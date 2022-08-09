@@ -10,4 +10,4 @@ prev=loe.html
 [[list-of-tables]]
 == List of Tables
 
-* link:checklist.html#sthref9[3-1 Checklist]
+* link:checklist.html#checklist[3-1 Checklist]

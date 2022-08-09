@@ -13,8 +13,6 @@ prev=list-iiop-listeners.html
 
 Lists {productName} instances in a domain
 
-[[sthref1517]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-instances [--help]
 [--long={false|true} | --nostatus={false|true}]
 [--standaloneonly={false|true} | target]
 ----
-
-[[sthref1518]]
 
 === Description
 
@@ -47,13 +43,11 @@ that is displayed for each instance.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1519]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -117,8 +111,6 @@ When an instance is listed, some configuration changes in the domain
   `false`;;
     All instances in the specified target are listed (default).
 
-[[sthref1520]]
-
 === Operands
 
 target::
@@ -140,8 +132,6 @@ target::
   configuration-name;;
     Lists all instances whose configuration is defined by the specified
     named configuration.
-
-[[sthref1521]]
 
 === Examples
 
@@ -210,8 +200,6 @@ pmdsa1 not running
 Command list-instances executed successfully.
 ----
 
-[[sthref1526]]
-
 === Exit Status
 
 0::
@@ -219,11 +207,9 @@ Command list-instances executed successfully.
 1::
   error in executing the command
 
-[[sthref1527]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]

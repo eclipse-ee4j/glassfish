@@ -14,8 +14,6 @@ prev=create-ssl.html
 Adds one or more system property elements that can be referenced
 elsewhere in the configuration.
 
-[[sthref545]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] create-system-properties [--help]
 [--target target]
 [name=value)[:name=value]*]
 ----
-
-[[sthref546]]
 
 === Description
 
@@ -45,20 +41,16 @@ line.
 
 This subcommand is supported in remote mode only.
 
-[[sthref547]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
   The target on which you are creating the system properties.
-
-[[sthref548]]
 
 === Operands
 
@@ -88,8 +80,6 @@ name=value::
   must be escaped with a `\` (blackslash). If any system properties were
   previously defined, they are updated with the new values.
 
-[[sthref549]]
-
 === Examples
 
 [[GSRFM526]][[sthref550]]
@@ -105,8 +95,6 @@ asadmin> create-system-properties --target myserver http-listener-port=1088
 Command create-system-properties executed successfully.
 ----
 
-[[sthref551]]
-
 === Exit Status
 
 0::
@@ -114,11 +102,9 @@ Command create-system-properties executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref552]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)],
 link:list-system-properties.html#list-system-properties-1[`list-system-properties`(1)]

@@ -13,8 +13,6 @@ prev=create-module-config.html
 
 Adds a new network listener socket
 
-[[sthref437]]
-
 === Synopsis
 
 [source]
@@ -30,8 +28,6 @@ asadmin [asadmin-options] create-network-listener [--help]
 [--target target]
 listener-name
 ----
-
-[[sthref438]]
 
 === Description
 
@@ -59,13 +55,11 @@ options.
 ====
 
 
-[[sthref439]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -105,18 +99,12 @@ asadmin-options::
     Creates the network listener on the specified standalone server
     instance.
 
-[[sthref440]]
-
 === Operands
 
 listener-name::
   The name of the network listener.
 
-[[sthref441]]
-
 === Examples
-
-[[GSRFM508]][[sthref442]]
 
 ==== Example 1   Creating a Network Listener
 
@@ -130,8 +118,6 @@ asadmin> create-network-listener --listenerport 7272 protocol http-1
 Command create-network-listener executed successfully.
 ----
 
-[[sthref443]]
-
 === Exit Status
 
 0::
@@ -139,11 +125,9 @@ Command create-network-listener executed successfully.
 1::
   error in executing the command
 
-[[sthref444]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
 link:create-protocol.html#create-protocol-1[`create-protocol`(1)],

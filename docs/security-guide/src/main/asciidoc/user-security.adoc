@@ -23,8 +23,8 @@ link:system-security.html#ablnk[Administering System Security].
 
 The following topics are addressed here:
 
-* link:#ggkuk[Administering Authentication Realms]
-* link:#ggnxq[Administering File Users]
+* xref:#ggkuk[Administering Authentication Realms]
+* xref:#ggnxq[Administering File Users]
 
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
@@ -47,15 +47,15 @@ in The Jakarta EE Tutorial for more information about Identity Stores.
 
 The following topics are addressed here:
 
-* link:#gkbiy[Overview of Authentication Realms]
-* link:#ggnca[To Create an Authentication Realm]
-* link:#ggngh[To List Authentication Realms]
-* link:#giwlt[To Update an Authentication Realm]
-* link:#ggngf[To Delete an Authentication Realm]
-* link:#ggmww[To Configure a JDBC or Digest Authentication Realm]
-* link:#gkbeo[To Configure LDAP Authentication with OID]
-* link:#gksgi[To Configure LDAP Authentication with OVD]
-* link:#gkbjp[To Enable LDAP Authentication on the {productName} DAS]
+* xref:#gkbiy[Overview of Authentication Realms]
+* xref:#ggnca[To Create an Authentication Realm]
+* xref:#ggngh[To List Authentication Realms]
+* xref:#giwlt[To Update an Authentication Realm]
+* xref:#ggngf[To Delete an Authentication Realm]
+* xref:#ggmww[To Configure a JDBC or Digest Authentication Realm]
+* xref:#gkbeo[To Configure LDAP Authentication with OID]
+* xref:#gksgi[To Configure LDAP Authentication with OVD]
+* xref:#gkbjp[To Enable LDAP Authentication on the {productName} DAS]
 
 [[gkbiy]][[GSSCG00217]][[overview-of-authentication-realms]]
 
@@ -91,7 +91,7 @@ LDAP realm::
   LDAP is a protocol for enabling anyone to locate organizations,
   individuals, and other resources such as files and devices in a
   network, whether on the public Internet or on a corporate intranet. +
-  See link:#gkbeo[To Configure LDAP Authentication with OID] for
+  See xref:#gkbeo[To Configure LDAP Authentication with OID] for
   instructions on configuring {productName} to work with an OVD/OID
   LDAP provider.
 +
@@ -171,8 +171,6 @@ auth.realm.DB.Database --property defaultuser=admin:Password=admin db
 Command create-auth-realm executed successfully.
 ----
 
-[[sthref21]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -206,8 +204,6 @@ file
 admin-realm
 Command list-auth-realms executed successfully.
 ----
-
-[[sthref22]]
 
 See Also
 
@@ -264,8 +260,6 @@ asadmin> delete-auth-realm db
 Command delete-auth-realm executed successfully.
 ----
 
-[[sthref23]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -307,7 +301,7 @@ To Create a JDBC Resource]" in {productName} Administration Guide.
 
 5. [[ggmvo]]
 Create a realm. +
-For instructions, see link:#ggnca[To Create an Authentication Realm].
+For instructions, see xref:#ggnca[To Create an Authentication Realm].
 +
 [NOTE]
 ====
@@ -520,13 +514,11 @@ This procedure explains how to enable LDAP authentication for logins to
 the {productName} Domain Administration Server (DAS). Logging in to
 the DAS is typically only performed by {productName} administrators
 who want to use the {productName} Administration Console or `asadmin`
-command. See link:#gkbeo[To Configure LDAP Authentication with OID] for
+command. See xref:#gkbeo[To Configure LDAP Authentication with OID] for
 instructions on enabling general LDAP authentication for {productName}.
 
-[[sthref24]]
-
 Before you begin, ensure that you have followed the configuration instructions in
-link:#gkbeo[To Configure LDAP Authentication with OID]
+xref:#gkbeo[To Configure LDAP Authentication with OID]
 
 Use the `asadmin configure-ldap-for-admin` subcommand to enable user
 authentication to the {productName} DAS.
@@ -560,8 +552,6 @@ asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
 --url ldaps://interopoel54-1:7501 --ldap-group sqestaticgroup
 ----
 
-[[sthref25]]
-
 See Also
 
 See link:reference-manual/configure-ldap-for-admin.html#GSRFM00010[`configure-ldap-for-admin`] for more information
@@ -582,11 +572,11 @@ services that they are entitled to use.
 
 The following topics are addressed here:
 
-* link:#ggocf[To Create a File User]
-* link:#ggoab[To List File Users]
-* link:#ghlgs[To List File Groups]
-* link:#ggoaw[To Update a File User]
-* link:#ggoah[To Delete a File User]
+* xref:#ggocf[To Create a File User]
+* xref:#ggoab[To List File Users]
+* xref:#ghlgs[To List File Groups]
+* xref:#ggoaw[To Update a File User]
+* xref:#ggoah[To Delete a File User]
 
 [[ggocf]][[GSSCG00118]][[to-create-a-file-user]]
 
@@ -623,7 +613,7 @@ The `asadmin` `--passwordfile` option specifies the name of a file that
 contains the password entries in a specific format. The entry for a
 password must have the `AS_ADMIN_` prefix followed by the password name
 in uppercase letters, an equals sign, and the password. See
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] for more information.
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] for more information.
 
 [source]
 ----
@@ -631,8 +621,6 @@ asadmin> create-file-user --user admin
 --passwordfile=c:\tmp\asadminpassword.txt Jennifer
 Command create-file-user executed successfully.
 ----
-
-[[sthref26]]
 
 See Also
 
@@ -661,8 +649,6 @@ asadmin> list-file-users
 Jennifer
 Command list-file-users executed successfully.
 ----
-
-[[sthref27]]
 
 See Also
 
@@ -741,8 +727,6 @@ staff:manager:engineer Jennifer
 Command update-file-user executed successfully.
 ----
 
-[[sthref28]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -773,8 +757,6 @@ This example deletes user `Jennifer` from the default `file` realm.
 asadmin> delete-file-user Jennifer
 Command delete-file-user executed successfully.
 ----
-
-[[sthref29]]
 
 See Also
 

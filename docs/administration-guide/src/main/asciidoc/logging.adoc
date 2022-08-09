@@ -13,10 +13,10 @@ to view log information in the {productName} 7 environment.
 
 The following topics are addressed here:
 
-* xref:#about-logging[About Logging]
-* xref:#defaults[Default Configuration]
-* xref:#configuring[Configuring the Logging Service]
-* xref:#asadmin[Using Asadmin]
+* <<About Logging>>
+* <<Default Configuration>>
+* <<Configuring the Logging Service>>
+* <<Using Asadmin>>
 
 [[about-logging]]
 
@@ -155,7 +155,7 @@ cluster-name represents the name of the cluster.
 
 
 For information about configuring logging properties, see
-xref:#configuring[Configuring the Logging Service].
+<<Configuring the Logging Service>>.
 
 ==== The Server Log File
 
@@ -204,7 +204,7 @@ as-install-parent directory
             server.log
 ----
 
-The `server.log` file uses the xref:#ODLFormatter[ODL] log format by default and is
+The `server.log` file uses the <<ODL>> log format by default and is
 rolled to a new file after it's size exceeds 100 Megabytes. If something
 in server's JVM prints to the standard output stream or standard
 error stream, it is redirected to the `server.log` file.
@@ -247,7 +247,7 @@ When you start the server with the `--verbose` argument, the server prints log
 records to the standard output too.
 The output is limited to just INFO levels and higher and uses the standard error stream,
 but this can be switched to standard output stream too.
-Log records are formatted to the xref:#UniformFormatter[Uniform Log Format] by default.
+Log records are formatted to the xref:UniformLogFormatter[Uniform Log Format]] by default.
 
 ==== Logger Levels
 
@@ -292,7 +292,7 @@ to `FINEST`.
 ==== Handlers
 
 You can use all JUL features, but some of {productName} features depend on some settings
-like the existence of the configured xref:#GlassFishLogHandler[GlassFishLogHandler]
+like the existence of the configured <<GlassFishLogHandler>>
 and it's `server.log` file.
 Also be careful when changing it's configuration as it may affect the performance.
 
@@ -333,10 +333,9 @@ but it will ignore incoming records. Default is `true`.
 * `file` - the output file; you can use also system options - default is `${com.sun.aas.instanceRoot}/logs/server.log`
 * `flushFrequency` - count of records to be handled in a single batch. Default is 1.
 * `formatter` - a formatter class to be used for formatting log records as strings.
-Default value is xref:#ODLFormatter[`org.glassfish.main.jul.formatter.ODLLogFormatter`]
+Default value is xref:ODL[`org.glassfish.main.jul.formatter.ODLLogFormatter`]
 * `formatter.*` - can be used for custom settings of the formatter.
-This works only for xref:#ODLFormatter[ODLLogFormatter], xref:#UniformFormatter[UniformLogFormatter]
-and xref:#OneLineFormatter[OneLineFormatter].
+This works only for <<ODLLogFormatter>>, <<UniformLogFormatter>> and <<OneLineFormatter>>.
 * `level` - Level used to filter log records. Less important log records will be ignored.
 Default is `ALL`.
 * `redirectStandardStreams` - if `true`, which is default, everything printed
@@ -365,14 +364,14 @@ The buffer is reset after timeout, which means that all unprocessible log record
 
 The `GlassFishLogHandler` can roll the output log file under following conditions:
 
-* if user forced him to do so, see xref:#setting-log-file-rotation[Forced Rotation of the server.log File] for more
+* if user forced him to do so, see <<To Rotate Log Files Manually>> for more
 * if the size of the file exceeded given limit
 * if the date changed
 * if the specified number of minutes have passed since the file was opened
 
 The last two conditions are exclusive, the date change has higher priority.
 
-The xref:#basic-settings[`flushFrequency`] parameter affects how many log records will be formatted
+The <<`flushFrequency`>> parameter affects how many log records will be formatted
 into the log file before the file is rolled out even after the file size exceeded it's configured
 limit.
 
@@ -389,7 +388,7 @@ drwxrwxr-x 14 admin admin   4096 čec 29 21:21 ../
 ----
 
 You can configure the logging service to change the default settings for
-log file rotation, as explained in xref:#setting-log-file-rotation[Setting Log File Rotation].
+log file rotation, as explained in <<Setting Log File Rotation>>.
 
 
 This is a list of related configuration properties:
@@ -410,16 +409,15 @@ The `org.glassfish.main.jul.handler.SimpleLogHandler` has similar targets as the
 with few differences:
 
 * can be configured to use STDOUT instead of STDERR
-* uses xref:#OneLineFormatter[OneLineFormatter] by default
+* uses <<OneLineFormatter>> by default
 
 The handler configuration properties:
 
 * `encoding` - output character encoding. Default is null which means it will use the system default.
 * `formatter` - a formatter class to be used for formatting log records as strings.
-Default value is xref:#OneLineFormatter[`org.glassfish.main.jul.formatter.OneLineFormatter`]
+Default value is <<`org.glassfish.main.jul.formatter.OneLineFormatter`>>
 * `formatter.*` - can be used for custom settings of the formatter.
-This works only for xref:#ODLFormatter[ODLLogFormatter], xref:#UniformFormatter[UniformLogFormatter]
-and xref:#OneLineFormatter[OneLineFormatter].
+This works only for <<ODLLogFormatter>>, <<UniformLogFormatter>> and <<OneLineFormatter>>.
 * `level` - Level used to filter log records. Less important log records will be ignored.
 Uses `INFO` as a default.
 * `useErrorStream` - if `false`, uses STDOUT instead of STDERR. Default is `true`.
@@ -450,7 +448,7 @@ but it will ignore incoming records. Default is `true`.
 * `encoding` - output character encoding used to send data to the Syslog service.
 Default is `UTF-8`.
 * `formatter` - a formatter class to be used for formatting log records as strings.
-Default value is xref:#SimpleFormatter[`java.util.logging.SimpleFormatter`]
+Default value is <<`java.util.logging.SimpleFormatter`>>
 * `host` - a host name or IP address used of the UDP endpoint.
 Default is an autodetected name of the local host.
 * `level` - Level used to filter log records. Less important log records will be ignored.
@@ -480,7 +478,7 @@ Some of formatters support exclusion of some of fields. Currently is possible to
 * `tid` - Thread id and name
 * `levelValue` - Integer value of the log level.
 
-[[ODLFormatter]]
+[[ODL]]
 ===== ODLLogFormatter
 
 The `org.glassfish.main.jul.formatter.ODLLogFormatter` logs records in
@@ -497,7 +495,7 @@ Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150
 The formatter has following properties:
 
 * `excludedFields` - comma separated list of fields which should not be printed. None by default.
-See xref:#excluded-fields[Excluded Fields]
+See <<Excluded Fields>>
 * `fieldSeparator` - String separating fields. Space by default.
 * `multiline` - if set to `true` (default), the end of line character is inserted before the log message.
 * `printSequenceNumber` - if set to `true`, logs the sequence number of each log record. Default is `false`.
@@ -506,7 +504,7 @@ See xref:#excluded-fields[Excluded Fields]
 Default is `https://en.wikipedia.org/wiki/ISO_8601[ISO-8601]` timestamp with microseconds and time zone.
 
 
-[[UniformFormatter]]
+[[Uniform]]
 ===== UniformLogFormatter
 
 The `org.glassfish.main.jul.formatter.UniformLogFormatter` logs records in
@@ -523,7 +521,7 @@ Running GlassFish Version: Eclipse GlassFish  7.0.0  (build master-b827-g71a6150
 The formatter has following properties:
 
 * `excludedFields` - comma separated list of fields which should not be printed. None by default.
-See xref:#excluded-fields[Excluded Fields]
+See <<Excluded Fields>>
 * `fieldSeparator` - String separating fields. Space by default.
 * `multiline` - if set to `true` (default), the end of line character is inserted before the log message.
 * `printSequenceNumber` - if set to `true`, logs the sequence number of each log record. Default is `false`.
@@ -533,7 +531,7 @@ See xref:#excluded-fields[Excluded Fields]
 * `timestampFormat` - see the `https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/format/DateTimeFormatter.html[DateTimeFormatter]` documentation.
 Default is `https://en.wikipedia.org/wiki/ISO_8601[ISO-8601]` timestamp with microseconds and time zone.
 
-[[OneLineFormatter]]
+[[OneLine]]
 ===== OneLineFormatter
 
 The `org.glassfish.main.jul.formatter.OneLineFormatter` logs records in the following simple format:
@@ -552,7 +550,7 @@ while when set to `false` it prefers the logger name.
 Default is `https://en.wikipedia.org/wiki/ISO_8601[ISO-8601]` time with microseconds (not date, no timezone).
 
 
-[[SimpleFormatter]]
+[[Simple]]
 ===== SimpleFormatter
 
 The full name is `java.util.logging.SimpleFormatter`. It is a default formatter provided by the JDK,

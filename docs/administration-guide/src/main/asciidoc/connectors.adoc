@@ -26,20 +26,20 @@ features are supported only in the Full Platform Profile.
 
 The following topics are addressed here:
 
-* link:#abllq[About EIS Connectivity]
-* link:#ablls[Administering Connector Connection Pools]
-* link:#abllx[Administering Connector Resources]
-* link:#giope[Administering the Resource Adapter Configuration]
-* link:#gitxy[Administering Connector Security Maps]
-* link:#giohl[Administering Connector Work Security Maps]
-* link:#ablmc[Administering Administered Objects]
+* <<About EIS Connectivity>>
+* <<Administering Connector Connection Pools>>
+* <<Administering Connector Resources>>
+* <<Administering the Resource Adapter Configuration>>
+* <<Administering Connector Security Maps>>
+* <<Administering Connector Work Security Maps>>
+* <<Administering Administered Objects>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
 For information about database connectivity, see
-link:jdbc.html#ablih[Administering Database Connectivity].
+xref:jdbc.adoc#ablih[Administering Database Connectivity].
 
 [[abllq]][[GSADG00580]][[about-eis-connectivity]]
 
@@ -62,34 +62,34 @@ connector module, see "link:application-development-guide/connectors.html#GSDVG0
 * Connector Connection Pool. A connector connection pool is a group of
 reusable connections for a particular EIS. A connector connection pool
 is created when you specify the connector module that is associated with
-the pool. For administration procedures, see link:#ablls[Administering
+the pool. For administration procedures, see xref:#ablls[Administering
 Connector Connection Pools].
 * Connector Resource. A connector resource is a program object that
 provides an application with a connection to an EIS. A connector
 resource is created when you specify its JNDI name and its associated
 connection pool. The JNDI name of a connector resource for an EIS is
 usually in the `java:comp/env/`eis-specific subcontext. For
-administration procedures, see link:#abllx[Administering Connector
+administration procedures, see xref:#abllx[Administering Connector
 Resources].
 * Connector Module Configuration. A connector module configuration is
 the information that resides in the domain configuration file
 (`domain.xml`) for the particular connector module (resource adapter).
-For administration procedures, see link:#giope[Administering the
+For administration procedures, see xref:#giope[Administering the
 Resource Adapter Configuration].
 * Connector Security Map. A connector security map associates the caller
 identity of the application (principal or user group) to a suitable EIS
 principal or group. For administration procedures, see
-link:#gitxy[Administering Connector Security Maps].
+<<Administering Connector Security Maps>>.
 * Connector Work Security Map. A connector work security map associates
 the caller identity of the work submitted by the connector module
 (resource adapter) EIS principal or EIS user group to a suitable
 principal or user group in the {productName} security domain. For
-administration procedures, see link:#giohl[Administering Connector Work
+administration procedures, see xref:#giohl[Administering Connector Work
 Security Maps].
 * Administered Object. An administered object provides specialized
 functionality for an application, such as providing access to a parser
 that is specific to the connector module and its associated EIS. For
-administration procedures, see link:#ablmc[Administering Administered
+administration procedures, see xref:#ablmc[Administering Administered
 Objects].
 
 At runtime, the following sequence occurs when an application connects
@@ -124,12 +124,12 @@ connector connection pool for it.
 
 The following topics are addressed here:
 
-* link:#gioce[To Create a Connector Connection Pool]
-* link:#giocg[To List Connector Connection Pools]
-* link:#gjiqz[To Connect to (Ping) or Reset (Flush) a Connector
+* <<To Create a Connector Connection Pool>>
+* <<To List Connector Connection Pools>>
+* xref:#gjiqz[To Connect to (Ping) or Reset (Flush) a Connector
 Connection Pool]
-* link:#gioti[To Update a Connector Connection Pool]
-* link:#giocp[To Delete a Connector Connection Pool]
+* <<To Update a Connector Connection Pool>>
+* <<To Delete a Connector Connection Pool>>
 
 [[gioce]][[GSADG00431]][[to-create-a-connector-connection-pool]]
 
@@ -145,10 +145,8 @@ Multiple connector resources can specify a single connection pool.
 
 Creating a connector connection pool is a dynamic event and does not
 require server restart. However, there are some parameters that do
-require server restart. See link:overview.html#ghciy[Configuration
+require server restart. See xref:overview.adoc#ghciy[Configuration
 Changes That Require Restart].
-
-[[GSADG968]]
 
 Before You Begin
 
@@ -164,13 +162,13 @@ page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 4. You can verify that a connection pool is usable by using the
 `ping-connection-pool` subcommand.
 +
-For instructions, see link:jdbc.html#ggnwn[To Contact (Ping) a Connection
+For instructions, see xref:jdbc.adoc#ggnwn[To Contact (Ping) a Connection
 Pool].
 
 [[GSADG00223]][[giocc]]
@@ -187,8 +185,6 @@ jakarta.jms.QueueConnectionFactory jms/qConnPool
 
 Command create-connector-connection-pool executed successfully
 ----
-
-[[GSADG969]]
 
 See Also
 
@@ -219,8 +215,6 @@ jms/qConnPool
 Command list-connector-connection-pools executed successfully
 ----
 
-[[GSADG970]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -233,8 +227,8 @@ line.
 
 Use the `ping-connection-pool` or `flush-connection-pool` subcommands in
 remote mode to perform these tasks on a connection pools. See
-link:jdbc.html#ggnwn[To Contact (Ping) a Connection Pool] or
-link:jdbc.html#gjiqp[To Reset (Flush) a Connection Pool] for
+xref:jdbc.adoc#ggnwn[To Contact (Ping) a Connection Pool] or
+xref:jdbc.adoc#gjiqp[To Reset (Flush) a Connection Pool] for
 instructions.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -268,8 +262,8 @@ asadmin> set domain.resources.connector-connection-pool
 .conectionpoolname.validate-atmost-once-period-in-seconds=3
 ----
 4. If needed, restart the server. Some properties require server restart.
-See link:overview.html#ghciy[Configuration Changes That Require Restart].
-If your server needs to be restarted, see link:domains.html#ginqj[To Restart a Domain].
+See xref:overview.adoc#ghciy[Configuration Changes That Require Restart].
+If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[giocp]][[GSADG00435]][[to-delete-a-connector-connection-pool]]
 
@@ -296,8 +290,6 @@ asadmin> delete-connector-connection-pool --cascade=false jms/qConnPool
 Command delete-connector-connection-pool executed successfully
 ----
 
-[[GSADG971]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -314,10 +306,10 @@ each EIS that is accessed by the applications deployed in the domain.
 
 The following topics are addressed here:
 
-* link:#giogt[To Create a Connector Resource]
-* link:#giohs[To List Connector Resources]
-* link:#giosg[To Update a Connector Resource]
-* link:#giofs[To Delete a Connector Resource]
+* <<To Create a Connector Resource>>
+* <<To List Connector Resources>>
+* <<To Update a Connector Resource>>
+* <<To Delete a Connector Resource>>
 
 [[giogt]][[GSADG00436]][[to-create-a-connector-resource]]
 
@@ -328,15 +320,13 @@ register a new connector resource with its JNDI name.
 
 Creating a connector resource is a dynamic event and does not require
 server restart. However, there are some parameters that do require
-server restart. See link:overview.html#ghciy[Configuration Changes That
+server restart. See xref:overview.adoc#ghciy[Configuration Changes That
 Require Restart].
-
-[[GSADG972]]
 
 Before You Begin
 
 Before creating a connector resource, you must first create a connector
-connection pool. For instructions, see link:#gioce[To Create a Connector
+connection pool. For instructions, see xref:#gioce[To Create a Connector
 Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -348,8 +338,8 @@ page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00226]][[giogn]]
@@ -364,8 +354,6 @@ asadmin> create-connector-resource --poolname jms/qConnPool
 --description "creating sample connector resource" jms/qConnFactory
 Command create-connector-resource executed successfully
 ----
-
-[[GSADG973]]
 
 See Also
 
@@ -394,8 +382,6 @@ asadmin> list-connector-resources
 jms/qConnFactory
 Command list-connector-resources executed successfully
 ----
-
-[[GSADG974]]
 
 See Also
 
@@ -428,8 +414,8 @@ For example:
 asadmin> set domain.resources.connector-resource.jms/qConnFactory.enabled=true
 ----
 4. If needed, restart the server. Some properties require server restart.
-See link:overview.html#ghciy[Configuration Changes That Require Restart].
-If your server needs to be restarted, see link:domains.html#ginqj[To Restart a Domain].
+See xref:overview.adoc#ghciy[Configuration Changes That Require Restart].
+If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[giofs]][[GSADG00439]][[to-delete-a-connector-resource]]
 
@@ -437,8 +423,6 @@ If your server needs to be restarted, see link:domains.html#ginqj[To Restart a D
 
 Use the `delete-connector-resource` subcommand in remote mode to remove
 a connector resource by specifying the JNDI name.
-
-[[GSADG975]]
 
 Before You Begin
 
@@ -462,8 +446,6 @@ asadmin> delete-connector-resource jms/qConnFactory
 Command delete-connector-resources executed successfully
 ----
 
-[[GSADG976]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -475,11 +457,11 @@ typing `asadmin help delete-connector-resource` at the command line.
 
 The following topics are addressed here:
 
-* link:#gioqx[To Create Configuration Information for a Resource
+* xref:#gioqx[To Create Configuration Information for a Resource
 Adapter]
-* link:#giorn[To List Resource Adapter Configurations]
-* link:#gioum[To Update a Resource Adapter Configuration]
-* link:#gionv[To Delete a Resource Adapter Configuration]
+* <<To List Resource Adapter Configurations>>
+* <<To Update a Resource Adapter Configuration>>
+* <<To Delete a Resource Adapter Configuration>>
 
 [[gioqx]][[GSADG00440]][[to-create-configuration-information-for-a-resource-adapter]]
 
@@ -512,8 +494,6 @@ asadmin> create-resource-adapter-config --property foo=bar
 Command create-resource-adapter-config executed successfully
 ----
 
-[[GSADG977]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -545,8 +525,6 @@ ra1
 ra2
 Command list-resource-adapter-configs executed successfully
 ----
-
-[[GSADG978]]
 
 See Also
 
@@ -605,8 +583,6 @@ asadmin> delete-resource-adapter-config ra1
 Command delete-resource-adapter-config executed successfully
 ----
 
-[[GSADG979]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -628,10 +604,10 @@ pool.
 
 The following topics are addressed here:
 
-* link:#gitzz[To Create a Connector Security Map]
-* link:#gitwx[To List Connector Security Maps]
-* link:#gityj[To Update a Connector Security Map]
-* link:#gitvf[To Delete a Connector Security Map]
+* <<To Create a Connector Security Map>>
+* <<To List Connector Security Maps>>
+* <<To Update a Connector Security Map>>
+* <<To Delete a Connector Security Map>>
 
 [[gitzz]][[GSADG00444]][[to-create-a-connector-security-map]]
 
@@ -648,12 +624,10 @@ You can also use this subcommand to map the caller identity of the
 application (principal or user group) to a suitable EIS principal in
 container-managed authentication scenarios.
 
-[[GSADG980]]
-
 Before You Begin
 
 For this subcommand to succeed, you must have first created a connector
-connection pool. For instructions, see link:#gioce[To Create a Connector
+connection pool. For instructions, see xref:#gioce[To Create a Connector
 Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -665,8 +639,8 @@ help page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00232]][[giuxc]]
@@ -758,8 +732,8 @@ using the link:reference-manual/update-connector-security-map.html#GSRFM00252[`u
 4. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00236]][[giuwi]]
@@ -817,10 +791,10 @@ pool.
 
 The following topics are addressed here:
 
-* link:#giofz[To Create a Connector Work Security Map]
-* link:#gioir[To List Connector Work Security Maps]
-* link:#giogm[To Update a Connector Work Security Map]
-* link:#gioin[To Delete a Connector Work Security Map]
+* <<To Create a Connector Work Security Map>>
+* <<To List Connector Work Security Maps>>
+* <<To Update a Connector Work Security Map>>
+* <<To Delete a Connector Work Security Map>>
 
 [[giofz]][[GSADG00448]][[to-create-a-connector-work-security-map]]
 
@@ -835,12 +809,10 @@ more work security maps can be associated with a connector module.
 The connector security map configuration supports the use of the wild
 card asterisk (*) to indicate all users or all user groups.
 
-[[GSADG981]]
-
 Before You Begin
 
 Before creating a connector work security map, you must first create a
-connector connection pool. For instructions, see link:#gioce[To Create a
+connector connection pool. For instructions, see xref:#gioce[To Create a
 Connector Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -852,8 +824,8 @@ page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00238]][[giokw]]
@@ -873,8 +845,6 @@ asadmin> create-connector-work-security-map --raname my-resource-adapter-name
 eis-group-3=server-group-1 workSecurityMap2
 Command create-connector-work-security-map executed successfully
 ----
-
-[[GSADG982]]
 
 See Also
 
@@ -906,8 +876,6 @@ generic-ra-principals-map: EIS principal=eis-bar, mapped principal=bar
 generic-ra-principals-map: EIS principal=eis-foo, mapped principal=foo
 Command list-connector-work-security-maps executed successfully.
 ----
-
-[[GSADG983]]
 
 See Also
 
@@ -943,8 +911,6 @@ asadmin> update-connector-work-security-map --raname generic-ra
 Command update-connector-work-security-map executed successfully.
 ----
 
-[[GSADG984]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -977,8 +943,6 @@ asadmin> delete-connector-work-security-map --raname my_ra worksecuritymap1
 Command delete-connector-work-security-map executed successfully.
 ----
 
-[[GSADG985]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -996,10 +960,10 @@ the connector module and its associated EIS.
 
 The following topics are addressed here:
 
-* link:#giolr[To Create an Administered Object]
-* link:#giokm[To List Administered Objects]
-* link:#giots[To Update an Administered Object]
-* link:#gioma[To Delete an Administered Object]
+* <<To Create an Administered Object>>
+* <<To List Administered Objects>>
+* <<To Update an Administered Object>>
+* <<To Delete an Administered Object>>
 
 [[giolr]][[GSADG00452]][[to-create-an-administered-object]]
 
@@ -1009,8 +973,6 @@ Use the `create-admin-object` subcommand to create an administered
 object resource. When creating an administered object resource,
 name-value pairs are created, and the object is associated to a JNDI
 name.
-
-[[GSADG986]]
 
 Before You Begin
 
@@ -1025,8 +987,8 @@ page.
 2. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00242]][[giokx]]
@@ -1042,8 +1004,6 @@ asadmin> create-admin-object --restype jakarta.jms.Queue --raname jmsra
 --description "sample administered object" --property Name=sample_jmsqueue jms/samplequeue
 Command create-admin-object executed successfully
 ----
-
-[[GSADG987]]
 
 See Also
 
@@ -1072,8 +1032,6 @@ asadmin> list-admin-objects
 jms/samplequeue
 Command list-admin-objects executed successfully
 ----
-
-[[GSADG988]]
 
 See Also
 
@@ -1106,8 +1064,8 @@ For example:
 asadmin> set domain.resources.admin-object-resource.jms/samplequeue.enabled=false
 ----
 4. If needed, restart the server. Some properties require server restart.
-See link:overview.html#ghciy[Configuration Changes That Require Restart].
-If your server needs to be restarted, see link:domains.html#ginqj[To Restart a Domain].
+See xref:overview.adoc#ghciy[Configuration Changes That Require Restart].
+If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[gioma]][[GSADG00455]][[to-delete-an-administered-object]]
 
@@ -1132,8 +1090,6 @@ This example deletes the administered object with the JNDI name
 asadmin> delete-admin-object jms/samplequeue
 Command delete-admin-object executed successfully
 ----
-
-[[GSADG989]]
 
 See Also
 

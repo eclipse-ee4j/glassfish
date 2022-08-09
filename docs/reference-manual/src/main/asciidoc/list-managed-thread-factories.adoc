@@ -13,8 +13,6 @@ prev=list-managed-scheduled-executor-services.html
 
 Lists managed thread factory resources
 
-[[sthref1669]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-managed-thread-factories [--help]
 [target]
 ----
 
-[[sthref1670]]
-
 === Description
 
 The `list-managed-thread-factories` subcommand lists managed thread
@@ -32,18 +28,14 @@ factory resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1671]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1672]]
 
 === Operands
 
@@ -61,8 +53,6 @@ target::
     cluster.
   instance-name;;
     Lists the resources on a specified server instance.
-
-[[sthref1673]]
 
 === Examples
 
@@ -82,8 +72,6 @@ concurrent/myThreadFactory2
 Command list-managed-thread-factories executed successfully.
 ----
 
-[[sthref1675]]
-
 === Exit Status
 
 0::
@@ -91,11 +79,9 @@ Command list-managed-thread-factories executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1676]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-managed-thread-factory.html#create-managed-thread-factory-1[`create-managed-thread-factory`(1)],
 link:delete-managed-thread-factory.html#delete-managed-thread-factory-1[`delete-managed-thread-factory`(1)]

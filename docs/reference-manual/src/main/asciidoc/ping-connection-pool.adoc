@@ -13,8 +13,6 @@ prev=osgi-shell.html
 
 Tests if a connection pool is usable
 
-[[sthref1926]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] ping-connection-pool [--help]
 pool_name
 [--appname application [--modulename module]
 ----
-
-[[sthref1927]]
 
 === Description
 
@@ -58,13 +54,11 @@ module-scoped-resources are specified using the format
 This naming scope is defined in the Jakarta EE 6 Specification
 (`http://download.oracle.com/javaee/6/api/`).
 
-[[sthref1928]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -74,14 +68,10 @@ asadmin-options::
 `--modulename`::
   Name of the module in which the module scoped resource is defined.
 
-[[sthref1929]]
-
 === Operands
 
 pool_name::
   Name of the connection pool to be reinitialized.
-
-[[sthref1930]]
 
 === Examples
 
@@ -98,8 +88,6 @@ asadmin> ping-connection-pool DerbyPool
 Command ping-connection-pool executed successfully
 ----
 
-[[sthref1932]]
-
 === Exit Status
 
 0::
@@ -107,11 +95,9 @@ Command ping-connection-pool executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1933]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-connector-connection-pool.html#create-connector-connection-pool-1[`create-connector-connection-pool`(1)],
 link:create-jdbc-connection-pool.html#create-jdbc-connection-pool-1[`create-jdbc-connection-pool`(1)],

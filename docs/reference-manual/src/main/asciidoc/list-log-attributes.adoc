@@ -13,8 +13,6 @@ prev=list-lifecycle-modules.html
 
 Lists all logging attributes defined for a specified target in a domain
 
-[[sthref1630]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists all logging attributes defined for a specified target in a domain
 asadmin [asadmin-options] list-log-attributes [--help]
 [target]
 ----
-
-[[sthref1631]]
 
 === Description
 
@@ -34,18 +30,14 @@ within a domain. The values listed correspond to the values in the
 
 This subcommand is supported in remote mode only.
 
-[[sthref1632]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1633]]
 
 === Operands
 
@@ -55,8 +47,6 @@ target::
   * configuration_name - The name of a specific configuration.
   * cluster_name - The name of a target cluster.
   * instance_name - The name of a target server instance.
-
-[[sthref1634]]
 
 === Examples
 
@@ -100,8 +90,6 @@ org.glassfish.main.jul.handler.SyslogHandler.port       <514>
 Command list-log-attributes executed successfully.
 ----
 
-[[sthref1636]]
-
 === Exit Status
 
 0::
@@ -109,11 +97,9 @@ Command list-log-attributes executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1637]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:collect-log-files.html#collect-log-files-1[`collect-log-files`(1)],
 link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],

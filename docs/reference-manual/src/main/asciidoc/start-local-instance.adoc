@@ -13,8 +13,6 @@ prev=start-instance.html
 
 Starts a {productName} instance on the host where the subcommand is run
 
-[[sthref2142]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] start-local-instance [--help]
 [--verbose={false|true}] [--watchdog={true|false}]
 [instance-name]
 ----
-
-[[sthref2143]]
 
 === Description
 
@@ -53,13 +49,11 @@ of the subcommand.
 This subcommand is supported in local mode. However, to synchronize the
 instance with the DAS, this subcommand must be run in remote mode.
 
-[[sthref2144]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -176,14 +170,10 @@ Possible values are as follows:
     Limited information is not displayed in the console window
     (default).
 
-[[sthref2145]]
-
 === Operands
 
 instance-name::
   The name of the instance to start.
-
-[[sthref2146]]
 
 === Examples
 
@@ -205,8 +195,6 @@ Admin Port: 24849
 Command start-local-instance executed successfully.
 ----
 
-[[sthref2148]]
-
 === Exit Status
 
 0::
@@ -214,11 +202,9 @@ Command start-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref2149]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],

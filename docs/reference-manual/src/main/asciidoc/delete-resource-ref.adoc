@@ -13,8 +13,6 @@ prev=delete-resource-adapter-config.html
 
 Removes a reference to a resource
 
-[[sthref967]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Removes a reference to a resource
 asadmin [asadmin-options] delete-resource-ref [--help]
 [--target target] reference_name
 ----
-
-[[sthref968]]
 
 === Description
 
@@ -43,13 +39,11 @@ that resource (for example, `delete-jdbc-resource`).
 
 This subcommand is supported in remote mode only.
 
-[[sthref969]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,14 +61,10 @@ asadmin-options::
     Removes the resource reference from the named unclustered server
     instance.
 
-[[sthref970]]
-
 === Operands
 
 reference_name::
   The name or JNDI name of the resource.
-
-[[sthref971]]
 
 === Examples
 
@@ -92,8 +82,6 @@ resource-ref jms/Topic deleted successfully.
 Command delete-resource-ref executed successfully.
 ----
 
-[[sthref973]]
-
 === Exit Status
 
 0::
@@ -101,11 +89,9 @@ Command delete-resource-ref executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref974]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
 link:list-resource-refs.html#list-resource-refs-1[`list-resource-refs`(1)]

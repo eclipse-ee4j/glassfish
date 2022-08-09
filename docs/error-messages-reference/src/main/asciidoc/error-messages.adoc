@@ -434,7 +434,7 @@ message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref73]]AS-EJB-00003 [\{0}]: passivateEJB(), Exception caught -> ::
+[[administering-concurrent-resources]]AS-EJB-00003 [\{0}]: passivateEJB(), Exception caught -> ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
@@ -3790,54 +3790,54 @@ HttpSessionListener, or HttpSessionAttributeListener interfaces ::
 +
   Action: Verify that 'catalina.home' was passed
 
-[[sthref730]]AS-WEB-CORE-00472 Exception creating instance of \{0} ::
+[[administering-concurrent-resources0]]AS-WEB-CORE-00472 Exception creating instance of \{0} ::
   Cause: Could not load application class
 +
   Action: Verify the class name
 
-[[sthref731]]AS-WEB-CORE-00473 Exception locating main() method ::
+[[administering-concurrent-resources1]]AS-WEB-CORE-00473 Exception locating main() method ::
   Cause: Could not locate the static main() method of the application
   class
 +
   Action: Verify the access permission
 
-[[sthref732]]AS-WEB-CORE-00474 Exception calling main() method ::
+[[administering-concurrent-resources2]]AS-WEB-CORE-00474 Exception calling main() method ::
   Cause: Could not invoke main() method
 +
   Action: Verify the underlying method is inaccessible, and parameter
   values
 
-[[sthref733]]AS-WEB-CORE-00475 Usage: java org.apache.catalina.startup.Tool [<options>] <class> [<arguments>] ::
+[[administering-concurrent-resources3]]AS-WEB-CORE-00475 Usage: java org.apache.catalina.startup.Tool [<options>] <class> [<arguments>] ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref734]]AS-WEB-CORE-00476 Deploying user web applications ::
+[[administering-concurrent-resources4]]AS-WEB-CORE-00476 Deploying user web applications ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref735]]AS-WEB-CORE-00477 Exception loading user database ::
+[[administering-concurrent-resources5]]AS-WEB-CORE-00477 Exception loading user database ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref736]]AS-WEB-CORE-00478 Deploying web application for user \{0} ::
+[[administering-concurrent-resources6]]AS-WEB-CORE-00478 Deploying web application for user \{0} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref737]]AS-WEB-CORE-00479 Error deploying web application for user \{0} ::
+[[administering-concurrent-resources7]]AS-WEB-CORE-00479 Error deploying web application for user \{0} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref738]]AS-WEB-CORE-00480 UserConfig[\{0}]: \{1} ::
+[[administering-concurrent-resources8]]AS-WEB-CORE-00480 UserConfig[\{0}]: \{1} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref739]]AS-WEB-CORE-00481 UserConfig[null]: \{0} ::
+[[administering-concurrent-resources9]]AS-WEB-CORE-00481 UserConfig[null]: \{0} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.

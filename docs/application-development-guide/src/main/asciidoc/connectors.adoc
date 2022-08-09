@@ -48,11 +48,11 @@ the link:application-deployment-guide.html#GSDPG[
 
 The following topics are addressed here:
 
-* link:#beall[Connector Support in the {productName}]
-* link:#bealr[Advanced Connector Configuration Options]
-* link:#bealz[Inbound Communication Support]
-* link:#gizdm[Outbound Communication Support]
-* link:#beama[Configuring a Message Driven Bean to Use a Resource Adapter]
+* xref:#beall[Connector Support in the {productName}]
+* xref:#bealr[Advanced Connector Configuration Options]
+* xref:#bealz[Inbound Communication Support]
+* xref:#gizdm[Outbound Communication Support]
+* xref:#beama[Configuring a Message Driven Bean to Use a Resource Adapter]
 
 [[beall]][[GSDVG00162]][[connector-support-in-the-glassfish-server]]
 
@@ -135,18 +135,18 @@ pools and the connector resource properties without restarting the
 
 The following topics are addressed here:
 
-* link:#beals[Thread Associations]
-* link:#bealt[Security Maps]
-* link:#giqgt[Work Security Maps]
-* link:#bealu[Overriding Configuration Properties]
-* link:#bealv[Testing a Connector Connection Pool]
-* link:#gizcv[Flushing a Connector Connection Pool]
-* link:#bealw[Handling Invalid Connections]
-* link:#bealx[Setting the Shutdown Timeout]
-* link:#gjjyy[Specifying the Class Loading Policy]
-* link:#bealy[Using Last Agent Optimization of Transactions]
-* link:#gizba[Disabling Pooling for a Connection]
-* link:#gizcs[Using Application-Scoped Connectors]
+* xref:#beals[Thread Associations]
+* xref:#bealt[Security Maps]
+* xref:#giqgt[Work Security Maps]
+* xref:#bealu[Overriding Configuration Properties]
+* xref:#bealv[Testing a Connector Connection Pool]
+* xref:#gizcv[Flushing a Connector Connection Pool]
+* xref:#bealw[Handling Invalid Connections]
+* xref:#bealx[Setting the Shutdown Timeout]
+* xref:#gjjyy[Specifying the Class Loading Policy]
+* xref:#bealy[Using Last Agent Optimization of Transactions]
+* xref:#gizba[Disabling Pooling for a Connection]
+* xref:#gizcs[Using Application-Scoped Connectors]
 
 [[beals]][[GSDVG00476]][[thread-associations]]
 

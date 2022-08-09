@@ -14,8 +14,6 @@ prev=disable-secure-admin-internal-user.html
 Disables the certificate for authorizing access in secure
 administration.
 
-[[sthref1087]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] disable-secure-admin-principal [--help]
 --alias aliasname | DN
 ----
 
-[[sthref1088]]
-
 === Description
 
 The `disable-secure-admin-principal` subcommand disables the certificate
@@ -33,13 +29,11 @@ as being valid for authorizing access as part of secure administration.
 
 You must specify either the `--alias` option, or the DN.
 
-[[sthref1089]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -51,8 +45,6 @@ asadmin-options::
   certificate currently in the truststore, you may find it most useful
   for self-signed certificates.
 
-[[sthref1090]]
-
 === Operands
 
 DN::
@@ -60,8 +52,6 @@ DN::
   comma-separated list in quotes. For example,
   `"CN=system.amer.oracle.com,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US"`
   .
-
-[[sthref1091]]
 
 === Examples
 
@@ -81,8 +71,6 @@ O=Oracle Corporation,L=Santa Clara,ST=California,C=US"
 Command disable-secure-admin-principal executed successfully.
 ----
 
-[[sthref1093]]
-
 === Exit Status
 
 0::
@@ -90,11 +78,9 @@ Command disable-secure-admin-principal executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1094]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)],
 link:enable-secure-admin-principal.html#enable-secure-admin-principal-1[`enable-secure-admin-principal`(1)]

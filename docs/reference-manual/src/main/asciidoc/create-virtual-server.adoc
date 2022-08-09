@@ -13,8 +13,6 @@ prev=create-transport.html
 
 Creates the named virtual server
 
-[[sthref569]]
-
 === Synopsis
 
 [source]
@@ -31,8 +29,6 @@ asadmin [asadmin-options] create-virtual-server [--help]
 virtual-server-id
 ----
 
-[[sthref570]]
-
 === Description
 
 The `create-virtual-server` subcommand creates the named virtual server.
@@ -43,13 +39,11 @@ they still share the same physical resource pools.
 
 This subcommand is supported in remote mode only.
 
-[[sthref571]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -344,15 +338,11 @@ You can set this property for a specific web application. For
   standalone-instance-name;;
     Creates the virtual server on the specified standalone server instance.
 
-[[sthref572]]
-
 === Operands
 
 virtual-server-id::
   Identifies the unique ID for the virtual server to be created. This ID
   cannot begin with a number.
-
-[[sthref573]]
 
 === Examples
 
@@ -369,8 +359,6 @@ asadmin> create-virtual-server --hosts pigeon,localhost
 Command create-virtual-server executed successfully.
 ----
 
-[[sthref575]]
-
 === Exit Status
 
 0::
@@ -378,11 +366,9 @@ Command create-virtual-server executed successfully.
 1::
   error in executing the command
 
-[[sthref576]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-virtual-server.html#delete-virtual-server-1[`delete-virtual-server`(1)],
 link:list-virtual-servers.html#list-virtual-servers-1[`list-virtual-servers`(1)],

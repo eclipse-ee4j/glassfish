@@ -13,8 +13,6 @@ prev=delete-jdbc-connection-pool.html
 
 Removes a JDBC resource with the specified JNDI name
 
-[[sthref785]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Removes a JDBC resource with the specified JNDI name
 asadmin [asadmin-options] delete-jdbc-resource [--help]
 [--target target] jndi_name
 ----
-
-[[sthref786]]
 
 === Description
 
@@ -33,13 +29,11 @@ this subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref787]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -70,14 +64,10 @@ deletion.
 ====
 
 
-[[sthref788]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this JDBC resource to be removed.
-
-[[sthref789]]
 
 === Examples
 
@@ -93,8 +83,6 @@ asadmin> delete-jdbc-resource jdbc/DerbyPool
 Command delete-jdbc-resource executed successfully.
 ----
 
-[[sthref791]]
-
 === Exit Status
 
 0::
@@ -102,11 +90,9 @@ Command delete-jdbc-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref792]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jdbc-resource.html#create-jdbc-resource-1[`create-jdbc-resource`(1)],
 link:list-jdbc-resources.html#list-jdbc-resources-1[`list-jdbc-resources`(1)]

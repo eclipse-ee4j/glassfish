@@ -14,8 +14,6 @@ prev=create-http-lb-config.html
 Adds an existing cluster or server instance to an existing load balancer
 configuration or load balancer
 
-[[sthref259]]
-
 === Synopsis
 
 [source]
@@ -28,8 +26,6 @@ asadmin [asadmin-options] create-http-lb-ref [--help]
 [--lbenableallapplications=true] [--lbweight instance=weight[:instance=weight]*]
 target
 ----
-
-[[sthref260]]
 
 === Description
 
@@ -56,13 +52,11 @@ subcommand is not applicable to {productName}.
 ====
 
 
-[[sthref261]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -111,8 +105,6 @@ asadmin-options::
   for every five requests, one goes to instance1 and four go to
   instance2. A weight of 1 is the default.
 
-[[sthref262]]
-
 === Operands
 
 target::
@@ -123,8 +115,6 @@ target::
   handled by the load balancer.
   * stand-alone_instance_name- Specifies that requests for this
   standalone instance will be handled by the load balancer.
-
-[[sthref263]]
 
 === Examples
 
@@ -186,8 +176,6 @@ asadmin> create-http-lb-ref --lbpolicy user-defined --lbpolicymodule /user/modul
 Command create-http-lb-ref executed successfully.
 ----
 
-[[sthref268]]
-
 === Exit Status
 
 0::
@@ -195,11 +183,9 @@ Command create-http-lb-ref executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref269]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:configure-lb-weight.html#configure-lb-weight-1[`configure-lb-weight`(1)],
 link:create-http-health-checker.html#create-http-health-checker-1[`create-http-health-checker`(1)],

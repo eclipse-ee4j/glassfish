@@ -29,10 +29,10 @@ component, regardless of the origin of the component.
 
 The following topics are addressed here:
 
-* link:#ghopc[Defining Statistics That Are to Be Monitored]
-* link:#ghplw[Updating the Monitorable Object Tree]
-* link:#ghrma[Dotted Names and REST URLs for an Add-On Component's Statistics]
-* link:#ghptj[Example of Adding Monitoring Capabilities]
+* xref:#ghopc[Defining Statistics That Are to Be Monitored]
+* xref:#ghplw[Updating the Monitorable Object Tree]
+* xref:#ghrma[Dotted Names and REST URLs for an Add-On Component's Statistics]
+* xref:#ghptj[Example of Adding Monitoring Capabilities]
 
 [[ghopc]][[GSACG00116]][[defining-statistics-that-are-to-be-monitored]]
 
@@ -66,8 +66,8 @@ to calculate the time to process a request, two requests, for example, a
 Defining statistics that are to be monitored involves the following
 tasks:
 
-* link:#gkadk[Defining an Event Provider]
-* link:#ghprg[Sending an Event]
+* xref:#gkadk[Defining an Event Provider]
+* xref:#ghprg[Sending an Event]
 
 [[gkadk]][[GSACG00220]][[defining-an-event-provider]]
 
@@ -133,7 +133,7 @@ for each method are as follows:
 * The return value of the callback methods must be void.
 * The method body must be empty. You instantiate the event provider
 class in the class that invokes the method to send the event.
-For more information, see link:#ghprg[Sending an Event].
+For more information, see xref:#ghprg[Sending an Event].
 * To enable the event to be used as an Oracle Solaris DTrace probe, each
 parameter in the method signature must be a Java language primitive,
 such as `Integer`, `boolean`, or `String`.
@@ -378,7 +378,7 @@ correct time, the `onTxBegin` method is invoked in the body of the
 `begin` method, which starts a transaction.
 
 The declaration of the `onTxBegin` method in the event provider
-interface is shown in link:#ghprw[Example 5-1].
+interface is shown in xref:#ghprw[Example 5-1].
 
 [source,java]
 ----
@@ -434,15 +434,15 @@ gather statistics from events that represent these statistics. At
 runtime, these listeners must update monitorable objects with statistics
 that these events contain. The events are sent by event provider
 classes. For information about how to create event provider classes and
-send events, see link:#ghopc[Defining Statistics That Are to Be
+send events, see xref:#ghopc[Defining Statistics That Are to Be
 Monitored].
 
 Updating the monitorable object tree involves the following tasks:
 
-* link:#ghpni[Creating Event Listeners]
-* link:#ghptp[Representing a Component's Statistics in an Event Listener Class]
-* link:#ghpml[Subscribing to Events From Event Provider Classes]
-* link:#ghppo[Registering an Event Listener]
+* xref:#ghpni[Creating Event Listeners]
+* xref:#ghptp[Representing a Component's Statistics in an Event Listener Class]
+* xref:#ghpml[Subscribing to Events From Event Provider Classes]
+* xref:#ghppo[Registering an Event Listener]
 
 [[ghpni]][[GSACG00222]][[creating-event-listeners]]
 
@@ -491,7 +491,7 @@ computing resources, such as memory or processor cycles.
 Represent each statistic as the property of a JavaBeans specification
 getter method of your listener class. Methods in the listener class for
 processing events can then access the property through the getter
-method. For more information, see link:#ghpml[Subscribing to Events From
+method. For more information, see xref:#ghpml[Subscribing to Events From
 Event Provider Classes].
 
 To enable AMX to expose the statistic to client applications, annotate
@@ -581,24 +581,24 @@ the type as follows:
 module-providername::
   The application to which the event provider belongs. This parameter
   must be the value of the `moduleProviderName` element or attribute in
-  the definition of the event provider. See link:#ghovq[Defining an
-  Event Provider by Writing a Java Class] and link:#gkaec[Defining an
+  the definition of the event provider. See xref:#ghovq[Defining an
+  Event Provider by Writing a Java Class] and xref:#gkaec[Defining an
   Event Provider by Writing an XML Fragment].
 module-name::
   The module for which the event provider is defined. This parameter
   must match be the value of the `moduleName` element or attribute in
-  the definition of the event provider. See link:#ghovq[Defining an
-  Event Provider by Writing a Java Class] and link:#gkaec[Defining an
+  the definition of the event provider. See xref:#ghovq[Defining an
+  Event Provider by Writing a Java Class] and xref:#gkaec[Defining an
   Event Provider by Writing an XML Fragment].
 probe-provider-name::
   The name of the event provider. This parameter must match be the value
   of the `probeProviderName` element or attribute in the definition of
-  the event provider. See link:#ghovq[Defining an Event Provider by
-  Writing a Java Class] and link:#gkaec[Defining an Event Provider by
+  the event provider. See xref:#ghovq[Defining an Event Provider by
+  Writing a Java Class] and xref:#gkaec[Defining an Event Provider by
   Writing an XML Fragment].
 event-type::
   The type of the event. This type is defined in the event provider
-  class. For more information, see link:#ghosi[Defining Event Types in
+  class. For more information, see xref:#ghosi[Defining Event Types in
   an Event Provider Class].
 
 Annotate each parameter in the method signature with the `@ProbeParam`
@@ -616,12 +616,12 @@ from the `tx` component. The provider of the component is `TxManager`.
 The body of the `begin` method contains code to increase the transaction
 count txcount by 1 each time that an event is received.
 
-The definition of the `begin` event type is shown in link:#ghprw[Example 5-1].
+The definition of the `begin` event type is shown in xref:#ghprw[Example 5-1].
 
-The code for sending `begin` events is shown in link:#ghpus[Example 5-4].
+The code for sending `begin` events is shown in xref:#ghpus[Example 5-4].
 
 The instantiation of the `txCount` object is shown in
-link:#ghpsc[Example 5-5].
+xref:#ghpsc[Example 5-5].
 
 [source,java]
 ----
@@ -820,22 +820,22 @@ listener-parent-node::
   The node in the monitorable object tree under which the event listener
   that defines the statistic is registered. This node is passed in the
   invocation of the `register` method that registers the event listener.
-  For more information, see link:#ghppo[Registering an Event Listener].
+  For more information, see xref:#ghppo[Registering an Event Listener].
 path-to-statistic::
   The path through the monitorable object tree from the node under which
   the event listener is registered down to the statistic in the event
   listener in which each slash is replaced with a period. This path is
   passed in the invocation of the `register` method that registers the
-  event listener. For more information, see link:#ghppo[Registering an
+  event listener. For more information, see xref:#ghppo[Registering an
   Event Listener].
 statistic-name::
   The name of the statistic. This name is the value of the `id` element
   of the `@ManagedAttribute` annotation on the property that represents
-  the statistic. For more information, see link:#ghptp[Representing a
+  the statistic. For more information, see xref:#ghptp[Representing a
   Component's Statistics in an Event Listener Class].
 
 For example, the dotted name of the `txcount` statistic that is defined
-in link:#ghpsc[Example 5-5] and registered in link:#ghpuu[Example 5-7]
+in xref:#ghpsc[Example 5-5] and registered in xref:#ghpuu[Example 5-7]
 is as follows:
 
 [source]
@@ -859,8 +859,8 @@ path::
   attribute in which each dot (`.`) is replaced with a slash (`/`).
 
 For example, the URL the REST resource for the `txcount` statistic that
-is defined in link:#ghpsc[Example 5-5] and registered in
-link:#ghpuu[Example 5-7] is as follows:
+is defined in xref:#ghpsc[Example 5-5] and registered in
+xref:#ghpuu[Example 5-7] is as follows:
 
 [source]
 ----
@@ -890,11 +890,11 @@ the listing of each class or interface in the example.
 [width="100%",cols="<50%,<50%",options="header",]
 |===
 |Class or Interface |Listing
-|`ModuleProbeProvider` |link:#ghpna[Example 5-8]
-|`ModuleBootStrap` |link:#ghpmu[Example 5-9]
-|`ModuleStatsTelemetry` |link:#ghpvw[Example 5-10]
-|`Module` |link:#ghpuc[Example 5-11]
-|`ModuleMBean` |link:#ghpwx[Example 5-12]
+|`ModuleProbeProvider` |xref:#ghpna[Example 5-8]
+|`ModuleBootStrap` |xref:#ghpmu[Example 5-9]
+|`ModuleStatsTelemetry` |xref:#ghpvw[Example 5-10]
+|`Module` |xref:#ghpuc[Example 5-11]
+|`ModuleMBean` |xref:#ghpwx[Example 5-12]
 |===
 
 
@@ -902,7 +902,7 @@ the listing of each class or interface in the example.
 Example 5-8 Event Provider Class
 
 This example illustrates how to define an event provider as explained in
-link:#ghovq[Defining an Event Provider by Writing a Java Class].
+xref:#ghovq[Defining an Event Provider by Writing a Java Class].
 
 The example shows the definition of the `ModuleProbeProvider` class.
 The event provider sends events when the request count is increased by 1 or
@@ -958,7 +958,7 @@ public class ModuleProbeProvider {
 Example 5-9 Bootstrap Class
 
 This example illustrates how to register an event listener as explained
-in link:#ghppo[Registering an Event Listener]. The example shows the
+in xref:#ghppo[Registering an Event Listener]. The example shows the
 code for registering an instance of the listener class
 `ModuleStatsTelemetry`. This instance is added as a child of the
 `server/applications` node of the tree.
@@ -1000,12 +1000,12 @@ Example 5-10 Listener Class
 
 This example shows how to perform the following tasks:
 
-* link:#ghpni[Creating Event Listeners]. The example shows the code of
+* xref:#ghpni[Creating Event Listeners]. The example shows the code of
 the `ModuleStatsTelemetry` listener class.
-* link:#ghptp[Representing a Component's Statistics in an Event Listener
+* xref:#ghptp[Representing a Component's Statistics in an Event Listener
 Class]. The example shows the code for representing the
 `countmbeancount` statistic.
-* link:#ghpml[Subscribing to Events From Event Provider Classes]. The
+* xref:#ghpml[Subscribing to Events From Event Provider Classes]. The
 example shows the code for subscribing to the following types of events
 from the `count` component:
 ** `moduleCountIncrementEvent`
@@ -1076,7 +1076,7 @@ public interface ModuleMBean {
 [[GSACG00052]][[ghpwx]]
 Example 5-12 MBean Implementation
 
-This example illustrates how to send an event as explained in link:#ghprg[Sending an Event].
+This example illustrates how to send an event as explained in xref:#ghprg[Sending an Event].
 The example shows code for sending events as follows:
 
 * The `moduleCountIncrementEvent` method is invoked in the body of the `incrementCount` method.

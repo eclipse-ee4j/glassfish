@@ -14,8 +14,6 @@ prev=enable-secure-admin-principal.html
 Marks a variable name for automatic export to the environment of
 subsequent commands in multimode
 
-[[sthref1151]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ subsequent commands in multimode
 asadmin [asadmin-options] export [--help]
 [variable-name=value [variable-name=value]*]
 ----
-
-[[sthref1152]]
 
 === Description
 
@@ -44,26 +40,20 @@ Environment variables that are not exported cannot be read by the
 
 This subcommand is supported in local mode only.
 
-[[sthref1153]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1154]]
 
 === Operands
 
 variable-name=value::
   Variable name and value for automatic export to the environment to be
   used by subsequent commands.
-
-[[sthref1155]]
 
 === Examples
 
@@ -108,8 +98,6 @@ AS_ADMIN_USER=admin AS_ADMIN_PREFIX=server1.jms-service
 Command export executed successfully
 ----
 
-[[sthref1159]]
-
 === Exit Status
 
 0::
@@ -117,11 +105,9 @@ Command export executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1160]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:multimode.html#multimode-1[`multimode`(1)],
 link:unset.html#unset-1[`unset`(1)]

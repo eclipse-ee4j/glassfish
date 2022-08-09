@@ -13,8 +13,6 @@ prev=list-http-lbs.html
 
 Lists the existing network listeners
 
-[[sthref1501]]
-
 === Synopsis
 
 [source]
@@ -23,26 +21,20 @@ asadmin [asadmin-options] list-http-listeners [--help]
 [target]
 ----
 
-[[sthref1502]]
-
 === Description
 
 The `list-http-listeners` subcommand lists the existing network listeners.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1503]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1504]]
 
 === Operands
 
@@ -60,8 +52,6 @@ target::
     specified cluster.
   instance-name;;
     Lists the network listeners for the specified server instance.
-
-[[sthref1505]]
 
 === Examples
 
@@ -81,8 +71,6 @@ admin-listener
 Command list-http-listeners executed successfully.
 ----
 
-[[sthref1507]]
-
 === Exit Status
 
 0::
@@ -90,11 +78,9 @@ Command list-http-listeners executed successfully.
 1::
   error in executing the command
 
-[[sthref1508]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
 link:delete-http-listener.html#delete-http-listener-1[`delete-http-listener`(1)]

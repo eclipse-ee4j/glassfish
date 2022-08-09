@@ -14,9 +14,9 @@ prev=jms.html
 This chapter describes using high-availability features for remote EJB
 references and JNDI objects over RMI-IIOP in {productName}.
 
-* link:#abdbe[Overview]
-* link:#gknqo[`InitialContext` Load Balancing]
-* link:#gknpv[Per-Request Load Balancing (PRLB)]
+* xref:#abdbe[Overview]
+* xref:#gknqo[`InitialContext` Load Balancing]
+* xref:#gknpv[Per-Request Load Balancing (PRLB)]
 
 [[abdbe]][[GSHAG00215]][[overview]]
 
@@ -30,8 +30,8 @@ EJB failover.
 
 The following topics are addressed here:
 
-* link:#abdbf[General Requirements for Configuring Load Balancing]
-* link:#gknpk[Load Balancing Models]
+* xref:#abdbf[General Requirements for Configuring Load Balancing]
+* xref:#gknpk[Load Balancing Models]
 
 [[abdbf]][[GSHAG00313]][[general-requirements-for-configuring-load-balancing]]
 
@@ -47,7 +47,7 @@ participate in load balancing.
 * RMI-IIOP client applications are enabled for load balancing.
 
 {productName} supports load balancing for Java applications executing
-in the Application Client Container (ACC). See link:#abdbd[Enabling
+in the Application Client Container (ACC). See xref:#abdbd[Enabling
 RMI-IIOP Hardware Load Balancing and Failover].
 
 
@@ -64,13 +64,13 @@ over secure sockets layer (SSL).
 
 {productName} supports two general models for load balancing:
 
-link:#gknqo[`InitialContext` Load Balancing]::
+xref:#gknqo[`InitialContext` Load Balancing]::
   When a client performs a JNDI lookup for an object, the Naming Service
   creates a `InitialContext` (IC) object associated with a particular
   server instance. From then on, all lookup requests made using that IC
   object are sent to the same server instance. `InitialContext` load
   balancing can be configured automatically across an entire cluster.
-link:#gknpv[Per-Request Load Balancing (PRLB)]::
+xref:#gknpv[Per-Request Load Balancing (PRLB)]::
   Per Request Load Balancing (PRLB) is a method for load balancing
   stateless EJBs that enables load-balancing for each request to an EJB
   instance. PRLB chooses the first node in a cluster to use on each
@@ -82,9 +82,9 @@ link:#gknpv[Per-Request Load Balancing (PRLB)]::
 
 The following topics are addressed here:
 
-* link:#gknpn[`InitialContext` Summary]
-* link:#abdbg[`InitialContext` Algorithm]
-* link:#abdbd[Enabling RMI-IIOP Hardware Load Balancing and Failover]
+* xref:#gknpn[`InitialContext` Summary]
+* xref:#abdbg[`InitialContext` Algorithm]
+* xref:#abdbd[Enabling RMI-IIOP Hardware Load Balancing and Failover]
 
 [[gknpn]][[GSHAG00315]][[initialcontext-summary]]
 
@@ -167,8 +167,6 @@ RMI-IIOP load balancing and failover with the application client
 container (ACC). For additional information on the ACC, see
 "link:application-development-guide/java-clients.html#GSDVG00160[Developing Clients Using the ACC]" in {productName} Application Development Guide.
 
-[[GSHAG440]]
-
 Before You Begin
 
 The first five steps in this procedure are only necessary if you are
@@ -202,7 +200,7 @@ For example, on UNIX use `chmod 700`.
 6. [[gevjb]]
 Find the IIOP listener port number for at least two instances in the cluster.
 +
-You specify the IIOP listeners as endpoints in link:#gevkc[Add at least
+You specify the IIOP listeners as endpoints in xref:#gevkc[Add at least
 two `target-server` elements in the `sun-acc.xml` file.].
 +
 For each instance, obtain the IIOP listener ports as follows:
@@ -236,7 +234,7 @@ asadmin> get servers.server.in1.system-property.*.value
 7. [[gevkc]]
 Add at least two `target-server` elements in the `sun-acc.xml` file.
 +
-Use the endpoints that you obtained in link:#gevjb[Find the IIOP
+Use the endpoints that you obtained in xref:#gevjb[Find the IIOP
 listener port number for at least two instances in the cluster.].
 +
 If the {productName} instance on which the application client is
@@ -333,8 +331,6 @@ sleeps) in your client application.
 To test load balancing, use multiple clients and see how the load gets
 distributed among all endpoints.
 
-[[GSHAG442]]
-
 See Also
 
 See link:session-persistence-and-failover.html#abdle[Enabling the High
@@ -348,8 +344,8 @@ container running in a cluster.
 
 The following topics are addressed here:
 
-* link:#gksgt[PRLB Summary]
-* link:#gksgy[Enabling Per-Request Load Balancing]
+* xref:#gksgt[PRLB Summary]
+* xref:#gksgy[Enabling Per-Request Load Balancing]
 
 [[gksgt]][[GSHAG00318]][[prlb-summary]]
 
@@ -471,8 +467,6 @@ public class EJBClient {
   }
 }
 ----
-
-[[GSHAG443]]
 
 See Also
 

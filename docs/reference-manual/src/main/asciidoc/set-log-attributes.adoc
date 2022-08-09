@@ -13,8 +13,6 @@ prev=set-batch-runtime-configuration.html
 
 Sets the logging attributes for one or more loggers
 
-[[sthref2041]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] set-log-attributes [--help]
 [--target=target]
 attribute-name=attribute-value[:attribute-name=attribute-value]*
 ----
-
-[[sthref2042]]
 
 === Description
 
@@ -35,13 +31,11 @@ for the domain.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2043]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -49,8 +43,6 @@ asadmin-options::
   The server domain, instance, or cluster for which logger attributes
   will be set. If this option is omitted, attributes are set for the
   default server.
-
-[[sthref2044]]
 
 === Operands
 
@@ -71,8 +63,6 @@ attribute-value::
   Use link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)] to get
   current set of attributes.
 
-[[sthref2045]]
-
 === Examples
 
 [[GSRFM748]][[sthref2046]]
@@ -92,8 +82,6 @@ The logging attributes are saved successfully for server.
 Command set-log-attributes executed successfully.
 ----
 
-[[sthref2047]]
-
 === Exit Status
 
 0::
@@ -101,12 +89,9 @@ Command set-log-attributes executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2048]]
-
 === See Also
 
-xref:asadmin.adoc#asadmin-1m[`asadmin`(1M)]
-
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:collect-log-files.adoc#collect-log-files-1[`collect-log-files`(1)],
 xref:list-log-attributes.adoc#list-log-attributes-1[`list-log-attributes`(1)],
 xref:list-log-levels.adoc#list-log-levels-1[`list-log-levels`(1)],

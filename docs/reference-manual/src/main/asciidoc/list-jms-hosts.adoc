@@ -13,8 +13,6 @@ prev=list-jmsdest.html
 
 Lists the existing JMS hosts
 
-[[sthref1568]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists the existing JMS hosts
 asadmin [asadmin-options] list-jms-hosts [--help]
 [--target target]
 ----
-
-[[sthref1569]]
 
 === Description
 
@@ -33,13 +29,11 @@ The `list-jms-hosts` subcommand lists the existing Java Message Service
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref1570]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -58,8 +52,6 @@ asadmin-options::
   instance-name;;
     Lists the JMS hosts for the specified server instance.
 
-[[sthref1571]]
-
 === Examples
 
 [[GSRFM674]][[sthref1572]]
@@ -76,8 +68,6 @@ MyNewHost
 Command list-jms-hosts executed successfully.
 ----
 
-[[sthref1573]]
-
 === Exit Status
 
 0::
@@ -85,11 +75,9 @@ Command list-jms-hosts executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1574]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jms-host.html#create-jms-host-1[`create-jms-host`(1)],
 link:delete-jms-host.html#delete-jms-host-1[`delete-jms-host`(1)],

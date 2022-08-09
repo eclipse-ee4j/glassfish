@@ -13,8 +13,6 @@ prev=create-jdbc-resource.html
 
 Creates a JMS physical destination
 
-[[sthref336]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] create-jmsdest [--help]
 [--force={false|true}]
 dest_name
 ----
-
-[[sthref337]]
 
 === Description
 
@@ -43,13 +39,11 @@ settings.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref338]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -185,14 +179,10 @@ To modify the value of these properties, you can use the
   Specifies whether the subcommand overwrites the existing JMS physical
   destination of the same name. The default value is `false`.
 
-[[sthref339]]
-
 === Operands
 
 dest_name::
   A unique identifier for the JMS destination to be created.
-
-[[sthref340]]
 
 === Examples
 
@@ -210,8 +200,6 @@ asadmin> create-jmsdest --desttype queue
 Command create-jmsdest executed successfully.
 ----
 
-[[sthref342]]
-
 === Exit Status
 
 0::
@@ -219,11 +207,9 @@ Command create-jmsdest executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref343]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)],
 link:delete-jmsdest.html#delete-jmsdest-1[`delete-jmsdest`(1)],

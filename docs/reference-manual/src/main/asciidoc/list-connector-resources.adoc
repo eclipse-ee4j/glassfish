@@ -13,8 +13,6 @@ prev=list-connector-connection-pools.html
 
 Lists all connector resources
 
-[[sthref1414]]
-
 === Synopsis
 
 [source]
@@ -23,26 +21,20 @@ asadmin [asadmin-options] list-connector-resources [--help]
 [target]
 ----
 
-[[sthref1415]]
-
 === Description
 
 The `list-connector-resources` subcommand lists all connector resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1416]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1417]]
 
 === Operands
 
@@ -61,8 +53,6 @@ target::
   instance-name;;
     Lists the connector resources on a specified server instance.
 
-[[sthref1418]]
-
 === Examples
 
 [[GSRFM650]][[sthref1419]]
@@ -78,8 +68,6 @@ jms/qConnFactory
 Command list-connector-resources executed successfully.
 ----
 
-[[sthref1420]]
-
 === Exit Status
 
 0::
@@ -87,11 +75,9 @@ Command list-connector-resources executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1421]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-connector-resource.html#create-connector-resource-1[`create-connector-resource`(1)],
 link:delete-connector-resource.html#delete-connector-resource-1[`delete-connector-resource`(1)]

@@ -13,8 +13,6 @@ prev=create-local-instance.html
 
 Creates a managed executor service resource
 
-[[sthref397]]
-
 === Synopsis
 
 [source]
@@ -40,8 +38,6 @@ asadmin [asadmin-options] create-managed-executor-service [--help]
 jndi_name
 ----
 
-[[sthref398]]
-
 === Description
 
 The `create-managed-executor-service` subcommand creates a managed
@@ -49,13 +45,11 @@ executor service resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref399]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -141,18 +135,12 @@ asadmin-options::
   instance_name;;
     Creates the resource for the specified server instance.
 
-[[sthref400]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this resource.
 
-[[sthref401]]
-
 === Examples
-
-[[GSRFM841]][[sthref402]]
 
 ==== Example 1   Creating a Managed Executor Service Resource
 
@@ -166,8 +154,6 @@ Managed executor service concurrent/myExecutor created successfully.
 Command create-managed-executor-service executed successfully.
 ----
 
-[[sthref403]]
-
 === Exit Status
 
 0::
@@ -175,11 +161,9 @@ Command create-managed-executor-service executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref404]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-managed-executor-service.html#delete-managed-executor-service-1[`delete-managed-executor-service`(1)],
 link:list-managed-executor-services.html#list-managed-executor-services-1[`list-managed-executor-services`(1)]

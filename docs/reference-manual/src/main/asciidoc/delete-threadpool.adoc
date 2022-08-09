@@ -13,8 +13,6 @@ prev=delete-system-property.html
 
 Removes a thread pool
 
-[[sthref991]]
-
 === Synopsis
 
 [source]
@@ -23,20 +21,16 @@ asadmin [asadmin-options] delete-threadpool [--help]
 [--target target] threadpool-id
 ----
 
-[[sthref992]]
-
 === Description
 
 Removes the thread pool with the specified ID. This subcommand is
 supported in remote mode only.
 
-[[sthref993]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -54,15 +48,11 @@ asadmin-options::
   instance-name;;
     Deletes the thread pool for a particular instance.
 
-[[sthref994]]
-
 === Operands
 
 threadpool-id::
   An ID for the work queue, for example, `thread-pool1`, `threadpool-2`,
   and so forth.
-
-[[sthref995]]
 
 === Examples
 
@@ -78,8 +68,6 @@ asadmin> delete-threadpool threadpool-1
 Command delete-threadpool executed successfully
 ----
 
-[[sthref997]]
-
 === Exit Status
 
 0::
@@ -87,11 +75,9 @@ Command delete-threadpool executed successfully
 1::
   error in executing the subcommand
 
-[[sthref998]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-threadpool.html#create-threadpool-1[`create-threadpool`(1)],
 link:list-threadpools.html#list-threadpools-1[`list-threadpools`(1)]

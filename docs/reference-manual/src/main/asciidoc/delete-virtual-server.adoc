@@ -13,8 +13,6 @@ prev=delete-transport.html
 
 Removes a virtual server
 
-[[sthref1007]]
-
 === Synopsis
 
 [source]
@@ -23,21 +21,17 @@ asadmin [asadmin-options] delete-virtual-server [--help]
 [--target target] virtual-server-id
 ----
 
-[[sthref1008]]
-
 === Description
 
 The `delete-virtual-server` subcommand removes the virtual server with
 the specified virtual server ID. This subcommand is supported in remote
 mode only.
 
-[[sthref1009]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -57,14 +51,10 @@ asadmin-options::
     Deletes the virtual server from the specified standalone server
     instance.
 
-[[sthref1010]]
-
 === Operands
 
 virtual-server-id::
   The unique identifier for the virtual server to be deleted.
-
-[[sthref1011]]
 
 === Examples
 
@@ -80,8 +70,6 @@ asadmin> delete-virtual-server sample_vs1
 Command delete-virtual-server executed successfully.
 ----
 
-[[sthref1013]]
-
 === Exit Status
 
 0::
@@ -89,11 +77,9 @@ Command delete-virtual-server executed successfully.
 1::
   error in executing the command
 
-[[sthref1014]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-virtual-server.html#create-virtual-server-1[`create-virtual-server`(1)],
 link:list-virtual-servers.html#list-virtual-servers-1[`list-virtual-servers`(1)]

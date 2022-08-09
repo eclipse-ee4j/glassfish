@@ -13,8 +13,6 @@ prev=add-resources.html
 
 Applies load balancer configuration changes to the load balancer
 
-[[sthref23]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Applies load balancer configuration changes to the load balancer
 asadmin [asadmin-options] apply-http-lb-changes [--help]
 lb-name
 ----
-
-[[sthref24]]
 
 === Description
 
@@ -34,8 +30,6 @@ balancer must already exist. To create a physical load balancer, use the
 
 This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
-
-[[sthref25]]
 
 Context
 
@@ -58,18 +52,14 @@ For more information about configuring load balancing with
 {productName}, refer to the online help in the {productName}
 Administration Console.
 
-[[sthref26]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref27]]
 
 === Operands
 
@@ -78,11 +68,7 @@ lb-name::
   balancer must already exist. You can create it with the
   `create-http-lb` subcommand.
 
-[[sthref28]]
-
 === Examples
-
-[[GSRFM446]][[sthref29]]
 
 ==== Example 1   Using the `apply-http-lb-changes` subcommand
 
@@ -95,8 +81,6 @@ asadmin> apply-http-lb-changes mylb
 Command apply-http-lb-changes executed successfully.
 ----
 
-[[sthref30]]
-
 === Exit Status
 
 0::
@@ -104,11 +88,9 @@ Command apply-http-lb-changes executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref31]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
 link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)]

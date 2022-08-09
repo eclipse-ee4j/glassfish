@@ -13,8 +13,6 @@ prev=get.html
 
 Displays the current active configuration of a service or instance
 
-[[sthref1219]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] get-active-module-config [--help]
 [service_name]
 ----
 
-[[sthref1220]]
-
 === Description
 
 The `get-active-module-config` subcommand displays the current active
@@ -34,13 +30,11 @@ configuration of a service or instance.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1221]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -64,15 +58,11 @@ asadmin-options::
   Displays all current active configurations. +
   The default value is `false`.
 
-[[sthref1222]]
-
 === Operands
 
 service_name::
   The name of the module for which you want to display the current
   active configuration.
-
-[[sthref1223]]
 
 === Examples
 
@@ -93,8 +83,6 @@ At location: domain/configs/config[server-config]
 Command get-active-module-config executed successfully.
 ----
 
-[[sthref1225]]
-
 === Exit Status
 
 0::
@@ -102,11 +90,9 @@ Command get-active-module-config executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1226]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-module-config.html#create-module-config-1[`create-module-config`(1)],
 link:delete-module-config.html#delete-module-config-1[`delete-module-config`(1)]

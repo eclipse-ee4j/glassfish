@@ -27,20 +27,20 @@ refer to the other titles in the {productName} documentation set at
 
 The following topics are addressed here:
 
-* link:#gkxwm[Using the {productName} Performance Tuner]
-* link:#abedo[Deployment Settings]
-* link:#abeds[Logger Settings]
-* link:#abedw[Web Container Settings]
-* link:#abeea[EJB Container Settings]
-* link:#abeel[Java Message Service Settings]
-* link:#abeem[Transaction Service Settings]
-* link:#abeet[HTTP Service Settings]
-* link:#abegk[Network Listener Settings]
-* link:#gkxjt[Transport Settings]
-* link:#abehk[Thread Pool Settings]
-* link:#abegt[ORB Settings]
-* link:#abehp[Resource Settings]
-* link:#gkxvd[Load Balancer Settings]
+* xref:#gkxwm[Using the {productName} Performance Tuner]
+* xref:#abedo[Deployment Settings]
+* xref:#abeds[Logger Settings]
+* xref:#abedw[Web Container Settings]
+* xref:#abeea[EJB Container Settings]
+* xref:#abeel[Java Message Service Settings]
+* xref:#abeem[Transaction Service Settings]
+* xref:#abeet[HTTP Service Settings]
+* xref:#abegk[Network Listener Settings]
+* xref:#gkxjt[Transport Settings]
+* xref:#abehk[Thread Pool Settings]
+* xref:#abegt[ORB Settings]
+* xref:#abehp[Resource Settings]
+* xref:#gkxvd[Load Balancer Settings]
 
 [[gkxwm]][[GSPTG00055]][[using-the-glassfish-server-performance-tuner]]
 
@@ -84,9 +84,9 @@ Deployment settings can have significant impact on performance. Follow
 these guidelines when configuring deployment settings for best
 performance:
 
-* link:#abedp[Disable Auto-Deployment]
-* link:#abedq[Use Pre-compiled JavaServer Pages]
-* link:#abedr[Disable Dynamic Application Reloading]
+* xref:#abedp[Disable Auto-Deployment]
+* xref:#abedq[Use Pre-compiled JavaServer Pages]
+* xref:#abedr[Disable Dynamic Application Reloading]
 
 [[abedp]][[GSPTG00180]][[disable-auto-deployment]]
 
@@ -180,9 +180,9 @@ following the instructions in "link:administration-guide/webapps.html#GSADG00009
 Applications]" in {productName} Administration
 Guide.
 
-* link:#abedx[Session Properties: Session Timeout]
-* link:#abedy[Manager Properties: Reap Interval]
-* link:#abedz[Disable Dynamic JSP Reloading]
+* xref:#abedx[Session Properties: Session Timeout]
+* xref:#abedy[Manager Properties: Reap Interval]
+* xref:#abedz[Disable Dynamic JSP Reloading]
 
 [[abedx]][[GSPTG00185]][[session-properties-session-timeout]]
 
@@ -291,11 +291,11 @@ the cache settings are valid for stateful session and entity beans.
 
 The following topics are addressed here:
 
-* link:#abeed[Overview of EJB Pooling and Caching]
-* link:#abeee[Tuning the EJB Pool]
-* link:#abeeg[Tuning the EJB Cache]
-* link:#abeei[Pool and Cache Settings for Individual EJB Components]
-* link:#abeej[Commit Option]
+* xref:#abeed[Overview of EJB Pooling and Caching]
+* xref:#abeee[Tuning the EJB Pool]
+* xref:#abeeg[Tuning the EJB Cache]
+* xref:#abeei[Pool and Cache Settings for Individual EJB Components]
+* xref:#abeej[Commit Option]
 
 [[abeed]][[GSPTG00117]][[overview-of-ejb-pooling-and-caching]]
 
@@ -305,7 +305,7 @@ Both stateless session beans and entity beans can be pooled to improve
 server performance. In addition, both stateful session beans and entity
 beans can be cached to improve performance.
 
-[[sthref7]][[gacmo]]
+[[gacmo]]
 
 Table 3-1 Bean Type Pooling or Caching
 
@@ -596,8 +596,8 @@ transactional logs has some performance penalty.
 
 The following topics are addressed here:
 
-* link:#abeen[Monitoring the Transaction Service]
-* link:#abeep[Tuning the Transaction Service]
+* xref:#abeen[Monitoring the Transaction Service]
+* xref:#abeep[Tuning the Transaction Service]
 
 [[abeen]][[GSPTG00190]][[monitoring-the-transaction-service]]
 
@@ -719,8 +719,8 @@ peak {productName} performance.
 
 The following topics are addressed here:
 
-* link:#abeeu[Monitoring the HTTP Service]
-* link:#abefk[HTTP Service Access Logging]
+* xref:#abeeu[Monitoring the HTTP Service]
+* xref:#abefk[HTTP Service Access Logging]
 
 [[abeeu]][[GSPTG00192]][[monitoring-the-http-service]]
 
@@ -753,10 +753,10 @@ different views of the available monitoring statistics.
 When viewing monitoring statistics, some key performance-related
 information to review includes the following:
 
-* link:#abeew[DNS Cache Information (dns)]
-* link:#abefh[File Cache Information (file-cache)]
-* link:#abefi[Keep Alive (keep-alive)]
-* link:#abefg[Connection Queue]
+* xref:#abeew[DNS Cache Information (dns)]
+* xref:#abefh[File Cache Information (file-cache)]
+* xref:#abefi[Keep Alive (keep-alive)]
+* xref:#abefg[Connection Queue]
 
 [[abeew]][[GSPTG00126]][[dns-cache-information-dns]]
 
@@ -767,15 +767,15 @@ disabled by default. In the DNS Statistics for Process ID All page under
 Monitor in the web-based Administration interface the following
 statistics are displayed:
 
-* link:#abeex[Enabled]
-* link:#abeey[CacheEntries (CurrentCacheEntries / MaxCacheEntries)]
-* link:#abeez[HitRatio]
-* link:#abefa[Caching DNS Entries]
-* link:#abefb[Limit DNS Lookups to Asynchronous]
-* link:#abefc[Enabled]
-* link:#abefd[NameLookups]
-* link:#abefe[AddrLookups]
-* link:#abeff[LookupsInProgress]
+* xref:#abeex[Enabled]
+* xref:#abeey[CacheEntries (CurrentCacheEntries / MaxCacheEntries)]
+* xref:#abeez[HitRatio]
+* xref:#abefa[Caching DNS Entries]
+* xref:#abefb[Limit DNS Lookups to Asynchronous]
+* xref:#abefc[Enabled]
+* xref:#abefd[NameLookups]
+* xref:#abefe[AddrLookups]
+* xref:#abeff[LookupsInProgress]
 
 [[abeex]][[GSPTG00016]][[enabled]]
 
@@ -878,7 +878,7 @@ The file cache caches static content so that the server handles requests
 for static content quickly. The file-cache section provides statistics
 on how your file cache is being used.
 
-For information about tuning the file cache, see link:#gkxit[File Cache
+For information about tuning the file cache, see xref:#gkxit[File Cache
 Settings].
 
 The Monitoring page lists the following file cache statistics:
@@ -908,7 +908,7 @@ represents a single URI. This is a tunable setting.
 
 The following are statistics related to the Keep Alive system. The most
 important settings you can tune here relate to HTTP Timeout. See
-link:#abefu[Timeout] for more information.
+xref:#abefu[Timeout] for more information.
 
 * Connections Terminated Due to Client Connection Timed Out
 * Max Connection Allowed in Keep-alive
@@ -971,9 +971,9 @@ online help for complete instructions about the options on these tabs.
 modifying settings on the following Edit Network Listener tabs in the
 Administration Console:
 
-* link:#abegl[General Settings]
-* link:#gkxjd[HTTP Settings]
-* link:#gkxit[File Cache Settings]
+* xref:#abegl[General Settings]
+* xref:#gkxjd[HTTP Settings]
+* xref:#gkxit[File Cache Settings]
 
 [[abegl]][[GSPTG00194]][[general-settings-1]]
 
@@ -994,10 +994,10 @@ each NIC.
 The following settings on the HTTP tab can significantly affect
 performance:
 
-* link:#abeft[Max Connections]
-* link:#abegd[DNS Lookup Enabled]
-* link:#abefu[Timeout]
-* link:#abefq[Header Buffer Length]
+* xref:#abeft[Max Connections]
+* xref:#abegd[DNS Lookup Enabled]
+* xref:#abefu[Timeout]
+* xref:#abefq[Header Buffer Length]
 
 [[abeft]][[GSPTG00130]][[max-connections]]
 
@@ -1098,8 +1098,8 @@ improve performance of applications that contain static files.
 The following settings on the File Cache tab can significantly affect
 performance:
 
-* link:#abegf[Max File Count]
-* link:#abegh[Max Age]
+* xref:#abegf[Max File Count]
+* xref:#abegh[Max Age]
 
 [[abegf]][[GSPTG00134]][[max-file-count]]
 
@@ -1165,8 +1165,8 @@ Configurations>configuration-name>Thread Pools>thread-pool-name page.
 The following thread pool settings can have significant effects on
 {productName} performance:
 
-* link:#abefn[Max Thread Pool Size]
-* link:#abefo[Min Thread Pool Size]
+* xref:#abefn[Max Thread Pool Size]
+* xref:#abefo[Min Thread Pool Size]
 
 [[abefn]][[GSPTG00197]][[max-thread-pool-size]]
 
@@ -1236,10 +1236,10 @@ instructions in the Administration Console online help.
 
 The following topics are addressed here:
 
-* link:#abegu[Overview]
-* link:#abegv[How a Client Connects to the ORB]
-* link:#abegw[Monitoring the ORB]
-* link:#abegz[Tuning the ORB]
+* xref:#abegu[Overview]
+* xref:#abegv[How a Client Connects to the ORB]
+* xref:#abegw[Monitoring the ORB]
+* xref:#abegz[Tuning the ORB]
 
 [[abegu]][[GSPTG00199]][[overview]]
 
@@ -1306,8 +1306,8 @@ Administration Console online help for complete instructions.
 
 The following statistics are of particular interest when tuning the ORB:
 
-* link:#abegx[Connection Statistics]
-* link:#abegy[Thread Pools]
+* xref:#abegx[Connection Statistics]
+* xref:#abegy[Thread Pools]
 
 [[abegx]][[GSPTG00136]][[connection-statistics]]
 
@@ -1356,11 +1356,11 @@ connection between the client and the server.
 
 The following topics are addressed here:
 
-* link:#abeha[Tunable ORB Parameters]
-* link:#abehb[ORB Thread Pool Parameters]
-* link:#abehc[Client ORB Properties]
-* link:#abehg[Thread Pool Sizing]
-* link:#abehh[Examining IIOP Messages]
+* xref:#abeha[Tunable ORB Parameters]
+* xref:#abehb[ORB Thread Pool Parameters]
+* xref:#abehc[Client ORB Properties]
+* xref:#abehg[Thread Pool Sizing]
+* xref:#abehh[Examining IIOP Messages]
 
 [[abeha]][[GSPTG00138]][[tunable-orb-parameters]]
 
@@ -1374,7 +1374,7 @@ Configurations>configuration-name>ORB node and refer to the online help.
 
 The following table summarizes the tunable ORB parameters.
 
-[[sthref8]][[gacma]]
+[[gacma]]
 
 Table 3-2 Tunable ORB Parameters
 
@@ -1433,7 +1433,7 @@ Allows shrinking of the thread pool.
 * Number of Work Queues
 
 In particular, the maximum pool size is important to performance. For
-more information, see link:#abehg[Thread Pool Sizing].
+more information, see xref:#abehg[Thread Pool Sizing].
 
 [[abehc]][[GSPTG00140]][[client-orb-properties]]
 
@@ -1450,9 +1450,9 @@ when starting the Java VM:
 
 The following topics are addressed here:
 
-* link:#abehd[Controlling Connections Between Client and Server ORB]
-* link:#CEGDGBBG[Limiting the Maximum Number of Client Connections]
-* link:#abehf[Load Balancing]
+* xref:#abehd[Controlling Connections Between Client and Server ORB]
+* xref:#CEGDGBBG[Limiting the Maximum Number of Client Connections]
+* xref:#abehf[Load Balancing]
 
 [[abehd]][[GSPTG00025]][[controlling-connections-between-client-and-server-orb]]
 
@@ -1620,8 +1620,8 @@ Tuning JDBC and connector resources can significantly improve {productName} perf
 
 The following topics are addressed here:
 
-* link:#abehq[JDBC Connection Pool Settings]
-* link:#abehy[Connector Connection Pool Settings]
+* xref:#abehq[JDBC Connection Pool Settings]
+* xref:#abehy[Connector Connection Pool Settings]
 
 [[abehq]][[GSPTG00203]][[jdbc-connection-pool-settings]]
 
@@ -1645,8 +1645,8 @@ information about managing JDBC connection pools.
 
 The following topics are addressed here:
 
-* link:#abehr[Monitoring JDBC Connection Pools]
-* link:#abehs[Tuning JDBC Connection Pools]
+* xref:#abehr[Monitoring JDBC Connection Pools]
+* xref:#abehs[Tuning JDBC Connection Pools]
 
 [[abehr]][[GSPTG00143]][[monitoring-jdbc-connection-pools]]
 
@@ -1694,10 +1694,10 @@ clicking the desired tab.
 
 The following JDBC properites affect {productName} performance:
 
-* link:#abeht[Pool Size Settings]
-* link:#abehu[Timeout Settings]
-* link:#abehv[Isolation Level Settings]
-* link:#abehw[Connection Validation Settings]
+* xref:#abeht[Pool Size Settings]
+* xref:#abehu[Timeout Settings]
+* xref:#abehv[Isolation Level Settings]
+* xref:#abehw[Connection Validation Settings]
 
 [[abeht]][[GSPTG00027]][[pool-size-settings]]
 
@@ -1719,7 +1719,7 @@ initial and minimum pool size, removal of connections stops.
 The following table summarizes advantages and disadvantages to consider
 when sizing connection pools.
 
-[[sthref9]][[gacmi]]
+[[gacmi]]
 
 Table 3-3 Connection Pool Sizing
 
@@ -1851,7 +1851,7 @@ failed connections.
 
 From a performance standpoint, connector connection pools are similar to
 JDBC connection pools. Follow all the recommendations in the previous
-section, link:#abehs[Tuning JDBC Connection Pools].
+section, xref:#abehs[Tuning JDBC Connection Pools].
 
 [[abehz]][[GSPTG00145]][[transaction-support]]
 

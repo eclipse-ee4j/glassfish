@@ -21,10 +21,10 @@ you to run new types of applications and to deploy new archive types in
 
 The following topics are addressed here:
 
-* link:#ghpjl[Creating a `Container` Implementation]
-* link:#ghozu[Adding an Archive Type]
-* link:#ghphp[Creating Connector Modules]
-* link:#gkane[Example of Adding Container Capabilities]
+* xref:#ghpjl[Creating a `Container` Implementation]
+* xref:#ghozu[Adding an Archive Type]
+* xref:#ghphp[Creating Connector Modules]
+* xref:#gkane[Example of Adding Container Capabilities]
 
 [[ghpjl]][[GSACG00132]][[creating-a-container-implementation]]
 
@@ -398,10 +398,10 @@ deployment request.
 This example shows a custom container and a web client of the container.
 The example is comprised of the following code:
 
-* Code for the container, which is shown in link:#gkbah[Container
+* Code for the container, which is shown in xref:#gkbah[Container
 Component Code]
 * Code for a web client of the container, which is shown in
-link:#gkbcq[Web Client Code]
+xref:#gkbcq[Web Client Code]
 
 Code that defines the configuration data for the container component is
 shown in link:adding-configuration-data.html#gkaal[Examples of Adding
@@ -421,11 +421,11 @@ cross-reference to the listing of each class or interface.
 [width="100%",cols="<50%,<50%",options="header",]
 |===
 |Class or Interface |Listing
-|`Greeter` |link:#gkamr[Example 7-3]
-|`GreeterContainer` |link:#gkand[Example 7-4]
-|`GreeterContainer` |link:#gkamm[Example 7-5]
-|`GreeterDeployer` |link:#gkalo[Example 7-6]
-|`GreeterSniffer` |link:#gkaks[Example 7-7]
+|`Greeter` |xref:#gkamr[Example 7-3]
+|`GreeterContainer` |xref:#gkand[Example 7-4]
+|`GreeterContainer` |xref:#gkamm[Example 7-5]
+|`GreeterDeployer` |xref:#gkalo[Example 7-6]
+|`GreeterSniffer` |xref:#gkaks[Example 7-7]
 |===
 
 [[GSACG00066]][[gkamr]]
@@ -740,11 +740,11 @@ to the listing of each class or resource.
 [width="100%",cols="<50%,<50%",options="header",]
 |===
 |Class or Resource |Listing
-|`HelloWorld` |link:#gkaki[Example 7-8]
+|`HelloWorld` |xref:#gkaki[Example 7-8]
 +
-|`SimpleGreeter` |link:#gkalf[Example 7-9]
+|`SimpleGreeter` |xref:#gkalf[Example 7-9]
 +
-|Deployment descriptor |link:#gkaly[Example 7-10]
+|Deployment descriptor |xref:#gkaly[Example 7-10]
 +
 |===
 

@@ -17,9 +17,9 @@ using the `asadmin` command-line utility.
 
 The following topics are addressed here:
 
-* link:#giusf[About Internet Connectivity]
-* link:#ggnfu[Administering HTTP Network Listeners]
-* link:#ggncs[Administering Virtual Servers]
+* <<About Internet Connectivity>>
+* <<Administering HTTP Network Listeners>>
+* <<Administering Virtual Servers>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -39,8 +39,8 @@ For more information about clusters, see the link:ha-administration-guide.html#G
 
 The following topics are addressed here:
 
-* link:#giuri[About HTTP Network Listeners]
-* link:#giupz[About Virtual Servers]
+* <<About HTTP Network Listeners>>
+* <<About Virtual Servers>>
 
 [[giuri]][[GSADG00766]][[about-http-network-listeners]]
 
@@ -138,8 +138,7 @@ server named `__asadmin`. For this listener, security is not enabled.
 The following table describes the {productName} default ports for the
 listeners that use ports.
 
-[[GSADG990]][[sthref72]][[ggnpj]]
-
+[[ggnpj]]
 
 Table 13-1 Default Ports for Listeners
 
@@ -163,11 +162,11 @@ listen on a separate port.
 
 The following topics are addressed here:
 
-* link:#ggnfh[To Create an Internet Connection]
-* link:#gjkuy[Administering HTTP Protocols]
-* link:#gjkzi[Administering HTTP Configurations]
-* link:#gjkym[Administering HTTP Transports]
-* link:#gjkwt[Administering HTTP Network Listeners]
+* <<To Create an Internet Connection>>
+* <<Administering HTTP Protocols>>
+* <<Administering HTTP Configurations>>
+* <<Administering HTTP Transports>>
+* <<Administering HTTP Network Listeners>>
 
 [[ggnfh]][[GSADG00456]][[to-create-an-internet-connection]]
 
@@ -176,7 +175,7 @@ The following topics are addressed here:
 Use the subcommands in this procedure to create an internet connection
 with the full range of listener options. A network listener is created
 behind the scenes. For the shortcut version of this process , see
-link:#gjimx[To Create an HTTP Network Listener].
+<<To Create an HTTP Network Listener>>.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create an HTTP or HTTPS protocol by using the
@@ -193,13 +192,11 @@ subcommand. To use the built-in `tcp` transport, skip this step.
 link:reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`] subcommand.
 To avoid using a thread pool, or to use the built-in `http-thread-pool`
 thread pool, skip this step.
-For additional thread pool information, see link:threadpools.html#abluc[Administering Thread Pools].
+For additional thread pool information, see xref:threadpools.adoc#abluc[Administering Thread Pools].
 6. Create an HTTP listener by using the
 link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
 Specify a protocol and transport, optionally a thread pool.
-7. To apply your changes, restart {productName}. See link:domains.html#ginqj[To Restart a Domain].
-
-[[GSADG991]]
+7. To apply your changes, restart {productName}. See xref:domains.adoc#ginqj[To Restart a Domain].
 
 See Also
 
@@ -214,13 +211,13 @@ command line.
 Each HTTP listener has an HTTP protocol, which is created either by
 using the `create-protocol` subcommand or by using the built-in
 protocols that are applied when you follow the instructions in
-link:#gjimx[To Create an HTTP Network Listener].
+<<To Create an HTTP Network Listener>>.
 
 The following topics are addressed here:
 
-* link:#gjhot[To Create a Protocol]
-* link:#gjhna[To List Protocols]
-* link:#gjhnx[To Delete a Protocol]
+* <<To Create a Protocol>>
+* <<To List Protocols>>
+* <<To Delete a Protocol>>
 
 [[gjhot]][[GSADG00457]][[to-create-a-protocol]]
 
@@ -245,8 +242,6 @@ This example creates a protocol named `http-1` with security enabled.
 asadmin> create-protocol --securityenabled=true http-1
 Command create-protocol executed successfully.
 ----
-
-[[GSADG992]]
 
 See Also
 
@@ -279,8 +274,6 @@ http-listener-2
 Command list-protocols executed successfully.
 ----
 
-[[GSADG993]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -308,8 +301,6 @@ asadmin> delete-protocol http-1
 Command delete-protocol executed successfully.
 ----
 
-[[GSADG994]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -322,12 +313,12 @@ typing `asadmin help delete-protocol` at the command line.
 Each HTTP listener has an HTTP configuration, which is created either by
 using the `create-http` subcommand or by using the built-in
 configurations that are applied when you follow the instructions in
-link:#gjimx[To Create an HTTP Network Listener].
+<<To Create an HTTP Network Listener>>.
 
 The following topics are addressed here:
 
-* link:#gjhqc[To Create an HTTP Configuration]
-* link:#gjhqa[To Delete an HTTP Configuration]
+* <<To Create an HTTP Configuration>>
+* <<To Delete an HTTP Configuration>>
 
 [[gjhqc]][[GSADG00460]][[to-create-an-http-configuration]]
 
@@ -354,8 +345,6 @@ This example creates an HTTP parameter set for the protocol named
 asadmin> create-http --timeout-seconds 60 --default-virtual-server server http-1
 Command create-http executed successfully.
 ----
-
-[[GSADG995]]
 
 See Also
 
@@ -384,8 +373,6 @@ asadmin> delete-http http-1
 Command delete-http executed successfully.
 ----
 
-[[GSADG996]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -398,13 +385,13 @@ typing `asadmin help delete-http` at the command line.
 Each HTTP listener has an HTTP transport, which is created either by
 using the `create-transport` subcommand or by using the built-in
 transports that are applied when you follow the instructions in
-link:#gjimx[To Create an HTTP Network Listener].
+<<To Create an HTTP Network Listener>>.
 
 The following topics are addressed here:
 
-* link:#gjhps[To Create a Transport]
-* link:#gjhmx[To List Transports]
-* link:#gjhqp[To Delete a Transport]
+* <<To Create a Transport>>
+* <<To List Transports>>
+* <<To Delete a Transport>>
 
 [[gjhps]][[GSADG00462]][[to-create-a-transport]]
 
@@ -429,8 +416,6 @@ non-default number of acceptor threads.
 asadmin> create-transport --acceptorthreads 100 http1-trans
 Command create-transport executed successfully.
 ----
-
-[[GSADG997]]
 
 See Also
 
@@ -461,8 +446,6 @@ tcp
 Command list-transports executed successfully.
 ----
 
-[[GSADG998]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -490,8 +473,6 @@ asadmin> delete-transport http1-trans
 Command delete-transport executed successfully.
 ----
 
-[[GSADG999]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -503,15 +484,15 @@ typing `asadmin help delete-transport` at the command line.
 
 The following topics are addressed here:
 
-* link:#gjimx[To Create an HTTP Network Listener]
-* link:#ggnbv[To List HTTP Network Listeners]
-* link:#giwls[To Update an HTTP Network Listener]
-* link:#ggndu[To Delete an HTTP Network Listener]
-* link:#ggnbj[To Configure an HTTP Listener for SSL]
-* link:#CHDEDCEA[To Configure Optional Client Authentication for SSL]
-* link:#CHDHEFHG[To Configure a Custom SSL Implementation]
-* link:#ggncl[To Delete SSL From an HTTP Listener]
-* link:#gixjb[To Assign a Default Virtual Server to an HTTP Listener]
+* <<To Create an HTTP Network Listener>>
+* <<To List HTTP Network Listeners>>
+* <<To Update an HTTP Network Listener>>
+* <<To Delete an HTTP Network Listener>>
+* <<To Configure an HTTP Listener for SSL>>
+* <<To Configure Optional Client Authentication for SSL>>
+* <<To Configure a Custom SSL Implementation>>
+* <<To Delete SSL From an HTTP Listener>>
+* <<To Assign a Default Virtual Server to an HTTP Listener>>
 
 [[gjimx]][[GSADG00465]][[to-create-an-http-network-listener]]
 
@@ -525,7 +506,7 @@ protocol. Behind the scenes, a network listener is created as well as
 its associated protocol, transport, and HTTP configuration. This method
 is a convenient shortcut, but it gives access to only a limited number
 of options. If you want to specify the full range of listener options,
-follow the instructions in link:#ggnfh[To Create an Internet
+follow the instructions in xref:#ggnfh[To Create an Internet
 Connection].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -536,7 +517,7 @@ link:reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener
 +
 If you edit the special HTTP network listener named `admin-listener`,
 you must restart the server for changes to take effect. See
-link:domains.html#ginqj[To Restart a Domain].
+xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00253]][[ggpjk]]
 Example 13-9 Creating an HTTP Listener
@@ -566,8 +547,6 @@ asadmin> create-network-listener --listenerport 7272 protocol http-1
 --enabled=false sampleListener
 Command create-network-listener executed successfully.
 ----
-
-[[GSADG1000]]
 
 See Also
 
@@ -601,8 +580,6 @@ http-listener-2
 http-listener-1
 Command list-http-listeners executed successfully.
 ----
-
-[[GSADG1001]]
 
 See Also
 
@@ -650,7 +627,7 @@ link:reference-manual/delete-http-listener.html#GSRFM00082[`delete-http-listener
 link:reference-manual/delete-network-listener.html#GSRFM00098[`delete-network-listener`] subcommand.
 4. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00257]][[ggpjr]]
 Example 13-13 Deleting an HTTP Listener
@@ -662,8 +639,6 @@ This example deletes the HTTP listener named `sampleListener`:
 asadmin> delete-http-listener sampleListener
 Command delete-http-listener executed successfully.
 ----
-
-[[GSADG1002]]
 
 See Also
 
@@ -684,7 +659,7 @@ communication for the listener.
 link:reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00258]][[ggphv]]
 Example 13-14 Configuring an HTTP Listener for SSL
@@ -696,8 +671,6 @@ This example enables the HTTP listener named `http-listener-1` for SSL:
 asadmin> create-ssl --type http-listener --certname sampleCert http-listener-1
 Command create-ssl executed successfully.
 ----
-
-[[GSADG1003]]
 
 See Also
 
@@ -752,7 +725,7 @@ listener.
 link:reference-manual/delete-ssl.html#GSRFM00109[`delete-ssl`] subcommand.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00259]][[ggpln]]
 Example 13-15 Deleting SSL From an HTTP Listener
@@ -764,8 +737,6 @@ This example disables SSL for the HTTP listener named `http-listener-1`:
 asadmin> delete-ssl --type http-listener http-listener-1
 Command delete-http-listener executed successfully.
 ----
-
-[[GSADG1004]]
 
 See Also
 
@@ -782,10 +753,8 @@ the relevant configuration.
 3. Select or create a new HTTP listener.
 4. Select from the Default Virtual Server drop-down list.
 +
-For more information, see link:#beaga[To Assign a Default Web Module to
+For more information, see xref:#beaga[To Assign a Default Web Module to
 a Virtual Server].
-
-[[GSADG1005]]
 
 See Also
 
@@ -830,13 +799,13 @@ application. For details, see "link:application-deployment-guide/dd-elements.htm
 
 The following topics are addressed here:
 
-* link:#ggnfr[To Create a Virtual Server]
-* link:#ggndw[To List Virtual Servers]
-* link:#giwkp[To Update a Virtual Server]
-* link:#ggnen[To Delete a Virtual Server]
-* link:#beaga[To Assign a Default Web Module to a Virtual Server]
-* link:#gixku[To Assign a Virtual Server to an Application or Module]
-* link:#glavy[To Set `JSESSIONIDSSO` Cookie Attributes]
+* <<To Create a Virtual Server>>
+* <<To List Virtual Servers>>
+* <<To Update a Virtual Server>>
+* <<To Delete a Virtual Server>>
+* <<To Assign a Default Web Module to a Virtual Server>>
+* <<To Assign a Virtual Server to an Application or Module>>
+* <<To Set `JSESSIONIDSSO` Cookie Attributes>>
 
 [[ggnfr]][[GSADG00472]][[to-create-a-virtual-server]]
 
@@ -863,8 +832,6 @@ web server, even though there is only one physical server.
 Use the `create-virtual-server` subcommand in remote mode to create the
 named virtual server.
 
-[[GSADG1006]]
-
 Before You Begin
 
 A virtual server must specify an existing HTTP listener. Because the
@@ -880,7 +847,7 @@ Information about properties for this subcommand is included in this
 help page.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00260]][[ggpha]]
 Example 13-16 Creating a Virtual Server
@@ -893,8 +860,6 @@ This example creates a virtual server named `sampleServer` on
 asadmin> create-virtual-server sampleServer
 Command create-virtual-server executed successfully.
 ----
-
-[[GSADG1007]]
 
 See Also
 
@@ -927,8 +892,6 @@ http-listener-1
 Command list-http-listeners executed successfully.
 ----
 
-[[GSADG1008]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -960,7 +923,7 @@ link:reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers
 link:reference-manual/delete-virtual-server.html#GSRFM00113[`delete-virtual-server`] subcommand.
 5. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00262]][[ggpmd]]
 Example 13-18 Deleting a Virtual Server
@@ -973,8 +936,6 @@ This example deletes the virtual server named `sampleServer` from
 asadmin> delete-virtual-server sampleServer
 Command delete-virtual-server executed successfully.
 ----
-
-[[GSADG1009]]
 
 See Also
 
@@ -1014,8 +975,6 @@ http://myvserver:3184/hellothere.jsp
 
 You can assign a virtual server to a deployed application or web module.
 
-[[GSADG1010]]
-
 Before You Begin
 
 The application or module must already be deployed. For more
@@ -1030,7 +989,7 @@ module.
 4. Select the application or web module from the Default Web Module
 drop-down list.
 +
-For more information, see link:#beaga[To Assign a Default Web Module to
+For more information, see xref:#beaga[To Assign a Default Web Module to
 a Virtual Server].
 
 [[glavy]][[GSADG00477]][[to-set-jsessionidsso-cookie-attributes]]

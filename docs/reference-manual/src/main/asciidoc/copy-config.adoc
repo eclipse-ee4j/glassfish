@@ -13,8 +13,6 @@ prev=configure-managed-jobs.html
 
 Copies an existing named configuration to create another configuration
 
-[[sthref107]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] copy-config [--help]
 [--systemproperties (name=value)[:name=value]*]
 source-configuration-name destination-configuration-name
 ----
-
-[[sthref108]]
 
 === Description
 
@@ -39,13 +35,11 @@ instance or standalone cluster is created.
 
 This subcommand is supported in remote mode only.
 
-[[sthref109]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -106,8 +100,6 @@ asadmin-options::
     creating sockets that listen on ports 1-1024 requires superuser
     privileges.
 
-[[sthref110]]
-
 === Operands
 
 source-configuration-name::
@@ -133,8 +125,6 @@ destination-configuration-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
 
-[[sthref111]]
-
 === Examples
 
 [[GSRFM456]][[sthref112]]
@@ -157,8 +147,6 @@ default-config pmdsaconfig
 Command copy-config executed successfully.
 ----
 
-[[sthref113]]
-
 === Exit Status
 
 0::
@@ -166,11 +154,9 @@ Command copy-config executed successfully.
 1::
   error in executing the command
 
-[[sthref114]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-config.html#delete-config-1[`delete-config`(1)],
 link:list-configs.html#list-configs-1[`list-configs`(1)]

@@ -13,8 +13,6 @@ prev=delete-network-listener.html
 
 Deletes a node that is not enabled for remote communication
 
-[[sthref898]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Deletes a node that is not enabled for remote communication
 asadmin [asadmin-options] delete-node-config [--help]
 node-name
 ----
-
-[[sthref899]]
 
 === Description
 
@@ -62,26 +58,20 @@ The predefined node ``localhost-``domain cannot be deleted.
 
 This subcommand is supported in remote mode only.
 
-[[sthref900]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref901]]
 
 === Operands
 
 node-name::
   The name of the node to delete. The node must not be enabled for
   communication over DCOM or SSH. Otherwise, an error occurs.
-
-[[sthref902]]
 
 === Examples
 
@@ -99,8 +89,6 @@ asadmin> delete-node-config sj03
 Command delete-node-config executed successfully.
 ----
 
-[[sthref904]]
-
 === Exit Status
 
 `0`::
@@ -108,11 +96,9 @@ Command delete-node-config executed successfully.
 `1`::
   error in executing the command
 
-[[sthref905]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],

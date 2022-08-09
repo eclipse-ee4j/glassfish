@@ -14,8 +14,6 @@ prev=restart-instance.html
 Restarts a running {productName} instance on the host where the
 subcommand is run
 
-[[sthref1994]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] restart-local-instance [--help]
 [--force={true|false}] [--kill={false|true}]
 [instance-name]
 ----
-
-[[sthref1995]]
 
 === Description
 
@@ -72,13 +68,11 @@ stopped and restarted by using following sequence of subcommands:
 This subcommand is supported in local mode. However, to synchronize the
 instance with the DAS, this subcommand must be run in remote mode.
 
-[[sthref1996]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -129,16 +123,12 @@ The default is the current setting of this option for the instance
     The instance is killed. The subcommand uses functionality of the
     operating system to terminate the instance process.
 
-[[sthref1997]]
-
 === Operands
 
 instance-name::
   The name of the {productName} instance to restart. If the instance
   is not running, the subcommand displays a warning message and attempts
   to start the instance.
-
-[[sthref1998]]
 
 === Examples
 
@@ -155,8 +145,6 @@ asadmin> restart-local-instance --node localhost-domain1 ymlsa1
 Command restart-local-instance executed successfully.
 ----
 
-[[sthref2000]]
-
 === Exit Status
 
 0::
@@ -164,11 +152,9 @@ Command restart-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref2001]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],

@@ -13,8 +13,6 @@ prev=set.html
 
 Configures the batch runtime
 
-[[sthref2034]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] set-batch-runtime-configuration [--help]
 [--executorservicelookupname executor-service-lookup-name]
 ----
 
-[[sthref2035]]
-
 === Description
 
 The `set-batch-runtime-configuration` subcommand configures the batch
@@ -34,13 +30,11 @@ runtime. The runtime uses a data source and a managed executor service
 to execute batch jobs. Batch runtime configuration data is stored in the
 `config` element in `domain.xml`.
 
-[[sthref2036]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -75,8 +69,6 @@ asadmin-options::
   The managed executor service can be changed after a batch job has been
   submitted to the batch runtime without impacting execution of the job.
 
-[[sthref2037]]
-
 === Examples
 
 [[GSRFM898]][[sthref2038]]
@@ -93,8 +85,6 @@ asadmin> set-batch-runtime-configuration --executorservicelookupname concurrent/
 Command set-batch-runtime-configuration executed successfully.
 ----
 
-[[sthref2039]]
-
 === Exit Status
 
 0::
@@ -102,11 +92,9 @@ Command set-batch-runtime-configuration executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2040]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-batch-jobs.html#list-batch-jobs-1[`list-batch-jobs`(1)],
 link:list-batch-job-executions.html#list-batch-job-executions-1[`list-batch-job-executions`(1)],

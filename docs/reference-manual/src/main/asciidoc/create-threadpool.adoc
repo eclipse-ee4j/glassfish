@@ -13,8 +13,6 @@ prev=create-system-properties.html
 
 Adds a thread pool
 
-[[sthref553]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-threadpool [--help]
 [--workqueues workqueues] threadpool-id
 ----
 
-[[sthref554]]
-
 === Description
 
 The `create-threadpool` subcommand creates a thread pool with the
@@ -40,13 +36,11 @@ be used in multiple resource adapters.
 
 This subcommand is supported in remote mode only.
 
-[[sthref555]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -82,14 +76,10 @@ asadmin-options::
   not occur. Instead, the subcommand runs successfully and displays a
   warning message that the option is ignored.
 
-[[sthref556]]
-
 === Operands
 
 threadpool-id::
   An ID for the work queue, for example, `threadpool-1`.
-
-[[sthref557]]
 
 === Examples
 
@@ -106,8 +96,6 @@ asadmin> create-threadpool --maxthreadpoolsize 100
 Command create-threadpool executed successfully
 ----
 
-[[sthref559]]
-
 === Exit Status
 
 0::
@@ -115,11 +103,9 @@ Command create-threadpool executed successfully
 1::
   error in executing the subcommand
 
-[[sthref560]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-threadpool.html#delete-threadpool-1[`delete-threadpool`(1)],
 link:list-threadpools.html#list-threadpools-1[`list-threadpools`(1)]

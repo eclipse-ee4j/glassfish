@@ -13,8 +13,6 @@ prev=list-batch-job-steps.html
 
 Displays the configuration of the batch runtime
 
-[[sthref1364]]
-
 === Synopsis
 
 [source]
@@ -25,21 +23,17 @@ asadmin [asadmin-options] list-batch-runtime-configuration [--help]
 [--header={false|true}]
 ----
 
-[[sthref1365]]
-
 === Description
 
 The `list-batch-runtime-configuration` subcommand displays the
 configuration of the batch runtime. Batch runtime configuration data is
 stored in the `config` element in `domain.xml`.
 
-[[sthref1366]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -80,8 +74,6 @@ asadmin-options::
   option is used. The default value is `true`. To suppress the headings,
   set the `--header` option to `false`.
 
-[[sthref1367]]
-
 === Examples
 
 [[GSRFM864]][[sthref1368]]
@@ -99,8 +91,6 @@ jdbc/_default            concurrent/__defaultManagedExecutorService
 Command list-batch-runtime-configuration executed successfully.
 ----
 
-[[sthref1369]]
-
 === Exit Status
 
 0::
@@ -108,11 +98,9 @@ Command list-batch-runtime-configuration executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1370]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:set-batch-runtime-configuration.html#set-batch-runtime-configuration-1[`set-batch-runtime-configuration`(1)],
 link:list-batch-jobs.html#list-batch-jobs-1[`list-batch-jobs`(1)],

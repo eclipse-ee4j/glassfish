@@ -13,8 +13,6 @@ prev=delete-http-lb.html
 
 Deletes a load balancer configuration
 
-[[sthref715]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Deletes a load balancer configuration
 asadmin [asadmin-options] delete-http-lb-config [--help]
 config_name
 ----
-
-[[sthref716]]
 
 === Description
 
@@ -39,18 +35,14 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref717]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref718]]
 
 === Operands
 
@@ -58,8 +50,6 @@ config_name::
   The name of the load balancer configuration to delete. The
   configuration must not reference any clusters or server instances
   enabled for load balancing, or be used by any physical load balancers.
-
-[[sthref719]]
 
 === Examples
 
@@ -75,8 +65,6 @@ asadmin> delete-http-lb-config mylbconfig
 Command delete-http-lb-config executed successfully.
 ----
 
-[[sthref721]]
-
 === Exit Status
 
 0::
@@ -84,11 +72,9 @@ Command delete-http-lb-config executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref722]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)],
 link:list-http-lb-configs.html#list-http-lb-configs-1[`list-http-lb-configs`(1)]

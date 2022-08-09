@@ -101,7 +101,7 @@ If a backing store is required, it is the responsibility of the
 `Store` that the `Manager` provides.
 ====
 
-[[sthref10]]
+[[gkcws]]
 
 Example 8-1 Implementing `PersistenceStrategyBuilder` With a Custom Web
 Session Manager
@@ -147,7 +147,7 @@ public class MyHASolutionStrategyBuilder implements PersistenceStrategyBuilder {
 }
 ----
 
-[[sthref11]]
+[[gksmc]]
 
 Example 8-2 Session Manager Configuration in the `glassfish-web.xml`
 File

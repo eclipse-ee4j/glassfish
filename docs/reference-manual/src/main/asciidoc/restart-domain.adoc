@@ -13,8 +13,6 @@ prev=remove-library.html
 
 Restarts the DAS of the specified domain
 
-[[sthref1978]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] restart-domain [--help]
 [--force={true|false}] [--kill={false|true}]
 [domain-name]
 ----
-
-[[sthref1979]]
 
 === Description
 
@@ -46,13 +42,11 @@ local mode, you normally do not need to authenticate to the server as
 long as you are running the subcommand as the same user who started the
 server.
 
-[[sthref1980]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -100,15 +94,11 @@ The default is the current setting of this option for the domain that
     The domain is killed. The subcommand uses functionality of the
     operating system to terminate the domain process.
 
-[[sthref1981]]
-
 === Operands
 
 domain-name::
   The name of the domain you want to restart. Default is the name
   specified during installation, usually `domain1`.
-
-[[sthref1982]]
 
 === Examples
 
@@ -125,8 +115,6 @@ Successfully restarted the domain
 Command restart-domain executed successfully.
 ----
 
-[[sthref1984]]
-
 === Exit Status
 
 0::
@@ -134,11 +122,9 @@ Command restart-domain executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1985]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
 link:list-domains.html#list-domains-1[`list-domains`(1)],

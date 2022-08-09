@@ -13,8 +13,6 @@ prev=list-applications.html
 
 Gets all audit modules and displays them
 
-[[sthref1316]]
-
 === Synopsis
 
 [source]
@@ -23,25 +21,19 @@ asadmin [asadmin-options] list-audit-modules [--help]
 [target]
 ----
 
-[[sthref1317]]
-
 === Description
 
 The `list-audit-modules` subcommand lists all the audit modules. This
 subcommand is supported in remote mode only.
 
-[[sthref1318]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1319]]
 
 === Operands
 
@@ -59,8 +51,6 @@ target::
   instance_name;;
     Lists the audit modules for a particular server instance.
 
-[[sthref1320]]
-
 === Examples
 
 [[GSRFM637]][[sthref1321]]
@@ -75,8 +65,6 @@ sampleAuditModule2
 Command list-audit-modules executed successfully
 ----
 
-[[sthref1322]]
-
 === Exit Status
 
 0::
@@ -84,11 +72,9 @@ Command list-audit-modules executed successfully
 1::
   error in executing the command
 
-[[sthref1323]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-audit-module.html#create-audit-module-1[`create-audit-module`(1)],
 link:delete-audit-module.html#delete-audit-module-1[`delete-audit-module`(1)]

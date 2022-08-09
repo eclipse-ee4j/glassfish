@@ -13,8 +13,6 @@ prev=list-admin-objects.html
 
 Lists the existing application references
 
-[[sthref1300]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists the existing application references
 asadmin [asadmin-options] list-application-refs [--help]
 [--long={false|true}] [target]
 ----
-
-[[sthref1301]]
 
 === Description
 
@@ -44,21 +40,17 @@ running or available for this subcommand to succeed.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1302]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--long`::
   If `true`, displays whether each module or application listed is
   enabled. The default is `false`.
-
-[[sthref1303]]
 
 === Operands
 
@@ -70,8 +62,6 @@ target::
   `server` is the name of the default server instance and is the default value.
   * cluster_name- Specifies a certain cluster as the target.
   * instance_name- Specifies a certain server instance as the target.
-
-[[sthref1304]]
 
 === Examples
 
@@ -91,8 +81,6 @@ __ejb_container_timer_app
 Command list-application-refs executed successfully.
 ----
 
-[[sthref1306]]
-
 === Exit Status
 
 0::
@@ -100,11 +88,9 @@ Command list-application-refs executed successfully.
 1::
   error in executing the command
 
-[[sthref1307]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
 link:delete-application-ref.html#delete-application-ref-1[`delete-application-ref`(1)]

@@ -15,8 +15,6 @@ get
 
 gets the values of configurable or monitorable attributes
 
-[[sthref1209]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] get [--help]
 [--aggregatedataonly={true|false}]
 (dotted-attribute--name)+
 ----
-
-[[sthref1210]]
 
 === Description
 
@@ -71,13 +67,11 @@ The following list shows common usage of the `get` subcommand with the `*`
 `get \*.*.\*.*`::
   Gets all values on all dotted names that have four parts.
 
-[[sthref1211]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -91,16 +85,12 @@ asadmin-options::
   Aggregates monitoring data for all {productName} instances in a
   cluster. The default value is `false`.
 
-[[sthref1212]]
-
 === Operands
 
 dotted-attribute-name::
   Identifies the attribute name in the dotted notation. At least one
   dotted name attribute is required. The dotted notation is the syntax
   used to access attributes of configurable entities.
-
-[[sthref1213]]
 
 === Examples
 
@@ -184,8 +174,6 @@ server.jvm.UpTime_Unit = milliseconds
 Command get executed successfully.
 ----
 
-[[sthref1217]]
-
 === Exit Status
 
 0::
@@ -193,11 +181,9 @@ Command get executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1218]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list.html#list-1[`list`(1)], link:set.html#set-1[`set`(1)]
 

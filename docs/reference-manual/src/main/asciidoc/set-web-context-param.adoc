@@ -14,8 +14,6 @@ prev=setup-ssh.html
 Sets a servlet context-initialization parameter of a deployed web
 application or module
 
-[[sthref2083]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] set-web-context-param [--help]
 {--value=value|--ignoredescriptoritem={false|true}}
 [--description=description] application-name[/module]
 ----
-
-[[sthref2084]]
 
 === Description
 
@@ -44,13 +40,11 @@ descriptors and repackage and redeploy the application.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2085]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -92,8 +86,6 @@ subcommand for this purpose.
   An optional textual description of the context parameter that is being
   set.
 
-[[sthref2086]]
-
 === Operands
 
 application-name::
@@ -121,8 +113,6 @@ module::
 ----
 +
 The module would be specified as the operand of this command as `myApp/myWebModule.war`.
-
-[[sthref2087]]
 
 === Examples
 
@@ -161,8 +151,6 @@ basic-ezcomp
 Command set-web-context-param executed successfully.
 ----
 
-[[sthref2090]]
-
 === Exit Status
 
 0::
@@ -170,11 +158,9 @@ Command set-web-context-param executed successfully.
 1::
   error in executing the command
 
-[[sthref2091]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-web-context-param.html#list-web-context-param-1[`list-web-context-param`(1)],
 link:unset-web-context-param.html#unset-web-context-param-1[`unset-web-context-param`(1)]

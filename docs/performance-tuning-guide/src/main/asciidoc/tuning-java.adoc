@@ -15,11 +15,11 @@ prev=tuning-glassfish.html
 
 The following topics are addressed here:
 
-* link:#abeib[Java Virtual Machine Settings]
-* link:#gfpzy[Start Options]
-* link:#glaat[Tuning High Availability Persistence]
-* link:#abeic[Managing Memory and Garbage Collection]
-* link:#abeiq[Further Information]
+* xref:#abeib[Java Virtual Machine Settings]
+* xref:#gfpzy[Start Options]
+* xref:#glaat[Tuning High Availability Persistence]
+* xref:#abeic[Managing Memory and Garbage Collection]
+* xref:#abeiq[Further Information]
 
 [[abeib]][[GSPTG00069]][[java-virtual-machine-settings]]
 
@@ -65,11 +65,11 @@ The efficiency of any application depends on how well memory and garbage
 collection are managed. The following sections provide information on
 optimizing memory and allocation functions:
 
-* link:#abeid[Tuning the Garbage Collector]
-* link:#abeig[Tracing Garbage Collection]
-* link:#abeih[Other Garbage Collector Settings]
-* link:#abeii[Tuning the Java Heap]
-* link:#abeio[Rebasing DLLs on Windows]
+* xref:#abeid[Tuning the Garbage Collector]
+* xref:#abeig[Tracing Garbage Collection]
+* xref:#abeih[Other Garbage Collector Settings]
+* xref:#abeii[Tuning the Java Heap]
+* xref:#abeio[Rebasing DLLs on Windows]
 
 [[abeid]][[GSPTG00205]][[tuning-the-garbage-collector]]
 
@@ -151,7 +151,7 @@ To do this, add the following JVM options:
 ===== Additional Information
 
 Use the `jvmstat` utility to monitor HotSpot garbage collection. (See
-link:#abeiq[Further Information].)
+xref:#abeiq[Further Information].)
 
 For detailed information on tuning the garbage collector, see
 http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html[Java
@@ -276,8 +276,8 @@ collection once per hour instead of the default rate of once per minute.
 This section discusses topics related to tuning the Java Heap for
 performance.
 
-* link:#abeij[Guidelines for Java Heap Sizing]
-* link:#abeik[Heap Tuning Parameters]
+* xref:#abeij[Guidelines for Java Heap Sizing]
+* xref:#abeik[Heap Tuning Parameters]
 
 [[abeij]][[GSPTG00151]][[guidelines-for-java-heap-sizing]]
 
@@ -287,7 +287,7 @@ Maximum heap size depends on maximum address space per process. The
 following table shows the maximum per-process address values for various
 platforms:
 
-[[sthref10]][[gacna]]
+[[gacna]]
 
 Table 4-1 Maximum Address Space Per Process
 
@@ -445,8 +445,6 @@ after installing the {productName}.
 
 ===== To rebase the {productName}'s DLLs
 
-[[sthref11]]
-
 Before You Begin
 
 To perform rebasing, you need:
@@ -491,8 +489,6 @@ for heavy server-centric applications, on Windows, as set in the
 <jvm-options> -Xms1400m </jvm-options>
 <jvm-options> -Xmx1400m </jvm-options>
 ----
-
-[[sthref12]]
 
 See Also
 

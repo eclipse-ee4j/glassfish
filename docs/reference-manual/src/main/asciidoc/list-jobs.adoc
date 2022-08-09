@@ -14,8 +14,6 @@ prev=list-jndi-resources.html
 Lists information about subcommands that were started using
 `asadmin --detach` or that contain progress information
 
-[[sthref1600]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ Lists information about subcommands that were started using
 asadmin [asadmin-options] list-jobs [--help]
 [job_id]
 ----
-
-[[sthref1601]]
 
 === Description
 
@@ -35,25 +31,19 @@ subcommands and executes them in the background in detach mode.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1602]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1603]]
 
 === Operands
 
 job_id::
   The ID of the job for which you want to list information.
-
-[[sthref1604]]
 
 === Examples
 
@@ -73,8 +63,6 @@ JOB ID     COMMAND           STATE       EXIT CODE TIME OF COMPLETION
 Command list-jobs executed successfully
 ----
 
-[[sthref1606]]
-
 === Exit Status
 
 0::
@@ -82,11 +70,9 @@ Command list-jobs executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1607]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:attach.html#attach-1[`attach`(1)],
 link:configure-managed-jobs.html#configure-managed-jobs-1[`configure-managed-jobs`(1)]

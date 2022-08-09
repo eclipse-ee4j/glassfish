@@ -21,10 +21,10 @@ of development tools. In addition, sample applications are available.
 
 The following topics are addressed here:
 
-* link:#beaar[Installing and Preparing the Server for Development]
-* link:#beaas[High Availability Features]
-* link:#beaat[Development Tools]
-* link:#beabf[Sample Applications]
+* xref:#beaar[Installing and Preparing the Server for Development]
+* xref:#beaas[High Availability Features]
+* xref:#beaat[Development Tools]
+* xref:#beabf[Sample Applications]
 
 [[beaar]][[GSDVG00090]][[installing-and-preparing-the-server-for-development]]
 
@@ -61,7 +61,7 @@ link:class-loaders.html#beadj[Using the Common Class Loader].
 * Set up debugging. For more information, see
 link:debugging-apps.html#beafc[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "link:administration-guide/jvm.html#GSADG00007[
+For more information, see "link:administration-guide/jvm.html#ablwj[
 Administering the Virtual Machine for the Java Platform]"
 in {productName} Administration Guide.
 
@@ -89,19 +89,19 @@ link:jms.html#beaop[Load-Balanced Message Inflow].
 
 The following general tools are provided with the {productName}:
 
-* link:#beaau[The `asadmin` Command]
-* link:#beaav[The Administration Console]
+* xref:#beaau[The `asadmin` Command]
+* xref:#beaav[The Administration Console]
 
 The following development tools are provided with the {productName}
 or downloadable from Oracle:
 
-* link:#beaba[The Migration Tool]
-* link:#beaaw[The NetBeans IDE]
+* xref:#beaba[The Migration Tool]
+* xref:#beaaw[The NetBeans IDE]
 
 The following third-party tools might also be useful:
 
-* link:#beabb[Debugging Tools]
-* link:#beabc[Profiling Tools]
+* xref:#beabb[Debugging Tools]
+* xref:#beabc[Profiling Tools]
 
 [[beaau]][[GSDVG00333]][[the-asadmin-command]]
 

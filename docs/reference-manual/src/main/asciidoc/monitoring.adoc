@@ -13,8 +13,6 @@ prev=logging.html
 
 Reviewing the runtime state of components and services deployed in {productName}
 
-[[sthref2406]]
-
 === Description
 
 Monitoring is the process of reviewing the statistics of a system to
@@ -54,8 +52,6 @@ identifying performance issues during runtime. Monitoring Scripting
 Client or DTrace Monitoring are only usable if their modules are
 present.
 
-[[sthref2407]]
-
 === See Also
 
 link:monitor.html#monitor-1[`monitor`(1)],
@@ -66,7 +62,7 @@ link:set.html#set-1[`set`(1)]
 
 link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
 

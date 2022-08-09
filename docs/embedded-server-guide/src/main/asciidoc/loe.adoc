@@ -10,34 +10,21 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:embedded-server-guide.html#gikmz[1-1 Creating an Embedded
-{productName}]
-* link:embedded-server-guide.html#gksjo[1-2 Creating an Embedded
-{productName} with configuration customizations]
-* link:embedded-server-guide.html#gjkxc[1-3 Setting the port of an
-Embedded {productName}]
-* link:embedded-server-guide.html#gilry[1-4 Starting an Embedded
-{productName}]
-* link:embedded-server-guide.html#gilnz[1-5 Stopping an Embedded
-{productName}]
-* link:embedded-server-guide.html#gioph[1-6 Deploying an Application From
-an Archive File]
-* link:embedded-server-guide.html#gilwu[1-7 Undeploying an Application]
-* link:embedded-server-guide.html#gjrfq[1-8 Deploying an Application From
-a Scattered Archive]
-* link:embedded-server-guide.html#gkvga[1-9 Deploying an Application From
-a Scattered Enterprise Archive]
-* link:embedded-server-guide.html#gjldj[1-10 Running an asadmin
-create-jdbc-resource Command]
-* link:embedded-server-guide.html#gjlfm[1-11 Running an asadmin
-set-log-level Command]
-* link:embedded-server-guide.html#gionq[1-12 Using an Existing domain.xml
-File and Deploying an Application From an Archive File]
-* link:embedded-server-guide.html#gjkod[1-13 POM File for Configuring
-Maven to Use Embedded {productName}]
-* link:embedded-server-guide.html#gjxds[1-14 Maven POM File for Using the
-EJB 3.1 Embeddable API with Embedded {productName}]
-* link:embedded-server-guide.html#gkrhh[1-15 Using the {productName}
-Embedded Server API]
-* link:embedded-server-guide.html#gkrgw[1-16 Creating a Custom Logging
-Configuration File]
+* xref:embedded-server-guide.adoc#gikmz[1-1 Creating an Embedded {productName}]
+* xref:embedded-server-guide.adoc#gksjo[1-2 Creating an Embedded {productName} with configuration customizations]
+* xref:embedded-server-guide.adoc#gjkxc[1-3 Setting the port of an Embedded {productName}]
+* xref:embedded-server-guide.adoc#gilry[1-4 Starting an Embedded {productName}]
+* xref:embedded-server-guide.adoc#gilnz[1-5 Stopping an Embedded {productName}]
+* xref:embedded-server-guide.adoc#gioph[1-6 Deploying an Application From an Archive File]
+* xref:embedded-server-guide.adoc#gilwu[1-7 Undeploying an Application]
+* xref:embedded-server-guide.adoc#gjrfq[1-8 Deploying an Application From a Scattered Archive]
+* xref:embedded-server-guide.adoc#gkvga[1-9 Deploying an Application From a Scattered Enterprise Archive]
+* xref:embedded-server-guide.adoc#gjldj[1-10 Running an asadmin create-jdbc-resource Command]
+* xref:embedded-server-guide.adoc#gjlfm[1-11 Running an asadmin set-log-level Command]
+* xref:embedded-server-guide.adoc#gionq[1-12 Using an Existing domain.xml File and Deploying an Application
+From an Archive File]
+* xref:embedded-server-guide.adoc#gjkod[1-13 POM File for Configuring Maven to Use Embedded {productName}]
+* xref:embedded-server-guide.adoc#gjxds[1-14 Maven POM File for Using the EJB 3.1 Embeddable API
+with Embedded {productName}]
+* xref:embedded-server-guide.adoc#gkrhh[1-15 Using the {productName} Embedded Server API]
+* xref:embedded-server-guide.adoc#gkrgw[1-16 Creating a Custom Logging Configuration File]

@@ -13,8 +13,6 @@ prev=delete-custom-resource.html
 
 Deletes a domain
 
-[[sthref674]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-domain [--help]
 [--domaindir domaindir] domain-name
 ----
 
-[[sthref675]]
-
 === Description
 
 The `delete-domain` subcommand deletes the specified domain. The domain
@@ -32,13 +28,11 @@ must already exist and must be stopped.
 
 This subcommand is supported in local mode only.
 
-[[sthref676]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -48,14 +42,10 @@ asadmin-options::
   domain under the domain root directory, which defaults to
   as-install``/domains``, is deleted.
 
-[[sthref677]]
-
 === Operands
 
 domain-name::
   The unique name of the domain you want to delete.
-
-[[sthref678]]
 
 === Examples
 
@@ -87,8 +77,6 @@ Domain sampleDomain deleted
 Command delete-domain executed successfully.
 ----
 
-[[sthref681]]
-
 === Exit Status
 
 0::
@@ -96,11 +84,9 @@ Command delete-domain executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref682]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-domain.html#create-domain-1[`create-domain`(1)],
 link:list-domains.html#list-domains-1[`list-domains`(1)],

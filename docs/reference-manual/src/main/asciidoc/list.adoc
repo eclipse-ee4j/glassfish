@@ -13,8 +13,6 @@ prev=jms-ping.html
 
 Lists configurable or monitorable elements
 
-[[sthref1282]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list [--help]
 [--monitor={false|true}]
 [dotted-parent-attribute-name]
 ----
-
-[[sthref1283]]
 
 === Description
 
@@ -75,13 +71,11 @@ provided matching pattern.
 For detailed information about dotted names, see the
 link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
 
-[[sthref1284]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -91,14 +85,10 @@ asadmin-options::
   are returned. If set to true, the monitorable attribute values are
   returned.
 
-[[sthref1285]]
-
 === Operands
 
 dotted-parent-element-name::
   Configurable or monitorable element name
-
-[[sthref1286]]
 
 === Examples
 
@@ -207,8 +197,6 @@ server.transaction-service
 Command list executed successfully.
 ----
 
-[[sthref1290]]
-
 === Exit Status
 
 0::
@@ -216,11 +204,9 @@ Command list executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1291]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:get.html#get-1[`get`(1)], link:set.html#set-1[`set`(1)]
 

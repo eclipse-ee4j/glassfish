@@ -13,8 +13,6 @@ prev=delete-connector-security-map.html
 
 Deletes a work security map for the specified resource adapter
 
-[[sthref650]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-connector-work-security-map [--help]
 --raname raname
 mapname
 ----
-
-[[sthref651]]
 
 === Description
 
@@ -39,13 +35,11 @@ database system, or an application.
 
 This subcommand is supported in remote mode only.
 
-[[sthref652]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -53,14 +47,10 @@ asadmin-options::
   Indicates the connector module name with which the work security map
   is associated.
 
-[[sthref653]]
-
 === Operands
 
 mapname::
   The name of the work security map to be deleted.
-
-[[sthref654]]
 
 === Examples
 
@@ -78,8 +68,6 @@ asadmin delete-connector-work-security-map
 Command delete-connector-work-security-map executed successfully.
 ----
 
-[[sthref656]]
-
 === Exit Status
 
 0::
@@ -87,11 +75,9 @@ Command delete-connector-work-security-map executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref657]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-connector-work-security-map.html#create-connector-work-security-map-1[`create-connector-work-security-map`(1)],
 link:list-connector-work-security-maps.html#list-connector-work-security-maps-1[`list-connector-work-security-maps`(1)],

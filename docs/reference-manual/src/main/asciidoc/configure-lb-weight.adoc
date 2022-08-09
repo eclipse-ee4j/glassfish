@@ -13,8 +13,6 @@ prev=configure-jms-cluster.html
 
 Sets load balancing weights for clustered instances
 
-[[sthref85]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] configure-lb-weight [--help]
 --cluster cluster_name
 instance-name=weight[:instance-name=weight]
 ----
-
-[[sthref86]]
 
 === Description
 
@@ -49,21 +45,16 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-
-[[sthref87]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--cluster`::
   The name of the cluster.
-
-[[sthref88]]
 
 === Operands
 
@@ -73,8 +64,6 @@ instance-name=weight::
   separated by colons. For example `instance1=1:instance2=4` means that
   for every five requests, one goes to instance1 and four go to
   instance2. A weight of 1 is the default.
-
-[[sthref89]]
 
 === Examples
 
@@ -91,8 +80,6 @@ asadmin> configure-lb-weight --cluster cluster1 i1=1:i2=1:i3=2
 Command configure-lb-weight executed successfully.
 ----
 
-[[sthref91]]
-
 === Exit Status
 
 0::
@@ -100,11 +87,9 @@ Command configure-lb-weight executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref92]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)]link:create-cluster.html#create-cluster-1[`create-cluster`(1)]
 

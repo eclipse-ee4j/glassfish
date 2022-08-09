@@ -13,8 +13,6 @@ prev=ping-node-dcom.html
 
 Tests if a node that is enabled for communication over SSH is usable
 
-[[sthref1943]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Tests if a node that is enabled for communication over SSH is usable
 asadmin [asadmin-options] ping-node-ssh [--help]
 [--validate={false|true}] node-name
 ----
-
-[[sthref1944]]
 
 === Description
 
@@ -39,7 +35,7 @@ subcommand could connect to the node through SSH. This confirmation
 includes the name of the host that the node represents.
 
 Optionally, the subcommand can also validate the node to determine if
-the link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility can run on the
+the xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility can run on the
 host that the node represents. To validate a node, the subcommand runs
 the link:version.html#version-1[`version`(1)] subcommand. If the node is
 valid, the subcommand displays the version that the `version` subcommand
@@ -61,13 +57,11 @@ subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1945]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -80,15 +74,11 @@ asadmin-options::
   `false`;;
     The node is not validated (default).
 
-[[sthref1946]]
-
 === Operands
 
 node-name::
   The name of the node to test. The node must be enabled for
   communication over SSH. Otherwise, an error occurs.
-
-[[sthref1947]]
 
 === Examples
 
@@ -122,8 +112,6 @@ Command version executed successfully.
 Command ping-node-ssh executed successfully.
 ----
 
-[[sthref1950]]
-
 === Exit Status
 
 0::
@@ -131,11 +119,9 @@ Command ping-node-ssh executed successfully.
 1::
   error in executing the command
 
-[[sthref1951]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
 link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)],

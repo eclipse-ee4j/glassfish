@@ -13,8 +13,6 @@ prev=list-password-aliases.html
 
 Lists registered persistence types for HTTP sessions and SFSB instances
 
-[[sthref1743]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists registered persistence types for HTTP sessions and SFSB instances
 asadmin [asadmin-options] list-persistence-types [--help]
 --type={web|ejb}
 ----
-
-[[sthref1744]]
 
 === Description
 
@@ -64,13 +60,11 @@ c1-config.availability-service.ejb-container-availability.sfsb-ha-persistence-ty
 
 This subcommand is supported in remote mode only.
 
-[[sthref1745]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -80,8 +74,6 @@ asadmin-options::
 
   * `web` — Lists persistence types for HTTP sessions.
   * `ejb` — Lists persistence types for SFSB instances.
-
-[[sthref1746]]
 
 === Examples
 
@@ -101,8 +93,6 @@ replicated
 Command list-persistence-types executed successfully.
 ----
 
-[[sthref1748]]
-
 === Exit Status
 
 0::
@@ -110,11 +100,9 @@ Command list-persistence-types executed successfully.
 1::
   error in executing the command
 
-[[sthref1749]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)],
 link:set.html#set-1[`set`(1)]

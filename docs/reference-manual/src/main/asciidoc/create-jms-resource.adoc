@@ -13,8 +13,6 @@ prev=create-jms-host.html
 
 Creates a JMS resource
 
-[[sthref352]]
-
 === Synopsis
 
 [source]
@@ -29,8 +27,6 @@ asadmin [asadmin-options] create-jms-resource [--help]
 jndi_name
 ----
 
-[[sthref353]]
-
 === Description
 
 The `create-jms-resource` subcommand creates a Java Message Service
@@ -39,13 +35,11 @@ The `create-jms-resource` subcommand creates a Java Message Service
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref354]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -161,14 +155,10 @@ Additionally, you can specify `connector-connection-pool` attributes
   Specifies whether the subcommand overwrites the existing JMS resource
   of the same name. The default value is `false`.
 
-[[sthref355]]
-
 === Operands
 
 jndi_name::
   The JNDI name of the JMS resource to be created.
-
-[[sthref356]]
 
 === Examples
 
@@ -209,8 +199,6 @@ Administered object jms/MyQueue created.
 Command create-jms-resource executed successfully.
 ----
 
-[[sthref359]]
-
 === Exit Status
 
 0::
@@ -218,11 +206,9 @@ Command create-jms-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref360]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-jms-resource.html#delete-jms-resource-1[`delete-jms-resource`(1)],
 link:list-jms-resources.html#list-jms-resources-1[`list-jms-resources`(1)]

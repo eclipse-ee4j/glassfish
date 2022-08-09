@@ -13,8 +13,6 @@ prev=list-file-groups.html
 
 Lists the file users
 
-[[sthref1476]]
-
 === Synopsis
 
 [source]
@@ -23,14 +21,10 @@ asadmin [asadmin-options] list-file-users [--help]
 [--authrealmname auth_realm_name] [target]
 ----
 
-[[sthref1477]]
-
 === Description
 
 The `list-file-users` subcommand displays a list of file users supported
 by file realm authentication.
-
-[[sthref1478]]
 
 === Options
 
@@ -39,8 +33,6 @@ by file realm authentication.
   Displays the help text for the subcommand.
 `--authrealmname`::
   Lists only the users in the specified authentication realm.
-
-[[sthref1479]]
 
 === Operands
 
@@ -58,8 +50,6 @@ target::
     cluster.
   instance_name;;
     Lists the file users on a specified server instance.
-
-[[sthref1480]]
 
 === Examples
 
@@ -79,8 +69,6 @@ sample_user12
 Command list-file-users executed successfully
 ----
 
-[[sthref1482]]
-
 === Exit Status
 
 0::
@@ -88,11 +76,9 @@ Command list-file-users executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1483]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
 link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],

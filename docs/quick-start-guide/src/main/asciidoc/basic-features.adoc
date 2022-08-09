@@ -25,15 +25,15 @@ platform) applications and web technologies based on Java technology.
 
 The following topics are addressed here:
 
-* link:#ghgpe[About This Quick Start Guide]
-* link:#ghpfg[Default Paths and File Names]
-* link:#gixue[Default Administration Values]
-* link:#gglog[Starting and Stopping the Default Domain]
-* link:#gglmh[Starting and Stopping the Database Server]
-* link:#ggllq[Starting the Administration Console]
-* link:#geyvr[Deploying and Undeploying Applications]
-* link:#gktqx[High Availability Clustering and Load Balancing]
-* link:#ggkzh[For More Information]
+* xref:#ghgpe[About This Quick Start Guide]
+* xref:#default-paths-and-file-names[Default Paths and File Names]
+* xref:#gixue[Default Administration Values]
+* xref:#gglog[Starting and Stopping the Default Domain]
+* xref:#gglmh[Starting and Stopping the Database Server]
+* xref:#ggllq[Starting the Administration Console]
+* xref:#geyvr[Deploying and Undeploying Applications]
+* xref:#gktqx[High Availability Clustering and Load Balancing]
+* xref:#ggkzh[For More Information]
 
 [[ghgpe]][[GSQSG00030]][[about-this-quick-start-guide]]
 
@@ -60,7 +60,7 @@ For example:
 
 This guide provides basic information only. For comprehensive
 information about {productName} and other entities mentioned in this
-guide, see link:#ggkzh[For More Information].
+guide, see xref:#ggkzh[For More Information].
 
 To review additional details about this release before you begin using
 the software, see the link:release-notes.html#GSRLN[{productName}
@@ -69,14 +69,12 @@ the {productName} 7 release, including details about new features,
 information about known issues and possible workarounds, and tips for
 installing and working with {productName} 7 software.
 
-[[ghpfg]][[GSQSG00031]][[default-paths-and-file-names]]
+[[default-paths-and-file-names]]
 
 === Default Paths and File Names
 
 The following table describes the default paths and file names that are
 used in this book.
-
-[[sthref3]][[sthref4]]
 
 Table 1-1 Default Paths and File Names
 
@@ -124,10 +122,11 @@ SystemDrive``:\glassfish7``
 
 === Default Administration Values
 
-The following table lists default administration values for {productName}. See link:#ghpfg[Default Paths and File Names] for more
+The following table lists default administration values for {productName}.
+See xref:#default-paths-and-file-names[Default Paths and File Names] for more
 information about the as-install and domain-dir placeholders.
 
-[[sthref5]][[gixxy]]
+[[gixxy]]
 
 Table 1-2 Default Administration Values
 
@@ -172,13 +171,11 @@ When you install {productName}, a default domain named `domain1` is
 created. The following procedures describe how to start and stop
 `domain1` when it is the only domain. For information about starting and
 stopping a domain when there are multiple domains, see
-"link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
 [[ggmpd]][[GSQSG00005]][[to-start-the-default-domain]]
 
 ==== To Start the Default Domain
-
-[[sthref6]]
 
 Before You Begin
 
@@ -242,8 +239,6 @@ Connectivity]" in {productName} Administration Guide.
 
 ==== To Start the Apache Derby Server
 
-[[sthref7]]
-
 Before You Begin
 
 At least one {productName} domain must be started before you start
@@ -287,8 +282,6 @@ for configuring, administering, and monitoring {productName}.
 
 ==== To Start the Administration Console
 
-[[sthref8]]
-
 Before You Begin
 
 At least one {productName} domain must be started.
@@ -307,8 +300,6 @@ http://localhost:4848
 You will be prompted to log in if you chose to require an administration
 password at the time {productName} was installed.
 
-[[sthref9]]
-
 See Also
 
 For more information, see the Administration Console online help.
@@ -324,10 +315,10 @@ This section explains how to deploy, list, and undeploy applications.
 The procedures in this section use the `hello.war` sample application.
 The following topics are addressed here:
 
-* link:#ghgis[To Obtain the Sample Application]
-* link:#gkpao[Deploying and Undeploying the Sample Application From the Command Line]
-* link:#gkpau[Deploying and Undeploying Applications by Using the Administration Console]
-* link:#gkpaa[Deploying and Undeploying the Sample Application Automatically]
+* xref:#ghgis[To Obtain the Sample Application]
+* xref:#gkpao[Deploying and Undeploying the Sample Application From the Command Line]
+* xref:#gkpau[Deploying and Undeploying Applications by Using the Administration Console]
+* xref:#gkpaa[Deploying and Undeploying the Sample Application Automatically]
 
 [[ghgis]][[GSQSG00010]][[to-obtain-the-sample-application]]
 
@@ -347,20 +338,18 @@ This directory is referred to as sample-dir.
 {productName} provides `asadmin` subcommands for performing the
 following deployment-related tasks:
 
-* link:#ggndq[To Deploy the Sample Application From the Command Line]
-* link:#ggnco[To List Deployed Applications From the Command Line]
-* link:#ggnbm[To Undeploy the Sample Application From the Command Line]
+* xref:#ggndq[To Deploy the Sample Application From the Command Line]
+* xref:#ggnco[To List Deployed Applications From the Command Line]
+* xref:#ggnbm[To Undeploy the Sample Application From the Command Line]
 
 [[ggndq]][[GSQSG00011]][[to-deploy-the-sample-application-from-the-command-line]]
 
 ===== To Deploy the Sample Application From the Command Line
 
-[[sthref10]]
-
 Before You Begin
 
 The sample application must be available before you start this task. To
-download the sample, see link:#ghgis[To Obtain the Sample Application].
+download the sample, see xref:#ghgis[To Obtain the Sample Application].
 At least one {productName} domain must be started before you deploy
 the sample application.
 
@@ -398,8 +387,6 @@ Hi, my name is Duke. What's yours?
 +
 The application displays a customized response, giving you a personal
 `Hello`.
-
-[[sthref11]]
 
 See Also
 
@@ -443,8 +430,6 @@ For the `hello.war` example, the command is as follows:
 as-install/bin/asadmin undeploy hello
 ----
 
-[[sthref12]]
-
 See Also
 
 For more information about the `undeploy` subcommand, see
@@ -457,20 +442,18 @@ link:reference-manual/undeploy.html#GSRFM00244[`undeploy`(1)].
 The graphical Administration Console of {productName} enables you to
 perform the following deployment-related tasks:
 
-* link:#ggnbn[To Deploy the Sample Application by Using the Administration Console]
-* link:#ggncd[To View Deployed Applications in the Administration Console]
-* link:#ggneh[To Undeploy the Sample Application by Using the Administration Console]
+* xref:#ggnbn[To Deploy the Sample Application by Using the Administration Console]
+* xref:#ggncd[To View Deployed Applications in the Administration Console]
+* xref:#ggneh[To Undeploy the Sample Application by Using the Administration Console]
 
 [[ggnbn]][[GSQSG00014]][[to-deploy-the-sample-application-by-using-the-administration-console]]
 
 ===== To Deploy the Sample Application by Using the Administration Console
 
-[[sthref13]]
-
 Before You Begin
 
 The sample application must be available before you start this task.
-To download the sample, see link:#ghgis[To Obtain the Sample Application].
+To download the sample, see xref:#ghgis[To Obtain the Sample Application].
 At least one {productName} domain must be started before you deploy
 the sample application.
 
@@ -515,8 +498,6 @@ The default URL for the application is as follows:
 http://localhost:8080/hello/
 ----
 
-[[sthref14]]
-
 See Also
 
 For more information, see the Administration Console online help.
@@ -559,8 +540,6 @@ The Applications page is displayed.
 * To remove the application, click the Undeploy button.
 * To disable the application, click the Disable button.
 
-[[sthref15]]
-
 See Also
 
 For more information, see the Administration Console online help.
@@ -572,8 +551,8 @@ For more information, see the Administration Console online help.
 {productName} enables you to performing the following
 deployment-related tasks automatically:
 
-* link:#geyvj[To Deploy the Sample Application Automatically]
-* link:#ggncw[To Undeploy the Sample Application Automatically]
+* xref:#geyvj[To Deploy the Sample Application Automatically]
+* xref:#ggncw[To Undeploy the Sample Application Automatically]
 
 [[geyvj]][[GSQSG00017]][[to-deploy-the-sample-application-automatically]]
 
@@ -590,12 +569,10 @@ domain-root-dir, which is as-install``/domains``:
 as-install/domains/domain1/autodeploy
 ----
 
-[[sthref16]]
-
 Before You Begin
 
 The sample application must be available before you start this task. To
-download the sample, see link:#ghgis[To Obtain the Sample Application].
+download the sample, see xref:#ghgis[To Obtain the Sample Application].
 
 Copy the application WAR file to the domain-dir``/autodeploy`` directory.
 
@@ -736,9 +713,9 @@ Additional resources are available to help you learn more about
 
 The following resources are described here:
 
-* link:#ghhir[Product Documentation]
-* link:#giyjo[Tutorials]
-* link:#gintm[Jakarta EE Examples]
+* xref:#ghhir[Product Documentation]
+* xref:#giyjo[Tutorials]
+* xref:#gintm[Jakarta EE Examples]
 
 [[ghhir]][[GSQSG00050]][[product-documentation]]
 

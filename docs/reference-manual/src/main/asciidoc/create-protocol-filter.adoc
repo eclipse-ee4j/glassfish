@@ -13,8 +13,6 @@ prev=create-protocol.html
 
 Adds a new protocol filter
 
-[[sthref497]]
-
 === Synopsis
 
 [source]
@@ -26,20 +24,16 @@ asadmin [asadmin-options] create-protocol-filter [--help]
 protocol-filter-name
 ----
 
-[[sthref498]]
-
 === Description
 
 The `create-protocol-filter` subcommand creates a protocol filter for a
 protocol. This subcommand is supported in remote mode only.
 
-[[sthref499]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -64,14 +58,10 @@ asadmin-options::
     Creates the protocol filter on the specified standalone server
     instance.
 
-[[sthref500]]
-
 === Operands
 
 protocol-filter-name::
   The name of the protocol filter.
-
-[[sthref501]]
 
 === Examples
 
@@ -88,8 +78,6 @@ asadmin> create-protocol-filter --protocol http1
 Command create-protocol-filter executed successfully.
 ----
 
-[[sthref503]]
-
 === Exit Status
 
 0::
@@ -97,11 +85,9 @@ Command create-protocol-filter executed successfully.
 1::
   error in executing the command
 
-[[sthref504]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-protocol.html#create-protocol-1[`create-protocol`(1)],
 link:delete-protocol-filter.html#delete-protocol-filter-1[`delete-protocol-filter`(1)],

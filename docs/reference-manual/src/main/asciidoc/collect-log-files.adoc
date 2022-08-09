@@ -13,8 +13,6 @@ prev=change-master-password.html
 
 Creates a ZIP archive of all available log files
 
-[[sthref69]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] collect-log-files [--help]
 [--target target]
 [--retrieve={false|true}] [retrievefilepath]]
 ----
-
-[[sthref70]]
 
 === Description
 
@@ -36,13 +32,11 @@ the log file for the DAS.
 
 This subcommand is supported in remote mode only.
 
-[[sthref71]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -78,8 +72,6 @@ Possible values are as follows:
   cluster-name;;
     The log files will be collected for the specified cluster and the DAS.
 
-[[sthref72]]
-
 === Operands
 
 retrievefilepath::
@@ -88,7 +80,7 @@ retrievefilepath::
   default directory. If the `--retrieve` option is `false`, this operand
   is ignored.
 
-[[sthref73]]
+[[administering-concurrent-resources]]
 
 === Examples
 
@@ -142,8 +134,6 @@ Created Zip file under /space/output/log_2010-12-15_15-55-54.zip.
 Command collect-log-files executed successfully.
 ----
 
-[[sthref77]]
-
 === Exit Status
 
 0::
@@ -151,11 +141,9 @@ Command collect-log-files executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref78]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)],
 link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],

@@ -19,11 +19,11 @@ and storage requirements accordingly.
 
 The following topics are addressed here:
 
-* link:#abfcc[Establishing Performance Goals]
-* link:#abfcp[Planning the Network Configuration]
-* link:#abfcy[Planning for Availability]
-* link:#abfdg[Design Decisions]
-* link:#abfdn[Planning Message Queue Broker Deployment]
+* xref:#abfcc[Establishing Performance Goals]
+* xref:#abfcp[Planning the Network Configuration]
+* xref:#abfcy[Planning for Availability]
+* xref:#abfdg[Design Decisions]
+* xref:#abfdn[Planning Message Queue Broker Deployment]
 
 [[abfcc]][[GSPLG00019]][[establishing-performance-goals]]
 
@@ -55,10 +55,10 @@ fine-tune the performance of {productName} and your applications.
 
 The following topics are addressed here:
 
-* link:#abfcd[Estimating Throughput]
-* link:#abfce[Estimating Load on {productName} Instances]
-* link:#abfcq[Estimating Bandwidth Requirements]
-* link:#abfct[Estimating Peak Load]
+* xref:#abfcd[Estimating Throughput]
+* xref:#abfce[Estimating Load on {productName} Instances]
+* xref:#abfcq[Estimating Bandwidth Requirements]
+* xref:#abfct[Estimating Peak Load]
 
 [[abfcd]][[GSPLG00054]][[estimating-throughput]]
 
@@ -89,10 +89,10 @@ instances.
 
 The following topics are addressed here:
 
-* link:#abfcf[Maximum Number of Concurrent Users]
-* link:#abfcg[Think Time]
-* link:#abfch[Average Response Time]
-* link:#abfcj[Requests Per Minute]
+* xref:#abfcf[Maximum Number of Concurrent Users]
+* xref:#abfcg[Think Time]
+* xref:#abfch[Average Response Time]
+* xref:#abfcj[Requests Per Minute]
 
 [[abfcf]][[GSPLG00025]][[maximum-number-of-concurrent-users]]
 
@@ -267,12 +267,12 @@ that it can meet users' performance requirements.
 
 The following topics are addressed here:
 
-* link:#gkvdm[Setting Up Traffic Separation]
-* link:#abfcq[Estimating Bandwidth Requirements]
-* link:#abfcr[Calculating Bandwidth Required]
-* link:#abfct[Estimating Peak Load]
-* link:#abfcw[Choosing Network Cards]
-* link:#abfdc[Identifying Failure Classes]
+* xref:#gkvdm[Setting Up Traffic Separation]
+* xref:#abfcq[Estimating Bandwidth Requirements]
+* xref:#abfcr[Calculating Bandwidth Required]
+* xref:#abfct[Estimating Peak Load]
+* xref:#abfcw[Choosing Network Cards]
+* xref:#abfdc[Identifying Failure Classes]
 
 [[gkvdm]][[GSPLG00056]][[setting-up-traffic-separation]]
 
@@ -292,11 +292,11 @@ see "link:ha-administration-guide/clusters.html#GSHAG00266[Using the Multi-Homin
 {productName} High Availability Administration
 Guide.
 
-To plan for traffic on both networks, see link:#abfcq[Estimating
+To plan for traffic on both networks, see xref:#abfcq[Estimating
 Bandwidth Requirements]. For external networks, follow the guidelines in
-link:#abfcr[Calculating Bandwidth Required] and link:#abfct[Estimating
+xref:#abfcr[Calculating Bandwidth Required] and xref:#abfct[Estimating
 Peak Load]. To size the interfaces for internal networks, see
-link:#abfcw[Choosing Network Cards].
+xref:#abfcw[Choosing Network Cards].
 
 [[abfcq]][[GSPLG00057]][[estimating-bandwidth-requirements]]
 
@@ -327,7 +327,7 @@ access.
 
 ==== Calculating Bandwidth Required
 
-Based on the calculations made in link:#abfcc[Establishing Performance
+Based on the calculations made in xref:#abfcc[Establishing Performance
 Goals], determine the additional bandwidth required for deploying
 {productName} at your site.
 
@@ -400,9 +400,9 @@ servers hosting {productName}.
 
 The following topics are addressed here:
 
-* link:#abfcz[Rightsizing Availability]
-* link:#abfda[Using Clusters to Improve Availability]
-* link:#abfdb[Adding Redundancy to the System]
+* xref:#abfcz[Rightsizing Availability]
+* xref:#abfda[Using Clusters to Improve Availability]
+* xref:#abfdb[Adding Redundancy to the System]
 
 [[abfcz]][[GSPLG00061]][[rightsizing-availability]]
 
@@ -513,9 +513,9 @@ sizes, and the size of the administration thread pool.
 
 The following topics are addressed here:
 
-* link:#abfdh[Designing for Peak or Steady State Load]
-* link:#abfdi[System Sizing]
-* link:#gkvcu[Sizing the Administration Thread Pool]
+* xref:#abfdh[Designing for Peak or Steady State Load]
+* xref:#abfdi[System Sizing]
+* xref:#gkvcu[Sizing the Administration Thread Pool]
 
 [[abfdh]][[GSPLG00064]][[designing-for-peak-or-steady-state-load]]
 
@@ -553,7 +553,7 @@ resources to the system.
 Based on the load on the {productName} instances and failover
 requirements, you can determine the number of applications server
 instances (hosts) needed. Evaluate your environment on the basis of the
-factors explained in link:#abfce[Estimating Load on {productName}
+factors explained in xref:#abfce[Estimating Load on {productName}
 Instances] to each {productName} instance, although each instance can
 use more than one Central Processing Unit (CPU).
 
@@ -605,9 +605,9 @@ traffic fault-tolerant and highly available.
 
 The following topics are addressed here:
 
-* link:#abfdo[Multi-Broker Clusters]
-* link:#abfdq[Configuring {productName} to Use Message Queue Brokers]
-* link:#abfdx[Example Deployment Scenarios]
+* xref:#abfdo[Multi-Broker Clusters]
+* xref:#abfdq[Configuring {productName} to Use Message Queue Brokers]
+* xref:#abfdx[Example Deployment Scenarios]
 
 [[abfdo]][[GSPLG00067]][[multi-broker-clusters]]
 

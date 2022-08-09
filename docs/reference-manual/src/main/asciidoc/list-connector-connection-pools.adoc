@@ -13,16 +13,12 @@ prev=list-configs.html
 
 Lists the existing connector connection pools
 
-[[sthref1407]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] list-connector-connection-pools [--help]
 ----
-
-[[sthref1408]]
 
 === Description
 
@@ -31,18 +27,14 @@ connection pools that have been created.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1409]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1410]]
 
 === Examples
 
@@ -59,8 +51,6 @@ jms/qConnPool
 Command list-connector-connection-pools executed successfully
 ----
 
-[[sthref1412]]
-
 === Exit Status
 
 0::
@@ -68,11 +58,9 @@ Command list-connector-connection-pools executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1413]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-connector-connection-pool.html#create-connector-connection-pool-1[`create-connector-connection-pool`(1)],
 link:delete-connector-connection-pool.html#delete-connector-connection-pool-1[`delete-connector-connection-pool`(1)],

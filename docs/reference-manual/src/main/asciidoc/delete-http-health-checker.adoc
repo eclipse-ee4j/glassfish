@@ -13,8 +13,6 @@ prev=delete-http.html
 
 Deletes the health-checker for a specified load balancer configuration
 
-[[sthref699]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-http-health-checker [--help]
 [--config config_name]
  target
 ----
-
-[[sthref700]]
 
 === Description
 
@@ -38,21 +34,17 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref701]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--config`::
   The load balancer configuration from which you delete the
   health-checker.
-
-[[sthref702]]
 
 === Operands
 
@@ -62,8 +54,6 @@ target::
 
   * cluster_name - The name of a target cluster.
   * instance_name - The name of a target server instance.
-
-[[sthref703]]
 
 === Examples
 
@@ -82,8 +72,6 @@ asadmin> delete-http-health-checker --user admin
 Command delete-http-health-checker executed successfully.
 ----
 
-[[sthref705]]
-
 === Exit Status
 
 0::
@@ -91,11 +79,9 @@ Command delete-http-health-checker executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref706]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-health-checker.html#create-http-health-checker-1[`create-http-health-checker`(1)]
 

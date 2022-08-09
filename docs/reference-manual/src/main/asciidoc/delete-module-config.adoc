@@ -13,8 +13,6 @@ prev=delete-message-security-provider.html
 
 Removes the configuration of a module from `domain.xml`
 
-[[sthref882]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] delete-module-config [--help]
 service_name
 ----
 
-[[sthref883]]
-
 === Description
 
 The `delete-module-config` subcommand removes the configuration of a
@@ -34,13 +30,11 @@ configuration included in the module.
 
 This subcommand is supported in remote mode only.
 
-[[sthref884]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -59,14 +53,10 @@ asadmin-options::
   instance-name;;
     Deletes the configuration from the specified instance.
 
-[[sthref885]]
-
 === Operands
 
 service_name::
   The name of the module for which configuration is to be removed.
-
-[[sthref886]]
 
 === Examples
 
@@ -83,8 +73,6 @@ asadmin> delete-module-config web-container
 Command delete-module-config executed successfully.
 ----
 
-[[sthref888]]
-
 === Exit Status
 
 0::
@@ -92,11 +80,9 @@ Command delete-module-config executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref889]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-module-config.html#create-module-config-1[`create-module-config`(1)],
 link:get-active-module-config.html#get-active-module-config-1[`get-active-module-config`(1)]

@@ -10,13 +10,11 @@ prev=appclient.html
 The script content on this page is for navigation purposes only and does
 not alter the content in any way.
 
-[[asadmin-1m]][[GSRFM00263]][[asadmin]]
+[[asadmin]]
 
 == asadmin
 
 Utility for performing administrative tasks for {productName}
-
-[[sthref2364]]
 
 === Synopsis
 
@@ -34,8 +32,6 @@ asadmin [--host host]
 [--help]
 [subcommand [options] [operands]]
 ----
-
-[[sthref2365]]
 
 === Description
 
@@ -201,8 +197,7 @@ character is required if the colon is part of any of the following items:
 
 ** A property
 
-** An option of the Virtual Machine for the Java platform (Java Virtual
-Machine or JVM machine)link:#sthref2366[^Foot 1 ^]
+** An option of the Virtual Machine for the Java platform (Java Virtual Machine or JVM machine)
 +
 For example, the operand of the subcommand
 link:create-jvm-options.html#create-jvm-options-1[`create-jvm-options`(1)]
@@ -290,8 +285,6 @@ information for the `asadmin` utility is displayed.
 
 To obtain a listing of available `asadmin` subcommands, use the
 link:list-commands.html#list-commands-1[`list-commands`(1)] subcommand.
-
-[[sthref2367]]
 
 === Options
 
@@ -458,8 +451,6 @@ The default value for `AS_ADMIN_MASTERPASSWORD` is `changeit`.
 `--help`::
 `-?`::
   Displays the help text for the `asadmin` utility.
-
-[[sthref2368]]
 
 === Examples
 
@@ -796,8 +787,6 @@ for descriptions of the following attributes:
 |Interface Stability |Unstable
 |===
 
-
-[[sthref2380]]
 
 === See Also
 

@@ -14,8 +14,6 @@ prev=create-lifecycle-module.html
 Creates a {productName} instance on the host where the subcommand is
 run
 
-[[sthref388]]
-
 === Synopsis
 
 [source]
@@ -31,8 +29,6 @@ asadmin [asadmin-options] create-local-instance [--help]
 instance-name
 ----
 
-[[sthref389]]
-
 === Description
 
 The `create-local-instance` subcommand creates a {productName}
@@ -47,7 +43,7 @@ host where the DAS is running. If a nondefault port is used for
 administration, this subcommand also requires the port number. If you
 are adding the first instance to a node, you must provide this
 information through the `--host` option and the `--port` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility. For the second and
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility. For the second and
 later instances, this information is obtained from the DAS properties of
 the node.
 
@@ -131,13 +127,11 @@ required for secure synchronization with the domain administration
 server (DAS). The instance is synchronized with the DAS when the
 instance is started
 
-[[sthref390]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -230,7 +224,7 @@ When the `--portbase` option is specified, the output of this
   `AS_ADMIN_MASTERPASSWORD` entry in the password file or prompts for
   the master password. The password file is specified in the
   `--passwordfile` option of the
-  link:asadmin.html#asadmin-1m[`asadmin`(1M)]utility. +
+  xref:asadmin.adoc#asadmin[`asadmin`(1M)]utility. +
   If the `--savemasterpassword` option is `true`, this option is also
   true, regardless of the value that is specified on the command line. +
   The master password must be the same for all instances in a domain.
@@ -294,8 +288,6 @@ When the `--portbase` option is specified, the output of this
     creating sockets that listen on ports 1-1024 requires superuser
     privileges.
 
-[[sthref391]]
-
 === Operands
 
 instance-name::
@@ -316,8 +308,6 @@ instance-name::
   or a node.
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
-
-[[sthref392]]
 
 === Examples
 
@@ -378,8 +368,6 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-local-instance executed successfully.
 ----
 
-[[sthref395]]
-
 === Exit Status
 
 0::
@@ -387,11 +375,9 @@ Command create-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref396]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],

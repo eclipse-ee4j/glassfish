@@ -13,8 +13,6 @@ prev=copy-config.html
 
 Adds the administered object with the specified JNDI name for a resource adapter
 
-[[sthref115]]
-
 === Synopsis
 
 [source]
@@ -30,8 +28,6 @@ asadmin [asadmin-options] create-admin-object [--help]
 jndi_name
 ----
 
-[[sthref116]]
-
 === Description
 
 The `create-admin-object` subcommand creates the administered object
@@ -39,13 +35,11 @@ with the specified JNDI name and the interface definition for a resource adapter
 
 This subcommand is supported in remote mode only.
 
-[[sthref117]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -95,14 +89,10 @@ multiple targets if needed.
   link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)]
   for JMS destination resources.
 
-[[sthref118]]
-
 === Operands
 
 jndi_name::
   JNDI name of the administered object to be created.
-
-[[sthref119]]
 
 === Examples
 
@@ -121,8 +111,6 @@ asadmin> create-admin-object --restype jakarta.jms.Queue
 Command create-admin-object executed successfully
 ----
 
-[[sthref121]]
-
 === Exit Status
 
 0::
@@ -130,11 +118,9 @@ Command create-admin-object executed successfully
 1::
   error in executing the subcommand
 
-[[sthref122]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
 link:delete-admin-object.html#delete-admin-object-1[`delete-admin-object`(1)],

@@ -13,8 +13,6 @@ prev=delete-domain.html
 
 Removes the named file user
 
-[[sthref683]]
-
 === Synopsis
 
 [source]
@@ -25,20 +23,16 @@ asadmin [asadmin-options] delete-file-user [--help]
 username
 ----
 
-[[sthref684]]
-
 === Description
 
 The `delete-file-user` subcommand deletes the entry in the keyfile for
 the specified username.
 
-[[sthref685]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -58,14 +52,10 @@ asadmin-options::
   instance_name;;
     Deletes the file user from a particular server instance.
 
-[[sthref686]]
-
 === Operands
 
 username::
   This is the name of file user to be deleted.
-
-[[sthref687]]
 
 === Examples
 
@@ -83,8 +73,6 @@ sample_user
 Command delete-file-user executed successfully
 ----
 
-[[sthref689]]
-
 === Exit Status
 
 0::
@@ -92,11 +80,9 @@ Command delete-file-user executed successfully
 1::
   error in executing the subcommand
 
-[[sthref690]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
 link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],

@@ -13,8 +13,6 @@ prev=list-instances.html
 
 Enables administrators to list JACC providers defined for a domain
 
-[[sthref1528]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Enables administrators to list JACC providers defined for a domain
 asadmin [asadmin-options] list-jacc-providers [--help]
 [target]
 ----
-
-[[sthref1529]]
 
 === Description
 
@@ -35,18 +31,14 @@ domain's `domain.xml` file. JACC providers can be created using the
 
 This subcommand is supported in remote mode only.
 
-[[sthref1530]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1531]]
 
 === Operands
 
@@ -64,8 +56,6 @@ target::
     cluster.
   instance_name;;
     Lists the JACC providers on a specified server instance.
-
-[[sthref1532]]
 
 === Examples
 
@@ -85,8 +75,6 @@ testJACC
 Command list-jacc-providers executed successfully.
 ----
 
-[[sthref1534]]
-
 === Exit Status
 
 0::
@@ -94,11 +82,9 @@ Command list-jacc-providers executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1535]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jacc-provider.html#create-jacc-provider-1[`create-jacc-provider`(1)],
 link:delete-jacc-provider.html#delete-jacc-provider-1[`delete-jacc-provider`(1)]

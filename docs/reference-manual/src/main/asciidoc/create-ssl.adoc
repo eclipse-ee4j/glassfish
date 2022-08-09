@@ -14,8 +14,6 @@ prev=create-service.html
 Creates and configures the SSL element in the selected HTTP listener,
 IIOP listener, or IIOP service
 
-[[sthref537]]
-
 === Synopsis
 
 [source]
@@ -32,8 +30,6 @@ asadmin [asadmin-options] create-ssl [--help]
 [listener_id]
 ----
 
-[[sthref538]]
-
 === Description
 
 The `create-ssl` subcommand creates and configures the SSL element in
@@ -41,8 +37,6 @@ the selected HTTP listener, IIOP listener, or IIOP service to enable
 secure communication on that listener/service.
 
 This subcommand is supported in remote mode only.
-
-[[sthref539]]
 
 === Options
 
@@ -52,7 +46,7 @@ two dashes.
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -145,15 +139,11 @@ When the type is `iiop-service`, the `ssl-client-config` along with
   every request independent of ACL-based access control. Default value
   is `false`.
 
-[[sthref540]]
-
 === Operands
 
 listener_id::
   The ID of the HTTP or IIOP listener for which the SSL element is to be
   created. The listener_id is not required if the `--type` is `iiop-service`.
-
-[[sthref541]]
 
 === Examples
 
@@ -172,8 +162,6 @@ asadmin> create-ssl
 Command create-ssl executed successfully.
 ----
 
-[[sthref543]]
-
 === Exit Status
 
 0::
@@ -181,11 +169,9 @@ Command create-ssl executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref544]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-ssl.html#delete-ssl-1[`delete-ssl`(1)]
 

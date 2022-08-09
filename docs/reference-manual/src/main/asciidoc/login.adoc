@@ -15,16 +15,12 @@ login
 
 Logs you into a domain
 
-[[sthref1874]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] login [--help]
 ----
-
-[[sthref1875]]
 
 === Description
 
@@ -61,18 +57,14 @@ There is no `logout` subcommand. If you want to log in to another
 domain, run the `login` subcommand and specify new values for the
 `asadmin` utility options `--host` and `--port`.
 
-[[sthref1876]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1877]]
 
 === Examples
 
@@ -120,8 +112,6 @@ Make sure that this file remains protected. Information stored in this
 file will be used by asadmin commands to manage associated domain.
 ----
 
-[[sthref1880]]
-
 === Exit Status
 
 0::
@@ -129,11 +119,9 @@ file will be used by asadmin commands to manage associated domain.
 1::
   error in executing the subcommand
 
-[[sthref1881]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-domain.html#create-domain-1[`create-domain`(1)],
 link:delete-domain.html#delete-domain-1[`delete-domain`(1)]

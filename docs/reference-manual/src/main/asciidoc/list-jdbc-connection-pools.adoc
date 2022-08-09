@@ -13,16 +13,12 @@ prev=list-javamail-resources.html
 
 Lists all JDBC connection pools
 
-[[sthref1544]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] list-jdbc-connection-pools [--help]
 ----
-
-[[sthref1545]]
 
 === Description
 
@@ -31,18 +27,14 @@ connection pools.
 
 This subcommand is supported in the remote mode only.
 
-[[sthref1546]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1547]]
 
 === Examples
 
@@ -60,8 +52,6 @@ __TimerPool
 Command list-jdbc-connection-pools executed successfully.
 ----
 
-[[sthref1549]]
-
 === Exit Status
 
 0::
@@ -69,11 +59,9 @@ Command list-jdbc-connection-pools executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1550]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jdbc-connection-pool.html#create-jdbc-connection-pool-1[`create-jdbc-connection-pool`(1)],
 link:delete-jdbc-connection-pool.html#delete-jdbc-connection-pool-1[`delete-jdbc-connection-pool`(1)]

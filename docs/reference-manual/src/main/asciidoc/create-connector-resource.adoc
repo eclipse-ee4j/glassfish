@@ -13,8 +13,6 @@ prev=create-connector-connection-pool.html
 
 Registers the connector resource with the specified JNDI name
 
-[[sthref166]]
-
 === Synopsis
 
 [source]
@@ -29,8 +27,6 @@ asadmin [asadmin-options] create-connector-resource [--help]
 jndi_name
 ----
 
-[[sthref167]]
-
 === Description
 
 The `create-connector-resource` subcommand registers the connector
@@ -38,13 +34,11 @@ resource with the specified JNDI name.
 
 This subcommand is supported in remote mode only.
 
-[[sthref168]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -98,14 +92,10 @@ the `create-resource-ref` subcommand to refer to the resource in
 multiple targets if needed.
 ====
 
-[[sthref169]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this connector resource.
-
-[[sthref170]]
 
 === Examples
 
@@ -138,8 +128,6 @@ Command create-connector-resource executed successfully
 Where `jms/qConnFactory` is the sample connector resource that is
 created.
 
-[[sthref173]]
-
 === Exit Status
 
 0::
@@ -147,11 +135,9 @@ created.
 1::
   error in executing the subcommand
 
-[[sthref174]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-connector-resource.html#delete-connector-resource-1[`delete-connector-resource`(1)],
 link:list-connector-resources.html#list-connector-resources-1[`list-connector-resources`(1)],

@@ -8,9 +8,9 @@ prev=loe.adoc
 [[list-of-figures]]
 == List of Figures
 
-* link:general-administration.html#gjjce[2-1 Web Page for the REST
+* xref:general-administration.adoc#gjjce[2-1 Web Page for the REST
 Resource for Managing a Domain]
-* link:general-administration.html#gkwku[2-2 Web Page for the REST
+* xref:general-administration.adoc#gkwku[2-2 Web Page for the REST
 Resource That Provides Class Loader Statistics]
 
 

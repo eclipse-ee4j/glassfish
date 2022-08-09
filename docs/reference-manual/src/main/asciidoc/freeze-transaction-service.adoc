@@ -13,8 +13,6 @@ prev=flush-jmsdest.html
 
 Freezes the transaction subsystem
 
-[[sthref1193]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Freezes the transaction subsystem
 asadmin [asadmin-options] freeze-transaction-service [--help]
 [--target target]
 ----
-
-[[sthref1194]]
 
 === Description
 
@@ -35,13 +31,11 @@ on an already frozen transaction subsystem has no effect. Restarting the
 server unfreezes the transaction subsystem. This subcommand is supported
 in remote mode only.
 
-[[sthref1195]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -61,8 +55,6 @@ asadmin-options::
   instance_name;;
     Freezes the transaction service for a particular server instance.
 
-[[sthref1196]]
-
 === Examples
 
 [[GSRFM616]][[sthref1197]]
@@ -75,8 +67,6 @@ asadmin-options::
 Command freeze-transaction-service executed successfully
 ----
 
-[[sthref1198]]
-
 === Exit Status
 
 0::
@@ -84,11 +74,9 @@ Command freeze-transaction-service executed successfully
 1::
   error in executing the command
 
-[[sthref1199]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:recover-transactions.html#recover-transactions-1[`recover-transactions`(1)],
 link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)],

@@ -15,8 +15,6 @@ Instructs the {productName} DAS and instances to not use the
 specified admin user to authenticate with each other and to authorize
 admin operations.
 
-[[sthref1079]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] disable-secure-admin-internal-user [--help]
 admin-username
 ----
 
-[[sthref1080]]
-
 === Description
 
 The `disable-secure-admin-internal-user` subcommand disables secure
@@ -34,18 +30,14 @@ admin from using the username (instead of SSL certificates) to
 authenticate the DAS and instances with each other and to authorize
 admin operations.
 
-[[sthref1081]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1082]]
 
 === Operands
 
@@ -53,8 +45,6 @@ admin-username::
   The admin user name that {productName} should not use to
   authenticate the DAS and instances with each other and to authorize
   admin operations.
-
-[[sthref1083]]
 
 === Examples
 
@@ -73,8 +63,6 @@ asadmin> disable-secure-admin-internal-user tester
 Command disable-secure-admin-internal-user executed successfully.
 ----
 
-[[sthref1085]]
-
 === Exit Status
 
 0::
@@ -82,11 +70,9 @@ Command disable-secure-admin-internal-user executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1086]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)],
 link:enable-secure-admin-internal-user.html#enable-secure-admin-internal-user-1[`enable-secure-admin-internal-user`(1)]

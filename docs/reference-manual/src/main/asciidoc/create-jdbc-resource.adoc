@@ -13,8 +13,6 @@ prev=create-jdbc-connection-pool.html
 
 Creates a JDBC resource with the specified JNDI name
 
-[[sthref328]]
-
 === Synopsis
 
 [source]
@@ -28,21 +26,17 @@ asadmin [asadmin-options] create-jdbc-resource [--help]
 jndi_name
 ----
 
-[[sthref329]]
-
 === Description
 
 The `create-jdbc-resource` subcommand creates a new JDBC resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref330]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -82,14 +76,10 @@ multiple targets if needed.
 ====
 
 
-[[sthref331]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this JDBC resource.
-
-[[sthref332]]
 
 === Examples
 
@@ -106,8 +96,6 @@ asadmin> create-jdbc-resource
 Command create-jdbc-resource executed successfully.
 ----
 
-[[sthref334]]
-
 === Exit Status
 
 0::
@@ -115,11 +103,9 @@ Command create-jdbc-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref335]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
 link:delete-jdbc-resource.html#delete-jdbc-resource-1[`delete-jdbc-resource`(1)],

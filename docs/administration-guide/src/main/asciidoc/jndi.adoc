@@ -17,8 +17,8 @@ locate objects by invoking the JNDI lookup method.
 
 The following topics are addressed here:
 
-* link:#ggjue[About JNDI]
-* link:#gglpq[Administering JNDI Resources]
+* <<About JNDI>>
+* <<Administering JNDI Resources>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -41,10 +41,10 @@ is created.
 
 The following topics are addressed here:
 
-* link:#abllb[Jakarta EE Naming Environment]
-* link:#gglpg[How the Naming Environment and the Container Work
+* <<Jakarta EE Naming Environment>>
+* xref:#gglpg[How the Naming Environment and the Container Work
 Together]
-* link:#abllc[Naming References and Binding Information]
+* <<Naming References and Binding Information>>
 
 [[abllb]][[GSADG00780]][[java-ee-naming-environment]]
 
@@ -117,8 +117,7 @@ preexisting components.
 The following table lists JNDI lookups and their associated resource
 references for the Jakarta EE resources used by the {productName}.
 
-[[GSADG1029]][[sthref87]][[fxizy]]
-
+[[fxizy]]
 
 Table 18-1 JNDI Lookup Names and Their Associated References
 
@@ -127,8 +126,7 @@ Table 18-1 JNDI Lookup Names and Their Associated References
 |JNDI Lookup Name |Associated Resource Reference
 |`java:comp/env` |Application environment entries
 
-|`java:comp/env/jdbc` |JDBC DataSource resource manager connection
-factories
+|`java:comp/env/jdbc` |JDBC DataSource resource manager connection factories
 
 |`java:comp/env/ejb` |EJB References
 
@@ -154,8 +152,8 @@ repository; an external resource accesses an external JNDI repository.
 Both types of resources need user-specified factory class elements, JNDI
 name attributes, and so on.
 
-* link:#ablle[Administering Custom JNDI Resources]
-* link:#gitxz[Administering External JNDI Resources]
+* <<Administering Custom JNDI Resources>>
+* <<Administering External JNDI Resources>>
 
 [[ablle]][[GSADG00783]][[administering-custom-jndi-resources]]
 
@@ -166,10 +164,10 @@ that implements the `javax.naming.spi.ObjectFactory` interface.
 
 The following topics are addressed here:
 
-* link:#giowe[To Create a Custom JNDI Resource]
-* link:#gioxb[To List Custom JNDI Resources]
-* link:#giwlk[To Update a Custom JNDI Resource]
-* link:#gioxl[To Delete a Custom JNDI Resource]
+* <<To Create a Custom JNDI Resource>>
+* <<To List Custom JNDI Resources>>
+* <<To Update a Custom JNDI Resource>>
+* <<To Delete a Custom JNDI Resource>>
 
 [[giowe]][[GSADG00503]][[to-create-a-custom-jndi-resource]]
 
@@ -186,7 +184,7 @@ Information on properties for the subcommand is contained in this help
 page.
 3. Restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00284]][[gioyi]]
 Example 18-1 Creating a Custom Resource
@@ -199,8 +197,6 @@ asadmin> create-custom-resource --restype topic --factoryclass com.imq.topic
 sample_custom_resource
 Command create-custom-resource executed successfully.
 ----
-
-[[GSADG1030]]
 
 See Also
 
@@ -230,8 +226,6 @@ sample_custom_resource01
 sample_custom_resource02
 Command list-custom-resources executed successfully
 ----
-
-[[GSADG1031]]
 
 See Also
 
@@ -283,8 +277,6 @@ asadmin> delete-custom-resource sample_custom_resource
 Command delete-custom-resource executed successfully.
 ----
 
-[[GSADG1032]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -302,13 +294,13 @@ resource repositories.
 
 The following topics are addressed here:
 
-* link:#gitxn[To Register an External JNDI Resource]
-* link:#gitvj[To List External JNDI Resources]
-* link:#gitwc[To List External JNDI Entries]
-* link:#giwnr[To Update an External JNDI Resource]
-* link:#gitvt[To Delete an External JNDI Resource]
-* link:#abllk[Example of Using an External JNDI Resource]
-* link:#gknaf[To Disable {productName} v2 Vendor-Specific JNDI Names]
+* <<To Register an External JNDI Resource>>
+* <<To List External JNDI Resources>>
+* <<To List External JNDI Entries>>
+* <<To Update an External JNDI Resource>>
+* <<To Delete an External JNDI Resource>>
+* <<Example of Using an External JNDI Resource>>
+* <<To Disable {productName} v2 Vendor-Specific JNDI Names>>
 
 [[gitxn]][[GSADG00507]][[to-register-an-external-jndi-resource]]
 
@@ -316,8 +308,6 @@ The following topics are addressed here:
 
 Use the `create-jndi-resource` subcommand in remote mode to register an
 external JNDI resource.
-
-[[GSADG1033]]
 
 Before You Begin
 
@@ -332,7 +322,7 @@ Information on properties for the subcommand is contained in this help
 page.
 3. Restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00288]][[giwcx]]
 Example 18-5 Registering an External JNDI Resource
@@ -346,8 +336,6 @@ asadmin> create-jndi-resource --jndilookupname sample_jndi
 resource" sample_jndi_resource
 Command create-jndi-resource executed successfully
 ----
-
-[[GSADG1034]]
 
 See Also
 
@@ -379,8 +367,6 @@ jndi_resource3
 Command list-jndi-resources executed successfully
 ----
 
-[[GSADG1035]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -411,8 +397,6 @@ jndi_entry72
 jndi_entry76
 Command list-jndi-resources executed successfully
 ----
-
-[[GSADG1036]]
 
 See Also
 
@@ -460,8 +444,6 @@ This example deletes an external JNDI resource:
 asadmin> delete-jndi-resource jndi_resource2
 Command delete-jndi-resource executed successfully.
 ----
-
-[[GSADG1037]]
 
 See Also
 

@@ -24,12 +24,12 @@ Console online help.
 
 The chapter describes the following topics:
 
-* link:#gksbk[Determining Your Security Needs]
-* link:#gksbw[Installing {productName} in a Secure Environment]
-* link:#gksby[Run on the Web Profile if Possible]
-* link:#gksct[Securing the {productName} Host]
-* link:#gksca[Securing {productName}]
-* link:#gksbf[Securing Applications]
+* xref:#gksbk[Determining Your Security Needs]
+* xref:#gksbw[Installing {productName} in a Secure Environment]
+* xref:#gksby[Run on the Web Profile if Possible]
+* xref:#gksct[Securing the {productName} Host]
+* xref:#gksca[Securing {productName}]
+* xref:#gksbf[Securing Applications]
 
 [[gksbk]][[GSSCG00169]][[determining-your-security-needs]]
 
@@ -40,8 +40,8 @@ production environment, determine your security needs and make sure that
 you take the appropriate security measures, as described in the
 following sections:
 
-* link:#gkscs[Understand Your Environment]
-* link:#gksce[Read Security Publications]
+* xref:#gkscs[Understand Your Environment]
+* xref:#gksce[Read Security Publications]
 
 [[gkscs]][[GSSCG00237]][[understand-your-environment]]
 
@@ -96,7 +96,7 @@ at `http://www.cert.org/`.
 === Installing {productName} in a Secure Environment
 
 This section describes recommendations for installing {productName}
-in a secure environment. The link:#gkscn[Enable the Secure
+in a secure environment. The xref:#gkscn[Enable the Secure
 Administration Feature] topic is described.
 
 [[gkscn]][[GSSCG00240]][[enable-the-secure-administration-feature]]
@@ -167,7 +167,7 @@ the operating system users who configure or execute {productName}.
 ====
 
 
-[[sthref39]][[gksbt]]
+[[gksbt]]
 
 Table 6-1 Securing the {productName} Host
 
@@ -338,7 +338,7 @@ for securing the subsystems and applications that run on a server
 instance. The following table provides a checklist of essential features
 that Oracle recommends you use to secure your production environment.
 
-[[sthref40]][[gkscz]]
+[[gkscz]]
 
 Table 6-2 Securing {productName}
 
@@ -473,7 +473,7 @@ application that you deploy in a production environment, review the
 items in the following table to verify that you have secured its
 resources.
 
-[[sthref41]][[gkscv]]
+[[gkscv]]
 
 Table 6-3 Securing Applications
 

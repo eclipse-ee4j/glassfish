@@ -13,8 +13,6 @@ prev=list-domains.html
 
 Lists file groups
 
-[[sthref1469]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-file-groups [--help]
 [--name username] [--authrealmname auth_realm_name]
 [--target target]
 ----
-
-[[sthref1470]]
 
 === Description
 
@@ -35,13 +31,11 @@ specified, all groups are listed.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1471]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -63,8 +57,6 @@ asadmin-options::
   instance_name;;
     Lists the file groups for a particular instance.
 
-[[sthref1472]]
-
 === Examples
 
 [[GSRFM657]][[sthref1473]]
@@ -81,8 +73,6 @@ manager
 Command list-file-groups executed successfully
 ----
 
-[[sthref1474]]
-
 === Exit Status
 
 0::
@@ -90,11 +80,9 @@ Command list-file-groups executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1475]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
 link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],

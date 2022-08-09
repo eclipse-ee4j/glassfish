@@ -13,8 +13,6 @@ prev=list-log-levels.html
 
 Lists managed executor service resources
 
-[[sthref1653]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-managed-executor-services [--help]
 [target]
 ----
 
-[[sthref1654]]
-
 === Description
 
 The `list-managed-executor-services` subcommand lists managed executor
@@ -32,18 +28,14 @@ service resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1655]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1656]]
 
 === Operands
 
@@ -61,8 +53,6 @@ target::
     cluster.
   instance-name;;
     Lists the resources on a specified server instance.
-
-[[sthref1657]]
 
 === Examples
 
@@ -82,8 +72,6 @@ concurrent/myExecutor2
 Command list-managed-executor-services executed successfully.
 ----
 
-[[sthref1659]]
-
 === Exit Status
 
 0::
@@ -91,11 +79,9 @@ Command list-managed-executor-services executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1660]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-managed-executor-service.html#create-managed-executor-service-1[`create-managed-executor-service`(1)],
 link:delete-managed-executor-service.html#delete-managed-executor-service-1[`delete-managed-executor-service`(1)]

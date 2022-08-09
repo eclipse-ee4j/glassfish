@@ -36,10 +36,10 @@ Guide.
 
 The following topics are addressed here:
 
-* link:#gkpcz[Using Application-Scoped JMS Resources]
-* link:#beaop[Load-Balanced Message Inflow]
-* link:#beaor[Authentication With `ConnectionFactory`]
-* link:#beaot[Delivering SOAP Messages Using the JMS API]
+* xref:#gkpcz[Using Application-Scoped JMS Resources]
+* xref:#beaop[Load-Balanced Message Inflow]
+* xref:#beaor[Authentication With `ConnectionFactory`]
+* xref:#beaot[Delivering SOAP Messages Using the JMS API]
 
 [[gkpcz]][[GSDVG00196]][[using-application-scoped-jms-resources]]
 
@@ -120,8 +120,8 @@ SOAP message.
 
 The following topics are addressed here:
 
-* link:#beaou[To Send SOAP Messages Using the JMS API]
-* link:#beaov[To Receive SOAP Messages Using the JMS API]
+* xref:#beaou[To Send SOAP Messages Using the JMS API]
+* xref:#beaov[To Receive SOAP Messages Using the JMS API]
 
 [[beaou]][[GSDVG00077]][[to-send-soap-messages-using-the-jms-api]]
 

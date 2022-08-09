@@ -19,8 +19,8 @@ This chapter provides procedures for administering thread pools in the
 
 The following topics are addressed here:
 
-* link:#ggjyv[About Thread Pools]
-* link:#ablud[Configuring Thread Pools]
+* <<About Thread Pools>>
+* <<Configuring Thread Pools>>
 
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
@@ -53,10 +53,10 @@ adjusted between these two values.
 
 The following topics are addressed here:
 
-* link:#ggkwj[To Create a Thread Pool]
-* link:#giuff[To List Thread Pools]
-* link:#ggkyc[To Update a Thread Pool]
-* link:#ggkwy[To Delete a Thread Pool]
+* <<To Create a Thread Pool>>
+* <<To List Thread Pools>>
+* <<To Update a Thread Pool>>
+* <<To Delete a Thread Pool>>
 
 [[ggkwj]][[GSADG00366]][[to-create-a-thread-pool]]
 
@@ -84,7 +84,7 @@ Information about options for the subcommand is included in this help
 page.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 +
 
 [NOTE]
@@ -104,8 +104,6 @@ asadmin> create-threadpool --maxthreadpoolsize 100
 --minthreadpoolsize 20 --idletimeout 2 --workqueues 100 threadpool-1
 Command create-threadpool executed successfully
 ----
-
-[[GSADG853]]
 
 See Also
 
@@ -135,8 +133,6 @@ threadpool-1
 Command list-threadpools executed successfully
 ----
 
-[[GSADG854]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -157,7 +153,7 @@ link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 +
 
 [NOTE]
@@ -175,8 +171,6 @@ This example sets the `max-thread-pool-size` from its previous value to
 asadmin> set server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=8
 Command set executed successfully
 ----
-
-[[GSADG855]]
 
 See Also
 
@@ -198,7 +192,7 @@ link:reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`] subco
 link:reference-manual/delete-threadpool.html#GSRFM00111[`delete-threadpool`] subcommand.
 4. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 +
 
 [NOTE]
@@ -217,8 +211,6 @@ This example deletes `threadpool-1`.
 asadmin> delete-threadpool threadpool-1
 Command delete-threadpool executed successfully
 ----
-
-[[GSADG856]]
 
 See Also
 

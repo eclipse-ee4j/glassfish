@@ -19,20 +19,20 @@ you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other {productName} components.
 A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
 The following topics are addressed here:
 
-* link:#ghpuj[About the Administrative Command Infrastructure of {productName}]
-* link:#ghpwe[Adding an `asadmin` Subcommand]
-* link:#ghpwa[Adding Parameters to an `asadmin` Subcommand]
-* link:#gkygt[Making `asadmin` Subcommands Cluster-Aware]
-* link:#ghptw[Adding Message Text Strings to an `asadmin` Subcommand]
-* link:#ghpvn[Enabling an `asadmin` Subcommand to Run]
-* link:#ghpvq[Setting the Context of an `asadmin` Subcommand]
-* link:#ghpwn[Changing the Brand in the {productName} CLI]
-* link:#ghmza[Examples of Extending the `asadmin` Utility]
-* link:#gkzlq[Implementing Create, Delete, and List Commands Using
+* xref:#ghpuj[About the Administrative Command Infrastructure of {productName}]
+* xref:#ghpwe[Adding an `asadmin` Subcommand]
+* xref:#ghpwa[Adding Parameters to an `asadmin` Subcommand]
+* xref:#gkygt[Making `asadmin` Subcommands Cluster-Aware]
+* xref:#ghptw[Adding Message Text Strings to an `asadmin` Subcommand]
+* xref:#ghpvn[Enabling an `asadmin` Subcommand to Run]
+* xref:#ghpvq[Setting the Context of an `asadmin` Subcommand]
+* xref:#ghpwn[Changing the Brand in the {productName} CLI]
+* xref:#ghmza[Examples of Extending the `asadmin` Utility]
+* xref:#gkzlq[Implementing Create, Delete, and List Commands Using
 Annotations]
 
 [[ghpuj]][[GSACG00105]][[about-the-administrative-command-infrastructure-of-glassfish-server]]
@@ -63,11 +63,11 @@ these tasks and operations through the `asadmin` utility.
 
 The following topics are addressed here:
 
-* link:#ghrqj[Representing an `asadmin` Subcommand as a Java Class]
-* link:#ghrpm[Specifying the Name of an `asadmin` Subcommand]
-* link:#ghrng[Ensuring That an `AdminCommand` Implementation Is
+* xref:#ghrqj[Representing an `asadmin` Subcommand as a Java Class]
+* xref:#ghrpm[Specifying the Name of an `asadmin` Subcommand]
+* xref:#ghrng[Ensuring That an `AdminCommand` Implementation Is
 Stateless]
-* link:#ghrqx[Example of Adding an `asadmin` Subcommand]
+* xref:#ghrqx[Example of Adding an `asadmin` Subcommand]
 
 [[ghrqj]][[GSACG00194]][[representing-an-asadmin-subcommand-as-a-java-class]]
 
@@ -189,16 +189,16 @@ that is to be started.
 
 The following topics are addressed here:
 
-* link:#ghpvh[Representing a Parameter of an `asadmin` Subcommand]
-* link:#ghptx[Identifying a Parameter of an `asadmin` Subcommand]
-* link:#ghpxp[Specifying Whether a Parameter Is an Option or an Operand]
-* link:#ghpxj[Specifying the Name of an Option]
-* link:#ghpxl[Specifying the Acceptable Values of a Parameter]
-* link:#ghrgt[Specifying the Default Value of a Parameter]
-* link:#ghpuk[Specifying Whether a Parameter Is Required or Optional]
-* link:#CDCFAJDG[Specifying Whether a Parameter Can Be Used Multiple
+* xref:#ghpvh[Representing a Parameter of an `asadmin` Subcommand]
+* xref:#ghptx[Identifying a Parameter of an `asadmin` Subcommand]
+* xref:#ghpxp[Specifying Whether a Parameter Is an Option or an Operand]
+* xref:#ghpxj[Specifying the Name of an Option]
+* xref:#ghpxl[Specifying the Acceptable Values of a Parameter]
+* xref:#ghrgt[Specifying the Default Value of a Parameter]
+* xref:#ghpuk[Specifying Whether a Parameter Is Required or Optional]
+* xref:#CDCFAJDG[Specifying Whether a Parameter Can Be Used Multiple
 Times on the Command Line]
-* link:#ghpxd[Example of Adding Parameters to an `asadmin` Subcommand]
+* xref:#ghpxd[Example of Adding Parameters to an `asadmin` Subcommand]
 
 [[ghpvh]][[GSACG00198]][[representing-a-parameter-of-an-asadmin-subcommand]]
 
@@ -304,7 +304,7 @@ the setter method name. For example, if the setter method `setPassword`
 is associated with an option, the property name and the option name are
 both `password`.
 
-[[sthref5]][[specifying-the-short-form-of-an-option-name]]
+[[specifying-the-short-form-of-an-option-name]]
 
 ===== Specifying the Short Form of an Option Name
 
@@ -446,11 +446,11 @@ instances.
 
 The following topics are addressed here:
 
-* link:#gkyjk[Specifying Allowed Targets]
-* link:#gkykm[The `Target` Utility]
-* link:#gkyfv[Specifying `asadmin` Subcommand Execution]
-* link:#gkyjs[Subcommand Preprocessing and Postprocessing]
-* link:#gkyit[Running a Command from Another Command]
+* xref:#gkyjk[Specifying Allowed Targets]
+* xref:#gkykm[The `Target` Utility]
+* xref:#gkyfv[Specifying `asadmin` Subcommand Execution]
+* xref:#gkyjs[Subcommand Preprocessing and Postprocessing]
+* xref:#gkyit[Running a Command from Another Command]
 
 [[gkyjk]][[GSACG00206]][[specifying-allowed-targets]]
 
@@ -703,7 +703,7 @@ set the `on` element of the `@Supplemental` annotation to
 ----
 
 Supplemental commands can use the `@ExecuteOn` annotation as described
-in link:#gkyfv[Specifying `asadmin` Subcommand Execution].
+in xref:#gkyfv[Specifying `asadmin` Subcommand Execution].
 
 [[gkyit]][[GSACG00210]][[running-a-command-from-another-command]]
 
@@ -789,7 +789,7 @@ string::
 To display the message strings to users, you must provide code in your
 implementation of the `execute` method to display the text. For more
 information about implementing the `execute` method, see
-link:#ghpvn[Enabling an `asadmin` Subcommand to Run].
+xref:#ghpvn[Enabling an `asadmin` Subcommand to Run].
 ====
 
 [[GSACG00036]][[ghpvm]]
@@ -815,7 +815,7 @@ No internationalization support is provided for this message.
 `The container name`. No internationalization support is provided for this message.
 
 The addition of the parameters `originator`, `description`, `enabled`
-and `containername` to the subcommand is shown in link:#ghpuh[Example 4-2].
+and `containername` to the subcommand is shown in xref:#ghpuh[Example 4-2].
 
 [source,java]
 ----
@@ -884,7 +884,7 @@ value.
 
 In the body of the `execute` method, provide the code for performing the
 operation that the command was designed to perform. For examples, see
-link:#ghrsi[Example 4-6] and link:#gkbdf[Example 4-7].
+xref:#ghrsi[Example 4-6] and xref:#gkbdf[Example 4-7].
 
 [[ghpvq]][[GSACG00112]][[setting-the-context-of-an-asadmin-subcommand]]
 
@@ -1236,15 +1236,15 @@ code is needed.
 
 The following topics are addressed here:
 
-* link:#gkzkc[Command Patterns]
-* link:#gkzle[Resolvers]
-* link:#gkzoy[The `@Create` Annotation]
-* link:#gkzoo[The `@Delete` Annotation]
-* link:#gkzpl[The `@Listing` Annotation]
-* link:#gkznf[Create Command Decorators]
-* link:#gkznx[Delete Command Decorators]
-* link:#gkzmu[Specifying Command Execution]
-* link:#gkznd[Using Multiple Command Annotations]
+* xref:#gkzkc[Command Patterns]
+* xref:#gkzle[Resolvers]
+* xref:#gkzoy[The `@Create` Annotation]
+* xref:#gkzoo[The `@Delete` Annotation]
+* xref:#gkzpl[The `@Listing` Annotation]
+* xref:#gkznf[Create Command Decorators]
+* xref:#gkznx[Delete Command Decorators]
+* xref:#gkzmu[Specifying Command Execution]
+* xref:#gkznd[Using Multiple Command Annotations]
 
 [[gkzkc]][[GSACG00211]][[command-patterns]]
 
@@ -1677,7 +1677,7 @@ Commands specified with the `@Create`, `@Delete`, and `@Listing`
 annotations can use the `@ExecuteOn` annotation. The `@ExecuteOn`
 annotation specifies whether the command runs on the DAS, on server
 instances, or both (the default). For more information, see
-link:#gkyfv[Specifying `asadmin` Subcommand Execution].
+xref:#gkyfv[Specifying `asadmin` Subcommand Execution].
 
 To add an `@ExecuteOn` annotation to a `@Create` or `@Delete`
 annotation, use the `cluster` element. For example:

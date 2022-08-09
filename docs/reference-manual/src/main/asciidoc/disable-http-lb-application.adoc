@@ -13,8 +13,6 @@ prev=disable.html
 
 Disables an application managed by a load balancer
 
-[[sthref1047]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] disable-http-lb-application [--help]
 [--timeout 30]
 --name application_name target
 ----
-
-[[sthref1048]]
 
 === Description
 
@@ -56,13 +52,11 @@ subcommand is not applicable to {productName}.
 ====
 
 
-[[sthref1049]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -74,8 +68,6 @@ asadmin-options::
 `--name`::
   The name of the application to be disabled.
 
-[[sthref1050]]
-
 === Operands
 
 target::
@@ -84,8 +76,6 @@ target::
 
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
-
-[[sthref1051]]
 
 === Examples
 
@@ -102,8 +92,6 @@ asadmin> disable-http-lb-application --name webapps-simple mycluster
 Command disable-http-lb-application executed successfully.
 ----
 
-[[sthref1053]]
-
 === Exit Status
 
 0::
@@ -111,11 +99,9 @@ Command disable-http-lb-application executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1054]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:enable-http-lb-application.html#enable-http-lb-application-1[`enable-http-lb-application`(1)]
 

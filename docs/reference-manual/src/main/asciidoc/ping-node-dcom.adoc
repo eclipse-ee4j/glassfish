@@ -13,8 +13,6 @@ prev=ping-connection-pool.html
 
 Tests if a node that is enabled for communication over DCOM is usable
 
-[[sthref1934]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Tests if a node that is enabled for communication over DCOM is usable
 asadmin [asadmin-options] ping-node-dcom [--help]
 [--validate={false|true}] node-name
 ----
-
-[[sthref1935]]
 
 === Description
 
@@ -40,7 +36,7 @@ subcommand could connect to the node through DCOM. This confirmation
 includes the name of the host that the node represents.
 
 Optionally, the subcommand can also validate the node to determine if
-the link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility can run on the
+the xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility can run on the
 host that the node represents. To validate a node, the subcommand runs
 the link:version.html#version-1[`version`(1)] subcommand. If the node is
 valid, the subcommand displays the version that the `version` subcommand
@@ -63,13 +59,11 @@ link:ping-node-ssh.html#ping-node-ssh-1[`ping-node-ssh`(1)] subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1936]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -82,15 +76,11 @@ asadmin-options::
   `false`;;
     The node is not validated (default).
 
-[[sthref1937]]
-
 === Operands
 
 node-name::
   The name of the node to test. The node must be enabled for
   communication over DCOM. Otherwise, an error occurs.
-
-[[sthref1938]]
 
 === Examples
 
@@ -124,8 +114,6 @@ Command version executed successfully.
 Command ping-node-dcom executed successfully.
 ----
 
-[[sthref1941]]
-
 === Exit Status
 
 0::
@@ -133,11 +121,9 @@ Command ping-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref1942]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
 link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],

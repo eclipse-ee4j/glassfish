@@ -24,13 +24,13 @@ Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
 Console online help.
 
-* link:#gkocp[Secure Administration Overview]
-* link:#gkofl[How Secure Admin Works: The Big Picture]
-* link:#gkofe[Considerations When Running {productName} With Default Security]
-* link:#gkomz[Running Secure Admin]
-* link:#gkolu[Additional Considerations When Creating Local Instances]
-* link:#gkqah[Secure Admin Use Case]
-* link:#gkodn[Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin]
+* xref:#gkocp[Secure Administration Overview]
+* xref:#gkofl[How Secure Admin Works: The Big Picture]
+* xref:#gkofe[Considerations When Running {productName} With Default Security]
+* xref:#gkomz[Running Secure Admin]
+* xref:#gkolu[Additional Considerations When Creating Local Instances]
+* xref:#gkqah[Secure Admin Use Case]
+* xref:#gkodn[Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin]
 
 [[gkocp]][[GSSCG00162]][[secure-administration-overview]]
 
@@ -95,13 +95,13 @@ Secure admin is a domain-wide setting. It affects the DAS and all
 instances and all administration clients. This section describes the
 following topics:
 
-* link:#gkqce[Functions Performed by Secure Admin]
-* link:#gkocv[Which Administration Account is Used?]
-* link:#gkodi[What Authentication Methods Are Used for Secure Administration?]
-* link:#gkpex[Understanding How Certificate Authentication is Performed]
-* link:#gkoey[What Certificates Are Used?]
-* link:#glgmy[An Alternate Approach: Using Distinguished Names to Specify Certificates]
-* link:#gkqjj[Guarding Against Unwanted Connections]
+* xref:#gkqce[Functions Performed by Secure Admin]
+* xref:#gkocv[Which Administration Account is Used?]
+* xref:#gkodi[What Authentication Methods Are Used for Secure Administration?]
+* xref:#gkpex[Understanding How Certificate Authentication is Performed]
+* xref:#gkoey[What Certificates Are Used?]
+* xref:#glgmy[An Alternate Approach: Using Distinguished Names to Specify Certificates]
+* xref:#gkqjj[Guarding Against Unwanted Connections]
 
 [[gkqce]][[GSSCG00227]][[functions-performed-by-secure-admin]]
 
@@ -124,7 +124,7 @@ Subsequent sections describe these functions in more detail.
 ** Configures SSL to use the administration truststore.
 ** Configures SSL to use the administration keystore and the correct
    alias (for the self-signed cert) for authenticating itself.
-   (You can use your own certificate instead, as described in link:#gkped[
+   (You can use your own certificate instead, as described in xref:#gkped[
    Using Your Own Certificates].
 
 +
@@ -196,10 +196,10 @@ local administration clients and instances are encrypted using SSL/TLS.
 This is true even if you explicitly set the `asadmin` `-—secure` option
 to false.
 
-link:#gkobl[Table 5-1] shows which authentication methods are employed
+xref:#gkobl[Table 5-1] shows which authentication methods are employed
 when secure admin is enabled or disabled.
 
-[[sthref35]][[gkobl]]
+[[gkobl]]
 
 Table 5-1 Authentication Methods Employed
 
@@ -319,7 +319,7 @@ client will detect whether the certificate is automatically trusted.
 
 Browsers will warn you, let you view the certificate, and ask you to
 reject the certificate, accept it once, or accept it indefinitely, as
-shown in link:#gkqpv[Figure 5-1].
+shown in xref:#gkqpv[Figure 5-1].
 
 [[GSSCG00002]][[gkqpv]]
 
@@ -673,7 +673,7 @@ If this level of security is acceptable in your environment, no changes
 are needed and you do not need to enable secure administration. Imposing
 a heightened level of security is optional.
 
-However, consider link:#gkode[Table 5-2], which shows which operations
+However, consider xref:#gkode[Table 5-2], which shows which operations
 are accepted and rejected when secure admin is disabled.
 
 
@@ -684,7 +684,7 @@ monitoring (read-only) access via the REST interface.
 ====
 
 
-[[sthref37]][[gkode]]
+[[gkode]]
 
 Table 5-2 Accepted and Rejected Operations if Secure Admin is Disabled
 
@@ -756,7 +756,7 @@ for authenticating itself and authorizing access in administration
 traffic, and instances use the (`glassfish-instance`) alias for
 authenticating themselves and authorizing access in secure admin traffic.
 
-As described in link:#gkped[Using Your Own Certificates], you can
+As described in xref:#gkped[Using Your Own Certificates], you can
 instead use your own certificates and their associated aliases for
 authenticating and authorizing the DAS and instances in administration traffic.
 
@@ -920,11 +920,11 @@ the DAS redirection, even though the command sets `--secure` to false.
 `asadmin` sends the HTTP Authorization header along with the redirected request.
 
 In addition to the flow described here, certificate authentication is
-also performed as described in link:#gkqax[Table 5-3]. Also, the
+also performed as described in xref:#gkqax[Table 5-3]. Also, the
 credentials that the user supplies are assumed to be valid administrator
 credentials for the DAS.
 
-[[sthref38]][[gkqax]]
+[[gkqax]]
 
 Table 5-3 asadmin --secure=false, With Username and Password
 

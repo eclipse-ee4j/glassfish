@@ -13,8 +13,6 @@ prev=list-transports.html
 
 Lists the existing virtual servers
 
-[[sthref1850]]
-
 === Synopsis
 
 [source]
@@ -23,25 +21,19 @@ asadmin [asadmin-options] list-virtual-servers [--help]
 [target]
 ----
 
-[[sthref1851]]
-
 === Description
 
 The `list-virtual-servers` subcommand lists the existing virtual
 servers. This subcommand is supported in remote mode only.
 
-[[sthref1852]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1853]]
 
 === Operands
 
@@ -60,8 +52,6 @@ target::
   instance-name;;
     Lists the virtual servers for the specified server instance.
 
-[[sthref1854]]
-
 === Examples
 
 [[GSRFM717]][[sthref1855]]
@@ -79,8 +69,6 @@ __asadmin
 Command list-virtual-servers executed successfully.
 ----
 
-[[sthref1856]]
-
 === Exit Status
 
 0::
@@ -88,11 +76,9 @@ Command list-virtual-servers executed successfully.
 1::
   error in executing the command
 
-[[sthref1857]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-virtual-server.html#create-virtual-server-1[`create-virtual-server`(1)],
 link:delete-virtual-server.html#delete-virtual-server-1[`delete-virtual-server`(1)]

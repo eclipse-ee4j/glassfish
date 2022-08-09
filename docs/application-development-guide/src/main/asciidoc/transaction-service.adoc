@@ -20,10 +20,10 @@ chapter discusses Jakarta EE transactions and transaction support in the
 
 The following topics are addressed here:
 
-* link:#giybi[Handling Transactions with Databases]
-* link:#beaje[Handling Transactions with Enterprise Beans]
-* link:#gknrh[Handling Transactions with the Java Message Service]
-* link:#gaxit[The Transaction Manager, the Transaction Synchronization
+* xref:#giybi[Handling Transactions with Databases]
+* xref:#beaje[Handling Transactions with Enterprise Beans]
+* xref:#gknrh[Handling Transactions with the Java Message Service]
+* xref:#gaxit[The Transaction Manager, the Transaction Synchronization
 Registry, and `UserTransaction`]
 
 For more information about the Java Transaction API (JTA) and Java
@@ -43,8 +43,8 @@ in The Jakarta EE Tutorial.
 
 The following topics are addressed here:
 
-* link:#beamv[Using JDBC Transaction Isolation Levels]
-* link:#beamu[Using Non-Transactional Connections]
+* xref:#beamv[Using JDBC Transaction Isolation Levels]
+* xref:#beamu[Using Non-Transactional Connections]
 
 [[beamv]][[GSDVG00511]][[using-jdbc-transaction-isolation-levels]]
 
@@ -55,8 +55,7 @@ available in the JDBC API. The {productName} permits specifying any
 isolation level your database supports. The following table defines
 transaction isolation levels.
 
-[[GSDVG559]][[sthref27]][[fvyoi]]
-
+[[fvyoi]]
 
 Table 15-1 Transaction Isolation Levels
 
@@ -224,10 +223,10 @@ EJB servers from different vendors.
 
 The following topics are addressed here:
 
-* link:#beajf[Flat Transactions]
-* link:#beajg[Global and Local Transactions]
-* link:#beajh[Commit Options]
-* link:#beaht[Bean-Level Container-Managed Transaction Timeouts]
+* xref:#beajf[Flat Transactions]
+* xref:#beajg[Global and Local Transactions]
+* xref:#beajh[Commit Options]
+* xref:#beaht[Bean-Level Container-Managed Transaction Timeouts]
 
 [[beajf]][[GSDVG00513]][[flat-transactions]]
 
@@ -251,7 +250,7 @@ fewer commercial database systems.
 Both local and global transactions are demarcated using the
 javax.transaction.UserTransaction interface, which the client must use.
 Local transactions bypass the XA commit protocol and are faster. For
-more information, see link:#gaxit[The Transaction Manager, the
+more information, see xref:#gaxit[The Transaction Manager, the
 Transaction Synchronization Registry, and `UserTransaction`].
 
 [[beajh]][[GSDVG00515]][[commit-options]]
@@ -330,8 +329,8 @@ if the bean joins a client transaction.
 
 The following topics are addressed here:
 
-* link:#beaoq[Transactions and Non-Persistent Messages]
-* link:#gdyya[Using the ConfigurableTransactionSupport Interface]
+* xref:#beaoq[Transactions and Non-Persistent Messages]
+* xref:#gdyya[Using the ConfigurableTransactionSupport Interface]
 
 [[beaoq]][[GSDVG00517]][[transactions-and-non-persistent-messages]]
 

@@ -21,10 +21,10 @@ applications and modules in the {productName} environment. Only
 
 The following topics are addressed here:
 
-* link:#gihzx[About Application Deployment]
-* link:#giphm[About Assembly and Deployment Events]
-* link:#giifh[About Deployment Tools]
-* link:#gipud[Additional Information on Application Deployment]
+* xref:#gihzx[About Application Deployment]
+* xref:#giphm[About Assembly and Deployment Events]
+* xref:#giifh[About Deployment Tools]
+* xref:#gipud[Additional Information on Application Deployment]
 
 Information and instructions on deploying from the command line are
 provided in this document. Information and instructions for
@@ -48,17 +48,17 @@ Deployment is the process of installing an application or module on
 such as a list of local users that can access the application, or the
 name of the local database. {productName} deployment tools expand the
 archive file into an open directory structure that is ready for users.
-{productName} deployment tools are described in link:#giifh[About
+{productName} deployment tools are described in xref:#giifh[About
 Deployment Tools].
 
 The following topics are addressed here:
 
-* link:#giptw[General Deployment Functionality]
-* link:#gihzc[Deployment Descriptors and Annotations]
-* link:#gikhs[Modules and Applications]
-* link:#gijla[Access to Shared Framework Classes]
-* link:#gihzk[Naming Standards]
-* link:#gkhhv[Module and Application Versions]
+* xref:#giptw[General Deployment Functionality]
+* xref:#gihzc[Deployment Descriptors and Annotations]
+* xref:#gikhs[Modules and Applications]
+* xref:#gijla[Access to Shared Framework Classes]
+* xref:#gihzk[Naming Standards]
+* xref:#gkhhv[Module and Application Versions]
 
 [[giptw]][[GSDPG00319]][[general-deployment-functionality]]
 
@@ -84,7 +84,7 @@ For instructions, see link:deploying-applications.html#gilcn[To Deploy an
 Application or Module in a Directory Format].
 * JSR 88 Deployment. A deployment mechanism implemented based on the JSR
 88 standard from `jcp.org`. It delivers vendor neutral deployment
-options. See link:#beaee[JSR 88 Client] and link:#giiel[JSR 88 Naming].
+options. See xref:#beaee[JSR 88 Client] and xref:#giiel[JSR 88 Naming].
 
 A deployment plan, which deploys a portable archive along with a
 deployment plan containing {productName} deployment descriptors, can
@@ -227,9 +227,9 @@ type. You can deploy a module alone or as part of an application.
 
 The following topics are addressed here:
 
-* link:#beacv[Types of Modules]
-* link:#beacu[Module-Based Deployment]
-* link:#beacw[Application-Based Deployment]
+* xref:#beacv[Types of Modules]
+* xref:#beacu[Module-Based Deployment]
+* xref:#beacw[Application-Based Deployment]
 
 [[beacv]][[GSDPG00307]][[types-of-modules]]
 
@@ -373,10 +373,10 @@ as well.
 
 The following topics are addressed here:
 
-* link:#gjjfg[Portable Naming]
-* link:#giidg[JNDI Naming]
-* link:#beada[Directory Structure]
-* link:#giiel[JSR 88 Naming]
+* xref:#gjjfg[Portable Naming]
+* xref:#giidg[JNDI Naming]
+* xref:#beada[Directory Structure]
+* xref:#giiel[JSR 88 Naming]
 
 [[gjjfg]][[GSDPG00310]][[portable-naming]]
 
@@ -448,9 +448,9 @@ name. Use of versioning is optional.
 
 The following topics are addressed here:
 
-* link:#gkhmg[Version Identifiers and Expressions]
-* link:#gkhmm[Choosing the Enabled Version]
-* link:#gkhob[Versioning Restrictions and Limitations]
+* xref:#gkhmg[Version Identifiers and Expressions]
+* xref:#gkhmm[Choosing the Enabled Version]
+* xref:#gkhob[Versioning Restrictions and Limitations]
 
 [[gkhmg]][[GSDPG00314]][[version-identifiers-and-expressions]]
 
@@ -594,7 +594,7 @@ developing deployment descriptors.
 2. Assembly. The developer assembles the archive file(s) using Java
 standards and tools, such as the `jar` command. The application or
 module is packaged into a JAR, WAR, RAR, or EAR file. For guidelines on
-naming, see link:#gihzk[Naming Standards].
+naming, see xref:#gihzk[Naming Standards].
 +
 There are no {productName} issues to consider.
 3. Test Deployment. The developer performs a test deployment of the
@@ -604,7 +604,7 @@ Deploy an Application or Module].
 the administrator for deployment into a production environment. The
 developer includes instructions for any additional deployment tasks that
 the administrator must perform. For an example of such additional
-instructions, see link:#gijla[Access to Shared Framework Classes].
+instructions, see xref:#gijla[Access to Shared Framework Classes].
 5. Configuration. The administrator applies additional deployment
 specifics. Sometimes the developer has indicated additional deployment
 needs, such as specifying the production database. In this case, the
@@ -626,11 +626,11 @@ application.
 
 The following topics are addressed here:
 
-* link:#giijz[Administration Console]
-* link:#giijf[The `asadmin` Utility]
-* link:#giijq[NetBeans IDE]
-* link:#gikwq[Eclipse IDE]
-* link:#beaee[JSR 88 Client]
+* xref:#giijz[Administration Console]
+* xref:#giijf[The `asadmin` Utility]
+* xref:#giijq[NetBeans IDE]
+* xref:#gikwq[Eclipse IDE]
+* xref:#beaee[JSR 88 Client]
 
 [[giijz]][[GSDPG00325]][[administration-console]]
 
@@ -690,7 +690,7 @@ asadmin help list-applications
 
 For additional information on the `asadmin` utility, see
 "link:administration-guide/general-administration.html#GSADG00530[Using the `asadmin` Utility]" in {productName} Administration Guide and the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
 
 [[giijq]][[GSDPG00329]][[netbeans-ide]]
 

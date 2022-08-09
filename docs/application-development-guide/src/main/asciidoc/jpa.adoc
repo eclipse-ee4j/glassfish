@@ -21,13 +21,13 @@ This chapter also tells how to set the default persistence provider in
 
 The following topics are addressed here:
 
-* link:#CHDJJAEI[Overview of Oracle TopLink]
-* link:#CHDHDABJ[Using Oracle TopLink in {productName}]
-* link:#gbwmj[Specifying the Database for an Application]
-* link:#gdkwf[Specifying the Persistence Provider for an Application]
-* link:#gescc[Primary Key Generation Defaults]
-* link:#gbwlh[Automatic Schema Generation]
-* link:#gbxjh[Restrictions and Optimizations]
+* xref:#CHDJJAEI[Overview of Oracle TopLink]
+* xref:#CHDHDABJ[Using Oracle TopLink in {productName}]
+* xref:#gbwmj[Specifying the Database for an Application]
+* xref:#gdkwf[Specifying the Persistence Provider for an Application]
+* xref:#gescc[Primary Key Generation Defaults]
+* xref:#gbwlh[Automatic Schema Generation]
+* xref:#gbxjh[Restrictions and Optimizations]
 
 [[CHDJJAEI]][[GSDVG537]][[overview-of-oracle-toplink]]
 
@@ -124,11 +124,11 @@ in {productName} Administration Guide.
 2. Create the application. For guidance in writing your application,
 see https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence[Persistence]
 in The Jakarta EE Tutorial.
-3. Create the `persistence.xml` file. See link:#gbwmj[Specifying the
+3. Create the `persistence.xml` file. See xref:#gbwmj[Specifying the
 Database for an Application] for considerations specific to {productName}.
 +
 If you are using the Java Persistence API by calling
-`Persistence.createEMF()`, see link:#gdkwf[Specifying the Persistence
+`Persistence.createEMF()`, see xref:#gdkwf[Specifying the Persistence
 Provider for an Application].
 4. If the security manager is enabled and you are using the Java
 Persistence API by calling `Persistence.createEMF()`, see
@@ -358,8 +358,8 @@ respect to performance, security, and so on.
 
 The following topics are addressed here:
 
-* link:#gcjgl[Annotations]
-* link:#gbwmk[Generation Options]
+* xref:#gcjgl[Annotations]
+* xref:#gbwmk[Generation Options]
 
 
 [NOTE]
@@ -414,7 +414,7 @@ control automatic schema generation by the following:
 [NOTE]
 ====
 Before using these options, make sure you have a properly configured
-database. See link:#gbwmj[Specifying the Database for an Application].
+database. See xref:#gbwmj[Specifying the Database for an Application].
 ====
 
 
@@ -428,11 +428,9 @@ EclipseLink JPA Extensions for Schema Generation]
 The following options of the `asadmin deploy` or `asadmin deploydir`
 command control the automatic creation of database tables at deployment.
 
-[[GSDVG539]][[sthref11]][[gbwlr]]
+[[gbwlr]]
 
-
-Table 6-1 The `asadmin deploy` and `asadmin deploydir` Generation
-Options
+Table 6-1 The `asadmin deploy` and `asadmin deploydir` Generation Options
 
 [width="181%",cols="14%,49%,37%",options="header",]
 |===
@@ -462,8 +460,7 @@ If `false`, the `eclipselink.ddl-generation` property setting in
 The following options of the `asadmin undeploy` command control the
 automatic removal of database tables at undeployment.
 
-[[GSDVG540]][[sthref12]][[gbwmm]]
-
+[[gbwmm]]
 
 Table 6-2 The `asadmin undeploy` Generation Options
 
@@ -497,13 +494,13 @@ affect using the Java Persistence API.
 
 The following topics are addressed here:
 
-* link:#giqbi[Oracle Database Enhancements]
-* link:#ghdtr[Extended Persistence Context]
-* link:#gezxw[Using @OrderBy with a Shared Session Cache]
-* link:#gdwqi[Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver]
-* link:#geqvh[Database Case Sensitivity]
-* link:#gbxjg[Sybase Finder Limitation]
-* link:#gbxjp[MySQL Database Restrictions]
+* xref:#giqbi[Oracle Database Enhancements]
+* xref:#ghdtr[Extended Persistence Context]
+* xref:#gezxw[Using @OrderBy with a Shared Session Cache]
+* xref:#gdwqi[Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver]
+* xref:#geqvh[Database Case Sensitivity]
+* xref:#gbxjg[Sybase Finder Limitation]
+* xref:#gbxjp[MySQL Database Restrictions]
 
 [[giqbi]][[GSDVG00390]][[oracle-database-enhancements]]
 
@@ -524,7 +521,7 @@ EclipseLink or you cannot put JDBC driver JAR files in
 domain-dir``/lib/ext``, set the `eclipselink.target-database` property to
 the value `org.eclipse.persistence.platform.database.OraclePlatform`.
 For more information about the `eclipselink.target-database` property,
-see link:#gbwmj[Specifying the Database for an Application].
+see xref:#gbwmj[Specifying the Database for an Application].
 
 [[ghdtr]][[GSDVG00391]][[extended-persistence-context]]
 

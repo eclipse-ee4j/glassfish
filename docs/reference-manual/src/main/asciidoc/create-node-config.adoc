@@ -13,8 +13,6 @@ prev=create-network-listener.html
 
 Creates a node that is not enabled for remote communication
 
-[[sthref445]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] create-node-config [--help]
 [--nodehost node-host]
 [--installdir as-install-parent] [--nodedir node-dir] node-name
 ----
-
-[[sthref446]]
 
 === Description
 
@@ -63,13 +59,11 @@ the instances.
 
 This subcommand is supported in remote mode only.
 
-[[sthref447]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -88,8 +82,6 @@ asadmin-options::
   specified, the path is relative to the as-install directory. If this
   option is omitted, no directory for instances is specified for the
   node.
-
-[[sthref448]]
 
 === Operands
 
@@ -112,11 +104,7 @@ node-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
 
-[[sthref449]]
-
 === Examples
-
-[[GSRFM509]][[sthref450]]
 
 ==== Example 1   Creating a Node That Is Not Enabled for Remote Communication
 
@@ -130,8 +118,6 @@ asadmin> create-node-config --nodehost sj03.example.com sj03
 Command create-node-config executed successfully.
 ----
 
-[[sthref451]]
-
 === Exit Status
 
 0::
@@ -139,11 +125,9 @@ Command create-node-config executed successfully.
 1::
   error in executing the command
 
-[[sthref452]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],

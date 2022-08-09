@@ -13,8 +13,6 @@ prev=list-clusters.html
 
 Lists available commands
 
-[[sthref1381]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-commands [--help]
 
 pattern-list
 ----
-
-[[sthref1382]]
 
 === Description
 
@@ -39,13 +35,11 @@ listed.
 
 This subcommand is supported in local mode and remote mode.
 
-[[sthref1383]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -60,16 +54,12 @@ asadmin-options::
   If this option is set to true, the `--localonly` option must be set to
   false. Otherwise, an error occurs.
 
-[[sthref1384]]
-
 === Operands
 
 pattern-list::
   A space-separated list of text strings on which to filter the list of
   subcommands. Only the subcommands that contain any one of the
   specified text strings is listed.
-
-[[sthref1385]]
 
 === Examples
 
@@ -203,8 +193,6 @@ delete-audit-module                     list-message-security-providers
 ...
 ----
 
-[[sthref1389]]
-
 === Exit Status
 
 0::
@@ -212,11 +200,9 @@ delete-audit-module                     list-message-security-providers
 1::
   error in executing the subcommand
 
-[[sthref1390]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-components.html#list-components-1[`list-components`(1)],
 link:list-containers.html#list-containers-1[`list-containers`(1)],

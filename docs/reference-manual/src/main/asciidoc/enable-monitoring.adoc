@@ -13,8 +13,6 @@ prev=enable-http-lb-server.html
 
 Enables monitoring for the server or for specific monitorable modules
 
-[[sthref1119]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] enable-monitoring [--help]
 [--pid pid]
 [--options options]]
 ----
-
-[[sthref1120]]
 
 === Description
 
@@ -54,13 +50,11 @@ take effect.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1121]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -105,8 +99,6 @@ asadmin-options::
   `debug`;;
     Enables debugging for BTrace. Default value is false.
 
-[[sthref1122]]
-
 === Examples
 
 [[GSRFM603]][[sthref1123]]
@@ -147,8 +139,6 @@ asadmin> enable-monitoring --options debug=true
 Command enable-monitoring executed successfully
 ----
 
-[[sthref1126]]
-
 === Exit Status
 
 0::
@@ -156,11 +146,9 @@ Command enable-monitoring executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1127]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:disable-monitoring.html#disable-monitoring-1[`disable-monitoring`(1)],
 link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)],

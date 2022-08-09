@@ -13,8 +13,6 @@ prev=list-containers.html
 
 Lists context service resources
 
-[[sthref1445]]
-
 === Synopsis
 
 [source]
@@ -23,26 +21,20 @@ asadmin [asadmin-options] list-context-services [--help]
 [target]
 ----
 
-[[sthref1446]]
-
 === Description
 
 The `list-context-services` subcommand lists context service resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1447]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1448]]
 
 === Operands
 
@@ -60,8 +52,6 @@ target::
     cluster.
   instance-name;;
     Lists the resources on a specified server instance.
-
-[[sthref1449]]
 
 === Examples
 
@@ -81,8 +71,6 @@ concurrent/myContextService2
 Command list-context-services executed successfully.
 ----
 
-[[sthref1451]]
-
 === Exit Status
 
 0::
@@ -90,11 +78,9 @@ Command list-context-services executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1452]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-context-service.html#create-context-service-1[`create-context-service`(1)],
 link:delete-context-service.html#delete-context-service-1[`delete-context-service`(1)]

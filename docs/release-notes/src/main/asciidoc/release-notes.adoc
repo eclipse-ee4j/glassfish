@@ -6,9 +6,6 @@ prev=preface.html
 
 = {productName} 7 Release Notes
 
-[[GSRLN00001]][[abppa]]
-
-
 [[glassfish-server-open-source-edition-release-notes]]
 == 1 {productName} 7 Release Notes
 
@@ -39,17 +36,16 @@ Refer to this document prior to installing, configuring, or using
 {productName} 7 software. Consult this document periodically to
 view the most up-to-date product information.
 
-* link:#ghmvk["Revision History"]
-* link:#glcmf["What's New in the {productName} 7 Release?"]
-* link:#abpaj["Hardware and Software Requirements"]
-* link:#glcmm["Known Issues in {productName} 7"]
-* link:#ggqok["Restrictions and Deprecated Functionality"]
-* link:#BABDACBE["Documentation Errata"]
-* link:#giraq["Features Available Only in the Full Platform"]
-* link:#gipkz["Jakarta EE Standards Support"]
-* link:#ghmtl["Jakarta EE SDK"]
-* link:#abpha["How to Report Problems and Provide Feedback"]
-* link:#abphc["Additional Resources"]
+* xref:#ghmvk["Revision History"]
+* xref:#glcmf["What's New in the {productName} 7 Release?"]
+* xref:#abpaj["Hardware and Software Requirements"]
+* xref:#glcmm["Known Issues in {productName} 7"]
+* xref:#ggqok["Restrictions and Deprecated Functionality"]
+* xref:#BABDACBE["Documentation Errata"]
+* xref:#giraq["Features Available Only in the Full Platform"]
+* xref:#gipkz["Jakarta EE Standards Support"]
+* xref:#abpha["How to Report Problems and Provide Feedback"]
+* xref:#abphc["Additional Resources"]
 
 [[ghmvk]][[GSRLN00128]][[revision-history]]
 
@@ -57,14 +53,14 @@ view the most up-to-date product information.
 
 This section lists the revision history for these Release Notes.
 
-[[sthref2]][[gabzd]]
+[[gabzd]]
 
 Table 1-1 Revision History
 
 [width="100%",options="header",]
 |===
 |Date |Description of Changes
-|September 2017 |{productName} 7.
+|September 2022 |{productName} 7.
 |===
 
 
@@ -86,7 +82,7 @@ Updated
 * To Be Done
 
 For a complete list of the Jakarta EE technologies included in {productName} 7,
-see link:#gipkz[Jakarta EE Standards Support].
+see xref:#gipkz[Jakarta EE Standards Support].
 
 
 [NOTE]
@@ -115,11 +111,11 @@ This section lists the requirements that must be met before installing
 
 The following topics are addressed here:
 
-* link:#abpak[Required JDK Versions]
-* link:#ggppy[Required Disk Space]
-* link:#ggpoq[Required Free Ports]
-* link:#gkxlg[Message Queue Broker Requirements]
-* link:#gfgps[Paths and Environment Settings for the JDK Software]
+* xref:#abpak[Required JDK Versions]
+* xref:#ggppy[Required Disk Space]
+* xref:#ggpoq[Required Free Ports]
+* xref:#gkxlg[Message Queue Broker Requirements]
+* xref:#gfgps[Paths and Environment Settings for the JDK Software]
 
 [[abpak]][[GSRLN00246]][[required-jdk-versions]]
 
@@ -128,7 +124,7 @@ The following topics are addressed here:
 {productName} Release 7 requires Oracle JDK 8
 Update 144 or later.
 
-Also be sure to see link:#gfgps[Paths and Environment Settings for the
+Also be sure to see xref:#gfgps[Paths and Environment Settings for the
 JDK Software] for important JDK configuration instructions.
 
 [NOTE]
@@ -165,8 +161,6 @@ The initial default port assignments are listed in the following table.
 If these default port numbers are in use, the installation program
 assigns a randomly selected port number from the dynamic port range. The
 selected port number might not be the next available port number.
-
-[[sthref3]][[ggpmu]]
 
 Table 1-2 Default Port Assignments for {productName} 7
 
@@ -212,7 +206,7 @@ single host, port conflicts can arise in the auto-generated ports used
 by Message Queue and the GMS. To avoid these conflicts, you can
 configure the JMS host and the GMS to use specific ports.
 
-[[sthref4]][[to-configure-specific-ports-for-a-jms-host]]
+[[to-configure-specific-ports-for-a-jms-host]]
 
 ===== To Configure Specific Ports for a JMS Host
 
@@ -240,7 +234,7 @@ jms-host-name
   used in the `--properties` option to escape the dots in the property
   names.
 
-[[sthref5]][[to-configure-specific-gms-ports-for-a-cluster]]
+[[to-configure-specific-gms-ports-for-a-cluster]]
 
 ===== To Configure Specific GMS Ports for a Cluster
 
@@ -297,9 +291,9 @@ difficult to trace.
 
 The following topics are addressed here:
 
-* link:#gldjj[Use the JDK Binaries]
-* link:#gldgl[Set the `JAVA_HOME` Environment Variable]
-* link:#gldho[Set Other Environment Variables As Necessary]
+* xref:#gldjj[Use the JDK Binaries]
+* xref:#gldgl[Set the `JAVA_HOME` Environment Variable]
+* xref:#gldho[Set Other Environment Variables As Necessary]
 
 [[gldjj]][[GSRLN00155]][[use-the-jdk-binaries]]
 
@@ -365,16 +359,14 @@ This section describes known issues and any available workarounds for
 
 The following topics are addressed here:
 
-* link:#CHDIBHHF[JAXB and JAX-WS no longer part of Jakarta EE platform]
-* link:#CHDIBEAJ[Resource validation property is enabled in the JVM option for deployment]
-* link:#CHDBJDGF[Update Tool and pkg Command no longer part of {productName}]
-* link:#CHDJGJHD[Java DB has been replaced by Apache Derby]
+* xref:#CHDIBHHF[JAXB and JAX-WS no longer part of Jakarta EE platform]
+* xref:#CHDIBEAJ[Resource validation property is enabled in the JVM option for deployment]
+* xref:#CHDBJDGF[Update Tool and pkg Command no longer part of {productName}]
+* xref:#CHDJGJHD[Java DB has been replaced by Apache Derby]
 
 [[CHDIBHHF]][[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
 
 ==== JAXB and JAX-WS no longer part of Jakarta EE platform
-
-[[sthref6]][[description]]
 
 ===== Description
 
@@ -388,7 +380,7 @@ These jars are present only in the full profile of GlassFish and
 not part of web profile.
 ====
 
-[[sthref7]][[workaround]]
+[[workaround]]
 
 ===== Workaround
 
@@ -397,8 +389,6 @@ None
 [[CHDIBEAJ]][[resource-validation-property-is-enabled-in-the-jvm-option-for-deployment]]
 
 ==== Resource validation property is enabled in the JVM option for deployment
-
-[[sthref8]][[description-1]]
 
 ===== Description
 
@@ -421,7 +411,7 @@ https://github.com/eclipse-ee4j/glassfishdoc/5.1/administration-guide.pdf#G11.99
 ====
 
 
-[[sthref9]][[workaround-1]]
+[[workaround-1]]
 
 ===== Workaround
 
@@ -432,7 +422,7 @@ deployment, you can set this property value to False.
 
 ==== Update Tool and pkg Command no longer part of {productName}
 
-[[sthref10]][[description-2]]
+[[description-2]]
 
 ===== Description
 
@@ -441,7 +431,7 @@ using the pkg command and the Update tool. Since the recent release of
 {productName} does not require the use of these features, they have
 been removed from the {productName} installation.
 
-[[sthref11]][[workaround-2]]
+[[workaround-2]]
 
 ===== Workaround
 
@@ -451,14 +441,14 @@ No workaround.
 
 ==== Java DB has been replaced by Apache Derby
 
-[[sthref12]][[description-3]]
+[[description-3]]
 
 ===== Description
 
 In the previous releases, Java DB was used as the database for {productName}s. With the release of {productName} 7, Apache Derby
 10.13.1.1 has replaced Java DB as the database for {productName}s.
 
-[[sthref13]][[workaround-3]]
+[[workaround-3]]
 
 ===== Workaround
 
@@ -473,14 +463,13 @@ This section describes restrictions and deprecated functionality in
 
 The following topics are addressed here:
 
-* link:#ggqoc[`asadmin` Subcommands]
-* link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
-* link:#gkueg[Applications That Use Apache Derby]
-* link:#ghpen[No Support for Client VM on Windows AMD64]
-* link:#gkwbd[Metro Reliable Messaging in `InOrder` Delivery Mode]
+* xref:#asadmin-subcommands[`asadmin` Subcommands]
+* <<deprecated-unsupported-and-obsolete-options, Deprecated, Unsupported, and Obsolete Options>>
+* <<Applications That Use Apache Derby>>
+* <<No Support for Client VM on Windows AMD64>>
+* <<Metro Reliable Messaging in `InOrder` Delivery Mode>>
 
-[[ggqoc]][[GSRLN00258]][[asadmin-subcommands]]
-
+[[asadmin-subcommands]]
 ==== `asadmin` Subcommands
 
 In {productName} 7, it is recommended that utility options of the
@@ -498,14 +487,13 @@ subcommand is deprecated.
 * `--echo`
 * `--interactive`
 
-[[abmbf]][[GSRLN00259]][[deprecated-unsupported-and-obsolete-options]]
-
+[[deprecated-unsupported-and-obsolete-options]]
 ==== Deprecated, Unsupported, and Obsolete Options
 
-Options in link:#gaeki[Table 1-3] are deprecated or no longer supported,
+Options in xref:#gaeki[Table 1-3] are deprecated or no longer supported,
 or are obsolete and are ignored.
 
-[[sthref14]][[gaeki]]
+[[gaeki]]
 
 Table 1-3 Deprecated, Unsupported, and Obsolete Options for `asadmin`
 and Subcommands
@@ -656,7 +644,7 @@ https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
 
 This section describes documentation errata.
 
-* link:#BABIDEHD[Upgrading to {productName} Is Not Necessary]
+* xref:#BABIDEHD[Upgrading to {productName} Is Not Necessary]
 
 [[BABIDEHD]][[upgrading-to-oracle-glassfish-server-is-not-necessary]]
 
@@ -707,7 +695,7 @@ only in the {productName} 7 full platform.
 
 === Jakarta EE Standards Support
 
-link:#gjxcp[Table 1-4] lists the Jakarta EE standards implemented in
+xref:#gjxcp[Table 1-4] lists the Jakarta EE standards implemented in
 {productName} 7. The table also indicates the distributions in
 which the implementation of a standard is available.
 
@@ -715,7 +703,7 @@ which the implementation of a standard is available.
 * - indicates that the implementation is not available in the
 distribution.
 
-[[sthref15]][[gjxcp]]
+[[gjxcp]]
 
 Table 1-4 Jakarta EE Standards Implementations in {productName} 7
 

@@ -13,8 +13,6 @@ prev=asadmin.html
 
 Stores the database metadata (schema) in a file for use in mapping and execution
 
-[[sthref2381]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ capture-schema -username name -password password
 [-schemaname schemaname] [-table tablename]
 -out filename]
 ----
-
-[[sthref2382]]
 
 === Description
 
@@ -38,8 +34,6 @@ and use that same username with the `-username` option (and
 When running `capture-schema` against an Oracle database, you should
 grant the database user running the `capture-schema` command the
 `ANALYZE ANY TABLE` privilege.
-
-[[sthref2383]]
 
 === Options
 
@@ -70,8 +64,6 @@ grant the database user running the `capture-schema` command the
   output file does not contain the .dbschema suffix, it will be appended
   to the filename.
 
-[[sthref2384]]
-
 === Examples
 
 [[GSRFM813]][[sthref2385]]
@@ -94,10 +86,8 @@ absolute path locations; otherwise the relative paths are used. The
 relative path is relative to the directory where the command is being
 executed.
 
-[[sthref2386]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

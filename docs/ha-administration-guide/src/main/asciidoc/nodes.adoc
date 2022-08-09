@@ -20,11 +20,11 @@ host such as the name of the host and the location where the {productName} is in
 
 The following topics are addressed here:
 
-* link:#gksgh[Types of {productName} Nodes]
-* link:#CHDBIHFJ[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
-* link:#gkrkn[Creating, Listing, Testing, and Deleting `SSH` Nodes]
-* link:#gkrnp[Creating, Listing, and Deleting `CONFIG` Nodes]
-* link:#gksjd[Updating and Changing the Type of a Node]
+* xref:#gksgh[Types of {productName} Nodes]
+* xref:#CHDBIHFJ[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
+* xref:#gkrkn[Creating, Listing, Testing, and Deleting `SSH` Nodes]
+* xref:#gkrnp[Creating, Listing, and Deleting `CONFIG` Nodes]
+* xref:#gksjd[Updating and Changing the Type of a Node]
 
 [[gksgh]][[GSHAG00179]][[types-of-glassfish-server-nodes]]
 
@@ -76,18 +76,16 @@ are reachable, and delete `DCOM` nodes that are no longer required.
 
 The following topics are addressed here:
 
-* link:#CHDIGBJB[To Create a `DCOM` Node]
-* link:#CHDDCBEG[To List `DCOM` Nodes in a Domain]
-* link:#CHDIFJCC[To Test if a `DCOM` Node is Reachable]
-* link:#CHDCFHBA[To Delete a `DCOM` Node]
+* xref:#CHDIGBJB[To Create a `DCOM` Node]
+* xref:#CHDDCBEG[To List `DCOM` Nodes in a Domain]
+* xref:#CHDIFJCC[To Test if a `DCOM` Node is Reachable]
+* xref:#CHDCFHBA[To Delete a `DCOM` Node]
 
 [[CHDIGBJB]][[GSHAG464]][[to-create-a-dcom-node]]
 
 ==== To Create a `DCOM` Node
 
 Use the `create-node-dcom` subcommand in remote mode to create a `DCOM` node.
-
-[[GSHAG465]]
 
 Before You Begin
 
@@ -140,7 +138,7 @@ install-dir::
 node-name::
   Your choice of name for the node that you are creating.
 
-[[GSHAG466]][[sthref13]]
+[[nodes-example-3-1]]
 Example 3-1 Creating a `DCOM` Node
 
 This example creates the `DCOM` node `wpmdl1` to represent the host
@@ -154,11 +152,9 @@ C:\> asadmin --passwordfile aspwalias.txt create-node-dcom
 Command create-node-dcom executed successfully.
 ----
 
-[[GSHAG467]]
-
 See Also
 
-* link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)]
+* link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)]
 * link:reference-manual/create-node-dcom.html#GSRFM510[`create-node-dcom`(1)]
 
 You can also view the full syntax and options of the subcommand by
@@ -198,7 +194,7 @@ link:reference-manual/list-nodes.html#GSRFM00187[`list-nodes`] subcommand.
 asadmin> list-nodes-dcom
 ----
 
-[[GSHAG470]][[sthref14]]
+[[nodes-example-3-2]]
 Example 3-2 Listing Basic Information About All `DCOM` Nodes in a Domain
 
 This example lists the name, type, and host of all `DCOM` nodes in the
@@ -213,7 +209,7 @@ wpmdl1  DCOM  wpmdl1.example.com
 Command list-nodes-dcom executed successfully.
 ----
 
-[[GSHAG471]][[sthref15]]
+[[nodes-example-3-3]]
 Example 3-3 Listing Detailed Information About All `DCOM` Nodes in a
 Domain
 
@@ -229,8 +225,6 @@ wpmdl2       DCOM   wpmdl2.example.com   C:\glassfish7       wdi2
 wpmdl1       DCOM   wpmdl1.example.com   C:\glassfish7       wdi1
 Command list-nodes-dcom executed successfully.
 ----
-
-[[GSHAG472]]
 
 See Also
 
@@ -249,8 +243,6 @@ typing the following commands at the command line:
 
 Use the `ping-node-dcom` subcommand in remote mode to test if a `DCOM`
 node is reachable.
-
-[[GSHAG474]]
 
 Before You Begin
 
@@ -275,7 +267,7 @@ asadmin> ping-node-dcom node-name
 node-name::
   The name of the node to test.
 
-[[GSHAG475]][[sthref16]]
+[[nodes-example-3-4]]
 Example 3-4 Testing if a `DCOM` Node Is Reachable
 
 This example tests if the `DCOM` node `wpmdl2` is reachable.
@@ -286,8 +278,6 @@ asadmin> ping-node-dcom wpmdl2
 Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
 Command ping-node-dcom executed successfully.
 ----
-
-[[GSHAG476]]
 
 See Also
 
@@ -305,8 +295,6 @@ Use the `delete-node-dcom` subcommand in remote mode to delete a `DCOM` node.
 Deleting a node removes the node from the configuration of the DAS. The
 node's directories and files are deleted when the last {productName}
 instance that resides on the node is deleted.
-
-[[GSHAG478]]
 
 Before You Begin
 
@@ -334,7 +322,7 @@ asadmin> delete-node-dcom node-name
 node-name::
   The name of the node that you are deleting.
 
-[[GSHAG479]][[sthref17]]
+[[nodes-example-3-5]]
 Example 3-5 Deleting a `DCOM` Node
 
 This example confirms that no instances reside on the `DCOM` node `xkyd`
@@ -351,8 +339,6 @@ Command list-nodes-dcom executed successfully.
 asadmin> delete-node-dcom xkyd
 Command delete-node-dcom executed successfully.
 ----
-
-[[GSHAG480]]
 
 See Also
 
@@ -390,10 +376,10 @@ and delete `SSH` nodes that are no longer required.
 
 The following topics are addressed here:
 
-* link:#gkrnf[To Create an `SSH` Node]
-* link:#gkrme[To List `SSH` Nodes in a Domain]
-* link:#gksig[To Test if an `SSH` Node is Reachable]
-* link:#gkrlz[To Delete an `SSH` Node]
+* xref:#gkrnf[To Create an `SSH` Node]
+* xref:#gkrme[To List `SSH` Nodes in a Domain]
+* xref:#gksig[To Test if an `SSH` Node is Reachable]
+* xref:#gkrlz[To Delete an `SSH` Node]
 
 [[gkrnf]][[GSHAG00088]][[to-create-an-ssh-node]]
 
@@ -401,8 +387,6 @@ The following topics are addressed here:
 
 Use the `create-node-ssh` subcommand in remote mode to create an `SSH`
 node.
-
-[[GSHAG347]]
 
 Before You Begin
 
@@ -422,7 +406,7 @@ node, see the link:reference-manual/create-node-ssh.html#GSRFM00048[`create-node
 
 If you are using password authentication for the SSH user, you must
 specify a password file through the `--passwordfile` option of the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility. For more information about SSH user
+link:reference-manual/asadmin.html#asadmin[`asadmin`] utility. For more information about SSH user
 authentication, see link:ssh-setup.html#gkshh[Setting Up SSH User
 Authentication].
 ====
@@ -444,7 +428,7 @@ install-dir::
 node-name::
   Your choice of name for the node that you are creating.
 
-[[GSHAG00020]][[gksih]]
+[[nodes-example-3-6]]
 Example 3-6 Creating an `SSH` Node
 
 This example creates the `SSH` node `sj01` to represent the host
@@ -471,8 +455,6 @@ The SSH session interprets any text message that is displayed during
 login as a file-transfer protocol packet. Therefore, any statement in a
 startup file that displays text messages corrupts the SSH session,
 causing this error.
-
-[[GSHAG349]]
 
 See Also
 
@@ -515,7 +497,7 @@ link:reference-manual/list-nodes.html#GSRFM00187[`list-nodes`] subcommand.
 asadmin> list-nodes-ssh
 ----
 
-[[GSHAG00021]][[gkskt]]
+[[nodes-example-3-7]]
 Example 3-7 Listing Basic Information About All `SSH` Nodes in a Domain
 
 This example lists the name, type, and host of all `SSH` nodes in the
@@ -529,7 +511,7 @@ sj02  SSH  sj02.example.com
 Command list-nodes-ssh executed successfully.
 ----
 
-[[GSHAG00022]][[gkske]]
+[[nodes-example-3-8]]
 Example 3-8 Listing Detailed Information About All `SSH` Nodes in a
 Domain
 
@@ -544,8 +526,6 @@ sj01        SSH    sj01.example.com   /export/glassfish7   pmd-i1
 sj02        SSH    sj02.example.com   /export/glassfish7   pmd-i2
 Command list-nodes-ssh executed successfully.
 ----
-
-[[GSHAG351]]
 
 See Also
 
@@ -564,8 +544,6 @@ typing the following commands at the command line:
 
 Use the `ping-node-ssh` subcommand in remote mode to test if an `SSH`
 node is reachable.
-
-[[GSHAG352]]
 
 Before You Begin
 
@@ -590,7 +568,7 @@ asadmin> ping-node-ssh node-name
 node-name::
   The name of the node to test.
 
-[[GSHAG00023]][[gkshk]]
+[[nodes-example-3-9]]
 Example 3-9 Testing if an `SSH` Node Is Reachable
 
 This example tests if the `SSH` node `sj01` is reachable.
@@ -601,8 +579,6 @@ asadmin> ping-node-ssh sj01
 Successfully made SSH connection to node sj01 (sj01.example.com)
 Command ping-node-ssh executed successfully.
 ----
-
-[[GSHAG353]]
 
 See Also
 
@@ -621,8 +597,6 @@ node.
 Deleting a node removes the node from the configuration of the DAS. The
 node's directories and files are deleted when the last {productName}
 instance that resides on the node is deleted.
-
-[[GSHAG354]]
 
 Before You Begin
 
@@ -650,7 +624,7 @@ asadmin> delete-node-ssh node-name
 node-name::
   The name of the node that you are deleting.
 
-[[GSHAG00024]][[gksjg]]
+[[nodes-example-3-10]]
 Example 3-10 Deleting an `SSH` Node
 
 This example confirms that no instances reside on the `SSH` node `sj01`
@@ -666,8 +640,6 @@ Command list-nodes-ssh executed successfully.
 asadmin> delete-node-ssh sj01
 Command delete-node-ssh executed successfully.
 ----
-
-[[GSHAG355]]
 
 See Also
 
@@ -697,9 +669,9 @@ nodes that are no longer required.
 
 The following topics are addressed here:
 
-* link:#gkrll[To Create a `CONFIG` Node]
-* link:#gkrjr[To List `CONFIG` Nodes in a Domain]
-* link:#gkrms[To Delete a `CONFIG` Node]
+* xref:#gkrll[To Create a `CONFIG` Node]
+* xref:#gkrjr[To List `CONFIG` Nodes in a Domain]
+* xref:#gkrms[To Delete a `CONFIG` Node]
 
 [[gkrll]][[GSHAG00092]][[to-create-a-config-node]]
 
@@ -745,7 +717,7 @@ install-dir::
 node-name::
   Your choice of name for the node that you are creating.
 
-[[GSHAG00025]][[gkshu]]
+[[nodes-example-3-11]]
 Example 3-11 Creating a `CONFIG` Node
 
 This example creates the `CONFIG` node `cfg01`. The host that the node
@@ -758,8 +730,6 @@ the node.
 asadmin> create-node-config cfg01
 Command create-node-config executed successfully.
 ----
-
-[[GSHAG356]]
 
 See Also
 
@@ -800,7 +770,7 @@ Remote subcommands require a running server.
 asadmin> list-nodes-config
 ----
 
-[[GSHAG00026]][[gkskp]]
+[[nodes-example-3-12]]
 Example 3-12 Listing Basic Information About All `CONFIG` Nodes in a
 Domain
 
@@ -816,7 +786,7 @@ cfg02  CONFIG  cfg02.example.com
 Command list-nodes-config executed successfully.
 ----
 
-[[GSHAG00027]][[gksjs]]
+[[nodes-example-3-13]]
 Example 3-13 Listing Detailed Information About All `CONFIG` Nodes in a
 Domain
 
@@ -832,8 +802,6 @@ cfg01               CONFIG   cfg01.example.com    /export/glassfish7   yml-i1
 cfg02               CONFIG   cfg02.example.com    /export/glassfish7   yml-i2
 Command list-nodes-config executed successfully.
 ----
-
-[[GSHAG358]]
 
 See Also
 
@@ -856,8 +824,6 @@ Use the `delete-node-config` subcommand in remote mode to delete a
 Deleting a node removes the node from the configuration of the DAS. The
 node's directories and files are deleted when the last {productName}
 instance that resides on the node is deleted.
-
-[[GSHAG359]]
 
 Before You Begin
 
@@ -883,7 +849,7 @@ asadmin> delete-node-config node-name
 node-name::
   The name of the node that you are deleting.
 
-[[GSHAG00028]][[gksla]]
+[[nodes-example-3-14]]
 Example 3-14 Deleting a `CONFIG` Node
 
 This example confirms that no instances reside on the `CONFIG` node
@@ -900,8 +866,6 @@ Command list-nodes-config executed successfully.
 asadmin> delete-node-config cfg01
 Command delete-node-config executed successfully.
 ----
-
-[[GSHAG360]]
 
 See Also
 
@@ -924,10 +888,10 @@ node and to change the type of a node.
 
 The following topics are addressed here:
 
-* link:#CHDHHAAE[To Update a `DCOM` Node]
-* link:#gksjq[To Update an `SSH` Node]
-* link:#gksjv[To Update a `CONFIG` Node]
-* link:#gkski[To Change the Type of a Node]
+* xref:#CHDHHAAE[To Update a `DCOM` Node]
+* xref:#gksjq[To Update an `SSH` Node]
+* xref:#gksjv[To Update a `CONFIG` Node]
+* xref:#gkski[To Change the Type of a Node]
 
 [[CHDHHAAE]][[GSHAG481]][[to-update-a-dcom-node]]
 
@@ -937,8 +901,6 @@ Use the `update-node-dcom` subcommand in remote mode to update a `DCOM` node.
 
 Options of this subcommand specify the new values of the node's configuration data.
 If you omit an option, the existing value is unchanged.
-
-[[GSHAG482]]
 
 Before You Begin
 
@@ -962,7 +924,7 @@ options::
 node-name::
   The name of the `DCOM` node to update.
 
-[[GSHAG483]][[sthref18]]
+[[nodes-example-3-15]]
 Example 3-15 Updating a `DCOM` Node
 
 This example updates the host that the node `wpmdl1` represents to `wj01`.
@@ -972,8 +934,6 @@ This example updates the host that the node `wpmdl1` represents to `wj01`.
 asadmin> update-node-dcom --nodehost wj01 wpmdl1
 Command update-node-dcom executed successfully.
 ----
-
-[[GSHAG484]]
 
 See Also
 
@@ -990,8 +950,6 @@ Use the `update-node-ssh` subcommand in remote mode to update an `SSH` node.
 
 Options of this subcommand specify the new values of the node's
 configuration data. If you omit an option, the existing value is unchanged.
-
-[[GSHAG361]]
 
 Before You Begin
 
@@ -1016,7 +974,7 @@ options::
 node-name::
   The name of the `SSH` node to update.
 
-[[GSHAG00029]][[gkslc]]
+[[nodes-example-3-16]]
 Example 3-16 Updating an `SSH` Node
 
 This example updates the host that the node `sj01` represents to
@@ -1027,8 +985,6 @@ This example updates the host that the node `sj01` represents to
 asadmin> update-node-ssh --nodehost adc01.example.com sj01
 Command update-node-ssh executed successfully.
 ----
-
-[[GSHAG362]]
 
 See Also
 
@@ -1047,8 +1003,6 @@ Use the `update-node-config` subcommand in remote mode to update a
 Options of this subcommand specify the new values of the node's
 configuration data. If you omit an option, the existing value is
 unchanged.
-
-[[GSHAG363]]
 
 Before You Begin
 
@@ -1069,7 +1023,7 @@ options::
 node-name::
   The name of the `CONFIG` node to update.
 
-[[GSHAG00030]][[gkskc]]
+[[nodes-example-3-17]]
 Example 3-17 Updating a `CONFIG` Node
 
 This example updates the host that the node `cfg02` represents to
@@ -1080,8 +1034,6 @@ This example updates the host that the node `cfg02` represents to
 asadmin> update-node-config --nodehost adc02.example.com cfg02
 Command update-node-config executed successfully.
 ----
-
-[[GSHAG364]]
 
 See Also
 
@@ -1131,8 +1083,6 @@ Changing a `DCOM` node or an `SSH` node to a `CONFIG` node disables
 remote communication for the node.
 ====
 
-
-[[GSHAG365]]
 
 Before You Begin
 
@@ -1189,7 +1139,7 @@ options::
 dcom-or-ssh-node-name::
   The name of the `DCOM` node or the `SSH` node to change.
 
-[[GSHAG00031]][[gkshw]]
+[[nodes-example-3-18]]
 Example 3-18 Changing a `CONFIG` Node to an `SSH` Node
 
 This example changes the `CONFIG` node `cfg02` to an `SSH` node.
@@ -1199,8 +1149,6 @@ This example changes the `CONFIG` node `cfg02` to an `SSH` node.
 asadmin> update-node-ssh cfg02
 Command update-node-ssh executed successfully.
 ----
-
-[[GSHAG366]]
 
 See Also
 

@@ -17,15 +17,15 @@ This chapter gives guidelines for debugging applications in the {productName}.
 
 The following topics are addressed here:
 
-* link:#beafd[Enabling Debugging]
-* link:#beafe[JPDA Options]
-* link:#beaff[Generating a Stack Trace for Debugging]
-* link:#gekvq[Application Client Debugging]
-* link:#beafk[Open Message Queue Debugging]
-* link:#beafl[Enabling Verbose Mode]
-* link:#gkpdk[Class Loader Debugging]
-* link:#beafm[{productName} Logging]
-* link:#beafn[Profiling Tools]
+* xref:#beafd[Enabling Debugging]
+* xref:#beafe[JPDA Options]
+* xref:#beaff[Generating a Stack Trace for Debugging]
+* xref:#gekvq[Application Client Debugging]
+* xref:#beafk[Open Message Queue Debugging]
+* xref:#beafl[Enabling Verbose Mode]
+* xref:#gkpdk[Class Loader Debugging]
+* xref:#beafm[{productName} Logging]
+* xref:#beafn[Profiling Tools]
 
 [[beafd]][[GSDVG00101]][[enabling-debugging]]
 
@@ -48,13 +48,6 @@ For example, for UNIX systems:
 jdb -attach 9009
 ----
 
-For Windows:
-
-[source]
-----
-jdb -connect com.sun.jdi.SocketAttach:port=9009
-----
-
 For more information about the `jdb` debugger, see the following links:
 
 * Java Platform Debugger Architecture - The Java Debugger:
@@ -64,7 +57,7 @@ For more information about the `jdb` debugger, see the following links:
 `https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html`
 
 {productName} debugging is based on the JPDA. For more information,
-see link:#beafe[JPDA Options].
+see xref:#beafe[JPDA Options].
 
 You can attach to the {productName} using any JPDA compliant debugger.
 
@@ -84,9 +77,7 @@ under the relevant configuration.
 attaching the JVM software to a debugger, specify ``address=``port-number
 in the Debug Options field.
 4. To add JPDA options, add any desired JPDA debugging options in Debug
-Options. See link:#beafe[JPDA Options].
-
-[[GSDVG532]]
+Options. See xref:#beafe[JPDA Options].
 
 See Also
 
@@ -148,7 +139,7 @@ point you want to examine.
 
 You should use different ports for the server and client if you are
 debugging both concurrently. For details about setting the port, see
-link:#beafe[JPDA Options].
+xref:#beafe[JPDA Options].
 
 You can also include JVM options in the `appclient` script directly. For
 information about the `appclient` script, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
@@ -237,7 +228,7 @@ not work with the JRockit JVM.
 
 To send the {productName} messages to the Administration Console
 instead of `stderr`, start the domain in verbose mode as described in
-link:#beafl[Enabling Verbose Mode].
+xref:#beafl[Enabling Verbose Mode].
 
 [[beafm]][[GSDVG00108]][[glassfish-server-logging]]
 
@@ -264,9 +255,9 @@ describes how to configure profilers for use with {productName}.
 
 The following topics are addressed here:
 
-* link:#gcicc[The NetBeans Profiler]
-* link:#beafo[The HPROF Profiler]
-* link:#beafr[The JProbe Profiler]
+* xref:#gcicc[The NetBeans Profiler]
+* xref:#beafo[The HPROF Profiler]
+* xref:#beafr[The JProbe Profiler]
 
 Information about comprehensive monitoring and management support in the
 Java 2 Platform, Standard Edition ( J2SE platform) is available at
@@ -411,7 +402,7 @@ profiler.
 ----
 JPROBE_ARGS_0=-jp_input=JPL-file-path
 ----
-See Step link:#jprbstp6[6] for instructions on how to create the JPL
+See Step xref:#jprbstp6[6] for instructions on how to create the JPL
 file.
 4. Start the server instance.
 

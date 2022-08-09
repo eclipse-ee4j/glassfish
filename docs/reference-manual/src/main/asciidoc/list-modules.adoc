@@ -13,16 +13,12 @@ prev=list-message-security-providers.html
 
 Lists {productName} modules
 
-[[sthref1685]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] list-modules [--help]
 ----
-
-[[sthref1686]]
 
 === Description
 
@@ -32,18 +28,14 @@ each module is shown.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1687]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1688]]
 
 === Examples
 
@@ -83,8 +75,6 @@ Module : org.glassfish.common.util:3.0.0.b66
 Command list-modules executed successfully
 ----
 
-[[sthref1690]]
-
 === Exit Status
 
 0::
@@ -92,11 +82,9 @@ Command list-modules executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1691]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-commands.html#list-commands-1[`list-commands`(1)],
 link:list-components.html#list-components-1[`list-components`(1)],

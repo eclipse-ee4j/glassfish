@@ -20,9 +20,9 @@ performance, clustering, security, and integration capabilities.
 
 The following topics are addressed here:
 
-* link:#abfar[Jakarta EE Platform Overview]
-* link:#abfay[{productName} Components]
-* link:#abfca[Configuration Roadmap for High Availability of {productName}]
+* xref:#abfar[Jakarta EE Platform Overview]
+* xref:#abfay[{productName} Components]
+* xref:#abfca[Configuration Roadmap for High Availability of {productName}]
 
 [[abfar]][[GSPLG00016]][[java-ee-platform-overview]]
 
@@ -172,13 +172,13 @@ This section describes the components in {productName}.
 
 The following topics are addressed here:
 
-* link:#abfaz[Server Instances]
-* link:#abfba[Administrative Domains]
-* link:#abfbc[Clusters]
-* link:#abfbe[Named Configurations]
-* link:#abfbf[HTTP Load Balancer Plug-in]
-* link:#abfbh[IIOP Load Balancing in a Cluster]
-* link:#abfbi[Message Queue and JMS Resources]
+* xref:#abfaz[Server Instances]
+* xref:#abfba[Administrative Domains]
+* xref:#abfbc[Clusters]
+* xref:#abfbe[Named Configurations]
+* xref:#abfbf[HTTP Load Balancer Plug-in]
+* xref:#abfbh[IIOP Load Balancing in a Cluster]
+* xref:#abfbi[Message Queue and JMS Resources]
 
 The administration tools, such as the browser-based Administration
 Console, communicate with the domain administration server (DAS), which
@@ -264,7 +264,7 @@ configuration and applications. With the standard backup and restore
 procedures, you can quickly restore working configurations. If the DAS
 host fails, you must create a new DAS installation to restore the
 previous domain configuration. For instructions, see
-"link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
 [[abfbc]][[GSPLG00048]][[clusters]]
 
@@ -512,7 +512,7 @@ Message Queue Broker Deployment].
 The following procedure lists the major tasks for configuring {productName} for high availability. The procedure also provides
 cross-references to detailed instructions for performing each task.
 
-[[sthref6]][[to-configure-glassfish-server-for-high-availability]]
+[[to-configure-glassfish-server-for-high-availability]]
 
 ==== To Configure {productName} for High Availability
 
@@ -541,7 +541,7 @@ High Availability Administration Guide.
 5. Configure domains, nodes, clusters, {productName} instances, and
 virtual servers as required. +
 For more information, see the following documentation:
-* "link:administration-guide/domains.html#GSADG00006[Administering Domains]" in {productName} Administration Guide
+* "link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide
 * "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
 * "link:ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide

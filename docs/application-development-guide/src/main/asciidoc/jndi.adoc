@@ -23,10 +23,10 @@ see the JNDI tutorial at `http://docs.oracle.com/javase/jndi/tutorial/`.
 
 The following topics are addressed here:
 
-* link:#beans[Accessing the Naming Context]
-* link:#beanx[Configuring Resources]
-* link:#gcpge[Using a Custom `jndi.properties` File]
-* link:#beaoa[Mapping References]
+* xref:#beans[Accessing the Naming Context]
+* xref:#beanx[Configuring Resources]
+* xref:#gcpge[Using a Custom `jndi.properties` File]
+* xref:#beaoa[Mapping References]
 
 
 [NOTE]
@@ -59,13 +59,13 @@ provides methods for creating and destroying subcontexts.
 
 The following topics are addressed here:
 
-* link:#BGBJGGAD[Portable Global JNDI Names]
-* link:#gcjkd[{productName} V2 Vendor-Specific Global JNDI Names]
-* link:#gkndi[Disabling {productName} V2 JNDI Names]
-* link:#beanu[Accessing EJB Components Using the `CosNaming` Naming
+* xref:#BGBJGGAD[Portable Global JNDI Names]
+* xref:#gcjkd[{productName} V2 Vendor-Specific Global JNDI Names]
+* xref:#gkndi[Disabling {productName} V2 JNDI Names]
+* xref:#beanu[Accessing EJB Components Using the `CosNaming` Naming
 Context]
-* link:#beanv[Accessing EJB Components in a Remote {productName}]
-* link:#beanw[Naming Environment for Lifecycle Modules]
+* xref:#beanv[Accessing EJB Components in a Remote {productName}]
+* xref:#beanw[Naming Environment for Lifecycle Modules]
 
 
 [NOTE]
@@ -98,8 +98,8 @@ and the EJB 3.1 Specification, section 4.4, "Global JNDI Access"
 If the `disable-nonportable-jndi-names` property is set to false (the
 default), a {productName} V2-specific JNDI name is assigned in
 addition to a portable global JNDI name. For more information, see
-link:#gcjkd[{productName} V2 Vendor-Specific Global JNDI Names] and
-link:#gkndi[Disabling {productName} V2 JNDI Names].
+xref:#gcjkd[{productName} V2 Vendor-Specific Global JNDI Names] and
+xref:#gkndi[Disabling {productName} V2 JNDI Names].
 
 [[gcjkd]][[GSDVG00519]][[glassfish-server-v2-vendor-specific-global-jndi-names]]
 
@@ -110,7 +110,7 @@ according to the following precedence rules:
 
 1. A global JNDI name assigned in the `glassfish-ejb-jar.xml`,
 `glassfish-web.xml`, or `glassfish-application-client.xml` deployment
-descriptor file has the highest precedence. See link:#beaoa[Mapping
+descriptor file has the highest precedence. See xref:#beaoa[Mapping
 References].
 2. A global JNDI name assigned in a `mapped-name` element in the
 `ejb-jar.xml`, `web.xml`, or `application-client.xml` deployment
@@ -311,10 +311,10 @@ server life cycle events.
 The {productName} exposes special resources in the naming
 environment.
 
-* link:#beany[External JNDI Resources]
-* link:#beanz[Custom Resources]
-* link:#giyvw[Built-in Factories for Custom Resources]
-* link:#gkpdn[Using Application-Scoped Resources]
+* xref:#beany[External JNDI Resources]
+* xref:#beanz[Custom Resources]
+* xref:#giyvw[Built-in Factories for Custom Resources]
+* xref:#gkpdn[Using Application-Scoped Resources]
 
 [[beany]][[GSDVG00523]][[external-jndi-resources]]
 
@@ -360,10 +360,10 @@ command. For details, see the link:reference-manual.html#GSRFM[{productName} Ref
 The {productName} provides built-in factories for the following types
 of custom resources:
 
-* link:#giywi[JavaBeanFactory]
-* link:#giysn[PropertiesFactory]
-* link:#giytz[PrimitivesAndStringFactory]
-* link:#giywh[URLFactory]
+* xref:#giywi[JavaBeanFactory]
+* xref:#giysn[PropertiesFactory]
+* xref:#giytz[PrimitivesAndStringFactory]
+* xref:#giywh[URLFactory]
 
 Template `glassfish-resources.xml` files for these built-in factories
 and a `README` file are available at

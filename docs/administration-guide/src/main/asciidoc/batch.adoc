@@ -17,14 +17,14 @@ utility.
 
 The following topics are addressed here:
 
-* link:#BABCHGJJ[About Batch Jobs]
-* link:#BABIHIGA[Viewing Batch Jobs]
-* link:#BABBFFIG[Configuring the Batch Runtime]
+* <<About Batch Jobs>>
+* <<Viewing Batch Jobs>>
+* <<Configuring the Batch Runtime>>
 
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
 
-[[BABCHGJJ]][[GSADG1078]][[about-batch-jobs]]
+[[about-batch-jobs]]
 
 === About Batch Jobs
 
@@ -50,7 +50,7 @@ Batch Applications for the Java Platform]
 programming model for batch applications and the runtime for scheduling
 and executing batch jobs.
 
-[[BABIHIGA]][[GSADG1079]][[viewing-batch-jobs]]
+[[viewing-batch-jobs]]
 
 === Viewing Batch Jobs
 
@@ -62,11 +62,11 @@ details for all batch jobs submitted by all applications in the
 
 The following tasks are used to view information about batch jobs:
 
-* link:#BABIBFDJ[To List Batch Jobs]
-* link:#BABFBGJB[To List Batch Job Executions]
-* link:#BABGJIDD[To List Batch Job Steps]
+* <<To List Batch Jobs>>
+* <<To List Batch Job Executions>>
+* <<To List Batch Job Steps>>
 
-[[BABIBFDJ]][[GSADG1080]][[to-list-batch-jobs]]
+[[to-list-batch-jobs]]
 
 ==== To List Batch Jobs
 
@@ -77,7 +77,7 @@ and job details.
 2. List batch jobs by using the link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-jobs`]
 subcommand.
 
-[[GSADG1081]][[sthref67]]
+[[sthref67]]
 Example 10-1 Listing Batch Jobs
 
 This example lists batch jobs for the default server instance, `server`.
@@ -92,14 +92,12 @@ bonus    6
 Command list-batch-jobs executed successfully.
 ----
 
-[[GSADG1082]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-batch-jobs` at the command line.
 
-[[BABFBGJB]][[GSADG1083]][[to-list-batch-job-executions]]
+[[to-list-batch-job-executions]]
 
 ==== To List Batch Job Executions
 
@@ -115,7 +113,7 @@ batch job executions and execution details.
 2. List batch job executions by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-job-executions`] subcommand.
 
-[[GSADG1084]][[sthref68]]
+[[sthref68]]
 Example 10-2 Listing Batch Job Executions
 
 This example lists batch job executions for the default server instance,
@@ -131,14 +129,12 @@ bonus    6            FAILED       FAILED
 Command list-batch-job-executions executed successfully.
 ----
 
-[[GSADG1085]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-batch-job-executions` at the command line.
 
-[[BABGJIDD]][[GSADG1086]][[to-list-batch-job-steps]]
+[[to-list-batch-job-steps]]
 
 ==== To List Batch Job Steps
 
@@ -154,7 +150,7 @@ and step details for a specific batch job execution.
 3. List steps for a specific batch job execution by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-job-steps`] subcommand.
 
-[[GSADG1087]][[sthref69]]
+[[sthref69]]
 Example 10-3 Listing Batch Job Steps
 
 This example lists batch job steps and specific step details for a job
@@ -180,14 +176,12 @@ process    8        COMPLETED     METRICNAME          VALUE
 Command list-batch-job-steps executed successfully.
 ----
 
-[[GSADG1088]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-batch-job-steps` at the command line.
 
-[[BABBFFIG]][[GSADG1089]][[configuring-the-batch-runtime]]
+[[configuring-the-batch-runtime]]
 
 === Configuring the Batch Runtime
 
@@ -207,16 +201,16 @@ server instance or a standalone cluster, the default data source is
 resources.
 
 For more information about data sources, see
-link:jdbc.html#ablih[Administering Database Connectivity]. For more
+xref:jdbc.adoc#ablih[Administering Database Connectivity]. For more
 information about managed executor services, see
-link:concurrent.html#DAFBHEDI[Configuring Managed Executor Services].
+xref:concurrent.adoc#configuring-managed-executor-services[Configuring Managed Executor Services].
 
 The following tasks are used to view and configure the batch runtime:
 
-* link:#BABBGHCJ[To List the Batch Runtime Configuration]
-* link:#BABFEJAD[To Configure the Batch Runtime]
+* <<To List the Batch Runtime Configuration>>
+* <<To Configure the Batch Runtime>>
 
-[[BABBGHCJ]][[GSADG1090]][[to-list-the-batch-runtime-configuration]]
+[[to-list-the-batch-runtime-configuration]]
 
 ==== To List the Batch Runtime Configuration
 
@@ -239,7 +233,7 @@ asdmin> get resources.managed-executor-service.concurrent/__defaultManagedExecut
 ...
 ----
 
-[[GSADG1091]][[sthref70]]
+[[sthref70]]
 Example 10-4 Listing the Batch Runtime Configuration
 
 This example lists the configuration of the batch runtime for the
@@ -253,15 +247,13 @@ jdbc/__TimerPool         concurrent/__defaultManagedExecutorService
 Command list-batch-runtime-configuration executed successfully.
 ----
 
-[[GSADG1092]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-batch-runtime-configuration` at the command
 line.
 
-[[BABFEJAD]][[GSADG1093]][[to-configure-the-batch-runtime]]
+[[to-configure-the-batch-runtime]]
 
 ==== To Configure the Batch Runtime
 
@@ -287,7 +279,7 @@ submitted to the batch runtime without affecting execution of the job.
 2. Configure the batch runtime by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`set-batch-runtime-configuration`] subcommand.
 
-[[GSADG1094]][[sthref71]]
+[[sthref71]]
 Example 10-5 Configuring the Batch Runtime
 
 This example configures the batch runtime for the default server
@@ -299,8 +291,6 @@ instance, `server`, to use an existing managed executor service named
 asadmin> set-batch-runtime-configuration --executorservicelookupname concurrent/Executor1
 Command set-batch-runtime-configuration executed successfully.
 ----
-
-[[GSADG1095]]
 
 See Also
 

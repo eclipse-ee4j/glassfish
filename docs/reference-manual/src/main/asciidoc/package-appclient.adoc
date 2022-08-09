@@ -13,16 +13,12 @@ prev=capture-schema.html
 
 Packs the application client container libraries and jar files
 
-[[sthref2387]]
-
 === Synopsis
 
 [source]
 ----
 package-appclient
 ----
-
-[[sthref2388]]
 
 === Description
 
@@ -78,8 +74,6 @@ for descriptions of the following attributes:
 |Interface Stability |Unstable
 |===
 
-
-[[sthref2390]]
 
 === See Also
 

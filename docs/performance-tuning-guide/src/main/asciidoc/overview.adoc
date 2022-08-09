@@ -22,10 +22,10 @@ environment.
 
 The following topics are addressed here:
 
-* link:#abear[Process Overview]
-* link:#abeat[Understanding Operational Requirements]
-* link:#abeba[General Tuning Concepts]
-* link:#abebd[Further Information]
+* xref:#abear[Process Overview]
+* xref:#abeat[Understanding Operational Requirements]
+* xref:#abeba[General Tuning Concepts]
+* xref:#abebd[Further Information]
 
 [[abear]][[GSPTG00048]][[process-overview]]
 
@@ -35,7 +35,7 @@ The following table outlines the overall {productName} 7
 administration process, and shows where performance tuning fits in the
 sequence.
 
-[[sthref4]][[gacmh]]
+[[gacmh]]
 
 Table 1-1 Performance Tuning Roadmap
 
@@ -119,11 +119,11 @@ Before you begin to deploy and tune your application on the {productName}, it is
 The operational environment is determined by high-level constraints and
 requirements such as:
 
-* link:#abeau[Application Architecture]
-* link:#abeav[Security Requirements]
-* link:#gkvjf[High Availability Clustering, Load Balancing, and Failover]
-* link:#abeay[Hardware Resources]
-* link:#abeaz[Administration]
+* xref:#abeau[Application Architecture]
+* xref:#abeav[Security Requirements]
+* xref:#gkvjf[High Availability Clustering, Load Balancing, and Failover]
+* xref:#abeay[Hardware Resources]
+* xref:#abeaz[Administration]
 
 [[abeau]][[GSPTG00154]][[application-architecture]]
 
@@ -360,7 +360,7 @@ second column gives the practical ramifications of the concept, the
 third column describes the measurements, and the right most column
 describes the value sources.
 
-[[sthref6]][[gacmp]]
+[[gacmp]]
 
 Table 1-2 Factors That Affect Performance
 
@@ -470,7 +470,7 @@ hardware node may meet the performance requirements. However for better
 availability, you can cluster two or more systems. Employing external
 load balancers and workload simulation, determine the performance
 benefits of replicating one well-tuned application server node, as
-determined in step link:#CEGHGCGI[2].
+determined in step xref:#CEGHGCGI[2].
 
 [[abebc]][[GSPTG00160]][[user-expectations]]
 

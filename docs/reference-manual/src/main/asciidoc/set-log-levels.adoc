@@ -13,8 +13,6 @@ prev=set-log-file-format.html
 
 Sets the log level for one or more loggers
 
-[[sthref2057]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] set-log-levels [--help]
 logger-name=logger-level[:logger-name=logger-level]*
 ----
 
-[[sthref2058]]
-
 === Description
 
 The `set-log-levels` subcommand sets the log level for one or more
@@ -33,13 +29,11 @@ loggers. Changes take effect with some latency for the reconfiguration.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2059]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -51,8 +45,6 @@ asadmin-options::
   * cluster-name - The name of a cluster.
   * instance-name - The name of a standalone server instance.
 
-[[sthref2060]]
-
 === Operands
 
 logger-name::
@@ -62,8 +54,6 @@ logger-level::
   The level to set for the logger. Log level values are `SEVERE`,
   `WARNING`, `INFO`, `CONFIG`, `FINE`, `FINER`, and `FINEST`. The
   default setting is `INFO`.
-
-[[sthref2061]]
 
 === Examples
 
@@ -94,8 +84,6 @@ jakarta.enterprise.system.container.ejb=SEVERE
 Command set-log-level executed successfully.
 ----
 
-[[sthref2064]]
-
 === Exit Status
 
 0::
@@ -103,11 +91,9 @@ Command set-log-level executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2065]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:collect-log-files.html#collect-log-files-1[`collect-log-files`(1)],
 link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)],

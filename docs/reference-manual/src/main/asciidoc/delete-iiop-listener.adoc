@@ -13,8 +13,6 @@ prev=delete-http-redirect.html
 
 Removes an IIOP listener
 
-[[sthref745]]
-
 === Synopsis
 
 [source]
@@ -22,20 +20,16 @@ Removes an IIOP listener
 delete-iiop-listener [--help] [--target target] listener_id
 ----
 
-[[sthref746]]
-
 === Description
 
 The `delete-iiop-listener` subcommand removes the specified IIOP
 listener. This subcommand is supported in remote mode only.
 
-[[sthref747]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -53,14 +47,10 @@ asadmin-options::
   instance_name;;
     Deletes the listener from a particular server instance.
 
-[[sthref748]]
-
 === Operands
 
 listener_id::
   The unique identifier for the IIOP listener to be deleted.
-
-[[sthref749]]
 
 === Examples
 
@@ -77,8 +67,6 @@ asadmin> delete-iiop-listener sample_iiop_listener
 Command delete-iiop-listener executed successfully.
 ----
 
-[[sthref751]]
-
 === Exit Status
 
 0::
@@ -86,11 +74,9 @@ Command delete-iiop-listener executed successfully.
 1::
   error in executing the command
 
-[[sthref752]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-iiop-listener.html#create-iiop-listener-1[`create-iiop-listener`(1)],
 link:list-iiop-listeners.html#list-iiop-listeners-1[`list-iiop-listeners`(1)]

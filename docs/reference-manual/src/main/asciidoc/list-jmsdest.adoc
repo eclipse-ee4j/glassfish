@@ -13,8 +13,6 @@ prev=list-jdbc-resources.html
 
 Lists the existing JMS physical destinations
 
-[[sthref1559]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-jmsdest [--help]
 [target]
 ----
 
-[[sthref1560]]
-
 === Description
 
 The `list-jmsdest` subcommand lists the Java Message Service (JMS)
@@ -34,21 +30,17 @@ physical destinations.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref1561]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--desttype`::
   The type of JMS destination to be listed. Valid values are `topic` and
   `queue`.
-
-[[sthref1562]]
 
 === Operands
 
@@ -66,8 +58,6 @@ target::
     specified cluster.
   instance-name;;
     Lists the physical destinations for the specified server instance.
-
-[[sthref1563]]
 
 === Examples
 
@@ -98,8 +88,6 @@ PhysicalTopic
 Command list-jmsdest executed successfully.
 ----
 
-[[sthref1566]]
-
 === Exit Status
 
 0::
@@ -107,11 +95,9 @@ Command list-jmsdest executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1567]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jmsdest.html#create-jmsdest-1[`create-jmsdest`(1)],
 link:delete-jmsdest.html#delete-jmsdest-1[`delete-jmsdest`(1)],

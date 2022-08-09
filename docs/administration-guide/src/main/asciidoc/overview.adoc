@@ -27,10 +27,10 @@ integrating add-on components, and deploying applications.
 
 The following topics are addressed here:
 
-* link:#giubb[Default Settings and Locations]
-* link:#ghrcy[Configuration Tasks]
-* link:#ggjxp[Administration Tools]
-* link:#giudo[Instructions for Administering {productName}]
+* <<Default Settings and Locations>>
+* <<Configuration Tasks>>
+* <<Administration Tools>>
+* <<Instructions for Administering {productName}>>
 
 [[giubb]][[GSADG00526]][[default-settings-and-locations]]
 
@@ -39,7 +39,7 @@ The following topics are addressed here:
 After installation, you might need to perform some immediate
 configuration tasks to make your installation function as intended. If
 configuration defaults have been accepted, some features are enabled and
-some not. For an overview of initial configuration tasks for {productName} services and resources, see link:#gitwr[Initial Configuration
+some not. For an overview of initial configuration tasks for {productName} services and resources, see xref:#gitwr[Initial Configuration
 Tasks].
 
 In addition, you might want to reset default passwords, change names or
@@ -55,8 +55,7 @@ required.
 ====
 
 
-[[GSADG793]][[sthref3]][[giuad]]
-
+[[giuad]]
 
 Table 1-1 Default Administration Values
 
@@ -77,8 +76,7 @@ Table 1-1 Default Administration Values
 |===
 
 
-[[GSADG794]][[sthref4]][[gjhfv]]
-
+[[gjhfv]]
 
 Table 1-2 Default Locations
 
@@ -93,7 +91,7 @@ Table 1-2 Default Locations
 
 
 For information about replaceable items and default paths and files, see
-link:preface.html#ghpfg[Default Paths and File Names].
+xref:preface.adoc#default-paths-and-file-names[Default Paths and File Names].
 
 [[ghrcy]][[GSADG00527]][[configuration-tasks]]
 
@@ -112,10 +110,10 @@ configuration file.
 
 The following topics are addressed here:
 
-* link:#gitwr[Initial Configuration Tasks]
-* link:#giusb[How Dotted Names Work for Configuration]
-* link:#gjjrl[Configuration Files]
-* link:#gitzw[Impact of Configuration Changes]
+* <<Initial Configuration Tasks>>
+* <<How Dotted Names Work for Configuration>>
+* <<Configuration Files>>
+* <<Impact of Configuration Changes>>
 
 [[gitwr]][[GSADG00694]][[initial-configuration-tasks]]
 
@@ -130,16 +128,16 @@ The following resources and services frequently require configuration
 immediately after installation:
 
 System Properties::
-  See link:general-administration.html#ghcjc[Administering System
+  See xref:general-administration.adoc#ghcjc[Administering System
   Properties].
 Domains::
   The initial `domain1` is created during installation. Additional
   configuration tasks might include such tasks as configuring additional
   domains or setting up automatic restart. See
-  link:domains.html#ggnop[Administering Domains].
+  xref:domains.adoc#administering-domains[Administering Domains].
 JVM::
   The initial tasks for configuring the JVM include creating JVM options
-  and profilers. See link:jvm.html#ablwj[Administering the Virtual
+  and profilers. See xref:jvm.adoc#ablwj[Administering the Virtual
   Machine for the Java Platform].
 Logging::
   By default, logging is enabled, so basic logging works without
@@ -150,9 +148,9 @@ Monitoring::
   By default, the monitoring service is enabled. However, monitoring for
   the individual modules is not enabled, so your first monitoring task
   is to enable monitoring for the modules that you want to monitor. See
-  link:monitoring.html#ablur[Administering the Monitoring Service].
+  xref:monitoring.adoc#ablur[Administering the Monitoring Service].
 Life Cycle Modules::
-  See link:lifecycle-modules.html#giury[Administering Life Cycle
+  See xref:lifecycle-modules.adoc#giury[Administering Life Cycle
   Modules].
 Security::
   * System Security. Initial configuration tasks might include setting
@@ -170,7 +168,7 @@ Database Connectivity::
   The initial tasks involved in configuring {productName} to connect
   to the Apache Derby database include creating a Java Database
   Connectivity (JDBC) connection pool, creating a JDBC resource, and
-  integrating a JDBC driver. See link:jdbc.html#ablih[Administering
+  integrating a JDBC driver. See xref:jdbc.adoc#ablih[Administering
   Database Connectivity].
 EIS Connectivity::
   The initial tasks involved in configuring {productName} to connect
@@ -178,31 +176,31 @@ EIS Connectivity::
   connection pool, creating a connector resource, editing a resource
   adapter configuration, creating a connector security map, creating a
   connector work security map, and creating an administered object (if
-  needed). See link:connectors.html#abllp[Administering EIS
+  needed). See xref:connectors.adoc#abllp[Administering EIS
   Connectivity].
 Internet Connectivity::
   The initial tasks involved in making deployed web applications
   accessible by internet clients include creating HTTP network listeners
   and virtual servers, and configuring the HTTP listeners for SSL (if
-  needed). See link:http_https.html#ablsw[Administering Internet
+  needed). See xref:http_https.adoc#ablsw[Administering Internet
   Connectivity].
 Object Request Broker (ORB)::
   An initial configuration task might involve creating an IIOP listener.
-  See link:orb.html#abltr[Administering the Object Request Broker (ORB)].
+  See xref:orb.adoc#abltr[Administering the Object Request Broker (ORB)].
 JavaMail Service::
   An initial configuration task might involve creating a JavaMail
-  resource. See link:javamail.html#ablkr[Administering the JavaMail
+  resource. See xref:javamail.adoc#ablkr[Administering the JavaMail
   Service].
 Java Message Service (JMS)::
   Initial configuration tasks might include creating a physical
   destination, creating connection factories or destination resources,
   creating a JMS host (if the default JMS host is not adequate),
   adjusting connection pool settings (if needed), and configuring
-  resource adapters for JMS. See link:jms.html#abljw[Administering the
+  resource adapters for JMS. See xref:jms.adoc#abljw[Administering the
   Java Message Service (JMS)].
 JNDI Service::
   An initial configuration task might involve creating a JNDI resource.
-  See link:jndi.html#ablky[Administering the Java Naming and Directory
+  See xref:jndi.adoc#ablky[Administering the Java Naming and Directory
   Interface (JNDI) Service].
 
 Information and instructions for accomplishing the tasks by using the
@@ -228,7 +226,7 @@ dotted names, see the link:reference-manual/dotted-names.html#GSRFM00268[`dotted
 ====
 Dotted names also apply to monitoring, but the method is different. For
 information on using dotted names for monitoring, see
-link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works].
+xref:monitoring.adoc#ghbaz[How the Monitoring Tree Structure Works].
 ====
 
 
@@ -353,10 +351,10 @@ pools must be disabled and re-enabled or redeployed for the change to take effec
 
 The following topics are addressed here:
 
-* link:#gkvaj[To Determine Whether the DAS or an Instance Requires Restart]
-* link:#ghciy[Configuration Changes That Require Restart]
-* link:#ghclm[Dynamic Configuration Changes]
-* link:#gkvas[Changes That Affect Applications]
+* <<To Determine Whether the DAS or an Instance Requires Restart>>
+* <<Configuration Changes That Require Restart>>
+* <<Dynamic Configuration Changes>>
+* <<Changes That Affect Applications>>
 
 [[gkvaj]][[GSADG00300]][[to-determine-whether-the-das-or-an-instance-requires-restart]]
 
@@ -418,8 +416,6 @@ asadmin> list-instances pmd-i1
 pmd-i1   running;  requires restart
 Command list-instances executed successfully.
 ----
-
-[[GSADG795]]
 
 See Also
 
@@ -538,12 +534,12 @@ however, there are exceptions.
 
 The following {productName} administration tools are described here:
 
-* link:#ablav[Administration Console]
-* link:#gcocs[`asadmin` Utility]
-* link:#gjjok[REST Interfaces]
-* link:#gjjxt[OSGi Module Management Subsystem]
-* link:#ghcjl[`keytool` Utility]
-* link:#ghrfm[Java Monitoring and Management Console (JConsole)]
+* <<Administration Console>>
+* <<`asadmin` Utility>>
+* <<REST Interfaces>>
+* <<OSGi Module Management Subsystem>>
+* <<`keytool` Utility>>
+* <<Java Monitoring and Management Console (JConsole)>>
 
 [[ablav]][[GSADG00698]][[administration-console]]
 
@@ -624,9 +620,9 @@ identifying the operation or task that you want to perform. You can run
 `asadmin` subcommands either from a command prompt or from a script.
 Running `asadmin` subcommands from a script is helpful for automating
 repetitive tasks. Basic information about how the `asadmin` utility
-works can be found in the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page. For
+works can be found in the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page. For
 instructions on using the `asadmin` utility, see
-link:general-administration.html#giobi[Using the `asadmin` Utility].
+xref:general-administration.adoc#giobi[Using the `asadmin` Utility].
 
 To issue an `asadmin` subcommand in the standard command shell (single
 mode), go to the as-install``/bin`` directory and type the `asadmin`
@@ -674,7 +670,7 @@ Manual].
 interfaces to enable you to access monitoring and configuration data for
 {productName}, including data that is provided by newly installed
 add-on components. For more information, see
-link:general-administration.html#gjipx[Using REST Interfaces to
+xref:general-administration.adoc#gjipx[Using REST Interfaces to
 Administer {productName}].
 
 [[gjjxt]][[GSADG00702]][[osgi-module-management-subsystem]]
@@ -743,7 +739,7 @@ as-install``/config/osgi.properties`` to change the value of the
 `glassfish.osgi.start.level.final` property from 2 to 3.
 
 3. Restart the DAS.
-For instructions, see link:domains.html#ginqj[To Restart a Domain].
+For instructions, see xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[CJAGIGII]][[GSADG1050]][[to-run-apache-felix-gogo-remote-shell-commands]]
 
@@ -783,7 +779,7 @@ instance whose shell is being accessed must be running.
 2. Access the remote shell by using the link:reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
 subcommand. For the full syntax and options for this subcommand, see `osgi-shell`(1).
 
-[[GSADG1053]][[sthref5]]
+[[GSADG1053]]
 Example 1-3 Listing Apache Felix Gogo Remote Shell Commands
 
 This example lists Apache Felix Gogo remote shell commands. Some lines
@@ -810,7 +806,7 @@ gogo:each
 gogo:echo
 ----
 
-[[GSADG1054]][[sthref6]]
+[[GSADG1054]]
 Example 1-4 Running a Remote Shell Command
 
 This example runs the Felix Remote Shell Command `lb` without any
@@ -898,7 +894,7 @@ http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glass
 The contents of the files are added to the
 as-install``/modules/autostart`` directory of your {productName}
 installation.
-4. Restart the DAS. For instructions, see link:domains.html#ginqj[To Restart a Domain].
+4. Restart the DAS. For instructions, see xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG797]]
 
@@ -907,9 +903,9 @@ Next Steps
 After downloading and installing the GlassFish OSGi Web Console, you can
 access the console as explained in the following sections:
 
-* link:#BABIDJHF[To Access the GlassFish OSGi Web Console Through the
+* xref:#BABIDJHF[To Access the GlassFish OSGi Web Console Through the
 {productName} Administration Console]
-* link:#BABDJHAF[To Access the GlassFish OSGi Web Console as a Standalone Web Application]
+* <<To Access the GlassFish OSGi Web Console as a Standalone Web Application>>
 
 [[BABIDJHF]][[GSADG798]][[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
 
@@ -922,7 +918,7 @@ every {productName} instance in a domain.
 the GlassFish OSGi Web Console are running.
 
 2. Start the {productName} Administration Console.
-For instructions, see link:#ablav[Administration Console].
+For instructions, see <<Administration Console>>.
 
 3. Open the Administration Console page for the DAS or instance for
 which you are accessing the GlassFish OSGi Web Console.
@@ -998,7 +994,7 @@ Java SE provides tools to connect to an MBean server and view the MBeans
 that are registered with the server. JConsole is one such popular JMX
 Connector Client and is available as part of the standard Java SE
 distribution. For instructions on implementing JConsole in the {productName} environment,
-see link:monitoring.html#giwqm[Configuring JConsole to View {productName} Monitoring Data].
+see xref:monitoring.adoc#giwqm[Configuring JConsole to View {productName} Monitoring Data].
 
 [[giudo]][[GSADG00529]][[instructions-for-administering-glassfish-server]]
 
@@ -1007,7 +1003,7 @@ see link:monitoring.html#giwqm[Configuring JConsole to View {productName} Monito
 Information and instructions on performing most of the administration
 tasks from the command line are provided in this document and in the
 `asadmin` utility help pages. For instructions on accessing `asadmin`
-online help, see link:general-administration.html#givlw[To Display Help
+online help, see xref:general-administration.adoc#givlw[To Display Help
 Information for the `asadmin` Utility or a Subcommand].
 
 Information and instructions for accomplishing the tasks by using the

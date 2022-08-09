@@ -13,8 +13,6 @@ prev=start-domain.html
 
 Starts a {productName} instance
 
-[[sthref2133]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] start-instance [--help]
 [--debug={false|true}] [--sync={normal|full|none}]
 instance-name
 ----
-
-[[sthref2134]]
 
 === Description
 
@@ -51,13 +47,11 @@ subcommand.
 
 This command is supported in remote mode only.
 
-[[sthref2135]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -109,14 +103,10 @@ If a file below a top level subdirectory is changed without a change
     startup of the instance while the DAS updates all files in the
     instance's directories.
 
-[[sthref2136]]
-
 === Operands
 
 instance-name::
   The name of the {productName} instance to start.
-
-[[sthref2137]]
 
 === Examples
 
@@ -163,8 +153,6 @@ The instance, ymlsa1, was started on host localhost
 Command start-instance executed successfully.
 ----
 
-[[sthref2140]]
-
 === Exit Status
 
 0::
@@ -172,11 +160,9 @@ Command start-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref2141]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],

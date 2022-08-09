@@ -14,8 +14,6 @@ prev=change-admin-password.html
 Changes the master broker in a Message Queue cluster providing JMS
 services for a {productName} cluster.
 
-[[sthref53]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ services for a {productName} cluster.
 asadmin [asadmin-options] change-master-broker [--help]
 clustered-instance-name
 ----
-
-[[sthref54]]
 
 === Description
 
@@ -36,18 +32,14 @@ first instance configured in the {productName} cluster.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref55]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref56]]
 
 === Operands
 
@@ -55,8 +47,6 @@ clustered-instance-name::
   The name of the server instance whose Message Queue broker is to
   become the master broker of the Message Queue cluster. This server
   instance must be an instance in a {productName} cluster.
-
-[[sthref57]]
 
 === Examples
 
@@ -73,8 +63,6 @@ asadmin> change-master-broker clustinst3
 Command change-master-broker executed successfully.
 ----
 
-[[sthref59]]
-
 === Exit Status
 
 0::
@@ -82,10 +70,8 @@ Command change-master-broker executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref60]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

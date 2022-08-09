@@ -19,9 +19,9 @@ Guidelines for evaluating and investigating a problem are provided.
 
 This chapter contains the following sections:
 
-* link:#abgar[Identifying the Problem]
-* link:#ghuvy[Troubleshooting Tools]
-* link:#ghuyv[Where to Go for More Information]
+* xref:#abgar[Identifying the Problem]
+* xref:#ghuvy[Troubleshooting Tools]
+* xref:#ghuyv[Where to Go for More Information]
 
 [[abgar]][[GSTSG00039]][[identifying-the-problem]]
 
@@ -33,10 +33,10 @@ Understanding and diagnosing problems in enterprise software with many
 components performing many tasks can be a challenge. This section
 describes how to get started , and contains the following topics:
 
-* link:#ghvay[First Steps]
-* link:#ghuvf[Gathering Information]
-* link:#abgax[Examining Log Files]
-* link:#ghuvd[Monitoring the System]
+* xref:#ghvay[First Steps]
+* xref:#ghuvf[Gathering Information]
+* xref:#abgax[Examining Log Files]
+* xref:#ghuvd[Monitoring the System]
 
 [[ghvay]][[GSTSG00171]][[first-steps]]
 
@@ -84,8 +84,8 @@ supported JDK version.
 Your problem might be related to a known issue for the release. Refer to
 the link:release-notes.html#GSRLN[{productName} Release Notes] for
 the latest information regarding known issues and possible workarounds.
-Also search the GlassFish Issue Tracker at
-`http://java.net/jira/browse/GLASSFISH`.
+Also search the GlassFish issues at
+`https://github.com/eclipse-ee4j/glassfish/issues`.
 
 [[ghykl]][[GSTSG00079]][[search-the-product-documentation]]
 
@@ -93,11 +93,10 @@ Also search the GlassFish Issue Tracker at
 
 {productName} includes complete product
 documentation. Search the documentation to see if your problem is
-addressed. See link:preface.html#ghpbz[{productName} Documentation
-Set] for the books in the documentation set and a description of their
-contents. Also see the Administration Console online help for detailed
-information about performing administrative tasks using the graphical
-interface.
+addressed. See link:preface.html#glassfish-server-documentation-set[{productName} Documentation Set]
+for the books in the documentation set and a description of their contents.
+Also see the Administration Console online help for detailed
+information about performing administrative tasks using the graphical interface.
 
 The following books will be especially helpful for troubleshooting:
 
@@ -116,9 +115,8 @@ be to figure out why something isn't working.
 
 Lists and forums are extremely helpful resources, and are accessed as follows:
 
-* GlassFish mailing lists (start with users@glassfish.java.net and
-  search the archives): `http://java.net/projects/glassfish/lists/`
-* GlassFish user forum: `http://www.java.net/forums/glassfish/glassfish`
+* GlassFish mailing lists: `https://accounts.eclipse.org/mailing-list/glassfish-dev`
+* GlassFish user forum: `https://www.eclipse.org/forums/index.php/f/419/`
 
 [[ghuvf]][[GSTSG00172]][[gathering-information]]
 
@@ -137,7 +135,7 @@ As you continue your investigation, consider the following questions.
 ===== When Does the Problem Occur?
 
 * What do the logs show? What kind of error message are you getting? For
-more information about logs, see link:#abgax[Examining Log Files]. Logs
+more information about logs, see xref:#abgax[Examining Log Files]. Logs
 are a good place to start your troubleshooting.
 * What are you trying to do when the problem occurs and how are you
 doing it? What is the sequence of events?
@@ -281,10 +279,10 @@ Several tools are available that can be used to collect information for
 troubleshooting purposes. This section provides basic information about
 some of them, and includes the following:
 
-* link:#ghvcm[Operating System Utilities]
-* link:#ghvbo[Stack Traces and Thread Dumps]
-* link:#ghyjq[VisualVM]
-* link:#gjjjl[JVM Command-Line Tools]
+* xref:#ghvcm[Operating System Utilities]
+* xref:#ghvbo[Stack Traces and Thread Dumps]
+* xref:#ghyjq[VisualVM]
+* xref:#gjjjl[JVM Command-Line Tools]
 
 [[ghvcm]][[GSTSG00175]][[operating-system-utilities]]
 
@@ -323,8 +321,6 @@ Type the following command:
 ----
 asadmin generate-jvm-report --type=thread
 ----
-
-[[sthref3]]
 
 See Also
 
@@ -384,7 +380,7 @@ again here for easy reference.
 Release Notes]
 * Error messages: link:error-messages-reference.html#GSEMR[{productName} Error
 Message Reference]
-* Mailing lists and forums: See link:#ghymp[Search the GlassFish Mailing
+* Mailing lists and forums: See xref:#ghymp[Search the GlassFish Mailing
 Lists and Forums] for details about accessing lists and forums.
 * GlassFish community site: `http://glassfish.java.net/`
 

@@ -13,8 +13,6 @@ prev=delete-node-config.html
 
 Deletes a node that is enabled for communication over DCOM
 
-[[sthref906]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-node-dcom [--help]
 [--uninstall={false|true}] [--force={false|true}]
 node-name
 ----
-
-[[sthref907]]
 
 === Description
 
@@ -56,13 +52,11 @@ link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(
 
 This subcommand is supported in remote mode only.
 
-[[sthref908]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -100,15 +94,11 @@ asadmin-options::
     If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.
 
-[[sthref909]]
-
 === Operands
 
 node-name::
   The name of the node to delete. The node must enabled for
   communication over DCOM. Otherwise, an error occurs.
-
-[[sthref910]]
 
 === Examples
 
@@ -125,8 +115,6 @@ asadmin> delete-node-dcom xkyd
 Command delete-node-dcom executed successfully.
 ----
 
-[[sthref912]]
-
 === Exit Status
 
 0::
@@ -134,11 +122,9 @@ Command delete-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref913]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
 link:delete-instance.html#delete-instance-1[`delete-instance`(1)],

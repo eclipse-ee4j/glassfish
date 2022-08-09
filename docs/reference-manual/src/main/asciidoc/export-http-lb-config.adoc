@@ -13,8 +13,6 @@ prev=export.html
 
 Exports the load balancer configuration or load balancer to a file
 
-[[sthref1161]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] export-http-lb-config [--help]
 --config config_name | --lbname load_balancer_name
 [--target target] [--retrievefile=false] [file_name]
 ----
-
-[[sthref1162]]
 
 === Description
 
@@ -51,13 +47,11 @@ subcommand is not applicable to {productName}.
 ====
 
 
-[[sthref1163]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -76,8 +70,6 @@ asadmin-options::
   Specifies the target to which the load balancer configuration will be
   exported. If a target is not specified, the load balancer
   configuration is exported to the location specified with file_name.
-
-[[sthref1164]]
 
 === Operands
 
@@ -101,8 +93,6 @@ target::
 
   * cluster_name- Specifies a cluster and its server instances.
   * stand-alone_instance_name- Specifies a specific server instance.
-
-[[sthref1165]]
 
 === Examples
 
@@ -134,8 +124,6 @@ asadmin> export-http-lb-config --config mycluster-http-lb-config "C:\Sun\AppServ
 Command export-http-lb-config executed successfully.
 ----
 
-[[sthref1168]]
-
 === Exit Status
 
 0::
@@ -143,11 +131,9 @@ Command export-http-lb-config executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1169]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
 link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)],

@@ -13,8 +13,6 @@ prev=disable-http-lb-server.html
 
 Disables monitoring for the server or for specific monitorable modules
 
-[[sthref1063]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Disables monitoring for the server or for specific monitorable modules
 asadmin [asadmin-options] disable-monitoring [--help]
 [--modules module-name][:module-name]*
 ----
-
-[[sthref1064]]
 
 === Description
 
@@ -49,13 +45,11 @@ take effect.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1065]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,11 +62,7 @@ asadmin-options::
   `transaction-service`, `web-container`, and `web-services-container`.
   Additional modules can be listed by using the `get` subcommand.
 
-[[sthref1066]]
-
 === Operands
-
-[[sthref1067]]
 
 === Examples
 
@@ -102,8 +92,6 @@ asadmin> disable-monitoring --modules web-container:ejb-container
 Command disable-monitoring executed successfully
 ----
 
-[[sthref1070]]
-
 === Exit Status
 
 0::
@@ -111,11 +99,9 @@ Command disable-monitoring executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1071]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:get.html#get-1[`get`(1)],
 link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],

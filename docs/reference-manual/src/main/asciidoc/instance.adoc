@@ -15,8 +15,6 @@ An instance in {productName} has its own Jakarta EE configuration,
 Jakarta EE resources, application deployment areas, and server configuration
 settings
 
-[[sthref2403]]
-
 === Description
 
 {productName} creates one server instance, called `server` at the

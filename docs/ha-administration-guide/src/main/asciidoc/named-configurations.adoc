@@ -26,9 +26,9 @@ regardless of how the configuration was created.
 
 The following topics are addressed here:
 
-* link:#abdjl[About Named Configurations]
-* link:#abdjq[Creating, Listing, and Deleting Named Configurations]
-* link:#gkrgf[Modifying Properties for Named Configurations and Instances]
+* xref:#abdjl[About Named Configurations]
+* xref:#abdjq[Creating, Listing, and Deleting Named Configurations]
+* xref:#gkrgf[Modifying Properties for Named Configurations and Instances]
 
 [[abdjl]][[GSHAG00191]][[about-named-configurations]]
 
@@ -91,7 +91,7 @@ information, see the following sections:
 `default-config` configuration. If you require an instance or cluster to
 reference a copy of a different configuration, copy the configuration
 and specify the copy when you create the instance or cluster. For
-information about how to copy a configuration, see link:#abdjr[To Create
+information about how to copy a configuration, see xref:#abdjr[To Create
 a Named Configuration].
 
 {productName} assigns the name cluster-or-instance`-config` to an
@@ -126,10 +126,10 @@ delete configurations that are no longer required.
 
 The following topics are addressed here:
 
-* link:#abdjr[To Create a Named Configuration]
-* link:#gkrgg[To List the Named Configurations in a Domain]
-* link:#abdju[To List the Targets of a Named Configuration]
-* link:#abdjv[To Delete a Named Configuration]
+* xref:#abdjr[To Create a Named Configuration]
+* xref:#gkrgg[To List the Named Configurations in a Domain]
+* xref:#abdju[To List the Targets of a Named Configuration]
+* xref:#abdjv[To Delete a Named Configuration]
 
 [[abdjr]][[GSHAG00128]][[to-create-a-named-configuration]]
 
@@ -196,8 +196,6 @@ asadmin> copy-config default-config clusterpresets-config
 Command copy-config executed successfully.
 ----
 
-[[GSHAG418]]
-
 See Also
 
 * link:clusters.html#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
@@ -238,8 +236,6 @@ ymlcluster-config
 clusterpresets-config
 Command list-configs executed successfully.
 ----
-
-[[GSHAG419]]
 
 See Also
 
@@ -295,8 +291,6 @@ yml-i2   not running
 Command list-instances executed successfully.
 ----
 
-[[GSHAG420]]
-
 See Also
 
 * link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
@@ -324,8 +318,6 @@ A standalone configuration that was created automatically for a cluster
 or a {productName} instance is deleted when the cluster or instance is deleted.
 ====
 
-
-[[GSHAG421]]
 
 Before You Begin
 
@@ -388,8 +380,6 @@ asadmin> delete-config clusterpresets-config
 Command delete-config executed successfully.
 ----
 
-[[GSHAG422]]
-
 See Also
 
 * link:instances.html#gkqcw[To Delete an Instance Centrally]
@@ -419,9 +409,9 @@ configurations and instances.
 
 The following topics are addressed here:
 
-* link:#gkrls[Properties for Port Numbers in a Named Configuration]
-* link:#fxxvk[To Modify a Named Configuration's Properties]
-* link:#abdjt[To Modify Port Numbers of an Instance]
+* xref:#gkrls[Properties for Port Numbers in a Named Configuration]
+* xref:#fxxvk[To Modify a Named Configuration's Properties]
+* xref:#abdjt[To Modify Port Numbers of an Instance]
 
 [[gkrls]][[GSHAG00272]][[properties-for-port-numbers-in-a-named-configuration]]
 
@@ -532,7 +522,7 @@ config-name::
   The name of the configuration whose properties you are modifying.
 property-name::
   The name of the property that you are modifying. For a list of
-  available properties, see link:#gkrls[Properties for Port Numbers in a
+  available properties, see xref:#gkrls[Properties for Port Numbers in a
   Named Configuration].
 
 .. Set the property to its new value.
@@ -546,7 +536,7 @@ config-name::
   The name of the configuration whose properties you are modifying.
 property-name::
   The name of the property that you are modifying. For a list of
-  available properties, see link:#gkrls[Properties for Port Numbers in a
+  available properties, see xref:#gkrls[Properties for Port Numbers in a
   Named Configuration].
 new-value::
   The value to which you are setting the property.
@@ -568,8 +558,6 @@ configs.config.clusterpresets-config.system-property.JMS_PROVIDER_PORT.value=276
 configs.config.clusterpresets-config.system-property.JMS_PROVIDER_PORT.value=27678
 Command set executed successfully.
 ----
-
-[[GSHAG423]]
 
 See Also
 
@@ -623,7 +611,7 @@ instance-name::
 port-property::
   The name of the property that corresponds to the port number that you
   are modifying. For a list of available properties, see
-  link:#gkrls[Properties for Port Numbers in a Named Configuration].
+  xref:#gkrls[Properties for Port Numbers in a Named Configuration].
 
 .. Set the port number to its new value.
 +
@@ -637,7 +625,7 @@ instance-name::
 port-property::
   The name of the property that corresponds to the port number that you
   are modifying. For a list of available properties, see
-  link:#gkrls[Properties for Port Numbers in a Named Configuration].
+  xref:#gkrls[Properties for Port Numbers in a Named Configuration].
 new-value::
   The value to which you are setting the port number.
 
@@ -658,8 +646,6 @@ servers.server.pmdsainst.system-property.ASADMIN_LISTENER_PORT.value=24859
 servers.server.pmdsainst.system-property.ASADMIN_LISTENER_PORT.value=24859
 Command set executed successfully.
 ----
-
-[[GSHAG424]]
 
 See Also
 

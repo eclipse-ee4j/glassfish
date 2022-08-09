@@ -13,8 +13,6 @@ prev=list-jacc-providers.html
 
 Lists the existing JavaMail session resources
 
-[[sthref1536]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-javamail-resources [--help]
 [target]
 ----
 
-[[sthref1537]]
-
 === Description
 
 The `list-javamail-resources` subcommand lists the existing JavaMail
@@ -32,18 +28,14 @@ session resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1538]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1539]]
 
 === Operands
 
@@ -61,8 +53,6 @@ target::
   instance_name;;
     Lists the resources for a particular server instance.
 
-[[sthref1540]]
-
 === Examples
 
 [[GSRFM669]][[sthref1541]]
@@ -79,8 +69,6 @@ mail/MyMailSession
 Command list-javamail-resources executed successfuly.
 ----
 
-[[sthref1542]]
-
 === Exit Status
 
 0::
@@ -88,11 +76,9 @@ Command list-javamail-resources executed successfuly.
 1::
   error in executing the subcommand
 
-[[sthref1543]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-javamail-resource.html#create-javamail-resource-1[`create-javamail-resource`(1)],
 link:delete-javamail-resource.html#delete-javamail-resource-1[`delete-javamail-resource`(1)]

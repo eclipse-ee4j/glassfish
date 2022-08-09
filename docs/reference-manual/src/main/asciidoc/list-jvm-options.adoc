@@ -13,8 +13,6 @@ prev=list-jobs.html
 
 Lists options for the Java application launcher
 
-[[sthref1608]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-jvm-options [--help]
 [--target target]
 [--profiler={false|true}]
 ----
-
-[[sthref1609]]
 
 === Description
 
@@ -38,13 +34,11 @@ Administration Console or by using the `create-jvm-options` and
 
 This subcommand is supported in remote mode only.
 
-[[sthref1610]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -66,8 +60,6 @@ asadmin-options::
   for the profiler. Set this option to true only if a profiler has been
   configured. If this option is set to true and no profiler is
   configured, an error occurs. The default is false.
-
-[[sthref1611]]
 
 === Examples
 
@@ -101,8 +93,6 @@ com.sun.aas.javaRoot}/jre/lib/ext${path.separator}${com.sun.aas.instanceRoot}
 Command list-jvm-options executed successfully.
 ----
 
-[[sthref1613]]
-
 === Exit Status
 
 0::
@@ -110,11 +100,9 @@ Command list-jvm-options executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1614]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jvm-options.html#create-jvm-options-1[`create-jvm-options`(1)],
 link:delete-jvm-options.html#delete-jvm-options-1[`delete-jvm-options`(1)]

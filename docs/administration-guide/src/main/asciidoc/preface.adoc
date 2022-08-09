@@ -5,7 +5,6 @@ prev=title.adoc
 
 = Preface
 
-[[GSADG00003]][[gkamj]]
 [[preface]]
 == Preface
 
@@ -27,13 +26,11 @@ of Jakarta EE: compatibility. It enables Java developers to access the
 
 The following topics are addressed here:
 
-* link:#ghpbz[{productName} Documentation Set]
-* link:#giprl[Related Documentation]
-* link:#fwbkx[Typographic Conventions]
-* link:#fquvc[Symbol Conventions]
-* link:#ghpfg[Default Paths and File Names]
-
-[[GSADG00518]][[ghpbz]]
+* <<{productName} Documentation Set>>
+* <<Related Documentation>>
+* <<Typographic Conventions>>
+* <<Symbol Conventions>>
+* <<Default Paths and File Names>>
 
 [[glassfish-server-documentation-set]]
 === {productName} Documentation Set
@@ -67,7 +64,7 @@ your system and enterprise.
 
 |link:administration-guide.html#GSADG[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
-from the command line by using the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] utility.
+from the command line by using the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
@@ -138,8 +135,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSADG00519]][[giprl]]
-
+[[giprl]]
 [[related-documentation]]
 === Related Documentation
 
@@ -182,8 +178,6 @@ are bundled with the Jakarta EE Software Development Kit (SDK) and are also
 available from the repository
 (`https://github.com/eclipse-ee4j/glassfish-samples`).
 
-[[GSADG00520]][[fwbkx]]
-
 [[typographic-conventions]]
 === Typographic Conventions
 
@@ -221,8 +215,6 @@ A cache is a copy that is stored locally.
 Do not save the file.
 |===
 
-
-[[GSADG00521]][[fquvc]]
 
 [[symbol-conventions]]
 === Symbol Conventions
@@ -264,8 +256,6 @@ The following table explains symbols that might be used in this book.
 |From the File menu, choose New. From the New submenu, choose Templates.
 |===
 
-
-[[GSADG00522]][[ghpfg]]
 
 [[default-paths-and-file-names]]
 === Default Paths and File Names

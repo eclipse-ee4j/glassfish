@@ -13,8 +13,6 @@ prev=delete-application-ref.html
 
 Removes the named audit-module
 
-[[sthref593]]
-
 === Synopsis
 
 [source]
@@ -24,20 +22,16 @@ asadmin [asadmin-options] delete-audit-module [--help]
 audit_module_name
 ----
 
-[[sthref594]]
-
 === Description
 
 This subcommand removes the named audit module. This subcommand is
 supported in remote mode only.
 
-[[sthref595]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -55,14 +49,10 @@ asadmin-options::
   instance_name;;
     Deletes the audit module for a particular server instance.
 
-[[sthref596]]
-
 === Operands
 
 audit_module_name::
   The name of the audit module to be deleted.
-
-[[sthref597]]
 
 === Examples
 
@@ -76,8 +66,6 @@ asadmin> delete-audit-module sampleAuditModule
 Command delete-audit-module executed successfully
 ----
 
-[[sthref599]]
-
 === Exit Status
 
 0::
@@ -85,11 +73,9 @@ Command delete-audit-module executed successfully
 1::
   error in executing the command
 
-[[sthref600]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-audit-module.html#create-audit-module-1[`create-audit-module`(1)],
 link:list-audit-modules.html#list-audit-modules-1[`list-audit-modules`(1)]

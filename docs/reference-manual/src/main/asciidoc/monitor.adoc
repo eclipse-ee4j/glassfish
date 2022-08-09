@@ -16,8 +16,6 @@ not alter the content in any way.
 
 Displays monitoring data for commonly used components and services
 
-[[sthref1890]]
-
 === Synopsis
 
 [source]
@@ -29,8 +27,6 @@ asadmin [asadmin-options] monitor [--help]
 [--filter filter]
 instance-name
 ----
-
-[[sthref1891]]
 
 === Description
 
@@ -50,13 +46,11 @@ appears in a table format. To view the legend of the table header, type `h`.
 
 This subcommand is supported in local mode only.
 
-[[sthref1892]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -88,7 +82,7 @@ asadmin-options::
     `server.server-config.monitoring-service.module-monitoring-levels.jvm`
     must be set to LOW or HIGH. +
     Displays the following statistics for the Virtual Machine for the
-    Java platform (Java Virtual Machine or JVM machine):link:#sthref1893[^Footnote 1^]
+    Java platform (Java Virtual Machine or JVM machine):xref:#sthref1893[^Footnote 1^]
 +
 --
     `UpTime`::
@@ -158,15 +152,11 @@ asadmin-options::
   not occur. Instead, the subcommand runs successfully and displays a
   warning message that the option is ignored.
 
-[[sthref1894]]
-
 === Operands
 
 instance-name::
   The server instance for which to view monitoring data. The default
   value is `server`.
-
-[[sthref1895]]
 
 === Examples
 
@@ -244,8 +234,6 @@ To see the legend for the table headings, type `h`.
 ******************************************************************************************
 ----
 
-[[sthref1898]]
-
 === Exit Status
 
 0::
@@ -253,11 +241,9 @@ To see the legend for the table headings, type `h`.
 1::
   error in executing the subcommand
 
-[[sthref1899]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],
 link:disable-monitoring.html#disable-monitoring-1[`disable-monitoring`(1)],

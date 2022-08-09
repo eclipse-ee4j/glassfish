@@ -13,8 +13,6 @@ prev=restart-domain.html
 
 Restarts a running {productName} instance
 
-[[sthref1986]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Restarts a running {productName} instance
 asadmin [asadmin-options] restart-instance [--help]
 [--debug={false|true}] instance-name
 ----
-
-[[sthref1987]]
 
 === Description
 
@@ -70,13 +66,11 @@ stopped and restarted by using following sequence of subcommands:
 
 This subcommand is supported in remote mode only.
 
-[[sthref1988]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -97,16 +91,12 @@ asadmin-options::
 The default is the current setting of this option for the instance
   that is being restarted.
 
-[[sthref1989]]
-
 === Operands
 
 instance-name::
   The name of the {productName} instance to restart. If the instance
   is not running, the subcommand displays a warning message and attempts
   to start the instance.
-
-[[sthref1990]]
 
 === Examples
 
@@ -124,8 +114,6 @@ Instance pmdsa1 was restarted.
 Command restart-instance executed successfully.
 ----
 
-[[sthref1992]]
-
 === Exit Status
 
 0::
@@ -133,11 +121,9 @@ Command restart-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref1993]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],

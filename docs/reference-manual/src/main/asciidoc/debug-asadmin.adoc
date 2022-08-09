@@ -10,15 +10,13 @@ prev=asadmin.html
 The script content on this page is for navigation purposes only and does
 not alter the content in any way.
 
-[[debug-asadmin-1m]][[GSRFM00263]][[debug-asadmin]]
+[[debug-asadmin]]
 
 == debug-asadmin
 
 Variant of the `asadmin` utility for performing administrative tasks for {productName}. This variant
 is useful for debugging local admin commands the launching of {productName}. It suspends immediately
 waiting for a debug connection to port 9008.
-
-[[sthref2364]]
 
 === Synopsis
 
@@ -36,8 +34,6 @@ debug-asadmin [--host host]
 [--help]
 [subcommand [options] [operands]]
 ----
-
-[[sthref2365]]
 
 === Description
 

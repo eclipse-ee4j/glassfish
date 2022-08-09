@@ -13,8 +13,6 @@ prev=create-node-dcom.html
 
 Creates a node that is enabled for communication over SSH
 
-[[sthref463]]
-
 === Synopsis
 
 [source]
@@ -28,8 +26,6 @@ asadmin [asadmin-options] create-node-ssh [--help]
 [--install={false|true}] [--archive archive]
 node-name
 ----
-
-[[sthref464]]
 
 === Description
 
@@ -53,13 +49,11 @@ through SSH, set the `--force` option to `true`.
 
 This subcommand is supported in remote mode only.
 
-[[sthref465]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -100,7 +94,7 @@ asadmin-options::
 {productName} also supports password authentication through the
 `AS_ADMIN_SSHPASSWORD` entry in the password file. The password file
 is specified in the `--paswordfile` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility.
 ====
 +
 If the SSH private key file is protected by a passphrase, the password
@@ -148,8 +142,6 @@ If the SSH private key file is protected by a passphrase, the password
   is run. The archive does not contain the `domains` directory or the
   `nodes` directory.
 
-[[sthref466]]
-
 === Operands
 
 node-name::
@@ -171,11 +163,7 @@ node-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
 
-[[sthref467]]
-
 === Examples
-
-[[GSRFM513]][[sthref468]]
 
 ==== Example 1   Creating a Node
 
@@ -191,8 +179,6 @@ asadmin> create-node-ssh
 
 Command create-node-ssh executed successfully.
 ----
-
-[[GSRFM514]][[sthref469]]
 
 ==== Example 2   Forcing the Creation of a Node
 
@@ -213,8 +199,6 @@ Continuing with node creation due to use of --force.
 Command create-node-ssh executed successfully.
 ----
 
-[[sthref470]]
-
 === Exit Status
 
 0::
@@ -222,11 +206,9 @@ Command create-node-ssh executed successfully.
 1::
   error in executing the command
 
-[[sthref471]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],

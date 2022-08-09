@@ -13,8 +13,6 @@ prev=create-auth-realm.html
 
 Creates a {productName} cluster
 
-[[sthref147]]
-
 === Synopsis
 
 [source]
@@ -35,8 +33,6 @@ asadmin [asadmin-options] create-cluster [--help]
 [--autohadb=false] [--portbase port-number]
 cluster-name
 ----
-
-[[sthref148]]
 
 === Description
 
@@ -84,13 +80,11 @@ subcommand
 
 This subcommand is supported in remote mode only.
 
-[[sthref149]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -344,8 +338,6 @@ To match the configuration of the network on which the DAS and
   not occur. Instead, the subcommand runs successfully and displays a
   warning message that the option is ignored.
 
-[[sthref150]]
-
 === Operands
 
 cluster-name::
@@ -379,8 +371,6 @@ cluster-name::
   link:configure-jms-cluster.html#configure-jms-cluster-1[`configure-jms-cluster`(1)]
   subcommand, the name can be no longer than n–19 characters, where n is
   the maximum table name length allowed by the database.
-
-[[sthref151]]
 
 === Examples
 
@@ -418,7 +408,7 @@ To distinguish colon (`:`) characters in URIs from separators in a
 property list, colons in URIs are escaped with single quote characters
 (`'`) and backslash (`\`) characters. For more information about escape
 characters in options for the `asadmin` utility, see the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 
 This example assumes that the port on which each instance listens for
 GMS messages is set independently for the instance through the
@@ -477,8 +467,6 @@ GMS_LISTENER_PORT=9090' gencluster
 Command create-cluster executed successfully.
 ----
 
-[[sthref156]]
-
 === Exit Status
 
 0::
@@ -486,11 +474,9 @@ Command create-cluster executed successfully.
 1::
   error in executing the command
 
-[[sthref157]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
 link:create-instance.html#create-instance-1[`create-instance`(1)],

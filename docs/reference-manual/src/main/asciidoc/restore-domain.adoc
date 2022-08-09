@@ -13,8 +13,6 @@ prev=restart-local-instance.html
 
 Restores files from backup
 
-[[sthref2002]]
-
 === Synopsis
 
 [source]
@@ -29,21 +27,17 @@ asadmin [asadmin-options] restore-domain [--help]
 [domain-name]
 ----
 
-[[sthref2003]]
-
 === Description
 
 This command restores files under the domain from a backup directory.
 
 The `restore-domain` command is supported in local mode only.
 
-[[sthref2004]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -72,8 +66,6 @@ asadmin-options::
   backup file. +
   The default value is `false`.
 
-[[sthref2005]]
-
 === Operands
 
 domain-name::
@@ -83,8 +75,6 @@ domain-name::
   the backup file, an error occurs unless the `--force` option is
   specified.
 
-[[sthref2006]]
-
 === Exit Status
 
 0::
@@ -92,11 +82,9 @@ domain-name::
 1::
   error in executing the subcommand
 
-[[sthref2007]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:backup-domain.html#backup-domain-1[`backup-domain`(1)],
 link:list-backups.html#list-backups-1[`list-backups`(1)]

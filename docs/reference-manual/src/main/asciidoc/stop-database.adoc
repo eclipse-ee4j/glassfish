@@ -13,8 +13,6 @@ prev=stop-cluster.html
 
 Stops the Java DB
 
-[[sthref2158]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] stop-database [--help]
 [--dbuser db-user]
 [--dbhost host] [--dbport port-no]
 ----
-
-[[sthref2159]]
 
 === Description
 
@@ -38,13 +34,11 @@ database server process for the specified port only.
 
 This subcommand is supported in local mode only.
 
-[[sthref2160]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -60,8 +54,6 @@ asadmin-options::
 `--dbport`::
   The port number where the Java DB server listens for client
   connections. The default is 1527.
-
-[[sthref2161]]
 
 === Examples
 
@@ -79,8 +71,6 @@ Shutdown successful.
 Command stop-database executed successfully.
 ----
 
-[[sthref2163]]
-
 === Exit Status
 
 The exit status applies to errors in executing the `asadmin` utility.
@@ -95,11 +85,9 @@ as-install``/javadb``.
 1::
   error in executing the command
 
-[[sthref2164]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:start-database.html#start-database-1[`start-database`(1)]
 

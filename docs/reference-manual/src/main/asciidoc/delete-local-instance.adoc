@@ -13,8 +13,6 @@ prev=delete-lifecycle-module.html
 
 Deletes a {productName} instance on the machine where the subcommand is run
 
-[[sthref842]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-local-instance [--help]
 [--nodedir node-dir] [--node node-name]
 [instance-name]
 ----
-
-[[sthref843]]
 
 === Description
 
@@ -69,13 +65,11 @@ specified and multiple instances reside on the node, an error occurs.
 
 This subcommand is supported in remote mode only.
 
-[[sthref844]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -88,16 +82,12 @@ asadmin-options::
   omitted only if the directory that the `--nodedir` option specifies
   contains only one node directory. Otherwise, this option is required.
 
-[[sthref845]]
-
 === Operands
 
 instance-name::
   The name of the instance to delete. This operand may be omitted if
   only one instance resides on the specified node. Otherwise, this
   operand is required.
-
-[[sthref846]]
 
 === Examples
 
@@ -114,8 +104,6 @@ asadmin> delete-local-instance pmdsainst
 Command delete-local-instance executed successfully.
 ----
 
-[[sthref848]]
-
 === Exit Status
 
 0::
@@ -123,11 +111,9 @@ Command delete-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref849]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],

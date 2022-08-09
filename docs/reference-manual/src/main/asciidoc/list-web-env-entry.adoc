@@ -13,8 +13,6 @@ prev=list-web-context-param.html
 
 Lists environment entries for a deployed web application or module
 
-[[sthref1866]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists environment entries for a deployed web application or module
 asadmin [asadmin-options] list-web-env-entry [--help]
 [--name=env-entry-name] application-name[/module]
 ----
-
-[[sthref1867]]
 
 === Description
 
@@ -52,13 +48,11 @@ For each entry, the following information is displayed:
 * The description of the entry or `null` if no description was specified
   when the entry was set
 
-[[sthref1868]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,8 +62,6 @@ asadmin-options::
   unique within a deployment component. If this option is omitted, all
   environment entries that have previously been set for the application
   are listed.
-
-[[sthref1869]]
 
 === Operands
 
@@ -100,8 +92,6 @@ module::
   The module would be specified as the operand of this command as
   `myApp/myWebModule.war`.
 
-[[sthref1870]]
-
 === Examples
 
 [[GSRFM719]][[sthref1871]]
@@ -124,8 +114,6 @@ Hello Port (java.lang.Integer) = null ignoreDescriptorItem=true //null
 Command list-web-env-entry executed successfully.
 ----
 
-[[sthref1872]]
-
 === Exit Status
 
 0::
@@ -133,11 +121,9 @@ Command list-web-env-entry executed successfully.
 1::
   error in executing the command
 
-[[sthref1873]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-applications.html#list-applications-1[`list-applications`(1)],
 link:set-web-env-entry.html#set-web-env-entry-1[`set-web-env-entry`(1)],

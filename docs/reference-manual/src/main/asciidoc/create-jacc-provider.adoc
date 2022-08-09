@@ -15,8 +15,6 @@ Enables administrators to create a JACC provider that can be used by
 third-party authorization modules for applications running in
 {productName}
 
-[[sthref304]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-jacc-provider [--help]
 [--property name=value)[:name=value]*]
 [--target target] jacc-provider-name
 ----
-
-[[sthref305]]
 
 === Description
 
@@ -55,8 +51,6 @@ point to a different JACC provider, restart {productName}.
 
 This command is supported in remote mode only.
 
-[[sthref306]]
-
 === Options
 
 If an option has a short option name, then the short option precedes the
@@ -65,7 +59,7 @@ two dashes.
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -103,15 +97,11 @@ asadmin-options::
   instance_name;;
     Creates the JACC provider on a specified server instance.
 
-[[sthref307]]
-
 === Operands
 
 jacc-provider-name::
   The name of the provider used to reference the `jacc-provider` element
   in `domain.xml`.
-
-[[sthref308]]
 
 === Examples
 
@@ -132,8 +122,6 @@ testJACC
 Command create-jacc-provider executed successfully.
 ----
 
-[[sthref310]]
-
 === Exit Status
 
 0::
@@ -141,11 +129,9 @@ Command create-jacc-provider executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref311]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-jacc-provider.html#delete-jacc-provider-1[`delete-jacc-provider`(1)],
 link:list-jacc-providers.html#list-jacc-providers-1[`list-jacc-providers`(1)]

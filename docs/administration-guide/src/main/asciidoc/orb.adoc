@@ -23,9 +23,9 @@ IIOP listeners.
 
 The following topics are addressed here:
 
-* link:#ablts[About the ORB]
-* link:#abltw[Configuring the ORB]
-* link:#ablty[Administering IIOP Listeners]
+* <<About the ORB>>
+* <<Configuring the ORB>>
+* <<Administering IIOP Listeners>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -74,10 +74,10 @@ listener.
 
 The following topics are addressed here:
 
-* link:#gioyo[To Create an IIOP Listener]
-* link:#giowc[To List IIOP Listeners]
-* link:#giwlq[To Update an IIOP Listener]
-* link:#giowj[To Delete an IIOP Listener]
+* <<To Create an IIOP Listener>>
+* <<To List IIOP Listeners>>
+* <<To Update an IIOP Listener>>
+* <<To Delete an IIOP Listener>>
 
 [[gioyo]][[GSADG00478]][[to-create-an-iiop-listener]]
 
@@ -94,7 +94,7 @@ Information about the properties for the subcommand is included in this
 help page.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00263]][[gipfl]]
 Example 15-1 Creating an IIOP Listener
@@ -107,8 +107,6 @@ asadmin> create-iiop-listener --listeneraddress 192.168.1.100
 --iiopport 1400 sample_iiop_listener
 Command create-iiop-listener executed successfully.
 ----
-
-[[GSADG1011]]
 
 See Also
 
@@ -140,8 +138,6 @@ SSL_MUTUALAUTH
 sample_iiop_listener
 Command list-iiop-listeners executed successfully.
 ----
-
-[[GSADG1012]]
 
 See Also
 
@@ -185,7 +181,7 @@ link:reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`]
 link:reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`] subcommand.
 4. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00266]][[giped]]
 Example 15-4 Deleting an IIOP Listener
@@ -197,8 +193,6 @@ This example deletes the IIOP listener named `sample_iiop_listener`.
 asadmin> delete-iiop-listener sample_iiop_listener
  Command delete-iiop-listener executed successfully.
 ----
-
-[[GSADG1013]]
 
 See Also
 

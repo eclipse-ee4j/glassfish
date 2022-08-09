@@ -13,8 +13,6 @@ prev=delete-virtual-server.html
 
 Deploys the specified component
 
-[[sthref1015]]
-
 === Synopsis
 
 [source]
@@ -48,8 +46,6 @@ asadmin [asadmin-options] deploy [--help]
 [file_archive|filepath]
 ----
 
-[[sthref1016]]
-
 === Description
 
 The `deploy` subcommand deploys applications to the server. Applications
@@ -70,13 +66,11 @@ the deployment does not fail; a warning message is provided in the log file.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1017]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -391,8 +385,6 @@ For components packaged as OSGi bundles (`--type=osgi`), the `deploy`
   which is used to wrap a plain WAR file as a WAB. For more information
   about usage, see the example in this help page.
 
-[[sthref1018]]
-
 === Operands
 
 file_archive|filepath::
@@ -409,8 +401,6 @@ file_archive|filepath::
 
 +
 If you specify a directory, the `--upload` option is ignored.
-
-[[sthref1019]]
 
 === Examples
 
@@ -552,7 +542,7 @@ deployed, and is specific to components packaged as OSGi bundles.
 
 The backslash (\) character is used to escape characters in the command.
 For more information about escape characters in options for the
-`asadmin` utility, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+`asadmin` utility, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 help page.
 
 [source]
@@ -567,8 +557,6 @@ Application deployed successfully with name sample1.
 Command deploy executed successfully
 ----
 
-[[sthref1029]]
-
 === Exit Status
 
 0::
@@ -576,11 +564,9 @@ Command deploy executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1030]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:get.html#get-1[`get`(1)],
 link:list-components.html#list-components-1[`list-components`(1)],

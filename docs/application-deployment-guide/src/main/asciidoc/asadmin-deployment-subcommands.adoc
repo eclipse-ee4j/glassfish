@@ -15,7 +15,7 @@ prev=deploying-applications.html
 
 This appendix lists the `asadmin` deployment subcommands that are
 included with this release of the {productName} software. For information on additional `asadmin` subcommands,
-see "link:administration-guide/asadmin-subcommands.html#GSADG00023[Subcommands for the `asadmin` Utility]" in
+see "link:administration-guide/asadmin-subcommands.html#asadmin-subcommands[Subcommands for the `asadmin` Utility]" in
 {productName} Administration Guide or see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
 

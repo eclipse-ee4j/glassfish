@@ -13,8 +13,6 @@ prev=create-iiop-listener.html
 
 Creates a {productName} instance
 
-[[sthref293]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-instance [--help]
 [--systemproperties (name=value)[:name=value]* ]
 instance-name
 ----
-
-[[sthref294]]
 
 === Description
 
@@ -115,13 +111,11 @@ subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref295]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -240,8 +234,6 @@ When the `--portbase` option is specified, the output of this
     creating sockets that listen on ports 1-1024 requires superuser
     privileges.
 
-[[sthref296]]
-
 === Operands
 
 instance-name::
@@ -262,8 +254,6 @@ instance-name::
   or a node.
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
-
-[[sthref297]]
 
 === Examples
 
@@ -371,8 +361,6 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-instance executed successfully.
 ----
 
-[[sthref302]]
-
 === Exit Status
 
 0::
@@ -380,11 +368,9 @@ Command create-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref303]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],

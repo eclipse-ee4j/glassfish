@@ -13,8 +13,6 @@ prev=uninstall-node.html
 
 Uninstalls {productName} software from specified DCOM-enabled hosts
 
-[[sthref2215]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] uninstall-node-dcom [--help]
 [--force={false|true}]
 host-list
 ----
-
-[[sthref2216]]
 
 === Description
 
@@ -68,13 +64,11 @@ administration server (DAS).
 
 This subcommand is supported in local mode only.
 
-[[sthref2217]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -117,15 +111,11 @@ asadmin-options::
 If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.
 
-[[sthref2218]]
-
 === Operands
 
 host-list::
   A space-separated list of the names of the hosts from which the
   {productName} software is to be uninstalled.
-
-[[sthref2219]]
 
 === Examples
 
@@ -158,8 +148,6 @@ asadmin> uninstall-node-dcom --force --installdir C:\glassfish7 xkyd.example.com
 Command uninstall-node-dcom executed successfully.
 ----
 
-[[sthref2222]]
-
 === Exit Status
 
 0::
@@ -167,11 +155,9 @@ Command uninstall-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref2223]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
 link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]

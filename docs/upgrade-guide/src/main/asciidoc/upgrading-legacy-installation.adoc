@@ -36,17 +36,17 @@ Upgrade Tool and the three Update Center tools are explained later in
 this chapter.
 
 To view a list of the older versions from which you can upgrade, see
-link:#gjxkx[Supported Releases for Upgrade to {productName} 7].
+xref:#gjxkx[Supported Releases for Upgrade to {productName} 7].
 
 The following topics are addressed here:
 
-* link:#gaejc[Upgrade Overview]
-* link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool]
-* link:#gkthu[Performing an In-Place Upgrade With the Update Center
+* xref:#gaejc[Upgrade Overview]
+* xref:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool]
+* xref:#gkthu[Performing an In-Place Upgrade With the Update Center
 Tools]
-* link:#gktnh[Upgrading Installations That Use NSS Cryptographic Tokens]
-* link:#gfybw[Upgrading Clusters and Node Agent Configurations]
-* link:#gkrfh[Correcting Potential Upgrade Problems]
+* xref:#gktnh[Upgrading Installations That Use NSS Cryptographic Tokens]
+* xref:#gfybw[Upgrading Clusters and Node Agent Configurations]
+* xref:#gkrfh[Correcting Potential Upgrade Problems]
 
 [[gaejc]][[GSUPG00039]][[upgrade-overview]]
 
@@ -57,12 +57,12 @@ you perform an upgrade.
 
 The following topics are addressed here:
 
-* link:#gkxum[Upgrade Paths]
-* link:#gdkiw[Upgrade Terminology]
-* link:#gktcb[Summary of Upgrade Tools and Procedures]
-* link:#gjxkx[Supported Releases for Upgrade to {productName} 7]
-* link:#gkufi[Upgrading From Version 8.x or Older Product Releases]
-* link:#gkxrp[Upgrading {productName} Inside a Closed Network]
+* xref:#gkxum[Upgrade Paths]
+* xref:#gdkiw[Upgrade Terminology]
+* xref:#gktcb[Summary of Upgrade Tools and Procedures]
+* xref:#gjxkx[Supported Releases for Upgrade to {productName} 7]
+* xref:#gkufi[Upgrading From Version 8.x or Older Product Releases]
+* xref:#gkxrp[Upgrading {productName} Inside a Closed Network]
 
 [[gkxum]][[GSUPG00059]][[upgrade-paths]]
 
@@ -110,7 +110,7 @@ In this scenario, you simply use Update Tool, the `pkg` utility, or
   upgrading from product versions prior to 3x, you must perform a
   side-by-side upgrade.
 
-For a more detailed overview, see link:#gktcb[Summary of Upgrade Tools
+For a more detailed overview, see xref:#gktcb[Summary of Upgrade Tools
 and Procedures].
 
 [[gdkiw]][[GSUPG00060]][[upgrade-terminology]]
@@ -142,11 +142,11 @@ on which tool you use and the product version from which you are upgrading.
 
 The following topics are addressed here:
 
-* link:#gktdx[Summary of Tools for Performing an Upgrade]
-* link:#gktdz[Summary of Procedure for Upgrading With Upgrade Tool]
-* link:#gktcl[Summary of Procedure for Upgrading With Update Tool]
-* link:#gkuef[Summary of Procedure for Upgrading With the Software Update Notifier]
-* link:#gktnb[Summary of Procedure for Upgrading With the `pkg` Utility]
+* xref:#gktdx[Summary of Tools for Performing an Upgrade]
+* xref:#gktdz[Summary of Procedure for Upgrading With Upgrade Tool]
+* xref:#gktcl[Summary of Procedure for Upgrading With Update Tool]
+* xref:#gkuef[Summary of Procedure for Upgrading With the Software Update Notifier]
+* xref:#gktnb[Summary of Procedure for Upgrading With the `pkg` Utility]
 
 [[gktdx]][[GSUPG00045]][[summary-of-tools-for-performing-an-upgrade]]
 
@@ -154,9 +154,9 @@ The following topics are addressed here:
 
 There are several tools you can use to perform an upgrade to {productName} 7 are described below.
 
-* link:#gktcz[Upgrade Tool]
-* link:#gktha[Update Tool and the `pkg` Utility]
-* link:#gkuff[Software Update Notifier]
+* xref:#gktcz[Upgrade Tool]
+* xref:#gktha[Update Tool and the `pkg` Utility]
+* xref:#gkuff[Software Update Notifier]
 
 [[gktcz]][[GSUPG00004]][[upgrade-tool]]
 
@@ -169,7 +169,7 @@ side-by-side upgrades from any compatible older product version to
 Upgrade Tool provides a number of features that aid in the migration of
 older configurations and applications to a new {productName} 7
 installation. These features are described in more detail in
-link:#gdkix[Upgrade Tool Functionality].
+xref:#gdkix[Upgrade Tool Functionality].
 
 In {productName} 7 Upgrade Tool is installed in the
 as-install``/bin`` directory.
@@ -180,7 +180,7 @@ Upgrade Tool is the only tool you can use when upgrading to {productName} 7 from
 Enterprise Server v3.
 ====
 
-See link:#gktdz[Summary of Procedure for Upgrading With Upgrade Tool]
+See xref:#gktdz[Summary of Procedure for Upgrading With Upgrade Tool]
 for an overview of the general procedure for performing an upgrade with
 Upgrade Tool.
 
@@ -211,10 +211,10 @@ as-install-parent``/bin`` directory.
 ====
 It is not possible to use Update Tool to upgrade from {productName}
 or Enterprise Server versions prior to 3x. For these older versions, you
-must use the Upgrade Tool, described in link:#gktcz[Upgrade Tool].
+must use the Upgrade Tool, described in xref:#gktcz[Upgrade Tool].
 ====
 
-See link:#gktcl[Summary of Procedure for Upgrading With Update Tool] for
+See xref:#gktcl[Summary of Procedure for Upgrading With Update Tool] for
 an overview of the general procedure for performing an upgrade with
 Update Tool. For more information about Update Tool in general, see
 "link:administration-guide.html#GSADG00701[Update Tool]"
@@ -237,7 +237,7 @@ installation. If installed and enabled, the Software Update Notifier
 monitors your installation and pops up a notification balloon when
 updates or upgrades are available for your product.
 
-See link:#gkuef[Summary of Procedure for Upgrading With the Software
+See xref:#gkuef[Summary of Procedure for Upgrading With the Software
 Update Notifier] for an overview of the general procedure for performing
 an upgrade with the Software Update Notifier. For more information about
 the Update Notifier, refer to the Update Tool online help.
@@ -263,7 +263,7 @@ as-install``/bin`` directory.
 4. Start the new {productName} 7 DAS with the
 `asadmin start-domain` subcommand.
 
-This procedure is described in more detail in link:#abmbr[Performing a
+This procedure is described in more detail in xref:#abmbr[Performing a
 Side-By-Side Upgrade With Upgrade Tool].
 
 [[gktcl]][[GSUPG00047]][[summary-of-procedure-for-upgrading-with-update-tool]]
@@ -284,7 +284,7 @@ subcommand. This performs the upgrade and then shuts down the DAS.
 5. Restart the DAS normally with the with the `asadmin start-domain`
 subcommand.
 
-This procedure is described in more detail in link:#gktjf[To Upgrade
+This procedure is described in more detail in xref:#gktjf[To Upgrade
 Using the Update Tool GUI].
 
 [[gkuef]][[GSUPG00048]][[summary-of-procedure-for-upgrading-with-the-software-update-notifier]]
@@ -306,7 +306,7 @@ subcommand. This performs the upgrade and then shuts down the DAS.
 6. Restart the upgraded DAS normally with the with the
 `asadmin start-domain` subcommand.
 
-This procedure is described in more detail in link:#gkuhu[To Upgrade
+This procedure is described in more detail in xref:#gkuhu[To Upgrade
 Using the Software Update Notifier].
 
 [[gktnb]][[GSUPG00049]][[summary-of-procedure-for-upgrading-with-the-pkg-utility]]
@@ -326,7 +326,7 @@ subcommand. This performs the upgrade and then shuts down the DAS.
 4. Restart the upgraded DAS normally with the with the
 `asadmin start-domain` subcommand.
 
-This procedure is described in more detail in link:#gktks[To Upgrade
+This procedure is described in more detail in xref:#gktks[To Upgrade
 From the Command Line Using the `pkg` Utility].
 
 [[gjxkx]][[GSUPG00062]][[supported-releases-for-upgrade-to-glassfish-server-7]]
@@ -350,7 +350,7 @@ It is not possible to upgrade to {productName} 7 directly from Sun
 GlassFish Enterprise Server 8.x or older product releases.
 
 To upgrade from a product release that is older than any of those listed
-in link:#gjxkx[Supported Releases for Upgrade to {productName} 7],
+in xref:#gjxkx[Supported Releases for Upgrade to {productName} 7],
 you must first upgrade your older product release to one of the releases
 that are supported for upgrade to {productName} 7.
 
@@ -391,10 +391,10 @@ upgrade to {productName} 7 from any compatible older product release.
 
 The following topics are addressed here:
 
-* link:#gktgx[Upgrade Tool Summary]
-* link:#gdkix[Upgrade Tool Functionality]
-* link:#gktjn[To Upgrade From the Command Line Using Upgrade Tool]
-* link:#gaejn[To Upgrade Using the Upgrade Tool Wizard]
+* xref:#gktgx[Upgrade Tool Summary]
+* xref:#gdkix[Upgrade Tool Functionality]
+* xref:#gktjn[To Upgrade From the Command Line Using Upgrade Tool]
+* xref:#gaejn[To Upgrade Using the Upgrade Tool Wizard]
 
 [[gktgx]][[GSUPG00066]][[upgrade-tool-summary]]
 
@@ -412,8 +412,8 @@ for the target directory.
 
 You can perform an upgrade using Upgrade Tool in the following ways:
 
-* link:#gktjn[To Upgrade From the Command Line Using Upgrade Tool]
-* link:#gaejn[To Upgrade Using the Upgrade Tool Wizard]
+* xref:#gktjn[To Upgrade From the Command Line Using Upgrade Tool]
+* xref:#gaejn[To Upgrade Using the Upgrade Tool Wizard]
 
 [[gdkix]][[GSUPG00067]][[upgrade-tool-functionality]]
 
@@ -434,9 +434,9 @@ source configurations to the new target {productName} installation.
 
 Additional Upgrade Tool functions are explained in the following sections:
 
-* link:#gebrv[Migration of Deployed Applications]
-* link:#gebqm[Upgrade of Clusters]
-* link:#gebvn[Upgrade Verification]
+* xref:#gebrv[Migration of Deployed Applications]
+* xref:#gebqm[Upgrade of Clusters]
+* xref:#gebvn[Upgrade Verification]
 
 [[gebrv]][[GSUPG00050]][[migration-of-deployed-applications]]
 
@@ -475,7 +475,7 @@ attempt to reconfigure the incorrect configurations.
 When upgrading from a clustered configuration, the older cluster
 information is retained in a new `domain.xml` file in the {productName} 7 installation directories. However, it is still necessary to
 manually re-create the server instances that are contained in the
-clusters. This procedure is explained in link:#gfybw[Upgrading Clusters
+clusters. This procedure is explained in xref:#gfybw[Upgrading Clusters
 and Node Agent Configurations].
 
 [[gebvn]][[GSUPG00052]][[upgrade-verification]]
@@ -502,10 +502,8 @@ Command version executed successfully.
 ==== To Upgrade From the Command Line Using Upgrade Tool
 
 This procedure explains how to use the Upgrade Tool command line to
-upgrade to {productName} 7 from any supported older product
-release. See link:#gjxkx[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
-
-[[sthref29]]
+upgrade to {productName} 7 from any supported older product release.
+See xref:#gjxkx[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
 
 Before You Begin
 
@@ -547,7 +545,7 @@ as-install/bin/asupgrade -c
 as-install\bin\asupgrade.bat -c
 ----
 The `-c` option starts Upgrade Tool in console mode. If `-c` is omitted,
-Upgrade Tool starts in GUI mode, which is described in link:#gaejn[To
+Upgrade Tool starts in GUI mode, which is described in xref:#gaejn[To
 Upgrade Using the Upgrade Tool Wizard].
 +
 If you start Upgrade Tool with only the `-c` option, the tool enters
@@ -603,13 +601,13 @@ used in the older server.
 ====
 {productName} 7 does not support NSS authentication. If you are
 upgrading from a Enterprise Profile configuration that uses NSS
-authentication, follow the procedure in link:#gktnh[Upgrading
+authentication, follow the procedure in xref:#gktnh[Upgrading
 Installations That Use NSS Cryptographic Tokens].
 ====
 
 7. If you are upgrading a clustered configuration or a configuration in
 which node agents were used, proceed with the instructions in
-link:#gfybw[Upgrading Clusters and Node Agent Configurations].
+xref:#gfybw[Upgrading Clusters and Node Agent Configurations].
 
 [[GSUPG00007]][[gktiu]]
 Example 2-1 Using the `asupgrade` Command Line
@@ -624,8 +622,6 @@ following command should be entered on a single line.
 asupgrade -c -s /home/glassfish/domains/domain1 -f /root/mypassword
 -t /home/glassfish7/glassfish/domains
 ----
-
-[[sthref30]]
 
 asupgrade Command-Line Options
 
@@ -662,8 +658,6 @@ installation; default is as-install``/domains``
 |The file containing the administration password and the master password.
 |===
 
-[[sthref31]]
-
 Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
@@ -681,10 +675,8 @@ click the Help button on the Administration Console.
 ==== To Upgrade Using the Upgrade Tool Wizard
 
 This procedure explains how to use the graphical Upgrade Tool Wizard to
-upgrade to {productName} 7 from any supported older product
-release. See link:#gjxkx[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
-
-[[sthref32]]
+upgrade to {productName} 7 from any supported older product release.
+See xref:#gjxkx[Supported Releases for Upgrade to {productName} 7] for a list of supported releases.
 
 Before You Begin
 
@@ -753,7 +745,7 @@ specify a password here, the default master password is used.
 ====
 {productName} 7 does not support NSS authentication. If you are
 upgrading from a Enterprise Profile configuration that uses NSS
-authentication, follow the procedure in link:#gktnh[Upgrading
+authentication, follow the procedure in xref:#gktnh[Upgrading
 Installations That Use NSS Cryptographic Tokens].
 ====
 
@@ -791,7 +783,7 @@ asadmin start-domain domain-name
 
 11. If you are upgrading a clustered configuration or a configuration in
 which node agents were used, proceed with the instructions in
-link:#gfybw[Upgrading Clusters and Node Agent Configurations].
+xref:#gfybw[Upgrading Clusters and Node Agent Configurations].
 
 [[sthref33]]
 
@@ -824,16 +816,16 @@ explained in this section are:
 {productName} 3.0.1 and Enterprise Server v3 are the only product
 releases that can be upgraded to the 7 release with the Update Center
 tools. If you are upgrading from any other product release, you must use
-Upgrade Tool, as described in link:#abmbr[Performing a Side-By-Side
+Upgrade Tool, as described in xref:#abmbr[Performing a Side-By-Side
 Upgrade With Upgrade Tool].
 ====
 
 The following topics are addressed here:
 
-* link:#gkthx[Update Center Tool Procedures]
-* link:#gktjf[To Upgrade Using the Update Tool GUI]
-* link:#gkuhu[To Upgrade Using the Software Update Notifier]
-* link:#gktks[To Upgrade From the Command Line Using the `pkg` Utility]
+* xref:#gkthx[Update Center Tool Procedures]
+* xref:#gktjf[To Upgrade Using the Update Tool GUI]
+* xref:#gkuhu[To Upgrade Using the Software Update Notifier]
+* xref:#gktks[To Upgrade From the Command Line Using the `pkg` Utility]
 
 [[gkthx]][[GSUPG00068]][[update-center-tool-procedures]]
 
@@ -850,9 +842,9 @@ and writer permissions for the server installation directories.
 You can perform an upgrade using the Update Center tools in the
 following ways:
 
-* link:#gktjf[To Upgrade Using the Update Tool GUI]
-* link:#gkuhu[To Upgrade Using the Software Update Notifier]
-* link:#gktks[To Upgrade From the Command Line Using the `pkg` Utility]
+* xref:#gktjf[To Upgrade Using the Update Tool GUI]
+* xref:#gkuhu[To Upgrade Using the Software Update Notifier]
+* xref:#gktks[To Upgrade From the Command Line Using the `pkg` Utility]
 
 [[gktjf]][[GSUPG00012]][[to-upgrade-using-the-update-tool-gui]]
 
@@ -914,8 +906,6 @@ click the Help button on the Administration Console.
 This procedure explains how to use the Software Update Notifier to
 perform an in-place upgrade to {productName} 7 from {productName} 3.0.1 or Enterprise Server v3. Note that it is not possible to
 use this procedure with any other product releases.
-
-[[sthref35]]
 
 Before You Begin
 
@@ -1007,8 +997,6 @@ This upgrades the domain and then shuts down the DAS.
 as-install/bin/asadmin start-domain domain-name
 ----
 
-[[sthref37]]
-
 Next Steps
 
 * Browse to the URL `http://localhost:8080` to view the
@@ -1032,9 +1020,9 @@ additional manual configuration steps must be performed.
 
 The following topics are addressed here:
 
-* link:#gktnq[To Prepare for the Upgrade]
-* link:#gktlz[To Perform Post-Upgrade Configuration]
-* link:#gktlp[To Upgrade PKCS#11 Hardware Tokens]
+* xref:#gktnq[To Prepare for the Upgrade]
+* xref:#gktlz[To Perform Post-Upgrade Configuration]
+* xref:#gktlp[To Upgrade PKCS#11 Hardware Tokens]
 
 [[gktnq]][[GSUPG00015]][[to-prepare-for-the-upgrade]]
 
@@ -1123,17 +1111,15 @@ These instructions explain the post-upgrade configuration steps that
 must be performed when upgrading from an NSS-based installation to
 {productName} 7.
 
-[[sthref38]]
-
 Before You Begin
 
 Before proceeding with this procedure, complete the procedure explained
-in link:#gktnq[To Prepare for the Upgrade].
+in xref:#gktnq[To Prepare for the Upgrade].
 
 1. Start the {productName} 7 domain, if it is not already running,
 and open the {productName} Admin Console in a browser window. +
 The default URL is `https://localhost:4848` +
-As part of the link:#gktnq[To Prepare for the Upgrade] procedure, the
+As part of the xref:#gktnq[To Prepare for the Upgrade] procedure, the
 default keystore with a default self-signed key-certificate pair with an
 alias named `s1as` and a keystore password `changeit` was copied into
 the v2.x domain before the upgrade.
@@ -1335,9 +1321,9 @@ the server instances that are contained in the clusters.
 
 The following topics are addressed here:
 
-* link:#gkyda[Overview of Cluster and Node Agent Upgrade Procedures]
-* link:#gktle[To Correct the Configuration of a Node After an Upgrade]
-* link:#gktkx[To Re-Create a Cluster]
+* xref:#gkyda[Overview of Cluster and Node Agent Upgrade Procedures]
+* xref:#gktle[To Correct the Configuration of a Node After an Upgrade]
+* xref:#gktkx[To Re-Create a Cluster]
 
 [[gkyda]][[GSUPG00069]][[overview-of-cluster-and-node-agent-upgrade-procedures]]
 
@@ -1347,7 +1333,7 @@ The general steps for upgrading a cluster and node agent configuration
 so it will work in {productName} 7 are as follows:
 
 1. Perform a side-by-side upgrade of the DAS. This procedure is
-described in link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
+described in xref:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
 2. Perform new (not upgrade) {productName} 7 installations on each
 node host. {productName} 7 installation instructions are provided
@@ -1355,11 +1341,11 @@ in the link:installation-guide.html#GSING[
 {productName} Installation Guide].
 
 3. Correct the node configuration on the upgraded DAS, if necessary.
-This procedure is described in link:#gktle[To Correct the Configuration
+This procedure is described in xref:#gktle[To Correct the Configuration
 of a Node After an Upgrade].
 
 4. Re-create the clusters and server instances on each {productName} 7 node host.
-This procedure is described in link:#gktkx[To Re-Create a Cluster].
+This procedure is described in xref:#gktkx[To Re-Create a Cluster].
 
 [[gktle]][[GSUPG00018]][[to-correct-the-configuration-of-a-node-after-an-upgrade]]
 
@@ -1370,7 +1356,7 @@ configuration are transformed into {productName} node elements of
 type `CONFIG`. This transformation does not affect the node agent
 directories for {productName} instances. To create the equivalent
 directories for {productName} instances after an upgrade, you must
-re-create the instances as explained in link:#gktkx[To Re-Create a
+re-create the instances as explained in xref:#gktkx[To Re-Create a
 Cluster].
 
 The name of an upgraded node is the name of the node agent from which
@@ -1406,14 +1392,12 @@ remote communication.
 For more information about {productName} nodes, see
 "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
 
-[[sthref39]]
-
 Before You Begin
 
 Ensure that the following prerequisites are met:
 
 * A side-by-side upgrade on the DAS has been performed. For more
-information, see link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
+information, see xref:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
 * If you are changing the type of the node to `SSH`, ensure that SSH is
 configured on the host where the DAS is running and on the host that the
@@ -1424,7 +1408,7 @@ Setting Up SSH for Centralized Administration]" in
 
 * If you are upgrading from an Enterprise Profile configuration that
 uses NSS authentication, ensure that the procedure in
-link:#gktnh[Upgrading Installations That Use NSS Cryptographic Tokens]
+xref:#gktnh[Upgrading Installations That Use NSS Cryptographic Tokens]
 has been performed. {productName} 7 does not support NSS authentication.
 
 1. Ensure that the DAS is running. +
@@ -1487,9 +1471,7 @@ Next Steps
 
 Re-create the cluster configuration from the older source installation
 in the new {productName} 7 installation in as explained in
-link:#gktkx[To Re-Create a Cluster].
-
-[[sthref41]]
+xref:#gktkx[To Re-Create a Cluster].
 
 See Also
 
@@ -1508,20 +1490,18 @@ in {productName} High Availability Administration Guide
 This procedure explains how to re-create a clustered {productName} or
 Enterprise Server configuration for {productName} 7.
 
-[[sthref42]]
-
 Before proceeding with these instructions, ensure that you have
 completed the following procedures:
 --
 * Perform the standard upgrade to {productName} 7 on the DAS, as
-described in link:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
+described in xref:#abmbr[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
 * Perform a new (not upgrade) installation of {productName} 7 on
 each node host. See the link:installation-guide.html#GSING[
 {productName} Installation Guide] for instructions.
 
 * Correct the upgraded node configuration, if necessary, as described
-link:#gktle[To Correct the Configuration of a Node After an Upgrade].
+xref:#gktle[To Correct the Configuration of a Node After an Upgrade].
 --
 
 1. Start the upgraded DAS.
@@ -1573,7 +1553,7 @@ in {productName} High Availability Administration Guide +
 Note that the node name matches that used for the node agent in the 2.x
 installation. If you get an error stating that some attributes do not
 match the values in the DAS configuration, follow the instructions in
-link:#gktle[To Correct the Configuration of a Node After an Upgrade].
+xref:#gktle[To Correct the Configuration of a Node After an Upgrade].
 
 4. After creating the instances, manually copy the instance-dir``/imq``
 directory for each instance from the older source installation to the
@@ -1619,9 +1599,9 @@ This section addresses issues that can occur during an upgrade to
 
 The following topics are addressed here:
 
-* link:#gkrgh[Cluster Profile Security Setting]
-* link:#gkrib[Cluster Profile Upgrade on Windows]
-* link:#gkyho[`asupgrade` Fails Without Internet Connection]
+* xref:#gkrgh[Cluster Profile Security Setting]
+* xref:#gkrib[Cluster Profile Upgrade on Windows]
+* xref:#gkyho[`asupgrade` Fails Without Internet Connection]
 
 [[gkrgh]][[GSUPG00070]][[cluster-profile-security-setting]]
 

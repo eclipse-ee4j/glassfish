@@ -14,8 +14,6 @@ prev=export-http-lb-config.html
 Exports the configuration data of a cluster or standalone instance to an
 archive file
 
-[[sthref1170]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] export-sync-bundle [--help]
 [--retrieve={false|true}]
 [file-name]
 ----
-
-[[sthref1171]]
 
 === Description
 
@@ -62,13 +58,11 @@ for which configuration data is being exported
 
 This subcommand is supported in remote mode only.
 
-[[sthref1172]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -90,8 +84,6 @@ asadmin-options::
   `false`;;
     The archive file is not downloaded and remains on the DAS host
     (default).
-
-[[sthref1173]]
 
 === Operands
 
@@ -118,8 +110,6 @@ If an existing directory is specified without a filename, the file
   name of the archive file is target``-sync-bundle.zip``, where target is
   the cluster or standalone instance that the `--target` option specifies.
 
-[[sthref1174]]
-
 === Examples
 
 [[GSRFM614]][[sthref1175]]
@@ -137,8 +127,6 @@ pmdcluster-sync-bundle.zip
 Command export-sync-bundle executed successfully.
 ----
 
-[[sthref1176]]
-
 === Exit Status
 
 0::
@@ -146,11 +134,9 @@ Command export-sync-bundle executed successfully.
 1::
   error in executing the command
 
-[[sthref1177]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:import-sync-bundle.html#import-sync-bundle-1[`import-sync-bundle`(1)]
 

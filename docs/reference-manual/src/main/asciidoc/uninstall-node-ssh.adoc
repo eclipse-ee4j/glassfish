@@ -13,8 +13,6 @@ prev=uninstall-node-dcom.html
 
 Uninstalls {productName} software from specified SSH-enabled hosts
 
-[[sthref2224]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] uninstall-node-ssh [--help]
 [--force={false|true}]
 host-list
 ----
-
-[[sthref2225]]
 
 === Description
 
@@ -71,13 +67,11 @@ administration server (DAS).
 
 This subcommand is supported in local mode only.
 
-[[sthref2226]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -131,15 +125,11 @@ asadmin-options::
 If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.
 
-[[sthref2227]]
-
 === Operands
 
 host-list::
   A space-separated list of the names of the hosts from which the
   {productName} software is to be uninstalled.
-
-[[sthref2228]]
 
 === Examples
 
@@ -187,8 +177,6 @@ Force removing directory /export/glassfish7/glassfish
 Command uninstall-node-ssh executed successfully.
 ----
 
-[[sthref2231]]
-
 === Exit Status
 
 0::
@@ -196,11 +184,9 @@ Command uninstall-node-ssh executed successfully.
 1::
   error in executing the command
 
-[[sthref2232]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:install-node.html#install-node-1[`install-node`(1)],
 link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],

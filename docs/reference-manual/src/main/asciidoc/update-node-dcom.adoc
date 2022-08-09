@@ -13,8 +13,6 @@ prev=update-node-config.html
 
 Updates the configuration data of a node
 
-[[sthref2290]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] update-node-dcom [--help]
 [--force={false|true}]
 node-name
 ----
-
-[[sthref2291]]
 
 === Description
 
@@ -59,13 +55,11 @@ updated even if the host cannot be contacted through DCOM, set the
 
 This subcommand is supported in remote mode only.
 
-[[sthref2292]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -119,15 +113,11 @@ If the `--nodehost` option is set to `localhost`, the `--windowsuser`
     The node is updated even if validation of the node's parameters
     fails.
 
-[[sthref2293]]
-
 === Operands
 
 node-name::
   The name of the node to update. The node must exist. Otherwise, an
   error occurs.
-
-[[sthref2294]]
 
 === Examples
 
@@ -161,8 +151,6 @@ Continuing with node update due to use of --force.
 Command update-node-dcom executed successfully.
 ----
 
-[[sthref2297]]
-
 === Exit Status
 
 0::
@@ -170,11 +158,9 @@ Command update-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref2298]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],

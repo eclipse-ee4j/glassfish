@@ -13,8 +13,6 @@ prev=list-jvm-options.html
 
 Lists library JAR files on {productName}
 
-[[sthref1615]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists library JAR files on {productName}
 asadmin [asadmin-options] list-libraries [--help]
 [--type={common|ext|app}]
 ----
-
-[[sthref1616]]
 
 === Description
 
@@ -35,13 +31,11 @@ directory for which libraries are to be listed.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1617]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -64,8 +58,6 @@ asadmin-options::
 For more information about these directories, see
   "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
 
-[[sthref1618]]
-
 === Examples
 
 [[GSRFM831]][[sthref1619]]
@@ -85,8 +77,6 @@ zlib.jar
 Command list-libraries executed successfully.
 ----
 
-[[sthref1620]]
-
 === Exit Status
 
 0::
@@ -94,11 +84,9 @@ Command list-libraries executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1621]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:add-library.html#add-library-1[`add-library`(1)],
 link:remove-library.html#remove-library-1[`remove-library`(1)]

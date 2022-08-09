@@ -15,8 +15,6 @@ Instructs the {productName} DAS and instances to use the specified
 admin user and the password associated with the password alias to
 authenticate with each other and to authorize admin operations.
 
-[[sthref1135]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] enable-secure-admin-internal-user [--help]
 [--passwordalias pwdaliasname]
 admin-username
 ----
-
-[[sthref1136]]
 
 === Description
 
@@ -77,13 +73,11 @@ If you set up more than one secure admin internal user, you should not
 make any assumptions about which user name and password pair
 {productName} will choose to use for any given admin request.
 
-[[sthref1137]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -92,16 +86,12 @@ asadmin-options::
   internally authenticating and authorizing the DAS to instances and the
   instances to the DAS.
 
-[[sthref1138]]
-
 === Operands
 
 admin-username::
   The admin user name that {productName} should use for internally
   authenticating and authorizing the DAS to instances and the instances
   to the DAS.
-
-[[sthref1139]]
 
 === Examples
 
@@ -120,8 +110,6 @@ asadmin> enable-secure-admin-internal-user
 newAdminUsername
 ----
 
-[[sthref1141]]
-
 === Exit Status
 
 0::
@@ -129,11 +117,9 @@ newAdminUsername
 1::
   error in executing the subcommand
 
-[[sthref1142]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:disable-secure-admin-internal-user.html#disable-secure-admin-internal-user-1[`disable-secure-admin-internal-user`(1)],
 link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)]

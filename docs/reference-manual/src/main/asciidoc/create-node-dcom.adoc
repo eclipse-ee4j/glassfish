@@ -13,8 +13,6 @@ prev=create-node-config.html
 
 Creates a node that is enabled for communication over DCOM
 
-[[sthref453]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-node-dcom [--help]
 [--install={false|true}] [--archive archive]
 node-name
 ----
-
-[[sthref454]]
 
 === Description
 
@@ -59,13 +55,11 @@ address of the host, or the host name.
 
 This subcommand is supported in remote mode only.
 
-[[sthref455]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -128,8 +122,6 @@ asadmin-options::
   is run. The archive does not contain the `domains` directory or the
   `nodes` directory.
 
-[[sthref456]]
-
 === Operands
 
 node-name::
@@ -151,11 +143,7 @@ node-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
 
-[[sthref457]]
-
 === Examples
-
-[[GSRFM511]][[sthref458]]
 
 ==== Example 1   Creating a Node
 
@@ -170,8 +158,6 @@ asadmin> create-node-dcom
 Command create-node-dcom executed successfully.
 ----
 
-[[GSRFM829]][[sthref459]]
-
 ==== Example 2   Creating a Node With a Specific Installation Directory
 
 This example creates the node `wyml1` for the host `wyml1.example.com`.
@@ -184,8 +170,6 @@ asadmin> create-node-dcom --installdir C:\middleware\glassfish7
 --nodehost wyml1.example.com wyml1
 Command create-node-dcom executed successfully.
 ----
-
-[[GSRFM512]][[sthref460]]
 
 ==== Example 3   Forcing the Creation of a Node
 
@@ -203,8 +187,6 @@ Continuing with node creation due to use of --force.
 Command create-node-dcom executed successfully.
 ----
 
-[[sthref461]]
-
 === Exit Status
 
 0::
@@ -212,11 +194,9 @@ Command create-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref462]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
 link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],

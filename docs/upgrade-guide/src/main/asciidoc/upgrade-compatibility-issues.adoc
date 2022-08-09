@@ -21,17 +21,17 @@ address these issues.
 
 The following topics are addressed here:
 
-* link:#gjwpd[Binary-Compatible Releases For {productName} 7]
-* link:#gkric[New Default Installation Directory]
-* link:#gklhr[Changes to Group Management Service Settings]
-* link:#geyyk[Application Client Interoperability]
-* link:#gktad[Node Agent Support]
-* link:#gkrjm[HADB and `hadbm` Command Support]
-* link:#abmbc[Command Line Interface: The `asadmin` Command]
-* link:#gflnv[Applications That Use Java DB]
-* link:#gjizi[Applications That Use Persistence]
-* link:#gjiqj[HTTP Service to Network Service Changes]
-* link:#gktkt[NSS Cryptographic Token Support]
+* xref:#gjwpd[Binary-Compatible Releases For {productName} 7]
+* xref:#gkric[New Default Installation Directory]
+* xref:#gklhr[Changes to Group Management Service Settings]
+* xref:#geyyk[Application Client Interoperability]
+* xref:#gktad[Node Agent Support]
+* xref:#gkrjm[HADB and `hadbm` Command Support]
+* xref:#abmbc[Command Line Interface: The `asadmin` Command]
+* xref:#gflnv[Applications That Use Java DB]
+* xref:#gjizi[Applications That Use Persistence]
+* xref:#gjiqj[HTTP Service to Network Service Changes]
+* xref:#gktkt[NSS Cryptographic Token Support]
 
 [[gjwpd]][[GSUPG00028]][[binary-compatible-releases-for-glassfish-server]]
 
@@ -95,7 +95,7 @@ upgrade process.
 Changes to settings on the Edit Group Management Service page in the
 Administration Console are summarized in the following table.
 
-[[sthref3]][[gklho]]
+[[gklho]]
 
 Table 1-1 GMS Administration Console Settings Changes from 2.1.1 to 4.0
 
@@ -193,8 +193,8 @@ for more information.
 
 The following sections describe changes to the command line utility `asadmin`:
 
-* link:#abmbd[Deprecated `asadmin` Subcommands]
-* link:#abmbf[Deprecated, Unsupported, and Obsolete Options]
+* xref:#abmbd[Deprecated `asadmin` Subcommands]
+* xref:#abmbf[Deprecated, Unsupported, and Obsolete Options]
 
 For more information about `asadmin` and its subcommands, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
@@ -222,10 +222,10 @@ subcommand is deprecated.
 
 ==== Deprecated, Unsupported, and Obsolete Options
 
-Options in link:#gaeki[Table 1-2] are deprecated or no longer supported,
+Options in xref:#gaeki[Table 1-2] are deprecated or no longer supported,
 or are obsolete and are ignored.
 
-[[sthref4]][[gaeki]]
+[[gaeki]]
 
 Table 1-2 Deprecated, Unsupported, and Obsolete Options for `asadmin`
 and Subcommands
@@ -439,10 +439,10 @@ Enterprise Server v3.
 
 The changes are described in the following sections.
 
-* link:#gipsa[Changes to Dotted Names]
-* link:#giprg[Changes to `asadmin` Subcommands]
-* link:#gipfo[Remapping of HTTP Service Attributes and Properties]
-* link:#gipcg[New Network Service Elements and Attributes]
+* xref:#gipsa[Changes to Dotted Names]
+* xref:#giprg[Changes to `asadmin` Subcommands]
+* xref:#gipfo[Remapping of HTTP Service Attributes and Properties]
+* xref:#gipcg[New Network Service Elements and Attributes]
 
 [[gipsa]][[GSUPG00055]][[changes-to-dotted-names]]
 
@@ -533,7 +533,7 @@ listener.http-1.listenerport=4321
 ==== Changes to `asadmin` Subcommands
 
 To accommodate the move of HTTP Service into the new Network Service
-configuration, link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommands are changed as
+configuration, link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommands are changed as
 follows:
 
 * The link:reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand has a new `--type`
@@ -555,7 +555,7 @@ releases. If you use a configuration from a Sun GlassFish Enterprise
 Server v2 or v3 release, this remapping happens automatically and then
 discontinued elements are deleted.
 
-[[sthref5]][[gipfy]]
+[[gipfy]]
 
 Table 1-3 `com.sun.grizzly` Property Remapping
 
@@ -570,7 +570,7 @@ Table 1-3 `com.sun.grizzly` Property Remapping
 |===
 
 
-[[sthref6]][[gipfn]]
+[[gipfn]]
 
 Table 1-4 `connection-pool` Attribute Remapping
 
@@ -588,7 +588,7 @@ Table 1-4 `connection-pool` Attribute Remapping
 |===
 
 
-[[sthref7]][[gipcv]]
+[[gipcv]]
 
 Table 1-5 `http-file-cache` Attribute Remapping
 
@@ -608,7 +608,7 @@ Table 1-5 `http-file-cache` Attribute Remapping
 |===
 
 
-[[sthref8]][[gipev]]
+[[gipev]]
 
 Table 1-6 `http-listener` Attribute Remapping
 
@@ -631,7 +631,7 @@ Table 1-6 `http-listener` Attribute Remapping
 |===
 
 
-[[sthref9]][[gipdo]]
+[[gipdo]]
 
 Table 1-7 `http-listener` Property Remapping
 
@@ -707,7 +707,7 @@ Table 1-7 `http-listener` Property Remapping
 |===
 
 
-[[sthref10]][[gipel]]
+[[gipel]]
 
 Table 1-8 `http-protocol` Attribute Remapping
 
@@ -722,7 +722,7 @@ Table 1-8 `http-protocol` Attribute Remapping
 |===
 
 
-[[sthref11]][[gipfa]]
+[[gipfa]]
 
 Table 1-9 `http-service` Property Remapping
 
@@ -747,7 +747,7 @@ Name
 |===
 
 
-[[sthref12]][[gipea]]
+[[gipea]]
 
 Table 1-10 `keep-alive` Attribute Remapping
 
@@ -760,7 +760,7 @@ Table 1-10 `keep-alive` Attribute Remapping
 |===
 
 
-[[sthref13]][[gipdh]]
+[[gipdh]]
 
 Table 1-11 `request-processing` Attribute Remapping
 
@@ -775,7 +775,7 @@ Table 1-11 `request-processing` Attribute Remapping
 |===
 
 
-[[sthref14]][[gipdv]]
+[[gipdv]]
 
 Table 1-12 `ssl` Attribute Changes
 
@@ -798,7 +798,7 @@ Attribute
 |===
 
 
-[[sthref15]][[gipcj]]
+[[gipcj]]
 
 Table 1-13 `thread-pool` Attribute Changes
 
@@ -821,7 +821,7 @@ Attribute
 |===
 
 
-[[sthref16]][[gipep]]
+[[gipep]]
 
 Table 1-14 `virtual-server` Attribute Changes
 
@@ -852,14 +852,14 @@ still properties
 The following tables describe the Network Service elements and
 attributes that were introduced in Sun GlassFish Enterprise Server v3.
 For attributes and properties remapped from discontinued elements to new
-elements, see link:#gipfo[Remapping of HTTP Service Attributes and
+elements, see xref:#gipfo[Remapping of HTTP Service Attributes and
 Properties].
 
 The new `file-cache` element has no new attributes. All of its
 attributes are remapped from the `http-file-cache` element. For details,
-see link:#gipcv[Table 1-5].
+see xref:#gipcv[Table 1-5].
 
-[[sthref17]][[gipds]]
+[[gipds]]
 
 Table 1-15 New `http` Attributes
 
@@ -874,11 +874,11 @@ of `POST` actions.
 |===
 
 
-For remapped `http` attributes, see link:#gipfn[Table 1-4],
-link:#gipev[Table 1-6], link:#gipdo[Table 1-7], link:#gipel[Table 1-8],
-link:#gipea[Table 1-10], and link:#gipdh[Table 1-11].
+For remapped `http` attributes, see xref:#gipfn[Table 1-4],
+xref:#gipev[Table 1-6], xref:#gipdo[Table 1-7], xref:#gipel[Table 1-8],
+xref:#gipea[Table 1-10], and xref:#gipdh[Table 1-11].
 
-[[sthref18]][[gipey]]
+[[gipey]]
 
 Table 1-16 New `network-listener` Attributes
 
@@ -901,9 +901,9 @@ to create a `network-listener`.
 |===
 
 
-For remapped `network-listener` attributes, see link:#gipev[Table 1-6].
+For remapped `network-listener` attributes, see xref:#gipev[Table 1-6].
 
-[[sthref19]][[gipfg]]
+[[gipfg]]
 
 Table 1-17 New `port-unification` Attributes
 
@@ -917,7 +917,7 @@ implementation.
 |===
 
 
-[[sthref20]][[gipdj]]
+[[gipdj]]
 
 Table 1-18 New `protocol` Attributes
 
@@ -928,9 +928,9 @@ Table 1-18 New `protocol` Attributes
 |===
 
 
-For remapped `protocol` attributes, see link:#gipev[Table 1-6].
+For remapped `protocol` attributes, see xref:#gipev[Table 1-6].
 
-[[sthref21]][[gipcr]]
+[[gipcr]]
 
 Table 1-19 New `protocol-chain` Attributes
 
@@ -946,7 +946,7 @@ implementation.
 |===
 
 
-[[sthref22]][[gipfq]]
+[[gipfq]]
 
 Table 1-20 New `protocol-chain-instance-handler` Attributes
 
@@ -961,7 +961,7 @@ Table 1-20 New `protocol-chain-instance-handler` Attributes
 |===
 
 
-[[sthref23]][[gipeq]]
+[[gipeq]]
 
 Table 1-21 New `protocol-filter` Attributes
 
@@ -975,7 +975,7 @@ implementation.
 |===
 
 
-[[sthref24]][[gipfd]]
+[[gipfd]]
 
 Table 1-22 New `protocol-finder` Attributes
 
@@ -992,7 +992,7 @@ with this `protocol-finder`.
 |===
 
 
-[[sthref25]][[gipft]]
+[[gipft]]
 
 Table 1-23 New `selection-key-handler` Attributes
 
@@ -1006,7 +1006,7 @@ Table 1-23 New `selection-key-handler` Attributes
 |===
 
 
-[[sthref26]][[gipfi]]
+[[gipfi]]
 
 Table 1-24 New `ssl` Attributes
 
@@ -1018,9 +1018,9 @@ Table 1-24 New `ssl` Attributes
 |===
 
 
-For remapped `ssl` attributes, see link:#gipdv[Table 1-12].
+For remapped `ssl` attributes, see xref:#gipdv[Table 1-12].
 
-[[sthref27]][[gipcc]]
+[[gipcc]]
 
 Table 1-25 New `thread-pool` Attributes
 
@@ -1036,10 +1036,10 @@ A value of `-1` specifies no limit.
 |===
 
 
-For remapped `thread-pool` attributes, see link:#gipfn[Table 1-4],
-link:#gipdh[Table 1-11], and link:#gipcj[Table 1-13].
+For remapped `thread-pool` attributes, see xref:#gipfn[Table 1-4],
+xref:#gipdh[Table 1-11], and xref:#gipcj[Table 1-13].
 
-[[sthref28]][[gipem]]
+[[gipem]]
 
 Table 1-26 New `transport` Attributes
 
@@ -1059,8 +1059,8 @@ timeout.
 |===
 
 
-For remapped `transport` attributes, see link:#gipfy[Table 1-3],
-link:#gipfn[Table 1-4], link:#gipev[Table 1-6], and link:#gipdo[Table
+For remapped `transport` attributes, see xref:#gipfy[Table 1-3],
+xref:#gipfn[Table 1-4], xref:#gipev[Table 1-6], and xref:#gipdo[Table
 1-7].
 
 [[gktkt]][[GSUPG00038]][[nss-cryptographic-token-support]]

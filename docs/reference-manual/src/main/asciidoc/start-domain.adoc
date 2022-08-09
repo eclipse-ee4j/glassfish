@@ -13,8 +13,6 @@ prev=start-database.html
 
 Starts the DAS of the specified domain
 
-[[sthref2125]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] start-domain [--help]
 [--verbose={true|false}] [--watchdog={true|false}]
 [domain-name]
 ----
-
-[[sthref2126]]
 
 === Description
 
@@ -53,17 +49,15 @@ administration is enabled; otherwise, the `start-domain` subcommand
 fails.
 
 To provide the new admin user password, you can use the `--passwordfile`
-utility option of the link:asadmin.html#asadmin-1m[`asadmin`(1M)] command
+utility option of the xref:asadmin.adoc#asadmin[`asadmin`(1M)] command
 after adding the entry `AS_ADMIN_NEWPASSWORD` to the password file.
 ====
-
-[[sthref2127]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -166,15 +160,11 @@ asadmin-options::
     Limited information is not displayed in the console window
     (default).
 
-[[sthref2128]]
-
 === Operands
 
 domain-name::
   The unique name of the domain you want to start. +
   This operand is optional if only one domain exists in the {productName} installation.
-
-[[sthref2129]]
 
 === Examples
 
@@ -195,8 +185,6 @@ Admin port for the domain: 4848
 Command start-domain executed successfully.
 ----
 
-[[sthref2131]]
-
 === Exit Status
 
 0::
@@ -204,11 +192,9 @@ Command start-domain executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2132]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-domain.html#create-domain-1[`create-domain`(1)],
 link:delete-domain.html#delete-domain-1[`delete-domain`(1)],

@@ -13,16 +13,12 @@ prev=disable-monitoring.html
 
 Disables secure admin if it is already enabled.
 
-[[sthref1072]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] disable-secure-admin [--help]
 ----
-
-[[sthref1073]]
 
 === Description
 
@@ -37,18 +33,14 @@ with only the DAS running, then restart the DAS, and then start any
 other instances.
 ====
 
-[[sthref1074]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1075]]
 
 === Examples
 
@@ -67,8 +59,6 @@ default-config
 Command disable-secure-admin executed successfully.
 ----
 
-[[sthref1077]]
-
 === Exit Status
 
 0::
@@ -76,11 +66,9 @@ Command disable-secure-admin executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1078]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)]
 

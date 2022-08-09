@@ -13,8 +13,6 @@ prev=delete-context-service.html
 
 Removes a custom resource
 
-[[sthref666]]
-
 === Synopsis
 
 [source]
@@ -23,21 +21,17 @@ asadmin [asadmin-options] delete-custom-resource [--help]
 [--target target] jndi-name
 ----
 
-[[sthref667]]
-
 === Description
 
 The `delete-custom-resource` subcommand removes a custom resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref668]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,14 +61,10 @@ deletion.
   instance_name;;
     Deletes the resource for a particular server instance.
 
-[[sthref669]]
-
 === Operands
 
 jndi-name::
   The JNDI name of this resource.
-
-[[sthref670]]
 
 === Examples
 
@@ -90,8 +80,6 @@ asadmin> delete-custom-resource mycustomresource
 Command delete-custom-resource executed successfully.
 ----
 
-[[sthref672]]
-
 === Exit Status
 
 0::
@@ -99,11 +87,9 @@ Command delete-custom-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref673]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-custom-resource.html#create-custom-resource-1[`create-custom-resource`(1)],
 link:list-custom-resources.html#list-custom-resources-1[`list-custom-resources`(1)]

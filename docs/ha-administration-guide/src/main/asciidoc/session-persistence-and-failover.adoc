@@ -15,9 +15,9 @@ prev=rolling-upgrade.html
 This chapter explains how to enable and configure high availability
 session persistence.
 
-* link:#abdla[Overview of Session Persistence and Failover]
-* link:#abdle[Enabling the High Availability Session Persistence Service]
-* link:#abdlp[Stateful Session Bean Failover]
+* xref:#abdla[Overview of Session Persistence and Failover]
+* xref:#abdle[Enabling the High Availability Session Persistence Service]
+* xref:#abdlp[Stateful Session Bean Failover]
 
 [[abdla]][[GSHAG00209]][[overview-of-session-persistence-and-failover]]
 
@@ -45,9 +45,9 @@ session-based stickiness is the Loadbalancer Plug-In available in {productName}.
 
 The following topics are addressed here:
 
-* link:#abdlb[Requirements]
-* link:#abdlc[Restrictions]
-* link:#gksoq[Scope]
+* xref:#abdlb[Requirements]
+* xref:#abdlc[Restrictions]
+* xref:#gksoq[Scope]
 
 [[abdlb]][[GSHAG00300]][[requirements]]
 
@@ -186,11 +186,11 @@ instance and container levels.
 This section explains how to configure and enable the high availability
 session persistence service.
 
-* link:#abdlf[To Enable Availability for a Cluster, Standalone Instance or Container]
-* link:#abdll[Configuring Availability for Individual Web Applications]
-* link:#gkwqu[Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`]
-* link:#abdln[Using Single Sign-on with Session Failover]
-* link:#gkyyl[Using Coherence*Web for HTTP Session Persistence]
+* xref:#abdlf[To Enable Availability for a Cluster, Standalone Instance or Container]
+* xref:#abdll[Configuring Availability for Individual Web Applications]
+* xref:#gkwqu[Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`]
+* xref:#abdln[Using Single Sign-on with Session Failover]
+* xref:#gkyyl[Using Coherence*Web for HTTP Session Persistence]
 
 [[abdlf]][[GSHAG00154]][[to-enable-availability-for-a-cluster-standalone-instance-or-container]]
 
@@ -292,7 +292,7 @@ asadmin> set instance-name-config.availability-service.availability-enabled=true
 6. Enable availability for any SFSB that requires it.
 +
 Select methods for which checkpointing the session state is necessary.
-For more information, see link:#abdlu[Configuring Availability for an Individual Bean].
+For more information, see xref:#abdlu[Configuring Availability for an Individual Bean].
 
 7. Make each web module distributable if you want it to be highly available.
 +
@@ -304,12 +304,10 @@ modules during deployment.
 +
 See the links below for instructions.
 
-[[GSHAG430]]
-
 See Also
 
-* link:#abdll[Configuring Availability for Individual Web Applications]
-* link:#abdln[Using Single Sign-on with Session Failover]
+* xref:#abdll[Configuring Availability for Individual Web Applications]
+* xref:#abdln[Using Single Sign-on with Session Failover]
 
 [[abdll]][[GSHAG00303]][[configuring-availability-for-individual-web-applications]]
 
@@ -518,7 +516,7 @@ of a subsequent method.
 The state of an SFSB is not necessarily transactional and might be
 significantly modified as a result of non-transactional business
 methods. If this is the case for an SFSB, you can specify a list of
-checkpointed methods, as described in link:#abdlw[Specifying Methods to
+checkpointed methods, as described in xref:#abdlw[Specifying Methods to
 Be Checkpointed]
 
 If a distributable web application references an SFSB, and the web

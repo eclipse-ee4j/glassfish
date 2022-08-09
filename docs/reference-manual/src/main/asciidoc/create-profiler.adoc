@@ -13,8 +13,6 @@ prev=create-password-alias.html
 
 Creates the profiler element
 
-[[sthref481]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] create-profiler [--help]
 [--classpath classpath] [--nativelibpath native_library_path] [--enabled=true]
 [--property(name=value)[:name=value]*] profiler_name
 ----
-
-[[sthref482]]
 
 === Description
 
@@ -39,13 +35,11 @@ For changes to take effect, the server must restarted.
 
 This subcommand is supported in remote mode only.
 
-[[sthref483]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -76,18 +70,12 @@ asadmin-options::
 `--property`::
   Name/value pairs of provider-specific attributes.
 
-[[sthref484]]
-
 === Operands
 
 profiler_name::
   Name of the profiler.
 
-[[sthref485]]
-
 === Examples
-
-[[GSRFM516]][[sthref486]]
 
 ==== Example 1   Creating a Profiler
 
@@ -101,8 +89,6 @@ asadmin> create-profiler --classpath /home/appserver/
 Created Profiler with id = sample_profiler
 ----
 
-[[sthref487]]
-
 === Exit Status
 
 0::
@@ -110,11 +96,9 @@ Created Profiler with id = sample_profiler
 1::
   error in executing the subcommand
 
-[[sthref488]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-profiler.html#delete-profiler-1[`delete-profiler`(1)]
 

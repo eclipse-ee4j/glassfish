@@ -35,12 +35,12 @@ for an application's database access if it does not use standard Jakarta EE
 
 The following topics are addressed here:
 
-* link:#giyck[Statements]
-* link:#giyeq[Connections]
-* link:#giyde[Connection Wrapping]
-* link:#gavro[Allowing Non-Component Callers]
-* link:#giydx[Using Application-Scoped Resources]
-* link:#geqvg[Restrictions and Optimizations]
+* xref:#giyck[Statements]
+* xref:#giyeq[Connections]
+* xref:#giyde[Connection Wrapping]
+* xref:#gavro[Allowing Non-Component Callers]
+* xref:#giydx[Using Application-Scoped Resources]
+* xref:#geqvg[Restrictions and Optimizations]
 
 [[giyck]][[GSDVG00182]][[statements]]
 
@@ -48,11 +48,11 @@ The following topics are addressed here:
 
 The following topics are addressed here:
 
-* link:#giyfu[Using an Initialization Statement]
-* link:#ghqrx[Setting a Statement Timeout]
-* link:#gktbf[Statement Leak Detection and Leaked Statement Reclamation]
-* link:#giyci[Statement Caching]
-* link:#giygg[Statement Tracing]
+* xref:#giyfu[Using an Initialization Statement]
+* xref:#ghqrx[Setting a Statement Timeout]
+* xref:#gktbf[Statement Leak Detection and Leaked Statement Reclamation]
+* xref:#giyci[Statement Caching]
+* xref:#giygg[Statement Tracing]
 
 [[giyfu]][[GSDVG00495]][[using-an-initialization-statement]]
 
@@ -268,13 +268,13 @@ asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queri
 
 The following topics are addressed here:
 
-* link:#gktas[Transparent Pool Reconfiguration]
-* link:#giygl[Disabling Pooling]
-* link:#giydr[Associating Connections with Threads]
-* link:#giyfg[Custom Connection Validation]
-* link:#beams[Sharing Connections]
-* link:#gezfh[Marking Bad Connections]
-* link:#gipzl[Handling Invalid Connections]
+* xref:#gktas[Transparent Pool Reconfiguration]
+* xref:#giygl[Disabling Pooling]
+* xref:#giydr[Associating Connections with Threads]
+* xref:#giyfg[Custom Connection Validation]
+* xref:#beams[Sharing Connections]
+* xref:#gezfh[Marking Bad Connections]
+* xref:#gipzl[Handling Invalid Connections]
 
 [[gktas]][[GSDVG00500]][[transparent-pool-reconfiguration]]
 
@@ -557,9 +557,9 @@ connection pool is resized.
 
 The following topics are addressed here:
 
-* link:#ghqxi[Wrapping Connections]
-* link:#beamt[Obtaining a Physical Connection From a Wrapped Connection]
-* link:#ggrum[Using the `Connection.unwrap()` Method]
+* xref:#ghqxi[Wrapping Connections]
+* xref:#beamt[Obtaining a Physical Connection From a Wrapped Connection]
+* xref:#ggrum[Using the `Connection.unwrap()` Method]
 
 [[ghqxi]][[GSDVG00507]][[wrapping-connections]]
 

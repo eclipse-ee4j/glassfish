@@ -13,8 +13,6 @@ prev=create-custom-resource.html
 
 Creates a domain
 
-[[sthref208]]
-
 === Synopsis
 
 [source]
@@ -35,8 +33,6 @@ asadmin [asadmin-options] create-domain [--help]
 [--nopassword={false|true}]
 domain-name
 ----
-
-[[sthref209]]
 
 === Description
 
@@ -73,13 +69,11 @@ developer, cluster, or enterprise profile for the domain you create.
 
 This subcommand is supported in local mode only.
 
-[[sthref210]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -178,7 +172,7 @@ When the `--portbase` option is specified, the output of this
   `AS_ADMIN_MASTERPASSWORD` entry in the password file or prompts for
   the master password. The password file is specified in the
   `--passwordfile` option of the
-  link:asadmin.html#asadmin-1m[`asadmin`(1M)]utility. +
+  xref:asadmin.adoc#asadmin[`asadmin`(1M)]utility. +
   If the `--savemasterpassword` option is `true`, this option is also
   true, regardless of the value that is specified on the command line.
 `--domainproperties`::
@@ -294,16 +288,12 @@ overwritten.
   option, and the `--nopassword` option is set to true, the default user
   name, `admin`, is used.
 
-[[sthref211]]
-
 === Operands
 
 domain-name::
   The name of the domain to be created. The name may contain only ASCII
   characters and must be a valid directory name for the operating system
   on the host where the domain is created.
-
-[[sthref212]]
 
 === Examples
 
@@ -431,8 +421,6 @@ Domain domain5 allows admin login as user "admin" with no password.
 Command create-domain executed successfully.
 ----
 
-[[sthref217]]
-
 === Exit Status
 
 0::
@@ -440,11 +428,9 @@ Command create-domain executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref218]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
 link:list-domains.html#list-domains-1[`list-domains`(1)],

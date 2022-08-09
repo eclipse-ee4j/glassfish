@@ -13,8 +13,6 @@ prev=install-node.html
 
 Installs {productName} software on specified DCOM-enabled hosts
 
-[[sthref1259]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] install-node-dcom [--help]
 [--force={false|true}]
 host-list
 ----
-
-[[sthref1260]]
 
 === Description
 
@@ -69,7 +65,7 @@ to authenticate the Windows user on each host where the
 to run noninteractively, the following conditions must be met:
 
 * The `--interactive` option of the
-  link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility must be `false`.
+  xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility must be `false`.
 * The `--passwordfile` option of the `asadmin` utility must specify a
   password file.
 * The password file must contain the `AS_ADMIN_WINDOWSPASSWORD` entry.
@@ -78,13 +74,11 @@ The subcommand does not modify the configuration of the DAS.
 
 This subcommand is supported in local mode only.
 
-[[sthref1261]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -149,15 +143,11 @@ asadmin-options::
   `true`;;
     The existing installation is overwritten.
 
-[[sthref1262]]
-
 === Operands
 
 host-list::
   A space-separated list of the names of the hosts where the
   {productName} software is to be installed.
-
-[[sthref1263]]
 
 === Examples
 
@@ -199,8 +189,6 @@ C:\glassfish7>jar xvf glassfish_install.zip
 Command install-node-dcom executed successfully.
 ----
 
-[[sthref1265]]
-
 === Exit Status
 
 0::
@@ -208,11 +196,9 @@ Command install-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref1266]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
 link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)]

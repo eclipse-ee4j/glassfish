@@ -13,8 +13,6 @@ prev=create-file-user.html
 
 Sets HTTP parameters for a protocol
 
-[[sthref227]]
-
 === Synopsis
 
 [source]
@@ -30,21 +28,17 @@ asadmin [asadmin-options] create-http [--help]
 protocol-name
 ----
 
-[[sthref228]]
-
 === Description
 
 The `create-http` subcommand creates a set of HTTP parameters for a
 protocol, which in turn configures one or more network listeners. This
 subcommand is supported in remote mode only.
 
-[[sthref229]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -89,14 +83,10 @@ asadmin-options::
     Creates the set of HTTP parameters on the specified standalone
     server instance.
 
-[[sthref230]]
-
 === Operands
 
 protocol-name::
   The name of the protocol to which this HTTP parameter set applies.
-
-[[sthref231]]
 
 === Examples
 
@@ -113,8 +103,6 @@ asadmin> create-http --timeout-seconds 60 --default-virtual-server server http-1
 Command create-http executed successfully.
 ----
 
-[[sthref233]]
-
 === Exit Status
 
 0::
@@ -122,11 +110,9 @@ Command create-http executed successfully.
 1::
   error in executing the command
 
-[[sthref234]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-network-listener.html#create-network-listener-1[`create-network-listener`(1)],
 link:create-protocol.html#create-protocol-1[`create-protocol`(1)],

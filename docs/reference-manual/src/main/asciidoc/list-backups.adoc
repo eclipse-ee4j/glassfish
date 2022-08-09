@@ -13,8 +13,6 @@ prev=list-auth-realms.html
 
 Lists all backups
 
-[[sthref1332]]
-
 === Synopsis
 
 [source]
@@ -27,21 +25,17 @@ asadmin [asadmin-options] list-backups [--help]
 [domain-name]
 ----
 
-[[sthref1333]]
-
 === Description
 
 The `list-backups` subcommand displays information about domain backups.
 
 This subcommand is supported in local mode only in {productName}, and is support in local mode and remote mode in {productName}.
 
-[[sthref1334]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -63,16 +57,12 @@ asadmin-options::
   backup files in the backup directory to those for the specified domain
   backup configuration.
 
-[[sthref1335]]
-
 === Operands
 
 domain-name::
   Specifies the domain for which backups are listed. +
   This operand is optional if only one domain exists in the
   {productName} installation.
-
-[[sthref1336]]
 
 === Examples
 
@@ -110,8 +100,6 @@ Domain Directory          : /glassfish7/glassfish/domains/domain1
 Command list-backups executed successfully.
 ----
 
-[[sthref1338]]
-
 === Exit Status
 
 0::
@@ -119,11 +107,9 @@ Command list-backups executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1339]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:backup-domain.html#backup-domain-1[`backup-domain`(1)],
 link:restore-domain.html#restore-domain-1[`restore-domain`(1)]

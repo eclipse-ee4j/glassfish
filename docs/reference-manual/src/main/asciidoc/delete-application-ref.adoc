@@ -13,8 +13,6 @@ prev=delete-admin-object.html
 
 Removes a reference to an application
 
-[[sthref585]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-application-ref [--help]
 [--target target]
 [--cascade=false] reference_name
 ----
-
-[[sthref586]]
 
 === Description
 
@@ -43,13 +39,11 @@ from the domain. The bits are removed only by the `undeploy` subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref587]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,8 +62,6 @@ asadmin-options::
   The connector module can be either a stand-alone RAR file or a module
   within an EAR file.
 
-[[sthref588]]
-
 === Operands
 
 reference_name::
@@ -86,8 +78,6 @@ reference_name::
   and Application Versions]" in {productName}
   Application Deployment Guide.
 
-[[sthref589]]
-
 === Examples
 
 [[GSRFM531]][[sthref590]]
@@ -103,8 +93,6 @@ asadmin> delete-application-ref --target NewServer MyWebApp
 Command delete-application-ref executed successfully.
 ----
 
-[[sthref591]]
-
 === Exit Status
 
 0::
@@ -112,11 +100,9 @@ Command delete-application-ref executed successfully.
 1::
   error in executing the command
 
-[[sthref592]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
 link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)],

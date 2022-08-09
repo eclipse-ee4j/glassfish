@@ -13,8 +13,6 @@ prev=create-http.html
 
 Creates a health-checker for a specified load balancer configuration
 
-[[sthref235]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] create-http-health-checker [--help]
 [--interval 30] [--timeout 10]
 [--config config_name] target
 ----
-
-[[sthref236]]
 
 === Description
 
@@ -41,13 +37,11 @@ subcommand is not applicable to {productName}.
 ====
 
 
-[[sthref237]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,8 +62,6 @@ asadmin-options::
   associated with the target. If no configuration references the target,
   the subcommand fails.
 
-[[sthref238]]
-
 === Operands
 
 target::
@@ -78,8 +70,6 @@ target::
 
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
-
-[[sthref239]]
 
 === Examples
 
@@ -97,8 +87,6 @@ asadmin> create-http-health-checker --config mycluster-http-lb-config mycluster
 Command create-http-health-checker executed successfully.
 ----
 
-[[sthref241]]
-
 === Exit Status
 
 0::
@@ -106,11 +94,9 @@ Command create-http-health-checker executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref242]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-http-health-checker.html#delete-http-health-checker-1[`delete-http-health-checker`(1)]
 

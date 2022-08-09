@@ -14,8 +14,6 @@ prev=list-secure-admin-principals.html
 Lists EJB or servlet components in a deployed module or module of a
 deployed application
 
-[[sthref1803]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] list-sub-components [--help]
 [--appname appname] [--resources]
 modulename
 ----
-
-[[sthref1804]]
 
 === Description
 
@@ -39,13 +35,11 @@ the `--appname` option.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1805]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,8 +62,6 @@ asadmin-options::
 `--resources`::
   Lists the application-scoped resources for each subcomponent.
 
-[[sthref1806]]
-
 === Operands
 
 modulename::
@@ -81,8 +73,6 @@ modulename::
   (`.`) characters. For more information about module and application
   versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
   {productName} Application Deployment Guide.
-
-[[sthref1807]]
 
 === Examples
 
@@ -100,8 +90,6 @@ MEJBBean <StatelessSessionBean>
 Command list-sub-components executed successfully.
 ----
 
-[[sthref1809]]
-
 === Exit Status
 
 0::
@@ -109,11 +97,9 @@ Command list-sub-components executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1810]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:disable.html#disable-1[`disable`(1)],
 link:enable.html#enable-1[`enable`(1)],

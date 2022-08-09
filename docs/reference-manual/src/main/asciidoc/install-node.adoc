@@ -13,8 +13,6 @@ prev=import-sync-bundle.html
 
 Installs {productName} software on specified SSH-enabled hosts
 
-[[sthref1251]]
-
 === Synopsis
 
 [source]
@@ -28,8 +26,6 @@ asadmin [asadmin-options] install-node [--help]
 [--force={false|true}]
 host-list
 ----
-
-[[sthref1252]]
 
 === Description
 
@@ -71,7 +67,7 @@ prompts for a password. To enable the subcommand to run
 noninteractively, the following conditions must be met:
 
 * The `--interactive` option of the
-  link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility must be `false`.
+  xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility must be `false`.
 * The `--passwordfile` option of the `asadmin` utility must specify a
   password file.
 * The password file must contain the `AS_ADMIN_SSHPASSWORD` entry.
@@ -80,13 +76,11 @@ The subcommand does not modify the configuration of the DAS.
 
 This subcommand is supported in local mode only.
 
-[[sthref1253]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -162,15 +156,11 @@ asadmin-options::
   `true`;;
     The existing installation is overwritten.
 
-[[sthref1254]]
-
 === Operands
 
 host-list::
   A space-separated list of the names of the hosts where the
   {productName} software is to be installed.
-
-[[sthref1255]]
 
 === Examples
 
@@ -203,8 +193,6 @@ Fixing file permissions of all files under sj04.example.com:/export/glassfish7/b
 Command install-node executed successfully
 ----
 
-[[sthref1257]]
-
 === Exit Status
 
 0::
@@ -212,11 +200,9 @@ Command install-node executed successfully
 1::
   error in executing the command
 
-[[sthref1258]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
 link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],

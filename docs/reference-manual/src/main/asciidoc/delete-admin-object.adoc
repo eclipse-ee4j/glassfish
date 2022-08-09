@@ -13,8 +13,6 @@ prev=create-virtual-server.html
 
 Removes the administered object with the specified JNDI name.
 
-[[sthref577]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-admin-object [--help]
 [--target target] jndi_name
 ----
 
-[[sthref578]]
-
 === Description
 
 The `delete-admin-object` subcommand removes an administered object with
@@ -32,13 +28,11 @@ the specified JNDI name.
 
 This subcommand is supported in remote mote only.
 
-[[sthref579]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,14 +61,10 @@ deletion.
   instance_name;;
     Deletes the administered object for a particular server instance.
 
-[[sthref580]]
-
 === Operands
 
 jndi_name::
   JNDI name of the administered object to be deleted.
-
-[[sthref581]]
 
 === Examples
 
@@ -90,8 +80,6 @@ asadmin> delete-admin-object jms/samplequeue
 Command delete-admin-object executed successfully
 ----
 
-[[sthref583]]
-
 === Exit Status
 
 0::
@@ -99,11 +87,9 @@ Command delete-admin-object executed successfully
 1::
   error in executing the subcommand
 
-[[sthref584]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-admin-object.html#create-admin-object-1[`create-admin-object`(1)],
 link:list-admin-objects.html#list-admin-objects-1[`list-admin-objects`(1)]

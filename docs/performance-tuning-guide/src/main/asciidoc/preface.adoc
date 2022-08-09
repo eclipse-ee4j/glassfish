@@ -70,7 +70,7 @@ your system and enterprise.
 
 |link:administration-guide.html#GSADG[Administration Guide] |Explains how to configure, monitor,
 and manage {productName} subsystems and components from the command
-line by using the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] utility. Instructions for
+line by using the link:reference-manual/asadmin.html#asadmin[`asadmin`] utility. Instructions for
 performing these tasks from the Administration Console are provided in
 the Administration Console online help.
 
@@ -136,9 +136,6 @@ messages.
 |===
 
 
-[[GSPTG00045]][[fwbkx]]
-
-
 [[typographic-conventions]]
 === Typographic Conventions
 
@@ -175,9 +172,6 @@ A cache is a copy that is stored locally.
 
 Do not save the file.
 |===
-
-
-[[GSPTG00046]][[fquvc]]
 
 
 [[symbol-conventions]]
@@ -220,9 +214,6 @@ argument or the `n` argument.
 |File > New > Templates
 |From the File menu, choose New. From the New submenu, choose Templates.
 |===
-
-
-[[GSPTG00044]][[ghpfg]]
 
 
 [[default-paths-and-file-names]]

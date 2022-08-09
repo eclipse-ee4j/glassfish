@@ -12,8 +12,6 @@ prev=resource.html
 
 Secure and administer {productName} applications
 
-[[sthref2412]]
-
 === Description
 
 Security is about protecting data: how to prevent unauthorized access or
@@ -23,8 +21,6 @@ security features include cryptography, authentication and
 authorization, and public key infrastructure. {productName} is built
 on the Java security model, which uses a sandbox where applications can
 run safely, without potential risk to systems or users.
-
-[[sthref2413]]
 
 === See Also
 
@@ -45,6 +41,6 @@ link:list-connector-security-maps.html#list-connector-security-maps-1[`list-conn
 link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],
 link:list-file-users.html#list-file-users-1[`list-file-users`(1)].
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

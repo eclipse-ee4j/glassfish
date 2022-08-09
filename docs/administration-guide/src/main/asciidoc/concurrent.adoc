@@ -5,9 +5,6 @@ prev=http_https.adoc
 
 = Administering Concurrent Resources
 
-[[GSADG1108]][[sthref73]]
-
-
 [[administering-concurrent-resources]]
 == 14 Administering Concurrent Resources
 
@@ -17,17 +14,17 @@ utility.
 
 The following topics are addressed here:
 
-* link:#DAFGCCDI[About Concurrent Resources]
-* link:#DAFFGDCD[Default Concurrent Resources]
-* link:#DAFFCEEA[Configuring Context Services]
-* link:#DAFBAAIJ[Configuring Managed Thread Factories]
-* link:#DAFBHEDI[Configuring Managed Executor Services]
-* link:#DAFHJHCF[Configuring Managed Scheduled Executor Services]
+* <<About Concurrent Resources>>
+* <<Default Concurrent Resources>>
+* <<Configuring Context Services>>
+* <<Configuring Managed Thread Factories>>
+* <<Configuring Managed Executor Services>>
+* <<Configuring Managed Scheduled Executor Services>>
 
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
 
-[[DAFGCCDI]][[GSADG1109]][[about-concurrent-resources]]
+[[about-concurrent-resources]]
 
 === About Concurrent Resources
 
@@ -39,13 +36,10 @@ through JNDI lookup or resource injection.
 
 Concurrent resources are resources of the following types:
 
-* Context services. See link:#DAFFCEEA[Configuring Context Services].
-* Managed thread factories. See link:#DAFBAAIJ[Configuring Managed
-Thread Factories].
-* Managed executor services. See link:#DAFBHEDI[Configuring Managed
-Executor Services].
-* Managed scheduled executor services. See link:#DAFHJHCF[Configuring
-Managed Scheduled Executor Services].
+* Context services. See <<Configuring Context Services>>.
+* Managed thread factories. <<Configuring Managed Thread Factories>>.
+* Managed executor services. See <<Configuring Managed Executor Services>>.
+* Managed scheduled executor services. <<Configuring Managed Scheduled Executor Services>>.
 
 For detailed information about concurrent resources, see
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#jakarta-concurrency-2[Concurrency Utilities]
@@ -53,7 +47,7 @@ in The Jakarta EE Tutorial. Also see
 http://jcp.org/en/jsr/detail?id=236[
 Java Specification Request 236: Concurrency Utilities for Jakarta EE].
 
-[[DAFFGDCD]][[GSADG1110]][[default-concurrent-resources]]
+[[default-concurrent-resources]]
 
 === Default Concurrent Resources
 
@@ -80,7 +74,7 @@ java:comp/DefaultManagedScheduledExecutorService::
   This Jakarta EE standard name is mapped to the
   `concurrent/__defaultManagedScheduledExecutorService` resource.
 
-[[DAFFCEEA]][[GSADG1111]][[configuring-context-services]]
+[[configuring-context-services]]
 
 === Configuring Context Services
 
@@ -91,12 +85,12 @@ the thread executing the task.
 
 The following tasks are used to administer context service resources:
 
-* link:#DAFJACDI[To Create a Context Service]
-* link:#DAFDCFCB[To List Context Services]
-* link:#DAFBFICB[To Update a Context Service]
-* link:#DAFGGGEC[To Delete a Context Service]
+* <<To Create a Context Service>>
+* <<To List Context Services>>
+* <<To Update a Context Service>>
+* <<To Delete a Context Service>>
 
-[[DAFJACDI]][[GSADG1112]][[to-create-a-context-service]]
+[[to-create-a-context-service]]
 
 ==== To Create a Context Service
 
@@ -108,7 +102,7 @@ specifying the JNDI name of a context service, use only the
 `concurrent/`name format. For example, `concurrent/Context1`.
 
 For more information about the default context service resource included
-with {productName}, see link:#DAFFGDCD[Default Concurrent Resources].
+with {productName}, see <<Default Concurrent Resources>>.
 
 
 [NOTE]
@@ -127,7 +121,7 @@ will not be able to locate the resource.
 link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-context-service`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
-[[GSADG1113]][[sthref74]]
+[[sthref74]]
 Example 14-1 Creating a Context Service
 
 This example creates a context service resource named
@@ -140,14 +134,12 @@ Context service concurrent/Context1 created successfully.
 Command create-context-service executed successfully.
 ----
 
-[[GSADG1114]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-context-service` at the command line.
 
-[[DAFDCFCB]][[GSADG1115]][[to-list-context-services]]
+[[to-list-context-services]]
 
 ==== To List Context Services
 
@@ -158,7 +150,7 @@ existing context service resources.
 2. List context service resources by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-context-services`] subcommand.
 
-[[GSADG1116]][[sthref75]]
+[[sthref75]]
 Example 14-2 Listing Context Services
 
 This example lists context service resources on the default server
@@ -173,14 +165,12 @@ concurrent/Context2
 Command list-context-services executed successfully.
 ----
 
-[[GSADG1117]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-context-services` at the command line.
 
-[[DAFBFICB]][[GSADG1118]][[to-update-a-context-service]]
+[[to-update-a-context-service]]
 
 ==== To Update a Context Service
 
@@ -215,7 +205,7 @@ For example:
 asadmin> set resources.context-service.concurrent/Context1.deployment-order=120
 ----
 
-[[DAFGGGEC]][[GSADG1119]][[to-delete-a-context-service]]
+[[to-delete-a-context-service]]
 
 ==== To Delete a Context Service
 
@@ -233,7 +223,7 @@ link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-context-s
 4. Delete the context service by using the
 link:reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-context-service`] subcommand.
 
-[[GSADG1120]][[sthref76]]
+[[sthref76]]
 Example 14-3 Deleting a Context Service
 
 This example deletes the context service resource named
@@ -246,14 +236,12 @@ Context service concurrent/Context1 deleted successfully.
 Command delete-context-service executed successfully.
 ----
 
-[[GSADG1121]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-context-service` at the command line.
 
-[[DAFBAAIJ]][[GSADG1122]][[configuring-managed-thread-factories]]
+[[configuring-managed-thread-factories]]
 
 === Configuring Managed Thread Factories
 
@@ -265,12 +253,12 @@ task.
 The following tasks are used to administer managed thread factory
 resources:
 
-* link:#DAFGFAEI[To Create a Managed Thread Factory]
-* link:#DAFDGEGE[To List Managed Thread Factories]
-* link:#DAFDIJIH[To Update a Managed Thread Factory]
-* link:#DAFCEDEI[To Delete a Managed Thread Factory]
+* <<To Create a Managed Thread Factory>>
+* <<To List Managed Thread Factories>>
+* <<To Update a Managed Thread Factory>>
+* <<To Delete a Managed Thread Factory>>
 
-[[DAFGFAEI]][[GSADG1123]][[to-create-a-managed-thread-factory]]
+[[to-create-a-managed-thread-factory]]
 
 ==== To Create a Managed Thread Factory
 
@@ -282,7 +270,7 @@ specifying the JNDI name of a managed thread factory, use only the
 ``concurrent/``name format. For example, `concurrent/Factory1`.
 
 For more information about the default managed thread factory resource
-included with {productName}, see link:#DAFFGDCD[Default Concurrent Resources].
+included with {productName}, see <<Default Concurrent Resources>>.
 
 [NOTE]
 ====
@@ -299,7 +287,7 @@ application will not be able to locate the resource.
 link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-thread-factory`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
-[[GSADG1124]][[sthref77]]
+[[sthref77]]
 Example 14-4 Creating a Managed Thread Factory
 
 This example creates a managed thread factory resource named
@@ -312,14 +300,12 @@ Managed thread factory concurrent/Factory1 created successfully.
 Command create-managed-thread-factory executed successfully.
 ----
 
-[[GSADG1125]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-managed-thread-factory` at the command line.
 
-[[DAFDGEGE]][[GSADG1126]][[to-list-managed-thread-factories]]
+[[to-list-managed-thread-factories]]
 
 ==== To List Managed Thread Factories
 
@@ -330,7 +316,7 @@ list the existing managed thread factory resources.
 2. List managed thread factory resources by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-thread-factories`] subcommand.
 
-[[GSADG1127]][[sthref78]]
+[[sthref78]]
 Example 14-5 Listing Managed Thread Factories
 
 This example lists managed thread factory resources on the default
@@ -345,14 +331,12 @@ concurrent/Factory2
 Command list-managed-thread-factories executed successfully.
 ----
 
-[[GSADG1128]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-managed-thread-factories` at the command line.
 
-[[DAFDIJIH]][[GSADG1129]][[to-update-a-managed-thread-factory]]
+[[to-update-a-managed-thread-factory]]
 
 ==== To Update a Managed Thread Factory
 
@@ -388,7 +372,7 @@ For example:
 asadmin> set resources.managed-thread-factory.concurrent/Factory1.deployment-order=120
 ----
 
-[[DAFCEDEI]][[GSADG1130]][[to-delete-a-managed-thread-factory]]
+[[to-delete-a-managed-thread-factory]]
 
 ==== To Delete a Managed Thread Factory
 
@@ -406,7 +390,7 @@ link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-t
 4. Delete the managed thread factory by using the
 link:reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-thread-factory`] subcommand.
 
-[[GSADG1131]][[sthref79]]
+[[sthref79]]
 Example 14-6 Deleting a Managed Thread Factory
 
 This example deletes the managed thread factory resource named
@@ -419,14 +403,12 @@ Managed thread factory concurrent/Factory1 deleted successfully.
 Command delete-managed-thread-factory executed successfully.
 ----
 
-[[GSADG1132]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-managed-thread-factory` at the command line.
 
-[[DAFBHEDI]][[GSADG1133]][[configuring-managed-executor-services]]
+[[configuring-managed-executor-services]]
 
 === Configuring Managed Executor Services
 
@@ -438,12 +420,12 @@ the thread executing the task.
 The following tasks are used to administer managed executor service
 resources:
 
-* link:#DAFJIEGA[To Create a Managed Executor Service]
-* link:#DAFIJDAE[To List Managed Executor Services]
-* link:#DAFICEJF[To Update a Managed Executor Service]
-* link:#DAFDAGAD[To Delete a Managed Executor Service]
+* <<To Create a Managed Executor Service>>
+* <<To List Managed Executor Services>>
+* <<To Update a Managed Executor Service>>
+* <<To Delete a Managed Executor Service>>
 
-[[DAFJIEGA]][[GSADG1134]][[to-create-a-managed-executor-service]]
+[[to-create-a-managed-executor-service]]
 
 ==== To Create a Managed Executor Service
 
@@ -455,8 +437,7 @@ specifying the JNDI name of a managed executor service, use only the
 `concurrent/`name format. For example, `concurrent/Executor1`.
 
 For more information about the default managed executor service resource
-included with {productName}, see link:#DAFFGDCD[Default Concurrent
-Resources].
+included with {productName}, see <<Default Concurrent Resources>>.
 
 
 [NOTE]
@@ -475,7 +456,7 @@ application will not be able to locate the resource.
 link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-executor-service`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
-[[GSADG1135]][[sthref80]]
+[[sthref80]]
 Example 14-7 Creating a Managed Executor Service
 
 This example creates a managed executor service resource named
@@ -488,15 +469,13 @@ Managed executor service concurrent/Executor1 created successfully.
 Command create-managed-executor-service executed successfully.
 ----
 
-[[GSADG1136]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-managed-executor-service` at the command
 line.
 
-[[DAFIJDAE]][[GSADG1137]][[to-list-managed-executor-services]]
+[[to-list-managed-executor-services]]
 
 ==== To List Managed Executor Services
 
@@ -507,7 +486,7 @@ list the existing managed executor service resources.
 2. List managed executor service resources by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-executor-services`] subcommand.
 
-[[GSADG1138]][[sthref81]]
+[[sthref81]]
 Example 14-8 Listing Managed Executor Services
 
 This example lists managed executor service resources on the default
@@ -522,15 +501,13 @@ concurrent/Executor2
 Command list-managed-executor-services executed successfully.
 ----
 
-[[GSADG1139]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-managed-executor-services` at the command
 line.
 
-[[DAFICEJF]][[GSADG1140]][[to-update-a-managed-executor-service]]
+[[to-update-a-managed-executor-service]]
 
 ==== To Update a Managed Executor Service
 
@@ -566,7 +543,7 @@ subcommand. For example:
 asadmin> set resources.managed-executor-service.concurrent/Executor1.deployment-order=120
 ----
 
-[[DAFDAGAD]][[GSADG1141]][[to-delete-a-managed-executor-service]]
+[[to-delete-a-managed-executor-service]]
 
 ==== To Delete a Managed Executor Service
 
@@ -584,7 +561,7 @@ link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-e
 4. Delete the managed executor service by using the
 link:reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-executor-service`] subcommand.
 
-[[GSADG1142]][[sthref82]]
+[[sthref82]]
 Example 14-9 Deleting a Managed Executor Service
 
 This example deletes the managed executor service resource named
@@ -596,8 +573,6 @@ asadmin> delete-managed-executor-service concurrent/Executor1
 Managed executor service concurrent/Executor1 deleted successfully.
 Command delete-managed-executor-service executed successfully.
 ----
-
-[[GSADG1143]]
 
 See Also
 
@@ -617,12 +592,12 @@ the container is propagated to the thread executing the task.
 The following tasks are used to administer managed scheduled executor
 service resources:
 
-* link:#DAFFGDGG[To Create a Managed Scheduled Executor Service]
-* link:#DAFJBADD[To List Managed Scheduled Executor Services]
-* link:#DAFGEBEI[To Update a Managed Scheduled Executor Service]
-* link:#DAFEBEGC[To Delete a Managed Scheduled Executor Service]
+* <<To Create a Managed Scheduled Executor Service>>
+* <<To List Managed Scheduled Executor Services>>
+* <<To Update a Managed Scheduled Executor Service>>
+* <<To Delete a Managed Scheduled Executor Service>>
 
-[[DAFFGDGG]][[GSADG1145]][[to-create-a-managed-scheduled-executor-service]]
+[[to-create-a-managed-scheduled-executor-service]]
 
 ==== To Create a Managed Scheduled Executor Service
 
@@ -636,7 +611,7 @@ only the `concurrent/`name format. For example,
 
 For more information about the default managed scheduled executor
 service resource included with {productName}, see
-link:#DAFFGDCD[Default Concurrent Resources].
+<<Default Concurrent Resources>>.
 
 
 [NOTE]
@@ -655,7 +630,7 @@ Otherwise, the application will not be able to locate the resource.
 link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-scheduled-executor-service`] subcommand.
 3. If necessary, notify users that the new resource has been created.
 
-[[GSADG1146]][[sthref83]]
+[[sthref83]]
 Example 14-10 Creating a Managed Scheduled Executor Service
 
 This example creates a managed scheduled executor service resource named
@@ -668,15 +643,13 @@ Managed scheduled executor service concurrent/ScheduledExecutor1 created success
 Command create-managed-scheduled-executor-service executed successfully.
 ----
 
-[[GSADG1147]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-managed-scheduled-executor-service` at the
 command line.
 
-[[DAFJBADD]][[GSADG1148]][[to-list-managed-scheduled-executor-services]]
+[[to-list-managed-scheduled-executor-services]]
 
 ==== To List Managed Scheduled Executor Services
 
@@ -687,7 +660,7 @@ mode to list the existing managed scheduled executor service resources.
 2. List managed scheduled executor service resources by using the
 link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-scheduled-executor-services`] subcommand.
 
-[[GSADG1149]][[sthref84]]
+[[sthref84]]
 Example 14-11 Listing Managed Scheduled Executor Services
 
 This example lists managed scheduled executor service resources on the
@@ -702,15 +675,13 @@ concurrent/ScheduledExecutor2
 Command list-managed-scheduled-executor-services executed successfully.
 ----
 
-[[GSADG1150]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-managed-scheduled-executor-services` at the
 command line.
 
-[[DAFGEBEI]][[GSADG1151]][[to-update-a-managed-scheduled-executor-service]]
+[[to-update-a-managed-scheduled-executor-service]]
 
 ==== To Update a Managed Scheduled Executor Service
 
@@ -745,7 +716,7 @@ the `set` subcommand. For example:
 asadmin> set resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.deployment-order=120
 ----
 
-[[DAFEBEGC]][[GSADG1152]][[to-delete-a-managed-scheduled-executor-service]]
+[[to-delete-a-managed-scheduled-executor-service]]
 
 ==== To Delete a Managed Scheduled Executor Service
 
@@ -776,8 +747,6 @@ asadmin> delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1
 Managed scheduled executor service concurrent/ScheduledExecutor1 deleted successfully.
 Command delete-managed-scheduled-executor-service executed successfully.
 ----
-
-[[GSADG1154]]
 
 See Also
 

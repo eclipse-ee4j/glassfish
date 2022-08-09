@@ -13,8 +13,6 @@ prev=flush-connection-pool.html
 
 Purges messages in a JMS destination.
 
-[[sthref1185]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] flush-jmsdest [--help]
 destname
 ----
 
-[[sthref1186]]
-
 === Description
 
 The `flush-jmsdest` subcommand purges the messages from a physical
@@ -35,13 +31,11 @@ destination in the server's Java Message Service (JMS) configuration.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref1187]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -66,14 +60,10 @@ asadmin-options::
     Purges messages from the physical destination for the specified
     server instance.
 
-[[sthref1188]]
-
 === Operands
 
 dest_name::
   The unique identifier of the JMS destination to be purged.
-
-[[sthref1189]]
 
 === Examples
 
@@ -90,8 +80,6 @@ asadmin> flush-jmsdest --desttype queue PhysicalQueue
 Command flush-jmsdest executed successfully.
 ----
 
-[[sthref1191]]
-
 === Exit Status
 
 0::
@@ -99,11 +87,9 @@ Command flush-jmsdest executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1192]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jmsdest.html#create-jmsdest-1[`create-jmsdest`(1)],
 link:list-jmsdest.html#list-jmsdest-1[`list-jmsdest`(1)]

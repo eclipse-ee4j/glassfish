@@ -13,8 +13,6 @@ prev=list-batch-runtime-configuration.html
 
 Lists existing clusters in a domain
 
-[[sthref1371]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists existing clusters in a domain
 asadmin [asadmin-options] list-clusters [--help]
 [target]
 ----
-
-[[sthref1372]]
 
 === Description
 
@@ -34,18 +30,14 @@ cluster is running.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1373]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1374]]
 
 === Operands
 
@@ -67,8 +59,6 @@ target::
   configuration-name;;
     Lists all clusters that contain instances whose configuration is
     defined by the named configuration.
-
-[[sthref1375]]
 
 === Examples
 
@@ -117,8 +107,6 @@ ymlclust not running
 Command list-clusters executed successfully.
 ----
 
-[[sthref1379]]
-
 === Exit Status
 
 0::
@@ -126,11 +114,9 @@ Command list-clusters executed successfully.
 1::
   error in executing the command
 
-[[sthref1380]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-cluster.html#create-cluster-1[`create-cluster`(1)],
 link:delete-cluster.html#delete-cluster-1[`delete-cluster`(1)],

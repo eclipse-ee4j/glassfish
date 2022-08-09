@@ -13,8 +13,6 @@ prev=delete-password-alias.html
 
 Removes the profiler element
 
-[[sthref930]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Removes the profiler element
 asadmin [asadmin-options] delete-profiler [--help]
 [--target target_name]
 ----
-
-[[sthref931]]
 
 === Description
 
@@ -36,13 +32,11 @@ For changes to take effect, the server must restarted.
 
 This command is supported in remote mode only.
 
-[[sthref932]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -61,8 +55,6 @@ asadmin-options::
   instance_name;;
     Deletes the profiler element for a particular server instance.
 
-[[sthref933]]
-
 === Examples
 
 [[GSRFM573]][[sthref934]]
@@ -77,8 +69,6 @@ asadmin> delete-profiler sample_profiler
 Command delete-profiler executed successfully
 ----
 
-[[sthref935]]
-
 === Exit Status
 
 0::
@@ -86,11 +76,9 @@ Command delete-profiler executed successfully
 1::
   error in executing the subcommand
 
-[[sthref936]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-profiler.html#create-profiler-1[`create-profiler`(1)]
 

@@ -15,8 +15,6 @@ set
 
 Sets the values of configurable attributes
 
-[[sthref2024]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ Sets the values of configurable attributes
 asadmin [asadmin-options] set [--help]
 attribute-name=value
 ----
-
-[[sthref2025]]
 
 === Description
 
@@ -63,25 +59,19 @@ Any change made by using the `asadmin` utility subcommands or the
 Administration Console are automatically applied to the associated
 {productName} configuration file.
 
-[[sthref2026]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref2027]]
 
 === Operands
 
 attribute-name=value::
   Identifies the full dotted name of the attribute name and its value.
-
-[[sthref2028]]
 
 === Examples
 
@@ -122,8 +112,6 @@ asadmin> set server.transaction-service.automatic-recovery=true
 Command set executed successfully.
 ----
 
-[[sthref2032]]
-
 === Exit Status
 
 0::
@@ -131,11 +119,9 @@ Command set executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2033]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)]
 

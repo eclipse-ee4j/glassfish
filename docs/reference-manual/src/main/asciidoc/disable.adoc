@@ -13,8 +13,6 @@ prev=deploydir.html
 
 Disables the component
 
-[[sthref1039]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Disables the component
 asadmin [asadmin-options] disable [--help]
 [--target target_name] component_name
 ----
-
-[[sthref1040]]
 
 === Description
 
@@ -33,13 +29,11 @@ returned.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1041]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -58,8 +52,6 @@ asadmin-options::
     Disables the component on a particular clustered or stand-alone
     server instance.
 
-[[sthref1042]]
-
 === Operands
 
 component_name::
@@ -73,8 +65,6 @@ component_name::
   module and application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and
   Application Versions]" in {productName}
   Application Deployment Guide.
-
-[[sthref1043]]
 
 === Examples
 
@@ -90,8 +80,6 @@ asadmin> disable sampleApp
 Command disable executed successfully
 ----
 
-[[sthref1045]]
-
 === Exit Status
 
 0::
@@ -99,11 +87,9 @@ Command disable executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1046]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:deploy.html#deploy-1[`deploy`(1)],
 link:enable.html#enable-1[`enable`(1)],

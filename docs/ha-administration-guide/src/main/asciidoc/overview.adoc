@@ -17,10 +17,10 @@ This chapter describes the high availability features in {productName} 7.
 
 The following topics are addressed here:
 
-* link:#abdar[Overview of High Availability]
-* link:#gaymr[How {productName} Provides High Availability]
-* link:#gbcot[Recovering from Failures]
-* link:#abdaz[More Information]
+* xref:#abdar[Overview of High Availability]
+* xref:#gaymr[How {productName} Provides High Availability]
+* xref:#gbcot[Recovering from Failures]
+* xref:#abdaz[More Information]
 
 [[abdar]][[GSHAG00168]][[overview-of-high-availability]]
 
@@ -38,10 +38,10 @@ minimum application downtime and enhanced transactional security.
 
 {productName} provides the following high availability features:
 
-* link:#gksdm[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
-* link:#gaynn[High Availability Session Persistence]
-* link:#gayna[High Availability Java Message Service]
-* link:#gaymz[RMI-IIOP Load Balancing and Failover]
+* xref:#gksdm[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
+* xref:#gaynn[High Availability Session Persistence]
+* xref:#gayna[High Availability Java Message Service]
+* xref:#gaymz[RMI-IIOP Load Balancing and Failover]
 
 [[gksdm]][[GSHAG00252]][[load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module]]
 
@@ -77,7 +77,7 @@ session can continue without loss of information. High availability is
 implemented in {productName} by means of in-memory session
 replication on {productName} instances running in a cluster.
 
-For more information about in-memory session replication in {productName}, see link:#gaymr[How {productName} Provides High
+For more information about in-memory session replication in {productName}, see xref:#gaymr[How {productName} Provides High
 Availability]. For detailed instructions on configuring high
 availability session persistence, see
 link:session-persistence-and-failover.html#abdkz[Configuring High
@@ -158,8 +158,8 @@ link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
 {productName} provides high availability through the following
 subcomponents and features:
 
-* link:#gjghv[Storage for Session State Data]
-* link:#abdax[Highly Available Clusters]
+* xref:#gjghv[Storage for Session State Data]
+* xref:#abdax[Highly Available Clusters]
 
 [[gjghv]][[GSHAG00256]][[storage-for-session-state-data]]
 
@@ -280,10 +280,10 @@ subcomponents after hardware failures such as disk crashes.
 
 The following topics are addressed here:
 
-* link:#gcmkp[Recovering the Domain Administration Server]
-* link:#gcmkc[Recovering {productName} Instances]
-* link:#gcmjs[Recovering the HTTP Load Balancer and Web Server]
-* link:#gcmjr[Recovering Message Queue]
+* xref:#gcmkp[Recovering the Domain Administration Server]
+* xref:#gcmkc[Recovering {productName} Instances]
+* xref:#gcmjs[Recovering the HTTP Load Balancer and Web Server]
+* xref:#gcmjr[Recovering Message Queue]
 
 [[gcmkp]][[GSHAG00258]][[recovering-the-domain-administration-server]]
 

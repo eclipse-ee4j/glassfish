@@ -13,8 +13,6 @@ prev=create-protocol-finder.html
 
 Creates the configuration information for the connector module
 
-[[sthref511]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] create-resource-adapter-config [--help]
 [--property (property-name=value)[:name=value]*]
 raname
 ----
-
-[[sthref512]]
 
 === Description
 
@@ -42,13 +38,11 @@ subcommand, and then identify that thread pool value as the ID in the
 
 This subcommand is supported in remote mode only.
 
-[[sthref513]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -66,15 +60,11 @@ asadmin-options::
   methods of the class that is referenced by the `resourceadapter-class`
   element in the `ra.xml` file.
 
-[[sthref514]]
-
 === Operands
 
 raname::
   Indicates the connector module name. It is the value of the
   `resource-adapter-name` in the `domain.xml` file.
-
-[[sthref515]]
 
 === Examples
 
@@ -91,8 +81,6 @@ mycustomerthreadpool ra1
 Command create-resource-adapter-config executed successfully
 ----
 
-[[sthref517]]
-
 === Exit Status
 
 0::
@@ -100,11 +88,9 @@ Command create-resource-adapter-config executed successfully
 1::
   error in executing the subcommand
 
-[[sthref518]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-threadpool.html#create-threadpool-1[`create-threadpool`(1)],
 link:delete-resource-adapter-config.html#delete-resource-adapter-config-1[`delete-resource-adapter-config`(1)],

@@ -30,14 +30,14 @@ hypothetical add-on component.
 
 The following topics are addressed here:
 
-* link:#ghmof[Administration Console Architecture]
-* link:#ghmom[About Administration Console Templates]
-* link:#ghmqr[About Integration Points]
-* link:#ghmpg[Specifying the ID of an Add-On Component]
-* link:#ghmpk[Adding Functionality to the Administration Console]
-* link:#ghmqi[Adding Internationalization Support]
-* link:#ghmqg[Changing the Theme or Brand of the Administration Console]
-* link:#ghpkz[Creating an Integration Point Type]
+* xref:#ghmof[Administration Console Architecture]
+* xref:#ghmom[About Administration Console Templates]
+* xref:#ghmqr[About Integration Points]
+* xref:#ghmpg[Specifying the ID of an Add-On Component]
+* xref:#ghmpk[Adding Functionality to the Administration Console]
+* xref:#ghmqi[Adding Internationalization Support]
+* xref:#ghmqg[Changing the Theme or Brand of the Administration Console]
+* xref:#ghpkz[Creating an Integration Point Type]
 
 [[ghmof]][[GSACG00097]][[administration-console-architecture]]
 
@@ -89,7 +89,7 @@ required method, `getConfiguration`. The `getConfiguration` method
 returns the location of the `console-config.xml` file as a
 `java.net.URL`. If `getConfiguration` returns `null`, the default
 location, `META-INF/admingui/console-config.xml`, is used. The
-`console-config.xml` file is described in link:#ghmqr[About Integration
+`console-config.xml` file is described in xref:#ghmqr[About Integration
 Points].
 
 To implement the console provider for your add-on component, write a
@@ -136,12 +136,12 @@ JSFTemplating.
 Examples of JSFTemplating technology can be found in the following
 sections of this chapter:
 
-* link:#ghoej[Creating a Jakarta Server Faces Page for Your Node]
-* link:#ghovg[Creating Jakarta Server Faces Pages for Your Tabs]
-* link:#ghoeu[Creating a Jakarta Server Faces Page for Your Task]
-* link:#ghoya[Creating a Jakarta Server Faces Page for Your Task Group]
-* link:#ghpao[Creating a Jakarta Server Faces Page for Your Page Content]
-* link:#ghmqe[Adding a Page to the Administration Console]
+* xref:#ghoej[Creating a Jakarta Server Faces Page for Your Node]
+* xref:#ghovg[Creating Jakarta Server Faces Pages for Your Tabs]
+* xref:#ghoeu[Creating a Jakarta Server Faces Page for Your Task]
+* xref:#ghoya[Creating a Jakarta Server Faces Page for Your Task Group]
+* xref:#ghpao[Creating a Jakarta Server Faces Page for Your Page Content]
+* xref:#ghmqe[Adding a Page to the Administration Console]
 
 [[ghmqr]][[GSACG00099]][[about-integration-points]]
 
@@ -190,7 +190,7 @@ In the example, the element is declared as follows:
 ----
 
 You will also specify this ID value when you construct URLs to images,
-resources and pages in your add-on component. See link:#ghocf[Adding a
+resources and pages in your add-on component. See xref:#ghocf[Adding a
 Node to the Navigation Tree] for an example.
 
 For example, a URL to an image named `my.gif` might look like this:
@@ -249,12 +249,12 @@ readability, this chapter uses the same order throughout.
 
 The following topics are addressed here:
 
-* link:#ghocf[Adding a Node to the Navigation Tree]
-* link:#ghotv[Adding Tabs to a Page]
-* link:#ghmqw[Adding a Task to the Common Tasks Page]
-* link:#ghozn[Adding a Task Group to the Common Tasks Page]
-* link:#ghmrg[Adding Content to a Page]
-* link:#ghmqe[Adding a Page to the Administration Console]
+* xref:#ghocf[Adding a Node to the Navigation Tree]
+* xref:#ghotv[Adding Tabs to a Page]
+* xref:#ghmqw[Adding a Task to the Common Tasks Page]
+* xref:#ghozn[Adding a Task Group to the Common Tasks Page]
+* xref:#ghmrg[Adding Content to a Page]
+* xref:#ghmqe[Adding a Page to the Administration Console]
 
 [[ghocf]][[GSACG00188]][[adding-a-node-to-the-navigation-tree]]
 
@@ -368,7 +368,7 @@ pages, specify the attributes of this tag as follows:
   simple Jakarta Server Faces page called `testPage.jsf`, which is in the
   `src/main/resources/page/` directory. Specify the integration point
   `id` value as the root of the URL; in this case, it is `sample` (see
-  link:#ghmpg[Specifying the ID of an Add-On Component]). The rest of
+  xref:#ghmpg[Specifying the ID of an Add-On Component]). The rest of
   the URL is relative to the `src/main/resources/` directory, where
   `sampleNode.jsf` resides.
   The `url` tag in this example passes a `name` parameter to the
@@ -379,7 +379,7 @@ pages, specify the attributes of this tag as follows:
   `src/main/resources/images/` directory. The URL for this image is an
   absolute path, `/resource/`sample`/images/sample.png`, where sample in
   the path is the integration point `id` value (see
-  link:#ghmpg[Specifying the ID of an Add-On Component]).
+  xref:#ghmpg[Specifying the ID of an Add-On Component]).
 
 [[ghotv]][[GSACG00189]][[adding-tabs-to-a-page]]
 
@@ -546,7 +546,7 @@ You can add either a single task or a group of tasks to the Common Tasks
 page of the Administration Console. To add a task or task group, use an
 integration point of type `org.glassfish.admingui:commonTask`.
 
-See link:#ghozn[Adding a Task Group to the Common Tasks Page] for
+See xref:#ghozn[Adding a Task Group to the Common Tasks Page] for
 information on adding a task group.
 
 [[GSACG00025]][[ghpox]]
@@ -977,7 +977,7 @@ complement your default tabs. This feature enables your page to behave
 like the existing Administration Console pages that you or others can
 extend.
 
-[[sthref4]][[to-create-an-integration-point-type]]
+[[to-create-an-integration-point-type]]
 
 ==== To Create an Integration Point Type
 

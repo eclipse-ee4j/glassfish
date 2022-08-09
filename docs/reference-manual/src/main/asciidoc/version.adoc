@@ -13,8 +13,6 @@ prev=verify-domain-xml.html
 
 Displays version information for{productName}
 
-[[sthref2347]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] version [--help]
 [--verbose={false|true}]
 [--local={false|true}]
 ----
-
-[[sthref2348]]
 
 === Description
 
@@ -35,13 +31,11 @@ information locally and displays a warning message.
 
 This subcommand is supported in remote mode and local mode.
 
-[[sthref2349]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -58,8 +52,6 @@ asadmin-options::
   contact the DAS to obtain the version. If the attempt to contact the
   DAS fails, the subcommand retrieves the version locally and displays a
   warning message.
-
-[[sthref2350]]
 
 === Examples
 
@@ -101,8 +93,6 @@ Version = Eclipse GlassFish 7.0.0 (build 34)
 Command version executed successfully.
 ----
 
-[[sthref2354]]
-
 === Exit Status
 
 0::
@@ -110,11 +100,9 @@ Command version executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2355]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-modules.html#list-modules-1[`list-modules`(1)]
 

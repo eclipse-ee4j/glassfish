@@ -14,8 +14,6 @@ prev=list-nodes.html
 Lists all {productName} nodes that do not support remote
 communication in a domain
 
-[[sthref1709]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ communication in a domain
 asadmin [asadmin-options] list-nodes-config [--help]
 [--long={false|true}]
 ----
-
-[[sthref1710]]
 
 === Description
 
@@ -54,19 +50,17 @@ information about each node is displayed:
 that reside on the node
 
 If the `--terse` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility is `true` and the
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility is `true` and the
 `--long` option of the subcommand is `false`, the subcommand lists only
 the name of each node.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1711]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -79,8 +73,6 @@ asadmin-options::
     The nodes are listed in long format.
   `false`;;
     The nodes are listed in short format (default).
-
-[[sthref1712]]
 
 === Examples
 
@@ -130,8 +122,6 @@ devnode             CONFIG   localhost   /export/glassfish7   pmdsa1
 Command list-nodes-config executed successfully.
 ----
 
-[[sthref1716]]
-
 === Exit Status
 
 0::
@@ -139,11 +129,9 @@ Command list-nodes-config executed successfully.
 1::
   error in executing the command
 
-[[sthref1717]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
 link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],

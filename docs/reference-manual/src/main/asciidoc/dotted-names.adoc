@@ -13,8 +13,6 @@ prev=domain.html
 
 Syntax for using periods to separate name elements
 
-[[sthref2398]]
-
 === Description
 
 A dotted name is an identifier for a particular {productName}
@@ -60,7 +58,7 @@ specific instance. For example, `web-container`, `log-service`,
 * If any part of the name itself contains a dot (.), then the dot must
 be escaped with a leading `\` (backslash) so that the `.` (dot) does not
 act like a delimiter. For further information on escape characters, see
-the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 * An `\*` (asterisk) character can be used anywhere in the dotted name
 and acts like the wildcard character in regular expressions.
 Additionally, an `*` can collapse all the parts of the dotted name. For
@@ -112,8 +110,6 @@ deployed to the domain or default server:
 ----
 server.applications.web-module.JSPWiki.context-root
 ----
-
-[[sthref2399]]
 
 === Examples
 
@@ -223,11 +219,9 @@ server.transaction-service
 Command list executed successfully.
 ----
 
-[[sthref2402]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)],
 link:set.html#set-1[`set`(1)]

@@ -13,16 +13,12 @@ prev=rollback-transaction.html
 
 Rotates the log file
 
-[[sthref2016]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] rotate-log [--help]
 ----
-
-[[sthref2017]]
 
 === Description
 
@@ -41,13 +37,11 @@ also useful in creating scripts for rotating the log at convenient times.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2018]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -55,8 +49,6 @@ asadmin-options::
   The server, cluster, or server instance for which logs will be
   rotated. If this option is omitted, logs are rotated for the default
   server.
-
-[[sthref2019]]
 
 === Operands
 
@@ -67,8 +59,6 @@ target::
     then logs are rotated for the server.
   * cluster_name - The name of a target cluster.
   * instance_name - The name of a target server instance.
-
-[[sthref2020]]
 
 === Examples
 
@@ -84,8 +74,6 @@ asadmin> rotate-log
 Command rotate-log executed successfully.
 ----
 
-[[sthref2022]]
-
 === Exit Status
 
 0::
@@ -93,11 +81,9 @@ Command rotate-log executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2023]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:collect-log-files.html#collect-log-files-1[`collect-log-files`(1)],
 link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)],

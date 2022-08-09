@@ -13,8 +13,6 @@ prev=create-jndi-resource.html
 
 Creates options for the Java application launcher
 
-[[sthref369]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] create-jvm-options [--help]
 [--target target] [--profiler={true|false}]
 (jvm-option-name=jvm-option-value) [:jvm-option-name=jvm-option-value*]
 ----
-
-[[sthref370]]
 
 === Description
 
@@ -110,13 +106,11 @@ link:restart-domain.html#restart-domain-1[`restart-domain`(1)] command.
 
 This subcommand is supported in remote mode only.
 
-[[sthref371]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -138,8 +132,6 @@ asadmin-options::
   Indicates whether the Java application launcher options are for the
   profiler. The profiler must exist for this option to be true. Default
   is false.
-
-[[sthref372]]
 
 === Operands
 
@@ -173,10 +165,8 @@ If an option name or option value contains a colon, the backslash
 (`\`) must be used to escape the colon in the name or value. Other
 characters might also require an escape character. For more
 information about escape characters in subcommand options, see the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] man page.
 ====
-
-[[sthref373]]
 
 === Examples
 
@@ -239,8 +229,6 @@ created 1 option(s)
 Command create-jvm-options executed successfully.
 ----
 
-[[sthref378]]
-
 === Exit Status
 
 0::
@@ -248,11 +236,9 @@ Command create-jvm-options executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref379]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-profiler.html#create-profiler-1[`create-profiler`(1)],
 link:delete-jvm-options.html#delete-jvm-options-1[`delete-jvm-options`(1)],

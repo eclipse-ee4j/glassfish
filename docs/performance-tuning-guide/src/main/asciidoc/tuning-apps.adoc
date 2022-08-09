@@ -19,9 +19,9 @@ EE applications is beyond the scope of this document.
 
 The following topics are addressed here:
 
-* link:#abebf[Java Programming Guidelines]
-* link:#abebp[Java Server Page and Servlet Tuning]
-* link:#abebw[EJB Performance Tuning]
+* xref:#abebf[Java Programming Guidelines]
+* xref:#abebp[Java Server Page and Servlet Tuning]
+* xref:#abebw[EJB Performance Tuning]
 
 [[abebf]][[GSPTG00052]][[java-programming-guidelines]]
 
@@ -37,15 +37,15 @@ Blueprints]
 
 The following topics are addressed here:
 
-* link:#abebg[Avoid Serialization and Deserialization]
-* link:#abebh[Use `StringBuilder` to Concatenate Strings]
-* link:#abebi[Assign null to Variables That Are No Longer Needed]
-* link:#abebj[Declare Methods as final Only If Necessary]
-* link:#abebk[Declare Constants as static final]
-* link:#abebl[Avoid Finalizers]
-* link:#abebm[Declare Method Arguments final]
-* link:#abebn[Synchronize Only When Necessary]
-* link:#abebo[Use DataHandlers for SOAP Attachments]
+* xref:#abebg[Avoid Serialization and Deserialization]
+* xref:#abebh[Use `StringBuilder` to Concatenate Strings]
+* xref:#abebi[Assign null to Variables That Are No Longer Needed]
+* xref:#abebj[Declare Methods as final Only If Necessary]
+* xref:#abebk[Declare Constants as static final]
+* xref:#abebl[Avoid Finalizers]
+* xref:#abebm[Declare Method Arguments final]
+* xref:#abebn[Synchronize Only When Necessary]
+* xref:#abebo[Use DataHandlers for SOAP Attachments]
 
 [[abebg]][[GSPTG00161]][[avoid-serialization-and-deserialization]]
 
@@ -217,10 +217,10 @@ and JSP application performance.
 
 The following topics are addressed here:
 
-* link:#abebr[General Guidelines]
-* link:#abebs[Avoid Shared Modified Class Variables]
-* link:#abebt[HTTP Session Handling]
-* link:#abebu[Configuration and Deployment Tips]
+* xref:#abebr[General Guidelines]
+* xref:#abebs[Avoid Shared Modified Class Variables]
+* xref:#abebt[HTTP Session Handling]
+* xref:#abebu[Configuration and Deployment Tips]
 
 [[abebr]][[GSPTG00082]][[general-guidelines]]
 
@@ -349,15 +349,15 @@ other system configurations.
 
 The following topics are addressed here:
 
-* link:#abebx[Goals]
-* link:#abeby[Monitoring EJB Components]
-* link:#abeca[General Guidelines]
-* link:#abecg[Using Local and Remote Interfaces]
-* link:#abecj[Improving Performance of EJB Transactions]
-* link:#abecs[Using Special Techniques]
-* link:#abecv[Tuning Tips for Specific Types of EJB Components]
-* link:#abedd[JDBC and Database Access]
-* link:#abedi[Tuning Message-Driven Beans]
+* xref:#abebx[Goals]
+* xref:#abeby[Monitoring EJB Components]
+* xref:#abeca[General Guidelines]
+* xref:#abecg[Using Local and Remote Interfaces]
+* xref:#abecj[Improving Performance of EJB Transactions]
+* xref:#abecs[Using Special Techniques]
+* xref:#abecv[Tuning Tips for Specific Types of EJB Components]
+* xref:#abedd[JDBC and Database Access]
+* xref:#abedi[Tuning Message-Driven Beans]
 
 [[abebx]][[GSPTG00171]][[goals]]
 
@@ -560,7 +560,7 @@ security, and transactions, as well as properties and methods.
 
 Use high-performance beans as much as possible to improve the overall
 performance of your application. For more information, see
-link:#abecv[Tuning Tips for Specific Types of EJB Components].
+xref:#abecv[Tuning Tips for Specific Types of EJB Components].
 
 The types of EJB components are listed below, from the highest
 performance to the lowest:
@@ -640,10 +640,10 @@ response for initial requests.
 cache bean specific resources and release them using the
 `unSetEntityContext()` method.
 * Load related data efficiently for container-managed relationships
-(CMRs). For more information, see link:#abedc[Pre-Fetching Container
+(CMRs). For more information, see xref:#abedc[Pre-Fetching Container
 Managed Relationship (CMR) Beans].
 * Identify read-only beans: Configure read-only entity beans for read
-only operations. For more information, see link:#abeda[Read-Only Entity
+only operations. For more information, see xref:#abeda[Read-Only Entity
 Beans].
 
 [[abecg]][[GSPTG00174]][[using-local-and-remote-interfaces]]
@@ -738,14 +738,14 @@ transactions.
 
 The following topics are addressed here:
 
-* link:#abeck[Use Container-Managed Transactions]
-* link:#abecl[Do Not Encompass User Input Time]
-* link:#abecm[Identify Non-Transactional Methods]
-* link:#abecn[Use `TX_REQUIRED` for Long Transaction Chains]
-* link:#abeco[Use Lowest Cost Database Locking]
-* link:#abecp[Use XA-Capable Data Sources Only When Needed]
-* link:#abecq[Configure JDBC Resources as One-Phase Commit Resources]
-* link:#abecr[Use the Least Expensive Transaction Attribute]
+* xref:#abeck[Use Container-Managed Transactions]
+* xref:#abecl[Do Not Encompass User Input Time]
+* xref:#abecm[Identify Non-Transactional Methods]
+* xref:#abecn[Use `TX_REQUIRED` for Long Transaction Chains]
+* xref:#abeco[Use Lowest Cost Database Locking]
+* xref:#abecp[Use XA-Capable Data Sources Only When Needed]
+* xref:#abecq[Configure JDBC Resources as One-Phase Commit Resources]
+* xref:#abecr[Use the Least Expensive Transaction Attribute]
 
 [[abeck]][[GSPTG00094]][[use-container-managed-transactions]]
 
@@ -841,8 +841,8 @@ attribute that will provide the functionality your application needs:
 Special performance-enhancing techniques are discussed in the following
 sections:
 
-* link:#abect[Version Consistency]
-* link:#abecu[Request Partitioning]
+* xref:#abect[Version Consistency]
+* xref:#abecu[Request Partitioning]
 
 [[abect]][[GSPTG00102]][[version-consistency]]
 
@@ -1023,11 +1023,11 @@ an EJB component named "`TheGreeter`" is assigned to a thread pool named `priori
 
 This section provides tips for tuning various specific types of EJB components:
 
-* link:#abecw[Entity Beans]
-* link:#abecx[Stateful Session Beans]
-* link:#abecz[Stateless Session Beans]
-* link:#abeda[Read-Only Entity Beans]
-* link:#abedc[Pre-Fetching Container Managed Relationship (CMR) Beans]
+* xref:#abecw[Entity Beans]
+* xref:#abecx[Stateful Session Beans]
+* xref:#abecz[Stateless Session Beans]
+* xref:#abeda[Read-Only Entity Beans]
+* xref:#abedc[Pre-Fetching Container Managed Relationship (CMR) Beans]
 
 These components can all be configured in the {productName}
 Administration Console from the Configurations>configuration-name>EJB
@@ -1278,10 +1278,10 @@ the `Orderlines`. However, you can prevent pre-fetching for the
 The following are some tips to improve the performance of database
 access:
 
-* link:#abede[Use JDBC Directly]
-* link:#abedf[Encapsulate Business Logic in Entity EJB Components]
-* link:#abedg[Close Connections]
-* link:#abedh[Minimize the Database Transaction Isolation Level]
+* xref:#abede[Use JDBC Directly]
+* xref:#abedf[Encapsulate Business Logic in Entity EJB Components]
+* xref:#abedg[Close Connections]
+* xref:#abedh[Minimize the Database Transaction Isolation Level]
 
 [[abede]][[GSPTG00109]][[use-jdbc-directly]]
 

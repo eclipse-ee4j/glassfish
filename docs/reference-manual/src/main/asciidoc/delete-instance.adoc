@@ -13,8 +13,6 @@ prev=delete-iiop-listener.html
 
 Deletes a {productName} instance
 
-[[sthref753]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Deletes a {productName} instance
 asadmin [asadmin-options] delete-instance [--help]
 instance-name
 ----
-
-[[sthref754]]
 
 === Description
 
@@ -67,25 +63,19 @@ clusters or unclustered instances refer.
 
 This subcommand is supported in remote mode only.
 
-[[sthref755]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref756]]
 
 === Operands
 
 instance-name::
   The name of the instance to delete.
-
-[[sthref757]]
 
 === Examples
 
@@ -102,8 +92,6 @@ asadmin> delete-instance pmdsainst
 Command delete-instance executed successfully.
 ----
 
-[[sthref759]]
-
 === Exit Status
 
 0::
@@ -111,11 +99,9 @@ Command delete-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref760]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-instance.html#create-instance-1[`create-instance`(1)],
 link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],

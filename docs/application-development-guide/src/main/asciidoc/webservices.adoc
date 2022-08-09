@@ -16,11 +16,11 @@ prev=securing-apps.html
 This chapter describes {productName} support for web services.
 The following topics are addressed here:
 
-* link:#gbizi[Creating Portable Web Service Artifacts]
-* link:#gbixz[Deploying a Web Service]
-* link:#gbiyw[The Web Service URI, WSDL File, and Test Page]
-* link:#CHDEBBCH[The Databinding Provider]
-* link:#gcgzz[GlassFish Jakarta EE Service Engine]
+* xref:#gbizi[Creating Portable Web Service Artifacts]
+* xref:#gbixz[Deploying a Web Service]
+* xref:#gbiyw[The Web Service URI, WSDL File, and Test Page]
+* xref:#CHDEBBCH[The Databinding Provider]
+* xref:#gcgzz[GlassFish Jakarta EE Service Engine]
 
 
 [NOTE]
@@ -47,7 +47,7 @@ in The Jakarta EE Tutorial shows how to deploy simple web services to
 
 For additional information about JAXB (Java Architecture for XML Binding), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
-Specification Request (JSR) 222] and link:#CHDEBBCH[The Databinding Provider].
+Specification Request (JSR) 222] and xref:#CHDEBBCH[The Databinding Provider].
 
 For additional information about JAX-WS (Java API for XML-Based Web Services), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr224/index.html[Java
@@ -93,7 +93,7 @@ The {productName} deployment descriptor files `glassfish-web.xml` and
 `webservice-endpoint` and `webservice-description` elements, including a
 `debugging-enabled` subelement that enables the creation of a test page.
 The test page feature is enabled by default and described in
-link:#gbiyw[The Web Service URI, WSDL File, and Test Page].
+xref:#gbiyw[The Web Service URI, WSDL File, and Test Page].
 
 For more information about deployment, autodeployment, and deployment
 descriptors, see the link:application-deployment-guide.html#GSDPG[

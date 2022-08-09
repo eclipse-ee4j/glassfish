@@ -13,8 +13,6 @@ prev=list-components.html
 
 Lists named configurations
 
-[[sthref1399]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists named configurations
 asadmin [asadmin-options] list-configs [--help]
 [target]
 ----
-
-[[sthref1400]]
 
 === Description
 
@@ -33,18 +29,14 @@ filtered by cluster, instance, or named configuration.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1401]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1402]]
 
 === Operands
 
@@ -62,8 +54,6 @@ target::
   configuration-name;;
     Lists the specified named configuration. Use this option to
     determine whether a named configuration exits.
-
-[[sthref1403]]
 
 === Examples
 
@@ -88,8 +78,6 @@ il2-config
 Command list-configs executed successfully.
 ----
 
-[[sthref1405]]
-
 === Exit Status
 
 0::
@@ -97,11 +85,9 @@ Command list-configs executed successfully.
 1::
   error in executing the command
 
-[[sthref1406]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:copy-config.html#copy-config-1[`copy-config`(1)],
 link:delete-config.html#delete-config-1[`delete-config`(1)]

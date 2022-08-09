@@ -13,8 +13,6 @@ prev=start-cluster.html
 
 Starts the Java DB
 
-[[sthref2117]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] start-database [--help]
 [--dbhost host] [--dbport port-no]
 [--dbhome db-file-path]
 ----
-
-[[sthref2118]]
 
 === Description
 
@@ -63,13 +59,11 @@ cannot write to the log file.
 
 This subcommand is supported in local mode only.
 
-[[sthref2119]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -108,8 +102,6 @@ asadmin-options::
 To create the database files at a particular location, you must set
   the `--dbhome` option.
 
-[[sthref2120]]
-
 === Examples
 
 [[GSRFM759]][[sthref2121]]
@@ -141,8 +133,6 @@ Starting database in the background.
 Log redirected to /export/glassfish7/glassfish/databases/derby.log.
 ----
 
-[[sthref2123]]
-
 === Exit Status
 
 The exit status applies to errors in executing the `asadmin` utility.
@@ -156,11 +146,9 @@ when you run the `start-database` subcommand. If you did not specify
 1::
   error in executing the subcommand
 
-[[sthref2124]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:stop-database.html#stop-database-1[`stop-database`(1)]
 

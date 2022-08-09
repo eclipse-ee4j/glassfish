@@ -13,8 +13,6 @@ prev=unset-web-env-entry.html
 
 Modifies a security map for the specified connector connection pool
 
-[[sthref2258]]
-
 === Synopsis
 
 [source]
@@ -29,8 +27,6 @@ asadmin [asadmin-options] update-connector-security-map [--help]
 mapname
 ----
 
-[[sthref2259]]
-
 === Description
 
 The `update-connector-security-map` subcommand modifies a security map
@@ -41,13 +37,11 @@ connection pool using the `create-connector-connection-pool` subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2260]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -70,14 +64,10 @@ asadmin-options::
 `--mappedusername`::
   Specifies the EIS username.
 
-[[sthref2261]]
-
 === Operands
 
 mapname::
   The name of the security map to be updated.
-
-[[sthref2262]]
 
 === Examples
 
@@ -94,8 +84,6 @@ asadmin> update-connector-security-map --poolname connector-pool1
 Command update-connector-security-map executed successfully
 ----
 
-[[sthref2264]]
-
 === Exit Status
 
 0::
@@ -103,11 +91,9 @@ Command update-connector-security-map executed successfully
 1::
   error in executing the subcommand
 
-[[sthref2265]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-connector-security-map.html#create-connector-security-map-1[`create-connector-security-map`(1)],
 link:delete-connector-security-map.html#delete-connector-security-map-1[`delete-connector-security-map`(1)],

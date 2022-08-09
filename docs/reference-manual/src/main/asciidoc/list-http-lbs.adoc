@@ -13,8 +13,6 @@ prev=list-http-lb-configs.html
 
 Lists load balancers
 
-[[sthref1493]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] list-http-lbs [--help]
 [name]
 ----
 
-[[sthref1494]]
-
 === Description
 
 Use the `list-http-lbs` subcommand to list physical load balancers.
@@ -38,13 +34,11 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref1495]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -79,14 +73,10 @@ asadmin-options::
   option is used. The default value is `true`. To suppress the headings,
   set the `--header` option to `false`.
 
-[[sthref1496]]
-
 === Operands
 
 name::
   The name of the load balancer for which you want to display details.
-
-[[sthref1497]]
 
 === Examples
 
@@ -105,8 +95,6 @@ lb2
 Command list-http-lbs executed successfully.
 ----
 
-[[sthref1499]]
-
 === Exit Status
 
 0::
@@ -114,11 +102,9 @@ Command list-http-lbs executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1500]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
 link:delete-http-lb.html#delete-http-lb-1[`delete-http-lb`(1)]

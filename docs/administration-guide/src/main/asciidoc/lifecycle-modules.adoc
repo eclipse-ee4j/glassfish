@@ -16,8 +16,8 @@ the {productName} 7 environment.
 
 The following topics are addressed here:
 
-* link:#giuxo[About Life Cycle Modules]
-* link:#giuue[Configuring Life Cycle Modules]
+* <<About Life Cycle Modules>>
+* <<Configuring Life Cycle Modules>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -69,10 +69,10 @@ not shutdown or termination.
 
 The following topics are addressed here:
 
-* link:#giuus[To Create a Life Cycle Module]
-* link:#giuvh[To List Life Cycle Modules]
-* link:#giuyh[To Update a Life Cycle Module]
-* link:#giuux[To Delete a Life Cycle Module]
+* <<To Create a Life Cycle Module>>
+* <<To List Life Cycle Modules>>
+* <<To Update a Life Cycle Module>>
+* <<To Delete a Life Cycle Module>>
 
 [[giuus]][[GSADG00399]][[to-create-a-life-cycle-module]]
 
@@ -89,7 +89,7 @@ Information about options and properties for the subcommand are included
 in this help page.
 3. Restart the server for your changes to take effect.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00206]][[giuyo]]
 Example 9-1 Creating a Life Cycle Module
@@ -104,8 +104,6 @@ asadmin> create-lifecycle-module --classname "com.acme.CustomSetup"
 --property rmi="Server\=acme1\:7070":timeout=30 customSetup
 Command create-lifecycle-module executed successfully
 ----
-
-[[GSADG927]]
 
 See Also
 
@@ -134,8 +132,6 @@ asadmin> list-lifecycle-modules
 WSTCPConnectorLCModule
 Command list-lifecycle-modules executed successfully
 ----
-
-[[GSADG928]]
 
 See Also
 
@@ -170,7 +166,7 @@ applications.application.sampleLCMmodule.property.isLifecycle=true
 subcommand.
 3. Restart the server for your changes to take effect.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00208]][[giuyq]]
 Example 9-3 Updating a Life Cycle Module
@@ -184,8 +180,6 @@ property.classpath=/build/lcm_new.jarapplications.application.
 sampleLCMmodule.property.classpath=/build/lcm_new.jar
 Command set executed successfully.
 ----
-
-[[GSADG929]]
 
 See Also
 
@@ -215,8 +209,6 @@ This example deletes the `customSetup` life cycle module.
 asadmin> delete-lifecycle-module customSetup
 Command delete-lifecycle-module executed successfully
 ----
-
-[[GSADG930]]
 
 See Also
 

@@ -16,12 +16,12 @@ This chapter explains how to administer web applications in the
 
 The following topics are addressed here:
 
-* link:#beagk[Invoking a Servlet by Alternate Means]
-* link:#gixud[Changing Log Output for a Servlet]
-* link:#beagc[Defining Global Features for Web Applications]
-* link:#gixrb[Redirecting a URL]
-* link:#gfaad[Administering `mod_jk`]
-* link:#CIHJDAJD[Administering `mod_proxy_ajp`]
+* <<Invoking a Servlet by Alternate Means>>
+* <<Changing Log Output for a Servlet>>
+* <<Defining Global Features for Web Applications>>
+* <<Redirecting a URL>>
+* <<Administering `mod_jk`>>
+* <<Administering `mod_proxy_ajp`>>
 
 Instructions for accomplishing some of these tasks by using the
 Administration Console are contained in the Administration Console
@@ -42,8 +42,7 @@ http://server:port/context-root/servlet-mapping?name=value
 
 The following table describes each URL section.
 
-[[GSADG857]][[sthref20]][[fvyhk]]
-
+[[fvyhk]]
 
 Table 6-1 URL Fields for Servlets Within an Application
 
@@ -110,7 +109,7 @@ System Log box. If this box is checked, `System.out` output is sent to
 the server log. If it is unchecked, `System.out` output is sent to the
 system default location only.
 
-[[beagc]][[GSADG00550]][[defining-global-features-for-web-applications]]
+[[defining-global-features-for-web-applications]]
 
 === Defining Global Features for Web Applications
 
@@ -152,7 +151,7 @@ the Servlet specification.
 You can use the Administration Console to edit the `default-web.xml`
 file, or edit the file directly using the following steps.
 
-[[fvymc]][[GSADG00370]][[to-use-the-default-web.xml-file]]
+[[to-use-the-default-web.xml-file]]
 
 ==== To Use the `default-web.xml` File
 
@@ -161,7 +160,7 @@ feature in the domain-dir``/lib`` directory.
 2. Edit the domain-dir``/config/default-web.xml`` file to refer to the JAR file.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[gixrb]][[GSADG00551]][[redirecting-a-url]]
 
@@ -208,11 +207,11 @@ HTTP Server for load balancing with {productName} 7 refer to
 
 The following topics are addressed here:
 
-* link:#gixqw[To Enable `mod_jk`]
-* link:#gixpx[To Load Balance Using `mod_jk` and {productName}]
-* link:#gjpat[To Enable SSL Between the `mod_jk` Load Balancer and the
+* <<To Enable `mod_jk`>>
+* <<To Load Balance Using `mod_jk` and {productName}>>
+* xref:#gjpat[To Enable SSL Between the `mod_jk` Load Balancer and the
 Browser]
-* link:#gjpan[To Enable SSL Between the `mod_jk` Load Balancer and
+* xref:#gjpan[To Enable SSL Between the `mod_jk` Load Balancer and
 {productName}]
 
 [[gixqw]][[GSADG00371]][[to-enable-mod_jk]]
@@ -241,7 +240,7 @@ the network listener attribute `jk-enabled`.
 * `apache2/conf/httpd.conf`, the main Apache configuration file
 * `apache2/conf/workers.properties`
 +
-link:#gixrq[Example 6-4] and link:#gixqt[Example 6-5] provide examples
+<<Example 6-4] and xref:#gixqt[Example 6-5>> provide examples
 of configuring these two files.
 3. Start Apache HTTP Server (`httpd`).
 4. Start {productName} with at least one web application deployed.
@@ -278,7 +277,7 @@ http-thread-pool.max-thread-pool-size=value
 ----
 8. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00169]][[gixrq]]
 Example 6-4 `httpd.conf` File for `mod_jk`
@@ -311,7 +310,7 @@ Example 6-5 `workers.properties` File for `mod_jk`
 
 This example shows a `workers.properties` that is set for `mod_jk`. This
 `workers.properties` file is referenced in the second line of
-link:#gixrq[Example 6-4].
+<<Example 6-4>>.
 
 [source]
 ----
@@ -322,8 +321,6 @@ worker.worker1.type=ajp13
 worker.worker1.host=localhost
 worker.worker1.port=8009
 ----
-
-[[GSADG858]]
 
 See Also
 
@@ -347,13 +344,13 @@ received by the load balancer. This means that every {productName}
 instance that is front-ended by the Apache load balancer must be
 configured with a unique `jvmRoute` system property.
 
-1. On each of the instances, perform the steps in link:#gixqw[To Enable
+1. On each of the instances, perform the steps in xref:#gixqw[To Enable
 `mod_jk`].
 +
 If your instances run on the same machine, you must choose different JK
 ports. The ports must match `worker.worker*.port` in your
 `workers.properties` file. See the properties file in
-link:#gixqt[Example 6-5].
+<<Example 6-5>>.
 2. On each of the instances, create the `jvmRoute` system property of
 {productName} by using the link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]
 subcommand.
@@ -429,8 +426,6 @@ Apache HTTP Server with the `mod_ssl` module. The tasks include
 generating a private key, a Certificate Signing Request (CSR), a
 self-signed certificate, and configuring SSL-enabled virtual hosts.
 
-[[GSADG859]]
-
 Before You Begin
 
 The `mod_jk` connector must be enabled.
@@ -502,20 +497,18 @@ This procedure does not enable SSL transfer between `mod_jk` and
 {productName}. It enables `mod_jk` to forward SSL-encrypted
 information from the browser to {productName}.
 
-[[GSADG860]]
-
 Before You Begin
 
 The self-signed certificate must be configured.
 
-1. Perform the steps in link:#gixqw[To Enable `mod_jk`].
+1. Perform the steps in <<To Enable `mod_jk`>>.
 2. Start another {productName} with at least one web application
 deployed.
 +
 In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
 achieved by deploying a web application.
-3. Follow instructions from link:http_https.html#ggnbj[To Configure an
+3. Follow instructions from xref:http_https.adoc#ggnbj[To Configure an
 HTTP Listener for SSL] on the `mod_jk` connector.
 +
 Use the following format:
@@ -549,9 +542,6 @@ JkCERTSIndicator SSL_CLIENT_CERT
 The Apache Connector `mod_proxy_ajp` can be used to connect the web
 container with Apache HTTP Server. By using `mod_proxy_ajp`, you can
 front {productName} with Apache HTTP Server.
-
-[[GSADG862]][[sthref21]]
-
 
 [[to-enable-mod_proxy_ajp]]
 ==== To Enable `mod_proxy_ajp`
@@ -614,9 +604,7 @@ http-thread-pool.max-thread-pool-size=value
 ----
 6. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
-
-[[GSADG863]]
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 See Also
 
@@ -720,7 +708,7 @@ asadmin> create-jvm-options --target cluster1 \
 7. Use the `create-system-properties` subcommand to define the
 `AJP_PORT` and `AJP_INSTANCE_NAME` properties for each of the instances
 in the cluster, making sure to match the port values you used in
-Step link:#BABIFEEC[2] when specifying the load balancer members.
+Step <<BABIFEEC, 2>> when specifying the load balancer members.
 +
 For example:
 +
@@ -740,6 +728,6 @@ In this example, `instance1`, `instance2` and `instance3` are the names
 of the {productName} instances in the cluster.
 8. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 

@@ -36,12 +36,12 @@ For Javadoc tool pages relevant to lifecycle modules, see the
 
 The following topics are addressed here:
 
-* link:#beamd[Server Life Cycle Events]
-* link:#beame[The LifecycleListener Interface]
-* link:#beamf[The `LifecycleEvent` Class]
-* link:#beamg[The Server Lifecycle Event Context]
-* link:#beamh[Deploying a Lifecycle Module]
-* link:#beami[Considerations for Lifecycle Modules]
+* xref:#beamd[Server Life Cycle Events]
+* xref:#beame[The LifecycleListener Interface]
+* xref:#beamf[The `LifecycleEvent` Class]
+* xref:#beamg[The Server Lifecycle Event Context]
+* xref:#beamh[Deploying a Lifecycle Module]
+* xref:#beami[Considerations for Lifecycle Modules]
 
 [[beamd]][[GSDVG00167]][[server-life-cycle-events]]
 

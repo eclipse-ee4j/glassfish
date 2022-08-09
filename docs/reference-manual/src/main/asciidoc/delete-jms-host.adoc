@@ -13,8 +13,6 @@ prev=delete-jmsdest.html
 
 Removes a JMS host
 
-[[sthref801]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-jms-host [--help]
 [--target target]
 jms_host_name
 ----
-
-[[sthref802]]
 
 === Description
 
@@ -36,13 +32,11 @@ subcommands require a running domain administration server (DAS).
 
 Deleting the default JMS host, named `default_JMS_host`, is not recommended.
 
-[[sthref803]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -61,14 +55,10 @@ asadmin-options::
   instance-name;;
     Deletes the JMS host from the specified server instance.
 
-[[sthref804]]
-
 === Operands
 
 jms_host_name::
   The name of the host to be deleted.
-
-[[sthref805]]
 
 === Examples
 
@@ -84,8 +74,6 @@ asadmin> delete-jms-host MyNewHost
 Command delete-jms-host executed successfully.
 ----
 
-[[sthref807]]
-
 === Exit Status
 
 0::
@@ -93,11 +81,9 @@ Command delete-jms-host executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref808]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jms-host.html#create-jms-host-1[`create-jms-host`(1)],
 link:jms-ping.html#jms-ping-1[`jms-ping`(1)],

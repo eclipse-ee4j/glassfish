@@ -13,8 +13,6 @@ prev=set-log-levels.html
 
 Sets up DCOM on a host
 
-[[sthref2066]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] setup-local-dcom [--help]
 [--verbose={false|true}]
 --force={false|true}
 ----
-
-[[sthref2067]]
 
 === Description
 
@@ -60,13 +56,11 @@ prompted, set the `--force` option to `true`.
 
 This subcommand is supported in local mode only.
 
-[[sthref2068]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -95,8 +89,6 @@ asadmin-options::
   `true`;;
     The subcommand forcibly updates the Windows registry without
     prompting you.
-
-[[sthref2069]]
 
 === Examples
 
@@ -131,8 +123,6 @@ asadmin> setup-local-dcom --force=true
 Command setup-local-dcom executed successfully.
 ----
 
-[[sthref2072]]
-
 === Exit Status
 
 0::
@@ -140,11 +130,9 @@ Command setup-local-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref2073]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 "link:ha-administration-guide/ssh-setup.html#GSHAG449[Windows Operating System Settings]" in {productName} High Availability Administration Guide
 

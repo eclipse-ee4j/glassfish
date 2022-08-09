@@ -13,8 +13,6 @@ prev=list-managed-thread-factories.html
 
 Lists all security message providers for the given message layer
 
-[[sthref1677]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-message-security-providers [--help]
 --layer message_layer
 [target]
 ----
-
-[[sthref1678]]
 
 === Description
 
@@ -35,21 +31,17 @@ for the given message layer (`message-security-config` element of
 
 This subcommand is supported in remote mode only.
 
-[[sthref1679]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--layer`::
   The message-layer for which the provider has to be listed. The default
   value is `HttpServlet`.
-
-[[sthref1680]]
 
 === Operands
 
@@ -66,8 +58,6 @@ target::
     Lists providers for the server instances in the cluster.
   instance;;
     Lists providers for a particular server instance.
-
-[[sthref1681]]
 
 === Examples
 
@@ -89,8 +79,6 @@ ServerProvider
 Command list-message-security-providers executed successfully.
 ----
 
-[[sthref1683]]
-
 === Exit Status
 
 0::
@@ -98,11 +86,9 @@ Command list-message-security-providers executed successfully.
 1::
   error in executing the command
 
-[[sthref1684]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-message-security-provider.html#create-message-security-provider-1[`create-message-security-provider`(1)],
 link:delete-message-security-provider.html#delete-message-security-provider-1[`delete-message-security-provider`(1)]

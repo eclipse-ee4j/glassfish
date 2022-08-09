@@ -18,9 +18,9 @@ security in a cluster.
 
 The following topics are described:
 
-* link:#gksam[Configuring Certificates in Cluster Mode]
-* link:#gkmhh[Dynamic Reconfiguration]
-* link:#gktgi[Understanding Synchronization]
+* xref:#gksam[Configuring Certificates in Cluster Mode]
+* xref:#gkmhh[Dynamic Reconfiguration]
+* xref:#gktgi[Understanding Synchronization]
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not, see

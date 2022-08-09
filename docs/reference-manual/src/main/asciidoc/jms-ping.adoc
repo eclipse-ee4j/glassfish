@@ -13,8 +13,6 @@ prev=install-node-ssh.html
 
 Checks if the JMS service is up and running
 
-[[sthref1275]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Checks if the JMS service is up and running
 asadmin [asadmin-options] jms-ping [--help]
 [-- target target]
 ----
-
-[[sthref1276]]
 
 === Description
 
@@ -38,13 +34,11 @@ built-in JMS service.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref1277]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -63,8 +57,6 @@ asadmin-options::
   instance-name;;
     Pings the JMS service for the specified server instance.
 
-[[sthref1278]]
-
 === Examples
 
 [[GSRFM630]][[sthref1279]]
@@ -82,8 +74,6 @@ Connector resoure test_jms_adapter created.
 Command jms-ping executed successfully.
 ----
 
-[[sthref1280]]
-
 === Exit Status
 
 0::
@@ -91,11 +81,9 @@ Command jms-ping executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1281]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-jms-host.html#create-jms-host-1[`create-jms-host`(1)],
 link:delete-jms-host.html#delete-jms-host-1[`delete-jms-host`(1)],

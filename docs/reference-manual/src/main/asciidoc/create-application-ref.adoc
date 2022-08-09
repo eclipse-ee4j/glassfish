@@ -13,8 +13,6 @@ prev=create-admin-object.html
 
 Creates a reference to an application
 
-[[sthref123]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] create-application-ref [--help]
 [--virtualservers virtual_servers] [--enabled=true]
 [--lbenabled=true] reference_name
 ----
-
-[[sthref124]]
 
 === Description
 
@@ -43,13 +39,11 @@ element the next time they start.
 
 This subcommand is supported in remote mode only.
 
-[[sthref125]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -78,8 +72,6 @@ asadmin-options::
   Controls whether the deployed application is available for load
   balancing. The default is true.
 
-[[sthref126]]
-
 === Operands
 
 reference_name::
@@ -98,8 +90,6 @@ reference_name::
   Module and Application Versions]"
   in {productName} Application Deployment Guide.
 
-[[sthref127]]
-
 === Examples
 
 [[GSRFM458]][[sthref128]]
@@ -115,8 +105,6 @@ asadmin> create-application-ref --target NewServer MyWebApp
 Command create-application-ref executed successfully.
 ----
 
-[[sthref129]]
-
 === Exit Status
 
 0::
@@ -124,11 +112,9 @@ Command create-application-ref executed successfully.
 1::
   error in executing the command
 
-[[sthref130]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-application-ref.html#delete-application-ref-1[`delete-application-ref`(1)],
 link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)]

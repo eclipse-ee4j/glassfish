@@ -14,8 +14,6 @@ prev=get-active-module-config.html
 Retrieves the application JAR files needed to launch the application
 client.
 
-[[sthref1227]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] get-client-stubs [--help]
 --appname application_name
 local_directory_path
 ----
-
-[[sthref1228]]
 
 === Description
 
@@ -39,13 +35,11 @@ subcommand, you must deploy the application or module. The generated
 client JAR file is useful for running the application using the
 `appclient` utility. This subcommand is supported in remote mode only.
 
-[[sthref1229]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -60,15 +54,11 @@ asadmin-options::
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 
-[[sthref1230]]
-
 === Operands
 
 local_directory_path::
   The path to the local directory where the client stub JAR file should
   be stored.
-
-[[sthref1231]]
 
 === Examples
 
@@ -82,8 +72,6 @@ asadmin> get-client-stubs --appname myapplication /sample/example
 Command get-client-stubs executed successfully
 ----
 
-[[sthref1233]]
-
 === Exit Status
 
 0::
@@ -91,11 +79,9 @@ Command get-client-stubs executed successfully
 1::
   error in executing the command
 
-[[sthref1234]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:deploy.html#deploy-1[`deploy`(1)],
 link:redeploy.html#redeploy-1[`redeploy`(1)],

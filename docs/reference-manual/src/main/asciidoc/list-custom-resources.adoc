@@ -13,8 +13,6 @@ prev=list-context-services.html
 
 Gets all custom resources
 
-[[sthref1453]]
-
 === Synopsis
 
 [source]
@@ -23,26 +21,20 @@ asadmin [asadmin-options] list-custom-resources [--help]
 [target]
 ----
 
-[[sthref1454]]
-
 === Description
 
 The `list-custom-resources` subcommand lists the custom resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1455]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1456]]
 
 === Operands
 
@@ -59,8 +51,6 @@ target::
     Lists the resources for every server instance in the cluster.
   instance_name;;
     Lists the resources for a particular server instance.
-
-[[sthref1457]]
 
 === Examples
 
@@ -94,8 +84,6 @@ sample_custom_resource04
 Command list-custom-resources executed successfully.
 ----
 
-[[sthref1460]]
-
 === Exit Status
 
 0::
@@ -103,11 +91,9 @@ Command list-custom-resources executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1461]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-custom-resource.html#create-custom-resource-1[`create-custom-resource`(1)],link:delete-custom-resource.html#delete-custom-resource-1[`delete-custom-resource`(1)]
 

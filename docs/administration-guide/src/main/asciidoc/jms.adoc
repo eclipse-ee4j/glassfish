@@ -28,21 +28,21 @@ simplify JMS messaging administration tasks.
 
 {productName} also supports the Generic Resource Adapter for JMS
 (GenericJMSRA) for use as a resource adapter to connect to other JMS
-providers. The last section in this chapter, link:#gbtvg[Using the
+providers. The last section in this chapter, xref:#gbtvg[Using the
 Generic Resource Adapter for JMS to Integrate Supported External JMS
 Providers], describes the GenericJMSRA and provides instructions for
 using it to make other supported JMS providers available to {productName}.
 
 The following topics are addressed here:
 
-* link:#gipit[About the JMS Service]
-* link:#beaof[Updating the JMS Service Configuration]
-* link:#gipbg[Administering JMS Hosts]
-* link:#ablkb[Administering JMS Connection Factories and Destinations]
-* link:#ablkj[Administering JMS Physical Destinations]
-* link:#gkxgk[Special Situations When Using the JMS Service]
-* link:#gipnh[Troubleshooting the JMS Service]
-* link:#gbtvg[Using the Generic Resource Adapter for JMS to Integrate
+* <<About the JMS Service>>
+* <<Updating the JMS Service Configuration>>
+* <<Administering JMS Hosts>>
+* <<Administering JMS Connection Factories and Destinations>>
+* <<Administering JMS Physical Destinations>>
+* <<Special Situations When Using the JMS Service>>
+* <<Troubleshooting the JMS Service>>
+* xref:#gbtvg[Using the Generic Resource Adapter for JMS to Integrate
 Supported External JMS Providers]
 
 Instructions for accomplishing the task in this chapter by using the
@@ -75,7 +75,7 @@ JMS Hosts::
     is managed using Message Queue administrative tools.
 
 +
-For more information about JMS host types, see link:#giplw[About JMS Host Types].
+For more information about JMS host types, see <<About JMS Host Types>>.
 JMS Connection Factory Resources::
   JMS connection factory resources house the information that
   applications use to connect to a JMS provider. For each JMS connection
@@ -136,7 +136,7 @@ The attributes you can set are:
 
 `type`::
   The JMS host type the service is to use. Available choices are
-  `EMBEDDED`, `LOCAL` and `REMOTE`. See link:#giplw[About JMS Host
+  `EMBEDDED`, `LOCAL` and `REMOTE`. See xref:#giplw[About JMS Host
   Types] for more information.
 `init-timeout-in-seconds`::
   The number of seconds {productName} waits for the JMS service to
@@ -238,12 +238,12 @@ hosts list.
 
 The following topics are addressed here:
 
-* link:#giplw[About JMS Host Types]
-* link:#gktfb[Configuring Embedded and Local JMS Hosts]
-* link:#gipbh[To Create a JMS Host]
-* link:#gipbz[To List JMS Hosts]
-* link:#givno[To Update a JMS Host]
-* link:#gipbv[To Delete a JMS Host]
+* <<About JMS Host Types>>
+* <<Configuring Embedded and Local JMS Hosts>>
+* <<To Create a JMS Host>>
+* <<To List JMS Hosts>>
+* <<To Update a JMS Host>>
+* <<To Delete a JMS Host>>
 
 For information about administering JMS hosts that are servicing
 GlassFish clusters, see "link:ha-administration-guide/jms.html#GSHAG00312[Configuring GlassFish Clusters
@@ -412,8 +412,6 @@ Jms Host MyNewHost created.
 Command create-jms-host executed successfully.
 ----
 
-[[GSADG1018]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -537,8 +535,6 @@ asadmin> delete-jms-host MyNewHost
 Command delete-jms-host executed successfully.
 ----
 
-[[GSADG1019]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -592,15 +588,15 @@ and publish-subscribe communications (recommended for new applications)
 
 The following topics are addressed here:
 
-* link:#giotd[To Create a Connection Factory or Destination Resource]
-* link:#giosx[To List JMS Resources]
-* link:#giouw[To Delete a Connection Factory or Destination Resource]
+* <<To Create a Connection Factory or Destination Resource>>
+* <<To List JMS Resources>>
+* <<To Delete a Connection Factory or Destination Resource>>
 
 The subcommands in this section can be used to administer both the
 connection factory resources and the destination resources. For
 information on JMS service support of connection pooling and failover,
 see "link:ha-administration-guide/jms.html#GSHAG00213[Connection Failover]" in {productName} High Availability Administration Guide. For instructions
-on administering physical destinations, see link:#ablkj[Administering
+on administering physical destinations, see xref:#ablkj[Administering
 JMS Physical Destinations].
 
 [[giotd]][[GSADG00490]][[to-create-a-connection-factory-or-destination-resource]]
@@ -624,16 +620,16 @@ To specify the `addresslist` property (in the format
 `asadmin create-jms-resource` command, escape the : by using `\\`. For
 example, `host1\\:mqport,host2\\:mqport,host3\\:mpqport`. For more
 information about using escape characters, see the
-olink:GSRFM00263[`asadmin`(1M)] help page.
+olink:asadmin[`asadmin`(1M)] help page.
 ====
 
 
 To update a JMS connection factory, use the `set` subcommand for the
-underlying connector connection pool, See link:connectors.html#gioti[To
+underlying connector connection pool, See xref:connectors.adoc#gioti[To
 Update a Connector Connection Pool].
 
 To update a destination, use the `set` subcommand for the admin object
-resource. See link:connectors.html#giots[To Update an Administered
+resource. See xref:connectors.adoc#giots[To Update an Administered
 Object].
 
 1. Ensure that the server is running.
@@ -647,8 +643,8 @@ help page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00275]][[giovy]]
@@ -681,8 +677,6 @@ asadmin> create-jms-resource --restype jakarta.jms.Queue
 --property Name=PhysicalQueue jms/MyQueue
 Command create-jms-resource executed successfully.
 ----
-
-[[GSADG1020]]
 
 See Also
 
@@ -731,8 +725,6 @@ jms/TopicConnectionFactory
 Command list-jms-resources executed successfully.
 ----
 
-[[GSADG1021]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -744,8 +736,6 @@ typing `asadmin help list-jms-resources` at the command line.
 
 Use the `delete-jms-resource` subcommand in remote `asadmin` mode to
 remove the specified connection factory or destination resource.
-
-[[GSADG1022]]
 
 Before You Begin
 
@@ -771,8 +761,6 @@ asadmin> delete-jms-resource jms/Queue
 Command delete-jms-resource executed successfully
 ----
 
-[[GSADG1023]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -788,7 +776,7 @@ identified and encapsulated by an administered object (such as a `Topic`
 or `Queue` destination resource) that an application component uses to
 specify the destination of messages it is producing and the source of
 messages it is consuming. For instructions on configuring a destination
-resource, see link:#giotd[To Create a Connection Factory or Destination
+resource, see xref:#giotd[To Create a Connection Factory or Destination
 Resource].
 
 If a message-driven bean is deployed and the physical destination it
@@ -805,10 +793,10 @@ consumers connected to it.
 
 The following topics are addressed here:
 
-* link:#gioue[To Create a JMS Physical Destination]
-* link:#gioyp[To List JMS Physical Destinations]
-* link:#giowx[To Purge Messages From a Physical Destination]
-* link:#giouv[To Delete a JMS Physical Destination]
+* <<To Create a JMS Physical Destination>>
+* <<To List JMS Physical Destinations>>
+* <<To Purge Messages From a Physical Destination>>
+* <<To Delete a JMS Physical Destination>>
 
 [[gioue]][[GSADG00493]][[to-create-a-jms-physical-destination]]
 
@@ -835,8 +823,8 @@ help page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00280]][[gioxt]]
@@ -850,8 +838,6 @@ asadmin> create-jmsdest --desttype queue --property
 User=public:Password=public PhysicalQueue
 Command create-jmsdest executed successfully.
 ----
-
-[[GSADG1024]]
 
 See Also
 
@@ -885,8 +871,6 @@ PhysicalTopic topic {}
 Command list-jmsdest executed successfully.
 ----
 
-[[GSADG1025]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
@@ -908,8 +892,8 @@ link:reference-manual/flush-jmsdest.html#GSRFM00136[`flush-jmsdest`] subcommand.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
+xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
 a Domain].
 
 [[GSADG00282]][[giows]]
@@ -922,8 +906,6 @@ This example purges messages from the queue named `PhysicalQueue`.
 asadmin> flush-jmsdest --desttype queue PhysicalQueue
 Command flush-jmsdest executed successfully
 ----
-
-[[GSADG1026]]
 
 See Also
 
@@ -955,8 +937,6 @@ This example deletes the queue named `PhysicalQueue`.
 asadmin> delete-jmsdest --desttype queue PhysicalQueue
 Command delete-jmsdest executed successfully
 ----
-
-[[GSADG1027]]
 
 See Also
 
@@ -1001,9 +981,9 @@ Changing the Admin User Password for an Embedded or Local Broker::
   4. [[CHDFJECE]]
   Restart the GlassFish instance that the broker is servicing. +
   When changing the password for the brokers in a broker cluster, first
-  perform steps link:#CHDDHDIE[1] and link:#CHDHDFAH[2] on each broker.
-  Then, perform step link:#CHDCJEFG[3]. Finally, perform
-  step link:#CHDFJECE[4] on each broker.
+  perform steps <<CHDDHDIE, 1>> and <<CHDHDFAH, 2>> on each broker.
+  Then, perform step <<CHDCJEFG, 3>>. Finally, perform
+  step <<CHDFJECE, 4>> on each broker.
 
 Using SSL to Connect to an Oracle Internet Directory (OID) or Oracle
 Virtual Directory (OVD) User Respository::
@@ -1060,10 +1040,10 @@ adapter is a `.rar` archive that can be deployed and configured using
 
 The following topics are addressed here:
 
-* link:#gkkvc[Configuring GenericJMSRA for Supported External JMS
+* xref:#gkkvc[Configuring GenericJMSRA for Supported External JMS
 Providers]
-* link:#gkkuy[Using GenericJMSRA with WebLogic JMS]
-* link:#gkslb[Using GenericJMSRA with IBM WebSphere MQ]
+* <<Using GenericJMSRA with WebLogic JMS>>
+* <<Using GenericJMSRA with IBM WebSphere MQ>>
 
 [[gkkvc]][[GSADG00777]][[configuring-genericjmsra-for-supported-external-jms-providers]]
 
@@ -1109,16 +1089,16 @@ module.
 See "link:application-deployment-guide/deploying-applications.html#GSDPG00069[Deploying a Connector Module]" in {productName} Application Deployment Guide.
 3. Configure the resource adapter's properties.
 +
-See link:#gbtvu[GenericJMSRA Configuration Properties].
+See <<GenericJMSRA Configuration Properties>>.
 4. Create a connector connection pool.
 +
-See link:connectors.html#gioce[To Create a Connector Connection Pool].
+See xref:connectors.adoc#gioce[To Create a Connector Connection Pool].
 5. Create a connector resource.
 +
-See link:connectors.html#giogt[To Create a Connector Resource].
+See xref:connectors.adoc#giogt[To Create a Connector Resource].
 6. Create an administered object resource.
 +
-See link:connectors.html#giolr[To Create an Administered Object].
+See xref:connectors.adoc#giolr[To Create an Administered Object].
 
 [[gbtvu]][[GSADG00674]][[genericjmsra-configuration-properties]]
 
@@ -1377,19 +1357,19 @@ T3 Client. Due to the nature of this client, messages exchanged between
 {productName} and WebLogic Server cannot be sent or received in XA
 transactions. There is also only limited support for asynchronous
 receipt of messages in an MDB, as described in detail in
-link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
+<<Limitations When Using GenericJMSRA with WebLogic JMS>>.
 
 The following topics are addressed here:
 
-* link:#gkmeb[Deploy the WebLogic Thin T3 Client JAR in {productName}]
-* link:#gkmek[Configure WebLogic JMS Resources for Integration]
-* link:#gkmee[Create a Resource Adapter Configuration for GenericJMSRA
+* <<Deploy the WebLogic Thin T3 Client JAR in {productName}>>
+* <<Configure WebLogic JMS Resources for Integration>>
+* xref:#gkmee[Create a Resource Adapter Configuration for GenericJMSRA
 to Work With WebLogic JMS]
-* link:#gkkxz[Deploy the GenericJMSRA Resource Archive]
-* link:#gkkwq[Configuring an MDB to Receive Messages from WebLogic JMS]
-* link:#gknjj[Accessing Connections and Destinations Directly]
-* link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS]
-* link:#gktfi[Configuration Reference of GenericJMSRA Properties for
+* <<Deploy the GenericJMSRA Resource Archive>>
+* <<Configuring an MDB to Receive Messages from WebLogic JMS>>
+* <<Accessing Connections and Destinations Directly>>
+* <<Limitations When Using GenericJMSRA with WebLogic JMS>>
+* xref:#gktfi[Configuration Reference of GenericJMSRA Properties for
 WebLogic JMS]
 
 [[gkmeb]][[GSADG00678]][[deploy-the-weblogic-thin-t3-client-jar-in-glassfish-server]]
@@ -1508,7 +1488,7 @@ if the configuration is performed through the Administration Console.
 
 
 For a description of all the resource adapter properties that are
-relevant for WebLogic JMS, see the link:#gktfi[Configuration Reference
+relevant for WebLogic JMS, see the xref:#gktfi[Configuration Reference
 of GenericJMSRA Properties for WebLogic JMS].
 
 [[gkkxz]][[GSADG00498]][[deploy-the-genericjmsra-resource-archive]]
@@ -1527,7 +1507,7 @@ $ asadmin deploy --user admin --password adminadmin
 ----
 If you deploy the resource adapter using the Administration Console,
 then after deployment you need to create a resource adapter
-configuration as described in link:#gkmee[Create a Resource Adapter
+configuration as described in xref:#gkmee[Create a Resource Adapter
 Configuration for GenericJMSRA to Work With WebLogic JMS].
 
 [[gkkwq]][[GSADG00499]][[configuring-an-mdb-to-receive-messages-from-weblogic-jms]]
@@ -1571,7 +1551,7 @@ as follows:
 ====
 If container-managed transactions are configured, then the transactional
 attribute must be set to `NotSupported`. For more information, see
-link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
+<<Limitations When Using GenericJMSRA with WebLogic JMS>>.
 ====
 
 2. Configure the glassfish-ejb-jar.xml deployment descriptor:
@@ -1611,7 +1591,7 @@ where:
 +
 The `<resource-adapter-mid>genericra</resource-adapter-mid>` element is
 used to specify the resource adapter and resource adapter configurations
-that was deployed in the link:#gkmee[Create a Resource Adapter
+that was deployed in the xref:#gkmee[Create a Resource Adapter
 Configuration for GenericJMSRA to Work With WebLogic JMS] instructions.
 It is recommended you stick to `genericra` as is used here.
 +
@@ -1627,7 +1607,7 @@ the WebLogic JNDI store. Therefore, replace `jms/WLInboundQueue` in the
 example above with the JNDI name used in your environment. +
 
 For a description of all the ActivationSpec properties that are relevant
-for WebLogic JMS, see the link:#gktfi[Configuration Reference of
+for WebLogic JMS, see the xref:#gktfi[Configuration Reference of
 GenericJMSRA Properties for WebLogic JMS]. +
 
 Make sure to use the appropriate WebLogic administration tools, such as
@@ -1645,7 +1625,7 @@ Online and Offline Command Reference].
 When configuring a MDB to consume messages from WebLogic JMS your code
 does not need to access the WebLogic JMS connection factory and
 destination directly. You simply define them in the activation
-configuration, as shown in link:#gkkwq[Configuring an MDB to Receive
+configuration, as shown in xref:#gkkwq[Configuring an MDB to Receive
 Messages from WebLogic JMS]. However when configuring an MDB to send
 messages, or when configuring a EJB, Servlet, or application client to
 either send or receive messages, your code needs to obtain these objects
@@ -1660,8 +1640,8 @@ online help. When using Administration Console, follow the instructions
 for creating a new Connector Connection Pool and Admin Object Resources,
 and not the instructions for creating a JMS Connection Pool and
 Destination Resources. For more information about using `asadmin` to
-create these resources, see link:connectors.html#gioce[To Create a
-Connector Connection Pool] and link:connectors.html#giogt[To Create a
+create these resources, see xref:connectors.adoc#gioce[To Create a
+Connector Connection Pool] and xref:connectors.adoc#giogt[To Create a
 Connector Resource].
 ====
 
@@ -1735,7 +1715,7 @@ contains objects of type `jakarta.jms.QueueConnectionFactory`.
 specifies that the connection will be used in local transactions only.
 You can also specify `NoTransaction`. However, the default setting of
 `XATransaction` cannot be used. For more information, see
-link:#gkkvz[Limitations When Using GenericJMSRA with WebLogic JMS].
+<<Limitations When Using GenericJMSRA with WebLogic JMS>>.
 * The connection pool is configured with the properties specified using
 the `properties` argument; multiple properties are configured as a
 colon-separated list of name-value pairs. Only one property is
@@ -1750,7 +1730,7 @@ the corresponding connection factory in the WebLogic JMS JNDI store.
 Therefore, replace `jms/WLOutboundQueueFactory` in the example above
 with the JNDI name used in your environment.
 * For a description of the `ManagedConnectionFactory` properties that
-are relevant for WebLogic JMS, see the link:#gktfi[Configuration
+are relevant for WebLogic JMS, see the xref:#gktfi[Configuration
 Reference of GenericJMSRA Properties for WebLogic JMS].
 4. Create a destination object that refers to a corresponding WebLogic
 JMS destination by entering the following `asadmin` command, all in one
@@ -1779,7 +1759,7 @@ corresponding destination in the WebLogic JMS JNDI store. Therefore,
 replace `jms/WLOutboundQueue` in the example above with the JNDI name
 used in your environment.
 * For a description of the destination properties that are relevant for
-WebLogic JMS, see the link:#gktfi[Configuration Reference of
+WebLogic JMS, see the xref:#gktfi[Configuration Reference of
 GenericJMSRA Properties for WebLogic JMS].
 
 [[gkkvz]][[GSADG00681]][[limitations-when-using-genericjmsra-with-weblogic-jms]]
@@ -1916,7 +1896,7 @@ The tables in this section list the properties that need to be set to
 configure the resource adapter and any activation specs, managed
 connections, and other administered objects that are relevant only when
 using GenericJMSRA to communicate with WebLogic JMS. For a complete list
-of properties, see the comprehensive table in link:#gbtvu[GenericJMSRA
+of properties, see the comprehensive table in xref:#gbtvu[GenericJMSRA
 Configuration Properties]
 
 Resource Adapter Properties
@@ -2092,14 +2072,14 @@ application server related configuration remains unchanged.
 
 The following topics are addressed here:
 
-* link:#gksiw[Preliminary Setup Procedures for WebSphere MQ Integration]
-* link:#gksli[Configure the WebSphere MQ Administered Objects]
-* link:#gksni[Create a Resource Adapter Configuration for GenericJMSRA
+* <<Preliminary Setup Procedures for WebSphere MQ Integration>>
+* <<Configure the WebSphere MQ Administered Objects>>
+* xref:#gksni[Create a Resource Adapter Configuration for GenericJMSRA
 to Work With WebSphere MQ]
-* link:#gksnh[Deploy the GenericJMSRA Archive]
-* link:#gkson[Create the Connection Factories and Administered Objects
+* <<Deploy the GenericJMSRA Archive>>
+* xref:#gkson[Create the Connection Factories and Administered Objects
 in {productName}]
-* link:#gktmn[Configuring an MDB to Receive Messages from WebSphere MQ]
+* <<Configuring an MDB to Receive Messages from WebSphere MQ>>
 
 [[gksiw]][[GSADG00683]][[preliminary-setup-procedures-for-websphere-mq-integration]]
 
@@ -2191,8 +2171,6 @@ necessary administered objects, such as destinations and connection
 factories, on the WebSphere MQ instance from which you want to access
 messages using {productName}. Therefore, you will need to change the
 administered object names to suit your installation.
-
-[[GSADG1028]]
 
 Before You Begin
 
@@ -2358,7 +2336,7 @@ In this example, the following properties are configured:
 ====
 The tables in this section describe the GenericJMSRA properties that are
 relevant only when integrating with WebSphere MQ. For a complete list of
-properties, see the comprehensive table in link:#gbtvu[GenericJMSRA
+properties, see the comprehensive table in xref:#gbtvu[GenericJMSRA
 Configuration Properties].
 ====
 
@@ -2443,7 +2421,7 @@ table.
 ===== Deploy the GenericJMSRA Archive
 
 For instructions on downloading and deploying GenericJMSRA, see
-link:#gkkxz[Deploy the GenericJMSRA Resource Archive].
+<<Deploy the GenericJMSRA Resource Archive>>.
 
 [[gkson]][[GSADG00686]][[create-the-connection-factories-and-administered-objects-in-glassfish-server]]
 
@@ -2452,7 +2430,7 @@ link:#gkkxz[Deploy the GenericJMSRA Resource Archive].
 In order to configure a JMS Connection Factory using GenericJMSRA, a
 Connector Connection Pool and resource needs to be created in {productName}, as described in this section.
 
-Using the example WebSphere MQ configuration in link:#gksli[Configure
+Using the example WebSphere MQ configuration in xref:#gksli[Configure
 the WebSphere MQ Administered Objects], you will see `mypool` (pointing
 to `GenericJMSRA` and `QCF`) and `jms/MyQCF` (for `mypool`) created in
 {productName}.
@@ -2466,8 +2444,8 @@ online help. When using Administration Console, following the,
 instructions for creating a new Connector Connection Pool and Admin
 Object Resources, and not the instructions for creating a JMS Connection
 Pool and Destination Resources. For more information about using
-`asadmin` to create these resources, see link:connectors.html#gioce[To
-Create a Connector Connection Pool] and link:connectors.html#giogt[To
+`asadmin` to create these resources, see xref:connectors.adoc#gioce[To
+Create a Connector Connection Pool] and xref:connectors.adoc#giogt[To
 Create a Connector Resource].
 ====
 
@@ -2481,7 +2459,7 @@ Connector Connection Pool and Destination resources need to be created
 in {productName} using names that map to the corresponding connection
 and destination resources in WebSphere MQ. The connections and
 destination name in these steps map to the example WebSphere MQ
-configuration in link:#gksli[Configure the WebSphere MQ Administered
+configuration in xref:#gksli[Configure the WebSphere MQ Administered
 Objects].
 
 1. Create connection pools that point to the connection pools in
@@ -2551,7 +2529,7 @@ and points to the `jms/TTopic` created in WebSphere MQ.
 ===== Configuring an MDB to Receive Messages from WebSphere MQ
 
 The administered object names in the sample deployment descriptor below
-map to the example WebSphere MQ configuration in link:#gksli[Configure
+map to the example WebSphere MQ configuration in xref:#gksli[Configure
 the WebSphere MQ Administered Objects]. The deployment descriptors need
 to take into account the resource adapter and the connection resources
 that have been created. A sample `sun-ejb-jar.xml` for a Message Driven

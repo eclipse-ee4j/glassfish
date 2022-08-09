@@ -14,8 +14,6 @@ prev=collect-log-files.html
 Configures the Message Queue cluster providing JMS services to a
 {productName} cluster
 
-[[sthref79]]
-
 === Synopsis
 
 [source]
@@ -31,8 +29,6 @@ asadmin [asadmin-options] configure-jms-cluster [--help]
 cluster-name
 ----
 
-[[sthref80]]
-
 === Description
 
 The `configure-jms-cluster` configures the Message Queue cluster
@@ -46,13 +42,11 @@ started for the first time. Otherwise, follow the instructions in
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref81]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -98,7 +92,7 @@ asadmin-options::
 [NOTE]
 ====
 To specify the password of the JDBC database user, use the `--passwordfile` utility option
-of the link:asadmin.html#asadmin-1m[`asadmin`(1M)] command after adding the entry
+of the xref:asadmin.adoc#asadmin[`asadmin`(1M)] command after adding the entry
 `AS_ADMIN_JMSDBPASSWORD` to the password file.
 ====
 
@@ -112,8 +106,6 @@ of the link:asadmin.html#asadmin-1m[`asadmin`(1M)] command after adding the entr
 ----
 prop1name=prop1value:prop2name=prop2value
 ----
-
-[[sthref82]]
 
 === Operands
 
@@ -131,8 +123,6 @@ cluster-name::
   than n–19 characters, where n is the maximum table name length allowed
   by the database.
 
-[[sthref83]]
-
 === Exit Status
 
 0::
@@ -140,10 +130,8 @@ cluster-name::
 1::
   error in executing the subcommand
 
-[[sthref84]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

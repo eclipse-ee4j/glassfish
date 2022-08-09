@@ -7,7 +7,7 @@ prev=title.html
 
 = Preface
 
-[[gkamj]][[preface]]
+[[preface]]
 
 == Preface
 
@@ -38,13 +38,13 @@ of Jakarta EE: compatibility. It enables Java developers to access the
 
 The following topics are addressed here:
 
-* link:#ghpbz[{productName} Documentation Set]
-* link:#giprl[Related Documentation]
-* link:#fwbkx[Typographic Conventions]
-* link:#fquvc[Symbol Conventions]
-* link:#ghpfg[Default Paths and File Names]
+* <<{productName} Documentation Set>>
+* <<Related Documentation>>
+* <<Typographic Conventions>>
+* <<Symbol Conventions>>
+* <<Default Paths and File Names>>
 
-[[ghpbz]][[glassfish-server-documentation-set]]
+[[glassfish-server-documentation-set]]
 
 === {productName} Documentation Set
 
@@ -77,7 +77,7 @@ your system and enterprise.
 
 |link:administration-guide.html#GSADG[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
-from the command line by using the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] utility.
+from the command line by using the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
@@ -191,7 +191,7 @@ are bundled with the Jakarta EE Software Development Kit (SDK) and are also
 available from the repository
 (`https://github.com/eclipse-ee4j/glassfish-samples`).
 
-[[fwbkx]][[typographic-conventions]]
+[[typographic-conventions]]
 
 === Typographic Conventions
 
@@ -230,7 +230,7 @@ Do not save the file.
 |===
 
 
-[[fquvc]][[symbol-conventions]]
+[[symbol-conventions]]
 
 === Symbol Conventions
 
@@ -272,7 +272,7 @@ The following table explains symbols that might be used in this book.
 |===
 
 
-[[ghpfg]][[default-paths-and-file-names]]
+[[default-paths-and-file-names]]
 
 === Default Paths and File Names
 

@@ -13,8 +13,6 @@ prev=list-application-refs.html
 
 Lists deployed applications
 
-[[sthref1308]]
-
 === Synopsis
 
 [source]
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-applications [--help]
 [--long={false|true}] [--resources] [--subcomponents]
 [--type type] [target]
 ----
-
-[[sthref1309]]
 
 === Description
 
@@ -44,13 +40,11 @@ Deployment Guide.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1310]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -80,8 +74,6 @@ asadmin-options::
 +
 If no type is specified, all applications are listed.
 
-[[sthref1311]]
-
 === Operands
 
 `--target`::
@@ -98,8 +90,6 @@ If no type is specified, all applications are listed.
   instance_name;;
     Lists the applications for a particular stand-alone server instance.
 
-[[sthref1312]]
-
 === Examples
 
 [[GSRFM636]][[sthref1313]]
@@ -113,8 +103,6 @@ hellojsp <web>
 Command list-applications executed successfully
 ----
 
-[[sthref1314]]
-
 === Exit Status
 
 0::
@@ -122,11 +110,9 @@ Command list-applications executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1315]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-components.html#list-components-1[`list-components`(1)],
 link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)],

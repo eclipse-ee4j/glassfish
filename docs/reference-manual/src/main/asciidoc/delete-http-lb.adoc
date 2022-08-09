@@ -13,8 +13,6 @@ prev=delete-http-health-checker.html
 
 Deletes a load balancer
 
-[[sthref707]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Deletes a load balancer
 asadmin [asadmin-options] delete-http-lb [--help]
 load_balancer_name
 ----
-
-[[sthref708]]
 
 === Description
 
@@ -35,25 +31,19 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref709]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref710]]
 
 === Operands
 
 load_balancer_name::
   The name of the load balancer to be deleted.
-
-[[sthref711]]
 
 === Examples
 
@@ -70,8 +60,6 @@ asadmin> delete-http-lb mylb
 Command delete-http-lb executed successfully.
 ----
 
-[[sthref713]]
-
 === Exit Status
 
 0::
@@ -79,11 +67,9 @@ Command delete-http-lb executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref714]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
 link:list-http-lbs.html#list-http-lbs-1[`list-http-lbs`(1)]

@@ -14,8 +14,6 @@ prev=configure-ldap-for-admin.html
 Configures how long information about subcommands that were started
 using `asadmin --detach` or that contain progress information is kept
 
-[[sthref100]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] configure-managed-jobs [--help]
 [--cleanup-initial-delay cleanup-initial-delay]
 [--cleanup-poll-interval cleanup-poll-interval]
 ----
-
-[[sthref101]]
 
 === Description
 
@@ -40,13 +36,11 @@ progress and status.
 
 This subcommand is supported in remote mode only.
 
-[[sthref102]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -61,8 +55,6 @@ asadmin-options::
 `--cleanup-poll-interval`::
   Specifies the time interval after which the cleanup service polls for
   expired jobs. The default value is 20 minutes.
-
-[[sthref103]]
 
 === Examples
 
@@ -79,8 +71,6 @@ asadmin> configure-managed-jobs --job-retention-period=36h
 Command configure-managed-jobs executed successfully.
 ----
 
-[[sthref105]]
-
 === Exit Status
 
 0::
@@ -88,11 +78,9 @@ Command configure-managed-jobs executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref106]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:list-jobs.html#list-jobs-1[`list-jobs`(1)]
 

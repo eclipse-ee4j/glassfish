@@ -15,12 +15,12 @@ prev=tuning-java.html
 This chapter discusses tuning the operating system (OS) for optimum
 performance. It discusses the following topics:
 
-* link:#abeis[Server Scaling]
-* link:#gfpzp[Solaris 10 Platform-Specific Tuning Information]
-* link:#abeix[Tuning for the Solaris OS]
-* link:#abeje[Tuning for Solaris on x86]
-* link:#abeji[Tuning for Linux platforms]
-* link:#gfpzh[Tuning UltraSPARC CMT-Based Systems]
+* xref:#abeis[Server Scaling]
+* xref:#gfpzp[Solaris 10 Platform-Specific Tuning Information]
+* xref:#abeix[Tuning for the Solaris OS]
+* xref:#abeje[Tuning for Solaris on x86]
+* xref:#abeji[Tuning for Linux platforms]
+* xref:#gfpzh[Tuning UltraSPARC CMT-Based Systems]
 
 [[abeis]][[GSPTG00074]][[server-scaling]]
 
@@ -29,11 +29,11 @@ performance. It discusses the following topics:
 This section provides recommendations for optimal performance scaling
 server for the following server subsystems:
 
-* link:#abeit[Processors]
-* link:#abeiu[Memory]
-* link:#abeiv[Disk Space]
-* link:#abeiw[Networking]
-* link:#glglf[UDP Buffer Sizes]
+* xref:#abeit[Processors]
+* xref:#abeiu[Memory]
+* xref:#abeiv[Disk Space]
+* xref:#abeiw[Networking]
+* xref:#glglf[UDP Buffer Sizes]
 
 [[abeit]][[GSPTG00210]][[processors]]
 
@@ -117,7 +117,7 @@ multicast, limit the need to retransmit UDP messages. To limit the need
 to retransmit UDP messages, set the size of the UDP buffer to avoid
 excessive UDP datagram loss.
 
-[[sthref13]][[to-determine-an-optimal-udp-buffer-size]]
+[[to-determine-an-optimal-udp-buffer-size]]
 
 ===== To Determine an Optimal UDP Buffer Size
 
@@ -140,7 +140,7 @@ testing for the loss of UDP packets.
 ====
 On Linux systems, the default UDP buffer size might be insufficient even
 if only one instance is running on each host. In this situation, set the
-UDP buffer size as explained in link:#glglz[To Set the UDP Buffer Size
+UDP buffer size as explained in xref:#glglz[To Set the UDP Buffer Size
 on Linux Systems].
 ====
 
@@ -216,7 +216,7 @@ net.core.rmem_default=rmem-default \
 net.core.wmem_default=wmem-default
 ----
 
-[[sthref14]]
+[[tun-ex-5-1]]
 
 Example 5-1 Setting the UDP Buffer Size in the `/etc/sysctl.conf` File
 
@@ -265,8 +265,8 @@ page]
 
 === Tuning for the Solaris OS
 
-* link:#abeiy[Tuning Parameters]
-* link:#abeja[File Descriptor Setting]
+* xref:#abeiy[Tuning Parameters]
+* xref:#abeja[File Descriptor Setting]
 
 [[abeiy]][[GSPTG00215]][[tuning-parameters]]
 
@@ -280,7 +280,7 @@ The following table shows Solaris tuning parameters that affect
 performance and scalability benchmarking. These values are examples of
 how to tune your system for best performance.
 
-[[sthref15]][[gacmm]]
+[[gacmm]]
 
 Table 5-1 Tuning Parameters for Solaris
 
@@ -394,7 +394,7 @@ network traffic.
 |`ndd /dev/tcp`
 |512
 |8192
-|Size of connection hash table. See link:#abeiz[Sizing the Connection Hash Table].
+|Size of connection hash table. See xref:#abeiz[Sizing the Connection Hash Table].
 |===
 
 
@@ -478,8 +478,8 @@ These settings apply to RMI/IIOP clients on the Solaris OS.
 The following are some options to consider when tuning Solaris on x86
 for {productName}:
 
-* link:#abejg[File Descriptors]
-* link:#abejh[IP Stack Settings]
+* xref:#abejg[File Descriptors]
+* xref:#abejh[IP Stack Settings]
 
 Some of the values depend on the system resources available. After
 making any changes to `/etc/system`, reboot the machines.
@@ -546,12 +546,12 @@ ndd -set /dev/tcp tcp_recv_hiwat 32768
 To tune for maximum performance on Linux, you need to make adjustments
 to the following:
 
-* link:#gkvjl[Startup Files]
-* link:#abejj[File Descriptors]
-* link:#abejk[Virtual Memory]
-* link:#abejl[Network Interface]
-* link:#abejm[Disk I/O Settings]
-* link:#abejn[TCP/IP Settings]
+* xref:#gkvjl[Startup Files]
+* xref:#abejj[File Descriptors]
+* xref:#abejk[Virtual Memory]
+* xref:#abejl[Network Interface]
+* xref:#abejm[Disk I/O Settings]
+* xref:#abejn[TCP/IP Settings]
 
 [[gkvjl]][[GSPTG00219]][[startup-files]]
 
@@ -861,7 +861,7 @@ The following table shows the operating system tuning for Solaris 10
 used when benchmarking for performance and scalability on UtraSPARC
 CMT-based systems (64-bit systems).
 
-[[sthref16]][[gkuaa]]
+[[gkuaa]]
 
 Table 5-2 Tuning 64-bit Systems for Performance Benchmarking
 

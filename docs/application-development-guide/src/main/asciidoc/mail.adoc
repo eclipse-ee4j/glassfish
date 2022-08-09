@@ -17,12 +17,12 @@ of abstract classes defining objects that comprise a mail system.
 
 The following topics are addressed here:
 
-* link:#beaox[Introducing Jakarta Mail]
-* link:#beaoy[Creating a Jakarta Mail Session]
-* link:#beaoz[Jakarta Mail Session Properties]
-* link:#beapa[Looking Up a Jakarta Mail Session]
-* link:#fwfiy[Sending and Reading Messages Using Jakarta Mail]
-* link:#gkpfg[Using Application-Scoped Jakarta Mail Resources]
+* xref:#beaox[Introducing Jakarta Mail]
+* xref:#beaoy[Creating a Jakarta Mail Session]
+* xref:#beaoz[Jakarta Mail Session Properties]
+* xref:#beapa[Looking Up a Jakarta Mail Session]
+* xref:#fwfiy[Sending and Reading Messages Using Jakarta Mail]
+* xref:#gkpfg[Using Application-Scoped Jakarta Mail Resources]
 
 
 [NOTE]
@@ -123,8 +123,8 @@ the Java Naming and Directory Interface].
 
 The following topics are addressed here:
 
-* link:#beapb[To Send a Message Using Jakarta Mail]
-* link:#beapc[To Read a Message Using Jakarta Mail]
+* xref:#beapb[To Send a Message Using Jakarta Mail]
+* xref:#beapc[To Read a Message Using Jakarta Mail]
 
 [[beapb]][[GSDVG00079]][[to-send-a-message-using-jakarta-mail]]
 
@@ -148,7 +148,7 @@ InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
 Session session = (Session)ic.lookup(snName);
 ----
-For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
+For more information, see xref:#beapa[Looking Up a Jakarta Mail Session].
 3. Override the Jakarta Mail session properties if necessary.
 +
 For example:
@@ -202,7 +202,7 @@ InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
 Session session = (jakarta.mail.Session)ic.lookup(snName);
 ----
-For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
+For more information, see xref:#beapa[Looking Up a Jakarta Mail Session].
 3. Override the Jakarta Mail session properties if necessary.
 +
 For example:

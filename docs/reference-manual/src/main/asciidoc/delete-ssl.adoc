@@ -14,8 +14,6 @@ prev=delete-resource-ref.html
 Deletes the SSL element in the selected HTTP listener, IIOP listener, or
 IIOP service
 
-[[sthref975]]
-
 === Synopsis
 
 [source]
@@ -26,8 +24,6 @@ asadmin [asadmin-options] delete-ssl [--help]
 listener_id
 ----
 
-[[sthref976]]
-
 === Description
 
 The `delete-ssl` subcommand deletes the SSL element in the selected HTTP
@@ -37,8 +33,6 @@ The listener_id is not required if the `--type` is `iiop-service`.
 
 This subcommand is supported in remote mode only.
 
-[[sthref977]]
-
 === Options
 
 If an option has a short option name, then the short option precedes the
@@ -47,7 +41,7 @@ two dashes.
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -78,15 +72,11 @@ asadmin-options::
   * `iiop-listener`
   * `iiop-service`
 
-[[sthref978]]
-
 === Operands
 
 listener_id::
   The ID of the listener from which the SSL element is to be deleted. +
   The listener_id operand is not required if the `--type` is `iiop-service`.
-
-[[sthref979]]
 
 === Examples
 
@@ -104,8 +94,6 @@ asadmin> delete-ssl
 Command delete-ssl executed successfully.
 ----
 
-[[sthref981]]
-
 === Exit Status
 
 0::
@@ -113,11 +101,9 @@ Command delete-ssl executed successfully.
 1::
   error in executing the command
 
-[[sthref982]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-ssl.html#create-ssl-1[`create-ssl`(1)]
 

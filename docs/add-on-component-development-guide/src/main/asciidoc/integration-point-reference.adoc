@@ -20,19 +20,19 @@ Define an integration point for each user interface feature in the
 
 The following topics are addressed here:
 
-* link:#ghprc[Integration Point Attributes]
-* link:#ghmwa[`org.glassfish.admingui:navNode` Integration Point]
-* link:#gjkff[`org.glassfish.admingui:rightPanel` Integration Point]
-* link:#gjkfq[`org.glassfish.admingui:rightPanelTitle` Integration Point]
-* link:#ghpkh[`org.glassfish.admingui:serverInstTab` Integration Point]
-* link:#ghpit[`org.glassfish.admingui:commonTask` Integration Point]
-* link:#ghphz[`org.glassfish.admingui:configuration` Integration Point]
-* link:#ghpfm[`org.glassfish.admingui:resources` Integration Point]
-* link:#ghpiz[`org.glassfish.admingui:customtheme` Integration Point]
-* link:#ghppm[`org.glassfish.admingui:masthead` Integration Point]
-* link:#ghppk[`org.glassfish.admingui:loginimage` Integration Point]
-* link:#ghprk[`org.glassfish.admingui:loginform` Integration Point]
-* link:#ghpse[`org.glassfish.admingui:versioninfo` Integration Point]
+* xref:#ghprc[Integration Point Attributes]
+* xref:#ghmwa[`org.glassfish.admingui:navNode` Integration Point]
+* xref:#gjkff[`org.glassfish.admingui:rightPanel` Integration Point]
+* xref:#gjkfq[`org.glassfish.admingui:rightPanelTitle` Integration Point]
+* xref:#ghpkh[`org.glassfish.admingui:serverInstTab` Integration Point]
+* xref:#ghpit[`org.glassfish.admingui:commonTask` Integration Point]
+* xref:#ghphz[`org.glassfish.admingui:configuration` Integration Point]
+* xref:#ghpfm[`org.glassfish.admingui:resources` Integration Point]
+* xref:#ghpiz[`org.glassfish.admingui:customtheme` Integration Point]
+* xref:#ghppm[`org.glassfish.admingui:masthead` Integration Point]
+* xref:#ghppk[`org.glassfish.admingui:loginimage` Integration Point]
+* xref:#ghprk[`org.glassfish.admingui:loginform` Integration Point]
+* xref:#ghpse[`org.glassfish.admingui:versioninfo` Integration Point]
 
 [[ghprc]][[GSACG00145]][[integration-point-attributes]]
 

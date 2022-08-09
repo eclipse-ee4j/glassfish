@@ -13,8 +13,6 @@ prev=create-domain.html
 
 Creates a new file user
 
-[[sthref219]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] create-file-user [--help]
 [--target target
 [--groups user_groups[:user_groups]*] user_name
 ----
-
-[[sthref220]]
 
 === Description
 
@@ -37,7 +33,7 @@ auth_realm_name is specified, an entry is created in the keyfile using
 the `auth_realm_name`.
 
 You can use the `--passwordfile` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] command to specify the
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] command to specify the
 password for the user. The password file entry must be of the form
 `AS_ADMIN_USERPASSWORD=`user-password.
 
@@ -47,13 +43,11 @@ administrative user.
 
 This subcommand is supported in remote mode only.
 
-[[sthref221]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,14 +61,10 @@ asadmin-options::
   The name of the realm in which the new user is created. If you do not
   specify this option, the user is created in the "file" realm.
 
-[[sthref222]]
-
 === Operands
 
 user_name::
   This is the name of file user to be created.
-
-[[sthref223]]
 
 === Examples
 
@@ -94,8 +84,6 @@ asadmin> create-file-user
 Command create-file-user executed successfully
 ----
 
-[[sthref225]]
-
 === Exit Status
 
 0::
@@ -103,11 +91,9 @@ Command create-file-user executed successfully
 1::
   error in executing the subcommand
 
-[[sthref226]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],
 link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],

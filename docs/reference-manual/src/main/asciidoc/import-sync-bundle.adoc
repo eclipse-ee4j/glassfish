@@ -14,8 +14,6 @@ prev=get-health.html
 Imports the configuration data of a clustered instance or standalone
 instance from an archive file
 
-[[sthref1243]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] import-sync-bundle [--help]
 [--nodedir node-dir] [--node node-name]
 file-name
 ----
-
-[[sthref1244]]
 
 === Description
 
@@ -41,7 +37,7 @@ contact the domain administration server (DAS), this subcommand requires
 the name of the host where the DAS is running. If a nondefault port is
 used for administration, this subcommand also requires the port number.
 You must provide this information through the `--host` option and the
-`--port` option of the link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+`--port` option of the xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 utility.
 
 Importing an instance's configuration data transfers the data to a host
@@ -71,13 +67,11 @@ node from the DAS configuration in the archive file.
 
 This subcommand is supported in local mode only.
 
-[[sthref1245]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -95,15 +89,11 @@ asadmin-options::
   subcommand determines the node from the DAS configuration in the
   archive file.
 
-[[sthref1246]]
-
 === Operands
 
 file-name::
   The name of the file, including the path, that contains the archive
   file to import. This operand is required.
-
-[[sthref1247]]
 
 === Examples
 
@@ -126,8 +116,6 @@ sj02# asadmin --host sr04 import-sync-bundle --node sj02 --instance ymli2
 Command import-sync-bundle executed successfully.
 ----
 
-[[sthref1249]]
-
 === Exit Status
 
 0::
@@ -135,11 +123,9 @@ Command import-sync-bundle executed successfully.
 1::
   error in executing the command
 
-[[sthref1250]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:export-sync-bundle.html#export-sync-bundle-1[`export-sync-bundle`(1)]
 

@@ -13,8 +13,6 @@ prev=list-loggers.html
 
 Lists the loggers and their log levels
 
-[[sthref1645]]
-
 === Synopsis
 
 [source]
@@ -22,8 +20,6 @@ Lists the loggers and their log levels
 asadmin [asadmin-options] list-log-levels [--help]
 [--target target]
 ----
-
-[[sthref1646]]
 
 === Description
 
@@ -35,20 +31,16 @@ the list.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1647]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--target`::
   The server, cluster or server instance for which log levels will be listed.
-
-[[sthref1648]]
 
 === Operands
 
@@ -59,8 +51,6 @@ target::
   then log levels are listed for the server.
   * cluster_name - The name of a target cluster.
   * instance_name - The name of a target server instance.
-
-[[sthref1649]]
 
 === Examples
 
@@ -129,8 +119,6 @@ sun     <INFO>
 Command list-log-levels executed successfully.
 ----
 
-[[sthref1651]]
-
 === Exit Status
 
 0::
@@ -138,11 +126,9 @@ Command list-log-levels executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1652]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:collect-log-files.html#collect-log-files-1[`collect-log-files`(1)],
 link:list-log-attributes.html#list-log-attributes-1[`list-log-attributes`(1)],

@@ -13,8 +13,6 @@ prev=create-managed-executor-service.html
 
 Creates a managed scheduled executor service resource
 
-[[sthref405]]
-
 === Synopsis
 
 [source]
@@ -38,8 +36,6 @@ asadmin [asadmin-options] create-managed-scheduled-executor-service [--help]
 jndi_name
 ----
 
-[[sthref406]]
-
 === Description
 
 The `create-managed-scheduled-executor-service` subcommand creates a
@@ -47,13 +43,11 @@ managed scheduled executor service resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref407]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -126,18 +120,12 @@ asadmin-options::
   instance_name;;
     Creates the resource for the specified server instance.
 
-[[sthref408]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this resource.
 
-[[sthref409]]
-
 === Examples
-
-[[GSRFM461]][[sthref410]]
 
 ==== Example 1   Creating a Managed Scheduled Executor Service Resource
 
@@ -151,8 +139,6 @@ Managed scheduled executor service concurrent/myScheduledExecutor created succes
 Command create-managed-scheduled-executor-service executed successfully.
 ----
 
-[[sthref411]]
-
 === Exit Status
 
 0::
@@ -160,11 +146,9 @@ Command create-managed-scheduled-executor-service executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref412]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-managed-scheduled-executor-service.html#delete-managed-scheduled-executor-service-1[`delete-managed-scheduled-executor-service`(1)],
 link:list-managed-scheduled-executor-services.html#list-managed-scheduled-executor-services-1[`list-managed-scheduled-executor-services`(1)]

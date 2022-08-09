@@ -13,16 +13,12 @@ prev=configure-lb-weight.html
 
 Configures the authentication realm named admin-realm for the given LDAP
 
-[[sthref93]]
-
 === Synopsis
 
 [source]
 ----
 asadmin [asadmin-options] configure-ldap-for-admin [--help]
 ----
-
-[[sthref94]]
 
 === Description
 
@@ -33,18 +29,14 @@ prompts the user for the `basedn` and `ldap-group` options.
 
 This command is supported in remote mode only.
 
-[[sthref95]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref96]]
 
 === Examples
 
@@ -61,8 +53,6 @@ The LDAP Auth Realm admin-realm was configured correctly
 in admin server's configuration.
 ----
 
-[[sthref98]]
-
 === Exit Status
 
 0::
@@ -70,11 +60,9 @@ in admin server's configuration.
 1::
   error in executing the command
 
-[[sthref99]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:change-admin-password.html#change-admin-password-1[`change-admin-password`(1)],
 link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)]link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],

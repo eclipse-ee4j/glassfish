@@ -13,8 +13,6 @@ prev=create-audit-module.html
 
 Adds the named authentication realm
 
-[[sthref139]]
-
 === Synopsis
 
 [source]
@@ -24,21 +22,17 @@ asadmin [asadmin-options] create-auth-realm [--help]
 [--target target_name] auth_realm_name
 ----
 
-[[sthref140]]
-
 === Description
 
 The `create-auth-realm` subcommand adds the named authentication realm.
 
 This subcommand is supported in remote mode only.
 
-[[sthref141]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -207,15 +201,11 @@ It is a security risk not to specify a password encryption algorithm.
     (Optional) Specifies the LDAP password for the DN given in
     `search-bind-dn`.
 
-[[sthref142]]
-
 === Operands
 
 auth_realm_name::
   A short name for the realm. This name is used to refer to the realm
   from, for example, `web.xml`.
-
-[[sthref143]]
 
 === Examples
 
@@ -236,8 +226,6 @@ Command create-auth-realm executed successfully
 
 Where `file` is the authentication realm created.
 
-[[sthref145]]
-
 === Exit Status
 
 0::
@@ -245,11 +233,9 @@ Where `file` is the authentication realm created.
 1::
   error in executing the subcommand
 
-[[sthref146]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-auth-realm.html#delete-auth-realm-1[`delete-auth-realm`(1)],
 link:list-auth-realms.html#list-auth-realms-1[`list-auth-realms`(1)]

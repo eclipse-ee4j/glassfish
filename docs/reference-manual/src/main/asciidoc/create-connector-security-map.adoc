@@ -13,8 +13,6 @@ prev=create-connector-resource.html
 
 Creates a security map for the specified connector connection pool
 
-[[sthref175]]
-
 === Synopsis
 
 [source]
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-connector-security-map [--help]
 [--target target]
 mapname
 ----
-
-[[sthref176]]
 
 === Description
 
@@ -53,13 +49,11 @@ connection pool using the `create-connector-connection-pool` subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref177]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -84,14 +78,10 @@ asadmin-options::
   not occur. Instead, the subcommand runs successfully and displays a
   warning message that the option is ignored.
 
-[[sthref178]]
-
 === Operands
 
 mapname::
   The name of the security map to be created.
-
-[[sthref179]]
 
 === Examples
 
@@ -109,8 +99,6 @@ asadmin> create-connector-security-map --poolname connector-pool1
 Command create-connector-security-map executed successfully
 ----
 
-[[sthref181]]
-
 === Exit Status
 
 0::
@@ -118,11 +106,9 @@ Command create-connector-security-map executed successfully
 1::
   error in executing the subcommand
 
-[[sthref182]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-connector-security-map.html#delete-connector-security-map-1[`delete-connector-security-map`(1)],
 link:list-connector-security-maps.html#list-connector-security-maps-1[`list-connector-security-maps`(1)],

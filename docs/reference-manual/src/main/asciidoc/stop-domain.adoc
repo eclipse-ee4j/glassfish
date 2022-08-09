@@ -13,8 +13,6 @@ prev=stop-database.html
 
 Stops the Domain Administration Server of the specified domain
 
-[[sthref2165]]
-
 === Synopsis
 
 [source]
@@ -24,8 +22,6 @@ asadmin [asadmin-options] stop-domain [--help]
 [--force={true|false}] [--kill={false|true}]
 [domain-name]
 ----
-
-[[sthref2166]]
 
 === Description
 
@@ -41,13 +37,11 @@ which means you must correctly authenticate to the remote server. In
 local mode, you normally do not need to authenticate to the server as
 long as you are running the subcommand as the same user who started the server.
 
-[[sthref2167]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -78,15 +72,11 @@ asadmin-options::
     The domain is killed. The subcommand uses functionality of the
     operating system to terminate the domain process.
 
-[[sthref2168]]
-
 === Operands
 
 domain-name::
   The name of the domain you want to stop. Default is the name specified
   during installation, usually `domain1`.
-
-[[sthref2169]]
 
 === Examples
 
@@ -104,8 +94,6 @@ Waiting for the domain to stop .................
 Command stop-domain executed successfully.
 ----
 
-[[sthref2171]]
-
 === Exit Status
 
 0::
@@ -113,11 +101,9 @@ Command stop-domain executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2172]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
 link:list-domains.html#list-domains-1[`list-domains`(1)],

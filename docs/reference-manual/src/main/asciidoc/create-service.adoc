@@ -14,8 +14,6 @@ prev=create-resource-ref.html
 Configures the starting of a DAS or a {productName} instance on an
 unattended boot
 
-[[sthref527]]
-
 === Synopsis
 
 [source]
@@ -29,8 +27,6 @@ asadmin [asadmin-options] create-service [--help]
 [--nodedir node-dir] [--node node]
 [domain-or-instance-name]
 ----
-
-[[sthref528]]
 
 === Description
 
@@ -147,13 +143,11 @@ file and the entire contents of the directory. Otherwise, an attempt to
 re-create the service by using the `create-service` subcommand fails.
 The Oracle Solaris command `svccfg` does not delete this directory.
 
-[[sthref529]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -207,15 +201,11 @@ asadmin-options::
   contains only one node directory. Otherwise, this option is required.
   If this option is specified, the operand must specify an instance.
 
-[[sthref530]]
-
 === Operands
 
 domain-or-instance-name::
   The name of the domain or instance to configure. If no operand is
   specified, the default domain is used.
-
-[[sthref531]]
 
 === Examples
 
@@ -306,8 +296,6 @@ Here are the most typical Solaris commands of interest:
 Command create-service executed successfully.
 ----
 
-[[sthref535]]
-
 === Exit Status
 
 0::
@@ -315,11 +303,9 @@ Command create-service executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref536]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1auths-1[`auths`(1)],
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]

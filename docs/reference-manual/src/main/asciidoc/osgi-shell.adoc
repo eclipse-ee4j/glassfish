@@ -14,8 +14,6 @@ prev=osgi.html
 Provides interactive access to the Apache Felix Gogo remote shell for
 the execution of OSGi shell commands
 
-[[sthref1918]]
-
 === Synopsis
 
 [source]
@@ -25,8 +23,6 @@ asadmin [asadmin-options] osgi-shell [--help]
 [--printprompt={false|true}]
 [--encoding encoding]
 ----
-
-[[sthref1919]]
 
 === Description
 
@@ -49,13 +45,11 @@ This subcommand is supported in local mode only. Unlike other local
 subcommands, however, the domain administration server (DAS) and the
 server instance whose shell is being accessed must be running.
 
-[[sthref1920]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,8 +62,6 @@ asadmin-options::
 `--encoding`::
   Specifies the character set for the file to be decoded. By default,
   the system character set is used.
-
-[[sthref1921]]
 
 === Examples
 
@@ -132,8 +124,6 @@ ID|State      |Level|Name
 gogo$
 ----
 
-[[sthref1924]]
-
 === Exit Status
 
 0::
@@ -141,11 +131,9 @@ gogo$
 1::
   error in executing the subcommand
 
-[[sthref1925]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 link:osgi.html#osgi-1[`osgi`(1)]
 

@@ -18,8 +18,8 @@ mail servers.
 
 The following topics are addressed here:
 
-* link:#ggjsf[About JavaMail]
-* link:#giowr[Administering JavaMail Resources]
+* <<About JavaMail>>
+* <<Administering JavaMail Resources>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -80,10 +80,10 @@ at this time
 
 The following topics are addressed here:
 
-* link:#giowd[To Create a JavaMail Resource]
-* link:#giowq[To List JavaMail Resources]
-* link:#giwjw[To Update a JavaMail Resource]
-* link:#gioxj[To Delete a JavaMail Resource]
+* <<To Create a JavaMail Resource>>
+* <<To List JavaMail Resources>>
+* <<To Update a JavaMail Resource>>
+* <<To Delete a JavaMail Resource>>
 
 [[giowd]][[GSADG00482]][[to-create-a-javamail-resource]]
 
@@ -102,7 +102,7 @@ Information about the properties for the subcommand is included in this
 help page.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00267]][[gipfs]]
 Example 16-1 Creating a JavaMail Resource
@@ -117,8 +117,6 @@ asadmin> create-javamail-resource --mailhost localhost
 --mailuser sample --fromaddress sample\@sun\.com mail/MyMailSession
 Command create-javamail-resource executed successfully.
 ----
-
-[[GSADG1014]]
 
 See Also
 
@@ -147,8 +145,6 @@ asadmin> list-javamail-resources
 mail/MyMailSession
 Command list-javamail-resources executed successfuly.
 ----
-
-[[GSADG1015]]
 
 See Also
 
@@ -186,8 +182,6 @@ Command set executed successfully.
 Use the `delete-javamail-resource` subcommands in remote mode to delete
 a JavaMail session resource.
 
-[[GSADG1016]]
-
 Before You Begin
 
 References to the specified resource must be removed before running the
@@ -200,7 +194,7 @@ link:reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-res
 link:reference-manual/delete-javamail-resource.html#GSRFM00087[`delete-javamail-resource`] subcommands.
 4. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#ginqj[To Restart a Domain].
 
 [[GSADG00270]][[gipcd]]
 Example 16-4 Deleting a JavaMail Resource
@@ -213,8 +207,6 @@ This example deletes the JavaMail session resource named
 asadmin> delete-javamail-resource mail/MyMailSession
 Command delete-javamail-resource executed successfully.
 ----
-
-[[GSADG1017]]
 
 See Also
 

@@ -25,11 +25,11 @@ the `asadmin` utility.
 
 The following topics are addressed here:
 
-* link:#ghmje[{productName} Modular Architecture and Add-On
+* xref:#ghmje[{productName} Modular Architecture and Add-On
 Components]
-* link:#ghmrf[OSGi Alliance Module Management Subsystem]
-* link:#ghmnq[Hundred-Kilobyte Kernel]
-* link:#ghmns[Overview of the Development Process for an Add-On
+* xref:#ghmrf[OSGi Alliance Module Management Subsystem]
+* xref:#ghmnq[Hundred-Kilobyte Kernel]
+* xref:#ghmns[Overview of the Development Process for an Add-On
 Component]
 
 [[ghmje]][[GSACG00087]][[glassfish-server-modular-architecture-and-add-on-components]]
@@ -128,14 +128,14 @@ monitoring data, it must provide that data to users through {productName} admini
 To develop add-on components that meet these requirements, follow the
 development process that is described in the following sections:
 
-* link:#ghpqc[Writing HK2 Components]
-* link:#ghokn[Extending the Administration Console]
-* link:#ghohx[Extending the `asadmin` Utility]
-* link:#ghojs[Adding Monitoring Capabilities]
-* link:#gkahs[Adding Configuration Data for a Component]
-* link:#ghojq[Adding Container Capabilities]
-* link:#gktld[Creating a Session Persistence Module]
-* link:#ghoiu[Packaging and Delivering an Add-On Component]
+* xref:#ghpqc[Writing HK2 Components]
+* xref:#ghokn[Extending the Administration Console]
+* xref:#ghohx[Extending the `asadmin` Utility]
+* xref:#ghojs[Adding Monitoring Capabilities]
+* xref:#gkahs[Adding Configuration Data for a Component]
+* xref:#ghojq[Adding Container Capabilities]
+* xref:#gktld[Creating a Session Persistence Module]
+* xref:#ghoiu[Packaging and Delivering an Add-On Component]
 
 [[ghpqc]][[GSACG00173]][[writing-hk2-components]]
 
@@ -181,7 +181,7 @@ you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other {productName} components.
 A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
 For more information, see link:extending-asadmin.html#ghmrd[Extending the
 `asadmin` Utility].

@@ -13,8 +13,6 @@ prev=configuration.html
 
 Domains have their own configurations.
 
-[[sthref2396]]
-
 === Description
 
 A domain provides a common authentication and administration point for a
@@ -23,10 +21,8 @@ encompasses several manageable resources, including instances, clusters,
 and their individual resources. A manageable resource, such as a server
 instance, may belong to only one domain.
 
-[[sthref2397]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

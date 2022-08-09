@@ -6,20 +6,14 @@ prev=planning.html
 
 = Checklist for Deployment
 
-[[GSPLG00003]][[abfeq]]
-
-
 [[checklist-for-deployment]]
 == 3 Checklist for Deployment
 
 This appendix provides a checklist to get started on evaluation and
 production with the {productName}.
 
-[[sthref7]][[checklist]]
-
+[[checklist]]
 === Checklist
-
-[[sthref8]][[sthref9]]
 
 Table 3-1 Checklist
 

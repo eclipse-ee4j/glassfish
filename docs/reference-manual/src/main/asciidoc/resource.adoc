@@ -13,16 +13,12 @@ prev=passwords.html
 
 Provide connectivity to various types of EIS.
 
-[[sthref2410]]
-
 === Description
 
 {productName} provides support for JDBC, JMS, and JNDI resources.
 
-[[sthref2411]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

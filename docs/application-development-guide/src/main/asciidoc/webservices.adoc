@@ -7,7 +7,7 @@ prev=securing-apps.html
 
 = Developing Web Services
 
-[[GSDVG00007]][[gaszn]]
+[[gaszn]]
 
 
 [[developing-web-services]]
@@ -64,7 +64,7 @@ see the https://eclipse-ee4j.github.io/metro-wsit/3.0.0/guide/ch02.html#using-fa
 Metro WSIT Guide]
 
 
-[[gbizi]][[GSDVG00126]][[creating-portable-web-service-artifacts]]
+[[creating-portable-web-service-artifacts]]
 
 === Creating Portable Web Service Artifacts
 
@@ -72,7 +72,7 @@ For a tutorial that shows how to use the `wsimport` and `wsgen`
 commands, see "https://eclipse-ee4j.github.io/jakartaee-tutorial/#web-services[
 Web Services]" in The Jakarta EE Tutorial.
 
-[[gbixz]][[GSDVG00127]][[deploying-a-web-service]]
+[[deploying-a-web-service]]
 
 === Deploying a Web Service
 
@@ -102,7 +102,7 @@ For more information about the
 `asadmin deploy` command, see the link:reference-manual.html#GSRFM[
 {productName} Reference Manual].
 
-[[gbiyw]][[GSDVG00128]][[the-web-service-uri-wsdl-file-and-test-page]]
+[[the-web-service-uri-wsdl-file-and-test-page]]
 
 === The Web Service URI, WSDL File, and Test Page
 
@@ -164,7 +164,7 @@ test page for a web service by setting the value of the
 information, see the link:application-deployment-guide.html#GSDPG[{productName}
 Application Deployment Guide].
 
-[[CHDEBBCH]][[GSDVG536]][[the-databinding-provider]]
+[[the-databinding-provider]]
 
 === The Databinding Provider
 
@@ -252,7 +252,7 @@ bin/jaxb-compiler.cmd
 bin/jaxb-compiler.sh
 ----
 
-[[gcgzz]][[GSDVG00129]][[glassfish-java-ee-service-engine]]
+[[glassfish-java-ee-service-engine]]
 
 === GlassFish Jakarta EE Service Engine
 
@@ -300,7 +300,7 @@ For more information about autodeployment, see
 To Deploy an Application or Module Automatically]"
 in {productName} Application Deployment Guide.
 
-[[gelxr]][[GSDVG00387]][[using-the-jbi.xml-file]]
+[[GSDVG00387]][[using-the-jbi.xml-file]]
 
 ==== Using the `jbi.xml` File
 

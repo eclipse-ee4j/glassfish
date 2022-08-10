@@ -151,7 +151,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSDPG00054]][[giprl]]
+
 
 [[related-documentation]]
 === Related Documentation

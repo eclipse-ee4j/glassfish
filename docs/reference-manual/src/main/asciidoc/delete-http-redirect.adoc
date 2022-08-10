@@ -7,7 +7,7 @@ prev=delete-http-listener.html
 
 = delete-http-redirect
 
-[[delete-http-redirect-1]][[GSRFM00083]][[delete-http-redirect]]
+[[delete-http-redirect]]
 
 == delete-http-redirect
 

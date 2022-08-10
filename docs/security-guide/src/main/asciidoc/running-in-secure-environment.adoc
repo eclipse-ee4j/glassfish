@@ -6,7 +6,7 @@ prev=administrative-security.html
 
 = Running in a Secure Environment
 
-[[GSSCG00040]][[gkscr]]
+[[gkscr]]
 
 
 [[running-in-a-secure-environment]]
@@ -31,7 +31,7 @@ The chapter describes the following topics:
 * xref:#securing-glassfish-server[Securing {productName}]
 * xref:#securing-applications[Securing Applications]
 
-[[gksbk]][[GSSCG00169]][[determining-your-security-needs]]
+[[determining-your-security-needs]]
 
 === Determining Your Security Needs
 
@@ -43,7 +43,7 @@ following sections:
 * xref:#understand-your-environment[Understand Your Environment]
 * xref:#gksce[Read Security Publications]
 
-[[gkscs]][[GSSCG00237]][[understand-your-environment]]
+[[understand-your-environment]]
 
 ==== Understand Your Environment
 
@@ -80,7 +80,7 @@ help you protect it properly.
 
 See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]]
 
-[[GSSCG00239]][[read-security-publications]]
+[[read-security-publications]]
 
 ==== Read Security Publications
 
@@ -91,7 +91,7 @@ recommends the "Security Practices & Evaluations" information available
 from the CERT Coordination Center operated by Carnegie Mellon University
 at `http://www.cert.org/`.
 
-[[gksbw]][[GSSCG00170]][[installing-glassfish-server-in-a-secure-environment]]
+[[installing-glassfish-server-in-a-secure-environment]]
 
 === Installing {productName} in a Secure Environment
 
@@ -99,7 +99,7 @@ This section describes recommendations for installing {productName}
 in a secure environment. The xref:#enable-the-secure-administration-feature[Enable the Secure
 Administration Feature] topic is described.
 
-[[gkscn]][[GSSCG00240]][[enable-the-secure-administration-feature]]
+[[enable-the-secure-administration-feature]]
 
 ==== Enable the Secure Administration Feature
 
@@ -120,7 +120,7 @@ level of security is optional.
 See link:administrative-security.html#gknqh[Managing Administrative
 Security] for information on enabling the secure administration feature.
 
-[[gksby]][[GSSCG00172]][[run-on-the-web-profile-if-possible]]
+[[run-on-the-web-profile-if-possible]]
 
 === Run on the Web Profile if Possible
 
@@ -146,7 +146,7 @@ For the list of APIs in each profile, see
 Jakarta EE Standards Support]"
 in {productName} Release Notes.
 
-[[gksct]][[GSSCG00173]][[securing-the-glassfish-server-host]]
+[[securing-the-glassfish-server-host]]
 
 === Securing the {productName} Host
 
@@ -329,7 +329,7 @@ and critical patch updates.
 |===
 
 
-[[gksca]][[GSSCG00174]][[securing-glassfish-server]]
+[[securing-glassfish-server]]
 
 === Securing {productName}
 
@@ -460,7 +460,7 @@ should set a password for admin.
 |===
 
 
-[[gksbf]][[GSSCG00175]][[securing-applications]]
+[[securing-applications]]
 
 === Securing Applications
 

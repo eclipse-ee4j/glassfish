@@ -7,7 +7,7 @@ prev=set-log-attributes.html
 
 = set-log-file-format
 
-[[set-log-file-format-1]][[GSRFM879]][[set-log-file-format]]
+[[set-log-file-format]]
 
 == set-log-file-format
 
@@ -58,7 +58,7 @@ formatter::
 
 === Examples
 
-[[GSRFM880]][[sthref2054]]
+[[sthref2054]]
 
 ==== Example 1   Setting the Log File Format
 

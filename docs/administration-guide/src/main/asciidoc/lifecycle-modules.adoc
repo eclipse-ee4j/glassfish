@@ -5,7 +5,7 @@ prev=monitoring.adoc
 
 = Administering Life Cycle Modules
 
-[[GSADG00013]][[giury]]
+[[giury]]
 
 
 [[administering-life-cycle-modules]]
@@ -23,7 +23,7 @@ Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[giuxo]][[GSADG00566]][[about-life-cycle-modules]]
+[[about-life-cycle-modules]]
 
 === About Life Cycle Modules
 
@@ -63,7 +63,7 @@ not shutdown or termination.
 ====
 
 
-[[giuue]][[GSADG00567]][[configuring-life-cycle-modules]]
+[[configuring-life-cycle-modules]]
 
 === Configuring Life Cycle Modules
 
@@ -74,7 +74,7 @@ The following topics are addressed here:
 * <<To Update a Life Cycle Module>>
 * <<To Delete a Life Cycle Module>>
 
-[[giuus]][[GSADG00399]][[to-create-a-life-cycle-module]]
+[[to-create-a-life-cycle-module]]
 
 ==== To Create a Life Cycle Module
 
@@ -91,7 +91,7 @@ in this help page.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00206]][[giuyo]]
+[[giuyo]]
 Example 9-1 Creating a Life Cycle Module
 
 This example creates the `customSetup` life cycle module :
@@ -110,7 +110,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-lifecycle-module` at the command line.
 
-[[giuvh]][[GSADG00400]][[to-list-life-cycle-modules]]
+[[to-list-life-cycle-modules]]
 
 ==== To List Life Cycle Modules
 
@@ -121,7 +121,7 @@ existing life cycle modules.
 2. List life cycle modules by using the
 link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 
-[[GSADG00207]][[giuyr]]
+[[giuyr]]
 Example 9-2 Listing Life Cycle Modules
 
 This example lists the existing life cycle modules.
@@ -138,7 +138,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-lifecycle-modules` at the command line.
 
-[[giuyh]][[GSADG00401]][[to-update-a-life-cycle-module]]
+[[to-update-a-life-cycle-module]]
 
 ==== To Update a Life Cycle Module
 
@@ -168,7 +168,7 @@ subcommand.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00208]][[giuyq]]
+[[giuyq]]
 Example 9-3 Updating a Life Cycle Module
 
 This example updates the `classpath` property.
@@ -186,7 +186,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help set` at the command line.
 
-[[giuux]][[GSADG00402]][[to-delete-a-life-cycle-module]]
+[[to-delete-a-life-cycle-module]]
 
 ==== To Delete a Life Cycle Module
 
@@ -199,7 +199,7 @@ link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-l
 3. Delete a life cycle module by using the
 link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`] subcommand.
 
-[[GSADG00209]][[giuyi]]
+[[giuyi]]
 Example 9-4 Deleting a Life Cycle Module
 
 This example deletes the `customSetup` life cycle module.

@@ -7,7 +7,7 @@ prev=set-web-context-param.html
 
 = set-web-env-entry
 
-[[set-web-env-entry-1]][[GSRFM00231]][[set-web-env-entry]]
+[[set-web-env-entry]]
 
 == set-web-env-entry
 
@@ -134,7 +134,7 @@ The module would be specified as the operand of this command as `myApp/myWebModu
 
 === Examples
 
-[[GSRFM755]][[sthref2097]]
+[[sthref2097]]
 
 ==== Example 1   Setting an Environment Entry for a Web Application
 
@@ -151,7 +151,7 @@ asadmin> set-web-env-entry --name="Hello User"
 Command set-web-env-entry executed successfully.
 ----
 
-[[GSRFM756]][[sthref2098]]
+[[sthref2098]]
 
 ==== Example 2   Ignoring an Environment Entry That Is Defined in a
 Deployment Descriptor

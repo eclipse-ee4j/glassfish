@@ -7,7 +7,7 @@ prev=list-timers.html
 
 = list-transports
 
-[[list-transports-1]][[GSRFM00206]][[list-transports]]
+[[list-transports]]
 
 == list-transports
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM716]][[sthref1847]]
+[[sthref1847]]
 
 ==== Example 1   Listing Transports
 

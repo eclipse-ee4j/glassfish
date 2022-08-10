@@ -7,7 +7,7 @@ prev=list-sub-components.html
 
 = list-supported-cipher-suites
 
-[[list-supported-cipher-suites-1]][[GSRFM00202]][[list-supported-cipher-suites]]
+[[list-supported-cipher-suites]]
 
 == list-supported-cipher-suites
 
@@ -58,7 +58,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM712]][[sthref1815]]
+[[sthref1815]]
 
 ==== Example 1   Listing cipher suites
 

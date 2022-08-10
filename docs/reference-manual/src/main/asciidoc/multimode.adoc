@@ -7,7 +7,7 @@ prev=monitor.html
 
 = multimode
 
-[[multimode-1]][[GSRFM00213]][[multimode]]
+[[multimode]]
 
 == multimode
 
@@ -73,7 +73,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM725]][[sthref1904]]
+[[sthref1904]]
 
 ==== Example 1   Starting a Multimode Session
 
@@ -88,7 +88,7 @@ asadmin>
 You can also start a multimode session by typing `asadmin` without
 options or subcommands at the system prompt.
 
-[[GSRFM726]][[sthref1905]]
+[[sthref1905]]
 
 ==== Example 2   Running Multiple Commands From a File
 

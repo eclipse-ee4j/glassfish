@@ -7,7 +7,7 @@ prev=rollback-transaction.html
 
 = rotate-log
 
-[[rotate-log-1]][[GSRFM00224]][[rotate-log]]
+[[rotate-log]]
 
 == rotate-log
 
@@ -62,7 +62,7 @@ target::
 
 === Examples
 
-[[GSRFM742]][[sthref2021]]
+[[sthref2021]]
 
 ==== Example 1   Rotating the Server Log
 

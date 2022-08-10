@@ -7,7 +7,7 @@ prev=preface.html
 
 = Installing {productName} 7
 
-[[GSING00002]][[ggssq]]
+[[ggssq]]
 
 
 [[installing-glassfish-server-5.0]]
@@ -22,7 +22,7 @@ The following topics are addressed here:
 * xref:#GSING00023[Installation Files for {productName} 7]
 * xref:#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File]
 
-[[gjiaz]][[GSING00022]][[installation-requirements]]
+[[installation-requirements]]
 
 === Installation Requirements
 
@@ -39,7 +39,7 @@ issues related to installation.
 * On Solaris, Linux, macOS and Windows systems, JDK software is available from the
 http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java SE downloads page].
 
-[[gkxfw]][[javassist-library-license-notice]]
+[[javassist-library-license-notice]]
 
 ==== Javassist Library License Notice
 
@@ -561,7 +561,7 @@ provisions required by the LGPL. If you do not delete the provisions
 above, a recipient may use your version of this file under the terms of
 either the MPL or the LGPL.
 
-[[ggrlg]][[GSING00023]][[installation-files-for-glassfish-server-5.0]]
+[[GSING00023]][[installation-files-for-glassfish-server-5.0]]
 
 === Installation Files for {productName} 7
 
@@ -572,7 +572,7 @@ The following topics are addressed here:
 * xref:#choosing-an-installation-method[Choosing an Installation Method]
 * xref:#glassfish-server-zip-files[{productName} ZIP Files]
 
-[[gkbaj]][[GSING00035]][[glassfish-server-download-locations]]
+[[glassfish-server-download-locations]]
 
 ==== {productName} Download Locations
 
@@ -586,7 +586,7 @@ distributions. The SDK distributions are available from the
 http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
 EE downloads page] and are not described in this document.
 
-[[gkbby]][[GSING00036]][[glassfish-server-installation-methods]]
+[[glassfish-server-installation-methods]]
 
 ==== {productName} Installation Methods
 
@@ -619,7 +619,7 @@ Each of the installation methods listed in xref:#ghtqe[Table 1-1] also
 let you choose between installing the Full Platform or the Web Profile.
 These two distributions are explained in the next section.
 
-[[gkudi]][[GSING00037]][[choosing-an-installation-method]]
+[[choosing-an-installation-method]]
 
 ==== Choosing an Installation Method
 
@@ -629,7 +629,7 @@ deciding which {productName} 7 installation method to use.
 * xref:#zip-package[ZIP Package]
 * xref:#full-platform-or-web-profile-distribution[Full Platform or Web Profile Distribution]
 
-[[gkuau]][[GSING00029]][[zip-package]]
+[[zip-package]]
 
 ===== ZIP Package
 
@@ -643,7 +643,7 @@ the installation
 ** Any additional configurations must be performed manually, after installation
 ** If uninstallation is desired, product must be uninstalled manually
 
-[[gkudp]][[GSING00030]][[full-platform-or-web-profile-distribution]]
+[[full-platform-or-web-profile-distribution]]
 
 ===== Full Platform or Web Profile Distribution
 
@@ -746,7 +746,7 @@ CORBA v3.0 APIs are available in the Jakarta EE Web Profile.
 
 ** Transaction propagation not supported.
 
-[[gkbbb]][[GSING00038]][[glassfish-server-zip-files]]
+[[glassfish-server-zip-files]]
 
 ==== {productName} ZIP Files
 
@@ -781,7 +781,7 @@ glassfish-7.0.0-web.zip
 |===
 
 
-[[ghmxb]][[GSING00024]][[installing-glassfish-server-from-a-zip-file]]
+[[installing-glassfish-server-from-a-zip-file]]
 
 === Installing {productName} From a ZIP File
 
@@ -799,7 +799,7 @@ after installation.
 ====
 
 
-[[ggrks]][[GSING00006]][[to-install-glassfish-server-using-the-zip-file]]
+[[to-install-glassfish-server-using-the-zip-file]]
 
 ==== To Install {productName} Using the ZIP File
 

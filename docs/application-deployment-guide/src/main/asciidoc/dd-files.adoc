@@ -7,7 +7,7 @@ prev=asadmin-deployment-subcommands.html
 
 = {productName} Deployment Descriptor Files
 
-[[GSDPG00006]][[giida]]
+[[giida]]
 
 
 [[b-glassfish-server-deployment-descriptor-files]]
@@ -29,7 +29,7 @@ The following topics are addressed here:
 * xref:#GSDPG00083[The glassfish-resources.xml File]
 * xref:#weblogic-server-deployment-descriptor-support-in-glassfish-server[WebLogic Server Deployment Descriptor Support in {productName}]
 
-[[giiie]][[GSDPG00076]][[about-the-glassfish-server-deployment-descriptors]]
+[[about-the-glassfish-server-deployment-descriptors]]
 
 === About the {productName} Deployment Descriptors
 
@@ -101,7 +101,7 @@ descriptors are supported for backward compatibility.
 ====
 
 
-[[beaqk]][[GSDPG00077]][[the-glassfish-application.xml-file]]
+[[GSDPG00077]][[the-glassfish-application.xml-file]]
 
 === The glassfish-application.xml File
 
@@ -188,7 +188,7 @@ GlassFish Application Server 3.1 Jakarta EE Application 6.0//EN"
 </glassfish-application>
 ----
 
-[[beaql]][[GSDPG00078]][[the-glassfish-web.xml-file]]
+[[GSDPG00078]][[the-glassfish-web.xml-file]]
 
 === The glassfish-web.xml File
 
@@ -349,7 +349,7 @@ GlassFish Application Server 3.1 Servlet 3.0//EN"
 </glassfish-web-app>
 ----
 
-[[beaqm]][[GSDPG00079]][[the-glassfish-ejb-jar.xml-file]]
+[[GSDPG00079]][[the-glassfish-ejb-jar.xml-file]]
 
 === The glassfish-ejb-jar.xml File
 
@@ -600,7 +600,7 @@ DTD GlassFish Application Server 3.1 EJB 3.1//EN"
 </glassfish-ejb-jar>
 ----
 
-[[beaqn]][[GSDPG00080]][[the-sun-cmp-mappings.xml-file]]
+[[GSDPG00080]][[the-sun-cmp-mappings.xml-file]]
 
 === The sun-cmp-mappings.xml File
 
@@ -800,7 +800,7 @@ Here is a corresponding sample `sun-cmp-mappings.xml` file:
 </sun-cmp-mappings>
 ----
 
-[[beaqo]][[GSDPG00081]][[the-glassfish-application-client.xml-file]]
+[[GSDPG00081]][[the-glassfish-application-client.xml-file]]
 
 === The glassfish-application-client.xml file
 
@@ -884,7 +884,7 @@ GlassFish Application Server 3.1 Application Client 6.0//EN""
 </glassfish-application-client>
 ----
 
-[[beaqp]][[GSDPG00082]][[the-sun-acc.xml-file]]
+[[GSDPG00082]][[the-sun-acc.xml-file]]
 
 === The sun-acc.xml File
 
@@ -915,7 +915,7 @@ client-container
 .  property (with attributes)
 ----
 
-[[giyhh]][[GSDPG00083]][[the-glassfish-resources.xml-file]]
+[[GSDPG00083]][[the-glassfish-resources.xml-file]]
 
 === The glassfish-resources.xml File
 
@@ -970,7 +970,7 @@ resources
 .  .  group-map
 ----
 
-[[gkiot]][[GSDPG00084]][[weblogic-server-deployment-descriptor-support-in-glassfish-server]]
+[[weblogic-server-deployment-descriptor-support-in-glassfish-server]]
 
 === WebLogic Server Deployment Descriptor Support in {productName}
 

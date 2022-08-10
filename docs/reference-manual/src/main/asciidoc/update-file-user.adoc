@@ -7,7 +7,7 @@ prev=update-connector-work-security-map.html
 
 = update-file-user
 
-[[update-file-user-1]][[GSRFM00254]][[update-file-user]]
+[[update-file-user]]
 
 == update-file-user
 
@@ -66,7 +66,7 @@ username::
 
 === Examples
 
-[[GSRFM787]][[sthref2279]]
+[[sthref2279]]
 
 ==== Example 1   Updating a User's Information in a File Realm
 

@@ -7,7 +7,7 @@ prev=create-jmsdest.html
 
 = create-jms-host
 
-[[create-jms-host-1]][[GSRFM00039]][[create-jms-host]]
+[[create-jms-host]]
 
 == create-jms-host
 
@@ -74,7 +74,7 @@ jms_host_name::
 
 === Examples
 
-[[GSRFM496]][[sthref349]]
+[[sthref349]]
 
 ==== Example 1   Creating a JMS host using a non-default port
 

@@ -7,7 +7,7 @@ prev=list-network-listeners.html
 
 = list-nodes
 
-[[list-nodes-1]][[GSRFM00187]][[list-nodes]]
+[[list-nodes]]
 
 == list-nodes
 
@@ -79,7 +79,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM687]][[sthref1704]]
+[[sthref1704]]
 
 ==== Example 1   Listing {productName} Nodes
 
@@ -96,7 +96,7 @@ devnode  CONFIG  localhost
 Command list-nodes executed successfully.
 ----
 
-[[GSRFM688]][[sthref1705]]
+[[sthref1705]]
 
 ==== Example 2   Listing Only the Names of {productName} Nodes
 
@@ -112,7 +112,7 @@ sj01
 devnode
 ----
 
-[[GSRFM689]][[sthref1706]]
+[[sthref1706]]
 
 ==== Example 3   Listing {productName} Nodes in Long Format
 

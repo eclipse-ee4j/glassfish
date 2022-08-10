@@ -7,7 +7,7 @@ prev=stop-instance.html
 
 = stop-local-instance
 
-[[stop-local-instance-1]][[GSRFM00242]][[stop-local-instance]]
+[[stop-local-instance]]
 
 == stop-local-instance
 
@@ -88,7 +88,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM768]][[sthref2186]]
+[[sthref2186]]
 
 ==== Example 1   Stopping an Instance Locally
 

@@ -7,7 +7,7 @@ prev=session-persistence-and-failover.html
 
 = Configuring Java Message Service High Availability
 
-[[GSHAG00012]][[abdbk]]
+[[abdbk]]
 
 
 [[configuring-java-message-service-high-availability]]
@@ -22,7 +22,7 @@ and load balancing, as described in the following topics:
 * xref:#connection-failover[Connection Failover]
 * xref:#load-balanced-delivery-to-mdbs[Load-Balanced Delivery to MDBs]
 
-[[abdbx]][[GSHAG00212]][[using-message-queue-broker-clusters-with-glassfish-server]]
+[[using-message-queue-broker-clusters-with-glassfish-server]]
 
 === Using Message Queue Broker Clusters With {productName}
 
@@ -49,7 +49,7 @@ Broker Cluster]
 * xref:#to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster[To Configure a GlassFish Cluster to Use a Remote Broker
 Cluster]
 
-[[gktgs]][[GSHAG00311]][[about-message-queue-broker-clusters]]
+[[about-message-queue-broker-clusters]]
 
 ==== About Message Queue Broker Clusters
 
@@ -114,7 +114,7 @@ in Open Message Queue Developer's Guide for Java Clients.
 ====
 
 
-[[gktft]][[GSHAG00312]][[configuring-glassfish-clusters-to-use-message-queue-broker-clusters]]
+[[configuring-glassfish-clusters-to-use-message-queue-broker-clusters]]
 
 ==== Configuring GlassFish Clusters to Use Message Queue Broker Clusters
 
@@ -164,7 +164,7 @@ Remote::
 The following topics provide instructions for configuring broker
 clusters in all these contexts.
 
-[[gktge]][[GSHAG00155]][[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker]]
+[[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker]]
 
 ==== To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster With Master Broker
 
@@ -212,7 +212,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help configure-jms-cluster` at the command line.
 
-[[gktfr]][[GSHAG00156]][[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers]]
+[[to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers]]
 
 ==== To Configure a GlassFish Cluster to Use an Embedded or Local Conventional Broker Cluster of Peer Brokers
 
@@ -270,7 +270,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help configure-jms-cluster` at the command line.
 
-[[gkthc]][[GSHAG00157]][[to-change-the-master-broker-in-an-embedded-or-local-broker-cluster]]
+[[to-change-the-master-broker-in-an-embedded-or-local-broker-cluster]]
 
 ==== To Change the Master Broker in an Embedded or Local Broker Cluster
 
@@ -307,7 +307,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help change-master-broker` at the command line.
 
-[[gktgj]][[GSHAG00158]][[to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters]]
+[[to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters]]
 
 ==== To Migrate Between Types of Embedded or Local Conventional Broker Clusters
 
@@ -316,7 +316,7 @@ master broker to a conventional broker cluster of peer brokers, or the
 reverse, follow the instructions in "link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00563[Managing
 Conventional Clusters]" in Open Message Queue Administration Guide.
 
-[[gktfl]][[GSHAG00159]][[to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster]]
+[[to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster]]
 
 ==== To Configure a GlassFish Cluster to Use a Local Enhanced Broker Cluster
 
@@ -372,7 +372,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help configure-jms-cluster` at the command line.
 
-[[abdby]][[GSHAG00160]][[to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster]]
+[[to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster]]
 
 ==== To Configure a GlassFish Cluster to Use a Remote Broker Cluster
 
@@ -415,7 +415,7 @@ in Open Message Queue Administration Guide.
 link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally] and
 link:instances.html#to-create-an-instance-locally[To Create an Instance Locally].
 
-[[abdbv]][[GSHAG00213]][[connection-failover]]
+[[connection-failover]]
 
 === Connection Failover
 
@@ -504,7 +504,7 @@ For details, see "link:administration-guide/jms.html#administering-jms-connectio
 Factories and Destinations]" in {productName}
 Administration Guide.
 
-[[abdbw]][[GSHAG00214]][[load-balanced-delivery-to-mdbs]]
+[[load-balanced-delivery-to-mdbs]]
 
 === Load-Balanced Delivery to MDBs
 

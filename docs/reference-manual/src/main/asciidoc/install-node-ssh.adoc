@@ -7,7 +7,7 @@ prev=install-node-dcom.html
 
 = install-node-ssh
 
-[[install-node-ssh-1]][[GSRFM628]][[install-node-ssh]]
+[[install-node-ssh]]
 
 == install-node-ssh
 
@@ -167,7 +167,7 @@ host-list::
 
 === Examples
 
-[[GSRFM629]][[sthref1272]]
+[[sthref1272]]
 
 ==== Example 1   Installing {productName} Software at the Default
 Location

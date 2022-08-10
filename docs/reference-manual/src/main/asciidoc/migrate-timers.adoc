@@ -7,7 +7,7 @@ prev=login.html
 
 = migrate-timers
 
-[[migrate-timers-1]][[GSRFM00211]][[migrate-timers]]
+[[migrate-timers]]
 
 == migrate-timers
 
@@ -54,7 +54,7 @@ server_name::
 
 === Examples
 
-[[GSRFM722]][[sthref1887]]
+[[sthref1887]]
 
 ==== Example 1   Migrating Timers
 

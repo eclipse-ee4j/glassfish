@@ -7,7 +7,7 @@ prev=get-health.html
 
 = import-sync-bundle
 
-[[import-sync-bundle-1]][[GSRFM00142]][[import-sync-bundle]]
+[[import-sync-bundle]]
 
 == import-sync-bundle
 
@@ -97,7 +97,7 @@ file-name::
 
 === Examples
 
-[[GSRFM624]][[sthref1248]]
+[[sthref1248]]
 
 ==== Example 1   Importing Configuration Data for a Clustered Instance
 

@@ -7,7 +7,7 @@ prev=create-service.html
 
 = create-ssl
 
-[[create-ssl-1]][[GSRFM00058]][[create-ssl]]
+[[create-ssl]]
 
 == create-ssl
 
@@ -147,7 +147,7 @@ listener_id::
 
 === Examples
 
-[[GSRFM525]][[sthref542]]
+[[sthref542]]
 
 ==== Example 1   Creating an SSL element for an HTTP listener
 

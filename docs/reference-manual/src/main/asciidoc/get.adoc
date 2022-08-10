@@ -8,7 +8,7 @@ prev=generate-jvm-report.html
 get
 ===
 
-[[get-1]][[GSRFM00139]][[get]]
+[[get]]
 
 get
 ---
@@ -94,7 +94,7 @@ dotted-attribute-name::
 
 === Examples
 
-[[GSRFM619]][[sthref1214]]
+[[sthref1214]]
 
 ==== Example 1   Getting the Attributes of a Configurable Element
 
@@ -119,7 +119,7 @@ server.http-service.http-listener.http-listener-1.xpowered-by = true
 Command get executed successfully.
 ----
 
-[[GSRFM620]][[sthref1215]]
+[[sthref1215]]
 
 ==== Example 2   Getting Monitorable Objects
 
@@ -145,7 +145,7 @@ server.monitoring-service.module-monitoring-levels.web-container=OFF
 Command get executed successfully.
 ----
 
-[[GSRFM621]][[sthref1216]]
+[[sthref1216]]
 
 ==== Example 3   Getting Attributes and Values for a Monitorable Object
 

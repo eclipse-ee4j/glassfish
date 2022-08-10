@@ -7,7 +7,7 @@ prev=create-virtual-server.html
 
 = delete-admin-object
 
-[[delete-admin-object-1]][[GSRFM00063]][[delete-admin-object]]
+[[delete-admin-object]]
 
 == delete-admin-object
 
@@ -68,7 +68,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM530]][[sthref582]]
+[[sthref582]]
 
 ==== Example 1   Deleting an Administered Object
 

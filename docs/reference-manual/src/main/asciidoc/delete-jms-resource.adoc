@@ -7,7 +7,7 @@ prev=delete-jms-host.html
 
 = delete-jms-resource
 
-[[delete-jms-resource-1]][[GSRFM00092]][[delete-jms-resource]]
+[[delete-jms-resource]]
 
 == delete-jms-resource
 
@@ -72,7 +72,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM560]][[sthref814]]
+[[sthref814]]
 
 ==== Example 1   Deleting a JMS destination resource
 

@@ -7,7 +7,7 @@ prev=list-libraries.html
 
 = list-lifecycle-modules
 
-[[list-lifecycle-modules-1]][[GSRFM00181]][[list-lifecycle-modules]]
+[[list-lifecycle-modules]]
 
 == list-lifecycle-modules
 
@@ -53,7 +53,7 @@ target::
 
 === Examples
 
-[[GSRFM681]][[sthref1627]]
+[[sthref1627]]
 
 ==== Example 1   Listing Lifecycle Modules
 

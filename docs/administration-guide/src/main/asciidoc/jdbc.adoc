@@ -5,10 +5,7 @@ prev=part-res-and-svcs-admin.adoc
 
 = Administering Database Connectivity
 
-[[GSADG00015]][[ablih]]
-
-
-[[administering-database-connectivity]]
+[[ablih]][[administering-database-connectivity]]
 == 11 Administering Database Connectivity
 
 This chapter provides procedures for performing database connectivity
@@ -25,7 +22,7 @@ The following topics are addressed here:
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
 
-[[gipbp]][[GSADG00576]][[about-database-connectivity]]
+[[about-database-connectivity]]
 
 === About Database Connectivity
 
@@ -83,7 +80,7 @@ protocol of the database server.
 application closes the connection and returns the connection to the
 connection pool.
 
-[[ggkon]][[GSADG00577]][[setting-up-the-database]]
+[[setting-up-the-database]]
 
 === Setting Up the Database
 
@@ -98,7 +95,7 @@ The following topics are addressed here:
 * <<To Stop the Database>>
 * <<Apache Derby Database Utility Scripts>>
 
-[[gharl]][[GSADG00416]][[to-install-the-database-and-database-driver]]
+[[to-install-the-database-and-database-driver]]
 
 ==== To Install the Database and Database Driver
 
@@ -132,7 +129,7 @@ Resource]. The final step is to integrate the JDBC driver into an
 administrative domain as described in xref:#integrating-the-jdbc-driver[Integrating the JDBC
 Driver].
 
-[[ggndz]][[GSADG00417]][[to-start-the-database]]
+[[to-start-the-database]]
 
 ==== To Start the Database
 
@@ -153,7 +150,7 @@ specified by the `--dbhome` option:
 with its standard output and standard error information.
 * The database files contain your schema (for example, database tables).
 
-[[GSADG00212]][[ggooc]]
+[[ggooc]]
 Example 11-1 Starting a Database
 
 This example starts the Apache Derby database on the host host1 and port
@@ -170,7 +167,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-database` at the command line.
 
-[[ggnbw]][[GSADG00418]][[to-stop-the-database]]
+[[to-stop-the-database]]
 
 ==== To Stop the Database
 
@@ -182,7 +179,7 @@ server processes running on different ports.
 2. Stop the database by using the link:reference-manual/stop-database.html#stop-database[`stop-database`]
 subcommand.
 
-[[GSADG00213]][[ggorc]]
+[[ggorc]]
 Example 11-2 Stopping a Database
 
 This example stops the Apache Derby database on port 5001 of
@@ -216,7 +213,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-database` at the command line.
 
-[[ghmbq]][[GSADG00744]][[apache-derby-database-utility-scripts]]
+[[apache-derby-database-utility-scripts]]
 
 ==== Apache Derby Database Utility Scripts
 
@@ -239,7 +236,7 @@ as-install``/javadb/bin`` directory:
 `NetworkServerControl,NetworkServerControl.bat`::
   Script to execute commands on the `NetworkServerControl` API
 
-[[ghmbj]][[GSADG00419]][[to-configure-your-environment-to-run-the-apache-derby-database-utility-scripts]]
+[[to-configure-your-environment-to-run-the-apache-derby-database-utility-scripts]]
 
 ===== To Configure Your Environment to Run the Apache Derby Database Utility Scripts
 
@@ -258,7 +255,7 @@ Utilities Guide]
 * http://db.apache.org/derby/docs/10.13/adminguide/[Derby Server and
 Administration Guide]
 
-[[ggndx]][[GSADG00578]][[configuring-access-to-the-database]]
+[[configuring-access-to-the-database]]
 
 === Configuring Access to the Database
 
@@ -272,11 +269,11 @@ sections:
 
 * <<Administering JDBC Connection Pools>>
 * <<Administering JDBC Resources>>
-* xref:#enabling-the-jdbc__default-resource-in-a-clustered-environment[Enabling the `jdbc/__default` Resource in a Clustered
+* xref:#etjdbcdefault-cluster[Enabling the `jdbc/__default` Resource in a Clustered
 Environment]
 * <<Integrating the JDBC Driver>>
 
-[[gharo]][[GSADG00745]][[administering-jdbc-connection-pools]]
+[[administering-jdbc-connection-pools]]
 
 ==== Administering JDBC Connection Pools
 
@@ -307,7 +304,7 @@ connection pools:
 * <<To Delete a JDBC Connection Pool>>
 * <<Configuring Specific JDBC Connection Pool Features>>
 
-[[ggnfv]][[GSADG00420]][[to-create-a-jdbc-connection-pool]]
+[[to-create-a-jdbc-connection-pool]]
 
 ===== To Create a JDBC Connection Pool
 
@@ -351,7 +348,7 @@ link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-po
 Some parameters require server restart. See
 xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
 
-[[GSADG00214]][[ggrgh]]
+[[ggrgh]]
 Example 11-3 Creating a JDBC Connection Pool
 
 This example creates a JDBC connection pool named `sample_derby_pool` on
@@ -373,7 +370,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-jdbc-connection-pool` at the command line.
 
-[[ggnby]][[GSADG00421]][[to-list-jdbc-connection-pools]]
+[[to-list-jdbc-connection-pools]]
 
 ===== To List JDBC Connection Pools
 
@@ -384,7 +381,7 @@ all existing JDBC connection pools.
 2. List the JDBC connection pools by using the
 link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`] subcommand.
 
-[[GSADG00215]][[ggpcf]]
+[[ggpcf]]
 Example 11-4 Listing JDBC Connection Pools
 
 This example lists the JDBC connection pools that are on `localhost`.
@@ -405,7 +402,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-jdbc-connection-pools` at the command line.
 
-[[ggnwn]][[GSADG00422]][[to-contact-ping-a-connection-pool]]
+[[to-contact-ping-a-connection-pool]]
 
 ===== To Contact (Ping) a Connection Pool
 
@@ -425,7 +422,7 @@ created with authentication, and the server or database must be running.
 2. Ping a connection pool by using the
 link:reference-manual/ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`] subcommand.
 
-[[GSADG00216]][[ggpcs]]
+[[ggpcs]]
 Example 11-5 Contacting a Connection Pool
 
 This example tests to see if the `DerbyPool` connection pool is usable.
@@ -446,7 +443,7 @@ when created or reconfigured by setting its `--ping` option to `true`
 (the default is `false`). See xref:#to-create-a-jdbc-connection-pool[To Create a JDBC Connection
 Pool] or <<To Update a JDBC Connection Pool>>.
 
-[[gjiqp]][[GSADG00423]][[to-reset-flush-a-connection-pool]]
+[[to-reset-flush-a-connection-pool]]
 
 ===== To Reset (Flush) a Connection Pool
 
@@ -464,7 +461,7 @@ for the pool, and restores the pool to its steady pool size.
 2. Reset a connection pool by using
 theolink:GSRFM00135[`flush-connection-pool`] subcommand.
 
-[[GSADG00217]][[gjirk]]
+[[gjirk]]
 Example 11-6 Resetting (Flushing) a Connection Pool
 
 This example resets the JDBC connection pool named `__TimerPool` to its
@@ -481,7 +478,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help flush-connection-pool` at the command line.
 
-[[giosk]][[GSADG00424]][[to-update-a-jdbc-connection-pool]]
+[[to-update-a-jdbc-connection-pool]]
 
 ===== To Update a JDBC Connection Pool
 
@@ -520,7 +517,7 @@ For information about how to tune a connection pool, see the
 link:performance-tuning-guide.html#GSPTG[{productName} Performance Tuning
 Guide].
 
-[[ggngb]][[GSADG00425]][[to-delete-a-jdbc-connection-pool]]
+[[to-delete-a-jdbc-connection-pool]]
 
 ===== To Delete a JDBC Connection Pool
 
@@ -541,7 +538,7 @@ deleted.
 4. Delete the connection pool by using the
 link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`] subcommand.
 
-[[GSADG00218]][[ggpis]]
+[[ggpis]]
 Example 11-7 Deleting a JDBC Connection Pool
 
 This example deletes the JDBC connection pool named `DerbyPool`.
@@ -557,7 +554,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-jdbc-connection-pool` at the command line.
 
-[[gktdi]][[GSADG00670]][[configuring-specific-jdbc-connection-pool-features]]
+[[configuring-specific-jdbc-connection-pool-features]]
 
 ===== Configuring Specific JDBC Connection Pool Features
 
@@ -572,7 +569,7 @@ following topics address several of these features:
 * <<Statement Caching>>
 * <<Statement Tracing>>
 
-[[gktcv]][[GSADG00085]][[transparent-pool-reconfiguration]]
+[[transparent-pool-reconfiguration]]
 
 Transparent Pool Reconfiguration
 
@@ -611,7 +608,7 @@ connections to close and in-flight transactions to complete. Any
 connections in use or transaction in flight past this time must be
 retried.
 
-[[gkter]][[GSADG00086]][[using-an-initialization-statement]]
+[[using-an-initialization-statement]]
 
 Using an Initialization Statement
 
@@ -636,7 +633,7 @@ example:
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="sql-string"
 ----
 
-[[gktcc]][[GSADG00087]][[setting-a-statement-timeout]]
+[[setting-a-statement-timeout]]
 
 Setting a Statement Timeout
 
@@ -658,7 +655,7 @@ click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 
-[[gktec]][[GSADG00088]][[statement-leak-detection-and-leaked-statement-reclamation]]
+[[statement-leak-detection-and-leaked-statement-reclamation]]
 
 Statement Leak Detection and Leaked Statement Reclamation
 
@@ -706,7 +703,7 @@ For example:
 asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-reclaim=true
 ----
 
-[[gktej]][[GSADG00089]][[statement-caching]]
+[[statement-caching]]
 
 Statement Caching
 
@@ -740,7 +737,7 @@ nonzero value. The built-in cache eviction strategy is LRU-based (Least
 Recently Used). When a connection pool is flushed, the connections in
 the statement cache are recreated.
 
-[[gktbu]][[GSADG00090]][[statement-tracing]]
+[[statement-tracing]]
 
 Statement Tracing
 
@@ -816,7 +813,7 @@ link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-po
 asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queries-in-minutes=10
 ----
 
-[[ggndp]][[GSADG00746]][[administering-jdbc-resources]]
+[[administering-jdbc-resources]]
 
 ==== Administering JDBC Resources
 
@@ -852,7 +849,7 @@ resources:
 * <<To Update a JDBC Resource>>
 * <<To Delete a JDBC Resource>>
 
-[[ggnda]][[GSADG00426]][[to-create-a-jdbc-resource]]
+[[to-create-a-jdbc-resource]]
 
 ===== To Create a JDBC Resource
 
@@ -879,7 +876,7 @@ Information about properties for the subcommand is included in this help
 page.
 3. If necessary, notify users that the new resource has been created.
 
-[[GSADG00219]][[ggplj]]
+[[ggplj]]
 Example 11-8 Creating a JDBC Resource
 
 This example creates a JDBC resource named `DerbyPool`.
@@ -895,7 +892,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-jdbc-resource` at the command line.
 
-[[ggnhl]][[GSADG00427]][[to-list-jdbc-resources]]
+[[to-list-jdbc-resources]]
 
 ===== To List JDBC Resources
 
@@ -906,7 +903,7 @@ existing JDBC resources.
 2. List JDBC resources by using the
 link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-resources`] subcommand.
 
-[[GSADG00220]][[ggpgi]]
+[[ggpgi]]
 Example 11-9 Listing JDBC Resources
 
 This example lists JDBC resources for `localhost`.
@@ -926,7 +923,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-jdbc-resources` at the command line.
 
-[[giwjv]][[GSADG00428]][[to-update-a-jdbc-resource]]
+[[to-update-a-jdbc-resource]]
 
 ===== To Update a JDBC Resource
 
@@ -940,7 +937,7 @@ link:reference-manual/set.html#set[`set`] subcommand.
 +
 For example:
 
-[[GSADG00221]][[gjkrz]]
+[[gjkrz]]
 Example 11-10 Updating a JDBC Resource
 
 This example changes the `res1` enabled setting to false.
@@ -950,7 +947,7 @@ This example changes the `res1` enabled setting to false.
 asadmin>set resources.jdbc-resource.res1.enabled=false
 ----
 
-[[ggnhz]][[GSADG00429]][[to-delete-a-jdbc-resource]]
+[[to-delete-a-jdbc-resource]]
 
 ===== To Delete a JDBC Resource
 
@@ -970,7 +967,7 @@ link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-re
 4. Delete a JDBC resource by using the
 link:reference-manual/delete-jdbc-resource.html#delete-jdbc-resource[`delete-jdbc-resource`] subcommand.
 
-[[GSADG00222]][[ggpga]]
+[[ggpga]]
 Example 11-11 Deleting a JDBC Resource
 
 This example deletes a JDBC resource named `DerbyPool`.
@@ -986,7 +983,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-jdbc-resource` at the command line.
 
-[[gkudf]][[GSADG00747]][[enabling-the-jdbc__default-resource-in-a-clustered-environment]]
+[[etjdbcdefault-cluster]]
 
 ==== Enabling the `jdbc/__default` Resource in a Clustered Environment
 
@@ -995,7 +992,7 @@ JNDI name `jdbc/__default`. This `jdbc/__default` resource is not
 enabled by default, so you need to explicitly enable it if you want to
 use it in a cluster.
 
-[[gkubj]][[GSADG00430]][[to-enable-the-jdbc__default-resource-for-a-clustered-environment]]
+[[enable-tjdbcdefault-cluster]]
 
 ===== To Enable the `jdbc/__default` Resource for a Clustered Environment
 
@@ -1027,7 +1024,7 @@ asadmin start-domain domain-name
 asadmin start-cluster cluster-name
 ----
 
-[[ghatb]][[GSADG00748]][[integrating-the-jdbc-driver]]
+[[integrating-the-jdbc-driver]]
 
 ==== Integrating the JDBC Driver
 
@@ -1039,7 +1036,7 @@ these topics:
 * <<Making the JDBC Driver JAR Files Accessible>>
 * <<Automatic Detection of Installed Drivers>>
 
-[[gkpdj]][[GSADG00671]][[supported-database-drivers]]
+[[supported-database-drivers]]
 
 ===== Supported Database Drivers
 
@@ -1058,7 +1055,7 @@ the latest database support information.
 ====
 
 
-[[gkpci]][[GSADG00672]][[making-the-jdbc-driver-jar-files-accessible]]
+[[making-the-jdbc-driver-jar-files-accessible]]
 
 ===== Making the JDBC Driver JAR Files Accessible
 
@@ -1075,7 +1072,7 @@ server. For details, see "link:application-development-guide/jpa.html#oracle-dat
 Enhancements]" in {productName} Application
 Development Guide.
 
-[[gkpfj]][[GSADG00673]][[automatic-detection-of-installed-drivers]]
+[[automatic-detection-of-installed-drivers]]
 
 ===== Automatic Detection of Installed Drivers
 
@@ -1093,7 +1090,7 @@ implementation class name on the next page, additional properties
 relevant to the installed JDBC driver are displayed in the Additional
 Properties section.
 
-[[beamw]][[GSADG00579]][[configuration-specifics-for-jdbc-drivers]]
+[[configuration-specifics-for-jdbc-drivers]]
 
 === Configuration Specifics for JDBC Drivers
 
@@ -1120,7 +1117,7 @@ Database]
 * <<Inet Sybelux Driver for Sybase Database>>
 * <<JConnect Type 4 Driver for Sybase ASE 12.5 Database>>
 
-[[beanc]][[GSADG00749]][[ibm-db2-database-type-2-driver]]
+[[ibm-db2-database-type-2-driver]]
 
 ==== IBM DB2 Database Type 2 Driver
 
@@ -1156,7 +1153,7 @@ Configure the connection pool using the following settings:
 
 ** `deferPrepares` - Set to `false`.
 
-[[glhim]][[GSADG00750]][[ibm-db2-database-type-4-driver]]
+[[ibm-db2-database-type-4-driver]]
 
 ==== IBM DB2 Database Type 4 Driver
 
@@ -1177,7 +1174,7 @@ connection pool using the following settings:
 
 ** `driverType` - Set to `4`.
 
-[[beamx]][[GSADG00751]][[apache-derby-dbderby-type-4-driver]]
+[[apache-derby-dbderby-type-4-driver]]
 
 ==== Apache Derby DB/Derby Type 4 Driver
 
@@ -1220,7 +1217,7 @@ the tables reside.
 This is only necessary if the Apache Derby database is configured to use
 authentication.
 
-[[gbsor]][[GSADG00752]][[mysql-server-database-type-4-driver]]
+[[mysql-server-database-type-4-driver]]
 
 ==== MySQL Server Database Type 4 Driver
 
@@ -1251,7 +1248,7 @@ server.
 
 ** `password` - Set as appropriate.
 
-[[beani]][[GSADG00753]][[oracle-10-database-driver]]
+[[oracle-10-database-driver]]
 
 ==== Oracle 10 Database Driver
 
@@ -1285,7 +1282,7 @@ oracle.jdbc.xa.client.OracleXADataSource
 
 ** `password` - Set as appropriate.
 
-[[beanh]][[GSADG00754]][[oracle-11-database-driver]]
+[[oracle-11-database-driver]]
 
 ==== Oracle 11 Database Driver
 
@@ -1339,7 +1336,7 @@ DBA_2PC_PENDING and DBA_2PC_NEIGHBORS.
 ====
 
 
-[[gjksj]][[GSADG00755]][[postgresql-type-4-driver]]
+[[postgresql-type-4-driver]]
 
 ==== PostgreSQL Type 4 Driver
 
@@ -1364,7 +1361,7 @@ server.
 
 ** `password` - Set as appropriate.
 
-[[beamy]][[GSADG00756]][[datadirect-type-4-driver-for-ibm-db2-database]]
+[[datadirect-type-4-driver-for-ibm-db2-database]]
 
 ==== DataDirect Type 4 Driver for IBM DB2 Database
 
@@ -1388,7 +1385,7 @@ server.
 
 ** `password` - Set as appropriate.
 
-[[beanj]][[GSADG00757]][[datadirect-type-4-driver-for-ibm-informix]]
+[[datadirect-type-4-driver-for-ibm-informix]]
 
 ==== DataDirect Type 4 Driver for IBM Informix
 
@@ -1421,7 +1418,7 @@ DataDirect DataSource Classname:
 ** `IfxIFXHost` - Specify the host name or IP address of the database
 server.
 
-[[beana]][[GSADG00758]][[datadirect-type-4-driver-for-microsoft-sql-server-database]]
+[[datadirect-type-4-driver-for-microsoft-sql-server-database]]
 
 ==== DataDirect Type 4 Driver for Microsoft SQL Server Database
 
@@ -1445,7 +1442,7 @@ the database server.
 
 ** `selectMethod` - Set to `cursor`.
 
-[[gjksd]][[GSADG00759]][[datadirect-type-4-driver-for-mysql-server-database]]
+[[datadirect-type-4-driver-for-mysql-server-database]]
 
 ==== DataDirect Type 4 Driver for MySQL Server Database
 
@@ -1469,7 +1466,7 @@ the database server.
 
 ** `selectMethod` - Set to `cursor`.
 
-[[beamz]][[GSADG00760]][[datadirect-type-4-driver-for-oracle-11-database]]
+[[datadirect-type-4-driver-for-oracle-11-database]]
 
 ==== DataDirect Type 4 Driver for Oracle 11 Database
 
@@ -1500,7 +1497,7 @@ server.
 
 ** `password` - Set as appropriate.
 
-[[beanb]][[GSADG00761]][[datadirect-type-4-driver-for-sybase-database]]
+[[datadirect-type-4-driver-for-sybase-database]]
 
 ==== DataDirect Type 4 Driver for Sybase Database
 
@@ -1534,7 +1531,7 @@ PreparedStatement by default. If this situation arises, add the property
 ====
 
 
-[[beane]][[GSADG00762]][[inet-oraxo-driver-for-oracle-database]]
+[[inet-oraxo-driver-for-oracle-database]]
 
 ==== Inet Oraxo Driver for Oracle Database
 
@@ -1576,7 +1573,7 @@ database URL, see the Oracle documentation.
 ** `streamstolob` - If the size of BLOB or CLOB data types exceeds 4 KB
 and this driver is used for CMP, this property must be set to `true`.
 
-[[beanf]][[GSADG00763]][[inet-merlia-driver-for-microsoft-sql-server-database]]
+[[inet-merlia-driver-for-microsoft-sql-server-database]]
 
 ==== Inet Merlia Driver for Microsoft SQL Server Database
 
@@ -1598,7 +1595,7 @@ the database server.
 
 ** `password` - Set as appropriate.
 
-[[beang]][[GSADG00764]][[inet-sybelux-driver-for-sybase-database]]
+[[inet-sybelux-driver-for-sybase-database]]
 
 ==== Inet Sybelux Driver for Sybase Database
 
@@ -1623,7 +1620,7 @@ only the database name.
 
 ** `password` - Set as appropriate.
 
-[[beand]][[GSADG00765]][[jconnect-type-4-driver-for-sybase-ase-12.5-database]]
+[[GSADG00765]][[jconnect-type-4-driver-for-sybase-ase-12.5-database]]
 
 ==== JConnect Type 4 Driver for Sybase ASE 12.5 Database
 

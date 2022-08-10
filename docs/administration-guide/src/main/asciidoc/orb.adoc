@@ -7,7 +7,7 @@ prev=concurrent.html
 
 = Administering the Object Request Broker (ORB)
 
-[[GSADG00018]][[abltr]]
+[[abltr]]
 
 
 [[administering-the-object-request-broker-orb]]
@@ -31,7 +31,7 @@ Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[ablts]][[GSADG00590]][[about-the-orb]]
+[[about-the-orb]]
 
 === About the ORB
 
@@ -46,7 +46,7 @@ network programming tasks such as object registration, object location,
 object activation, request de-multiplexing, error-handling, marshalling,
 and operation dispatching.
 
-[[abltw]][[GSADG00591]][[configuring-the-orb]]
+[[configuring-the-orb]]
 
 === Configuring the ORB
 
@@ -60,7 +60,7 @@ IIOP can be used as a Remote Method Invocation (RMI) protocol by
 applications or objects using RMI-IIOP. Remote clients of enterprise
 beans (EJB modules) communicate with {productName} by using RMI-IIOP.
 
-[[ablty]][[GSADG00592]][[administering-iiop-listeners]]
+[[administering-iiop-listeners]]
 
 === Administering IIOP Listeners
 
@@ -79,7 +79,7 @@ The following topics are addressed here:
 * <<To Update an IIOP Listener>>
 * <<To Delete an IIOP Listener>>
 
-[[gioyo]][[GSADG00478]][[to-create-an-iiop-listener]]
+[[to-create-an-iiop-listener]]
 
 ==== To Create an IIOP Listener
 
@@ -96,7 +96,7 @@ help page.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00263]][[gipfl]]
+[[gipfl]]
 Example 15-1 Creating an IIOP Listener
 
 This example creates an IIOP listener named `sample_iiop_listener`.
@@ -113,7 +113,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-iiop-listener` at the command line.
 
-[[giowc]][[GSADG00479]][[to-list-iiop-listeners]]
+[[to-list-iiop-listeners]]
 
 ==== To List IIOP Listeners
 
@@ -124,7 +124,7 @@ existing IIOP listeners.
 2. List the IIOP listeners by using the
 link:reference-manual/list-iiop-listeners.html#list-iiop-listeners[`list-iiop-listeners`] subcommand.
 
-[[GSADG00264]][[gipcm]]
+[[gipcm]]
 Example 15-2 Listing IIOP Listeners
 
 This example lists all the IIOP listeners for the server instance.
@@ -144,7 +144,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-iiop-listeners` at the command line.
 
-[[giwlq]][[GSADG00480]][[to-update-an-iiop-listener]]
+[[to-update-an-iiop-listener]]
 
 ==== To Update an IIOP Listener
 
@@ -155,7 +155,7 @@ link:reference-manual/set.html#set[`set`] subcommand.
 +
 The listener is identified by its dotted name.
 
-[[GSADG00265]][[giwlj]]
+[[giwlj]]
 Example 15-3 Updating an IIOP Listener
 
 This example changes SSL from enabled to disabled.
@@ -167,7 +167,7 @@ server.iiop-service.iiop-listener.SSL.enabled=false
 Command set executed successfully.
 ----
 
-[[giowj]][[GSADG00481]][[to-delete-an-iiop-listener]]
+[[to-delete-an-iiop-listener]]
 
 ==== To Delete an IIOP Listener
 
@@ -183,7 +183,7 @@ link:reference-manual/delete-iiop-listener.html#delete-iiop-listener[`delete-iio
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00266]][[giped]]
+[[giped]]
 Example 15-4 Deleting an IIOP Listener
 
 This example deletes the IIOP listener named `sample_iiop_listener`.

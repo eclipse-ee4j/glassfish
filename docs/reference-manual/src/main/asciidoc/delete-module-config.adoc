@@ -7,7 +7,7 @@ prev=delete-message-security-provider.html
 
 = delete-module-config
 
-[[delete-module-config-1]][[GSRFM854]][[delete-module-config]]
+[[delete-module-config]]
 
 == delete-module-config
 
@@ -60,7 +60,7 @@ service_name::
 
 === Examples
 
-[[GSRFM855]][[sthref887]]
+[[sthref887]]
 
 ==== Example 1   Deleting a Default Configuration From domain.xml
 

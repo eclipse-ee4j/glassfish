@@ -7,7 +7,7 @@ prev=create-node-dcom.html
 
 = create-node-ssh
 
-[[create-node-ssh-1]][[GSRFM00048]][[create-node-ssh]]
+[[create-node-ssh]]
 
 == create-node-ssh
 

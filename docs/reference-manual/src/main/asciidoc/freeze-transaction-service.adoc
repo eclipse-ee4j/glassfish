@@ -7,7 +7,7 @@ prev=flush-jmsdest.html
 
 = freeze-transaction-service
 
-[[freeze-transaction-service-1]][[GSRFM00137]][[freeze-transaction-service]]
+[[freeze-transaction-service]]
 
 == freeze-transaction-service
 
@@ -57,7 +57,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM616]][[sthref1197]]
+[[sthref1197]]
 
 ==== Example 1   Using freeze-transaction-service
 

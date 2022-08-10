@@ -7,7 +7,7 @@ prev=change-master-password.html
 
 = collect-log-files
 
-[[collect-log-files-1]][[GSRFM00007]][[collect-log-files]]
+[[collect-log-files]]
 
 == collect-log-files
 
@@ -80,11 +80,11 @@ retrievefilepath::
   default directory. If the `--retrieve` option is `false`, this operand
   is ignored.
 
-[[administering-concurrent-resources]]
+
 
 === Examples
 
-[[GSRFM451]][[sthref74]]
+[[sthref74]]
 
 ==== Example 1   Collecting Log Files for the Default Server
 
@@ -99,7 +99,7 @@ collected-logs/log_2021-12-15_15-46-23.zip.
 Command collect-log-files executed successfully.
 ----
 
-[[GSRFM452]][[sthref75]]
+[[sthref75]]
 
 ==== Example 2   Collecting Log Files for a Cluster
 
@@ -116,7 +116,7 @@ collected-logs/log_2021-12-15_15-54-06.zip.
 Command collect-log-files executed successfully.
 ----
 
-[[GSRFM453]][[sthref76]]
+[[sthref76]]
 
 ==== Example 3   Collecting Log Files in a Directory Other Than the Default
 for a Cluster

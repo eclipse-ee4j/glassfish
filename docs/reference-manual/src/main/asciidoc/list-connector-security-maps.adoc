@@ -7,7 +7,7 @@ prev=list-connector-resources.html
 
 = list-connector-security-maps
 
-[[list-connector-security-maps-1]][[GSRFM00159]][[list-connector-security-maps]]
+[[list-connector-security-maps]]
 
 == list-connector-security-maps
 
@@ -62,7 +62,7 @@ pool-name::
 
 === Examples
 
-[[GSRFM651]][[sthref1427]]
+[[sthref1427]]
 
 ==== Example 1   Listing the Connector Security Maps
 

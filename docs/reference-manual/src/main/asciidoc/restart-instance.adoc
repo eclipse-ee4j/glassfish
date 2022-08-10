@@ -7,7 +7,7 @@ prev=restart-domain.html
 
 = restart-instance
 
-[[restart-instance-1]][[GSRFM00219]][[restart-instance]]
+[[restart-instance]]
 
 == restart-instance
 
@@ -100,7 +100,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM739]][[sthref1991]]
+[[sthref1991]]
 
 ==== Example 1   Restarting a {productName} Instance
 

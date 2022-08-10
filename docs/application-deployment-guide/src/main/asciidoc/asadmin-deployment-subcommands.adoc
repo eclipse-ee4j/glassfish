@@ -7,7 +7,7 @@ prev=deploying-applications.html
 
 = The asadmin Deployment Subcommands
 
-[[GSDPG00005]][[gihzw]]
+[[gihzw]]
 
 
 [[a-the-asadmin-deployment-subcommands]]

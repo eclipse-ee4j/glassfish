@@ -7,7 +7,7 @@ prev=list-protocol-finders.html
 
 = list-protocols
 
-[[list-protocols-1]][[GSRFM00195]][[list-protocols]]
+[[list-protocols]]
 
 == list-protocols
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM705]][[sthref1769]]
+[[sthref1769]]
 
 ==== Example 1   Listing Protocols
 

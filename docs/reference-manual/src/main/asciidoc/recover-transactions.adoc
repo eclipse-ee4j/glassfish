@@ -7,7 +7,7 @@ prev=ping-node-ssh.html
 
 = recover-transactions
 
-[[recover-transactions-1]][[GSRFM00216]][[recover-transactions]]
+[[recover-transactions]]
 
 == recover-transactions
 
@@ -84,7 +84,7 @@ For an installation of multiple server instances, the value of this
 
 === Examples
 
-[[GSRFM733]][[sthref1957]]
+[[sthref1957]]
 
 ==== Example 1   Recovering transactions on a running server
 
@@ -94,7 +94,7 @@ For an installation of multiple server instances, the value of this
 Transaction recovered.
 ----
 
-[[GSRFM734]][[sthref1958]]
+[[sthref1958]]
 
 ==== Example 2   Recovering transactions for a server that is not running
 

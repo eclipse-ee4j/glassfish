@@ -7,7 +7,7 @@ prev=osgi-shell.html
 
 = ping-connection-pool
 
-[[ping-connection-pool-1]][[GSRFM00214]][[ping-connection-pool]]
+[[ping-connection-pool]]
 
 == ping-connection-pool
 
@@ -75,7 +75,7 @@ pool_name::
 
 === Examples
 
-[[GSRFM727]][[sthref1931]]
+[[sthref1931]]
 
 ==== Example 1   Contacting a Connection Pool
 

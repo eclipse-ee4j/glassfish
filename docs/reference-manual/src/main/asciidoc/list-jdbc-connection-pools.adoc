@@ -7,7 +7,7 @@ prev=list-javamail-resources.html
 
 = list-jdbc-connection-pools
 
-[[list-jdbc-connection-pools-1]][[GSRFM00173]][[list-jdbc-connection-pools]]
+[[list-jdbc-connection-pools]]
 
 == list-jdbc-connection-pools
 
@@ -38,7 +38,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM670]][[sthref1548]]
+[[sthref1548]]
 
 ==== Example 1   Listing the JDBC Connection Pools
 

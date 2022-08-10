@@ -7,7 +7,7 @@ prev=enable-http-lb-application.html
 
 = enable-http-lb-server
 
-[[enable-http-lb-server-1]][[GSRFM00127]][[enable-http-lb-server]]
+[[enable-http-lb-server]]
 
 == enable-http-lb-server
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM602]][[sthref1116]]
+[[sthref1116]]
 
 ==== Example 1   Enabling a Cluster for Load Balancing
 

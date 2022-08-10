@@ -7,7 +7,7 @@ prev=list-auth-realms.html
 
 = list-backups
 
-[[list-backups-1]][[GSRFM00152]][[list-backups]]
+[[list-backups]]
 
 == list-backups
 
@@ -66,7 +66,7 @@ domain-name::
 
 === Examples
 
-[[GSRFM640]][[sthref1337]]
+[[sthref1337]]
 
 ==== Example 1   Listing Domain Backups
 

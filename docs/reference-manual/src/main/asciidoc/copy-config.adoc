@@ -7,7 +7,7 @@ prev=configure-managed-jobs.html
 
 = copy-config
 
-[[copy-config-1]][[GSRFM00011]][[copy-config]]
+[[copy-config]]
 
 == copy-config
 
@@ -127,7 +127,7 @@ destination-configuration-name::
 
 === Examples
 
-[[GSRFM456]][[sthref112]]
+[[sthref112]]
 
 ==== Example 1   Copying a Configuration
 

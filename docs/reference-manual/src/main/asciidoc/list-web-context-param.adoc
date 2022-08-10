@@ -7,7 +7,7 @@ prev=list-virtual-servers.html
 
 = list-web-context-param
 
-[[list-web-context-param-1]][[GSRFM00208]][[list-web-context-param]]
+[[list-web-context-param]]
 
 == list-web-context-param
 
@@ -90,7 +90,7 @@ The module would be specified as the operand of this command as `myApp/myWebModu
 
 === Examples
 
-[[GSRFM718]][[sthref1863]]
+[[sthref1863]]
 
 ==== Example 1   Listing Servlet Context-Initialization Parameters for a Web
 Application

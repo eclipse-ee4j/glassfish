@@ -7,7 +7,7 @@ prev=ping-node-dcom.html
 
 = ping-node-ssh
 
-[[ping-node-ssh-1]][[GSRFM00215]][[ping-node-ssh]]
+[[ping-node-ssh]]
 
 == ping-node-ssh
 
@@ -82,7 +82,7 @@ node-name::
 
 === Examples
 
-[[GSRFM731]][[sthref1948]]
+[[sthref1948]]
 
 ==== Example 1   Testing if an SSH-Enabled Node Is Usable
 
@@ -95,7 +95,7 @@ Successfully made SSH connection to node sj03-node (sj03.example.com)
 Command ping-node-ssh executed successfully.
 ----
 
-[[GSRFM732]][[sthref1949]]
+[[sthref1949]]
 
 ==== Example 2   Validating an SSH-Enabled Node
 

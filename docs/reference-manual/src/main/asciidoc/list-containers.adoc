@@ -7,7 +7,7 @@ prev=list-connector-work-security-maps.html
 
 = list-containers
 
-[[list-containers-1]][[GSRFM00161]][[list-containers]]
+[[list-containers]]
 
 == list-containers
 
@@ -38,7 +38,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM653]][[sthref1442]]
+[[sthref1442]]
 
 ==== Example 1   Listing the Application Containers
 

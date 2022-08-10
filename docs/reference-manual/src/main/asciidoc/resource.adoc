@@ -7,7 +7,7 @@ prev=passwords.html
 
 = resource
 
-[[resource-5asc]][[GSRFM00273]][[resource]]
+[[resource]]
 
 == resource
 

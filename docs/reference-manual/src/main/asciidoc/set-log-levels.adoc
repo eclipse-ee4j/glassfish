@@ -7,7 +7,7 @@ prev=set-log-file-format.html
 
 = set-log-levels
 
-[[set-log-levels-1]][[GSRFM00228]][[set-log-levels]]
+[[set-log-levels]]
 
 == set-log-levels
 
@@ -57,7 +57,7 @@ logger-level::
 
 === Examples
 
-[[GSRFM749]][[sthref2062]]
+[[sthref2062]]
 
 ==== Example 1   Setting a Log Level for a Logger
 
@@ -70,7 +70,7 @@ asadmin> set-log-levels jakarta.enterprise.system.container.web=WARNING
 Command set-log-level executed successfully.
 ----
 
-[[GSRFM750]][[sthref2063]]
+[[sthref2063]]
 
 ==== Example 2   Setting the Log Level for Multiple Loggers
 

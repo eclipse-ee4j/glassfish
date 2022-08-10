@@ -7,7 +7,7 @@ prev=title.html
 
 = Preface
 
-[[GSEMR00001]][[gkbbw]]
+[[gkbbw]]
 [[preface]]
 == Preface
 
@@ -46,7 +46,7 @@ The following topics are addressed here:
 * xref:#typographic-conventions[Typographic Conventions]
 * xref:#symbol-conventions[Symbol Conventions]
 
-[[BABJIEEB]][[glassfish-server-documentation-set]]
+[[glassfish-server-documentation-set]]
 
 === {productName} Documentation Set
 
@@ -150,7 +150,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[BABBDGAE]][[related-documentation]]
+[[related-documentation]]
 
 === Related Documentation
 
@@ -193,7 +193,7 @@ are bundled with the Jakarta EE Software Development Kit (SDK) and are also
 available from the repository
 (`https://github.com/eclipse-ee4j/glassfish-samples`).
 
-[[BABGCFGH]][[typographic-conventions]]
+[[typographic-conventions]]
 
 === Typographic Conventions
 
@@ -232,7 +232,7 @@ Do not save the file.
 |===
 
 
-[[BABHAGID]][[symbol-conventions]]
+[[symbol-conventions]]
 
 === Symbol Conventions
 
@@ -274,7 +274,7 @@ The following table explains symbols that might be used in this book.
 |===
 
 
-[[BABEACJI]][[default-paths-and-file-names]]
+[[default-paths-and-file-names]]
 
 === Default Paths and File Names
 

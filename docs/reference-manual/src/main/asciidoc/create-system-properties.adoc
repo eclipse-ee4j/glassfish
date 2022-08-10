@@ -7,7 +7,7 @@ prev=create-ssl.html
 
 = create-system-properties
 
-[[create-system-properties-1]][[GSRFM00059]][[create-system-properties]]
+[[create-system-properties]]
 
 == create-system-properties
 
@@ -82,7 +82,7 @@ name=value::
 
 === Examples
 
-[[GSRFM526]][[sthref550]]
+[[sthref550]]
 
 ==== Example 1   Creating System Properties
 

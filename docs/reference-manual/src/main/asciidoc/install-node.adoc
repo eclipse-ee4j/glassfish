@@ -7,7 +7,7 @@ prev=import-sync-bundle.html
 
 = install-node
 
-[[install-node-1]][[GSRFM00143]][[install-node]]
+[[install-node]]
 
 == install-node
 
@@ -164,7 +164,7 @@ host-list::
 
 === Examples
 
-[[GSRFM625]][[sthref1256]]
+[[sthref1256]]
 
 ==== Example 1   Installing {productName} Software at the Default
 Location

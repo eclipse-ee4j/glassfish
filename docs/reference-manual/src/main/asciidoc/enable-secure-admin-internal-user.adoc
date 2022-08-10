@@ -7,7 +7,7 @@ prev=enable-secure-admin.html
 
 = enable-secure-admin-internal-user
 
-[[enable-secure-admin-internal-user-1]][[GSRFM00130]][[enable-secure-admin-internal-user]]
+[[enable-secure-admin-internal-user]]
 
 == enable-secure-admin-internal-user
 
@@ -95,7 +95,7 @@ admin-username::
 
 === Examples
 
-[[GSRFM607]][[sthref1140]]
+[[sthref1140]]
 
 ==== Example 1   Specifying a user name and password for secure admin
 

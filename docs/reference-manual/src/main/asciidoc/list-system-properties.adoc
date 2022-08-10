@@ -7,7 +7,7 @@ prev=list-supported-cipher-suites.html
 
 = list-system-properties
 
-[[list-system-properties-1]][[GSRFM00203]][[list-system-properties]]
+[[list-system-properties]]
 
 == list-system-properties
 
@@ -63,7 +63,7 @@ target::
 
 === Examples
 
-[[GSRFM713]][[sthref1823]]
+[[sthref1823]]
 
 ==== Example 1   Listing System Properties
 

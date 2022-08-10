@@ -7,7 +7,7 @@ prev=create-threadpool.html
 
 = create-transport
 
-[[create-transport-1]][[GSRFM00061]][[create-transport]]
+[[create-transport]]
 
 == create-transport
 
@@ -112,7 +112,7 @@ transport-name::
 
 === Examples
 
-[[GSRFM528]][[sthref566]]
+[[sthref566]]
 
 ==== Example 1   Creating a Transport
 

@@ -7,7 +7,7 @@ prev=delete-resource-ref.html
 
 = delete-ssl
 
-[[delete-ssl-1]][[GSRFM00109]][[delete-ssl]]
+[[delete-ssl]]
 
 == delete-ssl
 
@@ -80,7 +80,7 @@ listener_id::
 
 === Examples
 
-[[GSRFM579]][[sthref980]]
+[[sthref980]]
 
 ==== Example 1   Deleting an SSL element from an HTTP listener
 

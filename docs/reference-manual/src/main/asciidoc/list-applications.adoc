@@ -7,7 +7,7 @@ prev=list-application-refs.html
 
 = list-applications
 
-[[list-applications-1]][[GSRFM00148]][[list-applications]]
+[[list-applications]]
 
 == list-applications
 
@@ -92,7 +92,7 @@ If no type is specified, all applications are listed.
 
 === Examples
 
-[[GSRFM636]][[sthref1313]]
+[[sthref1313]]
 
 ==== Example 1   Listing the Web Applications
 

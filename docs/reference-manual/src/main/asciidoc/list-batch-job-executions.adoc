@@ -7,7 +7,7 @@ prev=list-backups.html
 
 = list-batch-job-executions
 
-[[list-batch-job-executions-1]][[GSRFM884]][[list-batch-job-executions]]
+[[list-batch-job-executions]]
 
 == list-batch-job-executions
 
@@ -102,7 +102,7 @@ instance_id::
 
 === Examples
 
-[[GSRFM885]][[sthref1345]]
+[[sthref1345]]
 
 ==== Example 1   Listing Batch Job Executions
 

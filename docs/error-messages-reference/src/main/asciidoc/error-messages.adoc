@@ -6,7 +6,7 @@ prev=preface.html
 
 = {productName} Error Messages
 
-[[sthref2]][[glassfish-server-open-source-edition-error-messages]]
+[[glassfish-server-open-source-edition-error-messages]]
 
 == 1 {productName} Error Messages
 
@@ -124,12 +124,12 @@ message.
 +
   Action: Check server.log for details
 
-[[sthref17]]AS-NAMING-00004 Error during CosNaming.unbind for name \{0}: \{1} ::
+AS-NAMING-00004 Error during CosNaming.unbind for name \{0}: \{1} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref18]]AS-NAMING-00005 Naming binding already exists for \{0} in namespace \{1} ::
+AS-NAMING-00005 Naming binding already exists for \{0} in namespace \{1} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
@@ -153,19 +153,19 @@ message.
   time. If this is normal, consider setting a higher hung task threshold
   or setting the "Long-Running Tasks" configuration attribute to true.
 
-[[sthref22]]AS-CONCURRENT-00002 Unable to setup or reset runtime context for a task because an invalid context handle is being passed. ::
+AS-CONCURRENT-00002 Unable to setup or reset runtime context for a task because an invalid context handle is being passed. ::
   Cause: An invalid context handle is being passed.
 +
   Action: Contact GlassFish support.
 
-[[sthref23]]AS-CONCURRENT-00003 Unable to bind \{0} to JNDI location [\{1}]. ::
+AS-CONCURRENT-00003 Unable to bind \{0} to JNDI location [\{1}]. ::
   Cause: An unexpected exception occurred when trying to bind a managed
   object to JNDI namespace
 +
   Action: Review the exception message to determine the cause of the
   failure and take appropriate action.
 
-[[sthref24]]AS-CONCURRENT-00004 Unable to deploy \{0}. ::
+AS-CONCURRENT-00004 Unable to deploy \{0}. ::
   Cause: No configuration information is provided when trying to deploy
   a managed object.
 +
@@ -176,7 +176,7 @@ message.
 +
   Action: Check the thread-pool-id property in Resource Adapter Config.
 
-[[sthref26]]AS-RAR-05002 Failed to get the default thread-pool for resource adapter [ \{0} ]. ::
+AS-RAR-05002 Failed to get the default thread-pool for resource adapter [ \{0} ]. ::
   Cause: Could not find the default thread pool for resource adatper.
 +
   Action: Check the thread-pool-id property in Resource Adapter Config.
@@ -217,14 +217,14 @@ message.
   Action: Make sure that same context type is not submitted multiple
   times in the Work Context.
 
-[[sthref33]]AS-RAR-05009 Application server cannot handle the following Work Context : \{0}. ::
+AS-RAR-05009 Application server cannot handle the following Work Context : \{0}. ::
   Cause: Work Context in question is not supported by application
   server.
 +
   Action: Check the application server documentation for supported Work
   Contexts.
 
-[[sthref34]]AS-RAR-05010 Setting custom Work Context class [ \{0} ] using most specific supportted Work Context class [ \{1} ]. ::
+AS-RAR-05010 Setting custom Work Context class [ \{0} ] using most specific supportted Work Context class [ \{1} ]. ::
   Cause: Requested Work Context is not supported, but a super type of
   the context is supported.
 +
@@ -235,7 +235,7 @@ message.
 +
   Action: Check the server.log for exceptions
 
-[[sthref36]]AS-RAR-05012 Unsupported callback \{0} during credential mapping. ::
+AS-RAR-05012 Unsupported callback \{0} during credential mapping. ::
   Cause: Resource adapter has used a callback that is not supported by
   application server.
 +
@@ -275,124 +275,124 @@ message.
 +
   Action: Correct the reference to the deployment manager.
 
-[[sthref43]]AS-DEPLOYMENT-04019 Deployment manager load failure. Unable to find \{0} ::
+AS-DEPLOYMENT-04019 Deployment manager load failure. Unable to find \{0} ::
   Cause: A deployment manager is not available.
 +
   Action: Correct the reference to the deployment manager.
 
-[[sthref44]]AS-DEPLOYMENT-00001 Ignore \{0} in archive \{1}, as WLS counterpart runtime xml \{2} is present in the same archive. ::
+AS-DEPLOYMENT-00001 Ignore \{0} in archive \{1}, as WLS counterpart runtime xml \{2} is present in the same archive. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref45]]AS-DEPLOYMENT-00002 Exception caught: \{0}. ::
+AS-DEPLOYMENT-00002 Exception caught: \{0}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref46]]AS-DEPLOYMENT-00003 \{0} module [\{1}] contains characteristics of other module type: \{2}. ::
+AS-DEPLOYMENT-00003 \{0} module [\{1}] contains characteristics of other module type: \{2}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref47]]AS-DEPLOYMENT-00004 Exception caught: \{0} for the subarchve indicated by the path: \{1}. ::
+AS-DEPLOYMENT-00004 Exception caught: \{0} for the subarchve indicated by the path: \{1}. ::
   Cause: An exception was caught when the sub archive was opened because
   the sub archive was not present.
 +
   Action: Correct the archive so that the sub archive is present.
 
-[[sthref48]]AS-DEPLOYMENT-00005 Exception caught during annotation scanning. ::
+AS-DEPLOYMENT-00005 Exception caught during annotation scanning. ::
   Cause: An exception was caught that indicates that the annotation is
   incorrect.
 +
   Action: Correct the annotation.
 
-[[sthref49]]AS-DEPLOYMENT-00006 Adding \{0} since \{1} is annotated with \{2}. ::
+AS-DEPLOYMENT-00006 Adding \{0} since \{1} is annotated with \{2}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref50]]AS-DEPLOYMENT-00007 Adding \{0} since it is implementing \{1}. ::
+AS-DEPLOYMENT-00007 Adding \{0} since it is implementing \{1}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref51]]AS-DEPLOYMENT-00008 Inconsistent type definition. \{0} is neither an annotation nor an interface. ::
+AS-DEPLOYMENT-00008 Inconsistent type definition. \{0} is neither an annotation nor an interface. ::
   Cause: The annotation is incorrect.
 +
   Action: Correct the annotation.
 
-[[sthref52]]AS-DEPLOYMENT-00009 The exception \{0} occurred while examining the jar at file path: \{1}. ::
+AS-DEPLOYMENT-00009 The exception \{0} occurred while examining the jar at file path: \{1}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref53]]AS-DEPLOYMENT-00010 No classloader can be found to use ::
+AS-DEPLOYMENT-00010 No classloader can be found to use ::
   Cause: The archive being processed is not correct.
 +
   Action: Examine the archive to determine what is incorrect.
 
-[[sthref54]]AS-DEPLOYMENT-00011 Error in annotation processing: \{0}. ::
+AS-DEPLOYMENT-00011 Error in annotation processing: \{0}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref55]]AS-DEPLOYMENT-00012 Cannot load \{0} reason : \{1}. ::
+AS-DEPLOYMENT-00012 Cannot load \{0} reason : \{1}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref56]]AS-DEPLOYMENT-00013 An exception was caught during library jar processing: \{0}. ::
+AS-DEPLOYMENT-00013 An exception was caught during library jar processing: \{0}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref57]]AS-DEPLOYMENT-00014 Could not load \{0} ::
+AS-DEPLOYMENT-00014 Could not load \{0} ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref58]]AS-DEPLOYMENT-00015 Unsupported deployment descriptors element \{0} value \{1}. ::
+AS-DEPLOYMENT-00015 Unsupported deployment descriptors element \{0} value \{1}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref59]]AS-DEPLOYMENT-00016 Unknown port-component-name \{0} port, all sub elements will be ignored. ::
+AS-DEPLOYMENT-00016 Unknown port-component-name \{0} port, all sub elements will be ignored. ::
   Cause: Used port-component-name does not exists.
 +
   Action: Use the name of existing web service endpoint
 
-[[sthref60]]AS-DEPLOYMENT-00017 DOLUtils: converting EJB to web bundle id \{0}. ::
+AS-DEPLOYMENT-00017 DOLUtils: converting EJB to web bundle id \{0}. ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref61]]AS-DEPLOYMENT-00020 Application validation failed for application: \{0}, jndi-name: \{1}, resource adapter name: \{2} is wrong. ::
+AS-DEPLOYMENT-00020 Application validation failed for application: \{0}, jndi-name: \{1}, resource adapter name: \{2} is wrong. ::
   Cause: For embedded resource adapter, its name should begin with '#'
   symbol
 +
   Action: Remove application name before the '#' symbol in the resource
   adapter name.
 
-[[sthref62]]AS-DEPLOYMENT-00022 For administered-object resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
+AS-DEPLOYMENT-00022 For administered-object resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
   Cause: For embedded resource adapter, its internal format of resource
   adapter name should contains application name.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref63]]AS-DEPLOYMENT-00023 For connection-factory resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
+AS-DEPLOYMENT-00023 For connection-factory resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
   Cause: For embedded resource adapter, its internal format of resource
   adapter name should contains application name.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref64]]AS-DEPLOYMENT-00024 For jms-connection-factory resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
+AS-DEPLOYMENT-00024 For jms-connection-factory resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
   Cause: For embedded resource adapter, its internal format of resource
   adapter name should contains application name.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref65]]AS-DEPLOYMENT-00025 For jms-destination resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
+AS-DEPLOYMENT-00025 For jms-destination resource: \{0}, there is no application part in its resource adapter name: \{1}. ::
   Cause: For embedded resource adapter, its internal format of resource
   adapter name should contains application name.
 +
@@ -434,7 +434,7 @@ message.
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[administering-concurrent-resources]]AS-EJB-00003 [\{0}]: passivateEJB(), Exception caught -> ::
+AS-EJB-00003 [\{0}]: passivateEJB(), Exception caught -> ::
   Cause: As described in the message.
 +
   Action: Resolve the situation described in the message, if necessary.

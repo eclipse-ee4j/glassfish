@@ -7,7 +7,7 @@ prev=list-custom-resources.html
 
 = list-domains
 
-[[list-domains-1]][[GSRFM00163]][[list-domains]]
+[[list-domains]]
 
 == list-domains
 
@@ -59,7 +59,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM656]][[sthref1466]]
+[[sthref1466]]
 
 ==== Example 1   Listing Domains
 

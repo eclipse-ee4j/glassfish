@@ -7,7 +7,7 @@ prev=java-clients.html
 
 = Developing Connectors
 
-[[GSDVG00013]][[bealk]]
+[[bealk]]
 
 
 [[developing-connectors]]
@@ -54,7 +54,7 @@ The following topics are addressed here:
 * xref:#outbound-communication-support[Outbound Communication Support]
 * xref:#configuring-a-message-driven-bean-to-use-a-resource-adapter[Configuring a Message Driven Bean to Use a Resource Adapter]
 
-[[beall]][[GSDVG00162]][[connector-support-in-the-glassfish-server]]
+[[connector-support-in-the-glassfish-server]]
 
 === Connector Support in the {productName}
 
@@ -94,7 +94,7 @@ Context mechanism by describing a standard `WorkContext`, the
 adapter can use to propagate transaction context information from the
 EIS to the application server.
 
-[[bealm]][[GSDVG00474]][[connector-architecture-for-jms-and-jdbc]]
+[[connector-architecture-for-jms-and-jdbc]]
 
 ==== Connector Architecture for JMS and JDBC
 
@@ -112,7 +112,7 @@ link:jms.html#beaob[Using the Java Message Service]. For more information
 about JDBC in the {productName}, see link:jdbc.html#beamj[Using the
 JDBC API for Database Access].
 
-[[bealn]][[GSDVG00475]][[connector-configuration]]
+[[connector-configuration]]
 
 ==== Connector Configuration
 
@@ -129,7 +129,7 @@ pool. In addition, dynamic changes can be made to connector connection
 pools and the connector resource properties without restarting the
 {productName}.
 
-[[bealr]][[GSDVG00163]][[advanced-connector-configuration-options]]
+[[advanced-connector-configuration-options]]
 
 === Advanced Connector Configuration Options
 
@@ -148,7 +148,7 @@ The following topics are addressed here:
 * xref:#disabling-pooling-for-a-connection[Disabling Pooling for a Connection]
 * xref:#using-application-scoped-connectors[Using Application-Scoped Connectors]
 
-[[beals]][[GSDVG00476]][[thread-associations]]
+[[thread-associations]]
 
 ==== Thread Associations
 
@@ -179,7 +179,7 @@ If you create a resource adapter configuration for a connector module
 that is already deployed, the connector module deployment is restarted
 with the new configuration properties.
 
-[[bealt]][[GSDVG00477]][[security-maps]]
+[[security-maps]]
 
 ==== Security Maps
 
@@ -211,7 +211,7 @@ connection pool. If there is no exact match, the {productName} uses
 the wild card character specification, if any, to determined the mapped
 back end EIS principal.
 
-[[giqgt]][[GSDVG00478]][[work-security-maps]]
+[[work-security-maps]]
 
 ==== Work Security Maps
 
@@ -234,7 +234,7 @@ the work security map defined for the resource adapter. If there is no
 exact match, the {productName} uses the wild card character
 specification, if any, to determine the application principal.
 
-[[bealu]][[GSDVG00479]][[overriding-configuration-properties]]
+[[overriding-configuration-properties]]
 
 ==== Overriding Configuration Properties
 
@@ -264,7 +264,7 @@ called `inboundPort`, you can assign the value `${inboundPort}`. You can
 then assign a different value to this property for each server instance.
 Changes to system properties take effect upon server restart.
 
-[[bealv]][[GSDVG00480]][[testing-a-connector-connection-pool]]
+[[testing-a-connector-connection-pool]]
 
 ==== Testing a Connector Connection Pool
 
@@ -294,7 +294,7 @@ the Administration Console.
 information, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 
-[[gizcv]][[GSDVG00481]][[flushing-a-connector-connection-pool]]
+[[flushing-a-connector-connection-pool]]
 
 ==== Flushing a Connector Connection Pool
 
@@ -315,7 +315,7 @@ Administration Console.
 * Use the `asadmin flush-connection-pool` command. For details, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[bealw]][[GSDVG00482]][[handling-invalid-connections]]
+[[handling-invalid-connections]]
 
 ==== Handling Invalid Connections
 
@@ -367,7 +367,7 @@ The {productName} checks if the resource adapter implements this
 interface, and if it does, invalid connections are removed when the
 connection pool is resized.
 
-[[bealx]][[GSDVG00483]][[setting-the-shutdown-timeout]]
+[[setting-the-shutdown-timeout]]
 
 ==== Setting the Shutdown Timeout
 
@@ -393,7 +393,7 @@ Reference Manual].
 The {productName} deactivates all message-driven bean deployments
 before stopping a resource adapter.
 
-[[gjjyy]][[GSDVG00484]][[specifying-the-class-loading-policy]]
+[[specifying-the-class-loading-policy]]
 
 ==== Specifying the Class Loading Policy
 
@@ -416,7 +416,7 @@ asadmin set server.connector-service.class-loading-policy="global"
 For details, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 
-[[bealy]][[GSDVG00485]][[using-last-agent-optimization-of-transactions]]
+[[using-last-agent-optimization-of-transactions]]
 
 ==== Using Last Agent Optimization of Transactions
 
@@ -443,7 +443,7 @@ level in the connection pool configuration property is lower. If the
 value in the connection pool configuration property is higher, it is
 ignored.
 
-[[gizba]][[GSDVG00486]][[disabling-pooling-for-a-connection]]
+[[disabling-pooling-for-a-connection]]
 
 ==== Disabling Pooling for a Connection
 
@@ -459,7 +459,7 @@ the Administration Console.
 information, see the link:reference-manual.html#GSRFM[{productName}
 Reference Manual].
 
-[[gizcs]][[GSDVG00487]][[using-application-scoped-connectors]]
+[[using-application-scoped-connectors]]
 
 ==== Using Application-Scoped Connectors
 
@@ -469,7 +469,7 @@ application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
 "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
-[[bealz]][[GSDVG00164]][[inbound-communication-support]]
+[[inbound-communication-support]]
 
 === Inbound Communication Support
 
@@ -509,7 +509,7 @@ messages using connection objects using messaging style APIs. For more
 information about administered objects, see link:jms.html#beaob[Using the
 Java Message Service].
 
-[[gizdm]][[GSDVG00165]][[outbound-communication-support]]
+[[outbound-communication-support]]
 
 === Outbound Communication Support
 
@@ -534,7 +534,7 @@ supported, and the Administration Console shows only `no-tx` and
 For more information, click the Help button in the Administration
 Console.
 
-[[beama]][[GSDVG00166]][[configuring-a-message-driven-bean-to-use-a-resource-adapter]]
+[[configuring-a-message-driven-bean-to-use-a-resource-adapter]]
 
 === Configuring a Message Driven Bean to Use a Resource Adapter
 

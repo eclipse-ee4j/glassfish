@@ -25,8 +25,9 @@ for line in ${ids} ; do
 				exit 1;
 			fi
 			redundantIds="${redundantIds},${redundantId},"
-			echo "Replacing $redundantId by $correctId";
+			echo "Replacing $redundantId by $correctId and removing [[$redundantId]] labels...";
 			find . -type f -name '*.adoc' ! -wholename '*/target/*' -exec sed -i -- "s/#${redundantId}/#${correctId}/g" {} +;
+			find . -type f -name '*.adoc' ! -wholename '*/target/*' -exec sed -i -- "s/\[\[${redundantId}\]\]//g" {} +;
 		done;
 #	else 
 #		echo "$labels is ok";

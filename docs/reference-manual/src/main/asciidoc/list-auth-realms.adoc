@@ -7,7 +7,7 @@ prev=list-audit-modules.html
 
 = list-auth-realms
 
-[[list-auth-realms-1]][[GSRFM00150]][[list-auth-realms]]
+[[list-auth-realms]]
 
 == list-auth-realms
 
@@ -53,7 +53,7 @@ target::
 
 === Examples
 
-[[GSRFM638]][[sthref1329]]
+[[sthref1329]]
 
 ==== Example 1   Listing authentication realms
 

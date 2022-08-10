@@ -7,7 +7,7 @@ prev=delete-http-lb-ref.html
 
 = delete-http-listener
 
-[[delete-http-listener-1]][[GSRFM00082]][[delete-http-listener]]
+[[delete-http-listener]]
 
 == delete-http-listener
 
@@ -70,7 +70,7 @@ listener-id::
 
 === Examples
 
-[[GSRFM551]][[administering-concurrent-resources6]]
+[[administering-concurrent-resources6]]
 
 ==== Example 1   Using the delete-http-listener subcommand
 

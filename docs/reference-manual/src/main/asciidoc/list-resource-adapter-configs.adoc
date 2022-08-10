@@ -7,7 +7,7 @@ prev=list-protocols.html
 
 = list-resource-adapter-configs
 
-[[list-resource-adapter-configs-1]][[GSRFM00196]][[list-resource-adapter-configs]]
+[[list-resource-adapter-configs]]
 
 == list-resource-adapter-configs
 
@@ -46,7 +46,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM706]][[sthref1776]]
+[[sthref1776]]
 
 ==== Example 1   Listing the Resource Adapter Configurations
 

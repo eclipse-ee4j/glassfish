@@ -6,7 +6,7 @@ prev=jms.html
 
 = RMI-IIOP Load Balancing and Failover
 
-[[GSHAG00013]][[fxxqs]]
+[[fxxqs]]
 
 [[rmi-iiop-load-balancing-and-failover]]
 == 11 RMI-IIOP Load Balancing and Failover
@@ -18,7 +18,7 @@ references and JNDI objects over RMI-IIOP in {productName}.
 * xref:#initialcontext-load-balancing[`InitialContext` Load Balancing]
 * xref:#per-request-load-balancing-prlb[Per-Request Load Balancing (PRLB)]
 
-[[abdbe]][[GSHAG00215]][[overview]]
+[[overview]]
 
 === Overview
 
@@ -33,7 +33,7 @@ The following topics are addressed here:
 * xref:#general-requirements-for-configuring-load-balancing[General Requirements for Configuring Load Balancing]
 * xref:#load-balancing-models[Load Balancing Models]
 
-[[abdbf]][[GSHAG00313]][[general-requirements-for-configuring-load-balancing]]
+[[general-requirements-for-configuring-load-balancing]]
 
 ==== General Requirements for Configuring Load Balancing
 
@@ -58,7 +58,7 @@ over secure sockets layer (SSL).
 ====
 
 
-[[gknpk]][[GSHAG00314]][[load-balancing-models]]
+[[load-balancing-models]]
 
 ==== Load Balancing Models
 
@@ -76,7 +76,7 @@ xref:#per-request-load-balancing-prlb[Per-Request Load Balancing (PRLB)]::
   instance. PRLB chooses the first node in a cluster to use on each
   request. PRLB is configured on a per-EJB basis.
 
-[[gknqo]][[GSHAG00216]][[initialcontext-load-balancing]]
+[[initialcontext-load-balancing]]
 
 === `InitialContext` Load Balancing
 
@@ -86,7 +86,7 @@ The following topics are addressed here:
 * xref:#initialcontext-algorithm[`InitialContext` Algorithm]
 * xref:#enabling-rmi-iiop-hardware-load-balancing-and-failover[Enabling RMI-IIOP Hardware Load Balancing and Failover]
 
-[[gknpn]][[GSHAG00315]][[initialcontext-summary]]
+[[initialcontext-summary]]
 
 ==== `InitialContext` Summary
 
@@ -115,7 +115,7 @@ if a new instance is added to the cluster or deleted from the cluster.
 However, a client should have at least two endpoints specified for
 bootstrapping purposes, in case one of the endpoints has failed.
 
-[[abdbg]][[GSHAG00316]][[initialcontext-algorithm]]
+[[initialcontext-algorithm]]
 
 ==== `InitialContext` Algorithm
 
@@ -150,7 +150,7 @@ that bean fail over to one of the alternate endpoints.
 You can configure RMI-IIOP load balancing and failover to work with
 applications running in the ACC.
 
-[[abdbd]][[GSHAG00317]][[enabling-rmi-iiop-hardware-load-balancing-and-failover]]
+[[enabling-rmi-iiop-hardware-load-balancing-and-failover]]
 
 ==== Enabling RMI-IIOP Hardware Load Balancing and Failover
 
@@ -158,7 +158,7 @@ You can enable RMI-IIOP load balancing and failover for applications
 running in the application client container (ACC). Weighted round-robin
 load balancing is also supported.
 
-[[abdbi]][[GSHAG00161]][[to-enable-rmi-iiop-hardware-load-balancing-for-the-application-client-container]]
+[[to-enable-rmi-iiop-hardware-load-balancing-for-the-application-client-container]]
 
 ===== To Enable RMI-IIOP Hardware Load Balancing for the Application Client Container
 
@@ -294,7 +294,7 @@ asadmin  --user admin --passwordfile pw.txt deploy --target cluster1 \
 appclient --client my_dir/myapp.jar
 ----
 
-[[GSHAG00070]][[gfohj]]
+[[gfohj]]
 Example 11-1 Setting Load-Balancing Weights for RMI-IIOP Weighted
 Round-Robin Load Balancing
 
@@ -338,7 +338,7 @@ Availability Session Persistence Service] for instructions on enabling
 the session availability service for a cluster or for a Web, EJB, or JMS
 container running in a cluster.
 
-[[gknpv]][[GSHAG00217]][[per-request-load-balancing-prlb]]
+[[per-request-load-balancing-prlb]]
 
 === Per-Request Load Balancing (PRLB)
 
@@ -347,7 +347,7 @@ The following topics are addressed here:
 * xref:#prlb-summary[PRLB Summary]
 * xref:#enabling-per-request-load-balancing[Enabling Per-Request Load Balancing]
 
-[[gksgt]][[GSHAG00318]][[prlb-summary]]
+[[prlb-summary]]
 
 ==== PRLB Summary
 
@@ -371,7 +371,7 @@ other bean types will result in a deployment error.
 ====
 
 
-[[gksgy]][[GSHAG00319]][[enabling-per-request-load-balancing]]
+[[enabling-per-request-load-balancing]]
 
 ==== Enabling Per-Request Load Balancing
 
@@ -381,7 +381,7 @@ You can enable Per-Request Load Balancing (PRLB) by setting the boolean
 client side, the `initContext.lookup` method is used to access the
 stateless EJB.
 
-[[gksgo]][[GSHAG00162]][[to-enable-rmi-iiop-per-request-load-balancing-for-a-stateless-ejb]]
+[[to-enable-rmi-iiop-per-request-load-balancing-for-a-stateless-ejb]]
 
 ===== To Enable RMI-IIOP Per-Request Load Balancing for a Stateless EJB
 

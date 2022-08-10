@@ -7,7 +7,7 @@ prev=start-local-instance.html
 
 = stop-cluster
 
-[[stop-cluster-1]][[GSRFM00238]][[stop-cluster]]
+[[stop-cluster]]
 
 == stop-cluster
 
@@ -77,7 +77,7 @@ cluster-name::
 
 === Examples
 
-[[GSRFM764]][[sthref2155]]
+[[sthref2155]]
 
 ==== Example 1   Stopping a Cluster
 

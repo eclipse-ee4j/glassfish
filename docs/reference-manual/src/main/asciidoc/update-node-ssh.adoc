@@ -7,7 +7,7 @@ prev=update-node-dcom.html
 
 = update-node-ssh
 
-[[update-node-ssh-1]][[GSRFM00256]][[update-node-ssh]]
+[[update-node-ssh]]
 
 == update-node-ssh
 
@@ -153,7 +153,7 @@ node-name::
 
 === Examples
 
-[[GSRFM792]][[sthref2304]]
+[[sthref2304]]
 
 ==== Example 1   Updating the Host That a Node Represents
 
@@ -165,7 +165,7 @@ asadmin> update-node-ssh --nodehost sj04 lssh
 Command update-node-ssh executed successfully.
 ----
 
-[[GSRFM793]][[sthref2305]]
+[[sthref2305]]
 
 ==== Example 2   Forcing the Update of a Node
 

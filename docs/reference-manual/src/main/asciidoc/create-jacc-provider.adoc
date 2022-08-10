@@ -7,7 +7,7 @@ prev=create-instance.html
 
 = create-jacc-provider
 
-[[create-jacc-provider-1]][[GSRFM00034]][[create-jacc-provider]]
+[[create-jacc-provider]]
 
 == create-jacc-provider
 
@@ -105,7 +105,7 @@ jacc-provider-name::
 
 === Examples
 
-[[GSRFM491]][[sthref309]]
+[[sthref309]]
 
 ==== Example 1   Creating a JACC Provider
 

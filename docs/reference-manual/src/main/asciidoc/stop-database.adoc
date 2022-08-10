@@ -7,7 +7,7 @@ prev=stop-cluster.html
 
 = stop-database
 
-[[stop-database-1]][[GSRFM00239]][[stop-database]]
+[[stop-database]]
 
 == stop-database
 
@@ -57,7 +57,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM765]][[sthref2162]]
+[[sthref2162]]
 
 ==== Example 1   Stopping Java DB
 

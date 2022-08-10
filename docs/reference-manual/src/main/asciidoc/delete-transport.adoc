@@ -7,7 +7,7 @@ prev=delete-threadpool.html
 
 = delete-transport
 
-[[delete-transport-1]][[GSRFM00112]][[delete-transport]]
+[[delete-transport]]
 
 == delete-transport
 
@@ -57,7 +57,7 @@ transport-name::
 
 === Examples
 
-[[GSRFM582]][[sthref1004]]
+[[sthref1004]]
 
 ==== Example 1   Deleting a Transport
 

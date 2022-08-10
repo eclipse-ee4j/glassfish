@@ -7,7 +7,7 @@ prev=create-managed-scheduled-executor-service.html
 
 = create-managed-thread-factory
 
-[[create-managed-thread-factory-1]][[GSRFM842]][[create-managed-thread-factory]]
+[[create-managed-thread-factory]]
 
 == create-managed-thread-factory
 

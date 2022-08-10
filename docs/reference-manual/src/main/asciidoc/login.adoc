@@ -8,7 +8,7 @@ prev=list-web-env-entry.html
 login
 =====
 
-[[login-1]][[GSRFM00210]][[login]]
+[[login]]
 
 login
 -----
@@ -68,7 +68,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM720]][[sthref1878]]
+[[sthref1878]]
 
 ==== Example 1   Logging Into a Domain on a Remote Machine
 
@@ -89,7 +89,7 @@ Make sure that this file remains protected. Information stored in this
 file will be used by asadmin commands to manage associated domain.
 ----
 
-[[GSRFM721]][[sthref1879]]
+[[sthref1879]]
 
 ==== Example 2   Logging Into a Domain on the Default Port of Localhost
 

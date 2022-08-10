@@ -7,7 +7,7 @@ prev=capture-schema.html
 
 = package-appclient
 
-[[package-appclient-1m]][[GSRFM00264]][[package-appclient]]
+[[package-appclient]]
 
 == package-appclient
 

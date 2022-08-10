@@ -7,7 +7,7 @@ prev=list-jvm-options.html
 
 = list-libraries
 
-[[list-libraries-1]][[GSRFM00819]][[list-libraries]]
+[[list-libraries]]
 
 == list-libraries
 
@@ -60,7 +60,7 @@ For more information about these directories, see
 
 === Examples
 
-[[GSRFM831]][[sthref1619]]
+[[sthref1619]]
 
 ==== Example 1   Listing Libraries
 

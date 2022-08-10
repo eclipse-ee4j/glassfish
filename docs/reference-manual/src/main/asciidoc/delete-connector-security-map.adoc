@@ -7,7 +7,7 @@ prev=delete-connector-resource.html
 
 = delete-connector-security-map
 
-[[delete-connector-security-map-1]][[GSRFM00072]][[delete-connector-security-map]]
+[[delete-connector-security-map]]
 
 == delete-connector-security-map
 
@@ -55,7 +55,7 @@ mapname::
 
 === Examples
 
-[[GSRFM540]][[sthref647]]
+[[sthref647]]
 
 ==== Example 1   Deleting a Connector Security Map
 

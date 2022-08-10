@@ -7,7 +7,7 @@ prev=create-http-redirect.html
 
 = create-iiop-listener
 
-[[create-iiop-listener-1]][[GSRFM00032]][[create-iiop-listener]]
+[[create-iiop-listener]]
 
 == create-iiop-listener
 
@@ -72,7 +72,7 @@ listener_id::
 
 === Examples
 
-[[GSRFM485]][[sthref289]]
+[[sthref289]]
 
 ==== Example 1   Creating an IIOP Listener
 
@@ -86,7 +86,7 @@ asadmin> create-iiop-listener --listeneraddress 192.168.1.100
 Command create-iiop-listener executed successfully.
 ----
 
-[[GSRFM486]][[sthref290]]
+[[sthref290]]
 
 ==== Example 2   Creating an IIOP Listener with a Target Cluster
 

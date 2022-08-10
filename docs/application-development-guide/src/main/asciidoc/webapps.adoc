@@ -7,7 +7,7 @@ prev=jpa.html
 
 = Developing Web Applications
 
-[[GSDVG00009]][[beafs]]
+[[beafs]]
 
 
 [[developing-web-applications]]
@@ -39,7 +39,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 ====
 
 
-[[beagj]][[GSDVG00140]][[using-servlets]]
+[[using-servlets]]
 
 === Using Servlets
 
@@ -72,7 +72,7 @@ The following topics are addressed here:
 * xref:#caching-servlet-results[Caching Servlet Results]
 * xref:#about-the-servlet-engine[About the Servlet Engine]
 
-[[beagm]][[GSDVG00397]][[caching-servlet-results]]
+[[caching-servlet-results]]
 
 ==== Caching Servlet Results
 
@@ -113,7 +113,7 @@ The following topics are addressed here:
 * xref:#caching-example[Caching Example]
 * xref:#the-cachekeygenerator-interface[The CacheKeyGenerator Interface]
 
-[[beagn]][[GSDVG00251]][[caching-features]]
+[[caching-features]]
 
 ===== Caching Features
 
@@ -157,7 +157,7 @@ cached if caching has been enabled for those resources. For details, see
 in {productName} Application Deployment Guide.
 These are elements in the `glassfish-web.xml` file.
 
-[[beago]][[GSDVG00252]][[default-cache-configuration]]
+[[default-cache-configuration]]
 
 ===== Default Cache Configuration
 
@@ -179,7 +179,7 @@ any are specified.
 `RequestDispatcher.include()` or `RequestDispatcher.forward()` call are
 never cached.
 
-[[beagp]][[GSDVG00253]][[caching-example]]
+[[caching-example]]
 
 ===== Caching Example
 
@@ -235,7 +235,7 @@ For more information about the `glassfish-web.xml` caching settings, see
 "link:application-deployment-guide/dd-elements.html#cache[cache]" in {productName}
 Application Deployment Guide.
 
-[[beagq]][[GSDVG00254]][[the-cachekeygenerator-interface]]
+[[the-cachekeygenerator-interface]]
 
 ===== The CacheKeyGenerator Interface
 
@@ -249,7 +249,7 @@ The name of the context attribute is configurable as the `value` of the
 the `glassfish-web.xml` deployment descriptor. For more information, see
 "link:application-deployment-guide/dd-elements.html#default-helper[default-helper]" in {productName} Application Deployment Guide.
 
-[[beagr]][[GSDVG00398]][[about-the-servlet-engine]]
+[[about-the-servlet-engine]]
 
 ==== About the Servlet Engine
 
@@ -263,7 +263,7 @@ The following topics are addressed here:
 * xref:#instantiating-and-removing-servlets[Instantiating and Removing Servlets]
 * xref:#request-handling[Request Handling]
 
-[[beags]][[GSDVG00255]][[instantiating-and-removing-servlets]]
+[[instantiating-and-removing-servlets]]
 
 ===== Instantiating and Removing Servlets
 
@@ -279,7 +279,7 @@ final tasks and deallocate resources. You can override this method to
 write log messages or clean up any lingering connections that won't be
 caught in garbage collection.
 
-[[beagt]][[GSDVG00256]][[request-handling]]
+[[request-handling]]
 
 ===== Request Handling
 
@@ -308,7 +308,7 @@ servlets. Very often, this means accessing EJB components to perform
 business transactions, then collating the information in the request
 object or in a JDBC `ResultSet` object.
 
-[[beagu]][[GSDVG00141]][[using-javaserver-pages]]
+[[using-javaserver-pages]]
 
 === Using JavaServer Pages
 
@@ -334,7 +334,7 @@ The following topics are addressed here:
 * xref:#jsp-caching[JSP Caching]
 * xref:#options-for-compiling-jsp-files[Options for Compiling JSP Files]
 
-[[beagv]][[GSDVG00399]][[jsp-tag-libraries-and-standard-portable-tags]]
+[[jsp-tag-libraries-and-standard-portable-tags]]
 
 ==== JSP Tag Libraries and Standard Portable Tags
 
@@ -351,7 +351,7 @@ However, the as-install``/lib/jspcachtags.jar`` tag library for JSP
 caching is not automatically available to web applications. See
 xref:#jsp-caching[JSP Caching], next.
 
-[[beagw]][[GSDVG00400]][[jsp-caching]]
+[[jsp-caching]]
 
 ==== JSP Caching
 
@@ -371,7 +371,7 @@ The following topics are addressed here:
 For more information about response caching as it pertains to servlets,
 see xref:#caching-servlet-results[Caching Servlet Results].
 
-[[gaxbq]][[GSDVG00257]][[enabling-jsp-caching]]
+[[enabling-jsp-caching]]
 
 ===== Enabling JSP Caching
 
@@ -414,7 +414,7 @@ Subsequently, the cache tags are available as `<`prefix`:cache>` and
 `<`prefix`:flush>`. For example, if your prefix is `mypfx`, the cache
 tags are available as `<mypfx:cache>` and `<mypfx:flush>`.
 
-[[gaxcr]][[GSDVG00258]][[caching-scope]]
+[[caching-scope]]
 
 ===== Caching Scope
 
@@ -452,7 +452,7 @@ specify any listener. The
 `com.sun.appserv.web.taglibs.cache.CacheContextListener` is already
 specified in the `jspcachtags.tld` file.
 
-[[beagx]][[GSDVG00259]][[the-cache-tag]]
+[[the-cache-tag]]
 
 ===== The `cache` Tag
 
@@ -463,7 +463,7 @@ time it is run, the cached content is checked to see if it needs to be
 refreshed and if so, it is executed again, and the cached data is
 refreshed. Otherwise, the cached data is served.
 
-[[fvyfx]][[GSDVG00023]][[attributes-of-cache]]
+[[attributes-of-cache]]
 
 Attributes of `cache`
 
@@ -504,7 +504,7 @@ programmatically refresh the cache immediately regardless of the
 |===
 
 
-[[fvyeh]][[GSDVG00024]][[example-of-cache]]
+[[example-of-cache]]
 
 Example of `cache`
 
@@ -533,7 +533,7 @@ The following example represents a cached JSP file:
 </mypfx:cache>
 ----
 
-[[beagy]][[GSDVG00260]][[the-flush-tag]]
+[[the-flush-tag]]
 
 ===== The `flush` Tag
 
@@ -541,7 +541,7 @@ Forces the cache to be flushed. If a `key` is specified, only the entry
 with that key is flushed. If no key is specified, the entire cache is
 flushed.
 
-[[fvykp]][[GSDVG00025]][[attributes-of-flush]]
+[[attributes-of-flush]]
 
 Attributes of `flush`
 
@@ -565,7 +565,7 @@ the page.
 |===
 
 
-[[fvyle]][[GSDVG00026]][[examples-of-flush]]
+[[examples-of-flush]]
 
 Examples of `flush`
 
@@ -585,7 +585,7 @@ To flush the entire cache:
 </c:if>
 ----
 
-[[beagz]][[GSDVG00401]][[options-for-compiling-jsp-files]]
+[[options-for-compiling-jsp-files]]
 
 ==== Options for Compiling JSP Files
 
@@ -599,7 +599,7 @@ Reference Manual].
 * The `jspc` command line tool allows you to precompile JSP files at the
 command line. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[beaha]][[GSDVG00142]][[creating-and-managing-sessions]]
+[[creating-and-managing-sessions]]
 
 === Creating and Managing Sessions
 
@@ -612,7 +612,7 @@ The following topics are addressed here:
 * xref:#configuring-sessions[Configuring Sessions]
 * xref:#session-managers[Session Managers]
 
-[[beahb]][[GSDVG00402]][[configuring-sessions]]
+[[configuring-sessions]]
 
 ==== Configuring Sessions
 
@@ -624,7 +624,7 @@ The following topics are addressed here:
 * xref:#logging-session-attributes[Logging Session Attributes]
 * xref:#distributed-sessions-and-persistence[Distributed Sessions and Persistence]
 
-[[beahc]][[GSDVG00261]][[http-sessions-cookies-and-url-rewriting]]
+[[http-sessions-cookies-and-url-rewriting]]
 
 ===== HTTP Sessions, Cookies, and URL Rewriting
 
@@ -640,7 +640,7 @@ entire web container, see xref:#GSDVG00410[Using the `default-web.xml` File]
 and the link:ha-administration-guide.html#GSHAG[{productName} High
 Availability Administration Guide].
 
-[[beahd]][[GSDVG00262]][[coordinating-session-access]]
+[[coordinating-session-access]]
 
 ===== Coordinating Session Access
 
@@ -660,7 +660,7 @@ frames where multiple servlets are executing simultaneously on behalf of
 the same client. A good solution is to ensure that one of the servlets
 modifies the session and the others have read-only access.
 
-[[ghmih]][[GSDVG00263]][[saving-sessions-during-redeployment]]
+[[saving-sessions-during-redeployment]]
 
 ===== Saving Sessions During Redeployment
 
@@ -695,7 +695,7 @@ application-specific class referenced by a session attribute may evolve
 only in a backward-compatible fashion. For more information about class
 loaders, see link:class-loaders.html#beade[Class Loaders].
 
-[[gixeb]][[GSDVG00264]][[logging-session-attributes]]
+[[logging-session-attributes]]
 
 ===== Logging Session Attributes
 
@@ -710,7 +710,7 @@ For more information about access logging and format tokens, see online
 help for the Access Log tab of the HTTP Service page in the
 Administration Console.
 
-[[beahe]][[GSDVG00265]][[distributed-sessions-and-persistence]]
+[[distributed-sessions-and-persistence]]
 
 ===== Distributed Sessions and Persistence
 
@@ -802,7 +802,7 @@ correctly rolled back or committed.
 |===
 
 
-[[beahf]][[GSDVG00403]][[session-managers]]
+[[session-managers]]
 
 ==== Session Managers
 
@@ -833,7 +833,7 @@ used.
 For more information, see "link:application-deployment-guide/dd-elements.html#session-manager[session-manager]" in
 {productName} Application Deployment Guide.
 
-[[beahg]][[GSDVG00266]][[the-memory-persistence-type]]
+[[the-memory-persistence-type]]
 
 ===== The `memory` Persistence Type
 
@@ -877,7 +877,7 @@ For more information about the `glassfish-web.xml` file, see the
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
-[[beahh]][[GSDVG00267]][[the-file-persistence-type]]
+[[the-file-persistence-type]]
 
 ===== The `file` Persistence Type
 
@@ -930,7 +930,7 @@ For more information about the `glassfish-web.xml` file, see the
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
-[[gdshu]][[GSDVG00268]][[the-replicated-persistence-type]]
+[[the-replicated-persistence-type]]
 
 ===== The `replicated` Persistence Type
 
@@ -1020,7 +1020,7 @@ false, performance is reduced but availability is guaranteed. States are
 not buffered but immediately transmitted to other instances in the
 cluster.
 
-[[ggrgt]][[GSDVG00143]][[using-comet]]
+[[using-comet]]
 
 === Using Comet
 
@@ -1033,7 +1033,7 @@ The following topics are addressed here:
 * xref:#grizzly-comet[Grizzly Comet]
 * xref:#bayeux-protocol[Bayeux Protocol]
 
-[[ggrgy]][[GSDVG00404]][[introduction-to-comet]]
+[[introduction-to-comet]]
 
 ==== Introduction to Comet
 
@@ -1066,7 +1066,7 @@ technique to send updates to clients when they are available rather than
 expecting clients to reopen the connection to poll the server for
 updates.
 
-[[ggrib]][[GSDVG00270]][[the-grizzly-implementation-of-comet]]
+[[the-grizzly-implementation-of-comet]]
 
 ===== The Grizzly Implementation of Comet
 
@@ -1103,7 +1103,7 @@ invoke it from an Enterprise Java Beans (EJB ) component. The Grizzly
 implementation of `Cometd` consists of a servlet that you reference from
 your web application.
 
-[[ggrim]][[GSDVG00271]][[client-technologies-to-use-with-comet]]
+[[client-technologies-to-use-with-comet]]
 
 ===== Client Technologies to Use With Comet
 
@@ -1129,7 +1129,7 @@ to the server. While you can use any of the client technologies listed
 in this section with either kind of connection, it is more difficult to
 use JavaScript with an HTTP-streaming connection.
 
-[[ggrgo]][[GSDVG00272]][[types-of-comet-connections]]
+[[types-of-comet-connections]]
 
 ===== Types of Comet Connections
 
@@ -1139,7 +1139,7 @@ different ways to handle client connections to the server:
 * HTTP Streaming
 * Long Polling
 
-[[ggriu]][[GSDVG00027]][[http-streaming]]
+[[http-streaming]]
 
 HTTP Streaming
 
@@ -1161,7 +1161,7 @@ The client makes an initial request and then suspends the request,
 meaning that it waits for a response. Whenever data is available, the
 server writes it to the response.
 
-[[ggrhv]][[GSDVG00028]][[long-polling]]
+[[long-polling]]
 
 Long Polling
 
@@ -1178,7 +1178,7 @@ The client makes an initial request and then suspends the request. When
 an update is available, the server writes it to the response. The
 connection closes, and the client optionally resumes the connection.
 
-[[ggtjb]][[GSDVG00029]][[how-to-choose-the-type-of-connection]]
+[[how-to-choose-the-type-of-connection]]
 
 How to Choose the Type of Connection
 
@@ -1192,7 +1192,7 @@ HTTP-streaming connection is that if you are streaming through a proxy,
 the proxy can buffer the response from the server. So, be sure to test
 your application if you plan to use HTTP-streaming behind a proxy.
 
-[[ghgxk]][[GSDVG00405]][[grizzly-comet]]
+[[grizzly-comet]]
 
 ==== Grizzly Comet
 
@@ -1238,7 +1238,7 @@ happens:
 cometContext.notify((Object)(handler))
 ----
 
-[[ghgxn]][[GSDVG00406]][[bayeux-protocol]]
+[[bayeux-protocol]]
 
 ==== Bayeux Protocol
 
@@ -1253,7 +1253,7 @@ The following topics are addressed here:
 * xref:#GSDVG00067[To Configure the `web.xml` File]
 * xref:#to-write-deploy-and-run-the-client[To Write, Deploy, and Run the Client]
 
-[[ghhaw]][[GSDVG00280]][[enabling-comet]]
+[[enabling-comet]]
 
 ===== Enabling Comet
 
@@ -1269,7 +1269,7 @@ asadmin set server-config.network-config.protocols.protocol.http-1.http.comet-su
 
 Substitute the name of the protocol for `http-1`.
 
-[[ghhap]][[GSDVG00067]][[to-configure-the-web.xml-file]]
+[[GSDVG00067]][[to-configure-the-web.xml-file]]
 
 ===== To Configure the `web.xml` File
 
@@ -1318,7 +1318,7 @@ Note that the `load-on-startup` value for the `CometdServlet` is `1`.
 ----
 4. Save the `web.xml` file.
 
-[[ghhtv]][[GSDVG00068]][[to-write-deploy-and-run-the-client]]
+[[to-write-deploy-and-run-the-client]]
 
 ===== To Write, Deploy, and Run the Client
 
@@ -1372,7 +1372,7 @@ https://docs.cometd.org/current/reference/#_bayeux[Bayeux Protocol]
 For more information about the Dojo toolkit, see
 `http://dojotoolkit.org/`.
 
-[[beaft]][[GSDVG00144]][[advanced-web-application-features]]
+[[advanced-web-application-features]]
 
 === Advanced Web Application Features
 
@@ -1392,7 +1392,7 @@ The following topics are addressed here:
 * xref:#using-ssi[Using SSI]
 * xref:#using-cgi[Using CGI]
 
-[[beafu]][[GSDVG00407]][[internationalization-issues]]
+[[internationalization-issues]]
 
 ==== Internationalization Issues
 
@@ -1401,7 +1401,7 @@ The following topics are addressed here:
 * xref:#the-servers-default-locale[The Server's Default Locale]
 * xref:#servlet-character-encoding[Servlet Character Encoding]
 
-[[beafv]][[GSDVG00281]][[the-servers-default-locale]]
+[[the-servers-default-locale]]
 
 ===== The Server's Default Locale
 
@@ -1411,7 +1411,7 @@ on, use the Administration Console. Select the domain component. Then
 type a value in the Locale field. For details, click the Help button in
 the Administration Console.
 
-[[beafw]][[GSDVG00282]][[servlet-character-encoding]]
+[[servlet-character-encoding]]
 
 ===== Servlet Character Encoding
 
@@ -1420,7 +1420,7 @@ encoding for the servlet request and the servlet response. For encodings
 you can use, see
 `http://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html`.
 
-[[beafx]][[GSDVG00031]][[servlet-request]]
+[[servlet-request]]
 
 Servlet Request
 
@@ -1439,7 +1439,7 @@ the `glassfish-web.xml` file
 For details about the `parameter-encoding` element, see
 "link:application-deployment-guide/dd-elements.html#parameter-encoding[parameter-encoding]" in {productName} Application Deployment Guide.
 
-[[beafy]][[GSDVG00032]][[servlet-response]]
+[[servlet-response]]
 
 Servlet Response
 
@@ -1451,7 +1451,7 @@ encoding:
 * The `setLocale` method
 * The default, which is `ISO-8859-1`
 
-[[gilyj]][[GSDVG00408]][[virtual-server-properties]]
+[[virtual-server-properties]]
 
 ==== Virtual Server Properties
 
@@ -1486,7 +1486,7 @@ Some virtual server properties can be set for a specific web
 application. For details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in
 {productName} Application Deployment Guide.
 
-[[beagb]][[GSDVG00409]][[class-loader-delegation]]
+[[class-loader-delegation]]
 
 ==== Class Loader Delegation
 
@@ -1512,7 +1512,7 @@ are part of the Jakarta EE platform.
 For general information about class loaders, see
 link:class-loaders.html#beade[Class Loaders].
 
-[[beagc]][[GSDVG00410]][[using-the-default-web.xml-file]]
+[[GSDVG00410]][[using-the-default-web.xml-file]]
 
 ==== Using the `default-web.xml` File
 
@@ -1568,7 +1568,7 @@ feature in the domain-dir``/lib`` directory.
 JAR file.
 3. Restart the server.
 
-[[beagd]][[GSDVG00411]][[configuring-logging-and-monitoring-in-the-web-container]]
+[[configuring-logging-and-monitoring-in-the-web-container]]
 
 ==== Configuring Logging and Monitoring in the Web Container
 
@@ -1578,7 +1578,7 @@ Administration Console. Select Logger Settings under the relevant
 configuration, or select the Stand-Alone Instances component, select the
 instance from the table, and select the Monitor tab.
 
-[[beage]][[GSDVG00412]][[configuring-idempotent-url-requests]]
+[[configuring-idempotent-url-requests]]
 
 ==== Configuring Idempotent URL Requests
 
@@ -1595,7 +1595,7 @@ The following topics are addressed here:
 * xref:#specifying-an-idempotent-url[Specifying an Idempotent URL]
 * xref:#characteristics-of-an-idempotent-url[Characteristics of an Idempotent URL]
 
-[[beagf]][[GSDVG00283]][[specifying-an-idempotent-url]]
+[[specifying-an-idempotent-url]]
 
 ===== Specifying an Idempotent URL
 
@@ -1613,7 +1613,7 @@ For details, see "link:application-deployment-guide/dd-elements.html#idempotent-
 If none of the server instances can successfully serve the request, an
 error page is returned.
 
-[[beagg]][[GSDVG00284]][[characteristics-of-an-idempotent-url]]
+[[characteristics-of-an-idempotent-url]]
 
 ===== Characteristics of an Idempotent URL
 
@@ -1648,7 +1648,7 @@ Examples of non-idempotent requests include banking transactions and
 online shopping. If you retry such requests, money might be transferred
 twice from your account.
 
-[[beagi]][[GSDVG00413]][[header-management]]
+[[header-management]]
 
 ==== Header Management
 
@@ -1660,7 +1660,7 @@ The header names used in ``HttpServletResponse.add``XXX``Header()`` and
 ``HttpServletResponse.set``XXX``Header()`` are returned as they were
 created.
 
-[[geqrh]][[GSDVG00414]][[configuring-valves-and-catalina-listeners]]
+[[configuring-valves-and-catalina-listeners]]
 
 ==== Configuring Valves and Catalina Listeners
 
@@ -1691,7 +1691,7 @@ module look like this:
 You can define these same properties for a virtual server. For more
 information, see xref:#virtual-server-properties[Virtual Server Properties].
 
-[[geqpl]][[GSDVG00415]][[alternate-document-roots]]
+[[alternate-document-roots]]
 
 ==== Alternate Document Roots
 
@@ -1813,7 +1813,7 @@ alternate docroots, or if the target web application does not specify
 any alternate docroots, the request is served from the web application's
 standard docroot, as usual.
 
-[[geurd]][[GSDVG00416]][[using-a-context.xml-file]]
+[[GSDVG00416]][[using-a-context.xml-file]]
 
 ==== Using a context.xml File
 
@@ -1860,7 +1860,7 @@ Container]
 parameters, environment entries, and resource definitions in
 `context.xml` are supported in the {productName}.
 
-[[gezcx]][[GSDVG00417]][[enabling-webdav]]
+[[enabling-webdav]]
 
 ==== Enabling WebDav
 
@@ -1967,7 +1967,7 @@ You can add the WebDav servlet to your `default-web.xml` file to enable
 it for all applications, but you can't set up a security role mapping to
 protect it.
 
-[[ghepd]][[GSDVG00418]][[using-ssi]]
+[[using-ssi]]
 
 ==== Using SSI
 
@@ -2033,7 +2033,7 @@ relative to the `content-root`.
 For more information about SSI, see
 `http://httpd.apache.org/docs/2.2/mod/mod_include.html`.
 
-[[ghepi]][[GSDVG00419]][[using-cgi]]
+[[using-cgi]]
 
 ==== Using CGI
 
@@ -2081,7 +2081,7 @@ http://localhost:8080/mycontext/cgi-bin/hello
 You can configure the following `init-param` values for the
 `CGIServlet`.
 
-[[GSDVG546]][[sthref17]][[ghern]]
+[[ghern]]
 
 
 Table 7-5 `CGIServlet` `init-param` Values

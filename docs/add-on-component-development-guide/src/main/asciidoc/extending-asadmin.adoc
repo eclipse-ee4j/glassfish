@@ -7,7 +7,7 @@ prev=extending-the-admin-console.html
 
 = Extending the asadmin Utility
 
-[[GSACG00004]][[ghmrd]]
+[[ghmrd]]
 
 
 [[extending-the-asadmin-utility]]
@@ -35,7 +35,7 @@ The following topics are addressed here:
 * xref:#implementing-create-delete-and-list-commands-using-annotations[Implementing Create, Delete, and List Commands Using
 Annotations]
 
-[[ghpuj]][[GSACG00105]][[about-the-administrative-command-infrastructure-of-glassfish-server]]
+[[about-the-administrative-command-infrastructure-of-glassfish-server]]
 
 === About the Administrative Command Infrastructure of {productName}
 
@@ -53,7 +53,7 @@ express their dependencies, and extraction to provide results to a user.
 For more information, see link:writing-hk2-components.html#ghmna[Writing
 HK2 Components].
 
-[[ghpwe]][[GSACG00107]][[adding-an-asadmin-subcommand]]
+[[adding-an-asadmin-subcommand]]
 
 === Adding an `asadmin` Subcommand
 
@@ -69,7 +69,7 @@ The following topics are addressed here:
 Stateless]
 * xref:#example-of-adding-an-asadmin-subcommand[Example of Adding an `asadmin` Subcommand]
 
-[[ghrqj]][[GSACG00194]][[representing-an-asadmin-subcommand-as-a-java-class]]
+[[representing-an-asadmin-subcommand-as-a-java-class]]
 
 ==== Representing an `asadmin` Subcommand as a Java Class
 
@@ -91,7 +91,7 @@ component that contains them is made known to the {productName} runtime.
 For information about how to make a component known to the {productName} runtime, see
 link:packaging-integrating-delivering.html#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}].
 
-[[ghrpm]][[GSACG00195]][[specifying-the-name-of-an-asadmin-subcommand]]
+[[specifying-the-name-of-an-asadmin-subcommand]]
 
 ==== Specifying the Name of an `asadmin` Subcommand
 
@@ -129,7 +129,7 @@ For a complete list of `asadmin` subcommands that are supplied in
 {productName} distributions, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[ghrng]][[GSACG00196]][[ensuring-that-an-admincommand-implementation-is-stateless]]
+[[ensuring-that-an-admincommand-implementation-is-stateless]]
 
 ==== Ensuring That an `AdminCommand` Implementation Is Stateless
 
@@ -143,11 +143,11 @@ In the `@Scoped` annotation, set the scope as follows:
 * To instantiate the subcommand for each lookup, set the scope to `PerLookup.class`.
 * To instantiate the subcommand only once for each session, set the scope to `Singleton`.
 
-[[ghrqx]][[GSACG00197]][[example-of-adding-an-asadmin-subcommand]]
+[[example-of-adding-an-asadmin-subcommand]]
 
 ==== Example of Adding an `asadmin` Subcommand
 
-[[GSACG00034]][[ghrqq]]
+[[ghrqq]]
 Example 4-1 Adding an `asadmin` Subcommand
 
 This example shows the declaration of the class `CreateMycontainer` that
@@ -175,7 +175,7 @@ public Class CreateMycontainer implements AdminCommand {
 }
 ----
 
-[[ghpwa]][[GSACG00108]][[adding-parameters-to-an-asadmin-subcommand]]
+[[adding-parameters-to-an-asadmin-subcommand]]
 
 === Adding Parameters to an `asadmin` Subcommand
 
@@ -200,7 +200,7 @@ The following topics are addressed here:
 Times on the Command Line]
 * xref:#example-of-adding-parameters-to-an-asadmin-subcommand[Example of Adding Parameters to an `asadmin` Subcommand]
 
-[[ghpvh]][[GSACG00198]][[representing-a-parameter-of-an-asadmin-subcommand]]
+[[representing-a-parameter-of-an-asadmin-subcommand]]
 
 ==== Representing a Parameter of an `asadmin` Subcommand
 
@@ -211,7 +211,7 @@ the property of a setter method for the following reasons:
 * To provide data encapsulation for the parameter
 * To add code for validating the parameter before the property is set
 
-[[ghptx]][[GSACG00199]][[identifying-a-parameter-of-an-asadmin-subcommand]]
+[[identifying-a-parameter-of-an-asadmin-subcommand]]
 
 ==== Identifying a Parameter of an `asadmin` Subcommand
 
@@ -239,7 +239,7 @@ setter method that is associated with the parameter.
 To specify the properties of the parameter, use the elements of the
 `@Param` annotation as explained in the sections that follow.
 
-[[ghpxp]][[GSACG00200]][[specifying-whether-a-parameter-is-an-option-or-an-operand]]
+[[specifying-whether-a-parameter-is-an-option-or-an-operand]]
 
 ==== Specifying Whether a Parameter Is an Option or an Operand
 
@@ -257,7 +257,7 @@ To specify whether a parameter is an option or an operand, set the
 This value is the default.
 * If the parameter is an operand, set the `primary` element to `true`.
 
-[[ghpxj]][[GSACG00201]][[specifying-the-name-of-an-option]]
+[[specifying-the-name-of-an-option]]
 
 ==== Specifying the Name of an Option
 
@@ -287,7 +287,7 @@ Option names are case-sensitive.
 ====
 
 
-[[ghpvy]][[GSACG00163]][[specifying-the-long-form-of-an-option-name]]
+[[specifying-the-long-form-of-an-option-name]]
 
 ===== Specifying the Long Form of an Option Name
 
@@ -316,7 +316,7 @@ short form of the parameter. The user can specify this character instead
 of the full parameter name, for example `-m` instead of `--monitor`. If
 you do not set this element, the option has no short form.
 
-[[ghpxl]][[GSACG00202]][[specifying-the-acceptable-values-of-a-parameter]]
+[[specifying-the-acceptable-values-of-a-parameter]]
 
 ==== Specifying the Acceptable Values of a Parameter
 
@@ -329,7 +329,7 @@ To specify the acceptable values of a parameter, set the
 contains a comma-separated list of acceptable values. If you do not set
 this element, any string of characters is acceptable.
 
-[[ghrgt]][[GSACG00203]][[specifying-the-default-value-of-a-parameter]]
+[[specifying-the-default-value-of-a-parameter]]
 
 ==== Specifying the Default Value of a Parameter
 
@@ -343,7 +343,7 @@ the `ParamDefaultCalculator` class and setting the `defaultCalculator`
 element of the `@Param` annotation to this class. If these elements are
 not set, the parameter has no default value.
 
-[[ghpuk]][[GSACG00204]][[specifying-whether-a-parameter-is-required-or-optional]]
+[[specifying-whether-a-parameter-is-required-or-optional]]
 
 ==== Specifying Whether a Parameter Is Required or Optional
 
@@ -360,7 +360,7 @@ To specify whether a parameter is optional or required, set the
 This value is the default.
 * If the parameter is optional, set the `optional` element to `true`.
 
-[[CDCFAJDG]][[specifying-whether-a-parameter-can-be-used-multiple-times-on-the-command-line]]
+[[specifying-whether-a-parameter-can-be-used-multiple-times-on-the-command-line]]
 
 Specifying Whether a Parameter Can Be Used Multiple Times on the Command
 ==== Line
@@ -370,11 +370,11 @@ the parameter multiple times, set the `multiple` element of the `@Param`
 annotation to `true`. The type of the annotated parameter must be an
 array.
 
-[[ghpxd]][[GSACG00205]][[example-of-adding-parameters-to-an-asadmin-subcommand]]
+[[example-of-adding-parameters-to-an-asadmin-subcommand]]
 
 ==== Example of Adding Parameters to an `asadmin` Subcommand
 
-[[GSACG00035]][[ghpuh]]
+[[ghpuh]]
 Example 4-2 Adding Parameters to an `asadmin` Subcommand
 
 This example shows the code for adding parameters to an `asadmin`
@@ -420,7 +420,7 @@ import org.glassfish.api.Param;
 }
 ----
 
-[[gkygt]][[GSACG00109]][[making-asadmin-subcommands-cluster-aware]]
+[[making-asadmin-subcommands-cluster-aware]]
 
 === Making `asadmin` Subcommands Cluster-Aware
 
@@ -452,7 +452,7 @@ The following topics are addressed here:
 * xref:#subcommand-preprocessing-and-postprocessing[Subcommand Preprocessing and Postprocessing]
 * xref:#running-a-command-from-another-command[Running a Command from Another Command]
 
-[[gkyjk]][[GSACG00206]][[specifying-allowed-targets]]
+[[specifying-allowed-targets]]
 
 ==== Specifying Allowed Targets
 
@@ -526,7 +526,7 @@ subcommand implementation if the following annotation is present:
 String target;
 ----
 
-[[gkykm]][[GSACG00207]][[the-target-utility]]
+[[the-target-utility]]
 
 ==== The `Target` Utility
 
@@ -554,7 +554,7 @@ The `Target` utility is packaged in the
 as-install``/modules/internal-api.jar`` file. Its methods are documented
 with comments.
 
-[[gkyfv]][[GSACG00208]][[specifying-asadmin-subcommand-execution]]
+[[specifying-asadmin-subcommand-execution]]
 
 ==== Specifying `asadmin` Subcommand Execution
 
@@ -613,7 +613,7 @@ command execution. Specify the `ifOffline` element and set it to
 @ExecuteOn(value={RuntimeType.DAS}, ifOffline=FailurePolicy.Ignore)
 ----
 
-[[gkyjs]][[GSACG00209]][[subcommand-preprocessing-and-postprocessing]]
+[[subcommand-preprocessing-and-postprocessing]]
 
 ==== Subcommand Preprocessing and Postprocessing
 
@@ -705,7 +705,7 @@ set the `on` element of the `@Supplemental` annotation to
 Supplemental commands can use the `@ExecuteOn` annotation as described
 in xref:#specifying-asadmin-subcommand-execution[Specifying `asadmin` Subcommand Execution].
 
-[[gkyit]][[GSACG00210]][[running-a-command-from-another-command]]
+[[running-a-command-from-another-command]]
 
 ==== Running a Command from Another Command
 
@@ -731,7 +731,7 @@ Set<String>
 
 This is optional.
 
-[[ghptw]][[GSACG00110]][[adding-message-text-strings-to-an-asadmin-subcommand]]
+[[adding-message-text-strings-to-an-asadmin-subcommand]]
 
 === Adding Message Text Strings to an `asadmin` Subcommand
 
@@ -792,7 +792,7 @@ information about implementing the `execute` method, see
 xref:#enabling-an-asadmin-subcommand-to-run[Enabling an `asadmin` Subcommand to Run].
 ====
 
-[[GSACG00036]][[ghpvm]]
+[[ghpvm]]
 Example 4-3 Adding Message Strings to an `asadmin` Subcommand
 
 This example shows the code for adding message strings to the
@@ -864,7 +864,7 @@ create-mycontainer.command.enabled=Whether the container is enabled or disabled
 create-mycontainer.command.containername=The container name
 ----
 
-[[ghpvn]][[GSACG00111]][[enabling-an-asadmin-subcommand-to-run]]
+[[enabling-an-asadmin-subcommand-to-run]]
 
 === Enabling an `asadmin` Subcommand to Run
 
@@ -886,7 +886,7 @@ In the body of the `execute` method, provide the code for performing the
 operation that the command was designed to perform. For examples, see
 xref:#ghrsi[Example 4-6] and xref:#gkbdf[Example 4-7].
 
-[[ghpvq]][[GSACG00112]][[setting-the-context-of-an-asadmin-subcommand]]
+[[setting-the-context-of-an-asadmin-subcommand]]
 
 === Setting the Context of an `asadmin` Subcommand
 
@@ -901,7 +901,7 @@ To set the context of an `asadmin` subcommand, pass an
 `AdminCommandContext` object to the `execute` method of your
 implementation.
 
-[[ghpwn]][[GSACG00113]][[changing-the-brand-in-the-glassfish-server-cli]]
+[[changing-the-brand-in-the-glassfish-server-cli]]
 
 === Changing the Brand in the {productName} CLI
 
@@ -957,7 +957,7 @@ The meaning of each keyword-value pair is as follows:
 `version_suffix=`version-suffix::
   Specifies a suffix for the product version, for example, `Beta`.
 
-[[GSACG00037]][[ghrfh]]
+[[ghrfh]]
 Example 4-4 `BrandingVersion.properties` File for Changing the Brand in
 the {productName} CLI
 
@@ -987,11 +987,11 @@ COMPANY_CONTACT_URL            "http://www.glassfish.org"
 PRODUCT_TRADEMARKS             "GlassFish is a trademark of the Eclipse Foundation"
 ----
 
-[[ghmza]][[GSACG00114]][[examples-of-extending-the-asadmin-utility]]
+[[examples-of-extending-the-asadmin-utility]]
 
 === Examples of Extending the `asadmin` Utility
 
-[[GSACG00038]][[ghrnt]]
+[[ghrnt]]
 Example 4-5 `asadmin` Subcommand With Empty `execute` Method
 
 This example shows a class that represents the `asadmin` subcommand
@@ -1069,7 +1069,7 @@ create-mycontainer.command.enabled=Whether the container is enabled or disabled
 create-mycontainer.command.containername=The container name
 ----
 
-[[GSACG00039]][[ghrsi]]
+[[ghrsi]]
 Example 4-6 `asadmin` Subcommand for Retrieving and Displaying Information
 
 This example shows a class that represents the `asadmin` subcommand
@@ -1135,7 +1135,7 @@ public class ListRuntimeEnvironmentCommand implements AdminCommand {
 }
 ----
 
-[[GSACG00040]][[gkbdf]]
+[[gkbdf]]
 Example 4-7 `asadmin` Subcommand for Updating Configuration Data
 
 This example shows a class that represents the `asadmin` subcommand
@@ -1222,7 +1222,7 @@ public class ConfigureGreeterContainerCommand implements AdminCommand {
 }
 ----
 
-[[gkzlq]][[GSACG00115]][[implementing-create-delete-and-list-commands-using-annotations]]
+[[implementing-create-delete-and-list-commands-using-annotations]]
 
 === Implementing Create, Delete, and List Commands Using Annotations
 
@@ -1246,7 +1246,7 @@ The following topics are addressed here:
 * xref:#specifying-command-execution[Specifying Command Execution]
 * xref:#using-multiple-command-annotations[Using Multiple Command Annotations]
 
-[[gkzkc]][[GSACG00211]][[command-patterns]]
+[[command-patterns]]
 
 ==== Command Patterns
 
@@ -1309,7 +1309,7 @@ the following information is provided:
 List command pattern. The most basic list commands simply retrieve all
 configuration object instances of a given type.
 
-[[gkzle]][[GSACG00212]][[resolvers]]
+[[resolvers]]
 
 ==== Resolvers
 
@@ -1363,7 +1363,7 @@ instances under names.
 * `TypeResolver` — Uses the requested type to find the configuration
 object instance. This is the default resolver.
 
-[[gkzoy]][[GSACG00213]][[the-create-annotation]]
+[[the-create-annotation]]
 
 ==== The `@Create` Annotation
 
@@ -1401,7 +1401,7 @@ Because there is only one instance of the parent type, `Clusters`, in
 the configuration, this example uses the default resolver to retrieve
 it. Therefore, no resolver needs to be specified.
 
-[[gkzoo]][[GSACG00214]][[the-delete-annotation]]
+[[the-delete-annotation]]
 
 ==== The `@Delete` Annotation
 
@@ -1439,7 +1439,7 @@ The `TypeAndNameResolver` uses the child type and the name operand
 passed through the command line to retrieve the specific cluster
 instance to be deleted.
 
-[[gkzpl]][[GSACG00215]][[the-listing-annotation]]
+[[the-listing-annotation]]
 
 ==== The `@Listing` Annotation
 
@@ -1478,7 +1478,7 @@ public interface Clusters extends ConfigBeanProxy, Injectable {
 }
 ----
 
-[[gkznf]][[GSACG00216]][[create-command-decorators]]
+[[create-command-decorators]]
 
 ==== Create Command Decorators
 
@@ -1584,7 +1584,7 @@ The decorator class can optionally be an inner class of the child class.
 You can inject command options using the `@Param` annotation. You can
 also inject HK2 services or configuration instances.
 
-[[gkznx]][[GSACG00217]][[delete-command-decorators]]
+[[delete-command-decorators]]
 
 ==== Delete Command Decorators
 
@@ -1669,7 +1669,7 @@ The decorator class can optionally be an inner class of the child class.
 You can inject command options using the `@Param` annotation. You can
 also inject HK2 services or configuration instances.
 
-[[gkzmu]][[GSACG00218]][[specifying-command-execution]]
+[[specifying-command-execution]]
 
 ==== Specifying Command Execution
 
@@ -1689,7 +1689,7 @@ annotation, use the `cluster` element. For example:
         cluster=@org.glassfish.api.admin.ExecuteOn(value=RuntimeType.DAS))
 ----
 
-[[gkznd]][[GSACG00219]][[using-multiple-command-annotations]]
+[[using-multiple-command-annotations]]
 
 ==== Using Multiple Command Annotations
 

@@ -7,7 +7,7 @@ prev=list-context-services.html
 
 = list-custom-resources
 
-[[list-custom-resources-1]][[GSRFM00162]][[list-custom-resources]]
+[[list-custom-resources]]
 
 == list-custom-resources
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM654]][[sthref1458]]
+[[sthref1458]]
 
 ==== Example 1   Listing Custom Resources
 
@@ -68,7 +68,7 @@ sample_custom_resource02
 Command list-custom-resources executed successfully.
 ----
 
-[[GSRFM655]][[sthref1459]]
+[[sthref1459]]
 
 ==== Example 2   Using the list-custom-resources command with a target
 

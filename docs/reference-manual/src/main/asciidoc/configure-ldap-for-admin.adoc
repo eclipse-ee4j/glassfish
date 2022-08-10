@@ -7,7 +7,7 @@ prev=configure-lb-weight.html
 
 = configure-ldap-for-admin
 
-[[configure-ldap-for-admin-1]][[GSRFM00010]][[configure-ldap-for-admin]]
+[[configure-ldap-for-admin]]
 
 == configure-ldap-for-admin
 
@@ -40,7 +40,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM455]][[sthref97]]
+[[sthref97]]
 
 ==== Example 1    Configuring the LDAP Authentication Realm
 

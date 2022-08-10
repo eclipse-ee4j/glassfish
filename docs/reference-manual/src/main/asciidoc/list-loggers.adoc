@@ -7,7 +7,7 @@ prev=list-log-attributes.html
 
 = list-loggers
 
-[[list-loggers-1]][[GSRFM869]][[list-loggers]]
+[[list-loggers]]
 
 == list-loggers
 
@@ -39,7 +39,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM870]][[sthref1642]]
+[[sthref1642]]
 
 ==== Example 1   Listing the Loggers
 

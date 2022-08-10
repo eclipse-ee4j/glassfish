@@ -7,7 +7,7 @@ prev=export-http-lb-config.html
 
 = export-sync-bundle
 
-[[export-sync-bundle-1]][[GSRFM00134]][[export-sync-bundle]]
+[[export-sync-bundle]]
 
 == export-sync-bundle
 
@@ -112,7 +112,7 @@ If an existing directory is specified without a filename, the file
 
 === Examples
 
-[[GSRFM614]][[sthref1175]]
+[[sthref1175]]
 
 ==== Example 1   Exporting the Configuration Data of a Cluster
 

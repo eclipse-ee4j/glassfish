@@ -7,7 +7,7 @@ prev=create-module-config.html
 
 = create-network-listener
 
-[[create-network-listener-1]][[GSRFM00046]][[create-network-listener]]
+[[create-network-listener]]
 
 == create-network-listener
 

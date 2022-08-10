@@ -7,7 +7,7 @@ prev=configure-jms-cluster.html
 
 = configure-lb-weight
 
-[[configure-lb-weight-1]][[GSRFM00009]][[configure-lb-weight]]
+[[configure-lb-weight]]
 
 == configure-lb-weight
 
@@ -67,7 +67,7 @@ instance-name=weight::
 
 === Examples
 
-[[GSRFM454]][[sthref90]]
+[[sthref90]]
 
 ==== Example 1   Assigning Load Balancer Weights to Cluster Instances
 

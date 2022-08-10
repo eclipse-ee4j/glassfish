@@ -7,7 +7,7 @@ prev=preface.html
 
 = Administering System Security
 
-[[GSSCG00035]][[ablnk]]
+[[ablnk]]
 
 
 [[administering-system-security]]
@@ -31,7 +31,7 @@ Information on application security is contained in
 "link:application-development-guide/securing-apps.html#beabg[Securing Applications]"
 in {productName} Application Development Guide.
 
-[[ggktf]][[GSSCG00143]][[about-system-security-in-glassfish-server]]
+[[about-system-security-in-glassfish-server]]
 
 === About System Security in {productName}
 
@@ -55,7 +55,7 @@ System security features include the following:
 * xref:#certificates-and-ssl[Certificates and SSL]
 * xref:#tools-for-managing-system-security[Tools for Managing System Security]
 
-[[ablnx]][[GSSCG00203]][[authentication]]
+[[authentication]]
 
 ==== Authentication
 
@@ -75,7 +75,7 @@ name and password in a web browser, and if the application verifies
 those credentials, the user is authenticated. The user is associated
 with this authenticated security identity for the remainder of the session.
 
-[[ghsqc]][[GSSCG00184]][[authentication-types]]
+[[authentication-types]]
 
 ===== Authentication Types
 
@@ -147,7 +147,7 @@ application to control the identity stores that it authenticates
 against, in a standard, portable way. You can use the built-in
 implementations of the  plug-in SPIs, or define custom implementations.
 
-[[gknah]][[GSSCG00185]][[jsr-196-server-authentication-modules]]
+[[jsr-196-server-authentication-modules]]
 
 ===== JSR 196 Server Authentication Modules
 
@@ -163,7 +163,7 @@ of message authentication modules in message processing runtimes. The
 standard defines profiles that establish contracts for the use of the
 SPI in specific contexts.
 
-[[ghltx]][[GSSCG00186]][[passwords]]
+[[passwords]]
 
 ===== Passwords
 
@@ -172,7 +172,7 @@ the components and data of {productName}. For Information about how
 to use passwords for {productName}, see xref:#administering-passwords[Administering
 Passwords].
 
-[[gczen]][[GSSCG00042]][[master-password-and-keystores]]
+[[master-password-and-keystores]]
 
 ====== Master Password and Keystores
 
@@ -198,7 +198,7 @@ password in sync between the DAS and instances.
 If you change the master password, you can choose to enter the master
 password manually when required, or save it in a file.
 
-[[gktgy]][[GSSCG00043]][[understanding-master-password-synchronization]]
+[[understanding-master-password-synchronization]]
 
 ====== Understanding Master Password Synchronization
 
@@ -239,7 +239,7 @@ If you do use a master password file, you assume the responsibility for
 using the `change-master-password` subcommand on the DAS and instances
 to keep the master password file in sync.
 
-[[gktez]][[GSSCG00044]][[using-the-default-master-password]]
+[[using-the-default-master-password]]
 
 ====== Using the Default Master Password
 
@@ -251,7 +251,7 @@ because it is assumed to be widely known.
 All {productName} subcommands work as expected with the default
 master password and there are no synchronization issues.
 
-[[gktfy]][[GSSCG00045]][[saving-the-master-password-to-a-file]]
+[[saving-the-master-password-to-a-file]]
 
 ====== Saving the Master Password to a File
 
@@ -278,7 +278,7 @@ described in xref:#additional-considerations-for-the-start-instance-and-start-cl
 The master-password file is encoded, not encrypted. You must use
 filesystem permissions to protect the file.
 
-[[gkthb]][[GSSCG00046]][[using-the-master-password-when-creating-a-domain]]
+[[using-the-master-password-when-creating-a-domain]]
 
 ====== Using the Master Password When Creating a Domain
 
@@ -293,7 +293,7 @@ password (changeit) that is built into {productName}.
 the `--passwordfile` option of the `asadmin` utility. Or, if none is
 defined, `--usemasterpassword` prompts the user for the master password.
 
-[[ghgof]][[GSSCG00047]][[administration-password]]
+[[administration-password]]
 
 ====== Administration Password
 
@@ -303,7 +303,7 @@ default admin username, the default admin password is usually set during
 installation but it can be changed. For instructions, see xref:#to-change-an-administration-password[To
 Change an Administration Password].
 
-[[ablnq]][[GSSCG00048]][[encoded-passwords]]
+[[encoded-passwords]]
 
 ====== Encoded Passwords
 
@@ -322,7 +322,7 @@ deleted after it has served its purpose.
 
 For instructions, see xref:#to-set-a-password-from-a-file[To Set a Password From a File].
 
-[[gkaol]][[GSSCG00049]][[web-browsers-and-password-storage]]
+[[web-browsers-and-password-storage]]
 
 ====== Web Browsers and Password Storage
 
@@ -342,7 +342,7 @@ To prevent your web browser from saving login credentials for the
 {productName} Administration Console, choose "No" or "Never for this
 page" when prompted by the browser during login.
 
-[[ghgoj]][[GSSCG00187]][[password-aliases]]
+[[password-aliases]]
 
 ===== Password Aliases
 
@@ -351,7 +351,7 @@ text, you can create an alias for a password. This process is also known
 as encrypting a password. For more information, see
 xref:#administering-password-aliases[Administering Password Aliases].
 
-[[ghlus]][[GSSCG00188]][[single-sign-on]]
+[[single-sign-on]]
 
 ===== Single Sign-on
 
@@ -369,7 +369,7 @@ on this virtual server that are configured for the same realm. If
 disabled, single sign-on is disabled for this virtual server, and users
 must authenticate separately to every application on the virtual server.
 
-[[ghlvu]][[GSSCG00204]][[authorization]]
+[[authorization]]
 
 ==== Authorization
 
@@ -379,7 +379,7 @@ user is authenticated, the user's level of authorization determines what
 operations the owner can perform. A user's authorization is based on the
 user's role.
 
-[[abloh]][[GSSCG00189]][[roles]]
+[[roles]]
 
 Roles
 +++++
@@ -417,7 +417,7 @@ mapping. The application server will implicitly make this mapping, as
 long as the names of the groups and roles match.
 ====
 
-[[GSSCG00001]][[fxjfw]]
+[[fxjfw]]
 
 .*Figure 1-1 Role Mapping*
 image:img/securityrolemapping.png[
@@ -425,7 +425,7 @@ image:img/securityrolemapping.png[
 assigned to roles, and how applications use groups and roles."]
 
 
-[[ghsqd]][[GSSCG00190]][[java-authorization-contract-for-containers]]
+[[java-authorization-contract-for-containers]]
 
 ===== Java Authorization Contract for Containers
 
@@ -443,7 +443,7 @@ JACC Providers] for additional information.
 
 You can also specify additional third-party JACC providers.
 
-[[gkriq]][[GSSCG00191]][[working-with-the-server.policy-policy-file]]
+[[GSSCG00191]][[working-with-the-server.policy-policy-file]]
 
 ===== Working With the server.policy Policy File
 
@@ -455,7 +455,7 @@ This section covers the following topics:
 * xref:#GSSCG00050[Contents of server.policy]
 * xref:#changing-the-default-permissions[Changing the Default Permissions]
 
-[[gkrkh]][[GSSCG00050]][[contents-of-server.policy]]
+[[GSSCG00050]][[contents-of-server.policy]]
 
 Contents of server.policy
 
@@ -569,7 +569,7 @@ grant {
 };
 ----
 
-[[gkrmo]][[GSSCG00051]][[changing-the-default-permissions]]
+[[changing-the-default-permissions]]
 
 ====== Changing the Default Permissions
 
@@ -626,7 +626,7 @@ are granted specifically for using connectors and reflection. If
 connectors or reflection are not used in a particular domain, you should
 remove these permissions, because they are otherwise unnecessary.
 
-[[ghlql]][[GSSCG00205]][[auditing]]
+[[auditing]]
 
 ==== Auditing
 
@@ -640,7 +640,7 @@ applications on the server will use the same audit module.
 For administration instructions, see xref:#administering-audit-modules[Administering Audit
 Modules].
 
-[[ghlti]][[GSSCG00206]][[firewalls]]
+[[firewalls]]
 
 ==== Firewalls
 
@@ -671,7 +671,7 @@ creates security risks.
 to allow for HTTP and HTTPS transactions. You must configure the inner
 firewall to allow the HTTP server plug-in to communicate with {productName} behind the firewall.
 
-[[abloj]][[GSSCG00207]][[certificates-and-ssl]]
+[[certificates-and-ssl]]
 
 ==== Certificates and SSL
 
@@ -685,7 +685,7 @@ The following topics are addressed here:
 
 For administration instructions, see xref:#administering-jsse-certificates[Administering JSSE Certificates].
 
-[[ablok]][[GSSCG00192]][[certificates]]
+[[certificates]]
 
 ===== Certificates
 
@@ -729,7 +729,7 @@ format. To verify the identity of a user in the `certificate` realm, the
 authentication service verifies an X.509 certificate, using the common
 name field of the X.509 certificate as the principal name.
 
-[[ablol]][[GSSCG00193]][[certificate-chains]]
+[[certificate-chains]]
 
 ===== Certificate Chains
 
@@ -763,7 +763,7 @@ certificate is reached. Each certificate in the chain (after the first)
 thus authenticates the public key of the signer of the previous
 certificate in the chain.
 
-[[ablqx]][[GSSCG00194]][[certificate-files]]
+[[certificate-files]]
 
 ===== Certificate Files
 
@@ -790,7 +790,7 @@ By default, {productName} is configured with a keystore and
 truststore that will work with the example applications and for
 development purposes.
 
-[[ablom]][[GSSCG00195]][[secure-sockets-layer]]
+[[secure-sockets-layer]]
 
 ===== Secure Sockets Layer
 
@@ -835,7 +835,7 @@ installed. For instructions on applying SSL to HTTP listeners, see
 "link:administration-guide/http_https.html#to-configure-an-http-listener-for-ssl[
 To Configure an HTTP Listener for SSL]" in {productName} Administration Guide.
 
-[[ablon]][[GSSCG00052]][[ciphers]]
+[[ciphers]]
 
 ====== Ciphers
 
@@ -850,7 +850,7 @@ the client and the server agree to use the strongest cipher that they
 both have enabled for communication, so it is usually sufficient to
 enable all ciphers.
 
-[[abloo]][[GSSCG00053]][[name-based-virtual-hosts]]
+[[name-based-virtual-hosts]]
 
 ====== Name-based Virtual Hosts
 
@@ -872,7 +872,7 @@ not match, these browsers display a warning. In general, only
 address-based virtual hosts are commonly used with SSL in a production
 environment.
 
-[[gksdc]][[GSSCG00196]][[custom-authentication-of-client-certificate-in-ssl-mutual-authentication]]
+[[custom-authentication-of-client-certificate-in-ssl-mutual-authentication]]
 
 ===== Custom Authentication of Client Certificate in SSL Mutual Authentication
 
@@ -894,7 +894,7 @@ This section describes the following topics:
 * xref:#example-appservcertificateloginmodule-code[Example AppservCertificateLoginModule Code]
 * xref:#setting-the-jaas-context[Setting the JAAS Context]
 
-[[gksfl]][[GSSCG00054]][[understanding-the-appservcertificateloginmodule-class]]
+[[understanding-the-appservcertificateloginmodule-class]]
 
 Understanding the `AppservCertificateLoginModule` Class
 
@@ -928,7 +928,7 @@ JAAS LoginModule `javax.security.auth.spi.LoginModule` instead if you so
 choose.
 ====
 
-[[gksej]][[GSSCG00055]][[example-appservcertificateloginmodule-code]]
+[[example-appservcertificateloginmodule-code]]
 
 Example AppservCertificateLoginModule Code
 
@@ -949,7 +949,7 @@ the distinguished name.
 * The example concatenates the application name with the value of `OU`,
 and uses it as the group name in the `commitUserAuthentication` method.
 
-[[GSSCG00060]][[gksel]]
+[[gksel]]
 Example 1-1 Sample AppservCertificateLoginModule Code
 
 [source,java]
@@ -976,7 +976,7 @@ public class CertificateLM extends AppservCertificateLoginModule {
 }
 ----
 
-[[gksee]][[GSSCG00056]][[setting-the-jaas-context]]
+[[setting-the-jaas-context]]
 
 ====== Setting the JAAS Context
 
@@ -1015,7 +1015,7 @@ property. For example:
 +
 `Command get executed successfully.`
 
-[[ablno]][[GSSCG00208]][[tools-for-managing-system-security]]
+[[tools-for-managing-system-security]]
 
 ==== Tools for Managing System Security
 
@@ -1046,7 +1046,7 @@ The `policytool` utility::
   system-wide Java security policies. As an administrator, you rarely
   use `policytool`.
 
-[[ghgrp]][[GSSCG00144]][[administering-passwords]]
+[[administering-passwords]]
 
 === Administering Passwords
 
@@ -1067,7 +1067,7 @@ The following topics are addressed here:
 * xref:#to-set-a-password-from-a-file[To Set a Password From a File]
 * xref:#administering-password-aliases[Administering Password Aliases]
 
-[[giudi]][[GSSCG00093]][[to-change-the-master-password]]
+[[to-change-the-master-password]]
 
 ==== To Change the Master Password
 
@@ -1115,7 +1115,7 @@ You are prompted for the old and new passwords. All dependent items are re-encry
 +
 See "link:administration-guide/domains.html#to-start-a-domain[To Start a Domain]" in {productName} Administration Guide.
 
-[[GSSCG00061]][[givil]]
+[[givil]]
 Example 1-2 Changing the Master Password
 
 The `change-master-password` subcommand is interactive in that you are
@@ -1159,7 +1159,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin --help change-master-password` at the command line.
 
-[[gktgr]][[GSSCG00209]][[additional-considerations-for-the-start-instance-and-start-cluster-subcommands]]
+[[additional-considerations-for-the-start-instance-and-start-cluster-subcommands]]
 
 ==== Additional Considerations for the `start-instance` and `start-cluster` Subcommands
 
@@ -1205,7 +1205,7 @@ password. In this case, you must start the instances locally by using
 `start-local-instance`.
 ====
 
-[[gktey]][[GSSCG00094]][[using-start-instance-and-start-cluster-with-a-password-file]]
+[[using-start-instance-and-start-cluster-with-a-password-file]]
 
 ==== Using `start-instance` and `start-cluster` With a Password File
 
@@ -1260,7 +1260,7 @@ instance. After the master password file exists in the node directory on
 the instance machine, additional instances can be created, started and
 stopped from the DAS.
 
-[[ghgpu]][[GSSCG00095]][[to-change-an-administration-password]]
+[[to-change-an-administration-password]]
 
 ==== To Change an Administration Password
 
@@ -1301,7 +1301,7 @@ link:reference-manual/change-admin-password.html#change-admin-password[`change-a
 3. Restart {productName}. +
 See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[GSSCG00062]][[ghlac]]
+[[ghlac]]
 Example 1-3 Changing the Admin Password
 
 This example changes the admin password for user anonymous from
@@ -1333,7 +1333,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help change-admin-password` at the command line.
 
-[[ghytn]][[GSSCG00096]][[to-set-a-password-from-a-file]]
+[[to-set-a-password-from-a-file]]
 
 ==== To Set a Password From a File
 
@@ -1388,7 +1388,7 @@ specifying the `--passwordfile` option will produce a warning about
 using the `--passwordfile` option. To prevent this warning situation
 from happening, unset `AS_ADMIN_PASSWORD`.
 
-[[ghgqc]][[GSSCG00210]][[administering-password-aliases]]
+[[administering-password-aliases]]
 
 ==== Administering Password Aliases
 
@@ -1410,7 +1410,7 @@ The following topics are addressed here:
 * xref:#to-delete-a-password-alias[To Delete a Password Alias]
 * xref:#to-update-a-password-alias[To Update a Password Alias]
 
-[[ghgrf]][[GSSCG00097]][[to-create-a-password-alias]]
+[[to-create-a-password-alias]]
 
 ===== To Create a Password Alias
 
@@ -1451,7 +1451,7 @@ You could use this method to create several users (user1, user2, and so forth),
 all with the same password. +
 `asadmin>` `--passwordfile``passwords.txt create-file-user` user1
 
-[[GSSCG00063]][[ginvi]]
+[[ginvi]]
 Example 1-4 Creating a Password Alias
 
 This example creates the new `jms-password` alias for the `admin` user:
@@ -1475,7 +1475,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-password-alias` at the command line.
 
-[[ghgsr]][[GSSCG00098]][[to-list-password-aliases]]
+[[to-list-password-aliases]]
 
 ===== To List Password Aliases
 
@@ -1486,7 +1486,7 @@ existing the password aliases.
 2. List password aliases by using the
 link:reference-manual/list-password-aliases.html#list-password-aliases[`list-password-aliases`] subcommand.
 
-[[GSSCG00064]][[ginsk]]
+[[ginsk]]
 Example 1-5 Listing Password Aliases
 
 This example lists the existing password aliases:
@@ -1503,7 +1503,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-password-aliases` at the command line.
 
-[[ghgnv]][[GSSCG00099]][[to-delete-a-password-alias]]
+[[to-delete-a-password-alias]]
 
 ===== To Delete a Password Alias
 
@@ -1516,7 +1516,7 @@ link:reference-manual/list-password-aliases.html#list-password-aliases[`list-pas
 3. Delete a password alias by using the
 link:reference-manual/list-password-aliases.html#list-password-aliases[`list-password-aliases`] subcommand.
 
-[[GSSCG00065]][[ginul]]
+[[ginul]]
 Example 1-6 Deleting a Password Alias
 
 This example deletes the password alias `jmspassword-alias`:
@@ -1532,7 +1532,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-password-alias` at the command line.
 
-[[giobz]][[GSSCG00100]][[to-update-a-password-alias]]
+[[to-update-a-password-alias]]
 
 ===== To Update a Password Alias
 
@@ -1547,7 +1547,7 @@ the password is propagated on the command line.
 link:reference-manual/update-password-alias.html#update-password-alias[`update-password-alias`] subcommand.
 3. Type the password when prompted.
 
-[[GSSCG00066]][[giodl]]
+[[giodl]]
 Example 1-7 Updating a Password Alias
 
 This example updates the password for the `jmspassword-alias` alias:
@@ -1571,7 +1571,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-password-alias` at the command line.
 
-[[ghgol]][[GSSCG00146]][[administering-audit-modules]]
+[[administering-audit-modules]]
 
 === Administering Audit Modules
 
@@ -1581,7 +1581,7 @@ The following topics are addressed here:
 * xref:#to-list-audit-modules[To List Audit Modules]
 * xref:#to-delete-an-audit-module[To Delete an Audit Module]
 
-[[ghgra]][[GSSCG00101]][[to-create-an-audit-module]]
+[[to-create-an-audit-module]]
 
 ==== To Create an Audit Module
 
@@ -1596,7 +1596,7 @@ link:reference-manual/create-audit-module.html#create-audit-module[`create-audit
 Information about properties for this subcommand is included in this
 help page.
 
-[[GSSCG00067]][[ghjlw]]
+[[ghjlw]]
 Example 1-8 Creating an Audit Module
 
 This example creates an audit module named `sampleAuditModule`:
@@ -1614,7 +1614,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-audit-module` at the command line.
 
-[[ghgsm]][[GSSCG00102]][[to-list-audit-modules]]
+[[to-list-audit-modules]]
 
 ==== To List Audit Modules
 
@@ -1629,7 +1629,7 @@ modules on one of the following targets:
 2. List the audit modules by using the
 link:reference-manual/list-audit-modules.html#list-audit-modules[`list-audit-modules`] subcommand.
 
-[[GSSCG00068]][[ghjmy]]
+[[ghjmy]]
 Example 1-9 Listing Audit Modules
 
 This example lists the audit modules on `localhost`:
@@ -1647,7 +1647,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-audit-modules` at the command line.
 
-[[ghgpo]][[GSSCG00104]][[to-delete-an-audit-module]]
+[[to-delete-an-audit-module]]
 
 ==== To Delete an Audit Module
 
@@ -1660,7 +1660,7 @@ link:reference-manual/list-audit-modules.html#list-audit-modules[`list-audit-mod
 3. Delete an audit module by using the
 link:reference-manual/delete-audit-module.html#delete-audit-module[`delete-audit-module`] subcommand.
 
-[[GSSCG00070]][[ghjhm]]
+[[ghjhm]]
 Example 1-10 Deleting an Audit Module
 
 This example deletes `sampleAuditModule`:
@@ -1671,7 +1671,7 @@ asadmin> delete-audit-module sampleAuditModule
 Command delete-audit-module executed successfully.
 ----
 
-[[ablqz]][[GSSCG00147]][[administering-jsse-certificates]]
+[[administering-jsse-certificates]]
 
 === Administering JSSE Certificates
 
@@ -1692,7 +1692,7 @@ The following topics are addressed here:
 * xref:#to-sign-a-certificate-by-using-keytool[To Sign a Certificate by Using `keytool`]
 * xref:#to-delete-a-certificate-by-using-keytool[To Delete a Certificate by Using `keytool`]
 
-[[ghlgv]][[GSSCG00105]][[to-generate-a-certificate-by-using-keytool]]
+[[to-generate-a-certificate-by-using-keytool]]
 
 ==== To Generate a Certificate by Using `keytool`
 
@@ -1762,7 +1762,7 @@ Certificate was added to keystore
 7. To apply your changes, restart {productName}. See
 "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[GSSCG00071]][[ghlii]]
+[[ghlii]]
 Example 1-11 Creating a Self-Signed Certificate in a JKS Keystore by
 Using an RSA Key Algorithm
 
@@ -1776,7 +1776,7 @@ keytool -genkey -noprompt -trustcacerts -keyalg RSA -alias ${cert.alias}
 -storepass ${keystore.pass}
 ----
 
-[[GSSCG00072]][[ghlew]]
+[[ghlew]]
 Example 1-12 Creating a Self-Signed Certificate in a JKS Keystore by
 Using a Default Key Algorithm
 
@@ -1787,7 +1787,7 @@ ${dn.name} -keypass ${key.pass} -keystore ${keystore.file} -storepass
 ${keystore.pass}
 ----
 
-[[GSSCG00073]][[ghldw]]
+[[ghldw]]
 Example 1-13 Displaying Available Certificates From a JKS Keystore
 
 [source]
@@ -1795,7 +1795,7 @@ Example 1-13 Displaying Available Certificates From a JKS Keystore
 keytool -list -v -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
-[[GSSCG00074]][[ghlfd]]
+[[ghlfd]]
 Example 1-14 Displaying Certificate information From a JKS Keystore
 
 [source]
@@ -1806,7 +1806,7 @@ keytool -list -v -alias ${cert.alias} -keystore ${keystore.file}
 
 See Also
 
-[[ghlgj]][[GSSCG00106]][[to-sign-a-certificate-by-using-keytool]]
+[[to-sign-a-certificate-by-using-keytool]]
 
 ==== To Sign a Certificate by Using `keytool`
 
@@ -1930,7 +1930,7 @@ Valid from: Sun Nov 11 05:30:00 GMT+05:30 2007 until: Mon Nov
 +
 See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[GSSCG00075]][[ghlhu]]
+[[ghlhu]]
 Example 1-15 Importing an RFC/Text-Formatted Certificate Into a JKS
 Keystore
 
@@ -1946,7 +1946,7 @@ keytool -import -noprompt -trustcacerts -alias ${cert.alias} -file
 ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
-[[GSSCG00076]][[ghlim]]
+[[ghlim]]
 Example 1-16 Exporting a Certificate From a JKS Keystore in PKCS7 Format
 
 The reply format defined by the Public Key Cryptography Standards #7,
@@ -1959,7 +1959,7 @@ keytool -export -noprompt -alias ${cert.alias} -file ${cert.file}
 -keystore ${keystore.file} -storepass ${keystore.pass}
 ----
 
-[[GSSCG00077]][[ghleb]]
+[[ghleb]]
 Example 1-17 Exporting a Certificate From a JKS Keystore in RFC/Text
 Format
 
@@ -1971,7 +1971,7 @@ ${cert.file} -keystore ${keystore.file} -storepass ${keystore.pass}
 
 See Also
 
-[[ghleq]][[GSSCG00107]][[to-delete-a-certificate-by-using-keytool]]
+[[to-delete-a-certificate-by-using-keytool]]
 
 ==== To Delete a Certificate by Using `keytool`
 
@@ -1987,7 +1987,7 @@ keytool -delete
  -storepass password
 ----
 
-[[GSSCG00078]][[ghlgy]]
+[[ghlgy]]
 Example 1-18 Deleting a Certificate From a JKS Keystore
 
 [source]
@@ -1998,7 +1998,7 @@ keytool -delete -noprompt -alias ${cert.alias} -keystore ${keystore.file}
 
 See Also
 
-[[gkngj]][[GSSCG00148]][[administering-jacc-providers]]
+[[administering-jacc-providers]]
 
 === Administering JACC Providers
 
@@ -2025,7 +2025,7 @@ in {productName}. The JACC provider is created as a `jacc-provider`
 element within the security-service element in the domain's `domain.xml`
 file.
 
-[[gksgp]][[GSSCG00108]][[administering-jacc-providers-from-the-administration-console]]
+[[administering-jacc-providers-from-the-administration-console]]
 
 ==== Administering JACC Providers From the Administration Console
 
@@ -2051,7 +2051,7 @@ enter optional properties (name/value) for the provider.
 6. To delete an existing JACC provider, select that provider and click
 Delete.
 
-[[gksfx]][[GSSCG00109]][[administering-jacc-providers-from-the-command-line]]
+[[administering-jacc-providers-from-the-command-line]]
 
 ==== Administering JACC Providers from the Command Line
 

@@ -7,7 +7,7 @@ prev=change-admin-password.html
 
 = change-master-broker
 
-[[change-master-broker-1]][[GSRFM00005]][[change-master-broker]]
+[[change-master-broker]]
 
 == change-master-broker
 
@@ -50,7 +50,7 @@ clustered-instance-name::
 
 === Examples
 
-[[GSRFM449]][[sthref58]]
+
 
 ==== Example 1   Changing the master broker
 

@@ -7,7 +7,7 @@ prev=list-password-aliases.html
 
 = list-persistence-types
 
-[[list-persistence-types-1]][[GSRFM00191]][[list-persistence-types]]
+[[list-persistence-types]]
 
 == list-persistence-types
 
@@ -77,7 +77,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM701]][[sthref1747]]
+[[sthref1747]]
 
 ==== Example 1   Listing Persistence Types for HTTP Sessions
 

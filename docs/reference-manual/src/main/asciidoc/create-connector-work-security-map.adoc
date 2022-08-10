@@ -7,7 +7,7 @@ prev=create-connector-security-map.html
 
 = create-connector-work-security-map
 
-[[create-connector-work-security-map-1]][[GSRFM00021]][[create-connector-work-security-map]]
+[[create-connector-work-security-map]]
 
 == create-connector-work-security-map
 
@@ -73,7 +73,7 @@ mapname::
 
 === Examples
 
-[[GSRFM468]][[sthref188]]
+[[sthref188]]
 
 ==== Example 1   Creating a Connector Work Security Map (Principal)
 
@@ -89,7 +89,7 @@ workSecurityMap1
 Command create-connector-work-security-map executed successfully.
 ----
 
-[[GSRFM469]][[sthref189]]
+[[sthref189]]
 
 ==== Example 2   Creating a Connector Work Security Map (Group)
 

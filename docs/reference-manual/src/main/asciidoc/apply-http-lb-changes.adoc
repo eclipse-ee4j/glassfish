@@ -7,7 +7,7 @@ prev=add-resources.html
 
 = apply-http-lb-changes
 
-[[apply-http-lb-changes-1]][[GSRFM00002]][[apply-http-lb-changes]]
+[[apply-http-lb-changes]]
 
 == apply-http-lb-changes
 

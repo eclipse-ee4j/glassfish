@@ -7,7 +7,7 @@ prev=list-jms-resources.html
 
 = list-jndi-entries
 
-[[list-jndi-entries-1]][[GSRFM00178]][[list-jndi-entries]]
+[[list-jndi-entries]]
 
 == list-jndi-entries
 
@@ -60,7 +60,7 @@ target::
 
 === Examples
 
-[[GSRFM677]][[sthref1589]]
+[[sthref1589]]
 
 ==== Example 1   Browsing the JNDI Tree
 

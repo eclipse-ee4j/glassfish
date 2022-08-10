@@ -7,7 +7,7 @@ prev=delete-http-lb.html
 
 = delete-http-lb-config
 
-[[delete-http-lb-config-1]][[GSRFM00080]][[delete-http-lb-config]]
+[[delete-http-lb-config]]
 
 == delete-http-lb-config
 
@@ -53,7 +53,7 @@ config_name::
 
 === Examples
 
-[[GSRFM549]][[sthref720]]
+[[sthref720]]
 
 ==== Example 1   Deleting a Load Balancer Configuration
 

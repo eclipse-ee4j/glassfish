@@ -7,7 +7,7 @@ prev=recover-transactions.html
 
 = redeploy
 
-[[redeploy-1]][[GSRFM00217]][[redeploy]]
+[[redeploy]]
 
 == redeploy
 
@@ -401,7 +401,7 @@ Whether this operand is required depends on how the application was
 
 === Examples
 
-[[GSRFM735]][[sthref1966]]
+[[sthref1966]]
 
 ==== Example 1   Redeploying a Web Application From a File
 
@@ -417,7 +417,7 @@ Application deployed successfully with name hello.
 Command redeploy executed successfully
 ----
 
-[[GSRFM736]][[sthref1967]]
+[[sthref1967]]
 
 ==== Example 2   Redeploying a Web Application From a Directory
 

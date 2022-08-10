@@ -7,7 +7,7 @@ prev=list-nodes.html
 
 = list-nodes-config
 
-[[list-nodes-config-1]][[GSRFM00188]][[list-nodes-config]]
+[[list-nodes-config]]
 
 == list-nodes-config
 
@@ -76,7 +76,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM690]][[sthref1713]]
+[[sthref1713]]
 
 ==== Example 1   Listing {productName} Nodes
 
@@ -91,7 +91,7 @@ devnode  CONFIG  localhost
 Command list-nodes-config executed successfully.
 ----
 
-[[GSRFM691]][[sthref1714]]
+[[sthref1714]]
 
 ==== Example 2   Listing Only the Names of {productName} Nodes
 
@@ -106,7 +106,7 @@ localhost-domain1
 devnode
 ----
 
-[[GSRFM692]][[sthref1715]]
+[[sthref1715]]
 
 ==== Example 3   Listing {productName} Nodes in Long Format
 

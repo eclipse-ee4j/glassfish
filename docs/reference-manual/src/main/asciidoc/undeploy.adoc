@@ -7,7 +7,7 @@ prev=stop-local-instance.html
 
 = undeploy
 
-[[undeploy-1]][[GSRFM00244]][[undeploy]]
+[[undeploy]]
 
 == undeploy
 
@@ -83,7 +83,7 @@ name::
 
 === Examples
 
-[[GSRFM769]][[sthref2194]]
+[[sthref2194]]
 
 ==== Example 1   Undeploying an Enterprise Application
 
@@ -95,7 +95,7 @@ asadmin> undeploy Cart
 Command undeploy executed successfully.
 ----
 
-[[GSRFM770]][[sthref2195]]
+[[sthref2195]]
 
 ==== Example 2   Undeploying an Enterprise Bean With Container-Managed Persistence (CMP)
 
@@ -108,7 +108,7 @@ asadmin> undeploy --droptables=true myejb
 Command undeploy executed successfully.
 ----
 
-[[GSRFM771]][[sthref2196]]
+[[sthref2196]]
 
 ==== Example 3   Undeploying a Connector (Resource Adapter)
 

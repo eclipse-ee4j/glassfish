@@ -7,7 +7,7 @@ prev=preface.html
 
 = High Availability in {productName}
 
-[[GSHAG00002]][[abdaq]]
+[[abdaq]]
 
 
 [[high-availability-in-glassfish-server]]
@@ -22,7 +22,7 @@ The following topics are addressed here:
 * xref:#recovering-from-failures[Recovering from Failures]
 * xref:#more-information[More Information]
 
-[[abdar]][[GSHAG00168]][[overview-of-high-availability]]
+[[overview-of-high-availability]]
 
 === Overview of High Availability
 
@@ -43,7 +43,7 @@ minimum application downtime and enhanced transactional security.
 * xref:#high-availability-java-message-service[High Availability Java Message Service]
 * xref:#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]
 
-[[gksdm]][[GSHAG00252]][[load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module]]
+[[load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module]]
 
 ==== Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module
 
@@ -56,7 +56,7 @@ Apache HTTP Server and `mod_jk`] and
 link:http-load-balancing.html#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with
 Apache HTTP Server and `mod_proxy_ajp`] for more information.
 
-[[gaynn]][[GSHAG00253]][[high-availability-session-persistence]]
+[[high-availability-session-persistence]]
 
 ==== High Availability Session Persistence
 
@@ -83,7 +83,7 @@ availability session persistence, see
 link:session-persistence-and-failover.html#abdkz[Configuring High
 Availability Session Persistence and Failover].
 
-[[gayna]][[GSHAG00254]][[high-availability-java-message-service]]
+[[high-availability-java-message-service]]
 
 ==== High Availability Java Message Service
 
@@ -119,7 +119,7 @@ Connection Failover::
   For more information about JMS connection failover, see
   link:jms.html#connection-failover[Connection Failover].
 
-[[gaymz]][[GSHAG00255]][[rmi-iiop-load-balancing-and-failover]]
+[[rmi-iiop-load-balancing-and-failover]]
 
 ==== RMI-IIOP Load Balancing and Failover
 
@@ -151,7 +151,7 @@ endpoints has failed.
 For more information on RMI-IIOP load balancing and failover, see
 link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
 
-[[gaymr]][[GSHAG00169]][[how-glassfish-server-provides-high-availability]]
+[[how-glassfish-server-provides-high-availability]]
 
 === How {productName} Provides High Availability
 
@@ -161,7 +161,7 @@ subcomponents and features:
 * xref:#storage-for-session-state-data[Storage for Session State Data]
 * xref:#highly-available-clusters[Highly Available Clusters]
 
-[[gjghv]][[GSHAG00256]][[storage-for-session-state-data]]
+[[storage-for-session-state-data]]
 
 ==== Storage for Session State Data
 
@@ -191,7 +191,7 @@ hosts must be on the same subnet.
 clocks on all hosts in the cluster must be synchronized as closely as
 possible.
 
-[[abdax]][[GSHAG00257]][[highly-available-clusters]]
+[[highly-available-clusters]]
 
 ==== Highly Available Clusters
 
@@ -209,7 +209,7 @@ Loadbalancer Plug-In available in {productName}.
 ====
 
 
-[[abday]][[GSHAG00218]][[clusters-instances-sessions-and-load-balancing]]
+[[clusters-instances-sessions-and-load-balancing]]
 
 ===== Clusters, Instances, Sessions, and Load Balancing
 
@@ -238,7 +238,7 @@ The cluster thus acts as a safe boundary for session failover for the
 server instances within the cluster. You can use the load balancer and
 upgrade components within the {productName} without loss of service.
 
-[[gktax]][[GSHAG00219]][[protocols-for-centralized-cluster-administration]]
+[[protocols-for-centralized-cluster-administration]]
 
 ===== Protocols for Centralized Cluster Administration
 
@@ -271,7 +271,7 @@ environment, you can administer remote instances locally.
 For more information, see link:ssh-setup.html#gkshg[Enabling Centralized
 Administration of {productName} Instances].
 
-[[gbcot]][[GSHAG00170]][[recovering-from-failures]]
+[[recovering-from-failures]]
 
 === Recovering from Failures
 
@@ -285,7 +285,7 @@ The following topics are addressed here:
 * xref:#recovering-the-http-load-balancer-and-web-server[Recovering the HTTP Load Balancer and Web Server]
 * xref:#recovering-message-queue[Recovering Message Queue]
 
-[[gcmkp]][[GSHAG00258]][[recovering-the-domain-administration-server]]
+[[recovering-the-domain-administration-server]]
 
 ==== Recovering the Domain Administration Server
 
@@ -307,14 +307,14 @@ manual intervention or user supplied automation.
 * Zip the {productName} installation and domain root directory.
 Restore it on the new host, assigning it the same network identity.
 
-[[gcmkc]][[GSHAG00259]][[recovering-glassfish-server-instances]]
+[[recovering-glassfish-server-instances]]
 
 ==== Recovering {productName} Instances
 
 {productName} provide tools for backing up and restoring {productName} instances. For more information, see link:instances.html#to-resynchronize-an-instance-and-the-das-offline[To
 Resynchronize an Instance and the DAS Offline].
 
-[[gcmjs]][[GSHAG00260]][[recovering-the-http-load-balancer-and-web-server]]
+[[recovering-the-http-load-balancer-and-web-server]]
 
 ==== Recovering the HTTP Load Balancer and Web Server
 
@@ -337,7 +337,7 @@ in the web server installation directory, typically `/opt/SUNWwbsvr`.
 The web-install``/``web-instance``/config`` directory contains the
 `loadbalancer.xml` file.
 
-[[gcmjr]][[GSHAG00261]][[recovering-message-queue]]
+[[recovering-message-queue]]
 
 ==== Recovering Message Queue
 
@@ -365,7 +365,7 @@ becomes unavailable, service availability and data availability continue
 to be provided by the other brokers in the cluster. Restore the broker
 to operation to return the cluster to its previous capacity.
 
-[[glaiv]][[GSHAG00220]][[recovering-from-power-failure-and-failures-other-than-disk-storage]]
+[[recovering-from-power-failure-and-failures-other-than-disk-storage]]
 
 ===== Recovering From Power Failure and Failures Other Than Disk Storage
 
@@ -378,7 +378,7 @@ To start brokers serving as Embedded or Local JMS hosts, start the
 GlassFish instances the brokers are servicing. To start brokers serving
 as Remote JMS hosts, use the `imqbrokerd` Message Queue utility.
 
-[[glaiu]][[GSHAG00221]][[recovering-from-failure-of-disk-storage]]
+[[recovering-from-failure-of-disk-storage]]
 
 ===== Recovering from Failure of Disk Storage
 
@@ -409,7 +409,7 @@ restoring a persistent data store, consider using a RAID or SAN data
 storage solution that is fault tolerant, especially for data stores in
 production environments.
 
-[[abdaz]][[GSHAG00171]][[more-information]]
+[[more-information]]
 
 === More Information
 

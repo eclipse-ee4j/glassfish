@@ -6,7 +6,7 @@ prev=preface.html
 
 = Quick Start for Basic Features
 
-[[GSQSG00003]][[aboaa]]
+[[aboaa]]
 
 
 [[quick-start-for-basic-features]]
@@ -35,7 +35,7 @@ The following topics are addressed here:
 * xref:#high-availability-clustering-and-load-balancing[High Availability Clustering and Load Balancing]
 * xref:#for-more-information[For More Information]
 
-[[ghgpe]][[GSQSG00030]][[about-this-quick-start-guide]]
+[[about-this-quick-start-guide]]
 
 === About This Quick Start Guide
 
@@ -118,7 +118,7 @@ SystemDrive``:\glassfish7``
 |===
 
 
-[[gixue]][[GSQSG00032]][[default-administration-values]]
+[[default-administration-values]]
 
 === Default Administration Values
 
@@ -163,7 +163,7 @@ Table 1-2 Default Administration Values
 |===
 
 
-[[gglog]][[GSQSG00033]][[starting-and-stopping-the-default-domain]]
+[[starting-and-stopping-the-default-domain]]
 
 === Starting and Stopping the Default Domain
 
@@ -173,7 +173,7 @@ created. The following procedures describe how to start and stop
 stopping a domain when there are multiple domains, see
 "link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
-[[ggmpd]][[GSQSG00005]][[to-start-the-default-domain]]
+[[to-start-the-default-domain]]
 
 ==== To Start the Default Domain
 
@@ -190,7 +190,7 @@ as-install/bin/asadmin start-domain
 
 The command starts the default domain, `domain1`.
 
-[[ggmsx]][[GSQSG00006]][[to-stop-the-default-domain]]
+[[to-stop-the-default-domain]]
 
 ==== To Stop the Default Domain
 
@@ -216,7 +216,7 @@ as-install/bin/asadmin list-domains
 ====
 
 
-[[gglmh]][[GSQSG00034]][[starting-and-stopping-the-database-server]]
+[[starting-and-stopping-the-database-server]]
 
 === Starting and Stopping the Database Server
 
@@ -235,7 +235,7 @@ For more information about database connectivity, see
 "https://github.com/eclipse-ee4j/glassfishdocumentation[Administering Database
 Connectivity]" in {productName} Administration Guide.
 
-[[ggncr]][[GSQSG00007]][[to-start-the-apache-derby-server]]
+[[to-start-the-apache-derby-server]]
 
 ==== To Start the Apache Derby Server
 
@@ -260,7 +260,7 @@ For example, to start the Apache Derby server from its default location:
 as-install/bin/asadmin start-database --dbhome as-install-parent/javadb
 ----
 
-[[ggnez]][[GSQSG00008]][[to-stop-the-apache-derby-server]]
+[[to-stop-the-apache-derby-server]]
 
 ==== To Stop the Apache Derby Server
 
@@ -271,14 +271,14 @@ Run the `asadmin stop-database` command:
 as-install/bin/asadmin stop-database
 ----
 
-[[ggllq]][[GSQSG00035]][[starting-the-administration-console]]
+[[starting-the-administration-console]]
 
 === Starting the Administration Console
 
 The {productName} Administration Console provides a browser interface
 for configuring, administering, and monitoring {productName}.
 
-[[ggnbp]][[GSQSG00009]][[to-start-the-administration-console]]
+[[to-start-the-administration-console]]
 
 ==== To Start the Administration Console
 
@@ -304,7 +304,7 @@ See Also
 
 For more information, see the Administration Console online help.
 
-[[geyvr]][[GSQSG00036]][[deploying-and-undeploying-applications]]
+[[deploying-and-undeploying-applications]]
 
 === Deploying and Undeploying Applications
 
@@ -320,7 +320,7 @@ The following topics are addressed here:
 * xref:#deploying-and-undeploying-applications-by-using-the-administration-console[Deploying and Undeploying Applications by Using the Administration Console]
 * xref:#deploying-and-undeploying-the-sample-application-automatically[Deploying and Undeploying the Sample Application Automatically]
 
-[[ghgis]][[GSQSG00010]][[to-obtain-the-sample-application]]
+[[to-obtain-the-sample-application]]
 
 ==== To Obtain the Sample Application
 
@@ -331,7 +331,7 @@ The following topics are addressed here:
 +
 This directory is referred to as sample-dir.
 
-[[gkpao]][[GSQSG00044]][[deploying-and-undeploying-the-sample-application-from-the-command-line]]
+[[deploying-and-undeploying-the-sample-application-from-the-command-line]]
 
 ==== Deploying and Undeploying the Sample Application From the Command Line
 
@@ -342,7 +342,7 @@ following deployment-related tasks:
 * xref:#to-list-deployed-applications-from-the-command-line[To List Deployed Applications From the Command Line]
 * xref:#to-undeploy-the-sample-application-from-the-command-line[To Undeploy the Sample Application From the Command Line]
 
-[[ggndq]][[GSQSG00011]][[to-deploy-the-sample-application-from-the-command-line]]
+[[to-deploy-the-sample-application-from-the-command-line]]
 
 ===== To Deploy the Sample Application From the Command Line
 
@@ -397,7 +397,7 @@ For more information about deploying applications from the command line,
 see the link:application-deployment-guide.html#GSDPG[{productName} Application
 Deployment Guide].
 
-[[ggnco]][[GSQSG00012]][[to-list-deployed-applications-from-the-command-line]]
+[[to-list-deployed-applications-from-the-command-line]]
 
 ===== To List Deployed Applications From the Command Line
 
@@ -408,7 +408,7 @@ Run the `asadmin list-applications` command:
 as-install/bin/asadmin list-applications
 ----
 
-[[ggnbm]][[GSQSG00013]][[to-undeploy-the-sample-application-from-the-command-line]]
+[[to-undeploy-the-sample-application-from-the-command-line]]
 
 ===== To Undeploy the Sample Application From the Command Line
 
@@ -435,7 +435,7 @@ See Also
 For more information about the `undeploy` subcommand, see
 link:reference-manual/undeploy.html#undeploy[`undeploy`(1)].
 
-[[gkpau]][[GSQSG00045]][[deploying-and-undeploying-applications-by-using-the-administration-console]]
+[[deploying-and-undeploying-applications-by-using-the-administration-console]]
 
 ==== Deploying and Undeploying Applications by Using the Administration Console
 
@@ -446,7 +446,7 @@ perform the following deployment-related tasks:
 * xref:#to-view-deployed-applications-in-the-administration-console[To View Deployed Applications in the Administration Console]
 * xref:#to-undeploy-the-sample-application-by-using-the-administration-console[To Undeploy the Sample Application by Using the Administration Console]
 
-[[ggnbn]][[GSQSG00014]][[to-deploy-the-sample-application-by-using-the-administration-console]]
+[[to-deploy-the-sample-application-by-using-the-administration-console]]
 
 ===== To Deploy the Sample Application by Using the Administration Console
 
@@ -502,7 +502,7 @@ See Also
 
 For more information, see the Administration Console online help.
 
-[[ggncd]][[GSQSG00015]][[to-view-deployed-applications-in-the-administration-console]]
+[[to-view-deployed-applications-in-the-administration-console]]
 
 ===== To View Deployed Applications in the Administration Console
 
@@ -519,7 +519,7 @@ http://localhost:4848
 Expand the node to list deployed applications. Deployed applications are
 also listed in the table on the Applications page.
 
-[[ggneh]][[GSQSG00016]][[to-undeploy-the-sample-application-by-using-the-administration-console]]
+[[to-undeploy-the-sample-application-by-using-the-administration-console]]
 
 ===== To Undeploy the Sample Application by Using the Administration Console
 
@@ -544,7 +544,7 @@ See Also
 
 For more information, see the Administration Console online help.
 
-[[gkpaa]][[GSQSG00046]][[deploying-and-undeploying-the-sample-application-automatically]]
+[[deploying-and-undeploying-the-sample-application-automatically]]
 
 ==== Deploying and Undeploying the Sample Application Automatically
 
@@ -554,7 +554,7 @@ deployment-related tasks automatically:
 * xref:#to-deploy-the-sample-application-automatically[To Deploy the Sample Application Automatically]
 * xref:#to-undeploy-the-sample-application-automatically[To Undeploy the Sample Application Automatically]
 
-[[geyvj]][[GSQSG00017]][[to-deploy-the-sample-application-automatically]]
+[[to-deploy-the-sample-application-automatically]]
 
 ===== To Deploy the Sample Application Automatically
 
@@ -597,7 +597,7 @@ The default URL for the application is as follows:
 http://localhost:8080/hello/
 ----
 
-[[ggncw]][[GSQSG00018]][[to-undeploy-the-sample-application-automatically]]
+[[to-undeploy-the-sample-application-automatically]]
 
 ===== To Undeploy the Sample Application Automatically
 
@@ -622,7 +622,7 @@ rm hello.war
 del hello.war
 ----
 
-[[gktqx]][[GSQSG00037]][[high-availability-clustering-and-load-balancing]]
+[[high-availability-clustering-and-load-balancing]]
 
 === High Availability Clustering and Load Balancing
 
@@ -632,7 +632,7 @@ scalability, and load balancing. The subsections that follow provide an
 overview of high availability clustering and load balancing for
 {productName}.
 
-[[gktob]][[GSQSG00047]][[clusters-of-glassfish-server-instances]]
+[[clusters-of-glassfish-server-instances]]
 
 ==== Clusters of {productName} Instances
 
@@ -662,7 +662,7 @@ For more information, see the following documentation:
 * "link:ha-administration-guide/instances.html#gkrbv[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
 
-[[gktpt]][[GSQSG00048]][[session-persistence-and-failover]]
+[[session-persistence-and-failover]]
 
 ==== Session Persistence and Failover
 
@@ -675,7 +675,7 @@ in the cluster for maintaining HTTP session and stateful session bean data.
 For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
-[[gksbz]][[GSQSG00049]][[load-balancing-for-clustered-configurations]]
+[[load-balancing-for-clustered-configurations]]
 
 ==== Load Balancing for Clustered Configurations
 
@@ -704,7 +704,7 @@ Configuring HTTP Load Balancing]" in
 RMI-IIOP Load Balancing and Failover]" in
 {productName} High Availability Administration Guide
 
-[[ggkzh]][[GSQSG00040]][[for-more-information]]
+[[for-more-information]]
 
 === For More Information
 
@@ -717,7 +717,7 @@ The following resources are described here:
 * xref:#tutorials[Tutorials]
 * xref:#jakarta-ee-examples[Jakarta EE Examples]
 
-[[ghhir]][[GSQSG00050]][[product-documentation]]
+[[product-documentation]]
 
 ==== Product Documentation
 
@@ -729,7 +729,7 @@ Latest details about new features, known issues, and tips for installing
 and working with {productName} software.
 * https://glassfish.org/docs/[{productName}]
 
-[[giyjo]][[GSQSG00052]][[tutorials]]
+[[tutorials]]
 
 ==== Tutorials
 
@@ -747,7 +747,7 @@ JavaServer Faces component for the web front end.
 This comprehensive tutorial explains how to use Jakarta EE platform technologies
 and APIs to develop Jakarta EE applications.
 
-[[gintm]][[GSQSG00053]][[jakarta-ee-examples]]
+[[jakarta-ee-examples]]
 
 ==== Jakarta EE Examples
 

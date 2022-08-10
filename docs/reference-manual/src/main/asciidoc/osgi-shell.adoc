@@ -7,7 +7,7 @@ prev=osgi.html
 
 = osgi-shell
 
-[[osgi-shell-1]][[GSRFM890]][[osgi-shell]]
+[[osgi-shell]]
 
 == osgi-shell
 
@@ -65,7 +65,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM891]][[sthref1922]]
+[[sthref1922]]
 
 ==== Example 1   Listing Apache Felix Gogo Remote Shell Commands
 
@@ -100,7 +100,7 @@ gogo:grep
 gogo$
 ----
 
-[[GSRFM892]][[sthref1923]]
+[[sthref1923]]
 
 ==== Example 2   Running a Remote Shell Command
 

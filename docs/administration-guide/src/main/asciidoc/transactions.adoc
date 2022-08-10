@@ -7,7 +7,7 @@ prev=jndi.html
 
 = Administering Transactions
 
-[[GSADG00022]][[ablsn]]
+[[ablsn]]
 
 
 [[administering-transactions]]
@@ -39,7 +39,7 @@ You might also want to read
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
 in The Jakarta EE Tutorial.
 
-[[ablso]][[GSADG00605]][[about-transactions]]
+[[about-transactions]]
 
 === About Transactions
 
@@ -105,7 +105,7 @@ The following topics are addressed here:
 * <<Transaction Resource Managers>>
 * <<Transaction Scope>>
 
-[[beann]][[GSADG00785]][[transaction-resource-managers]]
+[[transaction-resource-managers]]
 
 ==== Transaction Resource Managers
 
@@ -132,7 +132,7 @@ prevents legacy EIS systems from being left in inconsistent states due
 to incomplete updates. For more information about connectors, see
 xref:connectors.adoc#abllp[Administering EIS Connectivity].
 
-[[beano]][[GSADG00786]][[transaction-scope]]
+[[transaction-scope]]
 
 ==== Transaction Scope
 
@@ -178,7 +178,7 @@ transaction manager issue a commit request (`COMMIT`) to all the
 resource managers. Otherwise, the transaction manager issues a rollback
 request (`ABORT`) and the transaction is rolled back.
 
-[[beanp]][[GSADG00606]][[configuring-the-transaction-service]]
+[[configuring-the-transaction-service]]
 
 === Configuring the Transaction Service
 
@@ -268,7 +268,7 @@ JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR=0.75f
 The `JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR` default is the default
 `Map` resizing value.
 
-[[giubd]][[GSADG00607]][[managing-the-transaction-service-for-rollbacks]]
+[[managing-the-transaction-service-for-rollbacks]]
 
 === Managing the Transaction Service for Rollbacks
 
@@ -285,7 +285,7 @@ The following topics are addressed here:
 * <<To Restart the Transaction Service>>
 * <<Determining Local Transaction Completion at Shutdown>>
 
-[[giufn]][[GSADG00513]][[to-stop-the-transaction-service]]
+[[to-stop-the-transaction-service]]
 
 ==== To Stop the Transaction Service
 
@@ -302,7 +302,7 @@ by using the `unfreeze-transaction-service` subcommand.
 2. Stop the transaction service by using the
 link:reference-manual/freeze-transaction-service.html#freeze-transaction-service[`freeze-transaction-service`] subcommand.
 
-[[GSADG00293]][[giufq]]
+[[giufq]]
 Example 19-1 Stopping the Transaction Service
 
 This example stops the transaction service.
@@ -318,7 +318,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help freeze-transaction-service` at the command line.
 
-[[giugk]][[GSADG00514]][[to-roll-back-a-transaction]]
+[[to-roll-back-a-transaction]]
 
 ==== To Roll Back a Transaction
 
@@ -355,7 +355,7 @@ The transaction is not rolled back at the time of this command's
 execution, but only marked for rollback. The transaction is rolled back
 when it is completed.
 
-[[GSADG00294]][[giufy]]
+[[giufy]]
 Example 19-2 Rolling Back a Transaction
 
 This example rolls back the transaction with transaction ID
@@ -372,7 +372,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help rollback-transaction` at the command line.
 
-[[giuet]][[GSADG00515]][[to-restart-the-transaction-service]]
+[[to-restart-the-transaction-service]]
 
 ==== To Restart the Transaction Service
 
@@ -384,7 +384,7 @@ restart the transaction service after it has been frozen.
 2. Restart the suspended transaction service by using the
 link:reference-manual/unfreeze-transaction-service.html#unfreeze-transaction-service[`unfreeze-transaction-service`] subcommand.
 
-[[GSADG00295]][[giuef]]
+[[giuef]]
 Example 19-3 Restarting the Transaction Service
 
 This example restarts the transaction service after it has been frozen.
@@ -400,7 +400,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help unfreeze-transaction-service` at the command line.
 
-[[gkrbo]][[GSADG00787]][[determining-local-transaction-completion-at-shutdown]]
+[[determining-local-transaction-completion-at-shutdown]]
 
 ==== Determining Local Transaction Completion at Shutdown
 
@@ -423,7 +423,7 @@ link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-opt
 asadmin> create-jvm-options -Dcom.sun.enterprise.in-progress-local-transaction.completion-mode=rollback
 ----
 
-[[gjjpy]][[GSADG00608]][[recovering-transactions]]
+[[recovering-transactions]]
 
 === Recovering Transactions
 
@@ -444,7 +444,7 @@ The following topics are addressed here:
 * <<Distributed Transaction Recovery>>
 * <<Recovery Workarounds and Limitations>>
 
-[[gkoen]][[GSADG00788]][[automatic-transaction-recovery]]
+[[automatic-transaction-recovery]]
 
 ==== Automatic Transaction Recovery
 
@@ -461,7 +461,7 @@ Transaction Service].
 
 If commit fails during recovery, a message is written to the server log.
 
-[[giuhe]][[GSADG00516]][[to-manually-recover-transactions]]
+[[to-manually-recover-transactions]]
 
 ==== To Manually Recover Transactions
 
@@ -513,7 +513,7 @@ Administration Guide.
 2. Manually recover transactions by using the
 link:reference-manual/recover-transactions.html#recover-transactions[`recover-transactions`] subcommand.
 
-[[GSADG00296]][[giugn]]
+[[giugn]]
 Example 19-4 Manually Recovering Transactions
 
 This example performs manual recovery of transactions on `instance1`,
@@ -530,7 +530,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help recover-transactions` at the command line.
 
-[[gaxim]][[GSADG00789]][[distributed-transaction-recovery]]
+[[distributed-transaction-recovery]]
 
 ==== Distributed Transaction Recovery
 
@@ -543,7 +543,7 @@ property to `true` (the default is `false`). For information about
 setting `tx-log-dir` and `delegated-recovery`, see
 <<Configuring the Transaction Service>>.
 
-[[gaxig]][[GSADG00790]][[recovery-workarounds-and-limitations]]
+[[recovery-workarounds-and-limitations]]
 
 ==== Recovery Workarounds and Limitations
 
@@ -557,7 +557,7 @@ These workarounds do not imply support for any particular JDBC driver.
 ====
 
 
-[[gknau]][[GSADG00689]][[general-recovery-limitations]]
+[[general-recovery-limitations]]
 
 ===== General Recovery Limitations
 
@@ -582,7 +582,7 @@ on server instance restart is possible. This is because for conventional
 Message Queue clustering, state information in a failed broker is not
 available until the broker restarts.
 
-[[gknee]][[GSADG00690]][[oracle-setup-for-transaction-recovery]]
+[[oracle-setup-for-transaction-recovery]]
 
 ===== Oracle Setup for Transaction Recovery
 
@@ -602,7 +602,7 @@ grant select on SYS.DBA_2PC_PENDING to user;
 The user is the database administrator. On some versions of the Oracle
 driver the last `grant execute` fails. You can ignore this.
 
-[[gjiep]][[GSADG00691]][[oracle-thin-driver]]
+[[oracle-thin-driver]]
 
 ===== Oracle Thin Driver
 
@@ -619,7 +619,7 @@ about how to set this property, see xref:#configuring-the-transaction-service[Co
 Transaction Service]. This workaround is used unless explicitly
 disabled.
 
-[[gkneq]][[GSADG00692]][[delegated-recovery-after-server-crash-doesnt-work-on-mysql]]
+[[delegated-recovery-after-server-crash-doesnt-work-on-mysql]]
 
 ===== Delegated Recovery After Server Crash Doesn't Work on MySQL
 
@@ -627,7 +627,7 @@ The MySQL database supports XA transaction recovery only when the
 database crashes. When a {productName} instance crashes, MySQL rolls
 back prepared transactions.
 
-[[glclh]][[GSADG00693]][[call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled]]
+[[GSADG00693]][[call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled]]
 
 ===== Call to `XATeminator.recover()` During `ResourceAdapter.start()` Hangs If Automatic Recovery Is Enabled
 
@@ -640,7 +640,7 @@ transaction or calling `XATerminator.recover()`, during
 `ResourceAdapter.start()`. For more information, see
 `http://markmail.org/message/ogc7qndhaywfkdrp#query:+page:1+mid:kyyzpcexusbnv7ri+state:results`.
 
-[[beanq]][[GSADG00609]][[transaction-logging]]
+[[transaction-logging]]
 
 === Transaction Logging
 
@@ -683,7 +683,7 @@ system (NFS) to avoid a single point of failure.
 ====
 
 
-[[gcmam]][[GSADG00517]][[to-store-transaction-logs-in-a-database]]
+[[to-store-transaction-logs-in-a-database]]
 
 ==== To Store Transaction Logs in a Database
 

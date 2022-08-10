@@ -608,7 +608,7 @@ link:reference-manual/list-jndi-resources.html#list-jndi-resources[`list-jndi-re
   only. For procedural information in this guide, see
   xref:jndi.adoc#to-list-external-jndi-resources[To List External JNDI Resources].
 
-[[gglsk]][[GSADG00617]][[jvm-subcommands]]
+[[jvm-subcommands]]
 
 === JVM Subcommands
 
@@ -657,7 +657,7 @@ link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`dele
   For procedural information in this guide, see
   xref:lifecycle-modules.adoc#to-delete-a-life-cycle-module[To Delete a Life Cycle Module].
 
-[[gitxd]][[GSADG00619]][[logging-and-monitoring-subcommands]]
+[[logging-and-monitoring-subcommands]]
 
 === Logging and Monitoring Subcommands
 

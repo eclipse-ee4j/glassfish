@@ -7,7 +7,7 @@ prev=delete-resource-adapter-config.html
 
 = delete-resource-ref
 
-[[delete-resource-ref-1]][[GSRFM00107]][[delete-resource-ref]]
+[[delete-resource-ref]]
 
 == delete-resource-ref
 
@@ -68,7 +68,7 @@ reference_name::
 
 === Examples
 
-[[GSRFM577]][[sthref972]]
+[[sthref972]]
 
 ==== Example 1   Removing a Reference to a Resource
 

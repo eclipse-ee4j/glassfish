@@ -7,7 +7,7 @@ prev=list-secure-admin-principals.html
 
 = list-sub-components
 
-[[list-sub-components-1]][[GSRFM00201]][[list-sub-components]]
+[[list-sub-components]]
 
 == list-sub-components
 
@@ -76,7 +76,7 @@ modulename::
 
 === Examples
 
-[[GSRFM711]][[sthref1808]]
+[[sthref1808]]
 
 ==== Example 1   Listing Subcomponents
 

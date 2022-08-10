@@ -7,7 +7,7 @@ prev=apply-http-lb-changes.html
 
 = attach
 
-[[attach-1]][[GSRFM825]][[attach]]
+[[attach]]
 
 == attach
 
@@ -54,7 +54,7 @@ job_id::
 
 === Examples
 
-[[GSRFM826]][[CBHDFEGB]]
+[[CBHDFEGB]]
 
 ==== Example 1   Attaching to a Subcommand and Checking Its Status
 

@@ -7,7 +7,7 @@ prev=create-jdbc-resource.html
 
 = create-jmsdest
 
-[[create-jmsdest-1]][[GSRFM00038]][[create-jmsdest]]
+[[create-jmsdest]]
 
 == create-jmsdest
 
@@ -186,7 +186,7 @@ dest_name::
 
 === Examples
 
-[[GSRFM495]][[sthref341]]
+[[sthref341]]
 
 ==== Example 1   Creating a JMS physical destination
 

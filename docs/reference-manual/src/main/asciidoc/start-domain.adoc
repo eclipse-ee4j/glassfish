@@ -7,7 +7,7 @@ prev=start-database.html
 
 = start-domain
 
-[[start-domain-1]][[GSRFM00235]][[start-domain]]
+[[start-domain]]
 
 == start-domain
 
@@ -168,7 +168,7 @@ domain-name::
 
 === Examples
 
-[[GSRFM760]][[sthref2130]]
+[[sthref2130]]
 
 ==== Example 1   Starting a Domain
 

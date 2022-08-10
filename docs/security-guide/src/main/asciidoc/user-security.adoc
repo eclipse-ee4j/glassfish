@@ -7,7 +7,7 @@ prev=system-security.html
 
 = Administering User Security
 
-[[GSSCG00036]][[ggnqj]]
+[[ggnqj]]
 
 
 [[administering-user-security]]
@@ -41,7 +41,7 @@ Working with Identity Stores]
 in The Jakarta EE Tutorial for more information about Identity Stores.
 ====
 
-[[ggkuk]][[GSSCG00151]][[administering-authentication-realms]]
+[[administering-authentication-realms]]
 
 === Administering Authentication Realms
 
@@ -57,7 +57,7 @@ The following topics are addressed here:
 * xref:#to-configure-ldap-authentication-with-ovd[To Configure LDAP Authentication with OVD]
 * xref:#to-enable-ldap-authentication-on-the-glassfish-server-das[To Enable LDAP Authentication on the {productName} DAS]
 
-[[gkbiy]][[GSSCG00217]][[overview-of-authentication-realms]]
+[[overview-of-authentication-realms]]
 
 ==== Overview of Authentication Realms
 
@@ -147,7 +147,7 @@ Custom realm::
 
 The {productName} authentication service can govern users in multiple realms.
 
-[[ggnca]][[GSSCG00110]][[to-create-an-authentication-realm]]
+[[to-create-an-authentication-realm]]
 
 ==== To Create an Authentication Realm
 
@@ -159,7 +159,7 @@ authentication realm.
 link:reference-manual/create-auth-realm.html#create-auth-realm[`create-auth-realm`] subcommand. +
 Information about properties for this subcommand is included in this help page.
 
-[[GSSCG00079]][[ggpjx]]
+[[ggpjx]]
 Example 2-1 Creating a Realm
 
 This example creates a realm named `db`.
@@ -179,7 +179,7 @@ typing `asadmin help create-auth-realm` at the command line.
 For information on creating a custom realm, see
 "link:application-development-guide/securing-apps.html#creating-a-custom-realm[Creating a Custom Realm]" in {productName} Application Development Guide.
 
-[[ggngh]][[GSSCG00111]][[to-list-authentication-realms]]
+[[to-list-authentication-realms]]
 
 ==== To List Authentication Realms
 
@@ -190,7 +190,7 @@ existing authentication realms.
 2. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
 subcommand.
 
-[[GSSCG00080]][[ggpkw]]
+[[ggpkw]]
 Example 2-2 Listing Realms
 
 This example lists the authentication realms on `localhost`.
@@ -210,7 +210,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-auth-realms` at the command line.
 
-[[giwlt]][[GSSCG00112]][[to-update-an-authentication-realm]]
+[[to-update-an-authentication-realm]]
 
 ==== To Update an Authentication Realm
 
@@ -233,7 +233,7 @@ The thread pool is identified by its dotted name.
 +
 See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[ggngf]][[GSSCG00113]][[to-delete-an-authentication-realm]]
+[[to-delete-an-authentication-realm]]
 
 ==== To Delete an Authentication Realm
 
@@ -249,7 +249,7 @@ link:reference-manual/delete-auth-realm.html#delete-auth-realm[`delete-auth-real
 5. To apply your changes, restart {productName}. See
 "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[GSSCG00081]][[ggpjf]]
+[[ggpjf]]
 Example 2-3 Deleting a Realm
 
 This example deletes an authentication realm named `db`.
@@ -265,7 +265,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-auth-realm` at the command line.
 
-[[ggmww]][[GSSCG00114]][[to-configure-a-jdbc-or-digest-authentication-realm]]
+[[to-configure-a-jdbc-or-digest-authentication-realm]]
 
 ==== To Configure a JDBC or Digest Authentication Realm
 
@@ -334,7 +334,7 @@ in {productName} Administration Guide.
 See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
-[[GSSCG00082]][[ghysu]]
+[[ghysu]]
 Example 2-4 Assigning a Security Role
 
 This example shows a `security-role-mapping` element that assigns the
@@ -348,7 +348,7 @@ security role `Employee` to user `Calvin`
   </security-role-mapping>
 ----
 
-[[gkbeo]][[GSSCG00115]][[to-configure-ldap-authentication-with-oid]]
+[[to-configure-ldap-authentication-with-oid]]
 
 ==== To Configure LDAP Authentication with OID
 
@@ -446,7 +446,7 @@ in Oracle Fusion Middleware Administrator's Guide for Oracle Internet Directory
 (`http://docs.oracle.com/cd/E14571_01/oid.1111/e10029.html`) for
 complete instructions on the `ldapmodify` command.
 
-[[gksgi]][[GSSCG00116]][[to-configure-ldap-authentication-with-ovd]]
+[[to-configure-ldap-authentication-with-ovd]]
 
 ==== To Configure LDAP Authentication with OVD
 
@@ -506,7 +506,7 @@ keytool -importcert -alias "OVD self signed certificate" -keystore \
 See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
-[[gkbjp]][[GSSCG00117]][[to-enable-ldap-authentication-on-the-glassfish-server-das]]
+[[to-enable-ldap-authentication-on-the-glassfish-server-das]]
 
 ==== To Enable LDAP Authentication on the {productName} DAS
 
@@ -557,7 +557,7 @@ See Also
 See link:reference-manual/configure-ldap-for-admin.html#configure-ldap-for-admin[`configure-ldap-for-admin`] for more information
 about the `configure-ldap-for-admin subcommand`.
 
-[[ggnxq]][[GSSCG00152]][[administering-file-users]]
+[[administering-file-users]]
 
 === Administering File Users
 
@@ -578,7 +578,7 @@ The following topics are addressed here:
 * xref:#to-update-a-file-user[To Update a File User]
 * xref:#to-delete-a-file-user[To Delete a File User]
 
-[[ggocf]][[GSSCG00118]][[to-create-a-file-user]]
+[[to-create-a-file-user]]
 
 ==== To Create a File User
 
@@ -604,7 +604,7 @@ link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`]
 3. Create a file user by using the
 link:reference-manual/create-file-user.html#create-file-user[`create-file-user`] subcommand.
 
-[[GSSCG00083]][[ggpkq]]
+[[ggpkq]]
 Example 2-5 Creating a User
 
 This example create user `Jennifer` on the default realm `file` (no groups are specified).
@@ -627,7 +627,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-file-user` at the command line.
 
-[[ggoab]][[GSSCG00119]][[to-list-file-users]]
+[[to-list-file-users]]
 
 ==== To List File Users
 
@@ -638,7 +638,7 @@ that are in the `keyfile`.
 2. List users by using the link:reference-manual/list-file-users.html#list-file-users[`list-file-users`]
 subcommand.
 
-[[GSSCG00084]][[ggpgf]]
+[[ggpgf]]
 Example 2-6 Listing File Users
 
 This example lists file users on the default `file` realm file.
@@ -655,7 +655,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-file-users` at the command line.
 
-[[ghlgs]][[GSSCG00120]][[to-list-file-groups]]
+[[to-list-file-groups]]
 
 ==== To List File Groups
 
@@ -681,7 +681,7 @@ a file user, or all file groups if the `--name` option is not specified.
 2. List file groups by using the
 link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
 
-[[GSSCG00085]][[ghlgb]]
+[[ghlgb]]
 Example 2-7 Listing Groups for a User
 
 This example lists the groups for user `joesmith`.
@@ -694,7 +694,7 @@ manager
 Command list-file-groups executed successfully
 ----
 
-[[ggoaw]][[GSSCG00121]][[to-update-a-file-user]]
+[[to-update-a-file-user]]
 
 ==== To Update a File User
 
@@ -715,7 +715,7 @@ link:reference-manual/update-file-user.html#update-file-user[`update-file-user`]
 See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
-[[GSSCG00086]][[ggpgh]]
+[[ggpgh]]
 Example 2-8 Updating a User
 
 The following subcommand updates the groups for user `Jennifer`.
@@ -732,7 +732,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-file-user` at the command line.
 
-[[ggoah]][[GSSCG00122]][[to-delete-a-file-user]]
+[[to-delete-a-file-user]]
 
 ==== To Delete a File User
 
@@ -747,7 +747,7 @@ link:reference-manual/list-file-users.html#list-file-users[`list-file-users`] su
 3. Delete the user by using the
 link:reference-manual/delete-file-user.html#delete-file-user[`delete-file-user`] subcommand.
 
-[[GSSCG00087]][[ggpib]]
+[[ggpib]]
 Example 2-9 Deleting a User
 
 This example deletes user `Jennifer` from the default `file` realm.

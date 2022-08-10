@@ -7,7 +7,7 @@ prev=delete-node-dcom.html
 
 = delete-node-ssh
 
-[[delete-node-ssh-1]][[GSRFM00100]][[delete-node-ssh]]
+[[delete-node-ssh]]
 
 == delete-node-ssh
 
@@ -104,7 +104,7 @@ node-name::
 
 === Examples
 
-[[GSRFM571]][[sthref919]]
+[[sthref919]]
 
 ==== Example 1   Deleting a Node That Is Enabled for Communication Over SSH
 

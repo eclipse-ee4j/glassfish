@@ -7,7 +7,7 @@ prev=overview.html
 
 = Enabling Centralized Administration of {productName} Instances
 
-[[GSHAG00003]][[gkshg]]
+[[gkshg]]
 
 
 [[enabling-centralized-administration-of-glassfish-server-instances]]
@@ -50,7 +50,7 @@ The following topics are addressed here:
 * xref:#setting-up-ssh-user-authentication[Setting Up SSH User Authentication]
 * xref:#installing-and-removing-glassfish-server-software-on-multiple-hosts[Installing and Removing {productName} Software on Multiple Hosts]
 
-[[gkshz]][[GSHAG00172]][[about-centralized-administration-of-glassfish-server-instances]]
+[[about-centralized-administration-of-glassfish-server-instances]]
 
 === About Centralized Administration of {productName} Instances
 
@@ -148,7 +148,7 @@ On UNIX and Linux systems, SSH is typically installed and preconfigured,
 and requires minimal additional setup. On Windows systems, additional
 setup is required to install and configure an SSH provider.
 
-[[gksmt]][[GSHAG00262]][[obtaining-ssh-software]]
+[[obtaining-ssh-software]]
 
 ===== Obtaining SSH Software
 
@@ -161,7 +161,7 @@ However, on Windows systems, you must install one of the following SSH providers
 * http://www.mkssoftware.com[MKS Toolkit for Developers]
  (`http://www.mkssoftware.com`) release 9.2
 
-[[gkshj]][[GSHAG00263]][[determining-the-ssh-user]]
+[[determining-the-ssh-user]]
 
 ===== Determining the SSH User
 
@@ -176,7 +176,7 @@ able to read the SSH user's private key file.
 * By default, the DAS assumes that the SSH user is the user that is
 running the DAS.
 
-[[glghe]][[GSHAG00222]][[requirements-for-the-ssh-users-environment]]
+[[requirements-for-the-ssh-users-environment]]
 
 ===== Requirements for the SSH User's Environment
 
@@ -197,7 +197,7 @@ the user logs in, but only `.bashrc` is run when the user runs a
 command. Therefore, in the bash shell, you must ensure that `.bashrc`
 contains the required environment settings for the SSH user.
 
-[[glgfy]][[GSHAG00223]][[file-access-permissions-on-uac-enabled-windows-systems]]
+[[file-access-permissions-on-uac-enabled-windows-systems]]
 
 ===== File Access Permissions on UAC-Enabled Windows Systems
 
@@ -220,7 +220,7 @@ by default. You can also configure the system to grant such access to
 other users. For more information, see the documentation for the Windows
 operating system.
 
-[[CEGIFJJF]][[GSHAG448]][[setting-up-dcom-and-testing-the-dcom-set-up]]
+[[setting-up-dcom-and-testing-the-dcom-set-up]]
 
 === Setting Up DCOM and Testing the DCOM Set Up
 
@@ -235,7 +235,7 @@ Set up DCOM on all hosts where instances in your cluster will reside.
 After setting up DCOM on a host, test the connection over DCOM to the
 host.
 
-[[CEGDAFHD]][[GSHAG449]][[windows-operating-system-settings]]
+[[windows-operating-system-settings]]
 
 ==== Windows Operating System Settings
 
@@ -253,7 +253,7 @@ the Windows operating system are set as follows on the host:
 ** DCOM port 135 or 139
 ** Windows Shares port 445
 
-[[CEGCJGCF]][[GSHAG450]][[to-enable-the-windows-user-to-run-scripts-on-a-remote-host]]
+[[to-enable-the-windows-user-to-run-scripts-on-a-remote-host]]
 
 ==== To Enable the Windows User to Run Scripts on a Remote Host
 
@@ -329,7 +329,7 @@ Next Steps
 Set up password authentication for the Windows user as explained in
 xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password Authentication for the Windows User].
 
-[[CEGCDCEF]][[GSHAG452]][[to-set-up-password-authentication-for-the-windows-user]]
+[[to-set-up-password-authentication-for-the-windows-user]]
 
 ==== To Set Up Password Authentication for the Windows User
 
@@ -437,7 +437,7 @@ Next Steps
 Test the DCOM setup as explained in xref:#to-test-the-connection-over-dcom-to-a-remote-host[To Test the
 Connection Over DCOM to a Remote Host].
 
-[[CEGJFADH]][[GSHAG457]][[to-test-the-connection-over-dcom-to-a-remote-host]]
+[[to-test-the-connection-over-dcom-to-a-remote-host]]
 
 ==== To Test the Connection Over DCOM to a Remote Host
 
@@ -521,7 +521,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help validate-dcom` at the command line.
 
-[[gksiy]][[GSHAG00173]][[setting-up-cygwin-ssh-on-windows]]
+[[setting-up-cygwin-ssh-on-windows]]
 
 === Setting Up Cygwin SSH on Windows
 
@@ -536,7 +536,7 @@ The following topics are addressed here:
 * xref:#to-configure-and-start-the-cygwin-ssh-server-daemon-sshd[To Configure and Start the Cygwin SSH Server Daemon
 `sshd`]
 
-[[gksjn]][[GSHAG00071]][[to-download-and-install-cygwin]]
+[[to-download-and-install-cygwin]]
 
 ==== To Download and Install Cygwin
 
@@ -588,7 +588,7 @@ For detailed information about installing Cygwin, see
 Setup]" in Cygwin User's Guide
 (`http://cygwin.com/cygwin-ug-net/setup-net.html#internet-setup`).
 
-[[gksin]][[GSHAG00072]][[to-set-the-path-for-windows-and-for-the-cygwin-shell]]
+[[to-set-the-path-for-windows-and-for-the-cygwin-shell]]
 
 ==== To Set the Path for Windows and for the Cygwin Shell
 
@@ -610,7 +610,7 @@ change applies to all users.
 * The Cygwin `bin` directory, for example `C:\cygwin\bin`
 * The `bin` directory of the JDK software
 
-[[gksov]][[GSHAG00073]][[to-set-the-home-directory-for-the-cygwin-ssh-user]]
+[[to-set-the-home-directory-for-the-cygwin-ssh-user]]
 
 ==== To Set the Home Directory for the Cygwin SSH User
 
@@ -638,7 +638,7 @@ names are cumbersome in the UNIX environment.
 2. In the `c:\cygwin\etc\passwd` file, edit the home directory setting
 for the SSH user to specify the user's home directory for Windows.
 
-[[gkskx]][[GSHAG00074]][[to-configure-and-start-the-cygwin-ssh-server-daemon-sshd]]
+[[to-configure-and-start-the-cygwin-ssh-server-daemon-sshd]]
 
 ==== To Configure and Start the Cygwin SSH Server Daemon `sshd`
 
@@ -712,7 +712,7 @@ Next Steps
 After you have completed the setup of SSH on a host, test the setup on
 the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
-[[gkskf]][[GSHAG00174]][[setting-up-the-mks-toolkit-on-windows]]
+[[setting-up-the-mks-toolkit-on-windows]]
 
 === Setting Up the MKS Toolkit on Windows
 
@@ -727,7 +727,7 @@ The following topics are addressed here:
 * xref:#to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd[To Configure and Start the MKS Toolkit SSH Server Daemon
 `sshd`]
 
-[[gksmq]][[GSHAG00075]][[to-install-the-mks-toolkit]]
+[[to-install-the-mks-toolkit]]
 
 ==== To Install the MKS Toolkit
 
@@ -744,7 +744,7 @@ For detailed information about installing MKS Toolkit, see
 MKS Toolkit]" in MKS Toolkit v9.4 Release Notes
 (`http://www.mkssoftware.com/docs/rn/relnotes_tk94.asp#install`).
 
-[[gksmu]][[GSHAG00076]][[to-set-the-path-for-windows-and-for-the-mks-toolkit-shell]]
+[[to-set-the-path-for-windows-and-for-the-mks-toolkit-shell]]
 
 ==== To Set the Path for Windows and for the MKS Toolkit Shell
 
@@ -769,7 +769,7 @@ Variables.
 3. Add the `bin` directory of the JDK software to the Path environment
 variable.
 
-[[gksox]][[GSHAG00077]][[to-set-the-home-directory-for-the-mks-toolkit-ssh-user]]
+[[to-set-the-home-directory-for-the-mks-toolkit-ssh-user]]
 
 ==== To Set the Home Directory for the MKS Toolkit SSH User
 
@@ -871,7 +871,7 @@ $ userinfo -u -fHomeDirDrive:"C:"
 -fHomeDir:"\Documents and Settings\Administrator" Administrator
 ----
 
-[[gksnx]][[GSHAG00078]][[to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd]]
+[[to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd]]
 
 ==== To Configure and Start the MKS Toolkit SSH Server Daemon `sshd`
 
@@ -927,7 +927,7 @@ Next Steps
 After you have completed the setup of SSH on a host, test the setup on
 the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
-[[gksja]][[GSHAG00175]][[setting-up-ssh-on-unix-and-linux-systems]]
+[[setting-up-ssh-on-unix-and-linux-systems]]
 
 === Setting Up SSH on UNIX and Linux Systems
 
@@ -949,7 +949,7 @@ sections:
 * xref:#to-set-up-ssh-on-macos-systems[To Set Up SSH on MacOS Systems]
 * xref:#to-set-up-ssh-on-linux-systems[To Set Up SSH on Linux systems]
 
-[[gksjx]][[GSHAG00079]][[to-set-up-ssh-on-oracle-solaris-systems]]
+[[to-set-up-ssh-on-oracle-solaris-systems]]
 
 ==== To Set Up SSH on Oracle Solaris Systems
 
@@ -997,7 +997,7 @@ Next Steps
 After you have completed the setup of SSH on a host, test the setup on
 the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
-[[gkspz]][[GSHAG00080]][[to-set-up-ssh-on-macos-systems]]
+[[to-set-up-ssh-on-macos-systems]]
 
 ==== To Set Up SSH on MacOS Systems
 
@@ -1038,7 +1038,7 @@ Next Steps
 After you have completed the setup of SSH on a host, test the setup on
 the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
-[[gksrd]][[GSHAG00081]][[to-set-up-ssh-on-linux-systems]]
+[[to-set-up-ssh-on-linux-systems]]
 
 ==== To Set Up SSH on Linux systems
 
@@ -1080,7 +1080,7 @@ Next Steps
 After you have completed the setup of SSH on a host, test the setup on
 the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
-[[gkslw]][[GSHAG00176]][[testing-the-ssh-setup-on-a-host]]
+[[testing-the-ssh-setup-on-a-host]]
 
 === Testing the SSH Setup on a Host
 
@@ -1092,7 +1092,7 @@ the SSH user has a valid user account on the host.
 If you cannot use SSH to contact the host, troubleshoot the SSH setup
 before setting up SSH user authentication.
 
-[[gkskk]][[GSHAG00082]][[to-test-the-ssh-setup-on-a-host]]
+[[to-test-the-ssh-setup-on-a-host]]
 
 ==== To Test the SSH Setup on a Host
 
@@ -1147,7 +1147,7 @@ After testing the SSH setup, set up SSH user authentication to enable
 SSH to authenticate users without prompting for a password. For more
 information, see xref:#setting-up-ssh-user-authentication[Setting Up SSH User Authentication].
 
-[[gkshh]][[GSHAG00177]][[setting-up-ssh-user-authentication]]
+[[setting-up-ssh-user-authentication]]
 
 === Setting Up SSH User Authentication
 
@@ -1189,7 +1189,7 @@ The following topics are addressed here:
 * xref:#to-set-up-encrypted-public-key-authentication[To Set Up Encrypted Public Key Authentication]
 * xref:#to-set-up-password-authentication[To Set Up Password Authentication]
 
-[[gksqe]][[GSHAG00083]][[to-set-up-public-key-authentication-without-encryption]]
+[[to-set-up-public-key-authentication-without-encryption]]
 
 ==== To Set Up Public Key Authentication Without Encryption
 
@@ -1317,7 +1317,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help setup-ssh` at the command line.
 
-[[gktaq]][[GSHAG00084]][[to-set-up-encrypted-public-key-authentication]]
+[[to-set-up-encrypted-public-key-authentication]]
 
 ==== To Set Up Encrypted Public Key Authentication
 
@@ -1540,7 +1540,7 @@ typing the following commands at the command line:
 * `asadmin help create-password-alias`
 * `asadmin help setup-ssh`
 
-[[gktbd]][[GSHAG00085]][[to-set-up-password-authentication]]
+[[to-set-up-password-authentication]]
 
 ==== To Set Up Password Authentication
 
@@ -1634,7 +1634,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-password-alias` at the command line.
 
-[[gkshn]][[GSHAG00178]][[installing-and-removing-glassfish-server-software-on-multiple-hosts]]
+[[installing-and-removing-glassfish-server-software-on-multiple-hosts]]
 
 === Installing and Removing {productName} Software on Multiple Hosts
 
@@ -1658,7 +1658,7 @@ The following topics are addressed here:
 * xref:#to-copy-a-glassfish-server-installation-to-multiple-hosts[To Copy a {productName} Installation to Multiple Hosts]
 * xref:#to-remove-glassfish-server-software-from-multiple-hosts[To Remove {productName} Software From Multiple Hosts]
 
-[[gksil]][[GSHAG00086]][[to-copy-a-glassfish-server-installation-to-multiple-hosts]]
+[[to-copy-a-glassfish-server-installation-to-multiple-hosts]]
 
 ==== To Copy a {productName} Installation to Multiple Hosts
 
@@ -1789,7 +1789,7 @@ typing the following commands at the command line:
 * `asadmin help install-node-dcom`
 * `asadmin help install-node-ssh`
 
-[[gktaw]][[GSHAG00087]][[to-remove-glassfish-server-software-from-multiple-hosts]]
+[[to-remove-glassfish-server-software-from-multiple-hosts]]
 
 ==== To Remove {productName} Software From Multiple Hosts
 

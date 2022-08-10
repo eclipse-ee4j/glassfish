@@ -7,7 +7,7 @@ prev=delete-managed-thread-factory.html
 
 = delete-message-security-provider
 
-[[delete-message-security-provider-1]][[GSRFM00097]][[delete-message-security-provider]]
+[[delete-message-security-provider]]
 
 == delete-message-security-provider
 
@@ -80,7 +80,7 @@ provider_name::
 
 === Examples
 
-[[GSRFM566]][[sthref879]]
+[[sthref879]]
 
 ==== Example 1   Deleting a message security provider
 

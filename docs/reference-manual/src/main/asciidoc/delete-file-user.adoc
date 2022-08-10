@@ -7,7 +7,7 @@ prev=delete-domain.html
 
 = delete-file-user
 
-[[delete-file-user-1]][[GSRFM00076]][[delete-file-user]]
+[[delete-file-user]]
 
 == delete-file-user
 
@@ -59,7 +59,7 @@ username::
 
 === Examples
 
-[[GSRFM545]][[sthref688]]
+[[sthref688]]
 
 ==== Example 1   Deleting a User From a File Realm
 

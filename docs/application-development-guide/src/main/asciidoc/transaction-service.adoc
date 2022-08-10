@@ -7,7 +7,7 @@ prev=jdbc.html
 
 = Using the Transaction Service
 
-[[GSDVG00018]][[beanm]]
+[[beanm]]
 
 
 [[using-the-transaction-service]]
@@ -37,7 +37,7 @@ You might also want to read
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
 in The Jakarta EE Tutorial.
 
-[[giybi]][[GSDVG00188]][[handling-transactions-with-databases]]
+[[handling-transactions-with-databases]]
 
 === Handling Transactions with Databases
 
@@ -46,7 +46,7 @@ The following topics are addressed here:
 * xref:#using-jdbc-transaction-isolation-levels[Using JDBC Transaction Isolation Levels]
 * xref:#using-non-transactional-connections[Using Non-Transactional Connections]
 
-[[beamv]][[GSDVG00511]][[using-jdbc-transaction-isolation-levels]]
+[[using-jdbc-transaction-isolation-levels]]
 
 ==== Using JDBC Transaction Isolation Levels
 
@@ -151,7 +151,7 @@ asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.is-isolation-level-
 ----
 For more information, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[beamu]][[GSDVG00512]][[using-non-transactional-connections]]
+[[using-non-transactional-connections]]
 
 ==== Using Non-Transactional Connections
 
@@ -210,7 +210,7 @@ over several iterations of a loop can refresh cached data by using a
 non-transactional connection to read data before the transaction
 commits.
 
-[[beaje]][[GSDVG00189]][[handling-transactions-with-enterprise-beans]]
+[[handling-transactions-with-enterprise-beans]]
 
 === Handling Transactions with Enterprise Beans
 
@@ -228,7 +228,7 @@ The following topics are addressed here:
 * xref:#commit-options[Commit Options]
 * xref:#bean-level-container-managed-transaction-timeouts[Bean-Level Container-Managed Transaction Timeouts]
 
-[[beajf]][[GSDVG00513]][[flat-transactions]]
+[[flat-transactions]]
 
 ==== Flat Transactions
 
@@ -243,7 +243,7 @@ commercial database systems. Although nested transactions offer a finer
 granularity of control over transactions, they are supported by far
 fewer commercial database systems.
 
-[[beajg]][[GSDVG00514]][[global-and-local-transactions]]
+[[global-and-local-transactions]]
 
 ==== Global and Local Transactions
 
@@ -253,7 +253,7 @@ Local transactions bypass the XA commit protocol and are faster. For
 more information, see xref:#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the
 Transaction Synchronization Registry, and `UserTransaction`].
 
-[[beajh]][[GSDVG00515]][[commit-options]]
+[[commit-options]]
 
 ==== Commit Options
 
@@ -305,7 +305,7 @@ The `glassfish-ejb-jar.xml` deployment descriptor has an element,
 `commit-option`, that specifies the commit option to be used. Based on
 the specified commit option, the appropriate handler is instantiated.
 
-[[beaht]][[GSDVG00516]][[bean-level-container-managed-transaction-timeouts]]
+[[bean-level-container-managed-transaction-timeouts]]
 
 ==== Bean-Level Container-Managed Transaction Timeouts
 
@@ -323,7 +323,7 @@ value of `cmt-timeout-in-seconds` is used for all methods in the bean
 that start a new container-managed transaction. This value is not used
 if the bean joins a client transaction.
 
-[[gknrh]][[GSDVG00190]][[handling-transactions-with-the-java-message-service]]
+[[handling-transactions-with-the-java-message-service]]
 
 === Handling Transactions with the Java Message Service
 
@@ -332,7 +332,7 @@ The following topics are addressed here:
 * xref:#transactions-and-non-persistent-messages[Transactions and Non-Persistent Messages]
 * xref:#using-the-configurabletransactionsupport-interface[Using the ConfigurableTransactionSupport Interface]
 
-[[beaoq]][[GSDVG00517]][[transactions-and-non-persistent-messages]]
+[[transactions-and-non-persistent-messages]]
 
 ==== Transactions and Non-Persistent Messages
 
@@ -342,7 +342,7 @@ operations, any non-persistent message in the transaction is lost and
 cannot be delivered. A message that is not saved to a persistent store
 is not available for transaction recovery.
 
-[[gdyya]][[GSDVG00518]][[using-the-configurabletransactionsupport-interface]]
+[[using-the-configurabletransactionsupport-interface]]
 
 ==== Using the ConfigurableTransactionSupport Interface
 
@@ -363,7 +363,7 @@ obtained from a pool that is set to `XA_TRANSACTION` could be used as a
 LOCAL resource in a last-agent-optimized transaction or in a
 non-transactional context.
 
-[[gaxit]][[GSDVG00191]][[the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction]]
+[[the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction]]
 
 === The Transaction Manager, the Transaction Synchronization Registry, and `UserTransaction`
 

@@ -7,7 +7,7 @@ prev=delete-transport.html
 
 = delete-virtual-server
 
-[[delete-virtual-server-1]][[GSRFM00113]][[delete-virtual-server]]
+[[delete-virtual-server]]
 
 == delete-virtual-server
 
@@ -58,7 +58,7 @@ virtual-server-id::
 
 === Examples
 
-[[GSRFM583]][[sthref1012]]
+[[sthref1012]]
 
 ==== Example 1   Deleting a Virtual Server
 

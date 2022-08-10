@@ -7,7 +7,7 @@ prev=delete-config.html
 
 = delete-connector-connection-pool
 
-[[delete-connector-connection-pool-1]][[GSRFM00070]][[delete-connector-connection-pool]]
+[[delete-connector-connection-pool]]
 
 == delete-connector-connection-pool
 
@@ -56,7 +56,7 @@ poolname::
 
 === Examples
 
-[[GSRFM537]][[sthref630]]
+[[sthref630]]
 
 ==== Example 1   Deleting a Connector Connection Pool
 

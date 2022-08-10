@@ -7,7 +7,7 @@ prev=disable-secure-admin.html
 
 = disable-secure-admin-internal-user
 
-[[disable-secure-admin-internal-user-1]][[GSRFM00122]][[disable-secure-admin-internal-user]]
+[[disable-secure-admin-internal-user]]
 
 == disable-secure-admin-internal-user
 
@@ -48,7 +48,7 @@ admin-username::
 
 === Examples
 
-[[GSRFM597]][[sthref1084]]
+[[sthref1084]]
 
 ==== Example 1   Disabling a user name for secure admin
 

@@ -5,7 +5,7 @@ prev=orb.adoc
 
 = Administering the JavaMail Service
 
-[[GSADG00019]][[ablkr]]
+[[ablkr]]
 
 
 [[administering-the-javamail-service]]
@@ -25,7 +25,7 @@ Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[ggjsf]][[GSADG00593]][[about-javamail]]
+[[about-javamail]]
 
 === About JavaMail
 
@@ -46,7 +46,7 @@ platform and is also available as part of the Jakarta EE platform.
 To learn more about the JavaMail API, consult the
 http://www.oracle.com/technetwork/java/javamail/[JavaMail web site] .
 
-[[giowr]][[GSADG00594]][[administering-javamail-resources]]
+[[administering-javamail-resources]]
 
 === Administering JavaMail Resources
 
@@ -85,7 +85,7 @@ The following topics are addressed here:
 * <<To Update a JavaMail Resource>>
 * <<To Delete a JavaMail Resource>>
 
-[[giowd]][[GSADG00482]][[to-create-a-javamail-resource]]
+[[to-create-a-javamail-resource]]
 
 ==== To Create a JavaMail Resource
 
@@ -104,7 +104,7 @@ help page.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00267]][[gipfs]]
+[[gipfs]]
 Example 16-1 Creating a JavaMail Resource
 
 This example creates a JavaMail resource named `mail/MyMailSession`. The
@@ -123,7 +123,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-javamail-resource` at the command line.
 
-[[giowq]][[GSADG00483]][[to-list-javamail-resources]]
+[[to-list-javamail-resources]]
 
 ==== To List JavaMail Resources
 
@@ -134,7 +134,7 @@ existing JavaMail session resources.
 2. List the JavaMail resources by using the
 link:reference-manual/list-javamail-resources.html#list-javamail-resources[`list-javamail-resources`] subcommand.
 
-[[GSADG00268]][[gipfe]]
+[[gipfe]]
 Example 16-2 Listing JavaMail Resources
 
 This example lists the JavaMail resources on `localhost`.
@@ -151,7 +151,7 @@ See Also
 You can also view the full syntax and options of the subcommands by
 typing `asadmin help list-javamail-resources` at the command line.
 
-[[giwjw]][[GSADG00484]][[to-update-a-javamail-resource]]
+[[to-update-a-javamail-resource]]
 
 ==== To Update a JavaMail Resource
 
@@ -162,7 +162,7 @@ link:reference-manual/set.html#set[`set`] subcommand.
 +
 The resource is identified by its dotted name.
 
-[[GSADG00269]][[giwjb]]
+[[giwjb]]
 Example 16-3 Updating a JavaMail Resource
 
 This example changes `joeserver` to `joe`.
@@ -175,7 +175,7 @@ MyMailSession.user=joe
 Command set executed successfully.
 ----
 
-[[gioxj]][[GSADG00485]][[to-delete-a-javamail-resource]]
+[[to-delete-a-javamail-resource]]
 
 ==== To Delete a JavaMail Resource
 
@@ -196,7 +196,7 @@ link:reference-manual/delete-javamail-resource.html#delete-javamail-resource[`de
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00270]][[gipcd]]
+[[gipcd]]
 Example 16-4 Deleting a JavaMail Resource
 
 This example deletes the JavaMail session resource named

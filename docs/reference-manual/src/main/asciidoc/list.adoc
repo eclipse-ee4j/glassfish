@@ -7,7 +7,7 @@ prev=jms-ping.html
 
 = list
 
-[[list-1]][[GSRFM00145]][[list]]
+[[list]]
 
 == list
 
@@ -92,7 +92,7 @@ dotted-parent-element-name::
 
 === Examples
 
-[[GSRFM631]][[sthref1287]]
+[[sthref1287]]
 
 ==== Example 1   Listing Dotted Names of Configurable Elements
 
@@ -149,7 +149,7 @@ system-applications
 Command list executed successfully.
 ----
 
-[[GSRFM632]][[sthref1288]]
+[[sthref1288]]
 
 ==== Example 2   Listing Attributes of a Configurable Element
 
@@ -163,7 +163,7 @@ configs.config.server-config.web-container.session-config
 Command list executed successfully.
 ----
 
-[[GSRFM633]][[sthref1289]]
+[[sthref1289]]
 
 ==== Example 3   Listing Dotted Names of Monitorable Objects
 

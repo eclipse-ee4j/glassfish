@@ -7,7 +7,7 @@ prev=create-jacc-provider.html
 
 = create-javamail-resource
 
-[[create-javamail-resource-1]][[GSRFM00035]][[create-javamail-resource]]
+[[create-javamail-resource]]
 
 == create-javamail-resource
 
@@ -108,7 +108,7 @@ jndi-name::
 
 === Examples
 
-[[GSRFM492]][[sthref317]]
+[[sthref317]]
 
 ==== Example 1   Creating a JavaMail Resource
 

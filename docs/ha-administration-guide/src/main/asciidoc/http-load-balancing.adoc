@@ -7,7 +7,7 @@ prev=named-configurations.html
 
 = Configuring HTTP Load Balancing
 
-[[GSHAG00009]][[abdgs]]
+[[abdgs]]
 
 
 [[configuring-http-load-balancing]]
@@ -23,7 +23,7 @@ For information on other types of load balancing, see
 link:jms.html#abdbk[Configuring Java Message Service High Availability]
 and link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
 
-[[abdgx]][[GSHAG00202]][[setting-up-http-load-balancing]]
+[[setting-up-http-load-balancing]]
 
 === Setting Up HTTP Load Balancing
 
@@ -36,7 +36,7 @@ The following topics are addressed here:
 * xref:#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`]
 * xref:#http-load-balancer-deployments[HTTP Load Balancer Deployments]
 
-[[abdgy]][[GSHAG00281]][[prerequisites-for-setting-up-http-load-balancing]]
+[[prerequisites-for-setting-up-http-load-balancing]]
 
 ==== Prerequisites for Setting Up HTTP Load Balancing
 
@@ -55,7 +55,7 @@ HTTP Server and `mod_proxy_ajp`].
 
 * Deploy applications to these clusters or instances.
 
-[[gksdt]][[GSHAG00282]][[configuring-glassfish-server-with-apache-http-server-and-mod_jk]]
+[[configuring-glassfish-server-with-apache-http-server-and-mod_jk]]
 
 ==== Configuring {productName} with Apache HTTP Server and `mod_jk`
 
@@ -66,7 +66,7 @@ module. To enable the `mod_jk` module in {productName}, set the
 create `jk-connectors` under different virtual-servers using the
 `jk-enabled` `network-listener` attribute.
 
-[[gksde]][[GSHAG00143]][[to-configure-the-mod_jk-connector-module]]
+[[to-configure-the-mod_jk-connector-module]]
 
 ===== To Configure the `mod_jk` Connector Module
 
@@ -140,7 +140,7 @@ http-thread-pool.max-thread-pool-size=value
 
 7. Restart {productName}.
 
-[[GSHAG00065]][[gktpu]]
+[[gktpu]]
 Example 7-1 `httpd.conf` File for Load Balancing
 
 This example shows an `httpd.conf` file that is set for load balancing.
@@ -165,7 +165,7 @@ JkMount /*.jsp worker1
 JkMount /glassfish-test/* loadbalancer
 ----
 
-[[GSHAG00066]][[gktpe]]
+[[gktpe]]
 Example 7-2 `workers.properties` File for Load Balancing
 
 This example shows a `workers.properties` or `glassfish-jk.properties`
@@ -191,7 +191,7 @@ worker.loadbalancer.type=lb
 worker.loadbalancer.balance_workers=worker1,worker2
 ----
 
-[[CHDCCGDC]][[GSHAG494]][[configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp]]
+[[configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp]]
 
 ==== Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`
 
@@ -201,7 +201,7 @@ connector module. To enable the `mod_proxy_ajp` module in {productName}, set the
 attribute. You can also create `jk-connectors` under different
 virtual-servers using the `jk-enabled` `network-listener` attribute.
 
-[[GSHAG495]][[sthref22]]
+
 
 
 [[to-configure-the-mod_proxy_ajp-connector-module]]
@@ -256,7 +256,7 @@ http-thread-pool.max-thread-pool-size=value
 
 6. Restart {productName}.
 
-[[abdgz]][[GSHAG00284]][[http-load-balancer-deployments]]
+[[http-load-balancer-deployments]]
 
 ==== HTTP Load Balancer Deployments
 
@@ -266,7 +266,7 @@ your goals and environment, as described in the following sections:
 * xref:#using-clustered-server-instances[Using Clustered Server Instances]
 * xref:#using-multiple-standalone-instances[Using Multiple Standalone Instances]
 
-[[abdha]][[GSHAG00232]][[using-clustered-server-instances]]
+[[using-clustered-server-instances]]
 
 ===== Using Clustered Server Instances
 
@@ -291,7 +291,7 @@ Requests cannot be load balanced across clusters and standalone instances.
 ====
 
 
-[[abdhc]][[GSHAG00233]][[using-multiple-standalone-instances]]
+[[using-multiple-standalone-instances]]
 
 ===== Using Multiple Standalone Instances
 

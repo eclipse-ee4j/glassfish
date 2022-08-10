@@ -5,7 +5,7 @@ prev=logging.adoc
 
 = Administering the Monitoring Service
 
-[[GSADG00011]][[ablur]]
+[[ablur]]
 
 
 [[administering-the-monitoring-service]]
@@ -30,7 +30,7 @@ For information on using REST interfaces for monitoring, see
 xref:general-administration.adoc#using-rest-interfaces-to-administer-glassfish-server[Using REST Interfaces to
 Administer {productName}].
 
-[[ablus]][[GSADG00557]][[about-monitoring]]
+[[about-monitoring]]
 
 === About Monitoring
 
@@ -55,7 +55,7 @@ The following topics are addressed here:
 * <<About Monitoring for Add-on Components>>
 * <<Tools for Monitoring {productName}>>
 
-[[ghbaz]][[GSADG00727]][[how-the-monitoring-tree-structure-works]]
+[[how-the-monitoring-tree-structure-works]]
 
 ==== How the Monitoring Tree Structure Works
 
@@ -106,7 +106,7 @@ Although an object is monitorable, it is not necessarily being actively
 monitored. For instructions on activating monitoring, see
 <<Configuring Monitoring>>.
 
-[[abluv]][[GSADG00647]][[tree-structure-of-monitorable-objects]]
+[[tree-structure-of-monitorable-objects]]
 
 ===== Tree Structure of Monitorable Objects
 
@@ -129,7 +129,7 @@ The following node tree hierarchies are addressed here:
 * <<Transactions Service Tree Hierarchy>>
 * <<Web Tree Hierarchy>>
 
-[[abluw]][[GSADG00040]][[applications-tree-hierarchy]]
+[[applications-tree-hierarchy]]
 
 ====== Applications Tree Hierarchy
 
@@ -198,7 +198,7 @@ server.applications.helloworld-webapp.jersey.resources.resource-0.hitcount.resou
 
 For available statistics, see <<EJB Statistics>>, <<Jersey Statistics>>, and <<Web Statistics>>.
 
-[[abluz]][[GSADG00041]][[connector-service-tree-hierarchy]]
+[[connector-service-tree-hierarchy]]
 
 ====== Connector Service Tree Hierarchy
 
@@ -219,7 +219,7 @@ An example dotted name might be
 `server.connector-service.resource-adapter-1.connection-pools.pool-1`.
 For available statistics, see xref:#jmsconnector-service-statistics[JMS/Connector Service Statistics].
 
-[[ghlin]][[GSADG00042]][[http-service-tree-hierarchy]]
+[[http-service-tree-hierarchy]]
 
 ====== HTTP Service Tree Hierarchy
 
@@ -240,7 +240,7 @@ An example dotted name under the virutal-server node might be
 `server.http-service.virtual-server1.request.requestcount`. For
 available statistics, see <<HTTP Service Statistics>>.
 
-[[ablva]][[GSADG00043]][[jmscontainer-service-tree-hierarchy]]
+[[jmscontainer-service-tree-hierarchy]]
 
 ====== JMS/Container Service Tree Hierarchy
 
@@ -262,7 +262,7 @@ An example dotted name under the `connection-factories` node might be
 shows all the statistics for this connection factory. For available
 statistics, see <<JMS/Connector Service Statistics>>.
 
-[[ghlic]][[GSADG00044]][[jvm-tree-hierarchy]]
+[[jvm-tree-hierarchy]]
 
 ====== JVM Tree Hierarchy
 
@@ -283,7 +283,7 @@ An example dotted name under the `memory` node might be
 `server.jvm.memory.maxheapsize`. For available statistics, see
 <<JVM Statistics>>.
 
-[[giznj]][[GSADG00045]][[network-tree-hierarchy]]
+[[network-tree-hierarchy]]
 
 ====== Network Tree Hierarchy
 
@@ -309,7 +309,7 @@ An example dotted name under the `network` node might be
 `server.network.admin-listener.keep-alive.maxrequests-count`. For
 available statistics, see <<Network Statistics>>.
 
-[[ablvb]][[GSADG00046]][[orb-tree-hierarchy]]
+[[orb-tree-hierarchy]]
 
 ====== ORB Tree Hierarchy
 
@@ -332,7 +332,7 @@ An example dotted name might be
 For available statistics, see xref:#orb-statistics-connection-manager[ORB Statistics (Connection
 Manager)].
 
-[[giqdo]][[GSADG00047]][[resources-tree-hierarchy]]
+[[resources-tree-hierarchy]]
 
 ====== Resources Tree Hierarchy
 
@@ -353,7 +353,7 @@ An example dotted name might be
 available statistics, see xref:#resource-statistics-connection-pool[Resource Statistics (Connection
 Pool)].
 
-[[gjios]][[GSADG00048]][[security-tree-hierarchy]]
+[[security-tree-hierarchy]]
 
 ====== Security Tree Hierarchy
 
@@ -374,7 +374,7 @@ An example dotted name might be
 `server.security.realm.realmcount-starttime`. For available statistics,
 see <<Security Statistics>>.
 
-[[ablvc]][[GSADG00049]][[thread-pool-tree-hierarchy]]
+[[thread-pool-tree-hierarchy]]
 
 ====== Thread Pool Tree Hierarchy
 
@@ -394,7 +394,7 @@ An example dotted name might be
 `server.thread-pool.orb.threadpool.thread-pool-1.averagetimeinqueue-current`.
 For available statistics, see <<Thread Pool Statistics>>.
 
-[[gitci]][[GSADG00050]][[transactions-service-tree-hierarchy]]
+[[transactions-service-tree-hierarchy]]
 
 ====== Transactions Service Tree Hierarchy
 
@@ -412,7 +412,7 @@ An example dotted name might be `server.tranaction-service.activeids`.
 For available statistics, see xref:#transaction-service-statistics[Transaction Service
 Statistics].
 
-[[ghlff]][[GSADG00051]][[web-tree-hierarchy]]
+[[web-tree-hierarchy]]
 
 ====== Web Tree Hierarchy
 
@@ -435,7 +435,7 @@ An example dotted name for the `servlet` node might be
 `server.web.servlet.activeservletsloadedcount`. For available
 statistics, see <<Web Module Common Statistics>>.
 
-[[gitkq]][[GSADG00728]][[about-monitoring-for-add-on-components]]
+[[about-monitoring-for-add-on-components]]
 
 ==== About Monitoring for Add-on Components
 
@@ -447,7 +447,7 @@ result, you can use the same administrative interfaces to monitor
 statistics from any installed {productName} component, regardless of
 the origin of the component.
 
-[[ghbfq]][[GSADG00729]][[tools-for-monitoring-glassfish-server]]
+[[tools-for-monitoring-glassfish-server]]
 
 ==== Tools for Monitoring {productName}
 
@@ -471,7 +471,7 @@ monitorable object. For additional information, see
 xref:#guidelines-for-using-the-list-and-get-subcommands-for-monitoring[Guidelines for Using the `list` and `get` Subcommands for
 Monitoring].
 
-[[ablvp]][[GSADG00558]][[configuring-monitoring]]
+[[configuring-monitoring]]
 
 === Configuring Monitoring
 
@@ -491,7 +491,7 @@ The following tasks are addressed here:
 * <<To Enable Monitoring>>
 * <<To Disable Monitoring>>
 
-[[ablvr]][[GSADG00386]][[to-enable-monitoring]]
+[[to-enable-monitoring]]
 
 ==== To Enable Monitoring
 
@@ -525,7 +525,7 @@ subcommand.
 +
 Server restart is not required.
 
-[[GSADG00188]][[gixri]]
+[[gixri]]
 Example 8-1 Enabling the Monitoring Service Dynamically
 
 This example enables the monitoring service without affecting monitoring
@@ -537,7 +537,7 @@ asadmin> enable-monitoring
 Command enable-monitoring executed successfully
 ----
 
-[[GSADG00189]][[gixre]]
+[[gixre]]
 Example 8-2 Enabling Monitoring for Modules Dynamically
 
 This example enables monitoring for the `ejb-container` module.
@@ -548,7 +548,7 @@ asadmin> enable-monitoring --level ejb-container=HIGH
 Command enable-monitoring executed successfully
 ----
 
-[[GSADG00190]][[gjcmm]]
+[[gjcmm]]
 Example 8-3 Enabling Monitoring for Modules by Using the `set`
 Subcommand
 
@@ -567,7 +567,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help enable-monitoring` at the command line.
 
-[[gglcu]][[GSADG00387]][[to-disable-monitoring]]
+[[to-disable-monitoring]]
 
 ==== To Disable Monitoring
 
@@ -601,7 +601,7 @@ link:reference-manual/disable-monitoring.html#disable-monitoring[`disable-monito
 +
 Server restart is not required.
 
-[[GSADG00191]][[gixsc]]
+[[gixsc]]
 Example 8-4 Disabling the Monitoring Service Dynamically
 
 This example disables the monitoring service without changing the
@@ -613,7 +613,7 @@ asadmin> disable-monitoring
 Command disable-monitoring executed successfully
 ----
 
-[[GSADG00192]][[gjcnw]]
+[[gjcnw]]
 Example 8-5 Disabling Monitoring for Modules Dynamically
 
 This example disables monitoring for specific modules. Their monitoring
@@ -625,7 +625,7 @@ asadmin> disable-monitoring --modules web-container,ejb-container
 Command disable-monitoring executed successfully
 ----
 
-[[GSADG00193]][[gixpg]]
+[[gixpg]]
 Example 8-6 Disabling Monitoring by Using the `set` Subcommand
 
 This example disables monitoring for the HTTP service (you must restart
@@ -642,7 +642,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help disable-monitoring` at the command line.
 
-[[ablvs]][[GSADG00559]][[viewing-common-monitoring-data]]
+[[viewing-common-monitoring-data]]
 
 === Viewing Common Monitoring Data
 
@@ -652,7 +652,7 @@ objects.
 * <<To View Common Monitoring Data>>
 * <<Common Monitoring Statistics>>
 
-[[gelol]][[GSADG00388]][[to-view-common-monitoring-data]]
+[[to-view-common-monitoring-data]]
 
 ==== To View Common Monitoring Data
 
@@ -676,7 +676,7 @@ Your choices for 5.0 are `jvm`, `httplistener`, and `webmodule`.
 2. Request the monitoring data by using the link:reference-manual/monitor.html#monitor[`monitor`]
 subcommand.
 
-[[GSADG00194]][[ghljw]]
+[[ghljw]]
 Example 8-7 Viewing Common Monitoring Data
 
 This example requests common data for type `jvm` on instance `server`.
@@ -697,7 +697,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help monitor` at the command line.
 
-[[ghmdc]][[GSADG00730]][[common-monitoring-statistics]]
+[[common-monitoring-statistics]]
 
 ==== Common Monitoring Statistics
 
@@ -707,7 +707,7 @@ Common monitoring statistics are described in the following sections:
 * <<JVM Common Statistics>>
 * <<Web Module Common Statistics>>
 
-[[ghltk]][[GSADG00648]][[http-listener-common-statistics]]
+[[http-listener-common-statistics]]
 
 ===== HTTP Listener Common Statistics
 
@@ -734,7 +734,7 @@ processing times over request
 |===
 
 
-[[ghlvm]][[GSADG00649]][[jvm-common-statistics]]
+[[jvm-common-statistics]]
 
 ===== JVM Common Statistics
 
@@ -765,7 +765,7 @@ since it was last started
 |===
 
 
-[[ghljx]][[GSADG00650]][[web-module-common-statistics]]
+[[web-module-common-statistics]]
 
 ===== Web Module Common Statistics
 
@@ -802,7 +802,7 @@ are loaded
 |===
 
 
-[[ghmct]][[GSADG00560]][[viewing-comprehensive-monitoring-data]]
+[[viewing-comprehensive-monitoring-data]]
 
 === Viewing Comprehensive Monitoring Data
 
@@ -818,7 +818,7 @@ Monitoring]
 * <<To View Comprehensive Monitoring Data>>
 * <<Comprehensive Monitoring Statistics>>
 
-[[ablwh]][[GSADG00731]][[guidelines-for-using-the-list-and-get-subcommands-for-monitoring]]
+[[guidelines-for-using-the-list-and-get-subcommands-for-monitoring]]
 
 ==== Guidelines for Using the `list` and `get` Subcommands for Monitoring
 
@@ -875,7 +875,7 @@ attributes and values corresponding to connection pool attributes.
 For detailed information on dotted names, see the
 link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
-[[ablvv]][[GSADG00389]][[to-view-comprehensive-monitoring-data]]
+[[to-view-comprehensive-monitoring-data]]
 
 ==== To View Comprehensive Monitoring Data
 
@@ -911,7 +911,7 @@ server.thread-pools
 2. Get data for a monitored component or service by using the
 link:reference-manual/get.html#get[`get`] subcommand.
 
-[[GSADG00195]][[ghlre]]
+[[ghlre]]
 Example 8-8 Viewing Attributes for a Specific Type
 
 This example gets information about all the attributes for object type
@@ -955,7 +955,7 @@ server.jvm.runtime.vmvendor-current = Sun Microsystems Inc.
 server.jvm.runtime.vmversion-current = 1.5.0_11-b03
 ----
 
-[[GSADG00196]][[ghbgv]]
+[[ghbgv]]
 Example 8-9 Viewing Monitorable Applications
 
 This example lists all the monitorable applications for instance
@@ -970,7 +970,7 @@ server.applications.app1.virtual-server1
 server.applications.app2.virtual-server1
 ----
 
-[[GSADG00197]][[ghbfj]]
+[[ghbfj]]
 Example 8-10 Viewing Attributes for an Application
 
 This example gets information about all the attributes for application
@@ -999,7 +999,7 @@ server.applications.hello.server.totaljspsloadedcount = 0
 server.applications.hello.server.totalservletsloadedcount = 0
 ----
 
-[[GSADG00198]][[ghbge]]
+[[ghbge]]
 Example 8-11 Viewing a Specific Attribute
 
 This example gets information about the `jvm` attribute
@@ -1011,7 +1011,7 @@ asadmin> get --monitor server.jvm.runtime.vmversion-current
 server.jvm.runtime.vmversion-current = 10.0-b23
 ----
 
-[[ghmcn]][[GSADG00732]][[comprehensive-monitoring-statistics]]
+[[comprehensive-monitoring-statistics]]
 
 ==== Comprehensive Monitoring Statistics
 
@@ -1038,7 +1038,7 @@ available for each monitorable object:
 * <<Transaction Service Statistics>>
 * <<Web Statistics>>
 
-[[gjkbi]][[GSADG00651]][[ejb-statistics]]
+[[ejb-statistics]]
 
 ===== EJB Statistics
 
@@ -1070,7 +1070,7 @@ sections:
 * <<EJB Pool Statistics>>
 * <<Timer Statistics>>
 
-[[gisyw]][[GSADG00052]][[ejb-cache-statistics]]
+[[ejb-cache-statistics]]
 
 ====== EJB Cache Statistics
 
@@ -1113,7 +1113,7 @@ completed successfully. Applies only to stateful session beans.
 |===
 
 
-[[giszu]][[GSADG00053]][[ejb-container-statistics]]
+[[ejb-container-statistics]]
 
 ====== EJB Container Statistics
 
@@ -1126,7 +1126,7 @@ server.applications.appname.ejbmodulename.container.ejbname
 
 The statistics available for EJB containers are listed in the following table.
 
-[[GSADG885]][[sthref33]][[gelns]]
+[[gelns]]
 
 
 Table 8-6 EJB Container Monitoring Statistics
@@ -1152,7 +1152,7 @@ are in `Passive` state.
 |===
 
 
-[[gisyx]][[GSADG00054]][[ejb-method-statistics]]
+[[ejb-method-statistics]]
 
 ====== EJB Method Statistics
 
@@ -1166,7 +1166,7 @@ server.applications.appname.ejbmodulename.bean-methods.ejbname.statistic
 The statistics available for EJB method invocations are listed in the
 following table.
 
-[[GSADG886]][[sthref34]][[gelnu]]
+[[gelnu]]
 
 
 Table 8-7 EJB Method Monitoring Statistics
@@ -1194,7 +1194,7 @@ container.
 |===
 
 
-[[gisza]][[GSADG00055]][[ejb-pool-statistics]]
+[[ejb-pool-statistics]]
 
 ====== EJB Pool Statistics
 
@@ -1232,7 +1232,7 @@ associated pool since the gathering of data started.
 |===
 
 
-[[gisyr]][[GSADG00057]][[timer-statistics]]
+[[timer-statistics]]
 
 ====== Timer Statistics
 
@@ -1245,7 +1245,7 @@ server.applications.appname.ejbmodulename.timers.ejbname.statistic
 
 The statistics available for timers are listed in the following table.
 
-[[GSADG889]][[sthref36]][[gelob]]
+[[gelob]]
 
 
 Table 8-9 Timer Monitoring Statistics
@@ -1261,14 +1261,14 @@ Table 8-9 Timer Monitoring Statistics
 |===
 
 
-[[ablvg]][[GSADG00652]][[http-service-statistics]]
+[[http-service-statistics]]
 
 ===== HTTP Service Statistics
 
 The HTTP service fits into the tree of objects as shown in
 <<HTTP Service Tree Hierarchy>>.
 
-[[ghqdi]][[GSADG00059]][[http-service-virtual-server-statistics]]
+[[http-service-virtual-server-statistics]]
 
 HTTP Service Virtual Server Statistics
 
@@ -1336,7 +1336,7 @@ request processing times over the request count
 |===
 
 
-[[gjjyb]][[GSADG00653]][[jersey-statistics]]
+[[jersey-statistics]]
 
 ===== Jersey Statistics
 
@@ -1366,7 +1366,7 @@ resource class
 |===
 
 
-[[ablvi]][[GSADG00654]][[jmsconnector-service-statistics]]
+[[jmsconnector-service-statistics]]
 
 ===== JMS/Connector Service Statistics
 
@@ -1378,7 +1378,7 @@ JMS/Connector Service statistics are shown in the following sections:
 * <<Connector Connection Pool Statistics (JMS)>>
 * <<Connector Work Management Statistics (JMS)>>
 
-[[giszy]][[GSADG00060]][[connector-connection-pool-statistics-jms]]
+[[connector-connection-pool-statistics-jms]]
 
 ====== Connector Connection Pool Statistics (JMS)
 
@@ -1448,7 +1448,7 @@ queue waiting to be serviced.
 |===
 
 
-[[giszh]][[GSADG00061]][[connector-work-management-statistics-jms]]
+[[connector-work-management-statistics-jms]]
 
 ====== Connector Work Management Statistics (JMS)
 
@@ -1490,7 +1490,7 @@ work object before it gets executed.
 |===
 
 
-[[ablvm]][[GSADG00655]][[jvm-statistics]]
+[[jvm-statistics]]
 
 ===== JVM Statistics
 
@@ -1508,7 +1508,7 @@ following sections:
 * <<JVM Operating System Statistics>>
 * <<JVM Runtime Statistics>>
 
-[[ablvn]][[GSADG00062]][[jvm-class-loading-system-statistics]]
+[[jvm-class-loading-system-statistics]]
 
 ====== JVM Class Loading System Statistics
 
@@ -1585,7 +1585,7 @@ created and/or started since the JVM started.
 |===
 
 
-[[ghqfh]][[GSADG00063]][[jvm-compilation-system-statistics]]
+[[jvm-compilation-system-statistics]]
 
 ====== JVM Compilation System Statistics
 
@@ -1600,7 +1600,7 @@ server.jvm.compilation-system.statistic
 The statistics that are available for compilation in the JVM for Java SE
 are shown in the following table.
 
-[[GSADG897]][[sthref43]][[gelnt]]
+[[gelnt]]
 
 
 Table 8-16 JVM Monitoring Statistics for Java SE Compilation
@@ -1615,7 +1615,7 @@ milliseconds) spent in compilation
 |===
 
 
-[[ghqea]][[GSADG00064]][[jvm-garbage-collectors-statistics]]
+[[jvm-garbage-collectors-statistics]]
 
 ====== JVM Garbage Collectors Statistics
 
@@ -1630,7 +1630,7 @@ server.jvm.garbage-collectors.statistic
 The statistics that are available for garbage collection in the JVM for
 Java SE are shown in the following table.
 
-[[GSADG898]][[sthref44]][[gelox]]
+[[gelox]]
 
 
 Table 8-17 JVM Monitoring Statistics for Java SE Garbage Collectors
@@ -1646,7 +1646,7 @@ spent in collection
 |===
 
 
-[[ghqdn]][[GSADG00065]][[jvm-memory-statistics]]
+[[jvm-memory-statistics]]
 
 ====== JVM Memory Statistics
 
@@ -1660,7 +1660,7 @@ server.jvm.memory.statistic
 The statistics that are available for memory in the JVM for Java SE are
 shown in the following table.
 
-[[GSADG899]][[sthref45]][[gelnx]]
+[[gelnx]]
 
 
 Table 8-18 JVM Monitoring Statistics for Java SE Memory
@@ -1696,7 +1696,7 @@ in use
 |===
 
 
-[[ghqec]][[GSADG00066]][[jvm-operating-system-statistics]]
+[[jvm-operating-system-statistics]]
 
 ====== JVM Operating System Statistics
 
@@ -1711,7 +1711,7 @@ server.jvm.operating-system.statistic
 The statistics that are available for the operating system for the JVM
 machine in Java SE are shown in the following table.
 
-[[GSADG900]][[sthref46]][[gelog]]
+[[gelog]]
 
 
 Table 8-19 JVM Statistics for the Java SE Operating System
@@ -1729,7 +1729,7 @@ Table 8-19 JVM Statistics for the Java SE Operating System
 |===
 
 
-[[ghqby]][[GSADG00067]][[jvm-runtime-statistics]]
+[[jvm-runtime-statistics]]
 
 ====== JVM Runtime Statistics
 
@@ -1743,7 +1743,7 @@ server.jvm.runtime.statistic
 The statistics that are available for the runtime in the JVM runtime for
 Java SE are shown in the following table.
 
-[[GSADG901]][[sthref47]][[gelop]]
+[[gelop]]
 
 
 Table 8-20 JVM Monitoring Statistics for Java SE Runtime
@@ -1779,7 +1779,7 @@ specification version implemented by the JVM
 |===
 
 
-[[gjipy]][[GSADG00656]][[network-statistics]]
+[[network-statistics]]
 
 ===== Network Statistics
 
@@ -1793,7 +1793,7 @@ Network statistics are described in the following sections:
 * <<Network File Cache Statistics>>
 * <<Network Thread Pool Statistics>>
 
-[[gjiqu]][[GSADG00068]][[network-keep-alive-statistics]]
+[[network-keep-alive-statistics]]
 
 ====== Network Keep Alive Statistics
 
@@ -1806,7 +1806,7 @@ server.network.type-of-listener.keep-alive.statistic
 
 Statistics available for network keep alive are shown in the following table.
 
-[[GSADG902]][[sthref48]][[gjirp]]
+[[gjirp]]
 
 
 Table 8-21 Network Keep Alive Statistics
@@ -1831,7 +1831,7 @@ single keep-alive connection.
 |===
 
 
-[[gjjom]][[GSADG00069]][[network-connection-queue-statistics]]
+[[network-connection-queue-statistics]]
 
 ====== Network Connection Queue Statistics
 
@@ -1844,7 +1844,7 @@ server.network.type-of-listener.connection-queue.statistic
 
 Statistics available for network connection queue are shown in the following table.
 
-[[GSADG903]][[sthref49]][[gjjxc]]
+[[gjjxc]]
 
 
 Table 8-22 Network Connection Queue Statistics
@@ -1883,7 +1883,7 @@ that connections have spent in the queue
 |===
 
 
-[[gjjpi]][[GSADG00070]][[network-file-cache-statistics]]
+[[network-file-cache-statistics]]
 
 ====== Network File Cache Statistics
 
@@ -1896,7 +1896,7 @@ server.network.type-of-listener.file-cache.statistic
 
 Statistics available for network file cache are shown in the following table.
 
-[[GSADG904]][[sthref50]][[gjjpd]]
+[[gjjpd]]
 
 
 Table 8-23 Network File Cache Statistics
@@ -1928,7 +1928,7 @@ Table 8-23 Network File Cache Statistics
 |===
 
 
-[[gjjpp]][[GSADG00071]][[network-thread-pool-statistics]]
+[[network-thread-pool-statistics]]
 
 ====== Network Thread Pool Statistics
 
@@ -1941,7 +1941,7 @@ server.network.type-of-listener.thread-pool.statistic
 
 Statistics available for network thread pool are shown in the following table.
 
-[[GSADG905]][[sthref51]][[gjjov]]
+[[gjjov]]
 
 
 Table 8-24 Network Thread Pool Statistics
@@ -1964,7 +1964,7 @@ tasks, which were executed by the thread pool
 |===
 
 
-[[ablvj]][[GSADG00657]][[orb-statistics-connection-manager]]
+[[orb-statistics-connection-manager]]
 
 ===== ORB Statistics (Connection Manager)
 
@@ -1981,7 +1981,7 @@ server.orb.transport.connectioncache.outbound.statistic
 The statistics available for the connection manager in an ORB are listed
 in the following table.
 
-[[GSADG906]][[sthref52]][[gelqw]]
+[[gelqw]]
 
 
 Table 8-25 ORB Monitoring Statistics (Connection Manager)
@@ -2000,7 +2000,7 @@ to the ORB
 |===
 
 
-[[gipzv]][[GSADG00658]][[resource-statistics-connection-pool]]
+[[resource-statistics-connection-pool]]
 
 ===== Resource Statistics (Connection Pool)
 
@@ -2050,7 +2050,7 @@ for a connection pool are not available until the pool is initialized.
 ====
 
 
-[[GSADG907]][[sthref53]][[gelqa]]
+[[gelqa]]
 
 
 Table 8-26 General Resource Monitoring Statistics (Connection Pool)
@@ -2121,7 +2121,7 @@ queue waiting to be serviced
 |===
 
 
-[[GSADG908]][[sthref54]][[gktcp]]
+[[gktcp]]
 
 
 Table 8-27 Application Specific Resource Monitoring Statistics
@@ -2142,7 +2142,7 @@ connections that were used (high water mark)
 |===
 
 
-[[gjiov]][[GSADG00659]][[security-statistics]]
+[[security-statistics]]
 
 ===== Security Statistics
 
@@ -2155,7 +2155,7 @@ Statistics available for security are shown in the following sections:
 * <<Web Security Statistics>>
 * <<Realm Security Statistics>>
 
-[[gjira]][[GSADG00072]][[ejb-security-statistics]]
+[[ejb-security-statistics]]
 
 ====== EJB Security Statistics
 
@@ -2168,7 +2168,7 @@ server.security.ejb.statistic
 
 The statistics available for EJB security are listed in the following table.
 
-[[GSADG909]][[sthref55]][[gjirc]]
+[[gjirc]]
 
 
 Table 8-28 EJB Security Monitoring Statistics
@@ -2183,7 +2183,7 @@ configuration
 |===
 
 
-[[gjirn]][[GSADG00073]][[web-security-statistics]]
+[[web-security-statistics]]
 
 ====== Web Security Statistics
 
@@ -2196,7 +2196,7 @@ server.security.web.statistic
 
 The statistics available for web security are listed in the following table.
 
-[[GSADG910]][[sthref56]][[gjiqv]]
+[[gjiqv]]
 
 
 Table 8-29 Web Security Monitoring Statistics
@@ -2211,7 +2211,7 @@ configuration objects
 |===
 
 
-[[gjirj]][[GSADG00074]][[realm-security-statistics]]
+[[realm-security-statistics]]
 
 ====== Realm Security Statistics
 
@@ -2224,7 +2224,7 @@ server.security.realm.statistic
 
 The statistics available for realm security are listed in the following table.
 
-[[GSADG911]][[sthref57]][[gjirq]]
+[[gjirq]]
 
 
 Table 8-30 Realm Security Monitoring Statistics
@@ -2236,7 +2236,7 @@ Table 8-30 Realm Security Monitoring Statistics
 |===
 
 
-[[ablvk]][[GSADG00660]][[thread-pool-statistics]]
+[[thread-pool-statistics]]
 
 ===== Thread Pool Statistics
 
@@ -2249,7 +2249,7 @@ sections:
 * <<Thread Pool Monitoring Statistics>>
 * <<JVM Statistics for Java SE - Thread Information>>
 
-[[gitct]][[GSADG00075]][[thread-pool-monitoring-statistics]]
+[[thread-pool-monitoring-statistics]]
 
 ====== Thread Pool Monitoring Statistics
 
@@ -2262,7 +2262,7 @@ server.thread-pool.thread-pool.statistic
 
 The statistics available for the thread pool are shown in the following table.
 
-[[GSADG912]][[sthref58]][[gelqt]]
+[[gelqt]]
 
 
 Table 8-31 Thread Pool Monitoring Statistics
@@ -2291,14 +2291,14 @@ to the work queue as of last sampling
 |===
 
 
-[[gitce]][[GSADG00076]][[jvm-statistics-for-java-se-thread-information]]
+[[jvm-statistics-for-java-se-thread-information]]
 
 ====== JVM Statistics for Java SE - Thread Information
 
 The statistics available for `ThreadInfo` in the JVM in Java SE are
 shown in the following table.
 
-[[GSADG913]][[sthref59]][[geloy]]
+[[geloy]]
 
 
 Table 8-32 JVM Monitoring Statistics for Java SE - Thread Info
@@ -2340,7 +2340,7 @@ monitoring is disabled.
 |===
 
 
-[[ablvl]][[GSADG00661]][[transaction-service-statistics]]
+[[transaction-service-statistics]]
 
 ===== Transaction Service Statistics
 
@@ -2361,7 +2361,7 @@ server.transaction-service.statistic
 The statistics available for the transaction service are shown in the
 following table.
 
-[[GSADG914]][[sthref60]][[gelpl]]
+[[gelpl]]
 
 
 Table 8-33 Transaction Service Monitoring Statistics
@@ -2386,7 +2386,7 @@ been frozen.
 |===
 
 
-[[ablvf]][[GSADG00662]][[web-statistics]]
+[[web-statistics]]
 
 ===== Web Statistics
 
@@ -2401,7 +2401,7 @@ The available web statistics shown in the following sections:
 * <<Web Servlet Statistics>>
 * <<Web Session Statistics>>
 
-[[gjkaz]][[GSADG00077]][[web-module-servlet-statistics]]
+[[web-module-servlet-statistics]]
 
 ====== Web Module Servlet Statistics
 
@@ -2415,7 +2415,7 @@ server.applications.application.web-module.virtual-server.servlet.statistic
 
 The available web module servlet statistics are shown in the following table.
 
-[[GSADG915]][[sthref61]][[gjkba]]
+[[gjkba]]
 
 
 Table 8-34 Web Module Servlet Statistics
@@ -2438,7 +2438,7 @@ average of request processing times divided by the request count.
 |===
 
 
-[[ghqge]][[GSADG00079]][[web-jsp-statistics]]
+[[web-jsp-statistics]]
 
 ====== Web JSP Statistics
 
@@ -2452,7 +2452,7 @@ server.applications.application.web-module.virtual-server.statistic
 
 The available web JSP statistics are shown in the following table.
 
-[[GSADG917]][[sthref62]][[givgh]]
+[[givgh]]
 
 
 Table 8-35 Web JSP Monitoring Statistics
@@ -2472,7 +2472,7 @@ reloaded
 |===
 
 
-[[ghqga]][[GSADG00080]][[web-request-statistics]]
+[[web-request-statistics]]
 
 ====== Web Request Statistics
 
@@ -2486,7 +2486,7 @@ server.applications.application.web-module.virtual-server.statistic
 
 The available web request statistics are shown in the following table.
 
-[[GSADG918]][[sthref63]][[gjisw]]
+[[gjisw]]
 
 
 Table 8-36 Web Request Monitoring Statistics
@@ -2507,7 +2507,7 @@ cumulative value, but the largest response time from among the response times
 |===
 
 
-[[ghqfu]][[GSADG00081]][[web-servlet-statistics]]
+[[web-servlet-statistics]]
 
 ====== Web Servlet Statistics
 
@@ -2521,7 +2521,7 @@ server.applications.application.web-module.virtual-server.statistic
 
 The available web servlet statistics are shown in the following table.
 
-[[GSADG919]][[sthref64]][[ghqiu]]
+[[ghqiu]]
 
 
 Table 8-37 Web Servlet Monitoring Statistics
@@ -2540,7 +2540,7 @@ servlets that have been loaded into the web module
 |===
 
 
-[[ghqfr]][[GSADG00082]][[web-session-statistics]]
+[[web-session-statistics]]
 
 ====== Web Session Statistics
 
@@ -2554,7 +2554,7 @@ server.applications.application.web-module.virtual-server.statistic
 
 The available web session statistics are shown in the following table.
 
-[[GSADG920]][[sthref65]][[gellc]]
+[[gellc]]
 
 
 Table 8-38 Web Session Monitoring Statistics
@@ -2580,7 +2580,7 @@ Table 8-38 Web Session Monitoring Statistics
 |===
 
 
-[[giwqm]][[GSADG00561]][[configuring-jconsole-to-view-glassfish-server-monitoring-data]]
+[[configuring-jconsole-to-view-glassfish-server-monitoring-data]]
 
 === Configuring JConsole to View {productName} Monitoring Data
 
@@ -2590,7 +2590,7 @@ Client and is available as part of the standard Java SE distribution.
 When you configure JConsole for use with {productName}, {productName} becomes the JMX Connector's server end and JConsole becomes the
 JMX connector's client end.
 
-[[ggpfh]][[GSADG00390]][[to-connect-jconsole-to-glassfish-server]]
+[[to-connect-jconsole-to-glassfish-server]]
 
 ==== To Connect JConsole to {productName}
 

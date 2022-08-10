@@ -7,7 +7,7 @@ prev=create-managed-thread-factory.html
 
 = create-message-security-provider
 
-[[create-message-security-provider-1]][[GSRFM00045]][[create-message-security-provider]]
+[[create-message-security-provider]]
 
 == create-message-security-provider
 

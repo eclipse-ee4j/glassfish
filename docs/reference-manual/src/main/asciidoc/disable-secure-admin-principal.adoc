@@ -7,7 +7,7 @@ prev=disable-secure-admin-internal-user.html
 
 = disable-secure-admin-principal
 
-[[disable-secure-admin-principal-1]][[GSRFM00123]][[disable-secure-admin-principal]]
+[[disable-secure-admin-principal]]
 
 == disable-secure-admin-principal
 
@@ -55,7 +55,7 @@ DN::
 
 === Examples
 
-[[GSRFM598]][[sthref1092]]
+[[sthref1092]]
 
 ==== Example 1   Disables trust of a DN for secure administration
 

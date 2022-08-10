@@ -7,7 +7,7 @@ prev=list-commands.html
 
 = list-components
 
-[[list-components-1]][[GSRFM00155]][[list-components]]
+[[list-components]]
 
 == list-components
 
@@ -97,7 +97,7 @@ target::
 
 === Examples
 
-[[GSRFM647]][[sthref1396]]
+[[sthref1396]]
 
 ==== Example 1   Listing Components
 

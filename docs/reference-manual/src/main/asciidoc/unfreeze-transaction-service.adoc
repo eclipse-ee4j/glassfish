@@ -7,7 +7,7 @@ prev=undeploy.html
 
 = unfreeze-transaction-service
 
-[[unfreeze-transaction-service-1]][[GSRFM00245]][[unfreeze-transaction-service]]
+[[unfreeze-transaction-service]]
 
 == unfreeze-transaction-service
 
@@ -54,7 +54,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM772]][[sthref2203]]
+[[sthref2203]]
 
 ==== Example 1   Using unfreeze-transaction-service
 

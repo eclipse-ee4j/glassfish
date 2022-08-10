@@ -7,7 +7,7 @@ prev=dotted-names.html
 
 = instance
 
-[[instance-5asc]][[GSRFM00269]][[instance]]
+[[instance]]
 
 == instance
 

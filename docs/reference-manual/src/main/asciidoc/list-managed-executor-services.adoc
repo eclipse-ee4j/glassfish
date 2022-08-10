@@ -7,7 +7,7 @@ prev=list-log-levels.html
 
 = list-managed-executor-services
 
-[[list-managed-executor-services-1]][[GSRFM871]][[list-managed-executor-services]]
+[[list-managed-executor-services]]
 
 == list-managed-executor-services
 
@@ -56,7 +56,7 @@ target::
 
 === Examples
 
-[[GSRFM872]][[sthref1658]]
+[[sthref1658]]
 
 ==== Example 1   Listing Managed Executor Service Resources
 

@@ -7,7 +7,7 @@ prev=list-secure-admin-internal-users.html
 
 = list-secure-admin-principals
 
-[[list-secure-admin-principals-1]][[GSRFM00200]][[list-secure-admin-principals]]
+[[list-secure-admin-principals]]
 
 == list-secure-admin-principals
 
@@ -69,7 +69,7 @@ name::
 
 === Examples
 
-[[GSRFM710]][[sthref1800]]
+[[sthref1800]]
 
 ==== Example 1   Listing the Certificates
 

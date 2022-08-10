@@ -7,7 +7,7 @@ prev=list-containers.html
 
 = list-context-services
 
-[[list-context-services-1]][[GSRFM865]][[list-context-services]]
+[[list-context-services]]
 
 == list-context-services
 
@@ -55,7 +55,7 @@ target::
 
 === Examples
 
-[[GSRFM866]][[sthref1450]]
+[[sthref1450]]
 
 ==== Example 1   Listing Context Service Resources
 

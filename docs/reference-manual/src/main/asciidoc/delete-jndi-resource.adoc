@@ -7,7 +7,7 @@ prev=delete-jms-resource.html
 
 = delete-jndi-resource
 
-[[delete-jndi-resource-1]][[GSRFM00093]][[delete-jndi-resource]]
+[[delete-jndi-resource]]
 
 == delete-jndi-resource
 
@@ -68,7 +68,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM561]][[sthref822]]
+[[sthref822]]
 
 ==== Example 1   Deleting a JNDI Resource
 

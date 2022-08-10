@@ -7,7 +7,7 @@ prev=preface.html
 
 = Overview of {productName} Administration
 
-[[GSADG00004]][[ablaq]]
+[[ablaq]]
 
 
 [[overview-of-glassfish-server-administration]]
@@ -32,7 +32,7 @@ The following topics are addressed here:
 * <<Administration Tools>>
 * <<Instructions for Administering {productName}>>
 
-[[giubb]][[GSADG00526]][[default-settings-and-locations]]
+[[default-settings-and-locations]]
 
 === Default Settings and Locations
 
@@ -93,7 +93,7 @@ Table 1-2 Default Locations
 For information about replaceable items and default paths and files, see
 xref:preface.adoc#default-paths-and-file-names[Default Paths and File Names].
 
-[[ghrcy]][[GSADG00527]][[configuration-tasks]]
+[[configuration-tasks]]
 
 === Configuration Tasks
 
@@ -115,7 +115,7 @@ The following topics are addressed here:
 * <<Configuration Files>>
 * <<Impact of Configuration Changes>>
 
-[[gitwr]][[GSADG00694]][[initial-configuration-tasks]]
+[[initial-configuration-tasks]]
 
 ==== Initial Configuration Tasks
 
@@ -207,7 +207,7 @@ Information and instructions for accomplishing the tasks by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[giusb]][[GSADG00695]][[how-dotted-names-work-for-configuration]]
+[[how-dotted-names-work-for-configuration]]
 
 ==== How Dotted Names Work for Configuration
 
@@ -297,7 +297,7 @@ to true:
 asadmin> set server.http-service.http-listener.http-listener-1.security-enabled = true
 ----
 
-[[gjjrl]][[GSADG00696]][[configuration-files]]
+[[configuration-files]]
 
 ==== Configuration Files
 
@@ -334,7 +334,7 @@ Manual editing is prone to error and can have unexpected results.
 ====
 
 
-[[gitzw]][[GSADG00697]][[impact-of-configuration-changes]]
+[[impact-of-configuration-changes]]
 
 ==== Impact of Configuration Changes
 
@@ -356,7 +356,7 @@ The following topics are addressed here:
 * <<Dynamic Configuration Changes>>
 * <<Changes That Affect Applications>>
 
-[[gkvaj]][[GSADG00300]][[to-determine-whether-the-das-or-an-instance-requires-restart]]
+[[to-determine-whether-the-das-or-an-instance-requires-restart]]
 
 ===== To Determine Whether the DAS or an Instance Requires Restart
 
@@ -391,7 +391,7 @@ If the instance requires restart, one of the following pieces of
 information is displayed: a statement that restart is required,
 or a list of configuration changes that are not yet applied to the instance.
 
-[[GSADG00093]][[gkvay]]
+[[gkvay]]
 Example 1-1 Determining if the DAS Requires Restart
 
 This example determines that the DAS for the domain `domain1` requires
@@ -404,7 +404,7 @@ domain1 running, restart required to apply configuration changes
 Command list-domains executed successfully.
 ----
 
-[[GSADG00094]][[gkvba]]
+[[gkvba]]
 Example 1-2 Determining if an Instance Requires Restart
 
 This example determines that the instance `pmd-i1` requires restart to
@@ -428,7 +428,7 @@ typing the following commands at the command line.
 * `asadmin help list-domains`
 * `asadmin help list-instances`
 
-[[ghciy]][[GSADG00628]][[configuration-changes-that-require-restart]]
+[[configuration-changes-that-require-restart]]
 
 ===== Configuration Changes That Require Restart
 
@@ -451,7 +451,7 @@ require restart.
 * Enabling or disabling secure administration as explained in
 "link:security-guide/administrative-security.html#running-secure-admin[Running Secure Admin]" in {productName} Security Guide
 
-[[ghclm]][[GSADG00629]][[dynamic-configuration-changes]]
+[[dynamic-configuration-changes]]
 
 ===== Dynamic Configuration Changes
 
@@ -471,7 +471,7 @@ port
 * Enabling and disabling resources and applications
 * Deploying, undeploying, and redeploying applications
 
-[[gkvas]][[GSADG00630]][[changes-that-affect-applications]]
+[[changes-that-affect-applications]]
 
 ===== Changes That Affect Applications
 
@@ -524,7 +524,7 @@ or connector resources do not affect applications.)
 
 ** Vendor-specific properties
 
-[[ggjxp]][[GSADG00528]][[administration-tools]]
+[[administration-tools]]
 
 === Administration Tools
 
@@ -541,7 +541,7 @@ The following {productName} administration tools are described here:
 * <<`keytool` Utility>>
 * <<Java Monitoring and Management Console (JConsole)>>
 
-[[ablav]][[GSADG00698]][[administration-console]]
+[[administration-console]]
 
 ==== Administration Console
 
@@ -611,7 +611,7 @@ Security]" in {productName} Security Guide.
 ====
 
 
-[[gcocs]][[GSADG00699]][[asadmin-utility]]
+[[asadmin-utility]]
 
 ==== `asadmin` Utility
 
@@ -662,7 +662,7 @@ A collection of the `asadmin` help pages is available in HTML and PDF
 format in the link:reference-manual.html#GSRFM[{productName} Reference
 Manual].
 
-[[gjjok]][[GSADG00700]][[rest-interfaces]]
+[[rest-interfaces]]
 
 ==== REST Interfaces
 
@@ -673,7 +673,7 @@ add-on components. For more information, see
 xref:general-administration.adoc#using-rest-interfaces-to-administer-glassfish-server[Using REST Interfaces to
 Administer {productName}].
 
-[[gjjxt]][[GSADG00702]][[osgi-module-management-subsystem]]
+[[osgi-module-management-subsystem]]
 
 ==== OSGi Module Management Subsystem
 
@@ -701,7 +701,7 @@ such as:
 * Installing OSGi bundles
 * Controlling the life cycle of installed bundles
 
-[[glhdz]][[GSADG00302]][[to-enable-the-apache-felix-gogo-remote-shell]]
+[[to-enable-the-apache-felix-gogo-remote-shell]]
 
 ===== To Enable the Apache Felix Gogo Remote Shell
 
@@ -741,7 +741,7 @@ as-install``/config/osgi.properties`` to change the value of the
 3. Restart the DAS.
 For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[CJAGIGII]][[GSADG1050]][[to-run-apache-felix-gogo-remote-shell-commands]]
+[[to-run-apache-felix-gogo-remote-shell-commands]]
 
 ===== To Run Apache Felix Gogo Remote Shell Commands
 
@@ -834,7 +834,7 @@ ID|State      |Level|Name
 gogo$
 ----
 
-[[GSADG00097]][[gjkrh]]
+[[gjkrh]]
 Example 1-5 Determining the Services That an OSGi Bundle Provides
 
 This example runs the Felix Remote Shell Command `inspect` with the
@@ -864,7 +864,7 @@ service.id = 68
 gogo$
 ----
 
-[[gkwvx]][[GSADG00303]][[to-download-and-install-the-glassfish-osgi-web-console]]
+[[to-download-and-install-the-glassfish-osgi-web-console]]
 
 ===== To Download and Install the GlassFish OSGi Web Console
 
@@ -907,7 +907,7 @@ access the console as explained in the following sections:
 {productName} Administration Console]
 * <<To Access the GlassFish OSGi Web Console as a Standalone Web Application>>
 
-[[BABIDJHF]][[GSADG798]][[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
+[[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
 
 ===== To Access the GlassFish OSGi Web Console Through the {productName} Administration Console
 
@@ -944,7 +944,7 @@ administrative user of the GlassFish OSGi Web Console.
 The user name and password of this user are both preset to `admin`.
 The GlassFish OSGi Web Console page opens.
 
-[[BABDJHAF]][[GSADG799]][[to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application]]
+[[to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application]]
 
 ===== To Access the GlassFish OSGi Web Console as a Standalone Web Application
 
@@ -977,7 +977,7 @@ administrative user of the GlassFish OSGi Web Console.
 +
 The user name and password of this user are both preset to `admin`.
 
-[[ghcjl]][[GSADG00703]][[keytool-utility]]
+[[keytool-utility]]
 
 ==== `keytool` Utility
 
@@ -986,7 +986,7 @@ Socket Extension (JSSE) digital certificates. See
 "link:security-guide/system-security.html#administering-jsse-certificates[Administering JSSE Certificates]"
 in {productName} Security Guide for instructions on using `keytool`.
 
-[[ghrfm]][[GSADG00704]][[java-monitoring-and-management-console-jconsole]]
+[[java-monitoring-and-management-console-jconsole]]
 
 ==== Java Monitoring and Management Console (JConsole)
 
@@ -996,7 +996,7 @@ Connector Client and is available as part of the standard Java SE
 distribution. For instructions on implementing JConsole in the {productName} environment,
 see xref:monitoring.adoc#configuring-jconsole-to-view-glassfish-server-monitoring-data[Configuring JConsole to View {productName} Monitoring Data].
 
-[[giudo]][[GSADG00529]][[instructions-for-administering-glassfish-server]]
+[[instructions-for-administering-glassfish-server]]
 
 === Instructions for Administering {productName}
 

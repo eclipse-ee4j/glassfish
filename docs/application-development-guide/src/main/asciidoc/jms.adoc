@@ -7,7 +7,7 @@ prev=jndi.html
 
 = Using the Java Message Service
 
-[[GSDVG00020]][[beaob]]
+[[beaob]]
 
 
 [[using-the-java-message-service]]
@@ -41,7 +41,7 @@ The following topics are addressed here:
 * xref:#authentication-with-connectionfactory[Authentication With `ConnectionFactory`]
 * xref:#delivering-soap-messages-using-the-jms-api[Delivering SOAP Messages Using the JMS API]
 
-[[gkpcz]][[GSDVG00196]][[using-application-scoped-jms-resources]]
+[[using-application-scoped-jms-resources]]
 
 === Using Application-Scoped JMS Resources
 
@@ -51,7 +51,7 @@ application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
 "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
-[[beaop]][[GSDVG00197]][[load-balanced-message-inflow]]
+[[load-balanced-message-inflow]]
 
 === Load-Balanced Message Inflow
 
@@ -89,7 +89,7 @@ colocated Message Queue instance. If this broker is unavailable,
 connection attempts are made to brokers in the order in which they are
 listed in the `AddressList`. This setting is the default for {productName} instances that belong to a cluster.
 
-[[beaor]][[GSDVG00198]][[authentication-with-connectionfactory]]
+[[authentication-with-connectionfactory]]
 
 === Authentication With `ConnectionFactory`
 
@@ -100,7 +100,7 @@ for authentication information before using the supplied user and
 password. Version 7 of the {productName} threw an exception in this
 situation.
 
-[[beaot]][[GSDVG00199]][[delivering-soap-messages-using-the-jms-api]]
+[[delivering-soap-messages-using-the-jms-api]]
 
 === Delivering SOAP Messages Using the JMS API
 
@@ -123,7 +123,7 @@ The following topics are addressed here:
 * xref:#to-send-soap-messages-using-the-jms-api[To Send SOAP Messages Using the JMS API]
 * xref:#to-receive-soap-messages-using-the-jms-api[To Receive SOAP Messages Using the JMS API]
 
-[[beaou]][[GSDVG00077]][[to-send-soap-messages-using-the-jms-api]]
+[[to-send-soap-messages-using-the-jms-api]]
 
 ==== To Send SOAP Messages Using the JMS API
 
@@ -201,7 +201,7 @@ publisher.publish(m);
 tc.close();
 ----
 
-[[beaov]][[GSDVG00078]][[to-receive-soap-messages-using-the-jms-api]]
+[[to-receive-soap-messages-using-the-jms-api]]
 
 ==== To Receive SOAP Messages Using the JMS API
 

@@ -7,7 +7,7 @@ prev=list-connector-security-maps.html
 
 = list-connector-work-security-maps
 
-[[list-connector-work-security-maps-1]][[GSRFM00160]][[list-connector-work-security-maps]]
+[[list-connector-work-security-maps]]
 
 == list-connector-work-security-maps
 
@@ -49,7 +49,7 @@ resource_adapter_name::
 
 === Examples
 
-[[GSRFM652]][[sthref1435]]
+[[sthref1435]]
 
 ==== Example 1   Listing Connector Work Security Maps
 

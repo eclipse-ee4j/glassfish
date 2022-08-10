@@ -7,7 +7,7 @@ prev=message-security.html
 
 = Administering Security in Cluster Mode
 
-[[GSSCG00038]][[gknpf]]
+[[gknpf]]
 
 
 [[administering-security-in-cluster-mode]]
@@ -30,7 +30,7 @@ Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
 Console online help.
 
-[[gksam]][[GSSCG00159]][[configuring-certificates-in-cluster-mode]]
+[[configuring-certificates-in-cluster-mode]]
 
 === Configuring Certificates in Cluster Mode
 
@@ -46,7 +46,7 @@ the authenticity of the certificate.
 You can instead use your own certificates, as described in
 link:administrative-security.html#using-your-own-certificates[Using Your Own Certificates].
 
-[[gkmhh]][[GSSCG00160]][[dynamic-reconfiguration]]
+[[dynamic-reconfiguration]]
 
 === Dynamic Reconfiguration
 
@@ -104,7 +104,7 @@ The `--target` operand is supported for the following security-related CLI subco
 * list-file-users
 * login
 
-[[gkned]][[GSSCG00226]][[enabling-dynamic-configuration]]
+[[enabling-dynamic-configuration]]
 
 ==== Enabling Dynamic Configuration
 
@@ -132,7 +132,7 @@ the DAS. There is no way to make changes to the DAS configuration using
 without having those changes take effect immediately.
 ====
 
-[[gktgi]][[GSSCG00161]][[understanding-synchronization]]
+[[understanding-synchronization]]
 
 === Understanding Synchronization
 

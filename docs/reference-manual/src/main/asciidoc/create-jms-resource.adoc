@@ -7,7 +7,7 @@ prev=create-jms-host.html
 
 = create-jms-resource
 
-[[create-jms-resource-1]][[GSRFM00040]][[create-jms-resource]]
+[[create-jms-resource]]
 
 == create-jms-resource
 
@@ -162,7 +162,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM497]][[sthref357]]
+[[sthref357]]
 
 ==== Example 1   Creating a JMS connection factory resource for durable
 subscriptions
@@ -183,7 +183,7 @@ Connector resource jms/DurableConnectionFactory created.
 Command create-jms-resource executed successfully.
 ----
 
-[[GSRFM498]][[sthref358]]
+[[sthref358]]
 
 ==== Example 2   Creating a JMS destination resource
 

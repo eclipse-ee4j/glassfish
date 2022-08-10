@@ -7,7 +7,7 @@ prev=list-jmsdest.html
 
 = list-jms-hosts
 
-[[list-jms-hosts-1]][[GSRFM00176]][[list-jms-hosts]]
+[[list-jms-hosts]]
 
 == list-jms-hosts
 
@@ -54,7 +54,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM674]][[sthref1572]]
+[[sthref1572]]
 
 ==== Example 1   Listing all JMS hosts
 

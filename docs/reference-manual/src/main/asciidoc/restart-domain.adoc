@@ -7,7 +7,7 @@ prev=remove-library.html
 
 = restart-domain
 
-[[restart-domain-1]][[GSRFM00218]][[restart-domain]]
+[[restart-domain]]
 
 == restart-domain
 
@@ -102,7 +102,7 @@ domain-name::
 
 === Examples
 
-[[GSRFM738]][[sthref1983]]
+[[sthref1983]]
 
 ==== Example 1   Restarting a Domain
 

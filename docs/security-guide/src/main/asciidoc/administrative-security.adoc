@@ -7,7 +7,7 @@ prev=security-in-cluster-mode.html
 
 = Managing Administrative Security
 
-[[GSSCG00039]][[gknqh]]
+[[gknqh]]
 
 
 [[managing-administrative-security]]
@@ -32,7 +32,7 @@ Console online help.
 * xref:#secure-admin-use-case[Secure Admin Use Case]
 * xref:#upgrading-an-ssl-enabled-secure-glassfish-installation-to-secure-admin[Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin]
 
-[[gkocp]][[GSSCG00162]][[secure-administration-overview]]
+[[secure-administration-overview]]
 
 === Secure Administration Overview
 
@@ -87,7 +87,7 @@ If secure admin is not enabled, this subcommand has no effect.
 This section describes how to use these commands to run secure admin,
 and the implications of doing so.
 
-[[gkofl]][[GSSCG00163]][[how-secure-admin-works-the-big-picture]]
+[[how-secure-admin-works-the-big-picture]]
 
 === How Secure Admin Works: The Big Picture
 
@@ -103,7 +103,7 @@ following topics:
 * xref:#an-alternate-approach-using-distinguished-names-to-specify-certificates[An Alternate Approach: Using Distinguished Names to Specify Certificates]
 * xref:#guarding-against-unwanted-connections[Guarding Against Unwanted Connections]
 
-[[gkqce]][[GSSCG00227]][[functions-performed-by-secure-admin]]
+[[functions-performed-by-secure-admin]]
 
 ==== Functions Performed by Secure Admin
 
@@ -136,7 +136,7 @@ A server restart is required to change the Grizzly adapter behavior. +
 The restart also synchronizes the restarted instances. When you start
 the instances, the DAS delivers the updated configuration to the instances.
 
-[[gkocv]][[GSSCG00228]][[which-administration-account-is-used]]
+[[which-administration-account-is-used]]
 
 ==== Which Administration Account is Used?
 
@@ -163,7 +163,7 @@ The username and password used for a login attempt must match the
 username and password (if required) for an account defined in the realm,
 and you must have set up the account as a member of the admin group.
 
-[[gkodi]][[GSSCG00229]][[what-authentication-methods-are-used-for-secure-administration]]
+[[what-authentication-methods-are-used-for-secure-administration]]
 
 ==== What Authentication Methods Are Used for Secure Administration?
 
@@ -225,7 +225,7 @@ Table 5-1 Authentication Methods Employed
 |===
 
 
-[[gkpex]][[GSSCG00230]][[understanding-how-certificate-authentication-is-performed]]
+[[understanding-how-certificate-authentication-is-performed]]
 
 ==== Understanding How Certificate Authentication is Performed
 
@@ -250,7 +250,7 @@ the incoming request (provided automatically by Grizzly and the SSL/TLS
 Java implementation) matches the Principal associated with the
 adminalias from the instance's truststore.
 
-[[gkoey]][[GSSCG00231]][[what-certificates-are-used]]
+[[what-certificates-are-used]]
 
 ==== What Certificates Are Used?
 
@@ -307,7 +307,7 @@ of this design, normal instance creation operations (create-instance
 over SSH and create-local-instance) apply the up-to-date keystore,
 truststore, and configuration to each instance.
 
-[[gkpfi]][[GSSCG00201]][[self-signed-certificates-and-trust]]
+[[self-signed-certificates-and-trust]]
 
 ===== Self-Signed Certificates and Trust
 
@@ -321,7 +321,7 @@ Browsers will warn you, let you view the certificate, and ask you to
 reject the certificate, accept it once, or accept it indefinitely, as
 shown in xref:#gkqpv[Figure 5-1].
 
-[[GSSCG00002]][[gkqpv]]
+[[gkqpv]]
 
 
 .*Figure 5-1 Sample Browser Response to Untrusted Certificate*
@@ -408,7 +408,7 @@ changes). The instances do not use the same certificate as the DAS, so
 in these cases `asadmin` then prompts you to accept or reject the
 instance certificate.
 
-[[gkped]][[GSSCG00202]][[using-your-own-certificates]]
+[[using-your-own-certificates]]
 
 ===== Using Your Own Certificates
 
@@ -449,7 +449,7 @@ accomplish this. Then, import your own certificates.
 When you enable secure admin, the DAS and the instances then have copies
 of the same keystore and truststore
 
-[[glgmy]][[GSSCG00232]][[an-alternate-approach-using-distinguished-names-to-specify-certificates]]
+[[an-alternate-approach-using-distinguished-names-to-specify-certificates]]
 
 ==== An Alternate Approach: Using Distinguished Names to Specify Certificates
 
@@ -614,7 +614,7 @@ You can use the link:reference-manual/list-secure-admin-principals.html#list-sec
 subcommand to list the certificates for which {productName} accepts
 admin requests from clients.
 
-[[gkqjj]][[GSSCG00233]][[guarding-against-unwanted-connections]]
+[[guarding-against-unwanted-connections]]
 
 ==== Guarding Against Unwanted Connections
 
@@ -659,7 +659,7 @@ will fail.
 Therefore, a user on "test1" will not be able to run a remote command
 targeting an instance on "test2."
 
-[[gkofe]][[GSSCG00164]][[considerations-when-running-glassfish-server-with-default-security]]
+[[considerations-when-running-glassfish-server-with-default-security]]
 
 === Considerations When Running {productName} With Default Security
 
@@ -708,14 +708,14 @@ DAS will not see the instance.
 |===
 
 
-[[gkomz]][[GSSCG00165]][[running-secure-admin]]
+[[running-secure-admin]]
 
 === Running Secure Admin
 
 This section describes how to run secure admin. The section begins with
 prerequisites for running secure admin.
 
-[[gkokc]][[GSSCG00234]][[prerequisites-for-running-secure-admin]]
+[[prerequisites-for-running-secure-admin]]
 
 ==== Prerequisites for Running Secure Admin
 
@@ -744,7 +744,7 @@ If you are not using the default self-signed certificates, you must add
    administration traffic, and one that the instances will use for
    authenticating itself in administration traffic.
 
-[[glgmh]][[GSSCG00235]][[an-alternate-approach-using-a-user-name-and-password-for-internal-authentication-and-authorization]]
+[[an-alternate-approach-using-a-user-name-and-password-for-internal-authentication-and-authorization]]
 
 ==== An Alternate Approach: Using A User Name and Password for Internal Authentication and Authorization
 
@@ -845,7 +845,7 @@ subcommand to list the user names for which {productName}
 authenticate the DAS and instances with each other and authorizes admin
 operations.
 
-[[gkqby]][[GSSCG00236]][[example-of-running-enable-secure-admin]]
+[[example-of-running-enable-secure-admin]]
 
 ==== Example of Running enable-secure-admin
 
@@ -892,7 +892,7 @@ secure-admin.enabled=false
 Command get executed successfully.
 ----
 
-[[gkolu]][[GSSCG00166]][[additional-considerations-when-creating-local-instances]]
+[[additional-considerations-when-creating-local-instances]]
 
 === Additional Considerations When Creating Local Instances
 
@@ -904,7 +904,7 @@ However, if you use `xxx-instance` commands over SSH to manage remote
 instances, you can enable and disable secure admin, although this is not
 recommended because it can result in an inconsistent security model.
 
-[[gkqah]][[GSSCG00167]][[secure-admin-use-case]]
+[[secure-admin-use-case]]
 
 === Secure Admin Use Case
 
@@ -951,7 +951,7 @@ header in the realm Executes command, and responds with success status.
 |===
 
 
-[[gkodn]][[GSSCG00168]][[upgrading-an-ssl-enabled-secure-glassfish-installation-to-secure-admin]]
+[[upgrading-an-ssl-enabled-secure-glassfish-installation-to-secure-admin]]
 
 === Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin
 

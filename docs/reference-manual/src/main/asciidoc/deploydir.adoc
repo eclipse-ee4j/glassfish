@@ -7,7 +7,7 @@ prev=deploy.html
 
 = deploydir
 
-[[deploydir-1]][[GSRFM00115]][[deploydir]]
+[[deploydir]]
 
 == deploydir
 
@@ -380,7 +380,7 @@ dirpath::
 
 === Examples
 
-[[GSRFM589]][[sthref1036]]
+[[sthref1036]]
 
 ==== Example 1   Deploying an Application From a Directory
 

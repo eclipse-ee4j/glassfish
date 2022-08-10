@@ -7,7 +7,7 @@ prev=list-modules.html
 
 = list-network-listeners
 
-[[list-network-listeners-1]][[GSRFM00186]][[list-network-listeners]]
+[[list-network-listeners]]
 
 == list-network-listeners
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM686]][[sthref1697]]
+[[sthref1697]]
 
 ==== Example 1   Listing Network Listeners
 

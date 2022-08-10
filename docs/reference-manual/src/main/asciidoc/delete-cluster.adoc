@@ -7,7 +7,7 @@ prev=delete-auth-realm.html
 
 = delete-cluster
 
-[[delete-cluster-1]][[GSRFM00068]][[delete-cluster]]
+[[delete-cluster]]
 
 == delete-cluster
 
@@ -63,7 +63,7 @@ cluster-name::
 
 === Examples
 
-[[GSRFM535]][[sthref614]]
+[[sthref614]]
 
 ==== Example 1   Deleting a {productName} Cluster
 

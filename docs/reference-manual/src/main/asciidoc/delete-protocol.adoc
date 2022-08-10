@@ -7,7 +7,7 @@ prev=delete-profiler.html
 
 = delete-protocol
 
-[[delete-protocol-1]][[GSRFM00103]][[delete-protocol]]
+[[delete-protocol]]
 
 == delete-protocol
 
@@ -57,7 +57,7 @@ protocol-name::
 
 === Examples
 
-[[GSRFM574]][[sthref942]]
+[[sthref942]]
 
 ==== Example 1   Deleting a Protocol
 

@@ -7,7 +7,7 @@ prev=create-http-health-checker.html
 
 = create-http-lb
 
-[[create-http-lb-1]][[GSRFM00027]][[create-http-lb]]
+[[create-http-lb]]
 
 == create-http-lb
 
@@ -142,7 +142,7 @@ lb_name::
 
 === Examples
 
-[[GSRFM478]][[sthref248]]
+[[sthref248]]
 
 ==== Example 1   Creating a Load Balancer
 

@@ -7,7 +7,7 @@ prev=delete-protocol-filter.html
 
 = delete-protocol-finder
 
-[[delete-protocol-finder-1]][[GSRFM00105]][[delete-protocol-finder]]
+[[delete-protocol-finder]]
 
 == delete-protocol-finder
 

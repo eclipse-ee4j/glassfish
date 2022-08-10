@@ -7,7 +7,7 @@ prev=instances.html
 
 = Administering Named Configurations
 
-[[GSHAG00007]][[abdjk]]
+[[abdjk]]
 
 [[administering-named-configurations]]
 == 6 Administering Named Configurations
@@ -30,7 +30,7 @@ The following topics are addressed here:
 * xref:#creating-listing-and-deleting-named-configurations[Creating, Listing, and Deleting Named Configurations]
 * xref:#modifying-properties-for-named-configurations-and-instances[Modifying Properties for Named Configurations and Instances]
 
-[[abdjl]][[GSHAG00191]][[about-named-configurations]]
+[[about-named-configurations]]
 
 === About Named Configurations
 
@@ -40,7 +40,7 @@ have separate configurations. To ensure that the environment in a
 cluster's instances is homogenous, all instances in the cluster inherit
 the cluster's configuration.
 
-[[abdjm]][[GSHAG00268]][[types-of-named-configurations]]
+[[types-of-named-configurations]]
 
 ==== Types of Named Configurations
 
@@ -63,7 +63,7 @@ The type of an unclustered instance is determined by the type of the
 configuration that the instance references. For more information, see
 link:instances.html#types-of-glassfish-server-instances[Types of {productName} Instances].
 
-[[abdjn]][[GSHAG00269]][[the-default-config-configuration]]
+[[the-default-config-configuration]]
 
 ==== The `default-config` Configuration
 
@@ -72,7 +72,7 @@ as a template for creating named configurations. Clusters and instances
 cannot refer to the `default-config` configuration. The `default-config`
 configuration can only be copied to create configurations.
 
-[[abdjo]][[GSHAG00270]][[automatically-created-configurations]]
+[[automatically-created-configurations]]
 
 ==== Automatically Created Configurations
 
@@ -100,7 +100,7 @@ the cluster or instance for which the configuration is created. The
 `server-config` configuration is automatically created for the domain
 administration server (DAS) when the domain is created.
 
-[[gdgca]][[GSHAG00271]][[directory-for-configuration-synchronization]]
+[[directory-for-configuration-synchronization]]
 
 ==== Directory for Configuration Synchronization
 
@@ -116,7 +116,7 @@ config-name::
 This contents of this directory are synchronized to all instances that
 inherit or reference the configuration.
 
-[[abdjq]][[GSHAG00192]][[creating-listing-and-deleting-named-configurations]]
+[[creating-listing-and-deleting-named-configurations]]
 
 === Creating, Listing, and Deleting Named Configurations
 
@@ -131,7 +131,7 @@ The following topics are addressed here:
 * xref:#to-list-the-targets-of-a-named-configuration[To List the Targets of a Named Configuration]
 * xref:#to-delete-a-named-configuration[To Delete a Named Configuration]
 
-[[abdjr]][[GSHAG00128]][[to-create-a-named-configuration]]
+[[to-create-a-named-configuration]]
 
 ==== To Create a Named Configuration
 
@@ -184,7 +184,7 @@ destination-config-name::
   Your choice of name for the configuration that you are creating by
   copying the source configuration.
 
-[[GSHAG00059]][[gkrhn]]
+[[gkrhn]]
 Example 6-1 Creating a Named Configuration
 
 This example creates the named configuration `clusterpresets-config` by
@@ -207,7 +207,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help copy-config` at the command line.
 
-[[gkrgg]][[GSHAG00129]][[to-list-the-named-configurations-in-a-domain]]
+[[to-list-the-named-configurations-in-a-domain]]
 
 ==== To List the Named Configurations in a Domain
 
@@ -222,7 +222,7 @@ configurations in a domain.
 asadmin> list-configs
 ----
 
-[[GSHAG00060]][[gkrhp]]
+[[gkrhp]]
 Example 6-2 Listing All Named Configurations in a Domain
 
 This example lists all named configurations in the current domain.
@@ -244,7 +244,7 @@ link:reference-manual/list-configs.html#list-configs[`list-configs`(1)]
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-configs` at the command line.
 
-[[abdju]][[GSHAG00130]][[to-list-the-targets-of-a-named-configuration]]
+[[to-list-the-targets-of-a-named-configuration]]
 
 ==== To List the Targets of a Named Configuration
 
@@ -273,7 +273,7 @@ asadmin> list-instances config-name
 config-name::
   The name of the configuration whose targets you are listing.
 
-[[GSHAG00061]][[gkrfz]]
+[[gkrfz]]
 Example 6-3 Listing the Targets of a Named Configuration
 
 This example shows that the cluster `ymlcluster` and the instances
@@ -302,7 +302,7 @@ typing the following commands at the command line:
 * `asadmin help list-clusters`
 * `asadmin help list-instances`
 
-[[abdjv]][[GSHAG00131]][[to-delete-a-named-configuration]]
+[[to-delete-a-named-configuration]]
 
 ==== To Delete a Named Configuration
 
@@ -361,7 +361,7 @@ asadmin> delete-config config-name
 config-name::
   The name of the configuration that you are deleting.
 
-[[GSHAG00062]][[gkrgs]]
+[[gkrgs]]
 Example 6-4 Deleting a Named Configuration
 
 This example confirms that no clusters or instances refer to the
@@ -396,7 +396,7 @@ typing the following commands at the command line:
 * `asadmin help list-clusters`
 * `asadmin help list-instances`
 
-[[gkrgf]][[GSHAG00193]][[modifying-properties-for-named-configurations-and-instances]]
+[[modifying-properties-for-named-configurations-and-instances]]
 
 === Modifying Properties for Named Configurations and Instances
 
@@ -413,7 +413,7 @@ The following topics are addressed here:
 * xref:#to-modify-a-named-configurations-properties[To Modify a Named Configuration's Properties]
 * xref:#to-modify-port-numbers-of-an-instance[To Modify Port Numbers of an Instance]
 
-[[gkrls]][[GSHAG00272]][[properties-for-port-numbers-in-a-named-configuration]]
+[[properties-for-port-numbers-in-a-named-configuration]]
 
 ==== Properties for Port Numbers in a Named Configuration
 
@@ -491,7 +491,7 @@ follows:
   management subsystem. Valid values are 1-65535. On UNIX, creating
   sockets that listen on ports 1-1024 requires superuser privileges.
 
-[[fxxvk]][[GSHAG00132]][[to-modify-a-named-configurations-properties]]
+[[to-modify-a-named-configurations-properties]]
 
 ==== To Modify a Named Configuration's Properties
 
@@ -541,7 +541,7 @@ property-name::
 new-value::
   The value to which you are setting the property.
 
-[[GSHAG00063]][[gkrky]]
+[[gkrky]]
 Example 6-5 Modifying a Property of a Named Configuration
 
 This example changes the value of the `JMS_PROVIDER_PORT` property in
@@ -570,7 +570,7 @@ typing the following commands at the command line:
 * `asadmin help get`
 * `asadmin help set`
 
-[[abdjt]][[GSHAG00133]][[to-modify-port-numbers-of-an-instance]]
+[[to-modify-port-numbers-of-an-instance]]
 
 ==== To Modify Port Numbers of an Instance
 
@@ -629,7 +629,7 @@ port-property::
 new-value::
   The value to which you are setting the port number.
 
-[[GSHAG00064]][[gkrma]]
+[[gkrma]]
 Example 6-6 Modifying a Port Number for an Instance
 
 This example changes the port number of the HTTP port or the HTTPS port

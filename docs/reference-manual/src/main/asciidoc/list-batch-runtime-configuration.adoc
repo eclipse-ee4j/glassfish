@@ -7,7 +7,7 @@ prev=list-batch-job-steps.html
 
 = list-batch-runtime-configuration
 
-[[list-batch-runtime-configuration-1]][[GSRFM863]][[list-batch-runtime-configuration]]
+[[list-batch-runtime-configuration]]
 
 == list-batch-runtime-configuration
 
@@ -76,7 +76,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM864]][[sthref1368]]
+[[sthref1368]]
 
 ==== Example 1   Listing Batch Runtime Configuration
 

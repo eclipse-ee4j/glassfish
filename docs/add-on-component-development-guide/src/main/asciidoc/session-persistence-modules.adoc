@@ -7,7 +7,7 @@ prev=adding-container-capabilities.html
 
 = Creating a Session Persistence Module
 
-[[GSACG00008]][[gkmhj]]
+[[gkmhj]]
 
 
 [[creating-a-session-persistence-module]]
@@ -25,7 +25,7 @@ solutions, see "link:ha-administration-guide/session-persistence-and-failover.ht
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 
-[[gkmhr]][[GSACG00141]][[implementing-the-persistencestrategybuilder-interface]]
+[[implementing-the-persistencestrategybuilder-interface]]
 
 === Implementing the `PersistenceStrategyBuilder` Interface
 

@@ -6,7 +6,7 @@ prev=tuning-java.html
 
 = Tuning the Operating System and Platform
 
-[[GSPTG00007]][[abeir]]
+[[abeir]]
 
 
 [[tuning-the-operating-system-and-platform]]
@@ -22,7 +22,7 @@ performance. It discusses the following topics:
 * xref:#tuning-for-linux-platforms[Tuning for Linux platforms]
 * xref:#tuning-ultrasparc-cmt-based-systems[Tuning UltraSPARC CMT-Based Systems]
 
-[[abeis]][[GSPTG00074]][[server-scaling]]
+[[server-scaling]]
 
 === Server Scaling
 
@@ -35,7 +35,7 @@ server for the following server subsystems:
 * xref:#networking[Networking]
 * xref:#udp-buffer-sizes[UDP Buffer Sizes]
 
-[[abeit]][[GSPTG00210]][[processors]]
+[[processors]]
 
 ==== Processors
 
@@ -51,14 +51,14 @@ of time it spends in I/O versus CPU activity. Studies have shown that
 doubling the number of CPUs increases servlet performance by 50 to 80
 percent.
 
-[[abeiu]][[GSPTG00211]][[memory]]
+[[memory]]
 
 ==== Memory
 
 See the section Hardware and Software Requirements in the {productName} Release Notes for specific memory recommendations for each
 supported operating system.
 
-[[abeiv]][[GSPTG00212]][[disk-space]]
+[[disk-space]]
 
 ==== Disk Space
 
@@ -75,7 +75,7 @@ or paging space to allocate. Based on Oracle testing, {productName}
 performs best with swap space equal to RAM, plus enough to map the
 document tree.
 
-[[abeiw]][[GSPTG00213]][[networking]]
+[[networking]]
 
 ==== Networking
 
@@ -106,7 +106,7 @@ you can use 100BaseT. But if you have more than 50 Mbit/s of WAN
 bandwidth, consider configuring multiple 100BaseT interfaces, or look at
 Gigabit Ethernet technology.
 
-[[glglf]][[GSPTG00214]][[udp-buffer-sizes]]
+[[udp-buffer-sizes]]
 
 ==== UDP Buffer Sizes
 
@@ -176,7 +176,7 @@ Administration Guide.
 5. If the difference in the number of lost packets is significant,
 increase the size of the UDP buffer.
 
-[[glglz]][[GSPTG00040]][[to-set-the-udp-buffer-size-on-linux-systems]]
+[[to-set-the-udp-buffer-size-on-linux-systems]]
 
 ===== To Set the UDP Buffer Size on Linux Systems
 
@@ -231,7 +231,7 @@ net.core.rmem_default=524288
 net.core.wmem_default=524288
 ----
 
-[[GSPTG00034]][[glgjp]]
+[[glgjp]]
 Example 5-2 Setting the UDP Buffer Size at Runtime
 
 This example sets the kernel parameters for controlling the UDP buffer
@@ -249,7 +249,7 @@ net.core.rmem_default = 52428
 net.core.wmem_default = 524288
 ----
 
-[[gfpzp]][[GSPTG00075]][[solaris-10-platform-specific-tuning-information]]
+[[solaris-10-platform-specific-tuning-information]]
 
 === Solaris 10 Platform-Specific Tuning Information
 
@@ -261,14 +261,14 @@ http://hub.opensolaris.org/bin/view/Community+Group+dtrace/dtracetoolkit[DTraceT
 page]
 (`http://hub.opensolaris.org/bin/view/Community+Group+dtrace/dtracetoolkit`).
 
-[[abeix]][[GSPTG00076]][[tuning-for-the-solaris-os]]
+[[tuning-for-the-solaris-os]]
 
 === Tuning for the Solaris OS
 
 * xref:#tuning-parameters[Tuning Parameters]
 * xref:#file-descriptor-setting[File Descriptor Setting]
 
-[[abeiy]][[GSPTG00215]][[tuning-parameters]]
+[[tuning-parameters]]
 
 ==== Tuning Parameters
 
@@ -398,7 +398,7 @@ network traffic.
 |===
 
 
-[[abeiz]][[GSPTG00153]][[sizing-the-connection-hash-table]]
+[[sizing-the-connection-hash-table]]
 
 ===== Sizing the Connection Hash Table
 
@@ -425,7 +425,7 @@ Use the following command to get the current number of TCP connections.
 netstat -nP tcp|wc -l
 ----
 
-[[abeja]][[GSPTG00216]][[file-descriptor-setting]]
+[[file-descriptor-setting]]
 
 ==== File Descriptor Setting
 
@@ -471,7 +471,7 @@ repeatedly called the same business method with a think (delay) time of
 500 ms between business method calls, exchanging data of about 100 KB.
 These settings apply to RMI/IIOP clients on the Solaris OS.
 
-[[abeje]][[GSPTG00077]][[tuning-for-solaris-on-x86]]
+[[tuning-for-solaris-on-x86]]
 
 === Tuning for Solaris on x86
 
@@ -484,7 +484,7 @@ for {productName}:
 Some of the values depend on the system resources available. After
 making any changes to `/etc/system`, reboot the machines.
 
-[[abejg]][[GSPTG00217]][[file-descriptors]]
+[[file-descriptors]]
 
 ==== File Descriptors
 
@@ -502,7 +502,7 @@ set pcisch:pci_stream_buf_enable=0
 
 These settings affect the file descriptors.
 
-[[abejh]][[GSPTG00218]][[ip-stack-settings]]
+[[ip-stack-settings]]
 
 ==== IP Stack Settings
 
@@ -539,7 +539,7 @@ ndd -set /dev/tcp tcp_xmit_hiwat 32768
 ndd -set /dev/tcp tcp_recv_hiwat 32768
 ----
 
-[[abeji]][[GSPTG00078]][[tuning-for-linux-platforms]]
+[[tuning-for-linux-platforms]]
 
 === Tuning for Linux platforms
 
@@ -553,7 +553,7 @@ to the following:
 * xref:#disk-io-settings[Disk I/O Settings]
 * xref:#tcpip-settings[TCP/IP Settings]
 
-[[gkvjl]][[GSPTG00219]][[startup-files]]
+[[startup-files]]
 
 ==== Startup Files
 
@@ -613,7 +613,7 @@ net.ipv4.tcp_timestamps = 0
 kernel.shmmax = 67108864
 ----
 
-[[abejj]][[GSPTG00220]][[file-descriptors-1]]
+[[file-descriptors-1]]
 
 ==== File Descriptors
 
@@ -720,7 +720,7 @@ user and try it before doing the remaining steps. The remaining steps
 might not be required, depending on how pluggable authentication modules
 (PAM) and secure shell (SSH) are configured.
 
-[[abejk]][[GSPTG00221]][[virtual-memory]]
+[[virtual-memory]]
 
 ==== Virtual Memory
 
@@ -733,7 +733,7 @@ echo 100 1200 128 512 15 5000 500 1884 2> /proc/sys/vm/bdflush
 
 For more information, view the man pages for `bdflush`.
 
-[[abejl]][[GSPTG00222]][[network-interface]]
+[[network-interface]]
 
 ==== Network Interface
 
@@ -747,13 +747,13 @@ mii-tool -F 100baseTx-FD eth0
 
 where eth0 is the name of the network interface card (NIC).
 
-[[abejm]][[GSPTG00223]][[disk-io-settings]]
+[[disk-io-settings]]
 
 ==== Disk I/O Settings
 
  
 
-[[gaclw]][[GSPTG00041]][[to-tune-disk-io-performance-for-non-scsi-disks]]
+[[to-tune-disk-io-performance-for-non-scsi-disks]]
 
 ===== To tune disk I/O performance for non SCSI disks
 
@@ -787,13 +787,13 @@ http://people.redhat.com/alikins/system_tuning.html#scsi[System Tuning
 for Linux Servers — SCSI]
 (`http://people.redhat.com/alikins/system_tuning.html#scsi`).
 
-[[abejn]][[GSPTG00224]][[tcpip-settings]]
+[[tcpip-settings]]
 
 ==== TCP/IP Settings
 
  
 
-[[gacmd]][[GSPTG00042]][[to-tune-the-tcpip-settings]]
+[[to-tune-the-tcpip-settings]]
 
 ===== To tune the TCP/IP settings
 
@@ -845,7 +845,7 @@ sysctl -p /etc/sysctl.conf
 tcp_recv_hiwat ndd /dev/tcp 8129 32768
 ----
 
-[[gfpzh]][[GSPTG00079]][[tuning-ultrasparc-cmt-based-systems]]
+[[tuning-ultrasparc-cmt-based-systems]]
 
 === Tuning UltraSPARC CMT-Based Systems
 
@@ -853,7 +853,7 @@ Use a combination of tunable parameters and other parameters to tune
 UltraSPARC CMT-based systems. These values are an example of how you
 might tune your system to achieve the desired result.
 
-[[gfpzv]][[GSPTG00225]][[tuning-operating-system-and-tcp-settings]]
+[[tuning-operating-system-and-tcp-settings]]
 
 ==== Tuning Operating System and TCP Settings
 
@@ -981,7 +981,7 @@ network traffic.
 
 Note that the IPGE driver version is 1.25.25.
 
-[[gfpzm]][[GSPTG00226]][[disk-configuration]]
+[[disk-configuration]]
 
 ==== Disk Configuration
 
@@ -995,7 +995,7 @@ on the disk, some writes might be lost if the disk fails.
 * Consider mounting the disks with the following options, which might
 yield better disk performance: `nologging`, `directio`, `noatime`.
 
-[[gfpzk]][[GSPTG00227]][[network-configuration]]
+[[network-configuration]]
 
 ==== Network Configuration
 

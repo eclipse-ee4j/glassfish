@@ -7,7 +7,7 @@ prev=enable.html
 
 = enable-http-lb-application
 
-[[enable-http-lb-application-1]][[GSRFM00126]][[enable-http-lb-application]]
+[[enable-http-lb-application]]
 
 == enable-http-lb-application
 
@@ -57,7 +57,7 @@ target::
 
 === Examples
 
-[[GSRFM601]][[sthref1108]]
+[[sthref1108]]
 
 ==== Example 1   Enabling Load Balancing for an Application
 

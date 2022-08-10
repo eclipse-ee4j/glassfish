@@ -7,7 +7,7 @@ prev=delete-admin-object.html
 
 = delete-application-ref
 
-[[delete-application-ref-1]][[GSRFM00064]][[delete-application-ref]]
+[[delete-application-ref]]
 
 == delete-application-ref
 
@@ -80,7 +80,7 @@ reference_name::
 
 === Examples
 
-[[GSRFM531]][[sthref590]]
+[[sthref590]]
 
 ==== Example 1   Deleting an Application Reference
 

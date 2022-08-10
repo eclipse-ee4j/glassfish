@@ -7,7 +7,7 @@ prev=create-auth-realm.html
 
 = create-cluster
 
-[[create-cluster-1]][[GSRFM00017]][[create-cluster]]
+[[create-cluster]]
 
 == create-cluster
 
@@ -374,7 +374,7 @@ cluster-name::
 
 === Examples
 
-[[GSRFM462]][[sthref152]]
+[[sthref152]]
 
 ==== Example 1   Creating a Cluster
 
@@ -391,7 +391,7 @@ ltscluster
 Command create-cluster executed successfully.
 ----
 
-[[GSRFM463]][[sthref153]]
+[[sthref153]]
 
 ==== Example 2   Creating a Cluster With a List of URIs for Discovering the
 Cluster
@@ -427,7 +427,7 @@ tcp'\\:'//10.152.23.224'\\:'9092 tcpcluster
 Command create-cluster executed successfully.
 ----
 
-[[GSRFM827]][[sthref154]]
+[[sthref154]]
 
 ==== Example 3   Creating a Cluster With a List of IP Addresses for
 Discovering the Cluster
@@ -447,7 +447,7 @@ GMS_LISTENER_PORT=9090' ipcluster
 Command create-cluster executed successfully.
 ----
 
-[[GSRFM828]][[sthref155]]
+[[sthref155]]
 
 ==== Example 4   Creating a Cluster With a Generated List of Instances for
 Discovering the Cluster

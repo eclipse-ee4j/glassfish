@@ -7,7 +7,7 @@ prev=disable-monitoring.html
 
 = disable-secure-admin
 
-[[disable-secure-admin-1]][[GSRFM00121]][[disable-secure-admin]]
+[[disable-secure-admin]]
 
 == disable-secure-admin
 
@@ -44,7 +44,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM596]][[sthref1076]]
+[[sthref1076]]
 
 ==== Example 1   Disabling `secure admin` for a domain
 

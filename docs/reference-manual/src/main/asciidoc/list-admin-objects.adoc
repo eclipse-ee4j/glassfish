@@ -7,7 +7,7 @@ prev=list.html
 
 = list-admin-objects
 
-[[list-admin-objects-1]][[GSRFM00146]][[list-admin-objects]]
+[[list-admin-objects]]
 
 == list-admin-objects
 
@@ -55,7 +55,7 @@ target::
 
 === Examples
 
-[[GSRFM634]][[sthref1297]]
+[[sthref1297]]
 
 ==== Example 1   Listing Administered Objects
 

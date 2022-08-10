@@ -7,7 +7,7 @@ prev=start-instance.html
 
 = start-local-instance
 
-[[start-local-instance-1]][[GSRFM00237]][[start-local-instance]]
+[[start-local-instance]]
 
 == start-local-instance
 
@@ -177,7 +177,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM763]][[sthref2147]]
+[[sthref2147]]
 
 ==== Example 1   Starting an Instance Locally
 

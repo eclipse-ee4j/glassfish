@@ -7,7 +7,7 @@ prev=delete-cluster.html
 
 = delete-config
 
-[[delete-config-1]][[GSRFM00069]][[delete-config]]
+[[delete-config]]
 
 == delete-config
 
@@ -49,7 +49,7 @@ configuration-name::
 
 === Examples
 
-[[GSRFM536]][[sthref622]]
+[[sthref622]]
 
 ==== Example 1   Deleting a Named Configuration
 

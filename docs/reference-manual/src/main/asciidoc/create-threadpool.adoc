@@ -7,7 +7,7 @@ prev=create-system-properties.html
 
 = create-threadpool
 
-[[create-threadpool-1]][[GSRFM00060]][[create-threadpool]]
+[[create-threadpool]]
 
 == create-threadpool
 
@@ -83,7 +83,7 @@ threadpool-id::
 
 === Examples
 
-[[GSRFM527]][[sthref558]]
+[[sthref558]]
 
 ==== Example 1   Creating a Thread Pool
 

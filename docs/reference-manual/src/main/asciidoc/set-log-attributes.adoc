@@ -7,7 +7,7 @@ prev=set-batch-runtime-configuration.html
 
 = set-log-attributes
 
-[[set-log-attributes-1]][[GSRFM00227]][[set-log-attributes]]
+[[set-log-attributes]]
 
 == set-log-attributes
 
@@ -65,7 +65,7 @@ attribute-value::
 
 === Examples
 
-[[GSRFM748]][[sthref2046]]
+[[sthref2046]]
 
 ==== Example 1   Setting the Maximum Number of Log History Files to Maintain
 

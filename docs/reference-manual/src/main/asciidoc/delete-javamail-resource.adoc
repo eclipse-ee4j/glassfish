@@ -7,7 +7,7 @@ prev=delete-jacc-provider.html
 
 = delete-javamail-resource
 
-[[delete-javamail-resource-1]][[GSRFM00087]][[delete-javamail-resource]]
+[[delete-javamail-resource]]
 
 == delete-javamail-resource
 
@@ -58,7 +58,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM555]][[sthref774]]
+[[sthref774]]
 
 ==== Example 1   Deleting a JavaMail Resource
 

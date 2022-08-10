@@ -7,7 +7,7 @@ prev=delete-managed-scheduled-executor-service.html
 
 = delete-managed-thread-factory
 
-[[delete-managed-thread-factory-1]][[GSRFM852]][[delete-managed-thread-factory]]
+[[delete-managed-thread-factory]]
 
 == delete-managed-thread-factory
 
@@ -59,7 +59,7 @@ managed_thread_factory_name::
 
 === Examples
 
-[[GSRFM853]][[sthref871]]
+[[sthref871]]
 
 ==== Example 1   Deleting a Managed Thread Factory Resource
 

@@ -7,7 +7,7 @@ prev=delete-ssl.html
 
 = delete-system-property
 
-[[delete-system-property-1]][[GSRFM00110]][[delete-system-property]]
+[[delete-system-property]]
 
 == delete-system-property
 
@@ -52,7 +52,7 @@ property_name::
 
 === Examples
 
-[[GSRFM580]][[sthref988]]
+[[sthref988]]
 
 ==== Example 1   Deleting a System Property
 

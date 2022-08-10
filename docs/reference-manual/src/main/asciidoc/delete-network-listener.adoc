@@ -7,7 +7,7 @@ prev=delete-module-config.html
 
 = delete-network-listener
 
-[[delete-network-listener-1]][[GSRFM00098]][[delete-network-listener]]
+[[delete-network-listener]]
 
 == delete-network-listener
 
@@ -58,7 +58,7 @@ listener-name::
 
 === Examples
 
-[[GSRFM567]][[sthref895]]
+[[sthref895]]
 
 ==== Example 1   Deleting a Network Listener
 

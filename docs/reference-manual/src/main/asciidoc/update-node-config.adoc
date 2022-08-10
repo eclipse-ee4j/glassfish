@@ -7,7 +7,7 @@ prev=update-file-user.html
 
 = update-node-config
 
-[[update-node-config-1]][[GSRFM00255]][[update-node-config]]
+[[update-node-config]]
 
 == update-node-config
 
@@ -72,7 +72,7 @@ node-name::
 
 === Examples
 
-[[GSRFM788]][[sthref2287]]
+[[sthref2287]]
 
 ==== Example 1   Updating the Host That a Node Represents
 

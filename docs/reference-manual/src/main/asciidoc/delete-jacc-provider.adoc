@@ -7,7 +7,7 @@ prev=delete-instance.html
 
 = delete-jacc-provider
 
-[[delete-jacc-provider-1]][[GSRFM00086]][[delete-jacc-provider]]
+[[delete-jacc-provider]]
 
 == delete-jacc-provider
 
@@ -79,7 +79,7 @@ jacc-provider-name::
 
 === Examples
 
-[[GSRFM554]][[sthref766]]
+[[sthref766]]
 
 ==== Example 1   Deleting a JACC provider
 

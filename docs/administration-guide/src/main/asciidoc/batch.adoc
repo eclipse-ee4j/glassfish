@@ -5,7 +5,7 @@ prev=lifecycle-modules.adoc
 
 = Administering Batch Jobs
 
-[[GSADG1077]][[sthref66]]
+[[sthref66]]
 
 
 [[administering-batch-jobs]]

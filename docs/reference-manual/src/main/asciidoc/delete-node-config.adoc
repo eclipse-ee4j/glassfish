@@ -7,7 +7,7 @@ prev=delete-network-listener.html
 
 = delete-node-config
 
-[[delete-node-config-1]][[GSRFM00099]][[delete-node-config]]
+[[delete-node-config]]
 
 == delete-node-config
 
@@ -75,7 +75,7 @@ node-name::
 
 === Examples
 
-[[GSRFM568]][[sthref903]]
+[[sthref903]]
 
 ==== Example 1   Deleting a Node That Is Not Enabled for Remote Communication
 

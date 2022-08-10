@@ -7,7 +7,7 @@ prev=create-jms-resource.html
 
 = create-jndi-resource
 
-[[create-jndi-resource-1]][[GSRFM00041]][[create-jndi-resource]]
+[[create-jndi-resource]]
 
 == create-jndi-resource
 
@@ -90,7 +90,7 @@ jndi-name::
 
 === Examples
 
-[[GSRFM499]][[sthref366]]
+[[sthref366]]
 
 ==== Example 1   Creating a JNDI Resource
 

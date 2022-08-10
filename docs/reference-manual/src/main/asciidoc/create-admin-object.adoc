@@ -7,7 +7,7 @@ prev=copy-config.html
 
 = create-admin-object
 
-[[create-admin-object-1]][[GSRFM00012]][[create-admin-object]]
+[[create-admin-object]]
 
 == create-admin-object
 
@@ -96,7 +96,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM457]][[sthref120]]
+[[sthref120]]
 
 ==== Example 1   Creating an Administered Object
 

@@ -7,7 +7,7 @@ prev=add-library.html
 
 = add-resources
 
-[[add-resources-1]][[GSRFM00001]][[add-resources]]
+[[add-resources]]
 
 == add-resources
 

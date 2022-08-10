@@ -7,7 +7,7 @@ prev=transaction-service.html
 
 = Using the Java Naming and Directory Interface
 
-[[GSDVG00019]][[beanr]]
+[[beanr]]
 
 
 [[using-the-java-naming-and-directory-interface]]
@@ -40,7 +40,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 ====
 
 
-[[beans]][[GSDVG00192]][[accessing-the-naming-context]]
+[[accessing-the-naming-context]]
 
 === Accessing the Naming Context
 
@@ -76,7 +76,7 @@ have the same name.
 ====
 
 
-[[BGBJGGAD]][[GSDVG560]][[portable-global-jndi-names]]
+[[portable-global-jndi-names]]
 
 ==== Portable Global JNDI Names
 
@@ -101,7 +101,7 @@ addition to a portable global JNDI name. For more information, see
 xref:#glassfish-server-v2-vendor-specific-global-jndi-names[{productName} V2 Vendor-Specific Global JNDI Names] and
 xref:#disabling-glassfish-server-v2-jndi-names[Disabling {productName} V2 JNDI Names].
 
-[[gcjkd]][[GSDVG00519]][[glassfish-server-v2-vendor-specific-global-jndi-names]]
+[[glassfish-server-v2-vendor-specific-global-jndi-names]]
 
 ==== {productName} V2 Vendor-Specific Global JNDI Names
 
@@ -146,7 +146,7 @@ JNDI names, the default is the name of the dependency relative to
 `@Resource(name="jdbc/Foo") DataSource ds;` annotation, the global JNDI
 name is `jdbc/Foo`.
 
-[[gkndi]][[GSDVG00526]][[disabling-glassfish-server-v2-jndi-names]]
+[[disabling-glassfish-server-v2-jndi-names]]
 
 ==== Disabling {productName} V2 JNDI Names
 
@@ -183,7 +183,7 @@ take the following values:
 Note that this setting applies to all session beans deployed to the
 server.
 
-[[beanu]][[GSDVG00520]][[accessing-ejb-components-using-the-cosnaming-naming-context]]
+[[accessing-ejb-components-using-the-cosnaming-naming-context]]
 
 ==== Accessing EJB Components Using the `CosNaming` Naming Context
 
@@ -221,7 +221,7 @@ Properties properties = null;
 The `java.naming.factory.initial` property applies to only one instance.
 The property is not cluster-aware.
 
-[[beanv]][[GSDVG00521]][[accessing-ejb-components-in-a-remote-glassfish-server]]
+[[accessing-ejb-components-in-a-remote-glassfish-server]]
 
 ==== Accessing EJB Components in a Remote {productName}
 
@@ -284,7 +284,7 @@ component-specific (`java:comp/env`) naming contexts are transient. On
 each server startup or application reloading, all relevant objects are
 re-bound to the namespace.
 
-[[beanw]][[GSDVG00522]][[naming-environment-for-lifecycle-modules]]
+[[naming-environment-for-lifecycle-modules]]
 
 ==== Naming Environment for Lifecycle Modules
 
@@ -304,7 +304,7 @@ using the method `LifecycleEventContext.getInitialContext()` during, and
 only during, the `STARTUP_EVENT`, `READY_EVENT`, or `SHUTDOWN_EVENT`
 server life cycle events.
 
-[[beanx]][[GSDVG00193]][[configuring-resources]]
+[[configuring-resources]]
 
 === Configuring Resources
 
@@ -316,7 +316,7 @@ environment.
 * xref:#built-in-factories-for-custom-resources[Built-in Factories for Custom Resources]
 * xref:#using-application-scoped-resources[Using Application-Scoped Resources]
 
-[[beany]][[GSDVG00523]][[external-jndi-resources]]
+[[external-jndi-resources]]
 
 ==== External JNDI Resources
 
@@ -335,7 +335,7 @@ Administration Console.
 `asadmin create-jndi-resource` command. For details, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[beanz]][[GSDVG00524]][[custom-resources]]
+[[custom-resources]]
 
 ==== Custom Resources
 
@@ -353,7 +353,7 @@ Console.
 * To create a custom resource, use the `asadmin create-custom-resource`
 command. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[giyvw]][[GSDVG00525]][[built-in-factories-for-custom-resources]]
+[[built-in-factories-for-custom-resources]]
 
 ==== Built-in Factories for Custom Resources
 
@@ -372,7 +372,7 @@ information about the `glassfish-resources.xml` file, see the
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide].
 
-[[giywi]][[GSDVG00329]][[javabeanfactory]]
+[[javabeanfactory]]
 
 ===== JavaBeanFactory
 
@@ -391,7 +391,7 @@ specify a property named `account` and give it a value.
 For example, you can place the JavaBean class in the as-install``/lib``
 directory.
 
-[[giysn]][[GSDVG00330]][[propertiesfactory]]
+[[propertiesfactory]]
 
 ===== PropertiesFactory
 
@@ -419,7 +419,7 @@ resulting property set is the union. If the same property is defined in
 the file and directly in the custom resource, the value of the latter
 takes precedence.
 
-[[giytz]][[GSDVG00331]][[primitivesandstringfactory]]
+[[primitivesandstringfactory]]
 
 ===== PrimitivesAndStringFactory
 
@@ -445,7 +445,7 @@ the value needed by the application.
 For example, If the application requires a `double` of value `22.1`,
 create a property with the name `value` and the value `22.1`.
 
-[[giywh]][[GSDVG00332]][[urlfactory]]
+[[urlfactory]]
 
 ===== URLFactory
 
@@ -467,7 +467,7 @@ For example, for the first constructor, define properties named
 For the third constructor, define a property named `spec` and assign it
 the value of the entire URL.
 
-[[gkpdn]][[GSDVG00527]][[using-application-scoped-resources]]
+[[using-application-scoped-resources]]
 
 ==== Using Application-Scoped Resources
 
@@ -477,7 +477,7 @@ application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
 "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
-[[gcpge]][[GSDVG00194]][[using-a-custom-jndi.properties-file]]
+[[GSDVG00194]][[using-a-custom-jndi.properties-file]]
 
 === Using a Custom `jndi.properties` File
 
@@ -490,7 +490,7 @@ For each property found in more than one `jndi.properties` file, the
 Jakarta EE naming service either uses the first value found or concatenates
 all of the values, whichever makes sense.
 
-[[beaoa]][[GSDVG00195]][[mapping-references]]
+[[mapping-references]]
 
 === Mapping References
 

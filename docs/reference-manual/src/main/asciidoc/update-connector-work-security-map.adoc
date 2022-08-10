@@ -7,7 +7,7 @@ prev=update-connector-security-map.html
 
 = update-connector-work-security-map
 
-[[update-connector-work-security-map-1]][[GSRFM00253]][[update-connector-work-security-map]]
+[[update-connector-work-security-map]]
 
 == update-connector-work-security-map
 
@@ -65,7 +65,7 @@ mapname::
 
 === Examples
 
-[[GSRFM786]][[sthref2271]]
+[[sthref2271]]
 
 ==== Example 1   Updating a Connector Work Security Map
 

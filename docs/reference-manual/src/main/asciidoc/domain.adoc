@@ -7,7 +7,7 @@ prev=configuration.html
 
 = domain
 
-[[domain-5asc]][[GSRFM00267]][[domain]]
+[[domain]]
 
 == domain
 

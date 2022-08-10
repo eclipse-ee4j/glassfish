@@ -7,7 +7,7 @@ prev=create-jvm-options.html
 
 = create-lifecycle-module
 
-[[create-lifecycle-module-1]][[GSRFM00043]][[create-lifecycle-module]]
+[[create-lifecycle-module]]
 
 == create-lifecycle-module
 
@@ -90,7 +90,7 @@ module_name::
 
 === Examples
 
-[[GSRFM504]][[sthref385]]
+[[sthref385]]
 
 ==== Example 1   Creating a Lifecycle Module
 

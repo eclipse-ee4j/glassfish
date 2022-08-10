@@ -7,7 +7,7 @@ prev=create-http-lb-ref.html
 
 = create-http-listener
 
-[[create-http-listener-1]][[GSRFM00030]][[create-http-listener]]
+[[create-http-listener]]
 
 == create-http-listener
 
@@ -130,7 +130,7 @@ listener-id::
 
 === Examples
 
-[[GSRFM484]][[sthref275]]
+[[sthref275]]
 
 ==== Example 1   Creating an HTTP Network Listener
 

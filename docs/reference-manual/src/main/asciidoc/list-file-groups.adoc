@@ -7,7 +7,7 @@ prev=list-domains.html
 
 = list-file-groups
 
-[[list-file-groups-1]][[GSRFM00164]][[list-file-groups]]
+[[list-file-groups]]
 
 == list-file-groups
 
@@ -59,7 +59,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM657]][[sthref1473]]
+[[sthref1473]]
 
 ==== Example 1   Listing Groups in all File Realms
 

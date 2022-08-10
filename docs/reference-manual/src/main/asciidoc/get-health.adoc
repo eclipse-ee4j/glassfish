@@ -7,7 +7,7 @@ prev=get-client-stubs.html
 
 = get-health
 
-[[get-health-1]][[GSRFM00141]][[get-health]]
+[[get-health]]
 
 == get-health
 
@@ -48,7 +48,7 @@ cluster_name::
 
 === Examples
 
-[[GSRFM623]][[sthref1240]]
+[[sthref1240]]
 
 ==== Example 1   Checking the health of server instances in a cluster
 

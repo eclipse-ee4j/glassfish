@@ -7,7 +7,7 @@ prev=list-clusters.html
 
 = list-commands
 
-[[list-commands-1]][[GSRFM00154]][[list-commands]]
+[[list-commands]]
 
 == list-commands
 
@@ -63,7 +63,7 @@ pattern-list::
 
 === Examples
 
-[[GSRFM644]][[sthref1386]]
+[[sthref1386]]
 
 ==== Example 1   Listing the Local Subcommands
 
@@ -96,7 +96,7 @@ version
 Command list-commands executed successfully.
 ----
 
-[[GSRFM645]][[sthref1387]]
+[[sthref1387]]
 
 ==== Example 2   Filtering the Subcommands That Are Listed
 
@@ -120,7 +120,7 @@ set-log-attributes                      unset-web-env-entry
 Command list-commands executed successfully.
 ----
 
-[[GSRFM646]][[sthref1388]]
+[[sthref1388]]
 
 ==== Example 3   Listing All Subcommands
 

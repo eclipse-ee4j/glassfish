@@ -7,7 +7,7 @@ prev=redeploy.html
 
 = remove-library
 
-[[remove-library-1]][[GSRFM00820]][[remove-library]]
+[[remove-library]]
 
 == remove-library
 
@@ -81,7 +81,7 @@ library-name::
 
 === Examples
 
-[[GSRFM832]][[sthref1975]]
+[[sthref1975]]
 
 ==== Example 1   Removing Libraries
 

@@ -7,7 +7,7 @@ prev=list-nodes-dcom.html
 
 = list-nodes-ssh
 
-[[list-nodes-ssh-1]][[GSRFM00189]][[list-nodes-ssh]]
+[[list-nodes-ssh]]
 
 == list-nodes-ssh
 
@@ -75,7 +75,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM697]][[sthref1731]]
+[[sthref1731]]
 
 ==== Example 1   Listing {productName} Nodes
 
@@ -90,7 +90,7 @@ sj01  SSH  sj01.example.com
 Command list-nodes-ssh executed successfully.
 ----
 
-[[GSRFM698]][[sthref1732]]
+[[sthref1732]]
 
 ==== Example 2   Listing Only the Names of {productName} Nodes
 
@@ -105,7 +105,7 @@ sj02
 sj01
 ----
 
-[[GSRFM699]][[sthref1733]]
+[[sthref1733]]
 
 ==== Example 3   Listing {productName} Nodes in Long Format
 

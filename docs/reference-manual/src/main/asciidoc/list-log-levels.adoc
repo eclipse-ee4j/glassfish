@@ -7,7 +7,7 @@ prev=list-loggers.html
 
 = list-log-levels
 
-[[list-log-levels-1]][[GSRFM00183]][[list-log-levels]]
+[[list-log-levels]]
 
 == list-log-levels
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM683]][[sthref1650]]
+[[sthref1650]]
 
 ==== Example 1   Listing the Log Levels
 

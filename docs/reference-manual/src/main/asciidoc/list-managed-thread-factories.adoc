@@ -7,7 +7,7 @@ prev=list-managed-scheduled-executor-services.html
 
 = list-managed-thread-factories
 
-[[list-managed-thread-factories-1]][[GSRFM875]][[list-managed-thread-factories]]
+[[list-managed-thread-factories]]
 
 == list-managed-thread-factories
 
@@ -56,7 +56,7 @@ target::
 
 === Examples
 
-[[GSRFM876]][[sthref1674]]
+[[sthref1674]]
 
 ==== Example 1   Listing Managed Thread Factory Resources
 

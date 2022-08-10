@@ -7,7 +7,7 @@ prev=validate-dcom.html
 
 = validate-multicast
 
-[[validate-multicast-1]][[GSRFM00259]][[validate-multicast]]
+[[validate-multicast]]
 
 == validate-multicast
 
@@ -97,7 +97,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM798]][[sthref2336]]
+[[sthref2336]]
 
 ==== Example 1   Validating multicast transport
 

@@ -7,7 +7,7 @@ prev=list-http-listeners.html
 
 = list-iiop-listeners
 
-[[list-iiop-listeners-1]][[GSRFM00169]][[list-iiop-listeners]]
+[[list-iiop-listeners]]
 
 == list-iiop-listeners
 
@@ -53,7 +53,7 @@ target::
 
 === Examples
 
-[[GSRFM663]][[sthref1514]]
+[[sthref1514]]
 
 ==== Example 1   Using the list-iiop-listeners subcommand
 

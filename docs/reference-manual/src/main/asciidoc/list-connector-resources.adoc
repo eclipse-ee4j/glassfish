@@ -7,7 +7,7 @@ prev=list-connector-connection-pools.html
 
 = list-connector-resources
 
-[[list-connector-resources-1]][[GSRFM00158]][[list-connector-resources]]
+[[list-connector-resources]]
 
 == list-connector-resources
 
@@ -55,7 +55,7 @@ target::
 
 === Examples
 
-[[GSRFM650]][[sthref1419]]
+[[sthref1419]]
 
 ==== Example 1   Listing Connector Resources
 

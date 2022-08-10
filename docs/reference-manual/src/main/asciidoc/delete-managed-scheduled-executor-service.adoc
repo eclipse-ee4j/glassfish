@@ -7,7 +7,7 @@ prev=delete-managed-executor-service.html
 
 = delete-managed-scheduled-executor-service
 
-[[delete-managed-scheduled-executor-service-1]][[GSRFM850]][[delete-managed-scheduled-executor-service]]
+[[delete-managed-scheduled-executor-service]]
 
 == delete-managed-scheduled-executor-service
 
@@ -61,7 +61,7 @@ managed_scheduled_executor_service_name::
 
 === Examples
 
-[[GSRFM851]][[sthref863]]
+[[sthref863]]
 
 ==== Example 1   Deleting a Managed Scheduled Executor Service Resource
 

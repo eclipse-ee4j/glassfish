@@ -7,7 +7,7 @@ prev=update-node-config.html
 
 = update-node-dcom
 
-[[update-node-dcom-1]][[GSRFM789]][[update-node-dcom]]
+[[update-node-dcom]]
 
 == update-node-dcom
 
@@ -121,7 +121,7 @@ node-name::
 
 === Examples
 
-[[GSRFM790]][[sthref2295]]
+[[sthref2295]]
 
 ==== Example 1   Updating the Host That a Node Represents
 
@@ -134,7 +134,7 @@ asadmin> update-node-dcom --nodehost wj01 wpmdl1
 Command update-node-dcom executed successfully.
 ----
 
-[[GSRFM791]][[sthref2296]]
+[[sthref2296]]
 
 ==== Example 2   Forcing the Update of a Node
 

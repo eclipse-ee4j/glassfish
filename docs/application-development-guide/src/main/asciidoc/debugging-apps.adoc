@@ -7,7 +7,7 @@ prev=class-loaders.html
 
 = Debugging Applications
 
-[[GSDVG00004]][[beafc]]
+[[beafc]]
 
 
 [[debugging-applications]]
@@ -27,7 +27,7 @@ The following topics are addressed here:
 * xref:#glassfish-server-logging[{productName} Logging]
 * xref:#profiling-tools[Profiling Tools]
 
-[[beafd]][[GSDVG00101]][[enabling-debugging]]
+[[enabling-debugging]]
 
 === Enabling Debugging
 
@@ -66,7 +66,7 @@ without the `--debug` option.
 This is useful if you start the {productName} from the Windows Start Menu,
 or if you want to make sure that debugging is always turned on.
 
-[[fvyit]][[GSDVG00049]][[to-set-the-server-to-automatically-start-up-in-debug-mode]]
+[[to-set-the-server-to-automatically-start-up-in-debug-mode]]
 
 ==== To Set the Server to Automatically Start Up in Debug Mode
 
@@ -84,7 +84,7 @@ See Also
 For details, click the Help button in the Administration Console from
 the JVM Settings page.
 
-[[beafe]][[GSDVG00102]][[jpda-options]]
+[[jpda-options]]
 
 === JPDA Options
 
@@ -108,7 +108,7 @@ You can include additional options. A list of JPDA debugging options is
 available at
 `http://java.sun.com/javase/technologies/core/toolsapis/jpda/`.
 
-[[beaff]][[GSDVG00103]][[generating-a-stack-trace-for-debugging]]
+[[generating-a-stack-trace-for-debugging]]
 
 === Generating a Stack Trace for Debugging
 
@@ -118,7 +118,7 @@ goes to the domain-dir`/logs/server.log` file and also appears on the
 command prompt screen. For more information about the
 `asadmin generate-jvm-report` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[gekvq]][[GSDVG00104]][[application-client-debugging]]
+[[application-client-debugging]]
 
 === Application Client Debugging
 
@@ -152,7 +152,7 @@ link:java-clients.html#beakt[Developing Java Clients].
 ====
 
 
-[[beafk]][[GSDVG00105]][[open-message-queue-debugging]]
+[[open-message-queue-debugging]]
 
 === Open Message Queue Debugging
 
@@ -171,7 +171,7 @@ the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
 ====
 
 
-[[beafl]][[GSDVG00106]][[enabling-verbose-mode]]
+[[enabling-verbose-mode]]
 
 === Enabling Verbose Mode
 
@@ -197,7 +197,7 @@ platforms, you can also print a thread dump using the `jstack` command
 `http://docs.oracle.com/javase/8/docs/technotes/tools/share/jstack.html`)
 or the command `kill -QUIT` process_id.
 
-[[gkpdk]][[GSDVG00107]][[class-loader-debugging]]
+[[class-loader-debugging]]
 
 === Class Loader Debugging
 
@@ -230,7 +230,7 @@ To send the {productName} messages to the Administration Console
 instead of `stderr`, start the domain in verbose mode as described in
 xref:#enabling-verbose-mode[Enabling Verbose Mode].
 
-[[beafm]][[GSDVG00108]][[glassfish-server-logging]]
+[[glassfish-server-logging]]
 
 === {productName} Logging
 
@@ -246,7 +246,7 @@ To change logging settings, select Logger Settings under the relevant configurat
 
 For details about logging, click the Help button in the Administration Console.
 
-[[beafn]][[GSDVG00109]][[profiling-tools]]
+[[profiling-tools]]
 
 === Profiling Tools
 
@@ -263,14 +263,14 @@ Information about comprehensive monitoring and management support in the
 Java 2 Platform, Standard Edition ( J2SE platform) is available at
 `http://docs.oracle.com/javase/8/docs/technotes/guides/management/index.html`.
 
-[[gcicc]][[GSDVG00345]][[the-netbeans-profiler]]
+[[the-netbeans-profiler]]
 
 ==== The NetBeans Profiler
 
 For information on how to use the NetBeans profiler, see
 `http://profiler.netbeans.org/index.html`.
 
-[[beafo]][[GSDVG00346]][[the-hprof-profiler]]
+[[the-hprof-profiler]]
 
 ==== The HPROF Profiler
 
@@ -289,7 +289,7 @@ details on the HPROF profiler, see the technical article at
 After HPROF is enabled using the following instructions, its libraries
 are loaded into the server process.
 
-[[fvylg]][[GSDVG00050]][[to-use-hprof-profiling-on-unix]]
+[[to-use-hprof-profiling-on-unix]]
 
 ===== To Use HPROF Profiling on UNIX
 
@@ -351,7 +351,7 @@ Restart the {productName}.
 This writes an HPROF stack dump to the file you specified using the file
 HPROF parameter.
 
-[[beafr]][[GSDVG00347]][[the-jprobe-profiler]]
+[[the-jprobe-profiler]]
 
 ==== The JProbe Profiler
 
@@ -361,7 +361,7 @@ Information about JProbe from Sitraka is available at
 After JProbe is installed using the following instructions, its
 libraries are loaded into the server process.
 
-[[fvymj]][[GSDVG00051]][[to-enable-remote-profiling-with-jprobe]]
+[[to-enable-remote-profiling-with-jprobe]]
 
 ===== To Enable Remote Profiling With JProbe
 

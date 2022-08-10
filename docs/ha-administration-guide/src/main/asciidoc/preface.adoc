@@ -7,7 +7,7 @@ prev=title.html
 
 = Preface
 
-[[GSHAG00001]][[pref]]
+[[pref]]
 
 
 [[preface]]
@@ -54,7 +54,7 @@ available faster, while maintaining the most important feature of Java
 EE: compatibility. It enables Java developers to access the {productName} source code and to contribute to the development of the {productName}. The GlassFish project is designed to encourage communication
 between Oracle engineers and the community.
 
-[[GSHAG00163]][[gksfg]]
+[[gksfg]]
 
 
 [[oracle-glassfish-server-documentation-set]]

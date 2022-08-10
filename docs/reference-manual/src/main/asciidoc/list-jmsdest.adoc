@@ -7,7 +7,7 @@ prev=list-jdbc-resources.html
 
 = list-jmsdest
 
-[[list-jmsdest-1]][[GSRFM00175]][[list-jmsdest]]
+[[list-jmsdest]]
 
 == list-jmsdest
 
@@ -61,7 +61,7 @@ target::
 
 === Examples
 
-[[GSRFM672]][[sthref1564]]
+[[sthref1564]]
 
 ==== Example 1   Listing all physical destinations
 
@@ -75,7 +75,7 @@ PhysicalTopic
 Command list-jmsdest executed successfully.
 ----
 
-[[GSRFM673]][[sthref1565]]
+[[sthref1565]]
 
 ==== Example 2   Listing all physical destinations of a specified type
 

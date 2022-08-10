@@ -7,7 +7,7 @@ prev=list-batch-jobs.html
 
 = list-batch-job-steps
 
-[[list-batch-job-steps-1]][[GSRFM895]][[list-batch-job-steps]]
+[[list-batch-job-steps]]
 
 == list-batch-job-steps
 
@@ -94,7 +94,7 @@ execution_id::
 
 === Examples
 
-[[GSRFM896]][[sthref1361]]
+[[sthref1361]]
 
 ==== Example 1   Listing Batch Job Steps
 

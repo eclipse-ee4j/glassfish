@@ -7,7 +7,7 @@ prev=set.html
 
 = set-batch-runtime-configuration
 
-[[set-batch-runtime-configuration-1]][[GSRFM897]][[set-batch-runtime-configuration]]
+[[set-batch-runtime-configuration]]
 
 == set-batch-runtime-configuration
 
@@ -71,7 +71,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM898]][[sthref2038]]
+[[sthref2038]]
 
 ==== Example 1   Configuring the Batch Runtime
 

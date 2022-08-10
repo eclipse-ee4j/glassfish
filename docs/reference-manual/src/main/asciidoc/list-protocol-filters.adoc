@@ -7,7 +7,7 @@ prev=list-persistence-types.html
 
 = list-protocol-filters
 
-[[list-protocol-filters-1]][[GSRFM00193]][[list-protocol-filters]]
+[[list-protocol-filters]]
 
 == list-protocol-filters
 
@@ -57,7 +57,7 @@ protocol-name::
 
 === Examples
 
-[[GSRFM704]][[sthref1755]]
+[[sthref1755]]
 
 ==== Example 1   Listing Protocol Filters
 

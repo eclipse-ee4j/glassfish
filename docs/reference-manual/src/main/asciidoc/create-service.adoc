@@ -7,7 +7,7 @@ prev=create-resource-ref.html
 
 = create-service
 
-[[create-service-1]][[GSRFM00057]][[create-service]]
+[[create-service]]
 
 == create-service
 
@@ -209,7 +209,7 @@ domain-or-instance-name::
 
 === Examples
 
-[[GSRFM522]][[sthref532]]
+[[sthref532]]
 
 ==== Example 1   Creating a Service on a Windows System
 
@@ -241,7 +241,7 @@ root directory
 Command create-service executed successfully.
 ----
 
-[[GSRFM523]][[sthref533]]
+[[sthref533]]
 
 ==== Example 2   Creating a Service on a Linux System
 
@@ -269,7 +269,7 @@ For your convenience this message has also been saved to this file:
 Command create-service executed successfully.
 ----
 
-[[GSRFM524]][[sthref534]]
+[[sthref534]]
 
 ==== Example 3   Creating a Service on an Oracle Solaris System
 

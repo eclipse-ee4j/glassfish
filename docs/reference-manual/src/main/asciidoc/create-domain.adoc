@@ -7,7 +7,7 @@ prev=create-custom-resource.html
 
 = create-domain
 
-[[create-domain-1]][[GSRFM00023]][[create-domain]]
+[[create-domain]]
 
 == create-domain
 
@@ -297,7 +297,7 @@ domain-name::
 
 === Examples
 
-[[GSRFM471]][[sthref213]]
+[[sthref213]]
 
 ==== Example 1   Creating a Domain
 
@@ -325,7 +325,7 @@ Domain domain4 allows admin login as user "admin" with no password.
 Command create-domain executed successfully.
 ----
 
-[[GSRFM472]][[sthref214]]
+[[sthref214]]
 
 ==== Example 2   Creating a Domain in an Alternate Directory
 
@@ -355,7 +355,7 @@ Domain sampleDomain allows admin login as user "admin" with no password.
 Command create-domain executed successfully.
 ----
 
-[[GSRFM473]][[sthref215]]
+[[sthref215]]
 
 ==== Example 3   Creating a Domain and Saving the Administration User Name and Password
 
@@ -391,7 +391,7 @@ asadmin commands to manage this domain.
 Command create-domain executed successfully.
 ----
 
-[[GSRFM474]][[sthref216]]
+[[sthref216]]
 
 ==== Example 4   Creating a Domain and Designating the Certificate Host
 

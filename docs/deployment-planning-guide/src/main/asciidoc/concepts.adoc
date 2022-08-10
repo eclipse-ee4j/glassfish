@@ -7,7 +7,7 @@ prev=preface.html
 
 = Product Concepts
 
-[[GSPLG00001]][[abfaq]]
+[[abfaq]]
 
 
 [[product-concepts]]
@@ -24,7 +24,7 @@ The following topics are addressed here:
 * xref:#glassfish-server-components[{productName} Components]
 * xref:#configuration-roadmap-for-high-availability-of-glassfish-server[Configuration Roadmap for High Availability of {productName}]
 
-[[abfar]][[GSPLG00016]][[java-ee-platform-overview]]
+[[java-ee-platform-overview]]
 
 === Jakarta EE Platform Overview
 
@@ -33,7 +33,7 @@ The following topics are addressed here:
 that describe application components, APIs, and the runtime containers
 and services of an application server.
 
-[[abfas]][[GSPLG00040]][[java-ee-applications]]
+[[java-ee-applications]]
 
 ==== Jakarta EE Applications
 
@@ -46,7 +46,7 @@ production sites. Administrators install Jakarta EE applications onto
 {productName} by deploying Jakarta EE JAR files onto one or more server
 instances (or clusters of instances).
 
-[[abfat]][[GSPLG00041]][[containers]]
+[[containers]]
 
 ==== Containers
 
@@ -56,7 +56,7 @@ transaction management to Jakarta EE components. Web components, such as
 Java Server Pages and servlets, run within the web container. Enterprise
 JavaBeans run within the EJB container.
 
-[[abfau]][[GSPLG00042]][[java-ee-services]]
+[[java-ee-services]]
 
 ==== Jakarta EE Services
 
@@ -79,7 +79,7 @@ Message Service (JMS). JMS is an integral part of the Jakarta EE platform
 and simplifies the task of integrating heterogeneous enterprise
 applications.
 
-[[abfav]][[GSPLG00043]][[web-services]]
+[[web-services]]
 
 ==== Web Services
 
@@ -96,7 +96,7 @@ to execute them. {productName} distributes web services interface
 descriptions using a registry that other applications can access through
 the Java API for XML Registries (JAXR).
 
-[[abfaw]][[GSPLG00044]][[client-access]]
+[[client-access]]
 
 ==== Client Access
 
@@ -129,7 +129,7 @@ Jakarta EE applications can also act as clients of Jakarta EE components such
 as Enterprise JavaBeans modules deployed on other servers, and can use
 any of these access mechanisms.
 
-[[abfax]][[GSPLG00045]][[external-systems-and-resources]]
+[[external-systems-and-resources]]
 
 ==== External Systems and Resources
 
@@ -164,7 +164,7 @@ integrate with popular EIS.
 Simple Mail Transport Protocol (SMTP) server to send email and to an
 IMAP or POP3 server to receive email.
 
-[[abfay]][[GSPLG00017]][[glassfish-server-components]]
+[[glassfish-server-components]]
 
 === {productName} Components
 
@@ -184,7 +184,7 @@ The administration tools, such as the browser-based Administration
 Console, communicate with the domain administration server (DAS), which
 in turn communicates with the server instances.
 
-[[abfaz]][[GSPLG00046]][[server-instances]]
+[[server-instances]]
 
 ==== Server Instances
 
@@ -201,7 +201,7 @@ used in more than one administrative domain. The administration tools
 makes it easy to create, delete, and manage server instances across
 multiple machines.
 
-[[abfba]][[GSPLG00047]][[administrative-domains]]
+[[administrative-domains]]
 
 ==== Administrative Domains
 
@@ -226,7 +226,7 @@ are running must have the same operating system.
 ====
 
 
-[[abfbb]][[GSPLG00024]][[domain-administration-server-das]]
+[[domain-administration-server-das]]
 
 ===== Domain Administration Server (DAS)
 
@@ -266,7 +266,7 @@ host fails, you must create a new DAS installation to restore the
 previous domain configuration. For instructions, see
 "link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide.
 
-[[abfbc]][[GSPLG00048]][[clusters]]
+[[clusters]]
 
 ==== Clusters
 
@@ -299,7 +299,7 @@ Clusters, domains, and instances are related as follows:
 * A cluster has one or more server instances.
 * A cluster belongs to a single domain.
 
-[[abfbe]][[GSPLG00049]][[named-configurations]]
+[[named-configurations]]
 
 ==== Named Configurations
 
@@ -326,7 +326,7 @@ configuration that you can customize for your own purposes. Use the
 Administration Console and `asadmin` command line utility to create and
 manage named configurations.
 
-[[abfbf]][[GSPLG00050]][[http-load-balancer-plug-in]]
+[[http-load-balancer-plug-in]]
 
 ==== HTTP Load Balancer Plug-in
 
@@ -373,7 +373,7 @@ administrator can create a script to automate this entire process.
 For more details and complete configuration instructions, see
 "link:ha-administration-guide/http-load-balancing.html#abdgs[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
-[[abfbg]][[GSPLG00051]][[session-persistence]]
+[[session-persistence]]
 
 ==== Session Persistence
 
@@ -431,7 +431,7 @@ For more information on configuring session persistence, see
 Failover]" in {productName} High Availability
 Administration Guide.
 
-[[abfbh]][[GSPLG00052]][[iiop-load-balancing-in-a-cluster]]
+[[iiop-load-balancing-in-a-cluster]]
 
 ==== IIOP Load Balancing in a Cluster
 
@@ -478,7 +478,7 @@ Adding or deleting new instances to the cluster does not update the
 existing client's view of the cluster. You must manually update the
 endpoints list on the client side.
 
-[[abfbi]][[GSPLG00053]][[message-queue-and-jms-resources]]
+[[message-queue-and-jms-resources]]
 
 ==== Message Queue and JMS Resources
 
@@ -505,7 +505,7 @@ For information on deploying JMS applications and Message Queue
 clustering for message failover, see link:planning.html#planning-message-queue-broker-deployment[Planning
 Message Queue Broker Deployment].
 
-[[abfca]][[GSPLG00018]][[configuration-roadmap-for-high-availability-of-glassfish-server]]
+[[configuration-roadmap-for-high-availability-of-glassfish-server]]
 
 === Configuration Roadmap for High Availability of {productName}
 

@@ -7,7 +7,7 @@ prev=preface.html
 
 = Overview of {productName} 7 Application Deployment
 
-[[GSDPG00003]][[gihxo]]
+[[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
@@ -31,7 +31,7 @@ provided in this document. Information and instructions for
 accomplishing the deployment tasks by using the Administration Console
 are contained in the Administration Console online help.
 
-[[gihzx]][[GSDPG00061]][[about-application-deployment]]
+[[about-application-deployment]]
 
 === About Application Deployment
 
@@ -60,7 +60,7 @@ The following topics are addressed here:
 * xref:#naming-standards[Naming Standards]
 * xref:#module-and-application-versions[Module and Application Versions]
 
-[[giptw]][[GSDPG00319]][[general-deployment-functionality]]
+[[general-deployment-functionality]]
 
 ==== General Deployment Functionality
 
@@ -116,7 +116,7 @@ link:ha-administration-guide/rolling-upgrade.html#abdik[Upgrading Applications W
 {productName} High Availability Administration
 Guide.
 
-[[gihzc]][[GSDPG00320]][[deployment-descriptors-and-annotations]]
+[[deployment-descriptors-and-annotations]]
 
 ==== Deployment Descriptors and Annotations
 
@@ -210,7 +210,7 @@ deployment information in standard deployment descriptors. In case of
 conflicts, deployment descriptor values supersede the annotated
 metadata, and a warning message is logged.
 
-[[gikhs]][[GSDPG00321]][[modules-and-applications]]
+[[modules-and-applications]]
 
 ==== Modules and Applications
 
@@ -231,7 +231,7 @@ The following topics are addressed here:
 * xref:#module-based-deployment[Module-Based Deployment]
 * xref:#application-based-deployment[Application-Based Deployment]
 
-[[beacv]][[GSDPG00307]][[types-of-modules]]
+[[types-of-modules]]
 
 ===== Types of Modules
 
@@ -276,7 +276,7 @@ client supports the standard Jakarta EE Application Client specifications.
 short-duration or long-duration Java-based tasks within the {productName} environment. Lifecycle modules are not Jakarta EE standard modules.
 See link:application-development-guide/lifecycle-listeners.html#beamc[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
 
-[[beacu]][[GSDPG00308]][[module-based-deployment]]
+[[module-based-deployment]]
 
 ===== Module-Based Deployment
 
@@ -289,7 +289,7 @@ bean from a web, EJB, or application client component.
 The following figure shows separately-deployed EJB, web, and application
 client modules.
 
-[[GSDPG00001]][[fwfdj]]
+[[fwfdj]]
 
 
 .*Figure 1-1 Module-Based Assembly and Deployment*
@@ -298,7 +298,7 @@ image:img/dgdeploy3.png[
 deployment."]
 
 
-[[beacw]][[GSDPG00309]][[application-based-deployment]]
+[[application-based-deployment]]
 
 ===== Application-Based Deployment
 
@@ -308,7 +308,7 @@ together as one unit.
 The following figure shows EJB, web, application client, and connector
 modules assembled into a Jakarta EE application.
 
-[[GSDPG00002]][[fvyip]]
+[[fvyip]]
 
 
 .*Figure 1-2 Application-Based Assembly and Deployment*
@@ -316,7 +316,7 @@ image:img/dgdeploya.png[
 "Figure shows Jakarta EE application assembly and deployment."]
 
 
-[[gijla]][[GSDPG00322]][[access-to-shared-framework-classes]]
+[[access-to-shared-framework-classes]]
 
 ==== Access to Shared Framework Classes
 
@@ -353,7 +353,7 @@ an application using the JAR Extension Mechanism Architecture.
 ====
 
 
-[[gihzk]][[GSDPG00323]][[naming-standards]]
+[[naming-standards]]
 
 ==== Naming Standards
 
@@ -378,7 +378,7 @@ The following topics are addressed here:
 * xref:#directory-structure[Directory Structure]
 * xref:#giiel[JSR 88 Naming]
 
-[[gjjfg]][[GSDPG00310]][[portable-naming]]
+[[portable-naming]]
 
 ===== Portable Naming
 
@@ -405,7 +405,7 @@ is used.
 3. If no name is specified at deployment time or in the deployment
 descriptors, the archive name, minus the file type suffix, is used.
 
-[[giidg]][[GSDPG00311]][[jndi-naming]]
+[[jndi-naming]]
 
 ===== JNDI Naming
 
@@ -415,7 +415,7 @@ convention can help. For example, appending the application name and the
 module name to the EJB name is a way to guarantee unique names, such as,
 `jms/qConnPool`.
 
-[[beada]][[GSDPG00312]][[directory-structure]]
+[[directory-structure]]
 
 ===== Directory Structure
 
@@ -432,7 +432,7 @@ link:deploying-applications.html#to-deploy-an-application-or-module-in-a-directo
 in a Directory Format].
 
 
-[[gkhhv]][[GSDPG00324]][[module-and-application-versions]]
+[[module-and-application-versions]]
 
 ==== Module and Application Versions
 
@@ -452,7 +452,7 @@ The following topics are addressed here:
 * xref:#choosing-the-enabled-version[Choosing the Enabled Version]
 * xref:#versioning-restrictions-and-limitations[Versioning Restrictions and Limitations]
 
-[[gkhmg]][[GSDPG00314]][[version-identifiers-and-expressions]]
+[[version-identifiers-and-expressions]]
 
 ===== Version Identifiers and Expressions
 
@@ -514,7 +514,7 @@ The `list-applications` and `list-application-refs` subcommands display
 information about all deployed versions of a module or application. To
 find out which version is enabled, use the `--long` option.
 
-[[gkhmm]][[GSDPG00315]][[choosing-the-enabled-version]]
+[[choosing-the-enabled-version]]
 
 ===== Choosing the Enabled Version
 
@@ -532,7 +532,7 @@ state, set the `--enabled` option to `false`.
 To enable a version that has been deployed previously, use the `enable`
 subcommand.
 
-[[gkhob]][[GSDPG00316]][[versioning-restrictions-and-limitations]]
+[[versioning-restrictions-and-limitations]]
 
 ===== Versioning Restrictions and Limitations
 
@@ -570,7 +570,7 @@ an OSGi bundle, {productName} ignores any version information
 provided with the name but permits the deployment to succeed with
 warnings.
 
-[[giphm]][[GSDPG00062]][[about-assembly-and-deployment-events]]
+[[about-assembly-and-deployment-events]]
 
 === About Assembly and Deployment Events
 
@@ -617,7 +617,7 @@ archive to the developer. The developer fixes the problem and resubmits
 the archive to the administrator. Sometimes the administrator resolves
 the problem, depending on what the problem is.
 
-[[giifh]][[GSDPG00063]][[about-deployment-tools]]
+[[about-deployment-tools]]
 
 === About Deployment Tools
 
@@ -632,7 +632,7 @@ The following topics are addressed here:
 * xref:#eclipse-ide[Eclipse IDE]
 * xref:#jsr-88-client[JSR 88 Client]
 
-[[giijz]][[GSDPG00325]][[administration-console]]
+[[administration-console]]
 
 ==== Administration Console
 
@@ -653,7 +653,7 @@ The initial help page describes the functions and fields of the page
 itself. To find instructions for performing associated tasks, click a
 link in the See Also list.
 
-[[giijf]][[GSDPG00326]][[the-asadmin-utility]]
+[[the-asadmin-utility]]
 
 ==== The `asadmin` Utility
 
@@ -692,7 +692,7 @@ For additional information on the `asadmin` utility, see
 "link:administration-guide/general-administration.html#using-the-asadmin-utility[Using the `asadmin` Utility]" in {productName} Administration Guide and the
 link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
 
-[[giijq]][[GSDPG00329]][[netbeans-ide]]
+[[netbeans-ide]]
 
 ==== NetBeans IDE
 
@@ -703,14 +703,14 @@ Kit (SDK). To download, see
 `http://www.oracle.com/technetwork/java/javaee/downloads/index.html`.
 For additional information, see `http://www.netbeans.org`.
 
-[[gikwq]][[GSDPG00330]][[eclipse-ide]]
+[[eclipse-ide]]
 
 ==== Eclipse IDE
 
 In addition to the bundled NetBeans IDE, a plug-in for the Eclipse IDE
 extends GlassFish to the Eclipse community.
 
-[[beaee]][[GSDPG00331]][[jsr-88-client]]
+[[jsr-88-client]]
 
 ==== JSR 88 Client
 
@@ -729,7 +729,7 @@ For example:
 deployer:Sun:AppServer::localhost:4848:https
 ----
 
-[[gipud]][[GSDPG00064]][[additional-information-on-application-deployment]]
+[[additional-information-on-application-deployment]]
 
 === Additional Information on Application Deployment
 

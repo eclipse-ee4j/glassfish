@@ -7,7 +7,7 @@ prev=get.html
 
 = get-active-module-config
 
-[[get-active-module-config-1]][[GSRFM859]][[get-active-module-config]]
+[[get-active-module-config]]
 
 == get-active-module-config
 
@@ -66,7 +66,7 @@ service_name::
 
 === Examples
 
-[[GSRFM860]][[sthref1224]]
+[[sthref1224]]
 
 ==== Example 1   Displaying the Current Active Configuration
 

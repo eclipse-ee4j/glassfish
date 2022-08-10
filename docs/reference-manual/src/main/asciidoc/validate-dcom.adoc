@@ -7,7 +7,7 @@ prev=uptime.html
 
 = validate-dcom
 
-[[validate-dcom-1]][[GSRFM796]][[validate-dcom]]
+[[validate-dcom]]
 
 == validate-dcom
 
@@ -114,7 +114,7 @@ host-name::
 
 === Examples
 
-[[GSRFM834]][[sthref2328]]
+[[sthref2328]]
 
 ==== Example 1   Testing the Connection Over DCOM to a Remote Host
 
@@ -126,7 +126,7 @@ asadmin> validate-dcom --wpmdl2
 Command validate-dcom executed successfully.
 ----
 
-[[GSRFM797]][[sthref2329]]
+[[sthref2329]]
 
 ==== Example 2   Verbosely Testing the Connection Over DCOM to a Remote Host
 

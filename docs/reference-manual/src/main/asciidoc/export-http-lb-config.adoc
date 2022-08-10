@@ -7,7 +7,7 @@ prev=export.html
 
 = export-http-lb-config
 
-[[export-http-lb-config-1]][[GSRFM00133]][[export-http-lb-config]]
+[[export-http-lb-config]]
 
 == export-http-lb-config
 
@@ -96,7 +96,7 @@ target::
 
 === Examples
 
-[[GSRFM612]][[sthref1166]]
+[[sthref1166]]
 
 ==== Example 1   Exporting a Load Balancer Configuration on UNIX
 
@@ -110,7 +110,7 @@ asadmin> export-http-lb-config --config mycluster-http-lb-config /Sun/AppServer/
 Command export-http-lb-config executed successfully.
 ----
 
-[[GSRFM613]][[sthref1167]]
+[[sthref1167]]
 
 ==== Example 2   Exporting a Load Balancer Configuration on Windows
 

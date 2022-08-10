@@ -7,7 +7,7 @@ prev=create-resource-adapter-config.html
 
 = create-resource-ref
 
-[[create-resource-ref-1]][[GSRFM00055]][[create-resource-ref]]
+[[create-resource-ref]]
 
 == create-resource-ref
 
@@ -82,7 +82,7 @@ reference_name::
 
 === Examples
 
-[[GSRFM520]][[sthref524]]
+[[sthref524]]
 
 ==== Example 1   Creating a Reference to a JMS Destination Resource
 

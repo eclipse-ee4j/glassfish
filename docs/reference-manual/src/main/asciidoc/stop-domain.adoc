@@ -7,7 +7,7 @@ prev=stop-database.html
 
 = stop-domain
 
-[[stop-domain-1]][[GSRFM00240]][[stop-domain]]
+[[stop-domain]]
 
 == stop-domain
 
@@ -80,7 +80,7 @@ domain-name::
 
 === Examples
 
-[[GSRFM766]][[sthref2170]]
+[[sthref2170]]
 
 ==== Example 1   Stopping a Domain
 

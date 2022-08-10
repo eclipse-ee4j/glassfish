@@ -7,7 +7,7 @@ prev=set-web-env-entry.html
 
 = show-component-status
 
-[[show-component-status-1]][[GSRFM00232]][[show-component-status]]
+[[show-component-status]]
 
 == show-component-status
 
@@ -67,7 +67,7 @@ component-name::
 
 === Examples
 
-[[GSRFM757]][[sthref2106]]
+[[sthref2106]]
 
 ==== Example 1   Showing the Status of a Component
 

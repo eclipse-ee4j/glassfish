@@ -5,7 +5,7 @@ prev=threadpools.adoc
 
 = Administering Web Applications
 
-[[GSADG00009]][[gbbjk]]
+[[gbbjk]]
 
 
 [[administering-web-applications]]
@@ -27,7 +27,7 @@ Instructions for accomplishing some of these tasks by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[beagk]][[GSADG00548]][[invoking-a-servlet-by-alternate-means]]
+[[invoking-a-servlet-by-alternate-means]]
 
 === Invoking a Servlet by Alternate Means
 
@@ -72,7 +72,7 @@ file.
 |===
 
 
-[[GSADG00166]][[giyhf]]
+[[giyhf]]
 Example 6-1 Invoking a Servlet With a URL
 
 In this example, `localhost` is the host name, `MortPages` is the
@@ -83,7 +83,7 @@ context root, and `calcMortgage` is the servlet mapping.
 http://localhost:8080/MortPages/calcMortgage?rate=8.0&per=360&bal=180000
 ----
 
-[[GSADG00167]][[giyib]]
+[[giyib]]
 Example 6-2 Invoking a Servlet From Within a JSP File
 
 To invoke a servlet from within a JSP file, you can use a relative path.
@@ -94,7 +94,7 @@ For example:
 <jsp:forward page="TestServlet"/><jsp:include page="TestServlet"/>
 ----
 
-[[gixud]][[GSADG00549]][[changing-log-output-for-a-servlet]]
+[[changing-log-output-for-a-servlet]]
 
 === Changing Log Output for a Servlet
 
@@ -162,7 +162,7 @@ feature in the domain-dir``/lib`` directory.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[gixrb]][[GSADG00551]][[redirecting-a-url]]
+[[redirecting-a-url]]
 
 === Redirecting a URL
 
@@ -182,7 +182,7 @@ to match.
 * The second component, `url-prefix`, specifies the new URL prefix to
 return to the client. The from prefix is replaced by this URL prefix.
 
-[[GSADG00168]][[giyis]]
+[[giyis]]
 Example 6-3 Redirecting a URL
 
 This example redirects `from` `dummy` to `etude`:
@@ -192,7 +192,7 @@ This example redirects `from` `dummy` to `etude`:
 <property name="redirect_1" value="from=/dummy url-prefix=http://etude"/>
 ----
 
-[[gfaad]][[GSADG00552]][[administering-mod_jk]]
+[[administering-mod_jk]]
 
 === Administering `mod_jk`
 
@@ -214,7 +214,7 @@ Browser]
 * xref:#to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server[To Enable SSL Between the `mod_jk` Load Balancer and
 {productName}]
 
-[[gixqw]][[GSADG00371]][[to-enable-mod_jk]]
+[[to-enable-mod_jk]]
 
 ==== To Enable `mod_jk`
 
@@ -279,7 +279,7 @@ http-thread-pool.max-thread-pool-size=value
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00169]][[gixrq]]
+[[gixrq]]
 Example 6-4 `httpd.conf` File for `mod_jk`
 
 This example shows an `httpd.conf` file that is set for `mod_jk`. In
@@ -305,7 +305,7 @@ JkMount /*.jsp worker1
 JkMount /glassfish-test/* worker1
 ----
 
-[[GSADG00170]][[gixqt]]
+[[gixqt]]
 Example 6-5 `workers.properties` File for `mod_jk`
 
 This example shows a `workers.properties` that is set for `mod_jk`. This
@@ -329,7 +329,7 @@ For more information on Apache, see `http://httpd.apache.org/`.
 For more information on Apache Tomcat Connector, see
 `http://tomcat.apache.org/connectors-doc/index.html`.
 
-[[gixpx]][[GSADG00372]][[to-load-balance-using-mod_jk-and-glassfish-server]]
+[[to-load-balance-using-mod_jk-and-glassfish-server]]
 
 ==== To Load Balance Using `mod_jk` and {productName}
 
@@ -365,7 +365,7 @@ where instance-worker-name is the name of the worker that you defined to
 represent the instance in the `workers.properties` file.
 3. To apply your changes, restart Apache HTTP Server and {productName}.
 
-[[GSADG00171]][[gjjzu]]
+[[gjjzu]]
 Example 6-6 `httpd.conf` File for Load Balancing
 
 This example shows an `httpd.conf` file that is set for load balancing.
@@ -390,7 +390,7 @@ JkMount /*.jsp worker1
 JkMount /glassfish-test/* loadbalancer
 ----
 
-[[GSADG00172]][[gjjzf]]
+[[gjjzf]]
 Example 6-7 `workers.properties` File for Load Balancing
 
 This example shows a `workers.properties` or `glassfish-jk.properties`
@@ -416,7 +416,7 @@ worker.loadbalancer.type=lb
 worker.loadbalancer.balance_workers=worker1,worker2
 ----
 
-[[gjpat]][[GSADG00373]][[to-enable-ssl-between-the-mod_jk-load-balancer-and-the-browser]]
+[[to-enable-ssl-between-the-mod_jk-load-balancer-and-the-browser]]
 
 ==== To Enable SSL Between the `mod_jk` Load Balancer and the Browser
 
@@ -471,7 +471,7 @@ JkMount /*.jsp worker1
 JkMount /glassfish-test/* loadbalancer
 ----
 
-[[GSADG00173]][[gjpnc]]
+[[gjpnc]]
 Example 6-8 `http-ssl.conf` File for `mod_jk` Security
 
 A basic SSL-enabled virtual host will appear in the `http-ssl.conf`
@@ -489,7 +489,7 @@ JkMount /* worker1
 </VirtualHost>
 ----
 
-[[gjpan]][[GSADG00374]][[to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server]]
+[[to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server]]
 
 ==== To Enable SSL Between the `mod_jk` Load Balancer and {productName}
 
@@ -535,7 +535,7 @@ JkCERTSIndicator SSL_CLIENT_CERT
 ----
 5. To apply your changes, restart Apache HTTP Server and {productName}.
 
-[[CIHJDAJD]][[GSADG861]][[administering-mod_proxy_ajp]]
+[[administering-mod_proxy_ajp]]
 
 === Administering `mod_proxy_ajp`
 
@@ -617,7 +617,7 @@ For more information on the Apache `mod_proxy_ajp` Connector, see
 For more information on the AJP protocol, see
 `http://tomcat.apache.org/connectors-doc/ajp/ajpv13a.html`.
 
-[[GSADG1049]][[sthref22]]
+
 
 
 [[to-load-balance-using-mod_proxy_ajp-and-glassfish-server]]

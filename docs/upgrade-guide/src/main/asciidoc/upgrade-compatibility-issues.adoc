@@ -7,7 +7,7 @@ prev=preface.html
 
 = {productName} Upgrade Compatibility Issues
 
-[[GSUPG00002]][[abmaq]]
+[[abmaq]]
 
 
 [[glassfish-server-upgrade-compatibility-issues]]
@@ -33,7 +33,7 @@ The following topics are addressed here:
 * xref:#http-service-to-network-service-changes[HTTP Service to Network Service Changes]
 * xref:#nss-cryptographic-token-support[NSS Cryptographic Token Support]
 
-[[gjwpd]][[GSUPG00028]][[binary-compatible-releases-for-glassfish-server]]
+[[binary-compatible-releases-for-glassfish-server]]
 
 === Binary-Compatible Releases For {productName} 7
 
@@ -62,7 +62,7 @@ applications and data.
 ====
 
 
-[[gkric]][[GSUPG00029]][[new-default-installation-directory]]
+[[new-default-installation-directory]]
 
 === New Default Installation Directory
 
@@ -82,7 +82,7 @@ SystemDrive\glassfish7
 In {productName} 3.0.1 and Enterprise Server v3, the default
 installation root directory was `glassfish7`.
 
-[[gklhr]][[GSUPG00030]][[changes-to-group-management-service-settings]]
+[[changes-to-group-management-service-settings]]
 
 === Changes to Group Management Service Settings
 
@@ -112,7 +112,7 @@ Table 1-1 GMS Administration Console Settings Changes from 2.1.1 to 4.0
 The Merge Protocol settings from Sun GlassFish Enterprise Server v2.1.1
 are not supported and have been removed.
 
-[[geyyk]][[GSUPG00031]][[application-client-interoperability]]
+[[application-client-interoperability]]
 
 === Application Client Interoperability
 
@@ -162,7 +162,7 @@ end-user last used the application client, Java Web Start automatically
 retrieves the updated runtime. Java Web Start enables you to keep the
 clients and servers synchronized and using the same runtime.
 
-[[gktad]][[GSUPG00032]][[node-agent-support]]
+[[node-agent-support]]
 
 === Node Agent Support
 
@@ -173,7 +173,7 @@ instances themselves must be manually re-created. See
 link:upgrading-legacy-installation.html#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node
 Agent Configurations] for more information.
 
-[[gkrjm]][[GSUPG00033]][[hadb-and-hadbm-command-support]]
+[[hadb-and-hadbm-command-support]]
 
 === HADB and `hadbm` Command Support
 
@@ -187,7 +187,7 @@ High Availability in {productName}]" in
 {productName} High Availability Administration Guide
 for more information.
 
-[[abmbc]][[GSUPG00034]][[command-line-interface-the-asadmin-command]]
+[[command-line-interface-the-asadmin-command]]
 
 === Command Line Interface: The `asadmin` Command
 
@@ -199,7 +199,7 @@ The following sections describe changes to the command line utility `asadmin`:
 For more information about `asadmin` and its subcommands, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[abmbd]][[GSUPG00053]][[deprecated-asadmin-subcommands]]
+[[deprecated-asadmin-subcommands]]
 
 ==== Deprecated `asadmin` Subcommands
 
@@ -218,7 +218,7 @@ subcommand is deprecated.
 * `--echo`
 * `--interactive`
 
-[[abmbf]][[GSUPG00054]][[deprecated-unsupported-and-obsolete-options]]
+[[deprecated-unsupported-and-obsolete-options]]
 
 ==== Deprecated, Unsupported, and Obsolete Options
 
@@ -333,7 +333,7 @@ Replaced by an operand in the `list-custom-resources` subcommand and the
 |===
 
 
-[[gflnv]][[GSUPG00035]][[applications-that-use-java-db]]
+[[applications-that-use-java-db]]
 
 === Applications That Use Java DB
 
@@ -361,7 +361,7 @@ asadmin start-database --dbhome c:\glassfish\databases
 ----
 2. After upgrade, start {productName} 7.
 
-[[gjizi]][[GSUPG00036]][[applications-that-use-persistence]]
+[[applications-that-use-persistence]]
 
 === Applications That Use Persistence
 
@@ -429,7 +429,7 @@ Eclipse wiki]
 to do this. This tool is not provided with {productName} 7,
 however, so you must obtain it from the EclipseLink project download site.
 
-[[gjiqj]][[GSUPG00037]][[http-service-to-network-service-changes]]
+[[http-service-to-network-service-changes]]
 
 === HTTP Service to Network Service Changes
 
@@ -444,7 +444,7 @@ The changes are described in the following sections.
 * xref:#remapping-of-http-service-attributes-and-properties[Remapping of HTTP Service Attributes and Properties]
 * xref:#new-network-service-elements-and-attributes[New Network Service Elements and Attributes]
 
-[[gipsa]][[GSUPG00055]][[changes-to-dotted-names]]
+[[changes-to-dotted-names]]
 
 ==== Changes to Dotted Names
 
@@ -528,7 +528,7 @@ asadmin set server-config.network-config.network-listeners.network-\
 listener.http-1.listenerport=4321
 ----
 
-[[giprg]][[GSUPG00056]][[changes-to-asadmin-subcommands]]
+[[changes-to-asadmin-subcommands]]
 
 ==== Changes to `asadmin` Subcommands
 
@@ -544,7 +544,7 @@ parameter, `--networklisteners`.
 `network-listener` element to the domain configuration. The syntax and
 options of this commands are unchanged.
 
-[[gipfo]][[GSUPG00057]][[remapping-of-http-service-attributes-and-properties]]
+[[remapping-of-http-service-attributes-and-properties]]
 
 ==== Remapping of HTTP Service Attributes and Properties
 
@@ -845,7 +845,7 @@ still properties
 |===
 
 
-[[gipcg]][[GSUPG00058]][[new-network-service-elements-and-attributes]]
+[[new-network-service-elements-and-attributes]]
 
 ==== New Network Service Elements and Attributes
 
@@ -1063,7 +1063,7 @@ For remapped `transport` attributes, see xref:#gipfy[Table 1-3],
 xref:#gipfn[Table 1-4], xref:#gipev[Table 1-6], and xref:#gipdo[Table
 1-7].
 
-[[gktkt]][[GSUPG00038]][[nss-cryptographic-token-support]]
+[[nss-cryptographic-token-support]]
 
 === NSS Cryptographic Token Support
 

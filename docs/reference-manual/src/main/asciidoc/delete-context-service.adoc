@@ -7,7 +7,7 @@ prev=delete-connector-work-security-map.html
 
 = delete-context-service
 
-[[delete-context-service-1]][[GSRFM846]][[delete-context-service]]
+[[delete-context-service]]
 
 == delete-context-service
 
@@ -59,7 +59,7 @@ context-service-name::
 
 === Examples
 
-[[GSRFM847]][[sthref663]]
+[[sthref663]]
 
 ==== Example 1   Deleting a Context Service Resource
 

@@ -7,7 +7,7 @@ prev=preface.html
 
 = Introduction to the Development Environment for {productName} Add-On Components
 
-[[GSACG00001]][[ghmlv]]
+[[ghmlv]]
 
 
 [[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
@@ -32,7 +32,7 @@ Components]
 * xref:#overview-of-the-development-process-for-an-add-on-component[Overview of the Development Process for an Add-On
 Component]
 
-[[ghmje]][[GSACG00087]][[glassfish-server-modular-architecture-and-add-on-components]]
+[[glassfish-server-modular-architecture-and-add-on-components]]
 
 === {productName} Modular Architecture and Add-On Components
 
@@ -66,7 +66,7 @@ You can create and offer new or updated add-on components at any time.
 or remove installed components after {productName} is installed. For
 more information, see "link:administration-guide.html#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
 
-[[ghmrf]][[GSACG00088]][[osgi-alliance-module-management-subsystem]]
+[[osgi-alliance-module-management-subsystem]]
 
 === OSGi Alliance Module Management Subsystem
 
@@ -89,7 +89,7 @@ Release 4] (`http://www.osgi.org/Release4/HomePage`) API. Therefore,
 {productName} supports other OSGi module management subsystems that
 are compatible with the OSGi Service Platform Release 4 API.
 
-[[ghmnq]][[GSACG00089]][[hundred-kilobyte-kernel]]
+[[hundred-kilobyte-kernel]]
 
 === Hundred-Kilobyte Kernel
 
@@ -109,7 +109,7 @@ component and OSGi services.
 For more information, see link:writing-hk2-components.html#ghmna[Writing
 HK2 Components].
 
-[[ghmns]][[GSACG00090]][[overview-of-the-development-process-for-an-add-on-component]]
+[[overview-of-the-development-process-for-an-add-on-component]]
 
 === Overview of the Development Process for an Add-On Component
 
@@ -137,7 +137,7 @@ development process that is described in the following sections:
 * xref:#creating-a-session-persistence-module[Creating a Session Persistence Module]
 * xref:#packaging-and-delivering-an-add-on-component[Packaging and Delivering an Add-On Component]
 
-[[ghpqc]][[GSACG00173]][[writing-hk2-components]]
+[[writing-hk2-components]]
 
 ==== Writing HK2 Components
 
@@ -152,7 +152,7 @@ service implements an HK2 contract.
 For more information, see link:writing-hk2-components.html#ghmna[Writing
 HK2 Components].
 
-[[ghokn]][[GSACG00174]][[extending-the-administration-console]]
+[[extending-the-administration-console]]
 
 ==== Extending the Administration Console
 
@@ -171,7 +171,7 @@ For more information, see
 link:extending-the-admin-console.html#ghmrb[Extending the Administration
 Console].
 
-[[ghohx]][[GSACG00175]][[extending-the-asadmin-utility]]
+[[extending-the-asadmin-utility]]
 
 ==== Extending the `asadmin` Utility
 
@@ -186,7 +186,7 @@ link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 For more information, see link:extending-asadmin.html#ghmrd[Extending the
 `asadmin` Utility].
 
-[[ghojs]][[GSACG00176]][[adding-monitoring-capabilities]]
+[[adding-monitoring-capabilities]]
 
 ==== Adding Monitoring Capabilities
 
@@ -209,7 +209,7 @@ For more information, see
 link:adding-monitoring-capabilities.html#ghmos[Adding Monitoring
 Capabilities].
 
-[[gkahs]][[GSACG00177]][[adding-configuration-data-for-a-component]]
+[[adding-configuration-data-for-a-component]]
 
 ==== Adding Configuration Data for a Component
 
@@ -229,7 +229,7 @@ For more information, see
 link:adding-configuration-data.html#gjlpe[Adding Configuration Data for a
 Component].
 
-[[ghojq]][[GSACG00178]][[adding-container-capabilities]]
+[[adding-container-capabilities]]
 
 ==== Adding Container Capabilities
 
@@ -243,7 +243,7 @@ For more information, see
 link:adding-container-capabilities.html#ghmon[Adding Container
 Capabilities].
 
-[[gktld]][[GSACG00179]][[creating-a-session-persistence-module]]
+[[creating-a-session-persistence-module]]
 
 ==== Creating a Session Persistence Module
 
@@ -263,7 +263,7 @@ For more information, see
 link:session-persistence-modules.html#gkmhj[Creating a Session
 Persistence Module].
 
-[[ghoiu]][[GSACG00180]][[packaging-and-delivering-an-add-on-component]]
+[[packaging-and-delivering-an-add-on-component]]
 
 ==== Packaging and Delivering an Add-On Component
 

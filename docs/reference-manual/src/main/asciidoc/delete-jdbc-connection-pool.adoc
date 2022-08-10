@@ -7,7 +7,7 @@ prev=delete-javamail-resource.html
 
 = delete-jdbc-connection-pool
 
-[[delete-jdbc-connection-pool-1]][[GSRFM00088]][[delete-jdbc-connection-pool]]
+[[delete-jdbc-connection-pool]]
 
 == delete-jdbc-connection-pool
 
@@ -58,7 +58,7 @@ jdbc_connection_pool_id::
 
 === Examples
 
-[[GSRFM556]][[sthref782]]
+[[sthref782]]
 
 ==== Example 1   Deleting a JDBC Connection Pool
 

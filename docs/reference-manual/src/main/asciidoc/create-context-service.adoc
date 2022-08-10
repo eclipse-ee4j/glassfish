@@ -7,7 +7,7 @@ prev=create-connector-work-security-map.html
 
 = create-context-service
 
-[[create-context-service-1]][[GSRFM838]][[create-context-service]]
+[[create-context-service]]
 
 == create-context-service
 
@@ -83,7 +83,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM839]][[sthref197]]
+[[sthref197]]
 
 ==== Example 1   Creating a Context Service Resource
 

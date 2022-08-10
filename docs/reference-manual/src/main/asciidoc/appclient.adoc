@@ -7,7 +7,7 @@ prev=manvol1m.html
 
 = appclient
 
-[[appclient-1m]][[GSRFM00262]][[appclient]]
+[[appclient]]
 
 == appclient
 
@@ -165,7 +165,7 @@ application-options::
 
 === Examples
 
-[[GSRFM804]][[sthref2361]]
+[[sthref2361]]
 
 ==== Example 1   Using the `appclient` command
 

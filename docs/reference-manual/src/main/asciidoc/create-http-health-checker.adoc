@@ -7,7 +7,7 @@ prev=create-http.html
 
 = create-http-health-checker
 
-[[create-http-health-checker-1]][[GSRFM00026]][[create-http-health-checker]]
+[[create-http-health-checker]]
 
 == create-http-health-checker
 
@@ -73,7 +73,7 @@ target::
 
 === Examples
 
-[[GSRFM477]][[sthref240]]
+[[sthref240]]
 
 ==== Example 1   Creating a Health Checker for a Load Balancer Configuration
 

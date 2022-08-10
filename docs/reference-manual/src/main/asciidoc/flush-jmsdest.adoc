@@ -7,7 +7,7 @@ prev=flush-connection-pool.html
 
 = flush-jmsdest
 
-[[flush-jmsdest-1]][[GSRFM00136]][[flush-jmsdest]]
+[[flush-jmsdest]]
 
 == flush-jmsdest
 
@@ -67,7 +67,7 @@ dest_name::
 
 === Examples
 
-[[GSRFM615]][[sthref1190]]
+[[sthref1190]]
 
 ==== Example 1   Purging messages from a physical destination
 

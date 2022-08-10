@@ -7,7 +7,7 @@ prev=list-threadpools.html
 
 = list-timers
 
-[[list-timers-1]][[GSRFM00205]][[list-timers]]
+[[list-timers]]
 
 == list-timers
 
@@ -47,7 +47,7 @@ target::
 
 === Examples
 
-[[GSRFM715]][[sthref1839]]
+[[sthref1839]]
 
 ==== Example 1   Listing Current Timers in a Server Instance
 

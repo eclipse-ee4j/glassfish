@@ -7,7 +7,7 @@ prev=list-file-groups.html
 
 = list-file-users
 
-[[list-file-users-1]][[GSRFM00165]][[list-file-users]]
+[[list-file-users]]
 
 == list-file-users
 
@@ -53,7 +53,7 @@ target::
 
 === Examples
 
-[[GSRFM658]][[sthref1481]]
+[[sthref1481]]
 
 ==== Example 1   Listing Users in a Specific File Realm
 

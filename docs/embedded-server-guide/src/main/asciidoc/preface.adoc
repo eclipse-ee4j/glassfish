@@ -152,7 +152,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSESG00028]][[giprl]]
+
 
 [[related-documentation]]
 === Related Documentation

@@ -7,7 +7,7 @@ prev=create-connector-resource.html
 
 = create-connector-security-map
 
-[[create-connector-security-map-1]][[GSRFM00020]][[create-connector-security-map]]
+[[create-connector-security-map]]
 
 == create-connector-security-map
 
@@ -85,7 +85,7 @@ mapname::
 
 === Examples
 
-[[GSRFM467]][[sthref180]]
+[[sthref180]]
 
 ==== Example 1   Creating a Connector Security Map
 

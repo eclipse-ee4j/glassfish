@@ -7,7 +7,7 @@ prev=start-domain.html
 
 = start-instance
 
-[[start-instance-1]][[GSRFM00236]][[start-instance]]
+[[start-instance]]
 
 == start-instance
 
@@ -110,7 +110,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM761]][[sthref2138]]
+[[sthref2138]]
 
 ==== Example 1   Starting a {productName} Instance
 
@@ -130,7 +130,7 @@ The instance, pmdsa1, was started on host localhost
 Command start-instance executed successfully.
 ----
 
-[[GSRFM762]][[sthref2139]]
+[[sthref2139]]
 
 ==== Example 2   Starting a {productName} Instance With JPDA Debugging
 Enabled

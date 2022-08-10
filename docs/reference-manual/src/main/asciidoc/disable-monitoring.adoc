@@ -7,7 +7,7 @@ prev=disable-http-lb-server.html
 
 = disable-monitoring
 
-[[disable-monitoring-1]][[GSRFM00120]][[disable-monitoring]]
+[[disable-monitoring]]
 
 == disable-monitoring
 
@@ -66,7 +66,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM594]][[sthref1068]]
+[[sthref1068]]
 
 ==== Example 1   Disabling the Monitoring Service for {productName}
 
@@ -79,7 +79,7 @@ asadmin> disable-monitoring
 Command disable-monitoring executed successfully
 ----
 
-[[GSRFM595]][[sthref1069]]
+[[sthref1069]]
 
 ==== Example 2   Disabling Monitoring for the Web and EJB Containers
 

@@ -7,7 +7,7 @@ prev=create-admin-object.html
 
 = create-application-ref
 
-[[create-application-ref-1]][[GSRFM00013]][[create-application-ref]]
+[[create-application-ref]]
 
 == create-application-ref
 
@@ -92,7 +92,7 @@ reference_name::
 
 === Examples
 
-[[GSRFM458]][[sthref128]]
+[[sthref128]]
 
 ==== Example 1   Creating an Application Reference
 

@@ -47,7 +47,7 @@ view the most up-to-date product information.
 * xref:#how-to-report-problems-and-provide-feedback["How to Report Problems and Provide Feedback"]
 * xref:#additional-resources["Additional Resources"]
 
-[[ghmvk]][[GSRLN00128]][[revision-history]]
+[[revision-history]]
 
 === Revision History
 
@@ -64,7 +64,7 @@ Table 1-1 Revision History
 |===
 
 
-[[glcmf]][[GSRLN00129]][[whats-new-in-the-glassfish-server-release]]
+[[whats-new-in-the-glassfish-server-release]]
 
 === What's New in the {productName} 7 Release?
 
@@ -102,7 +102,7 @@ These features are included in the release, but they may not function
 properly with some of the new features added in support of the Jakarta EE 10 platform.
 ====
 
-[[abpaj]][[GSRLN00131]][[hardware-and-software-requirements]]
+[[hardware-and-software-requirements]]
 
 === Hardware and Software Requirements
 
@@ -117,7 +117,7 @@ The following topics are addressed here:
 * xref:#message-queue-broker-requirements[Message Queue Broker Requirements]
 * xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]
 
-[[abpak]][[GSRLN00246]][[required-jdk-versions]]
+[[required-jdk-versions]]
 
 ==== Required JDK Versions
 
@@ -133,7 +133,7 @@ It is recommended that any machine that is hosting a {productName}
 DAS or server instance have a minimum of 1 GB RAM.
 ====
 
-[[ggppy]][[GSRLN00248]][[required-disk-space]]
+[[required-disk-space]]
 
 ==== Required Disk Space
 
@@ -151,7 +151,7 @@ follows:
 * Full: 138 MB
 * Web: 84.4 MB
 
-[[ggpoq]][[GSRLN00249]][[required-free-ports]]
+[[required-free-ports]]
 
 ==== Required Free Ports
 
@@ -271,7 +271,7 @@ Though you can create a cluster, there is no support for
 configuration, as this has not been tested.
 ====
 
-[[gkxlg]][[GSRLN00250]][[message-queue-broker-requirements]]
+[[message-queue-broker-requirements]]
 
 ==== Message Queue Broker Requirements
 
@@ -280,7 +280,7 @@ configuration, as this has not been tested.
 https://github.com/eclipse-ee4j/glassfishdoc/5.1/mq-release-notes.pdf[`Open Message Queue Release Notes`]
 for complete information about MQ Broker requirements.
 
-[[gfgps]][[GSRLN00252]][[paths-and-environment-settings-for-the-jdk-software]]
+[[paths-and-environment-settings-for-the-jdk-software]]
 
 ==== Paths and Environment Settings for the JDK Software
 
@@ -295,7 +295,7 @@ The following topics are addressed here:
 * xref:#set-the-java_home-environment-variable[Set the `JAVA_HOME` Environment Variable]
 * xref:#set-other-environment-variables-as-necessary[Set Other Environment Variables As Necessary]
 
-[[gldjj]][[GSRLN00155]][[use-the-jdk-binaries]]
+[[use-the-jdk-binaries]]
 
 ===== Use the JDK Binaries
 
@@ -308,7 +308,7 @@ from the JDK software, not the Java Runtime Environment (JRE) software:
 To meet this requirement, ensure that the `bin` directory for the JDK
 software precedes the `bin` directory for the JRE software in your path.
 
-[[gldgl]][[GSRLN00156]][[set-the-java_home-environment-variable]]
+[[set-the-java_home-environment-variable]]
 
 ===== Set the `JAVA_HOME` Environment Variable
 
@@ -318,7 +318,7 @@ to add the `JAVA_HOME/bin` directory to the `PATH` variable for your
 environment. The `JAVA_HOME` variable must be set on all local and
 remote {productName} hosts.
 
-[[gldho]][[GSRLN00157]][[set-other-environment-variables-as-necessary]]
+[[set-other-environment-variables-as-necessary]]
 
 ===== Set Other Environment Variables As Necessary
 
@@ -350,7 +350,7 @@ to the machine, such as `.profile`.
 Alternatively, you can specifically set the Java path with the `AS_JAVA`
 property in the in the as-install``/config/asenv.conf`` file.
 
-[[glcmm]][[GSRLN00253]][[known-issues-in-glassfish-server-5.1]]
+[[GSRLN00253]][[known-issues-in-glassfish-server-5.1]]
 
 === Known Issues in {productName} 7
 
@@ -364,7 +364,7 @@ The following topics are addressed here:
 * xref:#update-tool-and-pkg-command-no-longer-part-of-glassfish-server[Update Tool and pkg Command no longer part of {productName}]
 * xref:#java-db-has-been-replaced-by-apache-derby[Java DB has been replaced by Apache Derby]
 
-[[CHDIBHHF]][[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
+[[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
 
 ==== JAXB and JAX-WS no longer part of Jakarta EE platform
 
@@ -386,7 +386,7 @@ not part of web profile.
 
 None
 
-[[CHDIBEAJ]][[resource-validation-property-is-enabled-in-the-jvm-option-for-deployment]]
+[[resource-validation-property-is-enabled-in-the-jvm-option-for-deployment]]
 
 ==== Resource validation property is enabled in the JVM option for deployment
 
@@ -418,7 +418,7 @@ https://github.com/eclipse-ee4j/glassfishdoc/5.1/administration-guide.pdf#G11.99
 In case you do not want the resource validation to take place during the
 deployment, you can set this property value to False.
 
-[[CHDBJDGF]][[update-tool-and-pkg-command-no-longer-part-of-glassfish-server]]
+[[update-tool-and-pkg-command-no-longer-part-of-glassfish-server]]
 
 ==== Update Tool and pkg Command no longer part of {productName}
 
@@ -437,7 +437,7 @@ been removed from the {productName} installation.
 
 No workaround.
 
-[[CHDJGJHD]][[java-db-has-been-replaced-by-apache-derby]]
+[[java-db-has-been-replaced-by-apache-derby]]
 
 ==== Java DB has been replaced by Apache Derby
 
@@ -454,7 +454,7 @@ In the previous releases, Java DB was used as the database for {productName}s. W
 
 No workaround.
 
-[[ggqok]][[GSRLN00133]][[restrictions-and-deprecated-functionality]]
+[[restrictions-and-deprecated-functionality]]
 
 === Restrictions and Deprecated Functionality
 
@@ -576,7 +576,7 @@ Replaced by an operand in the `list-custom-resources` subcommand and the
 |===
 
 
-[[gkueg]][[GSRLN00260]][[applications-that-use-apache-derby]]
+[[applications-that-use-apache-derby]]
 
 ==== Applications That Use Apache Derby
 
@@ -605,7 +605,7 @@ asadmin start-database --dbhome c:\glassfish\databases
 ----
 2. After upgrade, start {productName} 7.
 
-[[ghpen]][[GSRLN00261]][[no-support-for-client-vm-on-windows-amd64]]
+[[no-support-for-client-vm-on-windows-amd64]]
 
 ==== No Support for Client VM on Windows AMD64
 
@@ -620,7 +620,7 @@ For more information about platform support, see
 http://www.oracle.com/technetwork/java/ergo5-140223.html[Ergonomics in
 the 5.1 Java Virtual Machine].
 
-[[gkwbd]][[GSRLN00262]][[metro-reliable-messaging-in-inorder-delivery-mode]]
+[[metro-reliable-messaging-in-inorder-delivery-mode]]
 
 ==== Metro Reliable Messaging in `InOrder` Delivery Mode
 
@@ -629,7 +629,7 @@ tested for high availability in {productName} 7. The feature may
 work, but it has not been formally tested and is therefore not a
 supported feature.
 
-[[glgiy]][[GSRLN00263]][[no-support-for-kerberos-on-aix]]
+[[no-support-for-kerberos-on-aix]]
 
 ==== No Support for Kerberos on AIX
 
@@ -638,7 +638,7 @@ supported feature.
 For the complete report about this issue, see
 https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
 
-[[BABDACBE]][[documentation-errata]]
+[[documentation-errata]]
 
 === Documentation Errata
 
@@ -646,7 +646,7 @@ This section describes documentation errata.
 
 * xref:#upgrading-to-oracle-glassfish-server-is-not-necessary[Upgrading to {productName} Is Not Necessary]
 
-[[BABIDEHD]][[upgrading-to-oracle-glassfish-server-is-not-necessary]]
+[[upgrading-to-oracle-glassfish-server-is-not-necessary]]
 
 ==== Upgrading to {productName} Is Not Necessary
 
@@ -661,7 +661,7 @@ Upgrading may not work for {productName} 7
 ====
 
 
-[[giraq]][[GSRLN00135]][[features-available-only-in-the-full-platform]]
+[[features-available-only-in-the-full-platform]]
 
 === Features Available Only in the Full Platform
 
@@ -691,7 +691,7 @@ work-management that does not involve inbound communication features are
 supported in the Web Profile. Other connector features are supported
 only in the {productName} 7 full platform.
 
-[[gipkz]][[GSRLN00136]][[java-ee-standards-support]]
+[[java-ee-standards-support]]
 
 === Jakarta EE Standards Support
 
@@ -921,7 +921,7 @@ extensions, including the following:
   The ability to embed components that support HTTP, Bayeux Protocol, Java
   Servlet API, and Comet is provided.
 
-[[abpha]][[GSRLN00138]][[how-to-report-problems-and-provide-feedback]]
+[[how-to-report-problems-and-provide-feedback]]
 
 === How to Report Problems and Provide Feedback
 
@@ -935,7 +935,7 @@ one of the following mechanisms:
   (`https://github.com/javaee/glassfish/issues`) — {productName}
   project dashboards and issue tracking database
 
-[[abphc]][[GSRLN00139]][[additional-resources]]
+[[additional-resources]]
 
 === Additional Resources
 

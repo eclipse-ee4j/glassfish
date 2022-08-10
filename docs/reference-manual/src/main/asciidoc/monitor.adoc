@@ -10,7 +10,7 @@ prev=migrate-timers.html
 The script content on this page is for navigation purposes only and does
 not alter the content in any way.
 
-[[monitor-1]][[GSRFM00212]][[monitor]]
+[[monitor]]
 
 == monitor
 
@@ -160,7 +160,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM723]][[sthref1896]]
+[[sthref1896]]
 
 ==== Example 1   Displaying Monitoring Statistics by Interval
 
@@ -179,7 +179,7 @@ q
 Command monitor executed successfully.
 ----
 
-[[GSRFM724]][[sthref1897]]
+[[sthref1897]]
 
 ==== Example 2   Filtering the Monitoring Data
 

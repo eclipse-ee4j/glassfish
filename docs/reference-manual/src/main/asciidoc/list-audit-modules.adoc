@@ -7,7 +7,7 @@ prev=list-applications.html
 
 = list-audit-modules
 
-[[list-audit-modules-1]][[GSRFM00149]][[list-audit-modules]]
+[[list-audit-modules]]
 
 == list-audit-modules
 
@@ -53,7 +53,7 @@ target::
 
 === Examples
 
-[[GSRFM637]][[sthref1321]]
+[[sthref1321]]
 
 ==== Example 1   Listing Audit Modules
 

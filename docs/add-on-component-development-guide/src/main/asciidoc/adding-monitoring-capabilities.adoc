@@ -7,7 +7,7 @@ prev=extending-asadmin.html
 
 = Adding Monitoring Capabilities
 
-[[GSACG00005]][[ghmos]]
+[[ghmos]]
 
 [[adding-monitoring-capabilities]]
 == Adding Monitoring Capabilities
@@ -34,7 +34,7 @@ The following topics are addressed here:
 * xref:#dotted-names-and-rest-urls-for-an-add-on-components-statistics[Dotted Names and REST URLs for an Add-On Component's Statistics]
 * xref:#example-of-adding-monitoring-capabilities[Example of Adding Monitoring Capabilities]
 
-[[ghopc]][[GSACG00116]][[defining-statistics-that-are-to-be-monitored]]
+[[defining-statistics-that-are-to-be-monitored]]
 
 === Defining Statistics That Are to Be Monitored
 
@@ -69,7 +69,7 @@ tasks:
 * xref:#defining-an-event-provider[Defining an Event Provider]
 * xref:#sending-an-event[Sending an Event]
 
-[[gkadk]][[GSACG00220]][[defining-an-event-provider]]
+[[defining-an-event-provider]]
 
 ==== Defining an Event Provider
 
@@ -86,7 +86,7 @@ event provider.
 do not have access to the source code of the component for which you are
 defining and event provider.
 
-[[ghovq]][[GSACG00164]][[defining-an-event-provider-by-writing-a-java-class]]
+[[defining-an-event-provider-by-writing-a-java-class]]
 
 ===== Defining an Event Provider by Writing a Java Class
 
@@ -122,7 +122,7 @@ the elements of the `@ProbeProvider` annotation as follows:
   In {productName}, examples of event-provider names are `jsp`,
   `servlet`, and `web-module`.
 
-[[ghosi]][[GSACG00011]][[defining-event-types-in-an-event-provider-class]]
+[[defining-event-types-in-an-event-provider-class]]
 
 Defining Event Types in an Event Provider Class
 
@@ -152,7 +152,7 @@ You are not required to uniquely identify the event type for methods that are no
 ====
 
 
-[[ghoul]][[GSACG00012]][[specifying-event-parameters]]
+[[specifying-event-parameters]]
 
 Specifying Event Parameters
 
@@ -162,11 +162,11 @@ annotate each parameter in the method signature with the
 annotation. Set the `value` element of the `@ProbeParam` annotation to
 the name of the parameter.
 
-[[ghpmm]][[GSACG00013]][[example-of-defining-an-event-provider-by-writing-a-java-class]]
+[[example-of-defining-an-event-provider-by-writing-a-java-class]]
 
 Example of Defining an Event Provider by Writing a Java Class
 
-[[GSACG00041]][[ghprw]]
+[[ghprw]]
 Example 5-1 Defining an Event Provider by Writing a Java Class
 
 This example shows the definition of the `TxManager` class. This class
@@ -205,7 +205,7 @@ public class TxManager {
  }
 ----
 
-[[gkaec]][[GSACG00165]][[defining-an-event-provider-by-writing-an-xml-fragment]]
+[[defining-an-event-provider-by-writing-an-xml-fragment]]
 
 ===== Defining an Event Provider by Writing an XML Fragment
 
@@ -276,7 +276,7 @@ return-type (paramater-type-list)
   The `type` attribute of this element specifies the return type of the
   method. The `return-param` element does not contain any data.
 
-[[GSACG00042]][[gkajj]]
+[[gkajj]]
 Example 5-2 Defining an Event Provider by Writing an XML Fragment
 
 This example defines an event provider for the `glassfish:web:jsp`
@@ -303,7 +303,7 @@ void jspLoaded(String jsp, String hostName)
 </probe-provider>
 ----
 
-[[gkaie]][[GSACG00166]][[packaging-a-components-event-providers]]
+[[packaging-a-components-event-providers]]
 
 ===== Packaging a Component's Event Providers
 
@@ -336,7 +336,7 @@ probe-provider-xml-file-names : path-list
 The `path-list` is a comma-separated list of the paths to the XML files
 relative to the root of the archive in the JAR file.
 
-[[GSACG00043]][[gkaii]]
+[[gkaii]]
 Example 5-3 Manifest Entry for Event Providers That Are Defined as Java Classes
 
 This example shows the entry in the `META-INF/MANIFEST.MF` file of a
@@ -348,7 +348,7 @@ component whose event provider is the
 probe-provider-class-names : org.glassfish.pluggability.monitoring.ModuleProbeProvider
 ----
 
-[[ghprg]][[GSACG00221]][[sending-an-event]]
+[[sending-an-event]]
 
 ==== Sending an Event
 
@@ -365,7 +365,7 @@ component performs the operation for which the event was defined. One
 way to meet this requirement is to invoke the method for sending the
 event in the body of the method for performing the operation.
 
-[[GSACG00044]][[ghpus]]
+[[ghpus]]
 Example 5-4 Sending an Event
 
 This example shows the code for instantiating the `TxManager` class and
@@ -399,7 +399,7 @@ public class TransactionManagerImpl {
 }
 ----
 
-[[ghplw]][[GSACG00117]][[updating-the-monitorable-object-tree]]
+[[updating-the-monitorable-object-tree]]
 
 === Updating the Monitorable Object Tree
 
@@ -444,7 +444,7 @@ Updating the monitorable object tree involves the following tasks:
 * xref:#subscribing-to-events-from-event-provider-classes[Subscribing to Events From Event Provider Classes]
 * xref:#registering-an-event-listener[Registering an Event Listener]
 
-[[ghpni]][[GSACG00222]][[creating-event-listeners]]
+[[creating-event-listeners]]
 
 ==== Creating Event Listeners
 
@@ -484,7 +484,7 @@ by the framework. Therefore, unregistered listeners do not consume any
 computing resources, such as memory or processor cycles.
 ====
 
-[[ghptp]][[GSACG00223]][[representing-a-components-statistics-in-an-event-listener-class]]
+[[representing-a-components-statistics-in-an-event-listener-class]]
 
 ==== Representing a Component's Statistics in an Event Listener Class
 
@@ -528,7 +528,7 @@ following classes to gather and compute statistics data:
 `TimeStatisticImpl`::
   Provides standard timing measurements.
 
-[[GSACG00045]][[ghpsc]]
+[[ghpsc]]
 Example 5-5 Representing a Component's Statistics in an Event Listener
 Class
 
@@ -558,7 +558,7 @@ public class TxListener {
 }
 ----
 
-[[ghpml]][[GSACG00224]][[subscribing-to-events-from-event-provider-classes]]
+[[subscribing-to-events-from-event-provider-classes]]
 
 ==== Subscribing to Events From Event Provider Classes
 
@@ -608,7 +608,7 @@ the name of the parameter.
 In the method body, provide the code to update monitoring statistics in
 response to the event.
 
-[[GSACG00046]][[ghpwu]]
+[[ghpwu]]
 Example 5-6 Subscribing to Events From Event Provider Classes
 
 This example shows the code for subscribing to events of type `begin`
@@ -641,7 +641,7 @@ public class TxListener {
   }
 ----
 
-[[ghpsp]][[GSACG00167]][[listening-for-changes-to-values-that-are-not-part-of-the-target-method-definition]]
+[[listening-for-changes-to-values-that-are-not-part-of-the-target-method-definition]]
 
 ===== Listening for Changes to Values That are Not Part of the Target Method Definition
 
@@ -651,7 +651,7 @@ $\{gf.appname}, $\{gf.modulename} etc. are some of the computed params
 that are available to the clients, these values are computed/evaluated
 only on demand and provided by the event infrastructure.
 
-[[ghpsw]][[GSACG00168]][[getting-information-about-a-event-provider]]
+[[getting-information-about-a-event-provider]]
 
 ===== Getting Information About a Event Provider
 
@@ -677,7 +677,7 @@ public interface ProbeProviderInfo {
  }
 ----
 
-[[ghpmt]][[GSACG00225]][[listening-for-events-from-classes-that-are-not-event-providers]]
+[[listening-for-events-from-classes-that-are-not-event-providers]]
 
 ==== Listening for Events From Classes That Are Not Event Providers
 
@@ -701,7 +701,7 @@ public class TxMonitor {
   }
 ----
 
-[[ghpql]][[GSACG00169]][[monitoring-method-entry]]
+[[monitoring-method-entry]]
 
 ===== Monitoring Method Entry
 
@@ -709,7 +709,7 @@ The @MethodEntry annotation must be used by the client to receive
 callback when the target method is entered. The client method argument
 types and count must match the target methods parameter types/count.
 
-[[ghppg]][[GSACG00170]][[monitoring-method-exit]]
+[[monitoring-method-exit]]
 
 ===== Monitoring Method Exit
 
@@ -719,7 +719,7 @@ types and count must match the target methods parameter types/count. The
 first parameter in the client method should match the return type of the
 target method (only if the target method has a non void return type)
 
-[[ghplj]][[GSACG00171]][[monitoring-exceptions]]
+[[monitoring-exceptions]]
 
 ===== Monitoring Exceptions
 
@@ -729,7 +729,7 @@ client method argument types and count must match the target methods
 parameter types/count. (This restriction might be removed later). The
 first parameter in the client method should be of type Throwable
 
-[[ghppo]][[GSACG00226]][[registering-an-event-listener]]
+[[registering-an-event-listener]]
 
 ==== Registering an Event Listener
 
@@ -773,7 +773,7 @@ listener. The nodes in this path are separated by the slash (`/`)
 character.
 * The listener object that you are registering.
 
-[[GSACG00047]][[ghpuu]]
+[[ghpuu]]
 Example 5-7 Registering an Event Listener
 
 This example shows the code for registering the event listener
@@ -801,7 +801,7 @@ public class TransactionManagerImpl {
 }
 ----
 
-[[ghrma]][[GSACG00118]][[dotted-names-and-rest-urls-for-an-add-on-components-statistics]]
+[[dotted-names-and-rest-urls-for-an-add-on-components-statistics]]
 
 === Dotted Names and REST URLs for an Add-On Component's Statistics
 
@@ -870,7 +870,7 @@ http://localhost:4848/monitoring/domain/server/applications/tx/txapp/txcount
 In this example, the DAS is running on the local host and the HTTP port
 for administration is 4848.
 
-[[ghmox]][[GSACG00119]][[adding-a-type-to-the-monitor-command]]
+[[adding-a-type-to-the-monitor-command]]
 
 === Adding a Type to the `monitor` Command
 
@@ -879,7 +879,7 @@ To add a type to the `monitor` command, implement the `MonitorContract` interfac
 An implementation of the `MonitorContract` interface is an HK2 service
 that provides monitoring data to the `monitor` command.
 
-[[ghptj]][[GSACG00120]][[example-of-adding-monitoring-capabilities]]
+[[example-of-adding-monitoring-capabilities]]
 
 === Example of Adding Monitoring Capabilities
 
@@ -898,7 +898,7 @@ the listing of each class or interface in the example.
 |===
 
 
-[[GSACG00048]][[ghpna]]
+[[ghpna]]
 Example 5-8 Event Provider Class
 
 This example illustrates how to define an event provider as explained in
@@ -953,7 +953,7 @@ public class ModuleProbeProvider {
 ----
 
 
-[[GSACG00049]][[ghpmu]]
+[[ghpmu]]
 
 Example 5-9 Bootstrap Class
 
@@ -995,7 +995,7 @@ public class ModuleBootStrap implements PostConstruct {
 }
 ----
 
-[[GSACG00050]][[ghpvw]]
+[[ghpvw]]
 Example 5-10 Listener Class
 
 This example shows how to perform the following tasks:
@@ -1052,7 +1052,7 @@ public class ModuleStatsTelemetry {
 }
 ----
 
-[[GSACG00051]][[ghpuc]]
+[[ghpuc]]
 Example 5-11 MBean Interface
 
 This example defines the interface for a simple standard MBean that has
@@ -1073,7 +1073,7 @@ public interface ModuleMBean {
 }
 ----
 
-[[GSACG00052]][[ghpwx]]
+[[ghpwx]]
 Example 5-12 MBean Implementation
 
 This example illustrates how to send an event as explained in xref:#sending-an-event[Sending an Event].

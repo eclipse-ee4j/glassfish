@@ -7,7 +7,7 @@ prev=list-http-lbs.html
 
 = list-http-listeners
 
-[[list-http-listeners-1]][[GSRFM00168]][[list-http-listeners]]
+[[list-http-listeners]]
 
 == list-http-listeners
 
@@ -55,7 +55,7 @@ target::
 
 === Examples
 
-[[GSRFM662]][[sthref1506]]
+[[sthref1506]]
 
 ==== Example 1   Listing Network Listeners
 

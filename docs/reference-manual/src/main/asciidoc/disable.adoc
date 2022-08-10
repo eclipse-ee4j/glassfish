@@ -7,7 +7,7 @@ prev=deploydir.html
 
 = disable
 
-[[disable-1]][[GSRFM00116]][[disable]]
+[[disable]]
 
 == disable
 
@@ -68,7 +68,7 @@ component_name::
 
 === Examples
 
-[[GSRFM590]][[sthref1044]]
+[[sthref1044]]
 
 ==== Example 1   Disabling a Component
 

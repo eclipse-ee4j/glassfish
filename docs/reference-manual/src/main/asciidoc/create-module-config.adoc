@@ -7,7 +7,7 @@ prev=create-message-security-provider.html
 
 = create-module-config
 
-[[create-module-config-1]][[GSRFM844]][[create-module-config]]
+[[create-module-config]]
 
 == create-module-config
 

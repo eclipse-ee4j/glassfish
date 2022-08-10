@@ -7,7 +7,7 @@ prev=create-file-user.html
 
 = create-http
 
-[[create-http-1]][[GSRFM00025]][[create-http]]
+[[create-http]]
 
 == create-http
 
@@ -90,7 +90,7 @@ protocol-name::
 
 === Examples
 
-[[GSRFM476]][[sthref232]]
+[[sthref232]]
 
 ==== Example 1   Using the `create-http` Subcommand
 

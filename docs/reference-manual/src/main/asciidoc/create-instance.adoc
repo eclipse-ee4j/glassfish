@@ -7,7 +7,7 @@ prev=create-iiop-listener.html
 
 = create-instance
 
-[[create-instance-1]][[GSRFM00033]][[create-instance]]
+[[create-instance]]
 
 == create-instance
 
@@ -257,7 +257,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM487]][[sthref298]]
+[[sthref298]]
 
 ==== Example 1   Creating a Standalone {productName} Instance
 
@@ -280,7 +280,7 @@ IIOP_SSL_MUTUALAUTH_PORT=23922
 Command create-instance executed successfully.
 ----
 
-[[GSRFM488]][[sthref299]]
+[[sthref299]]
 
 ==== Example 2   Creating a Standalone {productName} Instance With Custom
 Port Assignments
@@ -312,7 +312,7 @@ ASADMIN_LISTENER_PORT=24851
 Command create-instance executed successfully.
 ----
 
-[[GSRFM489]][[sthref300]]
+[[sthref300]]
 
 ==== Example 3   Creating a Shared {productName} Instance
 
@@ -337,7 +337,7 @@ IIOP_SSL_MUTUALAUTH_PORT=23921
 Command create-instance executed successfully.
 ----
 
-[[GSRFM490]][[sthref301]]
+[[sthref301]]
 
 ==== Example 4   Creating a Clustered {productName} Instance
 

@@ -7,7 +7,7 @@ prev=delete-http-lb-config.html
 
 = delete-http-lb-ref
 
-[[delete-http-lb-ref-1]][[GSRFM00081]][[delete-http-lb-ref]]
+[[delete-http-lb-ref]]
 
 == delete-http-lb-ref
 
@@ -72,7 +72,7 @@ target::
 
 === Examples
 
-[[GSRFM550]][[sthref728]]
+[[sthref728]]
 
 ==== Example 1   Deleting a Cluster Reference from a Load Balancer
 Configuration

@@ -454,7 +454,7 @@ The default value for `AS_ADMIN_MASTERPASSWORD` is `changeit`.
 
 === Examples
 
-[[GSRFM805]][[sthref2369]]
+[[sthref2369]]
 
 ==== Example 1   Running an `asadmin` Utility Subcommand in Single Mode
 
@@ -474,7 +474,7 @@ hello <web>
 Command list-applications executed successfully.
 ----
 
-[[GSRFM806]][[sthref2370]]
+[[sthref2370]]
 
 ==== Example 2   Specifying an `asadmin` Utility Option With a Subcommand
 
@@ -497,7 +497,7 @@ automatic-timer-ejb <ejb>
 Command list-applications executed successfully.
 ----
 
-[[GSRFM807]][[sthref2371]]
+[[sthref2371]]
 
 ==== Example 3   Specifying an `asadmin` Utility Option and a Subcommand Option
 
@@ -516,7 +516,7 @@ ejb31-war <ejb, web>
 Command list-applications executed successfully.
 ----
 
-[[GSRFM808]][[sthref2372]]
+[[sthref2372]]
 
 ==== Example 4   Escaping a Command-Line Argument With Single Quote Characters
 
@@ -546,7 +546,7 @@ Application deployed with name pmdapp.
 Command deploy executed successfully
 ----
 
-[[GSRFM809]][[sthref2373]]
+[[sthref2373]]
 
 ==== Example 5   Specifying a UNIX Operating System Meta Character in an Option
 
@@ -576,7 +576,7 @@ asadmin --user admin --passwordfile gfpass create-jdbc-connection-pool
 sampleJDBCConnectionPool
 ----
 
-[[GSRFM835]][[sthref2374]]
+[[sthref2374]]
 
 ==== Example 6   Specifying a Command-Line Argument That Contains a Space
 
@@ -617,7 +617,7 @@ Application deployed with name hello.
 Command deploy executed successfully.
 ----
 
-[[GSRFM810]][[sthref2375]]
+[[sthref2375]]
 
 ==== Example 7   Specifying a Meta Character and an Option Delimiter Character in a Property
 
@@ -683,7 +683,7 @@ asadmin --user admin --passwordfile gfpass create-jdbc-connection-pool
 DatabaseName=\"jdbc:derby\":server=\"http://localhost:9092\" javadb-pool
 ----
 
-[[GSRFM811]][[sthref2376]]
+[[sthref2376]]
 
 ==== Example 8   Specifying an Option Delimiter and an Escape Character in a JVM Option
 
@@ -723,7 +723,7 @@ asadmin create-jvm-options --target test-server
 -e -Dlocation=c\:\\sun\\appserver
 ----
 
-[[GSRFM812]][[sthref2377]]
+[[sthref2377]]
 
 ==== Example 9   Specifying an Option That Contains an Escape Character
 

@@ -7,7 +7,7 @@ prev=set-log-levels.html
 
 = setup-local-dcom
 
-[[setup-local-dcom-1]][[GSRFM893]][[setup-local-dcom]]
+[[setup-local-dcom]]
 
 == setup-local-dcom
 
@@ -92,7 +92,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM737]][[sthref2070]]
+[[sthref2070]]
 
 ==== Example 1   Setting Up DCOM on a Host
 
@@ -110,7 +110,7 @@ Are you sure that you want to edit the Windows registry? If so, type yes in full
 Command setup-local-dcom executed successfully.
 ----
 
-[[GSRFM894]][[sthref2071]]
+[[sthref2071]]
 
 ==== Example 2   Forcibly Setting Up DCOM on a Host
 

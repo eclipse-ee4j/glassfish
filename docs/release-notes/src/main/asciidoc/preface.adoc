@@ -148,7 +148,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[giprl]][[related-documentation]]
+[[related-documentation]]
 
 === Related Documentation
 

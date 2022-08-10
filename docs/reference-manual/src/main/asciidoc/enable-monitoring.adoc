@@ -7,7 +7,7 @@ prev=enable-http-lb-server.html
 
 = enable-monitoring
 
-[[enable-monitoring-1]][[GSRFM00128]][[enable-monitoring]]
+[[enable-monitoring]]
 
 == enable-monitoring
 
@@ -101,7 +101,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM603]][[sthref1123]]
+[[sthref1123]]
 
 ==== Example 1   Enabling the Monitoring Service for {productName}
 
@@ -114,7 +114,7 @@ asadmin> enable-monitoring
 Command enable-monitoring executed successfully
 ----
 
-[[GSRFM604]][[sthref1124]]
+[[sthref1124]]
 
 ==== Example 2   Enabling Monitoring for the Web and EJB Containers
 
@@ -127,7 +127,7 @@ asadmin> enable-monitoring --modules web-container=LOW:ejb-container=HIGH
 Command enable-monitoring executed successfully
 ----
 
-[[GSRFM605]][[sthref1125]]
+[[sthref1125]]
 
 ==== Example 3   Turning on Debugging for Monitoring
 

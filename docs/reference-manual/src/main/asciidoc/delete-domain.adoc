@@ -7,7 +7,7 @@ prev=delete-custom-resource.html
 
 = delete-domain
 
-[[delete-domain-1]][[GSRFM00075]][[delete-domain]]
+[[delete-domain]]
 
 == delete-domain
 
@@ -49,7 +49,7 @@ domain-name::
 
 === Examples
 
-[[GSRFM543]][[sthref679]]
+[[sthref679]]
 
 ==== Example 1   Deleting a Domain
 
@@ -63,7 +63,7 @@ Domain mydomain4 deleted.
 Command delete-domain executed successfully.
 ----
 
-[[GSRFM544]][[sthref680]]
+[[sthref680]]
 
 ==== Example 2   deleting a Domain From an Alternate Location
 

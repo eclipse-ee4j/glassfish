@@ -7,7 +7,7 @@ prev=delete-system-property.html
 
 = delete-threadpool
 
-[[delete-threadpool-1]][[GSRFM00111]][[delete-threadpool]]
+[[delete-threadpool]]
 
 == delete-threadpool
 
@@ -56,7 +56,7 @@ threadpool-id::
 
 === Examples
 
-[[GSRFM581]][[sthref996]]
+[[sthref996]]
 
 ==== Example 1   Deleting a Thread Pool
 

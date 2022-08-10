@@ -7,7 +7,7 @@ prev=unfreeze-transaction-service.html
 
 = uninstall-node
 
-[[uninstall-node-1]][[GSRFM00246]][[uninstall-node]]
+[[uninstall-node]]
 
 == uninstall-node
 
@@ -133,7 +133,7 @@ host-list::
 
 === Examples
 
-[[GSRFM773]][[sthref2211]]
+[[sthref2211]]
 
 ==== Example 1   Uninstalling {productName} Software From the Default Location
 
@@ -150,7 +150,7 @@ Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 Command uninstall-node executed successfully.
 ----
 
-[[GSRFM774]][[sthref2212]]
+[[sthref2212]]
 
 ==== Example 2   Forcibly Uninstalling {productName} Software
 

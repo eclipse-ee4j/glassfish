@@ -7,7 +7,7 @@ prev=delete-http-redirect.html
 
 = delete-iiop-listener
 
-[[delete-iiop-listener-1]][[GSRFM00084]][[delete-iiop-listener]]
+[[delete-iiop-listener]]
 
 == delete-iiop-listener
 
@@ -54,7 +54,7 @@ listener_id::
 
 === Examples
 
-[[GSRFM552]][[sthref750]]
+[[sthref750]]
 
 ==== Example 1   Deleting an IIOP Listener
 

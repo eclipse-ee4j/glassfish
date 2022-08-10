@@ -7,7 +7,7 @@ prev=list-resource-adapter-configs.html
 
 = list-resource-refs
 
-[[list-resource-refs-1]][[GSRFM00197]][[list-resource-refs]]
+[[list-resource-refs]]
 
 == list-resource-refs
 
@@ -60,7 +60,7 @@ target::
 
 === Examples
 
-[[GSRFM707]][[sthref1784]]
+[[sthref1784]]
 
 ==== Example 1   Listing Resource References for a Cluster
 

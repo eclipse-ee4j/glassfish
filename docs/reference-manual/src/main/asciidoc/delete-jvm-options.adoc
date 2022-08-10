@@ -7,7 +7,7 @@ prev=delete-jndi-resource.html
 
 = delete-jvm-options
 
-[[delete-jvm-options-1]][[GSRFM00094]][[delete-jvm-options]]
+[[delete-jvm-options]]
 
 == delete-jvm-options
 
@@ -113,7 +113,7 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)] man page.
 
 === Examples
 
-[[GSRFM562]][[sthref830]]
+[[sthref830]]
 
 ==== Example 1   Deleting Java Application Launcher Options
 
@@ -126,7 +126,7 @@ asadmin> delete-jvm-options -Doption1=value1
 Command delete-jvm-options executed successfully
 ----
 
-[[GSRFM563]][[sthref831]]
+[[sthref831]]
 
 ==== Example 2   Deleting a Java Application Launcher Option From the Profiler
 

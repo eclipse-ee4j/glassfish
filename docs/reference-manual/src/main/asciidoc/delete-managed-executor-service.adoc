@@ -7,7 +7,7 @@ prev=delete-local-instance.html
 
 = delete-managed-executor-service
 
-[[delete-managed-executor-service-1]][[GSRFM848]][[delete-managed-executor-service]]
+[[delete-managed-executor-service]]
 
 == delete-managed-executor-service
 
@@ -59,7 +59,7 @@ managed_executor_service_name::
 
 === Examples
 
-[[GSRFM849]][[sthref855]]
+[[sthref855]]
 
 ==== Example 1   Deleting a Managed Executor Service Resource
 

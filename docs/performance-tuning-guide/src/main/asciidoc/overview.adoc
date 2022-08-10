@@ -7,7 +7,7 @@ prev=preface.html
 
 = Overview of {productName} Performance Tuning
 
-[[GSPTG00003]][[giekg]]
+[[giekg]]
 
 
 [[overview-of-glassfish-server-performance-tuning]]
@@ -27,7 +27,7 @@ The following topics are addressed here:
 * xref:#general-tuning-concepts[General Tuning Concepts]
 * xref:#further-information[Further Information]
 
-[[abear]][[GSPTG00048]][[process-overview]]
+[[process-overview]]
 
 === Process Overview
 
@@ -90,7 +90,7 @@ a|The following chapters:
 |===
 
 
-[[abeas]][[GSPTG00035]][[performance-tuning-sequence]]
+[[performance-tuning-sequence]]
 
 ==== Performance Tuning Sequence
 
@@ -111,7 +111,7 @@ link:tuning-java.html#abeia[Tuning the Java Runtime System].
 4. Tune the operating system, described in
 link:tuning-os.html#abeir[Tuning the Operating System and Platform].
 
-[[abeat]][[GSPTG00049]][[understanding-operational-requirements]]
+[[understanding-operational-requirements]]
 
 === Understanding Operational Requirements
 
@@ -125,7 +125,7 @@ requirements such as:
 * xref:#hardware-resources[Hardware Resources]
 * xref:#administration[Administration]
 
-[[abeau]][[GSPTG00154]][[application-architecture]]
+[[application-architecture]]
 
 ==== Application Architecture
 
@@ -135,7 +135,7 @@ functionally into many tiers. The presentation layer is typically
 implemented using servlets and JSP technology and executes in the web
 container.
 
-[[GSPTG00001]][[gacmj]]
+[[gacmj]]
 
 
 .*Figure 1-1 Jakarta EE Application Model*
@@ -157,14 +157,14 @@ It is important to understand the application architecture before
 designing a new {productName} deployment, and when deploying a new
 business application to an existing application server deployment.
 
-[[abeav]][[GSPTG00155]][[security-requirements]]
+[[security-requirements]]
 
 ==== Security Requirements
 
 Most business applications require security. This section discusses
 security considerations and decisions.
 
-[[abeaw]][[GSPTG00080]][[user-authentication-and-authorization]]
+[[user-authentication-and-authorization]]
 
 ===== User Authentication and Authorization
 
@@ -201,7 +201,7 @@ authorization checks, the application server performs some additional
 checking, which incurs additional overheads. When you perform capacity
 planning, you must take this additional overhead into account.
 
-[[abeax]][[GSPTG00081]][[encryption]]
+[[encryption]]
 
 ===== Encryption
 
@@ -255,7 +255,7 @@ For information on how to encrypt the communication between web servers
 and {productName}, see "link:security-guide/message-security.html#ablrk[Administering Message
 Security]" in {productName} Security Guide.
 
-[[gkvjf]][[GSPTG00156]][[high-availability-clustering-load-balancing-and-failover]]
+[[high-availability-clustering-load-balancing-and-failover]]
 
 ==== High Availability Clustering, Load Balancing, and Failover
 
@@ -287,7 +287,7 @@ Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
 features in {productName} 7.
 
-[[abeay]][[GSPTG00157]][[hardware-resources]]
+[[hardware-resources]]
 
 ==== Hardware Resources
 
@@ -313,7 +313,7 @@ hardware costs and is suitable for some types of applications. However,
 this approach requires administration of more application server
 instances and hardware nodes.
 
-[[abeaz]][[GSPTG00158]][[administration]]
+[[administration]]
 
 ==== Administration
 
@@ -344,7 +344,7 @@ efficient administration.
 For detailed information on administration, see the
 link:administration-guide.html#GSADG[{productName} Administration Guide].
 
-[[abeba]][[GSPTG00050]][[general-tuning-concepts]]
+[[general-tuning-concepts]]
 
 === General Tuning Concepts
 
@@ -419,7 +419,7 @@ Measure your deployment under real and simulated peak loads.
 |===
 
 
-[[abebb]][[GSPTG00159]][[capacity-planning]]
+[[capacity-planning]]
 
 ==== Capacity Planning
 
@@ -435,7 +435,7 @@ and performance.
 You can estimate these values through careful performance benchmarking,
 using an application with realistic data sets and workloads.
 
-[[gacmz]][[GSPTG00036]][[to-determine-capacity]]
+[[to-determine-capacity]]
 
 ===== To Determine Capacity
 
@@ -472,7 +472,7 @@ load balancers and workload simulation, determine the performance
 benefits of replicating one well-tuned application server node, as
 determined in step xref:#CEGHGCGI[2].
 
-[[abebc]][[GSPTG00160]][[user-expectations]]
+[[user-expectations]]
 
 ==== User Expectations
 
@@ -505,7 +505,7 @@ network capacity needs.
 ahead for the future will help avoid crisis situations and system
 downtimes for upgrades.
 
-[[abebd]][[GSPTG00051]][[further-information]]
+[[further-information]]
 
 === Further Information
 

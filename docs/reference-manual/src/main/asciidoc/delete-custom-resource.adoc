@@ -7,7 +7,7 @@ prev=delete-context-service.html
 
 = delete-custom-resource
 
-[[delete-custom-resource-1]][[GSRFM00074]][[delete-custom-resource]]
+[[delete-custom-resource]]
 
 == delete-custom-resource
 
@@ -68,7 +68,7 @@ jndi-name::
 
 === Examples
 
-[[GSRFM542]][[sthref671]]
+[[sthref671]]
 
 ==== Example 1   Deleting a Custom Resource
 

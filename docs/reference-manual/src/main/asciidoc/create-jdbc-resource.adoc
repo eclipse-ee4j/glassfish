@@ -7,7 +7,7 @@ prev=create-jdbc-connection-pool.html
 
 = create-jdbc-resource
 
-[[create-jdbc-resource-1]][[GSRFM00037]][[create-jdbc-resource]]
+[[create-jdbc-resource]]
 
 == create-jdbc-resource
 
@@ -83,7 +83,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM494]][[sthref333]]
+[[sthref333]]
 
 ==== Example 1   Creating a JDBC Resource
 

@@ -7,7 +7,7 @@ prev=list-jobs.html
 
 = list-jvm-options
 
-[[list-jvm-options-1]][[GSRFM00180]][[list-jvm-options]]
+[[list-jvm-options]]
 
 == list-jvm-options
 
@@ -63,7 +63,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM679]][[sthref1612]]
+[[sthref1612]]
 
 ==== Example 1   Listing the Java Application Launcher Options
 

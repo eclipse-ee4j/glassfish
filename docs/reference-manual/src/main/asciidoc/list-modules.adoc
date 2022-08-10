@@ -7,7 +7,7 @@ prev=list-message-security-providers.html
 
 = list-modules
 
-[[list-modules-1]][[GSRFM00185]][[list-modules]]
+[[list-modules]]
 
 == list-modules
 
@@ -39,7 +39,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM685]][[sthref1689]]
+[[sthref1689]]
 
 ==== Example 1   Listing {productName} Modules
 

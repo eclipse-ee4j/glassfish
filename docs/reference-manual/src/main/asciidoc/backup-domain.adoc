@@ -7,7 +7,7 @@ prev=attach.html
 
 = backup-domain
 
-[[backup-domain-1]][[GSRFM00003]][[backup-domain]]
+[[backup-domain]]
 
 == backup-domain
 

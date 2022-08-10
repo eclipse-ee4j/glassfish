@@ -7,7 +7,7 @@ prev=create-managed-executor-service.html
 
 = create-managed-scheduled-executor-service
 
-[[create-managed-scheduled-executor-service-1]][[GSRFM680]][[create-managed-scheduled-executor-service]]
+[[create-managed-scheduled-executor-service]]
 
 == create-managed-scheduled-executor-service
 

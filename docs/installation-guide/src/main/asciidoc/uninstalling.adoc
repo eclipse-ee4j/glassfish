@@ -6,7 +6,7 @@ prev=installing.html
 
 = Uninstalling GlassFish
 
-[[GSING00003]][[ghmlt]]
+[[ghmlt]]
 
 
 [[uninstalling-glassfish]]
@@ -14,7 +14,7 @@ prev=installing.html
 
 This chapter describes how to uninstall {productName}.
 
-[[gjxfv]][[GSING00028]][[removing-a-glassfish-server-installation]]
+[[removing-a-glassfish-server-installation]]
 
 === Removing a {productName} Installation
 

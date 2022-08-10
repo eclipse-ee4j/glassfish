@@ -7,7 +7,7 @@ prev=osgi.html
 
 = Using Services and APIs
 
-[[fvyam]][[GSDVG00047]][[part-iii]]
+[[part-iii]]
 
 == Part III
 

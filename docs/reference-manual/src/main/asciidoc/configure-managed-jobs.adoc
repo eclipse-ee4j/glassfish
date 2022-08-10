@@ -7,7 +7,7 @@ prev=configure-ldap-for-admin.html
 
 = configure-managed-jobs
 
-[[configure-managed-jobs-1]][[GSRFM836]][[configure-managed-jobs]]
+[[configure-managed-jobs]]
 
 == configure-managed-jobs
 
@@ -58,7 +58,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM837]][[sthref104]]
+[[sthref104]]
 
 ==== Example 1   Configuring the Job Retention Period
 

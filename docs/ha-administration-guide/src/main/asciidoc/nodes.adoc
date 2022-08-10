@@ -7,7 +7,7 @@ prev=ssh-setup.html
 
 = Administering {productName} Nodes
 
-[[GSHAG00004]][[gkrle]]
+[[gkrle]]
 
 
 [[administering-glassfish-server-nodes]]
@@ -26,7 +26,7 @@ The following topics are addressed here:
 * xref:#creating-listing-and-deleting-config-nodes[Creating, Listing, and Deleting `CONFIG` Nodes]
 * xref:#updating-and-changing-the-type-of-a-node[Updating and Changing the Type of a Node]
 
-[[gksgh]][[GSHAG00179]][[types-of-glassfish-server-nodes]]
+[[types-of-glassfish-server-nodes]]
 
 === Types of {productName} Nodes
 
@@ -60,7 +60,7 @@ Each {productName} node is one of the following types of node:
   host where the domain administration server (DAS) is running, this
   node represents the local host.
 
-[[CHDBIHFJ]][[GSHAG463]][[creating-listing-testing-and-deleting-dcom-nodes]]
+[[creating-listing-testing-and-deleting-dcom-nodes]]
 
 === Creating, Listing, Testing, and Deleting `DCOM` Nodes
 
@@ -81,7 +81,7 @@ The following topics are addressed here:
 * xref:#to-test-if-a-dcom-node-is-reachable[To Test if a `DCOM` Node is Reachable]
 * xref:#to-delete-a-dcom-node[To Delete a `DCOM` Node]
 
-[[CHDIGBJB]][[GSHAG464]][[to-create-a-dcom-node]]
+[[to-create-a-dcom-node]]
 
 ==== To Create a `DCOM` Node
 
@@ -170,7 +170,7 @@ in the following sections:
 * link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
 * link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
-[[CHDDCBEG]][[GSHAG469]][[to-list-dcom-nodes-in-a-domain]]
+[[to-list-dcom-nodes-in-a-domain]]
 
 ==== To List `DCOM` Nodes in a Domain
 
@@ -237,7 +237,7 @@ typing the following commands at the command line:
 * `asadmin help list-nodes`
 * `asadmin help list-nodes-dcom`
 
-[[CHDIFJCC]][[GSHAG473]][[to-test-if-a-dcom-node-is-reachable]]
+[[to-test-if-a-dcom-node-is-reachable]]
 
 ==== To Test if a `DCOM` Node is Reachable
 
@@ -286,7 +286,7 @@ link:reference-manual/ping-node-dcom.html#ping-node-dcom[`ping-node-dcom`(1)]
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help ping-node-dcom` at the command line.
 
-[[CHDCFHBA]][[GSHAG477]][[to-delete-a-dcom-node]]
+[[to-delete-a-dcom-node]]
 
 ==== To Delete a `DCOM` Node
 
@@ -353,7 +353,7 @@ typing the following commands at the command line:
 * `asadmin help delete-node-dcom`
 * `asadmin help list-nodes-dcom`
 
-[[gkrkn]][[GSHAG00180]][[creating-listing-testing-and-deleting-ssh-nodes]]
+[[creating-listing-testing-and-deleting-ssh-nodes]]
 
 === Creating, Listing, Testing, and Deleting `SSH` Nodes
 
@@ -381,7 +381,7 @@ The following topics are addressed here:
 * xref:#to-test-if-an-ssh-node-is-reachable[To Test if an `SSH` Node is Reachable]
 * xref:#to-delete-an-ssh-node[To Delete an `SSH` Node]
 
-[[gkrnf]][[GSHAG00088]][[to-create-an-ssh-node]]
+[[to-create-an-ssh-node]]
 
 ==== To Create an `SSH` Node
 
@@ -473,7 +473,7 @@ in the following sections:
 * link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
 * link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
-[[gkrme]][[GSHAG00089]][[to-list-ssh-nodes-in-a-domain]]
+[[to-list-ssh-nodes-in-a-domain]]
 
 ==== To List `SSH` Nodes in a Domain
 
@@ -538,7 +538,7 @@ typing the following commands at the command line:
 * `asadmin help list-nodes`
 * `asadmin help list-nodes-ssh`
 
-[[gksig]][[GSHAG00090]][[to-test-if-an-ssh-node-is-reachable]]
+[[to-test-if-an-ssh-node-is-reachable]]
 
 ==== To Test if an `SSH` Node is Reachable
 
@@ -587,7 +587,7 @@ link:reference-manual/ping-node-ssh.html#ping-node-ssh[`ping-node-ssh`(1)]
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help ping-node-ssh` at the command line.
 
-[[gkrlz]][[GSHAG00091]][[to-delete-an-ssh-node]]
+[[to-delete-an-ssh-node]]
 
 ==== To Delete an `SSH` Node
 
@@ -654,7 +654,7 @@ typing the following commands at the command line:
 * `asadmin help delete-node-ssh`
 * `asadmin help list-nodes-ssh`
 
-[[gkrnp]][[GSHAG00181]][[creating-listing-and-deleting-config-nodes]]
+[[creating-listing-and-deleting-config-nodes]]
 
 === Creating, Listing, and Deleting `CONFIG` Nodes
 
@@ -673,7 +673,7 @@ The following topics are addressed here:
 * xref:#to-list-config-nodes-in-a-domain[To List `CONFIG` Nodes in a Domain]
 * xref:#to-delete-a-config-node[To Delete a `CONFIG` Node]
 
-[[gkrll]][[GSHAG00092]][[to-create-a-config-node]]
+[[to-create-a-config-node]]
 
 ==== To Create a `CONFIG` Node
 
@@ -745,7 +745,7 @@ Next Steps
 After creating a node, you can create instances on the node as explained
 in link:instances.html#to-create-an-instance-locally[To Create an Instance Locally].
 
-[[gkrjr]][[GSHAG00093]][[to-list-config-nodes-in-a-domain]]
+[[to-list-config-nodes-in-a-domain]]
 
 ==== To List `CONFIG` Nodes in a Domain
 
@@ -814,7 +814,7 @@ typing the following commands at the command line:
 * `asadmin help list-nodes`
 * `asadmin help list-nodes-config`
 
-[[gkrms]][[GSHAG00094]][[to-delete-a-config-node]]
+[[to-delete-a-config-node]]
 
 ==== To Delete a `CONFIG` Node
 
@@ -879,7 +879,7 @@ typing the following commands at the command line:
 * `asadmin help delete-node-config`
 * `asadmin help list-nodes-config`
 
-[[gksjd]][[GSHAG00182]][[updating-and-changing-the-type-of-a-node]]
+[[updating-and-changing-the-type-of-a-node]]
 
 === Updating and Changing the Type of a Node
 
@@ -893,7 +893,7 @@ The following topics are addressed here:
 * xref:#to-update-a-config-node[To Update a `CONFIG` Node]
 * xref:#to-change-the-type-of-a-node[To Change the Type of a Node]
 
-[[CHDHHAAE]][[GSHAG481]][[to-update-a-dcom-node]]
+[[to-update-a-dcom-node]]
 
 ==== To Update a `DCOM` Node
 
@@ -942,7 +942,7 @@ link:reference-manual/update-node-ssh.html#update-node-dcom[`update-node-dcom`(1
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-node-dcom` at the command line.
 
-[[gksjq]][[GSHAG00095]][[to-update-an-ssh-node]]
+[[to-update-an-ssh-node]]
 
 ==== To Update an `SSH` Node
 
@@ -993,7 +993,7 @@ link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-node-ssh` at the command line.
 
-[[gksjv]][[GSHAG00096]][[to-update-a-config-node]]
+[[to-update-a-config-node]]
 
 ==== To Update a `CONFIG` Node
 
@@ -1042,7 +1042,7 @@ link:reference-manual/update-node-config.html#update-node-config[`update-node-co
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-node-config` at the command line.
 
-[[gkski]][[GSHAG00097]][[to-change-the-type-of-a-node]]
+[[to-change-the-type-of-a-node]]
 
 ==== To Change the Type of a Node
 

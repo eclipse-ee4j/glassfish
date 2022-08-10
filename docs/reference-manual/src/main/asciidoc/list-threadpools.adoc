@@ -7,7 +7,7 @@ prev=list-system-properties.html
 
 = list-threadpools
 
-[[list-threadpools-1]][[GSRFM00204]][[list-threadpools]]
+[[list-threadpools]]
 
 == list-threadpools
 
@@ -55,7 +55,7 @@ target::
 
 === Examples
 
-[[GSRFM714]][[sthref1831]]
+[[sthref1831]]
 
 ==== Example 1   Listing Thread Pools
 

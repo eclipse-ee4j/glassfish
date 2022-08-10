@@ -7,7 +7,7 @@ prev=delete-jmsdest.html
 
 = delete-jms-host
 
-[[delete-jms-host-1]][[GSRFM00091]][[delete-jms-host]]
+[[delete-jms-host]]
 
 == delete-jms-host
 
@@ -62,7 +62,7 @@ jms_host_name::
 
 === Examples
 
-[[GSRFM559]][[sthref806]]
+[[sthref806]]
 
 ==== Example 1   Deleting a JMS host
 

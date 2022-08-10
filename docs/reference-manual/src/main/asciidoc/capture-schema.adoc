@@ -7,7 +7,7 @@ prev=asadmin.html
 
 = capture-schema
 
-[[capture-schema-1m]][[GSRFM00821]][[capture-schema]]
+[[capture-schema]]
 
 == capture-schema
 
@@ -66,7 +66,7 @@ grant the database user running the `capture-schema` command the
 
 === Examples
 
-[[GSRFM813]][[sthref2385]]
+[[sthref2385]]
 
 ==== Example 1   Using the `capture-schema` command
 

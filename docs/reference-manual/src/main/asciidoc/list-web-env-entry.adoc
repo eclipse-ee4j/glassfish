@@ -7,7 +7,7 @@ prev=list-web-context-param.html
 
 = list-web-env-entry
 
-[[list-web-env-entry-1]][[GSRFM00209]][[list-web-env-entry]]
+[[list-web-env-entry]]
 
 == list-web-env-entry
 
@@ -94,7 +94,7 @@ module::
 
 === Examples
 
-[[GSRFM719]][[sthref1871]]
+[[sthref1871]]
 
 ==== Example 1   Listing Environment Entries for a Web Application
 

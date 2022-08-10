@@ -6,7 +6,7 @@ prev=resource.html
 
 = security
 
-[[security-5asc]][[GSRFM00274]][[security]]
+[[security]]
 
 == security
 

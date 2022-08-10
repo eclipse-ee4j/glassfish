@@ -6,7 +6,7 @@ prev=specific-issues.html
 
 = Frequently Asked Questions
 
-[[GSTSG00006]][[abgkd]]
+[[abgkd]]
 
 
 [[frequently-asked-questions]]
@@ -26,11 +26,11 @@ This chapter contains the following:
 * xref:#java-persistence-faqs[Java Persistence FAQs]
 * xref:#update-tool-faqs[Update Tool FAQs]
 
-[[ghynj]][[GSTSG00071]][[administration-faqs]]
+[[administration-faqs]]
 
 === Administration FAQs
 
-[[ghvhr]][[GSTSG00252]][[which-asadmin-commands-are-supported]]
+[[which-asadmin-commands-are-supported]]
 
 ==== Which `asadmin` Commands are Supported?
 
@@ -38,35 +38,35 @@ Use `asadmin` `list-commands` to determine which commands are supported
 and available for use. For related information, see
 "link:administration-guide/asadmin-subcommands.html#asadmin-subcommands[Subcommands for the asadmin Utility]" in {productName} Administration Guide.
 
-[[ghyaf]][[GSTSG00072]][[application-faqs]]
+[[application-faqs]]
 
 === Application FAQs
 
-[[ghybu]][[GSTSG00253]][[how-do-i-debug-applications]]
+[[how-do-i-debug-applications]]
 
 ==== How Do I Debug Applications?
 
 See "link:application-development-guide/debugging-apps.html#beafc[Debugging Applications]" in {productName} Application Development Guide.
 
-[[ghybh]][[GSTSG00254]][[how-do-i-change-application-permissions]]
+[[how-do-i-change-application-permissions]]
 
 ==== How Do I Change Application Permissions?
 
 See "link:application-development-guide/securing-apps.html#changing-permissions-for-an-application[Changing Permissions for an Application]" in
 {productName} Application Development Guide.
 
-[[ghybt]][[GSTSG00255]][[what-are-the-restrictions-and-optimizations-for-session-beans]]
+[[what-are-the-restrictions-and-optimizations-for-session-beans]]
 
 ==== What Are the Restrictions and Optimizations for Session Beans?
 
 See "link:application-development-guide/ejb.html#session-bean-restrictions-and-optimizations[Session Bean Restrictions and Optimizations]" in
 {productName} Application Development Guide.
 
-[[ghyak]][[GSTSG00073]][[eclipse-faqs]]
+[[eclipse-faqs]]
 
 === Eclipse FAQs
 
-[[ghvmc]][[GSTSG00256]][[where-can-i-find-more-information-about-eclipse-and-glassfish-server-integration]]
+[[where-can-i-find-more-information-about-eclipse-and-glassfish-server-integration]]
 
 ==== Where Can I Find More Information About Eclipse and {productName} Integration?
 
@@ -76,18 +76,18 @@ for Eclipse provides important changes to better support {productName} and to pr
 information, see the GlassFish Plugins page:
 `http://glassfishplugins.java.net`.
 
-[[ghybv]][[GSTSG00074]][[extensibility-faqs]]
+[[extensibility-faqs]]
 
 === Extensibility FAQs
 
-[[ghyaw]][[GSTSG00257]][[how-do-i-develop-add-on-components]]
+[[how-do-i-develop-add-on-components]]
 
 ==== How Do I Develop Add-On Components?
 
 See the link:add-on-component-development-guide.html#GSACG[{productName} Add-On
 Component Development Guide] for complete details.
 
-[[ghvhg]][[GSTSG00258]][[how-do-i-add-containers]]
+[[how-do-i-add-containers]]
 
 ==== How Do I Add Containers?
 
@@ -102,28 +102,28 @@ For more information, see "link:add-on-component-development-guide/adding-contai
 Capabilities]" in {productName} Add-On Component
 Development Guide.
 
-[[ghvgv]][[GSTSG00259]][[how-do-i-extend-the-administration-console]]
+[[how-do-i-extend-the-administration-console]]
 
 ==== How Do I Extend the Administration Console?
 
 See "link:add-on-component-development-guide/extending-the-admin-console.html#ghmrb[Extending the Administration Console]" in
 {productName} Add-On Component Development Guide.
 
-[[ghybi]][[GSTSG00075]][[java-persistence-faqs]]
+[[java-persistence-faqs]]
 
 === Java Persistence FAQs
 
-[[ghvnl]][[GSTSG00260]][[what-are-the-restrictions-and-optimizations-for-the-java-persistence-api]]
+[[what-are-the-restrictions-and-optimizations-for-the-java-persistence-api]]
 
 ==== What Are the Restrictions and Optimizations for the Java Persistence API?
 
 See "link:application-development-guide/jpa.html#restrictions-and-optimizations[Restrictions and Optimizations]" in {productName} Application Development Guide.
 
-[[ghybd]][[GSTSG00076]][[update-tool-faqs]]
+[[update-tool-faqs]]
 
 === Update Tool FAQs
 
-[[ghvly]][[GSTSG00261]][[how-do-i-use-update-tool-to-extend-my-glassfish-server-installation]]
+[[how-do-i-use-update-tool-to-extend-my-glassfish-server-installation]]
 
 ==== How Do I Use Update Tool to Extend My {productName} Installation?
 
@@ -159,14 +159,14 @@ configuration and deployed applications from an earlier version of
 Upgrade Tool and upgrading, see the link:upgrade-guide.html#GSUPG[{productName} Upgrade Guide].
 ====
 
-[[gjjoq]][[GSTSG00262]][[how-do-i-turn-off-the-notifier]]
+[[how-do-i-turn-off-the-notifier]]
 
 ==== How Do I Turn Off the Notifier?
 
 Update Tool provides automatic notifications of available updates after
 installation. These notifications can be turned off if desired.
 
-[[gjjox]][[GSTSG00028]][[to-turn-off-the-notifier]]
+[[to-turn-off-the-notifier]]
 
 ===== To Turn Off the Notifier
 

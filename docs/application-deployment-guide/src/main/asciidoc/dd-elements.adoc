@@ -6,7 +6,7 @@ prev=dd-files.html
 
 = Elements of the {productName} Deployment Descriptors
 
-[[GSDPG00007]][[beaqi]]
+[[beaqi]]
 
 
 [[c-elements-of-the-glassfish-server-deployment-descriptors]]
@@ -14,7 +14,7 @@ prev=dd-files.html
 
 This appendix describes the elements of the {productName}deployment descriptors.
 
-[[beaqs]][[GSDPG00085]][[activation-config]]
+[[activation-config]]
 
 === `activation-config`
 
@@ -24,20 +24,20 @@ environment. For example, this can include information about the name of
 a physical JMS destination. Matches and overrides the
 `activation-config` element in the `ejb-jar.xml` file.
 
-[[fvyoe]][[GSDPG00335]][[superelements]]
+[[superelements]]
 
 ==== Superelements
 
 xref:#mdb-resource-adapter[`mdb-resource-adapter`] (`glassfish-ejb-jar.xml`)
 
-[[fvynj]][[GSDPG00336]][[subelements]]
+[[subelements]]
 
 ==== Subelements
 
 The following table describes subelements for the `activation-config`
 element.
 
-[[GSDPG838]][[fvynw]]
+[[fvynw]]
 
 
 Table C-1 `activation-config` subelements
@@ -60,26 +60,26 @@ xref:#activation-config-property[`activation-config-property`]
 |===
 
 
-[[beaqt]][[GSDPG00086]][[activation-config-property]]
+[[activation-config-property]]
 
 === `activation-config-property`
 
 Specifies the name and value of an activation configuration property.
 
-[[fvyne]][[GSDPG00337]][[superelements-1]]
+[[superelements-1]]
 
 ==== Superelements
 
 xref:#activation-config[`activation-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvyns]][[GSDPG00338]][[subelements-1]]
+[[subelements-1]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `activation-config-property` element.
 
-[[GSDPG839]][[fvynv]]
+[[fvynv]]
 
 
 Table C-2 `activation-config-property` subelements
@@ -100,43 +100,43 @@ xref:#activation-config-property-value[`activation-config-property-value`]
 |===
 
 
-[[beaqu]][[GSDPG00087]][[activation-config-property-name]]
+[[activation-config-property-name]]
 
 === `activation-config-property-name`
 
 Specifies the name of an activation configuration property.
 
-[[fvynm]][[GSDPG00339]][[superelements-2]]
+[[superelements-2]]
 
 ==== Superelements
 
 xref:#activation-config-property[`activation-config-property`] (`glassfish-ejb-jar.xml`)
 
-[[fvyok]][[GSDPG00340]][[subelements-2]]
+[[subelements-2]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaqv]][[GSDPG00088]][[activation-config-property-value]]
+[[activation-config-property-value]]
 
 === `activation-config-property-value`
 
 Specifies the value of an activation configuration property.
 
-[[fvyou]][[GSDPG00341]][[superelements-3]]
+[[superelements-3]]
 
 ==== Superelements
 
 xref:#activation-config-property[`activation-config-property`] (`glassfish-ejb-jar.xml`)
 
-[[fvyoz]][[GSDPG00342]][[subelements-3]]
+[[subelements-3]]
 
 ==== Subelements
 
 none - contains data
 
-[[giyhw]][[GSDPG00089]][[admin-object-resource]]
+[[admin-object-resource]]
 
 === `admin-object-resource`
 
@@ -223,19 +223,19 @@ setter methods of the class referenced by the `adminobject-class` of the
 `ra.xml` file. Some of the property names can be specified in the
 `adminobjectType` element.
 
-[[beaqw]][[GSDPG00090]][[as-context]]
+[[as-context]]
 
 === `as-context`
 
 Specifies the authentication mechanism used to authenticate the client.
 
-[[fvyos]][[GSDPG00343]][[superelements-5]]
+[[superelements-5]]
 
 ==== Superelements
 
 xref:#ior-security-config[`ior-security-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvyom]][[GSDPG00344]][[subelements-5]]
+[[subelements-5]]
 
 ==== Subelements
 
@@ -270,7 +270,7 @@ xref:#required[`required`]
 |===
 
 
-[[gjizj]][[GSDPG00091]][[archive-name]]
+[[archive-name]]
 
 === `archive-name`
 
@@ -281,19 +281,19 @@ application name is the `archive-name` value minus the file extension.
 For example, if `archive-name` is `foo.ear`, the default application
 name is `foo`.
 
-[[gjizb]][[GSDPG00345]][[superelements-6]]
+[[superelements-6]]
 
 ==== Superelements
 
 xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`)
 
-[[gjizg]][[GSDPG00346]][[subelements-6]]
+[[subelements-6]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaqx]][[GSDPG00092]][[auth-method]]
+[[auth-method]]
 
 === `auth-method`
 
@@ -307,20 +307,20 @@ authentication mechanism for the web service endpoint. As a prerequisite
 to gaining access to any web resources protected by an authorization
 constraint, a user must be authenticated using the configured mechanism.
 
-[[fvyow]][[GSDPG00347]][[superelements-7]]
+[[superelements-7]]
 
 ==== Superelements
 
 xref:#login-config[`login-config`] (`glassfish-web.xml`),
 xref:#as-context[`as-context`] (`glassfish-ejb-jar.xml`)
 
-[[fvyop]][[GSDPG00348]][[subelements-7]]
+[[subelements-7]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaqy]][[GSDPG00093]][[auth-realm]]
+[[auth-realm]]
 
 === `auth-realm`
 
@@ -330,13 +330,13 @@ provider-specific properties, which vary depending on what a particular
 implementation needs. For more information about how to define realms,
 see "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
-[[fvyot]][[GSDPG00349]][[superelements-8]]
+[[superelements-8]]
 
 ==== Superelements
 
 xref:#client-container[`client-container`] (`sun-acc.xml`)
 
-[[fvyor]][[GSDPG00350]][[subelements-8]]
+[[subelements-8]]
 
 ==== Subelements
 
@@ -357,7 +357,7 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyoy]][[GSDPG00351]][[attributes-1]]
+[[attributes-1]]
 
 ==== `Attributes`
 
@@ -375,7 +375,7 @@ Table C-7 `auth-realm` attributes
 |===
 
 
-[[fvyox]][[GSDPG00352]][[example]]
+[[example]]
 
 ==== Example
 
@@ -395,7 +395,7 @@ the `auth-realm` element's `name` attribute. The file realm uses `file`
 and `jaas-context` properties. Other realms use different properties.
 See "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
-[[giyjv]][[GSDPG00094]][[backend-principal]]
+[[backend-principal]]
 
 === `backend-principal`
 
@@ -439,20 +439,20 @@ Table C-8 `backend-principal` Attributes
 |===
 
 
-[[beara]][[GSDPG00095]][[bean-cache]]
+[[bean-cache]]
 
 === `bean-cache`
 
 Specifies the entity bean cache properties. Used for entity beans and
 stateful session beans.
 
-[[fvyoq]][[GSDPG00353]][[superelements-10]]
+[[superelements-10]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyon]][[GSDPG00354]][[subelements-10]]
+[[subelements-10]]
 
 ==== Subelements
 
@@ -510,7 +510,7 @@ container to pick victims. Applies only to stateful session beans.
 |===
 
 
-[[fvyoo]][[GSDPG00355]][[example-1]]
+[[example-1]]
 
 ==== Example
 
@@ -526,20 +526,20 @@ container to pick victims. Applies only to stateful session beans.
 </bean-cache>
 ----
 
-[[bearb]][[GSDPG00096]][[bean-pool]]
+[[bean-pool]]
 
 === `bean-pool`
 
 Specifies the pool properties of stateless session beans, entity beans,
 and message-driven bean.
 
-[[fvypc]][[GSDPG00356]][[superelements-11]]
+[[superelements-11]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvypd]][[GSDPG00357]][[subelements-11]]
+[[subelements-11]]
 
 ==== Subelements
 
@@ -590,7 +590,7 @@ to the server. Default time is 600 seconds (10 minutes).
 |===
 
 
-[[fvypf]][[GSDPG00358]][[example-2]]
+[[example-2]]
 
 ==== Example
 
@@ -604,19 +604,19 @@ to the server. Default time is 600 seconds (10 minutes).
 </bean-pool>
 ----
 
-[[beard]][[GSDPG00097]][[cache]]
+[[cache]]
 
 === `cache`
 
 Configures caching for web application components.
 
-[[fvype]][[GSDPG00359]][[superelements-12]]
+[[superelements-12]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvypl]][[GSDPG00360]][[subelements-12]]
+[[subelements-12]]
 
 ==== Subelements
 
@@ -659,7 +659,7 @@ constraints.
 |===
 
 
-[[fvypj]][[GSDPG00361]][[attributes-3]]
+[[attributes-3]]
 
 ==== Attributes
 
@@ -685,7 +685,7 @@ caching is enabled.
 |===
 
 
-[[fvypx]][[GSDPG00362]][[properties-1]]
+[[properties-1]]
 
 ==== Properties
 
@@ -714,7 +714,7 @@ or `2 MB`. Applicable only if `cacheClassName` is set to
 |===
 
 
-[[fvyrn]][[GSDPG00363]][[cache-class-names]]
+[[cache-class-names]]
 
 ==== Cache Class Names
 
@@ -743,27 +743,27 @@ the `MaxSize` property.
 |===
 
 
-[[beare]][[GSDPG00098]][[cache-helper]]
+[[cache-helper]]
 
 === `cache-helper`
 
 Specifies a class that implements the
 com.sun.appserv.web.cache.CacheHelper interface.
 
-[[fvyqy]][[GSDPG00364]][[superelements-13]]
+[[superelements-13]]
 
 ==== Superelements
 
 xref:#cache[`cache`] (`glassfish-web.xml`)
 
-[[fvyru]][[GSDPG00365]][[subelements-13]]
+[[subelements-13]]
 
 ==== Subelements
 
 The following table describes subelements for the `cache-helper`
 element.
 
-[[GSDPG859]][[fvyql]]
+[[fvyql]]
 
 
 Table C-15 `cache-helper` Subelements
@@ -779,13 +779,13 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyqu]][[GSDPG00366]][[attributes-4]]
+[[attributes-4]]
 
 ==== Attributes
 
 The following table describes attributes for the `cache-helper` element.
 
-[[GSDPG860]][[fvyrp]]
+[[fvyrp]]
 
 
 Table C-16 `cache-helper` Attributes
@@ -802,26 +802,26 @@ interface.
 |===
 
 
-[[bearf]][[GSDPG00099]][[cache-helper-ref]]
+[[cache-helper-ref]]
 
 === `cache-helper-ref`
 
 Specifies the `name` of the xref:#cache-helper[`cache-helper`] used by the
 parent xref:#cache-mapping[`cache-mapping`] element.
 
-[[fvypq]][[GSDPG00367]][[superelements-14]]
+[[superelements-14]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvyqs]][[GSDPG00368]][[subelements-14]]
+[[subelements-14]]
 
 ==== Subelements
 
 none - contains data
 
-[[bearg]][[GSDPG00100]][[cache-idle-timeout-in-seconds]]
+[[cache-idle-timeout-in-seconds]]
 
 === `cache-idle-timeout-in-seconds`
 
@@ -832,38 +832,38 @@ passivation. Default is 600.
 
 Applies to stateful session beans and entity beans.
 
-[[fvyqc]][[GSDPG00369]][[superelements-15]]
+[[superelements-15]]
 
 ==== Superelements
 
 xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
-[[fvyqo]][[GSDPG00370]][[subelements-15]]
+[[subelements-15]]
 
 ==== Subelements
 
 none - contains data
 
-[[bearh]][[GSDPG00101]][[cache-mapping]]
+[[cache-mapping]]
 
 === `cache-mapping`
 
 Maps a URL pattern or a servlet name to its cacheability constraints.
 
-[[fvyqi]][[GSDPG00371]][[superelements-16]]
+[[superelements-16]]
 
 ==== Superelements
 
 xref:#cache[`cache`] (`glassfish-web.xml`)
 
-[[fvyqn]][[GSDPG00372]][[subelements-16]]
+[[subelements-16]]
 
 ==== Subelements
 
 The following table describes subelements for the `cache-mapping`
 element.
 
-[[GSDPG861]][[fvypt]]
+[[fvypt]]
 
 
 Table C-17 `cache-mapping` Subelements
@@ -941,7 +941,7 @@ cacheability constraint for the given `url-pattern` or `servlet-name`.
 |===
 
 
-[[beari]][[GSDPG00102]][[call-property]]
+[[call-property]]
 
 === `call-property`
 
@@ -950,7 +950,7 @@ Specifies JAX-RPC property values that can be set on a
 client. The property names can be any properties supported by the
 JAX-RPC `Call` implementation.
 
-[[fvyri]][[GSDPG00373]][[superelements-17]]
+[[superelements-17]]
 
 ==== Superelements
 
@@ -958,14 +958,14 @@ xref:#port-info[`port-info`], xref:#service-ref[`service-ref`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyqp]][[GSDPG00374]][[subelements-17]]
+[[subelements-17]]
 
 ==== Subelements
 
 The following table describes subelements for the `call-property`
 element.
 
-[[GSDPG862]][[fvyrw]]
+[[fvyrw]]
 
 
 Table C-18 `call-property` subelements
@@ -986,51 +986,51 @@ xref:#value[`value`]
 |===
 
 
-[[bearj]][[GSDPG00103]][[caller-propagation]]
+[[caller-propagation]]
 
 === `caller-propagation`
 
 Specifies whether the target accepts propagated caller identities. The
 values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
-[[fvyqj]][[GSDPG00375]][[superelements-18]]
+[[superelements-18]]
 
 ==== Superelements
 
 xref:#sas-context[`sas-context`] (`glassfish-ejb-jar.xml`)
 
-[[fvyrb]][[GSDPG00376]][[subelements-18]]
+[[subelements-18]]
 
 ==== Subelements
 
 none - contains data
 
-[[beark]][[GSDPG00104]][[cert-db]]
+[[cert-db]]
 
 === `cert-db`
 
 Not implemented. Included for backward compatibility only. Attribute
 values are ignored.
 
-[[fvyqa]][[GSDPG00377]][[superelements-19]]
+[[superelements-19]]
 
 ==== Superelements
 
 xref:#security[`security`] (`sun-acc.xml`)
 
-[[fvyre]][[GSDPG00378]][[subelements-19]]
+[[subelements-19]]
 
 ==== Subelements
 
 none
 
-[[fvyrr]][[GSDPG00379]][[attributes-5]]
+[[attributes-5]]
 
 ==== Attributes
 
 The following table describes attributes for the `cert-db` element.
 
-[[GSDPG863]][[fvypo]]
+[[fvypo]]
 
 
 Table C-19 `cert-db` attributes
@@ -1045,38 +1045,38 @@ database.
 |===
 
 
-[[bearl]][[GSDPG00105]][[check-all-at-commit]]
+[[check-all-at-commit]]
 
 === `check-all-at-commit`
 
 This element is not implemented. Do not use.
 
-[[fvyrj]][[GSDPG00380]][[superelements-20]]
+[[superelements-20]]
 
 ==== Superelements
 
 xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
-[[bearm]][[GSDPG00106]][[check-modified-at-commit]]
+[[check-modified-at-commit]]
 
 === `check-modified-at-commit`
 
 Checks concurrent modification of fields in modified beans at commit
 time.
 
-[[fvyqf]][[GSDPG00381]][[superelements-21]]
+[[superelements-21]]
 
 ==== Superelements
 
 xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
-[[fvyqz]][[GSDPG00382]][[subelements-20]]
+[[subelements-20]]
 
 ==== Subelements
 
 none - element is present or absent
 
-[[bearn]][[GSDPG00107]][[check-version-of-accessed-instances]]
+[[check-version-of-accessed-instances]]
 
 === `check-version-of-accessed-instances`
 
@@ -1091,20 +1091,20 @@ instances).
 The version column must be a numeric type, and must be in the primary
 table. You must provide appropriate update triggers for this column.
 
-[[fvyqt]][[GSDPG00383]][[superelements-22]]
+[[superelements-22]]
 
 ==== Superelements
 
 xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
-[[fvypp]][[GSDPG00384]][[subelements-21]]
+[[subelements-21]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `check-version-of-accessed-instances` element.
 
-[[GSDPG864]][[fvyrq]]
+[[fvyrq]]
 
 
 Table C-20 `check-version-of-accessed-instances` Subelements
@@ -1120,7 +1120,7 @@ xref:#column-name[`column-name`]
 |===
 
 
-[[bearo]][[GSDPG00108]][[checkpoint-at-end-of-method]]
+[[checkpoint-at-end-of-method]]
 
 === `checkpoint-at-end-of-method`
 
@@ -1129,20 +1129,20 @@ persisted, after the specified methods are executed. The
 `availability-enabled` attribute of the parent xref:#ejb[`ejb`]
 element must be set to `true`.
 
-[[fvypr]][[GSDPG00385]][[superelements-23]]
+[[superelements-23]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyqe]][[GSDPG00386]][[subelements-22]]
+[[subelements-22]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `checkpoint-at-end-of-method` element.
 
-[[GSDPG865]][[fvyqx]]
+[[fvyqx]]
 
 
 Table C-21 `checkpoint-at-end-of-method` Subelements
@@ -1158,39 +1158,39 @@ xref:#method[`method`]
 |===
 
 
-[[bearp]][[GSDPG00109]][[checkpointed-methods]]
+[[checkpointed-methods]]
 
 === `checkpointed-methods`
 
 Deprecated. Supported for backward compatibility. Use
 xref:#checkpoint-at-end-of-method[`checkpoint-at-end-of-method`] instead.
 
-[[fvyrk]][[GSDPG00387]][[superelements-24]]
+[[superelements-24]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[bearq]][[GSDPG00110]][[class-loader]]
+[[class-loader]]
 
 === `class-loader`
 
 Configures the class loader for the web module.
 
-[[fvyrv]][[GSDPG00388]][[superelements-25]]
+[[superelements-25]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvyrh]][[GSDPG00389]][[subelements-23]]
+[[subelements-23]]
 
 ==== Subelements
 
 The following table describes subelements for the `class-loader`
 element.
 
-[[GSDPG866]][[fvyqg]]
+[[fvyqg]]
 
 
 Table C-22 `class-loader` Subelements
@@ -1206,13 +1206,13 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyrl]][[GSDPG00390]][[attributes-6]]
+[[attributes-6]]
 
 ==== Attributes
 
 The following table describes attributes for the `class-loader` element.
 
-[[GSDPG867]][[fvyrs]]
+[[fvyrs]]
 
 
 Table C-23 `class-loader` Attributes
@@ -1269,13 +1269,13 @@ WAR file is undefined.
 ====
 
 
-[[gcfko]][[GSDPG00391]][[properties-2]]
+[[properties-2]]
 
 ==== Properties
 
 The following table describes properties for the `class-loader` element.
 
-[[GSDPG868]][[gcfjs]]
+[[gcfjs]]
 
 
 Table C-24 `class-loader` Properties
@@ -1289,7 +1289,7 @@ are ignored by the class loader.
 |===
 
 
-[[bearr]][[GSDPG00111]][[client-container]]
+[[client-container]]
 
 === `client-container`
 
@@ -1298,20 +1298,20 @@ client container. This is the root element; there can only be one
 `client-container` element in a `sun-acc.xml` file. See
 link:dd-files.html#GSDPG00082[The sun-acc.xml File].
 
-[[fvypv]][[GSDPG00392]][[superelements-26]]
+[[superelements-26]]
 
 ==== Superelements
 
 none
 
-[[fvypk]][[GSDPG00393]][[subelements-24]]
+[[subelements-24]]
 
 ==== Subelements
 
 The following table describes subelements for the `client-container`
 element.
 
-[[GSDPG869]][[fvypm]]
+[[fvypm]]
 
 
 Table C-25 `client-container` Subelements
@@ -1370,14 +1370,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyqq]][[GSDPG00394]][[attributes-7]]
+[[attributes-7]]
 
 ==== Attributes
 
 The following table describes attributes for the `client-container`
 element.
 
-[[GSDPG870]][[fvyqb]]
+[[fvyqb]]
 
 
 Table C-26 `client-container` Attributes
@@ -1392,14 +1392,14 @@ results in exceptions.
 |===
 
 
-[[fvyrm]][[GSDPG00395]][[properties-3]]
+[[properties-3]]
 
 ==== Properties
 
 The following table describes properties for the `client-container`
 element.
 
-[[GSDPG871]][[fvyqm]]
+[[fvyqm]]
 
 
 Table C-27 `client-container` Properties
@@ -1415,7 +1415,7 @@ xref:#target-server[`target-server`] elements instead.
 |===
 
 
-[[bears]][[GSDPG00112]][[client-credential]]
+[[client-credential]]
 
 === `client-credential`
 
@@ -1424,20 +1424,20 @@ is present, the credentials are automatically sent to the server,
 without prompting the user for the user name and password on the client
 side.
 
-[[fvyqk]][[GSDPG00396]][[superelements-27]]
+[[superelements-27]]
 
 ==== Superelements
 
 xref:#client-container[`client-container`] (`sun-acc.xml`)
 
-[[fvyqd]][[GSDPG00397]][[subelements-25]]
+[[subelements-25]]
 
 ==== Subelements
 
 The following table describes subelements for the `client-credential`
 element.
 
-[[GSDPG872]][[fvyro]]
+[[fvyro]]
 
 
 Table C-28 `client-credential` subelement
@@ -1453,14 +1453,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyqv]][[GSDPG00398]][[attributes-8]]
+[[attributes-8]]
 
 ==== Attributes
 
 The following table describes attributes for the `client-credential`
 element.
 
-[[GSDPG873]][[fvypi]]
+[[fvypi]]
 
 
 Table C-29 `client-credential` attributes
@@ -1479,7 +1479,7 @@ by name) where credentials are to be resolved.
 |===
 
 
-[[beart]][[GSDPG00113]][[cmp]]
+[[cmp]]
 
 `cmp`
 ~~~~~
@@ -1487,19 +1487,19 @@ by name) where credentials are to be resolved.
 Describes runtime information for a CMP entity bean object for EJB 1.1
 and EJB 2.1 beans.
 
-[[fvyrg]][[GSDPG00399]][[superelements-28]]
+[[superelements-28]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyqw]][[GSDPG00400]][[subelements-26]]
+[[subelements-26]]
 
 ==== Subelements
 
 The following table describes subelements for the `cmp` element.
 
-[[GSDPG874]][[fvypw]]
+[[fvypw]]
 
 
 Table C-30 `cmp` Subelements
@@ -1534,7 +1534,7 @@ specified query methods.
 |===
 
 
-[[bearu]][[GSDPG00114]][[cmp-field-mapping]]
+[[cmp-field-mapping]]
 
 === `cmp-field-mapping`
 
@@ -1546,20 +1546,20 @@ getting the value from the database. The columns are updated in the
 order they appear. There is one `cmp-field-mapping` element for each
 `cmp-field` element defined in the `ejb-jar.xml` file.
 
-[[fvypy]][[GSDPG00401]][[superelements-29]]
+[[superelements-29]]
 
 ==== Superelements
 
 xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvyra]][[GSDPG00402]][[subelements-27]]
+[[subelements-27]]
 
 ==== Subelements
 
 The following table describes subelements for the `cmp-field-mapping`
 element.
 
-[[GSDPG875]][[fvyqh]]
+[[fvyqh]]
 
 
 Table C-31 `cmp-field-mapping` Subelements
@@ -1597,7 +1597,7 @@ xref:#fetched-with[`fetched-with`]
 |===
 
 
-[[bearv]][[GSDPG00115]][[cmp-resource]]
+[[cmp-resource]]
 
 === `cmp-resource`
 
@@ -1606,20 +1606,20 @@ information about this element, see "link:application-development-guide/containe
 CMP Resource]" in {productName} Application
 Development Guide.
 
-[[fvypz]][[GSDPG00403]][[superelements-30]]
+[[superelements-30]]
 
 ==== Superelements
 
 xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
-[[fvyrf]][[GSDPG00404]][[subelements-28]]
+[[subelements-28]]
 
 ==== Subelements
 
 The following table describes subelements for the `cmp-resource`
 element.
 
-[[GSDPG876]][[fvyps]]
+[[fvyps]]
 
 
 Table C-32 `cmp-resource` Subelements
@@ -1678,7 +1678,7 @@ set the `use-unique-table-names` property.
 |===
 
 
-[[bearw]][[GSDPG00116]][[cmr-field-mapping]]
+[[cmr-field-mapping]]
 
 === `cmr-field-mapping`
 
@@ -1687,20 +1687,20 @@ pairs that define the relationship. There is one `cmr-field-mapping`
 element for each `cmr-field` element in the `ejb-jar.xml` file. A
 relationship can also participate in a fetch group.
 
-[[fvyrc]][[GSDPG00405]][[superelements-31]]
+[[superelements-31]]
 
 ==== Superelements
 
 xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvypu]][[GSDPG00406]][[subelements-29]]
+[[subelements-29]]
 
 ==== Subelements
 
 The following table describes subelements for the `cmr-field-mapping`
 element.
 
-[[GSDPG877]][[fvypn]]
+[[fvypn]]
 
 
 Table C-33 `cmr-field-mapping` Subelements
@@ -1732,7 +1732,7 @@ relationship.
 |===
 
 
-[[bearx]][[GSDPG00117]][[cmr-field-name]]
+[[cmr-field-name]]
 
 === `cmr-field-name`
 
@@ -1740,19 +1740,19 @@ Specifies the Java identifier of a field. Must match the value of the
 `cmr-field-name` subelement of the `cmr-field` element in the
 `ejb-jar.xml` file.
 
-[[fvyrx]][[GSDPG00407]][[superelements-32]]
+[[superelements-32]]
 
 ==== Superelements
 
 xref:#cmr-field-mapping[`cmr-field-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvyry]][[GSDPG00408]][[subelements-30]]
+[[subelements-30]]
 
 ==== Subelements
 
 none - contains data
 
-[[beary]][[GSDPG00118]][[cmt-timeout-in-seconds]]
+[[cmt-timeout-in-seconds]]
 
 === `cmt-timeout-in-seconds`
 
@@ -1762,26 +1762,26 @@ Transaction Service timeout is used. If positive, this value is used for
 all methods in the bean that start a new container-managed transaction.
 This value is not used if the bean joins a client transaction.
 
-[[fvysf]][[GSDPG00409]][[superelements-33]]
+[[superelements-33]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvysc]][[GSDPG00410]][[subelements-31]]
+[[subelements-31]]
 
 ==== Subelements
 
 none - contains data
 
-[[bearz]][[GSDPG00119]][[column-name]]
+[[column-name]]
 
 === `column-name`
 
 Specifies the name of a column from the primary table, or the qualified
 table name (TABLE.COLUMN) of a column from a secondary or related table.
 
-[[fvyse]][[GSDPG00411]][[superelements-34]]
+[[superelements-34]]
 
 ==== Superelements
 
@@ -1789,13 +1789,13 @@ xref:#check-version-of-accessed-instances[`check-version-of-accessed-instances`]
 xref:#cmp-field-mapping[`cmp-field-mapping`], xref:#column-pair[`column-pair`]
 (`sun-cmp-mappings.xml`)
 
-[[fvysb]][[GSDPG00412]][[subelements-32]]
+[[subelements-32]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasa]][[GSDPG00120]][[column-pair]]
+[[column-pair]]
 
 === `column-pair`
 
@@ -1805,20 +1805,20 @@ two database tables. Each `column-pair` must contain exactly two
 `column-name` element names the table that this bean is mapped to, and
 the second `column-name` names the column in the related table.
 
-[[fvysa]][[GSDPG00413]][[superelements-35]]
+[[superelements-35]]
 
 ==== Superelements
 
 xref:#cmr-field-mapping[`cmr-field-mapping`], xref:#secondary-table[`secondary-table`]
 (`sun-cmp-mappings.xml`)
 
-[[fvysg]][[GSDPG00414]][[subelements-33]]
+[[subelements-33]]
 
 ==== Subelements
 
 The following table describes subelements for the `column-pair` element.
 
-[[GSDPG878]][[fvysh]]
+[[fvysh]]
 
 
 Table C-34 `column-pair` Subelements
@@ -1836,7 +1836,7 @@ related table.
 |===
 
 
-[[beasb]][[GSDPG00121]][[commit-option]]
+[[commit-option]]
 
 === `commit-option`
 
@@ -1851,19 +1851,19 @@ Commit option A is not supported for this {productName} release.
 ====
 
 
-[[fvyrz]][[GSDPG00415]][[superelements-36]]
+[[superelements-36]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvysd]][[GSDPG00416]][[subelements-34]]
+[[subelements-34]]
 
 ==== Subelements
 
 none - contains data
 
-[[gjjak]][[GSDPG00122]][[compatibility]]
+[[compatibility]]
 
 === `compatibility`
 
@@ -1876,39 +1876,39 @@ on which JAR files can be visible to various modules within an EAR file.
 Setting this element to `v2` removes these Jakarta EE 6 and later
 restrictions.
 
-[[gjjaf]][[GSDPG00417]][[superelements-37]]
+[[superelements-37]]
 
 ==== Superelements
 
 xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
 xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
-[[gjjag]][[GSDPG00418]][[subelements-35]]
+[[subelements-35]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasc]][[GSDPG00123]][[confidentiality]]
+[[confidentiality]]
 
 === `confidentiality`
 
 Specifies if the target supports privacy-protected messages. The values
 are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
-[[fvysi]][[GSDPG00419]][[superelements-38]]
+[[superelements-38]]
 
 ==== Superelements
 
 xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvysk]][[GSDPG00420]][[subelements-36]]
+[[subelements-36]]
 
 ==== Subelements
 
 none - contains data
 
-[[giygu]][[GSDPG00124]][[connector-connection-pool]]
+[[connector-connection-pool]]
 
 === `connector-connection-pool`
 
@@ -2199,7 +2199,7 @@ All JMS administered object resource properties that worked with version
 ====
 
 
-[[giyhv]][[GSDPG00125]][[connector-resource]]
+[[connector-resource]]
 
 === `connector-resource`
 
@@ -2279,26 +2279,26 @@ enabled at runtime.
 |===
 
 
-[[beasd]][[GSDPG00126]][[consistency]]
+[[consistency]]
 
 === `consistency`
 
 Specifies container behavior in guaranteeing transactional consistency
 of the data in the bean.
 
-[[fvysj]][[GSDPG00421]][[superelements-41]]
+[[superelements-41]]
 
 ==== Superelements
 
 xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvysl]][[GSDPG00422]][[subelements-39]]
+[[subelements-39]]
 
 ==== Subelements
 
 The following table describes subelements for the `consistency` element.
 
-[[GSDPG891]][[fvysn]]
+[[fvysn]]
 
 
 Table C-40 `consistency` Subelements
@@ -2347,7 +2347,7 @@ modified beans.
 |===
 
 
-[[bease]][[GSDPG00127]][[constraint-field]]
+[[constraint-field]]
 
 === `constraint-field`
 
@@ -2358,20 +2358,20 @@ All `constraint-field` constraints must pass for a response to be
 cached. If there are `value` constraints, at least one of them must
 pass.
 
-[[fvysm]][[GSDPG00423]][[superelements-42]]
+[[superelements-42]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvyso]][[GSDPG00424]][[subelements-40]]
+[[subelements-40]]
 
 ==== Subelements
 
 The following table describes subelements for the `constraint-field`
 element.
 
-[[GSDPG892]][[fvysp]]
+[[fvysp]]
 
 
 Table C-41 `constraint-field` Subelements
@@ -2388,7 +2388,7 @@ value.
 |===
 
 
-[[fvysq]][[GSDPG00425]][[attributes-11]]
+[[attributes-11]]
 
 ==== Attributes
 
@@ -2419,7 +2419,7 @@ xref:#constraint-field-value[`constraint-field-value`] subelement.
 |===
 
 
-[[beasf]][[GSDPG00128]][[constraint-field-value]]
+[[constraint-field-value]]
 
 === `constraint-field-value`
 
@@ -2431,26 +2431,26 @@ matching is case sensitive. For example:
 <value match-expr="in-range">1-60</value>
 ----
 
-[[fvyss]][[GSDPG00426]][[superelements-43]]
+[[superelements-43]]
 
 ==== Superelements
 
 xref:#constraint-field[`constraint-field`] (`glassfish-web.xml`)
 
-[[fvyst]][[GSDPG00427]][[subelements-41]]
+[[subelements-41]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvysu]][[GSDPG00428]][[attributes-12]]
+[[attributes-12]]
 
 ==== Attributes
 
 The following table describes attributes for the
 `constraint-field-value` element.
 
-[[GSDPG894]][[administering-concurrent-resources]][[fvysv]]
+[[fvysv]]
 
 
 Table C-43 `constraint-field-value` Attributes
@@ -2475,7 +2475,7 @@ response if matching fails.
 |===
 
 
-[[beasg]][[GSDPG00129]][[context-root]]
+[[context-root]]
 
 === `context-root`
 
@@ -2492,7 +2492,7 @@ If you are setting up load balancing, web module context roots must be
 unique within a server instance. See the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide] for more
 information about load balancing.
 
-[[fvysx]][[GSDPG00429]][[superelements-44]]
+[[superelements-44]]
 
 ==== Superelements
 
@@ -2501,13 +2501,13 @@ xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
 xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
-[[fvysw]][[GSDPG00430]][[subelements-42]]
+[[subelements-42]]
 
 ==== Subelements
 
 none - contains data
 
-[[beash]][[GSDPG00130]][[cookie-properties]]
+[[cookie-properties]]
 
 === `cookie-properties`
 
@@ -2524,20 +2524,20 @@ properties defined here.
 ====
 
 
-[[fvysy]][[GSDPG00431]][[superelements-45]]
+[[superelements-45]]
 
 ==== Superelements
 
 xref:#session-config[`session-config`] (`glassfish-web.xml`)
 
-[[fvysz]][[GSDPG00432]][[subelements-43]]
+[[subelements-43]]
 
 ==== Subelements
 
 The following table describes subelements for the `cookie-properties`
 element.
 
-[[GSDPG895]][[fvytb]]
+[[fvytb]]
 
 
 Table C-44 `cookie-properties` Subelements
@@ -2553,14 +2553,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyta]][[GSDPG00433]][[properties-5]]
+[[properties-5]]
 
 ==== Properties
 
 The following table describes properties for the `cookie-properties`
 element.
 
-[[GSDPG896]][[fvyte]]
+[[fvyte]]
 
 
 Table C-45 `cookie-properties` Properties
@@ -2605,7 +2605,7 @@ Allowed values are `true` or `false`.
 |===
 
 
-[[beasi]][[GSDPG00131]][[create-tables-at-deploy]]
+[[create-tables-at-deploy]]
 
 === `create-tables-at-deploy`
 
@@ -2617,19 +2617,19 @@ does not create tables.
 This element can be overridden during deployment. See
 "link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
-[[fvytc]][[GSDPG00434]][[superelements-46]]
+[[superelements-46]]
 
 ==== Superelements
 
 xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
-[[fvytd]][[GSDPG00435]][[subelements-44]]
+[[subelements-44]]
 
 ==== Subelements
 
 none - contains data
 
-[[giyhr]][[GSDPG00132]][[custom-resource]]
+[[custom-resource]]
 
 === `custom-resource`
 
@@ -2715,7 +2715,7 @@ enabled at runtime.
 |===
 
 
-[[beask]][[GSDPG00133]][[database-vendor-name]]
+[[database-vendor-name]]
 
 === `database-vendor-name`
 
@@ -2733,39 +2733,39 @@ recognized, SQL-92 compliance is presumed.
 This element can be overridden during deployment. See
 "link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
-[[fvytf]][[GSDPG00436]][[superelements-48]]
+[[superelements-48]]
 
 ==== Superelements
 
 xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
-[[fvyti]][[GSDPG00437]][[subelements-46]]
+[[subelements-46]]
 
 ==== Subelements
 
 none - contains data
 
-[[gaubj]][[GSDPG00134]][[debugging-enabled]]
+[[debugging-enabled]]
 
 === `debugging-enabled`
 
 Specifies whether the debugging servlet is enabled for this web service
 endpoint. Allowed values are `true` (the default) and `false`.
 
-[[gaubf]][[GSDPG00438]][[superelements-49]]
+[[superelements-49]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[gaube]][[GSDPG00439]][[subelements-47]]
+[[subelements-47]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasl]][[GSDPG00135]][[default]]
+[[default]]
 
 === `default`
 
@@ -2774,39 +2774,39 @@ and enables prefetching for a CMR field. To disable prefetching for
 specific query methods, use a xref:#prefetch-disabled[`prefetch-disabled`] element
 in the `glassfish-ejb-jar.xml` file.
 
-[[fvytg]][[GSDPG00440]][[superelements-50]]
+[[superelements-50]]
 
 ==== Superelements
 
 xref:#fetched-with[`fetched-with`] (`sun-cmp-mappings.xml`)
 
-[[fvyth]][[GSDPG00441]][[subelements-48]]
+[[subelements-48]]
 
 ==== Subelements
 
 none - element is present or absent
 
-[[beasm]][[GSDPG00136]][[default-helper]]
+[[default-helper]]
 
 === `default-helper`
 
 Passes property values to the built-in `default`
 xref:#cache-helper[`cache-helper`] class.
 
-[[fvytj]][[GSDPG00442]][[superelements-51]]
+[[superelements-51]]
 
 ==== Superelements
 
 xref:#cache[`cache`] (`glassfish-web.xml`)
 
-[[fvytk]][[GSDPG00443]][[subelements-49]]
+[[subelements-49]]
 
 ==== Subelements
 
 The following table describes subelements for the `default-helper`
 element.
 
-[[GSDPG902]][[fvytm]]
+[[fvytm]]
 
 
 Table C-48 `default-helper` Subelements
@@ -2822,14 +2822,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvytp]][[GSDPG00444]][[properties-6]]
+[[properties-6]]
 
 ==== Properties
 
 The following table describes properties for the `default-helper`
 element.
 
-[[GSDPG903]][[fvyto]]
+[[fvyto]]
 
 
 Table C-49 `default-helper` Properties
@@ -2849,7 +2849,7 @@ helper. See "link:application-development-guide/webapps.html#the-cachekeygenerat
 |===
 
 
-[[beasn]][[GSDPG00137]][[default-resource-principal]]
+[[default-resource-principal]]
 
 === `default-resource-principal`
 
@@ -2861,7 +2861,7 @@ the Open Message Queue broker user repository. See
 "link:../openmq/mq-admin-guide/security-services.html#GMADG00040[Configuring and Managing Security Services]" in Open
 Message Queue Administration Guide for details.
 
-[[fvytl]][[GSDPG00445]][[superelements-52]]
+[[superelements-52]]
 
 ==== Superelements
 
@@ -2870,14 +2870,14 @@ xref:#resource-ref[`resource-ref`] (`glassfish-web.xml`,
 xref:#cmp-resource[`cmp-resource`], xref:#mdb-connection-factory[`mdb-connection-factory`]
 (`glassfish-ejb-jar.xml`)
 
-[[fvytn]][[GSDPG00446]][[subelements-50]]
+[[subelements-50]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `default-resource-principal` element.
 
-[[GSDPG904]][[fvytr]]
+[[fvytr]]
 
 
 Table C-50 `default-resource-principal` Subelements
@@ -2900,13 +2900,13 @@ xref:#password[`password`]
 |===
 
 
-[[beaso]][[GSDPG00138]][[description]]
+[[description]]
 
 === `description`
 
 Specifies a text description of the containing element.
 
-[[fvytq]][[GSDPG00447]][[superelements-53]]
+[[superelements-53]]
 
 ==== Superelements
 
@@ -2922,13 +2922,13 @@ xref:#jdbc-connection-pool[`jdbc-connection-pool`], xref:#jdbc-resource[`jdbc-re
 xref:#mail-resource[`mail-resource`], xref:#property-with-attributes[`property` (with attributes)],
 xref:#resource-adapter-config[`resource-adapter-config`] (`glassfish-resources.xml`)
 
-[[fvyts]][[GSDPG00448]][[subelements-51]]
+[[subelements-51]]
 
 ==== Subelements
 
 none - contains data
 
-[[gkhtw]][[GSDPG00139]][[disable-nonportable-jndi-names]]
+[[disable-nonportable-jndi-names]]
 
 === `disable-nonportable-jndi-names`
 
@@ -2939,19 +2939,19 @@ for backward compatibility. To disable {productName} specific JNDI
 names for an EJB module, set the value of this element to `true`. The
 default is `false`.
 
-[[gkhum]][[GSDPG00449]][[superelements-54]]
+[[superelements-54]]
 
 ==== Superelements
 
 xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
-[[gkhug]][[GSDPG00450]][[subelements-52]]
+[[subelements-52]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasp]][[GSDPG00140]][[dispatcher]]
+[[dispatcher]]
 
 === `dispatcher`
 
@@ -2961,19 +2961,19 @@ which caching is enabled on the target resource. Valid values are
 specified, the default is `REQUEST`. See SRV.6.2.5 of the Servlet 2.4
 specification for more information.
 
-[[fvytt]][[GSDPG00451]][[superelements-55]]
+[[superelements-55]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvytv]][[GSDPG00452]][[subelements-53]]
+[[subelements-53]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasq]][[GSDPG00141]][[drop-tables-at-undeploy]]
+[[drop-tables-at-undeploy]]
 
 === `drop-tables-at-undeploy`
 
@@ -2985,19 +2985,19 @@ default if this element is not present), does not drop tables.
 This element can be overridden during deployment. See
 "link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
-[[fvytu]][[GSDPG00453]][[superelements-56]]
+[[superelements-56]]
 
 ==== Superelements
 
 xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
-[[fvytx]][[GSDPG00454]][[subelements-54]]
+[[subelements-54]]
 
 ==== Subelements
 
 none - contains data
 
-[[beass]][[GSDPG00142]][[ejb]]
+[[ejb]]
 
 `ejb`
 ~~~~~
@@ -3020,19 +3020,19 @@ beans as follows:
 `mdb-connection-factory`, `jms-durable-subscription-name`,
 `jms-max-messages-load`, `bean-pool`
 
-[[fvyty]][[GSDPG00455]][[superelements-57]]
+[[superelements-57]]
 
 ==== Superelements
 
 xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
-[[fvytw]][[GSDPG00456]][[subelements-55]]
+[[subelements-55]]
 
 ==== Subelements
 
 The following table describes subelements for the `ejb` element.
 
-[[GSDPG905]][[fvyuc]]
+[[fvyuc]]
 
 
 Table C-51 `ejb` Subelements
@@ -3233,7 +3233,7 @@ xref:#per-request-load-balancing[`per-request-load-balancing`]
 |===
 
 
-[[fvyuf]][[GSDPG00457]][[attributes-14]]
+[[attributes-14]]
 
 ==== Attributes
 
@@ -3252,7 +3252,7 @@ apply to this bean if it is a stateful session bean.
 |===
 
 
-[[fvytz]][[GSDPG00458]][[example-3]]
+[[example-3]]
 
 ==== Example
 
@@ -3282,7 +3282,7 @@ apply to this bean if it is a stateful session bean.
 </ejb>
 ----
 
-[[beast]][[GSDPG00143]][[ejb-name]]
+[[ejb-name]]
 
 === `ejb-name`
 
@@ -3298,20 +3298,20 @@ In the `sun-cmp-mappings.xml` file, specifies the `ejb-name` of the
 entity bean in the `ejb-jar.xml` file to which the container-managed
 persistence (CMP) bean corresponds.
 
-[[fvyug]][[GSDPG00459]][[superelements-58]]
+[[superelements-58]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`], xref:#method[`method`] (`glassfish-ejb-jar.xml`);
 xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvyue]][[GSDPG00460]][[subelements-56]]
+[[subelements-56]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasu]][[GSDPG00144]][[ejb-ref]]
+[[ejb-ref]]
 
 === `ejb-ref`
 
@@ -3322,7 +3322,7 @@ resource.
 The `ejb-ref` element is used for the declaration of a reference to an
 EJB's home. Applies to session beans or entity beans.
 
-[[fvyub]][[GSDPG00461]][[superelements-59]]
+[[superelements-59]]
 
 ==== Superelements
 
@@ -3331,13 +3331,13 @@ xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[fvyua]][[GSDPG00462]][[subelements-57]]
+[[subelements-57]]
 
 ==== Subelements
 
 The following table describes subelements for the `ejb-ref` element.
 
-[[GSDPG907]][[fvyui]]
+[[fvyui]]
 
 
 Table C-53 `ejb-ref` Subelements
@@ -3360,47 +3360,47 @@ xref:#jndi-name[`jndi-name`]
 |===
 
 
-[[beasv]][[GSDPG00145]][[ejb-ref-name]]
+[[ejb-ref-name]]
 
 === `ejb-ref-name`
 
 Specifies the `ejb-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `ejb-ref` entry.
 
-[[fvyuh]][[GSDPG00463]][[superelements-60]]
+[[superelements-60]]
 
 ==== Superelements
 
 xref:#ejb-ref[`ejb-ref`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyuj]][[GSDPG00464]][[subelements-58]]
+[[subelements-58]]
 
 ==== Subelements
 
 none - contains data
 
-[[gaubh]][[GSDPG00146]][[eligible]]
+[[eligible]]
 
 === `eligible`
 
 Specifies whether the application client module is eligible to be Java
 Web Start enabled. Allowed values are `true` (the default) and `false`.
 
-[[gaubg]][[GSDPG00465]][[superelements-61]]
+[[superelements-61]]
 
 ==== Superelements
 
 xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
-[[gauaz]][[GSDPG00466]][[subelements-59]]
+[[subelements-59]]
 
 ==== Subelements
 
 none - contains data
 
-[[beasw]][[GSDPG00147]][[endpoint-address-uri]]
+[[endpoint-address-uri]]
 
 === `endpoint-address-uri`
 
@@ -3421,20 +3421,20 @@ If the web service endpoint is a servlet that implements only a single
 endpoint and has only one `url-pattern`, it is not necessary to set this
 value, because the web container derives it from the `web.xml` file.
 
-[[fvyul]][[GSDPG00467]][[superelements-62]]
+[[superelements-62]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvyum]][[GSDPG00468]][[subelements-60]]
+[[subelements-60]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvyuk]][[GSDPG00469]][[example-4]]
+[[example-4]]
 
 ==== Example
 
@@ -3453,27 +3453,27 @@ results in the following target endpoint address:
 http://localhost:8080/StockQuoteService/StockQuotePort
 ----
 
-[[beasx]][[GSDPG00148]][[enterprise-beans]]
+[[enterprise-beans]]
 
 === `enterprise-beans`
 
 Specifies all the runtime properties for an EJB JAR file in the
 application.
 
-[[fvyun]][[GSDPG00470]][[superelements-63]]
+[[superelements-63]]
 
 ==== Superelements
 
 xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
-[[fvyuo]][[GSDPG00471]][[subelements-61]]
+[[subelements-61]]
 
 ==== Subelements
 
 The following table describes subelements for the `enterprise-beans`
 element.
 
-[[GSDPG908]][[fvyut]]
+[[fvyut]]
 
 
 Table C-54 `enterprise-beans` Subelements
@@ -3536,7 +3536,7 @@ xref:#property-with-subelements[`property` (with subelements)]
 |===
 
 
-[[fvyux]][[GSDPG00472]][[example-5]]
+[[example-5]]
 
 ==== Example
 
@@ -3568,26 +3568,26 @@ xref:#property-with-subelements[`property` (with subelements)]
 </enterprise-beans>
 ----
 
-[[beasy]][[GSDPG00149]][[entity-mapping]]
+[[entity-mapping]]
 
 === `entity-mapping`
 
 Specifies the mapping a bean to database columns.
 
-[[fvyus]][[GSDPG00473]][[superelements-64]]
+[[superelements-64]]
 
 ==== Superelements
 
 xref:#sun-cmp-mapping[`sun-cmp-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvyur]][[GSDPG00474]][[subelements-62]]
+[[subelements-62]]
 
 ==== Subelements
 
 The following table describes subelements for the `entity-mapping`
 element.
 
-[[GSDPG909]][[fvyuz]]
+[[fvyuz]]
 
 
 Table C-55 `entity-mapping` Subelements
@@ -3639,45 +3639,45 @@ transactional consistency of the data in the bean.
 |===
 
 
-[[beasz]][[GSDPG00150]][[establish-trust-in-client]]
+[[establish-trust-in-client]]
 
 === `establish-trust-in-client`
 
 Specifies if the target is capable of authenticating a client. The
 values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
-[[fvyuq]][[GSDPG00475]][[superelements-65]]
+[[superelements-65]]
 
 ==== Superelements
 
 xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvyuy]][[GSDPG00476]][[subelements-63]]
+[[subelements-63]]
 
 ==== Subelements
 
 none - contains data
 
-[[beata]][[GSDPG00151]][[establish-trust-in-target]]
+[[establish-trust-in-target]]
 
 === `establish-trust-in-target`
 
 Specifies if the target is capable of authenticating to a client. The
 values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
-[[fvyuu]][[GSDPG00477]][[superelements-66]]
+[[superelements-66]]
 
 ==== Superelements
 
 xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvyuv]][[GSDPG00478]][[subelements-64]]
+[[subelements-64]]
 
 ==== Subelements
 
 none - contains data
 
-[[giyin]][[GSDPG00152]][[external-jndi-resource]]
+[[external-jndi-resource]]
 
 === `external-jndi-resource`
 
@@ -3769,7 +3769,7 @@ enabled at runtime.
 |===
 
 
-[[beatc]][[GSDPG00153]][[fetched-with]]
+[[fetched-with]]
 
 === `fetched-with`
 
@@ -3809,21 +3809,21 @@ same column. A managed field can have any `fetched-with` subelement
 except `<default/>`. For additional information, see
 "link:application-development-guide/container_managed-persistence.html#managed-fields[Managed Fields]" in {productName} Application Development Guide.
 
-[[fvyuw]][[GSDPG00479]][[superelements-68]]
+[[superelements-68]]
 
 ==== Superelements
 
 xref:#cmp-field-mapping[`cmp-field-mapping`], xref:#cmr-field-mapping[`cmr-field-mapping`]
 (`sun-cmp-mappings.xml`)
 
-[[fvyup]][[GSDPG00480]][[subelements-66]]
+[[subelements-66]]
 
 ==== Subelements
 
 The following table describes subelements for the `fetched-with`
 element.
 
-[[GSDPG915]][[fvzcz]]
+[[fvzcz]]
 
 
 Table C-58 `fetched-with` Subelements
@@ -3865,7 +3865,7 @@ transaction.
 |===
 
 
-[[beatd]][[GSDPG00154]][[field-name]]
+[[field-name]]
 
 === `field-name`
 
@@ -3873,37 +3873,37 @@ Specifies the Java identifier of a field. This identifier must match the
 value of the `field-name` subelement of the `cmp-field` element in the
 `ejb-jar.xml` file.
 
-[[fvzcm]][[GSDPG00481]][[superelements-69]]
+[[superelements-69]]
 
 ==== Superelements
 
 xref:#cmp-field-mapping[`cmp-field-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvyxs]][[GSDPG00482]][[subelements-67]]
+[[subelements-67]]
 
 ==== Subelements
 
 none - contains data
 
-[[beate]][[GSDPG00155]][[finder]]
+[[finder]]
 
 === `finder`
 
 Describes the finders for CMP 1.1 with a method name and query.
 
-[[fvzao]][[GSDPG00483]][[superelements-70]]
+[[superelements-70]]
 
 ==== Superelements
 
 xref:#one-one-finders[`one-one-finders`] (`glassfish-ejb-jar.xml`)
 
-[[fvzdc]][[GSDPG00484]][[subelements-68]]
+[[subelements-68]]
 
 ==== Subelements
 
 The following table describes subelements for the `finder` element.
 
-[[GSDPG916]][[fvyzu]]
+[[fvyzu]]
 
 
 Table C-59 `finder` Subelements
@@ -3944,27 +3944,27 @@ xref:#query-ordering[`query-ordering`]
 |===
 
 
-[[beatf]][[GSDPG00156]][[flush-at-end-of-method]]
+[[flush-at-end-of-method]]
 
 === `flush-at-end-of-method`
 
 Specifies the methods that force a database flush after execution.
 Applicable to entity beans.
 
-[[fvzcw]][[GSDPG00485]][[superelements-71]]
+[[superelements-71]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyza]][[GSDPG00486]][[subelements-69]]
+[[subelements-69]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `flush-at-end-of-method` element.
 
-[[GSDPG917]][[fvzba]]
+[[fvzba]]
 
 
 Table C-60 `flush-at-end-of-method` Subelements
@@ -3980,7 +3980,7 @@ xref:#method[`method`]
 |===
 
 
-[[beath]][[GSDPG00157]][[gen-classes]]
+[[gen-classes]]
 
 === `gen-classes`
 
@@ -3994,19 +3994,19 @@ redeployment time. Do not specify it or change it after deployment.
 ====
 
 
-[[fvyyh]][[GSDPG00487]][[superelements-72]]
+[[superelements-72]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvzee]][[GSDPG00488]][[subelements-70]]
+[[subelements-70]]
 
 ==== Subelements
 
 The following table describes subelements for the `gen-classes` element.
 
-[[GSDPG918]][[fvzdo]]
+[[fvzdo]]
 
 
 Table C-61 `gen-classes` Subelements
@@ -4044,7 +4044,7 @@ xref:#local-home-impl[`local-home-impl`]
 |===
 
 
-[[beaxw]][[GSDPG00158]][[glassfish-application]]
+[[glassfish-application]]
 
 === `glassfish-application`
 
@@ -4053,20 +4053,20 @@ This is the root element; there can only be one `glassfish-application`
 element in a `glassfish-application.xml` file. See
 link:dd-files.html#GSDPG00077[The glassfish-application.xml File].
 
-[[fvzhn]][[GSDPG00489]][[superelements-73]]
+[[superelements-73]]
 
 ==== Superelements
 
 none
 
-[[fvzgn]][[GSDPG00490]][[subelements-71]]
+[[subelements-71]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `glassfish-application` element.
 
-[[GSDPG919]][[fvzhl]]
+[[fvzhl]]
 
 
 Table C-62 `glassfish-application` Subelements
@@ -4174,7 +4174,7 @@ xref:#version-identifier[`version-identifier`]
 |===
 
 
-[[beaxx]][[GSDPG00159]][[glassfish-application-client]]
+[[glassfish-application-client]]
 
 === `glassfish-application-client`
 
@@ -4184,20 +4184,20 @@ client. This is the root element; there can only be one
 `glassfish-application-client.xml` file. See link:dd-files.html#GSDPG00081[The
 glassfish-application-client.xml file].
 
-[[fvzgq]][[GSDPG00491]][[superelements-74]]
+[[superelements-74]]
 
 ==== Superelements
 
 none
 
-[[fvzja]][[GSDPG00492]][[subelements-72]]
+[[subelements-72]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `glassfish-application-client` element.
 
-[[GSDPG920]][[fvzjh]]
+[[fvzjh]]
 
 
 Table C-63 `glassfish-application-client` subelements
@@ -4258,7 +4258,7 @@ xref:#version-identifier[`version-identifier`]
 |===
 
 
-[[beaya]][[GSDPG00160]][[glassfish-ejb-jar]]
+[[glassfish-ejb-jar]]
 
 === `glassfish-ejb-jar`
 
@@ -4267,20 +4267,20 @@ This is the root element; there can only be one `glassfish-ejb-jar`
 element in a `glassfish-ejb-jar.xml` file. See
 link:dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File].
 
-[[fvzhw]][[GSDPG00493]][[superelements-75]]
+[[superelements-75]]
 
 ==== Superelements
 
 none
 
-[[fvzfv]][[GSDPG00494]][[subelements-73]]
+[[subelements-73]]
 
 ==== Subelements
 
 The following table describes subelements for the `glassfish-ejb-jar`
 element.
 
-[[GSDPG921]][[fvzfu]]
+[[fvzfu]]
 
 
 Table C-64 `glassfish-ejb-jar` Subelements
@@ -4331,7 +4331,7 @@ xref:#version-identifier[`version-identifier`]
 |===
 
 
-[[beayb]][[GSDPG00161]][[glassfish-web-app]]
+[[glassfish-web-app]]
 
 === `glassfish-web-app`
 
@@ -4340,20 +4340,20 @@ is the root element; there can only be one `glassfish-web-app` element
 in a `glassfish-web.xml` file. See link:dd-files.html#GSDPG00078[The
 glassfish-web.xml File].
 
-[[fvzgj]][[GSDPG00495]][[superelements-76]]
+[[superelements-76]]
 
 ==== Superelements
 
 none
 
-[[fvzhr]][[GSDPG00496]][[subelements-74]]
+[[subelements-74]]
 
 ==== Subelements
 
 The following table describes subelements for the `glassfish-web-app`
 element.
 
-[[GSDPG922]][[fvzgf]]
+[[fvzgf]]
 
 
 Table C-65 `glassfish-web-app` Subelements
@@ -4499,14 +4499,14 @@ xref:#version-identifier[`version-identifier`]
 |===
 
 
-[[fvzia]][[GSDPG00497]][[attributes-16]]
+[[attributes-16]]
 
 ==== Attributes
 
 The following table describes attributes for the `glassfish-web-app`
 element.
 
-[[GSDPG923]][[fvzjf]]
+[[fvzjf]]
 
 
 Table C-66 `glassfish-web-app` Attributes
@@ -4522,14 +4522,14 @@ Table C-66 `glassfish-web-app` Attributes
 |===
 
 
-[[fvzgt]][[GSDPG00498]][[properties-7]]
+[[properties-7]]
 
 ==== Properties
 
 The following table describes properties for the `glassfish-web-app`
 element.
 
-[[GSDPG924]][[fvzim]]
+[[fvzim]]
 
 
 Table C-67 `glassfish-web-app` Properties
@@ -4667,7 +4667,7 @@ encoded using the response's charset instead of the default (UTF-8).
 |===
 
 
-[[giygy]][[GSDPG00162]][[group-map]]
+[[group-map]]
 
 === `group-map`
 
@@ -4681,7 +4681,7 @@ Maps an EIS group to a group defined in the {productName} domain.
 
 xref:#work-security-map[`work-security-map`] (`glassfish-resources.xml`)
 
-[[giyid]][[GSDPG00499]][[subelements-75]]
+[[subelements-75]]
 
 ==== Subelements
 
@@ -4710,70 +4710,70 @@ domain.
 |===
 
 
-[[beati]][[GSDPG00163]][[group-name]]
+[[group-name]]
 
 === `group-name`
 
 Specifies a group name in the current realm.
 
-[[fvzak]][[GSDPG00500]][[superelements-78]]
+[[superelements-78]]
 
 ==== Superelements
 
 xref:#security-role-mapping[`security-role-mapping`] (`glassfish-application.xml`,
 `glassfish-web.xml`, `glassfish-ejb-jar.xml`)
 
-[[fvywm]][[GSDPG00501]][[subelements-76]]
+[[subelements-76]]
 
 ==== Subelements
 
 none - contains data
 
-[[beatk]][[GSDPG00502]][[http-method]]
+[[http-method]]
 
 ==== `http-method`
 
 Specifies an HTTP method that is eligible for caching. The default is
 `GET`.
 
-[[fvzbq]][[GSDPG00317]][[superelements-79]]
+[[superelements-79]]
 
 ===== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvyyj]][[GSDPG00318]][[subelements-77]]
+[[subelements-77]]
 
 ===== Subelements
 
 none - contains data
 
-[[beatm]][[GSDPG00164]][[idempotent-url-pattern]]
+[[idempotent-url-pattern]]
 
 === `idempotent-url-pattern`
 
 Specifies a URL pattern for idempotent requests.
 
-[[fvzaj]][[GSDPG00503]][[superelements-80]]
+[[superelements-80]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvzea]][[GSDPG00504]][[subelements-78]]
+[[subelements-78]]
 
 ==== Subelements
 
 none
 
-[[fvyxx]][[GSDPG00505]][[attributes-18]]
+[[attributes-18]]
 
 ==== Attributes
 
 The following table describes attributes for the
 `idempotent-url-pattern` element.
 
-[[GSDPG928]][[fvzca]]
+[[fvzca]]
 
 
 Table C-69 `idempotent-url-pattern` Attributes
@@ -4793,7 +4793,7 @@ A value of `-1` indicates infinite retries.
 |===
 
 
-[[fvyxy]][[GSDPG00506]][[example-6]]
+[[example-6]]
 
 ==== Example
 
@@ -4805,46 +4805,46 @@ The following example specifies that all requests for the URI
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
 
-[[beatn]][[GSDPG00165]][[integrity]]
+[[integrity]]
 
 === `integrity`
 
 Specifies if the target supports integrity-protected messages. The
 values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
-[[fvzdj]][[GSDPG00507]][[superelements-81]]
+[[superelements-81]]
 
 ==== Superelements
 
 xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvzdv]][[GSDPG00508]][[subelements-79]]
+[[subelements-79]]
 
 ==== Subelements
 
 none - contains data
 
-[[beato]][[GSDPG00166]][[ior-security-config]]
+[[ior-security-config]]
 
 === `ior-security-config`
 
 Specifies the security information for the interoperable object
 reference (IOR).
 
-[[fvzbe]][[GSDPG00509]][[superelements-82]]
+[[superelements-82]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvzbv]][[GSDPG00510]][[subelements-80]]
+[[subelements-80]]
 
 ==== Subelements
 
 The following table describes subelements for the `ior-security-config`
 element.
 
-[[GSDPG929]][[fvyyk]]
+[[fvyyk]]
 
 
 Table C-70 `ior-security-config` Subelements
@@ -4873,69 +4873,69 @@ xref:#sas-context[`sas-context`]
 |===
 
 
-[[beatp]][[GSDPG00167]][[is-cache-overflow-allowed]]
+[[is-cache-overflow-allowed]]
 
 === `is-cache-overflow-allowed`
 
 This element is deprecated. Do not use.
 
-[[fvzcu]][[GSDPG00511]][[superelements-83]]
+[[superelements-83]]
 
 ==== Superelements
 
 xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
-[[beatq]][[GSDPG00168]][[is-one-one-cmp]]
+[[is-one-one-cmp]]
 
 === `is-one-one-cmp`
 
 This element is not used.
 
-[[fvyww]][[GSDPG00512]][[superelements-84]]
+[[superelements-84]]
 
 ==== Superelements
 
 xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
-[[beatr]][[GSDPG00169]][[is-read-only-bean]]
+[[is-read-only-bean]]
 
 === `is-read-only-bean`
 
 Specifies that this entity bean is a read-only bean if `true`. If this
 element is absent, the default value of `false` is used.
 
-[[fvzan]][[GSDPG00513]][[superelements-85]]
+[[superelements-85]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyvx]][[GSDPG00514]][[subelements-81]]
+[[subelements-81]]
 
 ==== Subelements
 
 none - contains data
 
-[[beatt]][[GSDPG00170]][[java-method]]
+[[java-method]]
 
 === `java-method`
 
 Specifies a method.
 
-[[fvyyw]][[GSDPG00515]][[superelements-86]]
+[[superelements-86]]
 
 ==== Superelements
 
 xref:#message[`message`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyvo]][[GSDPG00516]][[subelements-82]]
+[[subelements-82]]
 
 ==== Subelements
 
 The following table describes subelements for the `java-method` element.
 
-[[GSDPG930]][[fvzdu]]
+[[fvzdu]]
 
 
 Table C-71 `java-method` Subelements
@@ -4958,28 +4958,28 @@ parameters.
 |===
 
 
-[[gauax]][[GSDPG00171]][[java-web-start-access]]
+[[java-web-start-access]]
 
 === `java-web-start-access`
 
 Specifies changes to default Java Web Start parameters for an embedded
 or stand-alone application client module.
 
-[[gauba]][[GSDPG00517]][[superelements-87]]
+[[superelements-87]]
 
 ==== Superelements
 
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[gauav]][[GSDPG00518]][[subelements-83]]
+[[subelements-83]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `java-web-start-access` element.
 
-[[GSDPG931]][[gauaw]]
+[[gauaw]]
 
 
 Table C-72 `java-web-start-access` subelements
@@ -5039,7 +5039,7 @@ specified, a default JNLP file is generated.
 |===
 
 
-[[giyil]][[GSDPG00172]][[jdbc-connection-pool]]
+[[jdbc-connection-pool]]
 
 === `jdbc-connection-pool`
 
@@ -5490,7 +5490,7 @@ a standard property, it is commonly used.
 |===
 
 
-[[giyhm]][[GSDPG00173]][[jdbc-resource]]
+[[jdbc-resource]]
 
 === `jdbc-resource`
 
@@ -5574,7 +5574,7 @@ enabled at runtime.
 |===
 
 
-[[beatu]][[GSDPG00174]][[jms-durable-subscription-name]]
+[[jms-durable-subscription-name]]
 
 === `jms-durable-subscription-name`
 
@@ -5583,19 +5583,19 @@ class. Only applies to the Java Message Service Topic Destination type,
 and only when the message-driven bean deployment descriptor subscription
 durability is Durable.
 
-[[fvzdb]][[GSDPG00519]][[superelements-90]]
+[[superelements-90]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvzdp]][[GSDPG00520]][[subelements-86]]
+[[subelements-86]]
 
 ==== Subelements
 
 none - contains data
 
-[[beatv]][[GSDPG00175]][[jms-max-messages-load]]
+[[jms-max-messages-load]]
 
 === `jms-max-messages-load`
 
@@ -5603,19 +5603,19 @@ Specifies the maximum number of messages to load into a Java Message
 Service session at one time for a message-driven bean to serve. The
 default is 1.
 
-[[fvyzx]][[GSDPG00521]][[superelements-91]]
+[[superelements-91]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyxq]][[GSDPG00522]][[subelements-87]]
+[[subelements-87]]
 
 ==== Subelements
 
 none - contains data
 
-[[beatw]][[GSDPG00176]][[jndi-name]]
+[[jndi-name]]
 
 === `jndi-name`
 
@@ -5633,7 +5633,7 @@ xref:#mdb-resource-adapter[`mdb-resource-adapter`] element. For more information
 JMS resources, see "link:application-development-guide/jms.html#beaob[Using the Java Message Service]" in
 {productName} Application Development Guide.
 
-[[fvyyy]][[GSDPG00523]][[superelements-92]]
+[[superelements-92]]
 
 ==== Superelements
 
@@ -5644,13 +5644,13 @@ xref:#resource-env-ref[`resource-env-ref`], xref:#resource-ref[`resource-ref`]
 xref:#ejb[`ejb`], xref:#mdb-connection-factory[`mdb-connection-factory`]
 (`glassfish-ejb-jar.xml`)
 
-[[fvywz]][[GSDPG00524]][[subelements-88]]
+[[subelements-88]]
 
 ==== Subelements
 
 none - contains data
 
-[[gkhun]][[GSDPG00177]][[jnlp-doc]]
+[[jnlp-doc]]
 
 === `jnlp-doc`
 
@@ -5692,38 +5692,38 @@ the JAR from the path in the JAR:
 For information about the allowed contents of a custom JNLP file, see
 "link:application-development-guide/java-clients.html#beakt[Developing Java Clients]" in {productName} Application Development Guide.
 
-[[gkhuj]][[GSDPG00525]][[superelements-93]]
+[[superelements-93]]
 
 ==== Superelements
 
 xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
-[[gkhtm]][[GSDPG00526]][[subelements-89]]
+[[subelements-89]]
 
 ==== Subelements
 
 none - contains data
 
-[[beatx]][[GSDPG00178]][[jsp-config]]
+[[jsp-config]]
 
 === `jsp-config`
 
 Specifies JSP configuration information.
 
-[[fvywi]][[GSDPG00527]][[superelements-94]]
+[[superelements-94]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvzcs]][[GSDPG00528]][[subelements-90]]
+[[subelements-90]]
 
 ==== Subelements
 
 The following table describes subelements for the `jsp-config` element.
 
-[[GSDPG946]][[fvyzp]]
+[[fvyzp]]
 
 
 Table C-79 `jsp-config` Subelements
@@ -5739,7 +5739,7 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyzf]][[GSDPG00529]][[properties-8]]
+[[properties-8]]
 
 ==== Properties
 
@@ -5757,7 +5757,7 @@ properties to these non-default values:
 
 The following table describes properties for the `jsp-config` element.
 
-[[GSDPG947]][[fvzde]]
+[[fvzde]]
 
 
 Table C-80 `jsp-config` Properties
@@ -5896,7 +5896,7 @@ header is added by the generated servlet.
 |===
 
 
-[[gkhtr]][[GSDPG00179]][[keep-state]]
+[[keep-state]]
 
 === `keep-state`
 
@@ -5927,7 +5927,7 @@ To preserve active state data, {productName} serializes the data and
 saves it in memory. To restore the data, the class loader of the newly
 redeployed application deserializes the data that was previously saved.
 
-[[gkhto]][[GSDPG00530]][[superelements-95]]
+[[superelements-95]]
 
 ==== Superelements
 
@@ -5935,13 +5935,13 @@ xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web-app.xml`),
 xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
-[[gkhuk]][[GSDPG00531]][[subelements-91]]
+[[subelements-91]]
 
 ==== Subelements
 
 none - contains data
 
-[[beatz]][[GSDPG00180]][[key-field]]
+[[key-field]]
 
 === `key-field`
 
@@ -5954,25 +5954,25 @@ If this element is not present, the web container uses the Servlet Path
 the current request). See the Servlet 2.4 specification, section SRV
 4.4, for details on the Servlet Path.
 
-[[fvyvb]][[GSDPG00532]][[superelements-96]]
+[[superelements-96]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvzal]][[GSDPG00533]][[subelements-92]]
+[[subelements-92]]
 
 ==== Subelements
 
 none
 
-[[fvzdn]][[GSDPG00534]][[attributes-21]]
+[[attributes-21]]
 
 ==== Attributes
 
 The following table describes attributes for the `key-field` element.
 
-[[GSDPG948]][[fvyyi]]
+[[fvyyi]]
 
 
 Table C-81 `key-field` Attributes
@@ -5989,7 +5989,7 @@ the input parameter is retrieved. Allowed values are
 |===
 
 
-[[beaub]][[GSDPG00181]][[level]]
+[[level]]
 
 === `level`
 
@@ -5998,19 +5998,19 @@ integer. Fields and relationships that belong to a hierarchical fetch
 group of equal (or lesser) value are fetched at the same time. The value
 of level must be greater than zero. Only one is allowed.
 
-[[fvyvf]][[GSDPG00535]][[superelements-97]]
+[[superelements-97]]
 
 ==== Superelements
 
 xref:#fetched-with[`fetched-with`] (`sun-cmp-mappings.xml`)
 
-[[fvywq]][[GSDPG00536]][[subelements-93]]
+[[subelements-93]]
 
 ==== Subelements
 
 none - contains data
 
-[[beauc]][[GSDPG00182]][[local-home-impl]]
+[[local-home-impl]]
 
 === `local-home-impl`
 
@@ -6025,19 +6025,19 @@ redeployment time. Do not specify it or change it after deployment.
 ====
 
 
-[[fvyzo]][[GSDPG00537]][[superelements-98]]
+[[superelements-98]]
 
 ==== Superelements
 
 xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
-[[fvzah]][[GSDPG00538]][[subelements-94]]
+[[subelements-94]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaud]][[GSDPG00183]][[local-impl]]
+[[local-impl]]
 
 === `local-impl`
 
@@ -6052,19 +6052,19 @@ redeployment time. Do not specify it or change it after deployment.
 ====
 
 
-[[fvzcr]][[GSDPG00539]][[superelements-99]]
+[[superelements-99]]
 
 ==== Superelements
 
 xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
-[[fvzai]][[GSDPG00540]][[subelements-95]]
+[[subelements-95]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaue]][[GSDPG00184]][[locale-charset-info]]
+[[locale-charset-info]]
 
 === `locale-charset-info`
 
@@ -6073,20 +6073,20 @@ xref:#parameter-encoding[`parameter-encoding`] subelement of
 xref:#glassfish-web-app[`glassfish-web-app`] instead. Specifies information about
 the application's internationalization settings.
 
-[[fvyvm]][[GSDPG00541]][[superelements-100]]
+[[superelements-100]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvzbi]][[GSDPG00542]][[subelements-96]]
+[[subelements-96]]
 
 ==== Subelements
 
 The following table describes subelements for the `locale-charset-info`
 element.
 
-[[GSDPG949]][[fvyzd]]
+[[fvyzd]]
 
 
 Table C-82 `locale-charset-info` Subelements
@@ -6112,14 +6112,14 @@ field value.
 |===
 
 
-[[fvywh]][[GSDPG00543]][[attributes-22]]
+[[attributes-22]]
 
 ==== Attributes
 
 The following table describes attributes for the `locale-charset-info`
 element.
 
-[[GSDPG950]][[fvzcd]]
+[[fvzcd]]
 
 
 Table C-83 `locale-charset-info` Attributes
@@ -6133,7 +6133,7 @@ xref:#parameter-encoding[`parameter-encoding`] element.
 |===
 
 
-[[beauf]][[GSDPG00185]][[locale-charset-map]]
+[[locale-charset-map]]
 
 === `locale-charset-map`
 
@@ -6144,20 +6144,20 @@ from the optional xref:#parameter-encoding[`parameter-encoding`] element. For
 encodings, see
 `http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html`.
 
-[[fvzbg]][[GSDPG00544]][[superelements-101]]
+[[superelements-101]]
 
 ==== Superelements
 
 xref:#locale-charset-info[`locale-charset-info`] (`glassfish-web.xml`)
 
-[[fvywg]][[GSDPG00545]][[subelements-97]]
+[[subelements-97]]
 
 ==== Subelements
 
 The following table describes subelements for the `locale-charset-map`
 element.
 
-[[GSDPG951]][[fvyvl]]
+[[fvyvl]]
 
 
 Table C-84 `locale-charset-map` Subelements
@@ -6173,14 +6173,14 @@ xref:#description[`description`]
 |===
 
 
-[[fvyzn]][[GSDPG00546]][[attributes-23]]
+[[attributes-23]]
 
 ==== Attributes
 
 The following table describes attributes for the `locale-charset-map`
 element.
 
-[[GSDPG952]][[fvzbk]]
+[[fvzbk]]
 
 
 Table C-85 `locale-charset-map` Attributes
@@ -6201,7 +6201,7 @@ maps.
 |===
 
 
-[[fvzct]][[GSDPG00547]][[example-agents]]
+[[example-agents]]
 
 ==== Example Agents
 
@@ -6224,13 +6224,13 @@ Table C-86 Example `agent` Attribute Values
 |===
 
 
-[[beaug]][[GSDPG00186]][[localpart]]
+[[localpart]]
 
 === `localpart`
 
 Specifies the local part of a QNAME.
 
-[[fvzad]][[GSDPG00548]][[superelements-102]]
+[[superelements-102]]
 
 ==== Superelements
 
@@ -6238,13 +6238,13 @@ xref:#service-qname[`service-qname`], xref:#wsdl-port[`wsdl-port`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyzb]][[GSDPG00549]][[subelements-98]]
+[[subelements-98]]
 
 ==== Subelements
 
 none - contains data
 
-[[beauh]][[GSDPG00187]][[lock-when-loaded]]
+[[lock-when-loaded]]
 
 === `lock-when-loaded`
 
@@ -6254,49 +6254,49 @@ database-dependent. The lock is released when the transaction finishes
 (commit or rollback). While the lock is in place, other database users
 have read access to the bean.
 
-[[fvyze]][[GSDPG00550]][[superelements-103]]
+[[superelements-103]]
 
 ==== Superelements
 
 xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
-[[fvyyl]][[GSDPG00551]][[subelements-99]]
+[[subelements-99]]
 
 ==== Subelements
 
 none - element is present or absent
 
-[[beaui]][[GSDPG00188]][[lock-when-modified]]
+[[lock-when-modified]]
 
 === `lock-when-modified`
 
 This element is not implemented. Do not use.
 
-[[fvyyc]][[GSDPG00552]][[superelements-104]]
+[[superelements-104]]
 
 ==== Superelements
 
 xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
-[[beauj]][[GSDPG00189]][[log-service]]
+[[log-service]]
 
 === `log-service`
 
 Specifies configuration settings for the log file.
 
-[[fvyyv]][[GSDPG00553]][[superelements-105]]
+[[superelements-105]]
 
 ==== Superelements
 
 xref:#client-container[`client-container`] (`sun-acc.xml`)
 
-[[fvywo]][[GSDPG00554]][[subelements-100]]
+[[subelements-100]]
 
 ==== Subelements
 
 The following table describes subelements for the `log-service` element.
 
-[[GSDPG954]][[fvzdx]]
+[[fvzdx]]
 
 
 Table C-87 `log-service` subelement
@@ -6312,13 +6312,13 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvyzl]][[GSDPG00555]][[attributes-24]]
+[[attributes-24]]
 
 ==== Attributes
 
 The following table describes attributes for the `log-service` element.
 
-[[GSDPG955]][[fvzbn]]
+[[fvzbn]]
 
 
 Table C-88 `log-service` attributes
@@ -6335,7 +6335,7 @@ at or above this setting get logged to the log file.
 |===
 
 
-[[beauk]][[GSDPG00190]][[login-config]]
+[[login-config]]
 
 === `login-config`
 
@@ -6343,21 +6343,21 @@ Specifies the authentication configuration for an EJB web service
 endpoint. Not needed for servlet web service endpoints. A servlet's
 security configuration is contained in the `web.xml` file.
 
-[[fvywb]][[GSDPG00556]][[superelements-106]]
+[[superelements-106]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvyxg]][[GSDPG00557]][[subelements-101]]
+[[subelements-101]]
 
 ==== Subelements
 
 The following table describes subelements for the `login-config`
 element.
 
-[[GSDPG956]][[fvzap]]
+[[fvzap]]
 
 
 Table C-89 `login-config` subelements
@@ -6380,7 +6380,7 @@ authentication requests.
 |===
 
 
-[[giyik]][[GSDPG00191]][[mail-resource]]
+[[mail-resource]]
 
 === `mail-resource`
 
@@ -6535,26 +6535,26 @@ For more information about Jakarta Mail properties, see
 https://jakarta.ee/specifications/mail[Jakarta Mail API
 Documentation] (`https://jakarta.ee/specifications/mail`).
 
-[[beaum]][[GSDPG00192]][[manager-properties]]
+[[manager-properties]]
 
 === `manager-properties`
 
 Specifies session manager properties.
 
-[[fvyyu]][[GSDPG00558]][[superelements-108]]
+[[superelements-108]]
 
 ==== Superelements
 
 xref:#session-manager[`session-manager`] (`glassfish-web.xml`)
 
-[[fvzcq]][[GSDPG00559]][[subelements-103]]
+[[subelements-103]]
 
 ==== Subelements
 
 The following table describes subelements for the `manager-properties`
 element.
 
-[[GSDPG963]][[fvyvh]]
+[[fvyvh]]
 
 
 Table C-92 `manager-properties` Subelements
@@ -6570,14 +6570,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvzdg]][[GSDPG00560]][[properties-10]]
+[[properties-10]]
 
 ==== Properties
 
 The following table describes properties for the `manager-properties`
 element.
 
-[[GSDPG964]][[fvywk]]
+[[fvywk]]
 
 
 Table C-93 `manager-properties` Properties
@@ -6648,19 +6648,19 @@ xref:#session-manager[`session-manager`] element is `replicated`.
 |===
 
 
-[[beaun]][[GSDPG00193]][[mapping-properties]]
+[[mapping-properties]]
 
 === `mapping-properties`
 
 This element is not implemented.
 
-[[fvywv]][[GSDPG00561]][[superelements-109]]
+[[superelements-109]]
 
 ==== Superelements
 
 xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
-[[beauo]][[GSDPG00194]][[max-cache-size]]
+[[max-cache-size]]
 
 === `max-cache-size`
 
@@ -6671,19 +6671,19 @@ Default is 512.
 
 Applies to stateful session beans and entity beans.
 
-[[fvyyo]][[GSDPG00562]][[superelements-110]]
+[[superelements-110]]
 
 ==== Superelements
 
 xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
-[[fvzbx]][[GSDPG00563]][[subelements-104]]
+[[subelements-104]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaup]][[GSDPG00195]][[max-pool-size]]
+[[max-pool-size]]
 
 === `max-pool-size`
 
@@ -6693,31 +6693,31 @@ the pool is unbounded. Default is 64.
 
 Applies to all beans.
 
-[[fvzdw]][[GSDPG00564]][[superelements-111]]
+[[superelements-111]]
 
 ==== Superelements
 
 xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
-[[fvyxa]][[GSDPG00565]][[subelements-105]]
+[[subelements-105]]
 
 ==== Subelements
 
 none - contains data
 
-[[beauq]][[GSDPG00196]][[max-wait-time-in-millis]]
+[[max-wait-time-in-millis]]
 
 === `max-wait-time-in-millis`
 
 This element is deprecated. Do not use.
 
-[[fvyzg]][[GSDPG00566]][[superelements-112]]
+[[superelements-112]]
 
 ==== Superelements
 
 xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
-[[beaur]][[GSDPG00197]][[mdb-connection-factory]]
+[[mdb-connection-factory]]
 
 === `mdb-connection-factory`
 
@@ -6725,20 +6725,20 @@ Specifies the connection factory associated with a message-driven bean.
 Queue or Topic type must be consistent with the Java Message Service
 Destination type associated with the message-driven bean class.
 
-[[fvyzj]][[GSDPG00567]][[superelements-113]]
+[[superelements-113]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyxt]][[GSDPG00568]][[subelements-106]]
+[[subelements-106]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `mdb-connection-factory` element.
 
-[[GSDPG965]][[fvyxi]]
+[[fvyxi]]
 
 
 Table C-94 `mdb-connection-factory` Subelements
@@ -6761,26 +6761,26 @@ resource manager.
 |===
 
 
-[[beaus]][[GSDPG00198]][[mdb-resource-adapter]]
+[[mdb-resource-adapter]]
 
 === `mdb-resource-adapter`
 
 Specifies runtime configuration information for a message-driven bean.
 
-[[fvzdd]][[GSDPG00569]][[superelements-114]]
+[[superelements-114]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyyx]][[GSDPG00570]][[subelements-107]]
+[[subelements-107]]
 
 ==== Subelements
 
 The following table describes subelements for the `mdb-resource-adapter`
 element.
 
-[[GSDPG966]][[fvyzh]]
+[[fvyzh]]
 
 
 Table C-95 `mdb-resource-adapter` subelements
@@ -6801,27 +6801,27 @@ xref:#activation-config[`activation-config`]
 |===
 
 
-[[beaut]][[GSDPG00199]][[message]]
+[[message]]
 
 === `message`
 
 Specifies the methods or operations to which message security
 requirements apply.
 
-[[fvzci]][[GSDPG00571]][[superelements-115]]
+[[superelements-115]]
 
 ==== Superelements
 
 xref:#message-security[`message-security`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyxc]][[GSDPG00572]][[subelements-108]]
+[[subelements-108]]
 
 ==== Subelements
 
 The following table describes subelements for the `message` element.
 
-[[GSDPG967]][[fvyyd]]
+[[fvyyd]]
 
 
 Table C-96 `message` Subelements
@@ -6844,7 +6844,7 @@ xref:#operation-name[`operation-name`]
 |===
 
 
-[[beauu]][[GSDPG00200]][[message-destination]]
+[[message-destination]]
 
 === `message-destination`
 
@@ -6855,7 +6855,7 @@ descriptor file. Use when the message destination reference in the
 corresponding Jakarta EE deployment descriptor file specifies a
 `message-destination-link` to a logical `message-destination`.
 
-[[fvzaz]][[GSDPG00573]][[superelements-116]]
+[[superelements-116]]
 
 ==== Superelements
 
@@ -6864,14 +6864,14 @@ xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[fvyxn]][[GSDPG00574]][[subelements-109]]
+[[subelements-109]]
 
 ==== Subelements
 
 The following table describes subelements for the `message-destination`
 element.
 
-[[GSDPG968]][[fvyzy]]
+[[fvyzy]]
 
 
 Table C-97 `message-destination` subelements
@@ -6894,27 +6894,27 @@ xref:#jndi-name[`jndi-name`]
 |===
 
 
-[[beauv]][[GSDPG00201]][[message-destination-name]]
+[[message-destination-name]]
 
 === `message-destination-name`
 
 Specifies the name of a logical message destination defined within the
 corresponding Jakarta EE deployment descriptor file.
 
-[[fvzcj]][[GSDPG00575]][[superelements-117]]
+[[superelements-117]]
 
 ==== Superelements
 
 xref:#message-destination[`message-destination`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvzbo]][[GSDPG00576]][[subelements-110]]
+[[subelements-110]]
 
 ==== Subelements
 
 none - contains data
 
-[[gauao]][[GSDPG00202]][[message-destination-ref]]
+[[message-destination-ref]]
 
 === `message-destination-ref`
 
@@ -6924,7 +6924,7 @@ message destination reference in the corresponding Jakarta EE deployment
 descriptor file does not specify a `message-destination-link` to a
 logical `message-destination`.
 
-[[gauam]][[GSDPG00577]][[superelements-118]]
+[[superelements-118]]
 
 ==== Superelements
 
@@ -6933,14 +6933,14 @@ xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[gaual]][[GSDPG00578]][[subelements-111]]
+[[subelements-111]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `message-destination-ref` element.
 
-[[GSDPG969]][[gauar]]
+[[gauar]]
 
 
 Table C-98 `message-destination-ref` subelements
@@ -6963,27 +6963,27 @@ xref:#jndi-name[`jndi-name`]
 |===
 
 
-[[gauat]][[GSDPG00203]][[message-destination-ref-name]]
+[[message-destination-ref-name]]
 
 === `message-destination-ref-name`
 
 Specifies the name of a physical message destination defined within the
 corresponding Jakarta EE deployment descriptor file.
 
-[[gauaj]][[GSDPG00579]][[superelements-119]]
+[[superelements-119]]
 
 ==== Superelements
 
 xref:#message-destination-ref[`message-destination-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[gauas]][[GSDPG00580]][[subelements-112]]
+[[subelements-112]]
 
 ==== Subelements
 
 none - contains data
 
-[[beauw]][[GSDPG00204]][[message-security]]
+[[message-security]]
 
 === `message-security`
 
@@ -6995,21 +6995,21 @@ endpoint.
 * If the grandparent element is xref:#port-info[`port-info`], these
 requirements pertain to the port of the referenced service.
 
-[[fvzac]][[GSDPG00581]][[superelements-120]]
+[[superelements-120]]
 
 ==== Superelements
 
 xref:#message-security-binding[`message-security-binding`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyve]][[GSDPG00582]][[subelements-113]]
+[[subelements-113]]
 
 ==== Subelements
 
 The following table describes subelements for the `message-security`
 element.
 
-[[GSDPG970]][[fvywy]]
+[[fvywy]]
 
 
 Table C-99 `message-security` Subelements
@@ -7040,7 +7040,7 @@ application's response processing.
 |===
 
 
-[[beaux]][[GSDPG00205]][[message-security-binding]]
+[[message-security-binding]]
 
 === `message-security-binding`
 
@@ -7052,7 +7052,7 @@ in one or both of these ways:
 * By specifying the message security requirements enforced by the
 provider
 
-[[fvzbc]][[GSDPG00583]][[superelements-121]]
+[[superelements-121]]
 
 ==== Superelements
 
@@ -7060,14 +7060,14 @@ xref:#webservice-endpoint[`webservice-endpoint`], xref:#port-info[`port-info`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyxv]][[GSDPG00584]][[subelements-114]]
+[[subelements-114]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `message-security-binding` element.
 
-[[GSDPG971]][[fvzcx]]
+[[fvzcx]]
 
 
 Table C-100 `message-security-binding` Subelements
@@ -7083,14 +7083,14 @@ xref:#message-security[`message-security`]
 |===
 
 
-[[fvzbj]][[GSDPG00585]][[attributes-26]]
+[[attributes-26]]
 
 ==== Attributes
 
 The following table describes attributes for the
 `message-security-binding` element.
 
-[[GSDPG972]][[fvzda]]
+[[fvzda]]
 
 
 Table C-101 `message-security-binding` Attributes
@@ -7114,26 +7114,26 @@ in the `message-security-binding` are not enforced.
 |===
 
 
-[[beauy]][[GSDPG00206]][[message-security-config]]
+[[message-security-config]]
 
 === `message-security-config`
 
 Specifies configurations for message security providers.
 
-[[fvyya]][[GSDPG00586]][[superelements-122]]
+[[superelements-122]]
 
 ==== Superelements
 
 xref:#client-container[`client-container`] (`sun-acc.xml`)
 
-[[fvzck]][[GSDPG00587]][[subelements-115]]
+[[subelements-115]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `message-security-config` element.
 
-[[GSDPG973]][[fvyym]]
+[[fvyym]]
 
 
 Table C-102 `message-security-config` Subelements
@@ -7150,14 +7150,14 @@ provider.
 |===
 
 
-[[fvyvw]][[GSDPG00588]][[attributes-27]]
+[[attributes-27]]
 
 ==== Attributes
 
 The following table describes attributes for the
 `message-security-config` element.
 
-[[GSDPG974]][[fvzam]]
+[[fvzam]]
 
 
 Table C-103 `message-security-config` Attributes
@@ -7177,26 +7177,26 @@ client provider.
 |===
 
 
-[[beauz]][[GSDPG00207]][[method]]
+[[method]]
 
 === `method`
 
 Specifies a bean method.
 
-[[fvzae]][[GSDPG00589]][[superelements-123]]
+[[superelements-123]]
 
 ==== Superelements
 
 xref:#checkpoint-at-end-of-method[`checkpoint-at-end-of-method`],
 xref:#flush-at-end-of-method[`flush-at-end-of-method`] (`glassfish-ejb-jar.xml`)
 
-[[fvzay]][[GSDPG00590]][[subelements-116]]
+[[subelements-116]]
 
 ==== Subelements
 
 The following table describes subelements for the `method` element.
 
-[[GSDPG975]][[fvzch]]
+[[fvzch]]
 
 
 Table C-104 `method` Subelements
@@ -7239,7 +7239,7 @@ parameters.
 |===
 
 
-[[beava]][[GSDPG00208]][[method-intf]]
+[[method-intf]]
 
 === `method-intf`
 
@@ -7247,26 +7247,26 @@ Specifies the method interface to distinguish between methods with the
 same name in different interfaces. Allowed values are `Home`, `Remote`,
 `LocalHome`, and `Local`.
 
-[[fvywj]][[GSDPG00591]][[superelements-124]]
+[[superelements-124]]
 
 ==== Superelements
 
 xref:#method[`method`] (`glassfish-ejb-jar.xml`)
 
-[[fvyyz]][[GSDPG00592]][[subelements-117]]
+[[subelements-117]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavb]][[GSDPG00209]][[method-name]]
+[[method-name]]
 
 === `method-name`
 
 Specifies a method name or `*` (an asterisk) for all methods. If a
 method is overloaded, specifies all methods with the same name.
 
-[[fvyvp]][[GSDPG00593]][[superelements-125]]
+[[superelements-125]]
 
 ==== Superelements
 
@@ -7275,13 +7275,13 @@ xref:#java-method[`java-method`] (`glassfish-web.xml`,
 xref:#finder[`finder`], xref:#query-method[`query-method`] ,
 xref:#method[`method`] (`glassfish-ejb-jar.xml`)
 
-[[fvzcp]][[GSDPG00594]][[subelements-118]]
+[[subelements-118]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvzdr]][[GSDPG00595]][[examples]]
+[[examples]]
 
 ==== Examples
 
@@ -7289,32 +7289,32 @@ none - contains data
 
 `<method-name>*</method-name>`
 
-[[beavc]][[GSDPG00210]][[method-param]]
+[[method-param]]
 
 === `method-param`
 
 Specifies the fully qualified Java type name of a method parameter.
 
-[[fvzdl]][[GSDPG00596]][[superelements-126]]
+[[superelements-126]]
 
 ==== Superelements
 
 xref:#method-params[`method-params`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyvj]][[GSDPG00597]][[subelements-119]]
+[[subelements-119]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavd]][[GSDPG00211]][[method-params]]
+[[method-params]]
 
 === `method-params`
 
 Specifies fully qualified Java type names of method parameters.
 
-[[fvzdt]][[GSDPG00598]][[superelements-127]]
+[[superelements-127]]
 
 ==== Superelements
 
@@ -7323,14 +7323,14 @@ xref:#java-method[`java-method`] (`glassfish-web.xml`,
 xref:#query-method[`query-method`], xref:#method[`method`]
 (`glassfish-ejb-jar.xml`)
 
-[[fvyzw]][[GSDPG00599]][[subelements-120]]
+[[subelements-120]]
 
 ==== Subelements
 
 The following table describes subelements for the `method-params`
 element.
 
-[[GSDPG976]][[fvyzq]]
+[[fvyzq]]
 
 
 Table C-105 `method-params` Subelements
@@ -7347,14 +7347,14 @@ parameter.
 |===
 
 
-[[beavf]][[GSDPG00212]][[name]]
+[[name]]
 
 `name`
 ~~~~~~
 
 Specifies the name of the entity.
 
-[[fvyyf]][[GSDPG00600]][[superelements-128]]
+[[superelements-128]]
 
 ==== Superelements
 
@@ -7364,13 +7364,13 @@ xref:#stub-property[`stub-property`] (`glassfish-web.xml`,
 xref:#enterprise-beans[`enterprise-beans`], xref:#principal[`principal`],
 xref:#property-with-subelements[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
 
-[[fvyxe]][[GSDPG00601]][[subelements-121]]
+[[subelements-121]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavg]][[GSDPG00213]][[named-group]]
+[[named-group]]
 
 === `named-group`
 
@@ -7379,25 +7379,25 @@ relationships that are part of a named group are fetched at the same
 time. A field belongs to only one fetch group, regardless of what type
 of fetch group is used.
 
-[[fvzds]][[GSDPG00602]][[superelements-129]]
+[[superelements-129]]
 
 ==== Superelements
 
 xref:#fetched-with[`fetched-with`] (`sun-cmp-mappings.xml`)
 
-[[fvyxr]][[GSDPG00603]][[subelements-122]]
+[[subelements-122]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavh]][[GSDPG00214]][[namespaceuri]]
+[[namespaceuri]]
 
 === `namespaceURI`
 
 Specifies the namespace URI.
 
-[[fvywa]][[GSDPG00604]][[superelements-130]]
+[[superelements-130]]
 
 ==== Superelements
 
@@ -7405,13 +7405,13 @@ xref:#service-qname[`service-qname`], xref:#wsdl-port[`wsdl-port`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyzc]][[GSDPG00605]][[subelements-123]]
+[[subelements-123]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavi]][[GSDPG00215]][[none]]
+[[none]]
 
 `none`
 ~~~~~~
@@ -7419,39 +7419,39 @@ none - contains data
 Specifies that this field or relationship is fetched by itself, with no
 other fields or relationships.
 
-[[fvyvv]][[GSDPG00606]][[superelements-131]]
+[[superelements-131]]
 
 ==== Superelements
 
 xref:#consistency[`consistency`], xref:#fetched-with[`fetched-with`]
 (`sun-cmp-mappings.xml`)
 
-[[fvzaw]][[GSDPG00607]][[subelements-124]]
+[[subelements-124]]
 
 ==== Subelements
 
 none - element is present or absent
 
-[[beavk]][[GSDPG00216]][[one-one-finders]]
+[[one-one-finders]]
 
 === `one-one-finders`
 
 Describes the finders for CMP 1.1 beans.
 
-[[fvyvg]][[GSDPG00608]][[superelements-132]]
+[[superelements-132]]
 
 ==== Superelements
 
 xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
-[[fvywp]][[GSDPG00609]][[subelements-125]]
+[[subelements-125]]
 
 ==== Subelements
 
 The following table describes subelements for the `one-one-finders`
 element.
 
-[[GSDPG977]][[fvyxu]]
+[[fvyxu]]
 
 
 Table C-106 `one-one-finders` Subelements
@@ -7468,26 +7468,26 @@ query.
 |===
 
 
-[[beavl]][[GSDPG00217]][[operation-name]]
+[[operation-name]]
 
 === `operation-name`
 
 Specifies the WSDL name of an operation of a web service.
 
-[[fvzas]][[GSDPG00610]][[superelements-133]]
+[[superelements-133]]
 
 ==== Superelements
 
 xref:#message[`message`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvyvt]][[GSDPG00611]][[subelements-126]]
+[[subelements-126]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavn]][[GSDPG00218]][[parameter-encoding]]
+[[parameter-encoding]]
 
 === `parameter-encoding`
 
@@ -7501,27 +7501,27 @@ subelements, the subelement of `glassfish-web-app` takes precedence. For
 encodings, see
 `http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html`.
 
-[[fvyzr]][[GSDPG00612]][[superelements-134]]
+[[superelements-134]]
 
 ==== Superelements
 
 xref:#locale-charset-info[`locale-charset-info`], xref:#glassfish-web-app[`glassfish-web-app`]
 (`glassfish-web.xml`)
 
-[[fvzbf]][[GSDPG00613]][[subelements-127]]
+[[subelements-127]]
 
 ==== Subelements
 
 none
 
-[[fvyxk]][[GSDPG00614]][[attributes-28]]
+[[attributes-28]]
 
 ==== Attributes
 
 The following table describes attributes for the `parameter-encoding`
 element.
 
-[[GSDPG978]][[fvywn]]
+[[fvywn]]
 
 
 Table C-107 `parameter-encoding` Attributes
@@ -7539,7 +7539,7 @@ character encoding.
 |===
 
 
-[[beavo]][[GSDPG00219]][[pass-by-reference]]
+[[pass-by-reference]]
 
 === `pass-by-reference`
 
@@ -7590,39 +7590,39 @@ deployed EJB module, you can set the same element in the
 `glassfish-ejb-jar.xml` file. If `pass-by-reference` is used at both the
 bean and application level, the bean level takes precedence.
 
-[[fvzec]][[GSDPG00615]][[superelements-135]]
+[[superelements-135]]
 
 ==== Superelements
 
 xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvywx]][[GSDPG00616]][[subelements-128]]
+[[subelements-128]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavp]][[GSDPG00220]][[password]]
+[[password]]
 
 === `password`
 
 Specifies the password for the principal.
 
-[[fvyvn]][[GSDPG00617]][[superelements-136]]
+[[superelements-136]]
 
 ==== Superelements
 
 xref:#default-resource-principal[`default-resource-principal`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyvs]][[GSDPG00618]][[subelements-129]]
+[[subelements-129]]
 
 ==== Subelements
 
 none - contains data
 
-[[gkkia]][[GSDPG00221]][[per-request-load-balancing]]
+[[per-request-load-balancing]]
 
 === `per-request-load-balancing`
 
@@ -7632,31 +7632,31 @@ per-request load balancing is enabled for the associated stateless
 session bean. If set to `false` or not set, per-request load balancing
 is not enabled. The default is `false`.
 
-[[gkklx]][[GSDPG00619]][[superelements-137]]
+[[superelements-137]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[gkkmq]][[GSDPG00620]][[subelements-130]]
+[[subelements-130]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavq]][[GSDPG00222]][[pm-descriptors]]
+[[pm-descriptors]]
 
 === `pm-descriptors`
 
 This element and its subelements are deprecated. Do not use.
 
-[[fvzbh]][[GSDPG00621]][[superelements-138]]
+[[superelements-138]]
 
 ==== Superelements
 
 xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
-[[beavr]][[GSDPG00223]][[pool-idle-timeout-in-seconds]]
+[[pool-idle-timeout-in-seconds]]
 
 === `pool-idle-timeout-in-seconds`
 
@@ -7677,38 +7677,38 @@ removed (garbage collected) when the timeout expires.
 ====
 
 
-[[fvzbm]][[GSDPG00622]][[superelements-139]]
+[[superelements-139]]
 
 ==== Superelements
 
 xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
-[[fvzbs]][[GSDPG00623]][[subelements-131]]
+[[subelements-131]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavs]][[GSDPG00224]][[port-component-name]]
+[[port-component-name]]
 
 === `port-component-name`
 
 Specifies a unique name for a port component within a web or EJB module.
 
-[[fvzbl]][[GSDPG00624]][[superelements-140]]
+[[superelements-140]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvyys]][[GSDPG00625]][[subelements-132]]
+[[subelements-132]]
 
 ==== Subelements
 
 none - contains data
 
-[[beavt]][[GSDPG00225]][[port-info]]
+[[port-info]]
 
 === `port-info`
 
@@ -7725,20 +7725,20 @@ If a `service-endpoint-interface` is using container-managed port
 selection, its value must not appear in more than one `port-info`
 element within the same `service-ref`.
 
-[[fvzdh]][[GSDPG00626]][[superelements-141]]
+[[superelements-141]]
 
 ==== Superelements
 
 xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyva]][[GSDPG00627]][[subelements-133]]
+[[subelements-133]]
 
 ==== Subelements
 
 The following table describes subelements for the `port-info` element.
 
-[[GSDPG979]][[fvzbr]]
+[[fvzbr]]
 
 
 Table C-108 `port-info` subelements
@@ -7783,7 +7783,7 @@ xref:#message-security-binding[`message-security-binding`]
 |===
 
 
-[[beavu]][[GSDPG00226]][[prefetch-disabled]]
+[[prefetch-disabled]]
 
 === `prefetch-disabled`
 
@@ -7791,20 +7791,20 @@ Disables prefetching of entity bean states for the specified query
 methods. Container-managed relationship fields are prefetched if their
 xref:#fetched-with[`fetched-with`] element is set to xref:#default[`default`].
 
-[[fvyxl]][[GSDPG00628]][[superelements-142]]
+[[superelements-142]]
 
 ==== Superelements
 
 xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
-[[fvyyb]][[GSDPG00629]][[subelements-134]]
+[[subelements-134]]
 
 ==== Subelements
 
 The following table describes subelements for the `prefetch-disabled`
 element.
 
-[[GSDPG980]][[fvyyn]]
+[[fvyyn]]
 
 
 Table C-109 `prefetch-disabled` Subelements
@@ -7820,26 +7820,26 @@ xref:#query-method[`query-method`]
 |===
 
 
-[[beavv]][[GSDPG00227]][[principal]]
+[[principal]]
 
 === `principal`
 
 Defines a user name on the platform.
 
-[[fvyvy]][[GSDPG00630]][[superelements-143]]
+[[superelements-143]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`);
 xref:#security-map[`security-map`] (`glassfish-resources.xml`)
 
-[[fvzbt]][[GSDPG00631]][[subelements-135]]
+[[subelements-135]]
 
 ==== Subelements
 
 The following table describes subelements for the `principal` element.
 
-[[GSDPG981]][[fvzaq]]
+[[fvzaq]]
 
 
 Table C-110 `principal` Subelements
@@ -7855,7 +7855,7 @@ xref:#name[`name`]
 |===
 
 
-[[giyif]][[GSDPG00228]][[principal-map]]
+[[principal-map]]
 
 === `principal-map`
 
@@ -7870,7 +7870,7 @@ domain.
 
 xref:#work-security-map[`work-security-map`] (`glassfish-resources.xml`)
 
-[[giyjg]][[GSDPG00632]][[subelements-136]]
+[[subelements-136]]
 
 ==== Subelements
 
@@ -7900,7 +7900,7 @@ Table C-111 `principal-map` Attributes
 |===
 
 
-[[beavw]][[GSDPG00229]][[principal-name]]
+[[principal-name]]
 
 === `principal-name`
 
@@ -7909,7 +7909,7 @@ Contains the principal (user) name.
 In an enterprise bean, specifies the principal (user) name that has the
 `run-as` role specified.
 
-[[fvyws]][[GSDPG00633]][[superelements-145]]
+[[superelements-145]]
 
 ==== Superelements
 
@@ -7917,20 +7917,20 @@ xref:#security-role-mapping[`security-role-mapping`] (`glassfish-application.xml
 `glassfish-web.xml`, `glassfish-ejb-jar.xml`), xref:#servlet[`servlet`]
 (`glassfish-web.xml`)
 
-[[fvyxp]][[GSDPG00634]][[subelements-137]]
+[[subelements-137]]
 
 ==== Subelements
 
 none - contains data
 
-[[gatzl]][[GSDPG00635]][[attributes-30]]
+[[attributes-30]]
 
 ==== Attributes
 
 The following table describes attributes for the `principal-name`
 element.
 
-[[GSDPG985]][[gatyf]]
+[[gatyf]]
 
 
 Table C-112 `principal-name` Attributes
@@ -7944,7 +7944,7 @@ named principal.
 |===
 
 
-[[beavx]][[GSDPG00230]][[property-with-attributes]]
+[[property-with-attributes]]
 
 === `property` (with attributes)
 
@@ -7956,7 +7956,7 @@ the following:
 * Needed by a system or object that {productName} doesn't have
 knowledge of, such as an LDAP server or a Java class
 
-[[fvzeb]][[GSDPG00636]][[superelements-146]]
+[[superelements-146]]
 
 ==== Superelements
 
@@ -7977,13 +7977,13 @@ xref:#jdbc-connection-pool[`jdbc-connection-pool`], xref:#jdbc-resource[`jdbc-re
 xref:#mail-resource[`mail-resource`], xref:#resource-adapter-config[`resource-adapter-config`]
 (`glassfish-resources.xml`)
 
-[[fvyzv]][[GSDPG00637]][[subelements-138]]
+[[subelements-138]]
 
 ==== Subelements
 
 The following table describes subelements for the `property` element.
 
-[[GSDPG986]][[fvzcb]]
+[[fvzcb]]
 
 
 Table C-113 `property` Subelements
@@ -8006,13 +8006,13 @@ The `property` element in the `sun-acc.xml` file has no subelements.
 ====
 
 
-[[fvyvi]][[GSDPG00638]][[attributes-31]]
+[[attributes-31]]
 
 ==== Attributes
 
 The following table describes attributes for the `property` element.
 
-[[GSDPG987]][[fvzdi]]
+[[fvzdi]]
 
 
 Table C-114 `property` Attributes
@@ -8025,7 +8025,7 @@ Table C-114 `property` Attributes
 |===
 
 
-[[fvzab]][[GSDPG00639]][[example-7]]
+[[example-7]]
 
 ==== Example
 
@@ -8034,7 +8034,7 @@ Table C-114 `property` Attributes
 <property name="reapIntervalSeconds" value="20" />
 ----
 
-[[beavy]][[GSDPG00231]][[property-with-subelements]]
+[[property-with-subelements]]
 
 === `property` (with subelements)
 
@@ -8046,7 +8046,7 @@ the following:
 * Needed by a system or object that {productName} doesn't have
 knowledge of, such as an LDAP server or a Java class
 
-[[fvzcl]][[GSDPG00640]][[superelements-147]]
+[[superelements-147]]
 
 ==== Superelements
 
@@ -8054,13 +8054,13 @@ xref:#enterprise-beans[`enterprise-beans`], xref:#cmp-resource[`cmp-resource`],
 xref:#schema-generator-properties[`schema-generator-properties`],
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-ejb-jar.xml`)
 
-[[fvzaf]][[GSDPG00641]][[subelements-139]]
+[[subelements-139]]
 
 ==== Subelements
 
 The following table describes subelements for the `property` element.
 
-[[GSDPG988]][[fvzcc]]
+[[fvzcc]]
 
 
 Table C-115 `property` subelements
@@ -8081,7 +8081,7 @@ xref:#value[`value`]
 |===
 
 
-[[fvyxz]][[GSDPG00642]][[example-8]]
+[[example-8]]
 
 ==== Example
 
@@ -8093,7 +8093,7 @@ xref:#value[`value`]
 </property>
 ----
 
-[[beavz]][[GSDPG00232]][[provider-config]]
+[[provider-config]]
 
 === `provider-config`
 
@@ -8107,20 +8107,20 @@ Use property subelements to configure provider-specific properties.
 Property values are passed to the provider when its `initialize` method
 is called.
 
-[[fvzcy]][[GSDPG00643]][[superelements-148]]
+[[superelements-148]]
 
 ==== Superelements
 
 xref:#message-security-config[`message-security-config`] (`sun-acc.xml`)
 
-[[fvyzt]][[GSDPG00644]][[subelements-140]]
+[[subelements-140]]
 
 ==== Subelements
 
 The following table describes subelements for the `provider-config`
 element.
 
-[[GSDPG989]][[fvyyq]]
+[[fvyyq]]
 
 
 Table C-116 `provider-config` Subelements
@@ -8150,14 +8150,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvywu]][[GSDPG00645]][[attributes-32]]
+[[attributes-32]]
 
 ==== Attributes
 
 The following table describes attributes for the `provider-config`
 element.
 
-[[GSDPG990]][[fvyvz]]
+[[fvyvz]]
 
 
 Table C-117 `provider-config` Attributes
@@ -8179,44 +8179,44 @@ Client-server providers must implement both interfaces.
 |===
 
 
-[[beawb]][[GSDPG00233]][[query-filter]]
+[[query-filter]]
 
 === `query-filter`
 
 Specifies the query filter for the CMP 1.1 finder.
 
-[[fvzdm]][[GSDPG00646]][[superelements-149]]
+[[superelements-149]]
 
 ==== Superelements
 
 xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
-[[fvzco]][[GSDPG00647]][[subelements-141]]
+[[subelements-141]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawc]][[GSDPG00234]][[query-method]]
+[[query-method]]
 
 === `query-method`
 
 Specifies a query method.
 
-[[fvyxo]][[GSDPG00648]][[superelements-150]]
+[[superelements-150]]
 
 ==== Superelements
 
 xref:#prefetch-disabled[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
 
-[[fvyzm]][[GSDPG00649]][[subelements-142]]
+[[subelements-142]]
 
 ==== Subelements
 
 The following table describes subelements for the `query-method`
 element.
 
-[[GSDPG991]][[fvywl]]
+[[fvywl]]
 
 
 Table C-118 `query-method` Subelements
@@ -8239,80 +8239,80 @@ parameters.
 |===
 
 
-[[beawd]][[GSDPG00235]][[query-ordering]]
+[[query-ordering]]
 
 === `query-ordering`
 
 Specifies the query ordering for the CMP 1.1 finder.
 
-[[fvzef]][[GSDPG00650]][[superelements-151]]
+[[superelements-151]]
 
 ==== Superelements
 
 xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
-[[fvywd]][[GSDPG00651]][[subelements-143]]
+[[subelements-143]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawe]][[GSDPG00236]][[query-params]]
+[[query-params]]
 
 === `query-params`
 
 Specifies the query parameters for the CMP 1.1 finder.
 
-[[fvyvu]][[GSDPG00652]][[superelements-152]]
+[[superelements-152]]
 
 ==== Superelements
 
 xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
-[[fvzax]][[GSDPG00653]][[subelements-144]]
+[[subelements-144]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawf]][[GSDPG00237]][[query-variables]]
+[[query-variables]]
 
 === `query-variables`
 
 Specifies variables in the query expression for the CMP 1.1 finder.
 
-[[fvyyg]][[GSDPG00654]][[superelements-153]]
+[[superelements-153]]
 
 ==== Superelements
 
 xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
-[[fvzce]][[GSDPG00655]][[subelements-145]]
+[[subelements-145]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawh]][[GSDPG00238]][[read-only]]
+[[read-only]]
 
 === `read-only`
 
 Specifies that a field is read-only if `true`. If this element is
 absent, the default value is `false` .
 
-[[fvyzs]][[GSDPG00656]][[superelements-154]]
+[[superelements-154]]
 
 ==== Superelements
 
 xref:#cmp-field-mapping[`cmp-field-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvzav]][[GSDPG00657]][[subelements-146]]
+[[subelements-146]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawi]][[GSDPG00239]][[realm]]
+[[realm]]
 
 === `realm`
 
@@ -8322,7 +8322,7 @@ specified or does not match the name of a configured realm, the default
 realm is used. For more information about realms, see
 "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
-[[fvzaa]][[GSDPG00658]][[superelements-155]]
+[[superelements-155]]
 
 ==== Superelements
 
@@ -8330,39 +8330,39 @@ xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml
 xref:#as-context[`as-context`], xref:#login-config[`login-config`]
 (`glassfish-ejb-jar.xml`)
 
-[[fvzdq]][[GSDPG00659]][[subelements-147]]
+[[subelements-147]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawj]][[GSDPG00240]][[refresh-field]]
+[[refresh-field]]
 
 === `refresh-field`
 
 Specifies a field that gives the application component a programmatic
 way to refresh a cached entry.
 
-[[fvywt]][[GSDPG00660]][[superelements-156]]
+[[superelements-156]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvzbw]][[GSDPG00661]][[subelements-148]]
+[[subelements-148]]
 
 ==== Subelements
 
 none
 
-[[fvzbp]][[GSDPG00662]][[attributes-33]]
+[[attributes-33]]
 
 ==== Attributes
 
 The following table describes attributes for the `refresh-field`
 element.
 
-[[GSDPG992]][[fvzbz]]
+[[fvzbz]]
 
 
 Table C-119 `refresh-field` Attributes
@@ -8379,7 +8379,7 @@ the input parameter is retrieved. Allowed values are
 |===
 
 
-[[beawk]][[GSDPG00241]][[refresh-period-in-seconds]]
+[[refresh-period-in-seconds]]
 
 === `refresh-period-in-seconds`
 
@@ -8389,19 +8389,19 @@ never refreshed; if the value is greater than zero, the bean instances
 are refreshed at the specified interval. This rate is just a hint to the
 container. Default is 0 (no refresh).
 
-[[fvzcn]][[GSDPG00663]][[superelements-157]]
+[[superelements-157]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvyxh]][[GSDPG00664]][[subelements-149]]
+[[subelements-149]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawl]][[GSDPG00242]][[removal-timeout-in-seconds]]
+[[removal-timeout-in-seconds]]
 
 === `removal-timeout-in-seconds`
 
@@ -8419,19 +8419,19 @@ Applies to stateful session beans.
 For related information, see
 xref:#cache-idle-timeout-in-seconds[`cache-idle-timeout-in-seconds`].
 
-[[fvzat]][[GSDPG00665]][[superelements-158]]
+[[superelements-158]]
 
 ==== Superelements
 
 xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
-[[fvzeg]][[GSDPG00666]][[subelements-150]]
+[[subelements-150]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawm]][[GSDPG00243]][[remote-home-impl]]
+[[remote-home-impl]]
 
 === `remote-home-impl`
 
@@ -8446,19 +8446,19 @@ redeployment time. Do not specify it or change it after deployment.
 ====
 
 
-[[fvywr]][[GSDPG00667]][[superelements-159]]
+[[superelements-159]]
 
 ==== Superelements
 
 xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
-[[fvyyt]][[GSDPG00668]][[subelements-151]]
+[[subelements-151]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawn]][[GSDPG00244]][[remote-impl]]
+[[remote-impl]]
 
 === `remote-impl`
 
@@ -8473,45 +8473,45 @@ redeployment time. Do not specify it or change it after deployment.
 ====
 
 
-[[fvyzi]][[GSDPG00669]][[superelements-160]]
+[[superelements-160]]
 
 ==== Superelements
 
 xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
-[[fvzag]][[GSDPG00670]][[subelements-152]]
+[[subelements-152]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawo]][[GSDPG00245]][[request-policy]]
+[[request-policy]]
 
 === `request-policy`
 
 Defines the authentication policy requirements of the authentication
 provider's request processing.
 
-[[fvyxw]][[GSDPG00671]][[superelements-161]]
+[[superelements-161]]
 
 ==== Superelements
 
 xref:#provider-config[`provider-config`] (`sun-acc.xml`)
 
-[[fvzdz]][[GSDPG00672]][[subelements-153]]
+[[subelements-153]]
 
 ==== Subelements
 
 none
 
-[[fvyvq]][[GSDPG00673]][[attributes-34]]
+[[attributes-34]]
 
 ==== Attributes
 
 The following table describes attributes for the `request-policy`
 element.
 
-[[GSDPG993]][[fvzdy]]
+[[fvzdy]]
 
 
 Table C-120 `request-policy` Attributes
@@ -8529,34 +8529,34 @@ occurs before or after content authentication. Allowed values are
 |===
 
 
-[[beawp]][[GSDPG00246]][[request-protection]]
+[[request-protection]]
 
 === `request-protection`
 
 Defines the authentication policy requirements of the application's
 request processing.
 
-[[fvzcv]][[GSDPG00674]][[superelements-162]]
+[[superelements-162]]
 
 ==== Superelements
 
 xref:#message-security[`message-security`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvzby]][[GSDPG00675]][[subelements-154]]
+[[subelements-154]]
 
 ==== Subelements
 
 none
 
-[[fvzar]][[GSDPG00676]][[attributes-35]]
+[[attributes-35]]
 
 ==== Attributes
 
 The following table describes attributes for the `request-protection`
 element.
 
-[[GSDPG994]][[fvzbu]]
+[[fvzbu]]
 
 
 Table C-121 `request-protection` Attributes
@@ -8574,7 +8574,7 @@ occurs before or after content authentication. Allowed values are
 |===
 
 
-[[beawq]][[GSDPG00247]][[required]]
+[[required]]
 
 === `required`
 
@@ -8582,19 +8582,19 @@ Specifies whether the authentication method specified in the
 xref:#auth-method[`auth-method`] element must be used for client
 authentication. The value is `true` or `false` (the default).
 
-[[fvyvc]][[GSDPG00677]][[superelements-163]]
+[[superelements-163]]
 
 ==== Superelements
 
 xref:#as-context[`as-context`] (`glassfish-ejb-jar.xml`)
 
-[[fvywc]][[GSDPG00678]][[subelements-155]]
+[[subelements-155]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawr]][[GSDPG00248]][[res-ref-name]]
+[[res-ref-name]]
 
 === `res-ref-name`
 
@@ -8603,20 +8603,20 @@ descriptor file `resource-ref` entry. The `res-ref-name` element
 specifies the name of a resource manager connection factory reference.
 The name must be unique within an enterprise bean.
 
-[[fvyvk]][[GSDPG00679]][[superelements-164]]
+[[superelements-164]]
 
 ==== Superelements
 
 xref:#resource-ref[`resource-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyyp]][[GSDPG00680]][[subelements-156]]
+[[subelements-156]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaws]][[GSDPG00249]][[resize-quantity]]
+[[resize-quantity]]
 
 === `resize-quantity`
 
@@ -8655,20 +8655,20 @@ is 32.
 For message-driven beans, the value can be defined in the EJB container.
 Default is 2.
 
-[[fvyxb]][[GSDPG00681]][[superelements-165]]
+[[superelements-165]]
 
 ==== Superelements
 
 xref:#bean-cache[`bean-cache`], xref:#bean-pool[`bean-pool`]
 (`glassfish-ejb-jar.xml`)
 
-[[fvzcf]][[GSDPG00682]][[subelements-157]]
+[[subelements-157]]
 
 ==== Subelements
 
 none - contains data
 
-[[giyit]][[GSDPG00250]][[resource-adapter-config]]
+[[resource-adapter-config]]
 
 === `resource-adapter-config`
 
@@ -8758,26 +8758,26 @@ setter methods of the `resourceadapter-class` element in the `ra.xml`
 file, which defines the class name of the resource adapter JavaBean. Any
 properties defined here override the default values present in `ra.xml`.
 
-[[beawt]][[GSDPG00251]][[resource-adapter-mid]]
+[[resource-adapter-mid]]
 
 === `resource-adapter-mid`
 
 Specifies the module ID of the resource adapter that is responsible for
 delivering messages to the message-driven bean.
 
-[[fvyvd]][[GSDPG00683]][[superelements-167]]
+[[superelements-167]]
 
 ==== Superelements
 
 xref:#mdb-resource-adapter[`mdb-resource-adapter`] (`glassfish-ejb-jar.xml`)
 
-[[fvzed]][[GSDPG00684]][[subelements-159]]
+[[subelements-159]]
 
 ==== Subelements
 
 none - contains data
 
-[[beawu]][[GSDPG00252]][[resource-env-ref]]
+[[resource-env-ref]]
 
 === `resource-env-ref`
 
@@ -8785,7 +8785,7 @@ Maps the `res-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `resource-env-ref` entry to the absolute `jndi-name` of
 a resource.
 
-[[fvyvr]][[GSDPG00685]][[superelements-168]]
+[[superelements-168]]
 
 ==== Superelements
 
@@ -8794,14 +8794,14 @@ xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[fvywe]][[GSDPG00686]][[subelements-160]]
+[[subelements-160]]
 
 ==== Subelements
 
 The following table describes subelements for the `resource-env-ref`
 element.
 
-[[GSDPG1001]][[fvyye]]
+[[fvyye]]
 
 
 Table C-124 `resource-env-ref` Subelements
@@ -8824,7 +8824,7 @@ xref:#jndi-name[`jndi-name`]
 |===
 
 
-[[fvzdf]][[GSDPG00687]][[example-9]]
+[[example-9]]
 
 ==== Example
 
@@ -8836,27 +8836,27 @@ xref:#jndi-name[`jndi-name`]
 </resource-env-ref>
 ----
 
-[[beawv]][[GSDPG00253]][[resource-env-ref-name]]
+[[resource-env-ref-name]]
 
 === `resource-env-ref-name`
 
 Specifies the `res-ref-name` in the corresponding Jakarta EE deployment
 descriptor file `resource-env-ref` entry.
 
-[[fvzau]][[GSDPG00688]][[superelements-169]]
+[[superelements-169]]
 
 ==== Superelements
 
 xref:#resource-env-ref[`resource-env-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyxj]][[GSDPG00689]][[subelements-161]]
+[[subelements-161]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaww]][[GSDPG00254]][[resource-ref]]
+[[resource-ref]]
 
 === `resource-ref`
 
@@ -8881,7 +8881,7 @@ repository.
 ====
 
 
-[[fvywf]][[GSDPG00690]][[superelements-170]]
+[[superelements-170]]
 
 ==== Superelements
 
@@ -8890,14 +8890,14 @@ xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[fvyzz]][[GSDPG00691]][[subelements-162]]
+[[subelements-162]]
 
 ==== Subelements
 
 The following table describes subelements for the `resource-ref`
 element.
 
-[[GSDPG1002]][[fvzbd]]
+[[fvzbd]]
 
 
 Table C-125 `resource-ref` Subelements
@@ -8926,7 +8926,7 @@ xref:#default-resource-principal[`default-resource-principal`]
 |===
 
 
-[[fvyzk]][[GSDPG00692]][[example-10]]
+[[example-10]]
 
 ==== Example
 
@@ -8938,7 +8938,7 @@ xref:#default-resource-principal[`default-resource-principal`]
 </resource-ref>
 ----
 
-[[giyiy]][[GSDPG00255]][[resources]]
+[[resources]]
 
 === `resources`
 
@@ -9055,33 +9055,33 @@ Subelements of a `resources` element can occur in any order.
 ====
 
 
-[[beawx]][[GSDPG00256]][[response-policy]]
+[[response-policy]]
 
 === `response-policy`
 
 Defines the authentication policy requirements of the authentication
 provider's response processing.
 
-[[fvzcg]][[GSDPG00693]][[superelements-172]]
+[[superelements-172]]
 
 ==== Superelements
 
 xref:#provider-config[`provider-config`] (`sun-acc.xml`)
 
-[[fvyxm]][[GSDPG00694]][[subelements-164]]
+[[subelements-164]]
 
 ==== Subelements
 
 none
 
-[[fvyxf]][[GSDPG00695]][[attributes-37]]
+[[attributes-37]]
 
 ==== Attributes
 
 The following table describes attributes for the `response-policy`
 element.
 
-[[GSDPG1006]][[fvyyr]]
+[[fvyyr]]
 
 
 Table C-127 `response-policy` Attributes
@@ -9099,34 +9099,34 @@ occurs before or after content authentication. Allowed values are
 |===
 
 
-[[beawy]][[GSDPG00257]][[response-protection]]
+[[response-protection]]
 
 === `response-protection`
 
 Defines the authentication policy requirements of the application's
 response processing.
 
-[[fvzdk]][[GSDPG00696]][[superelements-173]]
+[[superelements-173]]
 
 ==== Superelements
 
 xref:#message-security[`message-security`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvyxd]][[GSDPG00697]][[subelements-165]]
+[[subelements-165]]
 
 ==== Subelements
 
 none
 
-[[fvzeh]][[GSDPG00698]][[attributes-38]]
+[[attributes-38]]
 
 ==== Attributes
 
 The following table describes attributes for the `response-protection`
 element.
 
-[[GSDPG1007]][[fvzej]]
+[[fvzej]]
 
 
 Table C-128 `response-protection` Attributes
@@ -9144,45 +9144,45 @@ occurs before or after content authentication. Allowed values are
 |===
 
 
-[[beawz]][[GSDPG00258]][[role-name]]
+[[role-name]]
 
 === `role-name`
 
 Contains the `role-name` in the `security-role` element of the
 corresponding Jakarta EE deployment descriptor file.
 
-[[fvzek]][[GSDPG00699]][[superelements-174]]
+[[superelements-174]]
 
 ==== Superelements
 
 xref:#security-role-mapping[`security-role-mapping`] (`glassfish-application.xml`,
 `glassfish-web.xml`, `glassfish-ejb-jar.xml`)
 
-[[fvzei]][[GSDPG00700]][[subelements-166]]
+[[subelements-166]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxb]][[GSDPG00259]][[sas-context]]
+[[sas-context]]
 
 === `sas-context`
 
 Describes the sas-context fields.
 
-[[fvzel]][[GSDPG00701]][[superelements-175]]
+[[superelements-175]]
 
 ==== Superelements
 
 xref:#ior-security-config[`ior-security-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvzfb]][[GSDPG00702]][[subelements-167]]
+[[subelements-167]]
 
 ==== Subelements
 
 The following table describes subelements for the `sas-context` element.
 
-[[GSDPG1008]][[fvzey]]
+[[fvzey]]
 
 
 Table C-129 `sas-context` Subelements
@@ -9199,7 +9199,7 @@ identities. The values are NONE, SUPPORTED, or REQUIRED.
 |===
 
 
-[[beaxc]][[GSDPG00260]][[schema]]
+[[schema]]
 
 === `schema`
 
@@ -9211,19 +9211,19 @@ file with a pathname relative to the directory containing the
 `sun-cmp-mappings.xml` file, but without the `.dbschema` extension. See
 "link:application-development-guide/container_managed-persistence.html#automatic-database-schema-capture[Automatic Database Schema Capture]" in {productName} Application Development Guide.
 
-[[fvzfa]][[GSDPG00703]][[superelements-176]]
+[[superelements-176]]
 
 ==== Superelements
 
 xref:#sun-cmp-mapping[`sun-cmp-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvzeq]][[GSDPG00704]][[subelements-168]]
+[[subelements-168]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvzer]][[GSDPG00705]][[examples-1]]
+[[examples-1]]
 
 ==== Examples
 
@@ -9234,26 +9234,26 @@ none - contains data
 <schema>CompanySchema</schema> <!-- use "CompanySchema.dbschema" -->
 ----
 
-[[beaxd]][[GSDPG00261]][[schema-generator-properties]]
+[[schema-generator-properties]]
 
 === `schema-generator-properties`
 
 Specifies field-specific column attributes in `property` subelements.
 
-[[fvzen]][[GSDPG00706]][[superelements-177]]
+[[superelements-177]]
 
 ==== Superelements
 
 xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
-[[fvzez]][[GSDPG00707]][[subelements-169]]
+[[subelements-169]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `schema-generator-properties` element.
 
-[[GSDPG1009]][[fvzex]]
+[[fvzex]]
 
 
 Table C-130 `schema-generator-properties` Subelements
@@ -9269,14 +9269,14 @@ xref:#property-with-subelements[`property` (with subelements)]
 |===
 
 
-[[fvzew]][[GSDPG00708]][[properties-12]]
+[[properties-12]]
 
 ==== Properties
 
 The following table describes properties for the
 `schema-generator-properties` element.
 
-[[GSDPG1010]][[fvzev]]
+[[fvzev]]
 
 
 Table C-131 `schema-generator-properties` Properties
@@ -9331,7 +9331,7 @@ field allows null values.
 |===
 
 
-[[fvzem]][[GSDPG00709]][[example-11]]
+[[example-11]]
 
 ==== Example
 
@@ -9353,26 +9353,26 @@ field allows null values.
 </schema-generator-properties>
 ----
 
-[[beaxe]][[GSDPG00262]][[secondary-table]]
+[[secondary-table]]
 
 === `secondary-table`
 
 Specifies a bean's secondary table(s).
 
-[[fvzep]][[GSDPG00710]][[superelements-178]]
+[[superelements-178]]
 
 ==== Superelements
 
 xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
-[[fvzeo]][[GSDPG00711]][[subelements-170]]
+[[subelements-170]]
 
 ==== Subelements
 
 The following table describes subelements for the `secondary-table`
 element.
 
-[[GSDPG1012]][[fvzet]]
+[[fvzet]]
 
 
 Table C-133 `secondary table` Subelements
@@ -9395,26 +9395,26 @@ relationship between two database tables.
 |===
 
 
-[[beaxf]][[GSDPG00263]][[security]]
+[[security]]
 
 === `security`
 
 Defines the SSL security configuration for IIOP/SSL communication with
 the target server.
 
-[[fvzes]][[GSDPG00712]][[superelements-179]]
+[[superelements-179]]
 
 ==== Superelements
 
 xref:#target-server[`target-server`] (`sun-acc.xml`)
 
-[[fvzeu]][[GSDPG00713]][[subelements-171]]
+[[subelements-171]]
 
 ==== Subelements
 
 The following table describes subelements for the `security` element.
 
-[[GSDPG1013]][[fvzfe]]
+[[fvzfe]]
 
 
 Table C-134 `security` Subelements
@@ -9435,7 +9435,7 @@ xref:#cert-db[`cert-db`]
 |===
 
 
-[[giyhy]][[GSDPG00264]][[security-map]]
+[[security-map]]
 
 === `security-map`
 
@@ -9511,7 +9511,7 @@ Table C-136 `security-map` Attributes
 |===
 
 
-[[beaxg]][[GSDPG00265]][[security-role-mapping]]
+[[security-role-mapping]]
 
 === `security-role-mapping`
 
@@ -9526,7 +9526,7 @@ it maps to a group, the realm must support groups and the group must be
 a concrete group which exists in the current realm. To be useful, there
 must be at least one user in that realm who belongs to that group.
 
-[[fvzfc]][[GSDPG00714]][[superelements-181]]
+[[superelements-181]]
 
 ==== Superelements
 
@@ -9534,14 +9534,14 @@ xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
 xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
-[[fvzfd]][[GSDPG00715]][[subelements-173]]
+[[subelements-173]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `security-role-mapping` element.
 
-[[GSDPG1019]][[fvzfj]]
+[[fvzfj]]
 
 
 Table C-137 `security-role-mapping` Subelements
@@ -9573,51 +9573,51 @@ group name in the current realm.
 |===
 
 
-[[beaxh]][[GSDPG00266]][[service-endpoint-interface]]
+[[service-endpoint-interface]]
 
 === `service-endpoint-interface`
 
 Specifies the web service reference name relative to `java:comp/env`.
 
-[[fvzfm]][[GSDPG00716]][[superelements-182]]
+[[superelements-182]]
 
 ==== Superelements
 
 xref:#port-info[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvzfl]][[GSDPG00717]][[subelements-174]]
+[[subelements-174]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxi]][[GSDPG00267]][[service-impl-class]]
+[[service-impl-class]]
 
 === `service-impl-class`
 
 Specifies the name of the generated service implementation class.
 
-[[fvzfg]][[GSDPG00718]][[superelements-183]]
+[[superelements-183]]
 
 ==== Superelements
 
 xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvzfk]][[GSDPG00719]][[subelements-175]]
+[[subelements-175]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxj]][[GSDPG00268]][[service-qname]]
+[[service-qname]]
 
 === `service-qname`
 
 Specifies the WSDL service element that is being referred to.
 
-[[fvzfn]][[GSDPG00720]][[superelements-184]]
+[[superelements-184]]
 
 ==== Superelements
 
@@ -9626,14 +9626,14 @@ xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvzff]][[GSDPG00721]][[subelements-176]]
+[[subelements-176]]
 
 ==== Subelements
 
 The following table describes subelements for the `service-qname`
 element.
 
-[[GSDPG1020]][[fvzfi]]
+[[fvzfi]]
 
 
 Table C-138 `service-qname` subelements
@@ -9654,7 +9654,7 @@ xref:#localpart[`localpart`]
 |===
 
 
-[[beaxk]][[GSDPG00269]][[service-ref]]
+[[service-ref]]
 
 === `service-ref`
 
@@ -9667,7 +9667,7 @@ information is only needed in the following cases:
 one associated with the `service-ref` in the standard Jakarta EE deployment
 descriptor
 
-[[fvzfh]][[GSDPG00722]][[superelements-185]]
+[[superelements-185]]
 
 ==== Superelements
 
@@ -9676,13 +9676,13 @@ xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
-[[fvzhf]][[GSDPG00723]][[subelements-177]]
+[[subelements-177]]
 
 ==== Subelements
 
 The following table describes subelements for the `service-ref` element.
 
-[[GSDPG1021]][[fvzgc]]
+[[fvzgc]]
 
 
 Table C-139 `service-ref` subelements
@@ -9734,45 +9734,45 @@ referenced.
 |===
 
 
-[[beaxl]][[GSDPG00270]][[service-ref-name]]
+[[service-ref-name]]
 
 === `service-ref-name`
 
 Specifies the web service reference name relative to `java:comp/env`.
 
-[[fvzfx]][[GSDPG00724]][[superelements-186]]
+[[superelements-186]]
 
 ==== Superelements
 
 xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvzga]][[GSDPG00725]][[subelements-178]]
+[[subelements-178]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxm]][[GSDPG00271]][[servlet]]
+[[servlet]]
 
 === `servlet`
 
 Specifies a principal name for a servlet. Used for the `run-as` role
 defined in `web.xml`.
 
-[[fvzgd]][[GSDPG00726]][[superelements-187]]
+[[superelements-187]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvzhs]][[GSDPG00727]][[subelements-179]]
+[[subelements-179]]
 
 ==== Subelements
 
 The following table describes subelements for the `servlet` element.
 
-[[GSDPG1022]][[fvzhy]]
+[[fvzhy]]
 
 
 Table C-140 `servlet` Subelements
@@ -9801,67 +9801,67 @@ xref:#webservice-endpoint[`webservice-endpoint`]
 |===
 
 
-[[beaxn]][[GSDPG00272]][[servlet-impl-class]]
+[[servlet-impl-class]]
 
 === `servlet-impl-class`
 
 Specifies the automatically generated name of the servlet implementation
 class.
 
-[[fvzhx]][[GSDPG00728]][[superelements-188]]
+[[superelements-188]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvzfs]][[GSDPG00729]][[subelements-180]]
+[[subelements-180]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxo]][[GSDPG00273]][[servlet-name]]
+[[servlet-name]]
 
 === `servlet-name`
 
 Specifies the name of a servlet, which is matched to a `servlet-name` in
 `web.xml`. This name must be present in `web.xml`.
 
-[[fvzhj]][[GSDPG00730]][[superelements-189]]
+[[superelements-189]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`], xref:#servlet[`servlet`]
 (`glassfish-web.xml`)
 
-[[fvzir]][[GSDPG00731]][[subelements-181]]
+[[subelements-181]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxp]][[GSDPG00274]][[session-config]]
+[[session-config]]
 
 === `session-config`
 
 Specifies session configuration information. Overrides the web container
 settings for an individual web module.
 
-[[fvzic]][[GSDPG00732]][[superelements-190]]
+[[superelements-190]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[fvzfy]][[GSDPG00733]][[subelements-182]]
+[[subelements-182]]
 
 ==== Subelements
 
 The following table describes subelements for the `session-config`
 element.
 
-[[GSDPG1023]][[fvzib]]
+[[fvzib]]
 
 
 Table C-141 `session-config` Subelements
@@ -9887,26 +9887,26 @@ xref:#cookie-properties[`cookie-properties`]
 |===
 
 
-[[beaxq]][[GSDPG00275]][[session-manager]]
+[[session-manager]]
 
 === `session-manager`
 
 Specifies session manager information.
 
-[[fvzgx]][[GSDPG00734]][[superelements-191]]
+[[superelements-191]]
 
 ==== Superelements
 
 xref:#session-config[`session-config`] (`glassfish-web.xml`)
 
-[[fvzit]][[GSDPG00735]][[subelements-183]]
+[[subelements-183]]
 
 ==== Subelements
 
 The following table describes subelements for the `session-manager`
 element.
 
-[[GSDPG1024]][[fvzgo]]
+[[fvzgo]]
 
 
 Table C-142 `session-manager` Subelements
@@ -9927,14 +9927,14 @@ xref:#store-properties[`store-properties`]
 |===
 
 
-[[fvzgm]][[GSDPG00736]][[attributes-40]]
+[[attributes-40]]
 
 ==== Attributes
 
 The following table describes attributes for the `session-manager`
 element.
 
-[[GSDPG1025]][[fvzje]]
+[[fvzje]]
 
 
 Table C-143 `session-manager` Attributes
@@ -9954,26 +9954,26 @@ Coherence*Web with {productName}
 |===
 
 
-[[beaxr]][[GSDPG00276]][[session-properties]]
+[[session-properties]]
 
 === `session-properties`
 
 Specifies session properties.
 
-[[fvzha]][[GSDPG00737]][[superelements-192]]
+[[superelements-192]]
 
 ==== Superelements
 
 xref:#session-config[`session-config`] (`glassfish-web.xml`)
 
-[[fvzgk]][[GSDPG00738]][[subelements-184]]
+[[subelements-184]]
 
 ==== Subelements
 
 The following table describes subelements for the `session-properties`
 element.
 
-[[GSDPG1026]][[fvzgv]]
+[[fvzgv]]
 
 
 Table C-144 `session-properties` Subelements
@@ -9989,14 +9989,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvzht]][[GSDPG00739]][[properties-13]]
+[[properties-13]]
 
 ==== Properties
 
 The following table describes properties for the `session-properties`
 element.
 
-[[GSDPG1027]][[fvzii]]
+[[fvzii]]
 
 
 Table C-145 `session-properties` Properties
@@ -10027,32 +10027,32 @@ the servlet or JSP.
 |===
 
 
-[[beaxs]][[GSDPG00277]][[ssl]]
+[[ssl]]
 
 `ssl`
 ~~~~~
 
 Defines SSL processing parameters.
 
-[[fvzft]][[GSDPG00740]][[superelements-193]]
+[[superelements-193]]
 
 ==== Superelements
 
 xref:#security[`security`] (`sun-acc.xml`)
 
-[[fvzgh]][[GSDPG00741]][[subelements-185]]
+[[subelements-185]]
 
 ==== Subelements
 
 none
 
-[[fvzip]][[GSDPG00742]][[attributes-41]]
+[[attributes-41]]
 
 ==== Attributes
 
 The following table describes attributes for the `SSL` element.
 
-[[GSDPG1028]][[fvzgb]]
+[[fvzgb]]
 
 
 Table C-146 `ssl attributes`
@@ -10095,7 +10095,7 @@ rollback is enabled. Enable TLS rollback for Microsoft Internet Explorer
 |===
 
 
-[[beaxt]][[GSDPG00278]][[steady-pool-size]]
+[[steady-pool-size]]
 
 === `steady-pool-size`
 
@@ -10103,38 +10103,38 @@ Specifies the initial and minimum number of bean instances that are
 maintained in the pool. Default is 32. Applies to stateless session
 beans and message-driven beans.
 
-[[fvziq]][[GSDPG00743]][[superelements-194]]
+[[superelements-194]]
 
 ==== Superelements
 
 xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
-[[fvziy]][[GSDPG00744]][[subelements-186]]
+[[subelements-186]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaxu]][[GSDPG00279]][[store-properties]]
+[[store-properties]]
 
 === `store-properties`
 
 Specifies session persistence (storage) properties.
 
-[[fvzie]][[GSDPG00745]][[superelements-195]]
+[[superelements-195]]
 
 ==== Superelements
 
 xref:#session-manager[`session-manager`] (`glassfish-web.xml`)
 
-[[fvzid]][[GSDPG00746]][[subelements-187]]
+[[subelements-187]]
 
 ==== Subelements
 
 The following table describes subelements for the `store-properties`
 element.
 
-[[GSDPG1029]][[fvzif]]
+[[fvzif]]
 
 
 Table C-147 `store-properties` Subelements
@@ -10150,14 +10150,14 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[fvzho]][[GSDPG00747]][[properties-14]]
+[[properties-14]]
 
 ==== Properties
 
 The following table describes properties for the `store-properties`
 element.
 
-[[GSDPG1030]][[fvzgr]]
+[[fvzgr]]
 
 
 Table C-148 `store-properties` Properties
@@ -10208,7 +10208,7 @@ correctly.
 * Distribute the session state across multiple attributes, or at least
 between a read-only attribute and a modifiable attribute.
 
-[[beaxv]][[GSDPG00280]][[stub-property]]
+[[stub-property]]
 
 === `stub-property`
 
@@ -10217,21 +10217,21 @@ object before it is returned to the web service client. The property
 names can be any properties supported by the JAX-RPC `Stub`
 implementation.
 
-[[fvzgu]][[GSDPG00748]][[superelements-196]]
+[[superelements-196]]
 
 ==== Superelements
 
 xref:#port-info[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvzij]][[GSDPG00749]][[subelements-188]]
+[[subelements-188]]
 
 ==== Subelements
 
 The following table describes subelements for the `stub-property`
 element.
 
-[[GSDPG1031]][[fvziz]]
+[[fvziz]]
 
 
 Table C-149 `stub-property` subelements
@@ -10252,14 +10252,14 @@ xref:#value[`value`]
 |===
 
 
-[[gawoa]][[GSDPG00750]][[properties-15]]
+[[properties-15]]
 
 ==== Properties
 
 The following table describes properties for the `stub-property`
 element.
 
-[[GSDPG1032]][[gawou]]
+[[gawou]]
 
 
 Table C-150 `stub-property` properties
@@ -10272,7 +10272,7 @@ endpoint as a Java Business Integration service is enabled or disabled.
 |===
 
 
-[[fvzji]][[GSDPG00751]][[example-12]]
+[[example-12]]
 
 ==== Example
 
@@ -10294,7 +10294,7 @@ endpoint as a Java Business Integration service is enabled or disabled.
 </service-ref>
 ----
 
-[[beaxy]][[GSDPG00281]][[sun-cmp-mapping]]
+[[sun-cmp-mapping]]
 
 === `sun-cmp-mapping`
 
@@ -10308,20 +10308,20 @@ schema, even if the beans are deployed in the same EJB JAR file.
 ====
 
 
-[[fvzhh]][[GSDPG00752]][[superelements-197]]
+[[superelements-197]]
 
 ==== Superelements
 
 xref:#sun-cmp-mappings[`sun-cmp-mappings`] (`sun-cmp-mappings.xml`)
 
-[[fvzjg]][[GSDPG00753]][[subelements-189]]
+[[subelements-189]]
 
 ==== Subelements
 
 The following table describes subelements for the `sun-cmp-mapping`
 element.
 
-[[GSDPG1033]][[fvzhm]]
+[[fvzhm]]
 
 
 Table C-151 `sun-cmp-mapping` Subelements
@@ -10344,7 +10344,7 @@ xref:#entity-mapping[`entity-mapping`]
 |===
 
 
-[[beaxz]][[GSDPG00282]][[sun-cmp-mappings]]
+[[sun-cmp-mappings]]
 
 === `sun-cmp-mappings`
 
@@ -10353,20 +10353,20 @@ EJB JAR file. This is the root element; there can only be one
 `sun-cmp-mappings` element in a `sun-cmp-mappings.xml` file. See
 link:dd-files.html#GSDPG00080[The sun-cmp-mappings.xml File].
 
-[[fvzix]][[GSDPG00754]][[superelements-198]]
+[[superelements-198]]
 
 ==== Superelements
 
 none
 
-[[fvzjj]][[GSDPG00755]][[subelements-190]]
+[[subelements-190]]
 
 ==== Subelements
 
 The following table describes subelements for the `sun-cmp-mappings`
 element.
 
-[[GSDPG1034]][[fvzin]]
+[[fvzin]]
 
 
 Table C-152 `sun-cmp-mappings` Subelements
@@ -10382,7 +10382,7 @@ xref:#sun-cmp-mapping[`sun-cmp-mapping`]
 |===
 
 
-[[beayd]][[GSDPG00283]][[table-name]]
+[[table-name]]
 
 === `table-name`
 
@@ -10391,20 +10391,20 @@ database schema file. See "link:application-development-guide/container_managed-
 Capture]" in {productName} Application
 Development Guide.
 
-[[fvzis]][[GSDPG00756]][[superelements-199]]
+[[superelements-199]]
 
 ==== Superelements
 
 xref:#entity-mapping[`entity-mapping`], xref:#secondary-table[`secondary-table`]
 (`sun-cmp-mappings.xml`)
 
-[[fvzjk]][[GSDPG00757]][[subelements-191]]
+[[subelements-191]]
 
 ==== Subelements
 
 none - contains data
 
-[[beaye]][[GSDPG00284]][[target-server]]
+[[target-server]]
 
 === `target-server`
 
@@ -10422,20 +10422,20 @@ IP address or host name, and the port specifies the port number.
 Not used if the deprecated `endpoints` property is defined for load
 balancing. For more information, see xref:#client-container[`client-container`].
 
-[[fvzgy]][[GSDPG00758]][[superelements-200]]
+[[superelements-200]]
 
 ==== Superelements
 
 xref:#client-container[`client-container`] (`sun-acc.xml`)
 
-[[fvzhi]][[GSDPG00759]][[subelements-192]]
+[[subelements-192]]
 
 ==== Subelements
 
 The following table describes subelements for the `target-server`
 element.
 
-[[GSDPG1035]][[fvzhg]]
+[[fvzhg]]
 
 
 Table C-153 `target-server` subelements
@@ -10458,14 +10458,14 @@ communication with the target server.
 |===
 
 
-[[fvzfp]][[GSDPG00760]][[attributes-42]]
+[[attributes-42]]
 
 ==== Attributes
 
 The following table describes attributes for the `target-server`
 element.
 
-[[GSDPG1036]][[fvzgg]]
+[[fvzgg]]
 
 
 Table C-154 `target-server` attributes
@@ -10490,27 +10490,27 @@ button in the Administration Console for more information.
 |===
 
 
-[[beayf]][[GSDPG00285]][[tie-class]]
+[[tie-class]]
 
 === `tie-class`
 
 Specifies the automatically generated name of a tie implementation class
 for a port component.
 
-[[fvzgz]][[GSDPG00761]][[superelements-201]]
+[[superelements-201]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvzfq]][[GSDPG00762]][[subelements-193]]
+[[subelements-193]]
 
 ==== Subelements
 
 none - contains data
 
-[[beayg]][[GSDPG00286]][[timeout]]
+[[timeout]]
 
 === `timeout`
 
@@ -10519,25 +10519,25 @@ time in seconds that an entry can remain in the cache after it is
 created or refreshed. If not specified, the default is the value of the
 `timeout` attribute of the xref:#cache[`cache`] element.
 
-[[fvzhc]][[GSDPG00763]][[superelements-202]]
+[[superelements-202]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvziv]][[GSDPG00764]][[subelements-194]]
+[[subelements-194]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvzhd]][[GSDPG00765]][[attributes-43]]
+[[attributes-43]]
 
 ==== Attributes
 
 The following table describes attributes for the `timeout` element.
 
-[[GSDPG1037]][[fvzih]]
+[[fvzih]]
 
 
 Table C-155 `timeout` Attributes
@@ -10556,26 +10556,26 @@ the input parameter is retrieved. Allowed values are
 |===
 
 
-[[beayh]][[GSDPG00287]][[transport-config]]
+[[transport-config]]
 
 === `transport-config`
 
 Specifies the security transport information.
 
-[[fvzfo]][[GSDPG00766]][[superelements-203]]
+[[superelements-203]]
 
 ==== Superelements
 
 xref:#ior-security-config[`ior-security-config`] (`glassfish-ejb-jar.xml`)
 
-[[fvzhv]][[GSDPG00767]][[subelements-195]]
+[[subelements-195]]
 
 ==== Subelements
 
 The following table describes subelements for the `transport-config`
 element.
 
-[[GSDPG1038]][[fvziu]]
+[[fvziu]]
 
 
 Table C-156 `transport-config` Subelements
@@ -10613,7 +10613,7 @@ client. The values are NONE, SUPPORTED, or REQUIRED.
 |===
 
 
-[[beayi]][[GSDPG00288]][[transport-guarantee]]
+[[transport-guarantee]]
 
 === `transport-guarantee`
 
@@ -10632,20 +10632,20 @@ contents of the transmission.
 In most cases, a value of `INTEGRAL` or `CONFIDENTIAL` indicates that
 the use of SSL is required.
 
-[[fvzhb]][[GSDPG00768]][[superelements-204]]
+[[superelements-204]]
 
 ==== Superelements
 
 xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvzgl]][[GSDPG00769]][[subelements-196]]
+[[subelements-196]]
 
 ==== Subelements
 
 none - contains data
 
-[[beayk]][[GSDPG00289]][[unique-id]]
+[[unique-id]]
 
 === `unique-id`
 
@@ -10653,39 +10653,39 @@ Contains the unique ID for the application. This value is automatically
 updated each time the application is deployed or redeployed. Do not edit
 this value.
 
-[[fvzig]][[GSDPG00770]][[superelements-205]]
+[[superelements-205]]
 
 ==== Superelements
 
 xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
 xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
-[[fvzjc]][[GSDPG00771]][[subelements-197]]
+[[subelements-197]]
 
 ==== Subelements
 
 none - contains data
 
-[[beayl]][[GSDPG00290]][[url-pattern]]
+[[url-pattern]]
 
 === `url-pattern`
 
 Specifies a servlet URL pattern for which caching is enabled. See the
 Servlet 2.4 specification section SRV. 11.2 for applicable patterns.
 
-[[fvziw]][[GSDPG00772]][[superelements-206]]
+[[superelements-206]]
 
 ==== Superelements
 
 xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
-[[fvzfw]][[GSDPG00773]][[subelements-198]]
+[[subelements-198]]
 
 ==== Subelements
 
 none - contains data
 
-[[giyiq]][[GSDPG00291]][[user-group]]
+[[user-group]]
 
 === `user-group`
 
@@ -10707,32 +10707,32 @@ xref:#security-map[`security-map`] (`glassfish-resources.xml`)
 
 none - contains data
 
-[[beaym]][[GSDPG00292]][[use-thread-pool-id]]
+[[use-thread-pool-id]]
 
 === `use-thread-pool-id`
 
 Specifies the thread pool from which threads are selected for remote
 invocations of this bean.
 
-[[fvzhz]][[GSDPG00774]][[superelements-208]]
+[[superelements-208]]
 
 ==== Superelements
 
 xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
-[[fvzhp]][[GSDPG00775]][[subelements-200]]
+[[subelements-200]]
 
 ==== Subelements
 
 none - contains data
 
-[[beayo]][[GSDPG00293]][[value]]
+[[value]]
 
 === `value`
 
 Specifies the value of the entity.
 
-[[fvzhq]][[GSDPG00776]][[superelements-209]]
+[[superelements-209]]
 
 ==== Superelements
 
@@ -10741,13 +10741,13 @@ xref:#call-property[`call-property`], xref:#stub-property[`stub-property`]
 `glassfish-application-client.xml`); xref:#property-with-subelements[`property` (with
 subelements)] (`glassfish-ejb-jar.xml`)
 
-[[fvzhe]][[GSDPG00777]][[subelements-201]]
+[[subelements-201]]
 
 ==== Subelements
 
 none - contains data
 
-[[gikqk]][[GSDPG00294]][[valve]]
+[[valve]]
 
 === `valve`
 
@@ -10755,19 +10755,19 @@ Specifies a custom valve for this web application. You can define a
 valve for all the web applications on a specific virtual server. For
 details, see link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
-[[giksf]][[GSDPG00778]][[superelements-210]]
+[[superelements-210]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
-[[gikvt]][[GSDPG00779]][[subelements-202]]
+[[subelements-202]]
 
 ==== Subelements
 
 The following table describes subelements for the `valve` element.
 
-[[GSDPG1041]][[giktu]]
+[[giktu]]
 
 
 Table C-157 `valve` Subelements
@@ -10788,13 +10788,13 @@ xref:#property-with-attributes[`property` (with attributes)]
 |===
 
 
-[[gikuo]][[GSDPG00780]][[attributes-44]]
+[[attributes-44]]
 
 ==== Attributes
 
 The following table describes attributes for the `valve` element.
 
-[[GSDPG1042]][[gikqw]]
+[[gikqw]]
 
 
 Table C-158 `valve` Attributes
@@ -10812,7 +10812,7 @@ org.glassfish.web.valve.GlassFishValve interface from the current
 |===
 
 
-[[giksd]][[GSDPG00781]][[example-13]]
+[[example-13]]
 
 ==== Example
 
@@ -10824,7 +10824,7 @@ org.glassfish.web.valve.GlassFishValve interface from the current
 </valve>
 ----
 
-[[gbgdw]][[GSDPG00295]][[vendor]]
+[[vendor]]
 
 === `vendor`
 
@@ -10869,20 +10869,20 @@ The following example vendor element contains only a text string:
 
 The default value is the text string `Application Client`.
 
-[[gbgdu]][[GSDPG00782]][[superelements-211]]
+[[superelements-211]]
 
 ==== Superelements
 
 xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
-[[gbgcq]][[GSDPG00783]][[subelements-203]]
+[[subelements-203]]
 
 ==== Subelements
 
 none - contains data
 
-[[gkkfd]][[GSDPG00296]][[version-identifier]]
+[[version-identifier]]
 
 === `version-identifier`
 
@@ -10910,7 +10910,7 @@ xref:#glassfish-application-client[`glassfish-application-client`]
 
 none - contains data
 
-[[beayp]][[GSDPG00297]][[victim-selection-policy]]
+[[victim-selection-policy]]
 
 === `victim-selection-policy`
 
@@ -10934,19 +10934,19 @@ background thread (or sweeper thread) to remove unwanted entries.
 
 Applies to stateful session beans.
 
-[[fvzhu]][[GSDPG00784]][[superelements-213]]
+[[superelements-213]]
 
 ==== Superelements
 
 xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
-[[fvzfr]][[GSDPG00785]][[subelements-205]]
+[[subelements-205]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvzgi]][[GSDPG00786]][[example-14]]
+[[example-14]]
 
 ==== Example
 
@@ -10960,26 +10960,26 @@ first. If that fails, the server tries SSL2 encryption. If both SSL2 and
 SSL3 are enabled for a virtual server, the server tries SSL3 encryption
 first. If that fails, the server tries SSL2 encryption.
 
-[[beayr]][[GSDPG00298]][[web]]
+[[web]]
 
 `web`
 ~~~~~
 
 Specifies the application's web tier configuration.
 
-[[fvzil]][[GSDPG00787]][[superelements-214]]
+[[superelements-214]]
 
 ==== Superelements
 
 xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`)
 
-[[fvzge]][[GSDPG00788]][[subelements-206]]
+[[subelements-206]]
 
 ==== Subelements
 
 The following table describes subelements for the `web` element.
 
-[[GSDPG1045]][[fvzfz]]
+[[fvzfz]]
 
 
 Table C-159 `web` Subelements
@@ -11000,46 +11000,46 @@ xref:#context-root[`context-root`]
 |===
 
 
-[[beays]][[GSDPG00299]][[web-uri]]
+[[web-uri]]
 
 === `web-uri`
 
 Contains the web URI for the application. Must match the corresponding
 element in the `application.xml` file.
 
-[[fvzhk]][[GSDPG00789]][[superelements-215]]
+[[superelements-215]]
 
 ==== Superelements
 
 xref:#web[`web`] (`glassfish-application.xml`)
 
-[[fvzik]][[GSDPG00790]][[subelements-207]]
+[[subelements-207]]
 
 ==== Subelements
 
 none - contains data
 
-[[beayt]][[GSDPG00300]][[webservice-description]]
+[[webservice-description]]
 
 === `webservice-description`
 
 Specifies a name and optional publish location for a web service.
 
-[[fvzjd]][[GSDPG00791]][[superelements-216]]
+[[superelements-216]]
 
 ==== Superelements
 
 xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
 xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
-[[fvzgs]][[GSDPG00792]][[subelements-208]]
+[[subelements-208]]
 
 ==== Subelements
 
 The following table describes subelements for the
 `webservice-description` element.
 
-[[GSDPG1046]][[fvzjb]]
+[[fvzjb]]
 
 
 Table C-160 `webservice-description` subelements
@@ -11063,46 +11063,46 @@ WSDL is published during deployment.
 |===
 
 
-[[beayu]][[GSDPG00301]][[webservice-description-name]]
+[[webservice-description-name]]
 
 === `webservice-description-name`
 
 Specifies a unique name for the web service within a web or EJB module.
 
-[[fvzgp]][[GSDPG00793]][[superelements-217]]
+[[superelements-217]]
 
 ==== Superelements
 
 xref:#webservice-description[`webservice-description`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvzgw]][[GSDPG00794]][[subelements-209]]
+[[subelements-209]]
 
 ==== Subelements
 
 none - contains data
 
-[[beayv]][[GSDPG00302]][[webservice-endpoint]]
+[[webservice-endpoint]]
 
 === `webservice-endpoint`
 
 Specifies information about a web service endpoint.
 
-[[fvzio]][[GSDPG00795]][[superelements-218]]
+[[superelements-218]]
 
 ==== Superelements
 
 xref:#servlet[`servlet`] (`glassfish-web.xml`), xref:#ejb[`ejb`]
 (`glassfish-ejb-jar.xml`)
 
-[[fvzjp]][[GSDPG00796]][[subelements-210]]
+[[subelements-210]]
 
 ==== Subelements
 
 The following table describes subelements for the `webservice-endpoint`
 element.
 
-[[GSDPG1047]][[fvzjs]]
+[[fvzjs]]
 
 
 Table C-161 `webservice-endpoint` subelements
@@ -11181,7 +11181,7 @@ xref:#property-with-subelements[`property` (with subelements)] (`glassfish-ejb-j
 |===
 
 
-[[giyht]][[GSDPG00303]][[work-security-map]]
+[[work-security-map]]
 
 === `work-security-map`
 
@@ -11202,7 +11202,7 @@ credentials accepted by the EIS.
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
 
-[[giyih]][[GSDPG00797]][[subelements-211]]
+[[subelements-211]]
 
 ==== Subelements
 
@@ -11260,7 +11260,7 @@ Table C-163 `work-security-map` Attributes
 |===
 
 
-[[beayw]][[GSDPG00304]][[wsdl-override]]
+[[wsdl-override]]
 
 === `wsdl-override`
 
@@ -11268,20 +11268,20 @@ Specifies a valid URL pointing to a final WSDL document. If not
 specified, the WSDL document associated with the `service-ref` in the
 standard Jakarta EE deployment descriptor is used.
 
-[[fvzjl]][[GSDPG00798]][[superelements-220]]
+[[superelements-220]]
 
 ==== Superelements
 
 xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
-[[fvzjq]][[GSDPG00799]][[subelements-212]]
+[[subelements-212]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvzjt]][[GSDPG00800]][[example-15]]
+[[example-15]]
 
 ==== Example
 
@@ -11294,26 +11294,26 @@ none - contains data
 <wsdl-override>file:/home/user1/myfinalwsdl.wsdl</wsdl-override>
 ----
 
-[[beayx]][[GSDPG00305]][[wsdl-port]]
+[[wsdl-port]]
 
 === `wsdl-port`
 
 Specifies the WSDL port.
 
-[[fvzjo]][[GSDPG00801]][[superelements-221]]
+[[superelements-221]]
 
 ==== Superelements
 
 xref:#port-info[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
-[[fvzjm]][[GSDPG00802]][[subelements-213]]
+[[subelements-213]]
 
 ==== Subelements
 
 The following table describes subelements for the `wsdl-port` element.
 
-[[GSDPG1052]][[fvzju]]
+[[fvzju]]
 
 
 Table C-164 `wsdl-port` subelements
@@ -11334,7 +11334,7 @@ xref:#localpart[`localpart`]
 |===
 
 
-[[beayy]][[GSDPG00306]][[wsdl-publish-location]]
+[[wsdl-publish-location]]
 
 === `wsdl-publish-location`
 
@@ -11343,20 +11343,20 @@ published during deployment. Any required files are published to this
 directory, preserving their location relative to the module-specific
 WSDL directory (`META-INF/wsdl` or `WEB-INF/wsdl`).
 
-[[fvzjw]][[GSDPG00803]][[superelements-222]]
+[[superelements-222]]
 
 ==== Superelements
 
 xref:#webservice-description[`webservice-description`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
-[[fvzjr]][[GSDPG00804]][[subelements-214]]
+[[subelements-214]]
 
 ==== Subelements
 
 none - contains data
 
-[[fvzjn]][[GSDPG00805]][[example-16]]
+[[example-16]]
 
 ==== Example
 

@@ -7,7 +7,7 @@ prev=start-cluster.html
 
 = start-database
 
-[[start-database-1]][[GSRFM00234]][[start-database]]
+[[start-database]]
 
 == start-database
 
@@ -104,7 +104,7 @@ To create the database files at a particular location, you must set
 
 === Examples
 
-[[GSRFM759]][[sthref2121]]
+[[sthref2121]]
 
 ==== Example 1   Starting Java DB
 
@@ -117,7 +117,7 @@ Starting database in the background.  Log redirected to
 /opt/SUNWappserver/databases/derby.log.
 ----
 
-[[GSRFM833]][[sthref2122]]
+[[sthref2122]]
 
 ==== Example 2   Starting Java DB With Options for the Java Application
 Launcher

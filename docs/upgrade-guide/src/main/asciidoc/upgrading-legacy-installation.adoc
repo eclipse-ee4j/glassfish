@@ -6,7 +6,7 @@ prev=upgrade-compatibility-issues.html
 
 = Upgrading an Installation of Application Server or {productName}
 
-[[GSUPG00003]][[abmbq]]
+[[abmbq]]
 
 
 [[upgrading-an-installation-of-application-server-or-glassfish-server]]
@@ -48,7 +48,7 @@ Tools]
 * xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node Agent Configurations]
 * xref:#correcting-potential-upgrade-problems[Correcting Potential Upgrade Problems]
 
-[[gaejc]][[GSUPG00039]][[upgrade-overview]]
+[[upgrade-overview]]
 
 === Upgrade Overview
 
@@ -64,7 +64,7 @@ The following topics are addressed here:
 * xref:#GSUPG00063[Upgrading From Version 8.x or Older Product Releases]
 * xref:#upgrading-glassfish-server-inside-a-closed-network[Upgrading {productName} Inside a Closed Network]
 
-[[gkxum]][[GSUPG00059]][[upgrade-paths]]
+[[upgrade-paths]]
 
 ==== Upgrade Paths
 
@@ -113,7 +113,7 @@ In this scenario, you simply use Update Tool, the `pkg` utility, or
 For a more detailed overview, see xref:#summary-of-upgrade-tools-and-procedures[Summary of Upgrade Tools
 and Procedures].
 
-[[gdkiw]][[GSUPG00060]][[upgrade-terminology]]
+[[upgrade-terminology]]
 
 ==== Upgrade Terminology
 
@@ -132,7 +132,7 @@ Master Password::
   this password if you have changed it from the default value of
   `changeit`.
 
-[[gktcb]][[GSUPG00061]][[summary-of-upgrade-tools-and-procedures]]
+[[summary-of-upgrade-tools-and-procedures]]
 
 ==== Summary of Upgrade Tools and Procedures
 
@@ -148,7 +148,7 @@ The following topics are addressed here:
 * xref:#summary-of-procedure-for-upgrading-with-the-software-update-notifier[Summary of Procedure for Upgrading With the Software Update Notifier]
 * xref:#summary-of-procedure-for-upgrading-with-the-pkg-utility[Summary of Procedure for Upgrading With the `pkg` Utility]
 
-[[gktdx]][[GSUPG00045]][[summary-of-tools-for-performing-an-upgrade]]
+[[summary-of-tools-for-performing-an-upgrade]]
 
 ===== Summary of Tools for Performing an Upgrade
 
@@ -158,7 +158,7 @@ There are several tools you can use to perform an upgrade to {productName} 7 are
 * xref:#update-tool-and-the-pkg-utility[Update Tool and the `pkg` Utility]
 * xref:#software-update-notifier[Software Update Notifier]
 
-[[gktcz]][[GSUPG00004]][[upgrade-tool]]
+[[upgrade-tool]]
 
 Upgrade Tool
 
@@ -184,7 +184,7 @@ See xref:#summary-of-procedure-for-upgrading-with-upgrade-tool[Summary of Proced
 for an overview of the general procedure for performing an upgrade with
 Upgrade Tool.
 
-[[gktha]][[GSUPG00005]][[update-tool-and-the-pkg-utility]]
+[[update-tool-and-the-pkg-utility]]
 
 Update Tool and the `pkg` Utility
 
@@ -220,7 +220,7 @@ Update Tool. For more information about Update Tool in general, see
 "link:administration-guide.html#GSADG00701[Update Tool]"
 in {productName} Administration Guide.
 
-[[gkuff]][[GSUPG00006]][[software-update-notifier]]
+[[software-update-notifier]]
 
 Software Update Notifier
 
@@ -242,7 +242,7 @@ Update Notifier] for an overview of the general procedure for performing
 an upgrade with the Software Update Notifier. For more information about
 the Update Notifier, refer to the Update Tool online help.
 
-[[gktdz]][[GSUPG00046]][[summary-of-procedure-for-upgrading-with-upgrade-tool]]
+[[summary-of-procedure-for-upgrading-with-upgrade-tool]]
 
 ===== Summary of Procedure for Upgrading With Upgrade Tool
 
@@ -266,7 +266,7 @@ as-install``/bin`` directory.
 This procedure is described in more detail in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a
 Side-By-Side Upgrade With Upgrade Tool].
 
-[[gktcl]][[GSUPG00047]][[summary-of-procedure-for-upgrading-with-update-tool]]
+[[summary-of-procedure-for-upgrading-with-update-tool]]
 
 ===== Summary of Procedure for Upgrading With Update Tool
 
@@ -287,7 +287,7 @@ subcommand.
 This procedure is described in more detail in xref:#to-upgrade-using-the-update-tool-gui[To Upgrade
 Using the Update Tool GUI].
 
-[[gkuef]][[GSUPG00048]][[summary-of-procedure-for-upgrading-with-the-software-update-notifier]]
+[[summary-of-procedure-for-upgrading-with-the-software-update-notifier]]
 
 ===== Summary of Procedure for Upgrading With the Software Update Notifier
 
@@ -309,7 +309,7 @@ subcommand. This performs the upgrade and then shuts down the DAS.
 This procedure is described in more detail in xref:#to-upgrade-using-the-software-update-notifier[To Upgrade
 Using the Software Update Notifier].
 
-[[gktnb]][[GSUPG00049]][[summary-of-procedure-for-upgrading-with-the-pkg-utility]]
+[[summary-of-procedure-for-upgrading-with-the-pkg-utility]]
 
 ===== Summary of Procedure for Upgrading With the `pkg` Utility
 
@@ -329,7 +329,7 @@ subcommand. This performs the upgrade and then shuts down the DAS.
 This procedure is described in more detail in xref:#to-upgrade-from-the-command-line-using-the-pkg-utility[To Upgrade
 From the Command Line Using the `pkg` Utility].
 
-[[gjxkx]][[GSUPG00062]][[supported-releases-for-upgrade-to-glassfish-server-7]]
+[[supported-releases-for-upgrade-to-glassfish-server-7]]
 
 ==== Supported Releases for Upgrade to {productName} 7
 
@@ -342,7 +342,7 @@ earlier {productName} product releases:
 * {productName} 3.1
 * {productName} 3.1.1
 
-[[gkufi]][[GSUPG00063]][[upgrading-from-version-8.x-or-older-product-releases]]
+[[GSUPG00063]][[upgrading-from-version-8.x-or-older-product-releases]]
 
 ==== Upgrading From Version 8.x or Older Product Releases
 
@@ -372,7 +372,7 @@ After upgrading your older Enterprise Server installation to Enterprise
 Server 2.1.1, you can proceed normally with the instructions in this
 guide to complete the upgrade to {productName} 7.
 
-[[gkxrp]][[GSUPG00065]][[upgrading-glassfish-server-inside-a-closed-network]]
+[[upgrading-glassfish-server-inside-a-closed-network]]
 
 ==== Upgrading {productName} Inside a Closed Network
 
@@ -382,7 +382,7 @@ environment where Internet access is not available, see
 Extending and Updating {productName} Inside a Closed Network]"
 in {productName} Administration Guide.
 
-[[abmbr]][[GSUPG00040]][[performing-a-side-by-side-upgrade-with-upgrade-tool]]
+[[performing-a-side-by-side-upgrade-with-upgrade-tool]]
 
 === Performing a Side-By-Side Upgrade With Upgrade Tool
 
@@ -396,7 +396,7 @@ The following topics are addressed here:
 * xref:#to-upgrade-from-the-command-line-using-upgrade-tool[To Upgrade From the Command Line Using Upgrade Tool]
 * xref:#to-upgrade-using-the-upgrade-tool-wizard[To Upgrade Using the Upgrade Tool Wizard]
 
-[[gktgx]][[GSUPG00066]][[upgrade-tool-summary]]
+[[upgrade-tool-summary]]
 
 ==== Upgrade Tool Summary
 
@@ -415,7 +415,7 @@ You can perform an upgrade using Upgrade Tool in the following ways:
 * xref:#to-upgrade-from-the-command-line-using-upgrade-tool[To Upgrade From the Command Line Using Upgrade Tool]
 * xref:#to-upgrade-using-the-upgrade-tool-wizard[To Upgrade Using the Upgrade Tool Wizard]
 
-[[gdkix]][[GSUPG00067]][[upgrade-tool-functionality]]
+[[upgrade-tool-functionality]]
 
 ==== Upgrade Tool Functionality
 
@@ -438,7 +438,7 @@ Additional Upgrade Tool functions are explained in the following sections:
 * xref:#upgrade-of-clusters[Upgrade of Clusters]
 * xref:#upgrade-verification[Upgrade Verification]
 
-[[gebrv]][[GSUPG00050]][[migration-of-deployed-applications]]
+[[migration-of-deployed-applications]]
 
 ===== Migration of Deployed Applications
 
@@ -468,7 +468,7 @@ installed application components do not agree with the configuration
 information, the configuration is migrated unchanged, without any
 attempt to reconfigure the incorrect configurations.
 
-[[gebqm]][[GSUPG00051]][[upgrade-of-clusters]]
+[[upgrade-of-clusters]]
 
 ===== Upgrade of Clusters
 
@@ -478,7 +478,7 @@ manually re-create the server instances that are contained in the
 clusters. This procedure is explained in xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters
 and Node Agent Configurations].
 
-[[gebvn]][[GSUPG00052]][[upgrade-verification]]
+[[upgrade-verification]]
 
 ===== Upgrade Verification
 
@@ -497,7 +497,7 @@ Version = Eclipse GlassFish 7.0.0 (build 42)
 Command version executed successfully.
 ----
 
-[[gktjn]][[GSUPG00010]][[to-upgrade-from-the-command-line-using-upgrade-tool]]
+[[to-upgrade-from-the-command-line-using-upgrade-tool]]
 
 ==== To Upgrade From the Command Line Using Upgrade Tool
 
@@ -609,7 +609,7 @@ Installations That Use NSS Cryptographic Tokens].
 which node agents were used, proceed with the instructions in
 xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node Agent Configurations].
 
-[[GSUPG00007]][[gktiu]]
+[[gktiu]]
 Example 2-1 Using the `asupgrade` Command Line
 
 The following example shows how to use the `asupgrade` command-line
@@ -670,7 +670,7 @@ Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
 
-[[gaejn]][[GSUPG00011]][[to-upgrade-using-the-upgrade-tool-wizard]]
+[[to-upgrade-using-the-upgrade-tool-wizard]]
 
 ==== To Upgrade Using the Upgrade Tool Wizard
 
@@ -785,7 +785,7 @@ asadmin start-domain domain-name
 which node agents were used, proceed with the instructions in
 xref:#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node Agent Configurations].
 
-[[sthref33]]
+
 
 Next Steps
 
@@ -799,7 +799,7 @@ Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
 
-[[gkthu]][[GSUPG00041]][[performing-an-in-place-upgrade-with-the-update-center-tools]]
+[[performing-an-in-place-upgrade-with-the-update-center-tools]]
 
 === Performing an In-Place Upgrade With the Update Center Tools
 
@@ -827,7 +827,7 @@ The following topics are addressed here:
 * xref:#to-upgrade-using-the-software-update-notifier[To Upgrade Using the Software Update Notifier]
 * xref:#to-upgrade-from-the-command-line-using-the-pkg-utility[To Upgrade From the Command Line Using the `pkg` Utility]
 
-[[gkthx]][[GSUPG00068]][[update-center-tool-procedures]]
+[[update-center-tool-procedures]]
 
 ==== Update Center Tool Procedures
 
@@ -846,7 +846,7 @@ following ways:
 * xref:#to-upgrade-using-the-software-update-notifier[To Upgrade Using the Software Update Notifier]
 * xref:#to-upgrade-from-the-command-line-using-the-pkg-utility[To Upgrade From the Command Line Using the `pkg` Utility]
 
-[[gktjf]][[GSUPG00012]][[to-upgrade-using-the-update-tool-gui]]
+[[to-upgrade-using-the-update-tool-gui]]
 
 ==== To Upgrade Using the Update Tool GUI
 
@@ -885,7 +885,7 @@ This upgrades the domain and then shuts down the DAS.
 as-install/bin/asadmin start-domain domain-name
 ----
 
-[[sthref34]]
+
 
 Next Steps
 
@@ -899,7 +899,7 @@ Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
 
-[[gkuhu]][[GSUPG00013]][[to-upgrade-using-the-software-update-notifier]]
+[[to-upgrade-using-the-software-update-notifier]]
 
 ==== To Upgrade Using the Software Update Notifier
 
@@ -945,7 +945,7 @@ This upgrades the domain and then shuts down the DAS.
 as-install/bin/asadmin start-domain domain-name
 ----
 
-[[sthref36]]
+
 
 Next Steps
 
@@ -959,7 +959,7 @@ Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
 
-[[gktks]][[GSUPG00014]][[to-upgrade-from-the-command-line-using-the-pkg-utility]]
+[[to-upgrade-from-the-command-line-using-the-pkg-utility]]
 
 ==== To Upgrade From the Command Line Using the `pkg` Utility
 
@@ -1009,7 +1009,7 @@ Administration Console, select the Registration item from the Common
 Tasks page. For step-by-step instructions on the registration process,
 click the Help button on the Administration Console.
 
-[[gktnh]][[GSUPG00042]][[upgrading-installations-that-use-nss-cryptographic-tokens]]
+[[upgrading-installations-that-use-nss-cryptographic-tokens]]
 
 === Upgrading Installations That Use NSS Cryptographic Tokens
 
@@ -1024,7 +1024,7 @@ The following topics are addressed here:
 * xref:#to-perform-post-upgrade-configuration[To Perform Post-Upgrade Configuration]
 * xref:#to-upgrade-pkcs11-hardware-tokens[To Upgrade PKCS#11 Hardware Tokens]
 
-[[gktnq]][[GSUPG00015]][[to-prepare-for-the-upgrade]]
+[[to-prepare-for-the-upgrade]]
 
 ==== To Prepare for the Upgrade
 
@@ -1103,7 +1103,7 @@ This upgrades the domain and then shuts down the DAS.
 as-install/bin/asadmin start-domain domain1
 ----
 
-[[gktlz]][[GSUPG00016]][[to-perform-post-upgrade-configuration]]
+[[to-perform-post-upgrade-configuration]]
 
 ==== To Perform Post-Upgrade Configuration
 
@@ -1251,7 +1251,7 @@ default `truststore`.
 ====
 
 
-[[gktlp]][[GSUPG00017]][[to-upgrade-pkcs11-hardware-tokens]]
+[[to-upgrade-pkcs11-hardware-tokens]]
 
 ==== To Upgrade PKCS#11 Hardware Tokens
 
@@ -1299,7 +1299,7 @@ Ensure that the following two `jvm-options` are set in the `domain.xml` file:
 <jvm-options>-Djavax.net.ssl.trustStoreType=PKCS11</jvm-options>
 ----
 
-[[gfybw]][[GSUPG00043]][[upgrading-clusters-and-node-agent-configurations]]
+[[upgrading-clusters-and-node-agent-configurations]]
 
 === Upgrading Clusters and Node Agent Configurations
 
@@ -1325,7 +1325,7 @@ The following topics are addressed here:
 * xref:#to-correct-the-configuration-of-a-node-after-an-upgrade[To Correct the Configuration of a Node After an Upgrade]
 * xref:#to-re-create-a-cluster[To Re-Create a Cluster]
 
-[[gkyda]][[GSUPG00069]][[overview-of-cluster-and-node-agent-upgrade-procedures]]
+[[overview-of-cluster-and-node-agent-upgrade-procedures]]
 
 ==== Overview of Cluster and Node Agent Upgrade Procedures
 
@@ -1347,7 +1347,7 @@ of a Node After an Upgrade].
 4. Re-create the clusters and server instances on each {productName} 7 node host.
 This procedure is described in xref:#to-re-create-a-cluster[To Re-Create a Cluster].
 
-[[gktle]][[GSUPG00018]][[to-correct-the-configuration-of-a-node-after-an-upgrade]]
+[[to-correct-the-configuration-of-a-node-after-an-upgrade]]
 
 ==== To Correct the Configuration of a Node After an Upgrade
 
@@ -1450,7 +1450,7 @@ node-name::
   The name of the node to update. This name is the name of the node
   agent from which the node was transformed.
 
-[[GSUPG00008]][[gktoh]]
+[[gktoh]]
 Example 2-2 Correcting the Configuration of a Node After an Upgrade
 
 This example updates the path to the directory that will contain
@@ -1483,7 +1483,7 @@ in {productName} High Availability Administration Guide
 * link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)]
 * link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
 
-[[gktkx]][[GSUPG00019]][[to-re-create-a-cluster]]
+[[to-re-create-a-cluster]]
 
 ==== To Re-Create a Cluster
 
@@ -1569,7 +1569,7 @@ asadmin> start-cluster cluster1
 This step may or may not be necessary, depending on the procedure you
 used to create the server instances for the cluster.
 
-[[GSUPG00009]][[gkyin]]
+[[gkyin]]
 Example 2-3 Creating Two Local Instances
 
 The following example shows how to create two local instances in a
@@ -1590,7 +1590,7 @@ host2$ asadmin --host dashost create-local-instance --node na2 --cluster cluster
 `instance1`, `instance2`::
   The names of the instances.
 
-[[gkrfh]][[GSUPG00044]][[correcting-potential-upgrade-problems]]
+[[correcting-potential-upgrade-problems]]
 
 === Correcting Potential Upgrade Problems
 
@@ -1603,7 +1603,7 @@ The following topics are addressed here:
 * xref:#cluster-profile-upgrade-on-windows[Cluster Profile Upgrade on Windows]
 * xref:#asupgrade-fails-without-internet-connection[`asupgrade` Fails Without Internet Connection]
 
-[[gkrgh]][[GSUPG00070]][[cluster-profile-security-setting]]
+[[cluster-profile-security-setting]]
 
 ==== Cluster Profile Security Setting
 
@@ -1643,7 +1643,7 @@ For example:
 asadmin> set configs.config.server-config.admin-service.jmx-connector.system.security-enabled=false
 ----
 
-[[gkrib]][[GSUPG00071]][[cluster-profile-upgrade-on-windows]]
+[[cluster-profile-upgrade-on-windows]]
 
 ==== Cluster Profile Upgrade on Windows
 
@@ -1658,7 +1658,7 @@ Fatal error while backing up the domain directory
 To resolve this error, look for and remove any hidden files in the
 source domain's directory and re-run Upgrade Tool.
 
-[[gkyho]][[GSUPG00072]][[asupgrade-fails-without-internet-connection]]
+[[asupgrade-fails-without-internet-connection]]
 
 ==== `asupgrade` Fails Without Internet Connection
 

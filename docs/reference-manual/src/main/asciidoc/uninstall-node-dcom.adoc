@@ -7,7 +7,7 @@ prev=uninstall-node.html
 
 = uninstall-node-dcom
 
-[[uninstall-node-dcom-1]][[GSRFM775]][[uninstall-node-dcom]]
+[[uninstall-node-dcom]]
 
 == uninstall-node-dcom
 
@@ -119,7 +119,7 @@ host-list::
 
 === Examples
 
-[[GSRFM776]][[sthref2220]]
+[[sthref2220]]
 
 ==== Example 1   Uninstalling {productName} Software From the Default Location
 
@@ -132,7 +132,7 @@ asadmin> uninstall-node-dcom wpmdl1 wpmdl2
 Command uninstall-node-dcom executed successfully.
 ----
 
-[[GSRFM777]][[sthref2221]]
+[[sthref2221]]
 
 ==== Example 2   Forcibly Uninstalling {productName} Software
 

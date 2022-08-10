@@ -7,7 +7,7 @@ prev=create-node-config.html
 
 = create-node-dcom
 
-[[create-node-dcom-1]][[GSRFM510]][[create-node-dcom]]
+[[create-node-dcom]]
 
 == create-node-dcom
 

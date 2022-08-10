@@ -7,7 +7,7 @@ prev=delete-http-health-checker.html
 
 = delete-http-lb
 
-[[delete-http-lb-1]][[GSRFM00079]][[delete-http-lb]]
+[[delete-http-lb]]
 
 == delete-http-lb
 
@@ -47,7 +47,7 @@ load_balancer_name::
 
 === Examples
 
-[[GSRFM548]][[sthref712]]
+[[sthref712]]
 
 ==== Example 1   Deleting a Load Balancer Configuration
 

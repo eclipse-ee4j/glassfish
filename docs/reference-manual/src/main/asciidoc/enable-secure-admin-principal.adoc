@@ -7,7 +7,7 @@ prev=enable-secure-admin-internal-user.html
 
 = enable-secure-admin-principal
 
-[[enable-secure-admin-principal-1]][[GSRFM00131]][[enable-secure-admin-principal]]
+[[enable-secure-admin-principal]]
 
 == enable-secure-admin-principal
 
@@ -72,7 +72,7 @@ DN::
 
 === Examples
 
-[[GSRFM608]][[sthref1148]]
+[[sthref1148]]
 
 ==== Example 1   Trusting a DN for secure administration
 

@@ -7,7 +7,7 @@ prev=uninstall-node-dcom.html
 
 = uninstall-node-ssh
 
-[[uninstall-node-ssh-1]][[GSRFM778]][[uninstall-node-ssh]]
+[[uninstall-node-ssh]]
 
 == uninstall-node-ssh
 
@@ -133,7 +133,7 @@ host-list::
 
 === Examples
 
-[[GSRFM779]][[sthref2229]]
+[[sthref2229]]
 
 ==== Example 1   Uninstalling {productName} Software From the Default Location
 
@@ -150,7 +150,7 @@ Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 Command uninstall-node-ssh executed successfully.
 ----
 
-[[GSRFM780]][[sthref2230]]
+[[sthref2230]]
 
 ==== Example 2   Forcibly Uninstalling {productName} Software
 

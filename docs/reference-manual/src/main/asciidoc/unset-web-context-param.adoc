@@ -7,7 +7,7 @@ prev=unset.html
 
 = unset-web-context-param
 
-[[unset-web-context-param-1]][[GSRFM00248]][[unset-web-context-param]]
+[[unset-web-context-param]]
 
 == unset-web-context-param
 
@@ -96,7 +96,7 @@ The module would be specified as the operand of this command as `myApp/myWebModu
 
 === Examples
 
-[[GSRFM783]][[sthref2247]]
+[[sthref2247]]
 
 ==== Example 1   Unsetting a Servlet Context-Initialization Parameter for a Web Application
 

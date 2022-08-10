@@ -7,7 +7,7 @@ prev=delete-connector-connection-pool.html
 
 = delete-connector-resource
 
-[[delete-connector-resource-1]][[GSRFM00071]][[delete-connector-resource]]
+[[delete-connector-resource]]
 
 == delete-connector-resource
 
@@ -69,7 +69,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM538]][[sthref638]]
+[[sthref638]]
 
 ==== Example 1   Deleting a Connector Resource
 
@@ -81,7 +81,7 @@ asadmin> delete-connector-resource jms/qConnFactory
 Command delete-connector-resource executed successfully
 ----
 
-[[GSRFM539]][[sthref639]]
+[[sthref639]]
 
 ==== Example 2   Using the delete-connector-resource subcommand
 

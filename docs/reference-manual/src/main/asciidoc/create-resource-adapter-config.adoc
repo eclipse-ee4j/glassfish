@@ -7,7 +7,7 @@ prev=create-protocol-finder.html
 
 = create-resource-adapter-config
 
-[[create-resource-adapter-config-1]][[GSRFM00054]][[create-resource-adapter-config]]
+[[create-resource-adapter-config]]
 
 == create-resource-adapter-config
 
@@ -68,7 +68,7 @@ raname::
 
 === Examples
 
-[[GSRFM519]][[sthref516]]
+[[sthref516]]
 
 ==== Example 1   Creating a Resource Adapter Con figuration
 

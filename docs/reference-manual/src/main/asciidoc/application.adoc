@@ -7,7 +7,7 @@ prev=manvol5asc.html
 
 = application
 
-[[application-5asc]][[GSRFM00265]][[application]]
+[[application]]
 
 == application
 

@@ -7,7 +7,7 @@ prev=disable-http-lb-application.html
 
 = disable-http-lb-server
 
-[[disable-http-lb-server-1]][[GSRFM00119]][[disable-http-lb-server]]
+[[disable-http-lb-server]]
 
 == disable-http-lb-server
 
@@ -71,7 +71,7 @@ target::
 
 === Examples
 
-[[GSRFM593]][[sthref1060]]
+[[sthref1060]]
 
 ==== Example 1   Disabling a Cluster for Load Balancing
 

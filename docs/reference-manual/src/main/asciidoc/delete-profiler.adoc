@@ -7,7 +7,7 @@ prev=delete-password-alias.html
 
 = delete-profiler
 
-[[delete-profiler-1]][[GSRFM00102]][[delete-profiler]]
+[[delete-profiler]]
 
 == delete-profiler
 
@@ -57,7 +57,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM573]][[sthref934]]
+[[sthref934]]
 
 ==== Example 1   Deleting a Profile
 

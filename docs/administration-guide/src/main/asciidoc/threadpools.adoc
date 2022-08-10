@@ -7,7 +7,7 @@ prev=jvm.html
 
 = Administering Thread Pools
 
-[[GSADG00008]][[abluc]]
+[[abluc]]
 
 
 [[administering-thread-pools]]
@@ -25,7 +25,7 @@ The following topics are addressed here:
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
 
-[[ggjyv]][[GSADG00546]][[about-thread-pools]]
+[[about-thread-pools]]
 
 === About Thread Pools
 
@@ -43,7 +43,7 @@ requests and returns results. For example, if the request needs to use a
 system resource that is currently busy, the thread waits until that
 resource is free before allowing the request to use that resource.
 
-[[ablud]][[GSADG00547]][[configuring-thread-pools]]
+[[configuring-thread-pools]]
 
 === Configuring Thread Pools
 
@@ -58,7 +58,7 @@ The following topics are addressed here:
 * <<To Update a Thread Pool>>
 * <<To Delete a Thread Pool>>
 
-[[ggkwj]][[GSADG00366]][[to-create-a-thread-pool]]
+[[to-create-a-thread-pool]]
 
 ==== To Create a Thread Pool
 
@@ -93,7 +93,7 @@ Restart is not necessary for thread pools used by the web container.
 ====
 
 
-[[GSADG00162]][[giuez]]
+[[giuez]]
 Example 5-1 Creating a Thread Pool
 
 This example creates `threadpool-l`.
@@ -110,7 +110,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-threadpool` at the command line.
 
-[[giuff]][[GSADG00367]][[to-list-thread-pools]]
+[[to-list-thread-pools]]
 
 ==== To List Thread Pools
 
@@ -121,7 +121,7 @@ existing thread pools.
 2. List the existing thread pools by using the
 link:reference-manual/list-threadpools.html#list-threadpools[`list-threadpools`] subcommand.
 
-[[GSADG00163]][[giugs]]
+[[giugs]]
 Example 5-2 Listing Thread Pools
 
 This example lists the existing thread pools.
@@ -138,7 +138,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-threadpools` at the command line.
 
-[[ggkyc]][[GSADG00368]][[to-update-a-thread-pool]]
+[[to-update-a-thread-pool]]
 
 ==== To Update a Thread Pool
 
@@ -162,7 +162,7 @@ Restart is not necessary for thread pools used by the web container.
 ====
 
 
-[[GSADG00164]][[giuhc]]
+[[giuhc]]
 Example 5-3 Updating a Thread Pool
 
 This example sets the `max-thread-pool-size` from its previous value to
@@ -177,7 +177,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help set` at the command line.
 
-[[ggkwy]][[GSADG00369]][[to-delete-a-thread-pool]]
+[[to-delete-a-thread-pool]]
 
 ==== To Delete a Thread Pool
 
@@ -201,7 +201,7 @@ Restart is not necessary for thread pools used by the web container.
 ====
 
 
-[[GSADG00165]][[giugt]]
+[[giugt]]
 Example 5-4 Deleting a Thread Pool
 
 This example deletes `threadpool-1`.

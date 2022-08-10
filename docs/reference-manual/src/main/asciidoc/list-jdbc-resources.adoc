@@ -7,7 +7,7 @@ prev=list-jdbc-connection-pools.html
 
 = list-jdbc-resources
 
-[[list-jdbc-resources-1]][[GSRFM00174]][[list-jdbc-resources]]
+[[list-jdbc-resources]]
 
 == list-jdbc-resources
 
@@ -54,7 +54,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM671]][[sthref1556]]
+[[sthref1556]]
 
 ==== Example 1   Listing the JDBC Resources
 

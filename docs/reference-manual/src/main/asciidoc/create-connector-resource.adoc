@@ -7,7 +7,7 @@ prev=create-connector-connection-pool.html
 
 = create-connector-resource
 
-[[create-connector-resource-1]][[GSRFM00019]][[create-connector-resource]]
+[[create-connector-resource]]
 
 == create-connector-resource
 
@@ -99,7 +99,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM465]][[sthref171]]
+[[sthref171]]
 
 ==== Example 1   Creating a Connector Resource
 
@@ -112,7 +112,7 @@ asadmin> create-connector-resource --poolname jms/qConnPool
 Command create-connector-resource executed successfully
 ----
 
-[[GSRFM466]][[sthref172]]
+[[sthref172]]
 
 ==== Example 2   Using the create-connector-resource subcommand
 

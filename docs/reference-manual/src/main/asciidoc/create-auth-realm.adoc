@@ -7,7 +7,7 @@ prev=create-audit-module.html
 
 = create-auth-realm
 
-[[create-auth-realm-1]][[GSRFM00015]][[create-auth-realm]]
+[[create-auth-realm]]
 
 == create-auth-realm
 
@@ -209,7 +209,7 @@ auth_realm_name::
 
 === Examples
 
-[[GSRFM460]][[sthref144]]
+[[sthref144]]
 
 ==== Example 1   Creating a New Authentication Realm
 

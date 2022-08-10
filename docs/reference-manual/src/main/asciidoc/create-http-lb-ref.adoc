@@ -7,7 +7,7 @@ prev=create-http-lb-config.html
 
 = create-http-lb-ref
 
-[[create-http-lb-ref-1]][[GSRFM00029]][[create-http-lb-ref]]
+[[create-http-lb-ref]]
 
 == create-http-lb-ref
 
@@ -118,7 +118,7 @@ target::
 
 === Examples
 
-[[GSRFM480]][[sthref264]]
+[[sthref264]]
 
 ==== Example 1   Adding a Cluster Reference to a Load Balancer Configuration
 
@@ -132,7 +132,7 @@ asadmin> create-http-lb-ref --config mylbconfig cluster2
 Command create-http-lb-ref executed successfully.
 ----
 
-[[GSRFM481]][[sthref265]]
+[[sthref265]]
 
 ==== Example 2   Adding a Cluster Reference to a Load Balancer
 
@@ -146,7 +146,7 @@ asadmin> create-http-lb-ref --lbname mylb cluster2
 Command create-http-lb-ref executed successfully.
 ----
 
-[[GSRFM482]][[sthref266]]
+[[sthref266]]
 
 ==== Example 3   Configuring a Health Checker and Load Balancer Policy
 
@@ -162,7 +162,7 @@ asadmin> create-http-lb-ref --config mylbconfig --lbpolicy weighted-round-robin
 Command create-http-lb-ref executed successfully.
 ----
 
-[[GSRFM483]][[sthref267]]
+[[sthref267]]
 
 ==== Example 4   Setting a User-Defined Load Balancing Policy
 

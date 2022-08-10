@@ -7,7 +7,7 @@ prev=restart-instance.html
 
 = restart-local-instance
 
-[[restart-local-instance-1]][[GSRFM00220]][[restart-local-instance]]
+[[restart-local-instance]]
 
 == restart-local-instance
 
@@ -132,7 +132,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM740]][[sthref1999]]
+[[sthref1999]]
 
 ==== Example 1   Restarting an Instance Locally
 

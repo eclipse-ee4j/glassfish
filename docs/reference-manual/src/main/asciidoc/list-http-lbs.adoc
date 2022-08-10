@@ -7,7 +7,7 @@ prev=list-http-lb-configs.html
 
 = list-http-lbs
 
-[[list-http-lbs-1]][[GSRFM00167]][[list-http-lbs]]
+[[list-http-lbs]]
 
 == list-http-lbs
 
@@ -80,7 +80,7 @@ name::
 
 === Examples
 
-[[GSRFM661]][[sthref1498]]
+[[sthref1498]]
 
 ==== Example 1   Listing Physical Load Balancers for a Domain
 

@@ -7,7 +7,7 @@ prev=title.html
 
 = Preface
 
-[[GSING00001]][[gjxfa]]
+[[gjxfa]]
 [[preface]]
 == Preface
 
@@ -150,7 +150,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSING00015]][[giprl]]
+
 
 [[related-documentation]]
 === Related Documentation

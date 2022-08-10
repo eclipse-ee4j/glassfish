@@ -7,7 +7,7 @@ prev=validate-multicast.html
 
 = verify-domain-xml
 
-[[verify-domain-xml-1]][[GSRFM00260]][[verify-domain-xml]]
+[[verify-domain-xml]]
 
 == verify-domain-xml
 
@@ -49,7 +49,7 @@ domain_name::
 
 === Examples
 
-[[GSRFM799]][[sthref2344]]
+[[sthref2344]]
 
 ==== Example 1   Using verify-domain-xml
 

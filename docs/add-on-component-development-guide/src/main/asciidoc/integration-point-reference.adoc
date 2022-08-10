@@ -6,7 +6,7 @@ prev=packaging-integrating-delivering.html
 
 = Integration Point Reference
 
-[[GSACG00010]][[ghmrp]]
+[[ghmrp]]
 
 
 [[a-integration-point-reference]]
@@ -34,7 +34,7 @@ The following topics are addressed here:
 * xref:#GSACG00156[`org.glassfish.admingui:loginform` Integration Point]
 * xref:#GSACG00157[`org.glassfish.admingui:versioninfo` Integration Point]
 
-[[ghprc]][[GSACG00145]][[integration-point-attributes]]
+[[integration-point-attributes]]
 
 === Integration Point Attributes
 
@@ -61,7 +61,7 @@ Each attribute takes a string value.
   specifies a link to another Jakarta Server Faces page that appears when a
   user clicks the link.
 
-[[ghmwa]][[GSACG00146]][[org.glassfish.adminguinavnode-integration-point]]
+[[GSACG00146]][[org.glassfish.adminguinavnode-integration-point]]
 
 === `org.glassfish.admingui:navNode` Integration Point
 
@@ -111,7 +111,7 @@ installed the web container module for the Administration Console (the
 
 For an example, see link:extending-the-admin-console.html#ghpmb[Example 3-2].
 
-[[gjkff]][[GSACG00147]][[org.glassfish.adminguirightpanel-integration-point]]
+[[GSACG00147]][[org.glassfish.adminguirightpanel-integration-point]]
 
 === `org.glassfish.admingui:rightPanel` Integration Point
 
@@ -132,7 +132,7 @@ attributes and their content as follows.
   containing the content for the right panel. Alternatively, it may
   contain a full URL which will deliver the content for the right panel.
 
-[[gjkfq]][[GSACG00148]][[org.glassfish.adminguirightpaneltitle-integration-point]]
+[[GSACG00148]][[org.glassfish.adminguirightpaneltitle-integration-point]]
 
 === `org.glassfish.admingui:rightPanelTitle` Integration Point
 
@@ -151,7 +151,7 @@ attributes and their content as follows.
 `content`::
   Specifies the title to display at the top of the right panel.
 
-[[ghpkh]][[GSACG00149]][[org.glassfish.adminguiserverinsttab-integration-point]]
+[[GSACG00149]][[org.glassfish.adminguiserverinsttab-integration-point]]
 
 === `org.glassfish.admingui:serverInstTab` Integration Point
 
@@ -192,7 +192,7 @@ Console. Specify the attributes and their content as follows.
 For examples, see link:extending-the-admin-console.html#ghplc[Example
 3-4] and link:extending-the-admin-console.html#ghplu[Example 3-5].
 
-[[ghpit]][[GSACG00150]][[org.glassfish.adminguicommontask-integration-point]]
+[[GSACG00150]][[org.glassfish.adminguicommontask-integration-point]]
 
 === `org.glassfish.admingui:commonTask` Integration Point
 
@@ -218,7 +218,7 @@ Console. Specify the attributes and their content as follows.
 For examples, see link:extending-the-admin-console.html#ghpox[Example
 3-7] and link:extending-the-admin-console.html#ghplk[Example 3-9].
 
-[[ghphz]][[GSACG00151]][[org.glassfish.adminguiconfiguration-integration-point]]
+[[GSACG00151]][[org.glassfish.adminguiconfiguration-integration-point]]
 
 === `org.glassfish.admingui:configuration` Integration Point
 
@@ -240,7 +240,7 @@ Specify the attributes and their content as follows.
   A relative path to the Jakarta Server Faces page that contains the content
   to be integrated.
 
-[[ghpfm]][[GSACG00152]][[org.glassfish.adminguiresources-integration-point]]
+[[GSACG00152]][[org.glassfish.adminguiresources-integration-point]]
 
 === `org.glassfish.admingui:resources` Integration Point
 
@@ -265,7 +265,7 @@ Specify the attributes and their content as follows.
 For an example, see link:extending-the-admin-console.html#ghpnu[Example
 3-11].
 
-[[ghpiz]][[GSACG00153]][[org.glassfish.adminguicustomtheme-integration-point]]
+[[GSACG00153]][[org.glassfish.adminguicustomtheme-integration-point]]
 
 === `org.glassfish.admingui:customtheme` Integration Point
 
@@ -301,7 +301,7 @@ com.sun.webui.theme.DEFAULT_THEME_VERSION=4.3
 For an example, see link:extending-the-admin-console.html#ghpls[Example
 3-14].
 
-[[ghppm]][[GSACG00154]][[org.glassfish.adminguimasthead-integration-point]]
+[[GSACG00154]][[org.glassfish.adminguimasthead-integration-point]]
 
 === `org.glassfish.admingui:masthead` Integration Point
 
@@ -325,7 +325,7 @@ this integration point.
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
 
-[[ghppk]][[GSACG00155]][[org.glassfish.adminguiloginimage-integration-point]]
+[[GSACG00155]][[org.glassfish.adminguiloginimage-integration-point]]
 
 === `org.glassfish.admingui:loginimage` Integration Point
 
@@ -351,7 +351,7 @@ point.
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
 
-[[ghprk]][[GSACG00156]][[org.glassfish.adminguiloginform-integration-point]]
+[[GSACG00156]][[org.glassfish.adminguiloginform-integration-point]]
 
 === `org.glassfish.admingui:loginform` Integration Point
 
@@ -375,7 +375,7 @@ attribute for this integration point.
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
 
-[[ghpse]][[GSACG00157]][[org.glassfish.adminguiversioninfo-integration-point]]
+[[GSACG00157]][[org.glassfish.adminguiversioninfo-integration-point]]
 
 === `org.glassfish.admingui:versioninfo` Integration Point
 

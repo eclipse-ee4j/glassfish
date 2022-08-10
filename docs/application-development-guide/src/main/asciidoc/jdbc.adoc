@@ -7,7 +7,7 @@ prev=part-services-and-apis.html
 
 = Using the JDBC API for Database Access
 
-[[GSDVG00017]][[beamj]]
+[[beamj]]
 
 
 [[using-the-jdbc-api-for-database-access]]
@@ -42,7 +42,7 @@ The following topics are addressed here:
 * xref:#using-application-scoped-resources[Using Application-Scoped Resources]
 * xref:#restrictions-and-optimizations[Restrictions and Optimizations]
 
-[[giyck]][[GSDVG00182]][[statements]]
+[[statements]]
 
 === Statements
 
@@ -54,7 +54,7 @@ The following topics are addressed here:
 * xref:#statement-caching[Statement Caching]
 * xref:#statement-tracing[Statement Tracing]
 
-[[giyfu]][[GSDVG00495]][[using-an-initialization-statement]]
+[[using-an-initialization-statement]]
 
 ==== Using an Initialization Statement
 
@@ -80,7 +80,7 @@ asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="sql-strin
 ----
 For more information, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[ghqrx]][[GSDVG00496]][[setting-a-statement-timeout]]
+[[setting-a-statement-timeout]]
 
 ==== Setting a Statement Timeout
 
@@ -102,7 +102,7 @@ click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[gktbf]][[GSDVG00497]][[statement-leak-detection-and-leaked-statement-reclamation]]
+[[statement-leak-detection-and-leaked-statement-reclamation]]
 
 ==== Statement Leak Detection and Leaked Statement Reclamation
 
@@ -150,7 +150,7 @@ For example:
 asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-reclaim=true
 ----
 
-[[giyci]][[GSDVG00498]][[statement-caching]]
+[[statement-caching]]
 
 ==== Statement Caching
 
@@ -185,7 +185,7 @@ nonzero value. The built-in cache eviction strategy is LRU-based (Least
 Recently Used). When a connection pool is flushed, the connections in
 the statement cache are recreated.
 
-[[giygg]][[GSDVG00499]][[statement-tracing]]
+[[statement-tracing]]
 
 ==== Statement Tracing
 
@@ -262,7 +262,7 @@ link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-po
 asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queries-in-minutes=10
 ----
 
-[[giyeq]][[GSDVG00183]][[connections]]
+[[connections]]
 
 === Connections
 
@@ -276,7 +276,7 @@ The following topics are addressed here:
 * xref:#marking-bad-connections[Marking Bad Connections]
 * xref:#handling-invalid-connections[Handling Invalid Connections]
 
-[[gktas]][[GSDVG00500]][[transparent-pool-reconfiguration]]
+[[transparent-pool-reconfiguration]]
 
 ==== Transparent Pool Reconfiguration
 
@@ -315,7 +315,7 @@ connections to close and in-flight transactions to complete. Any
 connections in use or transaction in flight past this time must be
 retried.
 
-[[giygl]][[GSDVG00501]][[disabling-pooling]]
+[[disabling-pooling]]
 
 ==== Disabling Pooling
 
@@ -355,7 +355,7 @@ environment:
 * `max-connection-usage`
 * `idle-timeout`
 
-[[giydr]][[GSDVG00502]][[associating-connections-with-threads]]
+[[associating-connections-with-threads]]
 
 ==== Associating Connections with Threads
 
@@ -396,7 +396,7 @@ asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.associate-with-thre
 ----
 For more information, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[giyfg]][[GSDVG00503]][[custom-connection-validation]]
+[[custom-connection-validation]]
 
 ==== Custom Connection Validation
 
@@ -443,7 +443,7 @@ Additionally, for JDBC 4.0 compliant database drivers, a validation
 mechanism is provided that uses the `Connection.isValid(0)`
 implementation.
 
-[[beams]][[GSDVG00504]][[sharing-connections]]
+[[sharing-connections]]
 
 ==== Sharing Connections
 
@@ -465,7 +465,7 @@ reference. To turn off connection sharing, set `res-sharing-scope` to
 For general information about connections and JDBC URLs, see
 "link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]" in {productName} Administration Guide.
 
-[[gezfh]][[GSDVG00505]][[marking-bad-connections]]
+[[marking-bad-connections]]
 
 ==== Marking Bad Connections
 
@@ -500,7 +500,7 @@ finally{
 }
 ----
 
-[[gipzl]][[GSDVG00506]][[handling-invalid-connections]]
+[[handling-invalid-connections]]
 
 ==== Handling Invalid Connections
 
@@ -551,7 +551,7 @@ The {productName} checks if the JDBC driver implements this
 interface, and if it does, invalid connections are removed when the
 connection pool is resized.
 
-[[giyde]][[GSDVG00184]][[connection-wrapping]]
+[[connection-wrapping]]
 
 === Connection Wrapping
 
@@ -561,7 +561,7 @@ The following topics are addressed here:
 * xref:#obtaining-a-physical-connection-from-a-wrapped-connection[Obtaining a Physical Connection From a Wrapped Connection]
 * xref:#GSDVG00509[Using the `Connection.unwrap()` Method]
 
-[[ghqxi]][[GSDVG00507]][[wrapping-connections]]
+[[wrapping-connections]]
 
 ==== Wrapping Connections
 
@@ -583,7 +583,7 @@ information, click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[beamt]][[GSDVG00508]][[obtaining-a-physical-connection-from-a-wrapped-connection]]
+[[obtaining-a-physical-connection-from-a-wrapped-connection]]
 
 ==== Obtaining a Physical Connection From a Wrapped Connection
 
@@ -612,7 +612,7 @@ Connection drivercon = ds.getConnection(con); //get physical connection from wra
 con.close(); // return wrapped connection to pool.
 ----
 
-[[ggrum]][[GSDVG00509]][[using-the-connection.unwrap-method]]
+[[GSDVG00509]][[using-the-connection.unwrap-method]]
 
 ==== Using the `Connection.unwrap()` Method
 
@@ -624,7 +624,7 @@ vendor-provided interface to check whether the connection can provide an
 implementation of the vendor-provided interface. Check the JDBC driver
 vendor's documentation for information on these interfaces.
 
-[[gavro]][[GSDVG00185]][[allowing-non-component-callers]]
+[[allowing-non-component-callers]]
 
 === Allowing Non-Component Callers
 
@@ -662,7 +662,7 @@ information about the Transaction Synchronization Registry, see
 link:transaction-service.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the
 Transaction Synchronization Registry, and `UserTransaction`].
 
-[[giydx]][[GSDVG00186]][[using-application-scoped-resources]]
+[[using-application-scoped-resources]]
 
 === Using Application-Scoped Resources
 
@@ -672,14 +672,14 @@ application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
 "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
-[[geqvg]][[GSDVG00187]][[restrictions-and-optimizations]]
+[[restrictions-and-optimizations]]
 
 === Restrictions and Optimizations
 
 This section discusses restrictions and performance optimizations that
 affect using the JDBC API.
 
-[[geqvy]][[GSDVG00510]][[disabling-stored-procedure-creation-on-sybase]]
+[[disabling-stored-procedure-creation-on-sybase]]
 
 ==== Disabling Stored Procedure Creation on Sybase
 

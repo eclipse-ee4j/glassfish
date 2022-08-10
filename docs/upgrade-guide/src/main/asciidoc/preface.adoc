@@ -7,7 +7,7 @@ prev=title.html
 
 = Preface
 
-[[GSUPG00001]][[gkbei]]
+[[gkbei]]
 
 
 [[preface]]
@@ -154,7 +154,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSUPG00021]][[giprl]]
+
 
 [[related-documentation]]
 === Related Documentation
@@ -237,7 +237,7 @@ Do not save the file.
 |===
 
 
-[[GSUPG00023]][[fquvc]]
+[[fquvc]]
 
 [[symbol-conventions]]
 === Symbol Conventions

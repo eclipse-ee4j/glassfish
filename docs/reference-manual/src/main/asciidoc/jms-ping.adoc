@@ -7,7 +7,7 @@ prev=install-node-ssh.html
 
 = jms-ping
 
-[[jms-ping-1]][[GSRFM00144]][[jms-ping]]
+[[jms-ping]]
 
 == jms-ping
 
@@ -59,7 +59,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM630]][[sthref1279]]
+[[sthref1279]]
 
 ==== Example 1   Verifying that the JMS service is running
 

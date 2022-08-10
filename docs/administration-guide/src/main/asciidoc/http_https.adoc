@@ -5,7 +5,7 @@ prev=connectors.adoc
 
 = Administering Internet Connectivity
 
-[[GSADG00017]][[ablsw]]
+[[ablsw]]
 
 
 [[administering-internet-connectivity]]
@@ -25,7 +25,7 @@ Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[giusf]][[GSADG00587]][[about-internet-connectivity]]
+[[about-internet-connectivity]]
 
 === About Internet Connectivity
 
@@ -42,7 +42,7 @@ The following topics are addressed here:
 * <<About HTTP Network Listeners>>
 * <<About Virtual Servers>>
 
-[[giuri]][[GSADG00766]][[about-http-network-listeners]]
+[[about-http-network-listeners]]
 
 ==== About HTTP Network Listeners
 
@@ -80,7 +80,7 @@ To access the Administration Console, use the URL
 `https://localhost:4848/` or `http://localhost:4848/asadmin/` (console
 default context root).
 
-[[giupz]][[GSADG00767]][[about-virtual-servers]]
+[[about-virtual-servers]]
 
 ==== About Virtual Servers
 
@@ -122,7 +122,7 @@ DNS server for your network. In addition, on a UNIX system, add these
 domains to your `/etc/hosts` file (if the setting for `hosts` in your
 `/etc/nsswitch.conf` file includes `files`).
 
-[[ggnfu]][[GSADG00588]][[administering-http-network-listeners]]
+[[administering-http-network-listeners]]
 
 === Administering HTTP Network Listeners
 
@@ -168,7 +168,7 @@ The following topics are addressed here:
 * <<Administering HTTP Transports>>
 * <<Administering HTTP Network Listeners>>
 
-[[ggnfh]][[GSADG00456]][[to-create-an-internet-connection]]
+[[to-create-an-internet-connection]]
 
 ==== To Create an Internet Connection
 
@@ -204,7 +204,7 @@ You can also view the full syntax and options of the subcommand by
 typing a command such as `asadmin help create-http-listener` at the
 command line.
 
-[[gjkuy]][[GSADG00768]][[administering-http-protocols]]
+[[administering-http-protocols]]
 
 ==== Administering HTTP Protocols
 
@@ -219,7 +219,7 @@ The following topics are addressed here:
 * <<To List Protocols>>
 * <<To Delete a Protocol>>
 
-[[gjhot]][[GSADG00457]][[to-create-a-protocol]]
+[[to-create-a-protocol]]
 
 ===== To Create a Protocol
 
@@ -232,7 +232,7 @@ protocol.
 Information about options and properties for the subcommand are included
 in this help page.
 
-[[GSADG00245]][[gjhos]]
+[[gjhos]]
 Example 13-1 Creating an HTTP Protocol
 
 This example creates a protocol named `http-1` with security enabled.
@@ -248,7 +248,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-protocol` at the command line.
 
-[[gjhna]][[GSADG00458]][[to-list-protocols]]
+[[to-list-protocols]]
 
 ===== To List Protocols
 
@@ -259,7 +259,7 @@ HTTP protocols.
 2. List the existing protocols by using the
 link:reference-manual/list-protocols.html#list-protocols[`list-protocols`] subcommand.
 
-[[GSADG00246]][[gjhqg]]
+[[gjhqg]]
 Example 13-2 Listing the Protocols
 
 This example lists the existing protocols.
@@ -279,7 +279,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-protocols` at the command line.
 
-[[gjhnx]][[GSADG00459]][[to-delete-a-protocol]]
+[[to-delete-a-protocol]]
 
 ===== To Delete a Protocol
 
@@ -290,7 +290,7 @@ protocol.
 2. Delete a protocol by using the link:reference-manual/delete-protocol.html#delete-protocol[`delete-protocol`]
 subcommand
 
-[[GSADG00247]][[gjhop]]
+[[gjhop]]
 Example 13-3 Deleting a Protocol
 
 This example deletes the protocol named `http-1`.
@@ -306,7 +306,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-protocol` at the command line.
 
-[[gjkzi]][[GSADG00769]][[administering-http-configurations]]
+[[administering-http-configurations]]
 
 ==== Administering HTTP Configurations
 
@@ -320,7 +320,7 @@ The following topics are addressed here:
 * <<To Create an HTTP Configuration>>
 * <<To Delete an HTTP Configuration>>
 
-[[gjhqc]][[GSADG00460]][[to-create-an-http-configuration]]
+[[to-create-an-http-configuration]]
 
 ===== To Create an HTTP Configuration
 
@@ -334,7 +334,7 @@ link:reference-manual/create-http.html#create-http[`create-http`] subcommand.
 Information about options and properties for the subcommand are included
 in this help page.
 
-[[GSADG00248]][[gjhnz]]
+[[gjhnz]]
 Example 13-4 Creating an HTTP Configuration
 
 This example creates an HTTP parameter set for the protocol named
@@ -351,7 +351,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-http` at the command line.
 
-[[gjhqa]][[GSADG00461]][[to-delete-an-http-configuration]]
+[[to-delete-an-http-configuration]]
 
 ===== To Delete an HTTP Configuration
 
@@ -362,7 +362,7 @@ parameters from a protocol.
 2. Delete the HTTP parameters from a protocol by using the
 link:reference-manual/delete-http.html#delete-http[`delete-http`] subcommand.
 
-[[GSADG00249]][[gjhov]]
+[[gjhov]]
 Example 13-5 Deleting an HTTP Configuration
 
 This example deletes the HTTP parameter set from a protocol named `http-1`.
@@ -378,7 +378,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-http` at the command line.
 
-[[gjkym]][[GSADG00770]][[administering-http-transports]]
+[[administering-http-transports]]
 
 ==== Administering HTTP Transports
 
@@ -393,7 +393,7 @@ The following topics are addressed here:
 * <<To List Transports>>
 * <<To Delete a Transport>>
 
-[[gjhps]][[GSADG00462]][[to-create-a-transport]]
+[[to-create-a-transport]]
 
 ===== To Create a Transport
 
@@ -405,7 +405,7 @@ transport for a network listener,
 subcommand.
 Information about options and properties for the subcommand are included in this help page.
 
-[[GSADG00250]][[gjhpx]]
+[[gjhpx]]
 Example 13-6 Creating a Transport
 
 This example creates a transport named `http1-trans` that uses a
@@ -422,7 +422,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-transport` at the command line.
 
-[[gjhmx]][[GSADG00463]][[to-list-transports]]
+[[to-list-transports]]
 
 ===== To List Transports
 
@@ -433,7 +433,7 @@ HTTP transports.
 2. List the existing transports by using the
 link:reference-manual/list-transports.html#list-transports[`list-transports`] subcommand.
 
-[[GSADG00251]][[gjhqj]]
+[[gjhqj]]
 Example 13-7 Listing HTTP Transports
 
 This example lists the existing transports.
@@ -451,7 +451,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-transports` at the command line.
 
-[[gjhqp]][[GSADG00464]][[to-delete-a-transport]]
+[[to-delete-a-transport]]
 
 ===== To Delete a Transport
 
@@ -462,7 +462,7 @@ transport.
 2. Delete a transport by using the link:reference-manual/delete-transport.html#delete-transport[`delete-transport`]
 subcommand.
 
-[[GSADG00252]][[gjhoh]]
+[[gjhoh]]
 Example 13-8 Deleting a Transport
 
 This example deletes he transport named `http1-trans`.
@@ -478,7 +478,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-transport` at the command line.
 
-[[gjkwt]][[GSADG00771]][[administering-http-network-listeners-1]]
+[[administering-http-network-listeners-1]]
 
 ==== Administering HTTP Network Listeners
 
@@ -494,7 +494,7 @@ The following topics are addressed here:
 * <<To Delete SSL From an HTTP Listener>>
 * <<To Assign a Default Virtual Server to an HTTP Listener>>
 
-[[gjimx]][[GSADG00465]][[to-create-an-http-network-listener]]
+[[to-create-an-http-network-listener]]
 
 ===== To Create an HTTP Network Listener
 
@@ -519,7 +519,7 @@ If you edit the special HTTP network listener named `admin-listener`,
 you must restart the server for changes to take effect. See
 xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00253]][[ggpjk]]
+[[ggpjk]]
 Example 13-9 Creating an HTTP Listener
 
 This example creates an HTTP listener named `sampleListener` that uses a
@@ -535,7 +535,7 @@ asadmin> create-http-listener --listeneraddress 0.0.0.0
 Command create-http-listener executed successfully.
 ----
 
-[[GSADG00254]][[gjimj]]
+[[gjimj]]
 Example 13-10 Creating a Network Listener
 
 This example a network listener named `sampleListener` that is not
@@ -554,7 +554,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-http-listener` or
 `asadmin help create-network-listener` at the command line.
 
-[[ggnbv]][[GSADG00466]][[to-list-http-network-listeners]]
+[[to-list-http-network-listeners]]
 
 ===== To List HTTP Network Listeners
 
@@ -566,7 +566,7 @@ subcommand in remote mode to list the existing HTTP listeners.
 link:reference-manual/list-http-listeners.html#list-http-listeners[`list-http-listeners`] or
 link:reference-manual/list-network-listeners.html#list-network-listeners[`list-network-listeners`] subcommand.
 
-[[GSADG00255]][[ggpgw]]
+[[ggpgw]]
 Example 13-11 Listing HTTP Listeners
 
 This example lists the HTTP listeners. The same output is given if you
@@ -587,7 +587,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-http-listeners` or
 `asadmin help list-network-listeners` at the command line.
 
-[[giwls]][[GSADG00467]][[to-update-an-http-network-listener]]
+[[to-update-an-http-network-listener]]
 
 ===== To Update an HTTP Network Listener
 
@@ -599,7 +599,7 @@ link:reference-manual/set.html#set[`set`] subcommand.
 +
 The listener is identified by its dotted name.
 
-[[GSADG00256]][[giwiw]]
+[[giwiw]]
 Example 13-12 Updating an HTTP Network Listener
 
 This example changes `security-enabled` to `false` on `http-listener-2`.
@@ -610,7 +610,7 @@ asadmin> set server.network-config.protocols.protocol.http-listener-2.security-e
 Command set executed successfully.
 ----
 
-[[ggndu]][[GSADG00468]][[to-delete-an-http-network-listener]]
+[[to-delete-an-http-network-listener]]
 
 ===== To Delete an HTTP Network Listener
 
@@ -629,7 +629,7 @@ link:reference-manual/delete-network-listener.html#delete-network-listener[`dele
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00257]][[ggpjr]]
+[[ggpjr]]
 Example 13-13 Deleting an HTTP Listener
 
 This example deletes the HTTP listener named `sampleListener`:
@@ -646,7 +646,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-http-listener` or
 `asadmin help delete-network-listener` at the command line.
 
-[[ggnbj]][[GSADG00469]][[to-configure-an-http-listener-for-ssl]]
+[[to-configure-an-http-listener-for-ssl]]
 
 ===== To Configure an HTTP Listener for SSL
 
@@ -661,7 +661,7 @@ link:reference-manual/create-ssl.html#create-ssl[`create-ssl`] subcommand.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00258]][[ggphv]]
+[[ggphv]]
 Example 13-14 Configuring an HTTP Listener for SSL
 
 This example enables the HTTP listener named `http-listener-1` for SSL:
@@ -677,7 +677,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-ssl` at the command line.
 
-[[CHDEDCEA]][[GSADG1106]][[to-configure-optional-client-authentication-for-ssl]]
+[[to-configure-optional-client-authentication-for-ssl]]
 
 ===== To Configure Optional Client Authentication for SSL
 
@@ -693,7 +693,7 @@ asadmin> set configs.config.config-name.network-config.protocols.\
 protocol.listener-name.ssl.client-auth=want
 ----
 
-[[CHDHEFHG]][[GSADG1107]][[to-configure-a-custom-ssl-implementation]]
+[[to-configure-a-custom-ssl-implementation]]
 
 ===== To Configure a Custom SSL Implementation
 
@@ -712,7 +712,7 @@ protocol.listener-name.ssl.classname=SSLImplementation-class-name
 By default, {productName} uses the implementation
 `com.sun.enterprise.security.ssl.GlassfishSSLImpl` for the SSL protocol.
 
-[[ggncl]][[GSADG00470]][[to-delete-ssl-from-an-http-listener]]
+[[to-delete-ssl-from-an-http-listener]]
 
 ===== To Delete SSL From an HTTP Listener
 
@@ -727,7 +727,7 @@ link:reference-manual/delete-ssl.html#delete-ssl[`delete-ssl`] subcommand.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00259]][[ggpln]]
+[[ggpln]]
 Example 13-15 Deleting SSL From an HTTP Listener
 
 This example disables SSL for the HTTP listener named `http-listener-1`:
@@ -743,7 +743,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-ssl` at the command line.
 
-[[gixjb]][[GSADG00471]][[to-assign-a-default-virtual-server-to-an-http-listener]]
+[[to-assign-a-default-virtual-server-to-an-http-listener]]
 
 ===== To Assign a Default Virtual Server to an HTTP Listener
 
@@ -761,7 +761,7 @@ See Also
 For details, click the Help button in the Administration Console from
 the HTTP Listeners page.
 
-[[ggncs]][[GSADG00589]][[administering-virtual-servers]]
+[[administering-virtual-servers]]
 
 === Administering Virtual Servers
 
@@ -807,7 +807,7 @@ The following topics are addressed here:
 * <<To Assign a Virtual Server to an Application or Module>>
 * <<To Set `JSESSIONIDSSO` Cookie Attributes>>
 
-[[ggnfr]][[GSADG00472]][[to-create-a-virtual-server]]
+[[to-create-a-virtual-server]]
 
 ==== To Create a Virtual Server
 
@@ -849,7 +849,7 @@ help page.
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00260]][[ggpha]]
+[[ggpha]]
 Example 13-16 Creating a Virtual Server
 
 This example creates a virtual server named `sampleServer` on
@@ -866,7 +866,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-virutal-server` at the command line.
 
-[[ggndw]][[GSADG00473]][[to-list-virtual-servers]]
+[[to-list-virtual-servers]]
 
 ==== To List Virtual Servers
 
@@ -877,7 +877,7 @@ existing virtual servers.
 2. List virtual servers by using the
 link:reference-manual/list-virtual-servers.html#list-virtual-servers[`list-virtual-servers`] subcommand.
 
-[[GSADG00261]][[ggpgr]]
+[[ggpgr]]
 Example 13-17 Listing Virtual Servers
 
 This example lists the virtual servers for `localhost`.
@@ -897,7 +897,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-virutal-servers` at the command line.
 
-[[giwkp]][[GSADG00474]][[to-update-a-virtual-server]]
+[[to-update-a-virtual-server]]
 
 ==== To Update a Virtual Server
 
@@ -908,7 +908,7 @@ link:reference-manual/set.html#set[`set`] subcommand.
 +
 The virtual server is identified by its dotted name.
 
-[[ggnen]][[GSADG00475]][[to-delete-a-virtual-server]]
+[[to-delete-a-virtual-server]]
 
 ==== To Delete a Virtual Server
 
@@ -925,7 +925,7 @@ link:reference-manual/delete-virtual-server.html#delete-virtual-server[`delete-v
 +
 See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00262]][[ggpmd]]
+[[ggpmd]]
 Example 13-18 Deleting a Virtual Server
 
 This example deletes the virtual server named `sampleServer` from
@@ -942,7 +942,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-virutal-server` at the command line.
 
-[[beaga]][[GSADG00772]][[to-assign-a-default-web-module-to-a-virtual-server]]
+[[to-assign-a-default-web-module-to-a-virtual-server]]
 
 ==== To Assign a Default Web Module to a Virtual Server
 
@@ -969,7 +969,7 @@ For example:
 http://myvserver:3184/hellothere.jsp
 ----
 
-[[gixku]][[GSADG00476]][[to-assign-a-virtual-server-to-an-application-or-module]]
+[[to-assign-a-virtual-server-to-an-application-or-module]]
 
 ==== To Assign a Virtual Server to an Application or Module
 
@@ -992,7 +992,7 @@ drop-down list.
 For more information, see xref:#to-assign-a-default-web-module-to-a-virtual-server[To Assign a Default Web Module to
 a Virtual Server].
 
-[[glavy]][[GSADG00477]][[to-set-jsessionidsso-cookie-attributes]]
+[[to-set-jsessionidsso-cookie-attributes]]
 
 ==== To Set `JSESSIONIDSSO` Cookie Attributes
 

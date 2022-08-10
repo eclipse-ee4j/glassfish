@@ -7,7 +7,7 @@ prev=get-active-module-config.html
 
 = get-client-stubs
 
-[[get-client-stubs-1]][[GSRFM00140]][[get-client-stubs]]
+[[get-client-stubs]]
 
 == get-client-stubs
 
@@ -62,7 +62,7 @@ local_directory_path::
 
 === Examples
 
-[[GSRFM622]][[sthref1232]]
+[[sthref1232]]
 
 ==== Example 1   Using get-client-stubs
 

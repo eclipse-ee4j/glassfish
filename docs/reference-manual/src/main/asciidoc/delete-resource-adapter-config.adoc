@@ -7,7 +7,7 @@ prev=delete-protocol-finder.html
 
 = delete-resource-adapter-config
 
-[[delete-resource-adapter-config-1]][[GSRFM00106]][[delete-resource-adapter-config]]
+[[delete-resource-adapter-config]]
 
 == delete-resource-adapter-config
 
@@ -46,7 +46,7 @@ raname::
 
 === Examples
 
-[[GSRFM576]][[sthref964]]
+[[sthref964]]
 
 ==== Example 1   Deleting a Resource Adapter Configuration
 

@@ -7,7 +7,7 @@ prev=list-lifecycle-modules.html
 
 = list-log-attributes
 
-[[list-log-attributes-1]][[GSRFM00182]][[list-log-attributes]]
+[[list-log-attributes]]
 
 == list-log-attributes
 
@@ -50,7 +50,7 @@ target::
 
 === Examples
 
-[[GSRFM682]][[sthref1635]]
+[[sthref1635]]
 
 ==== Example 1   Listing the Logger Attributes for a Domain
 

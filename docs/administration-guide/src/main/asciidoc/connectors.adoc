@@ -5,7 +5,7 @@ prev=jdbc.adoc
 
 = Administering EIS Connectivity
 
-[[GSADG00016]][[abllp]]
+[[abllp]]
 
 
 [[administering-eis-connectivity]]
@@ -41,7 +41,7 @@ online help.
 For information about database connectivity, see
 xref:jdbc.adoc#ablih[Administering Database Connectivity].
 
-[[abllq]][[GSADG00580]][[about-eis-connectivity]]
+[[about-eis-connectivity]]
 
 === About EIS Connectivity
 
@@ -115,7 +115,7 @@ API.
 4. When the application is finished accessing the EIS, the application
 closes the connection and returns the connection to the connection pool.
 
-[[ablls]][[GSADG00581]][[administering-connector-connection-pools]]
+[[administering-connector-connection-pools]]
 
 === Administering Connector Connection Pools
 
@@ -131,7 +131,7 @@ Connection Pool]
 * <<To Update a Connector Connection Pool>>
 * <<To Delete a Connector Connection Pool>>
 
-[[gioce]][[GSADG00431]][[to-create-a-connector-connection-pool]]
+[[to-create-a-connector-connection-pool]]
 
 ==== To Create a Connector Connection Pool
 
@@ -171,7 +171,7 @@ a Domain].
 For instructions, see xref:jdbc.adoc#to-contact-ping-a-connection-pool[To Contact (Ping) a Connection
 Pool].
 
-[[GSADG00223]][[giocc]]
+[[giocc]]
 Example 12-1 Creating a Connector Connection Pool
 
 This example creates the new `jms/qConnPool` pool for the
@@ -192,7 +192,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-connector-connection-pool` at the command
 line.
 
-[[giocg]][[GSADG00432]][[to-list-connector-connection-pools]]
+[[to-list-connector-connection-pools]]
 
 ==== To List Connector Connection Pools
 
@@ -203,7 +203,7 @@ list the pools that have been created.
 2. List the connector connection pools by using the
 link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 
-[[GSADG00224]][[giody]]
+[[giody]]
 Example 12-2 Listing Connector Connection Pools
 
 This example lists the existing connector connection pools.
@@ -221,7 +221,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-connector-connection-pools` at the command
 line.
 
-[[gjiqz]][[GSADG00433]][[to-connect-to-ping-or-reset-flush-a-connector-connection-pool]]
+[[to-connect-to-ping-or-reset-flush-a-connector-connection-pool]]
 
 ==== To Connect to (Ping) or Reset (Flush) a Connector Connection Pool
 
@@ -236,7 +236,7 @@ instructions.
 link:reference-manual/flush-connection-pool.html#flush-connection-pool[`flush-connection-pool`] subcommand or the
 link:reference-manual/ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`] subcommand.
 
-[[gioti]][[GSADG00434]][[to-update-a-connector-connection-pool]]
+[[to-update-a-connector-connection-pool]]
 
 ==== To Update a Connector Connection Pool
 
@@ -265,7 +265,7 @@ asadmin> set domain.resources.connector-connection-pool
 See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
 If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[giocp]][[GSADG00435]][[to-delete-a-connector-connection-pool]]
+[[to-delete-a-connector-connection-pool]]
 
 ==== To Delete a Connector Connection Pool
 
@@ -279,7 +279,7 @@ link:reference-manual/list-connector-connection-pools.html#list-connector-connec
 4. Delete the connector connection pool by using the
 link:reference-manual/delete-connector-connection-pool.html#delete-connector-connection-pool[`delete-connector-connection-pool`] subcommand.
 
-[[GSADG00225]][[giohd]]
+[[giohd]]
 Example 12-3 Deleting a Connector Connection Pool
 
 This example deletes the connection pool named `jms/qConnPool`.
@@ -296,7 +296,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-connector-connection-pool` at the command
 line.
 
-[[abllx]][[GSADG00582]][[administering-connector-resources]]
+[[administering-connector-resources]]
 
 === Administering Connector Resources
 
@@ -311,7 +311,7 @@ The following topics are addressed here:
 * <<To Update a Connector Resource>>
 * <<To Delete a Connector Resource>>
 
-[[giogt]][[GSADG00436]][[to-create-a-connector-resource]]
+[[to-create-a-connector-resource]]
 
 ==== To Create a Connector Resource
 
@@ -342,7 +342,7 @@ xref:overview.adoc#configuration-changes-that-require-restart[Configuration Chan
 your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
-[[GSADG00226]][[giogn]]
+[[giogn]]
 Example 12-4 Creating a Connector Resource
 
 This example creates a new resource named `jms/qConnFactory` for the
@@ -360,7 +360,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-connector-resource` at the command line.
 
-[[giohs]][[GSADG00437]][[to-list-connector-resources]]
+[[to-list-connector-resources]]
 
 ==== To List Connector Resources
 
@@ -371,7 +371,7 @@ connector resources that have been created.
 2. List the connector connection pools by using the
 link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
 
-[[GSADG00227]][[gioia]]
+[[gioia]]
 Example 12-5 Listing Connector Resources
 
 This example lists the existing connector resources.
@@ -388,7 +388,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-connector-resources` at the command line.
 
-[[giosg]][[GSADG00438]][[to-update-a-connector-resource]]
+[[to-update-a-connector-resource]]
 
 ==== To Update a Connector Resource
 
@@ -417,7 +417,7 @@ asadmin> set domain.resources.connector-resource.jms/qConnFactory.enabled=true
 See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
 If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[giofs]][[GSADG00439]][[to-delete-a-connector-resource]]
+[[to-delete-a-connector-resource]]
 
 ==== To Delete a Connector Resource
 
@@ -435,7 +435,7 @@ link:reference-manual/list-connector-resources.html#list-connector-resources[`li
 4. Delete the connector resource by using the
 link:reference-manual/delete-connector-resource.html#delete-connector-resource[`delete-connector-resource`] subcommand.
 
-[[GSADG00228]][[giokh]]
+[[giokh]]
 Example 12-6 Deleting a Connector Resource
 
 This example deletes the `jms/qConnFactory` connector resource.
@@ -451,7 +451,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-connector-resource` at the command line.
 
-[[giope]][[GSADG00583]][[administering-the-resource-adapter-configuration]]
+[[administering-the-resource-adapter-configuration]]
 
 === Administering the Resource Adapter Configuration
 
@@ -463,7 +463,7 @@ Adapter]
 * <<To Update a Resource Adapter Configuration>>
 * <<To Delete a Resource Adapter Configuration>>
 
-[[gioqx]][[GSADG00440]][[to-create-configuration-information-for-a-resource-adapter]]
+[[to-create-configuration-information-for-a-resource-adapter]]
 
 ==== To Create Configuration Information for a Resource Adapter
 
@@ -482,7 +482,7 @@ link:reference-manual/create-resource-adapter-config.html#create-resource-adapte
 Information about properties for the subcommand is included in this help
 page.
 
-[[GSADG00229]][[gionp]]
+[[gionp]]
 Example 12-7 Creating a Resource Adapter Configuration
 
 This example creates the configuration for resource adapter `ra1`.
@@ -500,7 +500,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-resource-adapter-config` at the command
 line.
 
-[[giorn]][[GSADG00441]][[to-list-resource-adapter-configurations]]
+[[to-list-resource-adapter-configurations]]
 
 ==== To List Resource Adapter Configurations
 
@@ -513,7 +513,7 @@ module).
 2. List the configurations for a resource adapter by using the
 link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 
-[[GSADG00230]][[gioof]]
+[[gioof]]
 Example 12-8 Listing Configurations for a Resource Adapter
 
 This example lists all the resource adapter configurations.
@@ -531,7 +531,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-resource-adapter-configs` at the command line.
 
-[[gioum]][[GSADG00442]][[to-update-a-resource-adapter-configuration]]
+[[to-update-a-resource-adapter-configuration]]
 
 ==== To Update a Resource Adapter Configuration
 
@@ -557,7 +557,7 @@ For example:
 asadmin> set domain.resources.resource-adapter-config.ra1.raSpecificProperty=value
 ----
 
-[[gionv]][[GSADG00443]][[to-delete-a-resource-adapter-configuration]]
+[[to-delete-a-resource-adapter-configuration]]
 
 ==== To Delete a Resource Adapter Configuration
 
@@ -572,7 +572,7 @@ link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-c
 3. Delete the configuration for a resource adapter by using the
 link:reference-manual/delete-resource-adapter-config.html#delete-resource-adapter-config[`delete-resource-adapter-config`] subcommand.
 
-[[GSADG00231]][[giorj]]
+[[giorj]]
 Example 12-9 Deleting a Resource Adapter Configuration
 
 This example deletes the configuration for resource adapter `ra1`.
@@ -589,7 +589,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-resource-adapter-config` at the command
 line.
 
-[[gitxy]][[GSADG00584]][[administering-connector-security-maps]]
+[[administering-connector-security-maps]]
 
 === Administering Connector Security Maps
 
@@ -609,7 +609,7 @@ The following topics are addressed here:
 * <<To Update a Connector Security Map>>
 * <<To Delete a Connector Security Map>>
 
-[[gitzz]][[GSADG00444]][[to-create-a-connector-security-map]]
+[[to-create-a-connector-security-map]]
 
 ==== To Create a Connector Security Map
 
@@ -643,7 +643,7 @@ xref:overview.adoc#configuration-changes-that-require-restart[Configuration Chan
 your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
-[[GSADG00232]][[giuxc]]
+[[giuxc]]
 Example 12-10 Creating a Connector Security Map
 
 This example creates a connector security map `securityMap1` for
@@ -656,7 +656,7 @@ asadmin> create-connector-security-map --poolname connector-pool1
 Command create-connector-security-map executed successfully
 ----
 
-[[gitwx]][[GSADG00445]][[to-list-connector-security-maps]]
+[[to-list-connector-security-maps]]
 
 ==== To List Connector Security Maps
 
@@ -672,7 +672,7 @@ link:reference-manual/list-connector-connection-pools.html#list-connector-connec
 3. List the security maps for a specific connector connection pool by
 using the link:reference-manual/list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`] subcommand.
 
-[[GSADG00233]][[giuwj]]
+[[giuwj]]
 Example 12-11 Listing All Connector Security Maps for a Connector
 Connection Pool
 
@@ -686,7 +686,7 @@ securityMap1
 Command list-connector-security-maps executed successfully.
 ----
 
-[[GSADG00234]][[giuyc]]
+[[giuyc]]
 Example 12-12 Listing Principals for a Specific Security Map for a
 Connector Connection Pool
 
@@ -700,7 +700,7 @@ principal1
 Command list-connector-security-maps executed successfully.
 ----
 
-[[GSADG00235]][[giuuf]]
+[[giuuf]]
 Example 12-13 Listing Principals of All Connector Security Maps for a
 Connector Connection Pool
 
@@ -716,7 +716,7 @@ principal1
 Command list-connector-security-maps executed successfully.
 ----
 
-[[gityj]][[GSADG00446]][[to-update-a-connector-security-map]]
+[[to-update-a-connector-security-map]]
 
 ==== To Update a Connector Security Map
 
@@ -736,7 +736,7 @@ xref:overview.adoc#configuration-changes-that-require-restart[Configuration Chan
 your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
-[[GSADG00236]][[giuwi]]
+[[giuwi]]
 Example 12-14 Updating a Connector Security Map
 
 This example adds principals to `securityMap1`.
@@ -748,7 +748,7 @@ asadmin> update-connector-security-map --poolname connector-pool1
 Command update-connector-security-map executed successfully.
 ----
 
-[[gitvf]][[GSADG00447]][[to-delete-a-connector-security-map]]
+[[to-delete-a-connector-security-map]]
 
 ==== To Delete a Connector Security Map
 
@@ -764,7 +764,7 @@ using the link:reference-manual/delete-connector-security-map.html#delete-connec
 Information about options for this subcommand is included in this help
 page.
 
-[[GSADG00237]][[giuvr]]
+[[giuvr]]
 Example 12-15 Deleting a Connector Security Map
 
 This example deletes `securityMap1` from `connector-pool1`.
@@ -776,7 +776,7 @@ asadmin> delete-connector-security-map --poolname connector-pool1 securityMap1
 Command delete-connector-security-map executed successfully
 ----
 
-[[giohl]][[GSADG00585]][[administering-connector-work-security-maps]]
+[[administering-connector-work-security-maps]]
 
 === Administering Connector Work Security Maps
 
@@ -796,7 +796,7 @@ The following topics are addressed here:
 * <<To Update a Connector Work Security Map>>
 * <<To Delete a Connector Work Security Map>>
 
-[[giofz]][[GSADG00448]][[to-create-a-connector-work-security-map]]
+[[to-create-a-connector-work-security-map]]
 
 ==== To Create a Connector Work Security Map
 
@@ -828,7 +828,7 @@ xref:overview.adoc#configuration-changes-that-require-restart[Configuration Chan
 your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
-[[GSADG00238]][[giokw]]
+[[giokw]]
 Example 12-16 Creating Connector Work Security Maps
 
 The following examples create `workSecurityMap1` and `workSecurityMap2`
@@ -852,7 +852,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-connector-work-security-map` at the command
 line.
 
-[[gioir]][[GSADG00449]][[to-list-connector-work-security-maps]]
+[[to-list-connector-work-security-maps]]
 
 ==== To List Connector Work Security Maps
 
@@ -863,7 +863,7 @@ list the work security maps that belong to a specific connector module.
 2. List the connector work security maps by using the
 link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 
-[[GSADG00239]][[gionj]]
+[[gionj]]
 Example 12-17 Listing the Connector Work Security Maps
 
 This example lists the generic work security maps.
@@ -883,7 +883,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-connector-work-security-maps` at the command
 line.
 
-[[giogm]][[GSADG00450]][[to-update-a-connector-work-security-map]]
+[[to-update-a-connector-work-security-map]]
 
 ==== To Update a Connector Work Security Map
 
@@ -899,7 +899,7 @@ being modified.
 4. Update a connector work security map by using the
 link:reference-manual/update-connector-work-security-m.html#update-connector-work-security-map[`update-connector-work-security-map`] subcommand.
 
-[[GSADG00240]][[gioll]]
+[[gioll]]
 Example 12-18 Updating a Connector Work Security Map
 
 This example removes a principal from a work security map.
@@ -917,7 +917,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help update-connector-work-security-map` at the command
 line.
 
-[[gioin]][[GSADG00451]][[to-delete-a-connector-work-security-map]]
+[[to-delete-a-connector-work-security-map]]
 
 ==== To Delete a Connector Work Security Map
 
@@ -931,7 +931,7 @@ link:reference-manual/list-connector-work-security-map.html#list-connector-work-
 3. Delete a connector work security map by using the
 link:reference-manual/delete-connector-work-security-m.html#delete-connector-work-security-map[`delete-connector-work-security-map`] subcommand.
 
-[[GSADG00241]][[giolk]]
+[[giolk]]
 Example 12-19 Deleting a Connector Work Security Map
 
 This example deletes the `worksecuritymap1` map from the `my_ra`
@@ -949,7 +949,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-connector-work-security-map` at the command
 line.
 
-[[ablmc]][[GSADG00586]][[administering-administered-objects]]
+[[administering-administered-objects]]
 
 === Administering Administered Objects
 
@@ -965,7 +965,7 @@ The following topics are addressed here:
 * <<To Update an Administered Object>>
 * <<To Delete an Administered Object>>
 
-[[giolr]][[GSADG00452]][[to-create-an-administered-object]]
+[[to-create-an-administered-object]]
 
 ==== To Create an Administered Object
 
@@ -991,7 +991,7 @@ xref:overview.adoc#configuration-changes-that-require-restart[Configuration Chan
 your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
-[[GSADG00242]][[giokx]]
+[[giokx]]
 Example 12-20 Creating an Administered Object
 
 For this example, the `jakarta.jms.Queue` resource type is obtained from
@@ -1010,7 +1010,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-admin-object` at the command line.
 
-[[giokm]][[GSADG00453]][[to-list-administered-objects]]
+[[to-list-administered-objects]]
 
 ==== To List Administered Objects
 
@@ -1021,7 +1021,7 @@ existing administered objects.
 2. List the administered objects by using the
 link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
 
-[[GSADG00243]][[giokg]]
+[[giokg]]
 Example 12-21 Listing Administered Objects
 
 This example lists the existing administered objects.
@@ -1038,7 +1038,7 @@ See Also
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-admin-object` at the command line.
 
-[[giots]][[GSADG00454]][[to-update-an-administered-object]]
+[[to-update-an-administered-object]]
 
 ==== To Update an Administered Object
 
@@ -1067,7 +1067,7 @@ asadmin> set domain.resources.admin-object-resource.jms/samplequeue.enabled=fals
 See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
 If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[gioma]][[GSADG00455]][[to-delete-an-administered-object]]
+[[to-delete-an-administered-object]]
 
 ==== To Delete an Administered Object
 
@@ -1079,7 +1079,7 @@ link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-obj
 3. Delete an administered object by using the
 link:reference-manual/delete-admin-object.html#delete-admin-object[`delete-admin-object`] subcommand.
 
-[[GSADG00244]][[giolc]]
+[[giolc]]
 Example 12-22 Deleting an Administered Object
 
 This example deletes the administered object with the JNDI name

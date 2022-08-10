@@ -7,7 +7,7 @@ prev=delete-node-config.html
 
 = delete-node-dcom
 
-[[delete-node-dcom-1]][[GSRFM569]][[delete-node-dcom]]
+[[delete-node-dcom]]
 
 == delete-node-dcom
 
@@ -102,7 +102,7 @@ node-name::
 
 === Examples
 
-[[GSRFM570]][[sthref911]]
+[[sthref911]]
 
 ==== Example 1   Deleting a Node That Is Enabled for Communication Over DCOM
 

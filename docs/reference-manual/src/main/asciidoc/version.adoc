@@ -7,7 +7,7 @@ prev=verify-domain-xml.html
 
 = version
 
-[[version-1]][[GSRFM00261]][[version]]
+[[version]]
 
 == version
 
@@ -55,7 +55,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM800]][[sthref2351]]
+[[sthref2351]]
 
 ==== Example 1   Obtaining Version Information From a Running DAS
 
@@ -66,7 +66,7 @@ Version = Eclipse GlassFish 7.0.0 (build 34)
 Command version executed successfully.
 ----
 
-[[GSRFM801]][[sthref2352]]
+[[sthref2352]]
 
 ==== Example 2   Obtaining Version Information When the DAS Cannot be Reached
 
@@ -81,7 +81,7 @@ Version = Eclipse GlassFish 7.0.0 (build 34)
 Command version executed successfully.
 ----
 
-[[GSRFM802]][[sthref2353]]
+[[sthref2353]]
 
 ==== Example 3   Obtaining Version Information Locally
 

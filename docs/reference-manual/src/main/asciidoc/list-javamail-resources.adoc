@@ -7,7 +7,7 @@ prev=list-jacc-providers.html
 
 = list-javamail-resources
 
-[[list-javamail-resources-1]][[GSRFM00172]][[list-javamail-resources]]
+[[list-javamail-resources]]
 
 == list-javamail-resources
 
@@ -55,7 +55,7 @@ target::
 
 === Examples
 
-[[GSRFM669]][[sthref1541]]
+[[sthref1541]]
 
 ==== Example 1   Listing JavaMail Resources
 

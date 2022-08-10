@@ -7,7 +7,7 @@ prev=domain.html
 
 = dotted-names
 
-[[dotted-names-5asc]][[GSRFM00268]][[dotted-names]]
+[[dotted-names]]
 
 == dotted-names
 
@@ -113,7 +113,7 @@ server.applications.web-module.JSPWiki.context-root
 
 === Examples
 
-[[GSRFM815]][[sthref2400]]
+[[sthref2400]]
 
 ==== Example 1   Listing All Configurable Elements
 
@@ -179,7 +179,7 @@ system-applications
 Command list executed successfully.
 ----
 
-[[GSRFM816]][[sthref2401]]
+[[sthref2401]]
 
 ==== Example 2   Listing All the Monitorable Objects
 

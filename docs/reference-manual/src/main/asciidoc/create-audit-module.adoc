@@ -7,7 +7,7 @@ prev=create-application-ref.html
 
 = create-audit-module
 
-[[create-audit-module-1]][[GSRFM00014]][[create-audit-module]]
+[[create-audit-module]]
 
 == create-audit-module
 
@@ -79,7 +79,7 @@ audit_module_name::
 
 === Examples
 
-[[GSRFM459]][[sthref136]]
+[[sthref136]]
 
 ==== Example 1   Creating an audit module
 

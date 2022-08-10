@@ -7,7 +7,7 @@ prev=stop-domain.html
 
 = stop-instance
 
-[[stop-instance-1]][[GSRFM00241]][[stop-instance]]
+[[stop-instance]]
 
 == stop-instance
 
@@ -72,7 +72,7 @@ instance-name::
 
 This example stops the {productName} instance `yml-i-sj01`.
 
-[[GSRFM767]][[sthref2178]]
+[[sthref2178]]
 
 ==== Example 1   Stopping a {productName} Instance
 

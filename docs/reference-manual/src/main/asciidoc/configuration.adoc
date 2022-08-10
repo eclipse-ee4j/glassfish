@@ -7,7 +7,7 @@ prev=application.html
 
 = configuration
 
-[[configuration-5asc]][[GSRFM00266]][[configuration]]
+[[configuration]]
 
 == configuration
 

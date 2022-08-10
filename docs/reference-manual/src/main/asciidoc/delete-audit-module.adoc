@@ -7,7 +7,7 @@ prev=delete-application-ref.html
 
 = delete-audit-module
 
-[[delete-audit-module-1]][[GSRFM00065]][[delete-audit-module]]
+[[delete-audit-module]]
 
 == delete-audit-module
 
@@ -56,7 +56,7 @@ audit_module_name::
 
 === Examples
 
-[[GSRFM532]][[sthref598]]
+[[sthref598]]
 
 ==== Example 1   Deleting an audit module
 

@@ -7,7 +7,7 @@ prev=instance.html
 
 = logging
 
-[[logging-5asc]][[GSRFM00270]][[logging]]
+[[logging]]
 
 == logging
 

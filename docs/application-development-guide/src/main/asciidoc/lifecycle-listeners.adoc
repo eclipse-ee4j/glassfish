@@ -7,7 +7,7 @@ prev=connectors.html
 
 = Developing Lifecycle Listeners
 
-[[GSDVG00014]][[beamc]]
+[[beamc]]
 
 
 [[developing-lifecycle-listeners]]
@@ -43,7 +43,7 @@ The following topics are addressed here:
 * xref:#deploying-a-lifecycle-module[Deploying a Lifecycle Module]
 * xref:#considerations-for-lifecycle-modules[Considerations for Lifecycle Modules]
 
-[[beamd]][[GSDVG00167]][[server-life-cycle-events]]
+[[server-life-cycle-events]]
 
 === Server Life Cycle Events
 
@@ -66,7 +66,7 @@ These events are defined in the `LifecycleEvent` class.
 The lifecycle modules that listen for these events implement the
 LifecycleListener interface.
 
-[[beame]][[GSDVG00168]][[the-lifecyclelistener-interface]]
+[[the-lifecyclelistener-interface]]
 
 === The LifecycleListener Interface
 
@@ -89,7 +89,7 @@ A sample implementation of the LifecycleListener interface is the
 `LifecycleListenerImpl.java` file, which you can use for testing
 lifecycle events.
 
-[[beamf]][[GSDVG00169]][[the-lifecycleevent-class]]
+[[the-lifecycleevent-class]]
 
 === The `LifecycleEvent` Class
 
@@ -112,7 +112,7 @@ This method returns the lifecycle event context, described next.
 A `LifecycleEvent` instance is passed to the
 `LifecycleListener.handleEvent` method.
 
-[[beamg]][[GSDVG00170]][[the-server-lifecycle-event-context]]
+[[the-server-lifecycle-event-context]]
 
 === The Server Lifecycle Event Context
 
@@ -142,7 +142,7 @@ If a lifecycle module needs to look up resources, it can do so after the
 `READY_EVENT`. It can use the `getInitialContext` method to get the
 initial context to which all the resources are bound.
 
-[[beamh]][[GSDVG00171]][[deploying-a-lifecycle-module]]
+[[deploying-a-lifecycle-module]]
 
 === Deploying a Lifecycle Module
 
@@ -157,7 +157,7 @@ for the Domain Administration Server. Do not place it in the lib
 directory for a particular instance, or it will be deleted when that
 instance synchronizes with the Domain Administration Server.
 
-[[beami]][[GSDVG00172]][[considerations-for-lifecycle-modules]]
+[[considerations-for-lifecycle-modules]]
 
 === Considerations for Lifecycle Modules
 

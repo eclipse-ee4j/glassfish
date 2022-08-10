@@ -7,7 +7,7 @@ prev=logging.html
 
 = monitoring
 
-[[monitoring-5asc]][[GSRFM00271]][[monitoring]]
+[[monitoring]]
 
 == monitoring
 

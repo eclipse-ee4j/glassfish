@@ -7,7 +7,7 @@ prev=list-transports.html
 
 = list-virtual-servers
 
-[[list-virtual-servers-1]][[GSRFM00207]][[list-virtual-servers]]
+[[list-virtual-servers]]
 
 == list-virtual-servers
 
@@ -54,7 +54,7 @@ target::
 
 === Examples
 
-[[GSRFM717]][[sthref1855]]
+[[sthref1855]]
 
 ==== Example 1   Listing Virtual Servers
 

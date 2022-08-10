@@ -7,7 +7,7 @@ prev=list-managed-thread-factories.html
 
 = list-message-security-providers
 
-[[list-message-security-providers-1]][[GSRFM00184]][[list-message-security-providers]]
+[[list-message-security-providers]]
 
 == list-message-security-providers
 
@@ -61,7 +61,7 @@ target::
 
 === Examples
 
-[[GSRFM684]][[sthref1682]]
+[[sthref1682]]
 
 ==== Example 1   Listing message security providers
 

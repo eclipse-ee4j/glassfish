@@ -7,7 +7,7 @@ prev=delete-protocol.html
 
 = delete-protocol-filter
 
-[[delete-protocol-filter-1]][[GSRFM00104]][[delete-protocol-filter]]
+[[delete-protocol-filter]]
 
 == delete-protocol-filter
 
@@ -61,7 +61,7 @@ protocol-filter-name::
 
 === Examples
 
-[[GSRFM575]][[sthref950]]
+[[sthref950]]
 
 ==== Example 1   Deleting a Protocol Filter
 

@@ -7,7 +7,7 @@ prev=create-cluster.html
 
 = create-connector-connection-pool
 
-[[create-connector-connection-pool-1]][[GSRFM00018]][[create-connector-connection-pool]]
+[[create-connector-connection-pool]]
 
 == create-connector-connection-pool
 
@@ -226,7 +226,7 @@ poolname::
 
 === Examples
 
-[[GSRFM464]][[sthref163]]
+[[sthref163]]
 
 ==== Example 1   Creating a Connector Connection Pool
 

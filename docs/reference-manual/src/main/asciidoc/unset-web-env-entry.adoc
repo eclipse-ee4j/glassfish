@@ -7,7 +7,7 @@ prev=unset-web-context-param.html
 
 = unset-web-env-entry
 
-[[unset-web-env-entry-1]][[GSRFM00249]][[unset-web-env-entry]]
+[[unset-web-env-entry]]
 
 == unset-web-env-entry
 
@@ -97,7 +97,7 @@ The module would be specified as the operand of this command as `myApp/myWebModu
 
 === Examples
 
-[[GSRFM784]][[sthref2255]]
+[[sthref2255]]
 
 ==== Example 1   Unsetting an Environment Entry for a Web Application
 

@@ -7,7 +7,7 @@ prev=delete-jdbc-connection-pool.html
 
 = delete-jdbc-resource
 
-[[delete-jdbc-resource-1]][[GSRFM00089]][[delete-jdbc-resource]]
+[[delete-jdbc-resource]]
 
 == delete-jdbc-resource
 
@@ -71,7 +71,7 @@ jndi_name::
 
 === Examples
 
-[[GSRFM557]][[sthref790]]
+[[sthref790]]
 
 ==== Example 1   Deleting a JDBC Resource
 

@@ -7,7 +7,7 @@ prev=list-jndi-resources.html
 
 = list-jobs
 
-[[list-jobs-1]][[GSRFM867]][[list-jobs]]
+[[list-jobs]]
 
 == list-jobs
 
@@ -47,7 +47,7 @@ job_id::
 
 === Examples
 
-[[GSRFM868]][[sthref1605]]
+[[sthref1605]]
 
 ==== Example 1   Checking Job Status
 

@@ -7,7 +7,7 @@ prev=list-managed-executor-services.html
 
 = list-managed-scheduled-executor-services
 
-[[list-managed-scheduled-executor-services-1]][[GSRFM873]][[list-managed-scheduled-executor-services]]
+[[list-managed-scheduled-executor-services]]
 
 == list-managed-scheduled-executor-services
 
@@ -56,7 +56,7 @@ target::
 
 === Examples
 
-[[GSRFM874]][[sthref1666]]
+[[sthref1666]]
 
 ==== Example 1   Listing Managed Scheduled Executor Service Resources
 

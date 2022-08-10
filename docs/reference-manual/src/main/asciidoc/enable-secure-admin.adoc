@@ -7,7 +7,7 @@ prev=enable-monitoring.html
 
 = enable-secure-admin
 
-[[enable-secure-admin-1]][[GSRFM00129]][[enable-secure-admin]]
+[[enable-secure-admin]]
 
 == enable-secure-admin
 
@@ -76,7 +76,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM606]][[sthref1132]]
+[[sthref1132]]
 
 ==== Example 1   Enabling `secure admin` for a domain
 

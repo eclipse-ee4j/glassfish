@@ -7,7 +7,7 @@ prev=delete-virtual-server.html
 
 = deploy
 
-[[deploy-1]][[GSRFM00114]][[deploy]]
+[[deploy]]
 
 == deploy
 
@@ -404,7 +404,7 @@ If you specify a directory, the `--upload` option is ignored.
 
 === Examples
 
-[[GSRFM584]][[sthref1020]]
+[[sthref1020]]
 
 ==== Example 1   Deploying an Enterprise Application
 
@@ -420,7 +420,7 @@ Application deployed successfully with name Cart.
 Command deploy executed successfully
 ----
 
-[[GSRFM585]][[sthref1021]]
+[[sthref1021]]
 
 ==== Example 2   Deploying a Web Application With the Default Context Root
 
@@ -435,7 +435,7 @@ Application deployed successfully with name hello.
 Command deploy executed successfully
 ----
 
-[[GSRFM586]][[sthref1022]]
+[[sthref1022]]
 
 ==== Example 3   Forcibly Deploying a Web Application With a Specific Context Root
 
@@ -450,7 +450,7 @@ Application deployed successfully with name hello.
 Command deploy executed successfully
 ----
 
-[[GSRFM587]][[sthref1023]]
+[[sthref1023]]
 
 ==== Example 4   Deploying an Enterprise Bean
 
@@ -468,7 +468,7 @@ Application deployed successfully with name EmployeeEJB.
 Command deploy executed successfully
 ----
 
-[[GSRFM588]][[sthref1024]]
+[[sthref1024]]
 
 ==== Example 5   Deploying a Connector Module
 
@@ -485,7 +485,7 @@ Application deployed successfully with name jdbcra.
 Command deploy executed successfully
 ----
 
-[[GSRFM856]][[sthref1025]]
+[[sthref1025]]
 
 ==== Example 6   Specifying the Deployment Order for an Application
 
@@ -503,7 +503,7 @@ asadmin> deploy --deploymentorder 110 --name horse horse.war
 ...
 ----
 
-[[GSRFM857]][[sthref1026]]
+[[sthref1026]]
 
 ==== Example 7   Deploying an Application Using an Alternate Jakarta EE Deployment Descriptor File
 
@@ -517,7 +517,7 @@ Application deployed successfully with name cart.
 Command deploy executed successfully
 ----
 
-[[GSRFM858]][[sthref1027]]
+[[sthref1027]]
 
 ==== Example 8   Deploying an Application Using an Alternate
 {productName} Deployment Descriptor File
@@ -533,7 +533,7 @@ Application deployed successfully with name horse.
 Command deploy executed successfully
 ----
 
-[[GSRFM883]][[sthref1028]]
+[[sthref1028]]
 
 ==== Example 9   Wrapping a WAR File as a WAB
 

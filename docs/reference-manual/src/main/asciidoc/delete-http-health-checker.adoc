@@ -7,7 +7,7 @@ prev=delete-http.html
 
 = delete-http-health-checker
 
-[[delete-http-health-checker-1]][[GSRFM00078]][[delete-http-health-checker]]
+[[delete-http-health-checker]]
 
 == delete-http-health-checker
 
@@ -57,7 +57,7 @@ target::
 
 === Examples
 
-[[GSRFM547]][[sthref704]]
+[[sthref704]]
 
 ==== Example 1   Deleting a Health Checker from a Load Balancer Configuration
 

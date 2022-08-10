@@ -7,7 +7,7 @@ prev=rolling-upgrade.html
 
 = Configuring High Availability Session Persistence and Failover
 
-[[GSHAG00011]][[abdkz]]
+[[abdkz]]
 
 [[configuring-high-availability-session-persistence-and-failover]]
 == 9 Configuring High Availability Session Persistence and Failover
@@ -19,7 +19,7 @@ session persistence.
 * xref:#enabling-the-high-availability-session-persistence-service[Enabling the High Availability Session Persistence Service]
 * xref:#stateful-session-bean-failover[Stateful Session Bean Failover]
 
-[[abdla]][[GSHAG00209]][[overview-of-session-persistence-and-failover]]
+[[overview-of-session-persistence-and-failover]]
 
 === Overview of Session Persistence and Failover
 
@@ -49,7 +49,7 @@ The following topics are addressed here:
 * xref:#restrictions[Restrictions]
 * xref:#scope[Scope]
 
-[[abdlb]][[GSHAG00300]][[requirements]]
+[[requirements]]
 
 ==== Requirements
 
@@ -95,7 +95,7 @@ subcommand with the `--availabilityenabled` option set to `true`. For
 more information on these subcommands, see link:reference-manual/deploy.html#deploy[`deploy`(1)]
 and link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
 
-[[abdlc]][[GSHAG00301]][[restrictions]]
+[[restrictions]]
 
 ==== Restrictions
 
@@ -146,7 +146,7 @@ be correctly rolled back or committed.
 In general, for these objects, failover will not work. However, failover
 might work in some cases, if for example the object is serializable.
 
-[[gksoq]][[GSHAG00302]][[scope]]
+[[scope]]
 
 Scope
 ^^^^^
@@ -179,7 +179,7 @@ at all higher levels as well. For example, to enable availability at the
 application level, you must also enable it at the cluster or server
 instance and container levels.
 
-[[abdle]][[GSHAG00210]][[enabling-the-high-availability-session-persistence-service]]
+[[enabling-the-high-availability-session-persistence-service]]
 
 === Enabling the High Availability Session Persistence Service
 
@@ -192,7 +192,7 @@ session persistence service.
 * xref:#using-single-sign-on-with-session-failover[Using Single Sign-on with Session Failover]
 * xref:#using-coherenceweb-for-http-session-persistence[Using Coherence*Web for HTTP Session Persistence]
 
-[[abdlf]][[GSHAG00154]][[to-enable-availability-for-a-cluster-standalone-instance-or-container]]
+[[to-enable-availability-for-a-cluster-standalone-instance-or-container]]
 
 ==== To Enable Availability for a Cluster, Standalone Instance or Container
 
@@ -309,7 +309,7 @@ See Also
 * xref:#configuring-availability-for-individual-web-applications[Configuring Availability for Individual Web Applications]
 * xref:#using-single-sign-on-with-session-failover[Using Single Sign-on with Session Failover]
 
-[[abdll]][[GSHAG00303]][[configuring-availability-for-individual-web-applications]]
+[[configuring-availability-for-individual-web-applications]]
 
 ==== Configuring Availability for Individual Web Applications
 
@@ -322,7 +322,7 @@ The `session-manager` element's `persistence-type` attribute determines
 the type of session persistence an application uses. It must be set to
 `replicated` to enable high availability session persistence.
 
-[[abdlm]][[GSHAG00247]][[example]]
+[[example]]
 
 ===== Example
 
@@ -341,7 +341,7 @@ the type of session persistence an application uses. It must be set to
 </session-config> ...
 ----
 
-[[gkwqu]][[GSHAG00304]][[configuring-replication-and-multi-threaded-concurrent-access-to-httpsessions]]
+[[configuring-replication-and-multi-threaded-concurrent-access-to-httpsessions]]
 
 ==== Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`
 
@@ -370,7 +370,7 @@ cache regardless of the version number. This is critical when multiple
 threads are interacting in an essentially non-deterministic fashion with
 the container.
 
-[[gkwrj]][[GSHAG00248]][[example-1]]
+[[example-1]]
 
 ===== Example
 
@@ -392,7 +392,7 @@ illustrates where to add the `relaxVersionSemantics` property.
 </glassfish-web-app>
 ----
 
-[[abdln]][[GSHAG00305]][[using-single-sign-on-with-session-failover]]
+[[using-single-sign-on-with-session-failover]]
 
 ==== Using Single Sign-on with Session Failover
 
@@ -421,7 +421,7 @@ asadmin> set config1.availability-service.web-container-availability. \
 sso-failover-enabled="true"
 ----
 
-[[abdlo]][[GSHAG00249]][[single-sign-on-groups]]
+[[single-sign-on-groups]]
 
 ===== Single Sign-On Groups
 
@@ -467,7 +467,7 @@ accessing the application.
 ====
 
 
-[[gkyyl]][[GSHAG00306]][[using-coherenceweb-for-http-session-persistence]]
+[[using-coherenceweb-for-http-session-persistence]]
 
 ==== Using Coherence*Web for HTTP Session Persistence
 
@@ -486,7 +486,7 @@ http://download.oracle.com/docs/cd/E18686_01/coh.37/e18690/glassfish.html[Using
 Coherence*Web with {productName}]
 (`http://docs.oracle.com/cd/E18686_01/coh.37/e18690/glassfish.html`).
 
-[[abdlp]][[GSHAG00211]][[stateful-session-bean-failover]]
+[[stateful-session-bean-failover]]
 
 === Stateful Session Bean Failover
 
@@ -527,7 +527,7 @@ If an SFSB that uses session persistence is undeployed while the
 persistence store might not be cleared. To prevent this, undeploy the
 SFSB while the {productName} instance is running.
 
-[[abdlq]][[GSHAG00307]][[configuring-availability-for-the-ejb-container]]
+[[configuring-availability-for-the-ejb-container]]
 
 ==== Configuring Availability for the EJB Container
 
@@ -560,7 +560,7 @@ config1.availability-service.
 ejb-container-availability.sfsb-ha-persistence-type="replicated"
 ----
 
-[[abdls]][[GSHAG00250]][[configuring-the-sfsb-session-store-when-availability-is-disabled]]
+[[configuring-the-sfsb-session-store-when-availability-is-disabled]]
 
 ===== Configuring the SFSB Session Store When Availability Is Disabled
 
@@ -570,7 +570,7 @@ is stored, change the Session Store Location setting in the EJB
 container. For information about configuring store properties, see the
 Administration Console online help.
 
-[[abdlt]][[GSHAG00308]][[configuring-availability-for-an-individual-application-or-ejb-module]]
+[[configuring-availability-for-an-individual-application-or-ejb-module]]
 
 ==== Configuring Availability for an Individual Application or EJB Module
 
@@ -584,7 +584,7 @@ Availability Enabled checkbox.
 `true`. For more information, see link:reference-manual/deploy.html#deploy[`deploy`(1)] and
 link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
 
-[[abdlu]][[GSHAG00309]][[configuring-availability-for-an-individual-bean]]
+[[configuring-availability-for-an-individual-bean]]
 
 ==== Configuring Availability for an Individual Bean
 
@@ -595,7 +595,7 @@ file.
 To enable high availability session persistence, set
 `availability-enabled="true"` in the `ejb` element.
 
-[[GSHAG00068]][[fxjqx]]
+[[fxjqx]]
 Example 9-1 Example of an EJB Deployment Descriptor With Availability
 Enabled
 
@@ -613,7 +613,7 @@ Enabled
 </glassfish-ejb-jar>
 ----
 
-[[abdlw]][[GSHAG00310]][[specifying-methods-to-be-checkpointed]]
+[[specifying-methods-to-be-checkpointed]]
 
 ==== Specifying Methods to Be Checkpointed
 
@@ -654,7 +654,7 @@ modification to the bean's state.
 ====
 
 
-[[GSHAG00069]][[fxjqg]]
+[[fxjqg]]
 Example 9-2 Example of EJB Deployment Descriptor Specifying Methods
 Checkpointing
 

@@ -7,7 +7,7 @@ prev=setup-local-dcom.html
 
 = setup-ssh
 
-[[setup-ssh-1]][[GSRFM00229]][[setup-ssh]]
+[[setup-ssh]]
 
 == setup-ssh
 
@@ -188,7 +188,7 @@ host-list::
 
 === Examples
 
-[[GSRFM751]][[sthref2079]]
+[[sthref2079]]
 
 ==== Example 1   Setting Up an SSH Key
 
@@ -207,7 +207,7 @@ Successfully connected to gfuser@sj04 using keyfile /home/gfuser/.ssh/id_rsa
 Command setup-ssh executed successfully.
 ----
 
-[[GSRFM752]][[sthref2080]]
+[[sthref2080]]
 
 ==== Example 2   Generating and Setting Up an SSH Key
 

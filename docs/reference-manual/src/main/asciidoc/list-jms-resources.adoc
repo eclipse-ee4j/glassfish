@@ -7,7 +7,7 @@ prev=list-jms-hosts.html
 
 = list-jms-resources
 
-[[list-jms-resources-1]][[GSRFM00177]][[list-jms-resources]]
+[[list-jms-resources]]
 
 == list-jms-resources
 
@@ -62,7 +62,7 @@ target::
 
 === Examples
 
-[[GSRFM675]][[sthref1580]]
+[[sthref1580]]
 
 ==== Example 1   Listing all JMS resources
 
@@ -78,7 +78,7 @@ jms/Topic
 Command list-jms-resources executed successfully.
 ----
 
-[[GSRFM676]][[sthref1581]]
+[[sthref1581]]
 
 ==== Example 2   Listing JMS resources of a specified type
 

@@ -151,7 +151,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSSCG00136]][[giprl]]
+
 
 [[related-documentation]]
 === Related Documentation
@@ -234,7 +234,7 @@ Do not save the file.
 |===
 
 
-[[GSSCG00138]][[fquvc]]
+[[fquvc]]
 
 
 [[symbol-conventions]]

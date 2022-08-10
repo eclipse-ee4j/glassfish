@@ -7,7 +7,7 @@ prev=delete-iiop-listener.html
 
 = delete-instance
 
-[[delete-instance-1]][[GSRFM00085]][[delete-instance]]
+[[delete-instance]]
 
 == delete-instance
 
@@ -79,7 +79,7 @@ instance-name::
 
 === Examples
 
-[[GSRFM553]][[sthref758]]
+[[sthref758]]
 
 ==== Example 1   Deleting a {productName} Instance
 

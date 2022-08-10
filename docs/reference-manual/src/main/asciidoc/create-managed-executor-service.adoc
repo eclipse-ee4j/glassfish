@@ -7,7 +7,7 @@ prev=create-local-instance.html
 
 = create-managed-executor-service
 
-[[create-managed-executor-service-1]][[GSRFM840]][[create-managed-executor-service]]
+[[create-managed-executor-service]]
 
 == create-managed-executor-service
 

@@ -7,7 +7,7 @@ prev=update-password-alias.html
 
 = uptime
 
-[[uptime-1]][[GSRFM00258]][[uptime]]
+[[uptime]]
 
 == uptime
 
@@ -39,7 +39,7 @@ asadmin-options::
 
 === Examples
 
-[[GSRFM795]][[sthref2320]]
+[[sthref2320]]
 
 ==== Example 1   Showing How Long the DAS Has Been Running
 

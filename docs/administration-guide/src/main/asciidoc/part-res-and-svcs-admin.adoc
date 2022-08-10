@@ -7,7 +7,7 @@ prev=batch.html
 
 = Resources and Services Administration
 
-[[gitxw]][[GSADG00298]][[part-ii]]
+[[part-ii]]
 
 == Part II
 

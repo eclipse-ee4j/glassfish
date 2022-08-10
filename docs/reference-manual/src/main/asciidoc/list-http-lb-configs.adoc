@@ -7,7 +7,7 @@ prev=list-file-users.html
 
 = list-http-lb-configs
 
-[[list-http-lb-configs-1]][[GSRFM00166]][[list-http-lb-configs]]
+[[list-http-lb-configs]]
 
 == list-http-lb-configs
 
@@ -52,7 +52,7 @@ target::
 
 === Examples
 
-[[GSRFM659]][[sthref1489]]
+[[sthref1489]]
 
 ==== Example 1   Listing Load Balancer Configurations Without a Target
 
@@ -68,7 +68,7 @@ serverinstlb
 Command list-http-lb-configs executed successfully.
 ----
 
-[[GSRFM660]][[sthref1490]]
+[[sthref1490]]
 
 ==== Example 2   Listing Load Balancer Configurations for a Specific Target
 

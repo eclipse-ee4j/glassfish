@@ -7,7 +7,7 @@ prev=export-sync-bundle.html
 
 = flush-connection-pool
 
-[[flush-connection-pool-1]][[GSRFM00135]][[flush-connection-pool]]
+[[flush-connection-pool]]
 
 == flush-connection-pool
 

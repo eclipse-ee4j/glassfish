@@ -7,7 +7,7 @@ prev=ping-connection-pool.html
 
 = ping-node-dcom
 
-[[ping-node-dcom-1]][[GSRFM728]][[ping-node-dcom]]
+[[ping-node-dcom]]
 
 == ping-node-dcom
 
@@ -84,7 +84,7 @@ node-name::
 
 === Examples
 
-[[GSRFM729]][[sthref1939]]
+[[sthref1939]]
 
 ==== Example 1   Testing if a DCOM-Enabled Node Is Usable
 
@@ -97,7 +97,7 @@ Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
 Command ping-node-dcom executed successfully.
 ----
 
-[[GSRFM730]][[sthref1940]]
+[[sthref1940]]
 
 ==== Example 2   Validating a DCOM-Enabled Node
 

@@ -7,7 +7,7 @@ prev=create-http-lb.html
 
 = create-http-lb-config
 
-[[create-http-lb-config-1]][[GSRFM00028]][[create-http-lb-config]]
+[[create-http-lb-config]]
 
 == create-http-lb-config
 
@@ -99,7 +99,7 @@ config_name::
 
 === Examples
 
-[[GSRFM479]][[sthref256]]
+[[sthref256]]
 
 ==== Example 1   Creating a Load Balancer Configuration
 

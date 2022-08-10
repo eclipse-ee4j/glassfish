@@ -7,7 +7,7 @@ prev=webservices.html
 
 = Configuring the Java Persistence Provider
 
-[[GSDVG00008]][[gbxjk]]
+[[gbxjk]]
 
 
 [[configuring-the-java-persistence-provider]]
@@ -29,7 +29,7 @@ The following topics are addressed here:
 * xref:#automatic-schema-generation[Automatic Schema Generation]
 * xref:#restrictions-and-optimizations[Restrictions and Optimizations]
 
-[[CHDJJAEI]][[GSDVG537]][[overview-of-oracle-toplink]]
+[[overview-of-oracle-toplink]]
 
 === Overview of Oracle TopLink
 
@@ -106,7 +106,7 @@ Coherence Developer's Guide]
 Fusion Middleware Integration Guide for Oracle TopLink with Coherence
 Grid]
 
-[[CHDHDABJ]][[GSDVG538]][[using-oracle-toplink-in-glassfish-server]]
+[[using-oracle-toplink-in-glassfish-server]]
 
 === Using Oracle TopLink in {productName}
 
@@ -142,7 +142,7 @@ an Application" in Administration Console online help.
 Administering the Monitoring Service]"
 in {productName} Administration Guide.
 
-[[gbwmj]][[GSDVG00130]][[specifying-the-database-for-an-application]]
+[[specifying-the-database-for-an-application]]
 
 === Specifying the Database for an Application
 
@@ -247,7 +247,7 @@ Notes]. For configurations of supported and other drivers, see
 "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
-[[gdkwf]][[GSDVG00138]][[specifying-the-persistence-provider-for-an-application]]
+[[specifying-the-persistence-provider-for-an-application]]
 
 === Specifying the Persistence Provider for an Application
 
@@ -299,7 +299,7 @@ and pass it to the `Map` parameter of the following method:
 javax.persistence.Persistence.createEntityManagerFactory(String, Map)
 ----
 
-[[gescc]][[GSDVG00135]][[primary-key-generation-defaults]]
+[[primary-key-generation-defaults]]
 
 === Primary Key Generation Defaults
 
@@ -344,7 +344,7 @@ default provider. The default `sequenceName` is the specified `name`.
 * The default `pkColumnValue` is the specified `name`, or the default
 `name` if no `name` is specified.
 
-[[gbwlh]][[GSDVG00136]][[automatic-schema-generation]]
+[[automatic-schema-generation]]
 
 === Automatic Schema Generation
 
@@ -377,7 +377,7 @@ database schema to be correct for running the application.
 ====
 
 
-[[gcjgl]][[GSDVG00388]][[annotations]]
+[[annotations]]
 
 ==== Annotations
 
@@ -398,7 +398,7 @@ not used in automatic schema generation.
 For `@OneToMany` and `@ManyToOne` annotations, no `ForeignKeyConstraint`
 is created in the resulting DDL files.
 
-[[gbwmk]][[GSDVG00389]][[generation-options]]
+[[generation-options]]
 
 ==== Generation Options
 
@@ -485,7 +485,7 @@ and `asadmin undeploy` commands, see the link:reference-manual.html#GSRFM[{produ
 When `asadmin` deployment options and `persistence.xml` options are both
 specified, the `asadmin` deployment options take precedence.
 
-[[gbxjh]][[GSDVG00139]][[restrictions-and-optimizations]]
+[[restrictions-and-optimizations]]
 
 === Restrictions and Optimizations
 
@@ -502,7 +502,7 @@ The following topics are addressed here:
 * xref:#sybase-finder-limitation[Sybase Finder Limitation]
 * xref:#mysql-database-restrictions[MySQL Database Restrictions]
 
-[[giqbi]][[GSDVG00390]][[oracle-database-enhancements]]
+[[oracle-database-enhancements]]
 
 ==== Oracle Database Enhancements
 
@@ -523,7 +523,7 @@ the value `org.eclipse.persistence.platform.database.OraclePlatform`.
 For more information about the `eclipselink.target-database` property,
 see xref:#specifying-the-database-for-an-application[Specifying the Database for an Application].
 
-[[ghdtr]][[GSDVG00391]][[extended-persistence-context]]
+[[extended-persistence-context]]
 
 ==== Extended Persistence Context
 
@@ -540,7 +540,7 @@ stateful session bean is activated.
 Therefore, in {productName}, a stateful session bean with an extended
 persistence context is never passivated and cannot be failed over.
 
-[[gezxw]][[GSDVG00392]][[using-orderby-with-a-shared-session-cache]]
+[[using-orderby-with-a-shared-session-cache]]
 
 ==== Using @OrderBy with a Shared Session Cache
 
@@ -560,7 +560,7 @@ want to maintain the order during creation or modification of the
 <property name="eclipselink.cache.shared.default" value="false"/>
 ----
 
-[[gdwqi]][[GSDVG00393]][[using-blob-or-clob-types-with-the-inet-oraxo-jdbc-driver]]
+[[using-blob-or-clob-types-with-the-inet-oraxo-jdbc-driver]]
 
 ==== Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver
 
@@ -568,7 +568,7 @@ To use BLOB or CLOB data types larger than 4 KB for persistence using
 the Inet Oraxo JDBC Driver for Oracle Databases, you must set the
 database's `streamstolob` property value to `true`.
 
-[[geqvh]][[GSDVG00394]][[database-case-sensitivity]]
+[[database-case-sensitivity]]
 
 ==== Database Case Sensitivity
 
@@ -586,7 +586,7 @@ The following are examples of how case sensitivity affects mapping
 elements that refer to columns or tables. Keep case sensitivity in mind
 when writing these mappings.
 
-[[geqvc]][[GSDVG00246]][[unique-constraints]]
+[[unique-constraints]]
 
 ===== Unique Constraints
 
@@ -612,14 +612,14 @@ Otherwise, the `ALTER TABLE` statement generated by the {productName}
 uses the incorrect case, and the creation of the unique constraint
 fails.
 
-[[geqvk]][[GSDVG00247]][[foreign-key-mapping]]
+[[foreign-key-mapping]]
 
 ===== Foreign Key Mapping
 
 Use `@OneToMany(mappedBy="COMPANY")` or specify an explicit column name
 for the `Company` field on the `Many` side of the relationship.
 
-[[geqvi]][[GSDVG00248]][[sql-result-set-mapping]]
+[[sql-result-set-mapping]]
 
 ===== SQL Result Set Mapping
 
@@ -635,7 +635,7 @@ Use the following elements:
 
 Or specify an explicit column name for the `upperCaseColumnName` field.
 
-[[geqvo]][[GSDVG00249]][[named-native-queries-and-jdbc-queries]]
+[[named-native-queries-and-jdbc-queries]]
 
 ===== Named Native Queries and JDBC Queries
 
@@ -644,7 +644,7 @@ with the expected case. For example, MySQL requires column names in the
 `SELECT` clause of JDBC queries to be uppercase, while PostgreSQL and
 Sybase require table names to be uppercase in all JDBC queries.
 
-[[geqxc]][[GSDVG00250]][[postgresql-case-sensitivity]]
+[[postgresql-case-sensitivity]]
 
 ===== PostgreSQL Case Sensitivity
 
@@ -660,7 +660,7 @@ use aliases Select m.ID AS \"ID\" from Department m
 Use the backslash as an escape character in the class file, but not in
 the `persistence.xml` file.
 
-[[gbxjg]][[GSDVG00395]][[sybase-finder-limitation]]
+[[sybase-finder-limitation]]
 
 ==== Sybase Finder Limitation
 
@@ -678,7 +678,7 @@ com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype
 To avoid this error, make sure the finder method input is less than 255
 characters.
 
-[[gbxjp]][[GSDVG00396]][[mysql-database-restrictions]]
+[[mysql-database-restrictions]]
 
 ==== MySQL Database Restrictions
 

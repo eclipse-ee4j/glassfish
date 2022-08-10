@@ -7,7 +7,7 @@ prev=create-network-listener.html
 
 = create-node-config
 
-[[create-node-config-1]][[GSRFM00047]][[create-node-config]]
+[[create-node-config]]
 
 == create-node-config
 

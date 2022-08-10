@@ -6,7 +6,7 @@ prev=jms.html
 
 = Using the Jakarta Mail API
 
-[[GSDVG00021]][[beaow]]
+[[beaow]]
 
 
 [[using-the-jakarta-mail-api]]
@@ -31,7 +31,7 @@ Jakarta Mail resources are supported only in the full {productName}, not in the 
 ====
 
 
-[[beaox]][[GSDVG00200]][[introducing-jakarta-mail]]
+[[introducing-jakarta-mail]]
 
 === Introducing Jakarta Mail
 
@@ -60,7 +60,7 @@ in {productName} Administration Guide
 and the Jakarta Mail specification at
 `https://jakarta.ee/specifications/mail`.
 
-[[beaoy]][[GSDVG00201]][[creating-a-jakarta-mail-session]]
+[[creating-a-jakarta-mail-session]]
 
 === Creating a Jakarta Mail Session
 
@@ -72,7 +72,7 @@ Administration Console.
 * Use the `asadmin create-mail-resource` command. For details, see
 the link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-[[beaoz]][[GSDVG00202]][[jakarta-mail-session-properties]]
+[[jakarta-mail-session-properties]]
 
 === Jakarta Mail Session Properties
 
@@ -89,7 +89,7 @@ Jakarta Mail `Session` object, first define the property as follows:
 * Name - `mail-from`
 * Value - `john.doe@sun.com`
 
-[[beapa]][[GSDVG00203]][[looking-up-a-jakarta-mail-session]]
+[[looking-up-a-jakarta-mail-session]]
 
 === Looking Up a Jakarta Mail Session
 
@@ -117,7 +117,7 @@ Session session = (Session)ic.lookup(snName);
 For more information about the JNDI API, see link:jndi.html#beanr[Using
 the Java Naming and Directory Interface].
 
-[[fwfiy]][[GSDVG00204]][[sending-and-reading-messages-using-jakarta-mail]]
+[[sending-and-reading-messages-using-jakarta-mail]]
 
 === Sending and Reading Messages Using Jakarta Mail
 
@@ -126,7 +126,7 @@ The following topics are addressed here:
 * xref:#to-send-a-message-using-jakarta-mail[To Send a Message Using Jakarta Mail]
 * xref:#to-read-a-message-using-jakarta-mail[To Read a Message Using Jakarta Mail]
 
-[[beapb]][[GSDVG00079]][[to-send-a-message-using-jakarta-mail]]
+[[to-send-a-message-using-jakarta-mail]]
 
 ==== To Send a Message Using Jakarta Mail
 
@@ -180,7 +180,7 @@ msg.setText(msgTxt);
 Transport.send(msg);
 ----
 
-[[beapc]][[GSDVG00080]][[to-read-a-message-using-jakarta-mail]]
+[[to-read-a-message-using-jakarta-mail]]
 
 ==== To Read a Message Using Jakarta Mail
 
@@ -236,7 +236,7 @@ messages on the server) into an array.
 Message[] messages = folder.getMessages();
 ----
 
-[[gkpfg]][[GSDVG00205]][[using-application-scoped-jakarta-mail-resources]]
+[[using-application-scoped-jakarta-mail-resources]]
 
 === Using Application-Scoped Jakarta Mail Resources
 

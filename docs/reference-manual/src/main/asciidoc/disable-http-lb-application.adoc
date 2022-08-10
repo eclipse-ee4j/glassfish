@@ -7,7 +7,7 @@ prev=disable.html
 
 = disable-http-lb-application
 
-[[disable-http-lb-application-1]][[GSRFM00118]][[disable-http-lb-application]]
+[[disable-http-lb-application]]
 
 == disable-http-lb-application
 
@@ -79,7 +79,7 @@ target::
 
 === Examples
 
-[[GSRFM592]][[sthref1052]]
+[[sthref1052]]
 
 ==== Example 1   Disabling an Application for Load Balancing
 

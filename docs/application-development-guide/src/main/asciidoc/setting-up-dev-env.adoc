@@ -7,9 +7,6 @@ prev=part-tasks-and-tools.html
 
 = Setting Up a Development Environment
 
-[[GSDVG00002]][[beaaq]]
-
-
 [[setting-up-a-development-environment]]
 == 1 Setting Up a Development Environment
 
@@ -21,17 +18,17 @@ of development tools. In addition, sample applications are available.
 
 The following topics are addressed here:
 
-* link:#beaar[Installing and Preparing the Server for Development]
-* link:#beaas[High Availability Features]
-* link:#beaat[Development Tools]
-* link:#beabf[Sample Applications]
+* xref:#installing-and-preparing-the-server-for-development[Installing and Preparing the Server for Development]
+* xref:#high-availability-features[High Availability Features]
+* xref:#development-tools[Development Tools]
+* xref:#sample-applications[Sample Applications]
 
-[[beaar]][[GSDVG00090]][[installing-and-preparing-the-server-for-development]]
+[[installing-and-preparing-the-server-for-development]]
 
 === Installing and Preparing the Server for Development
 
 For more information about {productName} installation, see the
-link:installation-guide.html#GSING[
+xref:installation-guide.adoc#GSING[
 {productName} Installation Guide].
 
 The following components are included in the full installation.
@@ -57,65 +54,65 @@ server for development in these ways:
 
 * Locate utility classes and libraries so they can be accessed by the
 proper class loaders. For more information, see
-link:class-loaders.html#beadj[Using the Common Class Loader].
+xref:class-loaders.adoc#using-the-common-class-loader[Using the Common Class Loader].
 * Set up debugging. For more information, see
-link:debugging-apps.html#beafc[Debugging Applications].
+xref:debugging-apps.adoc#debugging-applications[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "link:administration-guide/jvm.html#GSADG00007[
+For more information, see "link:administration-guide/jvm.html#administering-the-virtual-machine-for-the-java-platform[
 Administering the Virtual Machine for the Java Platform]"
 in {productName} Administration Guide.
 
-[[beaas]][[GSDVG00091]][[high-availability-features]]
+[[high-availability-features]]
 
 === High Availability Features
 
 High availability features such as load balancing and session failover
-are discussed in detail in the link:ha-administration-guide.html#GSHAG[{productName}
+are discussed in detail in the xref:ha-administration-guide.adoc#GSHAG[{productName}
 High Availability Administration Guide]. This book describes the
 following features in the following sections:
 
 * For information about HTTP session persistence, see
-link:webapps.html#beahe[Distributed Sessions and Persistence].
+xref:webapps.adoc#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
 * For information about checkpointing of the stateful session bean
-state, see link:ejb.html#beaib[Stateful Session Bean Failover].
+state, see xref:ejb.adoc#stateful-session-bean-failover[Stateful Session Bean Failover].
 * For information about failover and load balancing for Java clients,
-see link:java-clients.html#beakt[Developing Java Clients].
+see xref:java-clients.adoc#developing-java-clients[Developing Java Clients].
 * For information about load balancing for message-driven beans, see
-link:jms.html#beaop[Load-Balanced Message Inflow].
+xref:jms.adoc#load-balanced-message-inflow[Load-Balanced Message Inflow].
 
-[[beaat]][[GSDVG00092]][[development-tools]]
+[[development-tools]]
 
 === Development Tools
 
 The following general tools are provided with the {productName}:
 
-* link:#beaau[The `asadmin` Command]
-* link:#beaav[The Administration Console]
+* xref:#the-asadmin-command[The `asadmin` Command]
+* xref:#the-administration-console[The Administration Console]
 
 The following development tools are provided with the {productName}
 or downloadable from Oracle:
 
-* link:#beaba[The Migration Tool]
-* link:#beaaw[The NetBeans IDE]
+* xref:#the-migration-tool[The Migration Tool]
+* xref:#the-netbeans-ide[The NetBeans IDE]
 
 The following third-party tools might also be useful:
 
-* link:#beabb[Debugging Tools]
-* link:#beabc[Profiling Tools]
+* xref:#debugging-tools[Debugging Tools]
+* xref:#profiling-tools[Profiling Tools]
 
-[[beaau]][[GSDVG00333]][[the-asadmin-command]]
+[[the-asadmin-command]]
 
 ==== The `asadmin` Command
 
 The `asadmin` command allows you to configure a local or remote server
 and perform both administrative and development tasks at the command
 line. For general information about `asadmin`, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The `asadmin` command is located in the as-install``/bin`` directory. Type
 `asadmin help` for a list of subcommands.
 
-[[beaav]][[GSDVG00334]][[the-administration-console]]
+[[the-administration-console]]
 
 ==== The Administration Console
 
@@ -133,7 +130,7 @@ browser. The host is the name of the machine on which the {productName} is runni
 http://localhost:4848
 ----
 
-[[beaba]][[GSDVG00337]][[the-migration-tool]]
+[[the-migration-tool]]
 
 ==== The Migration Tool
 
@@ -144,7 +141,7 @@ migrated, with reasons for migration failure. For more information and
 to download the Migration Tool, see
 `http://java.sun.com/j2ee/tools/migration/index.html`.
 
-[[beaaw]][[GSDVG00338]][[the-netbeans-ide]]
+[[the-netbeans-ide]]
 
 ==== Code Editors
 
@@ -157,21 +154,21 @@ extensions, sometimes all you need is just some configuration.
 * `https://netbeans.apache.org[Apache NetBeans]`
 * `https://code.visualstudio.com[Microsoft Visual Studio Code]`
 
-[[beabb]][[GSDVG00340]][[debugging-tools]]
+[[debugging-tools]]
 
 ==== Debugging Tools
 
 You can use several debugging tools with the {productName}. For more
-information, see link:debugging-apps.html#beafc[Debugging Applications].
+information, see xref:debugging-apps.adoc#debugging-applications[Debugging Applications].
 
-[[beabc]][[GSDVG00341]][[profiling-tools]]
+[[profiling-tools]]
 
 ==== Profiling Tools
 
 You can use several profilers with the {productName}. For more
-information, see link:debugging-apps.html#beafn[Profiling Tools].
+information, see xref:debugging-apps.adoc#debug-profiling-tools[Profiling Tools].
 
-[[beabf]][[GSDVG00093]][[sample-applications]]
+[[sample-applications]]
 
 === Sample Applications
 

@@ -7,14 +7,12 @@ prev=list-secure-admin-internal-users.html
 
 = list-secure-admin-principals
 
-[[list-secure-admin-principals-1]][[GSRFM00200]][[list-secure-admin-principals]]
+[[list-secure-admin-principals]]
 
 == list-secure-admin-principals
 
 Lists the certificates for which {productName} accepts admin
 requests from clients.
-
-[[sthref1795]]
 
 === Synopsis
 
@@ -27,20 +25,16 @@ asadmin [asadmin-options] list-secure-admin-principals [--help]
 [name]
 ----
 
-[[sthref1796]]
-
 === Description
 
 The `list-secure-admin-principals` subcommand lists the certificates for
 which {productName} accepts admin requests from clients.
 
-[[sthref1797]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -66,8 +60,6 @@ asadmin-options::
   option is used. The default value is `true`. To suppress the headings,
   set the `--header` option to `false`.
 
-[[sthref1798]]
-
 === Operands
 
 name::
@@ -75,11 +67,9 @@ name::
   comma-separated list in quotes. For example:
   `"CN=system.amer.oracle.com,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US"`.
 
-[[sthref1799]]
-
 === Examples
 
-[[GSRFM710]][[sthref1800]]
+[[sthref1800]]
 
 ==== Example 1   Listing the Certificates
 
@@ -94,8 +84,6 @@ CN=localhost-instance,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=Califor
 Command list-secure-admin-principals executed successfully.
 ----
 
-[[sthref1801]]
-
 === Exit Status
 
 0::
@@ -103,13 +91,11 @@ Command list-secure-admin-principals executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1802]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)],
-link:enable-secure-admin-principal.html#enable-secure-admin-principal-1[`enable-secure-admin-principal`(1)]
+xref:enable-secure-admin.adoc#enable-secure-admin[`enable-secure-admin`(1)],
+xref:enable-secure-admin-principal.adoc#enable-secure-admin-principal[`enable-secure-admin-principal`(1)]
 
 

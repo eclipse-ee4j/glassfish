@@ -7,7 +7,7 @@ prev=package-appclient.html
 
 = {productName} 7 {productName} Concepts
 
-[[GSRFM814]][[sthref2391]]
+[[sthref2391]]
 
 
 [[glassfish-server-open-source-edition-5.0-glassfish-server-concepts]]

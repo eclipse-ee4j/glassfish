@@ -7,9 +7,6 @@ prev=java-clients.html
 
 = Developing Connectors
 
-[[GSDVG00013]][[bealk]]
-
-
 [[developing-connectors]]
 == 11 Developing Connectors
 
@@ -43,18 +40,18 @@ https://eclipse-ee4j.github.io/jakartaee-tutorial/#resource-adapters-and-contrac
 Resource Adapters and Contracts] in The Jakarta EE Tutorial.
 
 For information about deploying a connector to the {productName}, see
-the link:application-deployment-guide.html#GSDPG[
+the xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide].
 
 The following topics are addressed here:
 
-* link:#beall[Connector Support in the {productName}]
-* link:#bealr[Advanced Connector Configuration Options]
-* link:#bealz[Inbound Communication Support]
-* link:#gizdm[Outbound Communication Support]
-* link:#beama[Configuring a Message Driven Bean to Use a Resource Adapter]
+* <<Connector Support in the {productName}>>
+* <<Advanced Connector Configuration Options>>
+* <<Inbound Communication Support>>
+* <<Outbound Communication Support>>
+* <<Configuring a Message Driven Bean to Use a Resource Adapter>>
 
-[[beall]][[GSDVG00162]][[connector-support-in-the-glassfish-server]]
+[[connector-support-in-the-glassfish-server]]
 
 === Connector Support in the {productName}
 
@@ -94,7 +91,7 @@ Context mechanism by describing a standard `WorkContext`, the
 adapter can use to propagate transaction context information from the
 EIS to the application server.
 
-[[bealm]][[GSDVG00474]][[connector-architecture-for-jms-and-jdbc]]
+[[connector-architecture-for-jms-and-jdbc]]
 
 ==== Connector Architecture for JMS and JDBC
 
@@ -108,11 +105,11 @@ resource adapters. The {productName} automatically makes these system
 resource adapters available to any client that requires them.
 
 For more information about JMS in the {productName}, see
-link:jms.html#beaob[Using the Java Message Service]. For more information
-about JDBC in the {productName}, see link:jdbc.html#beamj[Using the
+xref:jms.adoc#using-the-java-message-service[Using the Java Message Service]. For more information
+about JDBC in the {productName}, see xref:jdbc.adoc#using-the-jdbc-api-for-database-access[Using the
 JDBC API for Database Access].
 
-[[bealn]][[GSDVG00475]][[connector-configuration]]
+[[connector-configuration]]
 
 ==== Connector Configuration
 
@@ -129,26 +126,26 @@ pool. In addition, dynamic changes can be made to connector connection
 pools and the connector resource properties without restarting the
 {productName}.
 
-[[bealr]][[GSDVG00163]][[advanced-connector-configuration-options]]
+[[advanced-connector-configuration-options]]
 
 === Advanced Connector Configuration Options
 
 The following topics are addressed here:
 
-* link:#beals[Thread Associations]
-* link:#bealt[Security Maps]
-* link:#giqgt[Work Security Maps]
-* link:#bealu[Overriding Configuration Properties]
-* link:#bealv[Testing a Connector Connection Pool]
-* link:#gizcv[Flushing a Connector Connection Pool]
-* link:#bealw[Handling Invalid Connections]
-* link:#bealx[Setting the Shutdown Timeout]
-* link:#gjjyy[Specifying the Class Loading Policy]
-* link:#bealy[Using Last Agent Optimization of Transactions]
-* link:#gizba[Disabling Pooling for a Connection]
-* link:#gizcs[Using Application-Scoped Connectors]
+* <<Thread Associations>>
+* <<Security Maps>>
+* <<Work Security Maps>>
+* <<Overriding Configuration Properties>>
+* <<Testing a Connector Connection Pool>>
+* <<Flushing a Connector Connection Pool>>
+* <<Handling Invalid Connections>>
+* <<Setting the Shutdown Timeout>>
+* <<Specifying the Class Loading Policy>>
+* <<Using Last Agent Optimization of Transactions>>
+* <<Disabling Pooling for a Connection>>
+* <<Using Application-Scoped Connectors>>
 
-[[beals]][[GSDVG00476]][[thread-associations]]
+[[thread-associations]]
 
 ==== Thread Associations
 
@@ -163,7 +160,7 @@ resource adapters. To create a thread pool:
 configuration. For details, click the Help button in the Administration
 Console.
 * Use the `asadmin create-threadpool` command. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 To associate a connector with a thread pool:
 
@@ -173,13 +170,13 @@ the Thread Pool ID field. For details, click the Help button in the
 Administration Console.
 * Use the `--threadpoolid` option of the
 `asadmin create-resource-adapter-config` command. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 If you create a resource adapter configuration for a connector module
 that is already deployed, the connector module deployment is restarted
 with the new configuration properties.
 
-[[bealt]][[GSDVG00477]][[security-maps]]
+[[security-maps]]
 
 ==== Security Maps
 
@@ -196,7 +193,7 @@ Connectors, select Connector Connection Pools, and select the Security
 Maps tab. For details, click the Help button in the Administration
 Console.
 * Use the `asadmin create-connector-security-map` command. For details,
-see the link:reference-manual.html#GSRFM[{productName} Reference
+see the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 If a security map already exists for a connector connection pool, the
@@ -211,7 +208,7 @@ connection pool. If there is no exact match, the {productName} uses
 the wild card character specification, if any, to determined the mapped
 back end EIS principal.
 
-[[giqgt]][[GSDVG00478]][[work-security-maps]]
+[[work-security-maps]]
 
 ==== Work Security Maps
 
@@ -224,7 +221,7 @@ map either principals or groups, but not both.
 
 To create a work security map, use the
 `asadmin create-connector-work-security-map` command. For details, see
-the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The work security map configuration supports the wildcard asterisk (`*`)
 character to indicate all users or all user groups. When an EIS
@@ -234,7 +231,7 @@ the work security map defined for the resource adapter. If there is no
 exact match, the {productName} uses the wild card character
 specification, if any, to determine the application principal.
 
-[[bealu]][[GSDVG00479]][[overriding-configuration-properties]]
+[[overriding-configuration-properties]]
 
 ==== Overriding Configuration Properties
 
@@ -249,7 +246,7 @@ the Administration Console.
 * Use the `asadmin create-resource-adapter-config` command to create a
 configuration for a resource adapter. Use this command's `--property`
 option to specify a name-value pair for a resource adapter property. For
-details, see the link:reference-manual.html#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 You can specify configuration properties either before or after resource
@@ -264,7 +261,7 @@ called `inboundPort`, you can assign the value `${inboundPort}`. You can
 then assign a different value to this property for each server instance.
 Changes to system properties take effect upon server restart.
 
-[[bealv]][[GSDVG00480]][[testing-a-connector-connection-pool]]
+[[testing-a-connector-connection-pool]]
 
 ==== Testing a Connector Connection Pool
 
@@ -277,7 +274,7 @@ pool you want to test. Then select the Ping button in the top right
 corner of the page. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin ping-connection-pool` command. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 Both these commands fail and display an error message unless they
 successfully connect to the connection pool.
@@ -291,10 +288,10 @@ Administration Console. For more information, click the Help button in
 the Administration Console.
 * Specify the `--ping` option in the
 `asadmin create-connector-connection-pool` command. For more
-information, see the link:reference-manual.html#GSRFM[{productName}
+information, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
-[[gizcv]][[GSDVG00481]][[flushing-a-connector-connection-pool]]
+[[flushing-a-connector-connection-pool]]
 
 ==== Flushing a Connector Connection Pool
 
@@ -313,9 +310,7 @@ pool you want to flush. Then select the Flush button in the top right
 corner of the page. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin flush-connection-pool` command. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
-
-[[bealw]][[GSDVG00482]][[handling-invalid-connections]]
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 ==== Handling Invalid Connections
 
@@ -358,7 +353,7 @@ asadmin set server.resources.connector-connection-pool.CCP1.is-connection-valida
 asadmin set server.resources.connector-connection-pool.CCP1.property.prefer-validate-over-recreate="true"
 ----
 
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 The interface ValidatingManagedConnectionFactory exposes the method
@@ -367,7 +362,7 @@ The {productName} checks if the resource adapter implements this
 interface, and if it does, invalid connections are removed when the
 connection pool is resized.
 
-[[bealx]][[GSDVG00483]][[setting-the-shutdown-timeout]]
+[[setting-the-shutdown-timeout]]
 
 ==== Setting the Shutdown Timeout
 
@@ -387,13 +382,13 @@ click the Help button in the Administration Console.
 ----
 asadmin set server.connector-service.shutdown-timeout-in-seconds="num-secs"
 ----
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 The {productName} deactivates all message-driven bean deployments
 before stopping a resource adapter.
 
-[[gjjyy]][[GSDVG00484]][[specifying-the-class-loading-policy]]
+[[specifying-the-class-loading-policy]]
 
 ==== Specifying the Class Loading Policy
 
@@ -413,10 +408,10 @@ To configure this setting, use the `asadmin set` command. For example:
 asadmin set server.connector-service.class-loading-policy="global"
 ----
 
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
-[[bealy]][[GSDVG00485]][[using-last-agent-optimization-of-transactions]]
+[[using-last-agent-optimization-of-transactions]]
 
 ==== Using Last Agent Optimization of Transactions
 
@@ -425,7 +420,7 @@ processes are distributed or global transactions. A global transaction
 can involve one non-XA resource if last agent optimization is enabled.
 Otherwise, all resources must be XA. For more information about
 transactions in the {productName}, see
-link:transaction-service.html#beanm[Using the Transaction Service].
+xref:transaction-service.adoc#using-the-transaction-service[Using the Transaction Service].
 
 The Connector specification requires that if a resource adapter supports
 `XATransaction`, the `ManagedConnection` created from that resource
@@ -443,7 +438,7 @@ level in the connection pool configuration property is lower. If the
 value in the connection pool configuration property is higher, it is
 ignored.
 
-[[gizba]][[GSDVG00486]][[disabling-pooling-for-a-connection]]
+[[disabling-pooling-for-a-connection]]
 
 ==== Disabling Pooling for a Connection
 
@@ -456,10 +451,10 @@ Administration Console. For more information, click the Help button in
 the Administration Console.
 * Specify the `--pooling` option in the
 `asadmin create-connector-connection-pool` command. For more
-information, see the link:reference-manual.html#GSRFM[{productName}
+information, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
-[[gizcs]][[GSDVG00487]][[using-application-scoped-connectors]]
+[[using-application-scoped-connectors]]
 
 ==== Using Application-Scoped Connectors
 
@@ -467,9 +462,9 @@ You can define an application-scoped connector or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
-[[bealz]][[GSDVG00164]][[inbound-communication-support]]
+[[inbound-communication-support]]
 
 === Inbound Communication Support
 
@@ -506,10 +501,10 @@ For example, some messaging styles may need applications to use special
 administered objects (such as Queue and Topic objects in JMS).
 Applications use these objects to send and synchronously receive
 messages using connection objects using messaging style APIs. For more
-information about administered objects, see link:jms.html#beaob[Using the
+information about administered objects, see xref:jms.adoc#using-the-java-message-service[Using the
 Java Message Service].
 
-[[gizdm]][[GSDVG00165]][[outbound-communication-support]]
+[[outbound-communication-support]]
 
 === Outbound Communication Support
 
@@ -534,7 +529,7 @@ supported, and the Administration Console shows only `no-tx` and
 For more information, click the Help button in the Administration
 Console.
 
-[[beama]][[GSDVG00166]][[configuring-a-message-driven-bean-to-use-a-resource-adapter]]
+[[configuring-a-message-driven-bean-to-use-a-resource-adapter]]
 
 === Configuring a Message Driven Bean to Use a Resource Adapter
 

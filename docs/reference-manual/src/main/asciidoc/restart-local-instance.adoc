@@ -7,14 +7,12 @@ prev=restart-instance.html
 
 = restart-local-instance
 
-[[restart-local-instance-1]][[GSRFM00220]][[restart-local-instance]]
+[[restart-local-instance]]
 
 == restart-local-instance
 
 Restarts a running {productName} instance on the host where the
 subcommand is run
-
-[[sthref1994]]
 
 === Synopsis
 
@@ -27,8 +25,6 @@ asadmin [asadmin-options] restart-local-instance [--help]
 [instance-name]
 ----
 
-[[sthref1995]]
-
 === Description
 
 The `restart-local-instance` subcommand restarts a {productName}
@@ -39,7 +35,7 @@ command from the host where the instance resides.
 The subcommand can restart any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can restart
 an instance that was created by using the
-link:create-instance.html#create-instance-1[`create-instance`(1)] subcommand.
+xref:create-instance.adoc#create-instance[`create-instance`(1)] subcommand.
 
 The `restart-local-instance` subcommand does not contact the domain
 administration server (DAS) to determine the node on which the instance
@@ -66,19 +62,17 @@ with the change.
 If different synchronization behavior is required, the instance must be
 stopped and restarted by using following sequence of subcommands:
 
-1. link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
-2. link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)]
+1. xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
+2. xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)]
 
 This subcommand is supported in local mode. However, to synchronize the
 instance with the DAS, this subcommand must be run in remote mode.
-
-[[sthref1996]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -129,8 +123,6 @@ The default is the current setting of this option for the instance
     The instance is killed. The subcommand uses functionality of the
     operating system to terminate the instance process.
 
-[[sthref1997]]
-
 === Operands
 
 instance-name::
@@ -138,11 +130,9 @@ instance-name::
   is not running, the subcommand displays a warning message and attempts
   to start the instance.
 
-[[sthref1998]]
-
 === Examples
 
-[[GSRFM740]][[sthref1999]]
+[[sthref1999]]
 
 ==== Example 1   Restarting an Instance Locally
 
@@ -155,8 +145,6 @@ asadmin> restart-local-instance --node localhost-domain1 ymlsa1
 Command restart-local-instance executed successfully.
 ----
 
-[[sthref2000]]
-
 === Exit Status
 
 0::
@@ -164,21 +152,19 @@ Command restart-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref2001]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:restart-instance.html#restart-instance-1[`restart-instance`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:restart-instance.adoc#restart-instance[`restart-instance`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)],
+xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 Java Platform Debugger Architecture (JPDA)
 (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)

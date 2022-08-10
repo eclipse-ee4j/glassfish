@@ -7,13 +7,11 @@ prev=create-jmsdest.html
 
 = create-jms-host
 
-[[create-jms-host-1]][[GSRFM00039]][[create-jms-host]]
+[[create-jms-host]]
 
 == create-jms-host
 
 Creates a JMS host
-
-[[sthref344]]
 
 === Synopsis
 
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-jms-host [--help]
 jms_host_name
 ----
 
-[[sthref345]]
-
 === Description
 
 Creates a Java Message Service (JMS) host within the JMS service.
@@ -36,13 +32,11 @@ Creates a Java Message Service (JMS) host within the JMS service.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref346]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -73,18 +67,14 @@ asadmin-options::
   Specifies whether the subcommand overwrites the existing JMS host of
   the same name. The default value is `false`.
 
-[[sthref347]]
-
 === Operands
 
 jms_host_name::
   A unique identifier for the JMS host to be created.
 
-[[sthref348]]
-
 === Examples
 
-[[GSRFM496]][[sthref349]]
+[[sthref349]]
 
 ==== Example 1   Creating a JMS host using a non-default port
 
@@ -99,8 +89,6 @@ Jms Host MyNewHost created.
 Command create-jms-host executed successfully.
 ----
 
-[[sthref350]]
-
 === Exit Status
 
 0::
@@ -108,14 +96,12 @@ Command create-jms-host executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref351]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-jms-host.html#delete-jms-host-1[`delete-jms-host`(1)],
-link:jms-ping.html#jms-ping-1[`jms-ping`(1)],
-link:list-jms-hosts.html#list-jms-hosts-1[`list-jms-hosts`(1)]
+xref:delete-jms-host.adoc#delete-jms-host[`delete-jms-host`(1)],
+xref:jms-ping.adoc#jms-ping[`jms-ping`(1)],
+xref:list-jms-hosts.adoc#list-jms-hosts[`list-jms-hosts`(1)]
 
 

@@ -7,13 +7,11 @@ prev=list-jms-hosts.html
 
 = list-jms-resources
 
-[[list-jms-resources-1]][[GSRFM00177]][[list-jms-resources]]
+[[list-jms-resources]]
 
 == list-jms-resources
 
 Lists the JMS resources
-
-[[sthref1575]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-jms-resources [--help]
 [target]
 ----
 
-[[sthref1576]]
-
 === Description
 
 The `list-jms-resources` subcommand lists the existing Java Message
@@ -34,13 +30,11 @@ Service (JMS) resources (destination and connection factory resources).
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref1577]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -48,8 +42,6 @@ asadmin-options::
   The JMS resource type can be `jakarta.jms.Topic`, `jakarta.jms.Queue`,
   `jakarta.jms.ConnectionFactory`, `jakarta.jms.TopicConnectionFactory`, or
   `jakarta.jms.QueueConnectionFactory`.
-
-[[sthref1578]]
 
 === Operands
 
@@ -68,11 +60,9 @@ target::
   instance-name;;
     Lists the resources for the specified server instance.
 
-[[sthref1579]]
-
 === Examples
 
-[[GSRFM675]][[sthref1580]]
+[[sthref1580]]
 
 ==== Example 1   Listing all JMS resources
 
@@ -88,7 +78,7 @@ jms/Topic
 Command list-jms-resources executed successfully.
 ----
 
-[[GSRFM676]][[sthref1581]]
+[[sthref1581]]
 
 ==== Example 2   Listing JMS resources of a specified type
 
@@ -103,8 +93,6 @@ jms/DurableConnectionFactory
 Command list-jms-resources executed successfully.
 ----
 
-[[sthref1582]]
-
 === Exit Status
 
 0::
@@ -112,13 +100,11 @@ Command list-jms-resources executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1583]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)],
-link:delete-jms-resource.html#delete-jms-resource-1[`delete-jms-resource`(1)]
+xref:create-jms-resource.adoc#create-jms-resource[`create-jms-resource`(1)],
+xref:delete-jms-resource.adoc#delete-jms-resource[`delete-jms-resource`(1)]
 
 

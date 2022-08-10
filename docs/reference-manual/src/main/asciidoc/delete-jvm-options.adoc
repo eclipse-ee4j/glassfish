@@ -7,13 +7,11 @@ prev=delete-jndi-resource.html
 
 = delete-jvm-options
 
-[[delete-jvm-options-1]][[GSRFM00094]][[delete-jvm-options]]
+[[delete-jvm-options]]
 
 == delete-jvm-options
 
 Removes one or more options for the Java application launcher
-
-[[sthref825]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] delete-jvm-options [--help]
 (jvm-option-name[=jvm-option-value]) [:jvm-option-name[=jvm-option-name]]*
 ----
 
-[[sthref826]]
-
 === Description
 
 The `delete-jvm-options` subcommand removes one or more command-line
@@ -33,7 +29,7 @@ options for the Java application launcher. These options are removed
 from the Java configuration `java—config` element or the profiler
 `profiler` element of the `domain.xml` file. To see the Java application
 launcher options that can be deleted, use the
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)]
+xref:list-jvm-options.adoc#list-jvm-options[`list-jvm-options`(1)]
 subcommand.
 
 The deletion of some options requires a server restart for changes to
@@ -63,17 +59,15 @@ example, restart is not required for the following Java system property:
 `-d64`
 
 To restart the DAS, use the
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)] command.
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)] command.
 
 This subcommand is supported in remote mode only.
-
-[[sthref827]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -95,8 +89,6 @@ asadmin-options::
   profiler. The option must have been set for a profiler for this option
   to be true.
 
-[[sthref828]]
-
 === Operands
 
 jvm-option-name::
@@ -115,15 +107,13 @@ If an option name or option value contains a colon, the backslash
 (`\`) must be used to escape the colon in the name or value. Other
 characters might also require an escape character. For more
 information about escape characters in subcommand options, see the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] man page.
 ====
 
 
-[[sthref829]]
-
 === Examples
 
-[[GSRFM562]][[sthref830]]
+[[sthref830]]
 
 ==== Example 1   Deleting Java Application Launcher Options
 
@@ -136,7 +126,7 @@ asadmin> delete-jvm-options -Doption1=value1
 Command delete-jvm-options executed successfully
 ----
 
-[[GSRFM563]][[sthref831]]
+[[sthref831]]
 
 ==== Example 2   Deleting a Java Application Launcher Option From the Profiler
 
@@ -149,8 +139,6 @@ asadmin> delete-jvm-options --profiler=true -XX:MaxPermSize=192m
 Command delete-jvm-options executed successfully.
 ----
 
-[[sthref832]]
-
 === Exit Status
 
 0::
@@ -158,15 +146,13 @@ Command delete-jvm-options executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref833]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jvm-options.html#create-jvm-options-1[`create-jvm-options`(1)],
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)],
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)]
+xref:create-jvm-options.adoc#create-jvm-options[`create-jvm-options`(1)],
+xref:list-jvm-options.adoc#list-jvm-options[`list-jvm-options`(1)],
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)]
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

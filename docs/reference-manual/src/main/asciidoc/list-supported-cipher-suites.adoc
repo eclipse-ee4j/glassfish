@@ -7,14 +7,12 @@ prev=list-sub-components.html
 
 = list-supported-cipher-suites
 
-[[list-supported-cipher-suites-1]][[GSRFM00202]][[list-supported-cipher-suites]]
+[[list-supported-cipher-suites]]
 
 == list-supported-cipher-suites
 
 Enables administrators to list the cipher suites that are supported and
 available to a specified {productName} target
-
-[[sthref1811]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ available to a specified {productName} target
 asadmin [asadmin-options] list-supported-cipher-suites [--help]
 [--target target]
 ----
-
-[[sthref1812]]
 
 === Description
 
@@ -37,13 +33,11 @@ provider.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1813]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -62,11 +56,9 @@ asadmin-options::
   instance_name;;
     Lists the cipher suites for a specified server instance.
 
-[[sthref1814]]
-
 === Examples
 
-[[GSRFM712]][[sthref1815]]
+[[sthref1815]]
 
 ==== Example 1   Listing cipher suites
 
@@ -103,8 +95,6 @@ SSL_DH_anon_EXPORT_WITH_DES40_CBC_SHA
 Command list-supported-cipher-suites executed successfully.
 ----
 
-[[sthref1816]]
-
 === Exit Status
 
 0::
@@ -112,10 +102,8 @@ Command list-supported-cipher-suites executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1817]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

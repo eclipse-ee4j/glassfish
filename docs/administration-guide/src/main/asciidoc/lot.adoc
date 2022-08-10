@@ -7,68 +7,48 @@ prev=lof.adoc
 [[list-of-tables]]
 == List of Tables
 
-* link:overview.html#giuad[1-1 Default Administration Values]
-* link:overview.html#gjhfv[1-2 Default Locations]
-* link:general-administration.html#gkame[2-1 REST Resource Methods for
-Administering Monitoring and Configuration Data]
-* link:webapps.html#fvyhk[6-1 URL Fields for Servlets Within an
-Application]
-* link:monitoring.html#ghlta[8-1 HTTP Listener Common Monitoring
-Statistics]
-* link:monitoring.html#ghlsl[8-2 JVM Common Monitoring Statistics]
-* link:monitoring.html#ghqly[8-3 Web Module Common Monitoring Statistics]
-* link:monitoring.html#ggnpb[8-4 Example Resources Level Dotted Names]
-* link:monitoring.html#gelod[8-5 EJB Cache Monitoring Statistics]
-* link:monitoring.html#gelns[8-6 EJB Container Monitoring Statistics]
-* link:monitoring.html#gelnu[8-7 EJB Method Monitoring Statistics]
-* link:monitoring.html#gelpe[8-8 EJB Pool Monitoring Statistics]
-* link:monitoring.html#gelob[8-9 Timer Monitoring Statistics]
-* link:monitoring.html#gelnm[8-10 HTTP Service Virtual Server Monitoring
-Statistics]
-* link:monitoring.html#gjjys[8-11 Jersey Statistics]
-* link:monitoring.html#gelot[8-12 Connector Connection Pool Monitoring
-Statistics (JMS)]
-* link:monitoring.html#gelnz[8-13 Connector Work Management Monitoring
-Statistics (JMS)]
-* link:monitoring.html#gelow[8-14 JVM Monitoring Statistics for Java SE
-Class Loading]
-* link:monitoring.html#geloa[8-15 JVM Monitoring Statistics for Java SE -
-Threads]
-* link:monitoring.html#gelnt[8-16 JVM Monitoring Statistics for Java SE
-Compilation]
-* link:monitoring.html#gelox[8-17 JVM Monitoring Statistics for Java SE
-Garbage Collectors]
-* link:monitoring.html#gelnx[8-18 JVM Monitoring Statistics for Java SE
-Memory]
-* link:monitoring.html#gelog[8-19 JVM Statistics for the Java SE
-Operating System]
-* link:monitoring.html#gelop[8-20 JVM Monitoring Statistics for Java SE
-Runtime]
-* link:monitoring.html#gjirp[8-21 Network Keep Alive Statistics]
-* link:monitoring.html#gjjxc[8-22 Network Connection Queue Statistics]
-* link:monitoring.html#gjjpd[8-23 Network File Cache Statistics]
-* link:monitoring.html#gjjov[8-24 Network Thread Pool Statistics]
-* link:monitoring.html#gelqw[8-25 ORB Monitoring Statistics (Connection
-Manager)]
-* link:monitoring.html#gelqa[8-26 General Resource Monitoring Statistics
-(Connection Pool)]
-* link:monitoring.html#gktcp[8-27 Application Specific Resource
-Monitoring Statistics (Connection Pool)]
-* link:monitoring.html#gjirc[8-28 EJB Security Monitoring Statistics]
-* link:monitoring.html#gjiqv[8-29 Web Security Monitoring Statistics]
-* link:monitoring.html#gjirq[8-30 Realm Security Monitoring Statistics]
-* link:monitoring.html#gelqt[8-31 Thread Pool Monitoring Statistics]
-* link:monitoring.html#geloy[8-32 JVM Monitoring Statistics for Java SE -
-Thread Info]
-* link:monitoring.html#gelpl[8-33 Transaction Service Monitoring
-Statistics]
-* link:monitoring.html#gjkba[8-34 Web Module Servlet Statistics]
-* link:monitoring.html#givgh[8-35 Web JSP Monitoring Statistics]
-* link:monitoring.html#gjisw[8-36 Web Request Monitoring Statistics]
-* link:monitoring.html#ghqiu[8-37 Web Servlet Monitoring Statistics]
-* link:monitoring.html#gellc[8-38 Web Session Monitoring Statistics]
-* link:http_https.html#ggnpj[13-1 Default Ports for Listeners]
-* link:jndi.html#fxizy[18-1 JNDI Lookup Names and Their Associated
-References]
-
+* xref:overview.adoc#giuad[1-1 Default Administration Values]
+* xref:overview.adoc#gjhfv[1-2 Default Locations]
+* xref:general-administration.adoc#gkame[2-1 REST Resource Methods for Administering Monitoring and Configuration Data]
+* xref:webapps.adoc#fvyhk[6-1 URL Fields for Servlets Within an Application]
+* xref:monitoring.adoc#ghlta[8-1 HTTP Listener Common Monitoring Statistics]
+* xref:monitoring.adoc#ghlsl[8-2 JVM Common Monitoring Statistics]
+* xref:monitoring.adoc#ghqly[8-3 Web Module Common Monitoring Statistics]
+* xref:monitoring.adoc#ggnpb[8-4 Example Resources Level Dotted Names]
+* xref:monitoring.adoc#gelod[8-5 EJB Cache Monitoring Statistics]
+* xref:monitoring.adoc#gelns[8-6 EJB Container Monitoring Statistics]
+* xref:monitoring.adoc#gelnu[8-7 EJB Method Monitoring Statistics]
+* xref:monitoring.adoc#gelpe[8-8 EJB Pool Monitoring Statistics]
+* xref:monitoring.adoc#gelob[8-9 Timer Monitoring Statistics]
+* xref:monitoring.adoc#gelnm[8-10 HTTP Service Virtual Server Monitoring Statistics]
+* xref:monitoring.adoc#gjjys[8-11 Jersey Statistics]
+* xref:monitoring.adoc#gelot[8-12 Connector Connection Pool Monitoring Statistics (JMS)]
+* xref:monitoring.adoc#gelnz[8-13 Connector Work Management Monitoring Statistics (JMS)]
+* xref:monitoring.adoc#gelow[8-14 JVM Monitoring Statistics for Java SE Class Loading]
+* xref:monitoring.adoc#geloa[8-15 JVM Monitoring Statistics for Java SE - Threads]
+* xref:monitoring.adoc#gelnt[8-16 JVM Monitoring Statistics for Java SE Compilation]
+* xref:monitoring.adoc#gelox[8-17 JVM Monitoring Statistics for Java SE Garbage Collectors]
+* xref:monitoring.adoc#gelnx[8-18 JVM Monitoring Statistics for Java SE Memory]
+* xref:monitoring.adoc#gelog[8-19 JVM Statistics for the Java SE Operating System]
+* xref:monitoring.adoc#gelop[8-20 JVM Monitoring Statistics for Java SE Runtime]
+* xref:monitoring.adoc#gjirp[8-21 Network Keep Alive Statistics]
+* xref:monitoring.adoc#gjjxc[8-22 Network Connection Queue Statistics]
+* xref:monitoring.adoc#gjjpd[8-23 Network File Cache Statistics]
+* xref:monitoring.adoc#gjjov[8-24 Network Thread Pool Statistics]
+* xref:monitoring.adoc#gelqw[8-25 ORB Monitoring Statistics (Connection Manager)]
+* xref:monitoring.adoc#gelqa[8-26 General Resource Monitoring Statistics (Connection Pool)]
+* xref:monitoring.adoc#gktcp[8-27 Application Specific Resource Monitoring Statistics (Connection Pool)]
+* xref:monitoring.adoc#gjirc[8-28 EJB Security Monitoring Statistics]
+* xref:monitoring.adoc#gjiqv[8-29 Web Security Monitoring Statistics]
+* xref:monitoring.adoc#gjirq[8-30 Realm Security Monitoring Statistics]
+* xref:monitoring.adoc#gelqt[8-31 Thread Pool Monitoring Statistics]
+* xref:monitoring.adoc#geloy[8-32 JVM Monitoring Statistics for Java SE - Thread Info]
+* xref:monitoring.adoc#gelpl[8-33 Transaction Service Monitoring Statistics]
+* xref:monitoring.adoc#gjkba[8-34 Web Module Servlet Statistics]
+* xref:monitoring.adoc#givgh[8-35 Web JSP Monitoring Statistics]
+* xref:monitoring.adoc#gjisw[8-36 Web Request Monitoring Statistics]
+* xref:monitoring.adoc#ghqiu[8-37 Web Servlet Monitoring Statistics]
+* xref:monitoring.adoc#gellc[8-38 Web Session Monitoring Statistics]
+* xref:http_https.adoc#ggnpj[13-1 Default Ports for Listeners]
+* xref:jndi.adoc#fxizy[18-1 JNDI Lookup Names and Their Associated References]
 

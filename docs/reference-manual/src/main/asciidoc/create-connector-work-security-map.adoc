@@ -7,13 +7,11 @@ prev=create-connector-security-map.html
 
 = create-connector-work-security-map
 
-[[create-connector-work-security-map-1]][[GSRFM00021]][[create-connector-work-security-map]]
+[[create-connector-work-security-map]]
 
 == create-connector-work-security-map
 
 Creates a work security map for the specified resource adapter
-
-[[sthref183]]
 
 === Synopsis
 
@@ -26,8 +24,6 @@ asadmin [asadmin-options] create-connector-work-security-map [--help]
 [--description description]
 mapname
 ----
-
-[[sthref184]]
 
 === Description
 
@@ -45,13 +41,11 @@ database system, or an application.
 
 This subcommand is supported in remote mode only.
 
-[[sthref185]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -72,18 +66,14 @@ asadmin-options::
   Indicates the connector module name, which is the name of the resource
   adapter.
 
-[[sthref186]]
-
 === Operands
 
 mapname::
   The name of the work security map to be created.
 
-[[sthref187]]
-
 === Examples
 
-[[GSRFM468]][[sthref188]]
+[[sthref188]]
 
 ==== Example 1   Creating a Connector Work Security Map (Principal)
 
@@ -99,7 +89,7 @@ workSecurityMap1
 Command create-connector-work-security-map executed successfully.
 ----
 
-[[GSRFM469]][[sthref189]]
+[[sthref189]]
 
 ==== Example 2   Creating a Connector Work Security Map (Group)
 
@@ -114,8 +104,6 @@ eis-group-3=server-group-1 workSecurityMap2
 Command create-connector-work-security-map executed successfully.
 ----
 
-[[sthref190]]
-
 === Exit Status
 
 0::
@@ -123,14 +111,12 @@ Command create-connector-work-security-map executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref191]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-connector-work-security-map.html#delete-connector-work-security-map-1[`delete-connector-work-security-map`(1)],
-link:list-connector-work-security-maps.html#list-connector-work-security-maps-1[`list-connector-work-security-maps`(1)],
-link:update-connector-work-security-map.html#update-connector-work-security-map-1[`update-connector-work-security-map`(1)]
+xref:delete-connector-work-security-map.adoc#delete-connector-work-security-map[`delete-connector-work-security-map`(1)],
+xref:list-connector-work-security-maps.adoc#list-connector-work-security-maps[`list-connector-work-security-maps`(1)],
+xref:update-connector-work-security-map.adoc#update-connector-work-security-map[`update-connector-work-security-map`(1)]
 
 

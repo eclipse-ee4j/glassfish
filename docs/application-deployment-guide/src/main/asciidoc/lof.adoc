@@ -10,7 +10,7 @@ prev=loe.html
 [[list-of-figures]]
 == List of Figures
 
-* link:overview.html#fwfdj[1-1 Module-Based Assembly and Deployment]
-* link:overview.html#fvyip[1-2 Application-Based Assembly and Deployment]
+* xref:overview.adoc#fwfdj[1-1 Module-Based Assembly and Deployment]
+* xref:overview.adoc#fvyip[1-2 Application-Based Assembly and Deployment]
 
 

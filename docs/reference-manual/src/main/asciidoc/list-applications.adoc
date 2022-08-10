@@ -7,13 +7,11 @@ prev=list-application-refs.html
 
 = list-applications
 
-[[list-applications-1]][[GSRFM00148]][[list-applications]]
+[[list-applications]]
 
 == list-applications
 
 Lists deployed applications
-
-[[sthref1308]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-applications [--help]
 [--long={false|true}] [--resources] [--subcomponents]
 [--type type] [target]
 ----
-
-[[sthref1309]]
 
 === Description
 
@@ -38,19 +34,17 @@ types are listed in the Options section of this help page.
 If multiple versions of a module or application are deployed, this
 subcommand lists all versions. To list which version is enabled, set the
 `--long` option to `true`. For more information about module and
-application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application
+application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application
 Versions]" in {productName} Application
 Deployment Guide.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1310]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -80,8 +74,6 @@ asadmin-options::
 +
 If no type is specified, all applications are listed.
 
-[[sthref1311]]
-
 === Operands
 
 `--target`::
@@ -98,11 +90,9 @@ If no type is specified, all applications are listed.
   instance_name;;
     Lists the applications for a particular stand-alone server instance.
 
-[[sthref1312]]
-
 === Examples
 
-[[GSRFM636]][[sthref1313]]
+[[sthref1313]]
 
 ==== Example 1   Listing the Web Applications
 
@@ -113,8 +103,6 @@ hellojsp <web>
 Command list-applications executed successfully
 ----
 
-[[sthref1314]]
-
 === Exit Status
 
 0::
@@ -122,17 +110,15 @@ Command list-applications executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1315]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-components.html#list-components-1[`list-components`(1)],
-link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)],
-link:show-component-status.html#show-component-status-1[`show-component-status`(1)]
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:list-sub-components.adoc#list-sub-components[`list-sub-components`(1)],
+xref:show-component-status.adoc#show-component-status[`show-component-status`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

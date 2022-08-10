@@ -7,13 +7,11 @@ prev=disable-http-lb-server.html
 
 = disable-monitoring
 
-[[disable-monitoring-1]][[GSRFM00120]][[disable-monitoring]]
+[[disable-monitoring]]
 
 == disable-monitoring
 
 Disables monitoring for the server or for specific monitorable modules
-
-[[sthref1063]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Disables monitoring for the server or for specific monitorable modules
 asadmin [asadmin-options] disable-monitoring [--help]
 [--modules module-name][:module-name]*
 ----
-
-[[sthref1064]]
 
 === Description
 
@@ -49,13 +45,11 @@ take effect.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1065]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,15 +62,11 @@ asadmin-options::
   `transaction-service`, `web-container`, and `web-services-container`.
   Additional modules can be listed by using the `get` subcommand.
 
-[[sthref1066]]
-
 === Operands
-
-[[sthref1067]]
 
 === Examples
 
-[[GSRFM594]][[sthref1068]]
+[[sthref1068]]
 
 ==== Example 1   Disabling the Monitoring Service for {productName}
 
@@ -89,7 +79,7 @@ asadmin> disable-monitoring
 Command disable-monitoring executed successfully
 ----
 
-[[GSRFM595]][[sthref1069]]
+[[sthref1069]]
 
 ==== Example 2   Disabling Monitoring for the Web and EJB Containers
 
@@ -102,8 +92,6 @@ asadmin> disable-monitoring --modules web-container:ejb-container
 Command disable-monitoring executed successfully
 ----
 
-[[sthref1070]]
-
 === Exit Status
 
 0::
@@ -111,19 +99,17 @@ Command disable-monitoring executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1071]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)],
-link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],
-link:list.html#list-1[`list`(1)],
-link:monitor.html#monitor-1[`monitor`(1)], link:set.html#set-1[`set`(1)]
+xref:get.adoc#get[`get`(1)],
+xref:enable-monitoring.adoc#enable-monitoring[`enable-monitoring`(1)],
+xref:list.adoc#list[`list`(1)],
+xref:monitor.adoc#monitor[`monitor`(1)], xref:set.adoc#set[`set`(1)]
 
-link:monitoring.html#monitoring-5asc[`monitoring`(5ASC)]
+xref:monitoring.adoc#monitoring[`monitoring`(5ASC)]
 
-"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide
 
 

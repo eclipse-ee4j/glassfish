@@ -7,13 +7,11 @@ prev=create-application-ref.html
 
 = create-audit-module
 
-[[create-audit-module-1]][[GSRFM00014]][[create-audit-module]]
+[[create-audit-module]]
 
 == create-audit-module
 
 Adds an audit module
-
-[[sthref131]]
 
 === Synopsis
 
@@ -26,8 +24,6 @@ asadmin [asadmin-options] create-audit-module [--help]
 audit_module_name
 ----
 
-[[sthref132]]
-
 === Description
 
 The `create-audit-module` subcommand adds the named audit module for the
@@ -37,13 +33,11 @@ and EJB components) and outgoing responses.
 
 This subcommand is supported in remote mode only.
 
-[[sthref133]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--classname`::
   The name of the Java class that implements this audit module. If not
   specified, this option defaults to
@@ -78,18 +72,14 @@ Other available properties are determined by the implementation of the
   instance_name;;
     Creates the audit module for a particular server instance.
 
-[[sthref134]]
-
 === Operands
 
 audit_module_name::
   The name of this audit module.
 
-[[sthref135]]
-
 === Examples
 
-[[GSRFM459]][[sthref136]]
+[[sthref136]]
 
 ==== Example 1   Creating an audit module
 
@@ -101,8 +91,6 @@ asadmin> create-audit-module
 Command create-audit-module executed successfully
 ----
 
-[[sthref137]]
-
 === Exit Status
 
 0::
@@ -110,13 +98,11 @@ Command create-audit-module executed successfully
 1::
   error in executing the command
 
-[[sthref138]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-audit-module.html#delete-audit-module-1[`delete-audit-module`(1)],
-link:list-audit-modules.html#list-audit-modules-1[`list-audit-modules`(1)]
+xref:delete-audit-module.adoc#delete-audit-module[`delete-audit-module`(1)],
+xref:list-audit-modules.adoc#list-audit-modules[`list-audit-modules`(1)]
 
 

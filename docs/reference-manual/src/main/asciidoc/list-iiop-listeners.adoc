@@ -7,13 +7,11 @@ prev=list-http-listeners.html
 
 = list-iiop-listeners
 
-[[list-iiop-listeners-1]][[GSRFM00169]][[list-iiop-listeners]]
+[[list-iiop-listeners]]
 
 == list-iiop-listeners
 
 Lists the existing IIOP listeners
-
-[[sthref1509]]
 
 === Synopsis
 
@@ -23,25 +21,19 @@ asadmin [asadmin-options] list-iiop-listeners [--help]
 [target]
 ----
 
-[[sthref1510]]
-
 === Description
 
 The `list-iiop-listeners` subcommand lists the existing IIOP listeners.
 This subcommand is supported in remote mode only.
 
-[[sthref1511]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1512]]
 
 === Operands
 
@@ -59,11 +51,9 @@ target::
   instance_name;;
     Lists the listeners in a particular server instance.
 
-[[sthref1513]]
-
 === Examples
 
-[[GSRFM663]][[sthref1514]]
+[[sthref1514]]
 
 ==== Example 1   Using the list-iiop-listeners subcommand
 
@@ -80,8 +70,6 @@ sample_iiop_listener
 Command list-iiop-listeners executed successfully.
 ----
 
-[[sthref1515]]
-
 === Exit Status
 
 0::
@@ -89,13 +77,11 @@ Command list-iiop-listeners executed successfully.
 1::
   error in executing the command
 
-[[sthref1516]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-iiop-listener.html#create-iiop-listener-1[`create-iiop-listener`(1)],
-link:delete-iiop-listener.html#delete-iiop-listener-1[`delete-iiop-listener`(1)]
+xref:create-iiop-listener.adoc#create-iiop-listener[`create-iiop-listener`(1)],
+xref:delete-iiop-listener.adoc#delete-iiop-listener[`delete-iiop-listener`(1)]
 
 

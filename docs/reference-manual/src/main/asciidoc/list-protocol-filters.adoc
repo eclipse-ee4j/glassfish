@@ -7,13 +7,11 @@ prev=list-persistence-types.html
 
 = list-protocol-filters
 
-[[list-protocol-filters-1]][[GSRFM00193]][[list-protocol-filters]]
+[[list-protocol-filters]]
 
 == list-protocol-filters
 
 Lists the existing protocol filters
-
-[[sthref1750]]
 
 === Synopsis
 
@@ -24,20 +22,16 @@ asadmin [asadmin-options] list-protocol-filters [--help]
 protocol-name
 ----
 
-[[sthref1751]]
-
 === Description
 
 The `list-protocol-filters` subcommand lists the existing protocol
 filters. This subcommand is supported in remote mode only.
 
-[[sthref1752]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -56,18 +50,14 @@ target::
   instance-name;;
     Lists the protocol filters for the specified server instance.
 
-[[sthref1753]]
-
 === Operands
 
 protocol-name::
   The name of the protocol for which to list protocol filters.
 
-[[sthref1754]]
-
 === Examples
 
-[[GSRFM704]][[sthref1755]]
+[[sthref1755]]
 
 ==== Example 1   Listing Protocol Filters
 
@@ -82,8 +72,6 @@ https1-filter
 Command list-protocol-filters executed successfully.
 ----
 
-[[sthref1756]]
-
 === Exit Status
 
 0::
@@ -91,13 +79,11 @@ Command list-protocol-filters executed successfully.
 1::
   error in executing the command
 
-[[sthref1757]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol-filter.html#create-protocol-filter-1[`create-protocol-filter`(1)],
-link:delete-protocol-filter.html#delete-protocol-filter-1[`delete-protocol-filter`(1)]
+xref:create-protocol-filter.adoc#create-protocol-filter[`create-protocol-filter`(1)],
+xref:delete-protocol-filter.adoc#delete-protocol-filter[`delete-protocol-filter`(1)]
 
 

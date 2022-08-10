@@ -8,14 +8,12 @@ prev=uninstall-node-ssh.html
 unset
 =====
 
-[[unset-1]][[GSRFM00247]][[unset]]
+[[unset]]
 
 unset
 -----
 
 Removes one or more variables from the multimode environment
-
-[[sthref2233]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ Removes one or more variables from the multimode environment
 asadmin [asadmin-options] unset [--help]
 variable-list
 ----
-
-[[sthref2234]]
 
 === Description
 
@@ -39,29 +35,23 @@ environment variables, no environment variables are set.
 
 This subcommand is supported in local mode only.
 
-[[sthref2235]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref2236]]
 
 === Operands
 
 variable-list::
   A space-separated list of the environment variables to remove.
 
-[[sthref2237]]
-
 === Examples
 
-[[GSRFM781]][[sthref2238]]
+[[sthref2238]]
 
 ==== Example 1   Listing the Environment Variables That Are Set
 
@@ -78,7 +68,7 @@ AS_ADMIN_PORT = 8000
 Command export executed successfully
 ----
 
-[[GSRFM782]][[sthref2239]]
+[[sthref2239]]
 
 ==== Example 2   Removing an Environment Variable
 
@@ -90,8 +80,6 @@ asadmin> unset AS_ADMIN_PREFIX
 Command unset executed successfully
 ----
 
-[[sthref2240]]
-
 === Exit Status
 
 0::
@@ -99,13 +87,11 @@ Command unset executed successfully
 1::
   error in executing the subcommand
 
-[[sthref2241]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:export.html#export-1[`export`(1)],
-link:multimode.html#multimode-1[`multimode`(1)]
+xref:export.adoc#export[`export`(1)],
+xref:multimode.adoc#multimode[`multimode`(1)]
 
 

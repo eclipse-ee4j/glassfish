@@ -7,13 +7,11 @@ prev=list-jdbc-resources.html
 
 = list-jmsdest
 
-[[list-jmsdest-1]][[GSRFM00175]][[list-jmsdest]]
+[[list-jmsdest]]
 
 == list-jmsdest
 
 Lists the existing JMS physical destinations
-
-[[sthref1559]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-jmsdest [--help]
 [target]
 ----
 
-[[sthref1560]]
-
 === Description
 
 The `list-jmsdest` subcommand lists the Java Message Service (JMS)
@@ -34,21 +30,17 @@ physical destinations.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref1561]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 `--desttype`::
   The type of JMS destination to be listed. Valid values are `topic` and
   `queue`.
-
-[[sthref1562]]
 
 === Operands
 
@@ -67,11 +59,9 @@ target::
   instance-name;;
     Lists the physical destinations for the specified server instance.
 
-[[sthref1563]]
-
 === Examples
 
-[[GSRFM672]][[sthref1564]]
+[[sthref1564]]
 
 ==== Example 1   Listing all physical destinations
 
@@ -85,7 +75,7 @@ PhysicalTopic
 Command list-jmsdest executed successfully.
 ----
 
-[[GSRFM673]][[sthref1565]]
+[[sthref1565]]
 
 ==== Example 2   Listing all physical destinations of a specified type
 
@@ -98,8 +88,6 @@ PhysicalTopic
 Command list-jmsdest executed successfully.
 ----
 
-[[sthref1566]]
-
 === Exit Status
 
 0::
@@ -107,14 +95,12 @@ Command list-jmsdest executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1567]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jmsdest.html#create-jmsdest-1[`create-jmsdest`(1)],
-link:delete-jmsdest.html#delete-jmsdest-1[`delete-jmsdest`(1)],
-link:flush-jmsdest.html#flush-jmsdest-1[`flush-jmsdest`(1)]
+xref:create-jmsdest.adoc#create-jmsdest[`create-jmsdest`(1)],
+xref:delete-jmsdest.adoc#delete-jmsdest[`delete-jmsdest`(1)],
+xref:flush-jmsdest.adoc#flush-jmsdest[`flush-jmsdest`(1)]
 
 

@@ -7,13 +7,11 @@ prev=list-jdbc-connection-pools.html
 
 = list-jdbc-resources
 
-[[list-jdbc-resources-1]][[GSRFM00174]][[list-jdbc-resources]]
+[[list-jdbc-resources]]
 
 == list-jdbc-resources
 
 Lists all JDBC resources
-
-[[sthref1551]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-jdbc-resources [--help]
 [target target]
 ----
 
-[[sthref1552]]
-
 === Description
 
 The `list-jdbc-resources` subcommand displays a list of the existing
@@ -32,18 +28,14 @@ JDBC resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1553]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1554]]
 
 === Operands
 
@@ -60,11 +52,9 @@ asadmin-options::
   instance_name;;
     Lists the JDBC resources for a particular instance.
 
-[[sthref1555]]
-
 === Examples
 
-[[GSRFM671]][[sthref1556]]
+[[sthref1556]]
 
 ==== Example 1   Listing the JDBC Resources
 
@@ -77,8 +67,6 @@ jdbc/DerbyPool
 Command list-jdbc-resources executed successfully.
 ----
 
-[[sthref1557]]
-
 === Exit Status
 
 0::
@@ -86,13 +74,11 @@ Command list-jdbc-resources executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1558]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jdbc-resource.html#create-jdbc-resource-1[`create-jdbc-resource`(1)],
-link:delete-jdbc-resource.html#delete-jdbc-resource-1[`delete-jdbc-resource`(1)]
+xref:create-jdbc-resource.adoc#create-jdbc-resource[`create-jdbc-resource`(1)],
+xref:delete-jdbc-resource.adoc#delete-jdbc-resource[`delete-jdbc-resource`(1)]
 
 

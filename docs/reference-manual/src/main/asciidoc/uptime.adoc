@@ -7,13 +7,11 @@ prev=update-password-alias.html
 
 = uptime
 
-[[uptime-1]][[GSRFM00258]][[uptime]]
+[[uptime]]
 
 == uptime
 
 Returns the length of time that the DAS has been running
-
-[[sthref2316]]
 
 === Synopsis
 
@@ -21,8 +19,6 @@ Returns the length of time that the DAS has been running
 ----
 asadmin [asadmin-options] uptime [--help]
 ----
-
-[[sthref2317]]
 
 === Description
 
@@ -32,22 +28,18 @@ restarted.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2318]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
 
-[[sthref2319]]
-
 === Examples
 
-[[GSRFM795]][[sthref2320]]
+[[sthref2320]]
 
 ==== Example 1   Showing How Long the DAS Has Been Running
 
@@ -60,8 +52,6 @@ Uptime: 2 days, 1 hours, 30 minutes, 18 seconds, Total milliseconds: 178218706
 Command uptime executed successfully.
 ----
 
-[[sthref2321]]
-
 === Exit Status
 
 0::
@@ -69,14 +59,12 @@ Command uptime executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2322]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-domains.html#list-domains-1[`list-domains`(1)],
-link:start-domain.html#start-domain-1[`start-domain`(1)],
-link:stop-domain.html#stop-domain-1[`stop-domain`(1)]
+xref:list-domains.adoc#list-domains[`list-domains`(1)],
+xref:start-domain.adoc#start-domain[`start-domain`(1)],
+xref:stop-domain.adoc#stop-domain[`stop-domain`(1)]
 
 

@@ -7,13 +7,11 @@ prev=add-library.html
 
 = add-resources
 
-[[add-resources-1]][[GSRFM00001]][[add-resources]]
+[[add-resources]]
 
 == add-resources
 
 Creates the resources specified in an XML file
-
-[[sthref15]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] add-resources [--help]
 [--target target]
 [--upload={false|true}] xml-file-name
 ----
-
-[[sthref16]]
 
 === Description
 
@@ -46,13 +42,11 @@ resources to be created. The `DOCTYPE` must be specified as
 
 This subcommand is supported in remote mode only.
 
-[[sthref17]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -92,8 +86,6 @@ The default value depends on whether the DAS is on the host where the
 
   * If the DAS is on the host where the subcommand is run, the default is `false`.
   * If the DAS is on a remote host, the default is `true`.
-
-[[sthref18]]
 
 === Operands
 
@@ -138,11 +130,9 @@ An example XML file follows.
 </resources>
 ----
 
-[[sthref19]]
-
 === Examples
 
-[[GSRFM445]][[sthref20]]
+[[addresource-ex-1]]
 
 ==== Example 1   Adding Resources
 
@@ -161,8 +151,6 @@ Command : JDBC resource jdbc/__defaultA created successfully.
 Command add-resources executed successfully.
 ----
 
-[[sthref21]]
-
 === Exit Status
 
 0::
@@ -170,20 +158,18 @@ Command add-resources executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref22]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool-1[`create-jdbc-connection-pool`(1)],link:create-jdbc-resource.html#create-jdbc-resource-1[`create-jdbc-resource`(1)],
-link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)],
-link:create-jndi-resource.html#create-jndi-resource-1[`create-jndi-resource`(1)],
-link:create-javamail-resource.html#create-javamail-resource-1[`create-javamail-resource`(1)],
-link:create-custom-resource.html#create-custom-resource-1[`create-custom-resource`(1)],
-link:create-connector-resource.html#create-connector-resource-1[`create-connector-resource`(1)],
-link:create-connector-work-security-map.html#create-connector-work-security-map-1[`create-connector-work-security-map`(1)],
-link:create-admin-object.html#create-admin-object-1[`create-admin-object`(1)],
-link:create-resource-adapter-config.html#create-resource-adapter-config-1[`create-resource-adapter-config`(1)]
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],xref:create-jdbc-resource.adoc#create-jdbc-resource[`create-jdbc-resource`(1)],
+xref:create-jms-resource.adoc#create-jms-resource[`create-jms-resource`(1)],
+xref:create-jndi-resource.adoc#create-jndi-resource[`create-jndi-resource`(1)],
+xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
+xref:create-custom-resource.adoc#create-custom-resource[`create-custom-resource`(1)],
+xref:create-connector-resource.adoc#create-connector-resource[`create-connector-resource`(1)],
+xref:create-connector-work-security-map.adoc#create-connector-work-security-map[`create-connector-work-security-map`(1)],
+xref:create-admin-object.adoc#create-admin-object[`create-admin-object`(1)],
+xref:create-resource-adapter-config.adoc#create-resource-adapter-config[`create-resource-adapter-config`(1)]
 
 

@@ -10,121 +10,105 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:writing-hk2-components.html#ghoqv[2-1 Example Implementation of
+* xref:writing-hk2-components.adoc#ghoqv[2-1 Example Implementation of
 PostContruct and PreDestroy]
-* link:writing-hk2-components.html#ghquz[2-2 Example of Instantiation
+* xref:writing-hk2-components.adoc#ghquz[2-2 Example of Instantiation
 Cascading]
-* link:writing-hk2-components.html#ghoip[2-3 Example of the Optional
+* xref:writing-hk2-components.adoc#ghoip[2-3 Example of the Optional
 Elements of the @Service Annotation]
-* link:writing-hk2-components.html#ghqsa[2-4 Example of the Maven Plug-In
+* xref:writing-hk2-components.adoc#ghqsa[2-4 Example of the Maven Plug-In
 Configuration]
-* link:writing-hk2-components.html#ghoik[2-5 Example of META-INF/services
+* xref:writing-hk2-components.adoc#ghoik[2-5 Example of META-INF/services
 File Generation]
-* link:extending-the-admin-console.html#ghosz[3-1 Example ConsoleProvider
+* xref:extending-the-admin-console.adoc#ghosz[3-1 Example ConsoleProvider
 Implementation]
-* link:extending-the-admin-console.html#ghpmb[3-2 Example Tree Node
+* xref:extending-the-admin-console.adoc#ghpmb[3-2 Example Tree Node
 Integration Point]
-* link:extending-the-admin-console.html#ghpmn[3-3 Example JavaServer
+* xref:extending-the-admin-console.adoc#ghpmn[3-3 Example JavaServer
 Faces Page for a Tree Node]
-* link:extending-the-admin-console.html#ghplc[3-4 Example Tab Integration
+* xref:extending-the-admin-console.adoc#ghplc[3-4 Example Tab Integration
 Point]
-* link:extending-the-admin-console.html#ghplu[3-5 Example Tab Set
+* xref:extending-the-admin-console.adoc#ghplu[3-5 Example Tab Set
 Integration Points]
-* link:extending-the-admin-console.html#ghpnt[3-6 Example JavaServer
+* xref:extending-the-admin-console.adoc#ghpnt[3-6 Example JavaServer
 Faces Page for a Tab]
-* link:extending-the-admin-console.html#ghpox[3-7 Example Task
+* xref:extending-the-admin-console.adoc#ghpox[3-7 Example Task
 Integration Point]
-* link:extending-the-admin-console.html#gjkgd[3-8 Example JavaServer
+* xref:extending-the-admin-console.adoc#gjkgd[3-8 Example JavaServer
 Faces Page for a Task]
-* link:extending-the-admin-console.html#ghplk[3-9 Example Task Group
+* xref:extending-the-admin-console.adoc#ghplk[3-9 Example Task Group
 Integration Point]
-* link:extending-the-admin-console.html#ghpqe[3-10 Example JavaServer
+* xref:extending-the-admin-console.adoc#ghpqe[3-10 Example JavaServer
 Faces Page for a Task Group]
-* link:extending-the-admin-console.html#ghpnu[3-11 Example Resources Page
+* xref:extending-the-admin-console.adoc#ghpnu[3-11 Example Resources Page
 Implementation Point]
-* link:extending-the-admin-console.html#ghpoz[3-12 Example JavaServer
+* xref:extending-the-admin-console.adoc#ghpoz[3-12 Example JavaServer
 Faces Page for a Resource Page Item]
-* link:extending-the-admin-console.html#ghple[3-13 Example JavaServer
+* xref:extending-the-admin-console.adoc#ghple[3-13 Example JavaServer
 Faces Page for a Property Sheet]
-* link:extending-the-admin-console.html#ghpls[3-14 Example Custom Theme
+* xref:extending-the-admin-console.adoc#ghpls[3-14 Example Custom Theme
 Integration Point]
-* link:extending-the-admin-console.html#ghpla[3-15 Example of Branding
+* xref:extending-the-admin-console.adoc#ghpla[3-15 Example of Branding
 Integration Points]
-* link:extending-asadmin.html#ghrqq[4-1 Adding an asadmin Subcommand]
-* link:extending-asadmin.html#ghpuh[4-2 Adding Parameters to an asadmin
+* xref:extending-asadmin.adoc#ghrqq[4-1 Adding an asadmin Subcommand]
+* xref:extending-asadmin.adoc#ghpuh[4-2 Adding Parameters to an asadmin
 Subcommand]
-* link:extending-asadmin.html#ghpvm[4-3 Adding Message Strings to an
+* xref:extending-asadmin.adoc#ghpvm[4-3 Adding Message Strings to an
 asadmin Subcommand]
-* link:extending-asadmin.html#ghrfh[4-4 BrandingVersion.properties File
+* xref:extending-asadmin.adoc#ghrfh[4-4 BrandingVersion.properties File
 for Changing the Brand in the {productName} CLI]
-* link:extending-asadmin.html#ghrnt[4-5 asadmin Subcommand With Empty
+* xref:extending-asadmin.adoc#ghrnt[4-5 asadmin Subcommand With Empty
 execute Method]
-* link:extending-asadmin.html#ghrsi[4-6 asadmin Subcommand for Retrieving
+* xref:extending-asadmin.adoc#ghrsi[4-6 asadmin Subcommand for Retrieving
 and Displaying Information]
-* link:extending-asadmin.html#gkbdf[4-7 asadmin Subcommand for Updating
+* xref:extending-asadmin.adoc#gkbdf[4-7 asadmin Subcommand for Updating
 Configuration Data]
-* link:adding-monitoring-capabilities.html#ghprw[5-1 Defining an Event
+* xref:adding-monitoring-capabilities.adoc#ghprw[5-1 Defining an Event
 Provider by Writing a Java Class]
-* link:adding-monitoring-capabilities.html#gkajj[5-2 Defining an Event
+* xref:adding-monitoring-capabilities.adoc#gkajj[5-2 Defining an Event
 Provider by Writing an XML Fragment]
-* link:adding-monitoring-capabilities.html#gkaii[5-3 Manifest Entry for
+* xref:adding-monitoring-capabilities.adoc#gkaii[5-3 Manifest Entry for
 Event Providers That Are Defined as Java Classes]
-* link:adding-monitoring-capabilities.html#ghpus[5-4 Sending an Event]
-* link:adding-monitoring-capabilities.html#ghpsc[5-5 Representing a
+* xref:adding-monitoring-capabilities.adoc#ghpus[5-4 Sending an Event]
+* xref:adding-monitoring-capabilities.adoc#ghpsc[5-5 Representing a
 Component's Statistics in an Event Listener Class]
-* link:adding-monitoring-capabilities.html#ghpwu[5-6 Subscribing to
+* xref:adding-monitoring-capabilities.adoc#ghpwu[5-6 Subscribing to
 Events From Event Provider Classes]
-* link:adding-monitoring-capabilities.html#ghpuu[5-7 Registering an Event
+* xref:adding-monitoring-capabilities.adoc#ghpuu[5-7 Registering an Event
 Listener]
-* link:adding-monitoring-capabilities.html#ghpna[5-8 Event Provider
+* xref:adding-monitoring-capabilities.adoc#ghpna[5-8 Event Provider
 Class]
-* link:adding-monitoring-capabilities.html#ghpmu[5-9 Bootstrap Class]
-* link:adding-monitoring-capabilities.html#ghpvw[5-10 Listener Class]
-* link:adding-monitoring-capabilities.html#ghpuc[5-11 MBean Interface]
-* link:adding-monitoring-capabilities.html#ghpwx[5-12 MBean
+* xref:adding-monitoring-capabilities.adoc#ghpmu[5-9 Bootstrap Class]
+* xref:adding-monitoring-capabilities.adoc#ghpvw[5-10 Listener Class]
+* xref:adding-monitoring-capabilities.adoc#ghpuc[5-11 MBean Interface]
+* xref:adding-monitoring-capabilities.adoc#ghpwx[5-12 MBean
 Implementation]
-* link:adding-configuration-data.html#gjcne[6-1 Declaration of an
+* xref:adding-configuration-data.adoc#gjcne[6-1 Declaration of an
 Interface That Defines an Element]
-* link:adding-configuration-data.html#sthref7[6-2 Defining an Attribute
-of an Element]
-* link:adding-configuration-data.html#gjzjt[6-3 Declaring an Interface to
-Represent a Subelement]
-* link:adding-configuration-data.html#gjzkh[6-4 Identifying a Subelement
-to its Parent Element]
-* link:adding-configuration-data.html#gjrmp[6-5 Specifying a Range of
-Valid Values for an Integer]
-* link:adding-configuration-data.html#gjzkq[6-6 Specifying Regular
-Expression Matching]
-* link:adding-configuration-data.html#gkaba[6-7 XML Data Fragment]
-* link:adding-configuration-data.html#gkabo[6-8 Writing a Component's
+* xref:adding-configuration-data.adoc#addon-example-6-2[6-2 Defining an Attribute of an Element]
+* xref:adding-configuration-data.adoc#gjzjt[6-3 Declaring an Interface to Represent a Subelement]
+* xref:adding-configuration-data.adoc#gjzkh[6-4 Identifying a Subelement to its Parent Element]
+* xref:adding-configuration-data.adoc#gjrmp[6-5 Specifying a Range of Valid Values for an Integer]
+* xref:adding-configuration-data.adoc#gjzkq[6-6 Specifying Regular Expression Matching]
+* xref:adding-configuration-data.adoc#gkaba[6-7 XML Data Fragment]
+* xref:adding-configuration-data.adoc#gkabo[6-8 Writing a Component's
 Initial Configuration Data to the domain.xml File]
-* link:adding-configuration-data.html#gjski[6-9 domain.xml File After
-Initialization]
-* link:adding-configuration-data.html#sthref9[6-10 Creating a Transaction
-to Update Configuration Data]
-* link:adding-configuration-data.html#gkamy[6-11 Parent Element
-Definition]
-* link:adding-configuration-data.html#gkamb[6-12 Subelement Definition]
-* link:adding-configuration-data.html#gkamk[6-13 XML Data Fragment for
-Initializing the greeter-container-config Element]
-* link:adding-container-capabilities.html#ghojg[7-1 Example
-Implementation of Container]
-* link:adding-container-capabilities.html#ghoiv[7-2 Example
-Implementation of Deployer]
-* link:adding-container-capabilities.html#gkamr[7-3 Annotation to Denote
-a Container's Component]
-* link:adding-container-capabilities.html#gkand[7-4 Application Container
-Class]
-* link:adding-container-capabilities.html#gkamm[7-5 Container Class]
-* link:adding-container-capabilities.html#gkalo[7-6 Deployer Class]
-* link:adding-container-capabilities.html#gkaks[7-7 Sniffer Class]
-* link:adding-container-capabilities.html#gkaki[7-8 Container Client
-Class]
-* link:adding-container-capabilities.html#gkalf[7-9 Component for
-Container Client]
-* link:adding-container-capabilities.html#gkaly[7-10 Deployment
-Descriptor for Container Client]
-* link:session-persistence-modules.html#sthref10[8-1 Implementing
-PersistenceStrategyBuilder With a Custom Web Session Manager]
-* link:session-persistence-modules.html#sthref11[8-2 Session Manager
+* xref:adding-configuration-data.adoc#gjski[6-9 domain.xml File After Initialization]
+* xref:adding-configuration-data.adoc#gkama[6-10 Creating a Transaction to Update Configuration Data]
+* xref:adding-configuration-data.adoc#gkamy[6-11 Parent Element Definition]
+* xref:adding-configuration-data.adoc#gkamb[6-12 Subelement Definition]
+* xref:adding-configuration-data.adoc#gkamk[6-13 XML Data Fragment for Initializing the greeter-container-config Element]
+* xref:adding-container-capabilities.adoc#ghojg[7-1 Example Implementation of Container]
+* xref:adding-container-capabilities.adoc#ghoiv[7-2 Example Implementation of Deployer]
+* xref:adding-container-capabilities.adoc#gkamr[7-3 Annotation to Denote a Container's Component]
+* xref:adding-container-capabilities.adoc#gkand[7-4 Application Container Class]
+* xref:adding-container-capabilities.adoc#gkamm[7-5 Container Class]
+* xref:adding-container-capabilities.adoc#gkalo[7-6 Deployer Class]
+* xref:adding-container-capabilities.adoc#gkaks[7-7 Sniffer Class]
+* xref:adding-container-capabilities.adoc#gkaki[7-8 Container Client Class]
+* xref:adding-container-capabilities.adoc#gkalf[7-9 Component for Container Client]
+* xref:adding-container-capabilities.adoc#gkaly[7-10 Deployment Descriptor for Container Client]
+* xref:session-persistence-modules.adoc#gkcws[8-1 Implementing PersistenceStrategyBuilder
+With a Custom Web Session Manager]
+* xref:session-persistence-modules.adoc#gksmc[8-2 Session Manager
 Configuration in the glassfish-web.xml File]

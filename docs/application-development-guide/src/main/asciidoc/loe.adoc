@@ -10,6 +10,6 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:osgi.html#gkvbk[13-1 Example of a WAB Using CDI]
+* xref:osgi.adoc#gkvbk[13-1 Example of a WAB Using CDI]
 
 

@@ -7,13 +7,11 @@ prev=create-profiler.html
 
 = create-protocol
 
-[[create-protocol-1]][[GSRFM00051]][[create-protocol]]
+[[create-protocol]]
 
 == create-protocol
 
 Adds a new protocol
-
-[[sthref489]]
 
 === Synopsis
 
@@ -25,20 +23,16 @@ asadmin [asadmin-options] create-protocol [--help]
 protocol-name
 ----
 
-[[sthref490]]
-
 === Description
 
 The `create-protocol` subcommand creates a protocol. This subcommand is
 supported in remote mode only.
 
-[[sthref491]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -62,18 +56,12 @@ asadmin-options::
   standalone-instance-name;;
     Creates the protocol on the specified standalone server instance.
 
-[[sthref492]]
-
 === Operands
 
 protocol-name::
   The name of the protocol.
 
-[[sthref493]]
-
 === Examples
-
-[[GSRFM517]][[sthref494]]
 
 ==== Example 1   Creating a Protocol
 
@@ -86,8 +74,6 @@ asadmin> create-protocol --securityenabled=true http-1
 Command create-protocol executed successfully.
 ----
 
-[[sthref495]]
-
 === Exit Status
 
 0::
@@ -95,14 +81,12 @@ Command create-protocol executed successfully.
 1::
   error in executing the command
 
-[[sthref496]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-protocol.html#delete-protocol-1[`delete-protocol`(1)],
-link:list-protocols.html#list-protocols-1[`list-protocols`(1)],
-link:create-network-listener.html#create-network-listener-1[`create-network-listener`(1)]
+xref:delete-protocol.adoc#delete-protocol[`delete-protocol`(1)],
+xref:list-protocols.adoc#list-protocols[`list-protocols`(1)],
+xref:create-network-listener.adoc#create-network-listener[`create-network-listener`(1)]
 
 

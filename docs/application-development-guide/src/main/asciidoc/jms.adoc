@@ -7,9 +7,6 @@ prev=jndi.html
 
 = Using the Java Message Service
 
-[[GSDVG00020]][[beaob]]
-
-
 [[using-the-java-message-service]]
 == 17 Using the Java Message Service
 
@@ -30,18 +27,18 @@ https://eclipse-ee4j.github.io/jakartaee-tutorial/#messaging[Messaging]
 in The Jakarta EE Tutorial.
 
 For detailed information about JMS concepts and JMS support in the
-{productName}, see "link:administration-guide/jms.html#GSADG00020[Administering the Java Message
+{productName}, see "link:administration-guide/jms.html#administering-the-java-message-service-jms[Administering the Java Message
 Service (JMS)]" in {productName} Administration
 Guide.
 
 The following topics are addressed here:
 
-* link:#gkpcz[Using Application-Scoped JMS Resources]
-* link:#beaop[Load-Balanced Message Inflow]
-* link:#beaor[Authentication With `ConnectionFactory`]
-* link:#beaot[Delivering SOAP Messages Using the JMS API]
+* xref:#using-application-scoped-jms-resources[Using Application-Scoped JMS Resources]
+* xref:#load-balanced-message-inflow[Load-Balanced Message Inflow]
+* xref:#authentication-with-connectionfactory[Authentication With `ConnectionFactory`]
+* xref:#delivering-soap-messages-using-the-jms-api[Delivering SOAP Messages Using the JMS API]
 
-[[gkpcz]][[GSDVG00196]][[using-application-scoped-jms-resources]]
+[[using-application-scoped-jms-resources]]
 
 === Using Application-Scoped JMS Resources
 
@@ -49,9 +46,9 @@ You can define an application-scoped JMS or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
-[[beaop]][[GSDVG00197]][[load-balanced-message-inflow]]
+[[load-balanced-message-inflow]]
 
 === Load-Balanced Message Inflow
 
@@ -60,7 +57,7 @@ adapter in the `glassfish-ejb-jar.xml` file for a message-driven bean
 using `activation-config-property` elements. Whenever a message-driven
 bean (`EndPointFactory`) is deployed, the connector runtime engine finds
 these properties and configures them accordingly in the resource
-adapter. See "link:application-deployment-guide/dd-elements.html#GSDPG00086[activation-config-property]" in {productName} Application Deployment Guide.
+adapter. See "link:application-deployment-guide/dd-elements.html#activation-config-property[activation-config-property]" in {productName} Application Deployment Guide.
 
 The {productName} transparently enables messages to be delivered in
 random fashion to message-driven beans having same `ClientID`. The
@@ -89,7 +86,7 @@ colocated Message Queue instance. If this broker is unavailable,
 connection attempts are made to brokers in the order in which they are
 listed in the `AddressList`. This setting is the default for {productName} instances that belong to a cluster.
 
-[[beaor]][[GSDVG00198]][[authentication-with-connectionfactory]]
+[[authentication-with-connectionfactory]]
 
 === Authentication With `ConnectionFactory`
 
@@ -100,7 +97,7 @@ for authentication information before using the supplied user and
 password. Version 7 of the {productName} threw an exception in this
 situation.
 
-[[beaot]][[GSDVG00199]][[delivering-soap-messages-using-the-jms-api]]
+[[delivering-soap-messages-using-the-jms-api]]
 
 === Delivering SOAP Messages Using the JMS API
 
@@ -120,10 +117,10 @@ SOAP message.
 
 The following topics are addressed here:
 
-* link:#beaou[To Send SOAP Messages Using the JMS API]
-* link:#beaov[To Receive SOAP Messages Using the JMS API]
+* xref:#to-send-soap-messages-using-the-jms-api[To Send SOAP Messages Using the JMS API]
+* xref:#to-receive-soap-messages-using-the-jms-api[To Receive SOAP Messages Using the JMS API]
 
-[[beaou]][[GSDVG00077]][[to-send-soap-messages-using-the-jms-api]]
+[[to-send-soap-messages-using-the-jms-api]]
 
 ==== To Send SOAP Messages Using the JMS API
 
@@ -201,7 +198,7 @@ publisher.publish(m);
 tc.close();
 ----
 
-[[beaov]][[GSDVG00078]][[to-receive-soap-messages-using-the-jms-api]]
+[[to-receive-soap-messages-using-the-jms-api]]
 
 ==== To Receive SOAP Messages Using the JMS API
 

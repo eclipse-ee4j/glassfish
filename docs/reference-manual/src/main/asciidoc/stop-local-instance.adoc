@@ -7,13 +7,11 @@ prev=stop-instance.html
 
 = stop-local-instance
 
-[[stop-local-instance-1]][[GSRFM00242]][[stop-local-instance]]
+[[stop-local-instance]]
 
 == stop-local-instance
 
 Stops a {productName} instance on the machine where the subcommand is run
-
-[[sthref2181]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] stop-local-instance [--help]
 [instance-name]
 ----
 
-[[sthref2182]]
-
 === Description
 
 The `stop-local-instance` subcommand stops a {productName} instance
@@ -37,7 +33,7 @@ from the machine where the instance resides.
 The subcommand can stop any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can stop an
 instance that was created by using the
-link:create-instance.html#create-instance-1[`create-instance`(1)] subcommand.
+xref:create-instance.adoc#create-instance[`create-instance`(1)] subcommand.
 
 The `stop-local-instance` subcommand does not contact the DAS to
 determine the node on which the instance resides. To determine the node
@@ -47,13 +43,11 @@ the node must be specified as an option of the subcommand.
 
 This subcommand is supported in local mode.
 
-[[sthref2183]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -87,18 +81,14 @@ asadmin-options::
     The instance is killed. The subcommand uses functionality of the
     operating system to terminate the instance process.
 
-[[sthref2184]]
-
 === Operands
 
 instance-name::
   The name of the instance to stop.
 
-[[sthref2185]]
-
 === Examples
 
-[[GSRFM768]][[sthref2186]]
+[[sthref2186]]
 
 ==== Example 1   Stopping an Instance Locally
 
@@ -112,8 +102,6 @@ Waiting for the instance to stop ...
 Command stop-local-instance executed successfully.
 ----
 
-[[sthref2187]]
-
 === Exit Status
 
 0::
@@ -121,18 +109,16 @@ Command stop-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref2188]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)]
 
 

@@ -10,12 +10,12 @@ prev=lof.html
 [[list-of-tables]]
 == List of Tables
 
-* link:overview.html#gacmh[1-1 Performance Tuning Roadmap]
-* link:overview.html#gacmp[1-2 Factors That Affect Performance]
-* link:tuning-glassfish.html#gacmo[3-1 Bean Type Pooling or Caching]
-* link:tuning-glassfish.html#gacma[3-2 Tunable ORB Parameters]
-* link:tuning-glassfish.html#gacmi[3-3 Connection Pool Sizing]
-* link:tuning-java.html#gacna[4-1 Maximum Address Space Per Process]
-* link:tuning-os.html#gacmm[5-1 Tuning Parameters for Solaris]
-* link:tuning-os.html#gkuaa[5-2 Tuning 64-bit Systems for Performance
+* xref:overview.adoc#gacmh[1-1 Performance Tuning Roadmap]
+* xref:overview.adoc#gacmp[1-2 Factors That Affect Performance]
+* xref:tuning-glassfish.adoc#gacmo[3-1 Bean Type Pooling or Caching]
+* xref:tuning-glassfish.adoc#gacma[3-2 Tunable ORB Parameters]
+* xref:tuning-glassfish.adoc#gacmi[3-3 Connection Pool Sizing]
+* xref:tuning-java.adoc#gacna[4-1 Maximum Address Space Per Process]
+* xref:tuning-os.adoc#gacmm[5-1 Tuning Parameters for Solaris]
+* xref:tuning-os.adoc#gkuaa[5-2 Tuning 64-bit Systems for Performance
 Benchmarking]

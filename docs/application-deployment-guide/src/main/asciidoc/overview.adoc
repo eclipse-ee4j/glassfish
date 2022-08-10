@@ -7,7 +7,7 @@ prev=preface.html
 
 = Overview of {productName} 7 Application Deployment
 
-[[GSDPG00003]][[gihxo]]
+[[gihxo]]
 
 
 [[overview-of-glassfish-server-open-source-edition-5.0-application-deployment]]
@@ -21,17 +21,17 @@ applications and modules in the {productName} environment. Only
 
 The following topics are addressed here:
 
-* link:#gihzx[About Application Deployment]
-* link:#giphm[About Assembly and Deployment Events]
-* link:#giifh[About Deployment Tools]
-* link:#gipud[Additional Information on Application Deployment]
+* xref:#about-application-deployment[About Application Deployment]
+* xref:#about-assembly-and-deployment-events[About Assembly and Deployment Events]
+* xref:#about-deployment-tools[About Deployment Tools]
+* xref:#additional-information-on-application-deployment[Additional Information on Application Deployment]
 
 Information and instructions on deploying from the command line are
 provided in this document. Information and instructions for
 accomplishing the deployment tasks by using the Administration Console
 are contained in the Administration Console online help.
 
-[[gihzx]][[GSDPG00061]][[about-application-deployment]]
+[[about-application-deployment]]
 
 === About Application Deployment
 
@@ -48,19 +48,19 @@ Deployment is the process of installing an application or module on
 such as a list of local users that can access the application, or the
 name of the local database. {productName} deployment tools expand the
 archive file into an open directory structure that is ready for users.
-{productName} deployment tools are described in link:#giifh[About
+{productName} deployment tools are described in xref:#about-deployment-tools[About
 Deployment Tools].
 
 The following topics are addressed here:
 
-* link:#giptw[General Deployment Functionality]
-* link:#gihzc[Deployment Descriptors and Annotations]
-* link:#gikhs[Modules and Applications]
-* link:#gijla[Access to Shared Framework Classes]
-* link:#gihzk[Naming Standards]
-* link:#gkhhv[Module and Application Versions]
+* xref:#general-deployment-functionality[General Deployment Functionality]
+* xref:#deployment-descriptors-and-annotations[Deployment Descriptors and Annotations]
+* xref:#modules-and-applications[Modules and Applications]
+* xref:#access-to-shared-framework-classes[Access to Shared Framework Classes]
+* xref:#naming-standards[Naming Standards]
+* xref:#module-and-application-versions[Module and Application Versions]
 
-[[giptw]][[GSDPG00319]][[general-deployment-functionality]]
+[[general-deployment-functionality]]
 
 ==== General Deployment Functionality
 
@@ -69,27 +69,27 @@ module, application client module, can be deployed in the following
 ways:
 
 * Archive Deployment. Deploys the application as an archive file. For
-instructions, see link:deploying-applications.html#gijmq[To Deploy an
+instructions, see xref:deploying-applications.adoc#to-deploy-an-application-or-module[To Deploy an
 Application or Module].
 * Dynamic Reloading. Redeploys the application by creating or modifying
 a special `.reload` file in the applications repository. For
-instructions, see link:deploying-applications.html#fwakh[To Reload
+instructions, see xref:deploying-applications.adoc#to-reload-changes-to-applications-or-modules-dynamically[To Reload
 Changes to Applications or Modules Dynamically].
 * Automatic Deployment. Deploys the application archive that is placed
 in the autodeployment directory. For instructions, see
-link:deploying-applications.html#fvxze[To Deploy an Application or Module
+xref:deploying-applications.adoc#to-deploy-an-application-or-module-automatically[To Deploy an Application or Module
 Automatically].
 * Directory Deployment. Deploys the application in a directory format.
-For instructions, see link:deploying-applications.html#gilcn[To Deploy an
+For instructions, see xref:deploying-applications.adoc#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an
 Application or Module in a Directory Format].
 * JSR 88 Deployment. A deployment mechanism implemented based on the JSR
 88 standard from `jcp.org`. It delivers vendor neutral deployment
-options. See link:#beaee[JSR 88 Client] and link:#giiel[JSR 88 Naming].
+options. See xref:#jsr-88-client[JSR 88 Client].
 
 A deployment plan, which deploys a portable archive along with a
 deployment plan containing {productName} deployment descriptors, can
 apply to any of these deployment techniques. For instructions, see
-link:deploying-applications.html#gijyb[To Deploy an Application or Module
+xref:deploying-applications.adoc#to-deploy-an-application-or-module-by-using-a-deployment-plan[To Deploy an Application or Module
 by Using a Deployment Plan].
 
 There are two work situations that require different safeguards and
@@ -112,11 +112,11 @@ production environment.
 For production environments, any upgrade should be performed as a
 rolling upgrade, which upgrades applications and modules without
 interruption in service. For more information, see
-link:ha-administration-guide/rolling-upgrade.html#GSHAG00010[Upgrading Applications Without Loss of Availability] in
+link:ha-administration-guide/rolling-upgrade.html#upgrading-applications-without-loss-of-availability[Upgrading Applications Without Loss of Availability] in
 {productName} High Availability Administration
 Guide.
 
-[[gihzc]][[GSDPG00320]][[deployment-descriptors-and-annotations]]
+[[deployment-descriptors-and-annotations]]
 
 ==== Deployment Descriptors and Annotations
 
@@ -165,8 +165,8 @@ these names: `ejb-jar.xml` and `glassfish-ejb-jar.xml`. If the EJB
 component is an entity bean with container-managed persistence (CMP),
 you can also create a `.dbschema` file and a `sun-cmp-mapping.xml` file.
 For complete descriptions of these files and their elements, see
-link:dd-files.html#giida[{productName} Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the {productName}
+xref:dd-files.adoc#b-glassfish-server-deployment-descriptor-files[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName}
 Deployment Descriptors].
 +
 {productName} also permits the use of alternate top-level {productName} runtime deployment descriptors that reside outside of an
@@ -210,7 +210,7 @@ deployment information in standard deployment descriptors. In case of
 conflicts, deployment descriptor values supersede the annotated
 metadata, and a warning message is logged.
 
-[[gikhs]][[GSDPG00321]][[modules-and-applications]]
+[[modules-and-applications]]
 
 ==== Modules and Applications
 
@@ -227,11 +227,11 @@ type. You can deploy a module alone or as part of an application.
 
 The following topics are addressed here:
 
-* link:#beacv[Types of Modules]
-* link:#beacu[Module-Based Deployment]
-* link:#beacw[Application-Based Deployment]
+* xref:#types-of-modules[Types of Modules]
+* xref:#module-based-deployment[Module-Based Deployment]
+* xref:#application-based-deployment[Application-Based Deployment]
 
-[[beacv]][[GSDPG00307]][[types-of-modules]]
+[[types-of-modules]]
 
 ===== Types of Modules
 
@@ -265,7 +265,7 @@ format for assembling connector modules. Each {productName} connector
 has annotations or a deployment descriptor file (`ra.xml`).
 +
 After deploying a J2EE connector module, you must configure it as
-described in link:application-development-guide/connectors.html#GSDVG00013[Developing Connectors] in {productName} Application Development Guide.
+described in link:application-development-guide/connectors.html#developing-connectors[Developing Connectors] in {productName} Application Development Guide.
 * Application Client Module. An application client module is a
 deployable software unit that consists of one or more classes, and
 application client deployment descriptors (`application-client.xml` and
@@ -274,9 +274,9 @@ applies to a {productName} type of Jakarta EE client. An application
 client supports the standard Jakarta EE Application Client specifications.
 * Lifecycle Module. A lifecycle module provides a means of running
 short-duration or long-duration Java-based tasks within the {productName} environment. Lifecycle modules are not Jakarta EE standard modules.
-See link:application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
+See link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
 
-[[beacu]][[GSDPG00308]][[module-based-deployment]]
+[[module-based-deployment]]
 
 ===== Module-Based Deployment
 
@@ -289,7 +289,7 @@ bean from a web, EJB, or application client component.
 The following figure shows separately-deployed EJB, web, and application
 client modules.
 
-[[GSDPG00001]][[fwfdj]]
+[[fwfdj]]
 
 
 .*Figure 1-1 Module-Based Assembly and Deployment*
@@ -298,7 +298,7 @@ image:img/dgdeploy3.png[
 deployment."]
 
 
-[[beacw]][[GSDPG00309]][[application-based-deployment]]
+[[application-based-deployment]]
 
 ===== Application-Based Deployment
 
@@ -308,7 +308,7 @@ together as one unit.
 The following figure shows EJB, web, application client, and connector
 modules assembled into a Jakarta EE application.
 
-[[GSDPG00002]][[fvyip]]
+[[fvyip]]
 
 
 .*Figure 1-2 Application-Based Assembly and Deployment*
@@ -316,7 +316,7 @@ image:img/dgdeploya.png[
 "Figure shows Jakarta EE application assembly and deployment."]
 
 
-[[gijla]][[GSDPG00322]][[access-to-shared-framework-classes]]
+[[access-to-shared-framework-classes]]
 
 ==== Access to Shared Framework Classes
 
@@ -339,7 +339,7 @@ remove the libraries with `remove-library`. For more information about
 all these commands, see the {productName}
 Reference Manual.
 
-For more information about class loaders, see link:application-development-guide/class-loaders.html#GSDVG00003[Class
+For more information about class loaders, see link:application-development-guide/class-loaders.html#class-loaders[Class
 Loaders] in {productName} Application Development
 Guide.
 
@@ -353,7 +353,7 @@ an application using the JAR Extension Mechanism Architecture.
 ====
 
 
-[[gihzk]][[GSDPG00323]][[naming-standards]]
+[[naming-standards]]
 
 ==== Naming Standards
 
@@ -373,12 +373,11 @@ as well.
 
 The following topics are addressed here:
 
-* link:#gjjfg[Portable Naming]
-* link:#giidg[JNDI Naming]
-* link:#beada[Directory Structure]
-* link:#giiel[JSR 88 Naming]
+* xref:#portable-naming[Portable Naming]
+* xref:#jndi-naming[JNDI Naming]
+* xref:#directory-structure[Directory Structure]
 
-[[gjjfg]][[GSDPG00310]][[portable-naming]]
+[[portable-naming]]
 
 ===== Portable Naming
 
@@ -405,7 +404,7 @@ is used.
 3. If no name is specified at deployment time or in the deployment
 descriptors, the archive name, minus the file type suffix, is used.
 
-[[giidg]][[GSDPG00311]][[jndi-naming]]
+[[jndi-naming]]
 
 ===== JNDI Naming
 
@@ -415,7 +414,7 @@ convention can help. For example, appending the application name and the
 module name to the EJB name is a way to guarantee unique names, such as,
 `jms/qConnPool`.
 
-[[beada]][[GSDPG00312]][[directory-structure]]
+[[directory-structure]]
 
 ===== Directory Structure
 
@@ -428,11 +427,11 @@ are named with `_jar`, `_rar`, and `_war` suffixes.
 If you deploy a directory instead of an EAR file, your directory
 structure must follow this same convention. For instructions on
 performing directory deployment, see
-link:deploying-applications.html#gilcn[To Deploy an Application or Module
+xref:deploying-applications.adoc#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an Application or Module
 in a Directory Format].
 
 
-[[gkhhv]][[GSDPG00324]][[module-and-application-versions]]
+[[module-and-application-versions]]
 
 ==== Module and Application Versions
 
@@ -448,11 +447,11 @@ name. Use of versioning is optional.
 
 The following topics are addressed here:
 
-* link:#gkhmg[Version Identifiers and Expressions]
-* link:#gkhmm[Choosing the Enabled Version]
-* link:#gkhob[Versioning Restrictions and Limitations]
+* xref:#version-identifiers-and-expressions[Version Identifiers and Expressions]
+* xref:#choosing-the-enabled-version[Choosing the Enabled Version]
+* xref:#versioning-restrictions-and-limitations[Versioning Restrictions and Limitations]
 
-[[gkhmg]][[GSDPG00314]][[version-identifiers-and-expressions]]
+[[version-identifiers-and-expressions]]
 
 ===== Version Identifiers and Expressions
 
@@ -514,7 +513,7 @@ The `list-applications` and `list-application-refs` subcommands display
 information about all deployed versions of a module or application. To
 find out which version is enabled, use the `--long` option.
 
-[[gkhmm]][[GSDPG00315]][[choosing-the-enabled-version]]
+[[choosing-the-enabled-version]]
 
 ===== Choosing the Enabled Version
 
@@ -532,7 +531,7 @@ state, set the `--enabled` option to `false`.
 To enable a version that has been deployed previously, use the `enable`
 subcommand.
 
-[[gkhob]][[GSDPG00316]][[versioning-restrictions-and-limitations]]
+[[versioning-restrictions-and-limitations]]
 
 ===== Versioning Restrictions and Limitations
 
@@ -570,7 +569,7 @@ an OSGi bundle, {productName} ignores any version information
 provided with the name but permits the deployment to succeed with
 warnings.
 
-[[giphm]][[GSDPG00062]][[about-assembly-and-deployment-events]]
+[[about-assembly-and-deployment-events]]
 
 === About Assembly and Deployment Events
 
@@ -586,38 +585,38 @@ the deployment descriptors or equivalent annotations using Java
 standards and tools.
 +
 Details of the {productName} deployment descriptors are contained in
-link:dd-files.html#giida[{productName} Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the {productName}
+xref:dd-files.adoc#b-glassfish-server-deployment-descriptor-files[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName}
 Deployment Descriptors]. The {productName} sample applications
 contain deployment descriptors that can be used as templates for
 developing deployment descriptors.
 2. Assembly. The developer assembles the archive file(s) using Java
 standards and tools, such as the `jar` command. The application or
 module is packaged into a JAR, WAR, RAR, or EAR file. For guidelines on
-naming, see link:#gihzk[Naming Standards].
+naming, see xref:#naming-standards[Naming Standards].
 +
 There are no {productName} issues to consider.
 3. Test Deployment. The developer performs a test deployment of the
-archive. For instructions, see link:deploying-applications.html#gijmq[To
+archive. For instructions, see xref:deploying-applications.adoc#to-deploy-an-application-or-module[To
 Deploy an Application or Module].
 4. Archive Submission. The developer submits the verified archive to
 the administrator for deployment into a production environment. The
 developer includes instructions for any additional deployment tasks that
 the administrator must perform. For an example of such additional
-instructions, see link:#gijla[Access to Shared Framework Classes].
+instructions, see xref:#access-to-shared-framework-classes[Access to Shared Framework Classes].
 5. Configuration. The administrator applies additional deployment
 specifics. Sometimes the developer has indicated additional deployment
 needs, such as specifying the production database. In this case, the
 administrator edits and reassembles the archive.
 6. Production Deployment. The administrator deploys the archive to
-production. See link:deploying-applications.html#gijmq[To Deploy an
+production. See xref:deploying-applications.adoc#to-deploy-an-application-or-module[To Deploy an
 Application or Module].
 7. Troubleshooting. If deployment fails, the administrator returns the
 archive to the developer. The developer fixes the problem and resubmits
 the archive to the administrator. Sometimes the administrator resolves
 the problem, depending on what the problem is.
 
-[[giifh]][[GSDPG00063]][[about-deployment-tools]]
+[[about-deployment-tools]]
 
 === About Deployment Tools
 
@@ -626,13 +625,13 @@ application.
 
 The following topics are addressed here:
 
-* link:#giijz[Administration Console]
-* link:#giijf[The `asadmin` Utility]
-* link:#giijq[NetBeans IDE]
-* link:#gikwq[Eclipse IDE]
-* link:#beaee[JSR 88 Client]
+* xref:#administration-console[Administration Console]
+* xref:#the-asadmin-utility[The `asadmin` Utility]
+* xref:#netbeans-ide[NetBeans IDE]
+* xref:#eclipse-ide[Eclipse IDE]
+* xref:#jsr-88-client[JSR 88 Client]
 
-[[giijz]][[GSDPG00325]][[administration-console]]
+[[administration-console]]
 
 ==== Administration Console
 
@@ -653,7 +652,7 @@ The initial help page describes the functions and fields of the page
 itself. To find instructions for performing associated tasks, click a
 link in the See Also list.
 
-[[giijf]][[GSDPG00326]][[the-asadmin-utility]]
+[[the-asadmin-utility]]
 
 ==== The `asadmin` Utility
 
@@ -670,9 +669,9 @@ asadmin list-applications --type web
 ----
 
 Application deployment commands are listed in
-link:asadmin-deployment-subcommands.html#gihzw[The `asadmin` Deployment
+xref:asadmin-deployment-subcommands.adoc#a-the-asadmin-deployment-subcommands[The `asadmin` Deployment
 Subcommands]. All {productName} `asadmin` subcommands are documented
-in the link:reference-manual.html#GSRFM[{productName} Reference
+in the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 For the most part, you can perform the same administrative tasks by
@@ -689,10 +688,10 @@ asadmin help list-applications
 ----
 
 For additional information on the `asadmin` utility, see
-"link:administration-guide/general-administration.html#GSADG00530[Using the `asadmin` Utility]" in {productName} Administration Guide and the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+"link:administration-guide/general-administration.html#using-the-asadmin-utility[Using the `asadmin` Utility]" in {productName} Administration Guide and the
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
 
-[[giijq]][[GSDPG00329]][[netbeans-ide]]
+[[netbeans-ide]]
 
 ==== NetBeans IDE
 
@@ -703,14 +702,14 @@ Kit (SDK). To download, see
 `http://www.oracle.com/technetwork/java/javaee/downloads/index.html`.
 For additional information, see `http://www.netbeans.org`.
 
-[[gikwq]][[GSDPG00330]][[eclipse-ide]]
+[[eclipse-ide]]
 
 ==== Eclipse IDE
 
 In addition to the bundled NetBeans IDE, a plug-in for the Eclipse IDE
 extends GlassFish to the Eclipse community.
 
-[[beaee]][[GSDPG00331]][[jsr-88-client]]
+[[jsr-88-client]]
 
 ==== JSR 88 Client
 
@@ -729,7 +728,7 @@ For example:
 deployer:Sun:AppServer::localhost:4848:https
 ----
 
-[[gipud]][[GSDPG00064]][[additional-information-on-application-deployment]]
+[[additional-information-on-application-deployment]]
 
 === Additional Information on Application Deployment
 
@@ -752,13 +751,13 @@ are the following:
 The following product documentation might be relevant to some aspects of
 application deployment:
 
-* link:application-development-guide.html#GSDVG[
+* xref:application-development-guide.adoc#GSDVG[
 {productName} Application Development Guide]
-* link:administration-guide.html#GSADG[
+* xref:administration-guide.adoc#GSADG[
 {productName} Administration Guide]
-* link:add-on-component-development-guide.html#GSACG[
+* xref:add-on-component-development-guide.adoc#GSACG[
 {productName} Add-On Component Development Guide]
-* link:reference-manual.html#GSRFM[
+* xref:reference-manual.adoc#GSRFM[
 {productName} Reference Manual]
 * {productName} Administration Console online help
 

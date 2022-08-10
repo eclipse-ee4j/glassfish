@@ -8,14 +8,12 @@ prev=generate-jvm-report.html
 get
 ===
 
-[[get-1]][[GSRFM00139]][[get]]
+[[get]]
 
 get
 ---
 
 gets the values of configurable or monitorable attributes
-
-[[sthref1209]]
 
 === Synopsis
 
@@ -27,21 +25,19 @@ asadmin [asadmin-options] get [--help]
 (dotted-attribute--name)+
 ----
 
-[[sthref1210]]
-
 === Description
 
 The `get` subcommand uses dotted names to get the names and values of
 configurable or monitorable attributes for {productName} elements.
 
-You can use the link:list.html#list-1[`list`(1)] subcommand to display
+You can use the xref:list.adoc#list[`list`(1)] subcommand to display
 the dotted names that represent individual server components and
 subsystems. For example, a dotted name might be
 `server.applications.web-module`. Attributes from the monitoring
 hierarchy are read-only, but configuration attributes can be modified
-using the link:set.html#set-1[`set`(1)] subcommand. For more detailed
+using the xref:set.adoc#set[`set`(1)] subcommand. For more detailed
 information on dotted names, see the
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)] help page.
 
 
 [NOTE]
@@ -71,13 +67,11 @@ The following list shows common usage of the `get` subcommand with the `*`
 `get \*.*.\*.*`::
   Gets all values on all dotted names that have four parts.
 
-[[sthref1211]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -91,8 +85,6 @@ asadmin-options::
   Aggregates monitoring data for all {productName} instances in a
   cluster. The default value is `false`.
 
-[[sthref1212]]
-
 === Operands
 
 dotted-attribute-name::
@@ -100,11 +92,9 @@ dotted-attribute-name::
   dotted name attribute is required. The dotted notation is the syntax
   used to access attributes of configurable entities.
 
-[[sthref1213]]
-
 === Examples
 
-[[GSRFM619]][[sthref1214]]
+[[sthref1214]]
 
 ==== Example 1   Getting the Attributes of a Configurable Element
 
@@ -129,7 +119,7 @@ server.http-service.http-listener.http-listener-1.xpowered-by = true
 Command get executed successfully.
 ----
 
-[[GSRFM620]][[sthref1215]]
+[[sthref1215]]
 
 ==== Example 2   Getting Monitorable Objects
 
@@ -155,7 +145,7 @@ server.monitoring-service.module-monitoring-levels.web-container=OFF
 Command get executed successfully.
 ----
 
-[[GSRFM621]][[sthref1216]]
+[[sthref1216]]
 
 ==== Example 3   Getting Attributes and Values for a Monitorable Object
 
@@ -184,8 +174,6 @@ server.jvm.UpTime_Unit = milliseconds
 Command get executed successfully.
 ----
 
-[[sthref1217]]
-
 === Exit Status
 
 0::
@@ -193,16 +181,14 @@ Command get executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1218]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list.html#list-1[`list`(1)], link:set.html#set-1[`set`(1)]
+xref:list.adoc#list[`list`(1)], xref:set.adoc#set[`set`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
-link:administration-guide.html#GSADG[{productName} Administration Guide]
+xref:administration-guide.adoc#GSADG[{productName} Administration Guide]
 
 

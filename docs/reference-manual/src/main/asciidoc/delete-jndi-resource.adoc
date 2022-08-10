@@ -7,13 +7,11 @@ prev=delete-jms-resource.html
 
 = delete-jndi-resource
 
-[[delete-jndi-resource-1]][[GSRFM00093]][[delete-jndi-resource]]
+[[delete-jndi-resource]]
 
 == delete-jndi-resource
 
 Removes a JNDI resource
-
-[[sthref817]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-jndi-resource [--help]
 [--target target] jndi_name
 ----
 
-[[sthref818]]
-
 === Description
 
 The `delete-jndi-resource` subcommand removes the specified JNDI
@@ -33,13 +29,11 @@ running this subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref819]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,18 +61,14 @@ deletion.
   instance_name;;
     Deletes the resource from the specified server instance
 
-[[sthref820]]
-
 === Operands
 
 jndi_name::
   The name of the JNDI resource to be removed.
 
-[[sthref821]]
-
 === Examples
 
-[[GSRFM561]][[sthref822]]
+[[sthref822]]
 
 ==== Example 1   Deleting a JNDI Resource
 
@@ -91,8 +81,6 @@ asadmin> delete-jndi-resource sample_jndi_resource
 Command delete-jndi-resource executed successfully.
 ----
 
-[[sthref823]]
-
 === Exit Status
 
 0::
@@ -100,13 +88,11 @@ Command delete-jndi-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref824]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jndi-resource.html#create-jndi-resource-1[`create-jndi-resource`(1)],
-link:list-jndi-resources.html#list-jndi-resources-1[`list-jndi-resources`(1)]
+xref:create-jndi-resource.adoc#create-jndi-resource[`create-jndi-resource`(1)],
+xref:list-jndi-resources.adoc#list-jndi-resources[`list-jndi-resources`(1)]
 
 

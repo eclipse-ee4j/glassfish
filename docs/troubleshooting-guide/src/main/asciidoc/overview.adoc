@@ -7,9 +7,6 @@ prev=preface.html
 
 = Overview of {productName} Troubleshooting
 
-[[GSTSG00002]][[abgap]]
-
-
 [[overview-of-glassfish-server-open-source-edition-troubleshooting]]
 == 1 Overview of {productName} Troubleshooting
 
@@ -19,11 +16,11 @@ Guidelines for evaluating and investigating a problem are provided.
 
 This chapter contains the following sections:
 
-* link:#abgar[Identifying the Problem]
-* link:#ghuvy[Troubleshooting Tools]
-* link:#ghuyv[Where to Go for More Information]
+* xref:#identifying-the-problem[Identifying the Problem]
+* xref:#troubleshooting-tools[Troubleshooting Tools]
+* xref:#where-to-go-for-more-information[Where to Go for More Information]
 
-[[abgar]][[GSTSG00039]][[identifying-the-problem]]
+[[identifying-the-problem]]
 
 === Identifying the Problem
 
@@ -33,24 +30,24 @@ Understanding and diagnosing problems in enterprise software with many
 components performing many tasks can be a challenge. This section
 describes how to get started , and contains the following topics:
 
-* link:#ghvay[First Steps]
-* link:#ghuvf[Gathering Information]
-* link:#abgax[Examining Log Files]
-* link:#ghuvd[Monitoring the System]
+* xref:#first-steps[First Steps]
+* xref:#gathering-information[Gathering Information]
+* xref:#examining-log-files[Examining Log Files]
+* xref:#monitoring-the-system[Monitoring the System]
 
-[[ghvay]][[GSTSG00171]][[first-steps]]
+[[first-steps]]
 
 ==== First Steps
 
 Sometimes the most obvious solutions are overlooked. As you begin your
 investigation, try the following steps first.
 
-[[ghyku]][[GSTSG00077]][[verify-system-requirements-and-configuration]]
+[[verify-system-requirements-and-configuration]]
 
 ===== Verify System Requirements and Configuration
 
 Ensure that your system meets the requirements listed in
-"link:release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+"link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware and Software Requirements]"
 in {productName} Release Notes.
 Problems are likely to arise if you attempt to install on a platform that
 is not supported or on a system that in some other way does not meet release requirements.
@@ -77,50 +74,48 @@ Environment (JRE) software.
 Set `JAVA_HOME` and `$JAVA_HOME/bin` in the `PATH` to point to the
 supported JDK version.
 
-[[ghyml]][[GSTSG00078]][[review-known-issues]]
+[[review-known-issues]]
 
 ===== Review Known Issues
 
 Your problem might be related to a known issue for the release. Refer to
-the link:release-notes.html#GSRLN[{productName} Release Notes] for
+the xref:release-notes.adoc#GSRLN[{productName} Release Notes] for
 the latest information regarding known issues and possible workarounds.
-Also search the GlassFish Issue Tracker at
-`http://java.net/jira/browse/GLASSFISH`.
+Also search the GlassFish issues at
+`https://github.com/eclipse-ee4j/glassfish/issues`.
 
-[[ghykl]][[GSTSG00079]][[search-the-product-documentation]]
+[[search-the-product-documentation]]
 
 ===== Search the Product Documentation
 
 {productName} includes complete product
 documentation. Search the documentation to see if your problem is
-addressed. See link:preface.html#ghpbz[{productName} Documentation
-Set] for the books in the documentation set and a description of their
-contents. Also see the Administration Console online help for detailed
-information about performing administrative tasks using the graphical
-interface.
+addressed. See xref:preface.adoc#glassfish-server-documentation-set[{productName} Documentation Set]
+for the books in the documentation set and a description of their contents.
+Also see the Administration Console online help for detailed
+information about performing administrative tasks using the graphical interface.
 
 The following books will be especially helpful for troubleshooting:
 
-* link:release-notes.html#GSRLN[{productName} Release Notes],
+* xref:release-notes.adoc#GSRLN[{productName} Release Notes],
   which provides the latest information regarding known issues and possible workarounds.
-* link:error-messages-reference.html#GSEMR[
+* xref:error-messages-reference.adoc#GSEMR[
   {productName} Error Message Reference],
   which lists error messages you might encounter when using {productName}.
 
 Use the product documentation to learn more about {productName}. The more you know about the product the easier it might
 be to figure out why something isn't working.
 
-[[ghymp]][[GSTSG00080]][[search-the-glassfish-mailing-lists-and-forums]]
+[[search-the-glassfish-mailing-lists-and-forums]]
 
 ===== Search the GlassFish Mailing Lists and Forums
 
 Lists and forums are extremely helpful resources, and are accessed as follows:
 
-* GlassFish mailing lists (start with users@glassfish.java.net and
-  search the archives): `http://java.net/projects/glassfish/lists/`
-* GlassFish user forum: `http://www.java.net/forums/glassfish/glassfish`
+* GlassFish mailing lists: `https://accounts.eclipse.org/mailing-list/glassfish-dev`
+* GlassFish user forum: `https://www.eclipse.org/forums/index.php/f/419/`
 
-[[ghuvf]][[GSTSG00172]][[gathering-information]]
+[[gathering-information]]
 
 ==== Gathering Information
 
@@ -132,12 +127,12 @@ through more formal Sun support channels.
 
 As you continue your investigation, consider the following questions.
 
-[[ghvar]][[GSTSG00081]][[when-does-the-problem-occur]]
+[[when-does-the-problem-occur]]
 
 ===== When Does the Problem Occur?
 
 * What do the logs show? What kind of error message are you getting? For
-more information about logs, see link:#abgax[Examining Log Files]. Logs
+more information about logs, see xref:#examining-log-files[Examining Log Files]. Logs
 are a good place to start your troubleshooting.
 * What are you trying to do when the problem occurs and how are you
 doing it? What is the sequence of events?
@@ -148,14 +143,14 @@ such as web sessions closing early, exceptions being thrown in your own
 application logic, components not being correctly deployed or
 undeployed?
 
-[[ghvbb]][[GSTSG00082]][[what-is-your-environment]]
+[[what-is-your-environment]]
 
 ===== What Is Your Environment?
 
 * What version of {productName} are you using?
 What operating system and version? What JDK version? Many problems are
 caused simply because system requirements for the release are not met.
-Refer to the link:release-notes.html#GSRLN[{productName} Release
+Refer to the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes] for the latest information regarding system requirements, and
 make sure your system meets those requirements.
 * What resources does your system have, such as memory, disk, and swap
@@ -173,7 +168,7 @@ installed? What are the products and versions?
 server?
 * What JDBC driver is being used to access the database?
 
-[[ghvce]][[GSTSG00083]][[what-is-your-system-configuration]]
+[[what-is-your-system-configuration]]
 
 ===== What Is Your System Configuration?
 
@@ -194,7 +189,7 @@ space available.
 * What are your network settings (proxy, firewall, and so on)? What
 happens if you disable your firewall and attempt the task?
 
-[[ghvcr]][[GSTSG00084]][[what-is-different]]
+[[what-is-different]]
 
 ===== What Is Different?
 
@@ -207,7 +202,7 @@ what changed or happened between then and now?
 * Is this working on another system? If so, what is different about that
 environment?
 
-[[abgax]][[GSTSG00173]][[examining-log-files]]
+[[examining-log-files]]
 
 ==== Examining Log Files
 
@@ -260,7 +255,7 @@ logging functions, see the Administration Console online help. For
 information about using the command line for logging functions, see
 "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide.
 
-[[ghuvd]][[GSTSG00174]][[monitoring-the-system]]
+[[monitoring-the-system]]
 
 ==== Monitoring the System
 
@@ -271,9 +266,9 @@ monitoring the state of various components and services deployed in
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide.
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide.
 
-[[ghuvy]][[GSTSG00040]][[troubleshooting-tools]]
+[[troubleshooting-tools]]
 
 === Troubleshooting Tools
 
@@ -281,12 +276,12 @@ Several tools are available that can be used to collect information for
 troubleshooting purposes. This section provides basic information about
 some of them, and includes the following:
 
-* link:#ghvcm[Operating System Utilities]
-* link:#ghvbo[Stack Traces and Thread Dumps]
-* link:#ghyjq[VisualVM]
-* link:#gjjjl[JVM Command-Line Tools]
+* xref:#operating-system-utilities[Operating System Utilities]
+* xref:#stack-traces-and-thread-dumps[Stack Traces and Thread Dumps]
+* xref:#visualvm[VisualVM]
+* xref:#jvm-command-line-tools[JVM Command-Line Tools]
 
-[[ghvcm]][[GSTSG00175]][[operating-system-utilities]]
+[[operating-system-utilities]]
 
 ==== Operating System Utilities
 
@@ -296,7 +291,7 @@ and `rpm` on Linux, are helpful in gathering system information.
 The `ps -ef` command provides helpful information about processes that
 are running, including their process identification numbers (PIDs).
 
-[[ghvbo]][[GSTSG00176]][[stack-traces-and-thread-dumps]]
+[[stack-traces-and-thread-dumps]]
 
 ==== Stack Traces and Thread Dumps
 
@@ -313,7 +308,7 @@ contained in a thread dump can be found in
 Introduction to Java Stack Traces]"
 (`http://java.sun.com/developer/technicalArticles/Programming/Stacktrace`).
 
-[[ghykr]][[GSTSG00023]][[to-obtain-a-server-thread-dump]]
+[[to-obtain-a-server-thread-dump]]
 
 ===== To Obtain a Server Thread Dump
 
@@ -324,13 +319,11 @@ Type the following command:
 asadmin generate-jvm-report --type=thread
 ----
 
-[[sthref3]]
-
 See Also
 
-link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`(1)]
 
-[[ghyjq]][[GSTSG00177]][[visualvm]]
+[[visualvm]]
 
 ==== VisualVM
 
@@ -352,7 +345,7 @@ the Java versions used in the client and server. Depending on your
 configuration, you might only get parts of the VisualVM features. For
 more information about VisualVM, see `http://visualvm.java.net`.
 
-[[gjjjl]][[GSTSG00178]][[jvm-command-line-tools]]
+[[jvm-command-line-tools]]
 
 ==== JVM Command-Line Tools
 
@@ -373,18 +366,18 @@ attach to the server using Java Remote Invocation Method (RMI).
 * `jstat`: Displays performance statistics for an instrumented HotSpot JVM.
 * `jps`: Lists the instrumented HotSpot JVMs on the target system
 
-[[ghuyv]][[GSTSG00041]][[where-to-go-for-more-information]]
+[[where-to-go-for-more-information]]
 
 === Where to Go for More Information
 
 These resources were mentioned throughout this chapter and are provided
 again here for easy reference.
 
-* Release Notes: link:release-notes.html#GSRLN[{productName}
+* Release Notes: xref:release-notes.adoc#GSRLN[{productName}
 Release Notes]
-* Error messages: link:error-messages-reference.html#GSEMR[{productName} Error
+* Error messages: xref:error-messages-reference.adoc#GSEMR[{productName} Error
 Message Reference]
-* Mailing lists and forums: See link:#ghymp[Search the GlassFish Mailing
+* Mailing lists and forums: See xref:#search-the-glassfish-mailing-lists-and-forums[Search the GlassFish Mailing
 Lists and Forums] for details about accessing lists and forums.
 * GlassFish community site: `http://glassfish.java.net/`
 

@@ -7,13 +7,11 @@ prev=delete-protocol.html
 
 = delete-protocol-filter
 
-[[delete-protocol-filter-1]][[GSRFM00104]][[delete-protocol-filter]]
+[[delete-protocol-filter]]
 
 == delete-protocol-filter
 
 Removes a protocol filter
-
-[[sthref945]]
 
 === Synopsis
 
@@ -25,20 +23,16 @@ asadmin [asadmin-options] delete-protocol-filter [--help]
 protocol-filter-name
 ----
 
-[[sthref946]]
-
 === Description
 
 The `delete-protocol-filter` subcommand removes the specified protocol
 filter. This subcommand is supported in remote mode only.
 
-[[sthref947]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -60,18 +54,14 @@ asadmin-options::
     Deletes the protocol filter from the specified standalone server
     instance.
 
-[[sthref948]]
-
 === Operands
 
 protocol-filter-name::
   The name of the protocol filter to be deleted.
 
-[[sthref949]]
-
 === Examples
 
-[[GSRFM575]][[sthref950]]
+[[sthref950]]
 
 ==== Example 1   Deleting a Protocol Filter
 
@@ -83,8 +73,6 @@ asadmin> delete-protocol-filter --protocol http1 http1-filter
 Command delete-protocol-filter executed successfully.
 ----
 
-[[sthref951]]
-
 === Exit Status
 
 0::
@@ -92,13 +80,11 @@ Command delete-protocol-filter executed successfully.
 1::
   error in executing the command
 
-[[sthref952]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol-filter.html#create-protocol-filter-1[`create-protocol-filter`(1)],
-link:list-protocol-filters.html#list-protocol-filters-1[`list-protocol-filters`(1)]
+xref:create-protocol-filter.adoc#create-protocol-filter[`create-protocol-filter`(1)],
+xref:list-protocol-filters.adoc#list-protocol-filters[`list-protocol-filters`(1)]
 
 

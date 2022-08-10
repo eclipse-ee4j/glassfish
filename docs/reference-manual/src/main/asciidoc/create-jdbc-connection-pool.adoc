@@ -7,13 +7,11 @@ prev=create-javamail-resource.html
 
 = create-jdbc-connection-pool
 
-[[create-jdbc-connection-pool-1]][[GSRFM00036]][[create-jdbc-connection-pool]]
+[[create-jdbc-connection-pool]]
 
 == create-jdbc-connection-pool
 
 Registers a JDBC connection pool
-
-[[sthref320]]
 
 === Synopsis
 
@@ -62,8 +60,6 @@ asadmin [asadmin-options] create-jdbc-connection-pool [--help]
 connectionpoolid
 ----
 
-[[sthref321]]
-
 === Description
 
 The `create-jdbc-connection-pool` subcommand registers a new Java
@@ -77,13 +73,11 @@ the XML descriptor file.
 
 This subcommand is supported in remote mode only.
 
-[[sthref322]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -444,7 +438,7 @@ If an attribute name or attribute value contains a colon, the
 backslash (`\`) must be used to escape the colon in the name or value.
 Other characters might also require an escape character. For more
 information about escape characters in command options, see the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] man page.
 ====
 
 `--target`::
@@ -453,18 +447,14 @@ link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
   not occur. Instead, the subcommand runs successfully and displays a
   warning message that the option is ignored.
 
-[[sthref323]]
-
 === Operands
 
 connectionpoolid::
   The name of the JDBC connection pool to be created.
 
-[[sthref324]]
-
 === Examples
 
-[[GSRFM493]][[sthref325]]
+[[sthref325]]
 
 ==== Example 1   Creating a JDBC Connection Pool
 
@@ -485,8 +475,6 @@ The escape character backslash (`\`) is used in the `--property` option
 to distinguish the semicolon (`;`). Two backslashes (`\\`) are used to
 distinguish the equal sign (`=`).
 
-[[sthref326]]
-
 === Exit Status
 
 0::
@@ -494,13 +482,11 @@ distinguish the equal sign (`=`).
 1::
   error in executing the subcommand
 
-[[sthref327]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-jdbc-connection-pool.html#delete-jdbc-connection-pool-1[`delete-jdbc-connection-pool`(1)],
-link:list-jdbc-connection-pools.html#list-jdbc-connection-pools-1[`list-jdbc-connection-pools`(1)]
+xref:delete-jdbc-connection-pool.adoc#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)],
+xref:list-jdbc-connection-pools.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
 
 

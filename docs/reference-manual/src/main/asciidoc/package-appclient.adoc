@@ -7,13 +7,11 @@ prev=capture-schema.html
 
 = package-appclient
 
-[[package-appclient-1m]][[GSRFM00264]][[package-appclient]]
+[[package-appclient]]
 
 == package-appclient
 
 Packs the application client container libraries and jar files
-
-[[sthref2387]]
 
 === Synopsis
 
@@ -21,8 +19,6 @@ Packs the application client container libraries and jar files
 ----
 package-appclient
 ----
-
-[[sthref2388]]
 
 === Description
 
@@ -79,10 +75,8 @@ for descriptions of the following attributes:
 |===
 
 
-[[sthref2390]]
-
 === See Also
 
-link:appclient.html#appclient-1m[`appclient`(1M)]
+xref:appclient.adoc#appclient[`appclient`(1M)]
 
 

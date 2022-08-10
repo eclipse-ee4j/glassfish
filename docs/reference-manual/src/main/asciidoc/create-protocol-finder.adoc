@@ -7,13 +7,11 @@ prev=create-protocol-filter.html
 
 = create-protocol-finder
 
-[[create-protocol-finder-1]][[GSRFM00053]][[create-protocol-finder]]
+[[create-protocol-finder]]
 
 == create-protocol-finder
 
 Adds a new protocol finder
-
-[[sthref505]]
 
 === Synopsis
 
@@ -27,20 +25,16 @@ asadmin [asadmin-options] create-protocol-finder [--help]
 protocol-finder-name
 ----
 
-[[sthref506]]
-
 === Description
 
 The `create-protocol-finder` subcommand creates a protocol finder for a
 protocol. This subcommand is supported in remote mode only.
 
-[[sthref507]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,14 +61,10 @@ asadmin-options::
     Creates the protocol finder on the specified standalone server
     instance.
 
-[[sthref508]]
-
 === Operands
 
 protocol-finder-name::
   The name of the protocol finder.
-
-[[sthref509]]
 
 === Exit Status
 
@@ -83,13 +73,11 @@ protocol-finder-name::
 1::
   error in executing the command
 
-[[sthref510]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-protocol-finder.html#delete-protocol-finder-1[`delete-protocol-finder`(1)],
-link:list-protocol-finders.html#list-protocol-finders-1[`list-protocol-finders`(1)]
+xref:delete-protocol-finder.adoc#delete-protocol-finder[`delete-protocol-finder`(1)],
+xref:list-protocol-finders.adoc#list-protocol-finders[`list-protocol-finders`(1)]
 
 

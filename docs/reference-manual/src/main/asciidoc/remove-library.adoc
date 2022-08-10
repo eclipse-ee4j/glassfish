@@ -7,13 +7,11 @@ prev=redeploy.html
 
 = remove-library
 
-[[remove-library-1]][[GSRFM00820]][[remove-library]]
+[[remove-library]]
 
 == remove-library
 
 Removes one or more library JAR files from {productName}
-
-[[sthref1970]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] remove-library [--help]
 [--type={common|ext|app}]
 library-name [library-name ... ]
 ----
-
-[[sthref1971]]
 
 === Description
 
@@ -51,13 +47,11 @@ This command is not supported on the Windows operating system.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1972]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -77,9 +71,7 @@ asadmin-options::
 
 +
 For more information about these directories, see
-  "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
-
-[[sthref1973]]
+  "link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide.
 
 === Operands
 
@@ -87,11 +79,9 @@ library-name::
   The names of the JAR files that contain the libraries that are to be
   removed.
 
-[[sthref1974]]
-
 === Examples
 
-[[GSRFM832]][[sthref1975]]
+[[sthref1975]]
 
 ==== Example 1   Removing Libraries
 
@@ -105,8 +95,6 @@ asadmin> remove-library --type app mylib.jar
 Command remove-library executed successfully.
 ----
 
-[[sthref1976]]
-
 === Exit Status
 
 0::
@@ -114,15 +102,13 @@ Command remove-library executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1977]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:add-library.html#add-library-1[`add-library`(1)],
-link:list-libraries.html#list-libraries-1[`list-libraries`(1)]
+xref:add-library.adoc#add-library[`add-library`(1)],
+xref:list-libraries.adoc#list-libraries[`list-libraries`(1)]
 
-"link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
+"link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide
 
 

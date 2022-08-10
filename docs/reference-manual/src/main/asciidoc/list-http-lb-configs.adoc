@@ -7,13 +7,11 @@ prev=list-file-users.html
 
 = list-http-lb-configs
 
-[[list-http-lb-configs-1]][[GSRFM00166]][[list-http-lb-configs]]
+[[list-http-lb-configs]]
 
 == list-http-lb-configs
 
 Lists load balancer configurations
-
-[[sthref1484]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Lists load balancer configurations
 asadmin [asadmin-options] list-http-lb-configs [--help]
 [target]
 ----
-
-[[sthref1485]]
 
 === Description
 
@@ -37,18 +33,14 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref1486]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1487]]
 
 === Operands
 
@@ -58,11 +50,9 @@ target::
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
-[[sthref1488]]
-
 === Examples
 
-[[GSRFM659]][[sthref1489]]
+[[sthref1489]]
 
 ==== Example 1   Listing Load Balancer Configurations Without a Target
 
@@ -78,7 +68,7 @@ serverinstlb
 Command list-http-lb-configs executed successfully.
 ----
 
-[[GSRFM660]][[sthref1490]]
+[[sthref1490]]
 
 ==== Example 2   Listing Load Balancer Configurations for a Specific Target
 
@@ -93,8 +83,6 @@ mycluster-http-lb-config
 Command list-http-lb-configs executed successfully.
 ----
 
-[[sthref1491]]
-
 === Exit Status
 
 0::
@@ -102,13 +90,11 @@ Command list-http-lb-configs executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1492]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)],
-link:delete-http-lb-config.html#delete-http-lb-config-1[`delete-http-lb-config`(1)]
+xref:create-http-lb-config.adoc#create-http-lb-config[`create-http-lb-config`(1)],
+xref:delete-http-lb-config.adoc#delete-http-lb-config[`delete-http-lb-config`(1)]
 
 

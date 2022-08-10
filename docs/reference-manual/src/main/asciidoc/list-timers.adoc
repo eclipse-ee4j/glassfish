@@ -7,13 +7,11 @@ prev=list-threadpools.html
 
 = list-timers
 
-[[list-timers-1]][[GSRFM00205]][[list-timers]]
+[[list-timers]]
 
 == list-timers
 
 Lists all of the persistent timers owned by server instance(s)
-
-[[sthref1834]]
 
 === Synopsis
 
@@ -23,26 +21,20 @@ asadmin [asadmin-options] list-timers [--help]
 [target]
 ----
 
-[[sthref1835]]
-
 === Description
 
 The `list-timers` subcommand lists the persistent timers owned by a
 specific server instance or a cluster of server instances. This command
 is supported in remote mode only.
 
-[[sthref1836]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1837]]
 
 === Operands
 
@@ -53,11 +45,9 @@ target::
   timers owned by each instance in the cluster is listed. The default
   target is `server`, the default server instance.
 
-[[sthref1838]]
-
 === Examples
 
-[[GSRFM715]][[sthref1839]]
+[[sthref1839]]
 
 ==== Example 1   Listing Current Timers in a Server Instance
 
@@ -72,8 +62,6 @@ asadmin> list-timers server
 The list-timers command was executed successfully.
 ----
 
-[[sthref1840]]
-
 === Exit Status
 
 0::
@@ -81,18 +69,16 @@ The list-timers command was executed successfully.
 1::
   error in executing the command
 
-[[sthref1841]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:migrate-timers.html#migrate-timers-1[`migrate-timers`(1)]
+xref:migrate-timers.adoc#migrate-timers[`migrate-timers`(1)]
 
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-the-timer-service[
 Using the Timer Service] in The Jakarta EE Tutorial
 
-"link:application-development-guide/ejb.html#GSDVG00146[EJB Timer Service]"
+"link:application-development-guide/ejb.html#ejb-timer-service[EJB Timer Service]"
 in {productName} Application Development Guide
 
 

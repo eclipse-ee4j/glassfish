@@ -7,13 +7,11 @@ prev=list-batch-job-executions.html
 
 = list-batch-jobs
 
-[[list-batch-jobs-1]][[GSRFM861]][[list-batch-jobs]]
+[[list-batch-jobs]]
 
 == list-batch-jobs
 
 Lists batch jobs
-
-[[sthref1348]]
 
 === Synopsis
 
@@ -27,19 +25,15 @@ asadmin [asadmin-options] list-batch-jobs [--help]
 [job_name]
 ----
 
-[[sthref1349]]
-
 === Description
 
 The `list-batch-jobs` subcommand lists batch jobs and job details.
-
-[[sthref1350]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -95,18 +89,14 @@ asadmin-options::
   option is used. The default value is `true`. To suppress the headings,
   set the `--header` option to `false`.
 
-[[sthref1351]]
-
 === Operands
 
 job_name::
   The name of the job for which to list details.
 
-[[sthref1352]]
-
 === Examples
 
-[[GSRFM862]][[sthref1353]]
+[[sthref1353]]
 
 ==== Example 1   Listing Batch Jobs
 
@@ -121,8 +111,6 @@ bonus    6
 Command list-batch-jobs executed successfully.
 ----
 
-[[sthref1354]]
-
 === Exit Status
 
 0::
@@ -130,15 +118,13 @@ Command list-batch-jobs executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1355]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-batch-job-executions.html#list-batch-job-executions-1[`list-batch-job-executions`(1)],
-link:list-batch-job-steps.html#list-batch-job-steps-1[`list-batch-job-steps`(1)],
-link:list-batch-runtime-configuration.html#list-batch-runtime-configuration-1[`list-batch-runtime-configuration`(1)],
-link:set-batch-runtime-configuration.html#set-batch-runtime-configuration-1[`set-batch-runtime-configuration`(1)]
+xref:list-batch-job-executions.adoc#list-batch-job-executions[`list-batch-job-executions`(1)],
+xref:list-batch-job-steps.adoc#list-batch-job-steps[`list-batch-job-steps`(1)],
+xref:list-batch-runtime-configuration.adoc#list-batch-runtime-configuration[`list-batch-runtime-configuration`(1)],
+xref:set-batch-runtime-configuration.adoc#set-batch-runtime-configuration[`set-batch-runtime-configuration`(1)]
 
 

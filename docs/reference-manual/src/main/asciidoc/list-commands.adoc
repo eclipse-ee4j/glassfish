@@ -7,13 +7,11 @@ prev=list-clusters.html
 
 = list-commands
 
-[[list-commands-1]][[GSRFM00154]][[list-commands]]
+[[list-commands]]
 
 == list-commands
 
 Lists available commands
-
-[[sthref1381]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-commands [--help]
 
 pattern-list
 ----
-
-[[sthref1382]]
 
 === Description
 
@@ -39,13 +35,11 @@ listed.
 
 This subcommand is supported in local mode and remote mode.
 
-[[sthref1383]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -60,8 +54,6 @@ asadmin-options::
   If this option is set to true, the `--localonly` option must be set to
   false. Otherwise, an error occurs.
 
-[[sthref1384]]
-
 === Operands
 
 pattern-list::
@@ -69,11 +61,9 @@ pattern-list::
   subcommands. Only the subcommands that contain any one of the
   specified text strings is listed.
 
-[[sthref1385]]
-
 === Examples
 
-[[GSRFM644]][[sthref1386]]
+[[sthref1386]]
 
 ==== Example 1   Listing the Local Subcommands
 
@@ -106,7 +96,7 @@ version
 Command list-commands executed successfully.
 ----
 
-[[GSRFM645]][[sthref1387]]
+[[sthref1387]]
 
 ==== Example 2   Filtering the Subcommands That Are Listed
 
@@ -130,7 +120,7 @@ set-log-attributes                      unset-web-env-entry
 Command list-commands executed successfully.
 ----
 
-[[GSRFM646]][[sthref1388]]
+[[sthref1388]]
 
 ==== Example 3   Listing All Subcommands
 
@@ -203,8 +193,6 @@ delete-audit-module                     list-message-security-providers
 ...
 ----
 
-[[sthref1389]]
-
 === Exit Status
 
 0::
@@ -212,14 +200,12 @@ delete-audit-module                     list-message-security-providers
 1::
   error in executing the subcommand
 
-[[sthref1390]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-components.html#list-components-1[`list-components`(1)],
-link:list-containers.html#list-containers-1[`list-containers`(1)],
-link:list-modules.html#list-modules-1[`list-modules`(1)]
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:list-containers.adoc#list-containers[`list-containers`(1)],
+xref:list-modules.adoc#list-modules[`list-modules`(1)]
 
 

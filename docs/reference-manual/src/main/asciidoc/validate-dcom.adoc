@@ -7,13 +7,11 @@ prev=uptime.html
 
 = validate-dcom
 
-[[validate-dcom-1]][[GSRFM796]][[validate-dcom]]
+[[validate-dcom]]
 
 == validate-dcom
 
 Tests the connection over DCOM to a remote host
-
-[[sthref2323]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] validate-dcom [--help]
 [--remotetestdir remote-test-directory]
 [--verbose={false|true}] host-name
 ----
-
-[[sthref2324]]
 
 === Description
 
@@ -70,13 +66,11 @@ information about these operations, set the `--verbose` option to `true`.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2325]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -113,18 +107,14 @@ If the `--verbose` option is true and the `AS_DEBUG` environment
     variable is set, the subcommand also displays the command line for
     each process that is running on the remote host.
 
-[[sthref2326]]
-
 === Operands
 
 host-name::
   The name of the host to which to test the connection over DCOM.
 
-[[sthref2327]]
-
 === Examples
 
-[[GSRFM834]][[sthref2328]]
+[[sthref2328]]
 
 ==== Example 1   Testing the Connection Over DCOM to a Remote Host
 
@@ -136,7 +126,7 @@ asadmin> validate-dcom --wpmdl2
 Command validate-dcom executed successfully.
 ----
 
-[[GSRFM797]][[sthref2329]]
+[[sthref2329]]
 
 ==== Example 2   Verbosely Testing the Connection Over DCOM to a Remote Host
 
@@ -174,8 +164,6 @@ C:\Windows\system32>dir C:\
 Command validate-dcom executed successfully.
 ----
 
-[[sthref2330]]
-
 === Exit Status
 
 0::
@@ -183,16 +171,14 @@ Command validate-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref2331]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:ping-node-dcom.html#ping-node-dcom-1[`ping-node-dcom`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)]
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
+xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
+xref:ping-node-dcom.adoc#ping-node-dcom[`ping-node-dcom`(1)],
+xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)]
 
 

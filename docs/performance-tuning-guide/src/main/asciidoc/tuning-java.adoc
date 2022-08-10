@@ -7,21 +7,18 @@ prev=tuning-glassfish.html
 
 = Tuning the Java Runtime System
 
-[[GSPTG00006]][[abeia]]
-
-
 [[tuning-the-java-runtime-system]]
 == 4 Tuning the Java Runtime System
 
 The following topics are addressed here:
 
-* link:#abeib[Java Virtual Machine Settings]
-* link:#gfpzy[Start Options]
-* link:#glaat[Tuning High Availability Persistence]
-* link:#abeic[Managing Memory and Garbage Collection]
-* link:#abeiq[Further Information]
+* xref:#java-virtual-machine-settings[Java Virtual Machine Settings]
+* xref:#start-options[Start Options]
+* xref:#tuning-high-availability-persistence[Tuning High Availability Persistence]
+* xref:#managing-memory-and-garbage-collection[Managing Memory and Garbage Collection]
+* xref:#further-information[Further Information]
 
-[[abeib]][[GSPTG00069]][[java-virtual-machine-settings]]
+[[java-virtual-machine-settings]]
 
 === Java Virtual Machine Settings
 
@@ -34,13 +31,13 @@ documentation to understand all consequences.
 JAVA_HOME/bin/java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version
 ----
 
-[[gfpzy]][[GSPTG00070]][[start-options]]
+[[start-options]]
 
 In some situations, performance can be improved by using large page sizes.
 For Ultrasparc CMT systems, include the `-XX:+UseLargePages` and
 `-XX:LargePageSizeInBytes=256m` arguments with your JVM tuning.
 
-[[glaat]][[GSPTG00071]][[tuning-high-availability-persistence]]
+[[tuning-high-availability-persistence]]
 
 === Tuning High Availability Persistence
 
@@ -57,7 +54,7 @@ The default value for this property is `20`. You can try setting it as
 high as `90`, depending on system loads. Like all system properties,
 this property is set with the `-D` flag in your Java arguments.
 
-[[abeic]][[GSPTG00072]][[managing-memory-and-garbage-collection]]
+[[managing-memory-and-garbage-collection]]
 
 === Managing Memory and Garbage Collection
 
@@ -65,13 +62,13 @@ The efficiency of any application depends on how well memory and garbage
 collection are managed. The following sections provide information on
 optimizing memory and allocation functions:
 
-* link:#abeid[Tuning the Garbage Collector]
-* link:#abeig[Tracing Garbage Collection]
-* link:#abeih[Other Garbage Collector Settings]
-* link:#abeii[Tuning the Java Heap]
-* link:#abeio[Rebasing DLLs on Windows]
+* xref:#tuning-the-garbage-collector[Tuning the Garbage Collector]
+* xref:#tracing-garbage-collection[Tracing Garbage Collection]
+* xref:#other-garbage-collector-settings[Other Garbage Collector Settings]
+* xref:#tuning-the-java-heap[Tuning the Java Heap]
+* xref:#rebasing-dlls-on-windows[Rebasing DLLs on Windows]
 
-[[abeid]][[GSPTG00205]][[tuning-the-garbage-collector]]
+[[tuning-the-garbage-collector]]
 
 ==== Tuning the Garbage Collector
 
@@ -123,7 +120,7 @@ for lock-free, fast, and scalable object allocation. So, custom object
 pooling is not often required. Consider pooling only if object
 construction cost is high and significantly affects execution profiles.
 
-[[abeie]][[GSPTG00146]][[choosing-the-garbage-collection-algorithm]]
+[[choosing-the-garbage-collection-algorithm]]
 
 ===== Choosing the Garbage Collection Algorithm
 
@@ -132,7 +129,7 @@ throughput but be tolerant of somewhat long pause times. If you would
 prefer to have minimal pause times at the expense of some throughput and
 increased CPU usage, consider using the CMS collector.
 
-[[gaclx]][[GSPTG00038]][[to-use-the-cms-collector]]
+[[to-use-the-cms-collector]]
 
 To use the CMS collector
 
@@ -146,19 +143,19 @@ To do this, add the following JVM options:
 * `-XX:+UseConcMarkSweepGC`
 * `-XX:SoftRefLRUPolicyMSPerMB=1`
 
-[[abeif]][[GSPTG00147]][[additional-information]]
+[[additional-information]]
 
 ===== Additional Information
 
 Use the `jvmstat` utility to monitor HotSpot garbage collection. (See
-link:#abeiq[Further Information].)
+xref:#further-information[Further Information].)
 
 For detailed information on tuning the garbage collector, see
 http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html[Java
 SE 6 HotSpot Virtual Machine Garbage Collection Tuning]
 (`http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html`).
 
-[[abeig]][[GSPTG00206]][[tracing-garbage-collection]]
+[[tracing-garbage-collection]]
 
 ==== Tracing Garbage Collection
 
@@ -208,7 +205,7 @@ Other useful monitoring options include:
 * `-XX:+PrintGCDetails` for more detailed logging information
 * `-Xloggc:file` to save the information in a log file
 
-[[abeih]][[GSPTG00207]][[other-garbage-collector-settings]]
+[[other-garbage-collector-settings]]
 
 ==== Other Garbage Collector Settings
 
@@ -216,7 +213,7 @@ To specify the attributes for the Java virtual machine, use the
 Administration Console and set the property under config-name > JVM
 settings (JVM options).
 
-[[glgkm]][[GSPTG00148]][[setting-the-maximum-permanent-generation]]
+[[setting-the-maximum-permanent-generation]]
 
 ===== Setting the Maximum Permanent Generation
 
@@ -228,7 +225,7 @@ performance, since filling the permanent generation can trigger a Full
 GC. Tune the maximum permanent generation with the `-XX:MaxPermSize`
 option.
 
-[[glglk]][[GSPTG00149]][[disabling-explicit-garbage-collection]]
+[[disabling-explicit-garbage-collection]]
 
 ===== Disabling Explicit Garbage Collection
 
@@ -257,7 +254,7 @@ file. {productName} can then delete or rename the file.
 ====
 
 
-[[glglr]][[GSPTG00150]][[setting-the-frequency-of-full-garbage-collection]]
+[[setting-the-frequency-of-full-garbage-collection]]
 
 ===== Setting the Frequency of Full Garbage Collection
 
@@ -269,17 +266,17 @@ collection. Control the frequency of these collections with the property
 `- java -Dsun.rmi.dgc.client.gcInterval=3600000` specifies explicit
 collection once per hour instead of the default rate of once per minute.
 
-[[abeii]][[GSPTG00208]][[tuning-the-java-heap]]
+[[tuning-the-java-heap]]
 
 ==== Tuning the Java Heap
 
 This section discusses topics related to tuning the Java Heap for
 performance.
 
-* link:#abeij[Guidelines for Java Heap Sizing]
-* link:#abeik[Heap Tuning Parameters]
+* xref:#guidelines-for-java-heap-sizing[Guidelines for Java Heap Sizing]
+* xref:#heap-tuning-parameters[Heap Tuning Parameters]
 
-[[abeij]][[GSPTG00151]][[guidelines-for-java-heap-sizing]]
+[[guidelines-for-java-heap-sizing]]
 
 ===== Guidelines for Java Heap Sizing
 
@@ -287,7 +284,7 @@ Maximum heap size depends on maximum address space per process. The
 following table shows the maximum per-process address values for various
 platforms:
 
-[[sthref10]][[gacna]]
+[[gacna]]
 
 Table 4-1 Maximum Address Space Per Process
 
@@ -318,7 +315,7 @@ applications, use the Java SE throughput collector on machines with
 multiple processors (`-XX:+AggressiveHeap`) and as large a heap as you
 can fit in the free memory of your machine.
 
-[[abeik]][[GSPTG00152]][[heap-tuning-parameters]]
+[[heap-tuning-parameters]]
 
 ===== Heap Tuning Parameters
 
@@ -381,7 +378,7 @@ http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html[Jav
 HotSpot VM Options]
 (`http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html`).
 
-[[GSPTG00032]][[fxxpw]]
+[[fxxpw]]
 Example 4-1 Heap Configuration on Solaris
 
 This is an exmple heap configuration used by {productName} on Solaris
@@ -395,7 +392,7 @@ for large applications:
 -Dsun.rmi.dgc.client.gcInterval=3600000
 ----
 
-[[abeil]][[GSPTG00031]][[survivor-ratio-sizing]]
+[[survivor-ratio-sizing]]
 
 Survivor Ratio Sizing
 
@@ -413,7 +410,7 @@ Use the option `-XX:+PrintTenuringDistribution` to show the threshold
 and ages of the objects in the new generation. It is useful for
 observing the lifetime distribution of an application.
 
-[[abeio]][[GSPTG00209]][[rebasing-dlls-on-windows]]
+[[rebasing-dlls-on-windows]]
 
 ==== Rebasing DLLs on Windows
 
@@ -441,11 +438,9 @@ Move these libraries near the system DLLs (`msvcrt.dll` is at
 substantially. Since rebasing can be done on any DLL, rebase to the DLLs
 after installing the {productName}.
 
-[[gacmt]][[GSPTG00039]][[to-rebase-the-glassfish-servers-dlls]]
+[[to-rebase-the-glassfish-servers-dlls]]
 
 ===== To rebase the {productName}'s DLLs
-
-[[sthref11]]
 
 Before You Begin
 
@@ -479,7 +474,7 @@ accordingly on the JVM Settings page in the Admin Console.
 
 5. Restart the {productName}.
 
-[[GSPTG00033]][[fxxpz]]
+[[fxxpz]]
 Example 4-2 Heap Configuration on Windows
 
 This is an example heap configuration used by {productName}
@@ -492,8 +487,6 @@ for heavy server-centric applications, on Windows, as set in the
 <jvm-options> -Xmx1400m </jvm-options>
 ----
 
-[[sthref12]]
-
 See Also
 
 For more information on rebasing, see
@@ -501,7 +494,7 @@ http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/reb
 documentation for rebase utility]
 (`http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/rebase.asp`).
 
-[[abeiq]][[GSPTG00073]][[further-information]]
+[[further-information]]
 
 === Further Information
 

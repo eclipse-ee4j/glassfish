@@ -7,13 +7,11 @@ prev=list-jndi-entries.html
 
 = list-jndi-resources
 
-[[list-jndi-resources-1]][[GSRFM00179]][[list-jndi-resources]]
+[[list-jndi-resources]]
 
 == list-jndi-resources
 
 Lists all existing JNDI resources
-
-[[sthref1592]]
 
 === Synopsis
 
@@ -22,26 +20,20 @@ Lists all existing JNDI resources
 list-jndi-resources [--help] [target]
 ----
 
-[[sthref1593]]
-
 === Description
 
 The `list-jndi-resources` subcommand identifies all existing JNDI resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1594]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1595]]
 
 === Operands
 
@@ -60,11 +52,9 @@ target::
   instance-name;;
     Lists the JNDI resources on a specified server instance.
 
-[[sthref1596]]
-
 === Examples
 
-[[GSRFM678]][[sthref1597]]
+[[sthref1597]]
 
 ==== Example 1   Listing JNDI Resources
 
@@ -79,8 +69,6 @@ jndi_resource3
 Command list-jndi-resources executed successfully
 ----
 
-[[sthref1598]]
-
 === Exit Status
 
 0::
@@ -88,13 +76,11 @@ Command list-jndi-resources executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1599]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jndi-resource.html#create-jndi-resource-1[`create-jndi-resource`(1)],
-link:delete-jndi-resource.html#delete-jndi-resource-1[`delete-jndi-resource`(1)]
+xref:create-jndi-resource.adoc#create-jndi-resource[`create-jndi-resource`(1)],
+xref:delete-jndi-resource.adoc#delete-jndi-resource[`delete-jndi-resource`(1)]
 
 

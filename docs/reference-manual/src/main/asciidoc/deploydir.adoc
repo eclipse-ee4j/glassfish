@@ -7,13 +7,11 @@ prev=deploy.html
 
 = deploydir
 
-[[deploydir-1]][[GSRFM00115]][[deploydir]]
+[[deploydir]]
 
 == deploydir
 
 Deploys an exploded format of application archive
-
-[[sthref1031]]
 
 === Synopsis
 
@@ -46,8 +44,6 @@ asadmin [asadmin-options] deploydir [--help]
 [--properties(name=value)[:name=value]*]
 dirpath
 ----
-
-[[sthref1032]]
 
 === Description
 
@@ -84,13 +80,11 @@ false, the subcommand fails.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1033]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -119,7 +113,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
+  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--retrieve`::
@@ -376,9 +370,7 @@ Other available properties are determined by the implementation of the
   decoration process. The {productName} OSGi web container registers
   a URL stream handler named `webbundle`, which is used to wrap a plain
   WAR file as a WAB. For more information about usage, see the related
-  example in the link:deploy.html#deploy-1[`deploy`(1)] help page.
-
-[[sthref1034]]
+  example in the xref:deploy.adoc#deploy[`deploy`(1)] help page.
 
 === Operands
 
@@ -386,11 +378,9 @@ dirpath::
   Path to the directory containing the exploded format of the deployable
   archive. This is the path to the directory on the server machine.
 
-[[sthref1035]]
-
 === Examples
 
-[[GSRFM589]][[sthref1036]]
+[[sthref1036]]
 
 ==== Example 1   Deploying an Application From a Directory
 
@@ -407,8 +397,6 @@ WARNING : deploydir command deprecated. Please use deploy command instead.
 Command deploydir executed successfully
 ----
 
-[[sthref1037]]
-
 === Exit Status
 
 0::
@@ -416,18 +404,16 @@ Command deploydir executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1038]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)], link:deploy.html#deploy-1[`deploy`(1)],
-link:redeploy.html#redeploy-1[`redeploy`(1)],
-link:set.html#set-1[`set`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+xref:get.adoc#get[`get`(1)], xref:deploy.adoc#deploy[`deploy`(1)],
+xref:redeploy.adoc#redeploy[`redeploy`(1)],
+xref:set.adoc#set[`set`(1)],
+xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

@@ -10,5 +10,5 @@ prev=loe.html
 [[list-of-tables]]
 == List of Tables
 
-* link:adding-configuration-data.html#gjrlg[6-1 Commonly Used Annotations
+* xref:adding-configuration-data.adoc#gjrlg[6-1 Commonly Used Annotations
 for Validating {productName} Configuration Data]

@@ -7,13 +7,11 @@ prev=list-domains.html
 
 = list-file-groups
 
-[[list-file-groups-1]][[GSRFM00164]][[list-file-groups]]
+[[list-file-groups]]
 
 == list-file-groups
 
 Lists file groups
-
-[[sthref1469]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] list-file-groups [--help]
 [--target target]
 ----
 
-[[sthref1470]]
-
 === Description
 
 The `list-file-groups` subcommand lists the file users and groups
@@ -35,13 +31,11 @@ specified, all groups are listed.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1471]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -63,11 +57,9 @@ asadmin-options::
   instance_name;;
     Lists the file groups for a particular instance.
 
-[[sthref1472]]
-
 === Examples
 
-[[GSRFM657]][[sthref1473]]
+[[sthref1473]]
 
 ==== Example 1   Listing Groups in all File Realms
 
@@ -81,8 +73,6 @@ manager
 Command list-file-groups executed successfully
 ----
 
-[[sthref1474]]
-
 === Exit Status
 
 0::
@@ -90,15 +80,13 @@ Command list-file-groups executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1475]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
-link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
-link:list-file-users.html#list-file-users-1[`list-file-users`(1)],
-link:update-file-user.html#update-file-user-1[`update-file-user`(1)]
+xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
+xref:delete-file-user.adoc#delete-file-user[`delete-file-user`(1)],
+xref:list-file-users.adoc#list-file-users[`list-file-users`(1)],
+xref:update-file-user.adoc#update-file-user[`update-file-user`(1)]
 
 

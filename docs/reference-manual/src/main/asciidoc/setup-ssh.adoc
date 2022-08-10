@@ -7,13 +7,11 @@ prev=setup-local-dcom.html
 
 = setup-ssh
 
-[[setup-ssh-1]][[GSRFM00229]][[setup-ssh]]
+[[setup-ssh]]
 
 == setup-ssh
 
 Sets up an SSH key on specified hosts
-
-[[sthref2074]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] setup-ssh [--help]
 [--generatekey={false|true}]
 host-list
 ----
-
-[[sthref2075]]
 
 === Description
 
@@ -107,7 +103,7 @@ for the password and, if necessary, the passphrase. To distribute the
 public key without being prompted, run the subcommand as follows:
 
 ** Set the `--interactive` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility to `false`.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility to `false`.
 
 ** Set the `--passwordfile` option of the `asadmin` utility to a file in
 which the `AS_ADMIN_SSHPASSWORD` entry specifies the SSH user's password
@@ -120,13 +116,11 @@ If public key authentication is already set up on a host, the subcommand
 informs the user that public key authentication is already set up and
 does not distribute the key to the host.
 
-[[sthref2076]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -186,19 +180,15 @@ asadmin-options::
     This value is the default.
 --
 
-[[sthref2077]]
-
 === Operands
 
 host-list::
   A space-separated list of the names of the hosts where an SSH key is
   to be set up.
 
-[[sthref2078]]
-
 === Examples
 
-[[GSRFM751]][[sthref2079]]
+[[sthref2079]]
 
 ==== Example 1   Setting Up an SSH Key
 
@@ -217,7 +207,7 @@ Successfully connected to gfuser@sj04 using keyfile /home/gfuser/.ssh/id_rsa
 Command setup-ssh executed successfully.
 ----
 
-[[GSRFM752]][[sthref2080]]
+[[sthref2080]]
 
 ==== Example 2   Generating and Setting Up an SSH Key
 
@@ -237,8 +227,6 @@ Successfully connected to gfuser@sua02 using keyfile /home/gfuser/.ssh/id_rsa
 Command setup-ssh executed successfully.
 ----
 
-[[sthref2081]]
-
 === Exit Status
 
 0::
@@ -246,11 +234,9 @@ Command setup-ssh executed successfully.
 1::
   error in executing the command
 
-[[sthref2082]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-1[`ssh`(1)],
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)]

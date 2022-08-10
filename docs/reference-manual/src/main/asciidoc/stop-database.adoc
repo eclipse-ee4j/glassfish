@@ -7,13 +7,11 @@ prev=stop-cluster.html
 
 = stop-database
 
-[[stop-database-1]][[GSRFM00239]][[stop-database]]
+[[stop-database]]
 
 == stop-database
 
 Stops the Java DB
-
-[[sthref2158]]
 
 === Synopsis
 
@@ -24,27 +22,23 @@ asadmin [asadmin-options] stop-database [--help]
 [--dbhost host] [--dbport port-no]
 ----
 
-[[sthref2159]]
-
 === Description
 
 The `stop-database` subcommand stops a process of the Java DB server.
 Java DB server is available for use with {productName} and is based
 upon Apache Derby. The database is typically started with the
-link:start-database.html#start-database-1[`start-database`(1)]
+xref:start-database.adoc#start-database[`start-database`(1)]
 subcommand. A single host can have multiple database server processes
 running on different ports. The `stop-database` subcommand stops the
 database server process for the specified port only.
 
 This subcommand is supported in local mode only.
 
-[[sthref2160]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -61,11 +55,9 @@ asadmin-options::
   The port number where the Java DB server listens for client
   connections. The default is 1527.
 
-[[sthref2161]]
-
 === Examples
 
-[[GSRFM765]][[sthref2162]]
+[[sthref2162]]
 
 ==== Example 1   Stopping Java DB
 
@@ -78,8 +70,6 @@ Connection obtained for host: host1, port number 5001.
 Shutdown successful.
 Command stop-database executed successfully.
 ----
-
-[[sthref2163]]
 
 === Exit Status
 
@@ -95,14 +85,12 @@ as-install``/javadb``.
 1::
   error in executing the command
 
-[[sthref2164]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:start-database.html#start-database-1[`start-database`(1)]
+xref:start-database.adoc#start-database[`start-database`(1)]
 
-"link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
+"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
 
 

@@ -7,13 +7,11 @@ prev=delete-jacc-provider.html
 
 = delete-javamail-resource
 
-[[delete-javamail-resource-1]][[GSRFM00087]][[delete-javamail-resource]]
+[[delete-javamail-resource]]
 
 == delete-javamail-resource
 
 Removes a JavaMail session resource
-
-[[sthref769]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-javamail-resource [--help]
 [--target target] jndi_name
 ----
 
-[[sthref770]]
-
 === Description
 
 The `delete-javamail-resource` subcommand removes the specified JavaMail
@@ -33,13 +29,11 @@ before running this subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref771]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -57,18 +51,14 @@ asadmin-options::
   instance_name;;
     Deletes the resource from a particular server instance.
 
-[[sthref772]]
-
 === Operands
 
 jndi_name::
   The JNDI name of the JavaMail session resource to be deleted.
 
-[[sthref773]]
-
 === Examples
 
-[[GSRFM555]][[sthref774]]
+[[sthref774]]
 
 ==== Example 1   Deleting a JavaMail Resource
 
@@ -81,8 +71,6 @@ asadmin> delete-javamail-resource mail/MyMailSession
 Command delete-javamail-resource executed successfully.
 ----
 
-[[sthref775]]
-
 === Exit Status
 
 0::
@@ -90,13 +78,11 @@ Command delete-javamail-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref776]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-javamail-resource.html#create-javamail-resource-1[`create-javamail-resource`(1)],
-link:list-javamail-resources.html#list-javamail-resources-1[`list-javamail-resources`(1)]
+xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
+xref:list-javamail-resources.adoc#list-javamail-resources[`list-javamail-resources`(1)]
 
 

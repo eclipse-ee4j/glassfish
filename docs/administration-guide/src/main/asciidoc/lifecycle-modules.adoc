@@ -5,9 +5,6 @@ prev=monitoring.adoc
 
 = Administering Life Cycle Modules
 
-[[GSADG00013]][[giury]]
-
-
 [[administering-life-cycle-modules]]
 == 9 Administering Life Cycle Modules
 
@@ -16,14 +13,14 @@ the {productName} 7 environment.
 
 The following topics are addressed here:
 
-* link:#giuxo[About Life Cycle Modules]
-* link:#giuue[Configuring Life Cycle Modules]
+* <<About Life Cycle Modules>>
+* <<Configuring Life Cycle Modules>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[giuxo]][[GSADG00566]][[about-life-cycle-modules]]
+[[about-life-cycle-modules]]
 
 === About Life Cycle Modules
 
@@ -50,7 +47,7 @@ the containers.
 subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
-on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing
+on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing
 Lifecycle Listeners]" in {productName}
 Application Development Guide.
 
@@ -63,18 +60,18 @@ not shutdown or termination.
 ====
 
 
-[[giuue]][[GSADG00567]][[configuring-life-cycle-modules]]
+[[configuring-life-cycle-modules]]
 
 === Configuring Life Cycle Modules
 
 The following topics are addressed here:
 
-* link:#giuus[To Create a Life Cycle Module]
-* link:#giuvh[To List Life Cycle Modules]
-* link:#giuyh[To Update a Life Cycle Module]
-* link:#giuux[To Delete a Life Cycle Module]
+* <<To Create a Life Cycle Module>>
+* <<To List Life Cycle Modules>>
+* <<To Update a Life Cycle Module>>
+* <<To Delete a Life Cycle Module>>
 
-[[giuus]][[GSADG00399]][[to-create-a-life-cycle-module]]
+[[to-create-a-life-cycle-module]]
 
 ==== To Create a Life Cycle Module
 
@@ -83,15 +80,15 @@ life cycle module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a new life cycle modules by using the
-link:reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`] subcommand.
+link:reference-manual/create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`] subcommand.
 +
 Information about options and properties for the subcommand are included
 in this help page.
 3. Restart the server for your changes to take effect.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00206]][[giuyo]]
+[[giuyo]]
 Example 9-1 Creating a Life Cycle Module
 
 This example creates the `customSetup` life cycle module :
@@ -105,14 +102,12 @@ asadmin> create-lifecycle-module --classname "com.acme.CustomSetup"
 Command create-lifecycle-module executed successfully
 ----
 
-[[GSADG927]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-lifecycle-module` at the command line.
 
-[[giuvh]][[GSADG00400]][[to-list-life-cycle-modules]]
+[[to-list-life-cycle-modules]]
 
 ==== To List Life Cycle Modules
 
@@ -121,9 +116,9 @@ existing life cycle modules.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List life cycle modules by using the
-link:reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`] subcommand.
+link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 
-[[GSADG00207]][[giuyr]]
+[[giuyr]]
 Example 9-2 Listing Life Cycle Modules
 
 This example lists the existing life cycle modules.
@@ -135,21 +130,19 @@ WSTCPConnectorLCModule
 Command list-lifecycle-modules executed successfully
 ----
 
-[[GSADG928]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-lifecycle-modules` at the command line.
 
-[[giuyh]][[GSADG00401]][[to-update-a-life-cycle-module]]
+[[to-update-a-life-cycle-module]]
 
 ==== To Update a Life Cycle Module
 
 Use the `set` subcommand to update an existing life cycle module.
 
 1. List the properties that can be updated for a life cycle module by
-using the link:reference-manual/get.html#GSRFM00139[`get`] subcommand.
+using the link:reference-manual/get.html#get[`get`] subcommand.
 +
 For example (single mode):
 +
@@ -170,9 +163,9 @@ applications.application.sampleLCMmodule.property.isLifecycle=true
 subcommand.
 3. Restart the server for your changes to take effect.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00208]][[giuyq]]
+[[giuyq]]
 Example 9-3 Updating a Life Cycle Module
 
 This example updates the `classpath` property.
@@ -185,14 +178,12 @@ sampleLCMmodule.property.classpath=/build/lcm_new.jar
 Command set executed successfully.
 ----
 
-[[GSADG929]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help set` at the command line.
 
-[[giuux]][[GSADG00402]][[to-delete-a-life-cycle-module]]
+[[to-delete-a-life-cycle-module]]
 
 ==== To Delete a Life Cycle Module
 
@@ -201,11 +192,11 @@ life cycle module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the current life cycle modules by using the
-link:reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`] subcommand.
+link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 3. Delete a life cycle module by using the
-link:reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`] subcommand.
+link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`] subcommand.
 
-[[GSADG00209]][[giuyi]]
+[[giuyi]]
 Example 9-4 Deleting a Life Cycle Module
 
 This example deletes the `customSetup` life cycle module.
@@ -215,8 +206,6 @@ This example deletes the `customSetup` life cycle module.
 asadmin> delete-lifecycle-module customSetup
 Command delete-lifecycle-module executed successfully
 ----
-
-[[GSADG930]]
 
 See Also
 

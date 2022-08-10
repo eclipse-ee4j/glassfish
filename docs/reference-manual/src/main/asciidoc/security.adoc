@@ -6,13 +6,11 @@ prev=resource.html
 
 = security
 
-[[security-5asc]][[GSRFM00274]][[security]]
+[[security]]
 
 == security
 
 Secure and administer {productName} applications
-
-[[sthref2412]]
 
 === Description
 
@@ -24,27 +22,25 @@ authorization, and public key infrastructure. {productName} is built
 on the Java security model, which uses a sandbox where applications can
 run safely, without potential risk to systems or users.
 
-[[sthref2413]]
-
 === See Also
 
-link:change-admin-password.html#change-admin-password-1[`change-admin-password`(1)],
-link:change-master-password.html#change-master-password-1[`change-master-password`(1)],
-link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],
-link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
-link:create-message-security-provider.html#create-message-security-provider-1[`create-message-security-provider`(1)],
-link:create-password-alias.html#create-password-alias-1[`create-password-alias`(1)],
-link:create-ssl.html#create-ssl-1[`create-ssl`(1)],
-link:delete-auth-realm.html#delete-auth-realm-1[`delete-auth-realm`(1)],
-link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
-link:delete-message-security-provider.html#delete-message-security-provider-1[`delete-message-security-provider`(1)],
-link:delete-password-alias.html#delete-password-alias-1[`delete-password-alias`(1)],
-link:delete-ssl.html#delete-ssl-1[`delete-ssl`(1)],
-link:list-auth-realms.html#list-auth-realms-1[`list-auth-realms`(1)],
-link:list-connector-security-maps.html#list-connector-security-maps-1[`list-connector-security-maps`(1)],
-link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],
-link:list-file-users.html#list-file-users-1[`list-file-users`(1)].
+xref:change-admin-password.adoc#change-admin-password[`change-admin-password`(1)],
+xref:change-master-password.adoc#change-master-password[`change-master-password`(1)],
+xref:create-auth-realm.adoc#create-auth-realm[`create-auth-realm`(1)],
+xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
+xref:create-message-security-provider.adoc#create-message-security-provider[`create-message-security-provider`(1)],
+xref:create-password-alias.adoc#create-password-alias[`create-password-alias`(1)],
+xref:create-ssl.adoc#create-ssl[`create-ssl`(1)],
+xref:delete-auth-realm.adoc#delete-auth-realm[`delete-auth-realm`(1)],
+xref:delete-file-user.adoc#delete-file-user[`delete-file-user`(1)],
+xref:delete-message-security-provider.adoc#delete-message-security-provider[`delete-message-security-provider`(1)],
+xref:delete-password-alias.adoc#delete-password-alias[`delete-password-alias`(1)],
+xref:delete-ssl.adoc#delete-ssl[`delete-ssl`(1)],
+xref:list-auth-realms.adoc#list-auth-realms[`list-auth-realms`(1)],
+xref:list-connector-security-maps.adoc#list-connector-security-maps[`list-connector-security-maps`(1)],
+xref:list-file-groups.adoc#list-file-groups[`list-file-groups`(1)],
+xref:list-file-users.adoc#list-file-users[`list-file-users`(1)].
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

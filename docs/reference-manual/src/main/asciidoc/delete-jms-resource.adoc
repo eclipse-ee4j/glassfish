@@ -7,13 +7,11 @@ prev=delete-jms-host.html
 
 = delete-jms-resource
 
-[[delete-jms-resource-1]][[GSRFM00092]][[delete-jms-resource]]
+[[delete-jms-resource]]
 
 == delete-jms-resource
 
 Removes a JMS resource
-
-[[sthref809]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] delete-jms-resource [--help]
 jndi_name
 ----
 
-[[sthref810]]
-
 === Description
 
 The `delete-jms-resource` subcommand removes the specified Java Message
@@ -35,13 +31,11 @@ resource before executing this subcommand.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref811]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -71,18 +65,14 @@ deletion.
   instance-name;;
     Deletes the JMS resource from the specified server instance.
 
-[[sthref812]]
-
 === Operands
 
 jndi_name::
   The JNDI name of the JMS resource to be deleted.
 
-[[sthref813]]
-
 === Examples
 
-[[GSRFM560]][[sthref814]]
+[[sthref814]]
 
 ==== Example 1   Deleting a JMS destination resource
 
@@ -96,8 +86,6 @@ Administered object jms/MyQueue deleted.
 Command delete-jms-resource executed successfully.
 ----
 
-[[sthref815]]
-
 === Exit Status
 
 0::
@@ -105,13 +93,11 @@ Command delete-jms-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref816]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)],
-link:list-jms-resources.html#list-jms-resources-1[`list-jms-resources`(1)]
+xref:create-jms-resource.adoc#create-jms-resource[`create-jms-resource`(1)],
+xref:list-jms-resources.adoc#list-jms-resources[`list-jms-resources`(1)]
 
 

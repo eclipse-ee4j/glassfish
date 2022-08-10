@@ -7,9 +7,6 @@ prev=connectors.html
 
 = Developing Lifecycle Listeners
 
-[[GSDVG00014]][[beamc]]
-
-
 [[developing-lifecycle-listeners]]
 == 12 Developing Lifecycle Listeners
 
@@ -36,14 +33,14 @@ For Javadoc tool pages relevant to lifecycle modules, see the
 
 The following topics are addressed here:
 
-* link:#beamd[Server Life Cycle Events]
-* link:#beame[The LifecycleListener Interface]
-* link:#beamf[The `LifecycleEvent` Class]
-* link:#beamg[The Server Lifecycle Event Context]
-* link:#beamh[Deploying a Lifecycle Module]
-* link:#beami[Considerations for Lifecycle Modules]
+* xref:#server-life-cycle-events[Server Life Cycle Events]
+* xref:#the-lifecyclelistener-interface[The LifecycleListener Interface]
+* xref:#the-lifecycleevent-class[The `LifecycleEvent` Class]
+* xref:#the-server-lifecycle-event-context[The Server Lifecycle Event Context]
+* xref:#deploying-a-lifecycle-module[Deploying a Lifecycle Module]
+* xref:#considerations-for-lifecycle-modules[Considerations for Lifecycle Modules]
 
-[[beamd]][[GSDVG00167]][[server-life-cycle-events]]
+[[server-life-cycle-events]]
 
 === Server Life Cycle Events
 
@@ -66,7 +63,7 @@ These events are defined in the `LifecycleEvent` class.
 The lifecycle modules that listen for these events implement the
 LifecycleListener interface.
 
-[[beame]][[GSDVG00168]][[the-lifecyclelistener-interface]]
+[[the-lifecyclelistener-interface]]
 
 === The LifecycleListener Interface
 
@@ -89,7 +86,7 @@ A sample implementation of the LifecycleListener interface is the
 `LifecycleListenerImpl.java` file, which you can use for testing
 lifecycle events.
 
-[[beamf]][[GSDVG00169]][[the-lifecycleevent-class]]
+[[the-lifecycleevent-class]]
 
 === The `LifecycleEvent` Class
 
@@ -112,7 +109,7 @@ This method returns the lifecycle event context, described next.
 A `LifecycleEvent` instance is passed to the
 `LifecycleListener.handleEvent` method.
 
-[[beamg]][[GSDVG00170]][[the-server-lifecycle-event-context]]
+[[the-server-lifecycle-event-context]]
 
 === The Server Lifecycle Event Context
 
@@ -142,14 +139,14 @@ If a lifecycle module needs to look up resources, it can do so after the
 `READY_EVENT`. It can use the `getInitialContext` method to get the
 initial context to which all the resources are bound.
 
-[[beamh]][[GSDVG00171]][[deploying-a-lifecycle-module]]
+[[deploying-a-lifecycle-module]]
 
 === Deploying a Lifecycle Module
 
 For instructions on how to deploy a lifecycle module, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide], or see the `asadmin create-lifecycle-module` command in the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 You do not need to specify a classpath for the lifecycle module if you
 place it in the domain-dir``/lib`` or domain-dir`/lib/classes` directory
@@ -157,7 +154,7 @@ for the Domain Administration Server. Do not place it in the lib
 directory for a particular instance, or it will be deleted when that
 instance synchronizes with the Domain Administration Server.
 
-[[beami]][[GSDVG00172]][[considerations-for-lifecycle-modules]]
+[[considerations-for-lifecycle-modules]]
 
 === Considerations for Lifecycle Modules
 
@@ -177,7 +174,7 @@ or its parent, the Connector class loader.
 You must ensure that the `server.policy` file is appropriately set up,
 or a lifecycle module trying to perform a `System.exec()` might cause a
 security access violation. For details, see
-link:securing-apps.html#beabx[The `server.policy` File].
+xref:securing-apps.adoc#GSDVG00121[The `server.policy` File].
 
 The configured properties for a lifecycle module are passed as
 properties after the `INIT_EVENT`. The JNDI naming context is not

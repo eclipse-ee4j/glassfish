@@ -7,10 +7,6 @@ prev=adding-configuration-data.html
 
 = Adding Container Capabilities
 
-[[GSACG00007]][[ghmon]]
-
-
-[[adding-container-capabilities]]
 == Adding Container Capabilities
 
 Applications run on {productName} in containers. {productName}
@@ -21,12 +17,12 @@ you to run new types of applications and to deploy new archive types in
 
 The following topics are addressed here:
 
-* link:#ghpjl[Creating a `Container` Implementation]
-* link:#ghozu[Adding an Archive Type]
-* link:#ghphp[Creating Connector Modules]
-* link:#gkane[Example of Adding Container Capabilities]
+* xref:#creating-a-container-implementation[Creating a `Container` Implementation]
+* xref:#adding-an-archive-type[Adding an Archive Type]
+* xref:#creating-connector-modules[Creating Connector Modules]
+* xref:#example-of-adding-container-capabilities[Example of Adding Container Capabilities]
 
-[[ghpjl]][[GSACG00132]][[creating-a-container-implementation]]
+[[creating-a-container-implementation]]
 
 === Creating a `Container` Implementation
 
@@ -44,7 +40,7 @@ information about the HK2 Inhabitants Generator, see the
 https://hk2.java.net/inhabitant-generator.html[HK2 Inhabitants Generator
 page].
 
-[[ghogv]][[GSACG00234]][[marking-the-class-with-the-service-annotation]]
+[[marking-the-class-with-the-service-annotation]]
 
 ==== Marking the Class With the `@Service` Annotation
 
@@ -74,7 +70,7 @@ public class MyContainer implements Container {
 }
 ----
 
-[[ghohg]][[GSACG00235]][[implementing-the-container-interface]]
+[[implementing-the-container-interface]]
 
 ==== Implementing the `Container` Interface
 
@@ -112,7 +108,7 @@ methods:
 The `DeploymentContext` is the usual context object passed around
 deployer instances during deployment.
 
-[[GSACG00064]][[ghojg]]
+[[ghojg]]
 Example 7-1 Example Implementation of `Container`
 
 This example shows a Java programming language class that implements the
@@ -135,7 +131,7 @@ public class MyContainer implements Container {
 }
 ----
 
-[[GSACG00065]][[ghoiv]]
+[[ghoiv]]
 Example 7-2 Example Implementation of `Deployer`
 
 [source,java]
@@ -179,7 +175,7 @@ public class MyDeployer {
 }
 ----
 
-[[ghozu]][[GSACG00133]][[adding-an-archive-type]]
+[[adding-an-archive-type]]
 
 === Adding an Archive Type
 
@@ -240,7 +236,7 @@ to the archive type. `WritableArchive` defines the following methods:
   Creates a new entry in the archive with the specified name, and
   returns it as a `java.io.OutputStream`.
 
-[[ghoyp]][[GSACG00236]][[implementing-the-archivehandler-interface]]
+[[implementing-the-archivehandler-interface]]
 
 ==== Implementing the `ArchiveHandler` Interface
 
@@ -282,7 +278,7 @@ containers in which the application will be deployed.
   handle. This method returns the archive as an instance of
   `WritableArchive`.
 
-[[ghphp]][[GSACG00134]][[creating-connector-modules]]
+[[creating-connector-modules]]
 
 === Creating Connector Modules
 
@@ -302,7 +298,7 @@ is found, the runtime attempts to install and configure the container
 associated with the application type as defined by the `Sniffer` implementation.
 3. The `Deployer` interface is used to prepare and load the implementation.
 
-[[ghozd]][[GSACG00237]][[associating-file-types-with-containers-by-using-the-sniffer-interface]]
+[[associating-file-types-with-containers-by-using-the-sniffer-interface]]
 
 ==== Associating File Types With Containers by Using the `Sniffer` Interface
 
@@ -381,7 +377,7 @@ The `Sniffer` interface defines the following methods:
   or reading the specified archive source, it throws a
   `java.io.IOException`.
 
-[[ghpbx]][[GSACG00172]][[making-sniffer-implementations-available-to-the-glassfish-server]]
+[[making-sniffer-implementations-available-to-the-glassfish-server]]
 
 ===== Making `Sniffer` Implementations Available to the {productName}
 
@@ -391,26 +387,26 @@ automatically discover these modules. If an administrator installs
 connector modules that contain`Sniffer` implementations while {productName} is running, {productName} will pick them up at the next
 deployment request.
 
-[[gkane]][[GSACG00135]][[example-of-adding-container-capabilities]]
+[[example-of-adding-container-capabilities]]
 
 === Example of Adding Container Capabilities
 
 This example shows a custom container and a web client of the container.
 The example is comprised of the following code:
 
-* Code for the container, which is shown in link:#gkbah[Container
+* Code for the container, which is shown in xref:#container-component-code[Container
 Component Code]
 * Code for a web client of the container, which is shown in
-link:#gkbcq[Web Client Code]
+xref:#web-client-code[Web Client Code]
 
 Code that defines the configuration data for the container component is
-shown in link:adding-configuration-data.html#gkaal[Examples of Adding
+shown in xref:adding-configuration-data.adoc#examples-of-adding-configuration-data-for-a-component[Examples of Adding
 Configuration Data for a Component].
 
 Code for an `asadmin` subcommand that updates the configuration data in
-this example is shown in link:extending-asadmin.html#gkbdf[Example 4-7].
+this example is shown in xref:extending-asadmin.adoc#gkbdf[Example 4-7].
 
-[[gkbah]][[GSACG00238]][[container-component-code]]
+[[container-component-code]]
 
 ==== Container Component Code
 
@@ -421,14 +417,14 @@ cross-reference to the listing of each class or interface.
 [width="100%",cols="<50%,<50%",options="header",]
 |===
 |Class or Interface |Listing
-|`Greeter` |link:#gkamr[Example 7-3]
-|`GreeterContainer` |link:#gkand[Example 7-4]
-|`GreeterContainer` |link:#gkamm[Example 7-5]
-|`GreeterDeployer` |link:#gkalo[Example 7-6]
-|`GreeterSniffer` |link:#gkaks[Example 7-7]
+|`Greeter` |xref:#gkamr[Example 7-3]
+|`GreeterContainer` |xref:#gkand[Example 7-4]
+|`GreeterContainer` |xref:#gkamm[Example 7-5]
+|`GreeterDeployer` |xref:#gkalo[Example 7-6]
+|`GreeterSniffer` |xref:#gkaks[Example 7-7]
 |===
 
-[[GSACG00066]][[gkamr]]
+[[gkamr]]
 Example 7-3 Annotation to Denote a Container's Component
 
 This example shows the code for defining a component of the `Greeter`
@@ -456,7 +452,7 @@ public @interface Greeter {
 }
 ----
 
-[[GSACG00067]][[gkand]]
+[[gkand]]
 Example 7-4 Application Container Class
 
 This example shows the Java language class `GreeterAppContainer`, which
@@ -525,7 +521,7 @@ public class GreeterAppContainer implements ApplicationContainer {
 }
 ----
 
-[[GSACG00068]][[gkamm]]
+[[gkamm]]
 Example 7-5 Container Class
 
 This example shows the Java language class `GreeterContainer`, which
@@ -557,7 +553,7 @@ public class GreeterContainer implements Container {
 }
 ----
 
-[[GSACG00069]][[gkalo]]
+[[gkalo]]
 Example 7-6 Deployer Class
 
 This example shows the Java language class `GreeterDeployer`, which
@@ -635,7 +631,7 @@ public class GreeterDeployer
 }
 ----
 
-[[GSACG00070]][[gkaks]]
+[[gkaks]]
 Example 7-7 Sniffer Class
 
 This example shows the Java language class `GreeterSniffer`, which
@@ -729,7 +725,7 @@ public class GreeterSniffer implements Sniffer {
 }
 ----
 
-[[gkbcq]][[GSACG00239]][[web-client-code]]
+[[web-client-code]]
 
 ==== Web Client Code
 
@@ -740,16 +736,16 @@ to the listing of each class or resource.
 [width="100%",cols="<50%,<50%",options="header",]
 |===
 |Class or Resource |Listing
-|`HelloWorld` |link:#gkaki[Example 7-8]
+|`HelloWorld` |xref:#gkaki[Example 7-8]
 +
-|`SimpleGreeter` |link:#gkalf[Example 7-9]
+|`SimpleGreeter` |xref:#gkalf[Example 7-9]
 +
-|Deployment descriptor |link:#gkaly[Example 7-10]
+|Deployment descriptor |xref:#gkaly[Example 7-10]
 +
 |===
 
 
-[[GSACG00071]][[gkaki]]
+[[gkaki]]
 Example 7-8 Container Client Class
 
 [source,java]
@@ -788,7 +784,7 @@ public class HelloWorld extends HttpServlet {
 }
 ----
 
-[[GSACG00072]][[gkalf]]
+[[gkalf]]
 Example 7-9 Component for Container Client
 
 [source,java]
@@ -806,7 +802,7 @@ public class SimpleGreeter {
 }
 ----
 
-[[GSACG00073]][[gkaly]]
+[[gkaly]]
 Example 7-10 Deployment Descriptor for Container Client
 
 [source,xml]

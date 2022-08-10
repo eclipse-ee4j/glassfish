@@ -7,13 +7,11 @@ prev=ping-connection-pool.html
 
 = ping-node-dcom
 
-[[ping-node-dcom-1]][[GSRFM728]][[ping-node-dcom]]
+[[ping-node-dcom]]
 
 == ping-node-dcom
 
 Tests if a node that is enabled for communication over DCOM is usable
-
-[[sthref1934]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Tests if a node that is enabled for communication over DCOM is usable
 asadmin [asadmin-options] ping-node-dcom [--help]
 [--validate={false|true}] node-name
 ----
-
-[[sthref1935]]
 
 === Description
 
@@ -40,9 +36,9 @@ subcommand could connect to the node through DCOM. This confirmation
 includes the name of the host that the node represents.
 
 Optionally, the subcommand can also validate the node to determine if
-the link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility can run on the
+the xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility can run on the
 host that the node represents. To validate a node, the subcommand runs
-the link:version.html#version-1[`version`(1)] subcommand. If the node is
+the xref:version.adoc#version[`version`(1)] subcommand. If the node is
 valid, the subcommand displays the version that the `version` subcommand
 returns.
 
@@ -50,26 +46,24 @@ The node that is specified as the operand of this subcommand must be
 enabled for communication over DCOM. If the node is not enabled for
 communication over DCOM, an error occurs. To determine whether a node is
 enabled for communication over DCOM, use the
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
+xref:list-nodes.adoc#list-nodes[`list-nodes`(1)] subcommand.
 
 
 [NOTE]
 ====
 To test whether a node that is enabled for communication over secure
 shell (SSH) is usable, use the
-link:ping-node-ssh.html#ping-node-ssh-1[`ping-node-ssh`(1)] subcommand.
+xref:ping-node-ssh.adoc#ping-node-ssh[`ping-node-ssh`(1)] subcommand.
 ====
 
 
 This subcommand is supported in remote mode only.
 
-[[sthref1936]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -82,19 +76,15 @@ asadmin-options::
   `false`;;
     The node is not validated (default).
 
-[[sthref1937]]
-
 === Operands
 
 node-name::
   The name of the node to test. The node must be enabled for
   communication over DCOM. Otherwise, an error occurs.
 
-[[sthref1938]]
-
 === Examples
 
-[[GSRFM729]][[sthref1939]]
+[[sthref1939]]
 
 ==== Example 1   Testing if a DCOM-Enabled Node Is Usable
 
@@ -107,7 +97,7 @@ Successfully made DCOM connection to node wpmdl2 (wpmdl2.example.com)
 Command ping-node-dcom executed successfully.
 ----
 
-[[GSRFM730]][[sthref1940]]
+[[sthref1940]]
 
 ==== Example 2   Validating a DCOM-Enabled Node
 
@@ -124,8 +114,6 @@ Command version executed successfully.
 Command ping-node-dcom executed successfully.
 ----
 
-[[sthref1941]]
-
 === Exit Status
 
 0::
@@ -133,18 +121,16 @@ Command ping-node-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref1942]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:ping-node-ssh.html#ping-node-ssh-1[`ping-node-ssh`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)],
-link:validate-dcom.html#validate-dcom-1[`validate-dcom`(1)],
-link:version.html#version-1[`version`(1)]
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
+xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
+xref:ping-node-ssh.adoc#ping-node-ssh[`ping-node-ssh`(1)],
+xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)],
+xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)],
+xref:version.adoc#version[`version`(1)]
 
 

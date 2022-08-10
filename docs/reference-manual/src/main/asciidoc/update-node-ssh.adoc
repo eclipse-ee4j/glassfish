@@ -7,13 +7,11 @@ prev=update-node-dcom.html
 
 = update-node-ssh
 
-[[update-node-ssh-1]][[GSRFM00256]][[update-node-ssh]]
+[[update-node-ssh]]
 
 == update-node-ssh
 
 Updates the configuration data of a node
-
-[[sthref2299]]
 
 === Synopsis
 
@@ -27,8 +25,6 @@ asadmin [asadmin-options] update-node-ssh [--help]
 [--force={false|true}]
 node-name
 ----
-
-[[sthref2300]]
 
 === Description
 
@@ -60,13 +56,11 @@ updated even if the host cannot be contacted through SSH, set the
 
 This subcommand is supported in remote mode only.
 
-[[sthref2301]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -120,7 +114,7 @@ If the `--nodehost` option is set to `localhost`, the `--sshuser`
 {productName} also supports password authentication through the
 `AS_ADMIN_SSHPASSWORD` entry in the password file. The password file
 is specified in the `--paswordfile` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility.
 ====
 +
 If the SSH private key file is protected by a passphrase, the password
@@ -151,19 +145,15 @@ If the SSH private key file is protected by a passphrase, the password
     The node is updated even if validation of the node's parameters
     fails.
 
-[[sthref2302]]
-
 === Operands
 
 node-name::
   The name of the node to update. The node must exist. Otherwise, an
   error occurs.
 
-[[sthref2303]]
-
 === Examples
 
-[[GSRFM792]][[sthref2304]]
+[[sthref2304]]
 
 ==== Example 1   Updating the Host That a Node Represents
 
@@ -175,7 +165,7 @@ asadmin> update-node-ssh --nodehost sj04 lssh
 Command update-node-ssh executed successfully.
 ----
 
-[[GSRFM793]][[sthref2305]]
+[[sthref2305]]
 
 ==== Example 2   Forcing the Update of a Node
 
@@ -193,8 +183,6 @@ Continuing with node update due to use of --force.
 Command update-node-ssh executed successfully.
 ----
 
-[[sthref2306]]
-
 === Exit Status
 
 0::
@@ -202,26 +190,24 @@ Command update-node-ssh executed successfully.
 1::
   error in executing the command
 
-[[sthref2307]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)],
-link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
-link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)],
-link:install-node.html#install-node-1[`install-node`(1)],
-link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
-link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)],
-link:update-node-config.html#update-node-config-1[`update-node-config`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)]
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
+xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
+xref:delete-node-config.adoc#delete-node-config[`delete-node-config`(1)],
+xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
+xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
+xref:install-node.adoc#install-node[`install-node`(1)],
+xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
+xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
+xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
+xref:uninstall-node.adoc#uninstall-node[`uninstall-node`(1)],
+xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)],
+xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)],
+xref:update-node-config.adoc#update-node-config[`update-node-config`(1)],
+xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)]
 
 

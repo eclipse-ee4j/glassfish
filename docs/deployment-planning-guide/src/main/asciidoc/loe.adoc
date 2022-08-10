@@ -10,7 +10,7 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:planning.html#fygam[2-1 Calculation of Response Time]
-* link:planning.html#fygaj[2-2 Calculation of Requests Per Second]
-* link:planning.html#fygad[2-3 Calculation of Bandwidth Required]
-* link:planning.html#fygai[2-4 Calculation of Peak Load]
+* xref:planning.adoc#fygam[2-1 Calculation of Response Time]
+* xref:planning.adoc#fygaj[2-2 Calculation of Requests Per Second]
+* xref:planning.adoc#fygad[2-3 Calculation of Bandwidth Required]
+* xref:planning.adoc#fygai[2-4 Calculation of Peak Load]

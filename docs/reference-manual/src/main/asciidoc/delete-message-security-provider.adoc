@@ -7,13 +7,11 @@ prev=delete-managed-thread-factory.html
 
 = delete-message-security-provider
 
-[[delete-message-security-provider-1]][[GSRFM00097]][[delete-message-security-provider]]
+[[delete-message-security-provider]]
 
 == delete-message-security-provider
 
 Enables administrators to delete a message security provider
-
-[[sthref874]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] delete-message-security-provider [--help]
 --layer message_layer
 provider_name
 ----
-
-[[sthref875]]
 
 === Description
 
@@ -46,8 +42,6 @@ it.
 
 This command is supported in remote mode only.
 
-[[sthref876]]
-
 === Options
 
 If an option has a short option name, then the short option precedes the
@@ -56,7 +50,7 @@ two dashes.
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -78,19 +72,15 @@ asadmin-options::
   The message-layer from which the provider has to be deleted. The
   default value is `HttpServlet`.
 
-[[sthref877]]
-
 === Operands
 
 provider_name::
   The name of the provider used to reference the `provider-config`
   element.
 
-[[sthref878]]
-
 === Examples
 
-[[GSRFM566]][[sthref879]]
+[[sthref879]]
 
 ==== Example 1   Deleting a message security provider
 
@@ -103,8 +93,6 @@ asadmin> delete-message-security-provider
 --layer SOAP mySecurityProvider
 ----
 
-[[sthref880]]
-
 === Exit Status
 
 0::
@@ -112,13 +100,11 @@ asadmin> delete-message-security-provider
 1::
   error in executing the command
 
-[[sthref881]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-message-security-provider.html#create-message-security-provider-1[`create-message-security-provider`(1)],
-link:list-message-security-providers.html#list-message-security-providers-1[`list-message-security-providers`(1)]
+xref:create-message-security-provider.adoc#create-message-security-provider[`create-message-security-provider`(1)],
+xref:list-message-security-providers.adoc#list-message-security-providers[`list-message-security-providers`(1)]
 
 

@@ -7,13 +7,11 @@ prev=create-jacc-provider.html
 
 = create-javamail-resource
 
-[[create-javamail-resource-1]][[GSRFM00035]][[create-javamail-resource]]
+[[create-javamail-resource]]
 
 == create-javamail-resource
 
 Creates a JavaMail session resource
-
-[[sthref312]]
 
 === Synopsis
 
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-javamail-resource [--help]
 [--description resource-description] [--property (name=value)[:name=value]*] jndi-name
 ----
 
-[[sthref313]]
-
 === Description
 
 The `create-javamail-resource` subcommand creates a JavaMail session
@@ -36,13 +32,11 @@ resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref314]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -105,8 +99,6 @@ asadmin-options::
   to the standard mail prefix. The JavaMail API documentation lists the
   properties you might want to set.
 
-[[sthref315]]
-
 === Operands
 
 jndi-name::
@@ -114,11 +106,9 @@ jndi-name::
   recommended practice to use the naming subcontext prefix `mail/` for
   JavaMail resources.
 
-[[sthref316]]
-
 === Examples
 
-[[GSRFM492]][[sthref317]]
+[[sthref317]]
 
 ==== Example 1   Creating a JavaMail Resource
 
@@ -133,8 +123,6 @@ asadmin> create-javamail-resource --mailhost localhost
 Command create-javamail-resource executed successfully.
 ----
 
-[[sthref318]]
-
 === Exit Status
 
 0::
@@ -142,13 +130,11 @@ Command create-javamail-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref319]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-javamail-resource.html#delete-javamail-resource-1[`delete-javamail-resource`(1)],
-link:list-javamail-resources.html#list-javamail-resources-1[`list-javamail-resources`(1)]
+xref:delete-javamail-resource.adoc#delete-javamail-resource[`delete-javamail-resource`(1)],
+xref:list-javamail-resources.adoc#list-javamail-resources[`list-javamail-resources`(1)]
 
 

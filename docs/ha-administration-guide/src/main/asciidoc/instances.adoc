@@ -7,8 +7,6 @@ prev=clusters.html
 
 = Administering {productName} Instances
 
-[[GSHAG00006]][[gkrbv]]
-
 [[administering-glassfish-server-instances]]
 == 5 Administering {productName} Instances
 
@@ -26,13 +24,13 @@ that defines the host where the instance resides.
 
 The following topics are addressed here:
 
-* link:#gkrbn[Types of {productName} Instances]
-* link:#gkqal[Administering {productName} Instances Centrally]
-* link:#gkqdw[Administering {productName} Instances Locally]
-* link:#gkrdd[Resynchronizing {productName} Instances and the DAS]
-* link:#gkqcr[Migrating EJB Timers]
+* xref:#types-of-glassfish-server-instances[Types of {productName} Instances]
+* xref:#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
+* xref:#administering-glassfish-server-instances-locally[Administering {productName} Instances Locally]
+* xref:#resynchronizing-glassfish-server-instances-and-the-das[Resynchronizing {productName} Instances and the DAS]
+* xref:#migrating-ejb-timers[Migrating EJB Timers]
 
-[[gkrbn]][[GSHAG00186]][[types-of-glassfish-server-instances]]
+[[types-of-glassfish-server-instances]]
 
 === Types of {productName} Instances
 
@@ -67,7 +65,7 @@ Clustered instance::
   unclustered server instance. Therefore, standalone instances and
   shared instances are unclustered server instances.
 
-[[gkqal]][[GSHAG00187]][[administering-glassfish-server-instances-centrally]]
+[[administering-glassfish-server-instances-centrally]]
 
 === Administering {productName} Instances Centrally
 
@@ -75,22 +73,22 @@ Centralized administration requires the Distributed Component Object
 Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
 or SSH is set up, you can administer clustered instances without the
 need to log in to hosts where remote instances reside. For information
-about setting up DCOM and SSH, see link:ssh-setup.html#gkshg[Enabling
+about setting up DCOM and SSH, see xref:ssh-setup.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling
 Centralized Administration of {productName} Instances].
 
 Administering {productName} instances centrally involves the
 following tasks:
 
-* link:#gkqch[To Create an Instance Centrally]
-* link:#gkrcb[To List All Instances in a Domain]
-* link:#gkqcw[To Delete an Instance Centrally]
-* link:#gkqcj[To Start a Cluster]
-* link:#gkqcl[To Stop a Cluster]
-* link:#gkqaw[To Start an Individual Instance Centrally]
-* link:#gkqaj[To Stop an Individual Instance Centrally]
-* link:#gkqcc[To Restart an Individual Instance Centrally]
+* xref:#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:#to-list-all-instances-in-a-domain[To List All Instances in a Domain]
+* xref:#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:#to-start-a-cluster[To Start a Cluster]
+* xref:#to-stop-a-cluster[To Stop a Cluster]
+* xref:#to-start-an-individual-instance-centrally[To Start an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
+* xref:#to-restart-an-individual-instance-centrally[To Restart an Individual Instance Centrally]
 
-[[gkqch]][[GSHAG00106]][[to-create-an-instance-centrally]]
+[[to-create-an-instance-centrally]]
 
 ==== To Create an Instance Centrally
 
@@ -106,9 +104,7 @@ configure an instance's system properties that relate to GMS when you
 create the instance. If you change GMS-related system properties for an
 existing instance, the DAS and the instance must be restarted to apply
 the changes. For information about GMS, see
-link:clusters.html#gjfnl[Group Management Service].
-
-[[GSHAG380]]
+xref:clusters.adoc#group-management-service[Group Management Service].
 
 Before You Begin
 
@@ -120,22 +116,22 @@ communication or represents the host on which the DAS is running. For
 information about how to create a node that is enabled for remote
 communication, see the following sections:
 
-** link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
-** link:nodes.html#gkrnf[To Create an `SSH` Node]
+** xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+** xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 
 * The user of the DAS can use DCOM or SSH to log in to the host for the
 node where the instance is to reside.
 
 If any of these prerequisites is not met, create the instance locally as
-explained in link:#gkqbl[To Create an Instance Locally].
+explained in xref:#to-create-an-instance-locally[To Create an Instance Locally].
 
 If you are adding the instance to a cluster, ensure that the cluster to
 which you are adding the instance exists. For information about how to
-create a cluster, see link:clusters.html#gkqdm[To Create a Cluster].
+create a cluster, see xref:clusters.adoc#to-create-a-cluster[To Create a Cluster].
 
 If the instance is to reference an existing named configuration, ensure
 that the configuration exists. For more information, see
-link:named-configurations.html#abdjr[To Create a Named Configuration].
+xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration].
 
 The instance might be a clustered instance that is managed by GMS and
 resides on a node that represents a multihome host. In this situation,
@@ -149,7 +145,7 @@ interface to which GMS binds.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-instance, see the link:reference-manual/create-instance.html#GSRFM00033[`create-instance`(1)] help page.
+instance, see the link:reference-manual/create-instance.html#create-instance[`create-instance`(1)] help page.
 ====
 * If you are creating a standalone instance, do not specify a cluster.
 +
@@ -210,7 +206,7 @@ bind-address::
 instance-name::
   Your choice of name for the instance that you are creating.
 
-[[GSHAG00039]][[gkqmv]]
+[[gkqmv]]
 Example 5-1 Creating a Clustered Instance Centrally
 
 This example adds the instance `pmd-i1` to the cluster `pmdclust` in the
@@ -233,14 +229,12 @@ The instance, pmd-i1, was created on host sj01.example.com
 Command create-instance executed successfully.
 ----
 
-[[GSHAG381]]
-
 See Also
 
-* link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
-* link:nodes.html#gkrnf[To Create an `SSH` Node]
-* link:#gkqbl[To Create an Instance Locally]
-* link:reference-manual/create-instance.html#GSRFM00033[`create-instance`(1)]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
+* xref:#to-create-an-instance-locally[To Create an Instance Locally]
+* link:reference-manual/create-instance.html#create-instance[`create-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-instance` at the command line.
@@ -252,10 +246,10 @@ Next Steps
 After creating an instance, you can start the instance as explained in
 the following sections:
 
-* link:#gkqaw[To Start an Individual Instance Centrally]
-* link:#gkqci[To Stop an Individual Instance Locally]
+* xref:#to-start-an-individual-instance-centrally[To Start an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
 
-[[gkrcb]][[GSHAG00107]][[to-list-all-instances-in-a-domain]]
+[[to-list-all-instances-in-a-domain]]
 
 ==== To List All Instances in a Domain
 
@@ -265,14 +259,14 @@ about existing instances in a domain.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand.
+2. Run the link:reference-manual/list-instances.html#list-instances[`list-instances`] subcommand.
 +
 [source]
 ----
 asadmin> list-instances
 ----
 
-[[GSHAG00040]][[gksfe]]
+[[gksfe]]
 Example 5-2 Listing Basic Information About All {productName}
 Instances in a Domain
 
@@ -290,7 +284,7 @@ pmdsa1 not running
 Command list-instances executed successfully.
 ----
 
-[[GSHAG00041]][[gkabz]]
+[[gkabz]]
 Example 5-3 Listing Detailed Information About All {productName}
 Instances in a Domain
 
@@ -310,16 +304,14 @@ ymlsa1  localhost         24849  -1     ---          not running
 Command list-instances executed successfully.
 ----
 
-[[GSHAG383]]
-
 See Also
 
-link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-instances` at the command line.
 
-[[gkqcw]][[GSHAG00108]][[to-delete-an-instance-centrally]]
+[[to-delete-an-instance-centrally]]
 
 ==== To Delete an Instance Centrally
 
@@ -332,7 +324,7 @@ Use the `delete-instance` subcommand in remote mode to delete a
 If you are using a Java Message Service (JMS) cluster with a master
 broker, do not delete the instance that is associated with the master
 broker. If this instance must be deleted, use the
-link:reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`] subcommand to assign the master
+link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`] subcommand to assign the master
 broker to a different instance.
 ====
 
@@ -342,15 +334,13 @@ Deleting an instance involves the following:
 * Removing the instance from the configuration of the DAS
 * Deleting the instance's files from file system
 
-[[GSHAG384]]
-
 Before You Begin
 
 Ensure that the instance that you are deleting is not running. For
 information about how to stop an instance, see the following sections:
 
-* link:#gkqaj[To Stop an Individual Instance Centrally]
-* link:#gkqci[To Stop an Individual Instance Locally]
+* xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
 
 1. Ensure that the DAS is running.
 +
@@ -363,7 +353,7 @@ asadmin> list-instances instance-name
 ----
 instance-name::
   The name of the instance that you are deleting.
-3. Run the link:reference-manual/delete-instance.html#GSRFM00085[`delete-instance`] subcommand.
+3. Run the link:reference-manual/delete-instance.html#delete-instance[`delete-instance`] subcommand.
 +
 [source]
 ----
@@ -372,7 +362,7 @@ asadmin> delete-instance instance-name
 instance-name::
   The name of the instance that you are deleting.
 
-[[GSHAG00042]][[gkqms]]
+[[gkqms]]
 Example 5-4 Deleting an Instance Centrally
 
 This example confirms that the instance `pmd-i1` is not running and
@@ -389,15 +379,13 @@ The instance, pmd-i1, was deleted from host sj01.example.com
 Command delete-instance executed successfully.
 ----
 
-[[GSHAG385]]
-
 See Also
 
-* link:#gkqaj[To Stop an Individual Instance Centrally]
-* link:#gkqci[To Stop an Individual Instance Locally]
-* link:reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`(1)]
-* link:reference-manual/delete-instance.html#GSRFM00085[`delete-instance`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
+* link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`(1)]
+* link:reference-manual/delete-instance.html#delete-instance[`delete-instance`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -405,7 +393,7 @@ typing the following commands at the command line:
 * `asadmin help delete-instance`
 * `asadmin help list-instances`
 
-[[gkqcj]][[GSHAG00109]][[to-start-a-cluster]]
+[[to-start-a-cluster]]
 
 ==== To Start a Cluster
 
@@ -413,8 +401,6 @@ Use the `start-cluster` subcommand in remote mode to start a cluster.
 
 Starting a cluster starts all instances in the cluster that are not
 already running.
-
-[[GSHAG386]]
 
 Before You Begin
 
@@ -427,11 +413,11 @@ running.
 node where instances in the cluster reside.
 
 If any of these prerequisites is not met, start the cluster by starting
-each instance locally as explained in link:#gkqak[To Start an Individual
+each instance locally as explained in xref:#to-start-an-individual-instance-locally[To Start an Individual
 Instance Locally].
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/start-cluster.html#GSRFM00233[`start-cluster`] subcommand.
+2. Run the link:reference-manual/start-cluster.html#start-cluster[`start-cluster`] subcommand.
 +
 [source]
 ----
@@ -440,7 +426,7 @@ asadmin> start-cluster cluster-name
 cluster-name::
   The name of the cluster that you are starting.
 
-[[GSHAG00043]][[gkqml]]
+[[gkqml]]
 Example 5-5 Starting a Cluster
 
 This example starts the cluster `pmdcluster`.
@@ -451,12 +437,10 @@ asadmin> start-cluster pmdcluster
 Command start-cluster executed successfully.
 ----
 
-[[GSHAG387]]
-
 See Also
 
-* link:#gkqak[To Start an Individual Instance Locally]
-* link:reference-manual/start-cluster.html#GSRFM00233[`start-cluster`(1)]
+* xref:#to-start-an-individual-instance-locally[To Start an Individual Instance Locally]
+* link:reference-manual/start-cluster.html#start-cluster[`start-cluster`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-cluster` at the command line.
@@ -466,9 +450,9 @@ typing `asadmin help start-cluster` at the command line.
 Next Steps
 
 After starting a cluster, you can deploy applications to the cluster.
-For more information, see link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
-[[gkqcl]][[GSHAG00110]][[to-stop-a-cluster]]
+[[to-stop-a-cluster]]
 
 ==== To Stop a Cluster
 
@@ -477,7 +461,7 @@ Use the `stop-cluster` subcommand in remote mode to stop a cluster.
 Stopping a cluster stops all running instances in the cluster.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/stop-cluster.html#GSRFM00238[`stop-cluster`] subcommand.
+2. Run the link:reference-manual/stop-cluster.html#stop-cluster[`stop-cluster`] subcommand.
 +
 [source]
 ----
@@ -486,7 +470,7 @@ asadmin> stop-cluster cluster-name
 cluster-name::
   The name of the cluster that you are stopping.
 
-[[GSHAG00044]][[gkqmn]]
+[[gkqmn]]
 Example 5-6 Stopping a Cluster
 
 This example stops the cluster `pmdcluster`.
@@ -497,11 +481,9 @@ asadmin> stop-cluster pmdcluster
 Command stop-cluster executed successfully.
 ----
 
-[[GSHAG389]]
-
 See Also
 
-link:reference-manual/stop-cluster.html#GSRFM00238[`stop-cluster`(1)]
+link:reference-manual/stop-cluster.html#stop-cluster[`stop-cluster`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-cluster` at the command line.
@@ -516,14 +498,12 @@ this option is `true`, the subcommand uses functionality of the
 operating system to kill the process for each running instance in the
 cluster.
 
-[[gkqaw]][[GSHAG00111]][[to-start-an-individual-instance-centrally]]
+[[to-start-an-individual-instance-centrally]]
 
 ==== To Start an Individual Instance Centrally
 
 Use the `start-instance` subcommand in remote mode to start an
 individual instance centrally.
-
-[[GSHAG391]]
 
 Before You Begin
 
@@ -535,7 +515,7 @@ communication or represents the host on which the DAS is running.
 node where the instance resides.
 
 If any of these prerequisites is not met, start the instance locally as
-explained in link:#gkqak[To Start an Individual Instance Locally].
+explained in xref:#to-start-an-individual-instance-locally[To Start an Individual Instance Locally].
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 2. Run the `start-instance` subcommand.
@@ -549,14 +529,14 @@ asadmin> start-instance instance-name
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the instance, see the link:reference-manual/start-instance.html#GSRFM00236[`start-instance`(1)]
+behavior of the instance, see the link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
 help page.
 ====
 
 instance-name::
   The name of the instance that you are starting.
 
-[[GSHAG00045]][[gkqoa]]
+[[gkqoa]]
 Example 5-7 Starting an Individual Instance Centrally
 
 This example starts the instance `pmd-i2`, which resides on the node
@@ -578,11 +558,9 @@ The instance, pmd-i2, was started on host sj02.example.com
 Command start-instance executed successfully.
 ----
 
-[[GSHAG392]]
-
 See Also
 
-link:reference-manual/start-instance.html#GSRFM00236[`start-instance`(1)]
+link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-instance` at the command line.
@@ -592,9 +570,9 @@ typing `asadmin help start-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
-[[gkqaj]][[GSHAG00112]][[to-stop-an-individual-instance-centrally]]
+[[to-stop-an-individual-instance-centrally]]
 
 ==== To Stop an Individual Instance Centrally
 
@@ -607,9 +585,9 @@ and waits for all outstanding requests to be completed.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/stop-instance.html#GSRFM00241[`stop-instance`] subcommand.
+2. Run the link:reference-manual/stop-instance.html#stop-instance[`stop-instance`] subcommand.
 
-[[GSHAG00046]][[gkqpy]]
+[[gkqpy]]
 Example 5-8 Stopping an Individual Instance Centrally
 
 This example stops the instance `pmd-i2`.
@@ -621,11 +599,9 @@ The instance, pmd-i2, is stopped.
 Command stop-instance executed successfully.
 ----
 
-[[GSHAG394]]
-
 See Also
 
-link:reference-manual/stop-instance.html#GSRFM00241[`stop-instance`(1)]
+link:reference-manual/stop-instance.html#stop-instance[`stop-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-instance` at the command line.
@@ -639,7 +615,7 @@ subcommand again with the `--kill` option set to `true`. When this
 option is `true`, the subcommand uses functionality of the operating
 system to kill the instance process.
 
-[[gkqcc]][[GSHAG00113]][[to-restart-an-individual-instance-centrally]]
+[[to-restart-an-individual-instance-centrally]]
 
 ==== To Restart an Individual Instance Centrally
 
@@ -648,14 +624,14 @@ individual instance centrally.
 
 When this subcommand restarts an instance, the DAS synchronizes the
 instance with changes since the last synchronization as described in
-link:#gksbo[Default Synchronization for Files and Directories].
+xref:#default-synchronization-for-files-and-directories[Default Synchronization for Files and Directories].
 
 If you require different synchronization behavior, stop and start the
-instance as explained in link:#gksak[To Resynchronize an Instance and
+instance as explained in xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an Instance and
 the DAS Online].
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/restart-instance.html#GSRFM00219[`restart-instance`] subcommand.
+2. Run the link:reference-manual/restart-instance.html#restart-instance[`restart-instance`] subcommand.
 +
 [source]
 ----
@@ -664,7 +640,7 @@ asadmin> restart-instance instance-name
 instance-name::
   The name of the instance that you are restarting.
 
-[[GSHAG00047]][[gkqqt]]
+[[gkqqt]]
 Example 5-9 Restarting an Individual Instance Centrally
 
 This example restarts the instance `pmd-i2`.
@@ -676,13 +652,11 @@ pmd-i2 was restarted.
 Command restart-instance executed successfully.
 ----
 
-[[GSHAG396]]
-
 See Also
 
-* link:#gkqaj[To Stop an Individual Instance Centrally]
-* link:#gkqaw[To Start an Individual Instance Centrally]
-* link:reference-manual/restart-instance.html#GSRFM00219[`restart-instance`(1)]
+* xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
+* xref:#to-start-an-individual-instance-centrally[To Start an Individual Instance Centrally]
+* link:reference-manual/restart-instance.html#restart-instance[`restart-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help restart-instance` at the command line.
@@ -696,7 +670,7 @@ subcommand again with the `--kill` option set to `true`. When this
 option is `true`, the subcommand uses functionality of the operating
 system to kill the instance process before restarting the instance.
 
-[[gkqdw]][[GSHAG00188]][[administering-glassfish-server-instances-locally]]
+[[administering-glassfish-server-instances-locally]]
 
 === Administering {productName} Instances Locally
 
@@ -707,23 +681,23 @@ remote instances reside and administer the instances individually.
 Administering {productName} instances locally involves the following
 tasks:
 
-* link:#gkqbl[To Create an Instance Locally]
-* link:#gkqed[To Delete an Instance Locally]
-* link:#gkqak[To Start an Individual Instance Locally]
-* link:#gkqci[To Stop an Individual Instance Locally]
-* link:#gkqef[To Restart an Individual Instance Locally]
+* xref:#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:#to-start-an-individual-instance-locally[To Start an Individual Instance Locally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
+* xref:#to-restart-an-individual-instance-locally[To Restart an Individual Instance Locally]
 
 
 [NOTE]
 ====
 Even if neither DCOM nor SSH is set up, you can obtain information about
 instances in a domain without logging in to each host where remote
-instances reside. For instructions, see link:#gkrcb[To List All
+instances reside. For instructions, see xref:#to-list-all-instances-in-a-domain[To List All
 Instances in a Domain].
 ====
 
 
-[[gkqbl]][[GSHAG00114]][[to-create-an-instance-locally]]
+[[to-create-an-instance-locally]]
 
 ==== To Create an Instance Locally
 
@@ -739,9 +713,7 @@ configure an instance's system properties that relate to GMS when you
 create the instance. If you change GMS-related system properties for an
 existing instance, the DAS and the instance must be restarted to apply
 the changes. For information about GMS, see
-link:clusters.html#gjfnl[Group Management Service].
-
-[[GSHAG398]]
+xref:clusters.adoc#group-management-service[Group Management Service].
 
 Before You Begin
 
@@ -760,17 +732,17 @@ the node is the unqualified name of the host.
 
 For information about how to create a node, see the following sections:
 
-* link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
-* link:nodes.html#gkrnf[To Create an `SSH` Node]
-* link:nodes.html#gkrll[To Create a `CONFIG` Node]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
+* xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
 
 If you are adding the instance to a cluster, ensure that the cluster to
 which you are adding the instance exists. For information about how to
-create a cluster, see link:clusters.html#gkqdm[To Create a Cluster].
+create a cluster, see xref:clusters.adoc#to-create-a-cluster[To Create a Cluster].
 
 If the instance is to reference an existing named configuration, ensure
 that the configuration exists. For more information, see
-link:named-configurations.html#abdjr[To Create a Named Configuration].
+xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration].
 
 The instance might be a clustered instance that is managed by GMS and
 resides on a node that represents a multihome host. In this situation,
@@ -788,7 +760,7 @@ instance is to reside.
 ====
 Only the options that are required to complete this task are provided in this step.
 For information about all the options for configuring the instance, see the
-link:reference-manual/create-local-instance.html#GSRFM00044[`create-local-instance`(1)] help page.
+link:reference-manual/create-local-instance.html#create-local-instance[`create-local-instance`(1)] help page.
 ====
 * If you are creating a standalone instance, do not specify a cluster.
 +
@@ -885,7 +857,7 @@ bind-address::
 instance-name::
   Your choice of name for the instance that you are creating.
 
-[[GSHAG00048]][[gktfa]]
+[[gktfa]]
 Example 5-10 Creating a Clustered Instance Locally Without Specifying a Node
 
 This example adds the instance `kui-i1` to the cluster `kuicluster`
@@ -926,7 +898,7 @@ xk01               CONFIG  xk01.example.com  /export/glassfish7  kui-i1
 Command list-nodes executed successfully.
 ----
 
-[[GSHAG00049]][[gkqps]]
+[[gkqps]]
 Example 5-11 Creating a Clustered Instance Locally
 
 This example adds the instance `yml-i1` to the cluster `ymlcluster`
@@ -953,14 +925,12 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-local-instance executed successfully.
 ----
 
-[[GSHAG399]]
-
 See Also
 
-* link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
-* link:nodes.html#gkrnf[To Create an `SSH` Node]
-* link:nodes.html#gkrll[To Create a `CONFIG` Node]
-* link:reference-manual/create-local-instance.html#GSRFM00044[`create-local-instance`(1)]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
+* xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
+* link:reference-manual/create-local-instance.html#create-local-instance[`create-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-local-instance` at the command line.
@@ -972,10 +942,10 @@ Next Steps
 After creating an instance, you can start the instance as explained in
 the following sections:
 
-* link:#gkqaw[To Start an Individual Instance Centrally]
-* link:#gkqci[To Stop an Individual Instance Locally]
+* xref:#to-start-an-individual-instance-centrally[To Start an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
 
-[[gkqed]][[GSHAG00115]][[to-delete-an-instance-locally]]
+[[to-delete-an-instance-locally]]
 
 ==== To Delete an Instance Locally
 
@@ -987,7 +957,7 @@ Use the `delete-local-instance` subcommand in remote mode to delete a
 If you are using a Java Message Service (JMS) cluster with a master
 broker, do not delete the instance that is associated with the master
 broker. If this instance must be deleted, use the
-link:reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`] subcommand to assign the master
+link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`] subcommand to assign the master
 broker to a different instance.
 ====
 
@@ -996,15 +966,13 @@ Deleting an instance involves the following:
 * Removing the instance from the configuration of the DAS
 * Deleting the instance's files from file system
 
-[[GSHAG401]]
-
 Before You Begin
 
 Ensure that the instance that you are deleting is not running. For
 information about how to stop an instance, see the following sections:
 
-* link:#gkqaj[To Stop an Individual Instance Centrally]
-* link:#gkqci[To Stop an Individual Instance Locally]
+* xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 2. Log in to the host that is represented by the node where the instance resides.
@@ -1023,7 +991,7 @@ admin-port::
   requests, you may omit this option.
 instance-name::
   The name of the instance that you are deleting.
-4. Run the link:reference-manual/delete-local-instance.html#GSRFM00096[`delete-local-instance`] subcommand.
+4. Run the link:reference-manual/delete-local-instance.html#delete-local-instance[`delete-local-instance`] subcommand.
 +
 [source]
 ----
@@ -1043,7 +1011,7 @@ node-name::
 instance-name::
   The name of the instance that you are deleting.
 
-[[GSHAG00050]][[gkqqu]]
+[[gkqqu]]
 Example 5-12 Deleting an Instance Locally
 
 This example confirms that the instance `yml-i1` is not running and
@@ -1058,15 +1026,13 @@ $ asadmin --host das1.example.com delete-local-instance --node sj01 yml-i1
 Command delete-local-instance executed successfully.
 ----
 
-[[GSHAG402]]
-
 See Also
 
-* link:#gkqaj[To Stop an Individual Instance Centrally]
-* link:#gkqci[To Stop an Individual Instance Locally]
-* link:reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`(1)]
-* link:reference-manual/delete-local-instance.html#GSRFM00096[`delete-local-instance`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* xref:#to-stop-an-individual-instance-centrally[To Stop an Individual Instance Centrally]
+* xref:#to-stop-an-individual-instance-locally[To Stop an Individual Instance Locally]
+* link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`(1)]
+* link:reference-manual/delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1074,7 +1040,7 @@ typing the following commands at the command line:
 * `asadmin help delete-local-instance`
 * `asadmin help list-instances`
 
-[[gkqak]][[GSHAG00116]][[to-start-an-individual-instance-locally]]
+[[to-start-an-individual-instance-locally]]
 
 ==== To Start an Individual Instance Locally
 
@@ -1094,7 +1060,7 @@ $ asadmin start-local-instance [--node node-name]instance-name
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the
-link:reference-manual/start-local-instance.html#GSRFM00237[`start-local-instance`(1)] help page.
+link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)] help page.
 ====
 
 node-name::
@@ -1104,7 +1070,7 @@ node-name::
 instance-name::
   The name of the instance that you are starting.
 
-[[GSHAG00051]][[gkqpu]]
+[[gkqpu]]
 Example 5-13 Starting an Individual Instance Locally
 
 This example starts the instance `yml-i1` locally. The instance resides
@@ -1121,11 +1087,9 @@ Admin Port: 24849
 Command start-local-instance executed successfully.
 ----
 
-[[GSHAG403]]
-
 See Also
 
-link:reference-manual/start-local-instance.html#GSRFM00237[`start-local-instance`(1)]
+link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-local-instance` at the command line.
@@ -1135,9 +1099,9 @@ typing `asadmin help start-local-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
-[[gkqci]][[GSHAG00117]][[to-stop-an-individual-instance-locally]]
+[[to-stop-an-individual-instance-locally]]
 
 ==== To Stop an Individual Instance Locally
 
@@ -1149,7 +1113,7 @@ and waits for all outstanding requests to be completed.
 
 1. Log in to the host that is represented by the node where the
 instance resides.
-2. Run the link:reference-manual/stop-local-instance.html#GSRFM00242[`stop-local-instance`] subcommand.
+2. Run the link:reference-manual/stop-local-instance.html#stop-local-instance[`stop-local-instance`] subcommand.
 +
 [source]
 ----
@@ -1162,7 +1126,7 @@ node-name::
 instance-name::
   The name of the instance that you are stopping.
 
-[[GSHAG00052]][[gkqoo]]
+[[gkqoo]]
 Example 5-14 Stopping an Individual Instance Locally
 
 This example stops the instance `yml-i1` locally. The instance resides
@@ -1175,11 +1139,9 @@ Waiting for the instance to stop ....
 Command stop-local-instance executed successfully.
 ----
 
-[[GSHAG405]]
-
 See Also
 
-link:reference-manual/stop-local-instance.html#GSRFM00242[`stop-local-instance`(1)]
+link:reference-manual/stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-local-instance` at the command line.
@@ -1193,7 +1155,7 @@ subcommand again with the `--kill` option set to `true`. When this
 option is `true`, the subcommand uses functionality of the operating
 system to kill the instance process.
 
-[[gkqef]][[GSHAG00118]][[to-restart-an-individual-instance-locally]]
+[[to-restart-an-individual-instance-locally]]
 
 ==== To Restart an Individual Instance Locally
 
@@ -1202,10 +1164,10 @@ individual instance locally.
 
 When this subcommand restarts an instance, the DAS synchronizes the
 instance with changes since the last synchronization as described in
-link:#gksbo[Default Synchronization for Files and Directories].
+xref:#default-synchronization-for-files-and-directories[Default Synchronization for Files and Directories].
 
 If you require different synchronization behavior, stop and start the
-instance as explained in link:#gksak[To Resynchronize an Instance and
+instance as explained in xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an Instance and
 the DAS Online].
 
 1. Log in to the host that is represented by the node where the instance resides.
@@ -1222,7 +1184,7 @@ node-name::
 instance-name::
   The name of the instance that you are restarting.
 
-[[GSHAG00053]][[gkqnt]]
+[[gkqnt]]
 Example 5-15 Restarting an Individual Instance Locally
 
 This example restarts the instance `yml-i1` locally. The instance
@@ -1234,11 +1196,9 @@ $ asadmin restart-local-instance --node sj01 yml-i1
 Command restart-local-instance executed successfully.
 ----
 
-[[GSHAG407]]
-
 See Also
 
-link:reference-manual/restart-local-instance.html#GSRFM00220[`restart-local-instance`(1)]
+link:reference-manual/restart-local-instance.html#restart-local-instance[`restart-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help restart-local-instance` at the command line.
@@ -1252,7 +1212,7 @@ subcommand again with the `--kill` option set to `true`. When this
 option is `true`, the subcommand uses functionality of the operating
 system to kill the instance process before restarting the instance.
 
-[[gkrdd]][[GSHAG00189]][[resynchronizing-glassfish-server-instances-and-the-das]]
+[[resynchronizing-glassfish-server-instances-and-the-das]]
 
 === Resynchronizing {productName} Instances and the DAS
 
@@ -1265,10 +1225,10 @@ The configuration data in these locations must be synchronized. The
 cache is synchronized in the following circumstances:
 
 * Whenever an `asadmin` subcommand is run. For more information, see
-"link:administration-guide/overview.html#GSADG00697[Impact of Configuration Changes]" in {productName} Administration Guide.
+"link:administration-guide/overview.html#impact-of-configuration-changes[Impact of Configuration Changes]" in {productName} Administration Guide.
 * When a user uses the administration tools to start or restart an instance.
 
-[[gksbo]][[GSHAG00267]][[default-synchronization-for-files-and-directories]]
+[[default-synchronization-for-files-and-directories]]
 
 ==== Default Synchronization for Files and Directories
 
@@ -1276,7 +1236,7 @@ The `--sync` option of the subcommands for starting an instance controls
 the type of synchronization between the DAS and the instance's files
 when the instance is started. You can use this option to override the
 default synchronization behavior for the files and directories of an
-instance. For more information, see link:#gksak[To Resynchronize an
+instance. For more information, see xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an
 Instance and the DAS Online].
 
 On the DAS, the files and directories of an instance are stored in the
@@ -1315,7 +1275,7 @@ By default, any file that you add to the `config` directory of the DAS
 is not resynchronized.
 If you require any additional configuration files to be resynchronized,
 you must specify the files explicitly.
-For more information, see link:#gksaz[To Resynchronize Additional Configuration Files].
+For more information, see xref:#to-resynchronize-additional-configuration-files[To Resynchronize Additional Configuration Files].
 ====
 
 ``config/``config-name::
@@ -1346,7 +1306,7 @@ out of date in the cache.
   instances in a domain use the same document root directory. To enable
   instances to use a different document root directory, a virtual server
   must be created in which the `docroot` property is set. For more
-  information, see the link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)]
+  information, see the link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)]
   help page. +
   The `docroot` directory might be very large. Therefore, by default,
   only a change to a file or a subdirectory in the top level of the
@@ -1375,7 +1335,7 @@ out of date in the cache.
   domain. Typically, these directories contain common JDBC drivers and
   other utility libraries that are shared by all applications in the domain. +
   The contents of these directories are loaded by the common class
-  loader. For more information, see "link:application-development-guide/class-loaders.html#GSDVG00342[
+  loader. For more information, see "link:application-development-guide/class-loaders.html#using-the-common-class-loader[
   Using the Common Class Loader]" in {productName} Application
   Development Guide.
   The class loader loads the contents of these directories in the following order:
@@ -1411,7 +1371,7 @@ Optional packages were formerly known as standard extensions or extensions.
   these directories causes the DAS to resynchronize the file that
   changed.
 
-[[gksak]][[GSHAG00119]][[to-resynchronize-an-instance-and-the-das-online]]
+[[to-resynchronize-an-instance-and-the-das-online]]
 
 ==== To Resynchronize an Instance and the DAS Online
 
@@ -1455,7 +1415,7 @@ asadmin> start-instance [--sync full] instance-name
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
-behavior of the instance, see the link:reference-manual/start-instance.html#GSRFM00236[`start-instance`(1)]
+behavior of the instance, see the link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
 help page.
 ====
 
@@ -1478,7 +1438,7 @@ $ asadmin start-local-instance [--node node-name] [--sync full] instance-name
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the instance, see the
-link:reference-manual/start-local-instance.html#GSRFM00237[`start-local-instance`(1)] help page.
+link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)] help page.
 ====
 
 node-name::
@@ -1488,7 +1448,7 @@ node-name::
 instance-name::
   The name of the instance that you are starting.
 
-[[GSHAG00054]][[gksfu]]
+[[gksfu]]
 Example 5-16 Resynchronizing an Instance and the DAS Online
 
 This example determines that the instance `yml-i1` is stopped and fully
@@ -1522,13 +1482,11 @@ Admin Port: 24849
 Command start-local-instance executed successfully.
 ----
 
-[[GSHAG409]]
-
 See Also
 
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
-* link:reference-manual/start-instance.html#GSRFM00236[`start-instance`(1)]
-* link:reference-manual/start-local-instance.html#GSRFM00237[`start-local-instance`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
+* link:reference-manual/start-instance.html#start-instance[`start-instance`(1)]
+* link:reference-manual/start-local-instance.html#start-local-instance[`start-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -1537,7 +1495,7 @@ typing the following commands at the command line.
 `asadmin help start-instance`
 `asadmin help start-local-instance`
 
-[[gksav]][[GSHAG00120]][[to-resynchronize-library-files]]
+[[to-resynchronize-library-files]]
 
 ==== To Resynchronize Library Files
 
@@ -1588,16 +1546,14 @@ asadmin> deploy --libraries commons-coll.jar,X1.jar app.ear
 ----
 For other types of library file, the full path is required.
 
-[[GSHAG411]]
-
 See Also
 
-link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)]
+link:reference-manual/deploy.html#deploy[`deploy`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the command `asadmin help deploy` at the command line.
 
-[[gksco]][[GSHAG00121]][[to-resynchronize-custom-configuration-files-for-an-instance]]
+[[to-resynchronize-custom-configuration-files-for-an-instance]]
 
 ==== To Resynchronize Custom Configuration Files for an Instance
 
@@ -1645,7 +1601,7 @@ option-name::
 new-value::
   The new value of the option for locating the file.
 
-[[GSHAG00055]][[gksfr]]
+[[gksfr]]
 Example 5-17 Updating the Option for Locating a Configuration File
 
 This example updates the option for locating the `server.policy` file to
@@ -1663,12 +1619,10 @@ Created 1 option(s)
 Command create-jvm-options executed successfully.
 ----
 
-[[GSHAG412]]
-
 See Also
 
-* link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`(1)]
-* link:reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`(1)]
+* link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)]
+* link:reference-manual/delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -1677,7 +1631,7 @@ typing the following commands at the command line.
 
 `asadmin help delete-jvm-options`
 
-[[gkscp]][[GSHAG00122]][[to-resynchronize-users-changes-to-files]]
+[[to-resynchronize-users-changes-to-files]]
 
 ==== To Resynchronize Users' Changes to Files
 
@@ -1698,16 +1652,14 @@ system. For example, on UNIX and Linux systems, you can use the
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)] command.
 
 2. Resynchronize each instance in the domain with the DAS. +
-For instructions, see link:#gksak[To Resynchronize an Instance and the DAS Online].
-
-[[GSHAG413]]
+For instructions, see xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an Instance and the DAS Online].
 
 See Also
 
-* link:#gksak[To Resynchronize an Instance and the DAS Online]
+* xref:#to-resynchronize-an-instance-and-the-das-online[To Resynchronize an Instance and the DAS Online]
 * http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1touch-1[`touch`(1)]
 
-[[gksaz]][[GSHAG00123]][[to-resynchronize-additional-configuration-files]]
+[[to-resynchronize-additional-configuration-files]]
 
 ==== To Resynchronize Additional Configuration Files
 
@@ -1744,7 +1696,7 @@ is named `config-files` that lists the files to resynchronize.
 
 In the `config-files` file, list each file name on a separate line.
 
-[[GSHAG00056]][[gksgl]]
+[[gksgl]]
 Example 5-18 `config-files` File
 
 This example shows the content of a `config-files` file. This file
@@ -1767,7 +1719,7 @@ wss-server-config-2.0.xml
 some-other-info
 ----
 
-[[gksdj]][[GSHAG00124]][[to-prevent-deletion-of-application-generated-files]]
+[[to-prevent-deletion-of-application-generated-files]]
 
 ==== To Prevent Deletion of Application-Generated Files
 
@@ -1781,7 +1733,7 @@ Put the files in a subdirectory under the domain directory that is not
 defined by {productName}, for example,
 `/export/glassfish7/glassfish/domains/domain1/myapp/myfile`.
 
-[[gksdy]][[GSHAG00125]][[to-resynchronize-an-instance-and-the-das-offline]]
+[[to-resynchronize-an-instance-and-the-das-offline]]
 
 ==== To Resynchronize an Instance and the DAS Offline
 
@@ -1803,7 +1755,7 @@ Export the configuration data that you are resynchronizing to an archive file.
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for exporting the
 configuration data, see the
-link:reference-manual/export-sync-bundle.html#GSRFM00134[`export-sync-bundle`(1)]
+link:reference-manual/export-sync-bundle.html#export-sync-bundle[`export-sync-bundle`(1)]
 help page.
 ====
 +
@@ -1855,17 +1807,17 @@ file is created on the DAS host.
 ====
 --
 3. If necessary, copy the archive file that you created in
-Step link:#gktio[2] from the DAS host to the host where the instance resides.
+Step xref:#gktio[2] from the DAS host to the host where the instance resides.
 
 4. From the host where the instance resides, import the instance's
 configuration data from the archive file that you created in
-Step link:#gktio[2].
+Step xref:#gktio[2].
 +
 [NOTE]
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for importing the
-configuration data, see the link:reference-manual/import-sync-bundle.html#GSRFM00142[`import-sync-bundle`(1)]
+configuration data, see the link:reference-manual/import-sync-bundle.html#import-sync-bundle[`import-sync-bundle`(1)]
 help page.
 ====
 +
@@ -1883,7 +1835,7 @@ archive-file::
   The name of the file, including the path, that contains the archive
   file to import.
 
-[[GSHAG00057]][[gksgg]]
+[[gksgg]]
 Example 5-19 Resynchronizing an Instance and the DAS Offline
 
 This example resynchronizes the clustered instance `yml-i1` and the DAS
@@ -1901,12 +1853,10 @@ $ asadmin import-sync-bundle --node sj01
 Command import-sync-bundle executed successfully.
 ----
 
-[[GSHAG414]]
-
 See Also
 
-* link:reference-manual/export-sync-bundle.html#GSRFM00134[`export-sync-bundle`(1)]
-* link:reference-manual/import-sync-bundle.html#GSRFM00142[`import-sync-bundle`(1)]
+* link:reference-manual/export-sync-bundle.html#export-sync-bundle[`export-sync-bundle`(1)]
+* link:reference-manual/import-sync-bundle.html#import-sync-bundle[`import-sync-bundle`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -1915,7 +1865,7 @@ typing the following commands at the command line.
 
 `asadmin help import-sync-bundle`
 
-[[gkqcr]][[GSHAG00190]][[migrating-ejb-timers]]
+[[migrating-ejb-timers]]
 
 === Migrating EJB Timers
 
@@ -1928,10 +1878,10 @@ instances that are stopped normally. Automatic timer migration can also
 be enabled to handle clustered server instance crashes. In addition,
 timers can be migrated manually for stopped or crashed server instances.
 
-* link:#gkvwo[To Enable Automatic EJB Timer Migration for Failed Clustered Instances]
-* link:#abdji[To Migrate EJB Timers Manually]
+* xref:#to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances[To Enable Automatic EJB Timer Migration for Failed Clustered Instances]
+* xref:#to-migrate-ejb-timers-manually[To Migrate EJB Timers Manually]
 
-[[gkvwo]][[GSHAG00126]][[to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances]]
+[[to-enable-automatic-ejb-timer-migration-for-failed-clustered-instances]]
 
 ==== To Enable Automatic EJB Timer Migration for Failed Clustered Instances
 
@@ -1949,11 +1899,9 @@ stopped abnormally.
 If the GMS is enabled, the default automatic timer migration cannot be
 disabled. To disable automatic timer migration, you must first disable
 the GMS. For information about the GMS, see
-link:clusters.html#gjfnl[Group Management Service].
+xref:clusters.adoc#group-management-service[Group Management Service].
 ====
 
-
-[[GSHAG415]]
 
 Before You Begin
 
@@ -1967,9 +1915,9 @@ This enables automatic timer migration for failed server instances in
 the cluster.
 
 For instructions on enabling delegated transaction recovery, see
-"link:administration-guide/transactions.html#GSADG00022[Administering Transactions]" in {productName} Administration Guide.
+"link:administration-guide/transactions.html#administering-transactions[Administering Transactions]" in {productName} Administration Guide.
 
-[[abdji]][[GSHAG00127]][[to-migrate-ejb-timers-manually]]
+[[to-migrate-ejb-timers-manually]]
 
 ==== To Migrate EJB Timers Manually
 
@@ -1989,8 +1937,6 @@ clustered instance, or from one cluster to another cluster.
 another standalone instance.
 * All EJB timers defined for a given instance are migrated with this
 procedure. It is not possible to migrate individual timers.
-
-[[GSHAG416]]
 
 Before You Begin
 
@@ -2032,7 +1978,7 @@ asadmin> list-timers source-cluster
 asadmin> migrate-timers --target target-instance source-instance
 ----
 
-[[GSHAG00058]][[gkmgw]]
+[[gkmgw]]
 Example 5-20 Migrating an EJB Timer
 
 The following example show how to migrate timers from a clustered source
@@ -2043,11 +1989,9 @@ instance named `football` to a clustered target instance named `soccer`.
 asadmin> migrate-timers --target soccer football
 ----
 
-[[GSHAG417]]
-
 See Also
 
-link:reference-manual/list-timers.html#GSRFM00205[`list-timers`(1)],
-link:reference-manual/migrate-timers.html#GSRFM00211[`migrate-timers`(1)],
-link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)],
-link:reference-manual/stop-instance.html#GSRFM00241[`stop-instance`(1)]
+link:reference-manual/list-timers.html#list-timers[`list-timers`(1)],
+link:reference-manual/migrate-timers.html#migrate-timers[`migrate-timers`(1)],
+link:reference-manual/list-instances.html#list-instances[`list-instances`(1)],
+link:reference-manual/stop-instance.html#stop-instance[`stop-instance`(1)]

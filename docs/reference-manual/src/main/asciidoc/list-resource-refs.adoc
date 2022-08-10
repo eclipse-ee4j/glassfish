@@ -7,13 +7,11 @@ prev=list-resource-adapter-configs.html
 
 = list-resource-refs
 
-[[list-resource-refs-1]][[GSRFM00197]][[list-resource-refs]]
+[[list-resource-refs]]
 
 == list-resource-refs
 
 Lists existing resource references
-
-[[sthref1779]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Lists existing resource references
 asadmin [asadmin-options] list-resource-refs [--help]
 [target]
 ----
-
-[[sthref1780]]
 
 === Description
 
@@ -37,18 +33,14 @@ available for this subcommand to succeed.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1781]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1782]]
 
 === Operands
 
@@ -66,11 +58,9 @@ target::
     Lists the resource references for the named unclustered server
     instance.
 
-[[sthref1783]]
-
 === Examples
 
-[[GSRFM707]][[sthref1784]]
+[[sthref1784]]
 
 ==== Example 1   Listing Resource References for a Cluster
 
@@ -83,8 +73,6 @@ jms/Topic
 Command list-resource-refs executed successfully.
 ----
 
-[[sthref1785]]
-
 === Exit Status
 
 0::
@@ -92,13 +80,11 @@ Command list-resource-refs executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1786]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
-link:delete-resource-ref.html#delete-resource-ref-1[`delete-resource-ref`(1)]
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)],
+xref:delete-resource-ref.adoc#delete-resource-ref[`delete-resource-ref`(1)]
 
 

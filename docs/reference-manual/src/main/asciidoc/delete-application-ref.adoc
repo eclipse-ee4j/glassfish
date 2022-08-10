@@ -7,13 +7,11 @@ prev=delete-admin-object.html
 
 = delete-application-ref
 
-[[delete-application-ref-1]][[GSRFM00064]][[delete-application-ref]]
+[[delete-application-ref]]
 
 == delete-application-ref
 
 Removes a reference to an application
-
-[[sthref585]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-application-ref [--help]
 [--target target]
 [--cascade=false] reference_name
 ----
-
-[[sthref586]]
 
 === Description
 
@@ -43,13 +39,11 @@ from the domain. The bits are removed only by the `undeploy` subcommand.
 
 This subcommand is supported in remote mode only.
 
-[[sthref587]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,8 +62,6 @@ asadmin-options::
   The connector module can be either a stand-alone RAR file or a module
   within an EAR file.
 
-[[sthref588]]
-
 === Operands
 
 reference_name::
@@ -82,15 +74,13 @@ reference_name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To delete references to multiple versions, you can
   use an asterisk (`*`) as a wildcard character. For more information
-  about module and application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module
+  about module and application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module
   and Application Versions]" in {productName}
   Application Deployment Guide.
 
-[[sthref589]]
-
 === Examples
 
-[[GSRFM531]][[sthref590]]
+[[sthref590]]
 
 ==== Example 1   Deleting an Application Reference
 
@@ -103,8 +93,6 @@ asadmin> delete-application-ref --target NewServer MyWebApp
 Command delete-application-ref executed successfully.
 ----
 
-[[sthref591]]
-
 === Exit Status
 
 0::
@@ -112,17 +100,15 @@ Command delete-application-ref executed successfully.
 1::
   error in executing the command
 
-[[sthref592]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-application-ref.html#create-application-ref-1[`create-application-ref`(1)],
-link:list-application-refs.html#list-application-refs-1[`list-application-refs`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+xref:create-application-ref.adoc#create-application-ref[`create-application-ref`(1)],
+xref:list-application-refs.adoc#list-application-refs[`list-application-refs`(1)],
+xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

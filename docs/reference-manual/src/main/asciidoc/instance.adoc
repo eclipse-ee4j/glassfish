@@ -7,15 +7,13 @@ prev=dotted-names.html
 
 = instance
 
-[[instance-5asc]][[GSRFM00269]][[instance]]
+[[instance]]
 
 == instance
 
 An instance in {productName} has its own Jakarta EE configuration,
 Jakarta EE resources, application deployment areas, and server configuration
 settings
-
-[[sthref2403]]
 
 === Description
 

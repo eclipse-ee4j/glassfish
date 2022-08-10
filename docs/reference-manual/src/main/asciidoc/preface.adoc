@@ -7,8 +7,6 @@ prev=title.html
 
 = Preface
 
-[[GSRFM441]][[sthref2]]
-
 [[preface]]
 == Preface
 
@@ -29,8 +27,6 @@ Both novice users and those familiar with {productName} can use online man pages
 and its features. A man page is intended to answer concisely the
 question "What does it do?" The man pages in general comprise a
 reference manual. They are not intended to be a tutorial.
-
-[[GSRFM442]][[sthref3]]
 
 
 [[overview]]

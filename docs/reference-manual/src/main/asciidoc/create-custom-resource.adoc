@@ -7,13 +7,11 @@ prev=create-context-service.html
 
 = create-custom-resource
 
-[[create-custom-resource-1]][[GSRFM00022]][[create-custom-resource]]
+[[create-custom-resource]]
 
 == create-custom-resource
 
 Creates a custom resource
-
-[[sthref200]]
 
 === Synopsis
 
@@ -26,8 +24,6 @@ asadmin [asadmin-options] create-custom-resource [--help]
 [--target target]
 ----
 
-[[sthref201]]
-
 === Description
 
 The `create-custom-resource` subcommand creates a custom resource. A
@@ -36,13 +32,11 @@ that implements the `javax.naming.spi.ObjectFactory` interface.
 
 This subcommand is supported in remote mode only.
 
-[[sthref202]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -89,18 +83,14 @@ multiple targets if needed.
 `--property`::
   Optional attribute name/value pairs for configuring the resource.
 
-[[sthref203]]
-
 === Operands
 
 jndi-name::
   The JNDI name of this resource.
 
-[[sthref204]]
-
 === Examples
 
-[[GSRFM470]][[sthref205]]
+[[sthref205]]
 
 ==== Example 1   Creating a Custom Resource
 
@@ -113,8 +103,6 @@ asadmin> create-custom-resource --restype topic
 Command create-custom-resource executed successfully.
 ----
 
-[[sthref206]]
-
 === Exit Status
 
 0::
@@ -122,14 +110,12 @@ Command create-custom-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref207]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-custom-resource.html#delete-custom-resource-1[`delete-custom-resource`(1)],
-link:list-custom-resources.html#list-custom-resources-1[`list-custom-resources`(1)],
-link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)]
+xref:delete-custom-resource.adoc#delete-custom-resource[`delete-custom-resource`(1)],
+xref:list-custom-resources.adoc#list-custom-resources[`list-custom-resources`(1)],
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)]
 
 

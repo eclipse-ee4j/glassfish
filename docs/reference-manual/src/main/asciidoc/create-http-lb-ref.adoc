@@ -7,14 +7,12 @@ prev=create-http-lb-config.html
 
 = create-http-lb-ref
 
-[[create-http-lb-ref-1]][[GSRFM00029]][[create-http-lb-ref]]
+[[create-http-lb-ref]]
 
 == create-http-lb-ref
 
 Adds an existing cluster or server instance to an existing load balancer
 configuration or load balancer
-
-[[sthref259]]
 
 === Synopsis
 
@@ -28,8 +26,6 @@ asadmin [asadmin-options] create-http-lb-ref [--help]
 [--lbenableallapplications=true] [--lbweight instance=weight[:instance=weight]*]
 target
 ----
-
-[[sthref260]]
 
 === Description
 
@@ -56,13 +52,11 @@ subcommand is not applicable to {productName}.
 ====
 
 
-[[sthref261]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -111,8 +105,6 @@ asadmin-options::
   for every five requests, one goes to instance1 and four go to
   instance2. A weight of 1 is the default.
 
-[[sthref262]]
-
 === Operands
 
 target::
@@ -124,11 +116,9 @@ target::
   * stand-alone_instance_name- Specifies that requests for this
   standalone instance will be handled by the load balancer.
 
-[[sthref263]]
-
 === Examples
 
-[[GSRFM480]][[sthref264]]
+[[sthref264]]
 
 ==== Example 1   Adding a Cluster Reference to a Load Balancer Configuration
 
@@ -142,7 +132,7 @@ asadmin> create-http-lb-ref --config mylbconfig cluster2
 Command create-http-lb-ref executed successfully.
 ----
 
-[[GSRFM481]][[sthref265]]
+[[sthref265]]
 
 ==== Example 2   Adding a Cluster Reference to a Load Balancer
 
@@ -156,7 +146,7 @@ asadmin> create-http-lb-ref --lbname mylb cluster2
 Command create-http-lb-ref executed successfully.
 ----
 
-[[GSRFM482]][[sthref266]]
+[[sthref266]]
 
 ==== Example 3   Configuring a Health Checker and Load Balancer Policy
 
@@ -172,7 +162,7 @@ asadmin> create-http-lb-ref --config mylbconfig --lbpolicy weighted-round-robin
 Command create-http-lb-ref executed successfully.
 ----
 
-[[GSRFM483]][[sthref267]]
+[[sthref267]]
 
 ==== Example 4   Setting a User-Defined Load Balancing Policy
 
@@ -186,8 +176,6 @@ asadmin> create-http-lb-ref --lbpolicy user-defined --lbpolicymodule /user/modul
 Command create-http-lb-ref executed successfully.
 ----
 
-[[sthref268]]
-
 === Exit Status
 
 0::
@@ -195,18 +183,16 @@ Command create-http-lb-ref executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref269]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:configure-lb-weight.html#configure-lb-weight-1[`configure-lb-weight`(1)],
-link:create-http-health-checker.html#create-http-health-checker-1[`create-http-health-checker`(1)],
-link:delete-http-lb-ref.html#delete-http-lb-ref-1[`delete-http-lb-ref`(1)],
-link:enable-http-lb-application.html#enable-http-lb-application-1[`enable-http-lb-application`(1)],
-link:enable-http-lb-server.html#enable-http-lb-server-1[`enable-http-lb-server`(1)],
-link:list-http-lb-configs.html#list-http-lb-configs-1[`list-http-lb-configs`(1)],
-link:list-http-lbs.html#list-http-lbs-1[`list-http-lbs`(1)]
+xref:configure-lb-weight.adoc#configure-lb-weight[`configure-lb-weight`(1)],
+xref:create-http-health-checker.adoc#create-http-health-checker[`create-http-health-checker`(1)],
+xref:delete-http-lb-ref.adoc#delete-http-lb-ref[`delete-http-lb-ref`(1)],
+xref:enable-http-lb-application.adoc#enable-http-lb-application[`enable-http-lb-application`(1)],
+xref:enable-http-lb-server.adoc#enable-http-lb-server[`enable-http-lb-server`(1)],
+xref:list-http-lb-configs.adoc#list-http-lb-configs[`list-http-lb-configs`(1)],
+xref:list-http-lbs.adoc#list-http-lbs[`list-http-lbs`(1)]
 
 

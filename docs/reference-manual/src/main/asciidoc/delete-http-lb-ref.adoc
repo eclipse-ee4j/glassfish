@@ -7,13 +7,11 @@ prev=delete-http-lb-config.html
 
 = delete-http-lb-ref
 
-[[delete-http-lb-ref-1]][[GSRFM00081]][[delete-http-lb-ref]]
+[[delete-http-lb-ref]]
 
 == delete-http-lb-ref
 
 Deletes the cluster or server instance from a load balancer
-
-[[sthref723]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-http-lb-ref [--help]
 --config config_name | --lbname load_balancer_name
 [--force=false] target
 ----
-
-[[sthref724]]
 
 === Description
 
@@ -42,13 +38,11 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref725]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,8 +61,6 @@ asadmin-options::
   there are currently enabled applications or instances. The default is
   false.
 
-[[sthref726]]
-
 === Operands
 
 target::
@@ -78,11 +70,9 @@ target::
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
-[[sthref727]]
-
 === Examples
 
-[[GSRFM550]][[sthref728]]
+[[sthref728]]
 
 ==== Example 1   Deleting a Cluster Reference from a Load Balancer
 Configuration
@@ -97,8 +87,6 @@ asadmin> delete-http-lb-ref --config mycluster-http-lb-config cluster2
 Command delete-http-lb-ref executed successfully.
 ----
 
-[[sthref729]]
-
 === Exit Status
 
 0::
@@ -106,13 +94,13 @@ Command delete-http-lb-ref executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref730]]
+[[administering-concurrent-resources0]]
 
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)],
-link:disable-http-lb-server.html#disable-http-lb-server-1[`disable-http-lb-server`(1)]
+xref:create-http-lb-ref.adoc#create-http-lb-ref[`create-http-lb-ref`(1)],
+xref:disable-http-lb-server.adoc#disable-http-lb-server[`disable-http-lb-server`(1)]
 
 

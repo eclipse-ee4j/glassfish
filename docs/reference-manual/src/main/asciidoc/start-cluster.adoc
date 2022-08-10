@@ -7,13 +7,11 @@ prev=show-component-status.html
 
 = start-cluster
 
-[[start-cluster-1]][[GSRFM00233]][[start-cluster]]
+[[start-cluster]]
 
 == start-cluster
 
 Starts a cluster
-
-[[sthref2109]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] start-cluster [--help]
 [--autohadboverride={true|false}]
 [--verbose={false|true}] cluster-name
 ----
-
-[[sthref2110]]
 
 === Description
 
@@ -41,7 +37,7 @@ If all instances reside on the same host as the DAS, DCOM or SSH is not
 required. You might require to start a cluster in which instances reside
 on hosts where DCOM or SSH is not configured that are remote from the
 DAS. In this situation, run the
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)]
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)]
 subcommand for each instance from the host where the instance resides.
 ====
 
@@ -49,13 +45,11 @@ You may run this subcommand from any host that can contact the DAS.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2111]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -75,18 +69,14 @@ asadmin-options::
   `false`;;
     Displays no additional status information (default).
 
-[[sthref2112]]
-
 === Operands
 
 cluster-name::
   The name of the cluster to start.
 
-[[sthref2113]]
-
 === Examples
 
-[[GSRFM758]][[sthref2114]]
+[[sthref2114]]
 
 ==== Example 1   Staring a Cluster
 
@@ -105,8 +95,6 @@ yml-i-sr1-usca-02 yml-i-sr1-usca-01
 Command start-cluster executed successfully.
 ----
 
-[[sthref2115]]
-
 === Exit Status
 
 0::
@@ -114,18 +102,16 @@ Command start-cluster executed successfully.
 1::
   error in executing the command
 
-[[sthref2116]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-cluster.html#create-cluster-1[`create-cluster`(1)],
-link:delete-cluster.html#delete-cluster-1[`delete-cluster`(1)],
-link:list-clusters.html#list-clusters-1[`list-clusters`(1)],
-link:setup-ssh.html#setup-ssh-1[`setup-ssh`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-cluster.html#stop-cluster-1[`stop-cluster`(1)],
-link:validate-dcom.html#validate-dcom-1[`validate-dcom`(1)]
+xref:create-cluster.adoc#create-cluster[`create-cluster`(1)],
+xref:delete-cluster.adoc#delete-cluster[`delete-cluster`(1)],
+xref:list-clusters.adoc#list-clusters[`list-clusters`(1)],
+xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)],
+xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)]
 
 

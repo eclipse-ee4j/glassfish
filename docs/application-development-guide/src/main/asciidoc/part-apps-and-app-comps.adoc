@@ -7,7 +7,7 @@ prev=debugging-apps.html
 
 = Developing Applications and Application Components
 
-[[fvyme]][[GSDVG00046]][[part-ii]]
+[[part-ii]]
 
 == Part II
 

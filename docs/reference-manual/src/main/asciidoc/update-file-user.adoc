@@ -7,13 +7,11 @@ prev=update-connector-work-security-map.html
 
 = update-file-user
 
-[[update-file-user-1]][[GSRFM00254]][[update-file-user]]
+[[update-file-user]]
 
 == update-file-user
 
 Updates a current file user as specified
-
-[[sthref2274]]
 
 === Synopsis
 
@@ -26,8 +24,6 @@ asadmin [asadmin-options] update-file-user [--help]
 username
 ----
 
-[[sthref2275]]
-
 === Description
 
 Th `update-file-user` subcommand updates an existing entry in the
@@ -38,13 +34,11 @@ If a new password is not provided, this subcommand fails if secure
 administration is enabled and the user being updated is an
 administrative user.
 
-[[sthref2276]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -65,18 +59,14 @@ asadmin-options::
   instance_name;;
     Updates the file user on a specified sever instance.
 
-[[sthref2277]]
-
 === Operands
 
 username::
   This is the name of the file user to be updated.
 
-[[sthref2278]]
-
 === Examples
 
-[[GSRFM787]][[sthref2279]]
+[[sthref2279]]
 
 ==== Example 1   Updating a User's Information in a File Realm
 
@@ -90,8 +80,6 @@ asadmin> update-file-user
 Command update-file-user executed successfully
 ----
 
-[[sthref2280]]
-
 === Exit Status
 
 0::
@@ -99,15 +87,13 @@ Command update-file-user executed successfully
 1::
   error in executing the subcommand
 
-[[sthref2281]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
-link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
-link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],
-link:list-file-users.html#list-file-users-1[`list-file-users`(1)]
+xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
+xref:delete-file-user.adoc#delete-file-user[`delete-file-user`(1)],
+xref:list-file-groups.adoc#list-file-groups[`list-file-groups`(1)],
+xref:list-file-users.adoc#list-file-users[`list-file-users`(1)]
 
 

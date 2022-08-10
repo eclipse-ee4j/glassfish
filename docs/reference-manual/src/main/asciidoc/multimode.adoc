@@ -7,14 +7,12 @@ prev=monitor.html
 
 = multimode
 
-[[multimode-1]][[GSRFM00213]][[multimode]]
+[[multimode]]
 
 == multimode
 
 Allows multiple subcommands to be run while preserving environment
 settings and remaining in the asadmin utility
-
-[[sthref1900]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] multimode [--help]
 [--file filename]
 [--printprompt={true|false}] [--encoding encode]
 ----
-
-[[sthref1901]]
 
 === Description
 
@@ -54,15 +50,13 @@ All the remote `asadmin` utility options can be supplied when invoking
 the `multimode` subcommand. The settings will apply as defaults for all
 subcommands that are run within the multimode session. For a list of the
 `asadmin` utility options, see the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
-
-[[sthref1902]]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -77,11 +71,9 @@ asadmin-options::
   Specifies the character set for the file to be decoded. By default,
   the system character set is used.
 
-[[sthref1903]]
-
 === Examples
 
-[[GSRFM725]][[sthref1904]]
+[[sthref1904]]
 
 ==== Example 1   Starting a Multimode Session
 
@@ -96,7 +88,7 @@ asadmin>
 You can also start a multimode session by typing `asadmin` without
 options or subcommands at the system prompt.
 
-[[GSRFM726]][[sthref1905]]
+[[sthref1905]]
 
 ==== Example 2   Running Multiple Commands From a File
 
@@ -108,8 +100,6 @@ file.
 % asadmin multimode --file commands_file.txt
 ----
 
-[[sthref1906]]
-
 === Exit Status
 
 0::
@@ -117,13 +107,11 @@ file.
 1::
   error in executing the subcommand
 
-[[sthref1907]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:export.html#export-1[`export`(1)],
-link:unset.html#unset-1[`unset`(1)]
+xref:export.adoc#export[`export`(1)],
+xref:unset.adoc#unset[`unset`(1)]
 
 

@@ -7,13 +7,11 @@ prev=create-jdbc-connection-pool.html
 
 = create-jdbc-resource
 
-[[create-jdbc-resource-1]][[GSRFM00037]][[create-jdbc-resource]]
+[[create-jdbc-resource]]
 
 == create-jdbc-resource
 
 Creates a JDBC resource with the specified JNDI name
-
-[[sthref328]]
 
 === Synopsis
 
@@ -28,21 +26,17 @@ asadmin [asadmin-options] create-jdbc-resource [--help]
 jndi_name
 ----
 
-[[sthref329]]
-
 === Description
 
 The `create-jdbc-resource` subcommand creates a new JDBC resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref330]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -82,18 +76,14 @@ multiple targets if needed.
 ====
 
 
-[[sthref331]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this JDBC resource.
 
-[[sthref332]]
-
 === Examples
 
-[[GSRFM494]][[sthref333]]
+[[sthref333]]
 
 ==== Example 1   Creating a JDBC Resource
 
@@ -106,8 +96,6 @@ asadmin> create-jdbc-resource
 Command create-jdbc-resource executed successfully.
 ----
 
-[[sthref334]]
-
 === Exit Status
 
 0::
@@ -115,14 +103,12 @@ Command create-jdbc-resource executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref335]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
-link:delete-jdbc-resource.html#delete-jdbc-resource-1[`delete-jdbc-resource`(1)],
-link:list-jdbc-resources.html#list-jdbc-resources-1[`list-jdbc-resources`(1)]
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)],
+xref:delete-jdbc-resource.adoc#delete-jdbc-resource[`delete-jdbc-resource`(1)],
+xref:list-jdbc-resources.adoc#list-jdbc-resources[`list-jdbc-resources`(1)]
 
 

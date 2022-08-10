@@ -10,9 +10,9 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:upgrading-legacy-installation.html#gktiu[2-1 Using the asupgrade
+* xref:upgrading-legacy-installation.adoc#gktiu[2-1 Using the asupgrade
 Command Line]
-* link:upgrading-legacy-installation.html#gktoh[2-2 Correcting the
+* xref:upgrading-legacy-installation.adoc#gktoh[2-2 Correcting the
 Configuration of a Node After an Upgrade]
-* link:upgrading-legacy-installation.html#gkyin[2-3 Creating Two Local
+* xref:upgrading-legacy-installation.adoc#gkyin[2-3 Creating Two Local
 Instances]

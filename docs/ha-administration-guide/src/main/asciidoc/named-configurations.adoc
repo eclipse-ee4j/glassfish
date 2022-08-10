@@ -7,8 +7,6 @@ prev=instances.html
 
 = Administering Named Configurations
 
-[[GSHAG00007]][[abdjk]]
-
 [[administering-named-configurations]]
 == 6 Administering Named Configurations
 
@@ -26,11 +24,11 @@ regardless of how the configuration was created.
 
 The following topics are addressed here:
 
-* link:#abdjl[About Named Configurations]
-* link:#abdjq[Creating, Listing, and Deleting Named Configurations]
-* link:#gkrgf[Modifying Properties for Named Configurations and Instances]
+* xref:#about-named-configurations[About Named Configurations]
+* xref:#creating-listing-and-deleting-named-configurations[Creating, Listing, and Deleting Named Configurations]
+* xref:#modifying-properties-for-named-configurations-and-instances[Modifying Properties for Named Configurations and Instances]
 
-[[abdjl]][[GSHAG00191]][[about-named-configurations]]
+[[about-named-configurations]]
 
 === About Named Configurations
 
@@ -40,7 +38,7 @@ have separate configurations. To ensure that the environment in a
 cluster's instances is homogenous, all instances in the cluster inherit
 the cluster's configuration.
 
-[[abdjm]][[GSHAG00268]][[types-of-named-configurations]]
+[[types-of-named-configurations]]
 
 ==== Types of Named Configurations
 
@@ -61,9 +59,9 @@ Shared configuration::
 
 The type of an unclustered instance is determined by the type of the
 configuration that the instance references. For more information, see
-link:instances.html#gkrbn[Types of {productName} Instances].
+xref:instances.adoc#types-of-glassfish-server-instances[Types of {productName} Instances].
 
-[[abdjn]][[GSHAG00269]][[the-default-config-configuration]]
+[[the-default-config-configuration]]
 
 ==== The `default-config` Configuration
 
@@ -72,7 +70,7 @@ as a template for creating named configurations. Clusters and instances
 cannot refer to the `default-config` configuration. The `default-config`
 configuration can only be copied to create configurations.
 
-[[abdjo]][[GSHAG00270]][[automatically-created-configurations]]
+[[automatically-created-configurations]]
 
 ==== Automatically Created Configurations
 
@@ -83,15 +81,15 @@ specifying an existing configuration, {productName} automatically
 creates a configuration for the cluster or instance. For more
 information, see the following sections:
 
-* link:clusters.html#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 {productName} automatically creates a configuration by copying the
 `default-config` configuration. If you require an instance or cluster to
 reference a copy of a different configuration, copy the configuration
 and specify the copy when you create the instance or cluster. For
-information about how to copy a configuration, see link:#abdjr[To Create
+information about how to copy a configuration, see xref:#to-create-a-named-configuration[To Create
 a Named Configuration].
 
 {productName} assigns the name cluster-or-instance`-config` to an
@@ -100,7 +98,7 @@ the cluster or instance for which the configuration is created. The
 `server-config` configuration is automatically created for the domain
 administration server (DAS) when the domain is created.
 
-[[gdgca]][[GSHAG00271]][[directory-for-configuration-synchronization]]
+[[directory-for-configuration-synchronization]]
 
 ==== Directory for Configuration Synchronization
 
@@ -116,7 +114,7 @@ config-name::
 This contents of this directory are synchronized to all instances that
 inherit or reference the configuration.
 
-[[abdjq]][[GSHAG00192]][[creating-listing-and-deleting-named-configurations]]
+[[creating-listing-and-deleting-named-configurations]]
 
 === Creating, Listing, and Deleting Named Configurations
 
@@ -126,12 +124,12 @@ delete configurations that are no longer required.
 
 The following topics are addressed here:
 
-* link:#abdjr[To Create a Named Configuration]
-* link:#gkrgg[To List the Named Configurations in a Domain]
-* link:#abdju[To List the Targets of a Named Configuration]
-* link:#abdjv[To Delete a Named Configuration]
+* xref:#to-create-a-named-configuration[To Create a Named Configuration]
+* xref:#to-list-the-named-configurations-in-a-domain[To List the Named Configurations in a Domain]
+* xref:#to-list-the-targets-of-a-named-configuration[To List the Targets of a Named Configuration]
+* xref:#to-delete-a-named-configuration[To Delete a Named Configuration]
 
-[[abdjr]][[GSHAG00128]][[to-create-a-named-configuration]]
+[[to-create-a-named-configuration]]
 
 ==== To Create a Named Configuration
 
@@ -155,10 +153,10 @@ default configuration for the cluster or instance.
 
 For more information, see the following sections:
 
-* link:clusters.html#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* link:clusters.html#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* xref:clusters.adoc#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 ====
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
@@ -168,7 +166,7 @@ For more information, see the following sections:
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-named configuration, see the link:reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
+named configuration, see the link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
 help page.
 ====
 +
@@ -184,7 +182,7 @@ destination-config-name::
   Your choice of name for the configuration that you are creating by
   copying the source configuration.
 
-[[GSHAG00059]][[gkrhn]]
+[[gkrhn]]
 Example 6-1 Creating a Named Configuration
 
 This example creates the named configuration `clusterpresets-config` by
@@ -196,20 +194,18 @@ asadmin> copy-config default-config clusterpresets-config
 Command copy-config executed successfully.
 ----
 
-[[GSHAG418]]
-
 See Also
 
-* link:clusters.html#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* link:clusters.html#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
-* link:reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
+* xref:clusters.adoc#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
+* link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help copy-config` at the command line.
 
-[[gkrgg]][[GSHAG00129]][[to-list-the-named-configurations-in-a-domain]]
+[[to-list-the-named-configurations-in-a-domain]]
 
 ==== To List the Named Configurations in a Domain
 
@@ -217,14 +213,14 @@ Use the `list-configs` subcommand in remote mode to list existing named
 configurations in a domain.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/list-configs.html#GSRFM00156[`list-configs`] subcommand.
+2. Run the link:reference-manual/list-configs.html#list-configs[`list-configs`] subcommand.
 +
 [source]
 ----
 asadmin> list-configs
 ----
 
-[[GSHAG00060]][[gkrhp]]
+[[gkrhp]]
 Example 6-2 Listing All Named Configurations in a Domain
 
 This example lists all named configurations in the current domain.
@@ -239,16 +235,14 @@ clusterpresets-config
 Command list-configs executed successfully.
 ----
 
-[[GSHAG419]]
-
 See Also
 
-link:reference-manual/list-configs.html#GSRFM00156[`list-configs`(1)]
+link:reference-manual/list-configs.html#list-configs[`list-configs`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-configs` at the command line.
 
-[[abdju]][[GSHAG00130]][[to-list-the-targets-of-a-named-configuration]]
+[[to-list-the-targets-of-a-named-configuration]]
 
 ==== To List the Targets of a Named Configuration
 
@@ -277,7 +271,7 @@ asadmin> list-instances config-name
 config-name::
   The name of the configuration whose targets you are listing.
 
-[[GSHAG00061]][[gkrfz]]
+[[gkrfz]]
 Example 6-3 Listing the Targets of a Named Configuration
 
 This example shows that the cluster `ymlcluster` and the instances
@@ -295,12 +289,10 @@ yml-i2   not running
 Command list-instances executed successfully.
 ----
 
-[[GSHAG420]]
-
 See Also
 
-* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -308,7 +300,7 @@ typing the following commands at the command line:
 * `asadmin help list-clusters`
 * `asadmin help list-instances`
 
-[[abdjv]][[GSHAG00131]][[to-delete-a-named-configuration]]
+[[to-delete-a-named-configuration]]
 
 ==== To Delete a Named Configuration
 
@@ -325,8 +317,6 @@ or a {productName} instance is deleted when the cluster or instance is deleted.
 ====
 
 
-[[GSHAG421]]
-
 Before You Begin
 
 Ensure that no clusters or instances refer to the configuration. If a
@@ -335,9 +325,9 @@ required, delete the cluster or instance. For information about how to
 delete an instance and how to delete a cluster, see the following
 sections:
 
-* link:instances.html#gkqcw[To Delete an Instance Centrally]
-* link:instances.html#gkqed[To Delete an Instance Locally]
-* link:clusters.html#gkqcp[To Delete a Cluster]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:clusters.adoc#to-delete-a-cluster[To Delete a Cluster]
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -360,7 +350,7 @@ asadmin> list-instances config-name
 config-name::
   The name of the configuration that you are deleting.
 
-4. Run the link:reference-manual/delete-config.html#GSRFM00069[`delete-config`] subcommand.
+4. Run the link:reference-manual/delete-config.html#delete-config[`delete-config`] subcommand.
 +
 [source]
 ----
@@ -369,7 +359,7 @@ asadmin> delete-config config-name
 config-name::
   The name of the configuration that you are deleting.
 
-[[GSHAG00062]][[gkrgs]]
+[[gkrgs]]
 Example 6-4 Deleting a Named Configuration
 
 This example confirms that no clusters or instances refer to the
@@ -388,16 +378,14 @@ asadmin> delete-config clusterpresets-config
 Command delete-config executed successfully.
 ----
 
-[[GSHAG422]]
-
 See Also
 
-* link:instances.html#gkqcw[To Delete an Instance Centrally]
-* link:instances.html#gkqed[To Delete an Instance Locally]
-* link:clusters.html#gkqcp[To Delete a Cluster]
-* link:reference-manual/delete-config.html#GSRFM00069[`delete-config`(1)]
-* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:clusters.adoc#to-delete-a-cluster[To Delete a Cluster]
+* link:reference-manual/delete-config.html#delete-config[`delete-config`(1)]
+* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -406,7 +394,7 @@ typing the following commands at the command line:
 * `asadmin help list-clusters`
 * `asadmin help list-instances`
 
-[[gkrgf]][[GSHAG00193]][[modifying-properties-for-named-configurations-and-instances]]
+[[modifying-properties-for-named-configurations-and-instances]]
 
 === Modifying Properties for Named Configurations and Instances
 
@@ -419,11 +407,11 @@ configurations and instances.
 
 The following topics are addressed here:
 
-* link:#gkrls[Properties for Port Numbers in a Named Configuration]
-* link:#fxxvk[To Modify a Named Configuration's Properties]
-* link:#abdjt[To Modify Port Numbers of an Instance]
+* xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a Named Configuration]
+* xref:#to-modify-a-named-configurations-properties[To Modify a Named Configuration's Properties]
+* xref:#to-modify-port-numbers-of-an-instance[To Modify Port Numbers of an Instance]
 
-[[gkrls]][[GSHAG00272]][[properties-for-port-numbers-in-a-named-configuration]]
+[[properties-for-port-numbers-in-a-named-configuration]]
 
 ==== Properties for Port Numbers in a Named Configuration
 
@@ -435,8 +423,8 @@ the instance.
 
 You can create additional system properties for a configuration either
 by specifying the `--systemproperties` option of the
-link:reference-manual/copy-config.html#GSRFM00011[`copy-config`] subcommand or by using the
-link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand. To reference a
+link:reference-manual/copy-config.html#copy-config[`copy-config`] subcommand or by using the
+link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`] subcommand. To reference a
 system property from the configuration, use the `${`prop-name`}`
 notation, where prop-name is the name of the system property.
 
@@ -501,7 +489,7 @@ follows:
   management subsystem. Valid values are 1-65535. On UNIX, creating
   sockets that listen on ports 1-1024 requires superuser privileges.
 
-[[fxxvk]][[GSHAG00132]][[to-modify-a-named-configurations-properties]]
+[[to-modify-a-named-configurations-properties]]
 
 ==== To Modify a Named Configuration's Properties
 
@@ -532,7 +520,7 @@ config-name::
   The name of the configuration whose properties you are modifying.
 property-name::
   The name of the property that you are modifying. For a list of
-  available properties, see link:#gkrls[Properties for Port Numbers in a
+  available properties, see xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a
   Named Configuration].
 
 .. Set the property to its new value.
@@ -546,12 +534,12 @@ config-name::
   The name of the configuration whose properties you are modifying.
 property-name::
   The name of the property that you are modifying. For a list of
-  available properties, see link:#gkrls[Properties for Port Numbers in a
+  available properties, see xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a
   Named Configuration].
 new-value::
   The value to which you are setting the property.
 
-[[GSHAG00063]][[gkrky]]
+[[gkrky]]
 Example 6-5 Modifying a Property of a Named Configuration
 
 This example changes the value of the `JMS_PROVIDER_PORT` property in
@@ -569,12 +557,10 @@ configs.config.clusterpresets-config.system-property.JMS_PROVIDER_PORT.value=276
 Command set executed successfully.
 ----
 
-[[GSHAG423]]
-
 See Also
 
-* link:reference-manual/get.html#GSRFM00139[`get`(1)]
-* link:reference-manual/set.html#GSRFM00226[`set`(1)]
+* link:reference-manual/get.html#get[`get`(1)]
+* link:reference-manual/set.html#set[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -582,7 +568,7 @@ typing the following commands at the command line:
 * `asadmin help get`
 * `asadmin help set`
 
-[[abdjt]][[GSHAG00133]][[to-modify-port-numbers-of-an-instance]]
+[[to-modify-port-numbers-of-an-instance]]
 
 ==== To Modify Port Numbers of an Instance
 
@@ -623,7 +609,7 @@ instance-name::
 port-property::
   The name of the property that corresponds to the port number that you
   are modifying. For a list of available properties, see
-  link:#gkrls[Properties for Port Numbers in a Named Configuration].
+  xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a Named Configuration].
 
 .. Set the port number to its new value.
 +
@@ -637,11 +623,11 @@ instance-name::
 port-property::
   The name of the property that corresponds to the port number that you
   are modifying. For a list of available properties, see
-  link:#gkrls[Properties for Port Numbers in a Named Configuration].
+  xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a Named Configuration].
 new-value::
   The value to which you are setting the port number.
 
-[[GSHAG00064]][[gkrma]]
+[[gkrma]]
 Example 6-6 Modifying a Port Number for an Instance
 
 This example changes the port number of the HTTP port or the HTTPS port
@@ -659,12 +645,10 @@ servers.server.pmdsainst.system-property.ASADMIN_LISTENER_PORT.value=24859
 Command set executed successfully.
 ----
 
-[[GSHAG424]]
-
 See Also
 
-* link:reference-manual/get.html#GSRFM00139[`get`(1)]
-* link:reference-manual/set.html#GSRFM00226[`set`(1)]
+* link:reference-manual/get.html#get[`get`(1)]
+* link:reference-manual/set.html#set[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

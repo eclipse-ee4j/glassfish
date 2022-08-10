@@ -7,13 +7,11 @@ prev=stop-domain.html
 
 = stop-instance
 
-[[stop-instance-1]][[GSRFM00241]][[stop-instance]]
+[[stop-instance]]
 
 == stop-instance
 
 Stops a running {productName} instance
-
-[[sthref2173]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] stop-instance [--help]
 instance-name
 ----
 
-[[sthref2174]]
-
 === Description
 
 The `stop-instance` subcommand stops a running {productName} instance.
@@ -33,17 +29,15 @@ The `stop-instance` subcommand stops a running {productName} instance.
 The subcommand can stop any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can stop an
 instance that was created by using the
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)] subcommand.
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)] subcommand.
 
 This command is supported in remote mode only.
-
-[[sthref2175]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -69,20 +63,16 @@ asadmin-options::
     The instance is killed. The subcommand uses functionality of the
     operating system to terminate the instance process.
 
-[[sthref2176]]
-
 === Operands
 
 instance-name::
   This is the name of the {productName} instance to stop.
 
-[[sthref2177]]
-
 === Examples
 
 This example stops the {productName} instance `yml-i-sj01`.
 
-[[GSRFM767]][[sthref2178]]
+[[sthref2178]]
 
 ==== Example 1   Stopping a {productName} Instance
 
@@ -94,8 +84,6 @@ The instance, yml-i-sj01, was stopped.
 Command stop-instance executed successfully.
 ----
 
-[[sthref2179]]
-
 === Exit Status
 
 0::
@@ -103,20 +91,18 @@ Command stop-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref2180]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:start-domain.html#start-domain-1[`start-domain`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-domain.html#stop-domain-1[`stop-domain`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:start-domain.adoc#start-domain[`start-domain`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-domain.adoc#stop-domain[`stop-domain`(1)],
+xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 

@@ -7,13 +7,11 @@ prev=delete-config.html
 
 = delete-connector-connection-pool
 
-[[delete-connector-connection-pool-1]][[GSRFM00070]][[delete-connector-connection-pool]]
+[[delete-connector-connection-pool]]
 
 == delete-connector-connection-pool
 
 Removes the specified connector connection pool
-
-[[sthref625]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] delete-connector-connection-pool [--help]
 [--cascade={false|true}] poolname
 ----
 
-[[sthref626]]
-
 === Description
 
 The `delete-connector-connection-pool` subcommand removes the specified
@@ -33,13 +29,11 @@ connector connection pool.
 
 This subcommand is supported in remote mode only.
 
-[[sthref627]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -55,18 +49,14 @@ asadmin-options::
   must be deleted explicitly or the option must be set to true. Default
   is false.
 
-[[sthref628]]
-
 === Operands
 
 poolname::
   The name of the connection pool to be removed.
 
-[[sthref629]]
-
 === Examples
 
-[[GSRFM537]][[sthref630]]
+[[sthref630]]
 
 ==== Example 1   Deleting a Connector Connection Pool
 
@@ -80,8 +70,6 @@ asadmin> delete-connector-connection-pool
 Command delete-connector-connection-pool executed successfully
 ----
 
-[[sthref631]]
-
 === Exit Status
 
 0::
@@ -89,14 +77,12 @@ Command delete-connector-connection-pool executed successfully
 1::
   error in executing the subcommand
 
-[[sthref632]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-connection-pool.html#create-connector-connection-pool-1[`create-connector-connection-pool`(1)],
-link:list-connector-connection-pools.html#list-connector-connection-pools-1[`list-connector-connection-pools`(1)],
-link:ping-connection-pool.html#ping-connection-pool-1[`ping-connection-pool`(1)]
+xref:create-connector-connection-pool.adoc#create-connector-connection-pool[`create-connector-connection-pool`(1)],
+xref:list-connector-connection-pools.adoc#list-connector-connection-pools[`list-connector-connection-pools`(1)],
+xref:ping-connection-pool.adoc#ping-connection-pool[`ping-connection-pool`(1)]
 
 

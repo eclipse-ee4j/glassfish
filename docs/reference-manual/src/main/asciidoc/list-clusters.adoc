@@ -7,13 +7,11 @@ prev=list-batch-runtime-configuration.html
 
 = list-clusters
 
-[[list-clusters-1]][[GSRFM00153]][[list-clusters]]
+[[list-clusters]]
 
 == list-clusters
 
 Lists existing clusters in a domain
-
-[[sthref1371]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Lists existing clusters in a domain
 asadmin [asadmin-options] list-clusters [--help]
 [target]
 ----
-
-[[sthref1372]]
 
 === Description
 
@@ -34,18 +30,14 @@ cluster is running.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1373]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1374]]
 
 === Operands
 
@@ -68,11 +60,9 @@ target::
     Lists all clusters that contain instances whose configuration is
     defined by the named configuration.
 
-[[sthref1375]]
-
 === Examples
 
-[[GSRFM641]][[sthref1376]]
+[[sthref1376]]
 
 ==== Example 1   Listing All Clusters in a Domain
 
@@ -87,7 +77,7 @@ ymlclust not running
 Command list-clusters executed successfully.
 ----
 
-[[GSRFM642]][[sthref1377]]
+[[sthref1377]]
 
 ==== Example 2   Displaying the Status of a Cluster
 
@@ -102,7 +92,7 @@ ymlclust not running
 Command list-clusters executed successfully.
 ----
 
-[[GSRFM643]][[sthref1378]]
+[[sthref1378]]
 
 ==== Example 3   Listing All Clusters That Are Associated With a Node
 
@@ -117,8 +107,6 @@ ymlclust not running
 Command list-clusters executed successfully.
 ----
 
-[[sthref1379]]
-
 === Exit Status
 
 0::
@@ -126,15 +114,13 @@ Command list-clusters executed successfully.
 1::
   error in executing the command
 
-[[sthref1380]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-cluster.html#create-cluster-1[`create-cluster`(1)],
-link:delete-cluster.html#delete-cluster-1[`delete-cluster`(1)],
-link:start-cluster.html#start-cluster-1[`start-cluster`(1)],
-link:stop-cluster.html#stop-cluster-1[`stop-cluster`(1)]
+xref:create-cluster.adoc#create-cluster[`create-cluster`(1)],
+xref:delete-cluster.adoc#delete-cluster[`delete-cluster`(1)],
+xref:start-cluster.adoc#start-cluster[`start-cluster`(1)],
+xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)]
 
 

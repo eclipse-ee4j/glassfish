@@ -29,29 +29,29 @@
 </li>
 <li><a href="#installing-glassfish-server-5.0">1 Installing Eclipse GlassFish 7</a>
 <ul class="sectlevel2">
-<li><a href="#installation-requirements-2">Installation Requirements</a>
+<li><a href="#installation-requirements">Installation Requirements</a>
 <ul class="sectlevel3">
 <li><a href="#javassist-library-license-notice">Javassist Library License Notice</a></li>
 </ul>
 </li>
 <li><a href="#installation-files-for-eclipse-glassfish-7">Installation Files for Eclipse GlassFish 7</a>
 <ul class="sectlevel3">
-<li><a href="#eclipse-glassfish-download-locations">Eclipse GlassFish Download Locations</a></li>
-<li><a href="#eclipse-glassfish-installation-methods">Eclipse GlassFish Installation Methods</a></li>
-<li><a href="#choosing-an-installation-method-2">Choosing an Installation Method</a></li>
-<li><a href="#eclipse-glassfish-zip-files">Eclipse GlassFish ZIP Files</a></li>
+<li><a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a></li>
+<li><a href="#glassfish-server-installation-methods">Eclipse GlassFish Installation Methods</a></li>
+<li><a href="#choosing-an-installation-method">Choosing an Installation Method</a></li>
+<li><a href="#glassfish-server-zip-files">Eclipse GlassFish ZIP Files</a></li>
 </ul>
 </li>
-<li><a href="#installing-eclipse-glassfish-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>
+<li><a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>
 <ul class="sectlevel3">
-<li><a href="#to-install-eclipse-glassfish-using-the-zip-file">To Install Eclipse GlassFish Using the ZIP File</a></li>
+<li><a href="#to-install-glassfish-server-using-the-zip-file">To Install Eclipse GlassFish Using the ZIP File</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li><a href="#uninstalling-glassfish">2 Uninstalling GlassFish</a>
 <ul class="sectlevel2">
-<li><a href="#removing-a-eclipse-glassfish-installation">Removing a Eclipse GlassFish Installation</a></li>
+<li><a href="#removing-a-glassfish-server-installation">Removing a Eclipse GlassFish Installation</a></li>
 </ul>
 </li>
 </ul>
@@ -103,9 +103,6 @@ trademark of The Open Group.</p>
 </div>
 <div class="paragraph">
 <p><span class="image"><img src="data:image/png;base64,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" alt="Eclipse Logo"></span></p>
-</div>
-<div class="paragraph">
-<p><a id="GSING00001"></a><a id="gjxfa"></a></p>
 </div>
 </div>
 </div>
@@ -159,24 +156,21 @@ Eclipse GlassFish.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#ghpbz">Eclipse GlassFish Documentation Set</a></p>
+<p><a href="#glassfish-server-documentation-set">Eclipse GlassFish Documentation Set</a></p>
 </li>
 <li>
-<p><a href="#giprl">Related Documentation</a></p>
+<p><a href="#related-documentation">Related Documentation</a></p>
 </li>
 <li>
-<p><a href="#fwbkx">Typographic Conventions</a></p>
+<p><a href="#typographic-conventions">Typographic Conventions</a></p>
 </li>
 <li>
-<p><a href="#fquvc">Symbol Conventions</a></p>
+<p><a href="#symbol-conventions">Symbol Conventions</a></p>
 </li>
 <li>
-<p><a href="#ghpfg">Default Paths and File Names</a></p>
+<p><a href="#default-paths-and-file-names">Default Paths and File Names</a></p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p><a id="GSING00014"></a><a id="ghpbz"></a></p>
 </div>
 <div class="sect2">
 <h3 id="glassfish-server-documentation-set"><a class="anchor" href="#glassfish-server-documentation-set"></a>Eclipse GlassFish Documentation Set</h3>
@@ -226,7 +220,7 @@ your system and enterprise.</p></td>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="administration-guide.html#GSADG">Administration Guide</a></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Explains how to configure, monitor, and manage Eclipse GlassFish subsystems and components
-from the command line by using the <a href="reference-manual/asadmin.html#GSRFM00263"><code>asadmin</code>(1M)</a> utility.
+from the command line by using the <a href="reference-manual/asadmin.html#asadmin"><code>asadmin</code>(1M)</a> utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.</p></td>
 </tr>
@@ -313,9 +307,6 @@ Queue messaging service to send, receive, and process Message Queue messages.</p
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="GSING00015"></a><a id="giprl"></a></p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="related-documentation"><a class="anchor" href="#related-documentation"></a>Related Documentation</h3>
@@ -375,9 +366,6 @@ are bundled with the Jakarta EE Software Development Kit (SDK) and are also
 available from the repository
 (<code><a href="https://github.com/eclipse-ee4j/glassfish-samples" class="bare">https://github.com/eclipse-ee4j/glassfish-samples</a></code>).</p>
 </div>
-<div class="paragraph">
-<p><a id="GSING00016"></a><a id="fwbkx"></a></p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="typographic-conventions"><a class="anchor" href="#typographic-conventions"></a>Typographic Conventions</h3>
@@ -426,9 +414,6 @@ this book.</p>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="GSING00017"></a><a id="fquvc"></a></p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="symbol-conventions"><a class="anchor" href="#symbol-conventions"></a>Symbol Conventions</h3>
@@ -489,9 +474,6 @@ this book.</p>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="GSING00018"></a><a id="ghpfg"></a></p>
-</div>
 </div>
 <div class="sect2">
 <h3 id="default-paths-and-file-names"><a class="anchor" href="#default-paths-and-file-names"></a>Default Paths and File Names</h3>
@@ -578,9 +560,6 @@ In configuration files, domain-dir is represented as follows:
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="GSING00002"></a><a id="ggssq"></a></p>
-</div>
 </div>
 </div>
 </div>
@@ -597,24 +576,21 @@ software on Solaris, Linux, Mac OS X, and Windows systems.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#gjiaz">Installation Requirements</a></p>
+<p><a href="#installation-requirements">Installation Requirements</a></p>
 </li>
 <li>
-<p><a href="#ggrlg">Installation Files for Eclipse GlassFish 7</a></p>
+<p><a href="#GSING00023">Installation Files for Eclipse GlassFish 7</a></p>
 </li>
 <li>
-<p><a href="#ghmxb">Installing Eclipse GlassFish From a ZIP File</a></p>
+<p><a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><a id="gjiaz"></a><a id="GSING00022"></a><a id="installation-requirements"></a></p>
-</div>
 <div class="sect2">
-<h3 id="installation-requirements-2"><a class="anchor" href="#installation-requirements-2"></a>Installation Requirements</h3>
+<h3 id="installation-requirements"><a class="anchor" href="#installation-requirements"></a>Installation Requirements</h3>
 <div class="paragraph">
 <p>Before installing Eclipse GlassFish 7, ensure that
-your system meets the requirements listed in "<a href="release-notes/release-notes.html#GSRLN00131">Hardware
+your system meets the requirements listed in "<a href="release-notes/release-notes.html#hardware-and-software-requirements">Hardware
 and Software Requirements</a>" in Eclipse GlassFish
 Release Notes. If necessary, download and install the required JDK
 software. Problems are likely to arise if you attempt to install on a
@@ -630,9 +606,6 @@ issues related to installation.</p>
 <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Java SE downloads page</a>.</p>
 </li>
 </ul>
-</div>
-<div class="paragraph">
-<p><a id="gkxfw"></a><a id="javassist-library-license-notice"></a></p>
 </div>
 <div class="sect3">
 <h4 id="javassist-library-license-notice"><a class="anchor" href="#javassist-library-license-notice"></a>Javassist Library License Notice</h4>
@@ -1160,7 +1133,7 @@ above, a recipient may use your version of this file under the terms of
 either the MPL or the LGPL.</p>
 </div>
 <div class="paragraph">
-<p><a id="ggrlg"></a><a id="GSING00023"></a><a id="installation-files-for-glassfish-server-5.0"></a></p>
+<p><a id="GSING00023"></a><a id="installation-files-for-glassfish-server-5.0"></a></p>
 </div>
 </div>
 </div>
@@ -1172,24 +1145,21 @@ either the MPL or the LGPL.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#gkbaj">Eclipse GlassFish Download Locations</a></p>
+<p><a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a></p>
 </li>
 <li>
-<p><a href="#gkbby">Eclipse GlassFish Installation Methods</a></p>
+<p><a href="#glassfish-server-installation-methods">Eclipse GlassFish Installation Methods</a></p>
 </li>
 <li>
-<p><a href="#gkudi">Choosing an Installation Method</a></p>
+<p><a href="#choosing-an-installation-method">Choosing an Installation Method</a></p>
 </li>
 <li>
-<p><a href="#gkbbb">Eclipse GlassFish ZIP Files</a></p>
+<p><a href="#glassfish-server-zip-files">Eclipse GlassFish ZIP Files</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><a id="gkbaj"></a><a id="GSING00035"></a><a id="glassfish-server-download-locations"></a></p>
-</div>
 <div class="sect3">
-<h4 id="eclipse-glassfish-download-locations"><a class="anchor" href="#eclipse-glassfish-download-locations"></a>Eclipse GlassFish Download Locations</h4>
+<h4 id="glassfish-server-download-locations"><a class="anchor" href="#glassfish-server-download-locations"></a>Eclipse GlassFish Download Locations</h4>
 <div class="paragraph">
 <p>Installation files for Eclipse GlassFish 7 are
 available by download from the
@@ -1202,12 +1172,9 @@ distributions. The SDK distributions are available from the
 <a href="http://www.oracle.com/technetwork/java/javaee/downloads/index.html">Java
 EE downloads page</a> and are not described in this document.</p>
 </div>
-<div class="paragraph">
-<p><a id="gkbby"></a><a id="GSING00036"></a><a id="glassfish-server-installation-methods"></a></p>
-</div>
 </div>
 <div class="sect3">
-<h4 id="eclipse-glassfish-installation-methods"><a class="anchor" href="#eclipse-glassfish-installation-methods"></a>Eclipse GlassFish Installation Methods</h4>
+<h4 id="glassfish-server-installation-methods"><a class="anchor" href="#glassfish-server-installation-methods"></a>Eclipse GlassFish Installation Methods</h4>
 <div class="paragraph">
 <p><a href="#ghtqe">Table 1-1</a> lists the various Eclipse GlassFish installation methods. The table also provides links to
 installation instructions for each method.</p>
@@ -1229,10 +1196,7 @@ Environment Settings for the JDK Software</a>" in Eclipse GlassFish Release Note
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p><a id="GSING103"></a><a id="sthref3"></a><a id="ghtqe"></a></p>
-</div>
-<div class="paragraph">
+<div id="ghtqe" class="paragraph">
 <p>Table 1-1 Eclipse GlassFish 7 Installation Methods</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1249,7 +1213,7 @@ Environment Settings for the JDK Software</a>" in Eclipse GlassFish Release Note
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Multi-platform ZIP file</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#ghmxb">Installing Eclipse GlassFish From a ZIP File</a>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>.</p></td>
 </tr>
 </tbody>
 </table>
@@ -1258,12 +1222,9 @@ Environment Settings for the JDK Software</a>" in Eclipse GlassFish Release Note
 let you choose between installing the Full Platform or the Web Profile.
 These two distributions are explained in the next section.</p>
 </div>
-<div class="paragraph">
-<p><a id="gkudi"></a><a id="GSING00037"></a><a id="choosing-an-installation-method"></a></p>
-</div>
 </div>
 <div class="sect3">
-<h4 id="choosing-an-installation-method-2"><a class="anchor" href="#choosing-an-installation-method-2"></a>Choosing an Installation Method</h4>
+<h4 id="choosing-an-installation-method"><a class="anchor" href="#choosing-an-installation-method"></a>Choosing an Installation Method</h4>
 <div class="paragraph">
 <p>There are two general sets of questions you should consider when
 deciding which Eclipse GlassFish 7 installation method to use.</p>
@@ -1271,18 +1232,15 @@ deciding which Eclipse GlassFish 7 installation method to use.</p>
 <div class="ulist">
 <ul>
 <li>
-<p><a href="#gkuau">ZIP Package</a></p>
+<p><a href="#zip-package">ZIP Package</a></p>
 </li>
 <li>
-<p><a href="#gkudp">Full Platform or Web Profile Distribution</a></p>
+<p><a href="#full-platform-or-web-profile-distribution">Full Platform or Web Profile Distribution</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><a id="gkuau"></a><a id="GSING00029"></a><a id="zip-package"></a></p>
-</div>
 <div class="sect4">
-<h5 id="zip-package-2"><a class="anchor" href="#zip-package-2"></a>ZIP Package</h5>
+<h5 id="zip-package"><a class="anchor" href="#zip-package"></a>ZIP Package</h5>
 <div class="paragraph">
 <p>The relative features and strengths of the Eclipse GlassFish ZIP packages
 are listed below.</p>
@@ -1308,12 +1266,9 @@ the installation</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><a id="gkudp"></a><a id="GSING00030"></a><a id="full-platform-or-web-profile-distribution"></a></p>
-</div>
 </div>
 <div class="sect4">
-<h5 id="full-platform-or-web-profile-distribution-2"><a class="anchor" href="#full-platform-or-web-profile-distribution-2"></a>Full Platform or Web Profile Distribution</h5>
+<h5 id="full-platform-or-web-profile-distribution"><a class="anchor" href="#full-platform-or-web-profile-distribution"></a>Full Platform or Web Profile Distribution</h5>
 <div class="paragraph">
 <p>Each of the installation methods listed in <a href="#ghtqe">Table 1-1</a> also
 let you choose to install either the Eclipse GlassFish Full Platform or
@@ -1321,10 +1276,7 @@ Web Profile distribution. <a href="#gkuap">Table 1-2</a> lists the features
 available in each of these two distributions. Note that some of these
 features are value-adds, and are not required by the Jakarta EE specification.</p>
 </div>
-<div class="paragraph">
-<p><a id="GSING104"></a><a id="sthref4"></a><a id="gkuap"></a></p>
-</div>
-<div class="paragraph">
+<div id="gkuap" class="paragraph">
 <p>Table 1-2 Eclipse GlassFish Full Profile and Web Profile Features</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1555,26 +1507,20 @@ CORBA v3.0 APIs are available in the Jakarta EE Web Profile.</p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><a id="gkbbb"></a><a id="GSING00038"></a><a id="glassfish-server-zip-files"></a></p>
-</div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="eclipse-glassfish-zip-files"><a class="anchor" href="#eclipse-glassfish-zip-files"></a>Eclipse GlassFish ZIP Files</h4>
+<h4 id="glassfish-server-zip-files"><a class="anchor" href="#glassfish-server-zip-files"></a>Eclipse GlassFish ZIP Files</h4>
 <div class="paragraph">
 <p>The Eclipse GlassFish 7 multi-platform ZIP files
 are compatible with Solaris, Linux, Mac OS, UNIX, and Windows operating
-systems. See <a href="#gkbaj">Eclipse GlassFish Download Locations</a> for a list
+systems. See <a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a> for a list
 of download locations.</p>
 </div>
 <div class="paragraph">
 <p><a href="#gkbac">Table 1-3</a> lists the available ZIP file downloads.</p>
 </div>
-<div class="paragraph">
-<p><a id="GSING105"></a><a id="sthref5"></a><a id="gkbac"></a></p>
-</div>
-<div class="paragraph">
+<div id="gkbac" class="paragraph">
 <p>Table 1-3 Eclipse GlassFish Downloadable ZIP Files</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
@@ -1607,13 +1553,10 @@ of download locations.</p>
 </tr>
 </tbody>
 </table>
-<div class="paragraph">
-<p><a id="ghmxb"></a><a id="GSING00024"></a><a id="installing-glassfish-server-from-a-zip-file"></a></p>
-</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="installing-eclipse-glassfish-from-a-zip-file"><a class="anchor" href="#installing-eclipse-glassfish-from-a-zip-file"></a>Installing Eclipse GlassFish From a ZIP File</h3>
+<h3 id="installing-glassfish-server-from-a-zip-file"><a class="anchor" href="#installing-glassfish-server-from-a-zip-file"></a>Installing Eclipse GlassFish From a ZIP File</h3>
 <div class="paragraph">
 <p>This section describes how to install Eclipse GlassFish 7 using the multi-platform ZIP file. Eclipse GlassFish is
 installed by unzipping the file in the installation directory of your
@@ -1636,17 +1579,14 @@ after installation.</p>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p><a id="ggrks"></a><a id="GSING00006"></a><a id="to-install-glassfish-server-using-the-zip-file"></a></p>
-</div>
 <div class="sect3">
-<h4 id="to-install-eclipse-glassfish-using-the-zip-file"><a class="anchor" href="#to-install-eclipse-glassfish-using-the-zip-file"></a>To Install Eclipse GlassFish Using the ZIP File</h4>
+<h4 id="to-install-glassfish-server-using-the-zip-file"><a class="anchor" href="#to-install-glassfish-server-using-the-zip-file"></a>To Install Eclipse GlassFish Using the ZIP File</h4>
 <div class="paragraph">
 <p>Before You Begin</p>
 </div>
 <div class="paragraph">
 <p>Ensure that your system meets the requirements listed in
-"<a href="release-notes/release-notes.html#GSRLN00131">Hardware and Software Requirements</a>"
+"<a href="release-notes/release-notes.html#hardware-and-software-requirements">Hardware and Software Requirements</a>"
 in Eclipse GlassFish Release Notes.</p>
 </div>
 <div class="paragraph">
@@ -1656,7 +1596,7 @@ in Eclipse GlassFish Release Notes.</p>
 <ol class="arabic">
 <li>
 <p>Download the desired Eclipse GlassFish 7 ZIP file.<br>
-See <a href="#gkbaj">Eclipse GlassFish Download Locations</a> for a list of
+See <a href="#glassfish-server-download-locations">Eclipse GlassFish Download Locations</a> for a list of
 download locations. See <a href="#gkbac">Table 1-3</a> for a list of available ZIP files.</p>
 </li>
 <li>
@@ -1709,9 +1649,6 @@ server, accessing the Administration Console, and deploying a sample application
 </li>
 </ol>
 </div>
-<div class="paragraph">
-<p><a id="GSING00003"></a><a id="ghmlt"></a></p>
-</div>
 </div>
 </div>
 </div>
@@ -1722,15 +1659,12 @@ server, accessing the Administration Console, and deploying a sample application
 <div class="paragraph">
 <p>This chapter describes how to uninstall Eclipse GlassFish.</p>
 </div>
-<div class="paragraph">
-<p><a id="gjxfv"></a><a id="GSING00028"></a><a id="removing-a-glassfish-server-installation"></a></p>
-</div>
 <div class="sect2">
-<h3 id="removing-a-eclipse-glassfish-installation"><a class="anchor" href="#removing-a-eclipse-glassfish-installation"></a>Removing a Eclipse GlassFish Installation</h3>
+<h3 id="removing-a-glassfish-server-installation"><a class="anchor" href="#removing-a-glassfish-server-installation"></a>Removing a Eclipse GlassFish Installation</h3>
 <div class="paragraph">
 <p>This procedure describes how to uninstall Eclipse GlassFish software that
 was installed using a ZIP file, as described in
-<a href="installing.html#ghmxb">Installing Eclipse GlassFish From a ZIP File</a>.</p>
+<a href="#installing-glassfish-server-from-a-zip-file">Installing Eclipse GlassFish From a ZIP File</a>.</p>
 </div>
 <div class="paragraph">
 <p>Before You Begin</p>
@@ -1743,7 +1677,7 @@ applications using Java SE files.</p>
 <div class="paragraph">
 <p>To stop domains, use the <code>asadmin stop-domain</code> command. For more
 information about stopping a domain, see
-"<a href="administration-guide/domains.html#GSADG00336">To Stop a Domain</a>"
+"<a href="administration-guide/domains.html#to-stop-a-domain">To Stop a Domain</a>"
 in Eclipse GlassFish Administration Guide.</p>
 </div>
 <div class="paragraph">
@@ -1785,7 +1719,7 @@ in Eclipse GlassFish Release Notes for known issues related to uninstallation.</
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2022-08-10 18:09:56 UTC
+Last updated 2022-08-10 18:23:07 UTC
 </div>
 </div>
 </body>

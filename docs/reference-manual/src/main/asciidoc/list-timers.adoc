@@ -73,7 +73,7 @@ The list-timers command was executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:migrate-timers.html#migrate-timers[`migrate-timers`(1)]
+xref:migrate-timers.adoc#migrate-timers[`migrate-timers`(1)]
 
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-the-timer-service[
 Using the Timer Service] in The Jakarta EE Tutorial

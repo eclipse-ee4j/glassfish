@@ -91,11 +91,11 @@ Command disable executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy[`deploy`(1)],
-link:enable.html#enable[`enable`(1)],
-link:undeploy.html#undeploy[`undeploy`(1)]
+xref:deploy.adoc#deploy[`deploy`(1)],
+xref:enable.adoc#enable[`enable`(1)],
+xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

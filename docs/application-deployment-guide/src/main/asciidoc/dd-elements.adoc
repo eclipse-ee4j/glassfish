@@ -1296,7 +1296,7 @@ are ignored by the class loader.
 Defines the {productName} specific configuration for the application
 client container. This is the root element; there can only be one
 `client-container` element in a `sun-acc.xml` file. See
-link:dd-files.html#GSDPG00082[The sun-acc.xml File].
+xref:dd-files.adoc#GSDPG00082[The sun-acc.xml File].
 
 [[superelements-26]]
 
@@ -2489,7 +2489,7 @@ module. If none is specified, a default is generated; see
 xref:#java-web-start-access[`java-web-start-access`].
 
 If you are setting up load balancing, web module context roots must be
-unique within a server instance. See the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide] for more
+unique within a server instance. See the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability Administration Guide] for more
 information about load balancing.
 
 [[superelements-44]]
@@ -3752,7 +3752,7 @@ resource.
 Specifies the fully qualified name of the factory class, which
 implements javax.naming.spi.InitialContextFactory .
 
-For more information about JNDI, see the link:application-development-guide.html#GSDVG[{productName} Application Development Guide].
+For more information about JNDI, see the xref:application-development-guide.adoc#GSDVG[{productName} Application Development Guide].
 
 |`object-type` |`user` a|
 (optional) Defines the type of the resource. Allowed values are:
@@ -4051,7 +4051,7 @@ xref:#local-home-impl[`local-home-impl`]
 Defines the {productName} specific configuration for an application.
 This is the root element; there can only be one `glassfish-application`
 element in a `glassfish-application.xml` file. See
-link:dd-files.html#GSDPG00077[The glassfish-application.xml File].
+xref:dd-files.adoc#GSDPG00077[The glassfish-application.xml File].
 
 [[superelements-73]]
 
@@ -4181,7 +4181,7 @@ xref:#version-identifier[`version-identifier`]
 Defines the {productName} specific configuration for an application
 client. This is the root element; there can only be one
 `glassfish-application-client` element in a
-`glassfish-application-client.xml` file. See link:dd-files.html#GSDPG00081[The
+`glassfish-application-client.xml` file. See xref:dd-files.adoc#GSDPG00081[The
 glassfish-application-client.xml file].
 
 [[superelements-74]]
@@ -4265,7 +4265,7 @@ xref:#version-identifier[`version-identifier`]
 Defines the {productName} specific configuration for an EJB JAR file.
 This is the root element; there can only be one `glassfish-ejb-jar`
 element in a `glassfish-ejb-jar.xml` file. See
-link:dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File].
+xref:dd-files.adoc#GSDPG00079[The glassfish-ejb-jar.xml File].
 
 [[superelements-75]]
 
@@ -4337,7 +4337,7 @@ xref:#version-identifier[`version-identifier`]
 
 Defines {productName} specific configuration for a web module. This
 is the root element; there can only be one `glassfish-web-app` element
-in a `glassfish-web.xml` file. See link:dd-files.html#GSDPG00078[The
+in a `glassfish-web.xml` file. See xref:dd-files.adoc#GSDPG00078[The
 glassfish-web.xml File].
 
 [[superelements-76]]
@@ -8945,7 +8945,7 @@ xref:#default-resource-principal[`default-resource-principal`]
 Defines application-scoped resources for an enterprise application, web
 module, EJB module, connector module, or application client module. This
 is the root element; there can only be one `resources` element in a
-`glassfish-resources.xml` file. See link:dd-files.html#GSDPG00083[The
+`glassfish-resources.xml` file. See xref:dd-files.adoc#GSDPG00083[The
 glassfish-resources.xml File].
 
 
@@ -10351,7 +10351,7 @@ xref:#entity-mapping[`entity-mapping`]
 Defines the {productName} specific CMP mapping configuration for an
 EJB JAR file. This is the root element; there can only be one
 `sun-cmp-mappings` element in a `sun-cmp-mappings.xml` file. See
-link:dd-files.html#GSDPG00080[The sun-cmp-mappings.xml File].
+xref:dd-files.adoc#GSDPG00080[The sun-cmp-mappings.xml File].
 
 [[superelements-198]]
 
@@ -10888,7 +10888,7 @@ none - contains data
 
 Contains version information for an application or module. For more
 information about application versioning, see
-link:overview.html#module-and-application-versions[Module and Application Versions].
+xref:overview.adoc#module-and-application-versions[Module and Application Versions].
 
 [[GSDPG1043]]
 

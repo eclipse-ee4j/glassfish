@@ -61,7 +61,7 @@ in The Jakarta EE Tutorial.
 * Java Architecture for XML Binding (JAXB) 2.0. The EclipseLink JAXB
 implementation, plus EclipseLink extensions, is called MOXy. The
 `org.eclipse.persistence.moxy.jar` file is bundled with {productName}. For more information about MOXy support in {productName}, see
-link:webservices.html#the-databinding-provider[The Databinding Provider].
+xref:webservices.adoc#the-databinding-provider[The Databinding Provider].
 +
 For the JAXB 2.0 specification, see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
@@ -118,7 +118,7 @@ TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
 Guide for Oracle TopLink. For more detailed explanations of these steps,
 see the links in the steps.
 
-1. Set up the datasource. See "link:administration-guide/jdbc.html#ablih[
+1. Set up the datasource. See "link:administration-guide/jdbc.html#administering-database-connectivity[
 Administering Database Connectivity]"
 in {productName} Administration Guide.
 2. Create the application. For guidance in writing your application,
@@ -132,7 +132,7 @@ If you are using the Java Persistence API by calling
 Provider for an Application].
 4. If the security manager is enabled and you are using the Java
 Persistence API by calling `Persistence.createEMF()`, see
-link:securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
+xref:securing-apps.adoc#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
 Manager].
 5. Deploy the application. See the {productName}
 Application Deployment Guide.
@@ -242,7 +242,7 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
     </persistence>
 ----
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -268,7 +268,7 @@ the manner described in the Java Persistence API Specification:
 1. Install the provider. Copy the provider JAR files to the
 domain-dir``/lib`` directory, and restart the {productName}. For more
 information about the domain-dir``/lib`` directory, see
-link:class-loaders.html#using-the-common-class-loader[Using the Common Class Loader]. The new
+xref:class-loaders.adoc#using-the-common-class-loader[Using the Common Class Loader]. The new
 persistence provider is now available to all modules and applications
 deployed on servers that share the same configuration.
 +
@@ -480,7 +480,7 @@ If not specified, tables are dropped only if the
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 When `asadmin` deployment options and `persistence.xml` options are both
 specified, the `asadmin` deployment options take precedence.

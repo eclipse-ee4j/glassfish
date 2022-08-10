@@ -201,7 +201,7 @@ for descriptions of the following attributes:
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get-client-stubs.html#get-client-stubs[`get-client-stubs`(1)],
-link:package-appclient.html#package-appclient[`package-appclient`(1M)]
+xref:get-client-stubs.adoc#get-client-stubs[`get-client-stubs`(1)],
+xref:package-appclient.adoc#package-appclient[`package-appclient`(1M)]
 
 

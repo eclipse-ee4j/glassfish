@@ -79,7 +79,7 @@ Command list-transports executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-transport.html#create-transport[`create-transport`(1)],
-link:delete-transport.html#delete-transport[`delete-transport`(1)]
+xref:create-transport.adoc#create-transport[`create-transport`(1)],
+xref:delete-transport.adoc#delete-transport[`delete-transport`(1)]
 
 

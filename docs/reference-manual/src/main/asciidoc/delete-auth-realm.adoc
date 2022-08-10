@@ -79,7 +79,7 @@ Command delete-auth-realm executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-auth-realm.html#create-auth-realm[`create-auth-realm`(1)],
-link:list-auth-realms.html#list-auth-realms[`list-auth-realms`(1)]
+xref:create-auth-realm.adoc#create-auth-realm[`create-auth-realm`(1)],
+xref:list-auth-realms.adoc#list-auth-realms[`list-auth-realms`(1)]
 
 

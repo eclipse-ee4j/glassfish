@@ -50,7 +50,7 @@ any add-on component that is known to {productName}.
 list of subcommands.
 * Support for the HK2 architecture. Subcommands can use injection to
 express their dependencies, and extraction to provide results to a user.
-For more information, see link:writing-hk2-components.html#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#ghmna[Writing
 HK2 Components].
 
 [[adding-an-asadmin-subcommand]]
@@ -89,7 +89,7 @@ implementations are met:
 component that contains them is made known to the {productName} runtime.
 +
 For information about how to make a component known to the {productName} runtime, see
-link:packaging-integrating-delivering.html#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}].
+xref:packaging-integrating-delivering.adoc#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}].
 
 [[specifying-the-name-of-an-asadmin-subcommand]]
 
@@ -127,7 +127,7 @@ are installed, use the
 link:reference-manual/list-commands.html#list-commands[`list-commands`] subcommand.
 For a complete list of `asadmin` subcommands that are supplied in
 {productName} distributions, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[ensuring-that-an-admincommand-implementation-is-stateless]]
 
@@ -1142,7 +1142,7 @@ This example shows a class that represents the `asadmin` subcommand
 `configure-greeter-container`. The subcommand performs a transaction to
 update configuration data for a container component. For more
 information about such transactions, see
-link:adding-configuration-data.html#creating-a-transaction-to-update-configuration-data[Creating a Transaction to
+xref:adding-configuration-data.adoc#creating-a-transaction-to-update-configuration-data[Creating a Transaction to
 Update Configuration Data].
 
 The usage statement for this subcommand is as follows:
@@ -1166,11 +1166,11 @@ option is optional or required.
 
 
 Code for the container component is shown in
-link:adding-container-capabilities.html#example-of-adding-container-capabilities[Example of Adding Container
+xref:adding-container-capabilities.adoc#example-of-adding-container-capabilities[Example of Adding Container
 Capabilities].
 
 Code that defines the configuration data for the container component is
-shown in link:adding-configuration-data.html#examples-of-adding-configuration-data-for-a-component[Examples of Adding
+shown in xref:adding-configuration-data.adoc#examples-of-adding-configuration-data-for-a-component[Examples of Adding
 Configuration Data for a Component].
 
 [source,java]

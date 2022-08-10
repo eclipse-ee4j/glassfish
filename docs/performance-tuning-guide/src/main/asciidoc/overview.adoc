@@ -44,17 +44,17 @@ Table 1-1 Performance Tuning Roadmap
 |Step |Description of Task |Location of Instructions
 |1
 |Design: Decide on the high-availability topology and set up {productName}.
-a|link:deployment-planning-guide.html#GSPLG[
+a|xref:deployment-planning-guide.adoc#GSPLG[
 {productName} Deployment Planning Guide]
 
 |2
 |Capacity Planning: Make sure the systems have sufficient resources to perform well.
-a|link:deployment-planning-guide.html#GSPLG[
+a|xref:deployment-planning-guide.adoc#GSPLG[
 {productName} Deployment Planning Guide]
 
 |3
 |Installation: Configure your DAS, clusters, and clustered server instances.
-a|link:installation-guide.html#GSING[
+a|xref:installation-guide.adoc#GSING[
 {productName} Installation Guide]
 
 |4
@@ -62,15 +62,15 @@ a|link:installation-guide.html#GSING[
 Familiarize yourself with how to configure and administer the {productName}.
 a|The following books:
 
-* link:application-deployment-guide.html#GSDPG[
+* xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide]
-* link:administration-guide.html#GSADG[
+* xref:administration-guide.adoc#GSADG[
 {productName} Administration Guide]
 
 |5
 |High Availability Configuration: Configuring your DAS, clusters, and
 clustered server instances for high availability and failover
-a|link:ha-administration-guide.html#GSHAG[
+a|xref:ha-administration-guide.adoc#GSHAG[
 {productName} High Availability Administration Guide]
 
 |6
@@ -83,10 +83,10 @@ a|Performance Tuning: Tune the following items:
 
 a|The following chapters:
 
-* link:tuning-apps.html#abebe[Tuning Your Application]
-* link:tuning-glassfish.html#abedn[Tuning the {productName}]
-* link:tuning-java.html#abeia[Tuning the Java Runtime System]
-* link:tuning-os.html#abeir[Tuning the Operating System and Platform]
+* xref:tuning-apps.adoc#abebe[Tuning Your Application]
+* xref:tuning-glassfish.adoc#abedn[Tuning the {productName}]
+* xref:tuning-java.adoc#abeia[Tuning the Java Runtime System]
+* xref:tuning-os.adoc#abeir[Tuning the Operating System and Platform]
 |===
 
 
@@ -103,13 +103,13 @@ you want to improve performance as much as possible in the meantime.
 Ideally, follow this sequence of steps when you are tuning performance:
 
 1. Tune your application, described in
-link:tuning-apps.html#abebe[Tuning Your Application].
-2. Tune the server, described in link:tuning-glassfish.html#abedn[Tuning
+xref:tuning-apps.adoc#abebe[Tuning Your Application].
+2. Tune the server, described in xref:tuning-glassfish.adoc#abedn[Tuning
 the {productName}].
 3. Tune the Java runtime system, described in
-link:tuning-java.html#abeia[Tuning the Java Runtime System].
+xref:tuning-java.adoc#abeia[Tuning the Java Runtime System].
 4. Tune the operating system, described in
-link:tuning-os.html#abeir[Tuning the Operating System and Platform].
+xref:tuning-os.adoc#abeir[Tuning the Operating System and Platform].
 
 [[understanding-operational-requirements]]
 
@@ -279,10 +279,10 @@ minimum application downtime and enhanced transactional security.
 * High Availability Java Message Service
 * RMI-IIOP Load Balancing and Failover
 
-See link:tuning-java.html#tuning-high-availability-persistence[Tuning High Availability Persistence] for
+See xref:tuning-java.adoc#tuning-high-availability-persistence[Tuning High Availability Persistence] for
 high availability persistence tuning recommendations.
 
-See the link:ha-administration-guide.html#GSHAG[{productName} High
+See the xref:ha-administration-guide.adoc#GSHAG[{productName} High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
 features in {productName} 7.
@@ -342,7 +342,7 @@ can host different URL domains on a single {productName} process for
 efficient administration.
 
 For detailed information on administration, see the
-link:administration-guide.html#GSADG[{productName} Administration Guide].
+xref:administration-guide.adoc#GSADG[{productName} Administration Guide].
 
 [[general-tuning-concepts]]
 
@@ -515,7 +515,7 @@ http://java.sun.com/docs/performance[Java Performance Documentation]
 http://java.sun.com/blueprints/performance/index.html[Java Performance
 BluePrints] (`http://java.sun.com/blueprints/performance/index.html`).
 * For more information about performance tuning for high availability
-configurations, see the link:ha-administration-guide.html#GSHAG[{productName}
+configurations, see the xref:ha-administration-guide.adoc#GSHAG[{productName}
 High Availability Administration Guide].
 * For complete information about using the Performance Tuning features
 available through the {productName} Administration Console, refer to

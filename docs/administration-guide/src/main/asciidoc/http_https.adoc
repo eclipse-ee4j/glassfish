@@ -35,7 +35,7 @@ either in a single application server instance or in a cluster of
 multiple server instances. HTTP services are provided by two kinds of
 related objects: listeners and virtual servers.
 
-For more information about clusters, see the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide].
+For more information about clusters, see the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability Administration Guide].
 
 The following topics are addressed here:
 
@@ -783,7 +783,7 @@ web application and don't specify any assigned virtual servers, the web
 application is assigned to all currently defined virtual servers. If you
 then create additional virtual servers and want to assign existing web
 applications to them, you must redeploy the web applications. For more
-information about deployment, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+information about deployment, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 You can define virtual server properties using the `asadmin set`
 command. For example:
@@ -978,7 +978,7 @@ You can assign a virtual server to a deployed application or web module.
 Before You Begin
 
 The application or module must already be deployed. For more
-information, see the link:application-deployment-guide.html#GSDPG[{productName}
+information, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
 1. In the Administration Console, open the HTTP Service component under

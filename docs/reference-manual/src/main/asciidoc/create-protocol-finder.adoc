@@ -77,7 +77,7 @@ protocol-finder-name::
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-protocol-finder.html#delete-protocol-finder[`delete-protocol-finder`(1)],
-link:list-protocol-finders.html#list-protocol-finders[`list-protocol-finders`(1)]
+xref:delete-protocol-finder.adoc#delete-protocol-finder[`delete-protocol-finder`(1)],
+xref:list-protocol-finders.adoc#list-protocol-finders[`list-protocol-finders`(1)]
 
 

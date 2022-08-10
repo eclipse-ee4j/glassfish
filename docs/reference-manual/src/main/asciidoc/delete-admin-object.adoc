@@ -91,7 +91,7 @@ Command delete-admin-object executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-admin-object.html#create-admin-object[`create-admin-object`(1)],
-link:list-admin-objects.html#list-admin-objects[`list-admin-objects`(1)]
+xref:create-admin-object.adoc#create-admin-object[`create-admin-object`(1)],
+xref:list-admin-objects.adoc#list-admin-objects[`list-admin-objects`(1)]
 
 

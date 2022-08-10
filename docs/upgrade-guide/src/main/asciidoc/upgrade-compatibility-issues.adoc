@@ -170,7 +170,7 @@ clients and servers synchronized and using the same runtime.
 installations of earlier product versions in which node agents were
 configured, the cluster definitions will be migrated, but the clustered
 instances themselves must be manually re-created. See
-link:upgrading-legacy-installation.html#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node
+xref:upgrading-legacy-installation.adoc#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node
 Agent Configurations] for more information.
 
 [[hadb-and-hadbm-command-support]]
@@ -197,7 +197,7 @@ The following sections describe changes to the command line utility `asadmin`:
 * xref:#deprecated-unsupported-and-obsolete-options[Deprecated, Unsupported, and Obsolete Options]
 
 For more information about `asadmin` and its subcommands, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[deprecated-asadmin-subcommands]]
 
@@ -1071,5 +1071,5 @@ xref:#gipfn[Table 1-4], xref:#gipev[Table 1-6], and xref:#gipdo[Table
 cryptographic tokens. When upgrading to {productName} 7 from
 Enterprise Server v2.x, additional manual configuration steps must be
 performed. These steps are explained later in this guide, in
-link:upgrading-legacy-installation.html#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading Installations
+xref:upgrading-legacy-installation.adoc#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading Installations
 That Use NSS Cryptographic Tokens].

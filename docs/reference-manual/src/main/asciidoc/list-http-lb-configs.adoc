@@ -94,7 +94,7 @@ Command list-http-lb-configs executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-config.html#create-http-lb-config[`create-http-lb-config`(1)],
-link:delete-http-lb-config.html#delete-http-lb-config[`delete-http-lb-config`(1)]
+xref:create-http-lb-config.adoc#create-http-lb-config[`create-http-lb-config`(1)],
+xref:delete-http-lb-config.adoc#delete-http-lb-config[`delete-http-lb-config`(1)]
 
 

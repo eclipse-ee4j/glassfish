@@ -73,7 +73,7 @@ Command list-loggers executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-log-levels.html#list-log-levels[`list-log-levels`(1)],
-link:set-log-file-format.html#set-log-file-format[`set-log-file-format`(1)]
+xref:list-log-levels.adoc#list-log-levels[`list-log-levels`(1)],
+xref:set-log-file-format.adoc#set-log-file-format[`set-log-file-format`(1)]
 
 

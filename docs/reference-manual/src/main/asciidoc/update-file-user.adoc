@@ -91,9 +91,9 @@ Command update-file-user executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-file-user.html#create-file-user[`create-file-user`(1)],
-link:delete-file-user.html#delete-file-user[`delete-file-user`(1)],
-link:list-file-groups.html#list-file-groups[`list-file-groups`(1)],
-link:list-file-users.html#list-file-users[`list-file-users`(1)]
+xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
+xref:delete-file-user.adoc#delete-file-user[`delete-file-user`(1)],
+xref:list-file-groups.adoc#list-file-groups[`list-file-groups`(1)],
+xref:list-file-users.adoc#list-file-users[`list-file-users`(1)]
 
 

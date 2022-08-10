@@ -105,9 +105,9 @@ Command stop-domain executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-domain.html#delete-domain[`delete-domain`(1)],
-link:list-domains.html#list-domains[`list-domains`(1)],
-link:restart-domain.html#restart-domain[`restart-domain`(1)],
-link:start-domain.html#start-domain[`start-domain`(1)]
+xref:delete-domain.adoc#delete-domain[`delete-domain`(1)],
+xref:list-domains.adoc#list-domains[`list-domains`(1)],
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)],
+xref:start-domain.adoc#start-domain[`start-domain`(1)]
 
 

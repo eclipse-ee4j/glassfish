@@ -82,6 +82,6 @@ Command configure-managed-jobs executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-jobs.html#list-jobs[`list-jobs`(1)]
+xref:list-jobs.adoc#list-jobs[`list-jobs`(1)]
 
 

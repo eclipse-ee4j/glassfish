@@ -412,8 +412,8 @@ jms-host-name-for-broker
 in Open Message Queue Administration Guide.
 
 5. Create instances in the {productName} cluster, as described in
-link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally] and
-link:instances.html#to-create-an-instance-locally[To Create an Instance Locally].
+xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally] and
+xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally].
 
 [[connection-failover]]
 

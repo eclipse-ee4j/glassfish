@@ -68,8 +68,8 @@ interface name for this service is
 `org.glassfish.api.admingui.ConsolePluginService`.
 
 For details about the Hundred-Kilobyte Kernel (HK2) project, see
-link:introduction.html#hundred-kilobyte-kernel[Hundred-Kilobyte Kernel] and
-link:writing-hk2-components.html#hk2-component-model[HK2 Component Model].
+xref:introduction.adoc#hundred-kilobyte-kernel[Hundred-Kilobyte Kernel] and
+xref:writing-hk2-components.adoc#hk2-component-model[HK2 Component Model].
 
 Each add-on component must contain a console provider implementation.
 This is a Java class that implements the
@@ -169,7 +169,7 @@ these files depends on the integration point you are implementing. The
 following sections describe how to create these JavaServer Faces pages.
 
 For reference information on integration points, see
-link:integration-point-reference.html#ghmrp[Integration Point Reference].
+xref:integration-point-reference.adoc#ghmrp[Integration Point Reference].
 
 [[specifying-the-id-of-an-add-on-component]]
 
@@ -802,7 +802,7 @@ You can use many other kinds of user interface elements within a
 
 Your add-on component may require new configuration tasks. In addition
 to implementing commands that accomplish these tasks (see
-link:extending-asadmin.html#ghmrd[Chapter 4, "Extending the `asadmin`
+xref:extending-asadmin.adoc#ghmrd[Chapter 4, "Extending the `asadmin`
 Utility"]), you can provide property sheets that enable users to
 configure your component or to perform tasks such as creating and
 editing resources for it.

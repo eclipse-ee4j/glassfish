@@ -105,6 +105,6 @@ Command delete-ssl executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-ssl.html#create-ssl[`create-ssl`(1)]
+xref:create-ssl.adoc#create-ssl[`create-ssl`(1)]
 
 

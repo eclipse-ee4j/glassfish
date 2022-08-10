@@ -29,7 +29,7 @@ a|Determine the following requirements for the application to be deployed.
 * Session timeout in `web.xml`.
 * Failover and availability requirements.
 
-For more information see the link:performance-tuning-guide.html#GSPTG[
+For more information see the xref:performance-tuning-guide.adoc#GSPTG[
 {productName} Performance Tuning Guide].
 
 |Hardware
@@ -37,14 +37,14 @@ a|
 * Have necessary amounts of hard disk space and memory installed.
 * Use the sizing exercise to identify the requirements for deployment.
 
-For more information see the link:release-notes.html#GSRLN[{productName} Release Notes]
+For more information see the xref:release-notes.adoc#GSRLN[{productName} Release Notes]
 
 |Operating System
 a|
 * Ensure that the product is installed on a supported platform.
 * Ensure that the patch levels are up-to-date and accurate.
 
-For more information see the link:release-notes.html#GSRLN[{productName} Release Notes]
+For more information see the xref:release-notes.adoc#GSRLN[{productName} Release Notes]
 
 |Network Infrastructure
 a|
@@ -53,7 +53,7 @@ a|
 * Run `ttcp` benchmark test to determine if the throughput meets the requirements/expected result.
 * Setup `ssh` based your preference.
 
-For more information see the link:installation-guide.html#GSING[{productName} Installation Guide].
+For more information see the xref:installation-guide.adoc#GSING[{productName} Installation Guide].
 
 |Back-ends and other external data sources
 |Check with the domain expert or vendor to ensure that these data sources
@@ -70,7 +70,7 @@ a|
 * On Solaris, use `Setoolkit` to determine the behavior of the system.
   Resolve any flags that show up.
 
-For more information see the link:performance-tuning-guide.html#GSPTG[{productName} Performance Tuning Guide].
+For more information see the xref:performance-tuning-guide.adoc#GSPTG[{productName} Performance Tuning Guide].
 
 |Installation
 a|
@@ -88,9 +88,9 @@ a|
   and they are not overridden underneath in the individual Web/EJB modules.
 * Ensure that only critical methods in the SFSB are checkpointed.
 
-For more information on tuning, see the link:performance-tuning-guide.html#GSPTG[{productName} Performance Tuning Guide].
+For more information on tuning, see the xref:performance-tuning-guide.adoc#GSPTG[{productName} Performance Tuning Guide].
 
-For more information on configuration, see the link:administration-guide.html#GSADG[{productName} Administration Guide].
+For more information on configuration, see the xref:administration-guide.adoc#GSADG[{productName} Administration Guide].
 
 |Load balancer Configuration
 a|

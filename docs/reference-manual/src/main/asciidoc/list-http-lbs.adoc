@@ -106,7 +106,7 @@ Command list-http-lbs executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb.html#create-http-lb[`create-http-lb`(1)],
-link:delete-http-lb.html#delete-http-lb[`delete-http-lb`(1)]
+xref:create-http-lb.adoc#create-http-lb[`create-http-lb`(1)],
+xref:delete-http-lb.adoc#delete-http-lb[`delete-http-lb`(1)]
 
 

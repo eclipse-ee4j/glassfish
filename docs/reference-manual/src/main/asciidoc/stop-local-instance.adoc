@@ -33,7 +33,7 @@ from the machine where the instance resides.
 The subcommand can stop any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can stop an
 instance that was created by using the
-link:create-instance.html#create-instance[`create-instance`(1)] subcommand.
+xref:create-instance.adoc#create-instance[`create-instance`(1)] subcommand.
 
 The `stop-local-instance` subcommand does not contact the DAS to
 determine the node on which the instance resides. To determine the node
@@ -113,12 +113,12 @@ Command stop-local-instance executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)],
-link:start-instance.html#start-instance[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance[`stop-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)]
 
 

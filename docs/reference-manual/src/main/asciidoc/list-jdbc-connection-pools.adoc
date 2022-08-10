@@ -63,7 +63,7 @@ Command list-jdbc-connection-pools executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
-link:delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)]
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
+xref:delete-jdbc-connection-pool.adoc#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)]
 
 

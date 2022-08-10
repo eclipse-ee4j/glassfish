@@ -86,7 +86,7 @@ domain-name::
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:backup-domain.html#backup-domain[`backup-domain`(1)],
-link:list-backups.html#list-backups[`list-backups`(1)]
+xref:backup-domain.adoc#backup-domain[`backup-domain`(1)],
+xref:list-backups.adoc#list-backups[`list-backups`(1)]
 
 

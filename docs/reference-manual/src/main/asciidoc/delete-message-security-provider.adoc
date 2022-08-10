@@ -104,7 +104,7 @@ asadmin> delete-message-security-provider
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-message-security-provider.html#create-message-security-provider[`create-message-security-provider`(1)],
-link:list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`(1)]
+xref:create-message-security-provider.adoc#create-message-security-provider[`create-message-security-provider`(1)],
+xref:list-message-security-providers.adoc#list-message-security-providers[`list-message-security-providers`(1)]
 
 

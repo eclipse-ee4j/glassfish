@@ -164,14 +164,14 @@ Command add-resources executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],link:create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`(1)],
-link:create-jms-resource.html#create-jms-resource[`create-jms-resource`(1)],
-link:create-jndi-resource.html#create-jndi-resource[`create-jndi-resource`(1)],
-link:create-javamail-resource.html#create-javamail-resource[`create-javamail-resource`(1)],
-link:create-custom-resource.html#create-custom-resource[`create-custom-resource`(1)],
-link:create-connector-resource.html#create-connector-resource[`create-connector-resource`(1)],
-link:create-connector-work-security-map.html#create-connector-work-security-map[`create-connector-work-security-map`(1)],
-link:create-admin-object.html#create-admin-object[`create-admin-object`(1)],
-link:create-resource-adapter-config.html#create-resource-adapter-config[`create-resource-adapter-config`(1)]
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],xref:create-jdbc-resource.adoc#create-jdbc-resource[`create-jdbc-resource`(1)],
+xref:create-jms-resource.adoc#create-jms-resource[`create-jms-resource`(1)],
+xref:create-jndi-resource.adoc#create-jndi-resource[`create-jndi-resource`(1)],
+xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
+xref:create-custom-resource.adoc#create-custom-resource[`create-custom-resource`(1)],
+xref:create-connector-resource.adoc#create-connector-resource[`create-connector-resource`(1)],
+xref:create-connector-work-security-map.adoc#create-connector-work-security-map[`create-connector-work-security-map`(1)],
+xref:create-admin-object.adoc#create-admin-object[`create-admin-object`(1)],
+xref:create-resource-adapter-config.adoc#create-resource-adapter-config[`create-resource-adapter-config`(1)]
 
 

@@ -80,7 +80,7 @@ Where file, ldap, certificate, and db are the available authentication realms.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-auth-realm.html#create-auth-realm[`create-auth-realm`(1)],
-link:delete-auth-realm.html#delete-auth-realm[`delete-auth-realm`(1)]
+xref:create-auth-realm.adoc#create-auth-realm[`create-auth-realm`(1)],
+xref:delete-auth-realm.adoc#delete-auth-realm[`delete-auth-realm`(1)]
 
 

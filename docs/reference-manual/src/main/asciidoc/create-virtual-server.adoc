@@ -370,12 +370,12 @@ Command create-virtual-server executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-virtual-server.html#delete-virtual-server[`delete-virtual-server`(1)],
-link:list-virtual-servers.html#list-virtual-servers[`list-virtual-servers`(1)],
-link:create-http-listener.html#create-http-listener[`create-http-listener`(1)],
-link:create-network-listener.html#create-network-listener[`create-network-listener`(1)]
+xref:delete-virtual-server.adoc#delete-virtual-server[`delete-virtual-server`(1)],
+xref:list-virtual-servers.adoc#list-virtual-servers[`list-virtual-servers`(1)],
+xref:create-http-listener.adoc#create-http-listener[`create-http-listener`(1)],
+xref:create-network-listener.adoc#create-network-listener[`create-network-listener`(1)]
 
-link:get.html#get[`get`(1)], link:list.html#list[`list`(1)],
-link:set.html#set[`set`(1)]
+xref:get.adoc#get[`get`(1)], xref:list.adoc#list[`list`(1)],
+xref:set.adoc#set[`set`(1)]
 
 

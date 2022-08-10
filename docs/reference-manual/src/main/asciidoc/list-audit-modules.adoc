@@ -76,7 +76,7 @@ Command list-audit-modules executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-audit-module.html#create-audit-module[`create-audit-module`(1)],
-link:delete-audit-module.html#delete-audit-module[`delete-audit-module`(1)]
+xref:create-audit-module.adoc#create-audit-module[`create-audit-module`(1)],
+xref:delete-audit-module.adoc#delete-audit-module[`delete-audit-module`(1)]
 
 

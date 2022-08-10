@@ -17,7 +17,7 @@ This chapter describes how to write secure Jakarta EE applications, which
 contain components that perform user authentication and access
 authorization for the business logic of Jakarta EE components.
 
-For information about administrative security for the {productName}, see the link:security-guide.html#GSSCG[{productName}
+For information about administrative security for the {productName}, see the xref:security-guide.adoc#GSSCG[{productName}
 Security Guide].
 
 For general information about Jakarta EE security, see
@@ -135,7 +135,7 @@ The {productName} supports the deployment descriptors specified by
 Jakarta EE and has additional security elements included in its own
 deployment descriptors. Declarative security is the application
 deployer's responsibility. For more information about {productName}
-deployment descriptors, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+deployment descriptors, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 There are two levels of declarative security, as follows:
 
@@ -287,7 +287,7 @@ access in the following ways:
 relevant configuration. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin set` command. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual]. For
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual]. For
 example, you can set the default principal as follows.
 +
 [source]
@@ -352,7 +352,7 @@ You can configure a realm in one of these ways:
 relevant configuration and go to the Realms page. For details, click the
 Help button in the Administration Console.
 * Use the `asadmin create-auth-realm` command to configure realms on
-local servers. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+local servers. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[how-to-set-a-realm-for-an-application-or-module]]
 
@@ -400,7 +400,7 @@ with the {productName}.
 To activate the custom login modules and realms, place the JAR files in
 the domain-dir``/lib`` directory or the class files in the
 domain-dir`/lib/classes` directory. For more information about class
-loading in the {productName}, see link:class-loaders.html#beade[Class
+loading in the {productName}, see xref:class-loaders.adoc#beade[Class
 Loaders].
 
 JAAS is a set of APIs that enable services to authenticate and enforce
@@ -662,7 +662,7 @@ Security component under the relevant configuration, and select the
 Audit Modules component. For details, click the Help button in the
 Administration Console.
 * You can use the `asadmin create-audit-module` command to configure an
-audit module. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+audit module. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[the-auditmodule-class]]
 
@@ -793,7 +793,7 @@ The following predefined system properties, also called variables, are
 available for use in the `server.policy` file. The system property most
 frequently used in `server.policy` is `${com.sun.aas.instanceRoot}`. For
 more information about system properties, see the
-`asadmin create-system-properties` command in the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+`asadmin create-system-properties` command in the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[GSDVG533]]
 
@@ -956,7 +956,7 @@ asadmin create-jvm-options -Djava.security.debug=failure
 ----
 
 For more information about the `asadmin create-jvm-options` command, see
-the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 You can use the J2SE standard `policytool` or any text editor to edit
 the `server.policy` file. For more information, see
@@ -1010,7 +1010,7 @@ asadmin create-jvm-options -Djava.security.manager
 To disable the security manager, uncheck the Security Manager Enabled
 box or use the corresponding `asadmin delete-jvm-options` command. For
 more information about `create-jvm-options` and `delete-jvm-options`,
-see the link:reference-manual.html#GSRFM[{productName} Reference
+see the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 If the security manager is enabled and you are using the Java
@@ -1089,13 +1089,13 @@ not supported.
 
 
 For more information about web services, see
-link:webservices.html#gaszn[Developing Web Services].
+xref:webservices.adoc#gaszn[Developing Web Services].
 
 For more information about message security, see the following:
 
 * "https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[Introduction to
 Security in the Jakarta EE Platform]" in The Jakarta EE Tutorial
-* link:security-guide.html#GSSCG[{productName} Security Guide]
+* xref:security-guide.adoc#GSSCG[{productName} Security Guide]
 * http://www.jcp.org/en/jsr/detail?id=196[JSR 196]
 (`http://www.jcp.org/en/jsr/detail?id=196`), Java Authentication Service
 Provider Interface for Containers
@@ -1141,7 +1141,7 @@ asadmin set
 server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider
 ----
 For more information about the `asadmin set` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The example described in xref:#understanding-and-running-the-sample-application[Understanding and Running the
 Sample Application] uses the `ClientProvider` and `ServerProvider`
@@ -1171,10 +1171,10 @@ The WS-I BSP specification can be viewed at
 `http://www.ws-i.org/Profiles/BasicSecurityProfile-1.0.html`.
 
 For more information about the {productName} deployment descriptor
-files, see the link:application-deployment-guide.html#GSDPG[{productName}
+files, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
-For information about configuring these providers in the {productName}, see the link:security-guide.html#GSSCG[{productName}
+For information about configuring these providers in the {productName}, see the xref:security-guide.adoc#GSSCG[{productName}
 Security Guide]. For additional information about overriding provider
 settings, see xref:#application-specific-message-protection[Application-Specific Message Protection].
 
@@ -1186,7 +1186,7 @@ and select the Message Security component. For details, click the Help
 button in the Administration Console.
 * You can use the `asadmin create-message-security-provider` command to
 create a message security provider. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 In addition, you can set a few optional provider properties using the
 `asadmin set` command. For example:
@@ -1313,7 +1313,7 @@ databases. Certificates and private keys are stored in key stores and
 are managed with `keytool`. If Network Security Services (NSS) is
 installed, certificates and private keys are stored in an NSS database,
 where they are managed using `certutil`. System administrator tasks are
-discussed in the link:security-guide.html#GSSCG[{productName}
+discussed in the xref:security-guide.adoc#GSSCG[{productName}
 Security Guide].
 
 [[application-specific-message-protection]]
@@ -1367,7 +1367,7 @@ update the `message-security-binding` element for the EJB web service
 endpoint in the application's `glassfish-ejb-jar.xml` file. In this
 file, add `request-protection` and `response-protection` elements, which
 are analogous to the `request-policy` and `response-policy` elements
-discussed in the link:security-guide.html#GSSCG[{productName}
+discussed in the xref:security-guide.adoc#GSSCG[{productName}
 Security Guide]. To apply the same protection mechanisms for all
 methods, leave the method-name element blank. xref:#configuring-message-protection-for-a-specific-method-based-on-digital-signatures[Configuring
 Message Protection for a Specific Method Based on Digital Signatures]
@@ -1431,7 +1431,7 @@ the EJB web service endpoint in the application's
 `glassfish-ejb-jar.xml` file. To this file, add `request-protection` and
 `response-protection` elements, which are analogous to the
 `request-policy` and `response-policy` elements discussed in the
-link:security-guide.html#GSSCG[{productName} Security Guide]. The
+xref:security-guide.adoc#GSSCG[{productName} Security Guide]. The
 administration guide includes a table listing the set and order of
 security operations for different request and response policy
 configurations.
@@ -1873,7 +1873,7 @@ asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-reap-in
 ----
 
 For more information about the `asadmin set` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[adding-authentication-mechanisms-to-the-servlet-container]]
 
@@ -2486,7 +2486,7 @@ configure a SAM. Set the following options:
 ** Provider name operand — Specify a unique name for the SAM, for
 example `MySAM`
 +
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 [[binding-a-server-authentication-module-to-your-application]]
@@ -2503,7 +2503,7 @@ using the `glassfish-web.xml` file. Set the value of the
 `httpservlet-security-provider` attribute of the `glassfish-web-app`
 element to the SAM's configured provider ID, for example, `MySAM`. For
 more information about the `glassfish-web.xml` file, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]. This option leverages the native `AuthConfigProvider`
 implementation that ships with the {productName}.
 * Another approach is to develop your own `AuthConfigProvider` and

@@ -75,9 +75,9 @@ Command unfreeze-transaction-service executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:freeze-transaction-service.html#freeze-transaction-service[`freeze-transaction-service`(1)],
-link:recover-transactions.html#recover-transactions[`recover-transactions`(1)],
-link:rollback-transaction.html#rollback-transaction[`rollback-transaction`(1)]
+xref:freeze-transaction-service.adoc#freeze-transaction-service[`freeze-transaction-service`(1)],
+xref:recover-transactions.adoc#recover-transactions[`recover-transactions`(1)],
+xref:rollback-transaction.adoc#rollback-transaction[`rollback-transaction`(1)]
 
 "link:administration-guide/transactions.html#ablsn[Administering Transactions]" in {productName} Administration Guide
 

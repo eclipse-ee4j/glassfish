@@ -251,7 +251,7 @@ availability of JDBC data sources using the `ServiceTracking` facility
 of the OSGi platform. The life of the OSGi service matches that of the
 underlying data source created in {productName}. For instructions on
 administering JDBC resources in {productName}, see the
-link:administration-guide.html#GSADG[{productName} Administration Guide].
+xref:administration-guide.adoc#GSADG[{productName} Administration Guide].
 
 {productName} registers each JDBC data source as an OSGi service with
 `objectClass = "javax.sql.DataSource"` and a service property called

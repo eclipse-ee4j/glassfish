@@ -60,7 +60,7 @@ using the Java Servlet API, see the documentation at
 
 The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a servlet. For more
-information about these tools, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+information about these tools, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 This section describes how to create effective servlets to control
 application interactions running on a {productName}, including
@@ -384,7 +384,7 @@ asadmin set server-config.web-container.property.jspCachingEnabled="true"
 ----
 
 For more information about the `asadmin set` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 To enable JSP caching for a single web application, follow these steps:
 
@@ -594,10 +594,10 @@ files into servlets:
 
 * JSP files are automatically compiled at runtime.
 * The `asadmin deploy` command has a `--precompilejsp` option. For
-details, see the link:reference-manual.html#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 * The `jspc` command line tool allows you to precompile JSP files at the
-command line. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+command line. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[creating-and-managing-sessions]]
 
@@ -637,7 +637,7 @@ application. For more about the properties you can configure, see
 
 For information about configuring default session properties for the
 entire web container, see xref:#GSDVG00410[Using the `default-web.xml` File]
-and the link:ha-administration-guide.html#GSHAG[{productName} High
+and the xref:ha-administration-guide.adoc#GSHAG[{productName} High
 Availability Administration Guide].
 
 [[coordinating-session-access]]
@@ -673,7 +673,7 @@ become invalid unless you use the `--keepstate=true` option of the
 asadmin redeploy --keepstate=true --name hello.war
 ----
 
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 The default for `--keepstate` is false. This option is supported only on
@@ -693,7 +693,7 @@ deserialize any sessions previously saved. The usual restrictions about
 serialization and deserialization apply. For example, any
 application-specific class referenced by a session attribute may evolve
 only in a backward-compatible fashion. For more information about class
-loaders, see link:class-loaders.html#beade[Class Loaders].
+loaders, see xref:class-loaders.adoc#beade[Class Loaders].
 
 [[logging-session-attributes]]
 
@@ -729,7 +729,7 @@ session persistence type reverts to `memory`. See xref:#the-replicated-persisten
 listed in xref:#fvyem[Table 7-3].
 * The web application must be deployed using the `deploy` or `deploydir`
 command with the `--availabilityenabled` option set to `true`. See the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
@@ -752,7 +752,7 @@ list of the types of references that `HTTPSession` failover supports.
 * References to open files or network connections are lost.
 
 For information about how to work around these limitations, see the
-link:deployment-planning-guide.html#GSPLG[{productName} Deployment Planning
+xref:deployment-planning-guide.adoc#GSPLG[{productName} Deployment Planning
 Guide].
 
 In the following table, No indicates that failover for the object type
@@ -762,8 +762,8 @@ example, failover might work because the class implementing that type is
 serializable.
 
 For more information about the `InitialContext`, see
-link:jndi.html#accessing-the-naming-context[Accessing the Naming Context]. For more information
-about transaction recovery, see link:transaction-service.html#beanm[Using
+xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. For more information
+about transaction recovery, see xref:transaction-service.adoc#beanm[Using
 the Transaction Service]. For more information about Administered
 Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
@@ -874,7 +874,7 @@ this behavior, specify an empty string as the value of
 `sessionFilename`. The default value is an empty string.
 
 For more information about the `glassfish-web.xml` file, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide].
 
 [[the-file-persistence-type]]
@@ -895,7 +895,7 @@ with a single server instance.
 ====
 Make sure the `delete` option is set in the `server.policy` file, or
 expired file-based sessions might not be deleted properly. For more
-information about `server.policy`, see link:securing-apps.html#GSDVG00121[The
+information about `server.policy`, see xref:securing-apps.adoc#GSDVG00121[The
 `server.policy` File].
 ====
 
@@ -927,7 +927,7 @@ and supports the `directory` store property listed under
 "link:application-deployment-guide/dd-elements.html#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide].
 
 [[the-replicated-persistence-type]]
@@ -950,7 +950,7 @@ Service box. To enable availability for the web container, select the
 Web Container Availability tab, then check the Availability Service box.
 All instances in an {productName} cluster should have the same
 availability settings to ensure consistent behavior. For details, see
-the link:ha-administration-guide.html#GSHAG[{productName} High Availability
+the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability
 Administration Guide].
 
 To change settings such as persistence frequency and persistence scope
@@ -966,7 +966,7 @@ server-config.availability-service.web-container-availability.persistence-freque
 ----
 
 For more information, see the description of the `asadmin set` command
-in the link:reference-manual.html#GSRFM[{productName} Reference
+in the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 To specify the `replicated` persistence type for a specific web
@@ -1000,7 +1000,7 @@ listed under "link:application-deployment-guide/dd-elements.html#manager-propert
 listed under "link:application-deployment-guide/dd-elements.html#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide].
 
 To specify that web sessions for which high availability is enabled are
@@ -1362,7 +1362,7 @@ http://localhost:8080/cometd/index.html
 See Also
 
 For more information about deployment in the {productName}, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide].
 
 For more information about the Bayeux protocol, see
@@ -1501,7 +1501,7 @@ The default value is `delegate="true"`, which causes the web application
 class loader to delegate in the same manner as the other class loaders.
 Use `delegate="true"` for a web application that accesses EJB components
 or that acts as a web service client or endpoint. For details about
-`glassfish-web.xml`, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+`glassfish-web.xml`, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 For a number of packages, including `java.*` and `javax.*`, symbol
 resolution is always delegated to the parent class loader regardless of
@@ -1510,7 +1510,7 @@ Java runtime classes or changing the API versions of specifications that
 are part of the Jakarta EE platform.
 
 For general information about class loaders, see
-link:class-loaders.html#beade[Class Loaders].
+xref:class-loaders.adoc#beade[Class Loaders].
 
 [[GSDVG00410]][[using-the-default-web.xml-file]]
 
@@ -1945,7 +1945,7 @@ asadmin create-file-user --groups Admin --authrealmname default admin
 ----
 
 Enable the security manager as described in
-link:securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
+xref:securing-apps.adoc#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
 Manager].
 
 You can now use any WebDav client by connecting to the WebDav servlet
@@ -2113,7 +2113,7 @@ To work with a native executable, do the following:
 3. Use directory deployment to deploy the web module. Do not deploy it
 as a WAR file, because the executable bit information is lost during the
 process of `jar` and `unjar`. For more information about directory
-deployment, see the link:application-deployment-guide.html#GSDPG[{productName}
+deployment, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
 

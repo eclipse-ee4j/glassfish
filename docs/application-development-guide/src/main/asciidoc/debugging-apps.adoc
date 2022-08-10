@@ -116,7 +116,7 @@ To generate a Java stack trace for debugging, use the
 `asadmin generate-jvm-report --type=thread` command. The stack trace
 goes to the domain-dir`/logs/server.log` file and also appears on the
 command prompt screen. For more information about the
-`asadmin generate-jvm-report` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+`asadmin generate-jvm-report` command, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[application-client-debugging]]
 
@@ -142,13 +142,13 @@ debugging both concurrently. For details about setting the port, see
 xref:#jpda-options[JPDA Options].
 
 You can also include JVM options in the `appclient` script directly. For
-information about the `appclient` script, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+information about the `appclient` script, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
 ====
 The Application Client Container is supported only in the full {productName}, not in the Web Profile. See
-link:java-clients.html#beakt[Developing Java Clients].
+xref:java-clients.adoc#beakt[Developing Java Clients].
 ====
 
 
@@ -167,7 +167,7 @@ Message Queue Administration Guide].
 [NOTE]
 ====
 JMS resources are supported only in the full {productName}, not in
-the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
+the Web Profile. See xref:jms.adoc#beaob[Using the Java Message Service].
 ====
 
 

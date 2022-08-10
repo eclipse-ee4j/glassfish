@@ -122,10 +122,10 @@ Command list-components executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-applications.html#list-applications[`list-applications`(1)],
-link:show-component-status.html#show-component-status[`show-component-status`(1)]
+xref:list-applications.adoc#list-applications[`list-applications`(1)],
+xref:show-component-status.adoc#show-component-status[`show-component-status`(1)]
 
-link:application-deployment-guide.html#GSDPG[
+xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide]
 
 

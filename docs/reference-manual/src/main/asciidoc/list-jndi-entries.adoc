@@ -90,8 +90,8 @@ Command list-jndi-entries executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jndi-resource.html#create-jndi-resource[`create-jndi-resource`(1)],
-link:delete-jndi-resource.html#delete-jndi-resource[`delete-jndi-resource`(1)],
-link:list-jndi-resources.html#list-jndi-resources[`list-jndi-resources`(1)]
+xref:create-jndi-resource.adoc#create-jndi-resource[`create-jndi-resource`(1)],
+xref:delete-jndi-resource.adoc#delete-jndi-resource[`delete-jndi-resource`(1)],
+xref:list-jndi-resources.adoc#list-jndi-resources[`list-jndi-resources`(1)]
 
 

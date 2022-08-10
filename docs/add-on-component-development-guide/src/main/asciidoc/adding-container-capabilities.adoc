@@ -404,11 +404,11 @@ Component Code]
 xref:#web-client-code[Web Client Code]
 
 Code that defines the configuration data for the container component is
-shown in link:adding-configuration-data.html#examples-of-adding-configuration-data-for-a-component[Examples of Adding
+shown in xref:adding-configuration-data.adoc#examples-of-adding-configuration-data-for-a-component[Examples of Adding
 Configuration Data for a Component].
 
 Code for an `asadmin` subcommand that updates the configuration data in
-this example is shown in link:extending-asadmin.html#gkbdf[Example 4-7].
+this example is shown in xref:extending-asadmin.adoc#gkbdf[Example 4-7].
 
 [[container-component-code]]
 

@@ -92,10 +92,10 @@ Command list-application-refs executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-application-ref.html#create-application-ref[`create-application-ref`(1)],
-link:delete-application-ref.html#delete-application-ref[`delete-application-ref`(1)]
+xref:create-application-ref.adoc#create-application-ref[`create-application-ref`(1)],
+xref:delete-application-ref.adoc#delete-application-ref[`delete-application-ref`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

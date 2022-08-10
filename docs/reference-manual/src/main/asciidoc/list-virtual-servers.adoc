@@ -80,7 +80,7 @@ Command list-virtual-servers executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)],
-link:delete-virtual-server.html#delete-virtual-server[`delete-virtual-server`(1)]
+xref:create-virtual-server.adoc#create-virtual-server[`create-virtual-server`(1)],
+xref:delete-virtual-server.adoc#delete-virtual-server[`delete-virtual-server`(1)]
 
 

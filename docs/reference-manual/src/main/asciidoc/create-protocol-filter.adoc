@@ -89,8 +89,8 @@ Command create-protocol-filter executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol.html#create-protocol[`create-protocol`(1)],
-link:delete-protocol-filter.html#delete-protocol-filter[`delete-protocol-filter`(1)],
-link:list-protocol-filters.html#list-protocol-filters[`list-protocol-filters`(1)]
+xref:create-protocol.adoc#create-protocol[`create-protocol`(1)],
+xref:delete-protocol-filter.adoc#delete-protocol-filter[`delete-protocol-filter`(1)],
+xref:list-protocol-filters.adoc#list-protocol-filters[`list-protocol-filters`(1)]
 
 

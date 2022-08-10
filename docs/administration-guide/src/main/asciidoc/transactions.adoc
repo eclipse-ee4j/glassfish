@@ -119,7 +119,7 @@ Application Development Guide.
 +
 The {productName} supports a variety of JDBC XA drivers. For a list
 of the JDBC drivers currently supported by the {productName}, see the
-link:release-notes.html#GSRLN[{productName} Release Notes]. For
+xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 xref:jdbc.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers].
 * Java Message Service (JMS) Providers - Use of transactions ensures
@@ -251,7 +251,7 @@ property to override server names that can cause errors.
 +
 You can use the link:reference-manual/get.html#get[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 +
 Changing `keypoint-interval`, `retry-timeout-in-seconds`, or
@@ -791,9 +791,9 @@ example:
 See Also
 
 For information about JDBC connection pools and resources, see
-xref:jdbc.adoc#ablih[Administering Database Connectivity]. For more
+xref:jdbc.adoc#administering-database-connectivity[Administering Database Connectivity]. For more
 information about the `asadmin set` and `asadmin create-jvm-options`
-commands, see the link:reference-manual.html#GSRFM[{productName}
+commands, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual]. For databases with which transaction logging has been
 tested, see the {productName} Release Notes.
 

@@ -81,7 +81,7 @@ Command list-threadpools executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-threadpool.html#create-threadpool[`create-threadpool`(1)],
-link:delete-threadpool.html#delete-threadpool[`delete-threadpool`(1)]
+xref:create-threadpool.adoc#create-threadpool[`create-threadpool`(1)],
+xref:delete-threadpool.adoc#delete-threadpool[`delete-threadpool`(1)]
 
 

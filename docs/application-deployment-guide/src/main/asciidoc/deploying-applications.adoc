@@ -95,7 +95,7 @@ status of an application or module by using the
 link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
 
 For information about how the application or module name is derived, see
-link:overview.html#naming-standards[Naming Standards].
+xref:overview.adoc#naming-standards[Naming Standards].
 
 Use the `--altdd` or `--runtimealtdd` options of the `deploy` (and
 `redeploy`) subcommand to deploy an application or module using a
@@ -103,7 +103,7 @@ top-level alternate deployment descriptor. The `--altdd` option
 specifies a top-level alternate Jakarta EE standard deployment descriptor.
 The `--runtimealtdd` option specifies a top-level alternate {productName} runtime deployment descriptor. See xref:#CHDFHDGD[Example 2-3].
 For more information about deployment descriptors associated with
-{productName}, see link:overview.html#deployment-descriptors-and-annotations[Deployment Descriptors and
+{productName}, see xref:overview.adoc#deployment-descriptors-and-annotations[Deployment Descriptors and
 Annotations].
 
 You can also specify the deployment order of an application by using the
@@ -705,7 +705,7 @@ $ jar r -tvf myotherplan.jar
 See Also
 
 The deployment plan is part of the implementation of JSR 88. For more
-information about JSR 88, see link:overview.html#giiel[JSR 88 Naming] and
+information about JSR 88, see xref:overview.adoc#giiel[JSR 88 Naming] and
 the JSR 88 page at `http://jcp.org/en/jsr/detail?id=88`.
 
 [[to-deploy-an-application-or-module-in-a-directory-format]]
@@ -1152,9 +1152,9 @@ deployment option was set to true. This option is not supported and
 ignored in a clustered environment. See xref:#gijzm[Example 2-8].
 +
 For information about HTTP session persistence, see the
-link:ha-administration-guide.html#GSHAG[{productName} High Availability
+xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability
 Administration Guide].
-* Load Balancing. See the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide] for information about
+* Load Balancing. See the xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability Administration Guide] for information about
 load balancing.
 * JSP Precompilation. You can precompile JSP files during deployment by
 checking the appropriate box in the Administration Console, or by using
@@ -1179,7 +1179,7 @@ an application, or domain-dir``/generated/jsp/``module-name for an
 individually-deployed web module.
 +
 For more information about JSP precompilation, see
-link:dd-elements.html#jsp-config[`jsp-config`].
+xref:dd-elements.adoc#jsp-config[`jsp-config`].
 * Web Context Parameters. You can set web context parameters after
 deployment. See the following sections:
 
@@ -1474,7 +1474,7 @@ http://localhost:80/myclient
 ----
 
 To set a different URL for an application client, set the `context-root`
-subelement of the link:dd-elements.html#java-web-start-access[`java-web-start-access`]
+subelement of the xref:dd-elements.adoc#java-web-start-access[`java-web-start-access`]
 element in the `glassfish-application-client.xml` file.
 
 If the context-root or module-id is not specified during deployment, the
@@ -1483,7 +1483,7 @@ used. For an application, the relative path to the application client
 JAR file is also included. If the application or module is not in EAR or
 JAR file format, a context-root or module-id is generated. Regardless of
 how the context-root or module-id is determined, it is written to the
-server log. For details about naming, see link:overview.html#naming-standards[Naming
+server log. For details about naming, see xref:overview.adoc#naming-standards[Naming
 Standards].
 
 Before You Begin
@@ -1598,8 +1598,8 @@ deployed application or module has a web service endpoint, the endpoint
 is detected automatically during deployment. The {productName}
 -specific deployment descriptor files, `glassfish-web.xml` and
 `glassfish-ejb-jar.xml`, provide optional web service enhancements in
-their link:dd-elements.html#webservice-endpoint[`webservice-endpoint`] and
-link:dd-elements.html#webservice-description[`webservice-description`] elements.
+their xref:dd-elements.adoc#webservice-endpoint[`webservice-endpoint`] and
+xref:dd-elements.adoc#webservice-description[`webservice-description`] elements.
 * Web Service Management. Web service management is fully supported in
 the Administration Console. After the application or module is deployed,
 click the Web Service component. The table in the right frame lists
@@ -1660,7 +1660,7 @@ If this property exists and has a positive value, it is enabled.
 
 You can set this property in the `glassfish-resources.xml` file. For
 more information, see the property descriptions under
-link:dd-elements.html#jdbc-connection-pool[`jdbc-connection-pool`].
+xref:dd-elements.adoc#jdbc-connection-pool[`jdbc-connection-pool`].
 
 For JDBC connection pools that are not application-scoped, use the `set`
 subcommand to set this property. For example, to configure `mypool` on
@@ -1710,8 +1710,8 @@ directory. If any submodule archives of an enterprise application
 archive have their own `glassfish-resources.xml` files, the resource
 definitions are scoped to those modules only. For more information about
 the `glassfish-resources.xml` file, see
-link:dd-files.html#giida[{productName} Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the {productName}
+xref:dd-files.adoc#giida[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#beaqi[Elements of the {productName}
 Deployment Descriptors].
 
 Naming. Application-scoped resource JNDI names begin with `java:app` or

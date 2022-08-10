@@ -111,8 +111,8 @@ Command create-iiop-listener executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-ssl.html#create-ssl[`create-ssl`(1)],
-link:delete-iiop-listener.html#delete-iiop-listener[`delete-iiop-listener`(1)],
-link:list-iiop-listeners.html#list-iiop-listeners[`list-iiop-listeners`(1)]
+xref:create-ssl.adoc#create-ssl[`create-ssl`(1)],
+xref:delete-iiop-listener.adoc#delete-iiop-listener[`delete-iiop-listener`(1)],
+xref:list-iiop-listeners.adoc#list-iiop-listeners[`list-iiop-listeners`(1)]
 
 

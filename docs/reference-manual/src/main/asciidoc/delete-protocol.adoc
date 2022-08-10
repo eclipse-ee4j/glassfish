@@ -80,7 +80,7 @@ Command delete-protocol executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol.html#create-protocol[`create-protocol`(1)],
-link:list-protocols.html#list-protocols[`list-protocols`(1)]
+xref:create-protocol.adoc#create-protocol[`create-protocol`(1)],
+xref:list-protocols.adoc#list-protocols[`list-protocols`(1)]
 
 

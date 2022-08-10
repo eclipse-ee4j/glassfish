@@ -38,7 +38,7 @@ The following topics are addressed here:
 A cluster is a named collection of {productName} instances that share
 the same applications, resources, and configuration information. For
 information about {productName} instances, see
-link:instances.html#gkrbv[Administering {productName} Instances].
+xref:instances.adoc#gkrbv[Administering {productName} Instances].
 
 {productName} enables you to administer all the instances in a
 cluster as a single unit from a single host, regardless of whether the
@@ -267,7 +267,7 @@ For example:
 ----
 asadmin> copy-config default-config mycfg
 ----
-For more information, see link:named-configurations.html#to-create-a-named-configuration[To Create
+For more information, see xref:named-configurations.adoc#to-create-a-named-configuration[To Create
 a Named Configuration].
 2. Set the values for the new configuration's GMS configuration
 settings.
@@ -653,7 +653,7 @@ asadmin> create-local-instance
 node-name::
   The name of an existing {productName} node on which the instance is
   to reside. For more information about nodes, see
-  link:nodes.html#gkrle[Administering {productName} Nodes].
+  xref:nodes.adoc#gkrle[Administering {productName} Nodes].
 cluster-name::
   The name of the cluster to which the you are adding the instance.
 gms-port::
@@ -667,8 +667,8 @@ instance-name::
 For full instructions for adding an instance to a cluster, see the
 following sections:
 
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 ====
 
 
@@ -742,8 +742,8 @@ See Also
 
 * link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`(1)]
 * xref:#to-create-a-cluster[To Create a Cluster]
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 [[to-discover-a-cluster-when-each-instance-in-a-cluster-is-running-on-a-different-host]]
 
@@ -856,14 +856,14 @@ Next Steps
 After creating the cluster, add instances to the cluster as explained in
 the following sections:
 
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 See Also
 
 * xref:#to-create-a-cluster[To Create a Cluster]
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 [[using-the-multi-homing-feature-with-gms]]
 
@@ -982,14 +982,14 @@ cluster, the DAS and the cluster must be restarted to apply the changes.
 
 When you create a cluster, {productName} automatically creates a
 Message Queue cluster for the {productName} cluster. For more
-information about Message Queue clusters, see link:jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using
+information about Message Queue clusters, see xref:jms.adoc#using-message-queue-broker-clusters-with-glassfish-server[Using
 Message Queue Broker Clusters With {productName}].
 
 Before You Begin
 
 If the cluster is to reference an existing named configuration, ensure
 that the configuration exists. For more information, see
-link:named-configurations.html#to-create-a-named-configuration[To Create a Named Configuration]. If
+xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration]. If
 you are using a named configuration to preconfigure GMS settings, ensure
 that these settings have the required values in the named configuration.
 For more information, see xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS
@@ -1134,14 +1134,14 @@ Next Steps
 After creating a cluster, you can add {productName} instances to the
 cluster as explained in the following sections:
 
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 See Also
 
-* link:named-configurations.html#to-create-a-named-configuration[To Create a Named Configuration]
+* xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration]
 * xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
-* link:jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}]
+* xref:jms.adoc#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}]
 * link:reference-manual/create-cluster.html#create-cluster[`create-cluster`(1)]
 * link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`(1)]
 
@@ -1217,14 +1217,14 @@ Before You Begin
 Ensure that following prerequisites are met:
 
 * The cluster that you are deleting is stopped. For information about
-how to stop a cluster, see link:instances.html#to-stop-a-cluster[To Stop a Cluster].
+how to stop a cluster, see xref:instances.adoc#to-stop-a-cluster[To Stop a Cluster].
 * The cluster that you are deleting contains no {productName}
 instances. For information about how to remove instances from a cluster,
 see the following sections:
 
-** link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+** xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
 
-** link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+** xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 
 1. Ensure that the DAS is running.
 +
@@ -1274,9 +1274,9 @@ Command delete-cluster executed successfully.
 
 See Also
 
-* link:instances.html#to-stop-a-cluster[To Stop a Cluster]
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:instances.adoc#to-stop-a-cluster[To Stop a Cluster]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 * link:reference-manual/delete-cluster.html#delete-cluster[`delete-cluster`(1)]
 * link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
 * link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]

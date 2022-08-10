@@ -54,13 +54,13 @@ present.
 
 === See Also
 
-link:monitor.html#monitor[`monitor`(1)],
-link:enable-monitoring.html#enable-monitoring[`enable-monitoring`(1)],
-link:disable-monitoring.html#disable-monitoring[`disable-monitoring`(1)],
-link:list.html#list[`list`(1)], link:get.html#get[`get`(1)],
-link:set.html#set[`set`(1)]
+xref:monitor.adoc#monitor[`monitor`(1)],
+xref:enable-monitoring.adoc#enable-monitoring[`enable-monitoring`(1)],
+xref:disable-monitoring.adoc#disable-monitoring[`disable-monitoring`(1)],
+xref:list.adoc#list[`list`(1)], xref:get.adoc#get[`get`(1)],
+xref:set.adoc#set[`set`(1)]
 
-link:dotted-names.html#dotted-names[`dotted-names`(5ASC)]
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 

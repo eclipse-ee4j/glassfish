@@ -83,7 +83,7 @@ Command list-managed-thread-factories executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-managed-thread-factory.html#create-managed-thread-factory[`create-managed-thread-factory`(1)],
-link:delete-managed-thread-factory.html#delete-managed-thread-factory[`delete-managed-thread-factory`(1)]
+xref:create-managed-thread-factory.adoc#create-managed-thread-factory[`create-managed-thread-factory`(1)],
+xref:delete-managed-thread-factory.adoc#delete-managed-thread-factory[`delete-managed-thread-factory`(1)]
 
 

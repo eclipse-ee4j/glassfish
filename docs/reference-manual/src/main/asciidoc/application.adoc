@@ -26,8 +26,8 @@ and highly available Jakarta EE applications.
 
 === See Also
 
-link:create-application-ref.html#create-application-ref[`create-application-ref`(1)],
-link:deploy.html#deploy[`deploy`(1)],
-link:list-applications.html#list-applications[`list-applications`(1)]
+xref:create-application-ref.adoc#create-application-ref[`create-application-ref`(1)],
+xref:deploy.adoc#deploy[`deploy`(1)],
+xref:list-applications.adoc#list-applications[`list-applications`(1)]
 
 

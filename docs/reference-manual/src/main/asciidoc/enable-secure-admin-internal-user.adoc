@@ -121,7 +121,7 @@ newAdminUsername
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:disable-secure-admin-internal-user.html#disable-secure-admin-internal-user[`disable-secure-admin-internal-user`(1)],
-link:enable-secure-admin.html#enable-secure-admin[`enable-secure-admin`(1)]
+xref:disable-secure-admin-internal-user.adoc#disable-secure-admin-internal-user[`disable-secure-admin-internal-user`(1)],
+xref:enable-secure-admin.adoc#enable-secure-admin[`enable-secure-admin`(1)]
 
 

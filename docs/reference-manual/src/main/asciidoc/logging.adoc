@@ -44,9 +44,9 @@ recommended for better log configuration.
 
 === See Also
 
-link:list-log-levels.html#list-log-levels[`list-log-levels`(1)],
-link:rotate-log.html#rotate-log[`rotate-log`(1)],
-link:set-log-levels.html#set-log-levels[`set-log-levels`(1)]
+xref:list-log-levels.adoc#list-log-levels[`list-log-levels`(1)],
+xref:rotate-log.adoc#rotate-log[`rotate-log`(1)],
+xref:set-log-levels.adoc#set-log-levels[`set-log-levels`(1)]
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 

@@ -103,8 +103,8 @@ Command enable-secure-admin executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:disable-secure-admin.html#disable-secure-admin[`disable-secure-admin`(1)],
-link:enable-secure-admin-principal.html#enable-secure-admin-principal[`enable-secure-admin-principal`(1)],
-link:enable-secure-admin-internal-user.html#enable-secure-admin-internal-user[`enable-secure-admin-internal-user`(1)]
+xref:disable-secure-admin.adoc#disable-secure-admin[`disable-secure-admin`(1)],
+xref:enable-secure-admin-principal.adoc#enable-secure-admin-principal[`enable-secure-admin-principal`(1)],
+xref:enable-secure-admin-internal-user.adoc#enable-secure-admin-internal-user[`enable-secure-admin-internal-user`(1)]
 
 

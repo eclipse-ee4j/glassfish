@@ -114,8 +114,8 @@ Command create-custom-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-custom-resource.html#delete-custom-resource[`delete-custom-resource`(1)],
-link:list-custom-resources.html#list-custom-resources[`list-custom-resources`(1)],
-link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)]
+xref:delete-custom-resource.adoc#delete-custom-resource[`delete-custom-resource`(1)],
+xref:list-custom-resources.adoc#list-custom-resources[`list-custom-resources`(1)],
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)]
 
 

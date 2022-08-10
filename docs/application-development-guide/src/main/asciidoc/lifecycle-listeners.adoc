@@ -147,9 +147,9 @@ initial context to which all the resources are bound.
 === Deploying a Lifecycle Module
 
 For instructions on how to deploy a lifecycle module, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide], or see the `asadmin create-lifecycle-module` command in the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 You do not need to specify a classpath for the lifecycle module if you
 place it in the domain-dir``/lib`` or domain-dir`/lib/classes` directory
@@ -177,7 +177,7 @@ or its parent, the Connector class loader.
 You must ensure that the `server.policy` file is appropriately set up,
 or a lifecycle module trying to perform a `System.exec()` might cause a
 security access violation. For details, see
-link:securing-apps.html#GSDVG00121[The `server.policy` File].
+xref:securing-apps.adoc#GSDVG00121[The `server.policy` File].
 
 The configured properties for a lifecycle module are passed as
 properties after the `INIT_EVENT`. The JNDI naming context is not

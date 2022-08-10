@@ -60,7 +60,7 @@ attribute-value::
   The value to apply to the specified attribute. +
   Refer to "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in
   {productName} Administration Guide for complete explanations of supported attribute values.
-  Use link:list-log-attributes.html#list-log-attributes[`list-log-attributes`(1)] to get
+  Use xref:list-log-attributes.adoc#list-log-attributes[`list-log-attributes`(1)] to get
   current set of attributes.
 
 === Examples

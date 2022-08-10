@@ -100,7 +100,7 @@ Command delete-http-lb-ref executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-ref.html#create-http-lb-ref[`create-http-lb-ref`(1)],
-link:disable-http-lb-server.html#disable-http-lb-server[`disable-http-lb-server`(1)]
+xref:create-http-lb-ref.adoc#create-http-lb-ref[`create-http-lb-ref`(1)],
+xref:disable-http-lb-server.adoc#disable-http-lb-server[`disable-http-lb-server`(1)]
 
 

@@ -52,30 +52,30 @@ standalone instances.
 To add instances to the cluster, set the `--cluster` option to the name
 of the cluster when using either of the following subcommands:
 
-* link:create-instance.html#create-instance[`create-instance`(1)]
-* link:create-local-instance.html#create-local-instance[`create-local-instance`(1)]
+* xref:create-instance.adoc#create-instance[`create-instance`(1)]
+* xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)]
 
 To delete server instances from the cluster at any time, use one of the
 following subcommands:
 
-* link:delete-instance.html#delete-instance[`delete-instance`(1)]
-* link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)]
+* xref:delete-instance.adoc#delete-instance[`delete-instance`(1)]
+* xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)]
 
 To associate applications and resources with all instances in the
 cluster, set the `--target` option to the name of the cluster when
 performing the following operations:
 
 * Deploying applications by using the
-link:deploy.html#deploy[`deploy`(1)] subcommand
+xref:deploy.adoc#deploy[`deploy`(1)] subcommand
 * Creating resources by using subcommands such as
-link:create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`(1)]
+xref:create-jdbc-resource.adoc#create-jdbc-resource[`create-jdbc-resource`(1)]
 * Creating references to applications that are already deployed in other
 targets by using the
-link:create-application-ref.html#create-application-ref[`create-application-ref`(1)]
+xref:create-application-ref.adoc#create-application-ref[`create-application-ref`(1)]
 subcommand
 * Creating references to resources that are already created in other
 targets by using the
-link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)]
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)]
 subcommand
 
 This subcommand is supported in remote mode only.
@@ -237,7 +237,7 @@ asadmin-options::
 To match the configuration of the network on which the DAS and
     clustered instances are deployed, set this value as low as possible.
     To determine the lowest possible value for your system, use the
-    link:validate-multicast.html#validate-multicast[`validate-multicast`(1)]
+    xref:validate-multicast.adoc#validate-multicast[`validate-multicast`(1)]
     subcommand.
 
     ** A value of 0 ensures that multicast messages never leave the host
@@ -359,16 +359,16 @@ cluster-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}. +
   If the
-  link:configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`(1)]
+  xref:configure-jms-cluster.adoc#configure-jms-cluster[`configure-jms-cluster`(1)]
   subcommand is to be used to configure a Message Queue cluster to
   provide JMS services to the {productName} cluster, the length of
   the {productName} cluster name is might be restricted: +
   * If `clustertype` is set to `enhanced` in the
-  link:configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`(1)]
+  xref:configure-jms-cluster.adoc#configure-jms-cluster[`configure-jms-cluster`(1)]
   subcommand, the name can be no longer than n–21 characters, where n is
   the maximum table name length allowed by the database.
   * If `configstoretype` is set to `shareddb` in the
-  link:configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`(1)]
+  xref:configure-jms-cluster.adoc#configure-jms-cluster[`configure-jms-cluster`(1)]
   subcommand, the name can be no longer than n–19 characters, where n is
   the maximum table name length allowed by the database.
 
@@ -478,19 +478,19 @@ Command create-cluster executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-application-ref.html#create-application-ref[`create-application-ref`(1)],
-link:create-instance.html#create-instance[`create-instance`(1)],
-link:create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`(1)],
-link:create-local-instance.html#create-local-instance[`create-local-instance`(1)],
-link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)],
-link:delete-cluster.html#delete-cluster[`delete-cluster`(1)],
-link:delete-instance.html#delete-instance[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)],
-link:deploy.html#deploy[`deploy`(1)],
-link:list-clusters.html#list-clusters[`list-clusters`(1)],
-link:start-cluster.html#start-cluster[`start-cluster`(1)],
-link:stop-cluster.html#stop-cluster[`stop-cluster`(1)],
-link:validate-multicast.html#validate-multicast[`validate-multicast`(1)]
+xref:create-application-ref.adoc#create-application-ref[`create-application-ref`(1)],
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-jdbc-resource.adoc#create-jdbc-resource[`create-jdbc-resource`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)],
+xref:delete-cluster.adoc#delete-cluster[`delete-cluster`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:deploy.adoc#deploy[`deploy`(1)],
+xref:list-clusters.adoc#list-clusters[`list-clusters`(1)],
+xref:start-cluster.adoc#start-cluster[`start-cluster`(1)],
+xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)],
+xref:validate-multicast.adoc#validate-multicast[`validate-multicast`(1)]
 
 "link:ha-administration-guide/clusters.html#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is
 Unavailable]" in {productName} High Availability

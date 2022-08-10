@@ -283,7 +283,7 @@ intended for production environments, not development environments.
 the server `CLASSPATH`. Put application-related classes into JAR files.
 * HTTP response times are dependent on how the keep-alive subsystem and
 the HTTP server is tuned in general. For more information, see
-link:tuning-glassfish.html#http-service-settings[HTTP Service Settings].
+xref:tuning-glassfish.adoc#http-service-settings[HTTP Service Settings].
 * Cache servlet results when possible. For more information, see
 "link:application-development-guide/webapps.html#beafs[Developing Web Applications]" in {productName} Application Development Guide.
 * If an application does not contain any EJB components, deploy the
@@ -611,7 +611,7 @@ option, which can speed up deployment.
 If you have a legacy rich-client application that directly uses the
 CosNaming service (not a recommended configuration), then you must
 generate the stubs for your application explicitly using RMIC. For more
-information, see the link:troubleshooting-guide.html#GSTSG[{productName}
+information, see the xref:troubleshooting-guide.adoc#GSTSG[{productName}
 Troubleshooting Guide] for more details.
 
 [[remove-unneeded-stateful-session-beans]]
@@ -1321,10 +1321,10 @@ carefully analyzing the database table usage patterns.
 To set the database transaction isolation level using the {productName} Administration Console, navigate to the Resources>JDBC>JDBC
 Connection Pools>pool-name node. Refer to the Administration Console
 online help for complete instructions. Alternatively, follow the
-instructions in "link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]"
+instructions in "link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]"
 in {productName} Administration Guide. For more
 information on tuning JDBC connection pools, see
-link:tuning-glassfish.html#jdbc-connection-pool-settings[JDBC Connection Pool Settings].
+xref:tuning-glassfish.adoc#jdbc-connection-pool-settings[JDBC Connection Pool Settings].
 
 [[tuning-message-driven-beans]]
 

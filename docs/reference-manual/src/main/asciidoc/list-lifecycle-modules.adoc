@@ -78,7 +78,7 @@ default target, `server`.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`(1)],
-link:delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`(1)]
+xref:create-lifecycle-module.adoc#create-lifecycle-module[`create-lifecycle-module`(1)],
+xref:delete-lifecycle-module.adoc#delete-lifecycle-module[`delete-lifecycle-module`(1)]
 
 

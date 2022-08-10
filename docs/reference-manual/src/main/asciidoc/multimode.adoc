@@ -111,7 +111,7 @@ file.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:export.html#export[`export`(1)],
-link:unset.html#unset[`unset`(1)]
+xref:export.adoc#export[`export`(1)],
+xref:unset.adoc#unset[`unset`(1)]
 
 

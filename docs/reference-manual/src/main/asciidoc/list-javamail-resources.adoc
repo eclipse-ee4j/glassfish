@@ -80,7 +80,7 @@ Command list-javamail-resources executed successfuly.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-javamail-resource.html#create-javamail-resource[`create-javamail-resource`(1)],
-link:delete-javamail-resource.html#delete-javamail-resource[`delete-javamail-resource`(1)]
+xref:create-javamail-resource.adoc#create-javamail-resource[`create-javamail-resource`(1)],
+xref:delete-javamail-resource.adoc#delete-javamail-resource[`delete-javamail-resource`(1)]
 
 

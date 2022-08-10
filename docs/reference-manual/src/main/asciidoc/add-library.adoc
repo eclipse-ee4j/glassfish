@@ -130,8 +130,8 @@ Command add-library executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-libraries.html#list-libraries[`list-libraries`(1)],
-link:remove-library.html#remove-library[`remove-library`(1)]
+xref:list-libraries.adoc#list-libraries[`list-libraries`(1)],
+xref:remove-library.adoc#remove-library[`remove-library`(1)]
 
 "link:application-development-guide/class-loaders.html#beade[Class Loaders]" in {productName} Application Development Guide
 

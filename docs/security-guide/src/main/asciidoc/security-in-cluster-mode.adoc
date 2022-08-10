@@ -24,7 +24,7 @@ The following topics are described:
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not, see
-link:system-security.html#ablnk[Administering System Security].
+xref:system-security.adoc#ablnk[Administering System Security].
 
 Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
@@ -34,8 +34,8 @@ Console online help.
 
 === Configuring Certificates in Cluster Mode
 
-The sections link:system-security.html#certificates-and-ssl[Certificates and SSL] and
-link:system-security.html#administering-jsse-certificates[Administering JSSE Certificates] describe
+The sections xref:system-security.adoc#certificates-and-ssl[Certificates and SSL] and
+xref:system-security.adoc#administering-jsse-certificates[Administering JSSE Certificates] describe
 the relevant concepts and use of certificates in {productName}.
 
 By default, {productName} uses self-signed certificates. The
@@ -44,7 +44,7 @@ by clients by default because a certificate authority does not vouch for
 the authenticity of the certificate.
 
 You can instead use your own certificates, as described in
-link:administrative-security.html#using-your-own-certificates[Using Your Own Certificates].
+xref:administrative-security.adoc#using-your-own-certificates[Using Your Own Certificates].
 
 [[dynamic-reconfiguration]]
 
@@ -61,7 +61,7 @@ respective copies of the domain's configuration.
 [NOTE]
 ====
 Oracle recommends that you enable secure admin as described in
-link:administrative-security.html#gknqh[Managing Administrative Security]
+xref:administrative-security.adoc#gknqh[Managing Administrative Security]
 so that {productName} securely transfers these files on the network.
 ====
 

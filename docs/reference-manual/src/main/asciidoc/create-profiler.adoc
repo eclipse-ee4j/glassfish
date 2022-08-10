@@ -100,6 +100,6 @@ Created Profiler with id = sample_profiler
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-profiler.html#delete-profiler[`delete-profiler`(1)]
+xref:delete-profiler.adoc#delete-profiler[`delete-profiler`(1)]
 
 

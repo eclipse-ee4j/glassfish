@@ -150,9 +150,9 @@ when you run the `start-database` subcommand. If you did not specify
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:stop-database.html#stop-database[`stop-database`(1)]
+xref:stop-database.adoc#stop-database[`stop-database`(1)]
 
-"link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]" in {productName} Administration Guide
+"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

@@ -35,7 +35,7 @@ Accordingly, the Application Client Container is supported only in the
 full {productName}, not in the Web Profile.
 
 JMS resources are supported only in the full {productName}, not in
-the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
+the Web Profile. See xref:jms.adoc#beaob[Using the Java Message Service].
 ====
 
 
@@ -57,7 +57,7 @@ that is bundled with it. Compared to other Jakarta EE containers, the ACC
 is lightweight.
 
 For information about debugging application clients, see
-link:debugging-apps.html#application-client-debugging[Application Client Debugging].
+xref:debugging-apps.adoc#application-client-debugging[Application Client Debugging].
 
 
 [NOTE]
@@ -94,7 +94,7 @@ implement the javax.security.auth.callback.CallbackHandler interface.
 See the Jakarta EE specification, section 9.2, Application Clients:
 Security, for more details.
 
-Application clients can use link:securing-apps.html#programmatic-login-using-the-programmaticlogin-class[Programmatic
+Application clients can use xref:securing-apps.adoc#programmatic-login-using-the-programmaticlogin-class[Programmatic
 Login Using the ProgrammaticLogin Class].
 
 [[acc-naming]]
@@ -165,7 +165,7 @@ Script]
 1. In your client code, reference the EJB component by using an `@EJB`
 annotation or by looking up the JNDI name as defined in the `ejb-jar.xml` file. +
 For more information about naming and lookups, see
-link:jndi.html#accessing-the-naming-context[Accessing the Naming Context]. +
+xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. +
 If load balancing is enabled as in Step xref:#accejb8[7] and the EJB
 components being accessed are in a different cluster, the endpoint list
 must be included in the lookup, as follows:
@@ -182,16 +182,16 @@ For more information on the `glassfish-application-client.xml` file, see
 "link:application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
 {productName} Application Deployment Guide.
 For a general explanation of how to map JNDI names using reference elements,
-see link:jndi.html#mapping-references[Mapping References].
+see xref:jndi.adoc#mapping-references[Mapping References].
 
 3. Deploy the application client and EJB component together in an application. +
 For more information on deployment, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 To get the client JAR file, use the `--retrieve` option of the `asadmin deploy` command. +
 To retrieve the stubs and ties generated during deployment, use the
 `asadmin get-client-stubs` command. +
 For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 4. Ensure that the client JAR file includes the following files:
 * A Java class to access the bean.
@@ -213,7 +213,7 @@ system files required to launch application clients on remote systems
 using the `package-appclient` script, then retrieve the application
 client itself using the `asadmin get-client-stubs` command. +
 For more information, see xref:#using-the-package-appclient-script[Using the `package-appclient` Script]
-and the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+and the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 6. To access EJB components that are residing in a remote system, make
 the following changes to the `sun-acc.xml` file or the `appclient`
@@ -232,7 +232,7 @@ To determine the ORB port on the remote server, use the `asadmin get` command. F
 asadmin --host rmtsrv get server-config.iiop-service.iiop-listener.iiop-listener1.port
 ----
 For more information about the `asadmin get` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 7. [[accejb8]]
 To set up load balancing and failover of remote EJB references, define
@@ -285,7 +285,7 @@ For more information on the `glassfish-application-client.xml` file, see
 "link:application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
 {productName} Application Deployment Guide. For a
 general explanation of how to map JNDI names using reference elements,
-see link:jndi.html#mapping-references[Mapping References].
+see xref:jndi.adoc#mapping-references[Mapping References].
 4. Ensure that the client JAR file includes the following files:
 * A Java class to access the resource.
 * `application-client.xml` - (optional) Jakarta EE application client
@@ -308,7 +308,7 @@ using the `package-appclient` script, then retrieve the application
 client itself using the `asadmin get-client-stubs` command.
 +
 For more information, see xref:#using-the-package-appclient-script[Using the `package-appclient`
-Script] and the link:reference-manual.html#GSRFM[{productName}
+Script] and the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 6. Run the application client.
 +
@@ -343,7 +343,7 @@ Java Web Start is enabled for all application clients by default.
 The application developer or deployer can specify that Java Web Start is
 always disabled for an application client by setting the value of the
 `eligible` element to `false` in the `glassfish-application-client.xml`
-file. See the link:application-deployment-guide.html#GSDPG[{productName}
+file. See the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
 The {productName} administrator can disable Java Web Start for a
@@ -368,7 +368,7 @@ asadmin set applications.application.module-name.property.java-web-start-enabled
 
 Setting `java-web-start-enabled="true"` re-enables Java Web Start for an
 eligible application client. For more information about the
-`asadmin set` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+`asadmin set` command, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[downloading-and-launching-an-application-client]]
 
@@ -443,7 +443,7 @@ naming, see "link:application-deployment-guide/overview.html#naming-standards[Na
 To set a different URL for an application client, use the `context-root`
 subelement of the `java-web-start-access` element in the
 `glassfish-application-client.xml` file. This overrides the
-appclient-module-id or application-id. See the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+appclient-module-id or application-id. See the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 You can also pass arguments to the ACC or to the application client's
 `main` method as query parameters in the URL. If multiple application
@@ -632,7 +632,7 @@ asadmin deploy --property jar-signing-alias=MyAlias MyApp.ear
 ----
 
 For more information about the `asadmin deploy` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[error-handling]]
 
@@ -692,7 +692,7 @@ The following example vendor element contains only a text string:
 The default value is the text string `Application Client`.
 
 For more information about the `glassfish-application-client.xml` file,
-see the link:application-deployment-guide.html#GSDPG[{productName} Application
+see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application
 Deployment Guide].
 
 You can also specify a vendor-specific icon, splash screen, text string,
@@ -1155,7 +1155,7 @@ might not support such serial or concurrent reuse.
 To run an application client, you can launch the ACC using the
 `appclient` script, whether or not Java Web Start is enabled. This is
 optional. This script is located in the as-install``/bin`` directory. For
-details, see the link:reference-manual.html#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 [[using-the-package-appclient-script]]
@@ -1166,7 +1166,7 @@ You can package the {productName} system files required to launch
 application clients on remote systems into a single JAR file using the
 `package-appclient` script. This is optional. This script is located in
 the as-install``/bin`` directory. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[GSDVG00468]][[the-client.policy-file]]
 
@@ -1200,7 +1200,7 @@ element in the `glassfish-ejb-jar.xml` file. The following configuration
 establishes SSL between an application client and an EJB component using
 a username and password. The user has to login to the ACC using either
 the `sun-acc.xml` mechanism or the
-link:securing-apps.html#programmatic-login-using-the-programmaticlogin-class[Programmatic Login Using the
+xref:securing-apps.adoc#programmatic-login-using-the-programmaticlogin-class[Programmatic Login Using the
 ProgrammaticLogin Class] mechanism.
 
 [source,xml]
@@ -1224,7 +1224,7 @@ ProgrammaticLogin Class] mechanism.
 ----
 
 For more information about the `glassfish-ejb-jar.xml` and `sun-acc.xml`
-files, see the link:application-deployment-guide.html#GSDPG[{productName}
+files, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
 To use a client certificate, configure the `ior-security-config` element
@@ -1372,7 +1372,7 @@ does not apply. In this case, you could write logic to catch an
 exception around the lookup and retry explicitly.
 
 For details about the `appclient` script syntax, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[using-libraries-with-application-clients]]
 
@@ -1383,7 +1383,7 @@ the `--libraries` option of the `asadmin deploy` command do not apply to
 application clients. Neither do the as-install``/lib``, domain-dir``/lib``,
 and domain-dir`/lib/classes` directories comprising the Common Class
 Loader. These apply only to applications and modules deployed to the
-server. For more information, see link:class-loaders.html#beade[Class
+server. For more information, see xref:class-loaders.adoc#beade[Class
 Loaders].
 
 To use libraries with an application client, package the application
@@ -1445,7 +1445,7 @@ must be included in the lookup, as follows:
 corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
 ----
 For more information about naming and lookups, see
-link:jndi.html#accessing-the-naming-context[Accessing the Naming Context].
+xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context].
 3. Deploy the EJB component to be accessed.
 +
 For more information on deployment, see "link:application-deployment-guide/overview.html#about-deployment-tools[About
@@ -1570,7 +1570,7 @@ must be included in the lookup, as follows:
 corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
 ----
 For more information about naming and lookups, see
-link:jndi.html#accessing-the-naming-context[Accessing the Naming Context].
+xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context].
 3. Deploy the EJB component to be accessed.
 +
 For more information on deployment, see "link:application-deployment-guide/overview.html#about-deployment-tools[About

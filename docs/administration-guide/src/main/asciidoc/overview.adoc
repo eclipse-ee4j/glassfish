@@ -168,7 +168,7 @@ Database Connectivity::
   The initial tasks involved in configuring {productName} to connect
   to the Apache Derby database include creating a Java Database
   Connectivity (JDBC) connection pool, creating a JDBC resource, and
-  integrating a JDBC driver. See xref:jdbc.adoc#ablih[Administering
+  integrating a JDBC driver. See xref:jdbc.adoc#administering-database-connectivity[Administering
   Database Connectivity].
 EIS Connectivity::
   The initial tasks involved in configuring {productName} to connect
@@ -659,7 +659,7 @@ asadmin help restart-domain
 ----
 
 A collection of the `asadmin` help pages is available in HTML and PDF
-format in the link:reference-manual.html#GSRFM[{productName} Reference
+format in the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 [[rest-interfaces]]
@@ -1027,6 +1027,6 @@ system, use backslashes (\) instead. For example:
 The following additional documents address specific administration areas:
 
 * Verifying and deploying applications
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide]
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide]
 
 

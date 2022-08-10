@@ -63,8 +63,8 @@ Command uptime executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-domains.html#list-domains[`list-domains`(1)],
-link:start-domain.html#start-domain[`start-domain`(1)],
-link:stop-domain.html#stop-domain[`stop-domain`(1)]
+xref:list-domains.adoc#list-domains[`list-domains`(1)],
+xref:start-domain.adoc#start-domain[`start-domain`(1)],
+xref:stop-domain.adoc#stop-domain[`stop-domain`(1)]
 
 

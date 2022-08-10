@@ -447,7 +447,7 @@ Add code to write the component's initial configuration data in the
 class that represents your add-on component. If your add-on component is
 a container, add this code to the sniffer class. For more information
 about adding a container, see
-link:adding-container-capabilities.html#ghmon[Adding Container
+xref:adding-container-capabilities.adoc#ghmon[Adding Container
 Capabilities].
 
 1. Set an optional dependency on an instance of the class that
@@ -567,9 +567,9 @@ available to system administrators in the following ways:
 * By adding an link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommand. If you are adding
 an `asadmin` subcommand, include the code for the transaction in the
 body of the subcommand's `execute` method. For more information, see
-link:extending-asadmin.html#ghmrd[Extending the `asadmin` Utility].
+xref:extending-asadmin.adoc#ghmrd[Extending the `asadmin` Utility].
 * By extending the Administration Console. For more information, see
-link:extending-the-admin-console.html#ghmrb[Extending the Administration
+xref:extending-the-admin-console.adoc#ghmrb[Extending the Administration
 Console].
 
 [[to-create-a-transaction-to-update-configuration-data]]
@@ -716,11 +716,11 @@ This example also shows an XML data fragment for initializing an
 element. See xref:#gkamk[Example 6-13].
 
 Code for the Greeter Container component is shown in
-link:adding-container-capabilities.html#example-of-adding-container-capabilities[Example of Adding Container
+xref:adding-container-capabilities.adoc#example-of-adding-container-capabilities[Example of Adding Container
 Capabilities].
 
 Code for an `asadmin` subcommand that updates the configuration data in
-this example is shown in link:extending-asadmin.html#gkbdf[Example 4-7].
+this example is shown in xref:extending-asadmin.adoc#gkbdf[Example 4-7].
 
 [[gkamy]]
 Example 6-11 Parent Element Definition

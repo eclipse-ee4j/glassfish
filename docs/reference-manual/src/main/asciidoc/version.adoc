@@ -104,6 +104,6 @@ Command version executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-modules.html#list-modules[`list-modules`(1)]
+xref:list-modules.adoc#list-modules[`list-modules`(1)]
 
 

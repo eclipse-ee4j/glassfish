@@ -1288,7 +1288,7 @@ login.
 [NOTE]
 ====
 If secure administration is enabled as described in
-link:administrative-security.html#running-secure-admin[Running Secure Admin], you cannot
+xref:administrative-security.adoc#running-secure-admin[Running Secure Admin], you cannot
 change an administration password to a blank value.
 ====
 

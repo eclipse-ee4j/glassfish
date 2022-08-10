@@ -34,4 +34,8 @@ for line in ${ids} ; do
 	fi;
 done;
 
+echo "Replacing link references by xref where it is possible.";
+find . -type f -name '*.adoc' ! -wholename '*/target/*' -exec sed -i -r -- 's/link:([a-zA-Z0-9\-]+)\.html#/xref:\1.adoc#/g' {} +;
+find . -type f -name '*.adoc' ! -wholename '*/target/*' -exec sed -i -r -- 's/link:#/xref:#/g' {} +;
+
 

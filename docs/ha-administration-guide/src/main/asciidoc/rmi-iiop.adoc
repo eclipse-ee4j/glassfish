@@ -333,7 +333,7 @@ distributed among all endpoints.
 
 See Also
 
-See link:session-persistence-and-failover.html#enabling-the-high-availability-session-persistence-service[Enabling the High
+See xref:session-persistence-and-failover.adoc#enabling-the-high-availability-session-persistence-service[Enabling the High
 Availability Session Persistence Service] for instructions on enabling
 the session availability service for a cluster or for a Web, EJB, or JMS
 container running in a cluster.
@@ -470,7 +470,7 @@ public class EJBClient {
 
 See Also
 
-See link:session-persistence-and-failover.html#enabling-the-high-availability-session-persistence-service[Enabling the High
+See xref:session-persistence-and-failover.adoc#enabling-the-high-availability-session-persistence-service[Enabling the High
 Availability Session Persistence Service] for instructions on enabling
 the session availability service for a cluster or for a Web, EJB, or JMS
 container running in a cluster.

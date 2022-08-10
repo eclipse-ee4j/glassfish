@@ -96,9 +96,9 @@ Command set-batch-runtime-configuration executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-batch-jobs.html#list-batch-jobs[`list-batch-jobs`(1)],
-link:list-batch-job-executions.html#list-batch-job-executions[`list-batch-job-executions`(1)],
-link:list-batch-job-steps.html#list-batch-job-steps[`list-batch-job-steps`(1)],
-link:list-batch-runtime-configuration.html#list-batch-runtime-configuration[`list-batch-runtime-configuration`(1)]
+xref:list-batch-jobs.adoc#list-batch-jobs[`list-batch-jobs`(1)],
+xref:list-batch-job-executions.adoc#list-batch-job-executions[`list-batch-job-executions`(1)],
+xref:list-batch-job-steps.adoc#list-batch-job-steps[`list-batch-job-steps`(1)],
+xref:list-batch-runtime-configuration.adoc#list-batch-runtime-configuration[`list-batch-runtime-configuration`(1)]
 
 

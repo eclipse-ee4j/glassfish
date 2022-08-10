@@ -81,7 +81,7 @@ Command list-protocols executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol.html#create-protocol[`create-protocol`(1)],
-link:delete-protocol.html#delete-protocol[`delete-protocol`(1)]
+xref:create-protocol.adoc#create-protocol[`create-protocol`(1)],
+xref:delete-protocol.adoc#delete-protocol[`delete-protocol`(1)]
 
 

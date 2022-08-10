@@ -81,6 +81,6 @@ Command delete-jdbc-connection-pool executed correctly.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],link:list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],xref:list-jdbc-connection-pools.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
 
 

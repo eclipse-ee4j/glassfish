@@ -217,7 +217,7 @@ must use the Upgrade Tool, described in xref:#upgrade-tool[Upgrade Tool].
 See xref:#summary-of-procedure-for-upgrading-with-update-tool[Summary of Procedure for Upgrading With Update Tool] for
 an overview of the general procedure for performing an upgrade with
 Update Tool. For more information about Update Tool in general, see
-"link:administration-guide.html#GSADG00701[Update Tool]"
+"xref:administration-guide.adoc#GSADG00701[Update Tool]"
 in {productName} Administration Guide.
 
 [[software-update-notifier]]
@@ -250,7 +250,7 @@ The general procedure for using Upgrade Tool to perform an upgrade to
 {productName} 7 from any compatible older version of {productName} or Enterprise Server comprises the following steps:
 
 1. Download {productName} 7 and perform a Standard Installation,
-as described in "link:installation-guide.html#GSING00007[
+as described in "xref:installation-guide.adoc#GSING00007[
 To Install {productName} Using the Self-Extracting File]"
 in {productName} Installation Guide.
 2. Copy any custom or third-party libraries from the older installation
@@ -378,7 +378,7 @@ guide to complete the upgrade to {productName} 7.
 
 For instructions on upgrading a {productName} installation in an
 environment where Internet access is not available, see
-"link:administration-guide.html#GSADG00575[
+"xref:administration-guide.adoc#GSADG00575[
 Extending and Updating {productName} Inside a Closed Network]"
 in {productName} Administration Guide.
 
@@ -512,7 +512,7 @@ upgrading are stopped before proceeding.
 
 1. Download and install {productName} 7 using the Typical
 Installation path. +
-See "link:installation-guide.html#GSING00025[
+See "xref:installation-guide.adoc#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
@@ -684,7 +684,7 @@ Ensure that the source domains from which you are upgrading are stopped
 before proceeding.
 
 1. Download and install {productName} 7 using the Typical Installation path. +
-See "link:installation-guide.html#GSING00025[
+See "xref:installation-guide.adoc#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
@@ -1035,7 +1035,7 @@ This procedure explains how to prepare for modifying an NSS-based
 Ensure that you install the new {productName} 7 product in a
 directory that is different than the one used for the older installation
 from which you are upgrading. +
-See "link:installation-guide.html#GSING00025[
+See "xref:installation-guide.adoc#GSING00025[
 Installing {productName} From a Self-Extracting Bundle]"
 in {productName} Installation Guide for instructions.
 
@@ -1337,7 +1337,7 @@ described in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performin
 
 2. Perform new (not upgrade) {productName} 7 installations on each
 node host. {productName} 7 installation instructions are provided
-in the link:installation-guide.html#GSING[
+in the xref:installation-guide.adoc#GSING[
 {productName} Installation Guide].
 
 3. Correct the node configuration on the upgraded DAS, if necessary.
@@ -1497,7 +1497,7 @@ completed the following procedures:
 described in xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Performing a Side-By-Side Upgrade With Upgrade Tool].
 
 * Perform a new (not upgrade) installation of {productName} 7 on
-each node host. See the link:installation-guide.html#GSING[
+each node host. See the xref:installation-guide.adoc#GSING[
 {productName} Installation Guide] for instructions.
 
 * Correct the upgraded node configuration, if necessary, as described

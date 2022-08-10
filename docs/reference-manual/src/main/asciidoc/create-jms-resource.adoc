@@ -210,7 +210,7 @@ Command create-jms-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-jms-resource.html#delete-jms-resource[`delete-jms-resource`(1)],
-link:list-jms-resources.html#list-jms-resources[`list-jms-resources`(1)]
+xref:delete-jms-resource.adoc#delete-jms-resource[`delete-jms-resource`(1)],
+xref:list-jms-resources.adoc#list-jms-resources[`list-jms-resources`(1)]
 
 

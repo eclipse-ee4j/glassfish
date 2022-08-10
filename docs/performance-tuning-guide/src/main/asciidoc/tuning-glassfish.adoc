@@ -1639,7 +1639,7 @@ maintained by the JDBC Connection Pool. More than one JDBC Resource is
 allowed to refer to the same JDBC Connection Pool. In such a case, the
 physical connection pool is shared by all the resources.
 
-Refer to "link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]" in
+Refer to "link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in
 {productName} Administration Guide for more
 information about managing JDBC connection pools.
 
@@ -1685,7 +1685,7 @@ instructions.
 
 ===== Tuning JDBC Connection Pools
 
-Refer to "link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]" in
+Refer to "link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in
 {productName} Administration Guide for
 instructions on configuring JDBC connection pools. If using the
 {productName} Administration Console by navigating to the
@@ -1869,7 +1869,7 @@ performance. However, by changing the EIS's connector connection pool to
 use LocalTransaction transaction support and leveraging the Last Agent
 Optimization feature previously described, you could leverage the
 better-performing EIS LocalTransaction implementation. For more
-information on LAO, see link:tuning-apps.html#configure-jdbc-resources-as-one-phase-commit-resources[Configure JDBC
+information on LAO, see xref:tuning-apps.adoc#configure-jdbc-resources-as-one-phase-commit-resources[Configure JDBC
 Resources as One-Phase Commit Resources].
 
 You can specify transaction support when you create or edit a connector

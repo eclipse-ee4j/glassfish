@@ -32,9 +32,9 @@ configuration.
 The subcommand displays every {productName} instance in the
 specified target, regardless of how each instance was created. For
 example, this subcommand lists instances that were created by using the
-link:create-instance.html#create-instance[`create-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)]
 subcommand and by using the
-link:create-local-instance.html#create-local-instance[`create-local-instance`(1)]
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)]
 subcommand.
 
 By default, the subcommand indicates whether each instance that is
@@ -211,7 +211,7 @@ Command list-instances executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance[`create-local-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)]
 
 

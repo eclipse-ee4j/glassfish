@@ -92,7 +92,7 @@ Command apply-http-lb-changes executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb.html#create-http-lb[`create-http-lb`(1)],
-link:create-http-lb-config.html#create-http-lb-config[`create-http-lb-config`(1)]
+xref:create-http-lb.adoc#create-http-lb[`create-http-lb`(1)],
+xref:create-http-lb-config.adoc#create-http-lb-config[`create-http-lb-config`(1)]
 
 

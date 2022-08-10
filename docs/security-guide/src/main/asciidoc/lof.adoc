@@ -10,8 +10,8 @@ prev=loe.html
 [[list-of-figures]]
 == List of Figures
 
-* link:system-security.html#fxjfw[1-1 Role Mapping]
-* link:administrative-security.html#gkqpv[5-1 Sample Browser Response to
+* xref:system-security.adoc#fxjfw[1-1 Role Mapping]
+* xref:administrative-security.adoc#gkqpv[5-1 Sample Browser Response to
 Untrusted Certificate]
 
 

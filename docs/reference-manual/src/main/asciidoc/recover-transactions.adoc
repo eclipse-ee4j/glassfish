@@ -115,9 +115,9 @@ Transaction recovered.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:freeze-transaction-service.html#freeze-transaction-service[`freeze-transaction-service`(1)],
-link:rollback-transaction.html#rollback-transaction[`rollback-transaction`(1)],
-link:unfreeze-transaction-service.html#unfreeze-transaction-service[`unfreeze-transaction-service`(1)]
+xref:freeze-transaction-service.adoc#freeze-transaction-service[`freeze-transaction-service`(1)],
+xref:rollback-transaction.adoc#rollback-transaction[`rollback-transaction`(1)],
+xref:unfreeze-transaction-service.adoc#unfreeze-transaction-service[`unfreeze-transaction-service`(1)]
 
 "link:administration-guide/transactions.html#ablsn[Administering Transactions]"
 in {productName} Administration Guide

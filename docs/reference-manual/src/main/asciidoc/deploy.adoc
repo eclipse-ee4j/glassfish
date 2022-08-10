@@ -568,13 +568,13 @@ Command deploy executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get[`get`(1)],
-link:list-components.html#list-components[`list-components`(1)],
-link:redeploy.html#redeploy[`redeploy`(1)],
-link:set.html#set[`set`(1)],
-link:undeploy.html#undeploy[`undeploy`(1)]
+xref:get.adoc#get[`get`(1)],
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:redeploy.adoc#redeploy[`redeploy`(1)],
+xref:set.adoc#set[`set`(1)],
+xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

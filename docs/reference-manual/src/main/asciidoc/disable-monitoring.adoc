@@ -103,12 +103,12 @@ Command disable-monitoring executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get[`get`(1)],
-link:enable-monitoring.html#enable-monitoring[`enable-monitoring`(1)],
-link:list.html#list[`list`(1)],
-link:monitor.html#monitor[`monitor`(1)], link:set.html#set[`set`(1)]
+xref:get.adoc#get[`get`(1)],
+xref:enable-monitoring.adoc#enable-monitoring[`enable-monitoring`(1)],
+xref:list.adoc#list[`list`(1)],
+xref:monitor.adoc#monitor[`monitor`(1)], xref:set.adoc#set[`set`(1)]
 
-link:monitoring.html#monitoring[`monitoring`(5ASC)]
+xref:monitoring.adoc#monitoring[`monitoring`(5ASC)]
 
 "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide
 

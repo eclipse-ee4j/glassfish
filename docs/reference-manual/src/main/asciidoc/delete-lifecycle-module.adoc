@@ -79,7 +79,7 @@ Command delete-lifecycle-module executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`(1)],
-link:list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`(1)]
+xref:create-lifecycle-module.adoc#create-lifecycle-module[`create-lifecycle-module`(1)],
+xref:list-lifecycle-modules.adoc#list-lifecycle-modules[`list-lifecycle-modules`(1)]
 
 

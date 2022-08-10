@@ -86,8 +86,8 @@ Command list-modules executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-commands.html#list-commands[`list-commands`(1)],
-link:list-components.html#list-components[`list-components`(1)],
-link:list-containers.html#list-containers[`list-containers`(1)]
+xref:list-commands.adoc#list-commands[`list-commands`(1)],
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:list-containers.adoc#list-containers[`list-containers`(1)]
 
 

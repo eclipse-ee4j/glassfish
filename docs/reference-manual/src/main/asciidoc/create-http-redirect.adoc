@@ -77,6 +77,6 @@ protocol-name::
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-http-redirect.html#delete-http-redirect[`delete-http-redirect`(1)]
+xref:delete-http-redirect.adoc#delete-http-redirect[`delete-http-redirect`(1)]
 
 

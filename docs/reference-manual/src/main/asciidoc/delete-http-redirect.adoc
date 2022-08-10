@@ -69,6 +69,6 @@ protocol-name::
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-redirect.html#create-http-redirect[`create-http-redirect`(1)]
+xref:create-http-redirect.adoc#create-http-redirect[`create-http-redirect`(1)]
 
 

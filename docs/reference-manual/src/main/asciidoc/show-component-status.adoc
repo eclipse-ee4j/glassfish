@@ -91,10 +91,10 @@ Command show-component-status executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-applications.html#list-applications[`list-applications`(1)],
-link:list-sub-components.html#list-sub-components[`list-sub-components`(1)]
+xref:list-applications.adoc#list-applications[`list-applications`(1)],
+xref:list-sub-components.adoc#list-sub-components[`list-sub-components`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

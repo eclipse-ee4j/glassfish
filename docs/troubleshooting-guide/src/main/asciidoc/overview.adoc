@@ -82,7 +82,7 @@ supported JDK version.
 ===== Review Known Issues
 
 Your problem might be related to a known issue for the release. Refer to
-the link:release-notes.html#GSRLN[{productName} Release Notes] for
+the xref:release-notes.adoc#GSRLN[{productName} Release Notes] for
 the latest information regarding known issues and possible workarounds.
 Also search the GlassFish issues at
 `https://github.com/eclipse-ee4j/glassfish/issues`.
@@ -93,16 +93,16 @@ Also search the GlassFish issues at
 
 {productName} includes complete product
 documentation. Search the documentation to see if your problem is
-addressed. See link:preface.html#glassfish-server-documentation-set[{productName} Documentation Set]
+addressed. See xref:preface.adoc#glassfish-server-documentation-set[{productName} Documentation Set]
 for the books in the documentation set and a description of their contents.
 Also see the Administration Console online help for detailed
 information about performing administrative tasks using the graphical interface.
 
 The following books will be especially helpful for troubleshooting:
 
-* link:release-notes.html#GSRLN[{productName} Release Notes],
+* xref:release-notes.adoc#GSRLN[{productName} Release Notes],
   which provides the latest information regarding known issues and possible workarounds.
-* link:error-messages-reference.html#GSEMR[
+* xref:error-messages-reference.adoc#GSEMR[
   {productName} Error Message Reference],
   which lists error messages you might encounter when using {productName}.
 
@@ -153,7 +153,7 @@ undeployed?
 * What version of {productName} are you using?
 What operating system and version? What JDK version? Many problems are
 caused simply because system requirements for the release are not met.
-Refer to the link:release-notes.html#GSRLN[{productName} Release
+Refer to the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes] for the latest information regarding system requirements, and
 make sure your system meets those requirements.
 * What resources does your system have, such as memory, disk, and swap
@@ -376,9 +376,9 @@ attach to the server using Java Remote Invocation Method (RMI).
 These resources were mentioned throughout this chapter and are provided
 again here for easy reference.
 
-* Release Notes: link:release-notes.html#GSRLN[{productName}
+* Release Notes: xref:release-notes.adoc#GSRLN[{productName}
 Release Notes]
-* Error messages: link:error-messages-reference.html#GSEMR[{productName} Error
+* Error messages: xref:error-messages-reference.adoc#GSEMR[{productName} Error
 Message Reference]
 * Mailing lists and forums: See xref:#search-the-glassfish-mailing-lists-and-forums[Search the GlassFish Mailing
 Lists and Forums] for details about accessing lists and forums.

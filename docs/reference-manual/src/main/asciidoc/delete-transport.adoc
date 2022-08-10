@@ -80,7 +80,7 @@ Command delete-transport executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-transport.html#create-transport[`create-transport`(1)],
-link:list-transports.html#list-transports[`list-transports`(1)]
+xref:create-transport.adoc#create-transport[`create-transport`(1)],
+xref:list-transports.adoc#list-transports[`list-transports`(1)]
 
 

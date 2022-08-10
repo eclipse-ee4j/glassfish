@@ -19,7 +19,7 @@ command-line utility. {productName} enforces its authentication and
 authorization policies upon realms, users, and groups. This chapter
 assumes that you are familiar with security features such as
 authentication, authorization, and certificates. If you are not, see
-link:system-security.html#ablnk[Administering System Security].
+xref:system-security.adoc#ablnk[Administering System Security].
 
 The following topics are addressed here:
 
@@ -111,7 +111,7 @@ asadmin> create-jvm-options --target=target
 ----
 where target is the {productName} instance or cluster for which you
 are disabling LDAP group search. For more information about the
-`create-jvm-options` subcommand, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+`create-jvm-options` subcommand, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 ====
 
 JDBC realm::
@@ -590,7 +590,7 @@ specified by separating the groups with colons (:).
 [NOTE]
 ====
 If secure administration is enabled as described in
-link:administrative-security.html#running-secure-admin[Running Secure Admin], you cannot
+xref:administrative-security.adoc#running-secure-admin[Running Secure Admin], you cannot
 create an administrative user with a blank password.
 ====
 
@@ -704,7 +704,7 @@ information in the `keyfile` for a specified user.
 [NOTE]
 ====
 If secure administration is enabled as described in
-link:administrative-security.html#running-secure-admin[Running Secure Admin], you cannot
+xref:administrative-security.adoc#running-secure-admin[Running Secure Admin], you cannot
 update an administrative user to have a blank password.
 ====
 

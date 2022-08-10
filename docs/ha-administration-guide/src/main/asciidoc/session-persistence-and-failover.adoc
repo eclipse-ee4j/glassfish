@@ -63,7 +63,7 @@ data. In-memory session replication is enabled by default for {productName} clus
 +
 The use of in-memory replication requires the Group Management Service
 (GMS) to be enabled. For more information about GMS, see
-link:clusters.html#group-management-service[Group Management Service].
+xref:clusters.adoc#group-management-service[Group Management Service].
 +
 If server instances in a cluster are located on different hosts, ensure
 that the following prerequisites are met:
@@ -79,7 +79,7 @@ possible.
 ====
 {productName} 7 does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
-link:overview.html#high-availability-session-persistence[High Availability Session Persistence].
+xref:overview.adoc#high-availability-session-persistence[High Availability Session Persistence].
 ====
 
 * Each server instance has the same distributable web application
@@ -112,12 +112,12 @@ with dynamic deployment, dynamic reloading, and autodeployment. These
 features are for development, not production environments, so you must
 disable them before enabling the session persistence service.
 For information about how to disable these features, see the
-link:application-deployment-guide.html#GSDPG[
+xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide].
 
 * {productName} 7 does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
-in link:overview.html#high-availability-session-persistence[High Availability Session Persistence].
+in xref:overview.adoc#high-availability-session-persistence[High Availability Session Persistence].
 
 * You can only bind certain objects to distributed sessions that support
 failover. Contrary to the Servlet 2.4 specification, {productName} 7 does not throw an `IllegalArgumentException` if an object type not
@@ -202,11 +202,11 @@ for a standalone server instance that is not part of a cluster.
 
 1. Create a {productName} cluster.
 +
-For more information, see link:clusters.html#to-create-a-cluster[To Create a Cluster].
+For more information, see xref:clusters.adoc#to-create-a-cluster[To Create a Cluster].
 
 2. Set up load balancing for the cluster.
 +
-For instructions, see link:http-load-balancing.html#setting-up-http-load-balancing[Setting Up HTTP Load Balancing].
+For instructions, see xref:http-load-balancing.adoc#setting-up-http-load-balancing[Setting Up HTTP Load Balancing].
 
 3. Verify that the cluster and all instances within the cluster for
 which you want to enable availability is running.

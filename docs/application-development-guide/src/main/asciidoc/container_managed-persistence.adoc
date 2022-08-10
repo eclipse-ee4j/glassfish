@@ -50,7 +50,7 @@ information on CMP is contained in chapters 10, 11, and 14 of the
 Enterprise JavaBeans Specification, v2.1. This includes the following:
 
 ** Support for commit options B and C for transactions.
-   See link:transaction-service.html#commit-options[Commit Options].
+   See xref:transaction-service.adoc#commit-options[Commit Options].
 ** The primary key class must be a subclass of `java.lang.Object`.
    This ensures portability, and is noted because some vendors allow primitive
    types (such as `int`) to be used as the primary key class.
@@ -264,7 +264,7 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -305,7 +305,7 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -429,7 +429,7 @@ type (or a collection of such) can be the type of a CMR field.
 The following table contains the mappings of JDBC types to database
 vendor-specific types when automatic mapping is used. For a list of the
 JDBC drivers currently supported by the {productName}, see the
-link:release-notes.html#GSRLN[{productName} Release Notes]. For
+xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
 "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -498,7 +498,7 @@ resource. See xref:#configuring-the-cmp-resource[Configuring the CMP Resource].
 
 For a read-only bean, do not create the database schema during
 deployment. Instead, work with your database administrator to populate
-the data into the tables. See link:ejb.html#using-read-only-beans[Using Read-Only Beans].
+the data into the tables. See xref:ejb.adoc#using-read-only-beans[Using Read-Only Beans].
 
 Automatic schema generation is not supported for beans with version
 column consistency checking. Instead, work with your database
@@ -646,7 +646,7 @@ in `glassfish-ejb-jar.xml` is used.
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 When command line and `glassfish-ejb-jar.xml` options are both
 specified, the `asadmin` options take precedence.
@@ -686,7 +686,7 @@ Resource].
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The `capture-schema` utility does not modify the schema in any way. Its
 only purpose is to provide the persistence engine with information about
@@ -725,7 +725,7 @@ In the Administration Console, open the Resources component, then select
 JDBC. Click the Help button in the Administration Console for
 information on creating a new JDBC resource.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
 "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
@@ -863,7 +863,7 @@ method is invoked.
 
 Read-only beans are best suited for situations where the underlying data
 never changes, or changes infrequently. For further information and
-usage guidelines, see link:ejb.html#using-read-only-beans[Using Read-Only Beans].
+usage guidelines, see xref:ejb.adoc#using-read-only-beans[Using Read-Only Beans].
 
 [[default-fetch-group-flags]]
 

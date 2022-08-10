@@ -141,14 +141,14 @@ Command list-nodes executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-config.html#create-node-config[`create-node-config`(1)],
-link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
-link:delete-node-config.html#delete-node-config[`delete-node-config`(1)],
-link:delete-node-dcom.html#delete-node-dcom[`delete-node-dcom`(1)],
-link:delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)],
-link:list-nodes-config.html#list-nodes-config[`list-nodes-config`(1)],
-link:list-nodes-dcom.html#list-nodes-dcom[`list-nodes-dcom`(1)],
-link:list-nodes-ssh.html#list-nodes-ssh[`list-nodes-ssh`(1)]
+xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
+xref:delete-node-config.adoc#delete-node-config[`delete-node-config`(1)],
+xref:delete-node-dcom.adoc#delete-node-dcom[`delete-node-dcom`(1)],
+xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
+xref:list-nodes-config.adoc#list-nodes-config[`list-nodes-config`(1)],
+xref:list-nodes-dcom.adoc#list-nodes-dcom[`list-nodes-dcom`(1)],
+xref:list-nodes-ssh.adoc#list-nodes-ssh[`list-nodes-ssh`(1)]
 
 

@@ -14,7 +14,7 @@ prev=packaging-integrating-delivering.html
 
 This appendix provides reference information about integration points,
 which are described in
-link:extending-the-admin-console.html#ghmrb[Extending the Administration Console].
+xref:extending-the-admin-console.adoc#ghmrb[Extending the Administration Console].
 Define an integration point for each user interface feature in the
 `console-config.xml` file for your add-on component.
 
@@ -109,7 +109,7 @@ installed the web container module for the Administration Console (the
   to be integrated, or a URL to an external resource that returns the
   appropriate data structure for inclusion.
 
-For an example, see link:extending-the-admin-console.html#ghpmb[Example 3-2].
+For an example, see xref:extending-the-admin-console.adoc#ghpmb[Example 3-2].
 
 [[GSACG00147]][[org.glassfish.adminguirightpanel-integration-point]]
 
@@ -189,8 +189,8 @@ Console. Specify the attributes and their content as follows.
   The `id` of the `sun:tab` custom tag must be the same as the `value`
   argument of the `setSessionAttribute` handler.
 
-For examples, see link:extending-the-admin-console.html#ghplc[Example
-3-4] and link:extending-the-admin-console.html#ghplu[Example 3-5].
+For examples, see xref:extending-the-admin-console.adoc#ghplc[Example
+3-4] and xref:extending-the-admin-console.adoc#ghplu[Example 3-5].
 
 [[GSACG00150]][[org.glassfish.adminguicommontask-integration-point]]
 
@@ -215,8 +215,8 @@ Console. Specify the attributes and their content as follows.
   A relative path to the Jakarta Server Faces page that contains the content
   to be integrated.
 
-For examples, see link:extending-the-admin-console.html#ghpox[Example
-3-7] and link:extending-the-admin-console.html#ghplk[Example 3-9].
+For examples, see xref:extending-the-admin-console.adoc#ghpox[Example
+3-7] and xref:extending-the-admin-console.adoc#ghplk[Example 3-9].
 
 [[GSACG00151]][[org.glassfish.adminguiconfiguration-integration-point]]
 
@@ -262,7 +262,7 @@ Specify the attributes and their content as follows.
   A relative path to the Jakarta Server Faces page that contains the content
   to be integrated.
 
-For an example, see link:extending-the-admin-console.html#ghpnu[Example
+For an example, see xref:extending-the-admin-console.adoc#ghpnu[Example
 3-11].
 
 [[GSACG00153]][[org.glassfish.adminguicustomtheme-integration-point]]
@@ -298,7 +298,7 @@ com.sun.webui.theme.DEFAULT_THEME=suntheme
 com.sun.webui.theme.DEFAULT_THEME_VERSION=4.3
 ----
 
-For an example, see link:extending-the-admin-console.html#ghpls[Example
+For an example, see xref:extending-the-admin-console.adoc#ghpls[Example
 3-14].
 
 [[GSACG00154]][[org.glassfish.adminguimasthead-integration-point]]
@@ -322,7 +322,7 @@ this integration point.
   A file that contains the content, typically a file that is included in
   a Jakarta Server Faces page.
 
-For an example, see link:extending-the-admin-console.html#ghpla[Example
+For an example, see xref:extending-the-admin-console.adoc#ghpla[Example
 3-15].
 
 [[GSACG00155]][[org.glassfish.adminguiloginimage-integration-point]]
@@ -348,7 +348,7 @@ point.
   A file that contains the content, typically a file that is included in
   a Jakarta Server Faces page.
 
-For an example, see link:extending-the-admin-console.html#ghpla[Example
+For an example, see xref:extending-the-admin-console.adoc#ghpla[Example
 3-15].
 
 [[GSACG00156]][[org.glassfish.adminguiloginform-integration-point]]
@@ -372,7 +372,7 @@ attribute for this integration point.
   A file that contains the content, typically a file that is included in
   a Jakarta Server Faces page.
 
-For an example, see link:extending-the-admin-console.html#ghpla[Example
+For an example, see xref:extending-the-admin-console.adoc#ghpla[Example
 3-15].
 
 [[GSACG00157]][[org.glassfish.adminguiversioninfo-integration-point]]
@@ -395,6 +395,6 @@ Specify the attributes and their content as follows. Do not specify a
   A file that contains the content, typically a file that is included in
   a Jakarta Server Faces page.
 
-For an example, see link:extending-the-admin-console.html#ghpla[Example
+For an example, see xref:extending-the-admin-console.adoc#ghpla[Example
 3-15].
 

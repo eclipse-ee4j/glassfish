@@ -211,9 +211,9 @@ Command create-jmsdest executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jms-resource.html#create-jms-resource[`create-jms-resource`(1)],
-link:delete-jmsdest.html#delete-jmsdest[`delete-jmsdest`(1)],
-link:flush-jmsdest.html#flush-jmsdest[`flush-jmsdest`(1)],
-link:list-jmsdest.html#list-jmsdest[`list-jmsdest`(1)]
+xref:create-jms-resource.adoc#create-jms-resource[`create-jms-resource`(1)],
+xref:delete-jmsdest.adoc#delete-jmsdest[`delete-jmsdest`(1)],
+xref:flush-jmsdest.adoc#flush-jmsdest[`flush-jmsdest`(1)],
+xref:list-jmsdest.adoc#list-jmsdest[`list-jmsdest`(1)]
 
 

@@ -20,8 +20,8 @@ The following topics are addressed here:
 * xref:#setting-up-http-load-balancing[Setting Up HTTP Load Balancing]
 
 For information on other types of load balancing, see
-link:jms.html#abdbk[Configuring Java Message Service High Availability]
-and link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
+xref:jms.adoc#abdbk[Configuring Java Message Service High Availability]
+and xref:rmi-iiop.adoc#fxxqs[RMI-IIOP Load Balancing and Failover].
 
 [[setting-up-http-load-balancing]]
 
@@ -282,7 +282,7 @@ If you have multiple clusters, requests can be load balanced across
 clusters but are only failed over between the instances in a single
 cluster. Use multiple clusters in a load balancer to easily enable
 rolling upgrades of applications. For more information, see
-link:rolling-upgrade.html#abdik[Upgrading Applications Without Loss of Availability].
+xref:rolling-upgrade.adoc#abdik[Upgrading Applications Without Loss of Availability].
 
 
 [NOTE]

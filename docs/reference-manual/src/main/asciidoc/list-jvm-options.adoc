@@ -104,8 +104,8 @@ Command list-jvm-options executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)],
-link:delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`(1)]
+xref:create-jvm-options.adoc#create-jvm-options[`create-jvm-options`(1)],
+xref:delete-jvm-options.adoc#delete-jvm-options[`delete-jvm-options`(1)]
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

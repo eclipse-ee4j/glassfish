@@ -29,11 +29,11 @@ this release of the {productName} 7 software.
 
 For information and instructions on using the `asadmin` application
 deployment subcommands, see
-the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 Online help for the `asadmin` subcommands can be invoked on the command
 line, for example, `asadmin create-domain` `help`.
-The link:reference-manual.html#GSRFM[{productName} Reference Manual] also
+The xref:reference-manual.adoc#GSRFM[{productName} Reference Manual] also
 provides a collection of these help pages.
 
 

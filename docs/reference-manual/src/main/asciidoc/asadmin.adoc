@@ -172,7 +172,7 @@ Test\Escape\Character
 ====
 In contexts where meta characters in the UNIX operating system are
 unambiguous, these characters do not require escape characters. For
-example, in the link:set.html#set[`set`(1)] subcommand, the value that
+example, in the xref:set.adoc#set[`set`(1)] subcommand, the value that
 is to be set is specified as name`=`value. Because name can never
 include an equals sign, no escape character is required to disable the
 equals sign. Therefore, everything after the equals sign is an
@@ -200,7 +200,7 @@ character is required if the colon is part of any of the following items:
 ** An option of the Virtual Machine for the Java platform (Java Virtual Machine or JVM machine)
 +
 For example, the operand of the subcommand
-link:create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)]
+xref:create-jvm-options.adoc#create-jvm-options[`create-jvm-options`(1)]
 specifies JVM machine options in the following format:
 +
 [source]
@@ -265,14 +265,14 @@ To set this attribute, use the `set` subcommand.
 When you use the `asadmin` subcommands to create or delete a
 configuration item, you must restart the DAS for the change to take
 effect. To restart the DAS, use the
-link:restart-domain.html#restart-domain[`restart-domain`(1)] subcommand.
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)] subcommand.
 
 ==== Help Information for Subcommands and the asadmin Utility
 
 To obtain help information for an `asadmin` utility subcommand, specify
 the subcommand of interest as the operand of the `help` subcommand. For
 example, to obtain help information for the
-link:start-domain.html#start-domain[`start-domain`(1)] subcommand,
+xref:start-domain.adoc#start-domain[`start-domain`(1)] subcommand,
 type:
 
 [source]
@@ -284,7 +284,7 @@ If you run the `help` subcommand without an operand, this help
 information for the `asadmin` utility is displayed.
 
 To obtain a listing of available `asadmin` subcommands, use the
-link:list-commands.html#list-commands[`list-commands`(1)] subcommand.
+xref:list-commands.adoc#list-commands[`list-commands`(1)] subcommand.
 
 === Options
 
@@ -327,37 +327,37 @@ The entries in this file that are read by subcommands are as follows:
 +
 --
   * ``AS_ADMIN_NEWPASSWORD=``new-administration-password (read by the
-  link:start-domain.html#start-domain[``start-domain``(1)] subcommand)
+  xref:start-domain.adoc#start-domain[``start-domain``(1)] subcommand)
   * ``AS_ADMIN_USERPASSWORD=``user-password (read by the
-  link:create-file-user.html#create-file-user[``create-file-user``(1)]
+  xref:create-file-user.adoc#create-file-user[``create-file-user``(1)]
   subcommand)
   * ``AS_ADMIN_ALIASPASSWORD=``alias-password (read by the
-  link:create-password-alias.html#create-password-alias[`create-password-alias`(1)]
+  xref:create-password-alias.adoc#create-password-alias[`create-password-alias`(1)]
   subcommand)
   * ``AS_ADMIN_MAPPEDPASSWORD=``mapped-password (read by the
-  link:create-connector-security-map.html#create-connector-security-map[``create-connector-security-map``(1)]
+  xref:create-connector-security-map.adoc#create-connector-security-map[``create-connector-security-map``(1)]
   subcommand)
   * ``AS_ADMIN_WINDOWSPASSWORD=``windows-password (read by the
-  link:create-node-dcom.html#create-node-dcom[``create-node-dcom``(1)],
-  link:install-node-dcom.html#install-node-dcom[``install-node-dcom``(1)],
-  and link:update-node-ssh.html#update-node-dcom[``update-node-dcom``(1)]
+  xref:create-node-dcom.adoc#create-node-dcom[``create-node-dcom``(1)],
+  xref:install-node-dcom.adoc#install-node-dcom[``install-node-dcom``(1)],
+  and xref:update-node-ssh.adoc#update-node-dcom[``update-node-dcom``(1)]
   subcommands)
   * ``AS_ADMIN_SSHPASSWORD=``sshd-password (read by the
-  link:create-node-ssh.html#create-node-ssh[``create-node-ssh``(1)],
-  link:install-node.html#install-node[``install-node``(1)],
-  link:install-node-ssh.html#install-node-ssh[``install-node-ssh``(1)],
+  xref:create-node-ssh.adoc#create-node-ssh[``create-node-ssh``(1)],
+  xref:install-node.adoc#install-node[``install-node``(1)],
+  xref:install-node-ssh.adoc#install-node-ssh[``install-node-ssh``(1)],
   and
-  link:update-node-ssh001.html#update-node-ssh[``update-node-ssh``(1)]
+  xref:update-node-ssh001.adoc#update-node-ssh[``update-node-ssh``(1)]
   subcommands)
   * ``AS_ADMIN_SSHKEYPASSPHRASE=``sshd-passphrase (read by the
-  link:create-node-ssh.html#create-node-ssh[``create-node-ssh``(1)],
-  link:install-node.html#install-node[``install-node``(1)],
-  link:install-node-ssh.html#install-node-ssh[``install-node-ssh``(1)],
+  xref:create-node-ssh.adoc#create-node-ssh[``create-node-ssh``(1)],
+  xref:install-node.adoc#install-node[``install-node``(1)],
+  xref:install-node-ssh.adoc#install-node-ssh[``install-node-ssh``(1)],
   and
-  link:update-node-ssh001.html#update-node-ssh[``update-node-ssh``(1)]
+  xref:update-node-ssh001.adoc#update-node-ssh[``update-node-ssh``(1)]
   subcommands)
   * ``AS_ADMIN_JMSDBPASSWORD=`` jdbc-user-password (read by the
-  link:configure-jms-cluster.html#configure-jms-cluster[``configure-jms-cluster``(1)]
+  xref:configure-jms-cluster.adoc#configure-jms-cluster[``configure-jms-cluster``(1)]
   subcommand)
 --
 
@@ -388,7 +388,7 @@ In domains that do not allow unauthenticated login, all remote
   to the DAS. The password can be specified by one of the following means:
 
   * Through the `--passwordfile` option
-  * Through the link:login.html#login[`login`(1)] subcommand
+  * Through the xref:login.adoc#login[`login`(1)] subcommand
   * Interactively at the command prompt
 
 +
@@ -402,7 +402,7 @@ After authenticating to a domain by using the `asadmin login` command,
   still must provide the other passwords, for example,
   `AS_ADMIN_USERPASSWORD`, when required by individual subcommands, such
   as
-  link:update-file-user.html#update-file-user[`update-file-user`(1)]. +
+  xref:update-file-user.adoc#update-file-user[`update-file-user`(1)]. +
 For security reasons, a password that is specified as an environment
   variable is not read by the `asadmin` utility. +
 The master password is not propagated on the command line or an
@@ -443,10 +443,10 @@ The default value for `AS_ADMIN_MASTERPASSWORD` is `changeit`.
   in single mode, `asadmin --detach` subcommand. +
   Job IDs are assigned to subcommands that are started using
   `asadmin --detach`. You can use the
-  link:list-jobs.html#list-jobs[`list-jobs`(1)] subcommand to view the
-  jobs and their job IDs, the link:attach.html#attach[`attach`(1)]
+  xref:list-jobs.adoc#list-jobs[`list-jobs`(1)] subcommand to view the
+  jobs and their job IDs, the xref:attach.adoc#attach[`attach`(1)]
   subcommand to reattach to the job and view its status and output, and the
-  link:configure-managed-jobs.html#configure-managed-jobs[`configure-managed-jobs`(1)]
+  xref:configure-managed-jobs.adoc#configure-managed-jobs[`configure-managed-jobs`(1)]
   subcommand to configure how long information about the jobs is kept.
 `--help`::
 `-?`::
@@ -459,7 +459,7 @@ The default value for `AS_ADMIN_MASTERPASSWORD` is `changeit`.
 ==== Example 1   Running an `asadmin` Utility Subcommand in Single Mode
 
 This example runs the
-link:list-applications.html#list-applications[`list-applications`(1)]
+xref:list-applications.adoc#list-applications[`list-applications`(1)]
 subcommand in single mode. In this example, the default values for all
 options are used.
 
@@ -624,7 +624,7 @@ Command deploy executed successfully.
 The commands in this example specify the backslash (`\`) UNIX operating
 system meta character and the colon (:) option delimiter character in
 the `--property` option of the
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)]
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)]
 subcommand.
 
 The name and value pairs for the `--property` option are as follows:
@@ -790,31 +790,31 @@ for descriptions of the following attributes:
 
 === See Also
 
-link:attach.html#attach[`attach`(1)],
-link:configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`(1)],
-link:configure-managed-jobs.html#configure-managed-jobs[`configure-managed-jobs`(1)],
-link:create-connector-security-map.html#create-connector-security-map[`create-connector-security-map`(1)],
-link:create-file-user.html#create-file-user[`create-file-user`(1)],
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
-link:create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)],
-link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
-link:create-password-alias.html#create-password-alias[`create-password-alias`(1)],
-link:deploy.html#deploy[`deploy`(1)],
-link:install-node.html#install-node[`install-node`(1)],
-link:install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)],
-link:install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)],
-link:list-applications.html#list-applications[`list-applications`(1)],
-link:list-commands.html#list-commands[`list-commands`(1)],
-link:list-jobs.html#list-jobs[`list-jobs`(1)],
-link:login.html#login[`login`(1)],
-link:restart-domain.html#restart-domain[`restart-domain`(1)],
-link:set.html#set[`set`(1)],
-link:set-web-env-entry.html#set-web-env-entry[`set-web-env-entry`(1)],
-link:start-domain.html#start-domain[`start-domain`(1)],
-link:update-file-user.html#update-file-user[`update-file-user`(1)],
-link:update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)],
-link:update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
+xref:attach.adoc#attach[`attach`(1)],
+xref:configure-jms-cluster.adoc#configure-jms-cluster[`configure-jms-cluster`(1)],
+xref:configure-managed-jobs.adoc#configure-managed-jobs[`configure-managed-jobs`(1)],
+xref:create-connector-security-map.adoc#create-connector-security-map[`create-connector-security-map`(1)],
+xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
+xref:create-jvm-options.adoc#create-jvm-options[`create-jvm-options`(1)],
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
+xref:create-password-alias.adoc#create-password-alias[`create-password-alias`(1)],
+xref:deploy.adoc#deploy[`deploy`(1)],
+xref:install-node.adoc#install-node[`install-node`(1)],
+xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
+xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
+xref:list-applications.adoc#list-applications[`list-applications`(1)],
+xref:list-commands.adoc#list-commands[`list-commands`(1)],
+xref:list-jobs.adoc#list-jobs[`list-jobs`(1)],
+xref:login.adoc#login[`login`(1)],
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)],
+xref:set.adoc#set[`set`(1)],
+xref:set-web-env-entry.adoc#set-web-env-entry[`set-web-env-entry`(1)],
+xref:start-domain.adoc#start-domain[`start-domain`(1)],
+xref:update-file-user.adoc#update-file-user[`update-file-user`(1)],
+xref:update-node-ssh.adoc#update-node-dcom[`update-node-dcom`(1)],
+xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)]
 
 http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5attributes-5[`attributes`(5)]
 

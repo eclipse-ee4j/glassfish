@@ -204,8 +204,8 @@ delete-audit-module                     list-message-security-providers
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-components.html#list-components[`list-components`(1)],
-link:list-containers.html#list-containers[`list-containers`(1)],
-link:list-modules.html#list-modules[`list-modules`(1)]
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:list-containers.adoc#list-containers[`list-containers`(1)],
+xref:list-modules.adoc#list-modules[`list-modules`(1)]
 
 

@@ -51,9 +51,9 @@ A common load balancing configuration for {productName} 7 is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 `mod_jk` or `mod_proxy_ajp` module as the connector between the web
 server and {productName}. See
-link:http-load-balancing.html#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with
+xref:http-load-balancing.adoc#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with
 Apache HTTP Server and `mod_jk`] and
-link:http-load-balancing.html#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with
+xref:http-load-balancing.adoc#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with
 Apache HTTP Server and `mod_proxy_ajp`] for more information.
 
 [[high-availability-session-persistence]]
@@ -80,7 +80,7 @@ replication on {productName} instances running in a cluster.
 For more information about in-memory session replication in {productName}, see xref:#how-glassfish-server-provides-high-availability[How {productName} Provides High
 Availability]. For detailed instructions on configuring high
 availability session persistence, see
-link:session-persistence-and-failover.html#abdkz[Configuring High
+xref:session-persistence-and-failover.adoc#abdkz[Configuring High
 Availability Session Persistence and Failover].
 
 [[high-availability-java-message-service]]
@@ -108,7 +108,7 @@ Message Queue Broker Clusters::
   GlassFish instances they service, or deploying different numbers of
   Message Queue brokers and GlassFish instances. +
   For more information about Message Queue clustering, see
-  link:jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}].
+  xref:jms.adoc#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}].
 Connection Failover::
   The use of Message Queue broker clusters allows connection failover in
   the event of a broker failure. If the primary JMS host (Message Queue
@@ -117,7 +117,7 @@ Connection Failover::
   JMS host list, allowing messaging operations to continue and
   maintaining JMS messaging semantics. +
   For more information about JMS connection failover, see
-  link:jms.html#connection-failover[Connection Failover].
+  xref:jms.adoc#connection-failover[Connection Failover].
 
 [[rmi-iiop-load-balancing-and-failover]]
 
@@ -149,7 +149,7 @@ endpoints specified for bootstrapping purposes, in case one of the
 endpoints has failed.
 
 For more information on RMI-IIOP load balancing and failover, see
-link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
+xref:rmi-iiop.adoc#fxxqs[RMI-IIOP Load Balancing and Failover].
 
 [[how-glassfish-server-provides-high-availability]]
 
@@ -180,7 +180,7 @@ replica or replicated data when a container needs to retrieve the data.
 
 The use of in-memory replication requires the Group Management Service
 (GMS) to be enabled. For more information about GMS, see
-link:clusters.html#group-management-service[Group Management Service].
+xref:clusters.adoc#group-management-service[Group Management Service].
 
 If server instances in a cluster are located on different hosts, ensure
 that the following prerequisites are met:
@@ -226,7 +226,7 @@ cluster.
 * A particular load balancer can forward requests to server instances on
 multiple clusters. You can use this ability of the load balancer to
 perform an online upgrade without loss of service. For more information,
-see link:rolling-upgrade.html#upgrading-in-multiple-clusters[Upgrading in Multiple Clusters].
+see xref:rolling-upgrade.adoc#upgrading-in-multiple-clusters[Upgrading in Multiple Clusters].
 * A single cluster can receive requests from multiple load balancers. If
 a cluster is served by more than one load balancer, you must configure
 the cluster in exactly the same way on each load balancer.
@@ -268,7 +268,7 @@ environment, you can administer remote instances locally.
 ====
 
 
-For more information, see link:ssh-setup.html#gkshg[Enabling Centralized
+For more information, see xref:ssh-setup.adoc#gkshg[Enabling Centralized
 Administration of {productName} Instances].
 
 [[recovering-from-failures]]
@@ -311,7 +311,7 @@ Restore it on the new host, assigning it the same network identity.
 
 ==== Recovering {productName} Instances
 
-{productName} provide tools for backing up and restoring {productName} instances. For more information, see link:instances.html#to-resynchronize-an-instance-and-the-das-offline[To
+{productName} provide tools for backing up and restoring {productName} instances. For more information, see xref:instances.adoc#to-resynchronize-an-instance-and-the-das-offline[To
 Resynchronize an Instance and the DAS Offline].
 
 [[recovering-the-http-load-balancer-and-web-server]]
@@ -415,7 +415,7 @@ production environments.
 
 For information about planning a high-availability deployment, including
 assessing hardware requirements, planning network configuration, and
-selecting a topology, see the link:deployment-planning-guide.html#GSPLG[{productName} Deployment Planning Guide]. This manual also provides a
+selecting a topology, see the xref:deployment-planning-guide.adoc#GSPLG[{productName} Deployment Planning Guide]. This manual also provides a
 high-level introduction to concepts such as:
 
 * {productName} components such as node agents, domains, and clusters
@@ -423,10 +423,10 @@ high-level introduction to concepts such as:
 * Message queue failover
 
 For more information about developing applications that take advantage
-of high availability features, see the link:application-development-guide.html#GSDVG[{productName} Application Development Guide].
+of high availability features, see the xref:application-development-guide.adoc#GSDVG[{productName} Application Development Guide].
 
 For information on how to configure and tune applications and {productName} for best performance with high availability, see the
-link:performance-tuning-guide.html#GSPTG[{productName} Performance Tuning
+xref:performance-tuning-guide.adoc#GSPTG[{productName} Performance Tuning
 Guide], which discusses topics such as:
 
 * Tuning persistence frequency and persistence scope

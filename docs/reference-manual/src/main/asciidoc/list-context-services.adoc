@@ -82,7 +82,7 @@ Command list-context-services executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-context-service.html#create-context-service[`create-context-service`(1)],
-link:delete-context-service.html#delete-context-service[`delete-context-service`(1)]
+xref:create-context-service.adoc#create-context-service[`create-context-service`(1)],
+xref:delete-context-service.adoc#delete-context-service[`delete-context-service`(1)]
 
 

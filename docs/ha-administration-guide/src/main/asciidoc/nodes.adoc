@@ -67,7 +67,7 @@ Each {productName} node is one of the following types of node:
 A `DCOM` node supports communication over DCOM. If DCOM is set up and
 you plan to administer your {productName} instances centrally, the
 instances must reside on `DCOM` nodes. For information about setting up
-DCOM, see link:ssh-setup.html#gkshg[Enabling Centralized Administration
+DCOM, see xref:ssh-setup.adoc#gkshg[Enabling Centralized Administration
 of {productName} Instances].
 
 {productName} enables you to create `DCOM` nodes for use by
@@ -98,7 +98,7 @@ If the Windows user cannot use DCOM to connect to the host, the validation fails
 [NOTE]
 ====
 For information about how to determine whether the Windows user can use
-DCOM to connect to the host, see link:ssh-setup.html#to-test-the-connection-over-dcom-to-a-remote-host[To Test the
+DCOM to connect to the host, see xref:ssh-setup.adoc#to-test-the-connection-over-dcom-to-a-remote-host[To Test the
 Connection Over DCOM to a Remote Host].
 ====
 
@@ -108,7 +108,7 @@ Connection Over DCOM to a Remote Host].
 2. Run the `create-node-dcom` subcommand. +
 Specify the file that contains the alias for the Windows user's password
 through the `--passwordfile` option of the `asadmin` utility. For more
-information about this file, see link:ssh-setup.html#to-set-up-password-authentication-for-the-windows-user[To Set Up
+information about this file, see xref:ssh-setup.adoc#to-set-up-password-authentication-for-the-windows-user[To Set Up
 Password Authentication for the Windows User].
 +
 [NOTE]
@@ -167,8 +167,8 @@ Next Steps
 After creating a node, you can create instances on the node as explained
 in the following sections:
 
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 [[to-list-dcom-nodes-in-a-domain]]
 
@@ -302,8 +302,8 @@ Ensure that no {productName} instances reside on the node that you
 are deleting. For information about how to delete an instance, see the
 following sections.
 
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -342,8 +342,8 @@ Command delete-node-dcom executed successfully.
 
 See Also
 
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 * link:reference-manual/delete-node-dcom.html#delete-node-dcom[`delete-node-dcom`(1)]
 * link:reference-manual/list-nodes-dcom.html#list-nodes-dcom[`list-nodes-dcom`(1)]
 
@@ -360,7 +360,7 @@ typing the following commands at the command line:
 An `SSH` node supports communication over SSH. If SSH is set up and you
 plan to administer your {productName} instances centrally, the
 instances must reside on `SSH` nodes. For information about setting up
-SSH, see link:ssh-setup.html#gkshg[Enabling Centralized Administration of
+SSH, see xref:ssh-setup.adoc#gkshg[Enabling Centralized Administration of
 {productName} Instances].
 
 
@@ -407,7 +407,7 @@ node, see the link:reference-manual/create-node-ssh.html#create-node-ssh[`create
 If you are using password authentication for the SSH user, you must
 specify a password file through the `--passwordfile` option of the
 link:reference-manual/asadmin.html#asadmin[`asadmin`] utility. For more information about SSH user
-authentication, see link:ssh-setup.html#setting-up-ssh-user-authentication[Setting Up SSH User
+authentication, see xref:ssh-setup.adoc#setting-up-ssh-user-authentication[Setting Up SSH User
 Authentication].
 ====
 +
@@ -470,8 +470,8 @@ Next Steps
 After creating a node, you can create instances on the node as explained
 in the following sections:
 
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 [[to-list-ssh-nodes-in-a-domain]]
 
@@ -604,8 +604,8 @@ Ensure that no {productName} instances reside on the node that you
 are deleting. For information about how to delete an instance, see the
 following sections.
 
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -643,8 +643,8 @@ Command delete-node-ssh executed successfully.
 
 See Also
 
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 * link:reference-manual/delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)]
 * link:reference-manual/list-nodes-ssh.html#list-nodes-ssh[`list-nodes-ssh`(1)]
 
@@ -685,7 +685,7 @@ If you create an instance locally on a host for which no nodes are
 defined, you can create the instance without creating a node beforehand.
 In this situation, {productName} creates a `CONFIG` node for you. The
 name of the node is the unqualified name of the host. For more
-information, see link:instances.html#to-create-an-instance-locally[To Create an Instance Locally].
+information, see xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally].
 ====
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
@@ -743,7 +743,7 @@ typing `asadmin help create-node-config` at the command line.
 Next Steps
 
 After creating a node, you can create instances on the node as explained
-in link:instances.html#to-create-an-instance-locally[To Create an Instance Locally].
+in xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally].
 
 [[to-list-config-nodes-in-a-domain]]
 
@@ -829,7 +829,7 @@ Before You Begin
 
 Ensure that no {productName} instances reside on the node that you
 are deleting. For information about how to delete an instance that
-resides on a `CONFIG` node, see link:instances.html#to-delete-an-instance-locally[To Delete an
+resides on a `CONFIG` node, see xref:instances.adoc#to-delete-an-instance-locally[To Delete an
 Instance Locally].
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
@@ -869,7 +869,7 @@ Command delete-node-config executed successfully.
 
 See Also
 
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
 * link:reference-manual/delete-node-config.html#delete-node-config[`delete-node-config`(1)]
 * link:reference-manual/list-nodes-config.html#list-nodes-config[`list-nodes-config`(1)]
 

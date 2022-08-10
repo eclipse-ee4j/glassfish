@@ -111,7 +111,7 @@ Command list-backups executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:backup-domain.html#backup-domain[`backup-domain`(1)],
-link:restore-domain.html#restore-domain[`restore-domain`(1)]
+xref:backup-domain.adoc#backup-domain[`backup-domain`(1)],
+xref:restore-domain.adoc#restore-domain[`restore-domain`(1)]
 
 

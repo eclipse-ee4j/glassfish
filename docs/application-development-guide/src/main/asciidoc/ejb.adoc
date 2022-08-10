@@ -181,7 +181,7 @@ this specified duration.
 beans, using commit option C. Commit option C is particularly useful if
 beans are accessed in large number but very rarely reused. For
 additional information, refer to
-link:transaction-service.html#commit-options[Commit Options].
+xref:transaction-service.adoc#commit-options[Commit Options].
 
 The {productName} caches can be either bounded or unbounded. Bounded
 caches have limits on the number of beans that they can hold beyond
@@ -244,7 +244,7 @@ preconfigured to use an embedded version of the Apache Derby database.
 The EJB Timer Service configuration can store persistent timer
 information in any database supported by the {productName} for
 persistence. For a list of the JDBC drivers currently supported by the
-{productName}, see the link:release-notes.html#GSRLN[{productName} Release Notes]. For configurations of supported and other
+{productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For configurations of supported and other
 drivers, see "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC
 Drivers]" in {productName} Administration Guide.
 
@@ -303,7 +303,7 @@ in {productName} Administration Guide.
 
 
 For information about the `asadmin list-timers` and
-`asadmin migrate-timers` subcommands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual]. For information about
+`asadmin migrate-timers` subcommands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual]. For information about
 migrating EJB timers, see "link:ha-administration-guide/instances.html#migrating-ejb-timers[Migrating EJB Timers]" in
 {productName} High Availability Administration
 Guide.
@@ -325,7 +325,7 @@ the newly redeployed application retrieves the EJB timers that
 correspond to these IDs from the timer database.
 
 For more information about the `asadmin redeploy` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[to-deploy-an-ejb-timer-to-a-cluster]]
 
@@ -460,7 +460,7 @@ For more information about `glassfish-ejb-jar.xml`, see
 
 The {productName} provides the `wscompile` and `wsdeploy` tools to
 help you implement a web service endpoint as a stateless session bean.
-For more information about these tools, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+For more information about these tools, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[stateful-container]]
 
@@ -504,7 +504,7 @@ subdirectories created under domain-dir`/session-store`.
 ====
 Make sure the `delete` option is set in the `server.policy` file, or
 expired file-based sessions might not be deleted properly. For more
-information about `server.policy`, see link:securing-apps.html#GSDVG00121[The
+information about `server.policy`, see xref:securing-apps.adoc#GSDVG00121[The
 `server.policy` File].
 ====
 
@@ -596,8 +596,8 @@ correctly rolled back or committed.
 
 
 For more information about the `InitialContext`, see
-link:jndi.html#accessing-the-naming-context[Accessing the Naming Context]. For more information
-about transaction recovery, see link:transaction-service.html#beanm[Using
+xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. For more information
+about transaction recovery, see xref:transaction-service.adoc#beanm[Using
 the Transaction Service]. For more information about Administered
 Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
@@ -606,7 +606,7 @@ in {productName} Administration Guide.
 [NOTE]
 ====
 Idempotent URLs are supported along the HTTP path, but not the RMI-IIOP
-path. For more information, see link:webapps.html#configuring-idempotent-url-requests[Configuring
+path. For more information, see xref:webapps.adoc#configuring-idempotent-url-requests[Configuring
 Idempotent URL Requests].
 
 If a server instance to which an RMI-IIOP client request is sent crashes
@@ -620,7 +620,7 @@ HTTP sessions can also be saved in a persistent store in case a server
 instance fails. In addition, if a distributable web application
 references an SFSB, and the web application's session fails over, the
 EJB reference is also failed over. For more information, see
-link:webapps.html#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
+xref:webapps.adoc#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
 
 If an SFSB that uses session persistence is undeployed while the
 {productName} instance is stopped, the session data in the
@@ -668,7 +668,7 @@ Service box. All instances in an {productName} cluster should have
 the same availability settings to ensure consistent behavior.
 
 For more information about SFSB state persistence, see the
-link:ha-administration-guide.html#GSHAG[{productName} High Availability
+xref:ha-administration-guide.adoc#GSHAG[{productName} High Availability
 Administration Guide].
 
 [[using-the---keepstate-option]]
@@ -696,7 +696,7 @@ saves it in memory. To restore the data, the class loader of the newly
 redeployed application deserializes the data that was previously saved.
 
 For more information about the `asadmin redeploy` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[using-the---asyncreplication-option]]
 
@@ -713,7 +713,7 @@ availability is guaranteed. States are not buffered but immediately
 transmitted to other instances in the cluster.
 
 For more information about the `asadmin deploy` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[enabling-checkpointing]]
 
@@ -739,7 +739,7 @@ Application and EJB Module Levels
 To enable SFSB checkpointing at the application or EJB module level
 during deployment, use the `asadmin deploy` or `asadmin deploydir`
 command with the `--availabilityenabled` option set to `true`. For
-details, see the link:reference-manual.html#GSRFM[{productName}
+details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 
 [[sfsb-level]]
@@ -1119,7 +1119,7 @@ The following topics are addressed here:
 * xref:#domain-level-settings[Domain-Level Settings]
 
 For information about setting up load balancing for message-driven
-beans, see link:jms.html#load-balanced-message-inflow[Load-Balanced Message Inflow].
+beans, see xref:jms.adoc#load-balanced-message-inflow[Load-Balanced Message Inflow].
 
 [[connection-factory-and-destination]]
 
@@ -1277,7 +1277,7 @@ asadmin set server-config.mdb-container.property.cmt-max-runtime-exceptions="5"
 ----
 
 For more information about the `asadmin set` command, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The `cmt-max-runtime-exceptions` property specifies the maximum number
 of runtime exceptions allowed from a message-driven bean's `onMessage`

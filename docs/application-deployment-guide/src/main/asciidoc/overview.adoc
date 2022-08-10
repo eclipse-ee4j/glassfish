@@ -69,18 +69,18 @@ module, application client module, can be deployed in the following
 ways:
 
 * Archive Deployment. Deploys the application as an archive file. For
-instructions, see link:deploying-applications.html#to-deploy-an-application-or-module[To Deploy an
+instructions, see xref:deploying-applications.adoc#to-deploy-an-application-or-module[To Deploy an
 Application or Module].
 * Dynamic Reloading. Redeploys the application by creating or modifying
 a special `.reload` file in the applications repository. For
-instructions, see link:deploying-applications.html#to-reload-changes-to-applications-or-modules-dynamically[To Reload
+instructions, see xref:deploying-applications.adoc#to-reload-changes-to-applications-or-modules-dynamically[To Reload
 Changes to Applications or Modules Dynamically].
 * Automatic Deployment. Deploys the application archive that is placed
 in the autodeployment directory. For instructions, see
-link:deploying-applications.html#to-deploy-an-application-or-module-automatically[To Deploy an Application or Module
+xref:deploying-applications.adoc#to-deploy-an-application-or-module-automatically[To Deploy an Application or Module
 Automatically].
 * Directory Deployment. Deploys the application in a directory format.
-For instructions, see link:deploying-applications.html#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an
+For instructions, see xref:deploying-applications.adoc#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an
 Application or Module in a Directory Format].
 * JSR 88 Deployment. A deployment mechanism implemented based on the JSR
 88 standard from `jcp.org`. It delivers vendor neutral deployment
@@ -89,7 +89,7 @@ options. See xref:#jsr-88-client[JSR 88 Client] and xref:#giiel[JSR 88 Naming].
 A deployment plan, which deploys a portable archive along with a
 deployment plan containing {productName} deployment descriptors, can
 apply to any of these deployment techniques. For instructions, see
-link:deploying-applications.html#to-deploy-an-application-or-module-by-using-a-deployment-plan[To Deploy an Application or Module
+xref:deploying-applications.adoc#to-deploy-an-application-or-module-by-using-a-deployment-plan[To Deploy an Application or Module
 by Using a Deployment Plan].
 
 There are two work situations that require different safeguards and
@@ -165,8 +165,8 @@ these names: `ejb-jar.xml` and `glassfish-ejb-jar.xml`. If the EJB
 component is an entity bean with container-managed persistence (CMP),
 you can also create a `.dbschema` file and a `sun-cmp-mapping.xml` file.
 For complete descriptions of these files and their elements, see
-link:dd-files.html#giida[{productName} Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the {productName}
+xref:dd-files.adoc#giida[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#beaqi[Elements of the {productName}
 Deployment Descriptors].
 +
 {productName} also permits the use of alternate top-level {productName} runtime deployment descriptors that reside outside of an
@@ -428,7 +428,7 @@ are named with `_jar`, `_rar`, and `_war` suffixes.
 If you deploy a directory instead of an EAR file, your directory
 structure must follow this same convention. For instructions on
 performing directory deployment, see
-link:deploying-applications.html#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an Application or Module
+xref:deploying-applications.adoc#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an Application or Module
 in a Directory Format].
 
 
@@ -586,8 +586,8 @@ the deployment descriptors or equivalent annotations using Java
 standards and tools.
 +
 Details of the {productName} deployment descriptors are contained in
-link:dd-files.html#giida[{productName} Deployment Descriptor Files]
-and link:dd-elements.html#beaqi[Elements of the {productName}
+xref:dd-files.adoc#giida[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#beaqi[Elements of the {productName}
 Deployment Descriptors]. The {productName} sample applications
 contain deployment descriptors that can be used as templates for
 developing deployment descriptors.
@@ -598,7 +598,7 @@ naming, see xref:#naming-standards[Naming Standards].
 +
 There are no {productName} issues to consider.
 3. Test Deployment. The developer performs a test deployment of the
-archive. For instructions, see link:deploying-applications.html#to-deploy-an-application-or-module[To
+archive. For instructions, see xref:deploying-applications.adoc#to-deploy-an-application-or-module[To
 Deploy an Application or Module].
 4. Archive Submission. The developer submits the verified archive to
 the administrator for deployment into a production environment. The
@@ -610,7 +610,7 @@ specifics. Sometimes the developer has indicated additional deployment
 needs, such as specifying the production database. In this case, the
 administrator edits and reassembles the archive.
 6. Production Deployment. The administrator deploys the archive to
-production. See link:deploying-applications.html#to-deploy-an-application-or-module[To Deploy an
+production. See xref:deploying-applications.adoc#to-deploy-an-application-or-module[To Deploy an
 Application or Module].
 7. Troubleshooting. If deployment fails, the administrator returns the
 archive to the developer. The developer fixes the problem and resubmits
@@ -670,9 +670,9 @@ asadmin list-applications --type web
 ----
 
 Application deployment commands are listed in
-link:asadmin-deployment-subcommands.html#gihzw[The `asadmin` Deployment
+xref:asadmin-deployment-subcommands.adoc#gihzw[The `asadmin` Deployment
 Subcommands]. All {productName} `asadmin` subcommands are documented
-in the link:reference-manual.html#GSRFM[{productName} Reference
+in the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 For the most part, you can perform the same administrative tasks by
@@ -752,13 +752,13 @@ are the following:
 The following product documentation might be relevant to some aspects of
 application deployment:
 
-* link:application-development-guide.html#GSDVG[
+* xref:application-development-guide.adoc#GSDVG[
 {productName} Application Development Guide]
-* link:administration-guide.html#GSADG[
+* xref:administration-guide.adoc#GSADG[
 {productName} Administration Guide]
-* link:add-on-component-development-guide.html#GSACG[
+* xref:add-on-component-development-guide.adoc#GSACG[
 {productName} Add-On Component Development Guide]
-* link:reference-manual.html#GSRFM[
+* xref:reference-manual.adoc#GSRFM[
 {productName} Reference Manual]
 * {productName} Administration Console online help
 

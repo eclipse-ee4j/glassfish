@@ -99,7 +99,7 @@ Command enable-secure-admin-principal executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:disable-secure-admin-principal.html#disable-secure-admin-principal[`disable-secure-admin-principal`(1)],
-link:enable-secure-admin.html#enable-secure-admin[`enable-secure-admin`(1)]
+xref:disable-secure-admin-principal.adoc#disable-secure-admin-principal[`disable-secure-admin-principal`(1)],
+xref:enable-secure-admin.adoc#enable-secure-admin[`enable-secure-admin`(1)]
 
 

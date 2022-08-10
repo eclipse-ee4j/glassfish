@@ -48,64 +48,64 @@ between Oracle engineers and the community.
 [width="100%",cols="<30%,<70%",options="header",]
 |===
 |Book Title |Description
-|link:release-notes.html#GSRLN[Release Notes] |Provides late-breaking information about
+|xref:release-notes.adoc#GSRLN[Release Notes] |Provides late-breaking information about
 the software and the documentation and includes a comprehensive,
 table-based summary of the supported hardware, operating system, Java
 Development Kit (JDK), and database drivers.
 
-|link:quick-start-guide.html#GSQSG[Quick Start Guide] |Explains how to get started with the
+|xref:quick-start-guide.adoc#GSQSG[Quick Start Guide] |Explains how to get started with the
 {productName} product.
 
-|link:installation-guide.html#GSING[Installation Guide] |Explains how to install the software
+|xref:installation-guide.adoc#GSING[Installation Guide] |Explains how to install the software
 and its components.
 
-|link:upgrade-guide.html#GSUPG[Upgrade Guide] |Explains how to upgrade to the latest
+|xref:upgrade-guide.adoc#GSUPG[Upgrade Guide] |Explains how to upgrade to the latest
 version of {productName}. This guide also describes differences
 between adjacent product releases and configuration options that can
 result in incompatibility with the product specifications.
 
-|link:deployment-planning-guide.html#GSPLG[Deployment Planning Guide] |Explains how to build a
+|xref:deployment-planning-guide.adoc#GSPLG[Deployment Planning Guide] |Explains how to build a
 production deployment of {productName} that meets the requirements of
 your system and enterprise.
 
-|link:administration-guide.html#GSADG[Administration Guide] |Explains how to configure, monitor,
+|xref:administration-guide.adoc#GSADG[Administration Guide] |Explains how to configure, monitor,
 and manage {productName} subsystems and components from the command
 line by using the link:reference-manual/asadmin.html#asadmin[`asadmin`] utility. Instructions for
 performing these tasks from the Administration Console are provided in
 the Administration Console online help.
 
-|link:security-guide.html#GSSCG[Security Guide] |Provides instructions for configuring and
+|xref:security-guide.adoc#GSSCG[Security Guide] |Provides instructions for configuring and
 administering {productName} security.
 
-|link:application-deployment-guide.html#GSDPG[Application Deployment Guide] |Explains how to assemble and
+|xref:application-deployment-guide.adoc#GSDPG[Application Deployment Guide] |Explains how to assemble and
 deploy applications to the {productName} and provides information
 about deployment descriptors.
 
-|link:application-development-guide.html#GSDVG[Application Development Guide] |Explains how to create and
+|xref:application-development-guide.adoc#GSDVG[Application Development Guide] |Explains how to create and
 implement Java Platform, Enterprise Edition (Jakarta EE platform)
 applications that are intended to run on the {productName}. These
 applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs). This guide provides
 information about developer tools, security, and debugging.
 
-|link:embedded-server-guide.html#GSESG[Embedded Server Guide] |Explains how to run applications in
+|xref:embedded-server-guide.adoc#GSESG[Embedded Server Guide] |Explains how to run applications in
 embedded {productName} and to develop applications in which {productName} is embedded.
 
-|link:ha-administration-guide.html#GSHAG[High Availability Administration Guide] |Explains how to
+|xref:ha-administration-guide.adoc#GSHAG[High Availability Administration Guide] |Explains how to
 configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
-|link:performance-tuning-guide.html#GSPTG[Performance Tuning Guide] |Explains how to optimize the
+|xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide] |Explains how to optimize the
 performance of {productName}.
 
-|link:troubleshooting-guide.html#GSTSG[Troubleshooting Guide] |Describes common problems that you
+|xref:troubleshooting-guide.adoc#GSTSG[Troubleshooting Guide] |Describes common problems that you
 might encounter when using {productName} and explains how to solve
 them.
 
-|link:error-messages-reference.html#GSEMR[Error Message Reference] |Describes error messages that you
+|xref:error-messages-reference.adoc#GSEMR[Error Message Reference] |Describes error messages that you
 might encounter when using {productName}.
 
-|link:reference-manual.html#GSRFM[Reference Manual] |Provides reference information in man
+|xref:reference-manual.adoc#GSRFM[Reference Manual] |Provides reference information in man
 page format for {productName} administration commands, utility
 commands, and related concepts.
 

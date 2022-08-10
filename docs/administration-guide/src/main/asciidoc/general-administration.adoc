@@ -232,7 +232,7 @@ Command list-applications executed successfully.
 {productName} provides help information about the syntax, purpose,
 and options of the `asadmin` utility and its subcommands. This help
 information is written in the style of UNIX platform man pages. This
-help information is also available in the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+help information is also available in the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 1. If you are displaying help information for a remote subcommand,
 ensure that the server is running.
@@ -2998,7 +2998,7 @@ message-id::
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
   identifier. For more information, see the
-  link:error-messages-reference.html#GSEMR[
+  xref:error-messages-reference.adoc#GSEMR[
   {productName} Error Message Reference].
 message-text::
   The text of the log message.
@@ -3102,7 +3102,7 @@ message-id::
   A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
-  identifier. For more information, see the link:error-messages-reference.html#GSEMR[{productName} Error Message Reference].
+  identifier. For more information, see the xref:error-messages-reference.adoc#GSEMR[{productName} Error Message Reference].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::

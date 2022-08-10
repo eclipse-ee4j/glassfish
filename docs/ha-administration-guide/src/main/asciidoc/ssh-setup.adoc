@@ -87,16 +87,16 @@ for enabling centralized administration, if any.
 |Protocol |Node Administration Instructions |Instance Administration Instructions
 
 |DCOM
-|link:nodes.html#creating-listing-testing-and-deleting-dcom-nodes[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
-|link:instances.html#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
+|xref:nodes.adoc#creating-listing-testing-and-deleting-dcom-nodes[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
+|xref:instances.adoc#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
 
 |SSH
-|link:nodes.html#creating-listing-testing-and-deleting-ssh-nodes[Creating, Listing, Testing, and Deleting `SSH` Nodes]
-|link:instances.html#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
+|xref:nodes.adoc#creating-listing-testing-and-deleting-ssh-nodes[Creating, Listing, Testing, and Deleting `SSH` Nodes]
+|xref:instances.adoc#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
 
 |None
-|link:nodes.html#creating-listing-and-deleting-config-nodes[Creating, Listing, and Deleting `CONFIG` Nodes]
-|link:instances.html#administering-glassfish-server-instances-locally[Administering {productName} Instances Locally]
+|xref:nodes.adoc#creating-listing-and-deleting-config-nodes[Creating, Listing, and Deleting `CONFIG` Nodes]
+|xref:instances.adoc#administering-glassfish-server-instances-locally[Administering {productName} Instances Locally]
 |===
 
 
@@ -396,7 +396,7 @@ alias-name::
 ====
 When you create a `DCOM` node, pass this file as the `--passwordfile`
 option of the `asadmin` utility. For more information, see
-link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node].
+xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node].
 ====
 
 
@@ -451,8 +451,8 @@ host. If this test fails, any attempt to perform a task that the
 requires the DAS contact the DCOM server on the host will also fail.
 Examples of such tasks are creating a DCOM node to represent the host or
 creating an instance that resides on the host. For more information, see
-link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node] and
-link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally].
+xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node] and
+xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally].
 
 If you cannot connect to the host over DCOM, troubleshoot the DCOM setup
 before proceeding.
@@ -515,8 +515,8 @@ See Also
 * link:reference-manual/validate-dcom.html#validate-dcom[`validate-dcom`(1)]
 * xref:#windows-operating-system-settings[Windows Operating System Settings]
 * xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run Scripts on a Remote Host]
-* link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node]
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help validate-dcom` at the command line.
@@ -1459,7 +1459,7 @@ alias-name::
 ====
 When you create an `SSH` node, pass this file as the `--passwordfile`
 option of the `asadmin` utility. For more information, see
-link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node].
+xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node].
 ====
 
 
@@ -1599,7 +1599,7 @@ alias-name::
 ====
 When you create an `SSH` node, pass this file as the `--passwordfile`
 option of the `asadmin` utility. For more information, see
-link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node].
+xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node].
 ====
 
 
@@ -1644,7 +1644,7 @@ installation on each host.
 
 * If you require complete control over the installation on each host,
 install the software from a {productName} distribution on each host
-individually. For more information, see link:installation-guide.html#GSING[{productName} Installation Guide].
+individually. For more information, see xref:installation-guide.adoc#GSING[{productName} Installation Guide].
 * If the same set up on each host is acceptable, copy an existing
 {productName} installation to the hosts. For more information, see
 xref:#to-copy-a-glassfish-server-installation-to-multiple-hosts[To Copy a {productName} Installation to Multiple Hosts].

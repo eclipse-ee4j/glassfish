@@ -68,7 +68,7 @@ can run unit tests automatically in every build.
 [NOTE]
 ====
 For information on how to embed {productName} in an OSGi environment,
-see the link:add-on-component-development-guide.html#GSACG[{productName} Add-On
+see the xref:add-on-component-development-guide.adoc#GSACG[{productName} Add-On
 Component Development Guide].
 ====
 
@@ -497,7 +497,7 @@ The following topics are addressed here:
 * xref:#creating-a-scattered-archive[Creating a Scattered Archive]
 * xref:#creating-a-scattered-enterprise-archive[Creating a Scattered Enterprise Archive]
 
-For general information about deploying applications in {productName}, see the link:application-deployment-guide.html#GSDPG[{productName}
+For general information about deploying applications in {productName}, see the xref:application-deployment-guide.adoc#GSDPG[{productName}
 Application Deployment Guide].
 
 [[to-deploy-an-application-from-an-archive-file-or-a-directory]]
@@ -892,9 +892,9 @@ required `asadmin` commands to create a JDBC technology connection to a
 database.
 
 For more information about configuring embedded {productName}, see
-the link:administration-guide.html#GSADG[{productName} Administration
+the xref:administration-guide.adoc#GSADG[{productName} Administration
 Guide]. For detailed information about `asadmin` commands, see Section 1
-of the link:reference-manual.html#GSRFM[{productName} Reference
+of the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].
 
 
@@ -1593,7 +1593,7 @@ Table 1-9 `embedded-glassfish:stop` Parameters
 This goal runs a {productName} administration command. You must use
 either the command and commandParameters parameters in combination or
 the commandLine parameter. For more information about administration
-commands, see the link:reference-manual.html#GSRFM[{productName}
+commands, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual]. You can set the parameters described in the following
 table.
 
@@ -1681,7 +1681,7 @@ See xref:#setting-the-class-path[Setting the Class Path] and Section 22.3.3 of t
 2. Configure any required resources.
 +
 For more information about configuring resources, see the Administration
-Console Online Help or "link:administration-guide.html#part-ii[Resources and Services
+Console Online Help or "xref:administration-guide.adoc#part-ii[Resources and Services
 Administration]" in {productName} Administration
 Guide. The `jdbc/__default` Java DB database is preconfigured with all
 distributions of {productName}. However, if you are using

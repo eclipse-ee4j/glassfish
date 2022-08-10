@@ -201,7 +201,7 @@ server instance or a standalone cluster, the default data source is
 resources.
 
 For more information about data sources, see
-xref:jdbc.adoc#ablih[Administering Database Connectivity]. For more
+xref:jdbc.adoc#administering-database-connectivity[Administering Database Connectivity]. For more
 information about managed executor services, see
 xref:concurrent.adoc#configuring-managed-executor-services[Configuring Managed Executor Services].
 

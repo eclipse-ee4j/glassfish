@@ -74,7 +74,7 @@ Command list-jobs executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:attach.html#attach[`attach`(1)],
-link:configure-managed-jobs.html#configure-managed-jobs[`configure-managed-jobs`(1)]
+xref:attach.adoc#attach[`attach`(1)],
+xref:configure-managed-jobs.adoc#configure-managed-jobs[`configure-managed-jobs`(1)]
 
 

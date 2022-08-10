@@ -44,12 +44,12 @@ value of an attribute or property, use the `set` subcommand.
 
 === See Also
 
-link:get.html#get[`get`(1)], link:list.html#list[`list`(1)],
-link:set.html#set[`set`(1)]
+xref:get.adoc#get[`get`(1)], xref:list.adoc#list[`list`(1)],
+xref:set.adoc#set[`set`(1)]
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:dotted-names.html#dotted-names[`dotted-names`(5ASC)]
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
 "link:administration-guide/overview.html#configuration-tasks[Configuration Tasks]" in {productName} Administration Guide
 

@@ -136,8 +136,8 @@ Command create-transport executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-network-listener.html#create-network-listener[`create-network-listener`(1)],
-link:delete-transport.html#delete-transport[`delete-transport`(1)],
-link:list-transports.html#list-transports[`list-transports`(1)]
+xref:create-network-listener.adoc#create-network-listener[`create-network-listener`(1)],
+xref:delete-transport.adoc#delete-transport[`delete-transport`(1)],
+xref:list-transports.adoc#list-transports[`list-transports`(1)]
 
 

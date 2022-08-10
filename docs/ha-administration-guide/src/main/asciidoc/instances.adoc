@@ -75,7 +75,7 @@ Centralized administration requires the Distributed Component Object
 Model (DCOM) remote protocol or secure shell (SSH) to be set up. If DCOM
 or SSH is set up, you can administer clustered instances without the
 need to log in to hosts where remote instances reside. For information
-about setting up DCOM and SSH, see link:ssh-setup.html#gkshg[Enabling
+about setting up DCOM and SSH, see xref:ssh-setup.adoc#gkshg[Enabling
 Centralized Administration of {productName} Instances].
 
 Administering {productName} instances centrally involves the
@@ -106,7 +106,7 @@ configure an instance's system properties that relate to GMS when you
 create the instance. If you change GMS-related system properties for an
 existing instance, the DAS and the instance must be restarted to apply
 the changes. For information about GMS, see
-link:clusters.html#group-management-service[Group Management Service].
+xref:clusters.adoc#group-management-service[Group Management Service].
 
 Before You Begin
 
@@ -118,8 +118,8 @@ communication or represents the host on which the DAS is running. For
 information about how to create a node that is enabled for remote
 communication, see the following sections:
 
-** link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node]
-** link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node]
+** xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+** xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 
 * The user of the DAS can use DCOM or SSH to log in to the host for the
 node where the instance is to reside.
@@ -129,11 +129,11 @@ explained in xref:#to-create-an-instance-locally[To Create an Instance Locally].
 
 If you are adding the instance to a cluster, ensure that the cluster to
 which you are adding the instance exists. For information about how to
-create a cluster, see link:clusters.html#to-create-a-cluster[To Create a Cluster].
+create a cluster, see xref:clusters.adoc#to-create-a-cluster[To Create a Cluster].
 
 If the instance is to reference an existing named configuration, ensure
 that the configuration exists. For more information, see
-link:named-configurations.html#to-create-a-named-configuration[To Create a Named Configuration].
+xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration].
 
 The instance might be a clustered instance that is managed by GMS and
 resides on a node that represents a multihome host. In this situation,
@@ -233,8 +233,8 @@ Command create-instance executed successfully.
 
 See Also
 
-* link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node]
-* link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
 * xref:#to-create-an-instance-locally[To Create an Instance Locally]
 * link:reference-manual/create-instance.html#create-instance[`create-instance`(1)]
 
@@ -452,7 +452,7 @@ typing `asadmin help start-cluster` at the command line.
 Next Steps
 
 After starting a cluster, you can deploy applications to the cluster.
-For more information, see link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 [[to-stop-a-cluster]]
 
@@ -572,7 +572,7 @@ typing `asadmin help start-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 [[to-stop-an-individual-instance-centrally]]
 
@@ -715,7 +715,7 @@ configure an instance's system properties that relate to GMS when you
 create the instance. If you change GMS-related system properties for an
 existing instance, the DAS and the instance must be restarted to apply
 the changes. For information about GMS, see
-link:clusters.html#group-management-service[Group Management Service].
+xref:clusters.adoc#group-management-service[Group Management Service].
 
 Before You Begin
 
@@ -734,17 +734,17 @@ the node is the unqualified name of the host.
 
 For information about how to create a node, see the following sections:
 
-* link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node]
-* link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node]
-* link:nodes.html#to-create-a-config-node[To Create a `CONFIG` Node]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
+* xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
 
 If you are adding the instance to a cluster, ensure that the cluster to
 which you are adding the instance exists. For information about how to
-create a cluster, see link:clusters.html#to-create-a-cluster[To Create a Cluster].
+create a cluster, see xref:clusters.adoc#to-create-a-cluster[To Create a Cluster].
 
 If the instance is to reference an existing named configuration, ensure
 that the configuration exists. For more information, see
-link:named-configurations.html#to-create-a-named-configuration[To Create a Named Configuration].
+xref:named-configurations.adoc#to-create-a-named-configuration[To Create a Named Configuration].
 
 The instance might be a clustered instance that is managed by GMS and
 resides on a node that represents a multihome host. In this situation,
@@ -929,9 +929,9 @@ Command create-local-instance executed successfully.
 
 See Also
 
-* link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node]
-* link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node]
-* link:nodes.html#to-create-a-config-node[To Create a `CONFIG` Node]
+* xref:nodes.adoc#to-create-a-dcom-node[To Create a `DCOM` Node]
+* xref:nodes.adoc#to-create-an-ssh-node[To Create an `SSH` Node]
+* xref:nodes.adoc#to-create-a-config-node[To Create a `CONFIG` Node]
 * link:reference-manual/create-local-instance.html#create-local-instance[`create-local-instance`(1)]
 
 You can also view the full syntax and options of the subcommand by
@@ -1101,7 +1101,7 @@ typing `asadmin help start-local-instance` at the command line.
 Next Steps
 
 After starting an instance, you can deploy applications to the instance.
-For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].
 
 [[to-stop-an-individual-instance-locally]]
 
@@ -1901,7 +1901,7 @@ stopped abnormally.
 If the GMS is enabled, the default automatic timer migration cannot be
 disabled. To disable automatic timer migration, you must first disable
 the GMS. For information about the GMS, see
-link:clusters.html#group-management-service[Group Management Service].
+xref:clusters.adoc#group-management-service[Group Management Service].
 ====
 
 

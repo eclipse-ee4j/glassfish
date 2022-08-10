@@ -75,7 +75,7 @@ Command delete-system-property executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-system-properties.html#create-system-properties[`create-system-properties`(1)],
-link:list-system-properties.html#list-system-properties[`list-system-properties`(1)]
+xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)],
+xref:list-system-properties.adoc#list-system-properties[`list-system-properties`(1)]
 
 

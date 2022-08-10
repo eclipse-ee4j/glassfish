@@ -202,7 +202,7 @@ asadmin> create-jvm-options -Djava.naming.factory.initial=org.glassfish.jndi.cos
 ----
 
 For details about `asadmin create-jvm-options`, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 Or you can set this property in the code, as follows:
 
@@ -293,7 +293,7 @@ duration tasks based on Java technology within the {productName}
 environment, such as instantiation of singletons or RMI servers. These
 modules are automatically initiated at server startup and are notified
 at various phases of the server life cycle. For details about lifecycle
-modules, see link:lifecycle-listeners.html#beamc[Developing Lifecycle
+modules, see xref:lifecycle-listeners.adoc#beamc[Developing Lifecycle
 Listeners].
 
 The configured properties for a lifecycle module are passed as
@@ -333,7 +333,7 @@ External Resources. For details, click the Help button in the
 Administration Console.
 * To create an external JNDI resource, use the
 `asadmin create-jndi-resource` command. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[custom-resources]]
 
@@ -351,7 +351,7 @@ Resources component, open the JNDI component, and select Custom
 Resources. For details, click the Help button in the Administration
 Console.
 * To create a custom resource, use the `asadmin create-custom-resource`
-command. For details, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+command. For details, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[built-in-factories-for-custom-resources]]
 
@@ -369,7 +369,7 @@ Template `glassfish-resources.xml` files for these built-in factories
 and a `README` file are available at
 as-install``/lib/install/templates/resources/custom/``. For more
 information about the `glassfish-resources.xml` file, see the
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide].
 
 [[javabeanfactory]]
@@ -484,7 +484,7 @@ deployment descriptor file. For details, see
 To use a custom `jndi.properties` file, JAR it and place it in the
 domain-dir``/lib`` directory. This adds the custom `jndi.properties` file
 to the Common class loader. For more information about class loading,
-see link:class-loaders.html#beade[Class Loaders].
+see xref:class-loaders.adoc#beade[Class Loaders].
 
 For each property found in more than one `jndi.properties` file, the
 Jakarta EE naming service either uses the first value found or concatenates

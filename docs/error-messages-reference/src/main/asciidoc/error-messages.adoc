@@ -23,7 +23,7 @@ Viewer. For more information about logging, see
 ”link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service”] in {productName} Administration Guide.
 
 For additional troubleshooting information, see the
-link:troubleshooting-guide.html#GSTSG[{productName} Troubleshooting Guide].
+xref:troubleshooting-guide.adoc#GSTSG[{productName} Troubleshooting Guide].
 
 Error messages in this chapter are listed in alphabetic and numeric
 order by message ID. The text is as it appears in the actual error

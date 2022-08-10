@@ -37,7 +37,7 @@ If all instances reside on the same host as the DAS, DCOM or SSH is not
 required. You might require to start a cluster in which instances reside
 on hosts where DCOM or SSH is not configured that are remote from the
 DAS. In this situation, run the
-link:start-local-instance.html#start-local-instance[`start-local-instance`(1)]
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)]
 subcommand for each instance from the host where the instance resides.
 ====
 
@@ -106,12 +106,12 @@ Command start-cluster executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-cluster.html#create-cluster[`create-cluster`(1)],
-link:delete-cluster.html#delete-cluster[`delete-cluster`(1)],
-link:list-clusters.html#list-clusters[`list-clusters`(1)],
-link:setup-ssh.html#setup-ssh[`setup-ssh`(1)],
-link:start-local-instance.html#start-local-instance[`start-local-instance`(1)],
-link:stop-cluster.html#stop-cluster[`stop-cluster`(1)],
-link:validate-dcom.html#validate-dcom[`validate-dcom`(1)]
+xref:create-cluster.adoc#create-cluster[`create-cluster`(1)],
+xref:delete-cluster.adoc#delete-cluster[`delete-cluster`(1)],
+xref:list-clusters.adoc#list-clusters[`list-clusters`(1)],
+xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-cluster.adoc#stop-cluster[`stop-cluster`(1)],
+xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)]
 
 

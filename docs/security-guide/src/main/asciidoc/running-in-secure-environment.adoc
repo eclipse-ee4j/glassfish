@@ -16,7 +16,7 @@ This chapter describes important information about running {productName} in a se
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not, see
-link:system-security.html#ablnk[Administering System Security].
+xref:system-security.adoc#ablnk[Administering System Security].
 
 Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
@@ -117,7 +117,7 @@ communication among the system components and does not accept
 administrative connections from remote hosts. Imposing a heightened
 level of security is optional.
 
-See link:administrative-security.html#gknqh[Managing Administrative
+See xref:administrative-security.adoc#gknqh[Managing Administrative
 Security] for information on enabling the secure administration feature.
 
 [[run-on-the-web-profile-if-possible]]
@@ -360,7 +360,7 @@ which you can be confident that rogue users or processes cannot
 intercept or corrupt administration traffic or impersonate legitimate
 {productName} components.
 
-See link:administrative-security.html#gknqh[Managing Administrative
+See xref:administrative-security.adoc#gknqh[Managing Administrative
 Security].
 
 |Protect the `.asadminpass` file a|
@@ -407,7 +407,7 @@ by clients by default because a certificate authority does not vouch for
 the authenticity of the certificate.
 
 You can instead use your own certificates, as described in
-link:administrative-security.html#using-your-own-certificates[Using Your Own Certificates].
+xref:administrative-security.adoc#using-your-own-certificates[Using Your Own Certificates].
 
 |Restrict the size and the time limit of requests on external channels
 to prevent Denial of Service attacks. a|

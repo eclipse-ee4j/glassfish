@@ -84,7 +84,7 @@ information, see the GlassFish Plugins page:
 
 ==== How Do I Develop Add-On Components?
 
-See the link:add-on-component-development-guide.html#GSACG[{productName} Add-On
+See the xref:add-on-component-development-guide.adoc#GSACG[{productName} Add-On
 Component Development Guide] for complete details.
 
 [[how-do-i-add-containers]]
@@ -135,7 +135,7 @@ Update Tool can be accessed as a standalone graphical tool from the
 command line (using the `updatetool` command from
 as-install-parent``/bin``), or as a browser-based graphical tool from the
 Administration Console (using the Update Tool node). For more
-information about Update Tool, see "link:administration-guide.html#GSADG00701[Update Tool]" in
+information about Update Tool, see "xref:administration-guide.adoc#GSADG00701[Update Tool]" in
 {productName} Administration Guide.
 
 [NOTE]
@@ -147,7 +147,7 @@ graphical Update Tool, not the Administration Console Update Tool.
 A command-line interface is also available for Update Tool. This
 interface uses the `pkg` command and enables you to perform most of the
 tasks provided by the standalone graphical version. For more information
-about the `pkg` command, see "link:administration-guide.html#GSADG00014[Extending and Updating
+about the `pkg` command, see "xref:administration-guide.adoc#GSADG00014[Extending and Updating
 {productName}]" in {productName}
 Administration Guide.
 
@@ -156,7 +156,7 @@ Administration Guide.
 Update Tool differs from Upgrade Tool, which is used to migrate the
 configuration and deployed applications from an earlier version of
 {productName} to the current version. For more information about
-Upgrade Tool and upgrading, see the link:upgrade-guide.html#GSUPG[{productName} Upgrade Guide].
+Upgrade Tool and upgrading, see the xref:upgrade-guide.adoc#GSUPG[{productName} Upgrade Guide].
 ====
 
 [[how-do-i-turn-off-the-notifier]]

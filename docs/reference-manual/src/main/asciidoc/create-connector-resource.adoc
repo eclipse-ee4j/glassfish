@@ -139,8 +139,8 @@ created.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-connector-resource.html#delete-connector-resource[`delete-connector-resource`(1)],
-link:list-connector-resources.html#list-connector-resources[`list-connector-resources`(1)],
-link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)]
+xref:delete-connector-resource.adoc#delete-connector-resource[`delete-connector-resource`(1)],
+xref:list-connector-resources.adoc#list-connector-resources[`list-connector-resources`(1)],
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)]
 
 

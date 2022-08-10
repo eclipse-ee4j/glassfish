@@ -85,8 +85,8 @@ Command create-protocol executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-protocol.html#delete-protocol[`delete-protocol`(1)],
-link:list-protocols.html#list-protocols[`list-protocols`(1)],
-link:create-network-listener.html#create-network-listener[`create-network-listener`(1)]
+xref:delete-protocol.adoc#delete-protocol[`delete-protocol`(1)],
+xref:list-protocols.adoc#list-protocols[`list-protocols`(1)],
+xref:create-network-listener.adoc#create-network-listener[`create-network-listener`(1)]
 
 

@@ -31,7 +31,7 @@ The following topics are addressed here:
 === Installing and Preparing the Server for Development
 
 For more information about {productName} installation, see the
-link:installation-guide.html#GSING[
+xref:installation-guide.adoc#GSING[
 {productName} Installation Guide].
 
 The following components are included in the full installation.
@@ -57,9 +57,9 @@ server for development in these ways:
 
 * Locate utility classes and libraries so they can be accessed by the
 proper class loaders. For more information, see
-link:class-loaders.html#using-the-common-class-loader[Using the Common Class Loader].
+xref:class-loaders.adoc#using-the-common-class-loader[Using the Common Class Loader].
 * Set up debugging. For more information, see
-link:debugging-apps.html#beafc[Debugging Applications].
+xref:debugging-apps.adoc#beafc[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
 For more information, see "link:administration-guide/jvm.html#administering-the-virtual-machine-for-the-java-platform[
 Administering the Virtual Machine for the Java Platform]"
@@ -70,18 +70,18 @@ in {productName} Administration Guide.
 === High Availability Features
 
 High availability features such as load balancing and session failover
-are discussed in detail in the link:ha-administration-guide.html#GSHAG[{productName}
+are discussed in detail in the xref:ha-administration-guide.adoc#GSHAG[{productName}
 High Availability Administration Guide]. This book describes the
 following features in the following sections:
 
 * For information about HTTP session persistence, see
-link:webapps.html#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
+xref:webapps.adoc#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
 * For information about checkpointing of the stateful session bean
-state, see link:ejb.html#stateful-session-bean-failover[Stateful Session Bean Failover].
+state, see xref:ejb.adoc#stateful-session-bean-failover[Stateful Session Bean Failover].
 * For information about failover and load balancing for Java clients,
-see link:java-clients.html#beakt[Developing Java Clients].
+see xref:java-clients.adoc#beakt[Developing Java Clients].
 * For information about load balancing for message-driven beans, see
-link:jms.html#load-balanced-message-inflow[Load-Balanced Message Inflow].
+xref:jms.adoc#load-balanced-message-inflow[Load-Balanced Message Inflow].
 
 [[development-tools]]
 
@@ -110,7 +110,7 @@ The following third-party tools might also be useful:
 The `asadmin` command allows you to configure a local or remote server
 and perform both administrative and development tasks at the command
 line. For general information about `asadmin`, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The `asadmin` command is located in the as-install``/bin`` directory. Type
 `asadmin help` for a list of subcommands.
@@ -162,14 +162,14 @@ extensions, sometimes all you need is just some configuration.
 ==== Debugging Tools
 
 You can use several debugging tools with the {productName}. For more
-information, see link:debugging-apps.html#beafc[Debugging Applications].
+information, see xref:debugging-apps.adoc#beafc[Debugging Applications].
 
 [[profiling-tools]]
 
 ==== Profiling Tools
 
 You can use several profilers with the {productName}. For more
-information, see link:debugging-apps.html#profiling-tools[Profiling Tools].
+information, see xref:debugging-apps.adoc#profiling-tools[Profiling Tools].
 
 [[sample-applications]]
 

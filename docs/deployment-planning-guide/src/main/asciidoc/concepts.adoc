@@ -502,7 +502,7 @@ about administering Message Queue, see the link:../openmq/mq-admin-guide.html#GM
 Queue Administration Guide].
 
 For information on deploying JMS applications and Message Queue
-clustering for message failover, see link:planning.html#planning-message-queue-broker-deployment[Planning
+clustering for message failover, see xref:planning.adoc#planning-message-queue-broker-deployment[Planning
 Message Queue Broker Deployment].
 
 [[configuration-roadmap-for-high-availability-of-glassfish-server]]
@@ -518,16 +518,16 @@ cross-references to detailed instructions for performing each task.
 
 1. Determine your requirements and goals for performance and QoS. +
 For more information, see the following documentation:
-* link:planning.html#establishing-performance-goals[Establishing Performance Goals]
-* link:planning.html#planning-the-network-configuration[Planning the Network Configuration]
-* link:planning.html#planning-for-availability[Planning for Availability]
+* xref:planning.adoc#establishing-performance-goals[Establishing Performance Goals]
+* xref:planning.adoc#planning-the-network-configuration[Planning the Network Configuration]
+* xref:planning.adoc#planning-for-availability[Planning for Availability]
 
 2. Size your system. +
-For more information, see link:planning.html#design-decisions[Design Decisions].
+For more information, see xref:planning.adoc#design-decisions[Design Decisions].
 
 3. Install {productName} and related subcomponents such as a web server. +
 For more information, see the following documentation:
-* link:installation-guide.html#GSING[{productName} Installation Guide]
+* xref:installation-guide.adoc#GSING[{productName} Installation Guide]
 * Installation guides for related subcomponents, for example, Oracle
 iPlanet Web Server 7.0.9 Installation and Migration Guide
 (`http://docs.oracle.com/cd/E19146-01/821-1832/index.html`)
@@ -560,11 +560,11 @@ Availability Session Persistence and Failover]" in {productName} High Availabili
 8. If you are using messaging extensively, configure Java Message
 Service (JMS) clusters for failover . +
 For more information, see the following documentation:
-* link:planning.html#planning-message-queue-broker-deployment[Planning Message Queue Broker Deployment]
+* xref:planning.adoc#planning-message-queue-broker-deployment[Planning Message Queue Broker Deployment]
 * "link:ha-administration-guide/jms.html#abdbk[Configuring Java Message Service High Availability]"
 in {productName} High Availability Administration
 Guide
 * link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]
 
 9. Deploy applications and configure them for high availability and session failover. +
-For more information, see the link:application-deployment-guide.html#GSDPG[{productName} Application Deployment Guide].
+For more information, see the xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment Guide].

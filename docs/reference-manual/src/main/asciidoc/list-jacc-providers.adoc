@@ -86,7 +86,7 @@ Command list-jacc-providers executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jacc-provider.html#create-jacc-provider[`create-jacc-provider`(1)],
-link:delete-jacc-provider.html#delete-jacc-provider[`delete-jacc-provider`(1)]
+xref:create-jacc-provider.adoc#create-jacc-provider[`create-jacc-provider`(1)],
+xref:delete-jacc-provider.adoc#delete-jacc-provider[`delete-jacc-provider`(1)]
 
 

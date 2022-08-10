@@ -237,7 +237,7 @@ Where `file` is the authentication realm created.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-auth-realm.html#delete-auth-realm[`delete-auth-realm`(1)],
-link:list-auth-realms.html#list-auth-realms[`list-auth-realms`(1)]
+xref:delete-auth-realm.adoc#delete-auth-realm[`delete-auth-realm`(1)],
+xref:list-auth-realms.adoc#list-auth-realms[`list-auth-realms`(1)]
 
 

@@ -64,7 +64,7 @@ distributions.
 You can create and offer new or updated add-on components at any time.
 {productName} administrators can install add-on components and update
 or remove installed components after {productName} is installed. For
-more information, see "link:administration-guide.html#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
+more information, see "xref:administration-guide.adoc#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
 
 [[osgi-alliance-module-management-subsystem]]
 
@@ -78,7 +78,7 @@ to this kernel must be implemented as an OSGi bundle. To enable an
 add-on component to plug in to the {productName} kernel in the same
 way as other components, package the component as an OSGi bundle. For
 more information, see
-link:packaging-integrating-delivering.html#packaging-an-add-on-component[Packaging an Add-On
+xref:packaging-integrating-delivering.adoc#packaging-an-add-on-component[Packaging an Add-On
 Component].
 
 The default OSGi module management subsystem in {productName} is the
@@ -106,7 +106,7 @@ components automatically and dynamically. HK2 components use injection
 of dependencies to express dependencies on other components. {productName} provides two-way mappings between the services of an HK2
 component and OSGi services.
 
-For more information, see link:writing-hk2-components.html#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#ghmna[Writing
 HK2 Components].
 
 [[overview-of-the-development-process-for-an-add-on-component]]
@@ -149,7 +149,7 @@ implementation paradigm. An HK2 contract identifies and describes the
 building blocks or the extension points of an application. An HK2
 service implements an HK2 contract.
 
-For more information, see link:writing-hk2-components.html#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#ghmna[Writing
 HK2 Components].
 
 [[extending-the-administration-console]]
@@ -168,7 +168,7 @@ file that describes how your customizations integrate with the
 Administration Console.
 
 For more information, see
-link:extending-the-admin-console.html#ghmrb[Extending the Administration
+xref:extending-the-admin-console.adoc#ghmrb[Extending the Administration
 Console].
 
 [[extending-the-asadmin-utility]]
@@ -183,7 +183,7 @@ A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
 link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
-For more information, see link:extending-asadmin.html#ghmrd[Extending the
+For more information, see xref:extending-asadmin.adoc#ghmrd[Extending the
 `asadmin` Utility].
 
 [[adding-monitoring-capabilities]]
@@ -206,7 +206,7 @@ interfaces to monitor statistics from any installed {productName}
 component, regardless of the origin of the component.
 
 For more information, see
-link:adding-monitoring-capabilities.html#ghmos[Adding Monitoring
+xref:adding-monitoring-capabilities.adoc#ghmos[Adding Monitoring
 Capabilities].
 
 [[adding-configuration-data-for-a-component]]
@@ -226,7 +226,7 @@ configure an add-on component in the same way as they can configure
 other {productName} components.
 
 For more information, see
-link:adding-configuration-data.html#gjlpe[Adding Configuration Data for a
+xref:adding-configuration-data.adoc#gjlpe[Adding Configuration Data for a
 Component].
 
 [[adding-container-capabilities]]
@@ -240,7 +240,7 @@ you to run new types of applications and to deploy new archive types in
 {productName}.
 
 For more information, see
-link:adding-container-capabilities.html#ghmon[Adding Container
+xref:adding-container-capabilities.adoc#ghmon[Adding Container
 Capabilities].
 
 [[creating-a-session-persistence-module]]
@@ -260,7 +260,7 @@ Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 
 For more information, see
-link:session-persistence-modules.html#gkmhj[Creating a Session
+xref:session-persistence-modules.adoc#gkmhj[Creating a Session
 Persistence Module].
 
 [[packaging-and-delivering-an-add-on-component]]
@@ -275,6 +275,6 @@ update to existing installations of {productName}, deliver the
 component through Update Tool.
 
 For more information, see
-link:packaging-integrating-delivering.html#ghmxp[Packaging, Integrating,
+xref:packaging-integrating-delivering.adoc#ghmxp[Packaging, Integrating,
 and Delivering an Add-On Component].
 

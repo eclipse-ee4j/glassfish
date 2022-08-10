@@ -689,9 +689,9 @@ Installation hangs more than five minutes during Update Tool configuration.
 Cancel the installation and run the installation program again, but this
 time deselect the Install Update Tool check box. Update Tool can be
 installed later from as-install``/bin/``. For more information about
-Update Tool, see "link:administration-guide.html#GSADG00701[Update Tool]"
+Update Tool, see "xref:administration-guide.adoc#GSADG00701[Update Tool]"
 in {productName} Administration Guide. For general information about
-{productName}installation, see the link:installation-guide.html#GSING[
+{productName}installation, see the xref:installation-guide.adoc#GSING[
 {productName} Installation Guide].
 
 
@@ -701,7 +701,7 @@ Update Tool differs from Upgrade Tool, which is used to migrate the
 configuration and deployed applications from an earlier version of
 {productName} to the current version.
 For more information about Upgrade Tool and upgrading, see the
-link:upgrade-guide.html#GSUPG[{productName} Upgrade Guide].
+xref:upgrade-guide.adoc#GSUPG[{productName} Upgrade Guide].
 ====
 
 

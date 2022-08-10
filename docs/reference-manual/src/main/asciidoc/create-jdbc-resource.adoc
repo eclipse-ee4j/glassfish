@@ -107,8 +107,8 @@ Command create-jdbc-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)],
-link:delete-jdbc-resource.html#delete-jdbc-resource[`delete-jdbc-resource`(1)],
-link:list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-resources`(1)]
+xref:create-resource-ref.adoc#create-resource-ref[`create-resource-ref`(1)],
+xref:delete-jdbc-resource.adoc#delete-jdbc-resource[`delete-jdbc-resource`(1)],
+xref:list-jdbc-resources.adoc#list-jdbc-resources[`list-jdbc-resources`(1)]
 
 

@@ -245,11 +245,11 @@ To see the legend for the table headings, type `h`.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:enable-monitoring.html#enable-monitoring[`enable-monitoring`(1)],
-link:disable-monitoring.html#disable-monitoring[`disable-monitoring`(1)],
-link:set.html#set[`set`(1)]
+xref:enable-monitoring.adoc#enable-monitoring[`enable-monitoring`(1)],
+xref:disable-monitoring.adoc#disable-monitoring[`disable-monitoring`(1)],
+xref:set.adoc#set[`set`(1)]
 
-link:monitoring.html#monitoring[`monitoring`(5ASC)]
+xref:monitoring.adoc#monitoring[`monitoring`(5ASC)]
 
 "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide
 

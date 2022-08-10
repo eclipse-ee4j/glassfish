@@ -83,6 +83,6 @@ Command delete-http-health-checker executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-health-checker.html#create-http-health-checker[`create-http-health-checker`(1)]
+xref:create-http-health-checker.adoc#create-http-health-checker[`create-http-health-checker`(1)]
 
 

@@ -61,7 +61,7 @@ Shared configuration::
 
 The type of an unclustered instance is determined by the type of the
 configuration that the instance references. For more information, see
-link:instances.html#types-of-glassfish-server-instances[Types of {productName} Instances].
+xref:instances.adoc#types-of-glassfish-server-instances[Types of {productName} Instances].
 
 [[the-default-config-configuration]]
 
@@ -83,9 +83,9 @@ specifying an existing configuration, {productName} automatically
 creates a configuration for the cluster or instance. For more
 information, see the following sections:
 
-* link:clusters.html#to-create-a-cluster[To Create a Cluster]
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 
 {productName} automatically creates a configuration by copying the
 `default-config` configuration. If you require an instance or cluster to
@@ -155,10 +155,10 @@ default configuration for the cluster or instance.
 
 For more information, see the following sections:
 
-* link:clusters.html#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
-* link:clusters.html#to-create-a-cluster[To Create a Cluster]
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:clusters.adoc#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 ====
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
@@ -198,10 +198,10 @@ Command copy-config executed successfully.
 
 See Also
 
-* link:clusters.html#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
-* link:clusters.html#to-create-a-cluster[To Create a Cluster]
-* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
-* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* xref:clusters.adoc#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* xref:clusters.adoc#to-create-a-cluster[To Create a Cluster]
+* xref:instances.adoc#to-create-an-instance-centrally[To Create an Instance Centrally]
+* xref:instances.adoc#to-create-an-instance-locally[To Create an Instance Locally]
 * link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
@@ -327,9 +327,9 @@ required, delete the cluster or instance. For information about how to
 delete an instance and how to delete a cluster, see the following
 sections:
 
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
-* link:clusters.html#to-delete-a-cluster[To Delete a Cluster]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:clusters.adoc#to-delete-a-cluster[To Delete a Cluster]
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -382,9 +382,9 @@ Command delete-config executed successfully.
 
 See Also
 
-* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
-* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
-* link:clusters.html#to-delete-a-cluster[To Delete a Cluster]
+* xref:instances.adoc#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* xref:instances.adoc#to-delete-an-instance-locally[To Delete an Instance Locally]
+* xref:clusters.adoc#to-delete-a-cluster[To Delete a Cluster]
 * link:reference-manual/delete-config.html#delete-config[`delete-config`(1)]
 * link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
 * link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]

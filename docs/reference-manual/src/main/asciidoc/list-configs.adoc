@@ -89,9 +89,9 @@ Command list-configs executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:copy-config.html#copy-config[`copy-config`(1)],
-link:delete-config.html#delete-config[`delete-config`(1)]
+xref:copy-config.adoc#copy-config[`copy-config`(1)],
+xref:delete-config.adoc#delete-config[`delete-config`(1)]
 
-link:configuration.html#configuration[`configuration`(5ASC)]
+xref:configuration.adoc#configuration[`configuration`(5ASC)]
 
 

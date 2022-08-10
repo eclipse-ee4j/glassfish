@@ -20,7 +20,7 @@ This chapter describes how to uninstall {productName}.
 
 This procedure describes how to uninstall {productName} software that
 was installed using a ZIP file, as described in
-link:installing.html#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File].
+xref:installing.adoc#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File].
 
 Before You Begin
 

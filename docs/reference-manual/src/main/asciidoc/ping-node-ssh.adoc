@@ -37,7 +37,7 @@ includes the name of the host that the node represents.
 Optionally, the subcommand can also validate the node to determine if
 the xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility can run on the
 host that the node represents. To validate a node, the subcommand runs
-the link:version.html#version[`version`(1)] subcommand. If the node is
+the xref:version.adoc#version[`version`(1)] subcommand. If the node is
 valid, the subcommand displays the version that the `version` subcommand
 returns.
 
@@ -45,13 +45,13 @@ The node that is specified as the operand of this subcommand must be
 enabled for communication over SSH. If the node is not enabled for
 communication over SSH, an error occurs. To determine whether a node is
 enabled for communication over SSH, use the
-link:list-nodes.html#list-nodes[`list-nodes`(1)] subcommand.
+xref:list-nodes.adoc#list-nodes[`list-nodes`(1)] subcommand.
 
 [NOTE]
 ====
 To test whether a node that is enabled for communication over the
 Distributed Component Object Model (DCOM) remote protocol is usable, use
-the link:ping-node-dcom.html#ping-node-dcom[`ping-node-dcom`(1)]
+the xref:ping-node-dcom.adoc#ping-node-dcom[`ping-node-dcom`(1)]
 subcommand.
 ====
 
@@ -123,12 +123,12 @@ Command ping-node-ssh executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
-link:delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)],
-link:list-nodes.html#list-nodes[`list-nodes`(1)],
-link:ping-node-dcom.html#ping-node-dcom[`ping-node-dcom`(1)],
-link:setup-ssh.html#setup-ssh[`setup-ssh`(1)],
-link:update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)],
-link:version.html#version[`version`(1)]
+xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
+xref:delete-node-ssh.adoc#delete-node-ssh[`delete-node-ssh`(1)],
+xref:list-nodes.adoc#list-nodes[`list-nodes`(1)],
+xref:ping-node-dcom.adoc#ping-node-dcom[`ping-node-dcom`(1)],
+xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
+xref:update-node-ssh001.adoc#update-node-ssh[`update-node-ssh`(1)],
+xref:version.adoc#version[`version`(1)]
 
 

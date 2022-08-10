@@ -99,11 +99,11 @@ Command ping-connection-pool executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-connection-pool.html#create-connector-connection-pool[`create-connector-connection-pool`(1)],
-link:create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
-link:delete-connector-connection-pool.html#delete-connector-connection-pool[`delete-connector-connection-pool`(1)],
-link:delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)],
-link:list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`(1)],
-link:list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
+xref:create-connector-connection-pool.adoc#create-connector-connection-pool[`create-connector-connection-pool`(1)],
+xref:create-jdbc-connection-pool.adoc#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)],
+xref:delete-connector-connection-pool.adoc#delete-connector-connection-pool[`delete-connector-connection-pool`(1)],
+xref:delete-jdbc-connection-pool.adoc#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)],
+xref:list-connector-connection-pools.adoc#list-connector-connection-pools[`list-connector-connection-pools`(1)],
+xref:list-jdbc-connection-pools.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
 
 

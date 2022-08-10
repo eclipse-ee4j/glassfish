@@ -77,6 +77,6 @@ for descriptions of the following attributes:
 
 === See Also
 
-link:appclient.html#appclient[`appclient`(1M)]
+xref:appclient.adoc#appclient[`appclient`(1M)]
 
 

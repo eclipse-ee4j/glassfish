@@ -486,7 +486,7 @@ distinguish the equal sign (`=`).
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)],
-link:list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
+xref:delete-jdbc-connection-pool.adoc#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`(1)],
+xref:list-jdbc-connection-pools.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
 
 

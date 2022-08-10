@@ -131,9 +131,9 @@ Command list-batch-job-steps executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-batch-jobs.html#list-batch-jobs[`list-batch-jobs`(1)],
-link:list-batch-job-executions.html#list-batch-job-executions[`list-batch-job-executions`(1)],
-link:list-batch-runtime-configuration.html#list-batch-runtime-configuration[`list-batch-runtime-configuration`(1)],
-link:set-batch-runtime-configuration.html#set-batch-runtime-configuration[`set-batch-runtime-configuration`(1)]
+xref:list-batch-jobs.adoc#list-batch-jobs[`list-batch-jobs`(1)],
+xref:list-batch-job-executions.adoc#list-batch-job-executions[`list-batch-job-executions`(1)],
+xref:list-batch-runtime-configuration.adoc#list-batch-runtime-configuration[`list-batch-runtime-configuration`(1)],
+xref:set-batch-runtime-configuration.adoc#set-batch-runtime-configuration[`set-batch-runtime-configuration`(1)]
 
 

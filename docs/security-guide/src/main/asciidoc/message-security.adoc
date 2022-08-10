@@ -33,7 +33,7 @@ The following topics are addressed here:
 
 Some of the material in this chapter assumes a basic understanding of
 security and web services concepts. For more information about security,
-see link:system-security.html#about-system-security-in-glassfish-server[About System Security in {productName}].
+see xref:system-security.adoc#about-system-security-in-glassfish-server[About System Security in {productName}].
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console online help.
@@ -61,7 +61,7 @@ references declared by client applications.
 Message-level security can be configured for the entire {productName}
 or for specific applications or methods. Configuring message security at
 the application level is discussed in the
-link:application-development-guide.html#GSDVG[
+xref:application-development-guide.adoc#GSDVG[
 {productName} Application Development Guide].
 
 The following topics are addressed here:

@@ -70,7 +70,7 @@ You can create a Jakarta Mail session in the following ways:
 Jakarta Mail Sessions. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin create-mail-resource` command. For details, see
-the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 [[jakarta-mail-session-properties]]
 
@@ -114,7 +114,7 @@ String snName = "java:comp/env/mail/MyMailSession";
 Session session = (Session)ic.lookup(snName);
 ----
 
-For more information about the JNDI API, see link:jndi.html#beanr[Using
+For more information about the JNDI API, see xref:jndi.adoc#beanr[Using
 the Java Naming and Directory Interface].
 
 [[sending-and-reading-messages-using-jakarta-mail]]

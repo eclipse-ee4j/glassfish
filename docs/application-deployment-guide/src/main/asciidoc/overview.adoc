@@ -84,7 +84,7 @@ For instructions, see xref:deploying-applications.adoc#to-deploy-an-application-
 Application or Module in a Directory Format].
 * JSR 88 Deployment. A deployment mechanism implemented based on the JSR
 88 standard from `jcp.org`. It delivers vendor neutral deployment
-options. See xref:#jsr-88-client[JSR 88 Client] and xref:#giiel[JSR 88 Naming].
+options. See xref:#jsr-88-client[JSR 88 Client].
 
 A deployment plan, which deploys a portable archive along with a
 deployment plan containing {productName} deployment descriptors, can
@@ -376,7 +376,6 @@ The following topics are addressed here:
 * xref:#portable-naming[Portable Naming]
 * xref:#jndi-naming[JNDI Naming]
 * xref:#directory-structure[Directory Structure]
-* xref:#giiel[JSR 88 Naming]
 
 [[portable-naming]]
 

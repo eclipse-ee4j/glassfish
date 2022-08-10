@@ -570,8 +570,7 @@ following topics address several of these features:
 * <<Statement Tracing>>
 
 [[transparent-pool-reconfiguration]]
-
-Transparent Pool Reconfiguration
+====== Transparent Pool Reconfiguration
 
 When the properties or attributes of a JDBC connection pool are changed,
 the connection pool is destroyed and re-created. Normally, applications
@@ -610,7 +609,7 @@ retried.
 
 [[using-an-initialization-statement]]
 
-Using an Initialization Statement
+====== Using an Initialization Statement
 
 You can specify a statement that executes each time a physical
 connection to the database is created (not reused) from a JDBC
@@ -635,7 +634,7 @@ asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="sql-strin
 
 [[setting-a-statement-timeout]]
 
-Setting a Statement Timeout
+====== Setting a Statement Timeout
 
 An abnormally long running JDBC query executed by an application may
 leave it in a hanging state unless a timeout is explicitly set on the
@@ -657,7 +656,7 @@ link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-po
 
 [[statement-leak-detection-and-leaked-statement-reclamation]]
 
-Statement Leak Detection and Leaked Statement Reclamation
+====== Statement Leak Detection and Leaked Statement Reclamation
 
 If statements are not closed by an application after use, it is possible
 for the application to run out of cursors. Enabling statement leak
@@ -680,8 +679,7 @@ subcommand. For example:
 asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-timeout-in-seconds=300
 ----
 
-When selecting a value for Statement Leak Timeout In Seconds, make sure
-that:
+When selecting a value for Statement Leak Timeout In Seconds, make sure that:
 
 * It is less than the Connection Leak Timeout; otherwise, the connection
 could be closed before the statement leak is recognized.
@@ -705,7 +703,7 @@ asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-reclaim=true
 
 [[statement-caching]]
 
-Statement Caching
+====== Statement Caching
 
 Statement caching stores statements, prepared statements, and callable
 statements that are executed repeatedly by applications in a cache,
@@ -739,7 +737,7 @@ the statement cache are recreated.
 
 [[statement-tracing]]
 
-Statement Tracing
+====== Statement Tracing
 
 You can trace the SQL statements executed by applications that use a
 JDBC connection pool. Set the SQL Trace Listeners attribute to a
@@ -865,15 +863,13 @@ database might be specified as `jdbc/payrolldb`.
 Before You Begin
 
 Before creating a JDBC resource, you must first create a JDBC connection
-pool. For instructions, see xref:#to-create-a-jdbc-connection-pool[To Create a JDBC Connection
-Pool].
+pool. For instructions, see xref:#to-create-a-jdbc-connection-pool[To Create a JDBC Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a JDBC resource by using the
 link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`] subcommand.
 +
-Information about properties for the subcommand is included in this help
-page.
+Information about properties for the subcommand is included in this help page.
 3. If necessary, notify users that the new resource has been created.
 
 [[ggplj]]

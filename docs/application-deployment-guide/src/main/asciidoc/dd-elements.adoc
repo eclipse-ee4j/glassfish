@@ -1502,7 +1502,7 @@ xref:#one-one-finders[`one-one-finders`]
  |zero or one |Describes the finders for CMP 1.1 beans.
 
 a|
-xref:#prefaceetch-disabled[`prefetch-disabled`]
+xref:#prefetch-disabled[`prefetch-disabled`]
 
 
  |zero or one |Disables prefetching of entity bean states for the
@@ -2043,6 +2043,11 @@ dies or when the calling thread is not in use and the pool has run out
 of connections. If `false`, the thread must obtain a connection from the
 pool each time the thread requires a connection.
 
+// It is not possible to generate tables larger than a page in PDF
+// See https://github.com/asciidoctor/asciidoctor-pdf/issues/1199#issuecomment-1128211534
+|
+|
+a|
 This attribute associates connections with a thread such that when the
 same thread is in need of connections, it can reuse the connections
 already associated with that thread. In this case, the overhead of
@@ -2054,8 +2059,6 @@ value is much higher than the `max-pool-size` value, a lot of time is
 spent associating connections with a new thread after dissociating them
 from an older one. Use this attribute in cases where the thread pool
 should reuse connections to avoid this overhead.
-
-| | |
 
 |`match-connections` |`true` |If `true`, enables connection matching.
 You can set to `false` if connections are homogeneous.
@@ -2717,7 +2720,7 @@ none - contains data
 
 Specifies that a field belongs to the default hierarchical fetch group,
 and enables prefetching for a CMR field. To disable prefetching for
-specific query methods, use a xref:#prefaceetch-disabled[`prefetch-disabled`] element
+specific query methods, use a xref:#prefetch-disabled[`prefetch-disabled`] element
 in the `glassfish-ejb-jar.xml` file.
 
 [[superelements-50]]
@@ -4474,17 +4477,21 @@ Table C-67 `glassfish-web-app` Properties
 [width="100%",cols="35%,23%,42%",options="header",]
 |===
 |Property |Default |Description
-|`allowLinking` |`false` a|
+
+|`allowLinking`
+|`false`
+a|
 If `true`, resources in this web application that are symbolic links are
 served. You can also define this property for a virtual server. Web
 applications on the virtual server that do not define this property use
 the virtual server's value. For details, see
 link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
-Caution: Setting this property to `true` on Windows systems exposes JSP
-source code.
+Caution: Setting this property to `true` on Windows systems exposes JSP source code.
 
-|`alternatedocroot_n` |none a|
+|`alternatedocroot_n`
+|none
+a|
 Specifies an alternate document root (docroot), where n is a positive
 integer that allows specification of more than one. Alternate docroots
 allow web applications to serve requests for certain resources from
@@ -4506,6 +4513,11 @@ The URI pattern of the first alternate docroot uses an exact match,
 whereas the URI patterns of the second and third alternate docroots use
 extension and longest path prefix matches, respectively.
 
+// It is not possible to generate tables larger than a page in PDF
+// See https://github.com/asciidoctor/asciidoctor-pdf/issues/1199#issuecomment-1128211534
+|
+|
+a|
 [source,xml]
 ----
 <property name="alternatedocroot_1"
@@ -4525,9 +4537,10 @@ You can set this property for all the web applications on a specific
 virtual server. For details, see
 link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
-|`valve_n` |none a|
-This property is deprecated. Use the xref:#valve[`valve`] subelement
-instead.
+|`valve_n`
+|none
+a|
+This property is deprecated. Use the xref:#valve[`valve`] subelement instead.
 
 Specifies a fully qualified class name of a custom valve, where n is a
 positive integer that allows specification of more than one. The valve
@@ -4546,7 +4559,9 @@ You can set this property for all the web applications on a specific
 virtual server. For details, see
 link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
-|`listener_n` |none a|
+|`listener_n`
+|none
+a|
 Specifies a fully qualified class name of a custom Catalina listener,
 where n is a positive integer that allows specification of more than
 one. The listener class must implement the
@@ -4564,19 +4579,26 @@ You can set this property for all the web applications on a specific
 virtual server. For details, see
 link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
-|`crossContextAllowed` |`true` |If `true`, allows this web application
+|`crossContextAllowed`
+|`true`
+|If `true`, allows this web application
 to access the contexts of other web applications using the
 `ServletContext.``getContext()`method.
 
-|`relativeRedirectAllowed` |`false` |If `true`, allows this web
-application to send a relative URL to the client using
+|`relativeRedirectAllowed`
+|`false`
+|If `true`, allows this web application to send a relative URL to the client using
 `HttpServletResponse.``sendRedirect()`, and instructs the web container
 not to translate any relative URLs to fully qualified ones.
 
-|`reuseSessionID` |`false` |If `true`, sessions generated for this web
+|`reuseSessionID`
+|`false`
+|If `true`, sessions generated for this web
 application use the session ID specified in the request.
 
-|`securePagesWithPragma` |`true` a|
+|`securePagesWithPragma`
+|`true`
+a|
 Set this property to `false` to ensure that for this web application
 file downloads using SSL work properly in Internet Explorer.
 
@@ -4584,23 +4606,26 @@ You can set this property for all the web applications on a specific
 virtual server. For details, see
 link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
-|`singleThreadedServletPoolSize` |`5` |Specifies the maximum number of
-servlet instances allocated for each `SingleThreadModel` servlet in the
-web application.
+|`singleThreadedServletPoolSize`
+|`5`
+|Specifies the maximum number of servlet instances allocated for
+each `SingleThreadModel` servlet in the web application.
 
-|`tempdir` a|
+|`tempdir`
+a|
 domain-dir`/generated/`app-name
 
 or
 
 domain-dir`/generated/`module-name
 
- |Specifies a temporary directory for use by this web module. This value
+|Specifies a temporary directory for use by this web module. This value
 is used to construct the value of the `javax.servlet.context.``tempdir`
 context attribute. Compiled JSP files are also placed in this directory.
 
-|`useResponseCTForHeaders` |`false` |If `true`, response headers are
-encoded using the response's charset instead of the default (UTF-8).
+|`useResponseCTForHeaders`
+|`false`
+|If `true`, response headers are encoded using the response's charset instead of the default (UTF-8).
 |===
 
 
@@ -5246,6 +5271,11 @@ calling thread is not in use and the pool has run out of connections. If
 `false`, the thread must obtain a connection from the pool each time the
 thread requires a connection.
 
+// It is not possible to generate tables larger than a page in PDF
+// See https://github.com/asciidoctor/asciidoctor-pdf/issues/1199#issuecomment-1128211534
+|
+|
+a|
 This attribute associates connections with a thread such that when the
 same thread is in need of connections, it can reuse the connections
 already associated with that thread. In this case, the overhead of
@@ -7696,8 +7726,7 @@ xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
 ==== Subelements
 
-The following table describes subelements for the `prefetch-disabled`
-element.
+The following table describes subelements for the `prefetch-disabled` element.
 
 [[fvyyn]]
 
@@ -8096,7 +8125,7 @@ Specifies a query method.
 
 ==== Superelements
 
-xref:#prefaceetch-disabled[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
+xref:#prefetch-disabled[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
 
 [[subelements-142]]
 

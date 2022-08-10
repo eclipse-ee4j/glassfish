@@ -703,7 +703,7 @@ link:reference-manual/set-log-file-format.html#set-log-file-format[`set-log-file
 link:reference-manual/set-log-levels.html#set-log-levels[`set-log-levels`]::
   Sets the log level for a module. Supported in remote mode only. For
   procedural information in this guide, see
-  xref:logging.adoc#gklml[Setting Log Levels].
+  xref:logging.adoc#setting-log-levels[Setting Log Levels].
 
 [[orb-subcommands]]
 

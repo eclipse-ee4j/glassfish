@@ -6,7 +6,7 @@ prev=preface.html
 
 = {productName} 7 Release Notes
 
-[[glassfish-server-open-source-edition-release-notes]]
+[[GSRLN]]
 == 1 {productName} 7 Release Notes
 
 [CAUTION]
@@ -422,8 +422,6 @@ deployment, you can set this property value to False.
 
 ==== Update Tool and pkg Command no longer part of {productName}
 
-[[description-2]]
-
 ===== Description
 
 In previous releases, you could update your {productName} software
@@ -440,8 +438,6 @@ No workaround.
 [[java-db-has-been-replaced-by-apache-derby]]
 
 ==== Java DB has been replaced by Apache Derby
-
-[[description-3]]
 
 ===== Description
 

@@ -6,7 +6,7 @@ prev=preface.html
 
 = {productName} 7 Embedded Server Guide
 
-[[glassfish-server-open-source-edition-embedded-server-guide]]
+[[GSESG]]
 == 1 {productName} 7 Embedded Server Guide
 
 This document explains how to run applications in embedded {productName} and to develop applications in which

@@ -7,7 +7,6 @@ prev=adding-configuration-data.html
 
 = Adding Container Capabilities
 
-[[adding-container-capabilities]]
 == Adding Container Capabilities
 
 Applications run on {productName} in containers. {productName}

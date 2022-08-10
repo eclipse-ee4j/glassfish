@@ -7,7 +7,6 @@ prev=writing-hk2-components.html
 
 = Extending the Administration Console
 
-[[extending-the-administration-console]]
 == Extending the Administration Console
 
 The Administration Console is a browser-based tool for administering

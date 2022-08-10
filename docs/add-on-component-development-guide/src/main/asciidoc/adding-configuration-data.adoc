@@ -7,7 +7,6 @@ prev=adding-monitoring-capabilities.html
 
 = Adding Configuration Data for a Component
 
-[[adding-configuration-data-for-a-component]]
 == Adding Configuration Data for a Component
 
 The configuration data of a component determines the characteristics and

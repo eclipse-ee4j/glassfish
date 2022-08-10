@@ -14,10 +14,10 @@ This chapter describes the high availability features in {productName} 7.
 
 The following topics are addressed here:
 
-* xref:#overview-of-high-availability[Overview of High Availability]
-* xref:#how-glassfish-server-provides-high-availability[How {productName} Provides High Availability]
-* xref:#recovering-from-failures[Recovering from Failures]
-* xref:#more-information[More Information]
+* <<Overview of High Availability>>
+* <<How {productName} Provides High Availability>>
+* <<Recovering from Failures>>
+* <<More Information>>
 
 [[overview-of-high-availability]]
 
@@ -35,10 +35,10 @@ minimum application downtime and enhanced transactional security.
 
 {productName} provides the following high availability features:
 
-* xref:#load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
-* xref:#high-availability-session-persistence[High Availability Session Persistence]
-* xref:#high-availability-java-message-service[High Availability Java Message Service]
-* xref:#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]
+* <<Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module>>
+* <<High Availability Session Persistence>>
+* <<High Availability Java Message Service>>
+* <<RMI-IIOP Load Balancing and Failover>>
 
 [[load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module]]
 
@@ -116,8 +116,7 @@ Connection Failover::
   For more information about JMS connection failover, see
   xref:jms.adoc#connection-failover[Connection Failover].
 
-[[rmi-iiop-load-balancing-and-failover]]
-
+[[overview-rmiiop-lb-failover]]
 ==== RMI-IIOP Load Balancing and Failover
 
 With RMI-IIOP load balancing, IIOP client requests are distributed to
@@ -155,8 +154,8 @@ xref:rmi-iiop.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing 
 {productName} provides high availability through the following
 subcomponents and features:
 
-* xref:#storage-for-session-state-data[Storage for Session State Data]
-* xref:#highly-available-clusters[Highly Available Clusters]
+* <<Storage for Session State Data>>
+* <<Highly Available Clusters>>
 
 [[storage-for-session-state-data]]
 
@@ -277,10 +276,10 @@ subcomponents after hardware failures such as disk crashes.
 
 The following topics are addressed here:
 
-* xref:#recovering-the-domain-administration-server[Recovering the Domain Administration Server]
-* xref:#recovering-glassfish-server-instances[Recovering {productName} Instances]
-* xref:#recovering-the-http-load-balancer-and-web-server[Recovering the HTTP Load Balancer and Web Server]
-* xref:#recovering-message-queue[Recovering Message Queue]
+* <<Recovering the Domain Administration Server>>
+* <<Recovering {productName} Instances>>
+* <<Recovering the HTTP Load Balancer and Web Server>>
+* <<Recovering Message Queue>>
 
 [[recovering-the-domain-administration-server]]
 

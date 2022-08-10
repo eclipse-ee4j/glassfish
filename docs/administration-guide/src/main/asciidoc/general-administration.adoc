@@ -740,7 +740,7 @@ active configuration of a module.
 2. Display the current active configuration of a module by using the
 link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`get-active-module-config`] subcommand.
 
-[[GSADG1104]]
+[[ex-dcacm]]
 Example 2-20 Displaying the Current Active Configuration of a Module
 
 This example displays the current active configuration of the JMS

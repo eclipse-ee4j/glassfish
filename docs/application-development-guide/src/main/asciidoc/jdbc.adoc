@@ -32,12 +32,12 @@ for an application's database access if it does not use standard Jakarta EE
 
 The following topics are addressed here:
 
-* xref:#statements[Statements]
-* xref:#connections[Connections]
-* xref:#connection-wrapping[Connection Wrapping]
-* xref:#allowing-non-component-callers[Allowing Non-Component Callers]
-* xref:#using-application-scoped-resources[Using Application-Scoped Resources]
-* xref:#restrictions-and-optimizations[Restrictions and Optimizations]
+* <<Statements>>
+* <<Connections>>
+* <<Connection Wrapping>>
+* <<Allowing Non-Component Callers>>
+* <<Using Application-Scoped JDBC Resources>>
+* <<Restrictions and Optimizations>>
 
 [[statements]]
 
@@ -45,11 +45,11 @@ The following topics are addressed here:
 
 The following topics are addressed here:
 
-* xref:#using-an-initialization-statement[Using an Initialization Statement]
-* xref:#setting-a-statement-timeout[Setting a Statement Timeout]
-* xref:#statement-leak-detection-and-leaked-statement-reclamation[Statement Leak Detection and Leaked Statement Reclamation]
-* xref:#statement-caching[Statement Caching]
-* xref:#statement-tracing[Statement Tracing]
+* <<Using an Initialization Statement>>
+* <<Setting a Statement Timeout>>
+* <<Statement Leak Detection and Leaked Statement Reclamation>>
+* <<Statement Caching>>
+* <<Statement Tracing>>
 
 [[using-an-initialization-statement]]
 
@@ -265,13 +265,13 @@ asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queri
 
 The following topics are addressed here:
 
-* xref:#transparent-pool-reconfiguration[Transparent Pool Reconfiguration]
-* xref:#disabling-pooling[Disabling Pooling]
-* xref:#associating-connections-with-threads[Associating Connections with Threads]
-* xref:#custom-connection-validation[Custom Connection Validation]
-* xref:#sharing-connections[Sharing Connections]
-* xref:#marking-bad-connections[Marking Bad Connections]
-* xref:#handling-invalid-connections[Handling Invalid Connections]
+* <<Transparent Pool Reconfiguration>>
+* <<Disabling Pooling>>
+* <<Associating Connections with Threads>>
+* <<Custom Connection Validation>>
+* <<Sharing Connections>>
+* <<Marking Bad Connections>>
+* <<Handling Invalid Connections>>
 
 [[transparent-pool-reconfiguration]]
 
@@ -497,8 +497,6 @@ finally{
 }
 ----
 
-[[handling-invalid-connections]]
-
 ==== Handling Invalid Connections
 
 If a `ConnectionErrorOccured` event occurs, the {productName}
@@ -554,9 +552,9 @@ connection pool is resized.
 
 The following topics are addressed here:
 
-* xref:#wrapping-connections[Wrapping Connections]
-* xref:#obtaining-a-physical-connection-from-a-wrapped-connection[Obtaining a Physical Connection From a Wrapped Connection]
-* xref:#GSDVG00509[Using the `Connection.unwrap()` Method]
+* <<Wrapping Connections>>
+* <<Obtaining a Physical Connection From a Wrapped Connection>>
+* <<Using the `Connection.unwrap()` Method>>
 
 [[wrapping-connections]]
 
@@ -659,17 +657,15 @@ information about the Transaction Synchronization Registry, see
 xref:transaction-service.adoc#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the
 Transaction Synchronization Registry, and `UserTransaction`].
 
-[[using-application-scoped-resources]]
+[[using-application-scoped-jdbc-resources]]
 
-=== Using Application-Scoped Resources
+=== Using Application-Scoped JDBC Resources
 
 You can define an application-scoped database or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
 "link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
-
-[[restrictions-and-optimizations]]
 
 === Restrictions and Optimizations
 

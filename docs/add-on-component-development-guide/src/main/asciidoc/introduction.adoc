@@ -22,12 +22,10 @@ the `asadmin` utility.
 
 The following topics are addressed here:
 
-* xref:#glassfish-server-modular-architecture-and-add-on-components[{productName} Modular Architecture and Add-On
-Components]
-* xref:#osgi-alliance-module-management-subsystem[OSGi Alliance Module Management Subsystem]
-* xref:#hundred-kilobyte-kernel[Hundred-Kilobyte Kernel]
-* xref:#overview-of-the-development-process-for-an-add-on-component[Overview of the Development Process for an Add-On
-Component]
+* <<{productName} Modular Architecture and Add-On Components>>
+* <<OSGi Alliance Module Management Subsystem>>
+* <<Hundred-Kilobyte Kernel>>
+* <<Overview of the Development Process for an Add-On Component>>
 
 [[glassfish-server-modular-architecture-and-add-on-components]]
 
@@ -50,8 +48,7 @@ has the following characteristics:
 
 * The component provides a set of Java classes.
 * The component offers services and public interfaces.
-* The component implements the public interfaces with a set of private
-classes.
+* The component implements the public interfaces with a set of private classes.
 * The component depends on other components.
 
 Add-on components that you develop interact with {productName} in the
@@ -125,16 +122,14 @@ monitoring data, it must provide that data to users through {productName} admini
 To develop add-on components that meet these requirements, follow the
 development process that is described in the following sections:
 
-* xref:#writing-hk2-components[Writing HK2 Components]
-* xref:#extending-the-administration-console[Extending the Administration Console]
-* xref:#extending-the-asadmin-utility[Extending the `asadmin` Utility]
-* xref:#adding-monitoring-capabilities[Adding Monitoring Capabilities]
-* xref:#adding-configuration-data-for-a-component[Adding Configuration Data for a Component]
-* xref:#adding-container-capabilities[Adding Container Capabilities]
-* xref:#creating-a-session-persistence-module[Creating a Session Persistence Module]
-* xref:#packaging-and-delivering-an-add-on-component[Packaging and Delivering an Add-On Component]
-
-[[writing-hk2-components]]
+* <<Writing HK2 Components>>
+* <<Extending the Administration Console]
+* <<Extending the `asadmin` Utility]
+* <<Adding Monitoring Capabilities>>
+* <<Adding Configuration Data for a Component>>
+* <<Adding Container Capabilities>>
+* <<Creating a Session Persistence Module>>
+* <<Packaging and Delivering an Add-On Component>>
 
 ==== Writing HK2 Components
 
@@ -148,8 +143,6 @@ service implements an HK2 contract.
 
 For more information, see xref:writing-hk2-components.adoc#writing-hk2-components[Writing
 HK2 Components].
-
-[[extending-the-administration-console]]
 
 ==== Extending the Administration Console
 
@@ -168,8 +161,6 @@ For more information, see
 xref:extending-the-admin-console.adoc#extending-the-administration-console[Extending the Administration
 Console].
 
-[[extending-the-asadmin-utility]]
-
 ==== Extending the `asadmin` Utility
 
 The `asadmin` utility is a command-line tool for configuring and
@@ -182,8 +173,6 @@ link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
 For more information, see xref:extending-asadmin.adoc#extending-the-asadmin-utility[Extending the
 `asadmin` Utility].
-
-[[adding-monitoring-capabilities]]
 
 ==== Adding Monitoring Capabilities
 
@@ -203,10 +192,7 @@ interfaces to monitor statistics from any installed {productName}
 component, regardless of the origin of the component.
 
 For more information, see
-xref:adding-monitoring-capabilities.adoc#adding-monitoring-capabilities[Adding Monitoring
-Capabilities].
-
-[[adding-configuration-data-for-a-component]]
+xref:adding-monitoring-capabilities.adoc#adding-monitoring-capabilities[Adding Monitoring Capabilities].
 
 ==== Adding Configuration Data for a Component
 
@@ -223,10 +209,8 @@ configure an add-on component in the same way as they can configure
 other {productName} components.
 
 For more information, see
-xref:adding-configuration-data.adoc#adding-configuration-data-for-a-component[Adding Configuration Data for a
-Component].
-
-[[adding-container-capabilities]]
+xref:adding-configuration-data.adoc#adding-configuration-data-for-a-component[
+Adding Configuration Data for a Component].
 
 ==== Adding Container Capabilities
 
@@ -237,10 +221,7 @@ you to run new types of applications and to deploy new archive types in
 {productName}.
 
 For more information, see
-xref:adding-container-capabilities.adoc#adding-container-capabilities[Adding Container
-Capabilities].
-
-[[creating-a-session-persistence-module]]
+xref:adding-container-capabilities.adoc#adding-container-capabilities[Adding Container Capabilities].
 
 ==== Creating a Session Persistence Module
 
@@ -259,8 +240,6 @@ Availability Administration Guide.
 For more information, see
 xref:session-persistence-modules.adoc#creating-a-session-persistence-module[Creating a Session
 Persistence Module].
-
-[[packaging-and-delivering-an-add-on-component]]
 
 ==== Packaging and Delivering an Add-On Component
 

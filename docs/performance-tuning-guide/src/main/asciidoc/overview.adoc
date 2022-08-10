@@ -22,7 +22,7 @@ The following topics are addressed here:
 * xref:#process-overview[Process Overview]
 * xref:#understanding-operational-requirements[Understanding Operational Requirements]
 * xref:#general-tuning-concepts[General Tuning Concepts]
-* xref:#further-information[Further Information]
+* xref:#overview-further-information[Further Information]
 
 [[process-overview]]
 
@@ -502,7 +502,7 @@ network capacity needs.
 ahead for the future will help avoid crisis situations and system
 downtimes for upgrades.
 
-[[further-information]]
+[[overview-further-information]]
 
 === Further Information
 

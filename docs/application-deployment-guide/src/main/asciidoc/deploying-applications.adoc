@@ -53,8 +53,7 @@ The following topics are addressed here:
 * xref:#to-undeploy-an-application-or-module[To Undeploy an Application or Module]
 * xref:#to-reload-changes-to-applications-or-modules-dynamically[To Reload Changes to Applications or Modules Dynamically]
 * xref:#to-deploy-an-application-or-module-automatically[To Deploy an Application or Module Automatically]
-* xref:#to-deploy-an-application-or-module-by-using-a-deployment-plan[To Deploy an Application or Module by Using a Deployment
-Plan]
+* xref:#to-deploy-an-application-or-module-by-using-a-deployment-plan[To Deploy an Application or Module by Using a Deployment Plan]
 * xref:#to-deploy-an-application-or-module-in-a-directory-format[To Deploy an Application or Module in a Directory Format]
 
 Instructions for accomplishing these tasks by using the Administration
@@ -702,8 +701,7 @@ $ jar r -tvf myotherplan.jar
 See Also
 
 The deployment plan is part of the implementation of JSR 88. For more
-information about JSR 88, see xref:overview.adoc#giiel[JSR 88 Naming] and
-the JSR 88 page at `http://jcp.org/en/jsr/detail?id=88`.
+information about JSR 88, see the JSR 88 page at `http://jcp.org/en/jsr/detail?id=88`.
 
 [[to-deploy-an-application-or-module-in-a-directory-format]]
 

@@ -22,7 +22,7 @@ The following topics are addressed here:
 * xref:#enabling-verbose-mode[Enabling Verbose Mode]
 * xref:#class-loader-debugging[Class Loader Debugging]
 * xref:#glassfish-server-logging[{productName} Logging]
-* xref:#profiling-tools[Profiling Tools]
+* xref:#debug-profiling-tools[Profiling Tools]
 
 [[enabling-debugging]]
 
@@ -243,7 +243,7 @@ To change logging settings, select Logger Settings under the relevant configurat
 
 For details about logging, click the Help button in the Administration Console.
 
-[[profiling-tools]]
+[[debug-profiling-tools]]
 
 === Profiling Tools
 

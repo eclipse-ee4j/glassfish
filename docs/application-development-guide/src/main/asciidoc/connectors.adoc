@@ -45,11 +45,11 @@ the xref:application-deployment-guide.adoc#GSDPG[
 
 The following topics are addressed here:
 
-* xref:#connector-support-in-the-glassfish-server[Connector Support in the {productName}]
-* xref:#advanced-connector-configuration-options[Advanced Connector Configuration Options]
-* xref:#inbound-communication-support[Inbound Communication Support]
-* xref:#outbound-communication-support[Outbound Communication Support]
-* xref:#configuring-a-message-driven-bean-to-use-a-resource-adapter[Configuring a Message Driven Bean to Use a Resource Adapter]
+* <<Connector Support in the {productName}>>
+* <<Advanced Connector Configuration Options>>
+* <<Inbound Communication Support>>
+* <<Outbound Communication Support>>
+* <<Configuring a Message Driven Bean to Use a Resource Adapter>>
 
 [[connector-support-in-the-glassfish-server]]
 
@@ -132,18 +132,18 @@ pools and the connector resource properties without restarting the
 
 The following topics are addressed here:
 
-* xref:#thread-associations[Thread Associations]
-* xref:#security-maps[Security Maps]
-* xref:#work-security-maps[Work Security Maps]
-* xref:#overriding-configuration-properties[Overriding Configuration Properties]
-* xref:#testing-a-connector-connection-pool[Testing a Connector Connection Pool]
-* xref:#flushing-a-connector-connection-pool[Flushing a Connector Connection Pool]
-* xref:#handling-invalid-connections[Handling Invalid Connections]
-* xref:#setting-the-shutdown-timeout[Setting the Shutdown Timeout]
-* xref:#specifying-the-class-loading-policy[Specifying the Class Loading Policy]
-* xref:#using-last-agent-optimization-of-transactions[Using Last Agent Optimization of Transactions]
-* xref:#disabling-pooling-for-a-connection[Disabling Pooling for a Connection]
-* xref:#using-application-scoped-connectors[Using Application-Scoped Connectors]
+* <<Thread Associations>>
+* <<Security Maps>>
+* <<Work Security Maps>>
+* <<Overriding Configuration Properties>>
+* <<Testing a Connector Connection Pool>>
+* <<Flushing a Connector Connection Pool>>
+* <<Handling Invalid Connections>>
+* <<Setting the Shutdown Timeout>>
+* <<Specifying the Class Loading Policy>>
+* <<Using Last Agent Optimization of Transactions>>
+* <<Disabling Pooling for a Connection>>
+* <<Using Application-Scoped Connectors>>
 
 [[thread-associations]]
 
@@ -311,8 +311,6 @@ corner of the page. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin flush-connection-pool` command. For details, see the
 xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
-
-[[handling-invalid-connections]]
 
 ==== Handling Invalid Connections
 

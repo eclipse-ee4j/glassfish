@@ -56,37 +56,37 @@ target::
 
 This example lists all loggers attributes for the default domain.
 
-[source,subs="none"]
+[source,text]
 ----
 asadmin> list-log-attributes
 handlers        <org.glassfish.main.jul.handler.GlassFishLogHandler,org.glassfish.main.jul.handler.SimpleLogHandler,org.glassfish.main.jul.handler.SyslogHandler>
-org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.capacity      <10000>
-org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.timeoutInSeconds      <0>
+org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.capacity      \<10000>
+org.glassfish.main.jul.handler.GlassFishLogHandler.buffer.timeoutInSeconds      \<0>
 org.glassfish.main.jul.handler.GlassFishLogHandler.enabled      <true>
 org.glassfish.main.jul.handler.GlassFishLogHandler.encoding     <UTF-8>
 org.glassfish.main.jul.handler.GlassFishLogHandler.file <${com.sun.aas.instanceRoot}/logs/server.log>
-org.glassfish.main.jul.handler.GlassFishLogHandler.flushFrequency       <1>
+org.glassfish.main.jul.handler.GlassFishLogHandler.flushFrequency       \<1>
 org.glassfish.main.jul.handler.GlassFishLogHandler.formatter    <org.glassfish.main.jul.formatter.ODLLogFormatter>
 org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields     <>
 org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.multiline  <true>
 org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.printSource        <false>
 org.glassfish.main.jul.handler.GlassFishLogHandler.redirectStandardStreams      <true>
 org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.compress    <false>
-org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.megabytes     <100>
-org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes       <0>
-org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles     <0>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.megabytes     \<100>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.limit.minutes       \<0>
+org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.maxArchiveFiles     \<0>
 org.glassfish.main.jul.handler.GlassFishLogHandler.rotation.rollOnDateChange    <false>
 org.glassfish.main.jul.handler.SimpleLogHandler.formatter       <org.glassfish.main.jul.formatter.UniformLogFormatter>
 org.glassfish.main.jul.handler.SimpleLogHandler.formatter.excludedFields        <>
 org.glassfish.main.jul.handler.SimpleLogHandler.formatter.printSource   <false>
 org.glassfish.main.jul.handler.SimpleLogHandler.useErrorStream  <true>
-org.glassfish.main.jul.handler.SyslogHandler.buffer.capacity    <5000>
-org.glassfish.main.jul.handler.SyslogHandler.buffer.timeoutInSeconds    <300>
+org.glassfish.main.jul.handler.SyslogHandler.buffer.capacity    \<5000>
+org.glassfish.main.jul.handler.SyslogHandler.buffer.timeoutInSeconds    \<300>
 org.glassfish.main.jul.handler.SyslogHandler.enabled    <false>
 org.glassfish.main.jul.handler.SyslogHandler.encoding   <UTF-8>
 org.glassfish.main.jul.handler.SyslogHandler.formatter  <java.util.logging.SimpleFormatter>
 org.glassfish.main.jul.handler.SyslogHandler.host       <>
-org.glassfish.main.jul.handler.SyslogHandler.port       <514>
+org.glassfish.main.jul.handler.SyslogHandler.port       \<514>
 Command list-log-attributes executed successfully.
 ----
 

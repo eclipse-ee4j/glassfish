@@ -128,8 +128,6 @@ When this error occurs, check the following:
 
 ==== Is the Server Available Locally?
 
-[[description-2]]
-
 ===== Description
 
 If the server cannot be accessed from the web, but it is running
@@ -161,8 +159,6 @@ does not appear, see xref:#did-the-server-start[Did the Server Start?].
 [[is-the-proxy-setting-causing-a-problem]]
 
 ==== Is the Proxy Setting Causing a Problem?
-
-[[description-3]]
 
 ===== Description
 

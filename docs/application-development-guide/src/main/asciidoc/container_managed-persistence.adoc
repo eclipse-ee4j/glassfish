@@ -15,14 +15,14 @@ persistence (CMP) works in {productName}.
 
 The following topics are addressed here:
 
-* xref:#glassfish-server-support-for-cmp[{productName} Support for CMP]
-* xref:#cmp-mapping[CMP Mapping]
-* xref:#automatic-schema-generation-for-cmp[Automatic Schema Generation for CMP]
-* xref:#schema-capture[Schema Capture]
-* xref:#configuring-the-cmp-resource[Configuring the CMP Resource]
-* xref:#performance-related-features[Performance-Related Features]
-* xref:#GSDVG00157[Configuring Queries for 1.1 Finders]
-* xref:#cmp-restrictions-and-optimizations[CMP Restrictions and Optimizations]
+* <<{productName} Support for CMP>>
+* <<CMP Mapping>>
+* <<Automatic Schema Generation for CMP>>
+* <<Schema Capture>>
+* <<Configuring the CMP Resource>>
+* <<Performance-Related Features>>
+* <<Configuring Queries for 1.1 Finders>>
+* <<CMP Restrictions and Optimizations>>
 
 
 [NOTE]
@@ -58,7 +58,7 @@ Enterprise JavaBeans Specification, v2.1. This includes the following:
 ** Support for compound (multi-column) primary keys.
 ** Support for sophisticated custom finder methods.
 ** Standards-based query language (EJB QL).
-** CMP runtime support. See xref:#configuring-the-cmp-resource[Configuring the CMP Resource].
+** CMP runtime support. See <<Configuring the CMP Resource>>.
 
 * {productName} performance-related features, including the following:
 ** Version column consistency checking
@@ -66,7 +66,7 @@ Enterprise JavaBeans Specification, v2.1. This includes the following:
 ** Read-Only Beans
 
 +
-For details, see xref:#performance-related-features[Performance-Related Features].
+For details, see <<Performance-Related Features>>.
 
 [[cmp-mapping]]
 
@@ -77,9 +77,9 @@ mapping CMP fields and CMR fields (relationships) to the database.
 
 The following topics are addressed here:
 
-* xref:#mapping-capabilities[Mapping Capabilities]
-* xref:#the-mapping-deployment-descriptor-file[The Mapping Deployment Descriptor File]
-* xref:#mapping-considerations[Mapping Considerations]
+* <<Mapping Capabilities>>
+* <<The Mapping Deployment Descriptor File>>
+* <<Mapping Considerations>>
 
 [[mapping-capabilities]]
 
@@ -125,7 +125,7 @@ Guide.
 
 The `sun-cmp-mappings.xml` file can be automatically generated and does
 not have to exist prior to deployment. For details, see
-xref:#generation-options-for-cmp[Generation Options for CMP].
+<<Generation Options for CMP>>.
 
 The `sun-cmp-mappings.xml` file maps CMP fields and CMR fields
 (relationships) to the database. A primary table must be selected for
@@ -159,9 +159,9 @@ are proficient in editing XML.
 
 The mapping information is developed in conjunction with the database
 schema (`.dbschema`) file, which can be automatically captured when you
-deploy the bean (see xref:#automatic-database-schema-capture[Automatic Database Schema Capture]).
+deploy the bean (see <<Automatic Database Schema Capture>>).
 You can manually generate the schema using the `capture-schema` utility
-(xref:#using-the-capture-schema-utility[Using the `capture-schema` Utility]).
+(<<Using the `capture-schema` Utility>>).
 
 [[mapping-considerations]]
 
@@ -169,16 +169,16 @@ You can manually generate the schema using the `capture-schema` utility
 
 The following topics are addressed here:
 
-* xref:#join-tables-and-relationships[Join Tables and Relationships]
-* xref:#automatic-primary-key-generation[Automatic Primary Key Generation]
-* xref:#fixed-length-char-primary-keys[Fixed Length CHAR Primary Keys]
-* xref:#managed-fields[Managed Fields]
-* xref:#blob-support[BLOB Support]
-* xref:#clob-support[CLOB Support]
+* <<Join Tables and Relationships>>
+* <<Automatic Primary Key Generation>>
+* <<Fixed Length CHAR Primary Keys>>
+* <<Managed Fields>>
+* <<BLOB Support>>
+* <<CLOB Support>>
 
 The data types used in automatic schema generation are also suggested
 for manual mapping. These data types are described in
-xref:#supported-data-types-for-cmp[Supported Data Types for CMP].
+<<Supported Data Types for CMP>>.
 
 [[join-tables-and-relationships]]
 
@@ -233,7 +233,7 @@ synchronized with the database.
 A managed field can have any `fetched-with` subelement. If the
 `fetched-with` subelement is `<default/>`, the
 `-DAllowManagedFieldsInDefaultFetchGroup` flag must be set to `true`.
-See xref:#default-fetch-group-flags[Default Fetch Group Flags] and
+See <<Default Fetch Group Flags>> and
 "link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName}
 Application Deployment Guide.
 
@@ -342,8 +342,8 @@ performance, security, and so on.
 
 The following topics are addressed here:
 
-* xref:#supported-data-types-for-cmp[Supported Data Types for CMP]
-* xref:#generation-options-for-cmp[Generation Options for CMP]
+* <<Supported Data Types for CMP>>
+* <<Generation Options for CMP>>
 
 
 [NOTE]
@@ -491,7 +491,7 @@ control automatic schema generation by the following:
 [NOTE]
 ====
 Before using these options, make sure you have a properly configured CMP
-resource. See xref:#configuring-the-cmp-resource[Configuring the CMP Resource].
+resource. See <<Configuring the CMP Resource>>.
 
 For a read-only bean, do not create the database schema during
 deployment. Instead, work with your database administrator to populate
@@ -500,7 +500,7 @@ the data into the tables. See xref:ejb.adoc#using-read-only-beans[Using Read-Onl
 Automatic schema generation is not supported for beans with version
 column consistency checking. Instead, work with your database
 administrator to create the schema and add the required triggers. See
-xref:#version-column-consistency-checking[Version Column Consistency Checking].
+<<Version Column Consistency Checking>>.
 ====
 
 
@@ -509,7 +509,7 @@ the `glassfish-ejb-jar.xml` file control the automatic creation of
 database tables at deployment. For more information about the
 `cmp-resource` element, see "link:application-deployment-guide/dd-elements.html#cmp-resource[cmp-resource]" in
 {productName} Application Deployment Guide and
-xref:#configuring-the-cmp-resource[Configuring the CMP Resource].
+<<Configuring the CMP Resource>>.
 
 [[fvymo]]
 
@@ -654,8 +654,8 @@ specified, the `asadmin` options take precedence.
 
 The following topics are addressed here:
 
-* xref:#automatic-database-schema-capture[Automatic Database Schema Capture]
-* xref:#using-the-capture-schema-utility[Using the `capture-schema` Utility]
+* <<Automatic Database Schema Capture>>
+* <<Using the `capture-schema` Utility>>
 
 [[automatic-database-schema-capture]]
 
@@ -672,8 +672,7 @@ database, and automatic generation of the schema is performed.
 [NOTE]
 ====
 Before capturing the database schema automatically, make sure you have a
-properly configured CMP resource. See xref:#configuring-the-cmp-resource[Configuring the CMP
-Resource].
+properly configured CMP resource. See xref:#configuring-the-cmp-resource[Configuring the CMP Resource].
 ====
 
 
@@ -747,10 +746,10 @@ supported only for entity beans with container managed persistence.
 
 The following topics are addressed here:
 
-* xref:#version-column-consistency-checking[Version Column Consistency Checking]
-* xref:#relationship-prefetching[Relationship Prefetching]
-* xref:#read-only-beans[Read-Only Beans]
-* xref:#default-fetch-group-flags[Default Fetch Group Flags]
+* <<Version Column Consistency Checking>>
+* <<Relationship Prefetching>>
+* <<Read-Only Beans>>
+* <<Default Fetch Group Flags>>
 
 
 [NOTE]
@@ -809,7 +808,8 @@ performance.) See "link:application-deployment-guide/dd-elements.html#fetched-wi
 
 To disable prefetching for specific custom finders, use the
 `prefetch-disabled` element in the `glassfish-ejb-jar.xml` file. See
-"link:application-deployment-guide/dd-elements.html#prefaceetch-disabled[prefetch-disabled]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#prefetch-disabled[prefetch-disabled]"
+in {productName} Application Deployment Guide.
 
 Multilevel relationship prefetching is supported for CMP 2.1 entity
 beans. To enable multilevel relationship prefetching, set the following
@@ -819,8 +819,6 @@ property using the `asadmin create-jvm-options` command:
 ----
 asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH=true
 ----
-
-[[read-only-beans]]
 
 ==== Read-Only Beans
 
@@ -900,11 +898,11 @@ asadmin create-jvm-options -DAllowManagedFieldsInDefaultFetchGroup=true
 
 The following topics are addressed here:
 
-* xref:#about-jdoql-queries[About JDOQL Queries]
-* xref:#query-filter-expression[Query Filter Expression]
-* xref:#query-parameters[Query Parameters]
-* xref:#query-variables[Query Variables]
-* xref:#jdoql-examples[JDOQL Examples]
+* <<About JDOQL Queries>>
+* <<Query Filter Expression>>
+* <<Query Parameters>>
+* <<Query Variables>>
+* <<JDOQL Examples>>
 
 [[about-jdoql-queries]]
 
@@ -1153,16 +1151,16 @@ pertain to using CMP.
 
 The following topics are addressed here:
 
-* xref:#disabling-order-by-validation[Disabling ORDER BY Validation]
-* xref:#setting-the-heap-size-on-db2[Setting the Heap Size on DB2]
-* xref:#eager-loading-of-field-state[Eager Loading of Field State]
-* xref:#restrictions-on-remote-interfaces[Restrictions on Remote Interfaces]
-* xref:#postgresql-case-insensitivity[PostgreSQL Case Insensitivity]
-* xref:#no-support-for-lock-when-loaded-on-sybase[No Support for `lock-when-loaded` on Sybase]
-* xref:#sybase-finder-limitation[Sybase Finder Limitation]
-* xref:#date-and-time-fields[Date and Time Fields]
-* xref:#set-recursive_triggers-to-false-on-mssql[Set `RECURSIVE_TRIGGERS` to `false` on MSSQL]
-* xref:#mysql-database-restrictions[MySQL Database Restrictions]
+* <<Disabling ORDER BY Validation>>
+* <<Setting the Heap Size on DB2>>
+* <<Eager Loading of Field State>>
+* <<Restrictions on Remote Interfaces>>
+* <<PostgreSQL Case Insensitivity>>
+* <<No Support for `lock-when-loaded` on Sybase>>
+* <<Sybase Finder Limitation>>
+* <<Date and Time Fields>>
+* <<set-recursive_triggers-to-false-on-mssql, Set `RECURSIVE_TRIGGERS` to `false` on MSSQL>>
+* <<MySQL Database Restrictions>>
 
 [[disabling-order-by-validation]]
 
@@ -1258,8 +1256,6 @@ mechanism available on Sybase databases to implement this feature.
 Therefore, the `lock-when-loaded` consistency level is not supported on
 Sybase databases. See "link:application-deployment-guide/dd-elements.html#consistency[consistency]" in {productName} Application Deployment Guide.
 
-[[sybase-finder-limitation]]
-
 ==== Sybase Finder Limitation
 
 If a finder method with an input greater than 255 characters is executed
@@ -1336,8 +1332,6 @@ You can test this property as follows:
 SELECT DATABASEPROPERTYEX('database-name', 'IsRecursiveTriggersEnabled')
 go
 ----
-
-[[mysql-database-restrictions]]
 
 ==== MySQL Database Restrictions
 

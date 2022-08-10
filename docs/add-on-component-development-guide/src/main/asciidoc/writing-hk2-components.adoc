@@ -7,7 +7,6 @@ prev=introduction.html
 
 = Writing HK2 Components
 
-[[writing-hk2-components]]
 == Writing HK2 Components
 
 The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible

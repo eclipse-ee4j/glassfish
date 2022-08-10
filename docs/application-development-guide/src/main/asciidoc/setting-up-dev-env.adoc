@@ -166,7 +166,7 @@ information, see xref:debugging-apps.adoc#debugging-applications[Debugging Appli
 ==== Profiling Tools
 
 You can use several profilers with the {productName}. For more
-information, see xref:debugging-apps.adoc#profiling-tools[Profiling Tools].
+information, see xref:debugging-apps.adoc#debug-profiling-tools[Profiling Tools].
 
 [[sample-applications]]
 

@@ -237,7 +237,7 @@ the network listener attribute `jk-enabled`.
 * `apache2/conf/httpd.conf`, the main Apache configuration file
 * `apache2/conf/workers.properties`
 +
-<<Example 6-4] and xref:#gixqt[Example 6-5>> provide examples
+xref:gixrq[Example 6-4] and xref:gixqt[Example 6-5] provide examples
 of configuring these two files.
 3. Start Apache HTTP Server (`httpd`).
 4. Start {productName} with at least one web application deployed.
@@ -307,7 +307,7 @@ Example 6-5 `workers.properties` File for `mod_jk`
 
 This example shows a `workers.properties` that is set for `mod_jk`. This
 `workers.properties` file is referenced in the second line of
-<<Example 6-4>>.
+xref:gixrq[Example 6-4]
 
 [source]
 ----
@@ -347,7 +347,7 @@ configured with a unique `jvmRoute` system property.
 If your instances run on the same machine, you must choose different JK
 ports. The ports must match `worker.worker*.port` in your
 `workers.properties` file. See the properties file in
-<<Example 6-5>>.
+xref:gixqt[Example 6-5].
 2. On each of the instances, create the `jvmRoute` system property of
 {productName} by using the link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`]
 subcommand.

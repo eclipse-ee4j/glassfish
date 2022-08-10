@@ -537,9 +537,9 @@ public class ConnectorsUtil {
 
     public static String getTransactionIsolationInt(int tranIsolation) {
 
-        if(tranIsolation == Connection.TRANSACTION_READ_UNCOMMITTED){
-            return "read-uncommited";
-        } else if(tranIsolation == Connection.TRANSACTION_READ_COMMITTED){
+        if (tranIsolation == Connection.TRANSACTION_READ_UNCOMMITTED) {
+            return "read-uncommitted";
+        } else if (tranIsolation == Connection.TRANSACTION_READ_COMMITTED) {
             return "read-committed";
         } else if(tranIsolation == Connection.TRANSACTION_REPEATABLE_READ){
             return "repeatable-read";

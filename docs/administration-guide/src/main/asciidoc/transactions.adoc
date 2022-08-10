@@ -7,9 +7,6 @@ prev=jndi.html
 
 = Administering Transactions
 
-[[ablsn]]
-
-
 [[administering-transactions]]
 == 19 Administering Transactions
 
@@ -126,11 +123,11 @@ xref:jdbc.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics 
 that messages are reliably delivered. The {productName} is integrated
 with Open Message Queue, a fully capable JMS provider. For more
 information about transactions and the JMS API, see
-xref:jms.adoc#abljw[Administering the Java Message Service (JMS)].
+xref:jms.adoc#administering-the-java-message-service-jms[Administering the Java Message Service (JMS)].
 * J2EE Connector Architecture (CA) components - Use of transactions
 prevents legacy EIS systems from being left in inconsistent states due
 to incomplete updates. For more information about connectors, see
-xref:connectors.adoc#abllp[Administering EIS Connectivity].
+xref:connectors.adoc#administering-eis-connectivity[Administering EIS Connectivity].
 
 [[transaction-scope]]
 

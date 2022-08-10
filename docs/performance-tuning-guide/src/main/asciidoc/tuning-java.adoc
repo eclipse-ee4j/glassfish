@@ -7,9 +7,6 @@ prev=tuning-glassfish.html
 
 = Tuning the Java Runtime System
 
-[[abeia]]
-
-
 [[tuning-the-java-runtime-system]]
 == 4 Tuning the Java Runtime System
 

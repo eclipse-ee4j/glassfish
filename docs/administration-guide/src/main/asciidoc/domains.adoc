@@ -58,7 +58,7 @@ without the need to administer {productName} instances explicitly.
 You administer the default instance when you administer its domain.
 
 If you require multiple instances, you must administer the instances
-explicitly. For more information, see "link:ha-administration-guide/instances.html#gkrbv[Administering
+explicitly. For more information, see "link:ha-administration-guide/instances.html#administering-glassfish-server-instances[Administering
 {productName} Instances]" in {productName}
 High Availability Administration Guide.
 
@@ -1195,7 +1195,7 @@ asadmin> start-domain domain1
 
 5. If the domain on olddashost was centrally administered, set up
 centralized administration on newdashost.
-See "link:ha-administration-guide/ssh-setup.html#gkshg[Enabling Centralized Administration of {productName} Instances]"
+See "link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized Administration of {productName} Instances]"
 in {productName} High Availability Administration Guide for instructions.
 
 6. Verify that instances on other hosts are visible to the new DAS on newdashost:

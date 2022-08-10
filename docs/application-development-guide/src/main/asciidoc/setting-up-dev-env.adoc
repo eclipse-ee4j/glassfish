@@ -7,9 +7,6 @@ prev=part-tasks-and-tools.html
 
 = Setting Up a Development Environment
 
-[[beaaq]]
-
-
 [[setting-up-a-development-environment]]
 == 1 Setting Up a Development Environment
 
@@ -59,7 +56,7 @@ server for development in these ways:
 proper class loaders. For more information, see
 xref:class-loaders.adoc#using-the-common-class-loader[Using the Common Class Loader].
 * Set up debugging. For more information, see
-xref:debugging-apps.adoc#beafc[Debugging Applications].
+xref:debugging-apps.adoc#debugging-applications[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
 For more information, see "link:administration-guide/jvm.html#administering-the-virtual-machine-for-the-java-platform[
 Administering the Virtual Machine for the Java Platform]"
@@ -79,7 +76,7 @@ xref:webapps.adoc#distributed-sessions-and-persistence[Distributed Sessions and 
 * For information about checkpointing of the stateful session bean
 state, see xref:ejb.adoc#stateful-session-bean-failover[Stateful Session Bean Failover].
 * For information about failover and load balancing for Java clients,
-see xref:java-clients.adoc#beakt[Developing Java Clients].
+see xref:java-clients.adoc#developing-java-clients[Developing Java Clients].
 * For information about load balancing for message-driven beans, see
 xref:jms.adoc#load-balanced-message-inflow[Load-Balanced Message Inflow].
 
@@ -162,7 +159,7 @@ extensions, sometimes all you need is just some configuration.
 ==== Debugging Tools
 
 You can use several debugging tools with the {productName}. For more
-information, see xref:debugging-apps.adoc#beafc[Debugging Applications].
+information, see xref:debugging-apps.adoc#debugging-applications[Debugging Applications].
 
 [[profiling-tools]]
 

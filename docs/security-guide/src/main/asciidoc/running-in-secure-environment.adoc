@@ -6,9 +6,6 @@ prev=administrative-security.html
 
 = Running in a Secure Environment
 
-[[gkscr]]
-
-
 [[running-in-a-secure-environment]]
 == 6 Running in a Secure Environment
 
@@ -16,7 +13,7 @@ This chapter describes important information about running {productName} in a se
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not, see
-xref:system-security.adoc#ablnk[Administering System Security].
+xref:system-security.adoc#administering-system-security[Administering System Security].
 
 Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
@@ -78,9 +75,7 @@ might cause great damage to companies or individual clients that use the
 Web site. Understanding the security ramifications of each resource will
 help you protect it properly.
 
-See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]]
-
-[[read-security-publications]]
+See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]][[read-security-publications]]
 
 ==== Read Security Publications
 
@@ -117,7 +112,7 @@ communication among the system components and does not accept
 administrative connections from remote hosts. Imposing a heightened
 level of security is optional.
 
-See xref:administrative-security.adoc#gknqh[Managing Administrative
+See xref:administrative-security.adoc#managing-administrative-security[Managing Administrative
 Security] for information on enabling the secure administration feature.
 
 [[run-on-the-web-profile-if-possible]]
@@ -360,7 +355,7 @@ which you can be confident that rogue users or processes cannot
 intercept or corrupt administration traffic or impersonate legitimate
 {productName} components.
 
-See xref:administrative-security.adoc#gknqh[Managing Administrative
+See xref:administrative-security.adoc#managing-administrative-security[Managing Administrative
 Security].
 
 |Protect the `.asadminpass` file a|

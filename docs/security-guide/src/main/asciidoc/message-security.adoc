@@ -7,9 +7,6 @@ prev=user-security.html
 
 = Administering Message Security
 
-[[ablrk]]
-
-
 [[administering-message-security]]
 == 3 Administering Message Security
 
@@ -202,7 +199,7 @@ situation where message protection policies are defined, the request and
 response message protection policies of the client must be equivalent t)
 the request and response message protection policies of the server. For
 more information about defining application-specific message protection
-policies, see "link:application-development-guide/securing-apps.html#beabg[Securing Applications]" in {productName} Application Development Guide.
+policies, see "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]" in {productName} Application Development Guide.
 
 [[application-specific-web-services-security]]
 
@@ -218,7 +215,7 @@ that they apply to a specific port or method of the corresponding
 endpoint or referenced service.
 
 For information about defining application-specific message protection
-policies, see "link:application-development-guide/securing-apps.html#beabg[Securing Applications]" in {productName} Application Development Guide.
+policies, see "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]" in {productName} Application Development Guide.
 
 [[message-security-administration]]
 
@@ -354,7 +351,7 @@ application as described in xref:#application-specific-web-services-security[App
 Services Security] application.
 
 For information about compiling, packaging, and running the `xms` sample
-application, "link:application-development-guide/securing-apps.html#beabg[
+application, "link:application-development-guide/securing-apps.html#securing-applications[
 Securing Applications]" in
 {productName} Application Development Guide.
 
@@ -862,7 +859,7 @@ For additional information about message security, see the following documentati
 
 * https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
 Introduction to Security in the Jakarta EE Platform] in The Jakarta EE Tutorial
-* "link:application-development-guide/securing-apps.html#beabg[Securing Applications]"
+* "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]"
 in {productName} Application Development Guide
 
 

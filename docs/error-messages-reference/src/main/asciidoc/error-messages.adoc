@@ -398,7 +398,7 @@ AS-DEPLOYMENT-00025 For jms-destination resource: \{0}, there is no application 
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref66]]AS-DEPLOYMENT-00026 JNDI lookup failed for the resource: Name: \{0}, Lookup: \{1}, Type: \{2}. ::
+AS-DEPLOYMENT-00026 JNDI lookup failed for the resource: Name: \{0}, Lookup: \{1}, Type: \{2}. ::
   Cause: JNDI lookup for the specified resource failed.
 +
   Action: Configure the required resources before deploying the

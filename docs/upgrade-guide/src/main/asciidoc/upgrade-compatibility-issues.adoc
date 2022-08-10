@@ -7,9 +7,6 @@ prev=preface.html
 
 = {productName} Upgrade Compatibility Issues
 
-[[abmaq]]
-
-
 [[glassfish-server-upgrade-compatibility-issues]]
 == 1 {productName} Upgrade Compatibility Issues
 
@@ -182,7 +179,7 @@ Agent Configurations] for more information.
 Instead of HADB, {productName} 7 supports high availability
 clustering by means of in-memory session state replication and
 ActiveCache for GlassFish.
-See "link:ha-administration-guide/overview.html#abdaq[
+See "link:ha-administration-guide/overview.html#high-availability-in-glassfish-server[
 High Availability in {productName}]" in
 {productName} High Availability Administration Guide
 for more information.

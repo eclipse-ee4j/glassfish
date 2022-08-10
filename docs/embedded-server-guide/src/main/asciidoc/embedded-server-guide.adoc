@@ -6,9 +6,6 @@ prev=preface.html
 
 = {productName} 7 Embedded Server Guide
 
-[[gjldt]]
-
-
 [[glassfish-server-open-source-edition-embedded-server-guide]]
 == 1 {productName} 7 Embedded Server Guide
 
@@ -508,7 +505,7 @@ An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
 the directory structure that the Jakarta EE specifications define for the
 type of archive that the file contains. For more information, see
-"link:application-deployment-guide/deploying-applications.html#beact[Deploying Applications]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide.
 
 Deploying an application from a directory enables you to deploy an
 application without the need to package the application in an archive

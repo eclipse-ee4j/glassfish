@@ -7,9 +7,6 @@ prev=securing-apps.html
 
 = Developing Web Services
 
-[[gaszn]]
-
-
 [[developing-web-services]]
 == 5 Developing Web Services
 

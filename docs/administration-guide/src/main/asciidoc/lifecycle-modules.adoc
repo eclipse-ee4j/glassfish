@@ -5,9 +5,6 @@ prev=monitoring.adoc
 
 = Administering Life Cycle Modules
 
-[[giury]]
-
-
 [[administering-life-cycle-modules]]
 == 9 Administering Life Cycle Modules
 
@@ -50,7 +47,7 @@ the containers.
 subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
-on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#beamc[Developing
+on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing
 Lifecycle Listeners]" in {productName}
 Application Development Guide.
 

@@ -7,9 +7,6 @@ prev=session-persistence-and-failover.html
 
 = Configuring Java Message Service High Availability
 
-[[abdbk]]
-
-
 [[configuring-java-message-service-high-availability]]
 == 10 Configuring Java Message Service High Availability
 

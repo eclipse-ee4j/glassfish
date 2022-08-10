@@ -112,7 +112,7 @@ production environment.
 For production environments, any upgrade should be performed as a
 rolling upgrade, which upgrades applications and modules without
 interruption in service. For more information, see
-link:ha-administration-guide/rolling-upgrade.html#abdik[Upgrading Applications Without Loss of Availability] in
+link:ha-administration-guide/rolling-upgrade.html#upgrading-applications-without-loss-of-availability[Upgrading Applications Without Loss of Availability] in
 {productName} High Availability Administration
 Guide.
 
@@ -165,8 +165,8 @@ these names: `ejb-jar.xml` and `glassfish-ejb-jar.xml`. If the EJB
 component is an entity bean with container-managed persistence (CMP),
 you can also create a `.dbschema` file and a `sun-cmp-mapping.xml` file.
 For complete descriptions of these files and their elements, see
-xref:dd-files.adoc#giida[{productName} Deployment Descriptor Files]
-and xref:dd-elements.adoc#beaqi[Elements of the {productName}
+xref:dd-files.adoc#b-glassfish-server-deployment-descriptor-files[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName}
 Deployment Descriptors].
 +
 {productName} also permits the use of alternate top-level {productName} runtime deployment descriptors that reside outside of an
@@ -265,7 +265,7 @@ format for assembling connector modules. Each {productName} connector
 has annotations or a deployment descriptor file (`ra.xml`).
 +
 After deploying a J2EE connector module, you must configure it as
-described in link:application-development-guide/connectors.html#bealk[Developing Connectors] in {productName} Application Development Guide.
+described in link:application-development-guide/connectors.html#developing-connectors[Developing Connectors] in {productName} Application Development Guide.
 * Application Client Module. An application client module is a
 deployable software unit that consists of one or more classes, and
 application client deployment descriptors (`application-client.xml` and
@@ -274,7 +274,7 @@ applies to a {productName} type of Jakarta EE client. An application
 client supports the standard Jakarta EE Application Client specifications.
 * Lifecycle Module. A lifecycle module provides a means of running
 short-duration or long-duration Java-based tasks within the {productName} environment. Lifecycle modules are not Jakarta EE standard modules.
-See link:application-development-guide/lifecycle-listeners.html#beamc[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
+See link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing Lifecycle Listeners] in {productName} Application Development Guide for more information.
 
 [[module-based-deployment]]
 
@@ -339,7 +339,7 @@ remove the libraries with `remove-library`. For more information about
 all these commands, see the {productName}
 Reference Manual.
 
-For more information about class loaders, see link:application-development-guide/class-loaders.html#beade[Class
+For more information about class loaders, see link:application-development-guide/class-loaders.html#class-loaders[Class
 Loaders] in {productName} Application Development
 Guide.
 
@@ -586,8 +586,8 @@ the deployment descriptors or equivalent annotations using Java
 standards and tools.
 +
 Details of the {productName} deployment descriptors are contained in
-xref:dd-files.adoc#giida[{productName} Deployment Descriptor Files]
-and xref:dd-elements.adoc#beaqi[Elements of the {productName}
+xref:dd-files.adoc#b-glassfish-server-deployment-descriptor-files[{productName} Deployment Descriptor Files]
+and xref:dd-elements.adoc#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName}
 Deployment Descriptors]. The {productName} sample applications
 contain deployment descriptors that can be used as templates for
 developing deployment descriptors.
@@ -670,7 +670,7 @@ asadmin list-applications --type web
 ----
 
 Application deployment commands are listed in
-xref:asadmin-deployment-subcommands.adoc#gihzw[The `asadmin` Deployment
+xref:asadmin-deployment-subcommands.adoc#a-the-asadmin-deployment-subcommands[The `asadmin` Deployment
 Subcommands]. All {productName} `asadmin` subcommands are documented
 in the xref:reference-manual.adoc#GSRFM[{productName} Reference
 Manual].

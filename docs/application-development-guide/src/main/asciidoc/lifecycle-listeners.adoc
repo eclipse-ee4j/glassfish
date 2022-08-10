@@ -7,9 +7,6 @@ prev=connectors.html
 
 = Developing Lifecycle Listeners
 
-[[beamc]]
-
-
 [[developing-lifecycle-listeners]]
 == 12 Developing Lifecycle Listeners
 

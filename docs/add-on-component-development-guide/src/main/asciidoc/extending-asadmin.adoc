@@ -7,9 +7,6 @@ prev=extending-the-admin-console.html
 
 = Extending the asadmin Utility
 
-[[ghmrd]]
-
-
 [[extending-the-asadmin-utility]]
 == Extending the `asadmin` Utility
 
@@ -50,7 +47,7 @@ any add-on component that is known to {productName}.
 list of subcommands.
 * Support for the HK2 architecture. Subcommands can use injection to
 express their dependencies, and extraction to provide results to a user.
-For more information, see xref:writing-hk2-components.adoc#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#writing-hk2-components[Writing
 HK2 Components].
 
 [[adding-an-asadmin-subcommand]]

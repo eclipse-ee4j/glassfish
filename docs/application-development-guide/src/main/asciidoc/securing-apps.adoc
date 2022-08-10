@@ -7,9 +7,6 @@ prev=part-apps-and-app-comps.html
 
 = Securing Applications
 
-[[beabg]]
-
-
 [[securing-applications]]
 == 4 Securing Applications
 
@@ -226,7 +223,7 @@ or `glassfish-ejb-jar.xml`.
 
 For more information regarding Jakarta EE deployment descriptors, see the
 Jakarta EE Specification. For more information regarding {productName}
-deployment descriptors, see "link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName} Deployment Descriptors]" in {productName}
+deployment descriptors, see "link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment Descriptors]" in {productName}
 Application Deployment Guide.
 
 Each `security-role-mapping` element in the `glassfish-application.xml`,
@@ -384,7 +381,7 @@ follows:
 ----
 
 For more information about the deployment descriptor files and elements,
-see "link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName} Deployment
+see "link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment
 Descriptors]" in {productName} Application
 Deployment Guide.
 
@@ -400,7 +397,7 @@ with the {productName}.
 To activate the custom login modules and realms, place the JAR files in
 the domain-dir``/lib`` directory or the class files in the
 domain-dir`/lib/classes` directory. For more information about class
-loading in the {productName}, see xref:class-loaders.adoc#beade[Class
+loading in the {productName}, see xref:class-loaders.adoc#class-loaders[Class
 Loaders].
 
 JAAS is a set of APIs that enable services to authenticate and enforce
@@ -1089,7 +1086,7 @@ not supported.
 
 
 For more information about web services, see
-xref:webservices.adoc#gaszn[Developing Web Services].
+xref:webservices.adoc#developing-web-services[Developing Web Services].
 
 For more information about message security, see the following:
 
@@ -1338,7 +1335,7 @@ xref:#message-security-providers[Message Security Providers].
 
 For more details on message security binding for EJB web services,
 servlet web services, and clients, see the XML file descriptions in
-"link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName} Deployment
+"link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName} Deployment
 Descriptors]" in {productName} Application
 Deployment Guide.
 
@@ -1826,7 +1823,7 @@ Single sign-on operates according to the following rules:
 * Single sign-on applies to web applications configured for the same
 realm and virtual server. The realm is defined by the `realm-name`
 element in the `web.xml` file. For information about virtual servers,
-see "link:administration-guide/http_https.html#ablsw[Administering Internet Connectivity]" in {productName} Administration Guide.
+see "link:administration-guide/http_https.html#administering-internet-connectivity[Administering Internet Connectivity]" in {productName} Administration Guide.
 * As long as users access only unprotected resources in any of the web
 applications on a virtual server, they are not challenged to
 authenticate themselves.

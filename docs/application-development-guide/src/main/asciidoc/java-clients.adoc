@@ -7,9 +7,6 @@ prev=container_managed-persistence.html
 
 = Developing Java Clients
 
-[[beakt]]
-
-
 [[developing-java-clients]]
 == 10 Developing Java Clients
 
@@ -35,7 +32,7 @@ Accordingly, the Application Client Container is supported only in the
 full {productName}, not in the Web Profile.
 
 JMS resources are supported only in the full {productName}, not in
-the Web Profile. See xref:jms.adoc#beaob[Using the Java Message Service].
+the Web Profile. See xref:jms.adoc#using-the-java-message-service[Using the Java Message Service].
 ====
 
 
@@ -259,7 +256,7 @@ Next Steps
 xref:#using-java-web-start[Using Java Web Start] or xref:#running-an-application-client-using-the-appclient-script[Running an Application
 Client Using the `appclient` Script].
 * For more information about RMI-IIOP load balancing and failover, see
-"link:ha-administration-guide/rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide.
 
 [[to-access-a-jms-resource-from-an-application-client]]
 
@@ -1383,7 +1380,7 @@ the `--libraries` option of the `asadmin deploy` command do not apply to
 application clients. Neither do the as-install``/lib``, domain-dir``/lib``,
 and domain-dir`/lib/classes` directories comprising the Common Class
 Loader. These apply only to applications and modules deployed to the
-server. For more information, see xref:class-loaders.adoc#beade[Class
+server. For more information, see xref:class-loaders.adoc#class-loaders[Class
 Loaders].
 
 To use libraries with an application client, package the application

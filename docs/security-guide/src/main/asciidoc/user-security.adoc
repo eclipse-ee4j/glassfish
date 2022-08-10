@@ -7,9 +7,6 @@ prev=system-security.html
 
 = Administering User Security
 
-[[ggnqj]]
-
-
 [[administering-user-security]]
 == 2 Administering User Security
 
@@ -19,7 +16,7 @@ command-line utility. {productName} enforces its authentication and
 authorization policies upon realms, users, and groups. This chapter
 assumes that you are familiar with security features such as
 authentication, authorization, and certificates. If you are not, see
-xref:system-security.adoc#ablnk[Administering System Security].
+xref:system-security.adoc#administering-system-security[Administering System Security].
 
 The following topics are addressed here:
 

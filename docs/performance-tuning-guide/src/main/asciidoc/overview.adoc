@@ -7,9 +7,6 @@ prev=preface.html
 
 = Overview of {productName} Performance Tuning
 
-[[giekg]]
-
-
 [[overview-of-glassfish-server-performance-tuning]]
 == 1 Overview of {productName} Performance Tuning
 
@@ -83,10 +80,10 @@ a|Performance Tuning: Tune the following items:
 
 a|The following chapters:
 
-* xref:tuning-apps.adoc#abebe[Tuning Your Application]
-* xref:tuning-glassfish.adoc#abedn[Tuning the {productName}]
-* xref:tuning-java.adoc#abeia[Tuning the Java Runtime System]
-* xref:tuning-os.adoc#abeir[Tuning the Operating System and Platform]
+* xref:tuning-apps.adoc#tuning-your-application[Tuning Your Application]
+* xref:tuning-glassfish.adoc#tuning-the-glassfish-server[Tuning the {productName}]
+* xref:tuning-java.adoc#tuning-the-java-runtime-system[Tuning the Java Runtime System]
+* xref:tuning-os.adoc#tuning-the-operating-system-and-platform[Tuning the Operating System and Platform]
 |===
 
 
@@ -103,13 +100,13 @@ you want to improve performance as much as possible in the meantime.
 Ideally, follow this sequence of steps when you are tuning performance:
 
 1. Tune your application, described in
-xref:tuning-apps.adoc#abebe[Tuning Your Application].
-2. Tune the server, described in xref:tuning-glassfish.adoc#abedn[Tuning
+xref:tuning-apps.adoc#tuning-your-application[Tuning Your Application].
+2. Tune the server, described in xref:tuning-glassfish.adoc#tuning-the-glassfish-server[Tuning
 the {productName}].
 3. Tune the Java runtime system, described in
-xref:tuning-java.adoc#abeia[Tuning the Java Runtime System].
+xref:tuning-java.adoc#tuning-the-java-runtime-system[Tuning the Java Runtime System].
 4. Tune the operating system, described in
-xref:tuning-os.adoc#abeir[Tuning the Operating System and Platform].
+xref:tuning-os.adoc#tuning-the-operating-system-and-platform[Tuning the Operating System and Platform].
 
 [[understanding-operational-requirements]]
 
@@ -252,7 +249,7 @@ system, given the security requirements?
 choices?
 
 For information on how to encrypt the communication between web servers
-and {productName}, see "link:security-guide/message-security.html#ablrk[Administering Message
+and {productName}, see "link:security-guide/message-security.html#administering-message-security[Administering Message
 Security]" in {productName} Security Guide.
 
 [[high-availability-clustering-load-balancing-and-failover]]

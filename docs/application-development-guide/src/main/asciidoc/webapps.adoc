@@ -7,9 +7,6 @@ prev=jpa.html
 
 = Developing Web Applications
 
-[[beafs]]
-
-
 [[developing-web-applications]]
 == 7 Developing Web Applications
 
@@ -693,7 +690,7 @@ deserialize any sessions previously saved. The usual restrictions about
 serialization and deserialization apply. For example, any
 application-specific class referenced by a session attribute may evolve
 only in a backward-compatible fashion. For more information about class
-loaders, see xref:class-loaders.adoc#beade[Class Loaders].
+loaders, see xref:class-loaders.adoc#class-loaders[Class Loaders].
 
 [[logging-session-attributes]]
 
@@ -763,7 +760,7 @@ serializable.
 
 For more information about the `InitialContext`, see
 xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. For more information
-about transaction recovery, see xref:transaction-service.adoc#beanm[Using
+about transaction recovery, see xref:transaction-service.adoc#using-the-transaction-service[Using
 the Transaction Service]. For more information about Administered
 Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
@@ -1510,7 +1507,7 @@ Java runtime classes or changing the API versions of specifications that
 are part of the Jakarta EE platform.
 
 For general information about class loaders, see
-xref:class-loaders.adoc#beade[Class Loaders].
+xref:class-loaders.adoc#class-loaders[Class Loaders].
 
 [[GSDVG00410]][[using-the-default-web.xml-file]]
 

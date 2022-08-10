@@ -7,9 +7,6 @@ prev=webservices.html
 
 = Configuring the Java Persistence Provider
 
-[[gbxjk]]
-
-
 [[configuring-the-java-persistence-provider]]
 == 6 Configuring the Java Persistence Provider
 
@@ -138,7 +135,7 @@ Manager].
 Application Deployment Guide.
 6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
-7. Monitor the application. See "link:administration-guide/monitoring.html#ablur[
+7. Monitor the application. See "link:administration-guide/monitoring.html#administering-the-monitoring-service[
 Administering the Monitoring Service]"
 in {productName} Administration Guide.
 

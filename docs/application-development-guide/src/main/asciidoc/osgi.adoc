@@ -7,8 +7,6 @@ prev=lifecycle-listeners.html
 
 = Developing OSGi-enabled Jakarta EE Applications
 
-[[gkpch]]
-
 [[developing-osgi-enabled-java-ee-applications]]
 == 13 Developing OSGi-enabled Jakarta EE Applications
 

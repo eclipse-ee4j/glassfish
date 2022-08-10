@@ -6,9 +6,6 @@ prev=installing.html
 
 = Uninstalling GlassFish
 
-[[ghmlt]]
-
-
 [[uninstalling-glassfish]]
 == 2 Uninstalling GlassFish
 

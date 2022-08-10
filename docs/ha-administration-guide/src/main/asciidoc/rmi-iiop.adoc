@@ -6,8 +6,6 @@ prev=jms.html
 
 = RMI-IIOP Load Balancing and Failover
 
-[[fxxqs]]
-
 [[rmi-iiop-load-balancing-and-failover]]
 == 11 RMI-IIOP Load Balancing and Failover
 
@@ -397,7 +395,7 @@ In this example, an EJB named `TheGreeter` is used.
 For instructions on developing and assembling an EJB for deployment to
 {productName}, refer to the following documentation:
 
-* "link:application-development-guide/ejb.html#beahl[Using Enterprise JavaBeans Technology]" in {productName} Application Development Guide
+* "link:application-development-guide/ejb.html#using-enterprise-javabeans-technology[Using Enterprise JavaBeans Technology]" in {productName} Application Development Guide
 * "link:application-deployment-guide/deploying-applications.html#ejb-module-deployment-guidelines[EJB Module Deployment Guidelines]" in {productName} Application Deployment Guide
 * "link:application-deployment-guide/deploying-applications.html#assembling-and-deploying-an-application-client-module[Assembling and Deploying an Application Client
 Module]" in {productName} Application Deployment Guide

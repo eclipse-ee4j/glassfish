@@ -234,9 +234,6 @@ Do not save the file.
 |===
 
 
-[[fquvc]]
-
-
 [[symbol-conventions]]
 === Symbol Conventions
 

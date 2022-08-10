@@ -7,9 +7,6 @@ prev=overview.html
 
 = Enabling Centralized Administration of {productName} Instances
 
-[[gkshg]]
-
-
 [[enabling-centralized-administration-of-glassfish-server-instances]]
 == 2 Enabling Centralized Administration of {productName} Instances
 

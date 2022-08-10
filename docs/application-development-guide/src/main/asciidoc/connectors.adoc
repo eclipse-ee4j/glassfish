@@ -7,9 +7,6 @@ prev=java-clients.html
 
 = Developing Connectors
 
-[[bealk]]
-
-
 [[developing-connectors]]
 == 11 Developing Connectors
 
@@ -108,8 +105,8 @@ resource adapters. The {productName} automatically makes these system
 resource adapters available to any client that requires them.
 
 For more information about JMS in the {productName}, see
-xref:jms.adoc#beaob[Using the Java Message Service]. For more information
-about JDBC in the {productName}, see xref:jdbc.adoc#beamj[Using the
+xref:jms.adoc#using-the-java-message-service[Using the Java Message Service]. For more information
+about JDBC in the {productName}, see xref:jdbc.adoc#using-the-jdbc-api-for-database-access[Using the
 JDBC API for Database Access].
 
 [[connector-configuration]]
@@ -425,7 +422,7 @@ processes are distributed or global transactions. A global transaction
 can involve one non-XA resource if last agent optimization is enabled.
 Otherwise, all resources must be XA. For more information about
 transactions in the {productName}, see
-xref:transaction-service.adoc#beanm[Using the Transaction Service].
+xref:transaction-service.adoc#using-the-transaction-service[Using the Transaction Service].
 
 The Connector specification requires that if a resource adapter supports
 `XATransaction`, the `ManagedConnection` created from that resource
@@ -506,7 +503,7 @@ For example, some messaging styles may need applications to use special
 administered objects (such as Queue and Topic objects in JMS).
 Applications use these objects to send and synchronously receive
 messages using connection objects using messaging style APIs. For more
-information about administered objects, see xref:jms.adoc#beaob[Using the
+information about administered objects, see xref:jms.adoc#using-the-java-message-service[Using the
 Java Message Service].
 
 [[outbound-communication-support]]

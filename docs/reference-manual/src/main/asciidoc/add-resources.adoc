@@ -130,8 +130,6 @@ An example XML file follows.
 </resources>
 ----
 
-[[examples]]
-
 === Examples
 
 [[addresource-ex-1]]

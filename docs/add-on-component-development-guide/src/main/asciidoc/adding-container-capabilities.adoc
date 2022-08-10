@@ -7,9 +7,6 @@ prev=adding-configuration-data.html
 
 = Adding Container Capabilities
 
-[[ghmon]]
-
-
 [[adding-container-capabilities]]
 == Adding Container Capabilities
 

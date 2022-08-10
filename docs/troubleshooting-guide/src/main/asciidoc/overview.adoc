@@ -7,9 +7,6 @@ prev=preface.html
 
 = Overview of {productName} Troubleshooting
 
-[[abgap]]
-
-
 [[overview-of-glassfish-server-open-source-edition-troubleshooting]]
 == 1 Overview of {productName} Troubleshooting
 
@@ -269,7 +266,7 @@ monitoring the state of various components and services deployed in
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide.
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide.
 
 [[troubleshooting-tools]]
 

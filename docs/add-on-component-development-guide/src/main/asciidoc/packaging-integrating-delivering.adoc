@@ -7,9 +7,6 @@ prev=session-persistence-modules.html
 
 = Packaging, Integrating, and Delivering an Add-On Component
 
-[[ghmxp]]
-
-
 [[packaging-integrating-and-delivering-an-add-on-component]]
 == Packaging, Integrating, and Delivering an Add-On Component
 

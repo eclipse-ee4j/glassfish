@@ -7,9 +7,6 @@ prev=webapps.html
 
 = Using Enterprise JavaBeans Technology
 
-[[beahl]]
-
-
 [[using-enterprise-javabeans-technology]]
 == 8 Using Enterprise JavaBeans Technology
 
@@ -597,7 +594,7 @@ correctly rolled back or committed.
 
 For more information about the `InitialContext`, see
 xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context]. For more information
-about transaction recovery, see xref:transaction-service.adoc#beanm[Using
+about transaction recovery, see xref:transaction-service.adoc#using-the-transaction-service[Using
 the Transaction Service]. For more information about Administered
 Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
@@ -925,7 +922,7 @@ Read-only beans have the following characteristics:
 (CMP) is allowed. If CMP is used, do not create the database schema
 during deployment. Instead, work with your database administrator to
 populate the data into the tables. See
-link:container_managed-persistence.html#beajj[Using Container-Managed
+link:container_managed-persistence.html#using-container-managed-persistence[Using Container-Managed
 Persistence].
 * Only container-managed transactions are allowed; read-only beans
 cannot start their own transactions.
@@ -1234,7 +1231,7 @@ Message Queue flow control related properties for connection factory in
 situations where the message incoming rate is much higher than
 `max-pool-size` can handle.
 
-Refer to "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide for
 information on how to get message-driven bean pool statistics.
 

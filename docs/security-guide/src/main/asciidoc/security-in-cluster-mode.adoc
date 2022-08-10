@@ -7,9 +7,6 @@ prev=message-security.html
 
 = Administering Security in Cluster Mode
 
-[[gknpf]]
-
-
 [[administering-security-in-cluster-mode]]
 == 4 Administering Security in Cluster Mode
 
@@ -24,7 +21,7 @@ The following topics are described:
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not, see
-xref:system-security.adoc#ablnk[Administering System Security].
+xref:system-security.adoc#administering-system-security[Administering System Security].
 
 Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
@@ -61,7 +58,7 @@ respective copies of the domain's configuration.
 [NOTE]
 ====
 Oracle recommends that you enable secure admin as described in
-xref:administrative-security.adoc#gknqh[Managing Administrative Security]
+xref:administrative-security.adoc#managing-administrative-security[Managing Administrative Security]
 so that {productName} securely transfers these files on the network.
 ====
 

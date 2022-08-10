@@ -6,9 +6,6 @@ prev=specific-issues.html
 
 = Frequently Asked Questions
 
-[[abgkd]]
-
-
 [[frequently-asked-questions]]
 == 3 Frequently Asked Questions
 
@@ -46,7 +43,7 @@ and available for use. For related information, see
 
 ==== How Do I Debug Applications?
 
-See "link:application-development-guide/debugging-apps.html#beafc[Debugging Applications]" in {productName} Application Development Guide.
+See "link:application-development-guide/debugging-apps.html#debugging-applications[Debugging Applications]" in {productName} Application Development Guide.
 
 [[how-do-i-change-application-permissions]]
 
@@ -98,7 +95,7 @@ which container developers implement. The {productName} framework
 then invokes the container's implementation of the SPI to detect,
 deploy, and manage applications of the new type.
 
-For more information, see "link:add-on-component-development-guide/adding-container-capabilities.html#ghmon[Adding Container
+For more information, see "link:add-on-component-development-guide/adding-container-capabilities.html#adding-container-capabilities[Adding Container
 Capabilities]" in {productName} Add-On Component
 Development Guide.
 
@@ -106,7 +103,7 @@ Development Guide.
 
 ==== How Do I Extend the Administration Console?
 
-See "link:add-on-component-development-guide/extending-the-admin-console.html#ghmrb[Extending the Administration Console]" in
+See "link:add-on-component-development-guide/extending-the-admin-console.html#extending-the-administration-console[Extending the Administration Console]" in
 {productName} Add-On Component Development Guide.
 
 [[java-persistence-faqs]]

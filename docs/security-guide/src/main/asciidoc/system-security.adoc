@@ -7,9 +7,6 @@ prev=preface.html
 
 = Administering System Security
 
-[[ablnk]]
-
-
 [[administering-system-security]]
 == 1 Administering System Security
 
@@ -28,7 +25,7 @@ Administration Console are contained in the Administration Console
 online help.
 
 Information on application security is contained in
-"link:application-development-guide/securing-apps.html#beabg[Securing Applications]"
+"link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]"
 in {productName} Application Development Guide.
 
 [[about-system-security-in-glassfish-server]]

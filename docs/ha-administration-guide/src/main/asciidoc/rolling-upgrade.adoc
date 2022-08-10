@@ -7,9 +7,6 @@ prev=http-load-balancing.html
 
 = Upgrading Applications Without Loss of Availability
 
-[[abdik]]
-
-
 [[upgrading-applications-without-loss-of-availability]]
 == 8 Upgrading Applications Without Loss of Availability
 

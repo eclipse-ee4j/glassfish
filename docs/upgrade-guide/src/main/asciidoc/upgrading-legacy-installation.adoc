@@ -6,9 +6,6 @@ prev=upgrade-compatibility-issues.html
 
 = Upgrading an Installation of Application Server or {productName}
 
-[[abmbq]]
-
-
 [[upgrading-an-installation-of-application-server-or-glassfish-server]]
 == 2 Upgrading an Installation of Application Server or {productName}
 
@@ -1390,7 +1387,7 @@ must also change the type of the node to `SSH` to enable the node for
 remote communication.
 
 For more information about {productName} nodes, see
-"link:ha-administration-guide/nodes.html#gkrle[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]" in {productName} High Availability Administration Guide.
 
 Before You Begin
 
@@ -1402,7 +1399,7 @@ information, see xref:#performing-a-side-by-side-upgrade-with-upgrade-tool[Perfo
 * If you are changing the type of the node to `SSH`, ensure that SSH is
 configured on the host where the DAS is running and on the host that the
 node represents. For more information, see
-"link:ha-administration-guide/ssh-setup.html#gkshg[
+"link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[
 Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide.
 
@@ -1475,10 +1472,10 @@ xref:#to-re-create-a-cluster[To Re-Create a Cluster].
 
 See Also
 
-* "link:ha-administration-guide/ssh-setup.html#gkshg[
+* "link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[
 Setting Up SSH for Centralized Administration]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/nodes.html#gkrle[Administering {productName} Nodes]"
+* "link:ha-administration-guide/nodes.html#administering-glassfish-server-nodes[Administering {productName} Nodes]"
 in {productName} High Availability Administration Guide
 * link:reference-manual/update-node-config.html#update-node-config[`update-node-config`(1)]
 * link:reference-manual/update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]

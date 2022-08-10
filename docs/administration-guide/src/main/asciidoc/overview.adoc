@@ -7,9 +7,6 @@ prev=preface.html
 
 = Overview of {productName} Administration
 
-[[ablaq]]
-
-
 [[overview-of-glassfish-server-administration]]
 == 1 Overview of {productName} Administration
 
@@ -148,21 +145,21 @@ Monitoring::
   By default, the monitoring service is enabled. However, monitoring for
   the individual modules is not enabled, so your first monitoring task
   is to enable monitoring for the modules that you want to monitor. See
-  xref:monitoring.adoc#ablur[Administering the Monitoring Service].
+  xref:monitoring.adoc#administering-the-monitoring-service[Administering the Monitoring Service].
 Life Cycle Modules::
-  See xref:lifecycle-modules.adoc#giury[Administering Life Cycle
+  See xref:lifecycle-modules.adoc#administering-life-cycle-modules[Administering Life Cycle
   Modules].
 Security::
   * System Security. Initial configuration tasks might include setting
   up passwords, audit modules, and certificates. See
-  "link:security-guide/system-security.html#ablnk[Administering System Security]" in {productName} Security Guide.
+  "link:security-guide/system-security.html#administering-system-security[Administering System Security]" in {productName} Security Guide.
   * User Security. Initial configuration tasks might include creating
   authentication realms and file users. See
-  "link:security-guide/user-security.html#ggnqj[Administering User Security]" in {productName} Security Guide.
+  "link:security-guide/user-security.html#administering-user-security[Administering User Security]" in {productName} Security Guide.
   * Message Security. Initial configuration tasks might include
   configuring a Java Cryptography Extension (JCE) provider, enabling
   default and non-default security providers, and configuring message
-  protection policies. See "link:security-guide/message-security.html#ablrk[Administering Message
+  protection policies. See "link:security-guide/message-security.html#administering-message-security[Administering Message
   Security]" in {productName} Security Guide.
 Database Connectivity::
   The initial tasks involved in configuring {productName} to connect
@@ -176,31 +173,31 @@ EIS Connectivity::
   connection pool, creating a connector resource, editing a resource
   adapter configuration, creating a connector security map, creating a
   connector work security map, and creating an administered object (if
-  needed). See xref:connectors.adoc#abllp[Administering EIS
+  needed). See xref:connectors.adoc#administering-eis-connectivity[Administering EIS
   Connectivity].
 Internet Connectivity::
   The initial tasks involved in making deployed web applications
   accessible by internet clients include creating HTTP network listeners
   and virtual servers, and configuring the HTTP listeners for SSL (if
-  needed). See xref:http_https.adoc#ablsw[Administering Internet
+  needed). See xref:http_https.adoc#administering-internet-connectivity[Administering Internet
   Connectivity].
 Object Request Broker (ORB)::
   An initial configuration task might involve creating an IIOP listener.
-  See xref:orb.adoc#abltr[Administering the Object Request Broker (ORB)].
+  See xref:orb.adoc#administering-the-object-request-broker-orb[Administering the Object Request Broker (ORB)].
 JavaMail Service::
   An initial configuration task might involve creating a JavaMail
-  resource. See xref:javamail.adoc#ablkr[Administering the JavaMail
+  resource. See xref:javamail.adoc#administering-the-javamail-service[Administering the JavaMail
   Service].
 Java Message Service (JMS)::
   Initial configuration tasks might include creating a physical
   destination, creating connection factories or destination resources,
   creating a JMS host (if the default JMS host is not adequate),
   adjusting connection pool settings (if needed), and configuring
-  resource adapters for JMS. See xref:jms.adoc#abljw[Administering the
+  resource adapters for JMS. See xref:jms.adoc#administering-the-java-message-service-jms[Administering the
   Java Message Service (JMS)].
 JNDI Service::
   An initial configuration task might involve creating a JNDI resource.
-  See xref:jndi.adoc#ablky[Administering the Java Naming and Directory
+  See xref:jndi.adoc#administering-the-java-naming-and-directory-interface-jndi-service[Administering the Java Naming and Directory
   Interface (JNDI) Service].
 
 Information and instructions for accomplishing the tasks by using the

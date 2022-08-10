@@ -79,7 +79,7 @@ xref:freeze-transaction-service.adoc#freeze-transaction-service[`freeze-transact
 xref:recover-transactions.adoc#recover-transactions[`recover-transactions`(1)],
 xref:rollback-transaction.adoc#rollback-transaction[`rollback-transaction`(1)]
 
-"link:administration-guide/transactions.html#ablsn[Administering Transactions]" in {productName} Administration Guide
+"link:administration-guide/transactions.html#administering-transactions[Administering Transactions]" in {productName} Administration Guide
 
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
 in The Jakarta EE Tutorial

@@ -7,9 +7,6 @@ prev=jdbc.html
 
 = Using the Transaction Service
 
-[[beanm]]
-
-
 [[using-the-transaction-service]]
 == 15 Using the Transaction Service
 
@@ -27,7 +24,7 @@ The following topics are addressed here:
 Registry, and `UserTransaction`]
 
 For more information about the Java Transaction API (JTA) and Java
-Transaction Service (JTS), see "link:administration-guide/transactions.html#ablsn[Administering
+Transaction Service (JTS), see "link:administration-guide/transactions.html#administering-transactions[Administering
 Transactions]" in {productName} Administration
 Guide and the following sites:
 `http://www.oracle.com/technetwork/java/javaee/jta/index.html` and

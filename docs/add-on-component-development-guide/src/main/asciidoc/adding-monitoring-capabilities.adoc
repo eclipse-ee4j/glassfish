@@ -7,8 +7,6 @@ prev=extending-asadmin.html
 
 = Adding Monitoring Capabilities
 
-[[ghmos]]
-
 [[adding-monitoring-capabilities]]
 == Adding Monitoring Capabilities
 

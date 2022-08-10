@@ -7,9 +7,6 @@ prev=part-services-and-apis.html
 
 = Using the JDBC API for Database Access
 
-[[beamj]]
-
-
 [[using-the-jdbc-api-for-database-access]]
 == 14 Using the JDBC API for Database Access
 

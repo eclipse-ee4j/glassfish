@@ -156,6 +156,6 @@ xref:monitor.adoc#monitor[`monitor`(1)], xref:set.adoc#set[`set`(1)]
 
 xref:monitoring.adoc#monitoring[`monitoring`(5ASC)]
 
-"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide
 
 

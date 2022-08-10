@@ -7,9 +7,6 @@ prev=ejb.html
 
 = Using Container-Managed Persistence
 
-[[beajj]]
-
-
 [[using-container-managed-persistence]]
 == 9 Using Container-Managed Persistence
 
@@ -812,7 +809,7 @@ performance.) See "link:application-deployment-guide/dd-elements.html#fetched-wi
 
 To disable prefetching for specific custom finders, use the
 `prefetch-disabled` element in the `glassfish-ejb-jar.xml` file. See
-"link:application-deployment-guide/dd-elements.html#prefetch-disabled[prefetch-disabled]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#prefaceetch-disabled[prefetch-disabled]" in {productName} Application Deployment Guide.
 
 Multilevel relationship prefetching is supported for CMP 2.1 entity
 beans. To enable multilevel relationship prefetching, set the following

@@ -7,9 +7,6 @@ prev=concurrent.html
 
 = Administering the Object Request Broker (ORB)
 
-[[abltr]]
-
-
 [[administering-the-object-request-broker-orb]]
 == 15 Administering the Object Request Broker (ORB)
 

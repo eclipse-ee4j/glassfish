@@ -7,9 +7,6 @@ prev=preface.html
 
 = Introduction to the Development Environment for {productName} Add-On Components
 
-[[ghmlv]]
-
-
 [[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
 == Introduction to the Development Environment for {productName} Add-On Components
 
@@ -106,7 +103,7 @@ components automatically and dynamically. HK2 components use injection
 of dependencies to express dependencies on other components. {productName} provides two-way mappings between the services of an HK2
 component and OSGi services.
 
-For more information, see xref:writing-hk2-components.adoc#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#writing-hk2-components[Writing
 HK2 Components].
 
 [[overview-of-the-development-process-for-an-add-on-component]]
@@ -149,7 +146,7 @@ implementation paradigm. An HK2 contract identifies and describes the
 building blocks or the extension points of an application. An HK2
 service implements an HK2 contract.
 
-For more information, see xref:writing-hk2-components.adoc#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#writing-hk2-components[Writing
 HK2 Components].
 
 [[extending-the-administration-console]]
@@ -168,7 +165,7 @@ file that describes how your customizations integrate with the
 Administration Console.
 
 For more information, see
-xref:extending-the-admin-console.adoc#ghmrb[Extending the Administration
+xref:extending-the-admin-console.adoc#extending-the-administration-console[Extending the Administration
 Console].
 
 [[extending-the-asadmin-utility]]
@@ -183,7 +180,7 @@ A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
 link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
-For more information, see xref:extending-asadmin.adoc#ghmrd[Extending the
+For more information, see xref:extending-asadmin.adoc#extending-the-asadmin-utility[Extending the
 `asadmin` Utility].
 
 [[adding-monitoring-capabilities]]
@@ -206,7 +203,7 @@ interfaces to monitor statistics from any installed {productName}
 component, regardless of the origin of the component.
 
 For more information, see
-xref:adding-monitoring-capabilities.adoc#ghmos[Adding Monitoring
+xref:adding-monitoring-capabilities.adoc#adding-monitoring-capabilities[Adding Monitoring
 Capabilities].
 
 [[adding-configuration-data-for-a-component]]
@@ -226,7 +223,7 @@ configure an add-on component in the same way as they can configure
 other {productName} components.
 
 For more information, see
-xref:adding-configuration-data.adoc#gjlpe[Adding Configuration Data for a
+xref:adding-configuration-data.adoc#adding-configuration-data-for-a-component[Adding Configuration Data for a
 Component].
 
 [[adding-container-capabilities]]
@@ -240,7 +237,7 @@ you to run new types of applications and to deploy new archive types in
 {productName}.
 
 For more information, see
-xref:adding-container-capabilities.adoc#ghmon[Adding Container
+xref:adding-container-capabilities.adoc#adding-container-capabilities[Adding Container
 Capabilities].
 
 [[creating-a-session-persistence-module]]
@@ -255,12 +252,12 @@ session manager extensible because you can implement a new persistence
 type without having to modify the web container code.
 
 For information about other high-availability, session persistence
-solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High Availability Session
+solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 
 For more information, see
-xref:session-persistence-modules.adoc#gkmhj[Creating a Session
+xref:session-persistence-modules.adoc#creating-a-session-persistence-module[Creating a Session
 Persistence Module].
 
 [[packaging-and-delivering-an-add-on-component]]
@@ -275,6 +272,6 @@ update to existing installations of {productName}, deliver the
 component through Update Tool.
 
 For more information, see
-xref:packaging-integrating-delivering.adoc#ghmxp[Packaging, Integrating,
+xref:packaging-integrating-delivering.adoc#packaging-integrating-and-delivering-an-add-on-component[Packaging, Integrating,
 and Delivering an Add-On Component].
 

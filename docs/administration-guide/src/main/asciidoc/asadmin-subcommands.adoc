@@ -51,8 +51,7 @@ link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
 link:reference-manual/add-resources.html#add-resources[`add-resources`]::
   Creates the resources named in the specified XML file. Supported in
   remote mode only. For procedural information in this guide, see
-  xref:general-administration.adoc#to-add-resources-from-an-xml-file[To Add Resources From an XML
-  File].
+  xref:general-administration.adoc#to-add-resources-from-an-xml-file[To Add Resources From an XML File].
 link:reference-manual/asadmin.html#asadmin[`asadmin`]::
   Describes how the `asadmin` utility works.
 link:reference-manual/attach.html#attach[`attach`]::

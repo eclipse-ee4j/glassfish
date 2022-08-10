@@ -5,9 +5,6 @@ prev=part-runtime-admin.adoc
 
 = General Administration
 
-[[gitya]]
-
-
 [[general-administration]]
 == 2 General Administration
 

@@ -7,9 +7,6 @@ prev=introduction.html
 
 = Writing HK2 Components
 
-[[ghmna]]
-
-
 [[writing-hk2-components]]
 == Writing HK2 Components
 

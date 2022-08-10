@@ -7,9 +7,6 @@ prev=tuning-apps.html
 
 = Tuning the {productName}
 
-[[abedn]]
-
-
 [[tuning-the-glassfish-server]]
 == 3 Tuning the {productName}
 
@@ -176,7 +173,7 @@ Set Web container settings in the {productName} Administration
 Console by navigating to the Configurations>configuration-name>Web
 Container node. Follow the instructions in the online help for more
 information. Alternatively, you can configure Web container settings by
-following the instructions in "link:administration-guide/webapps.html#gbbjk[Administering Web
+following the instructions in "link:administration-guide/webapps.html#administering-web-applications[Administering Web
 Applications]" in {productName} Administration
 Guide.
 
@@ -579,7 +576,7 @@ The Type attribute that determines whether the Java Message Service
 performance is better than remote JMS performance. However, a remote
 cluster can provide failover capabilities and can be administrated
 together, so there may be other advantages of using remote JMS. For more
-information on using JMS, see "link:administration-guide/jms.html#abljw[Administering the Java
+information on using JMS, see "link:administration-guide/jms.html#administering-the-java-message-service-jms[Administering the Java
 Message Service (JMS)]" in {productName}
 Administration Guide.
 
@@ -645,7 +642,7 @@ Most Transaction Service tuning tasks can be performed through the
 {productName} Administration Console by navigating to the
 Configurations>configuration-name>Transaction Service node and then
 following the instructions in the online help. Alternatively, you can
-follow the instructions in "link:administration-guide/transactions.html#ablsn[Administering
+follow the instructions in "link:administration-guide/transactions.html#administering-transactions[Administering
 Transactions]" in {productName} Administration
 Guide.
 
@@ -731,7 +728,7 @@ Disabling the collection of monitoring statistics can increase overall
 statistics collection for the HTTP service using either the
 Administration Console or `asadmin` subcommands.
 
-Refer to "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide for complete
 instructions on configuring the monitoring service using `asadmin`
 subcommands.
@@ -937,7 +934,7 @@ request.
 ==== HTTP Service Access Logging
 
 Accessing Logging can be tuned using several `asadmin` subcommands.
-Refer to "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide for
 information about using these subcommands.
 
@@ -1158,7 +1155,7 @@ page.
 === Thread Pool Settings
 
 You can tune thread pool settings by following the instructions in
-"link:administration-guide/threadpools.html#abluc[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration Console
+"link:administration-guide/threadpools.html#administering-thread-pools[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration Console
 Thread Pool settings are available on the
 Configurations>configuration-name>Thread Pools>thread-pool-name page.
 
@@ -1226,9 +1223,9 @@ Object Request Broker (ORB). The ORB is the foundation of the EJB
 Container on the server.
 
 For complete instructions on configuring ORB settings, refer to
-"link:administration-guide/orb.html#abltr[Administering the Object Request Broker (ORB)]" in
+"link:administration-guide/orb.html#administering-the-object-request-broker-orb[Administering the Object Request Broker (ORB)]" in
 {productName} Administration Guide. Also refer to
-"link:ha-administration-guide/rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
+"link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide. You
 can also configure most ORB settings through the {productName}
 Administration Console by navigating to the
 Configurations>configuration-name> ORB node and then following the
@@ -1367,7 +1364,7 @@ The following topics are addressed here:
 ===== Tunable ORB Parameters
 
 You can tune ORB parameters using the instructions in
-"link:administration-guide/orb.html#abltr[Administering the Object Request Broker (ORB)]" in
+"link:administration-guide/orb.html#administering-the-object-request-broker-orb[Administering the Object Request Broker (ORB)]" in
 {productName} Administration Guide. If using the
 Administration Console, navigate to the
 Configurations>configuration-name>ORB node and refer to the online help.
@@ -1419,7 +1416,7 @@ set the size of the threadpool to facilitate cleaning up the EJB pools
 and caches.
 
 You can set ORB thread pool attributes using the instructions in
-"link:administration-guide/threadpools.html#abluc[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration
+"link:administration-guide/threadpools.html#administering-thread-pools[Administering Thread Pools]" in {productName} Administration Guide. If using the Administration
 Console, navigate to Configurations>configuration-name> Thread
 Pools>thread-pool-name, where thread-pool-name is the thread pool ID
 selected for the ORB. Thread pools have the following attributes that
@@ -1517,10 +1514,10 @@ Command set executed successfully.
 Load Balancing
 
 For information on how to configure HTTP load balancing, see
-"link:ha-administration-guide/http-load-balancing.html#abdgs[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 For information on how to configure RMI/IIOP for multiple application
-server instances in a cluster, "link:ha-administration-guide/rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing
+server instances in a cluster, "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing
 and Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -1654,7 +1651,7 @@ The following topics are addressed here:
 
 Statistics-gathering is disabled by default for JDBC Connection Pools.
 Refer to for instructions on enabling JDBC monitoring in
-"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide. If using the
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide. If using the
 Administration Console, JDBC monitoring can be enabled on the
 Configurations>configuration-name>Monitoring page.
 
@@ -1900,5 +1897,5 @@ Performance Tuning Guide. For complete information about configuring
 load balancing in {productName}, refer to the following
 documentation:
 
-* "link:ha-administration-guide/http-load-balancing.html#abdgs[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
-* "link:ha-administration-guide/rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/http-load-balancing.html#configuring-http-load-balancing[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]" in {productName} High Availability Administration Guide

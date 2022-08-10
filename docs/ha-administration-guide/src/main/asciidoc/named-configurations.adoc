@@ -7,8 +7,6 @@ prev=instances.html
 
 = Administering Named Configurations
 
-[[abdjk]]
-
 [[administering-named-configurations]]
 == 6 Administering Named Configurations
 

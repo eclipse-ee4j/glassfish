@@ -5,9 +5,6 @@ prev=orb.adoc
 
 = Administering the JavaMail Service
 
-[[ablkr]]
-
-
 [[administering-the-javamail-service]]
 == 16 Administering the JavaMail Service
 

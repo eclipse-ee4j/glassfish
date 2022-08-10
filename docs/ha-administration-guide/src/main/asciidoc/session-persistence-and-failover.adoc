@@ -7,8 +7,6 @@ prev=rolling-upgrade.html
 
 = Configuring High Availability Session Persistence and Failover
 
-[[abdkz]]
-
 [[configuring-high-availability-session-persistence-and-failover]]
 == 9 Configuring High Availability Session Persistence and Failover
 

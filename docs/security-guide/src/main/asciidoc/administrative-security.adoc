@@ -7,9 +7,6 @@ prev=security-in-cluster-mode.html
 
 = Managing Administrative Security
 
-[[gknqh]]
-
-
 [[managing-administrative-security]]
 == 5 Managing Administrative Security
 
@@ -18,7 +15,7 @@ the secure administration feature.
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not,
-first see xref:system-security.adoc#ablnk[Administering System Security].
+first see xref:system-security.adoc#administering-system-security[Administering System Security].
 
 Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration

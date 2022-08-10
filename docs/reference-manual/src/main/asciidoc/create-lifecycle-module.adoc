@@ -122,6 +122,6 @@ xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 xref:delete-lifecycle-module.adoc#delete-lifecycle-module[`delete-lifecycle-module`(1)],
 xref:list-lifecycle-modules.adoc#list-lifecycle-modules[`list-lifecycle-modules`(1)]
 
-"link:application-development-guide/lifecycle-listeners.html#beamc[Developing Lifecycle Listeners]" in {productName} Application Development Guide
+"link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing Lifecycle Listeners]" in {productName} Application Development Guide
 
 

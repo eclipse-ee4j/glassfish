@@ -64,6 +64,6 @@ xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide
 
 

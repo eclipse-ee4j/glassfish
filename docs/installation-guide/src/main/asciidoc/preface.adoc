@@ -7,7 +7,6 @@ prev=title.html
 
 = Preface
 
-[[gjxfa]]
 [[preface]]
 == Preface
 

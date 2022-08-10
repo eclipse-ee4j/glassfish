@@ -7,9 +7,6 @@ prev=asadmin-deployment-subcommands.html
 
 = {productName} Deployment Descriptor Files
 
-[[giida]]
-
-
 [[b-glassfish-server-deployment-descriptor-files]]
 == B {productName} Deployment Descriptor Files
 

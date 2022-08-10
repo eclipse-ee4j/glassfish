@@ -7,9 +7,6 @@ prev=overview.html
 
 = Tuning Your Application
 
-[[abebe]]
-
-
 [[tuning-your-application]]
 == 2 Tuning Your Application
 
@@ -285,7 +282,7 @@ the server `CLASSPATH`. Put application-related classes into JAR files.
 the HTTP server is tuned in general. For more information, see
 xref:tuning-glassfish.adoc#http-service-settings[HTTP Service Settings].
 * Cache servlet results when possible. For more information, see
-"link:application-development-guide/webapps.html#beafs[Developing Web Applications]" in {productName} Application Development Guide.
+"link:application-development-guide/webapps.html#developing-web-applications[Developing Web Applications]" in {productName} Application Development Guide.
 * If an application does not contain any EJB components, deploy the
 application as a WAR file, not an EAR file.
 
@@ -517,7 +514,7 @@ asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 ----
 
 For more information about administering the monitoring service in
-general, see "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in
+general, see "link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in
 {productName} Administration Guide. For
 information about viewing comprehensive EJB monitoring statistics, see
 "link:administration-guide/monitoring.html#ejb-statistics[EJB Statistics]" in {productName} Administration Guide.
@@ -574,7 +571,7 @@ read-only
 6. BMP beans
 
 For more information about configuring high availability session
-persistence, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High Availability Session
+persistence, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide. To configure EJB beans using the
 {productName} Administration Console, navigate to the
@@ -976,7 +973,7 @@ Using the {productName} Administration Console, navigate to the
 Configurations>configuration-name>Thread Pools node.
 Refer to the Administration Console online help for more information.
 Alternatively, you can follow the instructions in
-"link:administration-guide/threadpools.html#abluc[
+"link:administration-guide/threadpools.html#administering-thread-pools[
 Administering Thread Pools]" in {productName} Administration Guide.
 +
 Configure the threadpools as follows:
@@ -1032,7 +1029,7 @@ This section provides tips for tuning various specific types of EJB components:
 These components can all be configured in the {productName}
 Administration Console from the Configurations>configuration-name>EJB
 Container node. Alternatively, you can perform these configurations by
-following the instructions in "link:ha-administration-guide/rmi-iiop.html#fxxqs[
+following the instructions in "link:ha-administration-guide/rmi-iiop.html#rmi-iiop-load-balancing-and-failover[
 RMI-IIOP Load Balancing and Failover]"
 in {productName} High Availability Administration Guide.
 

@@ -5,9 +5,6 @@ prev=logging.adoc
 
 = Administering the Monitoring Service
 
-[[ablur]]
-
-
 [[administering-the-monitoring-service]]
 == 8 Administering the Monitoring Service
 

@@ -5,9 +5,6 @@ prev=connectors.adoc
 
 = Administering Internet Connectivity
 
-[[ablsw]]
-
-
 [[administering-internet-connectivity]]
 == 13 Administering Internet Connectivity
 
@@ -192,7 +189,7 @@ subcommand. To use the built-in `tcp` transport, skip this step.
 link:reference-manual/create-threadpool.html#create-threadpool[`create-threadpool`] subcommand.
 To avoid using a thread pool, or to use the built-in `http-thread-pool`
 thread pool, skip this step.
-For additional thread pool information, see xref:threadpools.adoc#abluc[Administering Thread Pools].
+For additional thread pool information, see xref:threadpools.adoc#administering-thread-pools[Administering Thread Pools].
 6. Create an HTTP listener by using the
 link:reference-manual/create-network-listener.html#create-network-listener[`create-network-listener`] subcommand.
 Specify a protocol and transport, optionally a thread pool.

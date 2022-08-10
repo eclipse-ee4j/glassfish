@@ -7,9 +7,6 @@ prev=title.html
 
 = Preface
 
-[[pref]]
-
-
 [[preface]]
 == Preface
 
@@ -38,9 +35,6 @@ project provides a structured process for developing the {productName} platform 
 available faster, while maintaining the most important feature of Java
 EE: compatibility. It enables Java developers to access the {productName} source code and to contribute to the development of the {productName}. The GlassFish project is designed to encourage communication
 between Oracle engineers and the community.
-
-[[gksfg]]
-
 
 [[oracle-glassfish-server-documentation-set]]
 === {productName} Documentation Set

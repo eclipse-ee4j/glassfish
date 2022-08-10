@@ -6,9 +6,6 @@ prev=dd-files.html
 
 = Elements of the {productName} Deployment Descriptors
 
-[[beaqi]]
-
-
 [[c-elements-of-the-glassfish-server-deployment-descriptors]]
 == C Elements of the {productName} Deployment Descriptors
 
@@ -142,16 +139,10 @@ none - contains data
 
 Defines an administered object for an inbound resource adapter.
 
-[[GSDPG840]]
-
-
 [[superelements-4]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG841]]
-
 
 [[subelements-4]]
 ==== Subelements
@@ -173,9 +164,6 @@ a|xref:#property-with-attributes[`property`] (with attributes)
 |zero or more
 |Specifies a property or a variable.
 |===
-
-
-[[GSDPG843]]
 
 
 [[attributes]]
@@ -210,9 +198,6 @@ server.
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
 |===
-
-
-[[GSDPG845]]
 
 
 [[properties]]
@@ -402,24 +387,15 @@ See "link:application-development-guide/securing-apps.html#realm-configuration[R
 Specifies the user name and password required by the Enterprise
 Information System (EIS).
 
-[[GSDPG849]]
-
-
 [[superelements-9]]
 ==== Superelements
 
 xref:#security-map[`security-map`] (`glassfish-resources.xml`)
 
-[[GSDPG850]]
-
-
 [[subelements-9]]
 ==== Subelements
 
 none
-
-[[GSDPG851]]
-
 
 [[attributes-2]]
 ==== Attributes
@@ -1526,7 +1502,7 @@ xref:#one-one-finders[`one-one-finders`]
  |zero or one |Describes the finders for CMP 1.1 beans.
 
 a|
-xref:#prefetch-disabled[`prefetch-disabled`]
+xref:#prefaceetch-disabled[`prefetch-disabled`]
 
 
  |zero or one |Disables prefetching of entity bean states for the
@@ -1914,16 +1890,10 @@ none - contains data
 
 Defines a connector connection pool.
 
-[[GSDPG879]]
-
-
 [[superelements-39]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG880]]
-
 
 [[subelements-37]]
 ==== Subelements
@@ -1957,9 +1927,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG882]]
 
 
 [[attributes-9]]
@@ -2105,9 +2072,6 @@ attribute values.
 |===
 
 
-[[GSDPG884]]
-
-
 [[properties-4]]
 ==== Properties
 
@@ -2206,16 +2170,10 @@ All JMS administered object resource properties that worked with version
 Defines the connection factory object of a specific connection
 definition in a connector (resource adapter).
 
-[[GSDPG886]]
-
-
 [[superelements-40]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG887]]
-
 
 [[subelements-38]]
 ==== Subelements
@@ -2241,9 +2199,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG889]]
 
 
 [[attributes-10]]
@@ -2637,16 +2592,10 @@ Defines a custom resource, which specifies a custom server-wide resource
 object factory. Such object factories implement the
 javax.naming.spi.ObjectFactory interface.
 
-[[GSDPG897]]
-
-
 [[superelements-47]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG898]]
-
 
 [[subelements-45]]
 ==== Subelements
@@ -2673,9 +2622,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG900]]
 
 
 [[attributes-13]]
@@ -2771,7 +2717,7 @@ none - contains data
 
 Specifies that a field belongs to the default hierarchical fetch group,
 and enables prefetching for a CMR field. To disable prefetching for
-specific query methods, use a xref:#prefetch-disabled[`prefetch-disabled`] element
+specific query methods, use a xref:#prefaceetch-disabled[`prefetch-disabled`] element
 in the `glassfish-ejb-jar.xml` file.
 
 [[superelements-50]]
@@ -3686,16 +3632,10 @@ example, a generic Java object could be stored in an LDAP server. An
 external JNDI factory must implement the
 javax.naming.spi.InitialContextFactory interface.
 
-[[GSDPG910]]
-
-
 [[superelements-67]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG911]]
-
 
 [[subelements-65]]
 ==== Subelements
@@ -3722,9 +3662,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG913]]
 
 
 [[attributes-15]]
@@ -4673,9 +4610,6 @@ encoded using the response's charset instead of the default (UTF-8).
 
 Maps an EIS group to a group defined in the {productName} domain.
 
-[[GSDPG925]]
-
-
 [[superelements-77]]
 ==== Superelements
 
@@ -4686,9 +4620,6 @@ xref:#work-security-map[`work-security-map`] (`glassfish-resources.xml`)
 ==== Subelements
 
 none
-
-[[GSDPG926]]
-
 
 [[attributes-17]]
 ==== Attributes
@@ -5046,16 +4977,10 @@ specified, a default JNLP file is generated.
 Defines the attributes and properties that are required for creating a
 JDBC connection pool.
 
-[[GSDPG932]]
-
-
 [[superelements-88]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG933]]
-
 
 [[subelements-84]]
 ==== Subelements
@@ -5082,9 +5007,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG935]]
 
 
 [[attributes-19]]
@@ -5386,9 +5308,6 @@ applications.
 |===
 
 
-[[GSDPG937]]
-
-
 [[glassfish-server-properties]]
 ==== {productName} Properties
 
@@ -5429,9 +5348,6 @@ to `LOW` or `OFF`. It is enabled when `jdbc-connection-pool` monitoring
 is set to `HIGH` and the `sql-trace-listeners` attribute is set.
 
 |===
-
-
-[[GSDPG939]]
 
 
 [[database-properties]]
@@ -5496,16 +5412,10 @@ a standard property, it is commonly used.
 
 Defines a JDBC (javax.sql.DataSource) resource.
 
-[[GSDPG941]]
-
-
 [[superelements-89]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG942]]
-
 
 [[subelements-85]]
 ==== Subelements
@@ -5532,9 +5442,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG944]]
 
 
 [[attributes-20]]
@@ -5630,7 +5537,7 @@ from which the message-driven bean consumes JMS messages. This
 information is alternatively specified within the
 xref:#activation-config[`activation-config`] subelement of the
 xref:#mdb-resource-adapter[`mdb-resource-adapter`] element. For more information about
-JMS resources, see "link:application-development-guide/jms.html#beaob[Using the Java Message Service]" in
+JMS resources, see "link:application-development-guide/jms.html#using-the-java-message-service[Using the Java Message Service]" in
 {productName} Application Development Guide.
 
 [[superelements-92]]
@@ -5690,7 +5597,7 @@ the JAR from the path in the JAR:
 ----
 
 For information about the allowed contents of a custom JNLP file, see
-"link:application-development-guide/java-clients.html#beakt[Developing Java Clients]" in {productName} Application Development Guide.
+"link:application-development-guide/java-clients.html#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide.
 
 [[superelements-93]]
 
@@ -6386,16 +6293,10 @@ authentication requests.
 
 Defines a Jakarta Mail (`jakarta.mail.Session`) resource.
 
-[[GSDPG957]]
-
-
 [[superelements-107]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG958]]
-
 
 [[subelements-102]]
 ==== Subelements
@@ -6422,9 +6323,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG960]]
 
 
 [[attributes-25]]
@@ -6495,9 +6393,6 @@ server.
 |`enabled` |`true` |(optional) Determines whether this resource is
 enabled at runtime.
 |===
-
-
-[[GSDPG962]]
 
 
 [[properties-9]]
@@ -7862,9 +7757,6 @@ xref:#name[`name`]
 Maps an EIS principal to a principal defined in the {productName}
 domain.
 
-[[GSDPG982]]
-
-
 [[superelements-144]]
 ==== Superelements
 
@@ -7875,9 +7767,6 @@ xref:#work-security-map[`work-security-map`] (`glassfish-resources.xml`)
 ==== Subelements
 
 none
-
-[[GSDPG983]]
-
 
 [[attributes-29]]
 ==== Attributes
@@ -8207,7 +8096,7 @@ Specifies a query method.
 
 ==== Superelements
 
-xref:#prefetch-disabled[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
+xref:#prefaceetch-disabled[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
 
 [[subelements-142]]
 
@@ -8676,16 +8565,10 @@ Defines a connector (resource adapter) configuration. Stores
 configuration information for the resource adapter JavaBean in
 `property` subelements.
 
-[[GSDPG995]]
-
-
 [[superelements-166]]
 ==== Superelements
 
 xref:#resources[`resources`] (`glassfish-resources.xml`)
-
-[[GSDPG996]]
-
 
 [[subelements-158]]
 ==== Subelements
@@ -8707,9 +8590,6 @@ xref:#property-with-attributes[`property` (with attributes)]
 
  |zero or more |Specifies a property or a variable.
 |===
-
-
-[[GSDPG998]]
 
 
 [[attributes-36]]
@@ -8745,9 +8625,6 @@ server.
 connector module or application. If the resource adapter is embedded in
 an application, then it is app_name`#`rar_name.
 |===
-
-
-[[GSDPG1000]]
 
 
 [[properties-11]]
@@ -8958,16 +8835,10 @@ resources in JNDI, and to avoid portability problems, all names in a
 ====
 
 
-[[GSDPG1003]]
-
-
 [[superelements-171]]
 ==== Superelements
 
 none
-
-[[GSDPG1004]]
-
 
 [[subelements-163]]
 ==== Subelements
@@ -9448,16 +9319,10 @@ This is different from a xref:#work-security-map[`work-security-map`], which map
 principal associated with an incoming work instance to a principal in
 the {productName}'s security domain.
 
-[[GSDPG1014]]
-
-
 [[superelements-180]]
 ==== Superelements
 
 xref:#connector-connection-pool[`connector-connection-pool`] (`glassfish-resources.xml`)
-
-[[GSDPG1015]]
-
 
 [[subelements-172]]
 ==== Subelements
@@ -9489,9 +9354,6 @@ xref:#backend-principal[`backend-principal`]
 
  |only one |Specifies the user name and password required by the EIS.
 |===
-
-
-[[GSDPG1017]]
 
 
 [[attributes-39]]
@@ -10691,16 +10553,10 @@ none - contains data
 
 Contains the group to which the principal belongs.
 
-[[GSDPG1039]]
-
-
 [[superelements-207]]
 ==== Superelements
 
 xref:#security-map[`security-map`] (`glassfish-resources.xml`)
-
-[[GSDPG1040]]
-
 
 [[subelements-199]]
 ==== Subelements
@@ -10890,9 +10746,6 @@ Contains version information for an application or module. For more
 information about application versioning, see
 xref:overview.adoc#module-and-application-versions[Module and Application Versions].
 
-[[GSDPG1043]]
-
-
 [[superelements-212]]
 ==== Superelements
 
@@ -10901,9 +10754,6 @@ xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web-app.xml`),
 xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`),
 xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
-
-[[GSDPG1044]]
-
 
 [[subelements-204]]
 ==== Subelements
@@ -11194,9 +11044,6 @@ This is different from a xref:#security-map[`security-map`], which maps the
 principal received during servlet or EJB authentication to the
 credentials accepted by the EIS.
 
-[[GSDPG1048]]
-
-
 [[superelements-219]]
 ==== Superelements
 
@@ -11236,9 +11083,6 @@ xref:#group-map[`group-map`]
 
  |zero or more |Maps an EIS group to a group defined in the {productName} domain.
 |===
-
-
-[[GSDPG1050]]
 
 
 [[attributes-45]]

@@ -7,9 +7,6 @@ prev=writing-hk2-components.html
 
 = Extending the Administration Console
 
-[[ghmrb]]
-
-
 [[extending-the-administration-console]]
 == Extending the Administration Console
 
@@ -169,7 +166,7 @@ these files depends on the integration point you are implementing. The
 following sections describe how to create these JavaServer Faces pages.
 
 For reference information on integration points, see
-xref:integration-point-reference.adoc#ghmrp[Integration Point Reference].
+xref:integration-point-reference.adoc#a-integration-point-reference[Integration Point Reference].
 
 [[specifying-the-id-of-an-add-on-component]]
 
@@ -802,7 +799,7 @@ You can use many other kinds of user interface elements within a
 
 Your add-on component may require new configuration tasks. In addition
 to implementing commands that accomplish these tasks (see
-xref:extending-asadmin.adoc#ghmrd[Chapter 4, "Extending the `asadmin`
+xref:extending-asadmin.adoc#extending-the-asadmin-utility[Chapter 4, "Extending the `asadmin`
 Utility"]), you can provide property sheets that enable users to
 configure your component or to perform tasks such as creating and
 editing resources for it.

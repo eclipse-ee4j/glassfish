@@ -7,8 +7,6 @@ prev=adding-monitoring-capabilities.html
 
 = Adding Configuration Data for a Component
 
-[[gjlpe]]
-
 [[adding-configuration-data-for-a-component]]
 == Adding Configuration Data for a Component
 
@@ -447,7 +445,7 @@ Add code to write the component's initial configuration data in the
 class that represents your add-on component. If your add-on component is
 a container, add this code to the sniffer class. For more information
 about adding a container, see
-xref:adding-container-capabilities.adoc#ghmon[Adding Container
+xref:adding-container-capabilities.adoc#adding-container-capabilities[Adding Container
 Capabilities].
 
 1. Set an optional dependency on an instance of the class that
@@ -567,9 +565,9 @@ available to system administrators in the following ways:
 * By adding an link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommand. If you are adding
 an `asadmin` subcommand, include the code for the transaction in the
 body of the subcommand's `execute` method. For more information, see
-xref:extending-asadmin.adoc#ghmrd[Extending the `asadmin` Utility].
+xref:extending-asadmin.adoc#extending-the-asadmin-utility[Extending the `asadmin` Utility].
 * By extending the Administration Console. For more information, see
-xref:extending-the-admin-console.adoc#ghmrb[Extending the Administration
+xref:extending-the-admin-console.adoc#extending-the-administration-console[Extending the Administration
 Console].
 
 [[to-create-a-transaction-to-update-configuration-data]]

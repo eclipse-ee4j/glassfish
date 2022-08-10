@@ -5,9 +5,6 @@ prev=lifecycle-modules.adoc
 
 = Administering Batch Jobs
 
-[[sthref66]]
-
-
 [[administering-batch-jobs]]
 == 10 Administering Batch Jobs
 

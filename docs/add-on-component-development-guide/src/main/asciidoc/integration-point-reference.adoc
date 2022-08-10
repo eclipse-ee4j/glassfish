@@ -6,15 +6,12 @@ prev=packaging-integrating-delivering.html
 
 = Integration Point Reference
 
-[[ghmrp]]
-
-
 [[a-integration-point-reference]]
 == Integration Point Reference
 
 This appendix provides reference information about integration points,
 which are described in
-xref:extending-the-admin-console.adoc#ghmrb[Extending the Administration Console].
+xref:extending-the-admin-console.adoc#extending-the-administration-console[Extending the Administration Console].
 Define an integration point for each user interface feature in the
 `console-config.xml` file for your add-on component.
 

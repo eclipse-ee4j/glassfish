@@ -6,9 +6,6 @@ prev=jms.html
 
 = Using the Jakarta Mail API
 
-[[beaow]]
-
-
 [[using-the-jakarta-mail-api]]
 == 18 Using the Jakarta Mail API
 
@@ -55,7 +52,7 @@ layer using the RFC822 and MIME internet standards.
 message data and to handle commands intended to interact with that data.
 
 For more information, see
-"link:administration-guide/mail.html#ablkr[Administering the Jakarta Mail Service]"
+"link:administration-guide/mail.html#administering-the-javamail-service[Administering the Jakarta Mail Service]"
 in {productName} Administration Guide
 and the Jakarta Mail specification at
 `https://jakarta.ee/specifications/mail`.
@@ -114,7 +111,7 @@ String snName = "java:comp/env/mail/MyMailSession";
 Session session = (Session)ic.lookup(snName);
 ----
 
-For more information about the JNDI API, see xref:jndi.adoc#beanr[Using
+For more information about the JNDI API, see xref:jndi.adoc#using-the-java-naming-and-directory-interface[Using
 the Java Naming and Directory Interface].
 
 [[sending-and-reading-messages-using-jakarta-mail]]

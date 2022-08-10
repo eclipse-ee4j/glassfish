@@ -6,9 +6,6 @@ prev=tuning-java.html
 
 = Tuning the Operating System and Platform
 
-[[abeir]]
-
-
 [[tuning-the-operating-system-and-platform]]
 == 5 Tuning the Operating System and Platform
 

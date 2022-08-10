@@ -7,7 +7,6 @@ prev=title.html
 
 = Preface
 
-[[gkbfu]]
 [[preface]]
 == Preface
 
@@ -232,8 +231,6 @@ A cache is a copy that is stored locally.
 Do not save the file.
 |===
 
-
-[[fquvc]]
 
 [[symbol-conventions]]
 === Symbol Conventions

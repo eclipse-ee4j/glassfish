@@ -7,9 +7,6 @@ prev=jvm.html
 
 = Administering Thread Pools
 
-[[abluc]]
-
-
 [[administering-thread-pools]]
 == 5 Administering Thread Pools
 

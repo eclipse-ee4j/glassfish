@@ -5,9 +5,6 @@ prev=javamail.adoc
 
 = Administering the Java Message Service (JMS)
 
-[[abljw]]
-
-
 [[administering-the-java-message-service-jms]]
 == 17 Administering the Java Message Service (JMS)
 
@@ -113,7 +110,7 @@ hosts. Additionally, both GlassFish clusters and standalone instances
 can use Message Queue broker clusters as Remote type JMS hosts.
 
 For information about how the JMS service supports GlassFish clusters
-and Message Queue broker clusters, see "link:ha-administration-guide/jms.html#abdbk[Configuring
+and Message Queue broker clusters, see "link:ha-administration-guide/jms.html#configuring-java-message-service-high-availability[Configuring
 Java Message Service High Availability]" in {productName} High Availability Administration Guide.
 
 [[updating-the-jms-service-configuration]]

@@ -7,9 +7,6 @@ prev=class-loaders.html
 
 = Debugging Applications
 
-[[beafc]]
-
-
 [[debugging-applications]]
 == 3 Debugging Applications
 
@@ -148,7 +145,7 @@ information about the `appclient` script, see the xref:reference-manual.adoc#GSR
 [NOTE]
 ====
 The Application Client Container is supported only in the full {productName}, not in the Web Profile. See
-xref:java-clients.adoc#beakt[Developing Java Clients].
+xref:java-clients.adoc#developing-java-clients[Developing Java Clients].
 ====
 
 
@@ -167,7 +164,7 @@ Message Queue Administration Guide].
 [NOTE]
 ====
 JMS resources are supported only in the full {productName}, not in
-the Web Profile. See xref:jms.adoc#beaob[Using the Java Message Service].
+the Web Profile. See xref:jms.adoc#using-the-java-message-service[Using the Java Message Service].
 ====
 
 

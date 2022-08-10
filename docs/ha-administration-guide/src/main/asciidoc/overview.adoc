@@ -7,9 +7,6 @@ prev=preface.html
 
 = High Availability in {productName}
 
-[[abdaq]]
-
-
 [[high-availability-in-glassfish-server]]
 == 1 High Availability in {productName}
 
@@ -80,7 +77,7 @@ replication on {productName} instances running in a cluster.
 For more information about in-memory session replication in {productName}, see xref:#how-glassfish-server-provides-high-availability[How {productName} Provides High
 Availability]. For detailed instructions on configuring high
 availability session persistence, see
-xref:session-persistence-and-failover.adoc#abdkz[Configuring High
+xref:session-persistence-and-failover.adoc#configuring-high-availability-session-persistence-and-failover[Configuring High
 Availability Session Persistence and Failover].
 
 [[high-availability-java-message-service]]
@@ -149,7 +146,7 @@ endpoints specified for bootstrapping purposes, in case one of the
 endpoints has failed.
 
 For more information on RMI-IIOP load balancing and failover, see
-xref:rmi-iiop.adoc#fxxqs[RMI-IIOP Load Balancing and Failover].
+xref:rmi-iiop.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover].
 
 [[how-glassfish-server-provides-high-availability]]
 
@@ -268,7 +265,7 @@ environment, you can administer remote instances locally.
 ====
 
 
-For more information, see xref:ssh-setup.adoc#gkshg[Enabling Centralized
+For more information, see xref:ssh-setup.adoc#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized
 Administration of {productName} Instances].
 
 [[recovering-from-failures]]

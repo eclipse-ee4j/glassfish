@@ -7,9 +7,6 @@ prev=transaction-service.html
 
 = Using the Java Naming and Directory Interface
 
-[[beanr]]
-
-
 [[using-the-java-naming-and-directory-interface]]
 == 16 Using the Java Naming and Directory Interface
 
@@ -293,7 +290,7 @@ duration tasks based on Java technology within the {productName}
 environment, such as instantiation of singletons or RMI servers. These
 modules are automatically initiated at server startup and are notified
 at various phases of the server life cycle. For details about lifecycle
-modules, see xref:lifecycle-listeners.adoc#beamc[Developing Lifecycle
+modules, see xref:lifecycle-listeners.adoc#developing-lifecycle-listeners[Developing Lifecycle
 Listeners].
 
 The configured properties for a lifecycle module are passed as
@@ -484,7 +481,7 @@ deployment descriptor file. For details, see
 To use a custom `jndi.properties` file, JAR it and place it in the
 domain-dir``/lib`` directory. This adds the custom `jndi.properties` file
 to the Common class loader. For more information about class loading,
-see xref:class-loaders.adoc#beade[Class Loaders].
+see xref:class-loaders.adoc#class-loaders[Class Loaders].
 
 For each property found in more than one `jndi.properties` file, the
 Jakarta EE naming service either uses the first value found or concatenates
@@ -518,7 +515,7 @@ These elements are part of the `glassfish-web.xml`,
 `glassfish-application-client.xml`, `glassfish-ejb-jar.xml`, and
 `glassfish-application.xml` deployment descriptor files. For more
 information about how these elements behave in each of the deployment
-descriptor files, see "link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName}
+descriptor files, see "link:application-deployment-guide/dd-elements.html#c-elements-of-the-glassfish-server-deployment-descriptors[Elements of the {productName}
 Deployment Descriptors]" in {productName}
 Application Deployment Guide.
 

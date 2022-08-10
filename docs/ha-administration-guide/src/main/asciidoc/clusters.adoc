@@ -7,9 +7,6 @@ prev=nodes.html
 
 = Administering {productName} Clusters
 
-[[gjfom]]
-
-
 [[administering-glassfish-server-clusters]]
 == 4 Administering {productName} Clusters
 
@@ -38,7 +35,7 @@ The following topics are addressed here:
 A cluster is a named collection of {productName} instances that share
 the same applications, resources, and configuration information. For
 information about {productName} instances, see
-xref:instances.adoc#gkrbv[Administering {productName} Instances].
+xref:instances.adoc#administering-glassfish-server-instances[Administering {productName} Instances].
 
 {productName} enables you to administer all the instances in a
 cluster as a single unit from a single host, regardless of whether the
@@ -653,7 +650,7 @@ asadmin> create-local-instance
 node-name::
   The name of an existing {productName} node on which the instance is
   to reside. For more information about nodes, see
-  xref:nodes.adoc#gkrle[Administering {productName} Nodes].
+  xref:nodes.adoc#administering-glassfish-server-nodes[Administering {productName} Nodes].
 cluster-name::
   The name of the cluster to which the you are adding the instance.
 gms-port::

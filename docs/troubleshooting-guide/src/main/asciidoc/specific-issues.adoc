@@ -7,9 +7,6 @@ prev=overview.html
 
 = Specific Issues
 
-[[abgbj]]
-
-
 [[specific-issues]]
 == 2 Specific Issues
 
@@ -315,7 +312,7 @@ applications are deployed.
 clicking the Applications node.
 
 For more information about deploying applications, see
-"link:application-deployment-guide/deploying-applications.html#beact[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
+"link:application-deployment-guide/deploying-applications.html#deploying-applications[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
 Console online help.
 
 [[administrator-user-name-or-password-not-known]]
@@ -727,7 +724,7 @@ It is safe to remove uninstallation and installation log files after you
 have examined them.
 
 For information related to uninstallation, see
-"link:installation-guide/uninstalling.html#ghmlt[Uninstalling GlassFish]"
+"link:installation-guide/uninstalling.html#uninstalling-glassfish[Uninstalling GlassFish]"
 in {productName} Installation Guide.
 
 [[issues-related-to-security]]

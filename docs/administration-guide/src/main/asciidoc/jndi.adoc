@@ -5,9 +5,6 @@ prev=jms.adoc
 
 = Administering the Java Naming and Directory Interface (JNDI) Service
 
-[[ablky]]
-
-
 [[administering-the-java-naming-and-directory-interface-jndi-service]]
 == 18 Administering the Java Naming and Directory Interface (JNDI) Service
 

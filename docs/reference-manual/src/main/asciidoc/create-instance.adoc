@@ -104,9 +104,9 @@ basis of an algorithm that is internal to the subcommand. Use the
 `--systemproperties` option to resolve port conflicts for additional
 instances on the same node. System properties of an instance can be
 manipulated by using the
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)]
+link:create-system-properties.html#create-system-properties[`create-system-properties`(1)]
 subcommand and the
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)]
+link:delete-system-property.html#delete-system-property[`delete-system-property`(1)]
 subcommand.
 
 This subcommand is supported in remote mode only.
@@ -372,16 +372,16 @@ Command create-instance executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)],
-link:list-instances.html#list-instances-1[`list-instances`(1)],
-link:setup-ssh.html#setup-ssh-1[`setup-ssh`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
+link:create-local-instance.html#create-local-instance[`create-local-instance`(1)],
+link:create-node-config.html#create-node-config[`create-node-config`(1)],
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
+link:create-system-properties.html#create-system-properties[`create-system-properties`(1)],
+link:delete-instance.html#delete-instance[`delete-instance`(1)],
+link:delete-system-property.html#delete-system-property[`delete-system-property`(1)],
+link:list-instances.html#list-instances[`list-instances`(1)],
+link:setup-ssh.html#setup-ssh[`setup-ssh`(1)],
+link:start-instance.html#start-instance[`start-instance`(1)],
+link:stop-instance.html#stop-instance[`stop-instance`(1)]
 
 

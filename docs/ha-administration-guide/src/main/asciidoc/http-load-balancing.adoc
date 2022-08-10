@@ -17,7 +17,7 @@ This chapter describes how to configure HTTP load balancing on {productName} 7.
 
 The following topics are addressed here:
 
-* xref:#abdgx[Setting Up HTTP Load Balancing]
+* xref:#setting-up-http-load-balancing[Setting Up HTTP Load Balancing]
 
 For information on other types of load balancing, see
 link:jms.html#abdbk[Configuring Java Message Service High Availability]
@@ -31,10 +31,10 @@ This section describes how to set up load balancing for {productName}.
 
 The following topics are addressed here:
 
-* xref:#abdgy[Prerequisites for Setting Up HTTP Load Balancing]
-* xref:#gksdt[Configuring {productName} with Apache HTTP Server and `mod_jk`]
-* xref:#CHDCCGDC[Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`]
-* xref:#abdgz[HTTP Load Balancer Deployments]
+* xref:#prerequisites-for-setting-up-http-load-balancing[Prerequisites for Setting Up HTTP Load Balancing]
+* xref:#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with Apache HTTP Server and `mod_jk`]
+* xref:#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`]
+* xref:#http-load-balancer-deployments[HTTP Load Balancer Deployments]
 
 [[abdgy]][[GSHAG00281]][[prerequisites-for-setting-up-http-load-balancing]]
 
@@ -46,9 +46,9 @@ Before configuring your load balancer, you must:
 or `mod_proxy_ajp` modules, the only supported web server is Apache HTTP Server 2.2.x.
 
 * Configure the `mod_jk` connector module, as described in
-xref:#gksdt[Configuring {productName} with Apache HTTP Server and `mod_jk`],
+xref:#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with Apache HTTP Server and `mod_jk`],
 or configure the `mod_proxy_ajp` connector module, as
-described in xref:#CHDCCGDC[Configuring {productName} with Apache
+described in xref:#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with Apache
 HTTP Server and `mod_proxy_ajp`].
 
 * Create {productName} clusters or server instances to participate in load balancing.
@@ -111,7 +111,7 @@ JkMount /examples/* worker1
 3. Start Apache HTTP Server.
 
 4. Create a jk-enabled network listener by using the
-link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
+link:reference-manual/create-network-listener.html#create-network-listener[`create-network-listener`] subcommand.
 +
 [source]
 ----
@@ -263,8 +263,8 @@ http-thread-pool.max-thread-pool-size=value
 You can configure your load balancer in different ways, depending on
 your goals and environment, as described in the following sections:
 
-* xref:#abdha[Using Clustered Server Instances]
-* xref:#abdhc[Using Multiple Standalone Instances]
+* xref:#using-clustered-server-instances[Using Clustered Server Instances]
+* xref:#using-multiple-standalone-instances[Using Multiple Standalone Instances]
 
 [[abdha]][[GSHAG00232]][[using-clustered-server-instances]]
 

@@ -99,8 +99,8 @@ Command list-jmsdest executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jmsdest.html#create-jmsdest-1[`create-jmsdest`(1)],
-link:delete-jmsdest.html#delete-jmsdest-1[`delete-jmsdest`(1)],
-link:flush-jmsdest.html#flush-jmsdest-1[`flush-jmsdest`(1)]
+link:create-jmsdest.html#create-jmsdest[`create-jmsdest`(1)],
+link:delete-jmsdest.html#delete-jmsdest[`delete-jmsdest`(1)],
+link:flush-jmsdest.html#flush-jmsdest[`flush-jmsdest`(1)]
 
 

@@ -81,8 +81,8 @@ Command delete-connector-connection-pool executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-connection-pool.html#create-connector-connection-pool-1[`create-connector-connection-pool`(1)],
-link:list-connector-connection-pools.html#list-connector-connection-pools-1[`list-connector-connection-pools`(1)],
-link:ping-connection-pool.html#ping-connection-pool-1[`ping-connection-pool`(1)]
+link:create-connector-connection-pool.html#create-connector-connection-pool[`create-connector-connection-pool`(1)],
+link:list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`(1)],
+link:ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`(1)]
 
 

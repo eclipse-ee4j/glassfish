@@ -61,7 +61,7 @@ component-name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To list multiple versions, you can use an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application
+  application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application
   Versions]" in {productName} Application
   Deployment Guide.
 
@@ -91,8 +91,8 @@ Command show-component-status executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-applications.html#list-applications-1[`list-applications`(1)],
-link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)]
+link:list-applications.html#list-applications[`list-applications`(1)],
+link:list-sub-components.html#list-sub-components[`list-sub-components`(1)]
 
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]

@@ -129,11 +129,11 @@ Command create-network-listener executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
-link:create-protocol.html#create-protocol-1[`create-protocol`(1)],
-link:create-threadpool.html#create-threadpool-1[`create-threadpool`(1)],
-link:create-transport.html#create-transport-1[`create-transport`(1)],
-link:delete-network-listener.html#delete-network-listener-1[`delete-network-listener`(1)],
-link:list-network-listeners.html#list-network-listeners-1[`list-network-listeners`(1)]
+link:create-http-listener.html#create-http-listener[`create-http-listener`(1)],
+link:create-protocol.html#create-protocol[`create-protocol`(1)],
+link:create-threadpool.html#create-threadpool[`create-threadpool`(1)],
+link:create-transport.html#create-transport[`create-transport`(1)],
+link:delete-network-listener.html#delete-network-listener[`delete-network-listener`(1)],
+link:list-network-listeners.html#list-network-listeners[`list-network-listeners`(1)]
 
 

@@ -23,16 +23,16 @@ link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
 The following topics are addressed here:
 
-* xref:#ghpuj[About the Administrative Command Infrastructure of {productName}]
-* xref:#ghpwe[Adding an `asadmin` Subcommand]
-* xref:#ghpwa[Adding Parameters to an `asadmin` Subcommand]
-* xref:#gkygt[Making `asadmin` Subcommands Cluster-Aware]
-* xref:#ghptw[Adding Message Text Strings to an `asadmin` Subcommand]
-* xref:#ghpvn[Enabling an `asadmin` Subcommand to Run]
-* xref:#ghpvq[Setting the Context of an `asadmin` Subcommand]
-* xref:#ghpwn[Changing the Brand in the {productName} CLI]
-* xref:#ghmza[Examples of Extending the `asadmin` Utility]
-* xref:#gkzlq[Implementing Create, Delete, and List Commands Using
+* xref:#about-the-administrative-command-infrastructure-of-glassfish-server[About the Administrative Command Infrastructure of {productName}]
+* xref:#adding-an-asadmin-subcommand[Adding an `asadmin` Subcommand]
+* xref:#adding-parameters-to-an-asadmin-subcommand[Adding Parameters to an `asadmin` Subcommand]
+* xref:#making-asadmin-subcommands-cluster-aware[Making `asadmin` Subcommands Cluster-Aware]
+* xref:#adding-message-text-strings-to-an-asadmin-subcommand[Adding Message Text Strings to an `asadmin` Subcommand]
+* xref:#enabling-an-asadmin-subcommand-to-run[Enabling an `asadmin` Subcommand to Run]
+* xref:#setting-the-context-of-an-asadmin-subcommand[Setting the Context of an `asadmin` Subcommand]
+* xref:#changing-the-brand-in-the-glassfish-server-cli[Changing the Brand in the {productName} CLI]
+* xref:#examples-of-extending-the-asadmin-utility[Examples of Extending the `asadmin` Utility]
+* xref:#implementing-create-delete-and-list-commands-using-annotations[Implementing Create, Delete, and List Commands Using
 Annotations]
 
 [[ghpuj]][[GSACG00105]][[about-the-administrative-command-infrastructure-of-glassfish-server]]
@@ -63,11 +63,11 @@ these tasks and operations through the `asadmin` utility.
 
 The following topics are addressed here:
 
-* xref:#ghrqj[Representing an `asadmin` Subcommand as a Java Class]
-* xref:#ghrpm[Specifying the Name of an `asadmin` Subcommand]
-* xref:#ghrng[Ensuring That an `AdminCommand` Implementation Is
+* xref:#representing-an-asadmin-subcommand-as-a-java-class[Representing an `asadmin` Subcommand as a Java Class]
+* xref:#specifying-the-name-of-an-asadmin-subcommand[Specifying the Name of an `asadmin` Subcommand]
+* xref:#ensuring-that-an-admincommand-implementation-is-stateless[Ensuring That an `AdminCommand` Implementation Is
 Stateless]
-* xref:#ghrqx[Example of Adding an `asadmin` Subcommand]
+* xref:#example-of-adding-an-asadmin-subcommand[Example of Adding an `asadmin` Subcommand]
 
 [[ghrqj]][[GSACG00194]][[representing-an-asadmin-subcommand-as-a-java-class]]
 
@@ -89,7 +89,7 @@ implementations are met:
 component that contains them is made known to the {productName} runtime.
 +
 For information about how to make a component known to the {productName} runtime, see
-link:packaging-integrating-delivering.html#ghmne[Integrating an Add-On Component With {productName}].
+link:packaging-integrating-delivering.html#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}].
 
 [[ghrpm]][[GSACG00195]][[specifying-the-name-of-an-asadmin-subcommand]]
 
@@ -124,7 +124,7 @@ creating, deleting, and listing HTTP listeners:
 You must also ensure that the name of your subcommand is unique.
 To obtain a complete list of the names of all `asadmin` subcommands that
 are installed, use the
-link:reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand.
+link:reference-manual/list-commands.html#list-commands[`list-commands`] subcommand.
 For a complete list of `asadmin` subcommands that are supplied in
 {productName} distributions, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
@@ -184,21 +184,21 @@ of the subcommand.
 
 * Options control how the `asadmin` utility performs a subcommand.
 * Operands are the objects on which a subcommand acts. For example, the
-operand of the link:reference-manual/start-domain.html#GSRFM00235[`start-domain`] subcommand is the domain
+operand of the link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand is the domain
 that is to be started.
 
 The following topics are addressed here:
 
-* xref:#ghpvh[Representing a Parameter of an `asadmin` Subcommand]
-* xref:#ghptx[Identifying a Parameter of an `asadmin` Subcommand]
-* xref:#ghpxp[Specifying Whether a Parameter Is an Option or an Operand]
-* xref:#ghpxj[Specifying the Name of an Option]
-* xref:#ghpxl[Specifying the Acceptable Values of a Parameter]
-* xref:#ghrgt[Specifying the Default Value of a Parameter]
-* xref:#ghpuk[Specifying Whether a Parameter Is Required or Optional]
-* xref:#CDCFAJDG[Specifying Whether a Parameter Can Be Used Multiple
+* xref:#representing-a-parameter-of-an-asadmin-subcommand[Representing a Parameter of an `asadmin` Subcommand]
+* xref:#identifying-a-parameter-of-an-asadmin-subcommand[Identifying a Parameter of an `asadmin` Subcommand]
+* xref:#specifying-whether-a-parameter-is-an-option-or-an-operand[Specifying Whether a Parameter Is an Option or an Operand]
+* xref:#specifying-the-name-of-an-option[Specifying the Name of an Option]
+* xref:#specifying-the-acceptable-values-of-a-parameter[Specifying the Acceptable Values of a Parameter]
+* xref:#specifying-the-default-value-of-a-parameter[Specifying the Default Value of a Parameter]
+* xref:#specifying-whether-a-parameter-is-required-or-optional[Specifying Whether a Parameter Is Required or Optional]
+* xref:#specifying-whether-a-parameter-can-be-used-multiple-times-on-the-command-line[Specifying Whether a Parameter Can Be Used Multiple
 Times on the Command Line]
-* xref:#ghpxd[Example of Adding Parameters to an `asadmin` Subcommand]
+* xref:#example-of-adding-parameters-to-an-asadmin-subcommand[Example of Adding Parameters to an `asadmin` Subcommand]
 
 [[ghpvh]][[GSACG00198]][[representing-a-parameter-of-an-asadmin-subcommand]]
 
@@ -446,11 +446,11 @@ instances.
 
 The following topics are addressed here:
 
-* xref:#gkyjk[Specifying Allowed Targets]
-* xref:#gkykm[The `Target` Utility]
-* xref:#gkyfv[Specifying `asadmin` Subcommand Execution]
-* xref:#gkyjs[Subcommand Preprocessing and Postprocessing]
-* xref:#gkyit[Running a Command from Another Command]
+* xref:#specifying-allowed-targets[Specifying Allowed Targets]
+* xref:#the-target-utility[The `Target` Utility]
+* xref:#specifying-asadmin-subcommand-execution[Specifying `asadmin` Subcommand Execution]
+* xref:#subcommand-preprocessing-and-postprocessing[Subcommand Preprocessing and Postprocessing]
+* xref:#running-a-command-from-another-command[Running a Command from Another Command]
 
 [[gkyjk]][[GSACG00206]][[specifying-allowed-targets]]
 
@@ -703,7 +703,7 @@ set the `on` element of the `@Supplemental` annotation to
 ----
 
 Supplemental commands can use the `@ExecuteOn` annotation as described
-in xref:#gkyfv[Specifying `asadmin` Subcommand Execution].
+in xref:#specifying-asadmin-subcommand-execution[Specifying `asadmin` Subcommand Execution].
 
 [[gkyit]][[GSACG00210]][[running-a-command-from-another-command]]
 
@@ -789,7 +789,7 @@ string::
 To display the message strings to users, you must provide code in your
 implementation of the `execute` method to display the text. For more
 information about implementing the `execute` method, see
-xref:#ghpvn[Enabling an `asadmin` Subcommand to Run].
+xref:#enabling-an-asadmin-subcommand-to-run[Enabling an `asadmin` Subcommand to Run].
 ====
 
 [[GSACG00036]][[ghpvm]]
@@ -909,7 +909,7 @@ The brand in the {productName} command-line interface (CLI) consists
 of the product name and release information that are displayed in the
 following locations:
 
-* In the string that the link:reference-manual/version.html#GSRFM00261[`version`] subcommand displays
+* In the string that the link:reference-manual/version.html#version[`version`] subcommand displays
 * In each entry in the `server.log` file
 
 If you are incorporating {productName} into a new product with an
@@ -1142,7 +1142,7 @@ This example shows a class that represents the `asadmin` subcommand
 `configure-greeter-container`. The subcommand performs a transaction to
 update configuration data for a container component. For more
 information about such transactions, see
-link:adding-configuration-data.html#gjrcz[Creating a Transaction to
+link:adding-configuration-data.html#creating-a-transaction-to-update-configuration-data[Creating a Transaction to
 Update Configuration Data].
 
 The usage statement for this subcommand is as follows:
@@ -1166,11 +1166,11 @@ option is optional or required.
 
 
 Code for the container component is shown in
-link:adding-container-capabilities.html#gkane[Example of Adding Container
+link:adding-container-capabilities.html#example-of-adding-container-capabilities[Example of Adding Container
 Capabilities].
 
 Code that defines the configuration data for the container component is
-shown in link:adding-configuration-data.html#gkaal[Examples of Adding
+shown in link:adding-configuration-data.html#examples-of-adding-configuration-data-for-a-component[Examples of Adding
 Configuration Data for a Component].
 
 [source,java]
@@ -1236,15 +1236,15 @@ code is needed.
 
 The following topics are addressed here:
 
-* xref:#gkzkc[Command Patterns]
-* xref:#gkzle[Resolvers]
-* xref:#gkzoy[The `@Create` Annotation]
-* xref:#gkzoo[The `@Delete` Annotation]
-* xref:#gkzpl[The `@Listing` Annotation]
-* xref:#gkznf[Create Command Decorators]
-* xref:#gkznx[Delete Command Decorators]
-* xref:#gkzmu[Specifying Command Execution]
-* xref:#gkznd[Using Multiple Command Annotations]
+* xref:#command-patterns[Command Patterns]
+* xref:#resolvers[Resolvers]
+* xref:#the-create-annotation[The `@Create` Annotation]
+* xref:#the-delete-annotation[The `@Delete` Annotation]
+* xref:#the-listing-annotation[The `@Listing` Annotation]
+* xref:#create-command-decorators[Create Command Decorators]
+* xref:#delete-command-decorators[Delete Command Decorators]
+* xref:#specifying-command-execution[Specifying Command Execution]
+* xref:#using-multiple-command-annotations[Using Multiple Command Annotations]
 
 [[gkzkc]][[GSACG00211]][[command-patterns]]
 
@@ -1677,7 +1677,7 @@ Commands specified with the `@Create`, `@Delete`, and `@Listing`
 annotations can use the `@ExecuteOn` annotation. The `@ExecuteOn`
 annotation specifies whether the command runs on the DAS, on server
 instances, or both (the default). For more information, see
-xref:#gkyfv[Specifying `asadmin` Subcommand Execution].
+xref:#specifying-asadmin-subcommand-execution[Specifying `asadmin` Subcommand Execution].
 
 To add an `@ExecuteOn` annotation to a `@Create` or `@Delete`
 annotation, use the `cluster` element. For example:

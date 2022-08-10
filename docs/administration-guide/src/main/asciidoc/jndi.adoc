@@ -42,7 +42,7 @@ is created.
 The following topics are addressed here:
 
 * <<Jakarta EE Naming Environment>>
-* xref:#gglpg[How the Naming Environment and the Container Work
+* xref:#how-the-naming-environment-and-the-container-work-together[How the Naming Environment and the Container Work
 Together]
 * <<Naming References and Binding Information>>
 
@@ -178,13 +178,13 @@ custom resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a custom resource by using the
-link:reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-resource`] subcommand.
+link:reference-manual/create-custom-resource.html#create-custom-resource[`create-custom-resource`] subcommand.
 +
 Information on properties for the subcommand is contained in this help
 page.
 3. Restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00284]][[gioyi]]
 Example 18-1 Creating a Custom Resource
@@ -212,7 +212,7 @@ existing custom resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the custom resources by using the
-link:reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
+link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`] subcommand.
 
 [[GSADG00285]][[gioyr]]
 Example 18-2 Listing Custom Resources
@@ -237,8 +237,8 @@ typing `asadmin help list-custom-resources` at the command line.
 ===== To Update a Custom JNDI Resource
 
 1. List the custom resources by using the
-link:reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
-2. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to modify a custom JNDI
+link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`] subcommand.
+2. Use the link:reference-manual/set.html#set[`set`] subcommand to modify a custom JNDI
 resource.
 
 [[GSADG00286]][[giwkg]]
@@ -262,9 +262,9 @@ custom resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the custom resources by using the
-link:reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
+link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`] subcommand.
 3. Delete a custom resource by using the
-link:reference-manual/delete-custom-resource.html#GSRFM00074[`delete-custom-resource`] subcommand.
+link:reference-manual/delete-custom-resource.html#delete-custom-resource[`delete-custom-resource`] subcommand.
 
 [[GSADG00287]][[gioxh]]
 Example 18-4 Deleting a Custom Resource
@@ -316,13 +316,13 @@ The external JNDI factory must implement the
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Register an external JNDI resource by using the
-link:reference-manual/create-jndi-resource.html#GSRFM00041[`create-jndi-resource`] subcommand.
+link:reference-manual/create-jndi-resource.html#create-jndi-resource[`create-jndi-resource`] subcommand.
 +
 Information on properties for the subcommand is contained in this help
 page.
 3. Restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00288]][[giwcx]]
 Example 18-5 Registering an External JNDI Resource
@@ -382,7 +382,7 @@ can specify the JNDI context or subcontext to list specific entries.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JNDI entries for a configuration by using the
-link:reference-manual/list-jndi-entries.html#GSRFM00178[`list-jndi-entries`] subcommand.
+link:reference-manual/list-jndi-entries.html#list-jndi-entries[`list-jndi-entries`] subcommand.
 
 [[GSADG00290]][[giwal]]
 Example 18-7 Listing JNDI Entries
@@ -409,7 +409,7 @@ typing `asadmin help list-jndi-entries` at the command line.
 
 1. List the existing JNDI resources by using
 theolink:GSRFM00179[`list-jndi-resources`] subcommand.
-2. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to modify an external
+2. Use the link:reference-manual/set.html#set[`set`] subcommand to modify an external
 JNDI resource.
 
 [[GSADG00291]][[giwoa]]
@@ -432,7 +432,7 @@ JNDI resource.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Remove an external JNDI entry by using the
-link:reference-manual/delete-jndi-resource.html#GSRFM00093[`delete-jndi-resource`] subcommand.
+link:reference-manual/delete-jndi-resource.html#delete-jndi-resource[`delete-jndi-resource`] subcommand.
 
 [[GSADG00292]][[giwby]]
 Example 18-9 Deleting an External JNDI Resource

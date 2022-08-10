@@ -95,10 +95,10 @@ Command create-file-user executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-auth-realm.html#create-auth-realm-1[`create-auth-realm`(1)],
-link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
-link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],
-link:list-file-users.html#list-file-users-1[`list-file-users`(1)],
-link:update-file-user.html#update-file-user-1[`update-file-user`(1)]
+link:create-auth-realm.html#create-auth-realm[`create-auth-realm`(1)],
+link:delete-file-user.html#delete-file-user[`delete-file-user`(1)],
+link:list-file-groups.html#list-file-groups[`list-file-groups`(1)],
+link:list-file-users.html#list-file-users[`list-file-users`(1)],
+link:update-file-user.html#update-file-user[`update-file-user`(1)]
 
 

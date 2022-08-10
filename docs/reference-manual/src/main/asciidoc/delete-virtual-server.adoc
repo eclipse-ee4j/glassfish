@@ -81,7 +81,7 @@ Command delete-virtual-server executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-virtual-server.html#create-virtual-server-1[`create-virtual-server`(1)],
-link:list-virtual-servers.html#list-virtual-servers-1[`list-virtual-servers`(1)]
+link:create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)],
+link:list-virtual-servers.html#list-virtual-servers[`list-virtual-servers`(1)]
 
 

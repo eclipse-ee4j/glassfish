@@ -30,13 +30,13 @@ more configurable attributes.
 
 Attributes from the monitoring hierarchy are read-only, but
 configuration attributes can be modified. You can use the
-link:list.html#list-1[`list`(1)] subcommand to display the dotted names
+link:list.html#list[`list`(1)] subcommand to display the dotted names
 that represent individual server components and subsystems. For example,
 a dotted name might be `server.applications.web-module`. After you
 discover the particular component or subsystem, you can then use the
 `get` subcommand to access the attributes. For more detailed information
 on dotted names, see the
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
 [NOTE]
 ====
@@ -123,9 +123,9 @@ Command set executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)]
+link:get.html#get[`get`(1)], link:list.html#list[`list`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)]
 
 link:administration-guide.html#GSADG[{productName} Administration Guide]
 

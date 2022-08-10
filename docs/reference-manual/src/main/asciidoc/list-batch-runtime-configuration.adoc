@@ -102,9 +102,9 @@ Command list-batch-runtime-configuration executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:set-batch-runtime-configuration.html#set-batch-runtime-configuration-1[`set-batch-runtime-configuration`(1)],
-link:list-batch-jobs.html#list-batch-jobs-1[`list-batch-jobs`(1)],
-link:list-batch-job-executions.html#list-batch-job-executions-1[`list-batch-job-executions`(1)],
-link:list-batch-job-steps.html#list-batch-job-steps-1[`list-batch-job-steps`(1)]
+link:set-batch-runtime-configuration.html#set-batch-runtime-configuration[`set-batch-runtime-configuration`(1)],
+link:list-batch-jobs.html#list-batch-jobs[`list-batch-jobs`(1)],
+link:list-batch-job-executions.html#list-batch-job-executions[`list-batch-job-executions`(1)],
+link:list-batch-job-steps.html#list-batch-job-steps[`list-batch-job-steps`(1)]
 
 

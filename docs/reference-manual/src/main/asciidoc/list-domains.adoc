@@ -85,9 +85,9 @@ Command list-domains executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-domain.html#create-domain-1[`create-domain`(1)],
-link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
-link:start-domain.html#start-domain-1[`start-domain`(1)],
-link:stop-domain.html#stop-domain-1[`stop-domain`(1)],
+link:create-domain.html#create-domain[`create-domain`(1)],
+link:delete-domain.html#delete-domain[`delete-domain`(1)],
+link:start-domain.html#start-domain[`start-domain`(1)],
+link:stop-domain.html#stop-domain[`stop-domain`(1)],
 
 

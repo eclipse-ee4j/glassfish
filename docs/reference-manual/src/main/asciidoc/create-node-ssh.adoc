@@ -210,16 +210,16 @@ Command create-node-ssh executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)],
-link:install-node.html#install-node-1[`install-node`(1)],
-link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:ping-node-ssh.html#ping-node-ssh-1[`ping-node-ssh`(1)],
-link:setup-ssh.html#setup-ssh-1[`setup-ssh`(1)],
-link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)],
-link:update-node-ssh001.html#update-node-ssh-1[`update-node-ssh`(1)]
+link:create-node-config.html#create-node-config[`create-node-config`(1)],
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)],
+link:install-node.html#install-node[`install-node`(1)],
+link:install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)],
+link:list-nodes.html#list-nodes[`list-nodes`(1)],
+link:ping-node-ssh.html#ping-node-ssh[`ping-node-ssh`(1)],
+link:setup-ssh.html#setup-ssh[`setup-ssh`(1)],
+link:uninstall-node.html#uninstall-node[`uninstall-node`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh[`uninstall-node-ssh`(1)],
+link:update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
 
 

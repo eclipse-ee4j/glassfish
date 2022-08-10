@@ -82,7 +82,7 @@ asadmin-options::
     `server.server-config.monitoring-service.module-monitoring-levels.jvm`
     must be set to LOW or HIGH. +
     Displays the following statistics for the Virtual Machine for the
-    Java platform (Java Virtual Machine or JVM machine):xref:#sthref1893[^Footnote 1^]
+    Java platform (Java Virtual Machine or JVM machine):xref:#fvyed93[^Footnote 1^]
 +
 --
     `UpTime`::
@@ -245,13 +245,13 @@ To see the legend for the table headings, type `h`.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],
-link:disable-monitoring.html#disable-monitoring-1[`disable-monitoring`(1)],
-link:set.html#set-1[`set`(1)]
+link:enable-monitoring.html#enable-monitoring[`enable-monitoring`(1)],
+link:disable-monitoring.html#disable-monitoring[`disable-monitoring`(1)],
+link:set.html#set[`set`(1)]
 
-link:monitoring.html#monitoring-5asc[`monitoring`(5ASC)]
+link:monitoring.html#monitoring[`monitoring`(5ASC)]
 
-"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide
 
 '''''
 

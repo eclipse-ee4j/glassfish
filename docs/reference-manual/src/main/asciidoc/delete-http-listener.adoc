@@ -98,7 +98,7 @@ Command delete-http-listener executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
-link:list-http-listeners.html#list-http-listeners-1[`list-http-listeners`(1)]
+link:create-http-listener.html#create-http-listener[`create-http-listener`(1)],
+link:list-http-listeners.html#list-http-listeners[`list-http-listeners`(1)]
 
 

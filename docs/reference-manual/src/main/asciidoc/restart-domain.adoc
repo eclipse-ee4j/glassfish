@@ -126,10 +126,10 @@ Command restart-domain executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
-link:list-domains.html#list-domains-1[`list-domains`(1)],
-link:start-domain.html#start-domain-1[`start-domain`(1)],
-link:stop-domain.html#stop-domain-1[`stop-domain`(1)]
+link:delete-domain.html#delete-domain[`delete-domain`(1)],
+link:list-domains.html#list-domains[`list-domains`(1)],
+link:start-domain.html#start-domain[`start-domain`(1)],
+link:stop-domain.html#stop-domain[`stop-domain`(1)]
 
 Java Platform Debugger Architecture (JPDA)
 (`http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html`)

@@ -41,10 +41,10 @@ of Jakarta EE: compatibility. It enables Java developers to access the
 
 The following topics are addressed here:
 
-* xref:#BABJIEEB[{productName} Documentation Set]
-* xref:#BABBDGAE[Related Documentation]
-* xref:#BABGCFGH[Typographic Conventions]
-* xref:#BABHAGID[Symbol Conventions]
+* xref:#glassfish-server-documentation-set[{productName} Documentation Set]
+* xref:#related-documentation[Related Documentation]
+* xref:#typographic-conventions[Typographic Conventions]
+* xref:#symbol-conventions[Symbol Conventions]
 
 [[BABJIEEB]][[glassfish-server-documentation-set]]
 

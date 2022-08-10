@@ -77,8 +77,8 @@ Command list-connector-work-security-maps executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-work-security-map.html#create-connector-work-security-map-1[`create-connector-work-security-map`(1)],
-link:delete-connector-work-security-map.html#delete-connector-work-security-map-1[`delete-connector-work-security-map`(1)],
-link:update-connector-work-security-map.html#update-connector-work-security-map-1[`update-connector-work-security-map`(1)]
+link:create-connector-work-security-map.html#create-connector-work-security-map[`create-connector-work-security-map`(1)],
+link:delete-connector-work-security-map.html#delete-connector-work-security-map[`delete-connector-work-security-map`(1)],
+link:update-connector-work-security-map.html#update-connector-work-security-map[`update-connector-work-security-map`(1)]
 
 

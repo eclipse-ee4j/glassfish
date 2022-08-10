@@ -29,7 +29,7 @@ asadmin [asadmin-options] export-sync-bundle [--help]
 The `export-sync-bundle` subcommand exports the configuration data of a
 cluster or standalone instance to an archive file. The archive file can
 then be used with the
-link:import-sync-bundle.html#import-sync-bundle-1[`import-sync-bundle`(1)]
+link:import-sync-bundle.html#import-sync-bundle[`import-sync-bundle`(1)]
 subcommand to restore the configuration data.
 
 Importing an instance's configuration data transfers the data to a host
@@ -138,6 +138,6 @@ Command export-sync-bundle executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:import-sync-bundle.html#import-sync-bundle-1[`import-sync-bundle`(1)]
+link:import-sync-bundle.html#import-sync-bundle[`import-sync-bundle`(1)]
 
 

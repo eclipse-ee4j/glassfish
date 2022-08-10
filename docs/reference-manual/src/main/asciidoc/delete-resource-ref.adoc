@@ -93,7 +93,7 @@ Command delete-resource-ref executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
-link:list-resource-refs.html#list-resource-refs-1[`list-resource-refs`(1)]
+link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)],
+link:list-resource-refs.html#list-resource-refs[`list-resource-refs`(1)]
 
 

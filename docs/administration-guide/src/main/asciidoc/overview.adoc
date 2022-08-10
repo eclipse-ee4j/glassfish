@@ -39,7 +39,7 @@ The following topics are addressed here:
 After installation, you might need to perform some immediate
 configuration tasks to make your installation function as intended. If
 configuration defaults have been accepted, some features are enabled and
-some not. For an overview of initial configuration tasks for {productName} services and resources, see xref:#gitwr[Initial Configuration
+some not. For an overview of initial configuration tasks for {productName} services and resources, see xref:#initial-configuration-tasks[Initial Configuration
 Tasks].
 
 In addition, you might want to reset default passwords, change names or
@@ -128,7 +128,7 @@ The following resources and services frequently require configuration
 immediately after installation:
 
 System Properties::
-  See xref:general-administration.adoc#ghcjc[Administering System
+  See xref:general-administration.adoc#administering-system-properties[Administering System
   Properties].
 Domains::
   The initial `domain1` is created during installation. Additional
@@ -137,7 +137,7 @@ Domains::
   xref:domains.adoc#administering-domains[Administering Domains].
 JVM::
   The initial tasks for configuring the JVM include creating JVM options
-  and profilers. See xref:jvm.adoc#ablwj[Administering the Virtual
+  and profilers. See xref:jvm.adoc#administering-the-virtual-machine-for-the-java-platform[Administering the Virtual
   Machine for the Java Platform].
 Logging::
   By default, logging is enabled, so basic logging works without
@@ -155,14 +155,14 @@ Life Cycle Modules::
 Security::
   * System Security. Initial configuration tasks might include setting
   up passwords, audit modules, and certificates. See
-  "link:security-guide/system-security.html#GSSCG00035[Administering System Security]" in {productName} Security Guide.
+  "link:security-guide/system-security.html#ablnk[Administering System Security]" in {productName} Security Guide.
   * User Security. Initial configuration tasks might include creating
   authentication realms and file users. See
-  "link:security-guide/user-security.html#GSSCG00036[Administering User Security]" in {productName} Security Guide.
+  "link:security-guide/user-security.html#ggnqj[Administering User Security]" in {productName} Security Guide.
   * Message Security. Initial configuration tasks might include
   configuring a Java Cryptography Extension (JCE) provider, enabling
   default and non-default security providers, and configuring message
-  protection policies. See "link:security-guide/message-security.html#GSSCG00037[Administering Message
+  protection policies. See "link:security-guide/message-security.html#ablrk[Administering Message
   Security]" in {productName} Security Guide.
 Database Connectivity::
   The initial tasks involved in configuring {productName} to connect
@@ -219,14 +219,14 @@ or defaults to be reset. In some situations, an `asadmin` subcommand is
 provided for updating, such as the `update-connector-work-security-map`
 subcommand. However, most updating is done by using the `list`, `get`,
 and `set` subcommands with dotted names. For detailed information about
-dotted names, see the link:reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+dotted names, see the link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
 
 [NOTE]
 ====
 Dotted names also apply to monitoring, but the method is different. For
 information on using dotted names for monitoring, see
-xref:monitoring.adoc#ghbaz[How the Monitoring Tree Structure Works].
+xref:monitoring.adoc#how-the-monitoring-tree-structure-works[How the Monitoring Tree Structure Works].
 ====
 
 
@@ -365,7 +365,7 @@ To obtain information about the DAS or an instance, a running server is required
 
 2. Do one of the following:
 * To determine if the DAS requires restart, list the domains in your {productName} installation.
-Use the link:reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose.
+Use the link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand for this purpose.
 +
 [source]
 ----
@@ -379,7 +379,7 @@ directory of the {productName} software.
 If the DAS requires restart, a statement that restart is required is displayed.
 
 * To determine if an instance requires restart, list information about the instance.
-Use the link:reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand for this purpose.
+Use the link:reference-manual/list-instances.html#list-instances[`list-instances`] subcommand for this purpose.
 +
 [source]
 ----
@@ -419,8 +419,8 @@ Command list-instances executed successfully.
 
 See Also
 
-* link:reference-manual/list-domains.html#GSRFM00163[`list-domains`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/list-domains.html#list-domains[`list-domains`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -449,7 +449,7 @@ require restart.
 * Configuring certificates
 * Managing HTTP, JMS, IIOP, JNDI services
 * Enabling or disabling secure administration as explained in
-"link:security-guide/administrative-security.html#GSSCG00165[Running Secure Admin]" in {productName} Security Guide
+"link:security-guide/administrative-security.html#running-secure-admin[Running Secure Admin]" in {productName} Security Guide
 
 [[ghclm]][[GSADG00629]][[dynamic-configuration-changes]]
 
@@ -622,7 +622,7 @@ Running `asadmin` subcommands from a script is helpful for automating
 repetitive tasks. Basic information about how the `asadmin` utility
 works can be found in the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page. For
 instructions on using the `asadmin` utility, see
-xref:general-administration.adoc#giobi[Using the `asadmin` Utility].
+xref:general-administration.adoc#using-the-asadmin-utility[Using the `asadmin` Utility].
 
 To issue an `asadmin` subcommand in the standard command shell (single
 mode), go to the as-install``/bin`` directory and type the `asadmin`
@@ -670,7 +670,7 @@ Manual].
 interfaces to enable you to access monitoring and configuration data for
 {productName}, including data that is provided by newly installed
 add-on components. For more information, see
-xref:general-administration.adoc#gjipx[Using REST Interfaces to
+xref:general-administration.adoc#using-rest-interfaces-to-administer-glassfish-server[Using REST Interfaces to
 Administer {productName}].
 
 [[gjjxt]][[GSADG00702]][[osgi-module-management-subsystem]]
@@ -739,7 +739,7 @@ as-install``/config/osgi.properties`` to change the value of the
 `glassfish.osgi.start.level.final` property from 2 to 3.
 
 3. Restart the DAS.
-For instructions, see xref:domains.adoc#ginqj[To Restart a Domain].
+For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[CJAGIGII]][[GSADG1050]][[to-run-apache-felix-gogo-remote-shell-commands]]
 
@@ -760,7 +760,7 @@ utility. The `osgi` subcommand is supported in remote mode only.
 
 1. Ensure that the server is running.
 Remote commands require a running server.
-2. Access the remote shell by using the link:reference-manual/redeploy.html#GSRFM00217[`osgi`]
+2. Access the remote shell by using the link:reference-manual/redeploy.html#redeploy[`osgi`]
 subcommand. For the full syntax and options for this subcommand, see `osgi`(1).
 
 [[GSADG1052]]
@@ -776,7 +776,7 @@ Unlike other local subcommands, however, the DAS and the server
 instance whose shell is being accessed must be running.
 
 1. Ensure that the server is running.
-2. Access the remote shell by using the link:reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
+2. Access the remote shell by using the link:reference-manual/redeploy.html#redeploy[`osgi-shell`]
 subcommand. For the full syntax and options for this subcommand, see `osgi-shell`(1).
 
 [[GSADG1053]]
@@ -894,7 +894,7 @@ http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glass
 The contents of the files are added to the
 as-install``/modules/autostart`` directory of your {productName}
 installation.
-4. Restart the DAS. For instructions, see xref:domains.adoc#ginqj[To Restart a Domain].
+4. Restart the DAS. For instructions, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG797]]
 
@@ -903,7 +903,7 @@ Next Steps
 After downloading and installing the GlassFish OSGi Web Console, you can
 access the console as explained in the following sections:
 
-* xref:#BABIDJHF[To Access the GlassFish OSGi Web Console Through the
+* xref:#to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console[To Access the GlassFish OSGi Web Console Through the
 {productName} Administration Console]
 * <<To Access the GlassFish OSGi Web Console as a Standalone Web Application>>
 
@@ -983,7 +983,7 @@ The user name and password of this user are both preset to `admin`.
 
 The `keytool` utility is used to set up and work with Java Security
 Socket Extension (JSSE) digital certificates. See
-"link:security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
+"link:security-guide/system-security.html#administering-jsse-certificates[Administering JSSE Certificates]"
 in {productName} Security Guide for instructions on using `keytool`.
 
 [[ghrfm]][[GSADG00704]][[java-monitoring-and-management-console-jconsole]]
@@ -994,7 +994,7 @@ Java SE provides tools to connect to an MBean server and view the MBeans
 that are registered with the server. JConsole is one such popular JMX
 Connector Client and is available as part of the standard Java SE
 distribution. For instructions on implementing JConsole in the {productName} environment,
-see xref:monitoring.adoc#giwqm[Configuring JConsole to View {productName} Monitoring Data].
+see xref:monitoring.adoc#configuring-jconsole-to-view-glassfish-server-monitoring-data[Configuring JConsole to View {productName} Monitoring Data].
 
 [[giudo]][[GSADG00529]][[instructions-for-administering-glassfish-server]]
 
@@ -1003,7 +1003,7 @@ see xref:monitoring.adoc#giwqm[Configuring JConsole to View {productName} Monito
 Information and instructions on performing most of the administration
 tasks from the command line are provided in this document and in the
 `asadmin` utility help pages. For instructions on accessing `asadmin`
-online help, see xref:general-administration.adoc#givlw[To Display Help
+online help, see xref:general-administration.adoc#to-display-help-information-for-the-asadmin-utility-or-a-subcommand[To Display Help
 Information for the `asadmin` Utility or a Subcommand].
 
 Information and instructions for accomplishing the tasks by using the

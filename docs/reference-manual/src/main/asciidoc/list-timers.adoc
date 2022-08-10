@@ -73,12 +73,12 @@ The list-timers command was executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:migrate-timers.html#migrate-timers-1[`migrate-timers`(1)]
+link:migrate-timers.html#migrate-timers[`migrate-timers`(1)]
 
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-the-timer-service[
 Using the Timer Service] in The Jakarta EE Tutorial
 
-"link:application-development-guide/ejb.html#GSDVG00146[EJB Timer Service]"
+"link:application-development-guide/ejb.html#ejb-timer-service[EJB Timer Service]"
 in {productName} Application Development Guide
 
 

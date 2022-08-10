@@ -54,16 +54,16 @@ present.
 
 === See Also
 
-link:monitor.html#monitor-1[`monitor`(1)],
-link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],
-link:disable-monitoring.html#disable-monitoring-1[`disable-monitoring`(1)],
-link:list.html#list-1[`list`(1)], link:get.html#get-1[`get`(1)],
-link:set.html#set-1[`set`(1)]
+link:monitor.html#monitor[`monitor`(1)],
+link:enable-monitoring.html#enable-monitoring[`enable-monitoring`(1)],
+link:disable-monitoring.html#disable-monitoring[`disable-monitoring`(1)],
+link:list.html#list[`list`(1)], link:get.html#get[`get`(1)],
+link:set.html#set[`set`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)]
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide
 
 

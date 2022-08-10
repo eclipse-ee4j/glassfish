@@ -25,15 +25,15 @@ platform) applications and web technologies based on Java technology.
 
 The following topics are addressed here:
 
-* xref:#ghgpe[About This Quick Start Guide]
+* xref:#about-this-quick-start-guide[About This Quick Start Guide]
 * xref:#default-paths-and-file-names[Default Paths and File Names]
-* xref:#gixue[Default Administration Values]
-* xref:#gglog[Starting and Stopping the Default Domain]
-* xref:#gglmh[Starting and Stopping the Database Server]
-* xref:#ggllq[Starting the Administration Console]
-* xref:#geyvr[Deploying and Undeploying Applications]
-* xref:#gktqx[High Availability Clustering and Load Balancing]
-* xref:#ggkzh[For More Information]
+* xref:#default-administration-values[Default Administration Values]
+* xref:#starting-and-stopping-the-default-domain[Starting and Stopping the Default Domain]
+* xref:#starting-and-stopping-the-database-server[Starting and Stopping the Database Server]
+* xref:#starting-the-administration-console[Starting the Administration Console]
+* xref:#deploying-and-undeploying-applications[Deploying and Undeploying Applications]
+* xref:#high-availability-clustering-and-load-balancing[High Availability Clustering and Load Balancing]
+* xref:#for-more-information[For More Information]
 
 [[ghgpe]][[GSQSG00030]][[about-this-quick-start-guide]]
 
@@ -60,7 +60,7 @@ For example:
 
 This guide provides basic information only. For comprehensive
 information about {productName} and other entities mentioned in this
-guide, see xref:#ggkzh[For More Information].
+guide, see xref:#for-more-information[For More Information].
 
 To review additional details about this release before you begin using
 the software, see the link:release-notes.html#GSRLN[{productName}
@@ -315,10 +315,10 @@ This section explains how to deploy, list, and undeploy applications.
 The procedures in this section use the `hello.war` sample application.
 The following topics are addressed here:
 
-* xref:#ghgis[To Obtain the Sample Application]
-* xref:#gkpao[Deploying and Undeploying the Sample Application From the Command Line]
-* xref:#gkpau[Deploying and Undeploying Applications by Using the Administration Console]
-* xref:#gkpaa[Deploying and Undeploying the Sample Application Automatically]
+* xref:#to-obtain-the-sample-application[To Obtain the Sample Application]
+* xref:#deploying-and-undeploying-the-sample-application-from-the-command-line[Deploying and Undeploying the Sample Application From the Command Line]
+* xref:#deploying-and-undeploying-applications-by-using-the-administration-console[Deploying and Undeploying Applications by Using the Administration Console]
+* xref:#deploying-and-undeploying-the-sample-application-automatically[Deploying and Undeploying the Sample Application Automatically]
 
 [[ghgis]][[GSQSG00010]][[to-obtain-the-sample-application]]
 
@@ -338,9 +338,9 @@ This directory is referred to as sample-dir.
 {productName} provides `asadmin` subcommands for performing the
 following deployment-related tasks:
 
-* xref:#ggndq[To Deploy the Sample Application From the Command Line]
-* xref:#ggnco[To List Deployed Applications From the Command Line]
-* xref:#ggnbm[To Undeploy the Sample Application From the Command Line]
+* xref:#to-deploy-the-sample-application-from-the-command-line[To Deploy the Sample Application From the Command Line]
+* xref:#to-list-deployed-applications-from-the-command-line[To List Deployed Applications From the Command Line]
+* xref:#to-undeploy-the-sample-application-from-the-command-line[To Undeploy the Sample Application From the Command Line]
 
 [[ggndq]][[GSQSG00011]][[to-deploy-the-sample-application-from-the-command-line]]
 
@@ -349,7 +349,7 @@ following deployment-related tasks:
 Before You Begin
 
 The sample application must be available before you start this task. To
-download the sample, see xref:#ghgis[To Obtain the Sample Application].
+download the sample, see xref:#to-obtain-the-sample-application[To Obtain the Sample Application].
 At least one {productName} domain must be started before you deploy
 the sample application.
 
@@ -391,7 +391,7 @@ The application displays a customized response, giving you a personal
 See Also
 
 For more information about the `deploy` subcommand, see
-link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)].
+link:reference-manual/deploy.html#deploy[`deploy`(1)].
 
 For more information about deploying applications from the command line,
 see the link:application-deployment-guide.html#GSDPG[{productName} Application
@@ -433,7 +433,7 @@ as-install/bin/asadmin undeploy hello
 See Also
 
 For more information about the `undeploy` subcommand, see
-link:reference-manual/undeploy.html#GSRFM00244[`undeploy`(1)].
+link:reference-manual/undeploy.html#undeploy[`undeploy`(1)].
 
 [[gkpau]][[GSQSG00045]][[deploying-and-undeploying-applications-by-using-the-administration-console]]
 
@@ -442,9 +442,9 @@ link:reference-manual/undeploy.html#GSRFM00244[`undeploy`(1)].
 The graphical Administration Console of {productName} enables you to
 perform the following deployment-related tasks:
 
-* xref:#ggnbn[To Deploy the Sample Application by Using the Administration Console]
-* xref:#ggncd[To View Deployed Applications in the Administration Console]
-* xref:#ggneh[To Undeploy the Sample Application by Using the Administration Console]
+* xref:#to-deploy-the-sample-application-by-using-the-administration-console[To Deploy the Sample Application by Using the Administration Console]
+* xref:#to-view-deployed-applications-in-the-administration-console[To View Deployed Applications in the Administration Console]
+* xref:#to-undeploy-the-sample-application-by-using-the-administration-console[To Undeploy the Sample Application by Using the Administration Console]
 
 [[ggnbn]][[GSQSG00014]][[to-deploy-the-sample-application-by-using-the-administration-console]]
 
@@ -453,7 +453,7 @@ perform the following deployment-related tasks:
 Before You Begin
 
 The sample application must be available before you start this task.
-To download the sample, see xref:#ghgis[To Obtain the Sample Application].
+To download the sample, see xref:#to-obtain-the-sample-application[To Obtain the Sample Application].
 At least one {productName} domain must be started before you deploy
 the sample application.
 
@@ -551,8 +551,8 @@ For more information, see the Administration Console online help.
 {productName} enables you to performing the following
 deployment-related tasks automatically:
 
-* xref:#geyvj[To Deploy the Sample Application Automatically]
-* xref:#ggncw[To Undeploy the Sample Application Automatically]
+* xref:#to-deploy-the-sample-application-automatically[To Deploy the Sample Application Automatically]
+* xref:#to-undeploy-the-sample-application-automatically[To Undeploy the Sample Application Automatically]
 
 [[geyvj]][[GSQSG00017]][[to-deploy-the-sample-application-automatically]]
 
@@ -572,7 +572,7 @@ as-install/domains/domain1/autodeploy
 Before You Begin
 
 The sample application must be available before you start this task. To
-download the sample, see xref:#ghgis[To Obtain the Sample Application].
+download the sample, see xref:#to-obtain-the-sample-application[To Obtain the Sample Application].
 
 Copy the application WAR file to the domain-dir``/autodeploy`` directory.
 
@@ -656,10 +656,10 @@ that defines the host where the instance resides.
 
 For more information, see the following documentation:
 
-* "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
-* "link:ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
+* "link:ha-administration-guide/nodes.html#gkrle[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/clusters.html#gjfom[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
+* "link:ha-administration-guide/instances.html#gkrbv[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
 
 [[gktpt]][[GSQSG00048]][[session-persistence-and-failover]]
@@ -672,7 +672,7 @@ state enables the session to continue without loss of information.
 {productName} supports in-memory session replication on other servers
 in the cluster for maintaining HTTP session and stateful session bean data.
 
-For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
+For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
 [[gksbz]][[GSQSG00049]][[load-balancing-for-clustered-configurations]]
@@ -697,10 +697,10 @@ on the needs of your enterprise. For complete information about
 configuring load balancing in {productName}, see the following
 documentation:
 
-* "link:ha-administration-guide/http-load-balancing.html#GSHAG00009[
+* "link:ha-administration-guide/http-load-balancing.html#abdgs[
 Configuring HTTP Load Balancing]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/rmi-iiop.html#GSHAG00013[
+* "link:ha-administration-guide/rmi-iiop.html#fxxqs[
 RMI-IIOP Load Balancing and Failover]" in
 {productName} High Availability Administration Guide
 
@@ -713,9 +713,9 @@ Additional resources are available to help you learn more about
 
 The following resources are described here:
 
-* xref:#ghhir[Product Documentation]
-* xref:#giyjo[Tutorials]
-* xref:#gintm[Jakarta EE Examples]
+* xref:#product-documentation[Product Documentation]
+* xref:#tutorials[Tutorials]
+* xref:#jakarta-ee-examples[Jakarta EE Examples]
 
 [[ghhir]][[GSQSG00050]][[product-documentation]]
 

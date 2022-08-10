@@ -80,7 +80,7 @@ Command list-network-listeners executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-network-listener.html#create-network-listener-1[`create-network-listener`(1)],
-link:delete-network-listener.html#delete-network-listener-1[`delete-network-listener`(1)]
+link:create-network-listener.html#create-network-listener[`create-network-listener`(1)],
+link:delete-network-listener.html#delete-network-listener[`delete-network-listener`(1)]
 
 

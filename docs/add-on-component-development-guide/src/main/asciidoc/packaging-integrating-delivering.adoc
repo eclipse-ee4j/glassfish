@@ -22,9 +22,9 @@ component through Update Tool.
 
 The following topics are addressed here:
 
-* xref:#ghpun[Packaging an Add-On Component]
-* xref:#ghmne[Integrating an Add-On Component With {productName}]
-* xref:#ghpuz[Delivering an Add-On Component Through Update Tool]
+* xref:#packaging-an-add-on-component[Packaging an Add-On Component]
+* xref:#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}]
+* xref:#delivering-an-add-on-component-through-update-tool[Delivering an Add-On Component Through Update Tool]
 
 [[ghpun]][[GSACG00142]][[packaging-an-add-on-component]]
 

@@ -114,9 +114,9 @@ Command create-http executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-network-listener.html#create-network-listener-1[`create-network-listener`(1)],
-link:create-protocol.html#create-protocol-1[`create-protocol`(1)],
-link:create-virtual-server.html#create-virtual-server-1[`create-virtual-server`(1)],
-link:delete-http.html#delete-http-1[`delete-http`(1)]
+link:create-network-listener.html#create-network-listener[`create-network-listener`(1)],
+link:create-protocol.html#create-protocol[`create-protocol`(1)],
+link:create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)],
+link:delete-http.html#delete-http[`delete-http`(1)]
 
 

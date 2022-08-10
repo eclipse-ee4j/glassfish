@@ -71,7 +71,7 @@ asadmin-options::
 
 +
 For more information about these directories, see
-  "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
+  "link:application-development-guide/class-loaders.html#beade[Class Loaders]" in {productName} Application Development Guide.
 
 === Operands
 
@@ -106,9 +106,9 @@ Command remove-library executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:add-library.html#add-library-1[`add-library`(1)],
-link:list-libraries.html#list-libraries-1[`list-libraries`(1)]
+link:add-library.html#add-library[`add-library`(1)],
+link:list-libraries.html#list-libraries[`list-libraries`(1)]
 
-"link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
+"link:application-development-guide/class-loaders.html#beade[Class Loaders]" in {productName} Application Development Guide
 
 

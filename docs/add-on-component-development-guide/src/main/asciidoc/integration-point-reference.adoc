@@ -20,19 +20,19 @@ Define an integration point for each user interface feature in the
 
 The following topics are addressed here:
 
-* xref:#ghprc[Integration Point Attributes]
-* xref:#ghmwa[`org.glassfish.admingui:navNode` Integration Point]
-* xref:#gjkff[`org.glassfish.admingui:rightPanel` Integration Point]
-* xref:#gjkfq[`org.glassfish.admingui:rightPanelTitle` Integration Point]
-* xref:#ghpkh[`org.glassfish.admingui:serverInstTab` Integration Point]
-* xref:#ghpit[`org.glassfish.admingui:commonTask` Integration Point]
-* xref:#ghphz[`org.glassfish.admingui:configuration` Integration Point]
-* xref:#ghpfm[`org.glassfish.admingui:resources` Integration Point]
-* xref:#ghpiz[`org.glassfish.admingui:customtheme` Integration Point]
-* xref:#ghppm[`org.glassfish.admingui:masthead` Integration Point]
-* xref:#ghppk[`org.glassfish.admingui:loginimage` Integration Point]
-* xref:#ghprk[`org.glassfish.admingui:loginform` Integration Point]
-* xref:#ghpse[`org.glassfish.admingui:versioninfo` Integration Point]
+* xref:#integration-point-attributes[Integration Point Attributes]
+* xref:#GSACG00146[`org.glassfish.admingui:navNode` Integration Point]
+* xref:#GSACG00147[`org.glassfish.admingui:rightPanel` Integration Point]
+* xref:#GSACG00148[`org.glassfish.admingui:rightPanelTitle` Integration Point]
+* xref:#GSACG00149[`org.glassfish.admingui:serverInstTab` Integration Point]
+* xref:#GSACG00150[`org.glassfish.admingui:commonTask` Integration Point]
+* xref:#GSACG00151[`org.glassfish.admingui:configuration` Integration Point]
+* xref:#GSACG00152[`org.glassfish.admingui:resources` Integration Point]
+* xref:#GSACG00153[`org.glassfish.admingui:customtheme` Integration Point]
+* xref:#GSACG00154[`org.glassfish.admingui:masthead` Integration Point]
+* xref:#GSACG00155[`org.glassfish.admingui:loginimage` Integration Point]
+* xref:#GSACG00156[`org.glassfish.admingui:loginform` Integration Point]
+* xref:#GSACG00157[`org.glassfish.admingui:versioninfo` Integration Point]
 
 [[ghprc]][[GSACG00145]][[integration-point-attributes]]
 

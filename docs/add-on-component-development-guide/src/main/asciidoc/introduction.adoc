@@ -25,11 +25,11 @@ the `asadmin` utility.
 
 The following topics are addressed here:
 
-* xref:#ghmje[{productName} Modular Architecture and Add-On
+* xref:#glassfish-server-modular-architecture-and-add-on-components[{productName} Modular Architecture and Add-On
 Components]
-* xref:#ghmrf[OSGi Alliance Module Management Subsystem]
-* xref:#ghmnq[Hundred-Kilobyte Kernel]
-* xref:#ghmns[Overview of the Development Process for an Add-On
+* xref:#osgi-alliance-module-management-subsystem[OSGi Alliance Module Management Subsystem]
+* xref:#hundred-kilobyte-kernel[Hundred-Kilobyte Kernel]
+* xref:#overview-of-the-development-process-for-an-add-on-component[Overview of the Development Process for an Add-On
 Component]
 
 [[ghmje]][[GSACG00087]][[glassfish-server-modular-architecture-and-add-on-components]]
@@ -78,7 +78,7 @@ to this kernel must be implemented as an OSGi bundle. To enable an
 add-on component to plug in to the {productName} kernel in the same
 way as other components, package the component as an OSGi bundle. For
 more information, see
-link:packaging-integrating-delivering.html#ghpun[Packaging an Add-On
+link:packaging-integrating-delivering.html#packaging-an-add-on-component[Packaging an Add-On
 Component].
 
 The default OSGi module management subsystem in {productName} is the
@@ -128,14 +128,14 @@ monitoring data, it must provide that data to users through {productName} admini
 To develop add-on components that meet these requirements, follow the
 development process that is described in the following sections:
 
-* xref:#ghpqc[Writing HK2 Components]
-* xref:#ghokn[Extending the Administration Console]
-* xref:#ghohx[Extending the `asadmin` Utility]
-* xref:#ghojs[Adding Monitoring Capabilities]
-* xref:#gkahs[Adding Configuration Data for a Component]
-* xref:#ghojq[Adding Container Capabilities]
-* xref:#gktld[Creating a Session Persistence Module]
-* xref:#ghoiu[Packaging and Delivering an Add-On Component]
+* xref:#writing-hk2-components[Writing HK2 Components]
+* xref:#extending-the-administration-console[Extending the Administration Console]
+* xref:#extending-the-asadmin-utility[Extending the `asadmin` Utility]
+* xref:#adding-monitoring-capabilities[Adding Monitoring Capabilities]
+* xref:#adding-configuration-data-for-a-component[Adding Configuration Data for a Component]
+* xref:#adding-container-capabilities[Adding Container Capabilities]
+* xref:#creating-a-session-persistence-module[Creating a Session Persistence Module]
+* xref:#packaging-and-delivering-an-add-on-component[Packaging and Delivering an Add-On Component]
 
 [[ghpqc]][[GSACG00173]][[writing-hk2-components]]
 
@@ -255,7 +255,7 @@ session manager extensible because you can implement a new persistence
 type without having to modify the web container code.
 
 For information about other high-availability, session persistence
-solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
+solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 

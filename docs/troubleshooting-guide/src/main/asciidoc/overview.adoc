@@ -19,9 +19,9 @@ Guidelines for evaluating and investigating a problem are provided.
 
 This chapter contains the following sections:
 
-* xref:#abgar[Identifying the Problem]
-* xref:#ghuvy[Troubleshooting Tools]
-* xref:#ghuyv[Where to Go for More Information]
+* xref:#identifying-the-problem[Identifying the Problem]
+* xref:#troubleshooting-tools[Troubleshooting Tools]
+* xref:#where-to-go-for-more-information[Where to Go for More Information]
 
 [[abgar]][[GSTSG00039]][[identifying-the-problem]]
 
@@ -33,10 +33,10 @@ Understanding and diagnosing problems in enterprise software with many
 components performing many tasks can be a challenge. This section
 describes how to get started , and contains the following topics:
 
-* xref:#ghvay[First Steps]
-* xref:#ghuvf[Gathering Information]
-* xref:#abgax[Examining Log Files]
-* xref:#ghuvd[Monitoring the System]
+* xref:#first-steps[First Steps]
+* xref:#gathering-information[Gathering Information]
+* xref:#examining-log-files[Examining Log Files]
+* xref:#monitoring-the-system[Monitoring the System]
 
 [[ghvay]][[GSTSG00171]][[first-steps]]
 
@@ -50,7 +50,7 @@ investigation, try the following steps first.
 ===== Verify System Requirements and Configuration
 
 Ensure that your system meets the requirements listed in
-"link:release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+"link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware and Software Requirements]"
 in {productName} Release Notes.
 Problems are likely to arise if you attempt to install on a platform that
 is not supported or on a system that in some other way does not meet release requirements.
@@ -135,7 +135,7 @@ As you continue your investigation, consider the following questions.
 ===== When Does the Problem Occur?
 
 * What do the logs show? What kind of error message are you getting? For
-more information about logs, see xref:#abgax[Examining Log Files]. Logs
+more information about logs, see xref:#examining-log-files[Examining Log Files]. Logs
 are a good place to start your troubleshooting.
 * What are you trying to do when the problem occurs and how are you
 doing it? What is the sequence of events?
@@ -269,7 +269,7 @@ monitoring the state of various components and services deployed in
 bottlenecks, predict failures, perform root cause analysis, and ensure
 that everything is functioning as expected. For more information about
 monitoring, including JConsole information, see
-"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide.
+"link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in {productName} Administration Guide.
 
 [[ghuvy]][[GSTSG00040]][[troubleshooting-tools]]
 
@@ -279,10 +279,10 @@ Several tools are available that can be used to collect information for
 troubleshooting purposes. This section provides basic information about
 some of them, and includes the following:
 
-* xref:#ghvcm[Operating System Utilities]
-* xref:#ghvbo[Stack Traces and Thread Dumps]
-* xref:#ghyjq[VisualVM]
-* xref:#gjjjl[JVM Command-Line Tools]
+* xref:#operating-system-utilities[Operating System Utilities]
+* xref:#stack-traces-and-thread-dumps[Stack Traces and Thread Dumps]
+* xref:#visualvm[VisualVM]
+* xref:#jvm-command-line-tools[JVM Command-Line Tools]
 
 [[ghvcm]][[GSTSG00175]][[operating-system-utilities]]
 
@@ -324,7 +324,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`(1)]
 
 [[ghyjq]][[GSTSG00177]][[visualvm]]
 
@@ -380,7 +380,7 @@ again here for easy reference.
 Release Notes]
 * Error messages: link:error-messages-reference.html#GSEMR[{productName} Error
 Message Reference]
-* Mailing lists and forums: See xref:#ghymp[Search the GlassFish Mailing
+* Mailing lists and forums: See xref:#search-the-glassfish-mailing-lists-and-forums[Search the GlassFish Mailing
 Lists and Forums] for details about accessing lists and forums.
 * GlassFish community site: `http://glassfish.java.net/`
 

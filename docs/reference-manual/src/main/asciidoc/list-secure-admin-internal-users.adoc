@@ -95,7 +95,7 @@ Command list-secure-admin-internal-users executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)],
-link:enable-secure-admin-internal-user.html#enable-secure-admin-internal-user-1[`enable-secure-admin-internal-user`(1)]
+link:enable-secure-admin.html#enable-secure-admin[`enable-secure-admin`(1)],
+link:enable-secure-admin-internal-user.html#enable-secure-admin-internal-user[`enable-secure-admin-internal-user`(1)]
 
 

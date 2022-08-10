@@ -16,11 +16,11 @@ prev=securing-apps.html
 This chapter describes {productName} support for web services.
 The following topics are addressed here:
 
-* xref:#gbizi[Creating Portable Web Service Artifacts]
-* xref:#gbixz[Deploying a Web Service]
-* xref:#gbiyw[The Web Service URI, WSDL File, and Test Page]
-* xref:#CHDEBBCH[The Databinding Provider]
-* xref:#gcgzz[GlassFish Jakarta EE Service Engine]
+* xref:#creating-portable-web-service-artifacts[Creating Portable Web Service Artifacts]
+* xref:#deploying-a-web-service[Deploying a Web Service]
+* xref:#the-web-service-uri-wsdl-file-and-test-page[The Web Service URI, WSDL File, and Test Page]
+* xref:#the-databinding-provider[The Databinding Provider]
+* xref:#glassfish-java-ee-service-engine[GlassFish Jakarta EE Service Engine]
 
 
 [NOTE]
@@ -47,7 +47,7 @@ in The Jakarta EE Tutorial shows how to deploy simple web services to
 
 For additional information about JAXB (Java Architecture for XML Binding), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
-Specification Request (JSR) 222] and xref:#CHDEBBCH[The Databinding Provider].
+Specification Request (JSR) 222] and xref:#the-databinding-provider[The Databinding Provider].
 
 For additional information about JAX-WS (Java API for XML-Based Web Services), see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr224/index.html[Java
@@ -55,7 +55,7 @@ Specification Request (JSR) 224] and
 http://jcp.org/en/jsr/detail?id=109[Java Specification Request (JSR) 109].
 
 For information about web services security, see
-link:securing-apps.html#beaca[Configuring Message Security for Web Services].
+link:securing-apps.html#configuring-message-security-for-web-services[Configuring Message Security for Web Services].
 
 The Fast Infoset standard specifies a binary format based on the XML Information Set.
 This format is an efficient alternative to XML.
@@ -93,7 +93,7 @@ The {productName} deployment descriptor files `glassfish-web.xml` and
 `webservice-endpoint` and `webservice-description` elements, including a
 `debugging-enabled` subelement that enables the creation of a test page.
 The test page feature is enabled by default and described in
-xref:#gbiyw[The Web Service URI, WSDL File, and Test Page].
+xref:#the-web-service-uri-wsdl-file-and-test-page[The Web Service URI, WSDL File, and Test Page].
 
 For more information about deployment, autodeployment, and deployment
 descriptors, see the link:application-deployment-guide.html#GSDPG[
@@ -296,7 +296,7 @@ To deploy a Jakarta EE application or module as a JBI service unit, use the
 the `asadmin deploy` command, see the link:reference-manual.html#GSRFM[
 {productName} Reference Manual].
 For more information about autodeployment, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00041[
+"link:application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module-automatically[
 To Deploy an Application or Module Automatically]"
 in {productName} Application Deployment Guide.
 

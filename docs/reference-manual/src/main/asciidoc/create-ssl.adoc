@@ -173,6 +173,6 @@ Command create-ssl executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-ssl.html#delete-ssl-1[`delete-ssl`(1)]
+link:delete-ssl.html#delete-ssl[`delete-ssl`(1)]
 
 

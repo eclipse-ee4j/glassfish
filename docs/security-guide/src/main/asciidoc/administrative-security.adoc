@@ -24,13 +24,13 @@ Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
 Console online help.
 
-* xref:#gkocp[Secure Administration Overview]
-* xref:#gkofl[How Secure Admin Works: The Big Picture]
-* xref:#gkofe[Considerations When Running {productName} With Default Security]
-* xref:#gkomz[Running Secure Admin]
-* xref:#gkolu[Additional Considerations When Creating Local Instances]
-* xref:#gkqah[Secure Admin Use Case]
-* xref:#gkodn[Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin]
+* xref:#secure-administration-overview[Secure Administration Overview]
+* xref:#how-secure-admin-works-the-big-picture[How Secure Admin Works: The Big Picture]
+* xref:#considerations-when-running-glassfish-server-with-default-security[Considerations When Running {productName} With Default Security]
+* xref:#running-secure-admin[Running Secure Admin]
+* xref:#additional-considerations-when-creating-local-instances[Additional Considerations When Creating Local Instances]
+* xref:#secure-admin-use-case[Secure Admin Use Case]
+* xref:#upgrading-an-ssl-enabled-secure-glassfish-installation-to-secure-admin[Upgrading an SSL-Enabled Secure GlassFish Installation to Secure Admin]
 
 [[gkocp]][[GSSCG00162]][[secure-administration-overview]]
 
@@ -95,13 +95,13 @@ Secure admin is a domain-wide setting. It affects the DAS and all
 instances and all administration clients. This section describes the
 following topics:
 
-* xref:#gkqce[Functions Performed by Secure Admin]
-* xref:#gkocv[Which Administration Account is Used?]
-* xref:#gkodi[What Authentication Methods Are Used for Secure Administration?]
-* xref:#gkpex[Understanding How Certificate Authentication is Performed]
-* xref:#gkoey[What Certificates Are Used?]
-* xref:#glgmy[An Alternate Approach: Using Distinguished Names to Specify Certificates]
-* xref:#gkqjj[Guarding Against Unwanted Connections]
+* xref:#functions-performed-by-secure-admin[Functions Performed by Secure Admin]
+* xref:#which-administration-account-is-used[Which Administration Account is Used?]
+* xref:#what-authentication-methods-are-used-for-secure-administration[What Authentication Methods Are Used for Secure Administration?]
+* xref:#understanding-how-certificate-authentication-is-performed[Understanding How Certificate Authentication is Performed]
+* xref:#what-certificates-are-used[What Certificates Are Used?]
+* xref:#an-alternate-approach-using-distinguished-names-to-specify-certificates[An Alternate Approach: Using Distinguished Names to Specify Certificates]
+* xref:#guarding-against-unwanted-connections[Guarding Against Unwanted Connections]
 
 [[gkqce]][[GSSCG00227]][[functions-performed-by-secure-admin]]
 
@@ -124,7 +124,7 @@ Subsequent sections describe these functions in more detail.
 ** Configures SSL to use the administration truststore.
 ** Configures SSL to use the administration keystore and the correct
    alias (for the self-signed cert) for authenticating itself.
-   (You can use your own certificate instead, as described in xref:#gkped[
+   (You can use your own certificate instead, as described in xref:#using-your-own-certificates[
    Using Your Own Certificates].
 
 +
@@ -458,7 +458,7 @@ option to check incoming requests that use SSL/TLS cert authentication.
 Conversely, instances use the alias associated with the `--adminalias`
 option to check incoming requests with certificate authentication.
 
-The link:reference-manual/enable-secure-admin-principal.html#GSRFM00131[
+The link:reference-manual/enable-secure-admin-principal.html#enable-secure-admin-principal[
 `enable-secure-admin-principal`] subcommand
 provides an alternate approach. `enable-secure-admin-principal`
 instructs {productName} to accept admin requests when accompanied by
@@ -602,7 +602,7 @@ O=Oracle Corporation,L=Santa Clara,ST=California,C=US"
 Command enable-secure-admin-principal executed successfully.
 ----
 
-You can use the link:reference-manual/disable-secure-admin-principal.html#GSRFM00123[`disable-secure-admin-principal`]
+You can use the link:reference-manual/disable-secure-admin-principal.html#disable-secure-admin-principal[`disable-secure-admin-principal`]
 subcommand to disable a specific certificate for authenticating and
 authorizing access in secure admin. You must specify either the DN or
 the `--alias` option of the `disable-secure-admin-principal` subcommand.
@@ -610,7 +610,7 @@ To disable multiple certificates for authenticating and authorizing
 access in secure admin, run the `disable-secure-admin-principal`
 subcommand multiple times.
 
-You can use the link:reference-manual/list-secure-admin-principals.html#GSRFM00200[`list-secure-admin-principals`]
+You can use the link:reference-manual/list-secure-admin-principals.html#list-secure-admin-principals[`list-secure-admin-principals`]
 subcommand to list the certificates for which {productName} accepts
 admin requests from clients.
 
@@ -756,13 +756,13 @@ for authenticating itself and authorizing access in administration
 traffic, and instances use the (`glassfish-instance`) alias for
 authenticating themselves and authorizing access in secure admin traffic.
 
-As described in xref:#gkped[Using Your Own Certificates], you can
+As described in xref:#using-your-own-certificates[Using Your Own Certificates], you can
 instead use your own certificates and their associated aliases for
 authenticating and authorizing the DAS and instances in administration traffic.
 
 As an alternative to this certificate-based authentication and
 authorization, you can instead use the
-link:reference-manual/enable-secure-admin-internal-user.html#GSRFM00130[
+link:reference-manual/enable-secure-admin-internal-user.html#enable-secure-admin-internal-user[
 `enable-secure-admin-internal-user`] subcommand to
 instruct all servers in the domain to authenticate to each other, and to
 authorize admin operations submitted to each other, using an existing
@@ -776,7 +776,7 @@ regardless of how they authenticate to each other.
 ====
 
 You might want to use the
-link:reference-manual/enable-secure-admin-internal-user.html#GSRFM00130[
+link:reference-manual/enable-secure-admin-internal-user.html#enable-secure-admin-internal-user[
 `enable-secure-admin-internal-user`] subcommand if your
 use case favors the use of a user name and password combination over the
 use of SSL certificates and aliases.
@@ -833,14 +833,14 @@ password pair for internal admin communication and for admin user login.
 That is, create at least one admin account specifically for internal
 admin communication.
 
-You can use the link:reference-manual/disable-secure-admin-internal-user.html#GSRFM00122[`disable-secure-admin-internal-user`]
+You can use the link:reference-manual/disable-secure-admin-internal-user.html#disable-secure-admin-internal-user[`disable-secure-admin-internal-user`]
 subcommand to disable secure admin from using the user name (instead of
 SSL certificates) to authenticate the DAS and instances with each other
 and to authorize admin operations. To disable multiple user names for
 authenticating and authorizing access in secure admin, run the
 `disable-secure-admin-internal-user` subcommand multiple times.
 
-You can use the link:reference-manual/list-secure-admin-internal-users.html#GSRFM00199[`list-secure-admin-internal-users`]
+You can use the link:reference-manual/list-secure-admin-internal-users.html#list-secure-admin-internal-users[`list-secure-admin-internal-users`]
 subcommand to list the user names for which {productName}
 authenticate the DAS and instances with each other and authorizes admin
 operations.

@@ -71,7 +71,7 @@ Command list-resource-adapter-configs executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-resource-adapter-config.html#create-resource-adapter-config-1[`create-resource-adapter-config`(1)],
-link:delete-resource-adapter-config.html#delete-resource-adapter-config-1[`delete-resource-adapter-config`(1)]
+link:create-resource-adapter-config.html#create-resource-adapter-config[`create-resource-adapter-config`(1)],
+link:delete-resource-adapter-config.html#delete-resource-adapter-config[`delete-resource-adapter-config`(1)]
 
 

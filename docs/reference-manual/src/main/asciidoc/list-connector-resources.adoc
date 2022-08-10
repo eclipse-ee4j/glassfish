@@ -79,7 +79,7 @@ Command list-connector-resources executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-resource.html#create-connector-resource-1[`create-connector-resource`(1)],
-link:delete-connector-resource.html#delete-connector-resource-1[`delete-connector-resource`(1)]
+link:create-connector-resource.html#create-connector-resource[`create-connector-resource`(1)],
+link:delete-connector-resource.html#delete-connector-resource[`delete-connector-resource`(1)]
 
 

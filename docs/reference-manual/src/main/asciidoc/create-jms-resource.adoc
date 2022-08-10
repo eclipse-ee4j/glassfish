@@ -137,7 +137,7 @@ at the domain level, it is only active at the specified `--target`.
 +
 Additionally, you can specify `connector-connection-pool` attributes
   as connector resource properties. For a list of these attributes, see
-  "link:application-deployment-guide/dd-elements.html#GSDPG00124[connector-connection-pool]" in {productName} Application Deployment Guide. +
+  "link:application-deployment-guide/dd-elements.html#connector-connection-pool[connector-connection-pool]" in {productName} Application Deployment Guide. +
   You can specify the following properties for a destination resource:
 
   `Name`;;
@@ -210,7 +210,7 @@ Command create-jms-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-jms-resource.html#delete-jms-resource-1[`delete-jms-resource`(1)],
-link:list-jms-resources.html#list-jms-resources-1[`list-jms-resources`(1)]
+link:delete-jms-resource.html#delete-jms-resource[`delete-jms-resource`(1)],
+link:list-jms-resources.html#list-jms-resources[`list-jms-resources`(1)]
 
 

@@ -26,19 +26,19 @@ in The Jakarta EE Tutorial.
 
 The following topics are addressed here:
 
-* xref:#beabh[Security Goals]
-* xref:#beabi[{productName} Specific Security Features]
-* xref:#beabj[Container Security]
-* xref:#beacr[Roles, Principals, and Principal to Role Mapping]
-* xref:#beabo[Realm Configuration]
-* xref:#BACDEIHB[Jakarta EE Security API Support]
-* xref:#beabt[JACC Support]
-* xref:#beabu[Pluggable Audit Module Support]
-* xref:#beabx[The `server.policy` File]
-* xref:#beaca[Configuring Message Security for Web Services]
-* xref:#beacm[Programmatic Login Using the ProgrammaticLogin Class]
-* xref:#beacq[User Authentication for Single Sign-on]
-* xref:#gizel[Adding Authentication Mechanisms to the Servlet Container]
+* xref:#security-goals[Security Goals]
+* xref:#glassfish-server-specific-security-features[{productName} Specific Security Features]
+* xref:#container-security[Container Security]
+* xref:#roles-principals-and-principal-to-role-mapping[Roles, Principals, and Principal to Role Mapping]
+* xref:#realm-configuration[Realm Configuration]
+* xref:#java-ee-security-api-support[Jakarta EE Security API Support]
+* xref:#jacc-support[JACC Support]
+* xref:#pluggable-audit-module-support[Pluggable Audit Module Support]
+* xref:#GSDVG00121[The `server.policy` File]
+* xref:#configuring-message-security-for-web-services[Configuring Message Security for Web Services]
+* xref:#programmatic-login-using-the-programmaticlogin-class[Programmatic Login Using the ProgrammaticLogin Class]
+* xref:#user-authentication-for-single-sign-on[User Authentication for Single Sign-on]
+* xref:#adding-authentication-mechanisms-to-the-servlet-container[Adding Authentication Mechanisms to the Servlet Container]
 
 
 [NOTE]
@@ -96,12 +96,12 @@ specification and defined by https://jcp.org/en/jsr/detail?id=375[JSR
 The {productName} supports the Jakarta EE security model, as well as the
 following features which are specific to the {productName}:
 
-* Message security; see xref:#beaca[Configuring Message Security for Web
+* Message security; see xref:#configuring-message-security-for-web-services[Configuring Message Security for Web
 Services]
 * Single sign-on across all {productName} applications within a
-single security domain; see xref:#beacq[User Authentication for Single
+single security domain; see xref:#user-authentication-for-single-sign-on[User Authentication for Single
 Sign-on]
-* Programmatic login; see xref:#beacm[Programmatic Login Using the
+* Programmatic login; see xref:#programmatic-login-using-the-programmaticlogin-class[Programmatic Login Using the
 ProgrammaticLogin Class]
 
 [[beabj]][[GSDVG00116]][[container-security]]
@@ -111,8 +111,8 @@ ProgrammaticLogin Class]
 The component containers are responsible for providing Jakarta EE
 application security. The container provides two security forms:
 
-* xref:#beabl[Declarative Security]
-* xref:#beabk[Programmatic Security]
+* xref:#declarative-security[Declarative Security]
+* xref:#programmatic-security[Programmatic Security]
 
 Annotations (also called metadata) enable a declarative style of
 programming, and so encompass both the declarative and programmatic
@@ -139,8 +139,8 @@ deployment descriptors, see the link:application-deployment-guide.html#GSDPG[{pr
 
 There are two levels of declarative security, as follows:
 
-* xref:#beabm[Application Level Security]
-* xref:#beabn[Component Level Security]
+* xref:#application-level-security[Application Level Security]
+* xref:#component-level-security[Component Level Security]
 
 [[beabm]][[GSDVG00239]][[application-level-security]]
 
@@ -165,7 +165,7 @@ To Role Mapping setting is enabled by default on the Security page of
 the {productName} Administration Console. This default role mapping
 definition is in effect if you do not define your own mapping in the
 deployment descriptor for your application as described in this section.
-For more information, see xref:#beacr[Roles, Principals, and Principal
+For more information, see xref:#roles-principals-and-principal-to-role-mapping[Roles, Principals, and Principal
 to Role Mapping].
 
 [[beabn]][[GSDVG00240]][[component-level-security]]
@@ -200,7 +200,7 @@ The {productName} supports these interfaces as specified in the Java
 EE specification.
 
 There is also a proprietary Glassfish API for programmatic login. See
-xref:#beacm[Programmatic Login Using the ProgrammaticLogin Class].
+xref:#programmatic-login-using-the-programmaticlogin-class[Programmatic Login Using the ProgrammaticLogin Class].
 
 For more information about programmatic security, see
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#using-programmatic-security-with-web-applications[
@@ -226,7 +226,7 @@ or `glassfish-ejb-jar.xml`.
 
 For more information regarding Jakarta EE deployment descriptors, see the
 Jakarta EE Specification. For more information regarding {productName}
-deployment descriptors, see "link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName} Deployment Descriptors]" in {productName}
+deployment descriptors, see "link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName} Deployment Descriptors]" in {productName}
 Application Deployment Guide.
 
 Each `security-role-mapping` element in the `glassfish-application.xml`,
@@ -311,10 +311,10 @@ set the default principal to role mapping property to false.
 
 The following topics are addressed here:
 
-* xref:#beabp[Supported Realms]
-* xref:#beabq[How to Configure a Realm]
-* xref:#beabr[How to Set a Realm for an Application or Module]
-* xref:#beabs[Creating a Custom Realm]
+* xref:#supported-realms[Supported Realms]
+* xref:#how-to-configure-a-realm[How to Configure a Realm]
+* xref:#how-to-set-a-realm-for-an-application-or-module[How to Set a Realm for an Application or Module]
+* xref:#creating-a-custom-realm[Creating a Custom Realm]
 
 [[beabp]][[GSDVG00364]][[supported-realms]]
 
@@ -339,7 +339,7 @@ cryptographically verified client certificates.
 data. This realm is only supported on the Solaris operating system,
 version 9 and above.
 
-For information about configuring realms, see xref:#beabq[How to
+For information about configuring realms, see xref:#how-to-configure-a-realm[How to
 Configure a Realm].
 
 [[beabq]][[GSDVG00365]][[how-to-configure-a-realm]]
@@ -384,7 +384,7 @@ follows:
 ----
 
 For more information about the deployment descriptor files and elements,
-see "link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName} Deployment
+see "link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName} Deployment
 Descriptors]" in {productName} Application
 Deployment Guide.
 
@@ -647,8 +647,8 @@ custom audit module.
 
 The following topics are addressed here:
 
-* xref:#beabv[Configuring an Audit Module]
-* xref:#beabw[The `AuditModule` Class]
+* xref:#configuring-an-audit-module[Configuring an Audit Module]
+* xref:#the-auditmodule-class[The `AuditModule` Class]
 
 [[beabv]][[GSDVG00368]][[configuring-an-audit-module]]
 
@@ -756,10 +756,10 @@ policy) and a limited permission set for Jakarta EE application code.
 
 The following topics are addressed here:
 
-* xref:#beaby[Default Permissions]
-* xref:#gilzz[System Properties]
-* xref:#beabz[Changing Permissions for an Application]
-* xref:#gbyah[Enabling and Disabling the Security Manager]
+* xref:#default-permissions[Default Permissions]
+* xref:#system-properties[System Properties]
+* xref:#changing-permissions-for-an-application[Changing Permissions for an Application]
+* xref:#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security Manager]
 
 [[beaby]][[GSDVG00370]][[default-permissions]]
 
@@ -1055,7 +1055,7 @@ grant codeBase "file:${com.sun.aas.instanceRoot}/applications/foo" {
 ----
 
 For more information about modifying application permissions, see
-xref:#beabz[Changing Permissions for an Application].
+xref:#changing-permissions-for-an-application[Changing Permissions for an Application].
 
 [[beaca]][[GSDVG00122]][[configuring-message-security-for-web-services]]
 
@@ -1111,10 +1111,10 @@ Profile (BSP) specification at
 
 The following topics are addressed here:
 
-* xref:#gbjxw[Message Security Providers]
-* xref:#beacb[Message Security Responsibilities]
-* xref:#beacf[Application-Specific Message Protection]
-* xref:#beaci[Understanding and Running the Sample Application]
+* xref:#message-security-providers[Message Security Providers]
+* xref:#message-security-responsibilities[Message Security Responsibilities]
+* xref:#application-specific-message-protection[Application-Specific Message Protection]
+* xref:#understanding-and-running-the-sample-application[Understanding and Running the Sample Application]
 
 [[gbjxw]][[GSDVG00374]][[message-security-providers]]
 
@@ -1143,7 +1143,7 @@ server-config.security-service.message-security-config.SOAP.default_client_provi
 For more information about the `asadmin set` command, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
-The example described in xref:#beaci[Understanding and Running the
+The example described in xref:#understanding-and-running-the-sample-application[Understanding and Running the
 Sample Application] uses the `ClientProvider` and `ServerProvider`
 providers, which are enabled when the Ant targets are run. You don't
 need to enable these on the {productName} prior to running the
@@ -1176,7 +1176,7 @@ Application Deployment Guide].
 
 For information about configuring these providers in the {productName}, see the link:security-guide.html#GSSCG[{productName}
 Security Guide]. For additional information about overriding provider
-settings, see xref:#beacf[Application-Specific Message Protection].
+settings, see xref:#application-specific-message-protection[Application-Specific Message Protection].
 
 You can create new message security providers in one of the following ways:
 
@@ -1214,7 +1214,7 @@ example:
 
 `${com.sun.aas.instanceRoot}/config/``wss-server-config-1.0.xml`
 
-See xref:#gilzz[System Properties].
+See xref:#system-properties[System Properties].
 
 |`debug`
 |`false`
@@ -1250,9 +1250,9 @@ implementation and without involving the developer.
 
 The following topics are addressed here:
 
-* xref:#beacc[Application Developer Responsibilities]
-* xref:#beacd[Application Deployer Responsibilities]
-* xref:#beace[System Administrator Responsibilities]
+* xref:#application-developer-responsibilities[Application Developer Responsibilities]
+* xref:#application-deployer-responsibilities[Application Deployer Responsibilities]
+* xref:#system-administrator-responsibilities[System Administrator Responsibilities]
 
 [[beacc]][[GSDVG00241]][[application-developer-responsibilities]]
 
@@ -1289,9 +1289,9 @@ application-specific message protection policies information
 (message-security-binding elements) to web service endpoint and service
 references
 
-These security tasks are discussed in xref:#beacf[Application-Specific
+These security tasks are discussed in xref:#application-specific-message-protection[Application-Specific
 Message Protection]. A sample application using message security is
-discussed in xref:#beaci[Understanding and Running the Sample
+discussed in xref:#understanding-and-running-the-sample-application[Understanding and Running the Sample
 Application].
 
 [[beace]][[GSDVG00243]][[system-administrator-responsibilities]]
@@ -1334,11 +1334,11 @@ the WSDL file. For details, see the WSIT page at
 `http://wsit.java.net/`.
 
 For more information about message security providers, see
-xref:#gbjxw[Message Security Providers].
+xref:#message-security-providers[Message Security Providers].
 
 For more details on message security binding for EJB web services,
 servlet web services, and clients, see the XML file descriptions in
-"link:application-deployment-guide/dd-elements.html#GSDPG00007[Elements of the {productName} Deployment
+"link:application-deployment-guide/dd-elements.html#beaqi[Elements of the {productName} Deployment
 Descriptors]" in {productName} Application
 Deployment Guide.
 
@@ -1353,9 +1353,9 @@ glassfish-application-client.xml file]" in {productName} Application Deployment 
 
 The following topics are addressed here:
 
-* xref:#beacg[Using a Signature to Enable Message Protection for All
+* xref:#using-a-signature-to-enable-message-protection-for-all-methods[Using a Signature to Enable Message Protection for All
 Methods]
-* xref:#beach[Configuring Message Protection for a Specific Method Based
+* xref:#configuring-message-protection-for-a-specific-method-based-on-digital-signatures[Configuring Message Protection for a Specific Method Based
 on Digital Signatures]
 
 [[beacg]][[GSDVG00244]][[using-a-signature-to-enable-message-protection-for-all-methods]]
@@ -1369,12 +1369,12 @@ file, add `request-protection` and `response-protection` elements, which
 are analogous to the `request-policy` and `response-policy` elements
 discussed in the link:security-guide.html#GSSCG[{productName}
 Security Guide]. To apply the same protection mechanisms for all
-methods, leave the method-name element blank. xref:#beach[Configuring
+methods, leave the method-name element blank. xref:#configuring-message-protection-for-a-specific-method-based-on-digital-signatures[Configuring
 Message Protection for a Specific Method Based on Digital Signatures]
 discusses listing specific methods or using wildcard characters.
 
 This section uses the sample application discussed in
-xref:#beaci[Understanding and Running the Sample Application] to apply
+xref:#understanding-and-running-the-sample-application[Understanding and Running the Sample Application] to apply
 application-level message security to show only the differences
 necessary for protecting web services using various mechanisms.
 
@@ -1388,7 +1388,7 @@ Follow this procedure.
 file.
 +
 For the `xms` example, this file is located in the directory
-app-dir`/xms-ejb/src/conf`, where app-dir is defined in xref:#beacj[To
+app-dir`/xms-ejb/src/conf`, where app-dir is defined in xref:#to-set-up-the-sample-application[To
 Set Up the Sample Application].
 2. Modify the `glassfish-ejb-jar.xml` file by adding the
 `message-security-binding` element as shown:
@@ -1416,7 +1416,7 @@ Set Up the Sample Application].
 </glassfish-ejb-jar>
 ----
 3. Compile, deploy, and run the application as described in
-xref:#beack[To Run the Sample Application].
+xref:#to-run-the-sample-application[To Run the Sample Application].
 
 [[beach]][[GSDVG00245]][[configuring-message-protection-for-a-specific-method-based-on-digital-signatures]]
 
@@ -1424,7 +1424,7 @@ xref:#beack[To Run the Sample Application].
 
 To enable message protection for a specific method, or for a set of
 methods that can be identified using a wildcard value, follow these
-steps. As in the example discussed in xref:#beacg[Using a Signature to
+steps. As in the example discussed in xref:#using-a-signature-to-enable-message-protection-for-all-methods[Using a Signature to
 Enable Message Protection for All Methods], to enable message protection
 for a specific method, update the `message-security-binding` element for
 the EJB web service endpoint in the application's
@@ -1437,7 +1437,7 @@ security operations for different request and response policy
 configurations.
 
 This section uses the sample application discussed in
-xref:#beaci[Understanding and Running the Sample Application] to apply
+xref:#understanding-and-running-the-sample-application[Understanding and Running the Sample Application] to apply
 application-level message security to show only the differences
 necessary for protecting web services using various mechanisms.
 
@@ -1452,7 +1452,7 @@ Follow this procedure.
 file.
 +
 For the `xms` example, this file is located in the directory
-app-dir`/xms-ejb/src/conf`, where app-dir is defined in xref:#beacj[To
+app-dir`/xms-ejb/src/conf`, where app-dir is defined in xref:#to-set-up-the-sample-application[To
 Set Up the Sample Application].
 2. Modify the `glassfish-ejb-jar.xml` file by adding the
 `message-security-binding` element as shown:
@@ -1490,7 +1490,7 @@ Set Up the Sample Application].
 </glassfish-ejb-jar>
 ----
 3. Compile, deploy, and run the application as described in
-xref:#beack[To Run the Sample Application].
+xref:#to-run-the-sample-application[To Run the Sample Application].
 
 [[beaci]][[GSDVG00377]][[understanding-and-running-the-sample-application]]
 
@@ -1498,7 +1498,7 @@ xref:#beack[To Run the Sample Application].
 
 This section discusses the WSS sample application. This sample
 application is installed on your system only if you installed the J2EE
-1.4 samples. If you have not installed these samples, see xref:#beacj[To
+1.4 samples. If you have not installed these samples, see xref:#to-set-up-the-sample-application[To
 Set Up the Sample Application].
 
 The objective of this sample application is to demonstrate how a web
@@ -1509,7 +1509,7 @@ endpoint interface is defined with one operation, `sayHello`, which
 takes a string then sends a response with `Hello` prefixed to the given
 string. You can view the WSDL file for the service endpoint interface at
 app-dir`/xms-ejb/src/``conf/HelloWorld.wsdl`, where app-dir is defined
-in xref:#beacj[To Set Up the Sample Application].
+in xref:#to-set-up-the-sample-application[To Set Up the Sample Application].
 
 In this application, the client looks up the service using the JNDI name
 `java:comp/env/service/HelloWorld` and gets the port information using a
@@ -1518,7 +1518,7 @@ Duke, the client gets the response `Hello Duke!`
 
 This example shows how to use message security for web services at the
 {productName} level. For information about using message security at
-the application level, see xref:#beacf[Application-Specific Message
+the application level, see xref:#application-specific-message-protection[Application-Specific Message
 Protection]. The WSS message security mechanisms implement message-level
 authentication (for example, XML digital signature and encryption) of
 SOAP web services invocations using the X.509 and username/password
@@ -1528,8 +1528,8 @@ following URL:
 
 The following topics are addressed here:
 
-* xref:#beacj[To Set Up the Sample Application]
-* xref:#beack[To Run the Sample Application]
+* xref:#to-set-up-the-sample-application[To Set Up the Sample Application]
+* xref:#to-run-the-sample-application[To Run the Sample Application]
 
 [[beacj]][[GSDVG00054]][[to-set-up-the-sample-application]]
 
@@ -1653,9 +1653,9 @@ application servers.
 
 The following topics are addressed here:
 
-* xref:#beacn[Programmatic Login Precautions]
-* xref:#beaco[Granting Programmatic Login Permission]
-* xref:#beacp[The `ProgrammaticLogin` Class]
+* xref:#programmatic-login-precautions[Programmatic Login Precautions]
+* xref:#granting-programmatic-login-permission[Granting Programmatic Login Permission]
+* xref:#the-programmaticlogin-class[The `ProgrammaticLogin` Class]
 
 [[beacn]][[GSDVG00378]][[programmatic-login-precautions]]
 
@@ -1700,7 +1700,7 @@ repeat the request.
 The `ProgrammaticLoginPermission` permission is required to invoke the
 programmatic login mechanism for an application if the security manager
 is enabled. For information about the security manager, see
-xref:#beabx[The `server.policy` File]. This permission is not granted by
+xref:#GSDVG00121[The `server.policy` File]. This permission is not granted by
 default to deployed applications because this is not a standard Jakarta EE
 mechanism.
 
@@ -1826,7 +1826,7 @@ Single sign-on operates according to the following rules:
 * Single sign-on applies to web applications configured for the same
 realm and virtual server. The realm is defined by the `realm-name`
 element in the `web.xml` file. For information about virtual servers,
-see "link:administration-guide/http_https.html#GSADG00017[Administering Internet Connectivity]" in {productName} Administration Guide.
+see "link:administration-guide/http_https.html#ablsw[Administering Internet Connectivity]" in {productName} Administration Guide.
 * As long as users access only unprotected resources in any of the web
 applications on a virtual server, they are not challenged to
 authenticate themselves.
@@ -1889,13 +1889,13 @@ Negotiate/SPNEGO, OpenID, or CAS.
 
 The following topics are addressed here:
 
-* xref:#BACCFGBF[The {productName} and JSR-375]
-* xref:#gizfz[The {productName} and JSR 196]
-* xref:#gizdx[Writing a Server Authentication Module]
-* xref:#gizeb[Sample Server Authentication Module]
-* xref:#gizfa[Compiling and Installing a Server Authentication Module]
-* xref:#gizfe[Configuring a Server Authentication Module]
-* xref:#gizfm[Binding a Server Authentication Module to Your
+* xref:#the-glassfish-server-and-jsr-375[The {productName} and JSR-375]
+* xref:#the-glassfish-server-and-jsr-196[The {productName} and JSR 196]
+* xref:#writing-a-server-authentication-module[Writing a Server Authentication Module]
+* xref:#sample-server-authentication-module[Sample Server Authentication Module]
+* xref:#compiling-and-installing-a-server-authentication-module[Compiling and Installing a Server Authentication Module]
+* xref:#configuring-a-server-authentication-module[Configuring a Server Authentication Module]
+* xref:#binding-a-server-authentication-module-to-your-application[Binding a Server Authentication Module to Your
 Application]
 
 [[BACCFGBF]][[GSDVG564]][[the-glassfish-server-and-jsr-375]]

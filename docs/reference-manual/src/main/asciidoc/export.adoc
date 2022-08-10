@@ -109,7 +109,7 @@ Command export executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:multimode.html#multimode-1[`multimode`(1)],
-link:unset.html#unset-1[`unset`(1)]
+link:multimode.html#multimode[`multimode`(1)],
+link:unset.html#unset[`unset`(1)]
 
 

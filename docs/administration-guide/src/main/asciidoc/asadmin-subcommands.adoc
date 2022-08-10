@@ -48,150 +48,150 @@ link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
 
 === General Administration Subcommands
 
-link:reference-manual/add-resources.html#GSRFM00001[`add-resources`]::
+link:reference-manual/add-resources.html#add-resources[`add-resources`]::
   Creates the resources named in the specified XML file. Supported in
   remote mode only. For procedural information in this guide, see
-  xref:general-administration.adoc#ggoeh[To Add Resources From an XML
+  xref:general-administration.adoc#to-add-resources-from-an-xml-file[To Add Resources From an XML
   File].
 link:reference-manual/asadmin.html#asadmin[`asadmin`]::
   Describes how the `asadmin` utility works.
-link:reference-manual/attach.html#GSRFM825[`attach`]::
+link:reference-manual/attach.html#attach[`attach`]::
   Attaches to subcommands that were started using the `asadmin --detach`
   option or that contain progress information. For procedural
   information in this guide, see
-  xref:general-administration.adoc#CACDDHBA[To Run `asadmin` Subcommands
+  xref:general-administration.adoc#to-run-asadmin-subcommands-in---detach-mode[To Run `asadmin` Subcommands
   in `--detach` Mode].
-link:reference-manual/configure-managed-jobs.html#GSRFM836[`configure-managed-jobs`]::
+link:reference-manual/configure-managed-jobs.html#configure-managed-jobs[`configure-managed-jobs`]::
   Configures how long information about subcommands (jobs) that were
   started using the `asadmin --detach` option or that contain progress
   information is kept. For procedural information in this guide, see
-  xref:general-administration.adoc#CACDDHBA[To Run `asadmin` Subcommands
+  xref:general-administration.adoc#to-run-asadmin-subcommands-in---detach-mode[To Run `asadmin` Subcommands
   in `--detach` Mode].
-link:reference-manual/create-module-config.html#GSRFM844[`create-module-config`]::
+link:reference-manual/create-module-config.html#create-module-config[`create-module-config`]::
   Adds the default configuration of a module to `domain.xml`.
-link:reference-manual/create-service.html#GSRFM00057[`create-service`]::
+link:reference-manual/create-service.html#create-service[`create-service`]::
   Configures the starting of a domain administration server (DAS) on an
   unattended boot. On Oracle Solaris 10, this subcommand uses the
   Service Management Facility (SMF). For procedural information in this
-  guide, see xref:domains.adoc#giusi[To Configure a DAS or an Instance
+  guide, see xref:domains.adoc#to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris[To Configure a DAS or an Instance
   for Automatic Restart on Oracle Solaris].
-link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`]::
+link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`]::
   Creates or updates system properties. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:general-administration.adoc#ggonc[To Create System Properties].
-link:reference-manual/delete-module-config.html#GSRFM854[`delete-module-config`]::
+  xref:general-administration.adoc#to-create-system-properties[To Create System Properties].
+link:reference-manual/delete-module-config.html#delete-module-config[`delete-module-config`]::
   Removes the configuration of a module from `domain.xml`.
-link:reference-manual/delete-system-property.html#GSRFM00110[`delete-system-property`]::
+link:reference-manual/delete-system-property.html#delete-system-property[`delete-system-property`]::
   Deletes system properties of a domain or configuration, or server
   instance. Supported in remote mode only. For procedural information in
-  this guide, see xref:general-administration.adoc#ggomm[To Delete a
+  this guide, see xref:general-administration.adoc#to-delete-a-system-property[To Delete a
   System Property].
-link:reference-manual/get.html#GSRFM00139[`get`]::
+link:reference-manual/get.html#get[`get`]::
   Gets an attribute of an element in the `domain.xml` file. With the
   `-m` option, gets the names and values of the monitorable or
   configurable attributes. For procedural information in this guide, see
-  xref:monitoring.adoc#ablwh[Guidelines for Using the `list` and `get`
+  xref:monitoring.adoc#guidelines-for-using-the-list-and-get-subcommands-for-monitoring[Guidelines for Using the `list` and `get`
   Subcommands for Monitoring].
-link:reference-manual/get-active-module-config.html#GSRFM859[`get-active-module-config`]::
+link:reference-manual/get-active-module-config.html#get-active-module-config[`get-active-module-config`]::
   Displays the current active configuration of a module.
-link:reference-manual/list.html#GSRFM00145[`list`]::
+link:reference-manual/list.html#list[`list`]::
   Lists the configurable element. On Oracle Solaris, quotes are needed
   when running subcommands with `*` as the option value or operand. For
   procedural information in this guide, see
-  xref:monitoring.adoc#ablwh[Guidelines for Using the `list` and `get`
+  xref:monitoring.adoc#guidelines-for-using-the-list-and-get-subcommands-for-monitoring[Guidelines for Using the `list` and `get`
   Subcommands for Monitoring].
-link:reference-manual/list-commands.html#GSRFM00154[`list-commands`]::
+link:reference-manual/list-commands.html#list-commands[`list-commands`]::
   Lists all the `asadmin` subcommands, local subcommands first, then
   remote subcommands. You can specify that only remote subcommands or
   only local subcommands be displayed. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:general-administration.adoc#ggoeg[To List Subcommands].
-link:reference-manual/list-containers.html#GSRFM00161[`list-containers`]::
+  xref:general-administration.adoc#to-list-subcommands[To List Subcommands].
+link:reference-manual/list-containers.html#list-containers[`list-containers`]::
   Lists application containers and the status of each container.
   Supported in remote mode only. For procedural information in this
-  guide, see xref:general-administration.adoc#ggocv[To List Containers].
-link:reference-manual/list-jobs.html#GSRFM867[`list-jobs`]::
+  guide, see xref:general-administration.adoc#to-list-containers[To List Containers].
+link:reference-manual/list-jobs.html#list-jobs[`list-jobs`]::
   Lists information about subcommands that were started using the
   `asadmin --detach` option or that contain progress information. For
   procedural information in this guide, see
-  xref:general-administration.adoc#CACDDHBA[To Run `asadmin` Subcommands
+  xref:general-administration.adoc#to-run-asadmin-subcommands-in---detach-mode[To Run `asadmin` Subcommands
   in `--detach` Mode].
-link:reference-manual/list-modules.html#GSRFM00185[`list-modules`]::
+link:reference-manual/list-modules.html#list-modules[`list-modules`]::
   Lists modules that are accessible to the {productName} subsystem.
   The status of each module is included. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:general-administration.adoc#ghlgf[To List Modules].
-link:reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`]::
+  xref:general-administration.adoc#to-list-modules[To List Modules].
+link:reference-manual/list-system-properties.html#list-system-properties[`list-system-properties`]::
   Lists the system properties of a domain or configuration. Supported in
   remote mode only. For procedural information in this guide, see
-  xref:general-administration.adoc#ggodt[To List System Properties].
-link:reference-manual/list-timers.html#GSRFM00205[`list-timers`]::
+  xref:general-administration.adoc#to-list-system-properties[To List System Properties].
+link:reference-manual/list-timers.html#list-timers[`list-timers`]::
   List the timers owned by a specific server instance. Supported in
   remote mode only. For procedural information in this guide, see
-  xref:general-administration.adoc#giojd[To List Timers].
-link:reference-manual/multimode.html#GSRFM00213[`multimode`]::
+  xref:general-administration.adoc#to-list-timers[To List Timers].
+link:reference-manual/multimode.html#multimode[`multimode`]::
   Provides an `asadmin>` prompt for running multiple subcommands while
   preserving options and environment settings. Supported in local mode
   only. For procedural information, see
-  xref:general-administration.adoc#giobi[Using the `asadmin` Utility].
-link:reference-manual/osgi.html#GSRFM877[`osgi`]::
+  xref:general-administration.adoc#using-the-asadmin-utility[Using the `asadmin` Utility].
+link:reference-manual/osgi.html#osgi[`osgi`]::
   Delegates the command line to the Apache Felix Gogo remote shell for
   the execution of OSGi shell commands. For procedural information in
-  this guide, see xref:overview.adoc#CJAGIGII[To Run Apache Felix Gogo
+  this guide, see xref:overview.adoc#to-run-apache-felix-gogo-remote-shell-commands[To Run Apache Felix Gogo
   Remote Shell Commands].
-link:reference-manual/osgi-shell.html#GSRFM890[`osgi-shell`]::
+link:reference-manual/osgi-shell.html#osgi-shell[`osgi-shell`]::
   Provides interactive access to the Apache Felix Gogo remote shell for
   the execution of OSGi shell commands. For procedural information in
-  this guide, see xref:overview.adoc#CJAGIGII[To Run Apache Felix Gogo
+  this guide, see xref:overview.adoc#to-run-apache-felix-gogo-remote-shell-commands[To Run Apache Felix Gogo
   Remote Shell Commands].
-link:reference-manual/set.html#GSRFM00226[`set`]::
+link:reference-manual/set.html#set[`set`]::
   Sets the values of one or more configurable attributes. For procedural
-  information in this guide, see xref:monitoring.adoc#ablvp[Configuring
+  information in this guide, see xref:monitoring.adoc#configuring-monitoring[Configuring
   Monitoring].
-link:reference-manual/setup-local-dcom.html#GSRFM893[`setup-local-dcom`]::
+link:reference-manual/setup-local-dcom.html#setup-local-dcom[`setup-local-dcom`]::
   Sets up the Distributed Component Object Model (DCOM) remote protocol
   on the host where the subcommand is run. The DCOM remote protocol is
   available only on Windows systems.
-link:reference-manual/show-component-status.html#GSRFM00232[`show-component-status`]::
+link:reference-manual/show-component-status.html#show-component-status[`show-component-status`]::
   Lists the status of existing components. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:general-administration.adoc#giyjd[To Show Component Status].
-link:reference-manual/start-database.html#GSRFM00234[`start-database`]::
+  xref:general-administration.adoc#to-show-component-status[To Show Component Status].
+link:reference-manual/start-database.html#start-database[`start-database`]::
   Starts the Apache Derby database server. Use this subcommand only for
   working with applications deployed to the {productName}. For
-  procedural information in this guide, see xref:jdbc.adoc#ggndz[To Start
+  procedural information in this guide, see xref:jdbc.adoc#to-start-the-database[To Start
   the Database].
-link:reference-manual/stop-database.html#GSRFM00239[`stop-database`]::
+link:reference-manual/stop-database.html#stop-database[`stop-database`]::
   Stops a process of the Apache Derby DB database server. For procedural
-  information in this guide, see xref:jdbc.adoc#ggnbw[To Stop the
+  information in this guide, see xref:jdbc.adoc#to-stop-the-database[To Stop the
   Database].
-link:reference-manual/version.html#GSRFM00261[`version`]::
+link:reference-manual/version.html#version[`version`]::
   Displays the version information for the option specified in archive
   or folder format. Supported in remote mode only. For procedural
   information in this guide, see
-  xref:general-administration.adoc#ghhox[To Display the {productName}
+  xref:general-administration.adoc#to-display-the-glassfish-server-version[To Display the {productName}
   Version].
 
 [[batch-jobs-subcommands]]
 
 === Batch Jobs Subcommands
 
-link:reference-manual/list-batch-jobs.html#GSRFM861[`list-batch-jobs`]::
+link:reference-manual/list-batch-jobs.html#list-batch-jobs[`list-batch-jobs`]::
   Lists batch jobs and job details. For procedural information in this
   guide, see xref:batch.adoc#to-list-batch-jobs[To List Batch Jobs].
-link:reference-manual/list-batch-job-executions.html#GSRFM884[`list-batch-job-executions`]::
+link:reference-manual/list-batch-job-executions.html#list-batch-job-executions[`list-batch-job-executions`]::
   Lists batch job executions and execution details. For procedural
   information in this guide,
   see xref:batch.adoc#to-list-batch-job-executions[To List Batch Job Executions].
-link:reference-manual/list-batch-job-steps.html#GSRFM895[`list-batch-job-steps`]::
+link:reference-manual/list-batch-job-steps.html#list-batch-job-steps[`list-batch-job-steps`]::
   Lists steps for a specific batch job execution. For procedural
   information in this guide,
   see xref:batch.adoc#to-list-batch-job-steps[To List Batch Job Steps].
-link:reference-manual/list-batch-runtime-configuration.html#GSRFM863[`list-batch-runtime-configuration`]::
+link:reference-manual/list-batch-runtime-configuration.html#list-batch-runtime-configuration[`list-batch-runtime-configuration`]::
   Displays the configuration of the batch runtime. For procedural
   information in this guide, see
   xref:batch.adoc#to-list-the-batch-runtime-configuration[To List the Batch Runtime Configuration].
-link:reference-manual/set-batch-runtime-configuration.html#GSRFM897[`set-batch-runtime-configuration`]::
+link:reference-manual/set-batch-runtime-configuration.html#set-batch-runtime-configuration[`set-batch-runtime-configuration`]::
   Configures the batch runtime. For procedural information in this
   guide, see xref:batch.adoc#to-configure-the-batch-runtime[To Configure the Batch Runtime].
 
@@ -199,48 +199,48 @@ link:reference-manual/set-batch-runtime-configuration.html#GSRFM897[`set-batch-r
 
 === Concurrent Resources Subcommands
 
-link:reference-manual/create-context-service.html#GSRFM838[`create-context-service`]::
+link:reference-manual/create-context-service.html#create-context-service[`create-context-service`]::
   Creates a context service resource. For procedural information in this
   guide, see xref:concurrent.adoc#to-create-a-context-service[To Create a Context Service].
-link:reference-manual/create-managed-executor-service.html#GSRFM840[`create-managed-executor-service`]::
+link:reference-manual/create-managed-executor-service.html#create-managed-executor-service[`create-managed-executor-service`]::
   Creates a managed executor service resource. For procedural
   information in this guide, see xref:concurrent.adoc#to-create-a-managed-executor-service[To Create
   a Managed Executor Service].
-link:reference-manual/create-managed-scheduled-executo.html#GSRFM680[`create-managed-scheduled-executor-service`]::
+link:reference-manual/create-managed-scheduled-executo.html#create-managed-scheduled-executor-service[`create-managed-scheduled-executor-service`]::
   Creates a managed scheduled executor service resource. For procedural
   information in this guide, see xref:concurrent.adoc#to-create-a-managed-scheduled-executor-service[To Create
   a Managed Scheduled Executor Service].
-link:reference-manual/create-managed-thread-factory.html#GSRFM842[`create-managed-thread-factory`]::
+link:reference-manual/create-managed-thread-factory.html#create-managed-thread-factory[`create-managed-thread-factory`]::
   Creates a managed thread factory resource. For procedural information
   in this guide, see xref:concurrent.adoc#to-create-a-managed-thread-factory[To Create a Managed
   Thread Factory].
-link:reference-manual/create-context-service.html#GSRFM838[`list-context-services`]::
+link:reference-manual/create-context-service.html#create-context-service[`list-context-services`]::
   Lists context service resources. For procedural information in this
   guide, see xref:concurrent.adoc#to-list-context-services[To List Context Services].
-link:reference-manual/create-managed-executor-service.html#GSRFM840[`list-managed-executor-services`]::
+link:reference-manual/create-managed-executor-service.html#create-managed-executor-service[`list-managed-executor-services`]::
   Lists managed executor service resources. For procedural information
   in this guide, see xref:concurrent.adoc#to-list-managed-executor-services[To List Managed
   Executor Services].
-link:reference-manual/create-managed-scheduled-executo.html#GSRFM680[`list-managed-scheduled-executor-services`]::
+link:reference-manual/create-managed-scheduled-executo.html#create-managed-scheduled-executor-service[`list-managed-scheduled-executor-services`]::
   Lists managed scheduled executor service resources. For procedural
   information in this guide, see xref:concurrent.adoc#to-list-managed-scheduled-executor-services[To List
   Managed Scheduled Executor Services].
-link:reference-manual/create-managed-thread-factory.html#GSRFM842[`list-managed-thread-factories`]::
+link:reference-manual/create-managed-thread-factory.html#create-managed-thread-factory[`list-managed-thread-factories`]::
   Lists managed thread factory resources. For procedural information in
   this guide, see xref:concurrent.adoc#to-list-managed-thread-factories[To List Managed Thread
   Factories].
-link:reference-manual/delete-context-service.html#GSRFM846[`delete-context-service`]::
+link:reference-manual/delete-context-service.html#delete-context-service[`delete-context-service`]::
   Removes a context service resource. For procedural information in this
   guide, see xref:concurrent.adoc#to-delete-a-context-service[To Delete a Context Service].
-link:reference-manual/delete-managed-executor-service.html#GSRFM848[`delete-managed-executor-service`]::
+link:reference-manual/delete-managed-executor-service.html#delete-managed-executor-service[`delete-managed-executor-service`]::
   Removes a managed executor service resource. For procedural
   information in this guide, see xref:concurrent.adoc#to-delete-a-managed-executor-service[To Delete
   a Managed Executor Service].
-link:reference-manual/delete-managed-scheduled-executo.html#GSRFM850[`delete-managed-scheduled-executor-service`]::
+link:reference-manual/delete-managed-scheduled-executo.html#delete-managed-scheduled-executor-service[`delete-managed-scheduled-executor-service`]::
   Removes a managed scheduled executor service resource. For procedural
   information in this guide, see xref:concurrent.adoc#to-delete-a-managed-scheduled-executor-service[To Delete
   a Managed Scheduled Executor Service].
-link:reference-manual/delete-managed-thread-factory.html#GSRFM852[`delete-managed-thread-factory`]::
+link:reference-manual/delete-managed-thread-factory.html#delete-managed-thread-factory[`delete-managed-thread-factory`]::
   Removes a managed thread factory resource. For procedural information
   in this guide, see xref:concurrent.adoc#to-delete-a-managed-thread-factory[To Delete a Managed
   Thread Factory].
@@ -249,459 +249,459 @@ link:reference-manual/delete-managed-thread-factory.html#GSRFM852[`delete-manage
 
 === Connectivity Subcommands
 
-link:reference-manual/create-admin-object.html#GSRFM00012[`create-admin-object`]::
+link:reference-manual/create-admin-object.html#create-admin-object[`create-admin-object`]::
   Creates an administered object. For procedural information in this
-  guide, see xref:connectors.adoc#giolr[To Create an Administered
+  guide, see xref:connectors.adoc#to-create-an-administered-object[To Create an Administered
   Object].
-link:reference-manual/create-connector-connection-pool.html#GSRFM00018[`create-connector-connection-pool`]::
+link:reference-manual/create-connector-connection-pool.html#create-connector-connection-pool[`create-connector-connection-pool`]::
   Adds a new connector connection pool with the specified connection
   pool name. For procedural information in this guide, see
-  xref:connectors.adoc#gioce[To Create a Connector Connection Pool].
-link:reference-manual/create-connector-resource.html#GSRFM00019[`create-connector-resource`]::
+  xref:connectors.adoc#to-create-a-connector-connection-pool[To Create a Connector Connection Pool].
+link:reference-manual/create-connector-resource.html#create-connector-resource[`create-connector-resource`]::
   Creates a connector resource. For procedural information in this
-  guide, see xref:connectors.adoc#giogt[To Create a Connector Resource].
-link:reference-manual/create-connector-security-map.html#GSRFM00020[`create-connector-security-map`]::
+  guide, see xref:connectors.adoc#to-create-a-connector-resource[To Create a Connector Resource].
+link:reference-manual/create-connector-security-map.html#create-connector-security-map[`create-connector-security-map`]::
   Creates a connector security map for the specified connector
   connection pool. For procedural information, see
-  xref:connectors.adoc#gitzz[To Create a Connector Security Map].
-link:reference-manual/create-connector-work-security-m.html#GSRFM00021[`create-connector-work-security-map`]::
+  xref:connectors.adoc#to-create-a-connector-security-map[To Create a Connector Security Map].
+link:reference-manual/create-connector-work-security-m.html#create-connector-work-security-map[`create-connector-work-security-map`]::
   Creates a connector work security map for the specified resource
   adapter. Supported in remote mode only. For procedural information in
-  this guide, see xref:connectors.adoc#giofz[To Create a Connector Work
+  this guide, see xref:connectors.adoc#to-create-a-connector-work-security-map[To Create a Connector Work
   Security Map].
-link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-jdbc-resource`]::
+link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`]::
   Creates a new JDBC resource. Supported in remote mode only. For
-  procedural information in this guide, see xref:jdbc.adoc#ggnda[To
+  procedural information in this guide, see xref:jdbc.adoc#to-create-a-jdbc-resource[To
   Create a JDBC Resource].
-link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`]::
+link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`]::
   Registers a new JDBC connection pool with the specified JDBC
   connection pool name. Supported in remote mode only. For procedural
-  information in this guide, see xref:jdbc.adoc#ggnfv[To Create a JDBC
+  information in this guide, see xref:jdbc.adoc#to-create-a-jdbc-connection-pool[To Create a JDBC
   Connection Pool].
-link:reference-manual/create-resource-adapter-config.html#GSRFM00054[`create-resource-adapter-config`]::
+link:reference-manual/create-resource-adapter-config.html#create-resource-adapter-config[`create-resource-adapter-config`]::
   Creates configuration information for the connector module. Supported
   in remote mode only. For procedural information in this guide, see
-  xref:connectors.adoc#gioqx[To Create Configuration Information for a
+  xref:connectors.adoc#to-create-configuration-information-for-a-resource-adapter[To Create Configuration Information for a
   Resource Adapter].
-link:reference-manual/delete-admin-object.html#GSRFM00063[`delete-admin-object`]::
+link:reference-manual/delete-admin-object.html#delete-admin-object[`delete-admin-object`]::
   Deletes an administered object. For procedural information in this
-  guide, see xref:connectors.adoc#gioma[To Delete an Administered
+  guide, see xref:connectors.adoc#to-delete-an-administered-object[To Delete an Administered
   Object].
-link:reference-manual/delete-connector-connection-pool.html#GSRFM00070[`delete-connector-connection-pool`]::
+link:reference-manual/delete-connector-connection-pool.html#delete-connector-connection-pool[`delete-connector-connection-pool`]::
   Removes the connector connection pool specified using the
   `connector_connection_pool_name` operand. For procedural information
-  in this guide, see xref:connectors.adoc#giocp[To Delete a Connector
+  in this guide, see xref:connectors.adoc#to-delete-a-connector-connection-pool[To Delete a Connector
   Connection Pool].
-link:reference-manual/delete-connector-resource.html#GSRFM00071[`delete-connector-resource`]::
+link:reference-manual/delete-connector-resource.html#delete-connector-resource[`delete-connector-resource`]::
   Deletes connector resource. For procedural information in this guide,
-  see xref:connectors.adoc#giofs[To Delete a Connector Resource].
-link:reference-manual/delete-connector-security-map.html#GSRFM00072[`delete-connector-security-map`]::
+  see xref:connectors.adoc#to-delete-a-connector-resource[To Delete a Connector Resource].
+link:reference-manual/delete-connector-security-map.html#delete-connector-security-map[`delete-connector-security-map`]::
   Deletes a specified connector security map. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:connectors.adoc#gitvf[To Delete a Connector Security Map].
-link:reference-manual/delete-connector-work-security-m.html#GSRFM00073[`delete-connector-work-security-map`]::
+  xref:connectors.adoc#to-delete-a-connector-security-map[To Delete a Connector Security Map].
+link:reference-manual/delete-connector-work-security-m.html#delete-connector-work-security-map[`delete-connector-work-security-map`]::
   Deletes a specified connector work security map. Supported in remote
   mode only. For procedural information in this guide, see
-  xref:connectors.adoc#gioin[To Delete a Connector Work Security Map].
-link:reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-jdbc-connection-pool`]::
+  xref:connectors.adoc#to-delete-a-connector-work-security-map[To Delete a Connector Work Security Map].
+link:reference-manual/delete-jdbc-connection-pool.html#delete-jdbc-connection-pool[`delete-jdbc-connection-pool`]::
   Deletes the specified JDBC connection pool. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jdbc.adoc#ggngb[To Delete a JDBC Connection Pool].
-link:reference-manual/delete-jdbc-resource.html#GSRFM00089[`delete-jdbc-resource`]::
+  xref:jdbc.adoc#to-delete-a-jdbc-connection-pool[To Delete a JDBC Connection Pool].
+link:reference-manual/delete-jdbc-resource.html#delete-jdbc-resource[`delete-jdbc-resource`]::
   Deletes a JDBC resource. The specified JNDI name identifies the
   resource to be deleted. Supported in remote mode only. For procedural
-  information in this guide, see xref:jdbc.adoc#ggnhz[To Delete a JDBC
+  information in this guide, see xref:jdbc.adoc#to-delete-a-jdbc-resource[To Delete a JDBC
   Resource].
-link:reference-manual/delete-resource-adapter-config.html#GSRFM00106[`delete-resource-adapter-config`]::
+link:reference-manual/delete-resource-adapter-config.html#delete-resource-adapter-config[`delete-resource-adapter-config`]::
   Deletes configuration information for the connector module. Supported
   in remote mode only. For procedural information in this guide, see
-  xref:connectors.adoc#gionv[To Delete a Resource Adapter Configuration].
-link:reference-manual/flush-connection-pool.html#GSRFM00135[`flush-connection-pool`]::
+  xref:connectors.adoc#to-delete-a-resource-adapter-configuration[To Delete a Resource Adapter Configuration].
+link:reference-manual/flush-connection-pool.html#flush-connection-pool[`flush-connection-pool`]::
   Reintializes all connections established in the specified connection.
-  For procedural information in this guide, see xref:jdbc.adoc#gjiqp[To
+  For procedural information in this guide, see xref:jdbc.adoc#to-reset-flush-a-connection-pool[To
   Reset (Flush) a Connection Pool].
-link:reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`]::
+link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`]::
   Lists administered objects. For procedural information in this guide,
-  see xref:connectors.adoc#giokm[To List Administered Objects].
-link:reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`]::
+  see xref:connectors.adoc#to-list-administered-objects[To List Administered Objects].
+link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`]::
   Lists the connector connection pools that have been created. For
-  procedural information in this guide, see xref:connectors.adoc#giocg[To
+  procedural information in this guide, see xref:connectors.adoc#to-list-connector-connection-pools[To
   List Connector Connection Pools].
-link:reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`]::
+link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`]::
   Creates connector resources. For procedural information in this guide,
-  see xref:connectors.adoc#giohs[To List Connector Resources].
-link:reference-manual/list-connector-security-maps.html#GSRFM00159[`list-connector-security-maps`]::
+  see xref:connectors.adoc#to-list-connector-resources[To List Connector Resources].
+link:reference-manual/list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`]::
   Lists the connector security maps belonging to a specified connector
   connection pool. For procedural information in this guide, see
-  xref:connectors.adoc#gitwx[To List Connector Security Maps].
-link:reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`]::
+  xref:connectors.adoc#to-list-connector-security-maps[To List Connector Security Maps].
+link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`]::
   Lists the existing connector work security maps for a resource
   adapter. Supported in remote mode only. For procedural information in
-  this guide, see xref:connectors.adoc#gioir[To List Connector Work
+  this guide, see xref:connectors.adoc#to-list-connector-work-security-maps[To List Connector Work
   Security Maps].
-link:reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-jdbc-connection-pools`]::
+link:reference-manual/list-jdbc-connection-pools.html#list-jdbc-connection-pools[`list-jdbc-connection-pools`]::
   Lists the existing JDBC connection pools. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jdbc.adoc#ggnby[To List JDBC Connection Pools].
-link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-jdbc-resources`]::
+  xref:jdbc.adoc#to-list-jdbc-connection-pools[To List JDBC Connection Pools].
+link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-jdbc-resources`]::
   Lists the existing JDBC resources. Supported in remote mode only. For
-  procedural information in this guide, see xref:jdbc.adoc#ggnhl[To List
+  procedural information in this guide, see xref:jdbc.adoc#to-list-jdbc-resources[To List
   JDBC Resources].
-link:reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`]::
+link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`]::
   Lists configuration information for the connector modules. Supported
   in remote mode only. For procedural information in this guide, see
-  xref:connectors.adoc#giorn[To List Resource Adapter Configurations].
-link:reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-pool`]::
+  xref:connectors.adoc#to-list-resource-adapter-configurations[To List Resource Adapter Configurations].
+link:reference-manual/ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`]::
   Tests if a JDBC connection pool is usable. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jdbc.adoc#ggnwn[To Contact (Ping) a Connection Pool].
-link:reference-manual/update-connector-security-map.html#GSRFM00252[`update-connector-security-map`]::
+  xref:jdbc.adoc#to-contact-ping-a-connection-pool[To Contact (Ping) a Connection Pool].
+link:reference-manual/update-connector-security-map.html#update-connector-security-map[`update-connector-security-map`]::
   Modifies a security map for the specified connector connection pool.
   For procedural information in this guide, see
-  xref:connectors.adoc#gityj[To Update a Connector Security Map].
-link:reference-manual/update-connector-work-security-m.html#GSRFM00253[`update-connector-work-security-map`]::
+  xref:connectors.adoc#to-update-a-connector-security-map[To Update a Connector Security Map].
+link:reference-manual/update-connector-work-security-m.html#update-connector-work-security-map[`update-connector-work-security-map`]::
   Modifies a work security map that belongs to a specific resource
   adapter (connector module). For procedure information in this guide,
-  see xref:connectors.adoc#giogm[To Update a Connector Work Security
+  see xref:connectors.adoc#to-update-a-connector-work-security-map[To Update a Connector Work Security
   Map].
 
 [[domain-subcommands]]
 
 === Domain Subcommands
 
-link:reference-manual/backup-domain.html#GSRFM00003[`backup-domain`]::
+link:reference-manual/backup-domain.html#backup-domain[`backup-domain`]::
   Describes how to back up a domain. Supported in local mode only. For
-  procedural information in this guide, see xref:domains.adoc#ggocq[To
+  procedural information in this guide, see xref:domains.adoc#to-back-up-a-domain[To
   Back Up a Domain].
-link:reference-manual/create-domain.html#GSRFM00023[`create-domain`]::
+link:reference-manual/create-domain.html#create-domain[`create-domain`]::
   Creates the configuration of a domain. A domain can exist independent
   of other domains. Any user who has access to the `asadmin` utility on
   a given host can create a domain and store its configuration in a
   location of choice. For procedural information in this guide, see
-  xref:domains.adoc#ggoei[To Create a Domain].
-link:reference-manual/delete-domain.html#GSRFM00075[`delete-domain`]::
+  xref:domains.adoc#to-create-a-domain[To Create a Domain].
+link:reference-manual/delete-domain.html#delete-domain[`delete-domain`]::
   Deletes the specified domain. The domain must be stopped before it can
   be deleted. For procedural information in this guide, see
-  xref:domains.adoc#ggofa[To Delete a Domain].
-link:reference-manual/list-backups.html#GSRFM00152[`list-backups`]::
+  xref:domains.adoc#to-delete-a-domain[To Delete a Domain].
+link:reference-manual/list-backups.html#list-backups[`list-backups`]::
   Lists the existing domain backups. Supported in local mode only. For
-  procedural information in this guide, see xref:domains.adoc#ghgod[To
+  procedural information in this guide, see xref:domains.adoc#to-list-domain-backups[To
   List Domain Backups].
-link:reference-manual/list-domains.html#GSRFM00163[`list-domains`]::
+link:reference-manual/list-domains.html#list-domains[`list-domains`]::
   Lists the existing domains and their statuses. If the domain directory
   is not specified, the domains in the domain-root-dir, the default for
   which is as-install``/domains``, are displayed. For procedural
-  information in this guide, see xref:domains.adoc#ggoco[To List
+  information in this guide, see xref:domains.adoc#to-list-domains[To List
   Domains].
-link:reference-manual/login.html#GSRFM00210[`login`]::
+link:reference-manual/login.html#login[`login`]::
   Allows you to log in to a domain. For procedural information in this
-  guide, see xref:domains.adoc#ghhjz[To Log In to a Domain].
-link:reference-manual/restart-domain.html#GSRFM00218[`restart-domain`]::
+  guide, see xref:domains.adoc#to-log-in-to-a-domain[To Log In to a Domain].
+link:reference-manual/restart-domain.html#restart-domain[`restart-domain`]::
   Restarts the Domain Administration Server (DAS) of the specified
   domain. Supported in remote mode only. For procedural information in
-  this guide, see xref:domains.adoc#ginqj[To Restart a Domain].
-link:reference-manual/restore-domain.html#GSRFM00221[`restore-domain`]::
+  this guide, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
+link:reference-manual/restore-domain.html#restore-domain[`restore-domain`]::
   Recovers and domain from a backup file. Supported in local mode only.
   For procedural information in this guide, see
-  xref:domains.adoc#ggody[To Restore a Domain].
-link:reference-manual/start-domain.html#GSRFM00235[`start-domain`]::
+  xref:domains.adoc#to-restore-a-domain[To Restore a Domain].
+link:reference-manual/start-domain.html#start-domain[`start-domain`]::
   Starts a domain. If the domain directory is not specified, the default
   `domain1` in the default domain-root-dir directory is started. If
   there are two or more domains, the domain_name operand must be
   specified. For procedural information in this guide, see
-  xref:domains.adoc#ggoda[To Start a Domain].
-link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`]::
+  xref:domains.adoc#to-start-a-domain[To Start a Domain].
+link:reference-manual/stop-domain.html#stop-domain[`stop-domain`]::
   Stops the domain administration server (DAS) of the specified domain.
   Supported in remote mode only. For procedural information in this
-  guide, see xref:domains.adoc#ggoch[To Stop a Domain].
-link:reference-manual/uptime.html#GSRFM00258[`uptime`]::
+  guide, see xref:domains.adoc#to-stop-a-domain[To Stop a Domain].
+link:reference-manual/uptime.html#uptime[`uptime`]::
   Displays the length of time that the domain administration server
   (DAS) has been running since the last restart. Supported in remote
   mode only. For procedural information in this guide, see
-  xref:domains.adoc#ghhnt[To Display Domain Uptime].
+  xref:domains.adoc#to-display-domain-uptime[To Display Domain Uptime].
 
 [[internet-connectivity-subcommands]]
 
 === Internet Connectivity Subcommands
 
-link:reference-manual/create-http.html#GSRFM00025[`create-http`]::
+link:reference-manual/create-http.html#create-http[`create-http`]::
   Creates a set of HTTP parameters for a protocol, which in turn
   configures one or more network listeners. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:http_https.adoc#gjhqc[To Create an HTTP Configuration].
-link:reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`]::
+  xref:http_https.adoc#to-create-an-http-configuration[To Create an HTTP Configuration].
+link:reference-manual/create-http-listener.html#create-http-listener[`create-http-listener`]::
   Creates a new HTTP listener socket. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#ggnfh[To
+  procedural information in this guide, see xref:http_https.adoc#to-create-an-internet-connection[To
   Create an Internet Connection].
-link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`]::
+link:reference-manual/create-network-listener.html#create-network-listener[`create-network-listener`]::
   Creates a new HTTP listener socket. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#ggnfh[To
+  procedural information in this guide, see xref:http_https.adoc#to-create-an-internet-connection[To
   Create an Internet Connection].
-link:reference-manual/create-protocol.html#GSRFM00051[`create-protocol`]::
+link:reference-manual/create-protocol.html#create-protocol[`create-protocol`]::
   Creates a protocol for a listener. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#gjhot[To
+  procedural information in this guide, see xref:http_https.adoc#to-create-a-protocol[To
   Create a Protocol].
-link:reference-manual/create-transport.html#GSRFM00061[`create-transport`]::
+link:reference-manual/create-transport.html#create-transport[`create-transport`]::
   Creates a transport for a listener. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#gjhps[To
+  procedural information in this guide, see xref:http_https.adoc#to-create-a-transport[To
   Create a Transport].
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`]::
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`]::
   Creates the specified virtual server element. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:http_https.adoc#ggnfr[To Create a Virtual Server].
-link:reference-manual/create-ssl.html#GSRFM00058[`create-ssl`]::
+  xref:http_https.adoc#to-create-a-virtual-server[To Create a Virtual Server].
+link:reference-manual/create-ssl.html#create-ssl[`create-ssl`]::
   Creates and configures the SSL element in the selected HTTP listener
   to enable secure communication on that listener/service. Supported in
   remote mode only. For procedural information in this guide, see
-  xref:http_https.adoc#ggnbj[To Configure an HTTP Listener for SSL].
-link:reference-manual/delete-http.html#GSRFM00077[`delete-http`]::
+  xref:http_https.adoc#to-configure-an-http-listener-for-ssl[To Configure an HTTP Listener for SSL].
+link:reference-manual/delete-http.html#delete-http[`delete-http`]::
   Deletes an existing HTTP configuration. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:http_https.adoc#gjhqa[To Delete an HTTP Configuration].
-link:reference-manual/delete-http-listener.html#GSRFM00082[`delete-http-listener`]::
+  xref:http_https.adoc#to-delete-an-http-configuration[To Delete an HTTP Configuration].
+link:reference-manual/delete-http-listener.html#delete-http-listener[`delete-http-listener`]::
   Deletes the specified HTTP listener. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:http_https.adoc#ggndu[To Delete an HTTP Network Listener].
-link:reference-manual/delete-network-listener.html#GSRFM00098[`delete-network-listener`]::
+  xref:http_https.adoc#to-delete-an-http-network-listener[To Delete an HTTP Network Listener].
+link:reference-manual/delete-network-listener.html#delete-network-listener[`delete-network-listener`]::
   Deletes the specified HTTP listener. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:http_https.adoc#ggndu[To Delete an HTTP Network Listener].
-link:reference-manual/delete-protocol.html#GSRFM00103[`delete-protocol`]::
+  xref:http_https.adoc#to-delete-an-http-network-listener[To Delete an HTTP Network Listener].
+link:reference-manual/delete-protocol.html#delete-protocol[`delete-protocol`]::
   Deletes and existing HTTP protocol. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#gjhnx[To
+  procedural information in this guide, see xref:http_https.adoc#to-delete-a-protocol[To
   Delete a Protocol].
-link:reference-manual/delete-ssl.html#GSRFM00109[`delete-ssl`]::
+link:reference-manual/delete-ssl.html#delete-ssl[`delete-ssl`]::
   Deletes the SSL element in the selected HTTP listener. Supported in
   remote mode only. For procedural information in this guide, see
-  xref:http_https.adoc#ggncl[To Delete SSL From an HTTP Listener].
-link:reference-manual/delete-transport.html#GSRFM00112[`delete-transport`]::
+  xref:http_https.adoc#to-delete-ssl-from-an-http-listener[To Delete SSL From an HTTP Listener].
+link:reference-manual/delete-transport.html#delete-transport[`delete-transport`]::
   Deletes and existing HTTP transport. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:http_https.adoc#gjhqp[To Delete a Transport].
-link:reference-manual/delete-virtual-server.html#GSRFM00113[`delete-virtual-server`]::
+  xref:http_https.adoc#to-delete-a-transport[To Delete a Transport].
+link:reference-manual/delete-virtual-server.html#delete-virtual-server[`delete-virtual-server`]::
   Deletes the specified virtual server element. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:http_https.adoc#ggnen[To Delete a Virtual Server].
-link:reference-manual/list-http-listeners.html#GSRFM00168[`list-http-listeners`]::
+  xref:http_https.adoc#to-delete-a-virtual-server[To Delete a Virtual Server].
+link:reference-manual/list-http-listeners.html#list-http-listeners[`list-http-listeners`]::
   Lists the existing HTTP listeners. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#ggnbv[To
+  procedural information in this guide, see xref:http_https.adoc#to-list-http-network-listeners[To
   List HTTP Network Listeners].
-link:reference-manual/list-network-listeners.html#GSRFM00186[`list-network-listeners`]::
+link:reference-manual/list-network-listeners.html#list-network-listeners[`list-network-listeners`]::
   Lists the existing HTTP listeners. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#ggnbv[To
+  procedural information in this guide, see xref:http_https.adoc#to-list-http-network-listeners[To
   List HTTP Network Listeners].
-link:reference-manual/list-protocols.html#GSRFM00195[`list-protocols`]::
+link:reference-manual/list-protocols.html#list-protocols[`list-protocols`]::
   Lists the existing HTTP protocols. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#gjhna[To
+  procedural information in this guide, see xref:http_https.adoc#to-list-protocols[To
   List Protocols].
-link:reference-manual/list-transports.html#GSRFM00206[`list-transports`]::
+link:reference-manual/list-transports.html#list-transports[`list-transports`]::
   Lists the existing HTTP transports. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#gjhmx[To
+  procedural information in this guide, see xref:http_https.adoc#to-list-transports[To
   List Transports].
-link:reference-manual/list-virtual-servers.html#GSRFM00207[`list-virtual-servers`]::
+link:reference-manual/list-virtual-servers.html#list-virtual-servers[`list-virtual-servers`]::
   Lists the existing virtual servers. Supported in remote mode only. For
-  procedural information in this guide, see xref:http_https.adoc#ggndw[To
+  procedural information in this guide, see xref:http_https.adoc#to-list-virtual-servers[To
   List Virtual Servers].
 
 [[javamail-subcommands]]
 
 === JavaMail Subcommands
 
-link:reference-manual/create-javamail-resource.html#GSRFM00035[`create-javamail-resource`]::
+link:reference-manual/create-javamail-resource.html#create-javamail-resource[`create-javamail-resource`]::
   Creates a JavaMail session resource. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:javamail.adoc#giowd[To Create a JavaMail Resource].
-link:reference-manual/delete-javamail-resource.html#GSRFM00087[`delete-javamail-resource`]::
+  xref:javamail.adoc#to-create-a-javamail-resource[To Create a JavaMail Resource].
+link:reference-manual/delete-javamail-resource.html#delete-javamail-resource[`delete-javamail-resource`]::
   Deletes a JavaMail session resource. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:javamail.adoc#gioxj[To Delete a JavaMail Resource].
-link:reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`]::
+  xref:javamail.adoc#to-delete-a-javamail-resource[To Delete a JavaMail Resource].
+link:reference-manual/list-javamail-resources.html#list-javamail-resources[`list-javamail-resources`]::
   Creates JavaMail session resources. Supported in remote mode only. For
-  procedural information in this guide, see xref:javamail.adoc#giowq[To
+  procedural information in this guide, see xref:javamail.adoc#to-list-javamail-resources[To
   List JavaMail Resources].
 
 [[jms-subcommands]]
 
 === JMS Subcommands
 
-link:reference-manual/create-jmsdest.html#GSRFM00038[`create-jmsdest`]::
+link:reference-manual/create-jmsdest.html#create-jmsdest[`create-jmsdest`]::
   Creates a JMS physical destination. Along with the physical
   destination, you use the `create-jms-resource` subcommand to create a
   JMS destination resource that has a `Name` property that specifies the
   physical destination. Supported in remote mode only. For procedural
-  information in this guide, see xref:jms.adoc#gioue[To Create a JMS
+  information in this guide, see xref:jms.adoc#to-create-a-jms-physical-destination[To Create a JMS
   Physical Destination].
-link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`]::
+link:reference-manual/create-jms-host.html#create-jms-host[`create-jms-host`]::
   Creates a JMS host within the JMS service. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jms.adoc#gipbh[To Create a JMS Host].
-link:reference-manual/create-jms-resource.html#GSRFM00040[`create-jms-resource`]::
+  xref:jms.adoc#to-create-a-jms-host[To Create a JMS Host].
+link:reference-manual/create-jms-resource.html#create-jms-resource[`create-jms-resource`]::
   Creates a JMS connection factory resource or JMS destination resource.
   Supported in remote mode only. Supported in remote mode only. For
-  procedural information in this guide, see xref:jms.adoc#giotd[To Create
+  procedural information in this guide, see xref:jms.adoc#to-create-a-connection-factory-or-destination-resource[To Create
   a Connection Factory or Destination Resource].
-link:reference-manual/delete-jmsdest.html#GSRFM00090[`delete-jmsdest`]::
+link:reference-manual/delete-jmsdest.html#delete-jmsdest[`delete-jmsdest`]::
   Removes the specified JMS destination. Supported in remote mode only.
-  For procedural information in this guide, see xref:jms.adoc#giouv[To
+  For procedural information in this guide, see xref:jms.adoc#to-delete-a-jms-physical-destination[To
   Delete a JMS Physical Destination].
-link:reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`]::
+link:reference-manual/delete-jms-host.html#delete-jms-host[`delete-jms-host`]::
   Deletes a JMS host within the JMS service. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jms.adoc#gipbv[To Delete a JMS Host].
-link:reference-manual/delete-jms-resource.html#GSRFM00092[`delete-jms-resource`]::
+  xref:jms.adoc#to-delete-a-jms-host[To Delete a JMS Host].
+link:reference-manual/delete-jms-resource.html#delete-jms-resource[`delete-jms-resource`]::
   Deletes a JMS connection factory resource or JMS destination resource.
   Supported in remote mode only. For procedural information in this
-  guide, see xref:jms.adoc#giouw[To Delete a Connection Factory or
+  guide, see xref:jms.adoc#to-delete-a-connection-factory-or-destination-resource[To Delete a Connection Factory or
   Destination Resource].
-link:reference-manual/flush-jmsdest.html#GSRFM00136[`flush-jmsdest`]::
+link:reference-manual/flush-jmsdest.html#flush-jmsdest[`flush-jmsdest`]::
   Purges the messages from a physical destination in the specified JMS
   Service configuration of the specified target. Supported in remote
   mode only. For procedural information in this guide, see
-  xref:jms.adoc#giowx[To Purge Messages From a Physical Destination].
-link:reference-manual/jms-ping.html#GSRFM00144[`jms-ping`]::
+  xref:jms.adoc#to-purge-messages-from-a-physical-destination[To Purge Messages From a Physical Destination].
+link:reference-manual/jms-ping.html#jms-ping[`jms-ping`]::
   Checks if the JMS service (also known as the JMS provider) is up and
   running. Supported in remote mode only. For procedural information in
-  this guide, see xref:jms.adoc#gipnh[Troubleshooting the JMS Service].
-link:reference-manual/list-jmsdest.html#GSRFM00175[`list-jmsdest`]::
+  this guide, see xref:jms.adoc#troubleshooting-the-jms-service[Troubleshooting the JMS Service].
+link:reference-manual/list-jmsdest.html#list-jmsdest[`list-jmsdest`]::
   Lists the JMS physical destinations. Supported in remote mode only.
-  For procedural information in this guide, see xref:jms.adoc#gioyp[To
+  For procedural information in this guide, see xref:jms.adoc#to-list-jms-physical-destinations[To
   List JMS Physical Destinations].
-link:reference-manual/list-jms-hosts.html#GSRFM00176[`list-jms-hosts`]::
+link:reference-manual/list-jms-hosts.html#list-jms-hosts[`list-jms-hosts`]::
   Lists the existing JMS hosts. Supported in remote mode only. For
-  procedural information in this guide, see xref:jms.adoc#gipbz[To List
+  procedural information in this guide, see xref:jms.adoc#to-list-jms-hosts[To List
   JMS Hosts].
-link:reference-manual/list-jms-resources.html#GSRFM00177[`list-jms-resources`]::
+link:reference-manual/list-jms-resources.html#list-jms-resources[`list-jms-resources`]::
   Lists the existing JMS connection factory or destination resources.
   Supported in remote mode only. For procedural information in this
-  guide, see xref:jms.adoc#giosx[To List JMS Resources].
+  guide, see xref:jms.adoc#to-list-jms-resources[To List JMS Resources].
 
 [[jndi-subcommands]]
 
 === JNDI Subcommands
 
-link:reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-resource`]::
+link:reference-manual/create-custom-resource.html#create-custom-resource[`create-custom-resource`]::
   Creates a custom JNDI resource. Supported in remote mode only. For
-  procedural information in this guide, see xref:jndi.adoc#giowe[To
+  procedural information in this guide, see xref:jndi.adoc#to-create-a-custom-jndi-resource[To
   Create a Custom JNDI Resource].
-link:reference-manual/create-jndi-resource.html#GSRFM00041[`create-jndi-resource`]::
+link:reference-manual/create-jndi-resource.html#create-jndi-resource[`create-jndi-resource`]::
   Creates an external JNDI resource. Supported in remote mode only. For
-  procedural information in this guide, see xref:jndi.adoc#gitxn[To
+  procedural information in this guide, see xref:jndi.adoc#to-register-an-external-jndi-resource[To
   Register an External JNDI Resource].
-link:reference-manual/delete-custom-resource.html#GSRFM00074[`delete-custom-resource`]::
+link:reference-manual/delete-custom-resource.html#delete-custom-resource[`delete-custom-resource`]::
   Deletes a custom JNDI resource. Supported in remote mode only. For
-  procedural information in this guide, see xref:jndi.adoc#gioxl[To
+  procedural information in this guide, see xref:jndi.adoc#to-delete-a-custom-jndi-resource[To
   Delete a Custom JNDI Resource].
-link:reference-manual/delete-jndi-resource.html#GSRFM00093[`delete-jndi-resource`]::
+link:reference-manual/delete-jndi-resource.html#delete-jndi-resource[`delete-jndi-resource`]::
   Deletes an external JNDI resource. Supported in remote mode only. For
-  procedural information in this guide, see xref:jndi.adoc#gitvt[To
+  procedural information in this guide, see xref:jndi.adoc#to-delete-an-external-jndi-resource[To
   Delete an External JNDI Resource].
-link:reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`]::
+link:reference-manual/list-custom-resources.html#list-custom-resources[`list-custom-resources`]::
   Lists the existing custom JNDI resources. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jndi.adoc#gioxb[To List Custom JNDI Resources].
-link:reference-manual/list-jndi-entries.html#GSRFM00178[`list-jndi-entries`]::
+  xref:jndi.adoc#to-list-custom-jndi-resources[To List Custom JNDI Resources].
+link:reference-manual/list-jndi-entries.html#list-jndi-entries[`list-jndi-entries`]::
   Lists the entries in the JNDI tree. Supported in remote mode only. For
-  procedural information in this guide, see xref:jndi.adoc#gitwc[To List
+  procedural information in this guide, see xref:jndi.adoc#to-list-external-jndi-entries[To List
   External JNDI Entries],
-link:reference-manual/list-jndi-resources.html#GSRFM00179[`list-jndi-resources`]::
+link:reference-manual/list-jndi-resources.html#list-jndi-resources[`list-jndi-resources`]::
   Lists the existing external JNDI resources. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jndi.adoc#gitvj[To List External JNDI Resources].
+  xref:jndi.adoc#to-list-external-jndi-resources[To List External JNDI Resources].
 
 [[gglsk]][[GSADG00617]][[jvm-subcommands]]
 
 === JVM Subcommands
 
-link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]::
+link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`]::
   Creates a JVM option in the Java configuration or profiler elements of
   the `domain.xml` file. Supported in remote mode only. For procedural
-  information in this guide, see xref:jvm.adoc#ggnes[To Create JVM
+  information in this guide, see xref:jvm.adoc#to-create-jvm-options[To Create JVM
   Options].
-link:reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]::
+link:reference-manual/create-profiler.html#create-profiler[`create-profiler`]::
   Creates a profiler element. Supported in remote mode only. For
-  procedural information in this guide, see xref:jvm.adoc#ggneb[To Create
+  procedural information in this guide, see xref:jvm.adoc#to-create-a-profiler[To Create
   a Profiler].
-link:reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`]::
+link:reference-manual/delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`]::
   Deletes the specified JVM option from the Java configuration or
   profiler elements of the `domain.xml` file. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jvm.adoc#ggnfi[To Delete JVM Options].
-link:reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]::
+  xref:jvm.adoc#to-delete-jvm-options[To Delete JVM Options].
+link:reference-manual/delete-profiler.html#delete-profiler[`delete-profiler`]::
   Deletes the specified profiler element. Supported in remote mode only.
-  For procedural information in this guide, see xref:jvm.adoc#ggnem[To
+  For procedural information in this guide, see xref:jvm.adoc#to-delete-a-profiler[To
   Delete a Profiler].
-link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`]::
+link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`]::
   Generates a report showing the threads, classes, and memory for the
   virtual machine that runs {productName}. For procedural information
-  in this guide, see xref:jvm.adoc#ggnbu[To Generate a JVM Report].
-link:reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]::
+  in this guide, see xref:jvm.adoc#to-generate-a-jvm-report[To Generate a JVM Report].
+link:reference-manual/list-jvm-options.html#list-jvm-options[`list-jvm-options`]::
   Lists the command-line options that are passed to the Java application
   launcher when {productName} is started. Supported in remote mode
   only. For procedural information in this guide, see
-  xref:jvm.adoc#ggnce[To List JVM Options].
+  xref:jvm.adoc#to-list-jvm-options[To List JVM Options].
 
 [[life-cycle-module-subcommands]]
 
 === Life Cycle Module Subcommands
 
-link:reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`]::
+link:reference-manual/create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`]::
   Creates a new life cycle module. Supported in remote mode only. For
   procedural information in this guide, see
-  xref:lifecycle-modules.adoc#giuus[To Create a Life Cycle Module].
-link:reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`]::
+  xref:lifecycle-modules.adoc#to-create-a-life-cycle-module[To Create a Life Cycle Module].
+link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`]::
   Lists life cycle modules. Supported in remote mode only. For
   procedural information in this guide, see
-  xref:lifecycle-modules.adoc#giuvh[To List Life Cycle Modules].
-link:reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`]::
+  xref:lifecycle-modules.adoc#to-list-life-cycle-modules[To List Life Cycle Modules].
+link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`]::
   Deletes an existing life cycle module. Supported in remote mode only.
   For procedural information in this guide, see
-  xref:lifecycle-modules.adoc#giuux[To Delete a Life Cycle Module].
+  xref:lifecycle-modules.adoc#to-delete-a-life-cycle-module[To Delete a Life Cycle Module].
 
 [[gitxd]][[GSADG00619]][[logging-and-monitoring-subcommands]]
 
 === Logging and Monitoring Subcommands
 
-link:reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`]::
+link:reference-manual/collect-log-files.html#collect-log-files[`collect-log-files`]::
   Collects all available log files and creates a ZIP archive. Supported
   in remote mode only. For procedural information in this guide, see
   xref:logging.adoc#to-collect-log-files-into-a-zip-archive[To Collect Log Files into a ZIP Archive].
-link:reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`]::
+link:reference-manual/disable-monitoring.html#disable-monitoring[`disable-monitoring`]::
   Disables the monitoring service. Supported in remote mode only. For
-  procedural information in this guide, see xref:monitoring.adoc#gglcu[To
+  procedural information in this guide, see xref:monitoring.adoc#to-disable-monitoring[To
   Disable Monitoring].
-link:reference-manual/enable-monitoring.html#GSRFM00128[`enable-monitoring`]::
+link:reference-manual/enable-monitoring.html#enable-monitoring[`enable-monitoring`]::
   Enables the monitoring service. Supported in remote mode only. For
-  procedural information in this guide, see xref:monitoring.adoc#ablvr[To
+  procedural information in this guide, see xref:monitoring.adoc#to-enable-monitoring[To
   Enable Monitoring].
-link:reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]::
+link:reference-manual/list-log-attributes.html#list-log-attributes[`list-log-attributes`]::
   Lists log file attributes. Supported in remote mode only. For
   procedural information in this guide, see
   xref:logging.adoc#configuring[Configuring the Logging Service].
-link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`]::
+link:reference-manual/list-log-levels.html#list-log-levels[`list-log-levels`]::
   Lists the existing loggers. Supported in remote mode only.
   For procedural information in this guide,
   see xref:logging.adoc#to-list-log-levels[To List Log Levels].
-link:reference-manual/list-loggers.html#GSRFM869[`list-loggers`]::
+link:reference-manual/list-loggers.html#list-loggers[`list-loggers`]::
   Lists all public loggers in your distribution of {productName}. Internal loggers are not listed. For procedural
   information in this guide, see xref:logging.adoc#to-list-loggers[To List Loggers].
-link:reference-manual/monitor.html#GSRFM00212[`monitor`]::
+link:reference-manual/monitor.html#monitor[`monitor`]::
   Displays monitoring information for the common {productName}
   resources. Supported in remote mode only. For procedural information
-  in this guide, see xref:monitoring.adoc#gelol[To View Common Monitoring
+  in this guide, see xref:monitoring.adoc#to-view-common-monitoring-data[To View Common Monitoring
   Data].
-link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]::
+link:reference-manual/rotate-log.html#rotate-log[`rotate-log`]::
   Rotates the `server.log` file and stores the old data in a
   time-stamped file. Supported in remote mode only. For procedural
   information in this guide, see xref:logging.adoc#to-rotate-log-files-manually[To Rotate Log Files Manually].
-link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]::
+link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`]::
   Sets log file attributes. Supported in remote mode only. For
   procedural information in this guide, see
   xref:logging.adoc#configuring[Configuring the Logging Service].
-link:reference-manual/set-log-file-format.html#GSRFM879[`set-log-file-format`]::
+link:reference-manual/set-log-file-format.html#set-log-file-format[`set-log-file-format`]::
   Sets the formatter used to format log records in log files. For
   procedural information in this guide, see
   xref:logging.adoc#setting-the-log-file-format[Setting the Log File Format].
-link:reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`]::
+link:reference-manual/set-log-levels.html#set-log-levels[`set-log-levels`]::
   Sets the log level for a module. Supported in remote mode only. For
   procedural information in this guide, see
   xref:logging.adoc#gklml[Setting Log Levels].
@@ -710,57 +710,57 @@ link:reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`]::
 
 === ORB Subcommands
 
-link:reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`]::
+link:reference-manual/create-iiop-listener.html#create-iiop-listener[`create-iiop-listener`]::
   Creates an IIOP listener. Supported in remote mode only. For
-  procedural information in this guide, see xref:orb.adoc#gioyo[To Create
+  procedural information in this guide, see xref:orb.adoc#to-create-an-iiop-listener[To Create
   an IIOP Listener].
-link:reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`]::
+link:reference-manual/delete-iiop-listener.html#delete-iiop-listener[`delete-iiop-listener`]::
   Deletes an IIOP listener. Supported in remote mode only. For
-  procedural information in this guide, see xref:orb.adoc#giowj[To Delete
+  procedural information in this guide, see xref:orb.adoc#to-delete-an-iiop-listener[To Delete
   an IIOP Listener].
-link:reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`]::
+link:reference-manual/list-iiop-listeners.html#list-iiop-listeners[`list-iiop-listeners`]::
   Lists the existing IIOP listeners. Supported in remote mode only. For
-  procedural information in this guide, see xref:orb.adoc#giowc[To List
+  procedural information in this guide, see xref:orb.adoc#to-list-iiop-listeners[To List
   IIOP Listeners].
 
 [[thread-pool-subcommands]]
 
 === Thread Pool Subcommands
 
-link:reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`]::
+link:reference-manual/create-threadpool.html#create-threadpool[`create-threadpool`]::
   Creates a new thread pool. Supported in remote mode only. For
   procedural information in this guide, see
-  xref:threadpools.adoc#ggkwj[To Create a Thread Pool].
-link:reference-manual/delete-threadpool.html#GSRFM00111[`delete-threadpool`]::
+  xref:threadpools.adoc#to-create-a-thread-pool[To Create a Thread Pool].
+link:reference-manual/delete-threadpool.html#delete-threadpool[`delete-threadpool`]::
   Deletes the specified thread pool. Supported in remote mode only. For
   procedural information in this guide, see
-  xref:threadpools.adoc#ggkwy[To Delete a Thread Pool].
-link:reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`]::
+  xref:threadpools.adoc#to-delete-a-thread-pool[To Delete a Thread Pool].
+link:reference-manual/list-threadpools.html#list-threadpools[`list-threadpools`]::
   Lists the existing thread pools. Supported in remote mode only. For
   procedural information in this guide, see
-  xref:threadpools.adoc#giuff[To List Thread Pools].
+  xref:threadpools.adoc#to-list-thread-pools[To List Thread Pools].
 
 [[transaction-service-subcommands]]
 
 === Transaction Service Subcommands
 
-link:reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`]::
+link:reference-manual/freeze-transaction-service.html#freeze-transaction-service[`freeze-transaction-service`]::
   Freezes the transaction subsystem during which time all the in-flight
   transactions are suspended. Supported in remote mode only. For
-  procedural information, see xref:transactions.adoc#giufn[To Stop the
+  procedural information, see xref:transactions.adoc#to-stop-the-transaction-service[To Stop the
   Transaction Service].
-link:reference-manual/recover-transactions.html#GSRFM00216[`recover-transactions`]::
+link:reference-manual/recover-transactions.html#recover-transactions[`recover-transactions`]::
   Manually recovers pending transactions. Supported in remote mode only.
-  For procedural information, see xref:transactions.adoc#giuhe[To
+  For procedural information, see xref:transactions.adoc#to-manually-recover-transactions[To
   Manually Recover Transactions].
-link:reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`]::
+link:reference-manual/rollback-transaction.html#rollback-transaction[`rollback-transaction`]::
   Rolls back the named transaction. Supported in remote mode only. For
-  procedural information, see xref:transactions.adoc#giugk[To Roll Back a
+  procedural information, see xref:transactions.adoc#to-roll-back-a-transaction[To Roll Back a
   Transaction].
-link:reference-manual/unfreeze-transaction-service.html#GSRFM00245[`unfreeze-transaction-service`]::
+link:reference-manual/unfreeze-transaction-service.html#unfreeze-transaction-service[`unfreeze-transaction-service`]::
   Resumes all the suspended in-flight transactions. Invoke this
   subcommand on an already frozen transaction. Supported in remote mode
-  only. For procedural information, see xref:transactions.adoc#giuet[To
+  only. For procedural information, see xref:transactions.adoc#to-restart-the-transaction-service[To
   Restart the Transaction Service].
 
 

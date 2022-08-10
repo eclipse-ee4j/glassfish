@@ -187,12 +187,12 @@ Command create-http-lb-ref executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:configure-lb-weight.html#configure-lb-weight-1[`configure-lb-weight`(1)],
-link:create-http-health-checker.html#create-http-health-checker-1[`create-http-health-checker`(1)],
-link:delete-http-lb-ref.html#delete-http-lb-ref-1[`delete-http-lb-ref`(1)],
-link:enable-http-lb-application.html#enable-http-lb-application-1[`enable-http-lb-application`(1)],
-link:enable-http-lb-server.html#enable-http-lb-server-1[`enable-http-lb-server`(1)],
-link:list-http-lb-configs.html#list-http-lb-configs-1[`list-http-lb-configs`(1)],
-link:list-http-lbs.html#list-http-lbs-1[`list-http-lbs`(1)]
+link:configure-lb-weight.html#configure-lb-weight[`configure-lb-weight`(1)],
+link:create-http-health-checker.html#create-http-health-checker[`create-http-health-checker`(1)],
+link:delete-http-lb-ref.html#delete-http-lb-ref[`delete-http-lb-ref`(1)],
+link:enable-http-lb-application.html#enable-http-lb-application[`enable-http-lb-application`(1)],
+link:enable-http-lb-server.html#enable-http-lb-server[`enable-http-lb-server`(1)],
+link:list-http-lb-configs.html#list-http-lb-configs[`list-http-lb-configs`(1)],
+link:list-http-lbs.html#list-http-lbs[`list-http-lbs`(1)]
 
 

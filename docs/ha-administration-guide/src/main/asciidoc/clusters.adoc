@@ -27,9 +27,9 @@ correctly.
 
 The following topics are addressed here:
 
-* xref:#gjfqp[About {productName} Clusters]
-* xref:#gjfnl[Group Management Service]
-* xref:#gkqdy[Creating, Listing, and Deleting Clusters]
+* xref:#about-glassfish-server-clusters[About {productName} Clusters]
+* xref:#group-management-service[Group Management Service]
+* xref:#creating-listing-and-deleting-clusters[Creating, Listing, and Deleting Clusters]
 
 [[gjfqp]][[GSHAG00183]][[about-glassfish-server-clusters]]
 
@@ -85,15 +85,15 @@ Shoal, visit the http://shoal.dev.java.net/[Project Shoal home page]
 
 The following topics are addressed here:
 
-* xref:#CHDFEGAG[Protocols and Transports for GMS]
-* xref:#gjfpd[GMS Configuration Settings]
-* xref:#gjfog[Dotted Names for GMS Settings]
-* xref:#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* xref:#gkqqo[To Change GMS Settings After Cluster Creation]
-* xref:#gklhl[To Check the Health of Instances in a Cluster]
-* xref:#gklhd[To Validate That Multicast Transport Is Available for a Cluster]
-* xref:#CHDGAIBJ[Discovering a Cluster When Multicast Transport Is Unavailable]
-* xref:#gjdlw[Using the Multi-Homing Feature With GMS]
+* xref:#protocols-and-transports-for-gms[Protocols and Transports for GMS]
+* xref:#gms-configuration-settings[GMS Configuration Settings]
+* xref:#dotted-names-for-gms-settings[Dotted Names for GMS Settings]
+* xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* xref:#to-change-gms-settings-after-cluster-creation[To Change GMS Settings After Cluster Creation]
+* xref:#to-check-the-health-of-instances-in-a-cluster[To Check the Health of Instances in a Cluster]
+* xref:#to-validate-that-multicast-transport-is-available-for-a-cluster[To Validate That Multicast Transport Is Available for a Cluster]
+* xref:#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is Unavailable]
+* xref:#using-the-multi-homing-feature-with-gms[Using the Multi-Homing Feature With GMS]
 
 [[CHDFEGAG]][[GSHAG485]][[protocols-and-transports-for-gms]]
 
@@ -116,12 +116,12 @@ the following conditions must be met:
 * The DAS host and all hosts for the instances must be on the same subnet.
 * UDP multicast must be enabled for the network.
 To test whether multicast is enabled, use the
-link:reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`(1)]
+link:reference-manual/validate-multicast.html#validate-multicast[`validate-multicast`(1)]
 subcommand.
 
 If GMS should use TCP without multicast, you must configure GMS to
 locate the instances to use for discovering the cluster. For more
-information, see xref:#CHDGAIBJ[Discovering a Cluster When Multicast
+information, see xref:#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast
 Transport Is Unavailable].
 
 [NOTE]
@@ -138,7 +138,7 @@ discovering a cluster, GMS uses UDP multicast by default.
 {productName} has the following types of GMS settings:
 
 * GMS cluster settings — These are determined during cluster creation.
-For more information about these settings, see xref:#gkqdm[To Create a Cluster].
+For more information about these settings, see xref:#to-create-a-cluster[To Create a Cluster].
 * GMS configuration settings — These are determined during configuration
 creation and are explained here.
 
@@ -206,15 +206,15 @@ needed to ensure that failure detection is robust and reliable in
 {productName}.
 
 For the dotted names for each of these GMS configuration settings, see
-xref:#gjfog[Dotted Names for GMS Settings]. For the steps to specify
-these settings, see xref:#gkoac[To Preconfigure Nondefault GMS
+xref:#dotted-names-for-gms-settings[Dotted Names for GMS Settings]. For the steps to specify
+these settings, see xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS
 Configuration Settings].
 
 [[gjfog]][[GSHAG00265]][[dotted-names-for-gms-settings]]
 
 ==== Dotted Names for GMS Settings
 
-Below are sample link:reference-manual/get.html#GSRFM00139[`get`] subcommands to get all the GMS
+Below are sample link:reference-manual/get.html#get[`get`] subcommands to get all the GMS
 configuration settings (attributes associated with the referenced
 `mycfg` configuration) and GMS cluster settings (attributes and
 properties associated with a cluster named `mycluster`).
@@ -247,8 +247,8 @@ clusters.cluster.mycluster.property.GMS_TCPENDPORT=9200
 The last `get` subcommand displays only the properties that have been
 explicitly set.
 
-For the steps to specify these settings, see xref:#gkoac[To Preconfigure
-Nondefault GMS Configuration Settings] and xref:#gkqqo[To Change GMS
+For the steps to specify these settings, see xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure
+Nondefault GMS Configuration Settings] and xref:#to-change-gms-settings-after-cluster-creation[To Change GMS
 Settings After Cluster Creation].
 
 [[gkoac]][[GSHAG00098]][[to-preconfigure-nondefault-gms-configuration-settings]]
@@ -258,7 +258,7 @@ Settings After Cluster Creation].
 You can preconfigure GMS with values different than the defaults without
 requiring a restart of the DAS and the cluster.
 
-1. Create a configuration using the link:reference-manual/copy-config.html#GSRFM00011[`copy-config`]
+1. Create a configuration using the link:reference-manual/copy-config.html#copy-config[`copy-config`]
 subcommand.
 +
 For example:
@@ -267,7 +267,7 @@ For example:
 ----
 asadmin> copy-config default-config mycfg
 ----
-For more information, see link:named-configurations.html#abdjr[To Create
+For more information, see link:named-configurations.html#to-create-a-named-configuration[To Create
 a Named Configuration].
 2. Set the values for the new configuration's GMS configuration
 settings.
@@ -280,7 +280,7 @@ asadmin> set configs.config.mycfg.group-management-service.group-discovery-timeo
 asadmin> set configs.config.mycfg.group-management-service.failure-detection.max-missed-heartbeats=5
 ----
 For a complete list of the dotted names for these settings, see
-xref:#gjfog[Dotted Names for GMS Settings].
+xref:#dotted-names-for-gms-settings[Dotted Names for GMS Settings].
 3. Create the cluster so it uses the previously created configuration.
 +
 For example:
@@ -290,7 +290,7 @@ For example:
 asadmin> create-cluster --config mycfg mycluster
 ----
 You can also set GMS cluster settings during this step. For more
-information, see xref:#gkqdm[To Create a Cluster].
+information, see xref:#to-create-a-cluster[To Create a Cluster].
 4. Create server instances for the cluster.
 +
 For example:
@@ -321,10 +321,10 @@ You can also view the full syntax and options of a subcommand by typing
 
 To avoid the need to restart the DAS and the cluster, configure GMS
 configuration settings before cluster creation as explained in
-xref:#gkoac[To Preconfigure Nondefault GMS Configuration Settings].
+xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings].
 
 To avoid the need to restart the DAS and the cluster, configure the GMS
-cluster settings during cluster creation as explained in xref:#gkqdm[To
+cluster settings during cluster creation as explained in xref:#to-create-a-cluster[To
 Create a Cluster].
 
 Changing any GMS settings using the `set` subcommand after cluster
@@ -334,7 +334,7 @@ restart as explained here.
 1. Ensure that the DAS and cluster are running.
 +
 Remote subcommands require a running server.
-2. Use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to determine the settings
+2. Use the link:reference-manual/get.html#get[`get`] subcommand to determine the settings
 to change.
 +
 For example:
@@ -349,8 +349,8 @@ configs.config.mycfg.group-management-service.failure-detection.verify-failure-w
 configs.config.mycfg.group-management-service.group-discovery-timeout-in-millis=5000
 ----
 For a complete list of the dotted names for these settings, see
-xref:#gjfog[Dotted Names for GMS Settings].
-3. Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to change the settings.
+xref:#dotted-names-for-gms-settings[Dotted Names for GMS Settings].
+3. Use the link:reference-manual/set.html#set[`set`] subcommand to change the settings.
 +
 For example:
 +
@@ -403,17 +403,17 @@ cluster is properly operating; that is, all members of the cluster are
 running and visible to DAS.
 
 If multicast is not enabled for the network, all instances could be
-running (as shown by the link:reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand),
+running (as shown by the link:reference-manual/list-instances.html#list-instances[`list-instances`] subcommand),
 yet isolated from each other. The `get-health` subcommand does not show
 the instances if they are running but cannot discover each other due to
-multicast not being configured properly. See xref:#gklhd[To Validate
+multicast not being configured properly. See xref:#to-validate-that-multicast-transport-is-available-for-a-cluster[To Validate
 That Multicast Transport Is Available for a Cluster].
 
 1. Ensure that the DAS and cluster are running.
 +
 Remote subcommands require a running server.
 2. Check whether server instances in a cluster are running by using the
-link:reference-manual/get-health.html#GSRFM00141[`get-health`] subcommand.
+link:reference-manual/get-health.html#get-health[`get-health`] subcommand.
 
 [[clusters-example-4-1]]
 Example 4-1 Checking the Health of Instances in a Cluster
@@ -467,7 +467,7 @@ servers.server.i1.system-property.GMS-BIND-INTERFACE-ADDRESS-c1.value=10.12.152.
 ----
 
 For information on how to set this system property, see
-xref:#gjdlw[Using the Multi-Homing Feature With GMS].
+xref:#using-the-multi-homing-feature-with-gms[Using the Multi-Homing Feature With GMS].
 
 
 [NOTE]
@@ -483,7 +483,7 @@ received between the machines.
 
 
 Check whether multicast transport is available for a cluster by using
-the link:reference-manual/validate-multicast.html#GSRFM00259[`validate-multicast`] subcommand.
+the link:reference-manual/validate-multicast.html#validate-multicast[`validate-multicast`] subcommand.
 
 [[clusters-example-4-2]]
 Example 4-2 Validating That Multicast Transport Is Available for a
@@ -574,9 +574,9 @@ of the configuration data that you provide when creating the cluster.
 How to provide this data depends on how instances are distributed, as
 explained in the following subsections:
 
-* xref:#CHDCGIFF[To Discover a Cluster When Multiple Instances in a
+* xref:#to-discover-a-cluster-when-multiple-instances-in-a-cluster-are-running-on-a-host[To Discover a Cluster When Multiple Instances in a
 Cluster are Running on a Host]
-* xref:#CHDIGFCG[To Discover a Cluster When Each Instance in a Cluster
+* xref:#to-discover-a-cluster-when-each-instance-in-a-cluster-is-running-on-a-different-host[To Discover a Cluster When Each Instance in a Cluster
 Is Running on a Different Host]
 
 [[CHDCGIFF]][[GSHAG486]][[to-discover-a-cluster-when-multiple-instances-in-a-cluster-are-running-on-a-host]]
@@ -592,7 +592,7 @@ locate a {productName} instance or the DAS in the cluster.
 2. Create a system property to represent the port number of the port on
 which the DAS listens for messages from GMS for the cluster.
 +
-Use the link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand for this
+Use the link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`] subcommand for this
 purpose.
 +
 [source]
@@ -631,7 +631,7 @@ cluster-name::
 +
 [NOTE]
 ====
-For complete instructions for creating a cluster, see xref:#gkqdm[To Create a Cluster].
+For complete instructions for creating a cluster, see xref:#to-create-a-cluster[To Create a Cluster].
 ====
 
 5. When you add each instance to the cluster, set the system property
@@ -667,8 +667,8 @@ instance-name::
 For full instructions for adding an instance to a cluster, see the
 following sections:
 
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 ====
 
 
@@ -740,10 +740,10 @@ Command create-local-instance executed successfully.
 
 See Also
 
-* link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
-* xref:#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`(1)]
+* xref:#to-create-a-cluster[To Create a Cluster]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
 [[CHDIGFCG]][[GSHAG489]][[to-discover-a-cluster-when-each-instance-in-a-cluster-is-running-on-a-different-host]]
 
@@ -809,7 +809,7 @@ cluster-name::
 
 [NOTE]
 ====
-For complete instructions for creating a cluster, see xref:#gkqdm[To Create a Cluster].
+For complete instructions for creating a cluster, see xref:#to-create-a-cluster[To Create a Cluster].
 ====
 
 
@@ -856,14 +856,14 @@ Next Steps
 After creating the cluster, add instances to the cluster as explained in
 the following sections:
 
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
 See Also
 
-* xref:#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* xref:#to-create-a-cluster[To Create a Cluster]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
 [[gjdlw]][[GSHAG00266]][[using-the-multi-homing-feature-with-gms]]
 
@@ -964,9 +964,9 @@ about clusters, and delete clusters that are no longer required.
 
 The following topics are addressed here:
 
-* xref:#gkqdm[To Create a Cluster]
-* xref:#gkqdn[To List All Clusters in a Domain]
-* xref:#gkqcp[To Delete a Cluster]
+* xref:#to-create-a-cluster[To Create a Cluster]
+* xref:#to-list-all-clusters-in-a-domain[To List All Clusters in a Domain]
+* xref:#to-delete-a-cluster[To Delete a Cluster]
 
 [[gkqdm]][[GSHAG00103]][[to-create-a-cluster]]
 
@@ -982,17 +982,17 @@ cluster, the DAS and the cluster must be restarted to apply the changes.
 
 When you create a cluster, {productName} automatically creates a
 Message Queue cluster for the {productName} cluster. For more
-information about Message Queue clusters, see link:jms.html#abdbx[Using
+information about Message Queue clusters, see link:jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using
 Message Queue Broker Clusters With {productName}].
 
 Before You Begin
 
 If the cluster is to reference an existing named configuration, ensure
 that the configuration exists. For more information, see
-link:named-configurations.html#abdjr[To Create a Named Configuration]. If
+link:named-configurations.html#to-create-a-named-configuration[To Create a Named Configuration]. If
 you are using a named configuration to preconfigure GMS settings, ensure
 that these settings have the required values in the named configuration.
-For more information, see xref:#gkoac[To Preconfigure Nondefault GMS
+For more information, see xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS
 Configuration Settings].
 
 If you are configuring the cluster's GMS settings when you create the
@@ -1020,7 +1020,7 @@ Run the `create-cluster` subcommand.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-cluster, see the link:reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)] help page.
+cluster, see the link:reference-manual/create-cluster.html#create-cluster[`create-cluster`(1)] help page.
 ====
 * If multicast transport is available, run the `create-cluster`
 subcommand as follows:
@@ -1055,7 +1055,7 @@ max-iterations::
   message for GMS events can experience before the message is discarded.
 discovery-instances::
   Instances to use for discovering the cluster. For more information,
-  see xref:#CHDGAIBJ[Discovering a Cluster When Multicast Transport Is
+  see xref:#discovering-a-cluster-when-multicast-transport-is-unavailable[Discovering a Cluster When Multicast Transport Is
   Unavailable].
 gms-port::
   The port number of the port on which the cluster listens for messages
@@ -1134,16 +1134,16 @@ Next Steps
 After creating a cluster, you can add {productName} instances to the
 cluster as explained in the following sections:
 
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
 See Also
 
-* link:named-configurations.html#abdjr[To Create a Named Configuration]
-* xref:#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* link:jms.html#abdbx[Using Message Queue Broker Clusters With {productName}]
-* link:reference-manual/create-cluster.html#GSRFM00017[`create-cluster`(1)]
-* link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`(1)]
+* link:named-configurations.html#to-create-a-named-configuration[To Create a Named Configuration]
+* xref:#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* link:jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}]
+* link:reference-manual/create-cluster.html#create-cluster[`create-cluster`(1)]
+* link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1161,7 +1161,7 @@ about existing clusters in a domain.
 1. Ensure that the DAS is running.
 +
 Remote subcommands require a running server.
-2. Run the link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`] subcommand.
+2. Run the link:reference-manual/list-clusters.html#list-clusters[`list-clusters`] subcommand.
 +
 [source]
 ----
@@ -1196,7 +1196,7 @@ Command list-clusters executed successfully.
 
 See Also
 
-link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
+link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-clusters` at the command line.
@@ -1217,14 +1217,14 @@ Before You Begin
 Ensure that following prerequisites are met:
 
 * The cluster that you are deleting is stopped. For information about
-how to stop a cluster, see link:instances.html#gkqcl[To Stop a Cluster].
+how to stop a cluster, see link:instances.html#to-stop-a-cluster[To Stop a Cluster].
 * The cluster that you are deleting contains no {productName}
 instances. For information about how to remove instances from a cluster,
 see the following sections:
 
-** link:instances.html#gkqcw[To Delete an Instance Centrally]
+** link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
 
-** link:instances.html#gkqed[To Delete an Instance Locally]
+** link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
 
 1. Ensure that the DAS is running.
 +
@@ -1245,7 +1245,7 @@ asadmin> list-instances cluster-name
 ----
 cluster-name::
   The name of the cluster that you are deleting.
-4. Run the link:reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`] subcommand.
+4. Run the link:reference-manual/delete-cluster.html#delete-cluster[`delete-cluster`] subcommand.
 +
 [source]
 ----
@@ -1274,12 +1274,12 @@ Command delete-cluster executed successfully.
 
 See Also
 
-* link:instances.html#gkqcl[To Stop a Cluster]
-* link:instances.html#gkqcw[To Delete an Instance Centrally]
-* link:instances.html#gkqed[To Delete an Instance Locally]
-* link:reference-manual/delete-cluster.html#GSRFM00068[`delete-cluster`(1)]
-* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:instances.html#to-stop-a-cluster[To Stop a Cluster]
+* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* link:reference-manual/delete-cluster.html#delete-cluster[`delete-cluster`(1)]
+* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

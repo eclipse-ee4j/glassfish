@@ -29,7 +29,7 @@ file-name
 The `import-sync-bundle` subcommand imports the configuration data of a
 clustered instance or standalone instance from an archive file that was
 created by the
-link:export-sync-bundle.html#export-sync-bundle-1[`export-sync-bundle`(1)]
+link:export-sync-bundle.html#export-sync-bundle[`export-sync-bundle`(1)]
 subcommand.
 
 You must run this subcommand on the host where the instance resides. To
@@ -127,6 +127,6 @@ Command import-sync-bundle executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:export-sync-bundle.html#export-sync-bundle-1[`export-sync-bundle`(1)]
+link:export-sync-bundle.html#export-sync-bundle[`export-sync-bundle`(1)]
 
 

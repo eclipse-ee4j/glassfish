@@ -134,7 +134,7 @@ Command create-javamail-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-javamail-resource.html#delete-javamail-resource-1[`delete-javamail-resource`(1)],
-link:list-javamail-resources.html#list-javamail-resources-1[`list-javamail-resources`(1)]
+link:delete-javamail-resource.html#delete-javamail-resource[`delete-javamail-resource`(1)],
+link:list-javamail-resources.html#list-javamail-resources[`list-javamail-resources`(1)]
 
 

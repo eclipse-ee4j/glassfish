@@ -20,14 +20,14 @@ chapter discusses Jakarta EE transactions and transaction support in the
 
 The following topics are addressed here:
 
-* xref:#giybi[Handling Transactions with Databases]
-* xref:#beaje[Handling Transactions with Enterprise Beans]
-* xref:#gknrh[Handling Transactions with the Java Message Service]
-* xref:#gaxit[The Transaction Manager, the Transaction Synchronization
+* xref:#handling-transactions-with-databases[Handling Transactions with Databases]
+* xref:#handling-transactions-with-enterprise-beans[Handling Transactions with Enterprise Beans]
+* xref:#handling-transactions-with-the-java-message-service[Handling Transactions with the Java Message Service]
+* xref:#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the Transaction Synchronization
 Registry, and `UserTransaction`]
 
 For more information about the Java Transaction API (JTA) and Java
-Transaction Service (JTS), see "link:administration-guide/transactions.html#GSADG00022[Administering
+Transaction Service (JTS), see "link:administration-guide/transactions.html#ablsn[Administering
 Transactions]" in {productName} Administration
 Guide and the following sites:
 `http://www.oracle.com/technetwork/java/javaee/jta/index.html` and
@@ -43,8 +43,8 @@ in The Jakarta EE Tutorial.
 
 The following topics are addressed here:
 
-* xref:#beamv[Using JDBC Transaction Isolation Levels]
-* xref:#beamu[Using Non-Transactional Connections]
+* xref:#using-jdbc-transaction-isolation-levels[Using JDBC Transaction Isolation Levels]
+* xref:#using-non-transactional-connections[Using Non-Transactional Connections]
 
 [[beamv]][[GSDVG00511]][[using-jdbc-transaction-isolation-levels]]
 
@@ -101,7 +101,7 @@ Note that you cannot call `setTransactionIsolation` during a
 transaction.
 
 You can set the default transaction isolation level for a JDBC
-connection pool. For details, see "link:administration-guide/jdbc.html#GSADG00420[To Create a JDBC
+connection pool. For details, see "link:administration-guide/jdbc.html#to-create-a-jdbc-connection-pool[To Create a JDBC
 Connection Pool]" in {productName} Administration
 Guide.
 
@@ -223,10 +223,10 @@ EJB servers from different vendors.
 
 The following topics are addressed here:
 
-* xref:#beajf[Flat Transactions]
-* xref:#beajg[Global and Local Transactions]
-* xref:#beajh[Commit Options]
-* xref:#beaht[Bean-Level Container-Managed Transaction Timeouts]
+* xref:#flat-transactions[Flat Transactions]
+* xref:#global-and-local-transactions[Global and Local Transactions]
+* xref:#commit-options[Commit Options]
+* xref:#bean-level-container-managed-transaction-timeouts[Bean-Level Container-Managed Transaction Timeouts]
 
 [[beajf]][[GSDVG00513]][[flat-transactions]]
 
@@ -250,7 +250,7 @@ fewer commercial database systems.
 Both local and global transactions are demarcated using the
 javax.transaction.UserTransaction interface, which the client must use.
 Local transactions bypass the XA commit protocol and are faster. For
-more information, see xref:#gaxit[The Transaction Manager, the
+more information, see xref:#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the
 Transaction Synchronization Registry, and `UserTransaction`].
 
 [[beajh]][[GSDVG00515]][[commit-options]]
@@ -329,8 +329,8 @@ if the bean joins a client transaction.
 
 The following topics are addressed here:
 
-* xref:#beaoq[Transactions and Non-Persistent Messages]
-* xref:#gdyya[Using the ConfigurableTransactionSupport Interface]
+* xref:#transactions-and-non-persistent-messages[Transactions and Non-Persistent Messages]
+* xref:#using-the-configurabletransactionsupport-interface[Using the ConfigurableTransactionSupport Interface]
 
 [[beaoq]][[GSDVG00517]][[transactions-and-non-persistent-messages]]
 
@@ -374,7 +374,7 @@ the `java:comp/``UserTransaction` JNDI name or inject it using the
 Accessing a `DataSource` using the `Synchronization.beforeCompletion()`
 method requires setting Allow Non Component Callers to `true`. The
 default is `false`. For more information about non-component callers,
-see link:jdbc.html#gavro[Allowing Non-Component Callers].
+see link:jdbc.html#allowing-non-component-callers[Allowing Non-Component Callers].
 
 If possible, you should use the
 javax.transaction.TransactionSynchronizationRegistry interface instead

@@ -80,6 +80,6 @@ Command delete-profiler executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-profiler.html#create-profiler-1[`create-profiler`(1)]
+link:create-profiler.html#create-profiler[`create-profiler`(1)]
 
 

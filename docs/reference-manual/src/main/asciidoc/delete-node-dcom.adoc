@@ -35,20 +35,20 @@ the type of the node:
 
 * A node that is enabled for communication over secure shell (SSH) must
 be deleted by using the
-link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)] subcommand.
+link:delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)] subcommand.
 * A node that is not enabled for communication must be deleted by using the
-link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)] subcommand.
+link:delete-node-config.html#delete-node-config[`delete-node-config`(1)] subcommand.
 
 To determine whether a node is enabled for communication over DCOM, use
-the link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
+the link:list-nodes.html#list-nodes[`list-nodes`(1)] subcommand.
 
 No {productName} instances must reside on the node that is being
 deleted. Otherwise, the subcommand fails. Before running this
 subcommand, delete any instances that reside on the node by using, for
 example, the
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)]
+link:delete-instance.html#delete-instance[`delete-instance`(1)]
 subcommand or the
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)] subcommand.
+link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)] subcommand.
 
 This subcommand is supported in remote mode only.
 
@@ -126,14 +126,14 @@ Command delete-node-dcom executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)],
-link:delete-node-ssh.html#delete-node-ssh-1[`delete-node-ssh`(1)],
-link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)]
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:delete-instance.html#delete-instance[`delete-instance`(1)],
+link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)],
+link:delete-node-config.html#delete-node-config[`delete-node-config`(1)],
+link:delete-node-ssh.html#delete-node-ssh[`delete-node-ssh`(1)],
+link:install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)],
+link:list-nodes.html#list-nodes[`list-nodes`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom[`uninstall-node-dcom`(1)],
+link:update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)]
 
 

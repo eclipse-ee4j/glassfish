@@ -158,7 +158,7 @@ Command copy-config executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-config.html#delete-config-1[`delete-config`(1)],
-link:list-configs.html#list-configs-1[`list-configs`(1)]
+link:delete-config.html#delete-config[`delete-config`(1)],
+link:list-configs.html#list-configs[`list-configs`(1)]
 
 

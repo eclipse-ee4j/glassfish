@@ -110,8 +110,8 @@ Command create-connector-security-map executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-connector-security-map.html#delete-connector-security-map-1[`delete-connector-security-map`(1)],
-link:list-connector-security-maps.html#list-connector-security-maps-1[`list-connector-security-maps`(1)],
-link:update-connector-security-map.html#update-connector-security-map-1[`update-connector-security-map`(1)]
+link:delete-connector-security-map.html#delete-connector-security-map[`delete-connector-security-map`(1)],
+link:list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`(1)],
+link:update-connector-security-map.html#update-connector-security-map[`update-connector-security-map`(1)]
 
 

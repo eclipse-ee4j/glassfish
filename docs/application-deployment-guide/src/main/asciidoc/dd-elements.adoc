@@ -28,7 +28,7 @@ a physical JMS destination. Matches and overrides the
 
 ==== Superelements
 
-xref:#beaus[`mdb-resource-adapter`] (`glassfish-ejb-jar.xml`)
+xref:#mdb-resource-adapter[`mdb-resource-adapter`] (`glassfish-ejb-jar.xml`)
 
 [[fvynj]][[GSDPG00336]][[subelements]]
 
@@ -46,14 +46,14 @@ Table C-1 `activation-config` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Specifies a text description of the activation
 configuration.
 
 a|
-xref:#beaqt[`activation-config-property`]
+xref:#activation-config-property[`activation-config-property`]
 
 
  |one or more |Specifies an activation configuration property.
@@ -70,7 +70,7 @@ Specifies the name and value of an activation configuration property.
 
 ==== Superelements
 
-xref:#beaqs[`activation-config`] (`glassfish-ejb-jar.xml`)
+xref:#activation-config[`activation-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvyns]][[GSDPG00338]][[subelements-1]]
 
@@ -88,12 +88,12 @@ Table C-2 `activation-config-property` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaqu[`activation-config-property-name`]
+xref:#activation-config-property-name[`activation-config-property-name`]
 
 
  |only one |Specifies the name of an activation configuration property.
 a|
-xref:#beaqv[`activation-config-property-value`]
+xref:#activation-config-property-value[`activation-config-property-value`]
 
 
  |only one |Specifies the value of an activation configuration property.
@@ -110,7 +110,7 @@ Specifies the name of an activation configuration property.
 
 ==== Superelements
 
-xref:#beaqt[`activation-config-property`] (`glassfish-ejb-jar.xml`)
+xref:#activation-config-property[`activation-config-property`] (`glassfish-ejb-jar.xml`)
 
 [[fvyok]][[GSDPG00340]][[subelements-2]]
 
@@ -128,7 +128,7 @@ Specifies the value of an activation configuration property.
 
 ==== Superelements
 
-xref:#beaqt[`activation-config-property`] (`glassfish-ejb-jar.xml`)
+xref:#activation-config-property[`activation-config-property`] (`glassfish-ejb-jar.xml`)
 
 [[fvyoz]][[GSDPG00342]][[subelements-3]]
 
@@ -148,7 +148,7 @@ Defines an administered object for an inbound resource adapter.
 [[superelements-4]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG841]]
 
@@ -165,11 +165,11 @@ Table C-3 `admin-object-resource` Subelements
 [width="100%",cols="25%,12%,63%",options="header",]
 |===
 |Element |Required |Description
-a|xref:#beaso[`description`]
+a|xref:#description[`description`]
 |zero or one
 |Contains a text description of this element.
 
-a|xref:#beavx[`property`] (with attributes)
+a|xref:#property-with-attributes[`property`] (with attributes)
 |zero or more
 |Specifies a property or a variable.
 |===
@@ -233,7 +233,7 @@ Specifies the authentication mechanism used to authenticate the client.
 
 ==== Superelements
 
-xref:#beato[`ior-security-config`] (`glassfish-ejb-jar.xml`)
+xref:#ior-security-config[`ior-security-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvyom]][[GSDPG00344]][[subelements-5]]
 
@@ -249,20 +249,20 @@ Table C-5 `as-context` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaqx[`auth-method`]
+xref:#auth-method[`auth-method`]
 
 
  |only one |Specifies the authentication method. The only supported
 value is `USERNAME_PASSWORD`.
 
 a|
-xref:#beawi[`realm`]
+xref:#realm[`realm`]
 
 
  |only one |Specifies the realm in which the user is authenticated.
 
 a|
-xref:#beawq[`required`]
+xref:#required[`required`]
 
 
  |only one |Specifies whether the authentication method specified in the
@@ -285,7 +285,7 @@ name is `foo`.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`)
 
 [[gjizg]][[GSDPG00346]][[subelements-6]]
 
@@ -299,10 +299,10 @@ none - contains data
 
 Specifies the authentication method.
 
-If the parent element is xref:#beaqw[`as-context`], the only supported
+If the parent element is xref:#as-context[`as-context`], the only supported
 value is `USERNAME_PASSWORD`.
 
-If the parent element is xref:#beauk[`login-config`], specifies the
+If the parent element is xref:#login-config[`login-config`], specifies the
 authentication mechanism for the web service endpoint. As a prerequisite
 to gaining access to any web resources protected by an authorization
 constraint, a user must be authenticated using the configured mechanism.
@@ -311,8 +311,8 @@ constraint, a user must be authenticated using the configured mechanism.
 
 ==== Superelements
 
-xref:#beauk[`login-config`] (`glassfish-web.xml`),
-xref:#beaqw[`as-context`] (`glassfish-ejb-jar.xml`)
+xref:#login-config[`login-config`] (`glassfish-web.xml`),
+xref:#as-context[`as-context`] (`glassfish-ejb-jar.xml`)
 
 [[fvyop]][[GSDPG00348]][[subelements-7]]
 
@@ -328,13 +328,13 @@ JAAS is available on the ACC. Defines the optional configuration for a
 JAAS authentication realm. Authentication realms require
 provider-specific properties, which vary depending on what a particular
 implementation needs. For more information about how to define realms,
-see "link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+see "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 [[fvyot]][[GSDPG00349]][[superelements-8]]
 
 ==== Superelements
 
-xref:#bearr[`client-container`] (`sun-acc.xml`)
+xref:#client-container[`client-container`] (`sun-acc.xml`)
 
 [[fvyor]][[GSDPG00350]][[subelements-8]]
 
@@ -350,7 +350,7 @@ Table C-6 `auth-realm` subelement
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -393,7 +393,7 @@ Here is an example of the default file realm:
 Which properties an `auth-realm` element uses depends on the value of
 the `auth-realm` element's `name` attribute. The file realm uses `file`
 and `jaas-context` properties. Other realms use different properties.
-See "link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+See "link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 [[giyjv]][[GSDPG00094]][[backend-principal]]
 
@@ -408,7 +408,7 @@ Information System (EIS).
 [[superelements-9]]
 ==== Superelements
 
-xref:#giyhy[`security-map`] (`glassfish-resources.xml`)
+xref:#security-map[`security-map`] (`glassfish-resources.xml`)
 
 [[GSDPG850]]
 
@@ -450,7 +450,7 @@ stateful session beans.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyon]][[GSDPG00354]][[subelements-10]]
 
@@ -466,19 +466,19 @@ Table C-9 `bean-cache` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beauo[`max-cache-size`]
+xref:#max-cache-size[`max-cache-size`]
 
 
  |zero or one |Specifies the maximum number of beans allowable in cache.
 
 a|
-xref:#beatp[`is-cache-overflow-allowed`]
+xref:#is-cache-overflow-allowed[`is-cache-overflow-allowed`]
 
 
  |zero or one |Deprecated.
 
 a|
-xref:#bearg[`cache-idle-timeout-in-seconds`]
+xref:#cache-idle-timeout-in-seconds[`cache-idle-timeout-in-seconds`]
 
 
  |zero or one |Specifies the maximum time that a stateful session bean
@@ -486,7 +486,7 @@ or entity bean is allowed to be idle in cache before being passivated.
 Default value is 10 minutes (600 seconds).
 
 a|
-xref:#beawl[`removal-timeout-in-seconds`]
+xref:#removal-timeout-in-seconds[`removal-timeout-in-seconds`]
 
 
  |zero or one |Specifies the amount of time a bean remains before being
@@ -494,7 +494,7 @@ removed. If `removal-timeout-in-seconds` is less than `idle-timeout`,
 the bean is removed without being passivated.
 
 a|
-xref:#beaws[`resize-quantity`]
+xref:#resize-quantity[`resize-quantity`]
 
 
  |zero or one |Specifies the number of beans to be created if the pool
@@ -502,7 +502,7 @@ is empty (subject to the `max-pool-size` limit). Values are from 0 to
 MAX_INTEGER.
 
 a|
-xref:#beayp[`victim-selection-policy`]
+xref:#victim-selection-policy[`victim-selection-policy`]
 
 
  |zero or one |Specifies the algorithm that must be used by the
@@ -537,7 +537,7 @@ and message-driven bean.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvypd]][[GSDPG00357]][[subelements-11]]
 
@@ -553,14 +553,14 @@ Table C-10 `bean-pool` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxt[`steady-pool-size`]
+xref:#steady-pool-size[`steady-pool-size`]
 
 
  |zero or one |Specifies the initial and minimum number of beans
 maintained in the pool. Default is 32.
 
 a|
-xref:#beaws[`resize-quantity`]
+xref:#resize-quantity[`resize-quantity`]
 
 
  |zero or one |Specifies the number of beans to be created if the pool
@@ -568,20 +568,20 @@ is empty (subject to the `max-pool-size` limit). Values are from 0 to
 MAX_INTEGER.
 
 a|
-xref:#beaup[`max-pool-size`]
+xref:#max-pool-size[`max-pool-size`]
 
 
  |zero or one |Specifies the maximum number of beans in the pool. Values
 are from 0 to MAX_INTEGER. Default is to the EJB container value or 60.
 
 a|
-xref:#beauq[`max-wait-time-in-millis`]
+xref:#max-wait-time-in-millis[`max-wait-time-in-millis`]
 
 
  |zero or one |Deprecated.
 
 a|
-xref:#beavr[`pool-idle-timeout-in-seconds`]
+xref:#pool-idle-timeout-in-seconds[`pool-idle-timeout-in-seconds`]
 
 
  |zero or one |Specifies the maximum time that a bean is allowed to be
@@ -614,7 +614,7 @@ Configures caching for web application components.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvypl]][[GSDPG00360]][[subelements-12]]
 
@@ -630,28 +630,28 @@ Table C-11 `cache` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beare[`cache-helper`]
+xref:#cache-helper[`cache-helper`]
 
 
  |zero or more |Specifies a custom class that implements the CacheHelper
 interface.
 
 a|
-xref:#beasm[`default-helper`]
+xref:#default-helper[`default-helper`]
 
 
  |zero or one |Allows you to change the properties of the default,
-built-in xref:#beare[`cache-helper`] class.
+built-in xref:#cache-helper[`cache-helper`] class.
 
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a cache property, which has a name and a
 value.
 
 a|
-xref:#bearh[`cache-mapping`]
+xref:#cache-mapping[`cache-mapping`]
 
 
  |zero or more |Maps a URL pattern or a servlet name to its cacheability
@@ -677,7 +677,7 @@ entries the cache can contain. Must be a positive integer.
 
 |`timeout-in-seconds` |`30` |(optional) Specifies the maximum amount of
 time in seconds that an entry can remain in the cache after it is
-created or refreshed. Can be overridden by a xref:#beayg[`timeout`]
+created or refreshed. Can be overridden by a xref:#timeout[`timeout`]
 element.
 
 |`enabled` |`true` |(optional) Determines whether servlet and JSP
@@ -700,7 +700,7 @@ Table C-13 `cache` Properties
 |Property |Default |Description
 |`cacheClassName` |`com.sun.appserv.web.cache.LruCache` |Specifies the
 fully qualified name of the class that implements the cache
-functionality. See xref:#fvyrn[Cache Class Names] for possible values.
+functionality. See xref:#cache-class-names[Cache Class Names] for possible values.
 
 |`MultiLRUSegmentSize` |`4096` |Specifies the number of entries in a
 segment of the cache table that should have its own LRU (least recently
@@ -754,7 +754,7 @@ com.sun.appserv.web.cache.CacheHelper interface.
 
 ==== Superelements
 
-xref:#beard[`cache`] (`glassfish-web.xml`)
+xref:#cache[`cache`] (`glassfish-web.xml`)
 
 [[fvyru]][[GSDPG00365]][[subelements-13]]
 
@@ -772,7 +772,7 @@ Table C-15 `cache-helper` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -794,7 +794,7 @@ Table C-16 `cache-helper` Attributes
 |===
 |Attribute |Default |Description
 |`name` |`default` |Specifies a unique name for the helper class, which
-is referenced in the xref:#bearh[`cache-mapping`] element.
+is referenced in the xref:#cache-mapping[`cache-mapping`] element.
 
 |`class-name` |none |Specifies the fully qualified class name of the
 cache helper, which must implement the com.sun.appserv.web.CacheHelper
@@ -806,14 +806,14 @@ interface.
 
 === `cache-helper-ref`
 
-Specifies the `name` of the xref:#beare[`cache-helper`] used by the
-parent xref:#bearh[`cache-mapping`] element.
+Specifies the `name` of the xref:#cache-helper[`cache-helper`] used by the
+parent xref:#cache-mapping[`cache-mapping`] element.
 
 [[fvypq]][[GSDPG00367]][[superelements-14]]
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvyqs]][[GSDPG00368]][[subelements-14]]
 
@@ -836,7 +836,7 @@ Applies to stateful session beans and entity beans.
 
 ==== Superelements
 
-xref:#beara[`bean-cache`] (`glassfish-ejb-jar.xml`)
+xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
 [[fvyqo]][[GSDPG00370]][[subelements-15]]
 
@@ -854,7 +854,7 @@ Maps a URL pattern or a servlet name to its cacheability constraints.
 
 ==== Superelements
 
-xref:#beard[`cache`] (`glassfish-web.xml`)
+xref:#cache[`cache`] (`glassfish-web.xml`)
 
 [[fvyqn]][[GSDPG00372]][[subelements-16]]
 
@@ -872,30 +872,30 @@ Table C-17 `cache-mapping` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxo[`servlet-name`]
+xref:#servlet-name[`servlet-name`]
 
 
  |requires one `servlet-name` or `url-pattern` |Contains the name of a
 servlet.
 
 a|
-xref:#beayl[`url-pattern`]
+xref:#url-pattern[`url-pattern`]
 
 
  |requires one `servlet-name` or `url-pattern` |Contains a servlet URL
 pattern for which caching is enabled.
 
 a|
-xref:#bearf[`cache-helper-ref`]
+xref:#cache-helper-ref[`cache-helper-ref`]
 
 
  |required if `dispatcher`, `timeout`, `refresh-field`, `http-method`,
 `key-field`, and `constraint-field` are not used |Contains the `name` of
-the xref:#beare[`cache-helper`] used by the parent `cache-mapping`
+the xref:#cache-helper[`cache-helper`] used by the parent `cache-mapping`
 element.
 
 a|
-xref:#beasp[`dispatcher`]
+xref:#dispatcher[`dispatcher`]
 
 
  |zero or one if `cache-helper-ref` is not used |Contains a
@@ -903,15 +903,15 @@ comma-separated list of `RequestDispatcher` methods for which caching is
 enabled.
 
 a|
-xref:#beayg[`timeout`]
+xref:#timeout[`timeout`]
 
 
  |zero or one if `cache-helper-ref` is not used |Contains the
-xref:#bearh[`cache-mapping`] specific maximum amount of time in seconds
+xref:#cache-mapping[`cache-mapping`] specific maximum amount of time in seconds
 that an entry can remain in the cache after it is created or refreshed.
 
 a|
-xref:#beawj[`refresh-field`]
+xref:#refresh-field[`refresh-field`]
 
 
  |zero or one if `cache-helper-ref` is not used |Specifies a field that
@@ -919,21 +919,21 @@ gives the application component a programmatic way to refresh a cached
 entry.
 
 a|
-xref:#beatk[`http-method`]
+xref:#http-method[`http-method`]
 
 
  |zero or more if `cache-helper-ref` is not used |Contains an HTTP
 method that is eligible for caching.
 
 a|
-xref:#beatz[`key-field`]
+xref:#key-field[`key-field`]
 
 
  |zero or more if `cache-helper-ref` is not used |Specifies a component
 of the key used to look up and extract cache entries.
 
 a|
-xref:#bease[`constraint-field`]
+xref:#constraint-field[`constraint-field`]
 
 
  |zero or more if `cache-helper-ref` is not used |Specifies a
@@ -954,7 +954,7 @@ JAX-RPC `Call` implementation.
 
 ==== Superelements
 
-xref:#beavt[`port-info`], xref:#beaxk[`service-ref`]
+xref:#port-info[`port-info`], xref:#service-ref[`service-ref`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
@@ -974,12 +974,12 @@ Table C-18 `call-property` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavf[`name`]
+xref:#name[`name`]
 
 
  |only one |Specifies the name of the entity.
 a|
-xref:#beayo[`value`]
+xref:#value[`value`]
 
 
  |only one |Specifies the value of the entity.
@@ -997,7 +997,7 @@ values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
 ==== Superelements
 
-xref:#beaxb[`sas-context`] (`glassfish-ejb-jar.xml`)
+xref:#sas-context[`sas-context`] (`glassfish-ejb-jar.xml`)
 
 [[fvyrb]][[GSDPG00376]][[subelements-18]]
 
@@ -1016,7 +1016,7 @@ values are ignored.
 
 ==== Superelements
 
-xref:#beaxf[`security`] (`sun-acc.xml`)
+xref:#security[`security`] (`sun-acc.xml`)
 
 [[fvyre]][[GSDPG00378]][[subelements-19]]
 
@@ -1055,7 +1055,7 @@ This element is not implemented. Do not use.
 
 ==== Superelements
 
-xref:#beasd[`consistency`] (`sun-cmp-mappings.xml`)
+xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
 [[bearm]][[GSDPG00106]][[check-modified-at-commit]]
 
@@ -1068,7 +1068,7 @@ time.
 
 ==== Superelements
 
-xref:#beasd[`consistency`] (`sun-cmp-mappings.xml`)
+xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
 [[fvyqz]][[GSDPG00382]][[subelements-20]]
 
@@ -1095,7 +1095,7 @@ table. You must provide appropriate update triggers for this column.
 
 ==== Superelements
 
-xref:#beasd[`consistency`] (`sun-cmp-mappings.xml`)
+xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
 [[fvypp]][[GSDPG00384]][[subelements-21]]
 
@@ -1113,7 +1113,7 @@ Table C-20 `check-version-of-accessed-instances` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#bearz[`column-name`]
+xref:#column-name[`column-name`]
 
 
  |only one |Specifies the name of the version column.
@@ -1126,14 +1126,14 @@ xref:#bearz[`column-name`]
 
 Specifies that the stateful session bean state is checkpointed, or
 persisted, after the specified methods are executed. The
-`availability-enabled` attribute of the parent xref:#beass[`ejb`]
+`availability-enabled` attribute of the parent xref:#ejb[`ejb`]
 element must be set to `true`.
 
 [[fvypr]][[GSDPG00385]][[superelements-23]]
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyqe]][[GSDPG00386]][[subelements-22]]
 
@@ -1151,7 +1151,7 @@ Table C-21 `checkpoint-at-end-of-method` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beauz[`method`]
+xref:#method[`method`]
 
 
  |one or more |Specifies a bean method.
@@ -1163,13 +1163,13 @@ xref:#beauz[`method`]
 === `checkpointed-methods`
 
 Deprecated. Supported for backward compatibility. Use
-xref:#bearo[`checkpoint-at-end-of-method`] instead.
+xref:#checkpoint-at-end-of-method[`checkpoint-at-end-of-method`] instead.
 
 [[fvyrk]][[GSDPG00387]][[superelements-24]]
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[bearq]][[GSDPG00110]][[class-loader]]
 
@@ -1181,7 +1181,7 @@ Configures the class loader for the web module.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvyrh]][[GSDPG00389]][[subelements-23]]
 
@@ -1199,7 +1199,7 @@ Table C-22 `class-loader` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -1296,7 +1296,7 @@ are ignored by the class loader.
 Defines the {productName} specific configuration for the application
 client container. This is the root element; there can only be one
 `client-container` element in a `sun-acc.xml` file. See
-link:dd-files.html#beaqp[The sun-acc.xml File].
+link:dd-files.html#GSDPG00082[The sun-acc.xml File].
 
 [[fvypv]][[GSDPG00392]][[superelements-26]]
 
@@ -1320,7 +1320,7 @@ Table C-25 `client-container` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaye[`target-server`]
+xref:#target-server[`target-server`]
 
 
  |one or more a|
@@ -1336,34 +1336,34 @@ A listener or endpoint is in the form host`:`port, where the host is an
 IP address or host name, and the port specifies the port number.
 
 a|
-xref:#beaqy[`auth-realm`]
+xref:#auth-realm[`auth-realm`]
 
 
  |zero or one |Specifies the optional configuration for JAAS
 authentication realm.
 
 a|
-xref:#bears[`client-credential`]
+xref:#client-credential[`client-credential`]
 
 
  |zero or one |Specifies the default client credential that is sent to
 the server.
 
 a|
-xref:#beauj[`log-service`]
+xref:#log-service[`log-service`]
 
 
  |zero or one |Specifies the default log file and the severity level of
 the message.
 
 a|
-xref:#beauy[`message-security-config`]
+xref:#message-security-config[`message-security-config`]
 
 
  |zero or more |Specifies configurations for message security providers.
 
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -1411,7 +1411,7 @@ Table C-27 `client-container` Properties
 list of one or more IIOP endpoints used for load balancing. An IIOP
 endpoint is in the form host`:`port, where the host is an IP address or
 host name, and the port specifies the port number. Deprecated. Use
-xref:#beaye[`target-server`] elements instead.
+xref:#target-server[`target-server`] elements instead.
 |===
 
 
@@ -1428,7 +1428,7 @@ side.
 
 ==== Superelements
 
-xref:#bearr[`client-container`] (`sun-acc.xml`)
+xref:#client-container[`client-container`] (`sun-acc.xml`)
 
 [[fvyqd]][[GSDPG00397]][[subelements-25]]
 
@@ -1446,7 +1446,7 @@ Table C-28 `client-credential` subelement
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -1491,7 +1491,7 @@ and EJB 2.1 beans.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyqw]][[GSDPG00400]][[subelements-26]]
 
@@ -1508,25 +1508,25 @@ Table C-30 `cmp` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaun[`mapping-properties`]
+xref:#mapping-properties[`mapping-properties`]
 
 
  |zero or one |This element is not implemented.
 
 a|
-xref:#beatq[`is-one-one-cmp`]
+xref:#is-one-one-cmp[`is-one-one-cmp`]
 
 
  |zero or one |This element is not implemented.
 
 a|
-xref:#beavk[`one-one-finders`]
+xref:#one-one-finders[`one-one-finders`]
 
 
  |zero or one |Describes the finders for CMP 1.1 beans.
 
 a|
-xref:#beavu[`prefetch-disabled`]
+xref:#prefetch-disabled[`prefetch-disabled`]
 
 
  |zero or one |Disables prefetching of entity bean states for the
@@ -1550,7 +1550,7 @@ order they appear. There is one `cmp-field-mapping` element for each
 
 ==== Superelements
 
-xref:#beasy[`entity-mapping`] (`sun-cmp-mappings.xml`)
+xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvyra]][[GSDPG00402]][[subelements-27]]
 
@@ -1568,7 +1568,7 @@ Table C-31 `cmp-field-mapping` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beatd[`field-name`]
+xref:#field-name[`field-name`]
 
 
  |only one |Specifies the Java identifier of a field. This identifier
@@ -1576,7 +1576,7 @@ must match the value of the `field-name` subelement of the `cmp-field`
 that is being mapped.
 
 a|
-xref:#bearz[`column-name`]
+xref:#column-name[`column-name`]
 
 
  |one or more |Specifies the name of a column from the primary table, or
@@ -1584,13 +1584,13 @@ the qualified table name (TABLE.COLUMN) of a column from a secondary or
 related table.
 
 a|
-xref:#beawh[`read-only`]
+xref:#read-only[`read-only`]
 
 
  |zero or one |Specifies that a field is read-only.
 
 a|
-xref:#beatc[`fetched-with`]
+xref:#fetched-with[`fetched-with`]
 
 
  |zero or one |Specifies the fetch group for this CMP field's mapping.
@@ -1602,7 +1602,7 @@ xref:#beatc[`fetched-with`]
 === `cmp-resource`
 
 Specifies the database to be used for storing CMP beans. For more
-information about this element, see "link:application-development-guide/container_managed-persistence.html#GSDVG00154[Configuring the
+information about this element, see "link:application-development-guide/container_managed-persistence.html#configuring-the-cmp-resource[Configuring the
 CMP Resource]" in {productName} Application
 Development Guide.
 
@@ -1610,7 +1610,7 @@ Development Guide.
 
 ==== Superelements
 
-xref:#beasx[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
+xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
 [[fvyrf]][[GSDPG00404]][[subelements-28]]
 
@@ -1628,34 +1628,34 @@ Table C-32 `cmp-resource` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name` of a JDBC resource.
 
 a|
-xref:#beasn[`default-resource-principal`]
+xref:#default-resource-principal[`default-resource-principal`]
 
 
  |zero or one |Specifies the default runtime bindings of a resource
 reference.
 
 a|
-xref:#beavy[`property` (with subelements)]
+xref:#property-with-subelements[`property` (with subelements)]
 
 
  |zero or more |Specifies a property name and value. Used to configure
 `PersistenceManagerFactory` properties.
 
 a|
-xref:#beasi[`create-tables-at-deploy`]
+xref:#create-tables-at-deploy[`create-tables-at-deploy`]
 
 
  |zero or one |If `true`, specifies that database tables are created for
 beans that are automatically mapped by the EJB container.
 
 a|
-xref:#beasq[`drop-tables-at-undeploy`]
+xref:#drop-tables-at-undeploy[`drop-tables-at-undeploy`]
 
 
  |zero or one |If `true`, specifies that database tables that were
@@ -1663,14 +1663,14 @@ automatically created when the bean(s) were last deployed are dropped
 when the bean(s) are undeployed.
 
 a|
-xref:#beask[`database-vendor-name`]
+xref:#database-vendor-name[`database-vendor-name`]
 
 
  |zero or one |Specifies the name of the database vendor for which
 tables can be created.
 
 a|
-xref:#beaxd[`schema-generator-properties`]
+xref:#schema-generator-properties[`schema-generator-properties`]
 
 
  |zero or one |Specifies field-specific type mappings and allows you to
@@ -1691,7 +1691,7 @@ relationship can also participate in a fetch group.
 
 ==== Superelements
 
-xref:#beasy[`entity-mapping`] (`sun-cmp-mappings.xml`)
+xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvypu]][[GSDPG00406]][[subelements-29]]
 
@@ -1709,7 +1709,7 @@ Table C-33 `cmr-field-mapping` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#bearx[`cmr-field-name`]
+xref:#cmr-field-name[`cmr-field-name`]
 
 
  |only one |Specifies the Java identifier of a field. Must match the
@@ -1717,14 +1717,14 @@ value of the `cmr-field-name` subelement of the `cmr-field` that is
 being mapped.
 
 a|
-xref:#beasa[`column-pair`]
+xref:#column-pair[`column-pair`]
 
 
  |one or more |Specifies the pair of columns that determine the
 relationship between two database tables.
 
 a|
-xref:#beatc[`fetched-with`]
+xref:#fetched-with[`fetched-with`]
 
 
  |zero or one |Specifies the fetch group for this CMR field's
@@ -1744,7 +1744,7 @@ Specifies the Java identifier of a field. Must match the value of the
 
 ==== Superelements
 
-xref:#bearw[`cmr-field-mapping`] (`sun-cmp-mappings.xml`)
+xref:#cmr-field-mapping[`cmr-field-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvyry]][[GSDPG00408]][[subelements-30]]
 
@@ -1766,7 +1766,7 @@ This value is not used if the bean joins a client transaction.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvysc]][[GSDPG00410]][[subelements-31]]
 
@@ -1785,8 +1785,8 @@ table name (TABLE.COLUMN) of a column from a secondary or related table.
 
 ==== Superelements
 
-xref:#bearn[`check-version-of-accessed-instances`],
-xref:#bearu[`cmp-field-mapping`], xref:#beasa[`column-pair`]
+xref:#check-version-of-accessed-instances[`check-version-of-accessed-instances`],
+xref:#cmp-field-mapping[`cmp-field-mapping`], xref:#column-pair[`column-pair`]
 (`sun-cmp-mappings.xml`)
 
 [[fvysb]][[GSDPG00412]][[subelements-32]]
@@ -1809,7 +1809,7 @@ the second `column-name` names the column in the related table.
 
 ==== Superelements
 
-xref:#bearw[`cmr-field-mapping`], xref:#beaxe[`secondary-table`]
+xref:#cmr-field-mapping[`cmr-field-mapping`], xref:#secondary-table[`secondary-table`]
 (`sun-cmp-mappings.xml`)
 
 [[fvysg]][[GSDPG00414]][[subelements-33]]
@@ -1827,7 +1827,7 @@ Table C-34 `column-pair` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#bearz[`column-name`]
+xref:#column-name[`column-name`]
 
 
  |two |Specifies the name of a column from the primary table, or the
@@ -1855,7 +1855,7 @@ Commit option A is not supported for this {productName} release.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvysd]][[GSDPG00416]][[subelements-34]]
 
@@ -1880,8 +1880,8 @@ restrictions.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beaya[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
 [[gjjag]][[GSDPG00418]][[subelements-35]]
 
@@ -1900,7 +1900,7 @@ are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
 ==== Superelements
 
-xref:#beayh[`transport-config`] (`glassfish-ejb-jar.xml`)
+xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvysk]][[GSDPG00420]][[subelements-36]]
 
@@ -1920,7 +1920,7 @@ Defines a connector connection pool.
 [[superelements-39]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG880]]
 
@@ -1939,20 +1939,20 @@ Table C-35 `connector-connection-pool` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 
 a|
-xref:#giyhy[`security-map`]
+xref:#security-map[`security-map`]
 
 
  |zero or more |Maps the principal received during servlet or EJB
 authentication to the credentials accepted by the EIS.
 
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -1981,7 +1981,7 @@ Table C-36 `connector-connection-pool` Attributes
 |===
 |Attribute |Default |Description
 |`name` |none |Specifies the name of the connection pool. A
-xref:#giyhv[`connector-resource`] element's `pool-name` attribute refers
+xref:#connector-resource[`connector-resource`] element's `pool-name` attribute refers
 to this `name`.
 
 |`resource-adapter-name` |none |Specifies the name of the deployed
@@ -2212,7 +2212,7 @@ definition in a connector (resource adapter).
 [[superelements-40]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG887]]
 
@@ -2231,12 +2231,12 @@ Table C-38 `connector-resource` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -2262,7 +2262,7 @@ Table C-39 `connector-resource` Attributes
 |`jndi-name` |none |Specifies the JNDI name for the resource.
 
 |`pool-name` |none |Specifies the `name` of the associated
-xref:#giygu[`connector-connection-pool`].
+xref:#connector-connection-pool[`connector-connection-pool`].
 
 |`object-type` |`user` a|
 (optional) Defines the type of the resource. Allowed values are:
@@ -2290,7 +2290,7 @@ of the data in the bean.
 
 ==== Superelements
 
-xref:#beasy[`entity-mapping`] (`sun-cmp-mappings.xml`)
+xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvysl]][[GSDPG00422]][[subelements-39]]
 
@@ -2307,39 +2307,39 @@ Table C-40 `consistency` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavi[`none`]
+xref:#none[`none`]
 
 
  |exactly one subelement is required |No consistency checking occurs.
 
 a|
-xref:#bearm[`check-modified-at-commit`]
+xref:#check-modified-at-commit[`check-modified-at-commit`]
 
 
  |exactly one subelement is required |Checks concurrent modification of
 fields in modified beans at commit time.
 
 a|
-xref:#beauh[`lock-when-loaded`]
+xref:#lock-when-loaded[`lock-when-loaded`]
 
 
  |exactly one subelement is required |Obtains an exclusive lock when the
 data is loaded.
 
 a|
-xref:#bearl[`check-all-at-commit`]
+xref:#check-all-at-commit[`check-all-at-commit`]
 
 
  | + |This element is not implemented. Do not use.
 
 a|
-xref:#beaui[`lock-when-modified`]
+xref:#lock-when-modified[`lock-when-modified`]
 
 
  | + |This element is not implemented. Do not use.
 
 a|
-xref:#bearn[`check-version-of-accessed-instances`]
+xref:#check-version-of-accessed-instances[`check-version-of-accessed-instances`]
 
 
  |exactly one subelement is required |Checks the version column of the
@@ -2352,7 +2352,7 @@ modified beans.
 === `constraint-field`
 
 Specifies a cacheability constraint for the given
-xref:#beayl[`url-pattern`] or xref:#beaxo[`servlet-name`].
+xref:#url-pattern[`url-pattern`] or xref:#servlet-name[`servlet-name`].
 
 All `constraint-field` constraints must pass for a response to be
 cached. If there are `value` constraints, at least one of them must
@@ -2362,7 +2362,7 @@ pass.
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvyso]][[GSDPG00424]][[subelements-40]]
 
@@ -2380,7 +2380,7 @@ Table C-41 `constraint-field` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beasf[`constraint-field-value`]
+xref:#constraint-field-value[`constraint-field-value`]
 
 
  |zero or more |Contains a value to be matched to the input parameter
@@ -2411,11 +2411,11 @@ the input parameter is retrieved. Allowed values are
 
 |`cache-on-match` |`true` |(optional) If `true`, caches the response if
 matching succeeds. Overrides the same attribute in a
-xref:#beasf[`constraint-field-value`] subelement.
+xref:#constraint-field-value[`constraint-field-value`] subelement.
 
 |`cache-on-match-failure` |`false` |(optional) If `true`, caches the
 response if matching fails. Overrides the same attribute in a
-xref:#beasf[`constraint-field-value`] subelement.
+xref:#constraint-field-value[`constraint-field-value`] subelement.
 |===
 
 
@@ -2435,7 +2435,7 @@ matching is case sensitive. For example:
 
 ==== Superelements
 
-xref:#bease[`constraint-field`] (`glassfish-web.xml`)
+xref:#constraint-field[`constraint-field`] (`glassfish-web.xml`)
 
 [[fvyst]][[GSDPG00427]][[subelements-41]]
 
@@ -2486,7 +2486,7 @@ the `application.xml` or `web.xml` file.
 If the parent element is `java-web-start-access`, this element contains
 the context root for the Java Web Start enabled application client
 module. If none is specified, a default is generated; see
-xref:#gauax[`java-web-start-access`].
+xref:#java-web-start-access[`java-web-start-access`].
 
 If you are setting up load balancing, web module context roots must be
 unique within a server instance. See the link:ha-administration-guide.html#GSHAG[{productName} High Availability Administration Guide] for more
@@ -2496,9 +2496,9 @@ information about load balancing.
 
 ==== Superelements
 
-xref:#beayr[`web`] (`glassfish-application.xml`),
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#gauax[`java-web-start-access`]
+xref:#web[`web`] (`glassfish-application.xml`),
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
 [[fvysw]][[GSDPG00430]][[subelements-42]]
@@ -2528,7 +2528,7 @@ properties defined here.
 
 ==== Superelements
 
-xref:#beaxp[`session-config`] (`glassfish-web.xml`)
+xref:#session-config[`session-config`] (`glassfish-web.xml`)
 
 [[fvysz]][[GSDPG00432]][[subelements-43]]
 
@@ -2546,7 +2546,7 @@ Table C-44 `cookie-properties` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -2598,7 +2598,7 @@ the request that initiated the session.
 
 To set the `Secure` attribute of a `JSESSIONIDSSO` cookie, use the
 `ssoCookieSecure` `virtual-server` property. For details, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 |`cookieHttpOnly` |none |Specifies that the cookie is marked HTTP only.
 Allowed values are `true` or `false`.
@@ -2615,13 +2615,13 @@ the database. If `false` (the default if this element is not present),
 does not create tables.
 
 This element can be overridden during deployment. See
-"link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytc]][[GSDPG00434]][[superelements-46]]
 
 ==== Superelements
 
-xref:#bearv[`cmp-resource`] (`glassfish-ejb-jar.xml`)
+xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
 [[fvytd]][[GSDPG00435]][[subelements-44]]
 
@@ -2643,7 +2643,7 @@ javax.naming.spi.ObjectFactory interface.
 [[superelements-47]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG898]]
 
@@ -2663,12 +2663,12 @@ Table C-46 `custom-resource` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -2725,19 +2725,19 @@ created. Allowed values are `javadb`, `db2`, `mssql`, `mysql`, `oracle`,
 case-insensitive.
 
 If no value is specified, a connection is made to the resource specified
-by the xref:#beatw[`jndi-name`] subelement of the
-xref:#bearv[`cmp-resource`] element, and the database vendor name is
+by the xref:#jndi-name[`jndi-name`] subelement of the
+xref:#cmp-resource[`cmp-resource`] element, and the database vendor name is
 read. If the connection cannot be established, or if the value is not
 recognized, SQL-92 compliance is presumed.
 
 This element can be overridden during deployment. See
-"link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytf]][[GSDPG00436]][[superelements-48]]
 
 ==== Superelements
 
-xref:#bearv[`cmp-resource`] (`glassfish-ejb-jar.xml`)
+xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
 [[fvyti]][[GSDPG00437]][[subelements-46]]
 
@@ -2756,7 +2756,7 @@ endpoint. Allowed values are `true` (the default) and `false`.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[gaube]][[GSDPG00439]][[subelements-47]]
@@ -2771,14 +2771,14 @@ none - contains data
 
 Specifies that a field belongs to the default hierarchical fetch group,
 and enables prefetching for a CMR field. To disable prefetching for
-specific query methods, use a xref:#beavu[`prefetch-disabled`] element
+specific query methods, use a xref:#prefetch-disabled[`prefetch-disabled`] element
 in the `glassfish-ejb-jar.xml` file.
 
 [[fvytg]][[GSDPG00440]][[superelements-50]]
 
 ==== Superelements
 
-xref:#beatc[`fetched-with`] (`sun-cmp-mappings.xml`)
+xref:#fetched-with[`fetched-with`] (`sun-cmp-mappings.xml`)
 
 [[fvyth]][[GSDPG00441]][[subelements-48]]
 
@@ -2791,13 +2791,13 @@ none - element is present or absent
 === `default-helper`
 
 Passes property values to the built-in `default`
-xref:#beare[`cache-helper`] class.
+xref:#cache-helper[`cache-helper`] class.
 
 [[fvytj]][[GSDPG00442]][[superelements-51]]
 
 ==== Superelements
 
-xref:#beard[`cache`] (`glassfish-web.xml`)
+xref:#cache[`cache`] (`glassfish-web.xml`)
 
 [[fvytk]][[GSDPG00443]][[subelements-49]]
 
@@ -2815,7 +2815,7 @@ Table C-48 `default-helper` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -2838,13 +2838,13 @@ Table C-49 `default-helper` Properties
 |===
 |Property |Default |Description
 |`cacheKeyGeneratorAttrName` |Uses the built-in `default`
-xref:#beare[`cache-helper`] key generation, which concatenates the
-servlet path with xref:#beatz[`key-field`] values, if any. |The caching
+xref:#cache-helper[`cache-helper`] key generation, which concatenates the
+servlet path with xref:#key-field[`key-field`] values, if any. |The caching
 engine looks in the `ServletContext` for an attribute with a name equal
 to the value specified for this property to determine whether a
 customized CacheKeyGenerator implementation is used. An application can
 provide a customized key generator rather than using the `default`
-helper. See "link:application-development-guide/webapps.html#GSDVG00254[The CacheKeyGenerator Interface]" in
+helper. See "link:application-development-guide/webapps.html#the-cachekeygenerator-interface[The CacheKeyGenerator Interface]" in
 {productName} Application Development Guide.
 |===
 
@@ -2865,9 +2865,9 @@ Message Queue Administration Guide for details.
 
 ==== Superelements
 
-xref:#beaww[`resource-ref`] (`glassfish-web.xml`,
+xref:#resource-ref[`resource-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`);
-xref:#bearv[`cmp-resource`], xref:#beaur[`mdb-connection-factory`]
+xref:#cmp-resource[`cmp-resource`], xref:#mdb-connection-factory[`mdb-connection-factory`]
 (`glassfish-ejb-jar.xml`)
 
 [[fvytn]][[GSDPG00446]][[subelements-50]]
@@ -2886,14 +2886,14 @@ Table C-50 `default-resource-principal` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavf[`name`]
+xref:#name[`name`]
 
 
  |only one |Specifies the default resource principal name used to sign
 on to a resource manager.
 
 a|
-xref:#beavp[`password`]
+xref:#password[`password`]
 
 
  |only one |Specifies password of the default resource principal.
@@ -2910,17 +2910,17 @@ Specifies a text description of the containing element.
 
 ==== Superelements
 
-xref:#beavx[`property` (with attributes)], xref:#gikqk[`valve`]
-(`glassfish-web.xml`); xref:#beaqs[`activation-config`],
-xref:#beauz[`method`] (`glassfish-ejb-jar.xml`);
-xref:#beaye[`target-server`] (`sun-acc.xml`);
-xref:#giyhw[`admin-object-resource`],
-xref:#giygu[`connector-connection-pool`],
-xref:#giyhv[`connector-resource`], xref:#giyhr[`custom-resource`],
-xref:#giyin[`external-jndi-resource`],
-xref:#giyil[`jdbc-connection-pool`], xref:#giyhm[`jdbc-resource`],
-xref:#giyik[`mail-resource`], xref:#beavx[`property` (with attributes)],
-xref:#giyit[`resource-adapter-config`] (`glassfish-resources.xml`)
+xref:#property-with-attributes[`property` (with attributes)], xref:#valve[`valve`]
+(`glassfish-web.xml`); xref:#activation-config[`activation-config`],
+xref:#method[`method`] (`glassfish-ejb-jar.xml`);
+xref:#target-server[`target-server`] (`sun-acc.xml`);
+xref:#admin-object-resource[`admin-object-resource`],
+xref:#connector-connection-pool[`connector-connection-pool`],
+xref:#connector-resource[`connector-resource`], xref:#custom-resource[`custom-resource`],
+xref:#external-jndi-resource[`external-jndi-resource`],
+xref:#jdbc-connection-pool[`jdbc-connection-pool`], xref:#jdbc-resource[`jdbc-resource`],
+xref:#mail-resource[`mail-resource`], xref:#property-with-attributes[`property` (with attributes)],
+xref:#resource-adapter-config[`resource-adapter-config`] (`glassfish-resources.xml`)
 
 [[fvyts]][[GSDPG00448]][[subelements-51]]
 
@@ -2943,7 +2943,7 @@ default is `false`.
 
 ==== Superelements
 
-xref:#beaya[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
 [[gkhug]][[GSDPG00450]][[subelements-52]]
 
@@ -2965,7 +2965,7 @@ specification for more information.
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvytv]][[GSDPG00452]][[subelements-53]]
 
@@ -2983,13 +2983,13 @@ undeployed. If `true`, drops tables from the database. If `false` (the
 default if this element is not present), does not drop tables.
 
 This element can be overridden during deployment. See
-"link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options for CMP]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options for CMP]" in {productName} Application Development Guide.
 
 [[fvytu]][[GSDPG00453]][[superelements-56]]
 
 ==== Superelements
 
-xref:#bearv[`cmp-resource`] (`glassfish-ejb-jar.xml`)
+xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
 [[fvytx]][[GSDPG00454]][[subelements-54]]
 
@@ -3024,7 +3024,7 @@ beans as follows:
 
 ==== Superelements
 
-xref:#beasx[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
+xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
 [[fvytw]][[GSDPG00456]][[subelements-55]]
 
@@ -3041,53 +3041,53 @@ Table C-51 `ejb` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beast[`ejb-name`]
+xref:#ejb-name[`ejb-name`]
 
 
  |only one |Matches the `ejb-name` in the corresponding `ejb-jar.xml`
 file.
 
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |zero or more |Specifies the absolute `jndi-name`.
 
 a|
-xref:#beasu[`ejb-ref`]
+xref:#ejb-ref[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` element in
 the corresponding Jakarta EE XML file.
 
 a|
-xref:#beaww[`resource-ref`]
+xref:#resource-ref[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beawu[`resource-env-ref`]
+xref:#resource-env-ref[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
 the corresponding Jakarta EE XML file.
 
 a|
-xref:#beaxk[`service-ref`]
+xref:#service-ref[`service-ref`]
 
 
  |zero or more |Specifies runtime settings for a web service reference.
 
 a|
-xref:#gauao[`message-destination-ref`]
+xref:#message-destination-ref[`message-destination-ref`]
 
 
  |zero or more |Specifies the name of a physical message destination.
 
 a|
-xref:#beavo[`pass-by-reference`]
+xref:#pass-by-reference[`pass-by-reference`]
 
 
  |zero or one |Specifies the passing method used by an enterprise bean
@@ -3095,35 +3095,35 @@ calling a remote interface method in another bean that is colocated
 within the same process.
 
 a|
-xref:#beart[`cmp`]
+xref:#cmp[`cmp`]
 
 
  |zero or one |Specifies runtime information for a container-managed
 persistence (CMP) entity bean for EJB 1.1 and EJB 2.1 beans.
 
 a|
-xref:#beavv[`principal`]
+xref:#principal[`principal`]
 
 
  |zero or one |Specifies the principal (user) name in an enterprise bean
 that has the `run-as` role specified.
 
 a|
-xref:#beaur[`mdb-connection-factory`]
+xref:#mdb-connection-factory[`mdb-connection-factory`]
 
 
  |zero or one |Specifies the connection factory associated with a
 message-driven bean.
 
 a|
-xref:#beatu[`jms-durable-subscription-name`]
+xref:#jms-durable-subscription-name[`jms-durable-subscription-name`]
 
 
  |zero or one |Specifies the durable subscription associated with a
 message-driven bean.
 
 a|
-xref:#beatv[`jms-max-messages-load`]
+xref:#jms-max-messages-load[`jms-max-messages-load`]
 
 
  |zero or one |Specifies the maximum number of messages to load into a
@@ -3131,93 +3131,93 @@ Java Message Service session at one time for a message-driven bean to
 serve. The default is 1.
 
 a|
-xref:#beato[`ior-security-config`]
+xref:#ior-security-config[`ior-security-config`]
 
 
  |zero or one |Specifies the security information for the IOR.
 
 a|
-xref:#beatr[`is-read-only-bean`]
+xref:#is-read-only-bean[`is-read-only-bean`]
 
 
  |zero or one |Specifies that this entity bean is read-only.
 
 a|
-xref:#beawk[`refresh-period-in-seconds`]
+xref:#refresh-period-in-seconds[`refresh-period-in-seconds`]
 
 
  |zero or one |Specifies the rate at which a read-only-bean must be
 refreshed from the data source.
 
 a|
-xref:#beasb[`commit-option`]
+xref:#commit-option[`commit-option`]
 
 
  |zero or one |Has valid values of B or C. Default value is B.
 
 a|
-xref:#beary[`cmt-timeout-in-seconds`]
+xref:#cmt-timeout-in-seconds[`cmt-timeout-in-seconds`]
 
 
  |zero or one |Overrides the Transaction Timeout setting of the
 Transaction Service for an individual bean.
 
 a|
-xref:#beaym[`use-thread-pool-id`]
+xref:#use-thread-pool-id[`use-thread-pool-id`]
 
 
  |zero or one |Specifies the thread pool from which threads are selected
 for remote invocations of this bean.
 
 a|
-xref:#beath[`gen-classes`]
+xref:#gen-classes[`gen-classes`]
 
 
  |zero or one |Specifies all the generated class names for a bean.
 
 a|
-xref:#bearb[`bean-pool`]
+xref:#bean-pool[`bean-pool`]
 
 
  |zero or one |Specifies the bean pool properties. Used for stateless
 session beans, entity beans, and message-driven beans.
 
 a|
-xref:#beara[`bean-cache`]
+xref:#bean-cache[`bean-cache`]
 
 
  |zero or one |Specifies the bean cache properties. Used only for
 stateful session beans and entity beans.
 
 a|
-xref:#beaus[`mdb-resource-adapter`]
+xref:#mdb-resource-adapter[`mdb-resource-adapter`]
 
 
  |zero or one |Specifies runtime configuration information for a
 message-driven bean.
 
 a|
-xref:#beayv[`webservice-endpoint`]
+xref:#webservice-endpoint[`webservice-endpoint`]
 
 
  |zero or more |Specifies information about a web service endpoint.
 
 a|
-xref:#beatf[`flush-at-end-of-method`]
+xref:#flush-at-end-of-method[`flush-at-end-of-method`]
 
 
  |zero or one |Specifies the methods that force a database flush after
 execution. Used for entity beans.
 
 a|
-xref:#bearp[`checkpointed-methods`]
+xref:#checkpointed-methods[`checkpointed-methods`]
 
 
  |zero or one |Deprecated. Supported for backward compatibility. Use
-xref:#bearo[`checkpoint-at-end-of-method`] instead.
+xref:#checkpoint-at-end-of-method[`checkpoint-at-end-of-method`] instead.
 
 a|
-xref:#bearo[`checkpoint-at-end-of-method`]
+xref:#checkpoint-at-end-of-method[`checkpoint-at-end-of-method`]
 
 
  |zero or one |Specifies that the stateful session bean state is
@@ -3225,7 +3225,7 @@ checkpointed, or persisted, after the specified methods are executed.
 The `availability-enabled` attribute must be set to `true`.
 
 a|
-xref:#gkkia[`per-request-load-balancing`]
+xref:#per-request-load-balancing[`per-request-load-balancing`]
 
 
  |zero or one |Specifies the per-request load balancing behavior of EJB
@@ -3302,8 +3302,8 @@ persistence (CMP) bean corresponds.
 
 ==== Superelements
 
-xref:#beass[`ejb`], xref:#beauz[`method`] (`glassfish-ejb-jar.xml`);
-xref:#beasy[`entity-mapping`] (`sun-cmp-mappings.xml`)
+xref:#ejb[`ejb`], xref:#method[`method`] (`glassfish-ejb-jar.xml`);
+xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvyue]][[GSDPG00460]][[subelements-56]]
 
@@ -3326,9 +3326,9 @@ EJB's home. Applies to session beans or entity beans.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[fvyua]][[GSDPG00462]][[subelements-57]]
@@ -3346,14 +3346,14 @@ Table C-53 `ejb-ref` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beasv[`ejb-ref-name`]
+xref:#ejb-ref-name[`ejb-ref-name`]
 
 
  |only one |Specifies the `ejb-ref-name` in the corresponding Jakarta EE
 deployment descriptor file `ejb-ref` entry.
 
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name` of a resource.
@@ -3371,7 +3371,7 @@ descriptor file `ejb-ref` entry.
 
 ==== Superelements
 
-xref:#beasu[`ejb-ref`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
+xref:#ejb-ref[`ejb-ref`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
 [[fvyuj]][[GSDPG00464]][[subelements-58]]
@@ -3391,7 +3391,7 @@ Web Start enabled. Allowed values are `true` (the default) and `false`.
 
 ==== Superelements
 
-xref:#gauax[`java-web-start-access`]
+xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
 [[gauaz]][[GSDPG00466]][[subelements-59]]
@@ -3425,7 +3425,7 @@ value, because the web container derives it from the `web.xml` file.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvyum]][[GSDPG00468]][[subelements-60]]
@@ -3464,7 +3464,7 @@ application.
 
 ==== Superelements
 
-xref:#beaya[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
 [[fvyuo]][[GSDPG00471]][[subelements-61]]
 
@@ -3482,13 +3482,13 @@ Table C-54 `enterprise-beans` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavf[`name`]
+xref:#name[`name`]
 
 
  |zero or one |Specifies the name string.
 
 a|
-xref:#beayk[`unique-id`]
+xref:#unique-id[`unique-id`]
 
 
  |zero or one |Specifies a unique system identifier. This data is
@@ -3496,40 +3496,40 @@ automatically generated and updated at deployment/redeployment. Do not
 specify or edit this value.
 
 a|
-xref:#beass[`ejb`]
+xref:#ejb[`ejb`]
 
 
  |zero or more |Defines runtime properties for a single enterprise bean
 within the application.
 
 a|
-xref:#beavq[`pm-descriptors`]
+xref:#pm-descriptors[`pm-descriptors`]
 
 
  |zero or one |Deprecated.
 
 a|
-xref:#bearv[`cmp-resource`]
+xref:#cmp-resource[`cmp-resource`]
 
 
  |zero or one |Specifies the database to be used for storing
 container-managed persistence (CMP) beans in an EJB JAR file.
 
 a|
-xref:#beauu[`message-destination`]
+xref:#message-destination[`message-destination`]
 
 
  |zero or more |Specifies the name of a logical message destination.
 
 a|
-xref:#beayt[`webservice-description`]
+xref:#webservice-description[`webservice-description`]
 
 
  |zero or more |Specifies a name and optional publish location for a web
 service.
 
 a|
-xref:#beavy[`property` (with subelements)]
+xref:#property-with-subelements[`property` (with subelements)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -3578,7 +3578,7 @@ Specifies the mapping a bean to database columns.
 
 ==== Superelements
 
-xref:#beaxy[`sun-cmp-mapping`] (`sun-cmp-mappings.xml`)
+xref:#sun-cmp-mapping[`sun-cmp-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvyur]][[GSDPG00474]][[subelements-62]]
 
@@ -3596,42 +3596,42 @@ Table C-55 `entity-mapping` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beast[`ejb-name`]
+xref:#ejb-name[`ejb-name`]
 
 
  |only one |Specifies the name of the entity bean in the `ejb-jar.xml`
 file to which the CMP bean corresponds.
 
 a|
-xref:#beayd[`table-name`]
+xref:#table-name[`table-name`]
 
 
  |only one |Specifies the name of a database table. The table must be
 present in the database schema file.
 
 a|
-xref:#bearu[`cmp-field-mapping`]
+xref:#cmp-field-mapping[`cmp-field-mapping`]
 
 
  |one or more |Associates a field with one or more columns to which it
 maps.
 
 a|
-xref:#bearw[`cmr-field-mapping`]
+xref:#cmr-field-mapping[`cmr-field-mapping`]
 
 
  |zero or more |A container-managed relationship field has a name and
 one or more column pairs that define the relationship.
 
 a|
-xref:#beaxe[`secondary-table`]
+xref:#secondary-table[`secondary-table`]
 
 
  |zero or more |Describes the relationship between a bean's primary and
 secondary table.
 
 a|
-xref:#beasd[`consistency`]
+xref:#consistency[`consistency`]
 
 
  |zero or one |Specifies container behavior in guaranteeing
@@ -3650,7 +3650,7 @@ values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
 ==== Superelements
 
-xref:#beayh[`transport-config`] (`glassfish-ejb-jar.xml`)
+xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvyuy]][[GSDPG00476]][[subelements-63]]
 
@@ -3669,7 +3669,7 @@ values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
 ==== Superelements
 
-xref:#beayh[`transport-config`] (`glassfish-ejb-jar.xml`)
+xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvyuv]][[GSDPG00478]][[subelements-64]]
 
@@ -3692,7 +3692,7 @@ javax.naming.spi.InitialContextFactory interface.
 [[superelements-67]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG911]]
 
@@ -3712,12 +3712,12 @@ Table C-56 `external-jndi-resource` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -3778,7 +3778,7 @@ The `fetched-with` element has different allowed and default subelements
 based on its parent element and the data types of the fields.
 
 * If there is no `fetched-with` subelement of a
-xref:#bearu[`cmp-field-mapping`], and the data type is not BLOB, CLOB,
+xref:#cmp-field-mapping[`cmp-field-mapping`], and the data type is not BLOB, CLOB,
 VARBINARY, LONGVARBINARY, or OTHER, `fetched-with` can have any valid
 subelement. The default subelement is as follows:
 +
@@ -3787,7 +3787,7 @@ subelement. The default subelement is as follows:
 <fetched-with><default/></fetched-with>
 ----
 * If there is no `fetched-with` subelement of a
-xref:#bearu[`cmp-field-mapping`], and the data type is BLOB, CLOB,
+xref:#cmp-field-mapping[`cmp-field-mapping`], and the data type is BLOB, CLOB,
 VARBINARY, LONGVARBINARY, or OTHER, `fetched-with` can have any valid
 subelement except `<default/>`. The default subelement is as follows:
 +
@@ -3796,7 +3796,7 @@ subelement except `<default/>`. The default subelement is as follows:
 <fetched-with><none/></fetched-with>
 ----
 * If there is no `fetched-with` subelement of a
-xref:#bearw[`cmr-field-mapping`], `fetched-with` can have any valid
+xref:#cmr-field-mapping[`cmr-field-mapping`], `fetched-with` can have any valid
 subelement. The default subelement is as follows:
 +
 [source,xml]
@@ -3807,13 +3807,13 @@ subelement. The default subelement is as follows:
 Managed fields are multiple CMP or CMR fields that are mapped to the
 same column. A managed field can have any `fetched-with` subelement
 except `<default/>`. For additional information, see
-"link:application-development-guide/container_managed-persistence.html#GSDVG00306[Managed Fields]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#managed-fields[Managed Fields]" in {productName} Application Development Guide.
 
 [[fvyuw]][[GSDPG00479]][[superelements-68]]
 
 ==== Superelements
 
-xref:#bearu[`cmp-field-mapping`], xref:#bearw[`cmr-field-mapping`]
+xref:#cmp-field-mapping[`cmp-field-mapping`], xref:#cmr-field-mapping[`cmr-field-mapping`]
 (`sun-cmp-mappings.xml`)
 
 [[fvyup]][[GSDPG00480]][[subelements-66]]
@@ -3832,7 +3832,7 @@ Table C-58 `fetched-with` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beasl[`default`]
+xref:#default[`default`]
 
 
  |exactly one subelement is required |Specifies that a CMP field belongs
@@ -3841,21 +3841,21 @@ time the bean is loaded from a database. Enables prefetching of a CMR
 field.
 
 a|
-xref:#beaub[`level`]
+xref:#level[`level`]
 
 
  |exactly one subelement is required |Specifies the level number of a
 hierarchical fetch group.
 
 a|
-xref:#beavg[`named-group`]
+xref:#named-group[`named-group`]
 
 
  |exactly one subelement is required |Specifies the name of an
 independent fetch group.
 
 a|
-xref:#beavi[`none`]
+xref:#none[`none`]
 
 
  |exactly one subelement is required |Specifies that this field or
@@ -3877,7 +3877,7 @@ value of the `field-name` subelement of the `cmp-field` element in the
 
 ==== Superelements
 
-xref:#bearu[`cmp-field-mapping`] (`sun-cmp-mappings.xml`)
+xref:#cmp-field-mapping[`cmp-field-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvyxs]][[GSDPG00482]][[subelements-67]]
 
@@ -3895,7 +3895,7 @@ Describes the finders for CMP 1.1 with a method name and query.
 
 ==== Superelements
 
-xref:#beavk[`one-one-finders`] (`glassfish-ejb-jar.xml`)
+xref:#one-one-finders[`one-one-finders`] (`glassfish-ejb-jar.xml`)
 
 [[fvzdc]][[GSDPG00484]][[subelements-68]]
 
@@ -3912,32 +3912,32 @@ Table C-59 `finder` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavb[`method-name`]
+xref:#method-name[`method-name`]
 
 
  |only one |Specifies the method name for the finder.
 
 a|
-xref:#beawe[`query-params`]
+xref:#query-params[`query-params`]
 
 
  |zero or one |Specifies the query parameters for the CMP 1.1 finder.
 
 a|
-xref:#beawb[`query-filter`]
+xref:#query-filter[`query-filter`]
 
 
  |zero or one |Specifies the query filter for the CMP 1.1 finder.
 
 a|
-xref:#beawf[`query-variables`]
+xref:#query-variables[`query-variables`]
 
 
  |zero or one |Specifies variables in query expression for the CMP 1.1
 finder.
 
 a|
-xref:#beawd[`query-ordering`]
+xref:#query-ordering[`query-ordering`]
 
 
  |zero or one |Specifies the query ordering for the CMP 1.1 finder.
@@ -3955,7 +3955,7 @@ Applicable to entity beans.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyza]][[GSDPG00486]][[subelements-69]]
 
@@ -3973,7 +3973,7 @@ Table C-60 `flush-at-end-of-method` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beauz[`method`]
+xref:#method[`method`]
 
 
  |one or more |Specifies a bean method.
@@ -3998,7 +3998,7 @@ redeployment time. Do not specify it or change it after deployment.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvzee]][[GSDPG00488]][[subelements-70]]
 
@@ -4015,28 +4015,28 @@ Table C-61 `gen-classes` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawn[`remote-impl`]
+xref:#remote-impl[`remote-impl`]
 
 
  |zero or one |Specifies the fully-qualified class name of the generated
 `EJBObject` impl class.
 
 a|
-xref:#beaud[`local-impl`]
+xref:#local-impl[`local-impl`]
 
 
  |zero or one |Specifies the fully-qualified class name of the generated
 `EJBLocalObject` impl class.
 
 a|
-xref:#beawm[`remote-home-impl`]
+xref:#remote-home-impl[`remote-home-impl`]
 
 
  |zero or one |Specifies the fully-qualified class name of the generated
 `EJBHome` impl class.
 
 a|
-xref:#beauc[`local-home-impl`]
+xref:#local-home-impl[`local-home-impl`]
 
 
  |zero or one |Specifies the fully-qualified class name of the generated
@@ -4051,7 +4051,7 @@ xref:#beauc[`local-home-impl`]
 Defines the {productName} specific configuration for an application.
 This is the root element; there can only be one `glassfish-application`
 element in a `glassfish-application.xml` file. See
-link:dd-files.html#beaqk[The glassfish-application.xml File].
+link:dd-files.html#GSDPG00077[The glassfish-application.xml File].
 
 [[fvzhn]][[GSDPG00489]][[superelements-73]]
 
@@ -4075,84 +4075,84 @@ Table C-62 `glassfish-application` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beayr[`web`]
+xref:#web[`web`]
 
 
  |zero or more |Specifies the application's web tier configuration.
 
 a|
-xref:#beavo[`pass-by-reference`]
+xref:#pass-by-reference[`pass-by-reference`]
 
 
  |zero or one |Determines whether EJB modules use pass-by-value or
 pass-by-reference semantics.
 
 a|
-xref:#beayk[`unique-id`]
+xref:#unique-id[`unique-id`]
 
 
  |zero or one |Contains the unique ID for the application.
 
 a|
-xref:#beaxg[`security-role-mapping`]
+xref:#security-role-mapping[`security-role-mapping`]
 
 
  |zero or more |Maps a role in the corresponding Jakarta EE XML file to a
 user or group.
 
 a|
-xref:#beawi[`realm`]
+xref:#realm[`realm`]
 
 
  |zero or one |Specifies an authentication realm.
 
 a|
-xref:#beasu[`ejb-ref`]
+xref:#ejb-ref[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beaww[`resource-ref`]
+xref:#resource-ref[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beawu[`resource-env-ref`]
+xref:#resource-env-ref[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
 the corresponding Jakarta EE XML file.
 
 a|
-xref:#beaxk[`service-ref`]
+xref:#service-ref[`service-ref`]
 
 
  |zero or more |Specifies runtime settings for a web service reference.
 
 a|
-xref:#gauao[`message-destination-ref`]
+xref:#message-destination-ref[`message-destination-ref`]
 
 
  |zero or more |Specifies the name of a physical message destination.
 
 a|
-xref:#beauu[`message-destination`]
+xref:#message-destination[`message-destination`]
 
 
  |zero or more |Specifies the name of a logical message destination.
 
 a|
-xref:#gjizj[`archive-name`]
+xref:#archive-name[`archive-name`]
 
 
  |zero or one |Specifies the name of the archive file.
 
 a|
-xref:#gjjak[`compatibility`]
+xref:#compatibility[`compatibility`]
 
 
  |zero or one |Specifies the {productName} release with which to be
@@ -4160,14 +4160,14 @@ backward compatible in terms of JAR visibility requirements for
 applications.
 
 a|
-xref:#gkhtr[`keep-state`]
+xref:#keep-state[`keep-state`]
 
 
  |zero or one |Retains web sessions, stateful session bean instances,
 and persistently created EJB timers across redeployments.
 
 a|
-xref:#gkkfd[`version-identifier`]
+xref:#version-identifier[`version-identifier`]
 
 
  |zero or one |Contains version information for an application.
@@ -4181,7 +4181,7 @@ xref:#gkkfd[`version-identifier`]
 Defines the {productName} specific configuration for an application
 client. This is the root element; there can only be one
 `glassfish-application-client` element in a
-`glassfish-application-client.xml` file. See link:dd-files.html#beaqo[The
+`glassfish-application-client.xml` file. See link:dd-files.html#GSDPG00081[The
 glassfish-application-client.xml file].
 
 [[fvzgq]][[GSDPG00491]][[superelements-74]]
@@ -4206,52 +4206,52 @@ Table C-63 `glassfish-application-client` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beasu[`ejb-ref`]
+xref:#ejb-ref[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beaww[`resource-ref`]
+xref:#resource-ref[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beawu[`resource-env-ref`]
+xref:#resource-env-ref[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
 the corresponding Jakarta EE XML file.
 
 a|
-xref:#beaxk[`service-ref`]
+xref:#service-ref[`service-ref`]
 
 
  |zero or more |Specifies runtime settings for a web service reference.
 
 a|
-xref:#gauao[`message-destination-ref`]
+xref:#message-destination-ref[`message-destination-ref`]
 
 
  |zero or more |Specifies the name of a physical message destination.
 
 a|
-xref:#beauu[`message-destination`]
+xref:#message-destination[`message-destination`]
 
 
  |zero or more |Specifies the name of a logical message destination.
 
 a|
-xref:#gauax[`java-web-start-access`]
+xref:#java-web-start-access[`java-web-start-access`]
 
 
  |zero or one |Specifies changes to default Java Web Start parameters.
 
 a|
-xref:#gkkfd[`version-identifier`]
+xref:#version-identifier[`version-identifier`]
 
 
  |zero or one |Contains version information for an application client.
@@ -4265,7 +4265,7 @@ xref:#gkkfd[`version-identifier`]
 Defines the {productName} specific configuration for an EJB JAR file.
 This is the root element; there can only be one `glassfish-ejb-jar`
 element in a `glassfish-ejb-jar.xml` file. See
-link:dd-files.html#beaqm[The glassfish-ejb-jar.xml File].
+link:dd-files.html#GSDPG00079[The glassfish-ejb-jar.xml File].
 
 [[fvzhw]][[GSDPG00493]][[superelements-75]]
 
@@ -4289,21 +4289,21 @@ Table C-64 `glassfish-ejb-jar` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxg[`security-role-mapping`]
+xref:#security-role-mapping[`security-role-mapping`]
 
 
  |zero or more |Maps a role in the corresponding Jakarta EE XML file to a
 user or group.
 
 a|
-xref:#beasx[`enterprise-beans`]
+xref:#enterprise-beans[`enterprise-beans`]
 
 
  |only one |Describes all the runtime properties for an EJB JAR file in
 the application.
 
 a|
-xref:#gjjak[`compatibility`]
+xref:#compatibility[`compatibility`]
 
 
  |zero or one |Specifies the {productName} release with which to be
@@ -4311,20 +4311,20 @@ backward compatible in terms of JAR visibility requirements for
 applications.
 
 a|
-xref:#gkhtw[`disable-nonportable-jndi-names`]
+xref:#disable-nonportable-jndi-names[`disable-nonportable-jndi-names`]
 
 
  |zero or one |Disables {productName} specific JNDI names.
 
 a|
-xref:#gkhtr[`keep-state`]
+xref:#keep-state[`keep-state`]
 
 
  |zero or one |Retains stateful session bean instances and persistently
 created EJB timers across redeployments.
 
 a|
-xref:#gkkfd[`version-identifier`]
+xref:#version-identifier[`version-identifier`]
 
 
  |zero or one |Contains version information for an EJB module.
@@ -4337,7 +4337,7 @@ xref:#gkkfd[`version-identifier`]
 
 Defines {productName} specific configuration for a web module. This
 is the root element; there can only be one `glassfish-web-app` element
-in a `glassfish-web.xml` file. See link:dd-files.html#beaql[The
+in a `glassfish-web.xml` file. See link:dd-files.html#GSDPG00078[The
 glassfish-web.xml File].
 
 [[fvzgj]][[GSDPG00495]][[superelements-76]]
@@ -4362,98 +4362,98 @@ Table C-65 `glassfish-web-app` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beasg[`context-root`]
+xref:#context-root[`context-root`]
 
 
  |zero or one |Contains the web context root for the web module.
 
 a|
-xref:#beaxg[`security-role-mapping`]
+xref:#security-role-mapping[`security-role-mapping`]
 
 
  |zero or more |Maps roles to users or groups in the currently active
 realm.
 
 a|
-xref:#beaxm[`servlet`]
+xref:#servlet[`servlet`]
 
 
  |zero or more |Specifies a principal name for a servlet, which is used
 for the `run-as` role defined in `web.xml`.
 
 a|
-xref:#beatm[`idempotent-url-pattern`]
+xref:#idempotent-url-pattern[`idempotent-url-pattern`]
 
 
  |zero or more |Specifies a URL pattern for idempotent requests.
 
 a|
-xref:#beaxp[`session-config`]
+xref:#session-config[`session-config`]
 
 
  |zero or one |Specifies session manager, session cookie, and other
 session-related information.
 
 a|
-xref:#beasu[`ejb-ref`]
+xref:#ejb-ref[`ejb-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `ejb-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beaww[`resource-ref`]
+xref:#resource-ref[`resource-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-ref` in the
 corresponding Jakarta EE XML file.
 
 a|
-xref:#beawu[`resource-env-ref`]
+xref:#resource-env-ref[`resource-env-ref`]
 
 
  |zero or more |Maps the absolute JNDI name to the `resource-env-ref` in
 the corresponding Jakarta EE XML file.
 
 a|
-xref:#beaxk[`service-ref`]
+xref:#service-ref[`service-ref`]
 
 
  |zero or more |Specifies runtime settings for a web service reference.
 
 a|
-xref:#gauao[`message-destination-ref`]
+xref:#message-destination-ref[`message-destination-ref`]
 
 
  |zero or more |Specifies the name of a physical message destination.
 
 a|
-xref:#beard[`cache`]
+xref:#cache[`cache`]
 
 
  |zero or one |Configures caching for web application components.
 
 a|
-xref:#bearq[`class-loader`]
+xref:#class-loader[`class-loader`]
 
 
  |zero or one |Specifies class loader configuration information.
 
 a|
-xref:#beatx[`jsp-config`]
+xref:#jsp-config[`jsp-config`]
 
 
  |zero or one |Specifies JSP configuration information.
 
 a|
-xref:#beaue[`locale-charset-info`]
+xref:#locale-charset-info[`locale-charset-info`]
 
 
  |zero or one |Deprecated. Use the `parameter-encoding` subelement of
 `glassfish-web-app` instead.
 
 a|
-xref:#beavn[`parameter-encoding`]
+xref:#parameter-encoding[`parameter-encoding`]
 
 
  |zero or one |Determines the default request character encoding and how
@@ -4461,38 +4461,38 @@ the web container decodes parameters from forms according to a hidden
 field value.
 
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
 
 a|
-xref:#gikqk[`valve`]
+xref:#valve[`valve`]
 
 
  |zero or more |Specifies a custom valve.
 
 a|
-xref:#beauu[`message-destination`]
+xref:#message-destination[`message-destination`]
 
 
  |zero or more |Specifies the name of a logical message destination.
 
 a|
-xref:#beayt[`webservice-description`]
+xref:#webservice-description[`webservice-description`]
 
 
  |zero or more |Specifies a name and optional publish location for a web
 service.
 
 a|
-xref:#gkhtr[`keep-state`]
+xref:#keep-state[`keep-state`]
 
 
  |zero or one |Retains web sessions across redeployments.
 
 a|
-xref:#gkkfd[`version-identifier`]
+xref:#version-identifier[`version-identifier`]
 
 
  |zero or one |Contains version information for a web application.
@@ -4542,7 +4542,7 @@ If `true`, resources in this web application that are symbolic links are
 served. You can also define this property for a virtual server. Web
 applications on the virtual server that do not define this property use
 the virtual server's value. For details, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 Caution: Setting this property to `true` on Windows systems exposes JSP
 source code.
@@ -4586,10 +4586,10 @@ location (directory). Spaces are allowed in the `dir` component.
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 |`valve_n` |none a|
-This property is deprecated. Use the xref:#gikqk[`valve`] subelement
+This property is deprecated. Use the xref:#valve[`valve`] subelement
 instead.
 
 Specifies a fully qualified class name of a custom valve, where n is a
@@ -4607,7 +4607,7 @@ org.glassfish.web.valve.GlassFishValve interface from the current
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 |`listener_n` |none a|
 Specifies a fully qualified class name of a custom Catalina listener,
@@ -4625,7 +4625,7 @@ org.apache.catalina.InstanceListener interface. For example:
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 |`crossContextAllowed` |`true` |If `true`, allows this web application
 to access the contexts of other web applications using the
@@ -4645,7 +4645,7 @@ file downloads using SSL work properly in Internet Explorer.
 
 You can set this property for all the web applications on a specific
 virtual server. For details, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 |`singleThreadedServletPoolSize` |`5` |Specifies the maximum number of
 servlet instances allocated for each `SingleThreadModel` servlet in the
@@ -4679,7 +4679,7 @@ Maps an EIS group to a group defined in the {productName} domain.
 [[superelements-77]]
 ==== Superelements
 
-xref:#giyht[`work-security-map`] (`glassfish-resources.xml`)
+xref:#work-security-map[`work-security-map`] (`glassfish-resources.xml`)
 
 [[giyid]][[GSDPG00499]][[subelements-75]]
 
@@ -4720,7 +4720,7 @@ Specifies a group name in the current realm.
 
 ==== Superelements
 
-xref:#beaxg[`security-role-mapping`] (`glassfish-application.xml`,
+xref:#security-role-mapping[`security-role-mapping`] (`glassfish-application.xml`,
 `glassfish-web.xml`, `glassfish-ejb-jar.xml`)
 
 [[fvywm]][[GSDPG00501]][[subelements-76]]
@@ -4740,7 +4740,7 @@ Specifies an HTTP method that is eligible for caching. The default is
 
 ===== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvyyj]][[GSDPG00318]][[subelements-77]]
 
@@ -4758,7 +4758,7 @@ Specifies a URL pattern for idempotent requests.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvzea]][[GSDPG00504]][[subelements-78]]
 
@@ -4816,7 +4816,7 @@ values are `NONE`, `SUPPORTED`, or `REQUIRED`.
 
 ==== Superelements
 
-xref:#beayh[`transport-config`] (`glassfish-ejb-jar.xml`)
+xref:#transport-config[`transport-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvzdv]][[GSDPG00508]][[subelements-79]]
 
@@ -4835,7 +4835,7 @@ reference (IOR).
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvzbv]][[GSDPG00510]][[subelements-80]]
 
@@ -4853,20 +4853,20 @@ Table C-70 `ior-security-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beayh[`transport-config`]
+xref:#transport-config[`transport-config`]
 
 
  |zero or one |Specifies the security information for transport.
 
 a|
-xref:#beaqw[`as-context`]
+xref:#as-context[`as-context`]
 
 
  |zero or one |Specifies the authentication mechanism used to
 authenticate the client. If specified, it is `USERNAME_PASSWORD`.
 
 a|
-xref:#beaxb[`sas-context`]
+xref:#sas-context[`sas-context`]
 
 
  |zero or one |Describes the sas-context fields.
@@ -4883,7 +4883,7 @@ This element is deprecated. Do not use.
 
 ==== Superelements
 
-xref:#beara[`bean-cache`] (`glassfish-ejb-jar.xml`)
+xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
 [[beatq]][[GSDPG00168]][[is-one-one-cmp]]
 
@@ -4895,7 +4895,7 @@ This element is not used.
 
 ==== Superelements
 
-xref:#beart[`cmp`] (`glassfish-ejb-jar.xml`)
+xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
 [[beatr]][[GSDPG00169]][[is-read-only-bean]]
 
@@ -4908,7 +4908,7 @@ element is absent, the default value of `false` is used.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyvx]][[GSDPG00514]][[subelements-81]]
 
@@ -4926,7 +4926,7 @@ Specifies a method.
 
 ==== Superelements
 
-xref:#beaut[`message`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
+xref:#message[`message`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
 [[fvyvo]][[GSDPG00516]][[subelements-82]]
@@ -4944,13 +4944,13 @@ Table C-71 `java-method` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavb[`method-name`]
+xref:#method-name[`method-name`]
 
 
  |only one |Specifies a method name.
 
 a|
-xref:#beavd[`method-params`]
+xref:#method-params[`method-params`]
 
 
  |zero or one |Specifies fully qualified Java type names of method
@@ -4969,7 +4969,7 @@ or stand-alone application client module.
 
 ==== Superelements
 
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[gauav]][[GSDPG00518]][[subelements-83]]
@@ -4988,7 +4988,7 @@ Table C-72 `java-web-start-access` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beasg[`context-root`]
+xref:#context-root[`context-root`]
 
 
  |zero or one a|
@@ -5015,7 +5015,7 @@ in EAR or JAR file format, a name is generated and written to the server
 log.
 
 a|
-xref:#gaubh[`eligible`]
+xref:#eligible[`eligible`]
 
 
  |zero or one |Specifies whether the application client module is
@@ -5023,7 +5023,7 @@ eligible to be Java Web Start enabled. Allowed values are `true` (the
 default) and `false`.
 
 a|
-xref:#gbgdw[`vendor`]
+xref:#vendor[`vendor`]
 
 
  |zero or one |Specifies the name of the vendor as it appears in Java
@@ -5031,7 +5031,7 @@ Web Start download and launch screens. The default value is
 `Application Client`.
 
 a|
-xref:#gkhun[`jnlp-doc`]
+xref:#jnlp-doc[`jnlp-doc`]
 
 
  |zero or one |Specifies the name of a custom JNLP file. If none is
@@ -5052,7 +5052,7 @@ JDBC connection pool.
 [[superelements-88]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG933]]
 
@@ -5072,12 +5072,12 @@ Table C-73 `jdbc-connection-pool` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -5105,7 +5105,7 @@ Table C-74 `jdbc-connection-pool` Attributes
 |===
 |Attribute |Default |Description
 |`name` |none |Specifies the name of the connection pool. A
-xref:#giyhm[`jdbc-resource`] element's `pool-name` attribute refers to
+xref:#jdbc-resource[`jdbc-resource`] element's `pool-name` attribute refers to
 this `name`.
 
 |`datasource-classname` |none |(optional) Specifies the class name of
@@ -5502,7 +5502,7 @@ Defines a JDBC (javax.sql.DataSource) resource.
 [[superelements-89]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG942]]
 
@@ -5522,12 +5522,12 @@ Table C-77 `jdbc-resource` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -5557,7 +5557,7 @@ Table C-78 `jdbc-resource` Attributes
 element.
 
 |`pool-name` |none |Specifies the `name` of the associated
-xref:#giyil[`jdbc-connection-pool`].
+xref:#jdbc-connection-pool[`jdbc-connection-pool`].
 
 |`object-type` |`user` a|
 (optional) Defines the type of the resource. Allowed values are:
@@ -5587,7 +5587,7 @@ durability is Durable.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvzdp]][[GSDPG00520]][[subelements-86]]
 
@@ -5607,7 +5607,7 @@ default is 1.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyxq]][[GSDPG00522]][[subelements-87]]
 
@@ -5628,20 +5628,20 @@ bean exposes a remote view.
 For JMS message-driven beans, this is the JNDI name of the JMS resource
 from which the message-driven bean consumes JMS messages. This
 information is alternatively specified within the
-xref:#beaqs[`activation-config`] subelement of the
-xref:#beaus[`mdb-resource-adapter`] element. For more information about
-JMS resources, see "link:application-development-guide/jms.html#GSDVG00020[Using the Java Message Service]" in
+xref:#activation-config[`activation-config`] subelement of the
+xref:#mdb-resource-adapter[`mdb-resource-adapter`] element. For more information about
+JMS resources, see "link:application-development-guide/jms.html#beaob[Using the Java Message Service]" in
 {productName} Application Development Guide.
 
 [[fvyyy]][[GSDPG00523]][[superelements-92]]
 
 ==== Superelements
 
-xref:#beasu[`ejb-ref`], xref:#beauu[`message-destination`],
-xref:#beawu[`resource-env-ref`], xref:#beaww[`resource-ref`]
+xref:#ejb-ref[`ejb-ref`], xref:#message-destination[`message-destination`],
+xref:#resource-env-ref[`resource-env-ref`], xref:#resource-ref[`resource-ref`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
-`glassfish-application-client.xml`); xref:#bearv[`cmp-resource`],
-xref:#beass[`ejb`], xref:#beaur[`mdb-connection-factory`]
+`glassfish-application-client.xml`); xref:#cmp-resource[`cmp-resource`],
+xref:#ejb[`ejb`], xref:#mdb-connection-factory[`mdb-connection-factory`]
 (`glassfish-ejb-jar.xml`)
 
 [[fvywz]][[GSDPG00524]][[subelements-88]]
@@ -5690,13 +5690,13 @@ the JAR from the path in the JAR:
 ----
 
 For information about the allowed contents of a custom JNLP file, see
-"link:application-development-guide/java-clients.html#GSDVG00012[Developing Java Clients]" in {productName} Application Development Guide.
+"link:application-development-guide/java-clients.html#beakt[Developing Java Clients]" in {productName} Application Development Guide.
 
 [[gkhuj]][[GSDPG00525]][[superelements-93]]
 
 ==== Superelements
 
-xref:#gauax[`java-web-start-access`]
+xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
 [[gkhtm]][[GSDPG00526]][[subelements-89]]
@@ -5715,7 +5715,7 @@ Specifies JSP configuration information.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvzcs]][[GSDPG00528]][[subelements-90]]
 
@@ -5732,7 +5732,7 @@ Table C-79 `jsp-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -5902,7 +5902,7 @@ header is added by the generated servlet.
 
 If set to `true`, retains web sessions, stateful session bean instances,
 and persistently created EJB timers across redeployments. The
-`--keepstate` option of the link:reference-manual/redeploy.html#GSRFM00217[`redeploy`] subcommand
+`--keepstate` option of the link:reference-manual/redeploy.html#redeploy[`redeploy`] subcommand
 takes precedence. The default for both is `false`.
 
 Some changes to an application between redeployments prevent this
@@ -5911,7 +5911,7 @@ instance variables in the SFSB bean class.
 
 For web applications, this feature is applicable only if in the
 `glassfish-web-app.xml` file the `persistence-type` attribute of the
-xref:#beaxq[`session-manager`] element is `file`.
+xref:#session-manager[`session-manager`] element is `file`.
 
 For stateful session bean instances, the persistence type without high
 availability is set in the server (the `sfsb-persistence-type`
@@ -5931,9 +5931,9 @@ redeployed application deserializes the data that was previously saved.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beayb[`glassfish-web-app`] (`glassfish-web-app.xml`),
-xref:#beaya[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web-app.xml`),
+xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
 [[gkhuk]][[GSDPG00531]][[subelements-91]]
 
@@ -5958,7 +5958,7 @@ the current request). See the Servlet 2.4 specification, section SRV
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvzal]][[GSDPG00533]][[subelements-92]]
 
@@ -6002,7 +6002,7 @@ of level must be greater than zero. Only one is allowed.
 
 ==== Superelements
 
-xref:#beatc[`fetched-with`] (`sun-cmp-mappings.xml`)
+xref:#fetched-with[`fetched-with`] (`sun-cmp-mappings.xml`)
 
 [[fvywq]][[GSDPG00536]][[subelements-93]]
 
@@ -6029,7 +6029,7 @@ redeployment time. Do not specify it or change it after deployment.
 
 ==== Superelements
 
-xref:#beath[`gen-classes`] (`glassfish-ejb-jar.xml`)
+xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
 [[fvzah]][[GSDPG00538]][[subelements-94]]
 
@@ -6056,7 +6056,7 @@ redeployment time. Do not specify it or change it after deployment.
 
 ==== Superelements
 
-xref:#beath[`gen-classes`] (`glassfish-ejb-jar.xml`)
+xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
 [[fvzai]][[GSDPG00540]][[subelements-95]]
 
@@ -6069,15 +6069,15 @@ none - contains data
 === `locale-charset-info`
 
 Deprecated. For backward compatibility only. Use the
-xref:#beavn[`parameter-encoding`] subelement of
-xref:#beayb[`glassfish-web-app`] instead. Specifies information about
+xref:#parameter-encoding[`parameter-encoding`] subelement of
+xref:#glassfish-web-app[`glassfish-web-app`] instead. Specifies information about
 the application's internationalization settings.
 
 [[fvyvm]][[GSDPG00541]][[superelements-100]]
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvzbi]][[GSDPG00542]][[subelements-96]]
 
@@ -6095,7 +6095,7 @@ Table C-82 `locale-charset-info` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beauf[`locale-charset-map`]
+xref:#locale-charset-map[`locale-charset-map`]
 
 
  |one or more |Maps a locale and an agent to a character encoding.
@@ -6103,7 +6103,7 @@ Provided for backward compatibility. Used only for request processing,
 and only if no `parameter-encoding` is defined.
 
 a|
-xref:#beavn[`parameter-encoding`]
+xref:#parameter-encoding[`parameter-encoding`]
 
 
  |zero or one |Determines the default request character encoding and how
@@ -6129,7 +6129,7 @@ Table C-83 `locale-charset-info` Attributes
 |Attribute |Default |Description
 |`default-locale` |none |Although a value is required, the value is
 ignored. Use the `default-charset` attribute of the
-xref:#beavn[`parameter-encoding`] element.
+xref:#parameter-encoding[`parameter-encoding`] element.
 |===
 
 
@@ -6140,7 +6140,7 @@ xref:#beavn[`parameter-encoding`] element.
 Maps locales and agents to character encodings. Provided for backward
 compatibility. Used only for request processing. Used only if the
 character encoding is not specified in the request and cannot be derived
-from the optional xref:#beavn[`parameter-encoding`] element. For
+from the optional xref:#parameter-encoding[`parameter-encoding`] element. For
 encodings, see
 `http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html`.
 
@@ -6148,7 +6148,7 @@ encodings, see
 
 ==== Superelements
 
-xref:#beaue[`locale-charset-info`] (`glassfish-web.xml`)
+xref:#locale-charset-info[`locale-charset-info`] (`glassfish-web.xml`)
 
 [[fvywg]][[GSDPG00545]][[subelements-97]]
 
@@ -6166,7 +6166,7 @@ Table C-84 `locale-charset-map` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Specifies an optional text description of a mapping.
@@ -6234,7 +6234,7 @@ Specifies the local part of a QNAME.
 
 ==== Superelements
 
-xref:#beaxj[`service-qname`], xref:#beayx[`wsdl-port`]
+xref:#service-qname[`service-qname`], xref:#wsdl-port[`wsdl-port`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
@@ -6258,7 +6258,7 @@ have read access to the bean.
 
 ==== Superelements
 
-xref:#beasd[`consistency`] (`sun-cmp-mappings.xml`)
+xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
 [[fvyyl]][[GSDPG00551]][[subelements-99]]
 
@@ -6276,7 +6276,7 @@ This element is not implemented. Do not use.
 
 ==== Superelements
 
-xref:#beasd[`consistency`] (`sun-cmp-mappings.xml`)
+xref:#consistency[`consistency`] (`sun-cmp-mappings.xml`)
 
 [[beauj]][[GSDPG00189]][[log-service]]
 
@@ -6288,7 +6288,7 @@ Specifies configuration settings for the log file.
 
 ==== Superelements
 
-xref:#bearr[`client-container`] (`sun-acc.xml`)
+xref:#client-container[`client-container`] (`sun-acc.xml`)
 
 [[fvywo]][[GSDPG00554]][[subelements-100]]
 
@@ -6305,7 +6305,7 @@ Table C-87 `log-service` subelement
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -6347,7 +6347,7 @@ security configuration is contained in the `web.xml` file.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvyxg]][[GSDPG00557]][[subelements-101]]
@@ -6366,13 +6366,13 @@ Table C-89 `login-config` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaqx[`auth-method`]
+xref:#auth-method[`auth-method`]
 
 
  |only one |Specifies the authentication method.
 
 a|
-xref:#beawi[`realm`]
+xref:#realm[`realm`]
 
 
  |zero or one |Specifies the name of the realm used to process all
@@ -6392,7 +6392,7 @@ Defines a Jakarta Mail (`jakarta.mail.Session`) resource.
 [[superelements-107]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG958]]
 
@@ -6412,12 +6412,12 @@ Table C-90 `mail-resource` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -6545,7 +6545,7 @@ Specifies session manager properties.
 
 ==== Superelements
 
-xref:#beaxq[`session-manager`] (`glassfish-web.xml`)
+xref:#session-manager[`session-manager`] (`glassfish-web.xml`)
 
 [[fvzcq]][[GSDPG00559]][[subelements-103]]
 
@@ -6563,7 +6563,7 @@ Table C-92 `manager-properties` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -6600,7 +6600,7 @@ accessed web site, or the last few hits might be lost each time the
 server is restarted.
 
 Applicable only if the `persistence-type` attribute of the parent
-xref:#beaxq[`session-manager`] element is `file` or `replicated`.
+xref:#session-manager[`session-manager`] element is `file` or `replicated`.
 
 |`maxSessions` |`-1` a|
 Specifies the maximum number of sessions that are permitted in the
@@ -6608,7 +6608,7 @@ cache, or `-1` for no limit. After this, an attempt to create a new
 session causes an `IllegalStateException` to be thrown.
 
 If the `persistence-type` attribute of the parent
-xref:#beaxq[`session-manager`] element is `file` or `replicated`, the
+xref:#session-manager[`session-manager`] element is `file` or `replicated`, the
 session manager passivates sessions to the persistent store when this
 maximum is reached.
 
@@ -6626,7 +6626,7 @@ By default, this property's value is set to an empty string, which
 disables this property and does not preserve the session state.
 
 Applicable only if the `persistence-type` attribute of the parent
-xref:#beaxq[`session-manager`] element is `memory`.
+xref:#session-manager[`session-manager`] element is `memory`.
 
 |`persistenceFrequency` |`web-method` a|
 Specifies how often the session state is stored. Allowed values are as
@@ -6643,7 +6643,7 @@ provide a significant performance improvement because the state is not
 stored after each request.
 
 Applicable only if the `persistence-type` attribute of the parent
-xref:#beaxq[`session-manager`] element is `replicated`.
+xref:#session-manager[`session-manager`] element is `replicated`.
 
 |===
 
@@ -6658,7 +6658,7 @@ This element is not implemented.
 
 ==== Superelements
 
-xref:#beart[`cmp`] (`glassfish-ejb-jar.xml`)
+xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
 [[beauo]][[GSDPG00194]][[max-cache-size]]
 
@@ -6675,7 +6675,7 @@ Applies to stateful session beans and entity beans.
 
 ==== Superelements
 
-xref:#beara[`bean-cache`] (`glassfish-ejb-jar.xml`)
+xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
 [[fvzbx]][[GSDPG00563]][[subelements-104]]
 
@@ -6697,7 +6697,7 @@ Applies to all beans.
 
 ==== Superelements
 
-xref:#bearb[`bean-pool`] (`glassfish-ejb-jar.xml`)
+xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
 [[fvyxa]][[GSDPG00565]][[subelements-105]]
 
@@ -6715,7 +6715,7 @@ This element is deprecated. Do not use.
 
 ==== Superelements
 
-xref:#bearb[`bean-pool`] (`glassfish-ejb-jar.xml`)
+xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
 [[beaur]][[GSDPG00197]][[mdb-connection-factory]]
 
@@ -6729,7 +6729,7 @@ Destination type associated with the message-driven bean class.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyxt]][[GSDPG00568]][[subelements-106]]
 
@@ -6747,13 +6747,13 @@ Table C-94 `mdb-connection-factory` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name`.
 
 a|
-xref:#beasn[`default-resource-principal`]
+xref:#default-resource-principal[`default-resource-principal`]
 
 
  |zero or one |Specifies the default sign-on (name/password) to the
@@ -6771,7 +6771,7 @@ Specifies runtime configuration information for a message-driven bean.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyyx]][[GSDPG00570]][[subelements-107]]
 
@@ -6789,12 +6789,12 @@ Table C-95 `mdb-resource-adapter` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawt[`resource-adapter-mid`]
+xref:#resource-adapter-mid[`resource-adapter-mid`]
 
 
  |zero or one |Specifies a resource adapter module ID.
 a|
-xref:#beaqs[`activation-config`]
+xref:#activation-config[`activation-config`]
 
 
  |one or more |Specifies an activation configuration.
@@ -6812,7 +6812,7 @@ requirements apply.
 
 ==== Superelements
 
-xref:#beauw[`message-security`] (`glassfish-web.xml`,
+xref:#message-security[`message-security`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyxc]][[GSDPG00572]][[subelements-108]]
@@ -6830,14 +6830,14 @@ Table C-96 `message` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beatt[`java-method`]
+xref:#java-method[`java-method`]
 
 
  |zero or one |Specifies the methods or operations to which message
 security requirements apply.
 
 a|
-xref:#beavl[`operation-name`]
+xref:#operation-name[`operation-name`]
 
 
  |zero or one |Specifies the WSDL name of an operation of a web service.
@@ -6859,9 +6859,9 @@ corresponding Jakarta EE deployment descriptor file specifies a
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beasx[`enterprise-beans`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[fvyxn]][[GSDPG00574]][[subelements-109]]
@@ -6880,14 +6880,14 @@ Table C-97 `message-destination` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beauv[`message-destination-name`]
+xref:#message-destination-name[`message-destination-name`]
 
 
  |only one |Specifies the name of a logical message destination defined
 within the corresponding Jakarta EE deployment descriptor file.
 
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the `jndi-name` of the associated entity.
@@ -6905,7 +6905,7 @@ corresponding Jakarta EE deployment descriptor file.
 
 ==== Superelements
 
-xref:#beauu[`message-destination`] (`glassfish-web.xml`,
+xref:#message-destination[`message-destination`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvzbo]][[GSDPG00576]][[subelements-110]]
@@ -6928,9 +6928,9 @@ logical `message-destination`.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[gaual]][[GSDPG00578]][[subelements-111]]
@@ -6949,14 +6949,14 @@ Table C-98 `message-destination-ref` subelements
 |===
 |Element |Required |Description
 a|
-xref:#gauat[`message-destination-ref-name`]
+xref:#message-destination-ref-name[`message-destination-ref-name`]
 
 
  |only one |Specifies the name of a physical message destination defined
 within the corresponding Jakarta EE deployment descriptor file.
 
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the `jndi-name` of the associated entity.
@@ -6974,7 +6974,7 @@ corresponding Jakarta EE deployment descriptor file.
 
 ==== Superelements
 
-xref:#gauao[`message-destination-ref`] (`glassfish-web.xml`,
+xref:#message-destination-ref[`message-destination-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[gauas]][[GSDPG00580]][[subelements-112]]
@@ -6989,17 +6989,17 @@ none - contains data
 
 Specifies message security requirements.
 
-* If the grandparent element is xref:#beayv[`webservice-endpoint`],
+* If the grandparent element is xref:#webservice-endpoint[`webservice-endpoint`],
 these requirements pertain to request and response messages of the
 endpoint.
-* If the grandparent element is xref:#beavt[`port-info`], these
+* If the grandparent element is xref:#port-info[`port-info`], these
 requirements pertain to the port of the referenced service.
 
 [[fvzac]][[GSDPG00581]][[superelements-120]]
 
 ==== Superelements
 
-xref:#beaux[`message-security-binding`] (`glassfish-web.xml`,
+xref:#message-security-binding[`message-security-binding`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyve]][[GSDPG00582]][[subelements-113]]
@@ -7018,21 +7018,21 @@ Table C-99 `message-security` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaut[`message`]
+xref:#message[`message`]
 
 
  |one or more |Specifies the methods or operations to which message
 security requirements apply.
 
 a|
-xref:#beawp[`request-protection`]
+xref:#request-protection[`request-protection`]
 
 
  |zero or one |Defines the authentication policy requirements of the
 application's request processing.
 
 a|
-xref:#beawy[`response-protection`]
+xref:#response-protection[`response-protection`]
 
 
  |zero or one |Defines the authentication policy requirements of the
@@ -7045,7 +7045,7 @@ application's response processing.
 === `message-security-binding`
 
 Specifies a custom authentication provider binding for a parent
-xref:#beayv[`webservice-endpoint`] or xref:#beavt[`port-info`] element
+xref:#webservice-endpoint[`webservice-endpoint`] or xref:#port-info[`port-info`] element
 in one or both of these ways:
 
 * By binding to a specific provider
@@ -7056,7 +7056,7 @@ provider
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`], xref:#beavt[`port-info`]
+xref:#webservice-endpoint[`webservice-endpoint`], xref:#port-info[`port-info`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
@@ -7076,7 +7076,7 @@ Table C-100 `message-security-binding` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beauw[`message-security`]
+xref:#message-security[`message-security`]
 
 
  |zero or more |Specifies message security requirements.
@@ -7124,7 +7124,7 @@ Specifies configurations for message security providers.
 
 ==== Superelements
 
-xref:#bearr[`client-container`] (`sun-acc.xml`)
+xref:#client-container[`client-container`] (`sun-acc.xml`)
 
 [[fvzck]][[GSDPG00587]][[subelements-115]]
 
@@ -7142,7 +7142,7 @@ Table C-102 `message-security-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavz[`provider-config`]
+xref:#provider-config[`provider-config`]
 
 
  |one or more |Specifies a configuration for one message security
@@ -7187,8 +7187,8 @@ Specifies a bean method.
 
 ==== Superelements
 
-xref:#bearo[`checkpoint-at-end-of-method`],
-xref:#beatf[`flush-at-end-of-method`] (`glassfish-ejb-jar.xml`)
+xref:#checkpoint-at-end-of-method[`checkpoint-at-end-of-method`],
+xref:#flush-at-end-of-method[`flush-at-end-of-method`] (`glassfish-ejb-jar.xml`)
 
 [[fvzay]][[GSDPG00590]][[subelements-116]]
 
@@ -7205,33 +7205,33 @@ Table C-104 `method` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Specifies an optional text description.
 
 a|
-xref:#beast[`ejb-name`]
+xref:#ejb-name[`ejb-name`]
 
 
  |zero or one |Matches the `ejb-name` in the corresponding `ejb-jar.xml`
 file.
 
 a|
-xref:#beavb[`method-name`]
+xref:#method-name[`method-name`]
 
 
  |only one |Specifies a method name.
 
 a|
-xref:#beava[`method-intf`]
+xref:#method-intf[`method-intf`]
 
 
  |zero or one |Specifies the method interface to distinguish between
 methods with the same name in different interfaces.
 
 a|
-xref:#beavd[`method-params`]
+xref:#method-params[`method-params`]
 
 
  |zero or one |Specifies fully qualified Java type names of method
@@ -7251,7 +7251,7 @@ same name in different interfaces. Allowed values are `Home`, `Remote`,
 
 ==== Superelements
 
-xref:#beauz[`method`] (`glassfish-ejb-jar.xml`)
+xref:#method[`method`] (`glassfish-ejb-jar.xml`)
 
 [[fvyyz]][[GSDPG00592]][[subelements-117]]
 
@@ -7270,10 +7270,10 @@ method is overloaded, specifies all methods with the same name.
 
 ==== Superelements
 
-xref:#beatt[`java-method`] (`glassfish-web.xml`,
+xref:#java-method[`java-method`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`);
-xref:#beate[`finder`], xref:#beawc[`query-method`] ,
-xref:#beauz[`method`] (`glassfish-ejb-jar.xml`)
+xref:#finder[`finder`], xref:#query-method[`query-method`] ,
+xref:#method[`method`] (`glassfish-ejb-jar.xml`)
 
 [[fvzcp]][[GSDPG00594]][[subelements-118]]
 
@@ -7299,7 +7299,7 @@ Specifies the fully qualified Java type name of a method parameter.
 
 ==== Superelements
 
-xref:#beavd[`method-params`] (`glassfish-web.xml`,
+xref:#method-params[`method-params`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyvj]][[GSDPG00597]][[subelements-119]]
@@ -7318,9 +7318,9 @@ Specifies fully qualified Java type names of method parameters.
 
 ==== Superelements
 
-xref:#beatt[`java-method`] (`glassfish-web.xml`,
+xref:#java-method[`java-method`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`);
-xref:#beawc[`query-method`], xref:#beauz[`method`]
+xref:#query-method[`query-method`], xref:#method[`method`]
 (`glassfish-ejb-jar.xml`)
 
 [[fvyzw]][[GSDPG00599]][[subelements-120]]
@@ -7339,7 +7339,7 @@ Table C-105 `method-params` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavc[`method-param`]
+xref:#method-param[`method-param`]
 
 
  |zero or more |Specifies the fully qualified Java type name of a method
@@ -7358,11 +7358,11 @@ Specifies the name of the entity.
 
 ==== Superelements
 
-xref:#beari[`call-property`], xref:#beasn[`default-resource-principal`],
-xref:#beaxv[`stub-property`] (`glassfish-web.xml`,
+xref:#call-property[`call-property`], xref:#default-resource-principal[`default-resource-principal`],
+xref:#stub-property[`stub-property`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`);
-xref:#beasx[`enterprise-beans`], xref:#beavv[`principal`],
-xref:#beavy[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
+xref:#enterprise-beans[`enterprise-beans`], xref:#principal[`principal`],
+xref:#property-with-subelements[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
 
 [[fvyxe]][[GSDPG00601]][[subelements-121]]
 
@@ -7383,7 +7383,7 @@ of fetch group is used.
 
 ==== Superelements
 
-xref:#beatc[`fetched-with`] (`sun-cmp-mappings.xml`)
+xref:#fetched-with[`fetched-with`] (`sun-cmp-mappings.xml`)
 
 [[fvyxr]][[GSDPG00603]][[subelements-122]]
 
@@ -7401,7 +7401,7 @@ Specifies the namespace URI.
 
 ==== Superelements
 
-xref:#beaxj[`service-qname`], xref:#beayx[`wsdl-port`]
+xref:#service-qname[`service-qname`], xref:#wsdl-port[`wsdl-port`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
@@ -7423,7 +7423,7 @@ other fields or relationships.
 
 ==== Superelements
 
-xref:#beasd[`consistency`], xref:#beatc[`fetched-with`]
+xref:#consistency[`consistency`], xref:#fetched-with[`fetched-with`]
 (`sun-cmp-mappings.xml`)
 
 [[fvzaw]][[GSDPG00607]][[subelements-124]]
@@ -7442,7 +7442,7 @@ Describes the finders for CMP 1.1 beans.
 
 ==== Superelements
 
-xref:#beart[`cmp`] (`glassfish-ejb-jar.xml`)
+xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
 [[fvywp]][[GSDPG00609]][[subelements-125]]
 
@@ -7460,7 +7460,7 @@ Table C-106 `one-one-finders` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beate[`finder`]
+xref:#finder[`finder`]
 
 
  |one or more |Describes the finders for CMP 1.1 with a method name and
@@ -7478,7 +7478,7 @@ Specifies the WSDL name of an operation of a web service.
 
 ==== Superelements
 
-xref:#beaut[`message`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
+xref:#message[`message`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
 [[fvyvt]][[GSDPG00611]][[subelements-126]]
@@ -7495,8 +7495,8 @@ Specifies the default request character encoding and how the web
 container decodes parameters from forms according to a hidden field
 value.
 
-If both the xref:#beayb[`glassfish-web-app`] and
-xref:#beaue[`locale-charset-info`] elements have `parameter-encoding`
+If both the xref:#glassfish-web-app[`glassfish-web-app`] and
+xref:#locale-charset-info[`locale-charset-info`] elements have `parameter-encoding`
 subelements, the subelement of `glassfish-web-app` takes precedence. For
 encodings, see
 `http://docs.oracle.com/javase/7/docs/technotes/guides/intl/encoding.doc.html`.
@@ -7505,7 +7505,7 @@ encodings, see
 
 ==== Superelements
 
-xref:#beaue[`locale-charset-info`], xref:#beayb[`glassfish-web-app`]
+xref:#locale-charset-info[`locale-charset-info`], xref:#glassfish-web-app[`glassfish-web-app`]
 (`glassfish-web.xml`)
 
 [[fvzbf]][[GSDPG00613]][[subelements-127]]
@@ -7594,8 +7594,8 @@ bean and application level, the bean level takes precedence.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvywx]][[GSDPG00616]][[subelements-128]]
 
@@ -7613,7 +7613,7 @@ Specifies the password for the principal.
 
 ==== Superelements
 
-xref:#beasn[`default-resource-principal`] (`glassfish-web.xml`,
+xref:#default-resource-principal[`default-resource-principal`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyvs]][[GSDPG00618]][[subelements-129]]
@@ -7636,7 +7636,7 @@ is not enabled. The default is `false`.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[gkkmq]][[GSDPG00620]][[subelements-130]]
 
@@ -7654,7 +7654,7 @@ This element and its subelements are deprecated. Do not use.
 
 ==== Superelements
 
-xref:#beasx[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
+xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
 [[beavr]][[GSDPG00223]][[pool-idle-timeout-in-seconds]]
 
@@ -7681,7 +7681,7 @@ removed (garbage collected) when the timeout expires.
 
 ==== Superelements
 
-xref:#bearb[`bean-pool`] (`glassfish-ejb-jar.xml`)
+xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
 [[fvzbs]][[GSDPG00623]][[subelements-131]]
 
@@ -7699,7 +7699,7 @@ Specifies a unique name for a port component within a web or EJB module.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvyys]][[GSDPG00625]][[subelements-132]]
@@ -7729,7 +7729,7 @@ element within the same `service-ref`.
 
 ==== Superelements
 
-xref:#beaxk[`service-ref`] (`glassfish-web.xml`,
+xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyva]][[GSDPG00627]][[subelements-133]]
@@ -7747,20 +7747,20 @@ Table C-108 `port-info` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxh[`service-endpoint-interface`]
+xref:#service-endpoint-interface[`service-endpoint-interface`]
 
 
  |zero or one |Specifies the web service reference name relative to
 `java:comp/env`.
 
 a|
-xref:#beayx[`wsdl-port`]
+xref:#wsdl-port[`wsdl-port`]
 
 
  |zero or one |Specifies the WSDL port.
 
 a|
-xref:#beaxv[`stub-property`]
+xref:#stub-property[`stub-property`]
 
 
  |zero or more |Specifies JAX-RPC property values that are set on a
@@ -7768,7 +7768,7 @@ xref:#beaxv[`stub-property`]
 client.
 
 a|
-xref:#beari[`call-property`]
+xref:#call-property[`call-property`]
 
 
  |zero or more |Specifies JAX-RPC property values that are set on a
@@ -7776,7 +7776,7 @@ xref:#beari[`call-property`]
 client.
 
 a|
-xref:#beaux[`message-security-binding`]
+xref:#message-security-binding[`message-security-binding`]
 
 
  |zero or one |Specifies a custom authentication provider binding.
@@ -7789,13 +7789,13 @@ xref:#beaux[`message-security-binding`]
 
 Disables prefetching of entity bean states for the specified query
 methods. Container-managed relationship fields are prefetched if their
-xref:#beatc[`fetched-with`] element is set to xref:#beasl[`default`].
+xref:#fetched-with[`fetched-with`] element is set to xref:#default[`default`].
 
 [[fvyxl]][[GSDPG00628]][[superelements-142]]
 
 ==== Superelements
 
-xref:#beart[`cmp`] (`glassfish-ejb-jar.xml`)
+xref:#cmp[`cmp`] (`glassfish-ejb-jar.xml`)
 
 [[fvyyb]][[GSDPG00629]][[subelements-134]]
 
@@ -7813,7 +7813,7 @@ Table C-109 `prefetch-disabled` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawc[`query-method`]
+xref:#query-method[`query-method`]
 
 
  |one or more |Specifies a query method.
@@ -7830,8 +7830,8 @@ Defines a user name on the platform.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`);
-xref:#giyhy[`security-map`] (`glassfish-resources.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`);
+xref:#security-map[`security-map`] (`glassfish-resources.xml`)
 
 [[fvzbt]][[GSDPG00631]][[subelements-135]]
 
@@ -7848,7 +7848,7 @@ Table C-110 `principal` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavf[`name`]
+xref:#name[`name`]
 
 
  |only one |Specifies the name of the user.
@@ -7868,7 +7868,7 @@ domain.
 [[superelements-144]]
 ==== Superelements
 
-xref:#giyht[`work-security-map`] (`glassfish-resources.xml`)
+xref:#work-security-map[`work-security-map`] (`glassfish-resources.xml`)
 
 [[giyjg]][[GSDPG00632]][[subelements-136]]
 
@@ -7913,8 +7913,8 @@ In an enterprise bean, specifies the principal (user) name that has the
 
 ==== Superelements
 
-xref:#beaxg[`security-role-mapping`] (`glassfish-application.xml`,
-`glassfish-web.xml`, `glassfish-ejb-jar.xml`), xref:#beaxm[`servlet`]
+xref:#security-role-mapping[`security-role-mapping`] (`glassfish-application.xml`,
+`glassfish-web.xml`, `glassfish-ejb-jar.xml`), xref:#servlet[`servlet`]
 (`glassfish-web.xml`)
 
 [[fvyxp]][[GSDPG00634]][[subelements-137]]
@@ -7960,21 +7960,21 @@ knowledge of, such as an LDAP server or a Java class
 
 ==== Superelements
 
-xref:#beard[`cache`], xref:#beare[`cache-helper`],
-xref:#bearq[`class-loader`], xref:#beash[`cookie-properties`],
-xref:#beasm[`default-helper`], xref:#beaum[`manager-properties`],
-xref:#beaxr[`session-properties`], xref:#beaxu[`store-properties`],
-xref:#beayb[`glassfish-web-app`], xref:#gikqk[`valve`],
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`);
-xref:#beaqy[`auth-realm`], xref:#bearr[`client-container`],
-xref:#bears[`client-credential`], xref:#beauj[`log-service`],
-xref:#beavz[`provider-config`] (`sun-acc.xml`);
-xref:#giyhw[`admin-object-resource`],
-xref:#giygu[`connector-connection-pool`],
-xref:#giyhv[`connector-resource`], xref:#giyhr[`custom-resource`],
-xref:#giyin[`external-jndi-resource`],
-xref:#giyil[`jdbc-connection-pool`], xref:#giyhm[`jdbc-resource`],
-xref:#giyik[`mail-resource`], xref:#giyit[`resource-adapter-config`]
+xref:#cache[`cache`], xref:#cache-helper[`cache-helper`],
+xref:#class-loader[`class-loader`], xref:#cookie-properties[`cookie-properties`],
+xref:#default-helper[`default-helper`], xref:#manager-properties[`manager-properties`],
+xref:#session-properties[`session-properties`], xref:#store-properties[`store-properties`],
+xref:#glassfish-web-app[`glassfish-web-app`], xref:#valve[`valve`],
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`);
+xref:#auth-realm[`auth-realm`], xref:#client-container[`client-container`],
+xref:#client-credential[`client-credential`], xref:#log-service[`log-service`],
+xref:#provider-config[`provider-config`] (`sun-acc.xml`);
+xref:#admin-object-resource[`admin-object-resource`],
+xref:#connector-connection-pool[`connector-connection-pool`],
+xref:#connector-resource[`connector-resource`], xref:#custom-resource[`custom-resource`],
+xref:#external-jndi-resource[`external-jndi-resource`],
+xref:#jdbc-connection-pool[`jdbc-connection-pool`], xref:#jdbc-resource[`jdbc-resource`],
+xref:#mail-resource[`mail-resource`], xref:#resource-adapter-config[`resource-adapter-config`]
 (`glassfish-resources.xml`)
 
 [[fvyzv]][[GSDPG00637]][[subelements-138]]
@@ -7992,7 +7992,7 @@ Table C-113 `property` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Specifies an optional text description of a property.
@@ -8050,9 +8050,9 @@ knowledge of, such as an LDAP server or a Java class
 
 ==== Superelements
 
-xref:#beasx[`enterprise-beans`], xref:#bearv[`cmp-resource`],
-xref:#beaxd[`schema-generator-properties`],
-xref:#beayv[`webservice-endpoint`] (`glassfish-ejb-jar.xml`)
+xref:#enterprise-beans[`enterprise-beans`], xref:#cmp-resource[`cmp-resource`],
+xref:#schema-generator-properties[`schema-generator-properties`],
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-ejb-jar.xml`)
 
 [[fvzaf]][[GSDPG00641]][[subelements-139]]
 
@@ -8069,12 +8069,12 @@ Table C-115 `property` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavf[`name`]
+xref:#name[`name`]
 
 
  |only one |Specifies the name of the property.
 a|
-xref:#beayo[`value`]
+xref:#value[`value`]
 
 
  |only one |Specifies the value of the property.
@@ -8111,7 +8111,7 @@ is called.
 
 ==== Superelements
 
-xref:#beauy[`message-security-config`] (`sun-acc.xml`)
+xref:#message-security-config[`message-security-config`] (`sun-acc.xml`)
 
 [[fvyzt]][[GSDPG00644]][[subelements-140]]
 
@@ -8129,21 +8129,21 @@ Table C-116 `provider-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawo[`request-policy`]
+xref:#request-policy[`request-policy`]
 
 
  |zero or one |Defines the authentication policy requirements of the
 authentication provider's request processing.
 
 a|
-xref:#beawx[`response-policy`]
+xref:#response-policy[`response-policy`]
 
 
  |zero or one |Defines the authentication policy requirements of the
 authentication provider's response processing.
 
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -8189,7 +8189,7 @@ Specifies the query filter for the CMP 1.1 finder.
 
 ==== Superelements
 
-xref:#beate[`finder`] (`glassfish-ejb-jar.xml`)
+xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
 [[fvzco]][[GSDPG00647]][[subelements-141]]
 
@@ -8207,7 +8207,7 @@ Specifies a query method.
 
 ==== Superelements
 
-xref:#beavu[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
+xref:#prefetch-disabled[`prefetch-disabled`] (`glassfish-ejb-jar.xml`)
 
 [[fvyzm]][[GSDPG00649]][[subelements-142]]
 
@@ -8225,13 +8225,13 @@ Table C-118 `query-method` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavb[`method-name`]
+xref:#method-name[`method-name`]
 
 
  |only one |Specifies a method name.
 
 a|
-xref:#beavd[`method-params`]
+xref:#method-params[`method-params`]
 
 
  |only one |Specifies the fully qualified Java type names of method
@@ -8249,7 +8249,7 @@ Specifies the query ordering for the CMP 1.1 finder.
 
 ==== Superelements
 
-xref:#beate[`finder`] (`glassfish-ejb-jar.xml`)
+xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
 [[fvywd]][[GSDPG00651]][[subelements-143]]
 
@@ -8267,7 +8267,7 @@ Specifies the query parameters for the CMP 1.1 finder.
 
 ==== Superelements
 
-xref:#beate[`finder`] (`glassfish-ejb-jar.xml`)
+xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
 [[fvzax]][[GSDPG00653]][[subelements-144]]
 
@@ -8285,7 +8285,7 @@ Specifies variables in the query expression for the CMP 1.1 finder.
 
 ==== Superelements
 
-xref:#beate[`finder`] (`glassfish-ejb-jar.xml`)
+xref:#finder[`finder`] (`glassfish-ejb-jar.xml`)
 
 [[fvzce]][[GSDPG00655]][[subelements-145]]
 
@@ -8304,7 +8304,7 @@ absent, the default value is `false` .
 
 ==== Superelements
 
-xref:#bearu[`cmp-field-mapping`] (`sun-cmp-mappings.xml`)
+xref:#cmp-field-mapping[`cmp-field-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvzav]][[GSDPG00657]][[subelements-146]]
 
@@ -8320,14 +8320,14 @@ Specifies the name of the realm used to process all authentication
 requests associated with this application. If this element is not
 specified or does not match the name of a configured realm, the default
 realm is used. For more information about realms, see
-"link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+"link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 [[fvzaa]][[GSDPG00658]][[superelements-155]]
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beaqw[`as-context`], xref:#beauk[`login-config`]
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#as-context[`as-context`], xref:#login-config[`login-config`]
 (`glassfish-ejb-jar.xml`)
 
 [[fvzdq]][[GSDPG00659]][[subelements-147]]
@@ -8347,7 +8347,7 @@ way to refresh a cached entry.
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvzbw]][[GSDPG00661]][[subelements-148]]
 
@@ -8393,7 +8393,7 @@ container. Default is 0 (no refresh).
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvyxh]][[GSDPG00664]][[subelements-149]]
 
@@ -8417,13 +8417,13 @@ being passivated.
 Applies to stateful session beans.
 
 For related information, see
-xref:#bearg[`cache-idle-timeout-in-seconds`].
+xref:#cache-idle-timeout-in-seconds[`cache-idle-timeout-in-seconds`].
 
 [[fvzat]][[GSDPG00665]][[superelements-158]]
 
 ==== Superelements
 
-xref:#beara[`bean-cache`] (`glassfish-ejb-jar.xml`)
+xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
 [[fvzeg]][[GSDPG00666]][[subelements-150]]
 
@@ -8450,7 +8450,7 @@ redeployment time. Do not specify it or change it after deployment.
 
 ==== Superelements
 
-xref:#beath[`gen-classes`] (`glassfish-ejb-jar.xml`)
+xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
 [[fvyyt]][[GSDPG00668]][[subelements-151]]
 
@@ -8477,7 +8477,7 @@ redeployment time. Do not specify it or change it after deployment.
 
 ==== Superelements
 
-xref:#beath[`gen-classes`] (`glassfish-ejb-jar.xml`)
+xref:#gen-classes[`gen-classes`] (`glassfish-ejb-jar.xml`)
 
 [[fvzag]][[GSDPG00670]][[subelements-152]]
 
@@ -8496,7 +8496,7 @@ provider's request processing.
 
 ==== Superelements
 
-xref:#beavz[`provider-config`] (`sun-acc.xml`)
+xref:#provider-config[`provider-config`] (`sun-acc.xml`)
 
 [[fvzdz]][[GSDPG00672]][[subelements-153]]
 
@@ -8540,7 +8540,7 @@ request processing.
 
 ==== Superelements
 
-xref:#beauw[`message-security`] (`glassfish-web.xml`,
+xref:#message-security[`message-security`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvzby]][[GSDPG00675]][[subelements-154]]
@@ -8579,14 +8579,14 @@ occurs before or after content authentication. Allowed values are
 === `required`
 
 Specifies whether the authentication method specified in the
-xref:#beaqx[`auth-method`] element must be used for client
+xref:#auth-method[`auth-method`] element must be used for client
 authentication. The value is `true` or `false` (the default).
 
 [[fvyvc]][[GSDPG00677]][[superelements-163]]
 
 ==== Superelements
 
-xref:#beaqw[`as-context`] (`glassfish-ejb-jar.xml`)
+xref:#as-context[`as-context`] (`glassfish-ejb-jar.xml`)
 
 [[fvywc]][[GSDPG00678]][[subelements-155]]
 
@@ -8607,7 +8607,7 @@ The name must be unique within an enterprise bean.
 
 ==== Superelements
 
-xref:#beaww[`resource-ref`] (`glassfish-web.xml`,
+xref:#resource-ref[`resource-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyyp]][[GSDPG00680]][[subelements-156]]
@@ -8623,23 +8623,23 @@ none - contains data
 Specifies the number of bean instances to be:
 
 * Created, if a request arrives when the pool has less than
-xref:#beaxt[`steady-pool-size`] quantity of beans (applies to pools only
+xref:#steady-pool-size[`steady-pool-size`] quantity of beans (applies to pools only
 for creation). If the pool has more than `steady-pool-size` minus
-xref:#beaws[`resize-quantity`] of beans, then `resize-quantity` is still
+xref:#resize-quantity[`resize-quantity`] of beans, then `resize-quantity` is still
 created.
-* Removed, when the xref:#beavr[`pool-idle-timeout-in-seconds`] timer
+* Removed, when the xref:#pool-idle-timeout-in-seconds[`pool-idle-timeout-in-seconds`] timer
 expires and a cleaner thread removes any unused instances.
 
-** For caches, when xref:#beauo[`max-cache-size`] is reached,
+** For caches, when xref:#max-cache-size[`max-cache-size`] is reached,
 `resize-quantity` beans are selected for passivation using the
-xref:#beayp[`victim-selection-policy`]. In addition, the
-xref:#bearg[`cache-idle-timeout-in-seconds`] or
-xref:#beawl[`removal-timeout-in-seconds`] timers passivate beans from
+xref:#victim-selection-policy[`victim-selection-policy`]. In addition, the
+xref:#cache-idle-timeout-in-seconds[`cache-idle-timeout-in-seconds`] or
+xref:#removal-timeout-in-seconds[`removal-timeout-in-seconds`] timers passivate beans from
 the cache.
 
-** For pools, when the xref:#beaup[`max-pool-size`] is reached,
+** For pools, when the xref:#max-pool-size[`max-pool-size`] is reached,
 `resize-quantity` beans are selected for removal. In addition, the
-xref:#beavr[`pool-idle-timeout-in-seconds`] timer removes beans until
+xref:#pool-idle-timeout-in-seconds[`pool-idle-timeout-in-seconds`] timer removes beans until
 `steady-pool-size` is reached.
 
 Values are from 0 to MAX_INTEGER. The pool is not resized below the
@@ -8659,7 +8659,7 @@ Default is 2.
 
 ==== Superelements
 
-xref:#beara[`bean-cache`], xref:#bearb[`bean-pool`]
+xref:#bean-cache[`bean-cache`], xref:#bean-pool[`bean-pool`]
 (`glassfish-ejb-jar.xml`)
 
 [[fvzcf]][[GSDPG00682]][[subelements-157]]
@@ -8682,7 +8682,7 @@ configuration information for the resource adapter JavaBean in
 [[superelements-166]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[GSDPG996]]
 
@@ -8702,7 +8702,7 @@ Table C-122 `resource-adapter-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property or a variable.
@@ -8769,7 +8769,7 @@ delivering messages to the message-driven bean.
 
 ==== Superelements
 
-xref:#beaus[`mdb-resource-adapter`] (`glassfish-ejb-jar.xml`)
+xref:#mdb-resource-adapter[`mdb-resource-adapter`] (`glassfish-ejb-jar.xml`)
 
 [[fvzed]][[GSDPG00684]][[subelements-159]]
 
@@ -8789,9 +8789,9 @@ a resource.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[fvywe]][[GSDPG00686]][[subelements-160]]
@@ -8810,14 +8810,14 @@ Table C-124 `resource-env-ref` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawv[`resource-env-ref-name`]
+xref:#resource-env-ref-name[`resource-env-ref-name`]
 
 
  |only one |Specifies the `res-ref-name` in the corresponding Jakarta EE
 deployment descriptor file `resource-env-ref` entry.
 
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name` of a resource.
@@ -8847,7 +8847,7 @@ descriptor file `resource-env-ref` entry.
 
 ==== Superelements
 
-xref:#beawu[`resource-env-ref`] (`glassfish-web.xml`,
+xref:#resource-env-ref[`resource-env-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyxj]][[GSDPG00689]][[subelements-161]]
@@ -8885,9 +8885,9 @@ repository.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[fvyzz]][[GSDPG00691]][[subelements-162]]
@@ -8906,20 +8906,20 @@ Table C-125 `resource-ref` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawr[`res-ref-name`]
+xref:#res-ref-name[`res-ref-name`]
 
 
  |only one |Specifies the `res-ref-name` in the corresponding Jakarta EE
 deployment descriptor file `resource-ref` entry.
 
 a|
-xref:#beatw[`jndi-name`]
+xref:#jndi-name[`jndi-name`]
 
 
  |only one |Specifies the absolute `jndi-name` of a resource.
 
 a|
-xref:#beasn[`default-resource-principal`]
+xref:#default-resource-principal[`default-resource-principal`]
 
 
  |zero or one |Specifies the default principal (user) for the resource.
@@ -8945,7 +8945,7 @@ xref:#beasn[`default-resource-principal`]
 Defines application-scoped resources for an enterprise application, web
 module, EJB module, connector module, or application client module. This
 is the root element; there can only be one `resources` element in a
-`glassfish-resources.xml` file. See link:dd-files.html#giyhh[The
+`glassfish-resources.xml` file. See link:dd-files.html#GSDPG00083[The
 glassfish-resources.xml File].
 
 
@@ -8983,65 +8983,65 @@ Table C-126 `resources` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#giyhr[`custom-resource`]
+xref:#custom-resource[`custom-resource`]
 
 
  |zero or more |Defines a custom resource.
 
 a|
-xref:#giyin[`external-jndi-resource`]
+xref:#external-jndi-resource[`external-jndi-resource`]
 
 
  |zero or more |Defines a resource that resides in an external JNDI
 repository.
 
 a|
-xref:#giyhm[`jdbc-resource`]
+xref:#jdbc-resource[`jdbc-resource`]
 
 
  |zero or more |Defines a JDBC (Java Database Connectivity) resource.
 
 a|
-xref:#giyik[`mail-resource`]
+xref:#mail-resource[`mail-resource`]
 
 
  |zero or more |Defines a Jakarta Mail resource.
 
 a|
-xref:#giyhw[`admin-object-resource`]
+xref:#admin-object-resource[`admin-object-resource`]
 
 
  |zero or more |Defines an administered object for an inbound resource
 adapter.
 
 a|
-xref:#giyhv[`connector-resource`]
+xref:#connector-resource[`connector-resource`]
 
 
  |zero or more |Defines a connector (resource adapter) resource.
 
 a|
-xref:#giyit[`resource-adapter-config`]
+xref:#resource-adapter-config[`resource-adapter-config`]
 
 
  |zero or more |Defines a resource adapter configuration.
 
 a|
-xref:#giyil[`jdbc-connection-pool`]
+xref:#jdbc-connection-pool[`jdbc-connection-pool`]
 
 
  |zero or more |Defines the properties that are required for creating a
 JDBC connection pool.
 
 a|
-xref:#giygu[`connector-connection-pool`]
+xref:#connector-connection-pool[`connector-connection-pool`]
 
 
  |zero or more |Defines the properties that are required for creating a
 connector connection pool.
 
 a|
-xref:#giyht[`work-security-map`]
+xref:#work-security-map[`work-security-map`]
 
 
  |zero or more |Defines a work security map.
@@ -9066,7 +9066,7 @@ provider's response processing.
 
 ==== Superelements
 
-xref:#beavz[`provider-config`] (`sun-acc.xml`)
+xref:#provider-config[`provider-config`] (`sun-acc.xml`)
 
 [[fvyxm]][[GSDPG00694]][[subelements-164]]
 
@@ -9110,7 +9110,7 @@ response processing.
 
 ==== Superelements
 
-xref:#beauw[`message-security`] (`glassfish-web.xml`,
+xref:#message-security[`message-security`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvyxd]][[GSDPG00697]][[subelements-165]]
@@ -9155,7 +9155,7 @@ corresponding Jakarta EE deployment descriptor file.
 
 ==== Superelements
 
-xref:#beaxg[`security-role-mapping`] (`glassfish-application.xml`,
+xref:#security-role-mapping[`security-role-mapping`] (`glassfish-application.xml`,
 `glassfish-web.xml`, `glassfish-ejb-jar.xml`)
 
 [[fvzei]][[GSDPG00700]][[subelements-166]]
@@ -9174,7 +9174,7 @@ Describes the sas-context fields.
 
 ==== Superelements
 
-xref:#beato[`ior-security-config`] (`glassfish-ejb-jar.xml`)
+xref:#ior-security-config[`ior-security-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvzfb]][[GSDPG00702]][[subelements-167]]
 
@@ -9191,7 +9191,7 @@ Table C-129 `sas-context` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#bearj[`caller-propagation`]
+xref:#caller-propagation[`caller-propagation`]
 
 
  |only one |Specifies whether the target accepts propagated caller
@@ -9209,13 +9209,13 @@ element is empty, the database schema file is automatically generated at
 deployment time. Otherwise, the `schema` element names a `.dbschema`
 file with a pathname relative to the directory containing the
 `sun-cmp-mappings.xml` file, but without the `.dbschema` extension. See
-"link:application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema Capture]" in {productName} Application Development Guide.
+"link:application-development-guide/container_managed-persistence.html#automatic-database-schema-capture[Automatic Database Schema Capture]" in {productName} Application Development Guide.
 
 [[fvzfa]][[GSDPG00703]][[superelements-176]]
 
 ==== Superelements
 
-xref:#beaxy[`sun-cmp-mapping`] (`sun-cmp-mappings.xml`)
+xref:#sun-cmp-mapping[`sun-cmp-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvzeq]][[GSDPG00704]][[subelements-168]]
 
@@ -9244,7 +9244,7 @@ Specifies field-specific column attributes in `property` subelements.
 
 ==== Superelements
 
-xref:#bearv[`cmp-resource`] (`glassfish-ejb-jar.xml`)
+xref:#cmp-resource[`cmp-resource`] (`glassfish-ejb-jar.xml`)
 
 [[fvzez]][[GSDPG00707]][[subelements-169]]
 
@@ -9262,7 +9262,7 @@ Table C-130 `schema-generator-properties` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavy[`property` (with subelements)]
+xref:#property-with-subelements[`property` (with subelements)]
 
 
  |zero or more |Specifies a property name and value.
@@ -9286,7 +9286,7 @@ Table C-131 `schema-generator-properties` Properties
 |Property |Default |Description
 |`use-unique-table-names` |`false` |Specifies that generated table names
 are unique within each {productName} domain. This property can be
-overridden during deployment. See "link:application-development-guide/container_managed-persistence.html#GSDVG00438[Generation Options
+overridden during deployment. See "link:application-development-guide/container_managed-persistence.html#generation-options-for-cmp[Generation Options
 for CMP]" in {productName} Application
 Development Guide.
 
@@ -9363,7 +9363,7 @@ Specifies a bean's secondary table(s).
 
 ==== Superelements
 
-xref:#beasy[`entity-mapping`] (`sun-cmp-mappings.xml`)
+xref:#entity-mapping[`entity-mapping`] (`sun-cmp-mappings.xml`)
 
 [[fvzeo]][[GSDPG00711]][[subelements-170]]
 
@@ -9381,13 +9381,13 @@ Table C-133 `secondary table` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beayd[`table-name`]
+xref:#table-name[`table-name`]
 
 
  |only one |Specifies the name of a database table.
 
 a|
-xref:#beasa[`column-pair`]
+xref:#column-pair[`column-pair`]
 
 
  |one or more |Specifies the pair of columns that determine the
@@ -9406,7 +9406,7 @@ the target server.
 
 ==== Superelements
 
-xref:#beaye[`target-server`] (`sun-acc.xml`)
+xref:#target-server[`target-server`] (`sun-acc.xml`)
 
 [[fvzeu]][[GSDPG00713]][[subelements-171]]
 
@@ -9423,12 +9423,12 @@ Table C-134 `security` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxs[`ssl`]
+xref:#ssl[`ssl`]
 
 
  |only one |Specifies the SSL processing parameters.
 a|
-xref:#beark[`cert-db`]
+xref:#cert-db[`cert-db`]
 
 
  |only one |Not implemented. Included for backward compatibility only.
@@ -9444,7 +9444,7 @@ credentials accepted by the EIS. This mapping is optional. It is
 possible to map multiple {productName} principals to the same
 back-end principal.
 
-This is different from a xref:#giyht[`work-security-map`], which maps a
+This is different from a xref:#work-security-map[`work-security-map`], which maps a
 principal associated with an incoming work instance to a principal in
 the {productName}'s security domain.
 
@@ -9454,7 +9454,7 @@ the {productName}'s security domain.
 [[superelements-180]]
 ==== Superelements
 
-xref:#giygu[`connector-connection-pool`] (`glassfish-resources.xml`)
+xref:#connector-connection-pool[`connector-connection-pool`] (`glassfish-resources.xml`)
 
 [[GSDPG1015]]
 
@@ -9474,17 +9474,17 @@ Table C-135 `security-map` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavv[`principal`]
+xref:#principal[`principal`]
 
 
  |one or more |Contains the principal of the servlet or EJB client.
 a|
-xref:#giyiq[`user-group`]
+xref:#user-group[`user-group`]
 
 
  |one or more |Contains the group to which the principal belongs.
 a|
-xref:#giyjv[`backend-principal`]
+xref:#backend-principal[`backend-principal`]
 
 
  |only one |Specifies the user name and password required by the EIS.
@@ -9516,7 +9516,7 @@ Table C-136 `security-map` Attributes
 === `security-role-mapping`
 
 Maps roles to users or groups in the currently active realm. See
-"link:application-development-guide/securing-apps.html#GSDVG00118[Realm Configuration]" in {productName} Application Development Guide.
+"link:application-development-guide/securing-apps.html#realm-configuration[Realm Configuration]" in {productName} Application Development Guide.
 
 The role mapping element maps a role, as specified in the EJB JAR
 `role-name` entries, to a environment-specific user or group. If it maps
@@ -9530,9 +9530,9 @@ must be at least one user in that realm who belongs to that group.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beaya[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`)
 
 [[fvzfd]][[GSDPG00715]][[subelements-173]]
 
@@ -9550,14 +9550,14 @@ Table C-137 `security-role-mapping` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beawz[`role-name`]
+xref:#role-name[`role-name`]
 
 
  |only one |Contains the `role-name` in the `security-role` element of
 the corresponding Jakarta EE deployment descriptor file.
 
 a|
-xref:#beavw[`principal-name`]
+xref:#principal-name[`principal-name`]
 
 
  |one or more if no `group-name`, otherwise zero or more |Contains a
@@ -9565,7 +9565,7 @@ principal (user) name in the current realm. In an enterprise bean, the
 principal must have the run-as role specified.
 
 a|
-xref:#beati[`group-name`]
+xref:#group-name[`group-name`]
 
 
  |one or more if no `principal-name`, otherwise zero or more |Contains a
@@ -9583,7 +9583,7 @@ Specifies the web service reference name relative to `java:comp/env`.
 
 ==== Superelements
 
-xref:#beavt[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
+xref:#port-info[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
 [[fvzfl]][[GSDPG00717]][[subelements-174]]
@@ -9602,7 +9602,7 @@ Specifies the name of the generated service implementation class.
 
 ==== Superelements
 
-xref:#beaxk[`service-ref`] (`glassfish-web.xml`,
+xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvzfk]][[GSDPG00719]][[subelements-175]]
@@ -9621,9 +9621,9 @@ Specifies the WSDL service element that is being referred to.
 
 ==== Superelements
 
-xref:#beaxk[`service-ref`] (`glassfish-web.xml`,
+xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`);
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvzff]][[GSDPG00721]][[subelements-176]]
@@ -9642,12 +9642,12 @@ Table C-138 `service-qname` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavh[`namespaceURI`]
+xref:#namespaceuri[`namespaceURI`]
 
 
  |only one |Specifies the namespace URI.
 a|
-xref:#beaug[`localpart`]
+xref:#localpart[`localpart`]
 
 
  |only one |Specifies the local part of a QNAME.
@@ -9671,9 +9671,9 @@ descriptor
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[fvzhf]][[GSDPG00723]][[subelements-177]]
@@ -9691,21 +9691,21 @@ Table C-139 `service-ref` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxl[`service-ref-name`]
+xref:#service-ref-name[`service-ref-name`]
 
 
  |only one |Specifies the web service reference name relative to
 `java:comp/env`.
 
 a|
-xref:#beavt[`port-info`]
+xref:#port-info[`port-info`]
 
 
  |zero or more |Specifies information for a port within a web service
 reference.
 
 a|
-xref:#beari[`call-property`]
+xref:#call-property[`call-property`]
 
 
  |zero or more |Specifies JAX-RPC property values that can be set on a
@@ -9713,20 +9713,20 @@ xref:#beari[`call-property`]
 client.
 
 a|
-xref:#beayw[`wsdl-override`]
+xref:#wsdl-override[`wsdl-override`]
 
 
  |zero or one |Specifies a valid URL pointing to a final WSDL document.
 
 a|
-xref:#beaxi[`service-impl-class`]
+xref:#service-impl-class[`service-impl-class`]
 
 
  |zero or one |Specifies the name of the generated service
 implementation class.
 
 a|
-xref:#beaxj[`service-qname`]
+xref:#service-qname[`service-qname`]
 
 
  |zero or one |Specifies the WSDL service element that is being
@@ -9744,7 +9744,7 @@ Specifies the web service reference name relative to `java:comp/env`.
 
 ==== Superelements
 
-xref:#beaxk[`service-ref`] (`glassfish-web.xml`,
+xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvzga]][[GSDPG00725]][[subelements-178]]
@@ -9764,7 +9764,7 @@ defined in `web.xml`.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvzhs]][[GSDPG00727]][[subelements-179]]
 
@@ -9781,20 +9781,20 @@ Table C-140 `servlet` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxo[`servlet-name`]
+xref:#servlet-name[`servlet-name`]
 
 
  |only one |Contains the name of a servlet, which is matched to a
 `servlet-name` in `web.xml`.
 
 a|
-xref:#beavw[`principal-name`]
+xref:#principal-name[`principal-name`]
 
 
  |zero or one |Contains a principal (user) name in the current realm.
 
 a|
-xref:#beayv[`webservice-endpoint`]
+xref:#webservice-endpoint[`webservice-endpoint`]
 
 
  |zero or more |Specifies information about a web service endpoint.
@@ -9812,7 +9812,7 @@ class.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvzfs]][[GSDPG00729]][[subelements-180]]
@@ -9832,7 +9832,7 @@ Specifies the name of a servlet, which is matched to a `servlet-name` in
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`], xref:#beaxm[`servlet`]
+xref:#cache-mapping[`cache-mapping`], xref:#servlet[`servlet`]
 (`glassfish-web.xml`)
 
 [[fvzir]][[GSDPG00731]][[subelements-181]]
@@ -9852,7 +9852,7 @@ settings for an individual web module.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[fvzfy]][[GSDPG00733]][[subelements-182]]
 
@@ -9870,17 +9870,17 @@ Table C-141 `session-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxq[`session-manager`]
+xref:#session-manager[`session-manager`]
 
 
  |zero or one |Specifies session manager configuration information.
 a|
-xref:#beaxr[`session-properties`]
+xref:#session-properties[`session-properties`]
 
 
  |zero or one |Specifies session properties.
 a|
-xref:#beash[`cookie-properties`]
+xref:#cookie-properties[`cookie-properties`]
 
 
  |zero or one |Specifies session cookie properties.
@@ -9897,7 +9897,7 @@ Specifies session manager information.
 
 ==== Superelements
 
-xref:#beaxp[`session-config`] (`glassfish-web.xml`)
+xref:#session-config[`session-config`] (`glassfish-web.xml`)
 
 [[fvzit]][[GSDPG00735]][[subelements-183]]
 
@@ -9915,12 +9915,12 @@ Table C-142 `session-manager` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaum[`manager-properties`]
+xref:#manager-properties[`manager-properties`]
 
 
  |zero or one |Specifies session manager properties.
 a|
-xref:#beaxu[`store-properties`]
+xref:#store-properties[`store-properties`]
 
 
  |zero or one |Specifies session persistence (storage) properties.
@@ -9964,7 +9964,7 @@ Specifies session properties.
 
 ==== Superelements
 
-xref:#beaxp[`session-config`] (`glassfish-web.xml`)
+xref:#session-config[`session-config`] (`glassfish-web.xml`)
 
 [[fvzgk]][[GSDPG00738]][[subelements-184]]
 
@@ -9982,7 +9982,7 @@ Table C-144 `session-properties` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -10038,7 +10038,7 @@ Defines SSL processing parameters.
 
 ==== Superelements
 
-xref:#beaxf[`security`] (`sun-acc.xml`)
+xref:#security[`security`] (`sun-acc.xml`)
 
 [[fvzgh]][[GSDPG00741]][[subelements-185]]
 
@@ -10107,7 +10107,7 @@ beans and message-driven beans.
 
 ==== Superelements
 
-xref:#bearb[`bean-pool`] (`glassfish-ejb-jar.xml`)
+xref:#bean-pool[`bean-pool`] (`glassfish-ejb-jar.xml`)
 
 [[fvziy]][[GSDPG00744]][[subelements-186]]
 
@@ -10125,7 +10125,7 @@ Specifies session persistence (storage) properties.
 
 ==== Superelements
 
-xref:#beaxq[`session-manager`] (`glassfish-web.xml`)
+xref:#session-manager[`session-manager`] (`glassfish-web.xml`)
 
 [[fvzid]][[GSDPG00746]][[subelements-187]]
 
@@ -10143,7 +10143,7 @@ Table C-147 `store-properties` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -10171,7 +10171,7 @@ individual session files are written. A relative path is relative to the
 temporary work directory for this web module.
 
 Applicable only if the `persistence-type` attribute of the parent
-xref:#beaxq[`session-manager`] element is `file`.
+xref:#session-manager[`session-manager`] element is `file`.
 
 |`persistenceScope` |`session` a|
 Specifies how much of the session state is stored. Allowed values are as
@@ -10191,7 +10191,7 @@ For this mode to work properly, you must follow some guidelines, which
 are explained immediately following this table.
 
 Applicable only if the `persistence-type` attribute of the parent
-xref:#beaxq[`session-manager`] element is `replicated`.
+xref:#session-manager[`session-manager`] element is `replicated`.
 
 |===
 
@@ -10221,7 +10221,7 @@ implementation.
 
 ==== Superelements
 
-xref:#beavt[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
+xref:#port-info[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
 [[fvzij]][[GSDPG00749]][[subelements-188]]
@@ -10240,12 +10240,12 @@ Table C-149 `stub-property` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavf[`name`]
+xref:#name[`name`]
 
 
  |only one |Specifies the name of the entity.
 a|
-xref:#beayo[`value`]
+xref:#value[`value`]
 
 
  |only one |Specifies the value of the entity.
@@ -10312,7 +10312,7 @@ schema, even if the beans are deployed in the same EJB JAR file.
 
 ==== Superelements
 
-xref:#beaxz[`sun-cmp-mappings`] (`sun-cmp-mappings.xml`)
+xref:#sun-cmp-mappings[`sun-cmp-mappings`] (`sun-cmp-mappings.xml`)
 
 [[fvzjg]][[GSDPG00753]][[subelements-189]]
 
@@ -10330,14 +10330,14 @@ Table C-151 `sun-cmp-mapping` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxc[`schema`]
+xref:#schema[`schema`]
 
 
  |only one |Specifies the file that contains a description of the
 database schema.
 
 a|
-xref:#beasy[`entity-mapping`]
+xref:#entity-mapping[`entity-mapping`]
 
 
  |one or more |Specifies the mapping of a bean to database columns.
@@ -10351,7 +10351,7 @@ xref:#beasy[`entity-mapping`]
 Defines the {productName} specific CMP mapping configuration for an
 EJB JAR file. This is the root element; there can only be one
 `sun-cmp-mappings` element in a `sun-cmp-mappings.xml` file. See
-link:dd-files.html#beaqn[The sun-cmp-mappings.xml File].
+link:dd-files.html#GSDPG00080[The sun-cmp-mappings.xml File].
 
 [[fvzix]][[GSDPG00754]][[superelements-198]]
 
@@ -10375,7 +10375,7 @@ Table C-152 `sun-cmp-mappings` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaxy[`sun-cmp-mapping`]
+xref:#sun-cmp-mapping[`sun-cmp-mapping`]
 
 
  |one or more |Specifies beans mapped to a particular database schema.
@@ -10387,7 +10387,7 @@ xref:#beaxy[`sun-cmp-mapping`]
 === `table-name`
 
 Specifies the name of a database table. The table must be present in the
-database schema file. See "link:application-development-guide/container_managed-persistence.html#GSDVG00439[Automatic Database Schema
+database schema file. See "link:application-development-guide/container_managed-persistence.html#automatic-database-schema-capture[Automatic Database Schema
 Capture]" in {productName} Application
 Development Guide.
 
@@ -10395,7 +10395,7 @@ Development Guide.
 
 ==== Superelements
 
-xref:#beasy[`entity-mapping`], xref:#beaxe[`secondary-table`]
+xref:#entity-mapping[`entity-mapping`], xref:#secondary-table[`secondary-table`]
 (`sun-cmp-mappings.xml`)
 
 [[fvzjk]][[GSDPG00757]][[subelements-191]]
@@ -10420,13 +10420,13 @@ A listener or endpoint is in the form host`:`port, where the host is an
 IP address or host name, and the port specifies the port number.
 
 Not used if the deprecated `endpoints` property is defined for load
-balancing. For more information, see xref:#bearr[`client-container`].
+balancing. For more information, see xref:#client-container[`client-container`].
 
 [[fvzgy]][[GSDPG00758]][[superelements-200]]
 
 ==== Superelements
 
-xref:#bearr[`client-container`] (`sun-acc.xml`)
+xref:#client-container[`client-container`] (`sun-acc.xml`)
 
 [[fvzhi]][[GSDPG00759]][[subelements-192]]
 
@@ -10444,13 +10444,13 @@ Table C-153 `target-server` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Specifies the description of the target server.
 
 a|
-xref:#beaxf[`security`]
+xref:#security[`security`]
 
 
  |zero or one |Specifies the security configuration for the IIOP/SSL
@@ -10501,7 +10501,7 @@ for a port component.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvzfq]][[GSDPG00762]][[subelements-193]]
@@ -10514,16 +10514,16 @@ none - contains data
 
 === `timeout`
 
-Specifies the xref:#bearh[`cache-mapping`] specific maximum amount of
+Specifies the xref:#cache-mapping[`cache-mapping`] specific maximum amount of
 time in seconds that an entry can remain in the cache after it is
 created or refreshed. If not specified, the default is the value of the
-`timeout` attribute of the xref:#beard[`cache`] element.
+`timeout` attribute of the xref:#cache[`cache`] element.
 
 [[fvzhc]][[GSDPG00763]][[superelements-202]]
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvziv]][[GSDPG00764]][[subelements-194]]
 
@@ -10566,7 +10566,7 @@ Specifies the security transport information.
 
 ==== Superelements
 
-xref:#beato[`ior-security-config`] (`glassfish-ejb-jar.xml`)
+xref:#ior-security-config[`ior-security-config`] (`glassfish-ejb-jar.xml`)
 
 [[fvzhv]][[GSDPG00767]][[subelements-195]]
 
@@ -10584,28 +10584,28 @@ Table C-156 `transport-config` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beatn[`integrity`]
+xref:#integrity[`integrity`]
 
 
  |only one |Specifies if the target supports integrity-protected
 messages. The values are NONE, SUPPORTED, or REQUIRED.
 
 a|
-xref:#beasc[`confidentiality`]
+xref:#confidentiality[`confidentiality`]
 
 
  |only one |Specifies if the target supports privacy-protected messages.
 The values are NONE, SUPPORTED, or REQUIRED.
 
 a|
-xref:#beata[`establish-trust-in-target`]
+xref:#establish-trust-in-target[`establish-trust-in-target`]
 
 
  |only one |Specifies if the target is capable of authenticating to a
 client. The values are NONE, SUPPORTED, or REQUIRED.
 
 a|
-xref:#beasz[`establish-trust-in-client`]
+xref:#establish-trust-in-client[`establish-trust-in-client`]
 
 
  |only one |Specifies if the target is capable of authenticating a
@@ -10636,7 +10636,7 @@ the use of SSL is required.
 
 ==== Superelements
 
-xref:#beayv[`webservice-endpoint`] (`glassfish-web.xml`,
+xref:#webservice-endpoint[`webservice-endpoint`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvzgl]][[GSDPG00769]][[subelements-196]]
@@ -10657,8 +10657,8 @@ this value.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beasx[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
 [[fvzjc]][[GSDPG00771]][[subelements-197]]
 
@@ -10677,7 +10677,7 @@ Servlet 2.4 specification section SRV. 11.2 for applicable patterns.
 
 ==== Superelements
 
-xref:#bearh[`cache-mapping`] (`glassfish-web.xml`)
+xref:#cache-mapping[`cache-mapping`] (`glassfish-web.xml`)
 
 [[fvzfw]][[GSDPG00773]][[subelements-198]]
 
@@ -10697,7 +10697,7 @@ Contains the group to which the principal belongs.
 [[superelements-207]]
 ==== Superelements
 
-xref:#giyhy[`security-map`] (`glassfish-resources.xml`)
+xref:#security-map[`security-map`] (`glassfish-resources.xml`)
 
 [[GSDPG1040]]
 
@@ -10718,7 +10718,7 @@ invocations of this bean.
 
 ==== Superelements
 
-xref:#beass[`ejb`] (`glassfish-ejb-jar.xml`)
+xref:#ejb[`ejb`] (`glassfish-ejb-jar.xml`)
 
 [[fvzhp]][[GSDPG00775]][[subelements-200]]
 
@@ -10736,9 +10736,9 @@ Specifies the value of the entity.
 
 ==== Superelements
 
-xref:#beari[`call-property`], xref:#beaxv[`stub-property`]
+xref:#call-property[`call-property`], xref:#stub-property[`stub-property`]
 (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
-`glassfish-application-client.xml`); xref:#beavy[`property` (with
+`glassfish-application-client.xml`); xref:#property-with-subelements[`property` (with
 subelements)] (`glassfish-ejb-jar.xml`)
 
 [[fvzhe]][[GSDPG00777]][[subelements-201]]
@@ -10753,13 +10753,13 @@ none - contains data
 
 Specifies a custom valve for this web application. You can define a
 valve for all the web applications on a specific virtual server. For
-details, see link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+details, see link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 
 [[giksf]][[GSDPG00778]][[superelements-210]]
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[gikvt]][[GSDPG00779]][[subelements-202]]
 
@@ -10776,12 +10776,12 @@ Table C-157 `valve` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Specifies a text description of this element.
 a|
-xref:#beavx[`property` (with attributes)]
+xref:#property-with-attributes[`property` (with attributes)]
 
 
  |zero or more |Specifies a property, which has a name and a value.
@@ -10873,7 +10873,7 @@ The default value is the text string `Application Client`.
 
 ==== Superelements
 
-xref:#gauax[`java-web-start-access`]
+xref:#java-web-start-access[`java-web-start-access`]
 (`glassfish-application-client.xml`)
 
 [[gbgcq]][[GSDPG00783]][[subelements-203]]
@@ -10888,7 +10888,7 @@ none - contains data
 
 Contains version information for an application or module. For more
 information about application versioning, see
-link:overview.html#gkhhv[Module and Application Versions].
+link:overview.html#module-and-application-versions[Module and Application Versions].
 
 [[GSDPG1043]]
 
@@ -10896,10 +10896,10 @@ link:overview.html#gkhhv[Module and Application Versions].
 [[superelements-212]]
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`),
-xref:#beayb[`glassfish-web-app`] (`glassfish-web-app.xml`),
-xref:#beaya[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`),
-xref:#beaxx[`glassfish-application-client`]
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`),
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web-app.xml`),
+xref:#glassfish-ejb-jar[`glassfish-ejb-jar`] (`glassfish-ejb-jar.xml`),
+xref:#glassfish-application-client[`glassfish-application-client`]
 (`glassfish-application-client.xml`)
 
 [[GSDPG1044]]
@@ -10938,7 +10938,7 @@ Applies to stateful session beans.
 
 ==== Superelements
 
-xref:#beara[`bean-cache`] (`glassfish-ejb-jar.xml`)
+xref:#bean-cache[`bean-cache`] (`glassfish-ejb-jar.xml`)
 
 [[fvzfr]][[GSDPG00785]][[subelements-205]]
 
@@ -10971,7 +10971,7 @@ Specifies the application's web tier configuration.
 
 ==== Superelements
 
-xref:#beaxw[`glassfish-application`] (`glassfish-application.xml`)
+xref:#glassfish-application[`glassfish-application`] (`glassfish-application.xml`)
 
 [[fvzge]][[GSDPG00788]][[subelements-206]]
 
@@ -10988,12 +10988,12 @@ Table C-159 `web` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beays[`web-uri`]
+xref:#web-uri[`web-uri`]
 
 
  |only one |Contains the web URI for the application.
 a|
-xref:#beasg[`context-root`]
+xref:#context-root[`context-root`]
 
 
  |only one |Contains the web context root for the web module.
@@ -11011,7 +11011,7 @@ element in the `application.xml` file.
 
 ==== Superelements
 
-xref:#beayr[`web`] (`glassfish-application.xml`)
+xref:#web[`web`] (`glassfish-application.xml`)
 
 [[fvzik]][[GSDPG00790]][[subelements-207]]
 
@@ -11029,8 +11029,8 @@ Specifies a name and optional publish location for a web service.
 
 ==== Superelements
 
-xref:#beayb[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#beasx[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
+xref:#enterprise-beans[`enterprise-beans`] (`glassfish-ejb-jar.xml`)
 
 [[fvzgs]][[GSDPG00792]][[subelements-208]]
 
@@ -11048,14 +11048,14 @@ Table C-160 `webservice-description` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beayu[`webservice-description-name`]
+xref:#webservice-description-name[`webservice-description-name`]
 
 
  |only one |Specifies a unique name for the web service within a web or
 EJB module.
 
 a|
-xref:#beayy[`wsdl-publish-location`]
+xref:#wsdl-publish-location[`wsdl-publish-location`]
 
 
  |zero or one |Specifies the URL of a directory to which a web service's
@@ -11073,7 +11073,7 @@ Specifies a unique name for the web service within a web or EJB module.
 
 ==== Superelements
 
-xref:#beayt[`webservice-description`] (`glassfish-web.xml`,
+xref:#webservice-description[`webservice-description`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvzgw]][[GSDPG00794]][[subelements-209]]
@@ -11092,7 +11092,7 @@ Specifies information about a web service endpoint.
 
 ==== Superelements
 
-xref:#beaxm[`servlet`] (`glassfish-web.xml`), xref:#beass[`ejb`]
+xref:#servlet[`servlet`] (`glassfish-web.xml`), xref:#ejb[`ejb`]
 (`glassfish-ejb-jar.xml`)
 
 [[fvzjp]][[GSDPG00796]][[subelements-210]]
@@ -11111,61 +11111,61 @@ Table C-161 `webservice-endpoint` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavs[`port-component-name`]
+xref:#port-component-name[`port-component-name`]
 
 
  |only one |Specifies a unique name for a port component within a web or
 EJB module.
 
 a|
-xref:#beasw[`endpoint-address-uri`]
+xref:#endpoint-address-uri[`endpoint-address-uri`]
 
 
  |zero or one |Specifies the automatically generated endpoint address.
 
 a|
-xref:#beauk[`login-config`]
+xref:#login-config[`login-config`]
 
 
  |zero or one |Specifies the authentication configuration for an EJB web
 service endpoint.
 
 a|
-xref:#beaux[`message-security-binding`]
+xref:#message-security-binding[`message-security-binding`]
 
 
  |zero or one |Specifies a custom authentication provider binding.
 
 a|
-xref:#beayi[`transport-guarantee`]
+xref:#transport-guarantee[`transport-guarantee`]
 
 
  |zero or one |Specifies that the communication between client and
 server is `NONE`, `INTEGRAL`, or `CONFIDENTIAL`.
 
 a|
-xref:#beaxj[`service-qname`]
+xref:#service-qname[`service-qname`]
 
 
  |zero or one |Specifies the WSDL service element that is being
 referenced.
 
 a|
-xref:#beayf[`tie-class`]
+xref:#tie-class[`tie-class`]
 
 
  |zero or one |Specifies the automatically generated name of a tie
 implementation class for a port component.
 
 a|
-xref:#beaxn[`servlet-impl-class`]
+xref:#servlet-impl-class[`servlet-impl-class`]
 
 
  |zero or one |Specifies the automatically generated name of the
 generated servlet implementation class.
 
 a|
-xref:#gaubj[`debugging-enabled`]
+xref:#debugging-enabled[`debugging-enabled`]
 
 
  |zero or one |Specifies whether the debugging servlet is enabled for
@@ -11173,9 +11173,9 @@ this web service endpoint. Allowed values are `true` and `false` (the
 default).
 
 a|
-xref:#beavx[`property` (with attributes)] (`glassfish-web.xml`)
+xref:#property-with-attributes[`property` (with attributes)] (`glassfish-web.xml`)
 
-xref:#beavy[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
+xref:#property-with-subelements[`property` (with subelements)] (`glassfish-ejb-jar.xml`)
 
  |zero or more |Specifies a property, which has a name and a value.
 |===
@@ -11190,7 +11190,7 @@ incoming work instance to a principal in the {productName}'s security
 domain. It is possible to map multiple EIS group or user principals to
 the same {productName} principal.
 
-This is different from a xref:#giyhy[`security-map`], which maps the
+This is different from a xref:#security-map[`security-map`], which maps the
 principal received during servlet or EJB authentication to the
 credentials accepted by the EIS.
 
@@ -11200,7 +11200,7 @@ credentials accepted by the EIS.
 [[superelements-219]]
 ==== Superelements
 
-xref:#giyiy[`resources`] (`glassfish-resources.xml`)
+xref:#resources[`resources`] (`glassfish-resources.xml`)
 
 [[giyih]][[GSDPG00797]][[subelements-211]]
 
@@ -11218,20 +11218,20 @@ Table C-162 `work-security-map` Subelements
 |===
 |Element |Required |Description
 a|
-xref:#beaso[`description`]
+xref:#description[`description`]
 
 
  |zero or one |Contains a text description of this element.
 
 a|
-xref:#giyif[`principal-map`]
+xref:#principal-map[`principal-map`]
 
 
  |zero or more |Maps an EIS principal to a principal defined in the
 {productName} domain.
 
 a|
-xref:#giygy[`group-map`]
+xref:#group-map[`group-map`]
 
 
  |zero or more |Maps an EIS group to a group defined in the {productName} domain.
@@ -11272,7 +11272,7 @@ standard Jakarta EE deployment descriptor is used.
 
 ==== Superelements
 
-xref:#beaxk[`service-ref`] (`glassfish-web.xml`,
+xref:#service-ref[`service-ref`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`, `glassfish-application-client.xml`)
 
 [[fvzjq]][[GSDPG00799]][[subelements-212]]
@@ -11304,7 +11304,7 @@ Specifies the WSDL port.
 
 ==== Superelements
 
-xref:#beavt[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
+xref:#port-info[`port-info`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 `glassfish-application-client.xml`)
 
 [[fvzjm]][[GSDPG00802]][[subelements-213]]
@@ -11322,12 +11322,12 @@ Table C-164 `wsdl-port` subelements
 |===
 |Element |Required |Description
 a|
-xref:#beavh[`namespaceURI`]
+xref:#namespaceuri[`namespaceURI`]
 
 
  |only one |Specifies the namespace URI.
 a|
-xref:#beaug[`localpart`]
+xref:#localpart[`localpart`]
 
 
  |only one |Specifies the local part of a QNAME.
@@ -11347,7 +11347,7 @@ WSDL directory (`META-INF/wsdl` or `WEB-INF/wsdl`).
 
 ==== Superelements
 
-xref:#beayt[`webservice-description`] (`glassfish-web.xml`,
+xref:#webservice-description[`webservice-description`] (`glassfish-web.xml`,
 `glassfish-ejb-jar.xml`)
 
 [[fvzjr]][[GSDPG00804]][[subelements-214]]

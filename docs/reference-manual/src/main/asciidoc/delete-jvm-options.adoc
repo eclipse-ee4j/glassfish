@@ -29,7 +29,7 @@ options for the Java application launcher. These options are removed
 from the Java configuration `java—config` element or the profiler
 `profiler` element of the `domain.xml` file. To see the Java application
 launcher options that can be deleted, use the
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)]
+link:list-jvm-options.html#list-jvm-options[`list-jvm-options`(1)]
 subcommand.
 
 The deletion of some options requires a server restart for changes to
@@ -59,7 +59,7 @@ example, restart is not required for the following Java system property:
 `-d64`
 
 To restart the DAS, use the
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)] command.
+link:restart-domain.html#restart-domain[`restart-domain`(1)] command.
 
 This subcommand is supported in remote mode only.
 
@@ -150,9 +150,9 @@ Command delete-jvm-options executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jvm-options.html#create-jvm-options-1[`create-jvm-options`(1)],
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)],
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)]
+link:create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)],
+link:list-jvm-options.html#list-jvm-options[`list-jvm-options`(1)],
+link:restart-domain.html#restart-domain[`restart-domain`(1)]
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

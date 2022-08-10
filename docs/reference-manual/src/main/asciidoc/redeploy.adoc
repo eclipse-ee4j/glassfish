@@ -86,7 +86,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
@@ -373,7 +373,7 @@ Other available properties are determined by the implementation of the
   OSGi web container registers a URL stream handler named `webbundle`,
   which is used to wrap a plain WAR file as a WAB. For more information
   about usage, see the related example in the
-  link:deploy.html#deploy-1[`deploy`(1)] help page.
+  link:deploy.html#deploy[`deploy`(1)] help page.
 
 === Operands
 
@@ -442,9 +442,9 @@ Command redeploy executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy-1[`deploy`(1)], link:get.html#get-1[`get`(1)],
-link:list-components.html#list-components-1[`list-components`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+link:deploy.html#deploy[`deploy`(1)], link:get.html#get[`get`(1)],
+link:list-components.html#list-components[`list-components`(1)],
+link:undeploy.html#undeploy[`undeploy`(1)]
 
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]

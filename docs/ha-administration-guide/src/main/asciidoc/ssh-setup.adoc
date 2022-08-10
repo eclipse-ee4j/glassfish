@@ -41,14 +41,14 @@ environment, you can administer remote instances locally.
 
 The following topics are addressed here:
 
-* xref:#gkshz[About Centralized Administration of {productName} Instances]
-* xref:#CEGIFJJF[Setting Up DCOM and Testing the DCOM Set Up]
-* xref:#gksiy[Setting Up Cygwin SSH on Windows]
-* xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-* xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
-* xref:#gkslw[Testing the SSH Setup on a Host]
-* xref:#gkshh[Setting Up SSH User Authentication]
-* xref:#gkshn[Installing and Removing {productName} Software on Multiple Hosts]
+* xref:#about-centralized-administration-of-glassfish-server-instances[About Centralized Administration of {productName} Instances]
+* xref:#setting-up-dcom-and-testing-the-dcom-set-up[Setting Up DCOM and Testing the DCOM Set Up]
+* xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+* xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+* xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
+* xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host]
+* xref:#setting-up-ssh-user-authentication[Setting Up SSH User Authentication]
+* xref:#installing-and-removing-glassfish-server-software-on-multiple-hosts[Installing and Removing {productName} Software on Multiple Hosts]
 
 [[gkshz]][[GSHAG00172]][[about-centralized-administration-of-glassfish-server-instances]]
 
@@ -87,16 +87,16 @@ for enabling centralized administration, if any.
 |Protocol |Node Administration Instructions |Instance Administration Instructions
 
 |DCOM
-|link:nodes.html#CHDBIHFJ[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
-|link:instances.html#gkqal[Administering {productName} Instances Centrally]
+|link:nodes.html#creating-listing-testing-and-deleting-dcom-nodes[Creating, Listing, Testing, and Deleting `DCOM` Nodes]
+|link:instances.html#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
 
 |SSH
-|link:nodes.html#gkrkn[Creating, Listing, Testing, and Deleting `SSH` Nodes]
-|link:instances.html#gkqal[Administering {productName} Instances Centrally]
+|link:nodes.html#creating-listing-testing-and-deleting-ssh-nodes[Creating, Listing, Testing, and Deleting `SSH` Nodes]
+|link:instances.html#administering-glassfish-server-instances-centrally[Administering {productName} Instances Centrally]
 
 |None
-|link:nodes.html#gkrnp[Creating, Listing, and Deleting `CONFIG` Nodes]
-|link:instances.html#gkqdw[Administering {productName} Instances Locally]
+|link:nodes.html#creating-listing-and-deleting-config-nodes[Creating, Listing, and Deleting `CONFIG` Nodes]
+|link:instances.html#administering-glassfish-server-instances-locally[Administering {productName} Instances Locally]
 |===
 
 
@@ -182,7 +182,7 @@ running the DAS.
 
 The environment of the SSH user on any remote host to which the user
 will connect must meet the requirements that are stated in
-"link:release-notes/release-notes.html#GSRLN00252[Paths and Environment Settings for the JDK Software]"
+"link:release-notes/release-notes.html#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]"
 in {productName} Release Notes.
 
 The SSH user's environment on a host is set by the environment set-up
@@ -327,7 +327,7 @@ control is required, quit the Registry Editor.
 Next Steps
 
 Set up password authentication for the Windows user as explained in
-xref:#CEGCDCEF[To Set Up Password Authentication for the Windows User].
+xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password Authentication for the Windows User].
 
 [[CEGCDCEF]][[GSHAG452]][[to-set-up-password-authentication-for-the-windows-user]]
 
@@ -347,9 +347,9 @@ Ensure that the following prerequisites are met:
 * The Windows user is a valid user on the host to which you are testing
 the connection over DCOM.
 * Items in the Windows operating system are set on the host as described
-in xref:#CEGDAFHD[Windows Operating System Settings].
+in xref:#windows-operating-system-settings[Windows Operating System Settings].
 * The Windows user is able to run scripts on the host. For more
-information, see xref:#CEGCJGCF[To Enable the Windows User to Run
+information, see xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run
 Scripts on a Remote Host].
 
 1. Ensure that the DAS is running. +
@@ -362,7 +362,7 @@ Create an alias for the Windows user's password.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for creating a password
-alias, see the link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)] help page.
+alias, see the link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`(1)] help page.
 ====
 +
 [source]
@@ -396,7 +396,7 @@ alias-name::
 ====
 When you create a `DCOM` node, pass this file as the `--passwordfile`
 option of the `asadmin` utility. For more information, see
-link:nodes.html#CHDIGBJB[To Create a `DCOM` Node].
+link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node].
 ====
 
 
@@ -425,7 +425,7 @@ AS_ADMIN_WINDOWSPASSWORD=${ALIAS=winuser-password}
 See Also
 
 * link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)]
-* link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
+* link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-password-alias` at the command line.
@@ -434,7 +434,7 @@ typing `asadmin help create-password-alias` at the command line.
 
 Next Steps
 
-Test the DCOM setup as explained in xref:#CEGJFADH[To Test the
+Test the DCOM setup as explained in xref:#to-test-the-connection-over-dcom-to-a-remote-host[To Test the
 Connection Over DCOM to a Remote Host].
 
 [[CEGJFADH]][[GSHAG457]][[to-test-the-connection-over-dcom-to-a-remote-host]]
@@ -451,8 +451,8 @@ host. If this test fails, any attempt to perform a task that the
 requires the DAS contact the DCOM server on the host will also fail.
 Examples of such tasks are creating a DCOM node to represent the host or
 creating an instance that resides on the host. For more information, see
-link:nodes.html#CHDIGBJB[To Create a `DCOM` Node] and
-link:instances.html#gkqch[To Create an Instance Centrally].
+link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node] and
+link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally].
 
 If you cannot connect to the host over DCOM, troubleshoot the DCOM setup
 before proceeding.
@@ -464,12 +464,12 @@ Ensure that the following prerequisites are met:
 * The Windows user is a valid user on the host to which you are testing
 the connection over DCOM.
 * Items in the Windows operating system are set on the host as described
-in xref:#CEGDAFHD[Windows Operating System Settings].
+in xref:#windows-operating-system-settings[Windows Operating System Settings].
 * The Windows user is able to run scripts on the host. For more
-information, see xref:#CEGCJGCF[To Enable the Windows User to Run
+information, see xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run
 Scripts on a Remote Host].
 * Password authentication is set up for the windows user as explained in
-xref:#CEGCDCEF[To Set Up Password Authentication for the Windows User].
+xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password Authentication for the Windows User].
 
 1. Ensure that the DAS is running. +
 Remote subcommands require a running server.
@@ -477,14 +477,14 @@ Remote subcommands require a running server.
 2. Run the `validate-dcom` subcommand. +
 Specify the file that contains the alias for the Windows user's password
 through the `--passwordfile` option of the `asadmin` utility. For more
-information about this file, see xref:#CEGCDCEF[To Set Up Password
+information about this file, see xref:#to-set-up-password-authentication-for-the-windows-user[To Set Up Password
 Authentication for the Windows User].
 
 [NOTE]
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-node, see the link:reference-manual/validate-dcom.html#GSRFM796[`validate-dcom`(1)] help page.
+node, see the link:reference-manual/validate-dcom.html#validate-dcom[`validate-dcom`(1)] help page.
 ====
 
 [source]
@@ -512,11 +512,11 @@ Command validate-dcom executed successfully.
 See Also
 
 * link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)]
-* link:reference-manual/validate-dcom.html#GSRFM796[`validate-dcom`(1)]
-* xref:#CEGDAFHD[Windows Operating System Settings]
-* xref:#CEGCJGCF[To Enable the Windows User to Run Scripts on a Remote Host]
-* link:nodes.html#CHDIGBJB[To Create a `DCOM` Node]
-* link:instances.html#gkqch[To Create an Instance Centrally]
+* link:reference-manual/validate-dcom.html#validate-dcom[`validate-dcom`(1)]
+* xref:#windows-operating-system-settings[Windows Operating System Settings]
+* xref:#to-enable-the-windows-user-to-run-scripts-on-a-remote-host[To Enable the Windows User to Run Scripts on a Remote Host]
+* link:nodes.html#to-create-a-dcom-node[To Create a `DCOM` Node]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help validate-dcom` at the command line.
@@ -530,10 +530,10 @@ your cluster will reside.
 
 The following topics are addressed here:
 
-* xref:#gksjn[To Download and Install Cygwin]
-* xref:#gksin[To Set the Path for Windows and for the Cygwin Shell]
-* xref:#gksov[To Set the Home Directory for the Cygwin SSH User]
-* xref:#gkskx[To Configure and Start the Cygwin SSH Server Daemon
+* xref:#to-download-and-install-cygwin[To Download and Install Cygwin]
+* xref:#to-set-the-path-for-windows-and-for-the-cygwin-shell[To Set the Path for Windows and for the Cygwin Shell]
+* xref:#to-set-the-home-directory-for-the-cygwin-ssh-user[To Set the Home Directory for the Cygwin SSH User]
+* xref:#to-configure-and-start-the-cygwin-ssh-server-daemon-sshd[To Configure and Start the Cygwin SSH Server Daemon
 `sshd`]
 
 [[gksjn]][[GSHAG00071]][[to-download-and-install-cygwin]]
@@ -710,7 +710,7 @@ $ cygrunsrv --query sshd
 Next Steps
 
 After you have completed the setup of SSH on a host, test the setup on
-the host as explained in xref:#gkslw[Testing the SSH Setup on a Host].
+the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
 [[gkskf]][[GSHAG00174]][[setting-up-the-mks-toolkit-on-windows]]
 
@@ -721,10 +721,10 @@ in your cluster will reside.
 
 The following topics are addressed here:
 
-* xref:#gksmq[To Install the MKS Toolkit]
-* xref:#gksmu[To Set the Path for Windows and for the MKS Toolkit Shell]
-* xref:#gksox[To Set the Home Directory for the MKS Toolkit SSH User]
-* xref:#gksnx[To Configure and Start the MKS Toolkit SSH Server Daemon
+* xref:#to-install-the-mks-toolkit[To Install the MKS Toolkit]
+* xref:#to-set-the-path-for-windows-and-for-the-mks-toolkit-shell[To Set the Path for Windows and for the MKS Toolkit Shell]
+* xref:#to-set-the-home-directory-for-the-mks-toolkit-ssh-user[To Set the Home Directory for the MKS Toolkit SSH User]
+* xref:#to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd[To Configure and Start the MKS Toolkit SSH Server Daemon
 `sshd`]
 
 [[gksmq]][[GSHAG00075]][[to-install-the-mks-toolkit]]
@@ -925,7 +925,7 @@ Service Start Name:     LocalSystem
 Next Steps
 
 After you have completed the setup of SSH on a host, test the setup on
-the host as explained in xref:#gkslw[Testing the SSH Setup on a Host].
+the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
 [[gksja]][[GSHAG00175]][[setting-up-ssh-on-unix-and-linux-systems]]
 
@@ -945,9 +945,9 @@ How to set up SSH on UNIX and Linux systems depends on the flavor of the
 operating system that you are running, as explained in the following
 sections:
 
-* xref:#gksjx[To Set Up SSH on Oracle Solaris Systems]
-* xref:#gkspz[To Set Up SSH on MacOS Systems]
-* xref:#gksrd[To Set Up SSH on Linux systems]
+* xref:#to-set-up-ssh-on-oracle-solaris-systems[To Set Up SSH on Oracle Solaris Systems]
+* xref:#to-set-up-ssh-on-macos-systems[To Set Up SSH on MacOS Systems]
+* xref:#to-set-up-ssh-on-linux-systems[To Set Up SSH on Linux systems]
 
 [[gksjx]][[GSHAG00079]][[to-set-up-ssh-on-oracle-solaris-systems]]
 
@@ -995,7 +995,7 @@ http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1svcs-1[`svcs`(1)]
 Next Steps
 
 After you have completed the setup of SSH on a host, test the setup on
-the host as explained in xref:#gkslw[Testing the SSH Setup on a Host].
+the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
 [[gkspz]][[GSHAG00080]][[to-set-up-ssh-on-macos-systems]]
 
@@ -1036,7 +1036,7 @@ $ sudo launchctl start com.openssh.sshd
 Next Steps
 
 After you have completed the setup of SSH on a host, test the setup on
-the host as explained in xref:#gkslw[Testing the SSH Setup on a Host].
+the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
 [[gksrd]][[GSHAG00081]][[to-set-up-ssh-on-linux-systems]]
 
@@ -1078,7 +1078,7 @@ openssh-daemon (pid  2373) is running...
 Next Steps
 
 After you have completed the setup of SSH on a host, test the setup on
-the host as explained in xref:#gkslw[Testing the SSH Setup on a Host].
+the host as explained in xref:#testing-the-ssh-setup-on-a-host[Testing the SSH Setup on a Host].
 
 [[gkslw]][[GSHAG00176]][[testing-the-ssh-setup-on-a-host]]
 
@@ -1132,9 +1132,9 @@ If your connection is refused, the SSH server daemon `sshd` is not
 running and you must start the daemon. For instructions, see the
 following sections:
 
-* xref:#gkskx[To Configure and Start the Cygwin SSH Server Daemon `sshd`]
-* xref:#gksnx[To Configure and Start the MKS Toolkit SSH Server Daemon `sshd`]
-* xref:#gksjx[To Set Up SSH on Oracle Solaris Systems]
+* xref:#to-configure-and-start-the-cygwin-ssh-server-daemon-sshd[To Configure and Start the Cygwin SSH Server Daemon `sshd`]
+* xref:#to-configure-and-start-the-mks-toolkit-ssh-server-daemon-sshd[To Configure and Start the MKS Toolkit SSH Server Daemon `sshd`]
+* xref:#to-set-up-ssh-on-oracle-solaris-systems[To Set Up SSH on Oracle Solaris Systems]
 
 If your connection is accepted, but you cannot log in, ensure that the
 SSH user has a valid user account on the host.
@@ -1145,7 +1145,7 @@ Next Steps
 
 After testing the SSH setup, set up SSH user authentication to enable
 SSH to authenticate users without prompting for a password. For more
-information, see xref:#gkshh[Setting Up SSH User Authentication].
+information, see xref:#setting-up-ssh-user-authentication[Setting Up SSH User Authentication].
 
 [[gkshh]][[GSHAG00177]][[setting-up-ssh-user-authentication]]
 
@@ -1185,9 +1185,9 @@ ensure that file access permissions are correct. |For each SSH user,
 
 The following topics are addressed here:
 
-* xref:#gksqe[To Set Up Public Key Authentication Without Encryption]
-* xref:#gktaq[To Set Up Encrypted Public Key Authentication]
-* xref:#gktbd[To Set Up Password Authentication]
+* xref:#to-set-up-public-key-authentication-without-encryption[To Set Up Public Key Authentication Without Encryption]
+* xref:#to-set-up-encrypted-public-key-authentication[To Set Up Encrypted Public Key Authentication]
+* xref:#to-set-up-password-authentication[To Set Up Password Authentication]
 
 [[gksqe]][[GSHAG00083]][[to-set-up-public-key-authentication-without-encryption]]
 
@@ -1202,7 +1202,7 @@ public key file to specified hosts. The private key file and the public
 key file are protected only by the file system's file access
 permissions. If you require additional security, set up public key
 authentication with passphrase-protected encryption as explained in
-xref:#gktaq[To Set Up Encrypted Public Key Authentication].
+xref:#to-set-up-encrypted-public-key-authentication[To Set Up Encrypted Public Key Authentication].
 
 Before You Begin
 
@@ -1211,9 +1211,9 @@ Ensure that the following prerequisites are met:
 * SSH is set up on each host where you are setting up public key
 authentication. For more information, see the following sections:
 
-** xref:#gksiy[Setting Up Cygwin SSH on Windows]
-** xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-** xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
+** xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+** xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+** xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
 
 * Only the SSH user has write access to the following files and
 directories on each host where you are setting up public key
@@ -1235,7 +1235,7 @@ hosts where you are setting up public key authentication.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for setting up an SSH
-key, see the link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)] help page.
+key, see the link:reference-manual/setup-ssh.html#setup-ssh[`setup-ssh`(1)] help page.
 ====
 +
 [source]
@@ -1309,10 +1309,10 @@ Secure Service tab in the MKS configuration GUI and click Passwordless.
 
 See Also
 
-* xref:#gksiy[Setting Up Cygwin SSH on Windows]
-* xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-* xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
-* link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)]
+* xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+* xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+* xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
+* link:reference-manual/setup-ssh.html#setup-ssh[`setup-ssh`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help setup-ssh` at the command line.
@@ -1351,9 +1351,9 @@ Ensure that the following prerequisites are met:
 * SSH is set up on each host where you are setting up public key
 authentication. For more information, see the following sections:
 
-** xref:#gksiy[Setting Up Cygwin SSH on Windows]
-** xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-** xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
+** xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+** xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+** xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
 
 * Only the SSH user has write access to the following files and
 directories on each host where you are setting up public key
@@ -1397,7 +1397,7 @@ In response to the prompt, type the passphrase that you set in Step xref:#gktbh
 5. Distribute the public key file to the hosts where you are setting up
 public key authentication.
 +
-Use the link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`]
+Use the link:reference-manual/setup-ssh.html#setup-ssh[`setup-ssh`]
 `asadmin` subcommand for this purpose.
 +
 [source]
@@ -1427,7 +1427,7 @@ in Step xref:#gktbh[3].
 [arabic]
 .. Ensure that the DAS is running. +
 Remote subcommands require a running server.
-.. Run the link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`]
+.. Run the link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`]
 `asadmin` subcommand.
 +
 [source]
@@ -1459,7 +1459,7 @@ alias-name::
 ====
 When you create an `SSH` node, pass this file as the `--passwordfile`
 option of the `asadmin` utility. For more information, see
-link:nodes.html#gkrnf[To Create an `SSH` Node].
+link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node].
 ====
 
 
@@ -1526,12 +1526,12 @@ Secure Service tab in the MKS configuration GUI and click Passwordless.
 
 See Also
 
-* xref:#gksiy[Setting Up Cygwin SSH on Windows]
-* xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-* xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
+* xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+* xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+* xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
 * link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)]
-* link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
-* link:reference-manual/setup-ssh.html#GSRFM00229[`setup-ssh`(1)]
+* link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`(1)]
+* link:reference-manual/setup-ssh.html#setup-ssh[`setup-ssh`(1)]
 * http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN1ssh-keygen-1[`ssh-keygen`(1)]
 
 You can also view the full syntax and options of the subcommands by
@@ -1555,9 +1555,9 @@ Before You Begin
 Ensure that SSH is set up on each host where you are setting up password
 authentication. For more information, see the following sections:
 
-* xref:#gksiy[Setting Up Cygwin SSH on Windows]
-* xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-* xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
+* xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+* xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+* xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
 
 1. Ensure that the DAS is running. +
 Remote subcommands require a running server.
@@ -1569,7 +1569,7 @@ Create an alias for the SSH user's password.
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for creating a password
-alias, see the link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)] help page.
+alias, see the link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`(1)] help page.
 ====
 +
 [source]
@@ -1599,7 +1599,7 @@ alias-name::
 ====
 When you create an `SSH` node, pass this file as the `--passwordfile`
 option of the `asadmin` utility. For more information, see
-link:nodes.html#gkrnf[To Create an `SSH` Node].
+link:nodes.html#to-create-an-ssh-node[To Create an `SSH` Node].
 ====
 
 
@@ -1625,11 +1625,11 @@ AS_ADMIN_SSHPASSWORD=${ALIAS=ssh-password}
 
 See Also
 
-* xref:#gksiy[Setting Up Cygwin SSH on Windows]
-* xref:#gkskf[Setting Up the MKS Toolkit on Windows]
-* xref:#gksja[Setting Up SSH on UNIX and Linux Systems]
+* xref:#setting-up-cygwin-ssh-on-windows[Setting Up Cygwin SSH on Windows]
+* xref:#setting-up-the-mks-toolkit-on-windows[Setting Up the MKS Toolkit on Windows]
+* xref:#setting-up-ssh-on-unix-and-linux-systems[Setting Up SSH on UNIX and Linux Systems]
 * link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)]
-* link:reference-manual/create-password-alias.html#GSRFM00049[`create-password-alias`(1)]
+* link:reference-manual/create-password-alias.html#create-password-alias[`create-password-alias`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-password-alias` at the command line.
@@ -1647,16 +1647,16 @@ install the software from a {productName} distribution on each host
 individually. For more information, see link:installation-guide.html#GSING[{productName} Installation Guide].
 * If the same set up on each host is acceptable, copy an existing
 {productName} installation to the hosts. For more information, see
-xref:#gksil[To Copy a {productName} Installation to Multiple Hosts].
+xref:#to-copy-a-glassfish-server-installation-to-multiple-hosts[To Copy a {productName} Installation to Multiple Hosts].
 
 {productName} also enables you to remove {productName} software
 from multiple hosts in a single operation. For more information, see
-xref:#gktaw[To Remove {productName} Software From Multiple Hosts].
+xref:#to-remove-glassfish-server-software-from-multiple-hosts[To Remove {productName} Software From Multiple Hosts].
 
 The following topics are addressed here:
 
-* xref:#gksil[To Copy a {productName} Installation to Multiple Hosts]
-* xref:#gktaw[To Remove {productName} Software From Multiple Hosts]
+* xref:#to-copy-a-glassfish-server-installation-to-multiple-hosts[To Copy a {productName} Installation to Multiple Hosts]
+* xref:#to-remove-glassfish-server-software-from-multiple-hosts[To Remove {productName} Software From Multiple Hosts]
 
 [[gksil]][[GSHAG00086]][[to-copy-a-glassfish-server-installation-to-multiple-hosts]]
 
@@ -1683,7 +1683,7 @@ communication between the hosts.
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for copying an
 installation of {productName} software, see the
-link:reference-manual/install-node-dcom.html#GSRFM626[`install-node-dcom`(1)] help page.
+link:reference-manual/install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)] help page.
 ====
 +
 [source]
@@ -1701,7 +1701,7 @@ host-list::
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for copying an
 installation of {productName} software, see the
-link:reference-manual/install-node-ssh.html#GSRFM628[`install-node-ssh`(1)] help page.
+link:reference-manual/install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)] help page.
 ====
 +
 [source]
@@ -1780,8 +1780,8 @@ Command install-node-ssh executed successfully
 
 See Also
 
-* link:reference-manual/install-node-dcom.html#GSRFM626[`install-node-dcom`(1)]
-* link:reference-manual/install-node-ssh.html#GSRFM628[`install-node-ssh`(1)]
+* link:reference-manual/install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)]
+* link:reference-manual/install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -1834,7 +1834,7 @@ communication between the hosts.
 ====
 Only the options that are required to complete this task are provided in this step.
 For information about all the options for removing {productName} software, see the
-link:reference-manual/uninstall-node-dcom.html#GSRFM775[`uninstall-node-dcom`(1)] help page.
+link:reference-manual/uninstall-node-dcom.html#uninstall-node-dcom[`uninstall-node-dcom`(1)] help page.
 ====
 +
 [source]
@@ -1851,7 +1851,7 @@ host-list::
 ====
 Only the options that are required to complete this task are provided in this step.
 For information about all the options for removing {productName} software, see the
-link:reference-manual/uninstall-node-ssh.html#GSRFM778[`uninstall-node-ssh`(1)] help page.
+link:reference-manual/uninstall-node-ssh.html#uninstall-node-ssh[`uninstall-node-ssh`(1)] help page.
 ====
 +
 [source]
@@ -1894,8 +1894,8 @@ Command uninstall-node-ssh executed successfully.
 
 See Also
 
-* link:reference-manual/uninstall-node-dcom.html#GSRFM775[`uninstall-node-dcom`(1)]
-* link:reference-manual/uninstall-node-ssh.html#GSRFM778[`uninstall-node-ssh`(1)]
+* link:reference-manual/uninstall-node-dcom.html#uninstall-node-dcom[`uninstall-node-dcom`(1)]
+* link:reference-manual/uninstall-node-ssh.html#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

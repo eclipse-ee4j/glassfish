@@ -36,16 +36,16 @@ Refer to this document prior to installing, configuring, or using
 {productName} 7 software. Consult this document periodically to
 view the most up-to-date product information.
 
-* xref:#ghmvk["Revision History"]
-* xref:#glcmf["What's New in the {productName} 7 Release?"]
-* xref:#abpaj["Hardware and Software Requirements"]
-* xref:#glcmm["Known Issues in {productName} 7"]
-* xref:#ggqok["Restrictions and Deprecated Functionality"]
-* xref:#BABDACBE["Documentation Errata"]
-* xref:#giraq["Features Available Only in the Full Platform"]
-* xref:#gipkz["Jakarta EE Standards Support"]
-* xref:#abpha["How to Report Problems and Provide Feedback"]
-* xref:#abphc["Additional Resources"]
+* xref:#revision-history["Revision History"]
+* xref:#whats-new-in-the-glassfish-server-release["What's New in the {productName} 7 Release?"]
+* xref:#hardware-and-software-requirements["Hardware and Software Requirements"]
+* xref:#GSRLN00253["Known Issues in {productName} 7"]
+* xref:#restrictions-and-deprecated-functionality["Restrictions and Deprecated Functionality"]
+* xref:#documentation-errata["Documentation Errata"]
+* xref:#features-available-only-in-the-full-platform["Features Available Only in the Full Platform"]
+* xref:#java-ee-standards-support["Jakarta EE Standards Support"]
+* xref:#how-to-report-problems-and-provide-feedback["How to Report Problems and Provide Feedback"]
+* xref:#additional-resources["Additional Resources"]
 
 [[ghmvk]][[GSRLN00128]][[revision-history]]
 
@@ -82,7 +82,7 @@ Updated
 * To Be Done
 
 For a complete list of the Jakarta EE technologies included in {productName} 7,
-see xref:#gipkz[Jakarta EE Standards Support].
+see xref:#java-ee-standards-support[Jakarta EE Standards Support].
 
 
 [NOTE]
@@ -111,11 +111,11 @@ This section lists the requirements that must be met before installing
 
 The following topics are addressed here:
 
-* xref:#abpak[Required JDK Versions]
-* xref:#ggppy[Required Disk Space]
-* xref:#ggpoq[Required Free Ports]
-* xref:#gkxlg[Message Queue Broker Requirements]
-* xref:#gfgps[Paths and Environment Settings for the JDK Software]
+* xref:#required-jdk-versions[Required JDK Versions]
+* xref:#required-disk-space[Required Disk Space]
+* xref:#required-free-ports[Required Free Ports]
+* xref:#message-queue-broker-requirements[Message Queue Broker Requirements]
+* xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the JDK Software]
 
 [[abpak]][[GSRLN00246]][[required-jdk-versions]]
 
@@ -124,7 +124,7 @@ The following topics are addressed here:
 {productName} Release 7 requires Oracle JDK 8
 Update 144 or later.
 
-Also be sure to see xref:#gfgps[Paths and Environment Settings for the
+Also be sure to see xref:#paths-and-environment-settings-for-the-jdk-software[Paths and Environment Settings for the
 JDK Software] for important JDK configuration instructions.
 
 [NOTE]
@@ -291,9 +291,9 @@ difficult to trace.
 
 The following topics are addressed here:
 
-* xref:#gldjj[Use the JDK Binaries]
-* xref:#gldgl[Set the `JAVA_HOME` Environment Variable]
-* xref:#gldho[Set Other Environment Variables As Necessary]
+* xref:#use-the-jdk-binaries[Use the JDK Binaries]
+* xref:#set-the-java_home-environment-variable[Set the `JAVA_HOME` Environment Variable]
+* xref:#set-other-environment-variables-as-necessary[Set Other Environment Variables As Necessary]
 
 [[gldjj]][[GSRLN00155]][[use-the-jdk-binaries]]
 
@@ -359,10 +359,10 @@ This section describes known issues and any available workarounds for
 
 The following topics are addressed here:
 
-* xref:#CHDIBHHF[JAXB and JAX-WS no longer part of Jakarta EE platform]
-* xref:#CHDIBEAJ[Resource validation property is enabled in the JVM option for deployment]
-* xref:#CHDBJDGF[Update Tool and pkg Command no longer part of {productName}]
-* xref:#CHDJGJHD[Java DB has been replaced by Apache Derby]
+* xref:#jaxb-and-jax-ws-no-longer-part-of-java-ee-platform[JAXB and JAX-WS no longer part of Jakarta EE platform]
+* xref:#resource-validation-property-is-enabled-in-the-jvm-option-for-deployment[Resource validation property is enabled in the JVM option for deployment]
+* xref:#update-tool-and-pkg-command-no-longer-part-of-glassfish-server[Update Tool and pkg Command no longer part of {productName}]
+* xref:#java-db-has-been-replaced-by-apache-derby[Java DB has been replaced by Apache Derby]
 
 [[CHDIBHHF]][[jaxb-and-jax-ws-no-longer-part-of-java-ee-platform]]
 
@@ -644,7 +644,7 @@ https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
 
 This section describes documentation errata.
 
-* xref:#BABIDEHD[Upgrading to {productName} Is Not Necessary]
+* xref:#upgrading-to-oracle-glassfish-server-is-not-necessary[Upgrading to {productName} Is Not Necessary]
 
 [[BABIDEHD]][[upgrading-to-oracle-glassfish-server-is-not-necessary]]
 

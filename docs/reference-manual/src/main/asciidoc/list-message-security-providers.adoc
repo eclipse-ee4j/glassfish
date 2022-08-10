@@ -90,7 +90,7 @@ Command list-message-security-providers executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-message-security-provider.html#create-message-security-provider-1[`create-message-security-provider`(1)],
-link:delete-message-security-provider.html#delete-message-security-provider-1[`delete-message-security-provider`(1)]
+link:create-message-security-provider.html#create-message-security-provider[`create-message-security-provider`(1)],
+link:delete-message-security-provider.html#delete-message-security-provider[`delete-message-security-provider`(1)]
 
 

@@ -15,12 +15,12 @@ prev=tuning-java.html
 This chapter discusses tuning the operating system (OS) for optimum
 performance. It discusses the following topics:
 
-* xref:#abeis[Server Scaling]
-* xref:#gfpzp[Solaris 10 Platform-Specific Tuning Information]
-* xref:#abeix[Tuning for the Solaris OS]
-* xref:#abeje[Tuning for Solaris on x86]
-* xref:#abeji[Tuning for Linux platforms]
-* xref:#gfpzh[Tuning UltraSPARC CMT-Based Systems]
+* xref:#server-scaling[Server Scaling]
+* xref:#solaris-10-platform-specific-tuning-information[Solaris 10 Platform-Specific Tuning Information]
+* xref:#tuning-for-the-solaris-os[Tuning for the Solaris OS]
+* xref:#tuning-for-solaris-on-x86[Tuning for Solaris on x86]
+* xref:#tuning-for-linux-platforms[Tuning for Linux platforms]
+* xref:#tuning-ultrasparc-cmt-based-systems[Tuning UltraSPARC CMT-Based Systems]
 
 [[abeis]][[GSPTG00074]][[server-scaling]]
 
@@ -29,11 +29,11 @@ performance. It discusses the following topics:
 This section provides recommendations for optimal performance scaling
 server for the following server subsystems:
 
-* xref:#abeit[Processors]
-* xref:#abeiu[Memory]
-* xref:#abeiv[Disk Space]
-* xref:#abeiw[Networking]
-* xref:#glglf[UDP Buffer Sizes]
+* xref:#processors[Processors]
+* xref:#memory[Memory]
+* xref:#disk-space[Disk Space]
+* xref:#networking[Networking]
+* xref:#udp-buffer-sizes[UDP Buffer Sizes]
 
 [[abeit]][[GSPTG00210]][[processors]]
 
@@ -140,7 +140,7 @@ testing for the loss of UDP packets.
 ====
 On Linux systems, the default UDP buffer size might be insufficient even
 if only one instance is running on each host. In this situation, set the
-UDP buffer size as explained in xref:#glglz[To Set the UDP Buffer Size
+UDP buffer size as explained in xref:#to-set-the-udp-buffer-size-on-linux-systems[To Set the UDP Buffer Size
 on Linux Systems].
 ====
 
@@ -150,7 +150,7 @@ on Linux Systems].
 1. Ensure that no {productName} clusters are running.
 +
 If necessary, stop any running clusters as explained in
-"link:ha-administration-guide/instances.html#GSHAG00110[To Stop a Cluster]"
+"link:ha-administration-guide/instances.html#to-stop-a-cluster[To Stop a Cluster]"
 in {productName} High Availability Administration Guide.
 
 2. Determine the absolute number of lost UDP packets when no clusters
@@ -167,7 +167,7 @@ system. For example:
 3. Start all the clusters that are configured for your installation of
 {productName}.
 +
-Start each cluster as explained in "link:ha-administration-guide/instances.html#GSHAG00109[To Start a
+Start each cluster as explained in "link:ha-administration-guide/instances.html#to-start-a-cluster[To Start a
 Cluster]" in {productName} High Availability
 Administration Guide.
 
@@ -265,8 +265,8 @@ page]
 
 === Tuning for the Solaris OS
 
-* xref:#abeiy[Tuning Parameters]
-* xref:#abeja[File Descriptor Setting]
+* xref:#tuning-parameters[Tuning Parameters]
+* xref:#file-descriptor-setting[File Descriptor Setting]
 
 [[abeiy]][[GSPTG00215]][[tuning-parameters]]
 
@@ -394,7 +394,7 @@ network traffic.
 |`ndd /dev/tcp`
 |512
 |8192
-|Size of connection hash table. See xref:#abeiz[Sizing the Connection Hash Table].
+|Size of connection hash table. See xref:#sizing-the-connection-hash-table[Sizing the Connection Hash Table].
 |===
 
 
@@ -478,8 +478,8 @@ These settings apply to RMI/IIOP clients on the Solaris OS.
 The following are some options to consider when tuning Solaris on x86
 for {productName}:
 
-* xref:#abejg[File Descriptors]
-* xref:#abejh[IP Stack Settings]
+* xref:#file-descriptors[File Descriptors]
+* xref:#ip-stack-settings[IP Stack Settings]
 
 Some of the values depend on the system resources available. After
 making any changes to `/etc/system`, reboot the machines.
@@ -546,12 +546,12 @@ ndd -set /dev/tcp tcp_recv_hiwat 32768
 To tune for maximum performance on Linux, you need to make adjustments
 to the following:
 
-* xref:#gkvjl[Startup Files]
-* xref:#abejj[File Descriptors]
-* xref:#abejk[Virtual Memory]
-* xref:#abejl[Network Interface]
-* xref:#abejm[Disk I/O Settings]
-* xref:#abejn[TCP/IP Settings]
+* xref:#startup-files[Startup Files]
+* xref:#file-descriptors-1[File Descriptors]
+* xref:#virtual-memory[Virtual Memory]
+* xref:#network-interface[Network Interface]
+* xref:#disk-io-settings[Disk I/O Settings]
+* xref:#tcpip-settings[TCP/IP Settings]
 
 [[gkvjl]][[GSPTG00219]][[startup-files]]
 

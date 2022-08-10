@@ -48,13 +48,13 @@ The domain administration server (DAS) on a remote host cannot contact
 the node. To administer instances on a node that represents a host that
 is remote from the DAS, you must use the following subcommands:
 
-* link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
-* link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)]
-* link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)]
+* link:create-local-instance.html#create-local-instance[`create-local-instance`(1)]
+* link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)]
+* link:start-local-instance.html#start-local-instance[`start-local-instance`(1)]
 
 However, you may use
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
-or link:stop-instance.html#stop-instance-1[`stop-instance`(1)] to stop
+link:stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)]
+or link:stop-instance.html#stop-instance[`stop-instance`(1)] to stop
 the instances.
 
 This subcommand is supported in remote mode only.
@@ -129,23 +129,23 @@ Command create-node-config executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:delete-node-config.html#delete-node-config-1[`delete-node-config`(1)],
-link:install-node.html#install-node-1[`install-node`(1)],
-link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
-link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)],
-link:uninstall-node.html#uninstall-node-1[`uninstall-node`(1)],
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)],
-link:update-node-config.html#update-node-config-1[`update-node-config`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)],
-link:update-node-ssh001.html#update-node-ssh-1[`update-node-ssh`(1)]
+link:create-local-instance.html#create-local-instance[`create-local-instance`(1)],
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
+link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)],
+link:delete-node-config.html#delete-node-config[`delete-node-config`(1)],
+link:install-node.html#install-node[`install-node`(1)],
+link:install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)],
+link:install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)],
+link:list-nodes.html#list-nodes[`list-nodes`(1)],
+link:start-local-instance.html#start-local-instance[`start-local-instance`(1)],
+link:stop-instance.html#stop-instance[`stop-instance`(1)],
+link:stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)],
+link:uninstall-node.html#uninstall-node[`uninstall-node`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom[`uninstall-node-dcom`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh[`uninstall-node-ssh`(1)],
+link:update-node-config.html#update-node-config[`update-node-config`(1)],
+link:update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)],
+link:update-node-ssh001.html#update-node-ssh[`update-node-ssh`(1)]
 
 

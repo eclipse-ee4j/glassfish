@@ -78,7 +78,7 @@ Command enable-http-lb-server executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)],
-link:disable-http-lb-server.html#disable-http-lb-server-1[`disable-http-lb-server`(1)]
+link:create-http-lb-ref.html#create-http-lb-ref[`create-http-lb-ref`(1)],
+link:disable-http-lb-server.html#disable-http-lb-server[`disable-http-lb-server`(1)]
 
 

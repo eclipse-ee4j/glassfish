@@ -69,7 +69,7 @@ their child nodes that match the regular expression created by the
 provided matching pattern.
 
 For detailed information about dotted names, see the
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
 === Options
 
@@ -208,9 +208,9 @@ Command list executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)], link:set.html#set-1[`set`(1)]
+link:get.html#get[`get`(1)], link:set.html#set[`set`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)]
 
 link:administration-guide.html#GSADG[{productName} Administration Guide]
 

@@ -157,10 +157,10 @@ Command create-http-listener executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-ssl.html#create-ssl-1[`create-ssl`(1)],
-link:create-network-listener.html#create-network-listener-1[`create-network-listener`(1)],
-link:create-virtual-server.html#create-virtual-server-1[`create-virtual-server`(1)],
-link:delete-http-listener.html#delete-http-listener-1[`delete-http-listener`(1)],
-link:list-http-listeners.html#list-http-listeners-1[`list-http-listeners`(1)]
+link:create-ssl.html#create-ssl[`create-ssl`(1)],
+link:create-network-listener.html#create-network-listener[`create-network-listener`(1)],
+link:create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)],
+link:delete-http-listener.html#delete-http-listener[`delete-http-listener`(1)],
+link:list-http-listeners.html#list-http-listeners[`list-http-listeners`(1)]
 
 

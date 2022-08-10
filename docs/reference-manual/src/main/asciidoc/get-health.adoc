@@ -71,6 +71,6 @@ Command get-health executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:validate-multicast.html#validate-multicast-1[`validate-multicast`(1)]
+link:validate-multicast.html#validate-multicast[`validate-multicast`(1)]
 
 

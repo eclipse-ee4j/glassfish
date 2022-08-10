@@ -21,13 +21,13 @@ This chapter also tells how to set the default persistence provider in
 
 The following topics are addressed here:
 
-* xref:#CHDJJAEI[Overview of Oracle TopLink]
-* xref:#CHDHDABJ[Using Oracle TopLink in {productName}]
-* xref:#gbwmj[Specifying the Database for an Application]
-* xref:#gdkwf[Specifying the Persistence Provider for an Application]
-* xref:#gescc[Primary Key Generation Defaults]
-* xref:#gbwlh[Automatic Schema Generation]
-* xref:#gbxjh[Restrictions and Optimizations]
+* xref:#overview-of-oracle-toplink[Overview of Oracle TopLink]
+* xref:#using-oracle-toplink-in-glassfish-server[Using Oracle TopLink in {productName}]
+* xref:#specifying-the-database-for-an-application[Specifying the Database for an Application]
+* xref:#specifying-the-persistence-provider-for-an-application[Specifying the Persistence Provider for an Application]
+* xref:#primary-key-generation-defaults[Primary Key Generation Defaults]
+* xref:#automatic-schema-generation[Automatic Schema Generation]
+* xref:#restrictions-and-optimizations[Restrictions and Optimizations]
 
 [[CHDJJAEI]][[GSDVG537]][[overview-of-oracle-toplink]]
 
@@ -61,7 +61,7 @@ in The Jakarta EE Tutorial.
 * Java Architecture for XML Binding (JAXB) 2.0. The EclipseLink JAXB
 implementation, plus EclipseLink extensions, is called MOXy. The
 `org.eclipse.persistence.moxy.jar` file is bundled with {productName}. For more information about MOXy support in {productName}, see
-link:webservices.html#CHDEBBCH[The Databinding Provider].
+link:webservices.html#the-databinding-provider[The Databinding Provider].
 +
 For the JAXB 2.0 specification, see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
@@ -118,27 +118,27 @@ TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
 Guide for Oracle TopLink. For more detailed explanations of these steps,
 see the links in the steps.
 
-1. Set up the datasource. See "link:administration-guide/jdbc.html#GSADG00015[
+1. Set up the datasource. See "link:administration-guide/jdbc.html#ablih[
 Administering Database Connectivity]"
 in {productName} Administration Guide.
 2. Create the application. For guidance in writing your application,
 see https://eclipse-ee4j.github.io/jakartaee-tutorial/#persistence[Persistence]
 in The Jakarta EE Tutorial.
-3. Create the `persistence.xml` file. See xref:#gbwmj[Specifying the
+3. Create the `persistence.xml` file. See xref:#specifying-the-database-for-an-application[Specifying the
 Database for an Application] for considerations specific to {productName}.
 +
 If you are using the Java Persistence API by calling
-`Persistence.createEMF()`, see xref:#gdkwf[Specifying the Persistence
+`Persistence.createEMF()`, see xref:#specifying-the-persistence-provider-for-an-application[Specifying the Persistence
 Provider for an Application].
 4. If the security manager is enabled and you are using the Java
 Persistence API by calling `Persistence.createEMF()`, see
-link:securing-apps.html#gbyah[Enabling and Disabling the Security
+link:securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
 Manager].
 5. Deploy the application. See the {productName}
 Application Deployment Guide.
 6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
-7. Monitor the application. See "link:administration-guide/monitoring.html#GSADG00011[
+7. Monitor the application. See "link:administration-guide/monitoring.html#ablur[
 Administering the Monitoring Service]"
 in {productName} Administration Guide.
 
@@ -244,7 +244,7 @@ value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage
 
 For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 [[gdkwf]][[GSDVG00138]][[specifying-the-persistence-provider-for-an-application]]
@@ -268,7 +268,7 @@ the manner described in the Java Persistence API Specification:
 1. Install the provider. Copy the provider JAR files to the
 domain-dir``/lib`` directory, and restart the {productName}. For more
 information about the domain-dir``/lib`` directory, see
-link:class-loaders.html#beadj[Using the Common Class Loader]. The new
+link:class-loaders.html#using-the-common-class-loader[Using the Common Class Loader]. The new
 persistence provider is now available to all modules and applications
 deployed on servers that share the same configuration.
 +
@@ -358,8 +358,8 @@ respect to performance, security, and so on.
 
 The following topics are addressed here:
 
-* xref:#gcjgl[Annotations]
-* xref:#gbwmk[Generation Options]
+* xref:#annotations[Annotations]
+* xref:#generation-options[Generation Options]
 
 
 [NOTE]
@@ -414,7 +414,7 @@ control automatic schema generation by the following:
 [NOTE]
 ====
 Before using these options, make sure you have a properly configured
-database. See xref:#gbwmj[Specifying the Database for an Application].
+database. See xref:#specifying-the-database-for-an-application[Specifying the Database for an Application].
 ====
 
 
@@ -494,13 +494,13 @@ affect using the Java Persistence API.
 
 The following topics are addressed here:
 
-* xref:#giqbi[Oracle Database Enhancements]
-* xref:#ghdtr[Extended Persistence Context]
-* xref:#gezxw[Using @OrderBy with a Shared Session Cache]
-* xref:#gdwqi[Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver]
-* xref:#geqvh[Database Case Sensitivity]
-* xref:#gbxjg[Sybase Finder Limitation]
-* xref:#gbxjp[MySQL Database Restrictions]
+* xref:#oracle-database-enhancements[Oracle Database Enhancements]
+* xref:#extended-persistence-context[Extended Persistence Context]
+* xref:#using-orderby-with-a-shared-session-cache[Using @OrderBy with a Shared Session Cache]
+* xref:#using-blob-or-clob-types-with-the-inet-oraxo-jdbc-driver[Using BLOB or CLOB Types with the Inet Oraxo JDBC Driver]
+* xref:#database-case-sensitivity[Database Case Sensitivity]
+* xref:#sybase-finder-limitation[Sybase Finder Limitation]
+* xref:#mysql-database-restrictions[MySQL Database Restrictions]
 
 [[giqbi]][[GSDVG00390]][[oracle-database-enhancements]]
 
@@ -521,7 +521,7 @@ EclipseLink or you cannot put JDBC driver JAR files in
 domain-dir``/lib/ext``, set the `eclipselink.target-database` property to
 the value `org.eclipse.persistence.platform.database.OraclePlatform`.
 For more information about the `eclipselink.target-database` property,
-see xref:#gbwmj[Specifying the Database for an Application].
+see xref:#specifying-the-database-for-an-application[Specifying the Database for an Application].
 
 [[ghdtr]][[GSDVG00391]][[extended-persistence-context]]
 

@@ -148,6 +148,6 @@ Command validate-multicast executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get-health.html#get-health-1[`get-health`(1)]
+link:get-health.html#get-health[`get-health`(1)]
 
 

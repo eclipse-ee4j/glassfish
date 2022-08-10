@@ -22,10 +22,10 @@ environment.
 
 The following topics are addressed here:
 
-* xref:#abear[Process Overview]
-* xref:#abeat[Understanding Operational Requirements]
-* xref:#abeba[General Tuning Concepts]
-* xref:#abebd[Further Information]
+* xref:#process-overview[Process Overview]
+* xref:#understanding-operational-requirements[Understanding Operational Requirements]
+* xref:#general-tuning-concepts[General Tuning Concepts]
+* xref:#further-information[Further Information]
 
 [[abear]][[GSPTG00048]][[process-overview]]
 
@@ -119,11 +119,11 @@ Before you begin to deploy and tune your application on the {productName}, it is
 The operational environment is determined by high-level constraints and
 requirements such as:
 
-* xref:#abeau[Application Architecture]
-* xref:#abeav[Security Requirements]
-* xref:#gkvjf[High Availability Clustering, Load Balancing, and Failover]
-* xref:#abeay[Hardware Resources]
-* xref:#abeaz[Administration]
+* xref:#application-architecture[Application Architecture]
+* xref:#security-requirements[Security Requirements]
+* xref:#high-availability-clustering-load-balancing-and-failover[High Availability Clustering, Load Balancing, and Failover]
+* xref:#hardware-resources[Hardware Resources]
+* xref:#administration[Administration]
 
 [[abeau]][[GSPTG00154]][[application-architecture]]
 
@@ -183,7 +183,7 @@ already use a directory server may find it advantageous to leverage
 investment in Solaris security infrastructure.
 
 For more information on security realms, see
-"link:security-guide/user-security.html#GSSCG00151[Administering Authentication Realms]" in {productName} Security Guide.
+"link:security-guide/user-security.html#administering-authentication-realms[Administering Authentication Realms]" in {productName} Security Guide.
 
 The type of authentication mechanism chosen may require additional
 hardware for the deployment. Typically a directory server executes on a
@@ -252,7 +252,7 @@ system, given the security requirements?
 choices?
 
 For information on how to encrypt the communication between web servers
-and {productName}, see "link:security-guide/message-security.html#GSSCG00037[Administering Message
+and {productName}, see "link:security-guide/message-security.html#ablrk[Administering Message
 Security]" in {productName} Security Guide.
 
 [[gkvjf]][[GSPTG00156]][[high-availability-clustering-load-balancing-and-failover]]
@@ -279,7 +279,7 @@ minimum application downtime and enhanced transactional security.
 * High Availability Java Message Service
 * RMI-IIOP Load Balancing and Failover
 
-See link:tuning-java.html#glaat[Tuning High Availability Persistence] for
+See link:tuning-java.html#tuning-high-availability-persistence[Tuning High Availability Persistence] for
 high availability persistence tuning recommendations.
 
 See the link:ha-administration-guide.html#GSHAG[{productName} High
@@ -525,7 +525,7 @@ http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/[Seven
 Rules for Optimizing Entity Beans]
 (`http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/`)
 * For details on profiling,
-see "link:application-development-guide/setting-up-dev-env.html#GSDVG00341[
+see "link:application-development-guide/setting-up-dev-env.html#profiling-tools[
 Profiling Tools]" in {productName} Application Development Guide.
 * To view a demonstration video showing how to use the {productName} Performance Tuner,
 see the http://www.youtube.com/watch?v=FavsE2pzAjc[

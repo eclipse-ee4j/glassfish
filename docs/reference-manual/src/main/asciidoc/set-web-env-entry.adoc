@@ -96,7 +96,7 @@ Either the `--value` option or the `--ignoredescriptoritem` option
 Do not use the `--ignoredescriptoritem` option to unset an environment
 entry that has previously been set by using the `set-web-env-entry`
 subcommand. Instead, use the
-link:unset-web-env-entry.html#unset-web-env-entry-1[`unset-web-env-entry`(1)]
+link:unset-web-env-entry.html#unset-web-env-entry[`unset-web-env-entry`(1)]
 subcommand for this purpose.
 ====
 
@@ -109,7 +109,7 @@ subcommand for this purpose.
 application-name::
   The name of the application. This name can be obtained from the
   Administration Console or by using the
-  link:list-applications.html#list-applications-1[`list-applications`(1)] subcommand. +
+  link:list-applications.html#list-applications[`list-applications`(1)] subcommand. +
   The application must already be deployed. Otherwise, an error occurs.
 module::
   The relative path to the module within the application's enterprise
@@ -178,8 +178,8 @@ Command set-web-env-entry executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-applications.html#list-applications-1[`list-applications`(1)],
-link:list-web-env-entry.html#list-web-env-entry-1[`list-web-env-entry`(1)],
-link:unset-web-env-entry.html#unset-web-env-entry-1[`unset-web-env-entry`(1)]
+link:list-applications.html#list-applications[`list-applications`(1)],
+link:list-web-env-entry.html#list-web-env-entry[`list-web-env-entry`(1)],
+link:unset-web-env-entry.html#unset-web-env-entry[`unset-web-env-entry`(1)]
 
 

@@ -15,11 +15,11 @@ prev=tuning-glassfish.html
 
 The following topics are addressed here:
 
-* xref:#abeib[Java Virtual Machine Settings]
-* xref:#gfpzy[Start Options]
-* xref:#glaat[Tuning High Availability Persistence]
-* xref:#abeic[Managing Memory and Garbage Collection]
-* xref:#abeiq[Further Information]
+* xref:#java-virtual-machine-settings[Java Virtual Machine Settings]
+* xref:#start-options[Start Options]
+* xref:#tuning-high-availability-persistence[Tuning High Availability Persistence]
+* xref:#managing-memory-and-garbage-collection[Managing Memory and Garbage Collection]
+* xref:#further-information[Further Information]
 
 [[abeib]][[GSPTG00069]][[java-virtual-machine-settings]]
 
@@ -65,11 +65,11 @@ The efficiency of any application depends on how well memory and garbage
 collection are managed. The following sections provide information on
 optimizing memory and allocation functions:
 
-* xref:#abeid[Tuning the Garbage Collector]
-* xref:#abeig[Tracing Garbage Collection]
-* xref:#abeih[Other Garbage Collector Settings]
-* xref:#abeii[Tuning the Java Heap]
-* xref:#abeio[Rebasing DLLs on Windows]
+* xref:#tuning-the-garbage-collector[Tuning the Garbage Collector]
+* xref:#tracing-garbage-collection[Tracing Garbage Collection]
+* xref:#other-garbage-collector-settings[Other Garbage Collector Settings]
+* xref:#tuning-the-java-heap[Tuning the Java Heap]
+* xref:#rebasing-dlls-on-windows[Rebasing DLLs on Windows]
 
 [[abeid]][[GSPTG00205]][[tuning-the-garbage-collector]]
 
@@ -151,7 +151,7 @@ To do this, add the following JVM options:
 ===== Additional Information
 
 Use the `jvmstat` utility to monitor HotSpot garbage collection. (See
-xref:#abeiq[Further Information].)
+xref:#further-information[Further Information].)
 
 For detailed information on tuning the garbage collector, see
 http://www.oracle.com/technetwork/java/javase/gc-tuning-6-140523.html[Java
@@ -276,8 +276,8 @@ collection once per hour instead of the default rate of once per minute.
 This section discusses topics related to tuning the Java Heap for
 performance.
 
-* xref:#abeij[Guidelines for Java Heap Sizing]
-* xref:#abeik[Heap Tuning Parameters]
+* xref:#guidelines-for-java-heap-sizing[Guidelines for Java Heap Sizing]
+* xref:#heap-tuning-parameters[Heap Tuning Parameters]
 
 [[abeij]][[GSPTG00151]][[guidelines-for-java-heap-sizing]]
 

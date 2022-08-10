@@ -35,12 +35,12 @@ for an application's database access if it does not use standard Jakarta EE
 
 The following topics are addressed here:
 
-* xref:#giyck[Statements]
-* xref:#giyeq[Connections]
-* xref:#giyde[Connection Wrapping]
-* xref:#gavro[Allowing Non-Component Callers]
-* xref:#giydx[Using Application-Scoped Resources]
-* xref:#geqvg[Restrictions and Optimizations]
+* xref:#statements[Statements]
+* xref:#connections[Connections]
+* xref:#connection-wrapping[Connection Wrapping]
+* xref:#allowing-non-component-callers[Allowing Non-Component Callers]
+* xref:#using-application-scoped-resources[Using Application-Scoped Resources]
+* xref:#restrictions-and-optimizations[Restrictions and Optimizations]
 
 [[giyck]][[GSDVG00182]][[statements]]
 
@@ -48,11 +48,11 @@ The following topics are addressed here:
 
 The following topics are addressed here:
 
-* xref:#giyfu[Using an Initialization Statement]
-* xref:#ghqrx[Setting a Statement Timeout]
-* xref:#gktbf[Statement Leak Detection and Leaked Statement Reclamation]
-* xref:#giyci[Statement Caching]
-* xref:#giygg[Statement Tracing]
+* xref:#using-an-initialization-statement[Using an Initialization Statement]
+* xref:#setting-a-statement-timeout[Setting a Statement Timeout]
+* xref:#statement-leak-detection-and-leaked-statement-reclamation[Statement Leak Detection and Leaked Statement Reclamation]
+* xref:#statement-caching[Statement Caching]
+* xref:#statement-tracing[Statement Tracing]
 
 [[giyfu]][[GSDVG00495]][[using-an-initialization-statement]]
 
@@ -118,7 +118,7 @@ of the following ways:
 
 * Specify the `--statementleaktimeout` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-timeout-in-seconds` option in the `set`
 subcommand. For example:
 +
@@ -141,7 +141,7 @@ pool to a `true` value in one of the following ways:
 
 * Specify the `--statementleakreclaim=true` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-reclaim` option in the `set` subcommand.
 For example:
 +
@@ -254,7 +254,7 @@ page in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify them using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set them using the `set` subcommand. For example:
 +
 [source]
@@ -268,13 +268,13 @@ asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queri
 
 The following topics are addressed here:
 
-* xref:#gktas[Transparent Pool Reconfiguration]
-* xref:#giygl[Disabling Pooling]
-* xref:#giydr[Associating Connections with Threads]
-* xref:#giyfg[Custom Connection Validation]
-* xref:#beams[Sharing Connections]
-* xref:#gezfh[Marking Bad Connections]
-* xref:#gipzl[Handling Invalid Connections]
+* xref:#transparent-pool-reconfiguration[Transparent Pool Reconfiguration]
+* xref:#disabling-pooling[Disabling Pooling]
+* xref:#associating-connections-with-threads[Associating Connections with Threads]
+* xref:#custom-connection-validation[Custom Connection Validation]
+* xref:#sharing-connections[Sharing Connections]
+* xref:#marking-bad-connections[Marking Bad Connections]
+* xref:#handling-invalid-connections[Handling Invalid Connections]
 
 [[gktas]][[GSDVG00500]][[transparent-pool-reconfiguration]]
 
@@ -302,7 +302,7 @@ in the Administration Console. For more information, click the Help
 button in the Administration Console.
 * Specify it using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
-link:reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
+link:reference-manual/create-jdbc-connection-pool.html#create-jdbc-connection-pool[`create-jdbc-connection-pool`(1)].
 * Set it using the `set` subcommand. For example:
 +
 [source]
@@ -463,7 +463,7 @@ reference. To turn off connection sharing, set `res-sharing-scope` to
 `Unshareable`.
 
 For general information about connections and JDBC URLs, see
-"link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide.
+"link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]" in {productName} Administration Guide.
 
 [[gezfh]][[GSDVG00505]][[marking-bad-connections]]
 
@@ -557,9 +557,9 @@ connection pool is resized.
 
 The following topics are addressed here:
 
-* xref:#ghqxi[Wrapping Connections]
-* xref:#beamt[Obtaining a Physical Connection From a Wrapped Connection]
-* xref:#ggrum[Using the `Connection.unwrap()` Method]
+* xref:#wrapping-connections[Wrapping Connections]
+* xref:#obtaining-a-physical-connection-from-a-wrapped-connection[Obtaining a Physical Connection From a Wrapped Connection]
+* xref:#GSDVG00509[Using the `Connection.unwrap()` Method]
 
 [[ghqxi]][[GSDVG00507]][[wrapping-connections]]
 
@@ -659,7 +659,7 @@ For more information, see the link:reference-manual.html#GSRFM[{productName} Ref
 Accessing a `DataSource` using the `Synchronization.beforeCompletion()`
 method requires setting Allow Non Component Callers to `true`. For more
 information about the Transaction Synchronization Registry, see
-link:transaction-service.html#gaxit[The Transaction Manager, the
+link:transaction-service.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The Transaction Manager, the
 Transaction Synchronization Registry, and `UserTransaction`].
 
 [[giydx]][[GSDVG00186]][[using-application-scoped-resources]]
@@ -670,7 +670,7 @@ You can define an application-scoped database or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 [[geqvg]][[GSDVG00187]][[restrictions-and-optimizations]]
 

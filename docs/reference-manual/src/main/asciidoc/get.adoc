@@ -30,14 +30,14 @@ asadmin [asadmin-options] get [--help]
 The `get` subcommand uses dotted names to get the names and values of
 configurable or monitorable attributes for {productName} elements.
 
-You can use the link:list.html#list-1[`list`(1)] subcommand to display
+You can use the link:list.html#list[`list`(1)] subcommand to display
 the dotted names that represent individual server components and
 subsystems. For example, a dotted name might be
 `server.applications.web-module`. Attributes from the monitoring
 hierarchy are read-only, but configuration attributes can be modified
-using the link:set.html#set-1[`set`(1)] subcommand. For more detailed
+using the link:set.html#set[`set`(1)] subcommand. For more detailed
 information on dotted names, see the
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
 
 [NOTE]
@@ -185,9 +185,9 @@ Command get executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list.html#list-1[`list`(1)], link:set.html#set-1[`set`(1)]
+link:list.html#list[`list`(1)], link:set.html#set[`set`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+link:dotted-names.html#dotted-names[`dotted-names`(5ASC)]
 
 link:administration-guide.html#GSADG[{productName} Administration Guide]
 

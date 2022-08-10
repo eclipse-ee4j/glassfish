@@ -37,7 +37,7 @@ options are sent to the command line in the order they appear in the
 Profiler options are used to record the settings that are required to
 start a particular profiler. The profiler must already exist. If
 necessary, use the
-link:create-profiler.html#create-profiler-1[`create-profiler`(1)]
+link:create-profiler.html#create-profiler[`create-profiler`(1)]
 subcommand to create the profiler.
 
 This subcommand can be used to create the following types of options:
@@ -102,7 +102,7 @@ example, restart is not required for the following Java system property:
 `-d64`
 
 To restart the DAS, use the
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)] command.
+link:restart-domain.html#restart-domain[`restart-domain`(1)] command.
 
 This subcommand is supported in remote mode only.
 
@@ -240,10 +240,10 @@ Command create-jvm-options executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-profiler.html#create-profiler-1[`create-profiler`(1)],
-link:delete-jvm-options.html#delete-jvm-options-1[`delete-jvm-options`(1)],
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)],
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)]
+link:create-profiler.html#create-profiler[`create-profiler`(1)],
+link:delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`(1)],
+link:list-jvm-options.html#list-jvm-options[`list-jvm-options`(1)],
+link:restart-domain.html#restart-domain[`restart-domain`(1)]
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

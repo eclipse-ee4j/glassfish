@@ -15,9 +15,9 @@ prev=rolling-upgrade.html
 This chapter explains how to enable and configure high availability
 session persistence.
 
-* xref:#abdla[Overview of Session Persistence and Failover]
-* xref:#abdle[Enabling the High Availability Session Persistence Service]
-* xref:#abdlp[Stateful Session Bean Failover]
+* xref:#overview-of-session-persistence-and-failover[Overview of Session Persistence and Failover]
+* xref:#enabling-the-high-availability-session-persistence-service[Enabling the High Availability Session Persistence Service]
+* xref:#stateful-session-bean-failover[Stateful Session Bean Failover]
 
 [[abdla]][[GSHAG00209]][[overview-of-session-persistence-and-failover]]
 
@@ -45,9 +45,9 @@ session-based stickiness is the Loadbalancer Plug-In available in {productName}.
 
 The following topics are addressed here:
 
-* xref:#abdlb[Requirements]
-* xref:#abdlc[Restrictions]
-* xref:#gksoq[Scope]
+* xref:#requirements[Requirements]
+* xref:#restrictions[Restrictions]
+* xref:#scope[Scope]
 
 [[abdlb]][[GSHAG00300]][[requirements]]
 
@@ -63,7 +63,7 @@ data. In-memory session replication is enabled by default for {productName} clus
 +
 The use of in-memory replication requires the Group Management Service
 (GMS) to be enabled. For more information about GMS, see
-link:clusters.html#gjfnl[Group Management Service].
+link:clusters.html#group-management-service[Group Management Service].
 +
 If server instances in a cluster are located on different hosts, ensure
 that the following prerequisites are met:
@@ -79,7 +79,7 @@ possible.
 ====
 {productName} 7 does not support High Availability Database (HADB)
 configurations. Instead, use in-memory replication, as described in
-link:overview.html#gaynn[High Availability Session Persistence].
+link:overview.html#high-availability-session-persistence[High Availability Session Persistence].
 ====
 
 * Each server instance has the same distributable web application
@@ -92,8 +92,8 @@ session persistence, the server writes an error to the log file.
 
 * The web application must be deployed using the `deploy` or `deploydir`
 subcommand with the `--availabilityenabled` option set to `true`. For
-more information on these subcommands, see link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)]
-and link:reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
+more information on these subcommands, see link:reference-manual/deploy.html#deploy[`deploy`(1)]
+and link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
 
 [[abdlc]][[GSHAG00301]][[restrictions]]
 
@@ -117,7 +117,7 @@ link:application-deployment-guide.html#GSDPG[
 
 * {productName} 7 does not support High Availability Database
 (HADB) configurations. Instead, use in-memory replication, as described
-in link:overview.html#gaynn[High Availability Session Persistence].
+in link:overview.html#high-availability-session-persistence[High Availability Session Persistence].
 
 * You can only bind certain objects to distributed sessions that support
 failover. Contrary to the Servlet 2.4 specification, {productName} 7 does not throw an `IllegalArgumentException` if an object type not
@@ -186,11 +186,11 @@ instance and container levels.
 This section explains how to configure and enable the high availability
 session persistence service.
 
-* xref:#abdlf[To Enable Availability for a Cluster, Standalone Instance or Container]
-* xref:#abdll[Configuring Availability for Individual Web Applications]
-* xref:#gkwqu[Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`]
-* xref:#abdln[Using Single Sign-on with Session Failover]
-* xref:#gkyyl[Using Coherence*Web for HTTP Session Persistence]
+* xref:#to-enable-availability-for-a-cluster-standalone-instance-or-container[To Enable Availability for a Cluster, Standalone Instance or Container]
+* xref:#configuring-availability-for-individual-web-applications[Configuring Availability for Individual Web Applications]
+* xref:#configuring-replication-and-multi-threaded-concurrent-access-to-httpsessions[Configuring Replication and Multi-Threaded Concurrent Access to `HttpSessions`]
+* xref:#using-single-sign-on-with-session-failover[Using Single Sign-on with Session Failover]
+* xref:#using-coherenceweb-for-http-session-persistence[Using Coherence*Web for HTTP Session Persistence]
 
 [[abdlf]][[GSHAG00154]][[to-enable-availability-for-a-cluster-standalone-instance-or-container]]
 
@@ -202,11 +202,11 @@ for a standalone server instance that is not part of a cluster.
 
 1. Create a {productName} cluster.
 +
-For more information, see link:clusters.html#gkqdm[To Create a Cluster].
+For more information, see link:clusters.html#to-create-a-cluster[To Create a Cluster].
 
 2. Set up load balancing for the cluster.
 +
-For instructions, see link:http-load-balancing.html#abdgx[Setting Up HTTP Load Balancing].
+For instructions, see link:http-load-balancing.html#setting-up-http-load-balancing[Setting Up HTTP Load Balancing].
 
 3. Verify that the cluster and all instances within the cluster for
 which you want to enable availability is running.
@@ -292,11 +292,11 @@ asadmin> set instance-name-config.availability-service.availability-enabled=true
 6. Enable availability for any SFSB that requires it.
 +
 Select methods for which checkpointing the session state is necessary.
-For more information, see xref:#abdlu[Configuring Availability for an Individual Bean].
+For more information, see xref:#configuring-availability-for-an-individual-bean[Configuring Availability for an Individual Bean].
 
 7. Make each web module distributable if you want it to be highly available.
 +
-For more information, see "link:application-deployment-guide/deploying-applications.html#GSDPG00067[Web Module Deployment
+For more information, see "link:application-deployment-guide/deploying-applications.html#web-module-deployment-guidelines[Web Module Deployment
 Guidelines]" in {productName} Application Deployment Guide.
 
 8. Enable availability for individual applications, web modules, or EJB
@@ -306,8 +306,8 @@ See the links below for instructions.
 
 See Also
 
-* xref:#abdll[Configuring Availability for Individual Web Applications]
-* xref:#abdln[Using Single Sign-on with Session Failover]
+* xref:#configuring-availability-for-individual-web-applications[Configuring Availability for Individual Web Applications]
+* xref:#using-single-sign-on-with-session-failover[Using Single Sign-on with Session Failover]
 
 [[abdll]][[GSHAG00303]][[configuring-availability-for-individual-web-applications]]
 
@@ -516,7 +516,7 @@ of a subsequent method.
 The state of an SFSB is not necessarily transactional and might be
 significantly modified as a result of non-transactional business
 methods. If this is the case for an SFSB, you can specify a list of
-checkpointed methods, as described in xref:#abdlw[Specifying Methods to
+checkpointed methods, as described in xref:#specifying-methods-to-be-checkpointed[Specifying Methods to
 Be Checkpointed]
 
 If a distributable web application references an SFSB, and the web
@@ -581,8 +581,8 @@ module during deployment:
 Availability Enabled checkbox.
 * If you are deploying using use the `asadmin deploy` or
 `asadmin deploydir` commands, set the `--availabilityenabled` option to
-`true`. For more information, see link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] and
-link:reference-manual/deploydir.html#GSRFM00115[`deploydir`(1)].
+`true`. For more information, see link:reference-manual/deploy.html#deploy[`deploy`(1)] and
+link:reference-manual/deploydir.html#deploydir[`deploydir`(1)].
 
 [[abdlu]][[GSHAG00309]][[configuring-availability-for-an-individual-bean]]
 

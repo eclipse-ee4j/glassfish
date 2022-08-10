@@ -36,12 +36,12 @@ For Javadoc tool pages relevant to lifecycle modules, see the
 
 The following topics are addressed here:
 
-* xref:#beamd[Server Life Cycle Events]
-* xref:#beame[The LifecycleListener Interface]
-* xref:#beamf[The `LifecycleEvent` Class]
-* xref:#beamg[The Server Lifecycle Event Context]
-* xref:#beamh[Deploying a Lifecycle Module]
-* xref:#beami[Considerations for Lifecycle Modules]
+* xref:#server-life-cycle-events[Server Life Cycle Events]
+* xref:#the-lifecyclelistener-interface[The LifecycleListener Interface]
+* xref:#the-lifecycleevent-class[The `LifecycleEvent` Class]
+* xref:#the-server-lifecycle-event-context[The Server Lifecycle Event Context]
+* xref:#deploying-a-lifecycle-module[Deploying a Lifecycle Module]
+* xref:#considerations-for-lifecycle-modules[Considerations for Lifecycle Modules]
 
 [[beamd]][[GSDVG00167]][[server-life-cycle-events]]
 
@@ -177,7 +177,7 @@ or its parent, the Connector class loader.
 You must ensure that the `server.policy` file is appropriately set up,
 or a lifecycle module trying to perform a `System.exec()` might cause a
 security access violation. For details, see
-link:securing-apps.html#beabx[The `server.policy` File].
+link:securing-apps.html#GSDVG00121[The `server.policy` File].
 
 The configured properties for a lifecycle module are passed as
 properties after the `INIT_EVENT`. The JNDI naming context is not

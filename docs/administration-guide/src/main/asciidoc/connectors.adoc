@@ -57,24 +57,24 @@ is a Jakarta EE component that enables applications to interact with EIS
 software. A connector module is used by {productName} to implement
 Java Message Service (JMS). Like other Jakarta EE modules, a connector
 module is installed when it is deployed. For instructions on creating a
-connector module, see "link:application-development-guide/connectors.html#GSDVG00013[Developing Connectors]" in
+connector module, see "link:application-development-guide/connectors.html#bealk[Developing Connectors]" in
 {productName} Application Development Guide.
 * Connector Connection Pool. A connector connection pool is a group of
 reusable connections for a particular EIS. A connector connection pool
 is created when you specify the connector module that is associated with
-the pool. For administration procedures, see xref:#ablls[Administering
+the pool. For administration procedures, see xref:#administering-connector-connection-pools[Administering
 Connector Connection Pools].
 * Connector Resource. A connector resource is a program object that
 provides an application with a connection to an EIS. A connector
 resource is created when you specify its JNDI name and its associated
 connection pool. The JNDI name of a connector resource for an EIS is
 usually in the `java:comp/env/`eis-specific subcontext. For
-administration procedures, see xref:#abllx[Administering Connector
+administration procedures, see xref:#administering-connector-resources[Administering Connector
 Resources].
 * Connector Module Configuration. A connector module configuration is
 the information that resides in the domain configuration file
 (`domain.xml`) for the particular connector module (resource adapter).
-For administration procedures, see xref:#giope[Administering the
+For administration procedures, see xref:#administering-the-resource-adapter-configuration[Administering the
 Resource Adapter Configuration].
 * Connector Security Map. A connector security map associates the caller
 identity of the application (principal or user group) to a suitable EIS
@@ -84,12 +84,12 @@ principal or group. For administration procedures, see
 the caller identity of the work submitted by the connector module
 (resource adapter) EIS principal or EIS user group to a suitable
 principal or user group in the {productName} security domain. For
-administration procedures, see xref:#giohl[Administering Connector Work
+administration procedures, see xref:#administering-connector-work-security-maps[Administering Connector Work
 Security Maps].
 * Administered Object. An administered object provides specialized
 functionality for an application, such as providing access to a parser
 that is specific to the connector module and its associated EIS. For
-administration procedures, see xref:#ablmc[Administering Administered
+administration procedures, see xref:#administering-administered-objects[Administering Administered
 Objects].
 
 At runtime, the following sequence occurs when an application connects
@@ -126,7 +126,7 @@ The following topics are addressed here:
 
 * <<To Create a Connector Connection Pool>>
 * <<To List Connector Connection Pools>>
-* xref:#gjiqz[To Connect to (Ping) or Reset (Flush) a Connector
+* xref:#to-connect-to-ping-or-reset-flush-a-connector-connection-pool[To Connect to (Ping) or Reset (Flush) a Connector
 Connection Pool]
 * <<To Update a Connector Connection Pool>>
 * <<To Delete a Connector Connection Pool>>
@@ -145,7 +145,7 @@ Multiple connector resources can specify a single connection pool.
 
 Creating a connector connection pool is a dynamic event and does not
 require server restart. However, there are some parameters that do
-require server restart. See xref:overview.adoc#ghciy[Configuration
+require server restart. See xref:overview.adoc#configuration-changes-that-require-restart[Configuration
 Changes That Require Restart].
 
 Before You Begin
@@ -155,20 +155,20 @@ installed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the connector connection pool by using the
-link:reference-manual/create-connector-connection-pool.html#GSRFM00018[`create-connector-connection-pool`] subcommand.
+link:reference-manual/create-connector-connection-pool.html#create-connector-connection-pool[`create-connector-connection-pool`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
+xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 4. You can verify that a connection pool is usable by using the
 `ping-connection-pool` subcommand.
 +
-For instructions, see xref:jdbc.adoc#ggnwn[To Contact (Ping) a Connection
+For instructions, see xref:jdbc.adoc#to-contact-ping-a-connection-pool[To Contact (Ping) a Connection
 Pool].
 
 [[GSADG00223]][[giocc]]
@@ -201,7 +201,7 @@ list the pools that have been created.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
+link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 
 [[GSADG00224]][[giody]]
 Example 12-2 Listing Connector Connection Pools
@@ -227,14 +227,14 @@ line.
 
 Use the `ping-connection-pool` or `flush-connection-pool` subcommands in
 remote mode to perform these tasks on a connection pools. See
-xref:jdbc.adoc#ggnwn[To Contact (Ping) a Connection Pool] or
-xref:jdbc.adoc#gjiqp[To Reset (Flush) a Connection Pool] for
+xref:jdbc.adoc#to-contact-ping-a-connection-pool[To Contact (Ping) a Connection Pool] or
+xref:jdbc.adoc#to-reset-flush-a-connection-pool[To Reset (Flush) a Connection Pool] for
 instructions.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Connect to or reset a connector connection pool by using the
-link:reference-manual/flush-connection-pool.html#GSRFM00135[`flush-connection-pool`] subcommand or the
-link:reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-pool`] subcommand.
+link:reference-manual/flush-connection-pool.html#flush-connection-pool[`flush-connection-pool`] subcommand or the
+link:reference-manual/ping-connection-pool.html#ping-connection-pool[`ping-connection-pool`] subcommand.
 
 [[gioti]][[GSADG00434]][[to-update-a-connector-connection-pool]]
 
@@ -244,16 +244,16 @@ Use the `get` and `set` subcommands to view and change the values of the
 connector connection pool properties.
 
 1. List the connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
+link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 2. View the properties of the connector connection pool by using the
-link:reference-manual/get.html#GSRFM00139[`get`] subcommand. For example:
+link:reference-manual/get.html#get[`get`] subcommand. For example:
 +
 [source]
 ----
 asadmin> get domain.resources.connector-connection-pool.conectionpoolname.*
 ----
 3. Set the property of the connector connection pool by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -262,8 +262,8 @@ asadmin> set domain.resources.connector-connection-pool
 .conectionpoolname.validate-atmost-once-period-in-seconds=3
 ----
 4. If needed, restart the server. Some properties require server restart.
-See xref:overview.adoc#ghciy[Configuration Changes That Require Restart].
-If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
+If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[giocp]][[GSADG00435]][[to-delete-a-connector-connection-pool]]
 
@@ -274,10 +274,10 @@ remove a connector connection pool.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
+link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 3. If necessary, notify users that the connector connection pool is being deleted.
 4. Delete the connector connection pool by using the
-link:reference-manual/delete-connector-connection-pool.html#GSRFM00070[`delete-connector-connection-pool`] subcommand.
+link:reference-manual/delete-connector-connection-pool.html#delete-connector-connection-pool[`delete-connector-connection-pool`] subcommand.
 
 [[GSADG00225]][[giohd]]
 Example 12-3 Deleting a Connector Connection Pool
@@ -320,26 +320,26 @@ register a new connector resource with its JNDI name.
 
 Creating a connector resource is a dynamic event and does not require
 server restart. However, there are some parameters that do require
-server restart. See xref:overview.adoc#ghciy[Configuration Changes That
+server restart. See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That
 Require Restart].
 
 Before You Begin
 
 Before creating a connector resource, you must first create a connector
-connection pool. For instructions, see xref:#gioce[To Create a Connector
+connection pool. For instructions, see xref:#to-create-a-connector-connection-pool[To Create a Connector
 Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the connector resource by using the
-link:reference-manual/create-connector-resource.html#GSRFM00019[`create-connector-resource`] subcommand.
+link:reference-manual/create-connector-resource.html#create-connector-resource[`create-connector-resource`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
+xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
 [[GSADG00226]][[giogn]]
@@ -369,7 +369,7 @@ connector resources that have been created.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`] subcommand.
+link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
 
 [[GSADG00227]][[gioia]]
 Example 12-5 Listing Connector Resources
@@ -396,9 +396,9 @@ Use the `get` and `set` subcommands to view and change the values of the
 connector resource properties.
 
 1. List the connector connection pools by using the
-link:reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`] subcommand.
+link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
 2. View the properties of the connector resource by using the
-link:reference-manual/get.html#GSRFM00139[`get`] subcommand.
+link:reference-manual/get.html#get[`get`] subcommand.
 For example
 +
 [source]
@@ -406,7 +406,7 @@ For example
 asadmin> get domain.resources.connector-resource.jms/qConnFactory
 ----
 3. Set the property of the connector resource by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -414,8 +414,8 @@ For example:
 asadmin> set domain.resources.connector-resource.jms/qConnFactory.enabled=true
 ----
 4. If needed, restart the server. Some properties require server restart.
-See xref:overview.adoc#ghciy[Configuration Changes That Require Restart].
-If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
+If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[giofs]][[GSADG00439]][[to-delete-a-connector-resource]]
 
@@ -430,10 +430,10 @@ Before deleting a resource, all associations with the resource must be removed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector connection pools by using the
-link:reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`] subcommand.
+link:reference-manual/list-connector-resources.html#list-connector-resources[`list-connector-resources`] subcommand.
 3. If necessary, notify users that the connector resource is being deleted.
 4. Delete the connector resource by using the
-link:reference-manual/delete-connector-resource.html#GSRFM00071[`delete-connector-resource`] subcommand.
+link:reference-manual/delete-connector-resource.html#delete-connector-resource[`delete-connector-resource`] subcommand.
 
 [[GSADG00228]][[giokh]]
 Example 12-6 Deleting a Connector Resource
@@ -457,7 +457,7 @@ typing `asadmin help delete-connector-resource` at the command line.
 
 The following topics are addressed here:
 
-* xref:#gioqx[To Create Configuration Information for a Resource
+* xref:#to-create-configuration-information-for-a-resource-adapter[To Create Configuration Information for a Resource
 Adapter]
 * <<To List Resource Adapter Configurations>>
 * <<To Update a Resource Adapter Configuration>>
@@ -477,7 +477,7 @@ adapter is restarted with the new configuration.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create configuration information by using the
-link:reference-manual/create-resource-adapter-config.html#GSRFM00054[`create-resource-adapter-config`] subcommand.
+link:reference-manual/create-resource-adapter-config.html#create-resource-adapter-config[`create-resource-adapter-config`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
@@ -511,7 +511,7 @@ module).
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the configurations for a resource adapter by using the
-link:reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`] subcommand.
+link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 
 [[GSADG00230]][[gioof]]
 Example 12-8 Listing Configurations for a Resource Adapter
@@ -539,9 +539,9 @@ Use the `get` and `set` subcommands to view and change the values of the
 resource adapter configuration properties.
 
 1. List the configurations for a resource adapter by using the
-link:reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`] subcommand.
+link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 2. View the properties of the connector resource by using the
-link:reference-manual/get.html#GSRFM00139[`get`] subcommand.
+link:reference-manual/get.html#get[`get`] subcommand.
 For example:
 +
 [source]
@@ -549,7 +549,7 @@ For example:
 asadmin>get domain.resources.resource-adapter-config.ra1.*
 ----
 3. Set the property of the connector resource by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -568,9 +568,9 @@ configuration file (`domain.xml`) for a specified resource adapter
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the configurations for a resource adapter by using the
-link:reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`] subcommand.
+link:reference-manual/list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`] subcommand.
 3. Delete the configuration for a resource adapter by using the
-link:reference-manual/delete-resource-adapter-config.html#GSRFM00106[`delete-resource-adapter-config`] subcommand.
+link:reference-manual/delete-resource-adapter-config.html#delete-resource-adapter-config[`delete-resource-adapter-config`] subcommand.
 
 [[GSADG00231]][[giorj]]
 Example 12-9 Deleting a Resource Adapter Configuration
@@ -627,20 +627,20 @@ container-managed authentication scenarios.
 Before You Begin
 
 For this subcommand to succeed, you must have first created a connector
-connection pool. For instructions, see xref:#gioce[To Create a Connector
+connection pool. For instructions, see xref:#to-create-a-connector-connection-pool[To Create a Connector
 Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a connector security map by using the
-link:reference-manual/create-connector-security-map.html#GSRFM00020[`create-connector-security-map`] subcommand.
+link:reference-manual/create-connector-security-map.html#create-connector-security-map[`create-connector-security-map`] subcommand.
 +
 Information about the options for the subcommand is included in this
 help page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
+xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
 [[GSADG00232]][[giuxc]]
@@ -668,9 +668,9 @@ comprehensive listing that shows the principals of the map.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List existing connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
+link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 3. List the security maps for a specific connector connection pool by
-using the link:reference-manual/list-connector-security-maps.html#GSRFM00159[`list-connector-security-maps`] subcommand.
+using the link:reference-manual/list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`] subcommand.
 
 [[GSADG00233]][[giuwj]]
 Example 12-11 Listing All Connector Security Maps for a Connector
@@ -726,14 +726,14 @@ pool.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List existing connector security maps by using the
-link:reference-manual/list-connector-security-maps.html#GSRFM00159[`list-connector-security-maps`] subcommand.
+link:reference-manual/list-connector-security-maps.html#list-connector-security-maps[`list-connector-security-maps`] subcommand.
 3. Modify a security map for a specific connector connection pool by
-using the link:reference-manual/update-connector-security-map.html#GSRFM00252[`update-connector-security-map`] subcommand.
+using the link:reference-manual/update-connector-security-map.html#update-connector-security-map[`update-connector-security-map`] subcommand.
 4. If needed, restart the server.
 +
 Some properties require server restart. See
-xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
+xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
 [[GSADG00236]][[giuwi]]
@@ -757,9 +757,9 @@ delete a security map for the specified connector connection pool.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List existing connector connection pools by using the
-link:reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
+link:reference-manual/list-connector-connection-pools.html#list-connector-connection-pools[`list-connector-connection-pools`] subcommand.
 3. Delete a security map for a specific connector connection pool by
-using the link:reference-manual/delete-connector-security-map.html#GSRFM00072[`delete-connector-security-map`] subcommand.
+using the link:reference-manual/delete-connector-security-map.html#delete-connector-security-map[`delete-connector-security-map`] subcommand.
 +
 Information about options for this subcommand is included in this help
 page.
@@ -812,20 +812,20 @@ card asterisk (*) to indicate all users or all user groups.
 Before You Begin
 
 Before creating a connector work security map, you must first create a
-connector connection pool. For instructions, see xref:#gioce[To Create a
+connector connection pool. For instructions, see xref:#to-create-a-connector-connection-pool[To Create a
 Connector Connection Pool].
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the connector work security map by using the
-link:reference-manual/create-connector-work-security-m.html#GSRFM00021[`create-connector-work-security-map`] subcommand.
+link:reference-manual/create-connector-work-security-m.html#create-connector-work-security-map[`create-connector-work-security-map`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
+xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
 [[GSADG00238]][[giokw]]
@@ -861,7 +861,7 @@ list the work security maps that belong to a specific connector module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector work security maps by using the
-link:reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`] subcommand.
+link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 
 [[GSADG00239]][[gionj]]
 Example 12-17 Listing the Connector Work Security Maps
@@ -893,11 +893,11 @@ modify a work security map that belongs to a specific resource adapter
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector work security maps by using the
-link:reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`] subcommand.
+link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 3. If necessary, notify users that the connector work security map is
 being modified.
 4. Update a connector work security map by using the
-link:reference-manual/update-connector-work-security-m.html#GSRFM00253[`update-connector-work-security-map`] subcommand.
+link:reference-manual/update-connector-work-security-m.html#update-connector-work-security-map[`update-connector-work-security-map`] subcommand.
 
 [[GSADG00240]][[gioll]]
 Example 12-18 Updating a Connector Work Security Map
@@ -927,9 +927,9 @@ module (resource adapter).
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the connector work security maps by using the
-link:reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`] subcommand.
+link:reference-manual/list-connector-work-security-map.html#list-connector-work-security-maps[`list-connector-work-security-maps`] subcommand.
 3. Delete a connector work security map by using the
-link:reference-manual/delete-connector-work-security-m.html#GSRFM00073[`delete-connector-work-security-map`] subcommand.
+link:reference-manual/delete-connector-work-security-m.html#delete-connector-work-security-map[`delete-connector-work-security-map`] subcommand.
 
 [[GSADG00241]][[giolk]]
 Example 12-19 Deleting a Connector Work Security Map
@@ -980,15 +980,15 @@ The resource adapter must be deployed before running this subcommand
 (`jmsrar.rar`).
 
 1. Create an administered object by using the
-link:reference-manual/create-admin-object.html#GSRFM00012[`create-admin-object`] subcommand.
+link:reference-manual/create-admin-object.html#create-admin-object[`create-admin-object`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 2. If needed, restart the server.
 +
 Some properties require server restart. See
-xref:overview.adoc#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart
+xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart]. If
+your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart
 a Domain].
 
 [[GSADG00242]][[giokx]]
@@ -1019,7 +1019,7 @@ existing administered objects.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the administered objects by using the
-link:reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`] subcommand.
+link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
 
 [[GSADG00243]][[giokg]]
 Example 12-21 Listing Administered Objects
@@ -1046,9 +1046,9 @@ Use the `get` and `set` subcommands to view and change the values of the
 administered objects properties.
 
 1. List the administered objects by using the
-link:reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`] subcommand.
+link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
 2. View the properties of the administered object by using the
-link:reference-manual/get.html#GSRFM00139[`get`] subcommand.
+link:reference-manual/get.html#get[`get`] subcommand.
 For example:
 +
 [source]
@@ -1056,7 +1056,7 @@ For example:
 asadmin> get domain.resources.admin-object-resource.jms/samplequeue.*
 ----
 3. Set the property of the administered object by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 For example:
 +
 [source]
@@ -1064,8 +1064,8 @@ For example:
 asadmin> set domain.resources.admin-object-resource.jms/samplequeue.enabled=false
 ----
 4. If needed, restart the server. Some properties require server restart.
-See xref:overview.adoc#ghciy[Configuration Changes That Require Restart].
-If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:overview.adoc#configuration-changes-that-require-restart[Configuration Changes That Require Restart].
+If your server needs to be restarted, see xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[gioma]][[GSADG00455]][[to-delete-an-administered-object]]
 
@@ -1074,10 +1074,10 @@ If your server needs to be restarted, see xref:domains.adoc#ginqj[To Restart a D
 Use the `delete-admin-object` subcommand to delete an administered objects.
 
 1. List the administered objects by using the
-link:reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`] subcommand.
+link:reference-manual/list-admin-objects.html#list-admin-objects[`list-admin-objects`] subcommand.
 2. If necessary, notify users that the administered object is being deleted.
 3. Delete an administered object by using the
-link:reference-manual/delete-admin-object.html#GSRFM00063[`delete-admin-object`] subcommand.
+link:reference-manual/delete-admin-object.html#delete-admin-object[`delete-admin-object`] subcommand.
 
 [[GSADG00244]][[giolc]]
 Example 12-22 Deleting an Administered Object

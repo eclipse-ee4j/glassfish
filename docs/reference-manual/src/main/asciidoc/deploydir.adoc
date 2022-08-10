@@ -113,7 +113,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
+  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--retrieve`::
@@ -370,7 +370,7 @@ Other available properties are determined by the implementation of the
   decoration process. The {productName} OSGi web container registers
   a URL stream handler named `webbundle`, which is used to wrap a plain
   WAR file as a WAB. For more information about usage, see the related
-  example in the link:deploy.html#deploy-1[`deploy`(1)] help page.
+  example in the link:deploy.html#deploy[`deploy`(1)] help page.
 
 === Operands
 
@@ -408,10 +408,10 @@ Command deploydir executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)], link:deploy.html#deploy-1[`deploy`(1)],
-link:redeploy.html#redeploy-1[`redeploy`(1)],
-link:set.html#set-1[`set`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+link:get.html#get[`get`(1)], link:deploy.html#deploy[`deploy`(1)],
+link:redeploy.html#redeploy[`redeploy`(1)],
+link:set.html#set[`set`(1)],
+link:undeploy.html#undeploy[`undeploy`(1)]
 
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]

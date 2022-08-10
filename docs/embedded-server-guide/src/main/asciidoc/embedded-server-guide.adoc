@@ -19,14 +19,14 @@ ability to program in the Java language is assumed.
 
 The following topics are addressed here:
 
-* xref:#giidt[Introduction to Embedded {productName}]
-* xref:#gkubb[Embedded {productName} File System]
-* xref:#giijw[Including the {productName} Embedded Server API in Applications]
-* xref:#gijhs[Testing Applications with the Maven Plug-in for Embedded {productName}]
-* xref:#gjlde[Using the EJB 3.1 Embeddable API with Embedded {productName}]
-* xref:#gjlfe[Changing Log Levels in Embedded {productName}]
-* xref:#gksmw[Default Java Persistence Data Source for Embedded {productName}]
-* xref:#gihxf[Restrictions for Embedded {productName}]
+* xref:#introduction-to-embedded-glassfish-server[Introduction to Embedded {productName}]
+* xref:#embedded-glassfish-server-file-system[Embedded {productName} File System]
+* xref:#including-the-glassfish-server-embedded-server-api-in-applications[Including the {productName} Embedded Server API in Applications]
+* xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Testing Applications with the Maven Plug-in for Embedded {productName}]
+* xref:#GSESG00039[Using the EJB 3.1 Embeddable API with Embedded {productName}]
+* xref:#changing-log-levels-in-embedded-glassfish-server[Changing Log Levels in Embedded {productName}]
+* xref:#default-java-persistence-data-source-for-embedded-glassfish-server[Default Java Persistence Data Source for Embedded {productName}]
+* xref:#restrictions-for-embedded-glassfish-server[Restrictions for Embedded {productName}]
 
 [[giidt]][[GSESG00035]][[introduction-to-embedded-glassfish-server]]
 
@@ -50,10 +50,10 @@ Embedded {productName} does not run on the Java Platform, Micro Edition (Java ME
 
 You can use embedded {productName} in the following ways:
 
-* With the Embedded Server API (see xref:#giijw[Including the {productName} Embedded Server API in Applications])
-* With the Maven Plug-in (see xref:#gijhs[Testing Applications with the
+* With the Embedded Server API (see xref:#including-the-glassfish-server-embedded-server-api-in-applications[Including the {productName} Embedded Server API in Applications])
+* With the Maven Plug-in (see xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Testing Applications with the
 Maven Plug-in for Embedded {productName}])
-* With the EJB 3.1 Embeddable API (see xref:#gjlde[Using the EJB 3.1
+* With the EJB 3.1 Embeddable API (see xref:#GSESG00039[Using the EJB 3.1
 Embeddable API with Embedded {productName}])
 
 Embedded {productName} provides a plug-in for
@@ -80,9 +80,9 @@ Component Development Guide].
 The following Embedded {productName} directories and files are
 important if you are referencing a nonembedded installation of {productName}:
 
-* xref:#gikqf[Installation Root Directory]
-* xref:#gikvf[Instance Root Directory]
-* xref:#giiak[The `domain.xml` File]
+* xref:#installation-root-directory[Installation Root Directory]
+* xref:#instance-root-directory[Instance Root Directory]
+* xref:#GSESG00056[The `domain.xml` File]
 
 [[gikqf]][[GSESG00054]][[installation-root-directory]]
 
@@ -120,7 +120,7 @@ Specify the instance root directory only if you have a valid nonembedded
 If you have valid nonembedded {productName} as-install and domain-dir
 directories, specify both in the `BootstrapProperties` and
 `GlassFishProperties` classes respectively as described in
-xref:#gihyr[Creating and Configuring an Embedded {productName}].
+xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}].
 ====
 
 
@@ -143,7 +143,7 @@ application obtains domain configuration data from an existing
 interfaces of an installation of nonembedded {productName}. To
 specify an existing `domain.xml` file, invoke the `setConfigFileURI`
 method of the `GlassFishProperties` class as described in
-xref:#gihyr[Creating and Configuring an Embedded {productName}].
+xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}].
 
 
 [NOTE]
@@ -166,13 +166,13 @@ embedded. For details, see the `org.glassfish.embeddable` packages at
 
 The following topics are addressed here:
 
-* xref:#giide[Setting the Class Path]
-* xref:#giiky[Creating, Starting, and Stopping Embedded {productName}]
-* xref:#giigc[Deploying and Undeploying an Application in an Embedded
+* xref:#setting-the-class-path[Setting the Class Path]
+* xref:#creating-starting-and-stopping-embedded-glassfish-server[Creating, Starting, and Stopping Embedded {productName}]
+* xref:#deploying-and-undeploying-an-application-in-an-embedded-glassfish-server[Deploying and Undeploying an Application in an Embedded
 {productName}]
-* xref:#gjldy[Running `asadmin` Commands Using the {productName}
+* xref:#running-asadmin-commands-using-the-glassfish-server-embedded-server-api[Running `asadmin` Commands Using the {productName}
 Embedded Server API]
-* xref:#gikrt[Sample Applications]
+* xref:#sample-applications[Sample Applications]
 
 [[giide]][[GSESG00057]][[setting-the-class-path]]
 
@@ -198,7 +198,7 @@ To enable your applications to locate the class libraries for embedded
   {productName}. Reference this file from the
   as-install``/lib/embedded`` directory of a nonembedded {productName}
   installation. Do not move this file or it will not work. For an
-  explanation of as-install, see xref:#gikqf[Installation Root
+  explanation of as-install, see xref:#installation-root-directory[Installation Root
   Directory].
 
 
@@ -224,8 +224,8 @@ Before you can run applications, you must set up and run the embedded
 
 The following topics are addressed here:
 
-* xref:#gihyr[Creating and Configuring an Embedded {productName}]
-* xref:#gihyz[Running an Embedded {productName}]
+* xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}]
+* xref:#running-an-embedded-glassfish-server[Running an Embedded {productName}]
 
 [[gihyr]][[GSESG00043]][[creating-and-configuring-an-embedded-glassfish-server]]
 
@@ -259,14 +259,14 @@ Table 1-1 Methods of the `BootstrapProperties` Class
 [width="100%",cols="<29%,<33%,<38%",options="header",]
 |===
 |Purpose |Method |Default Value
-|References an existing xref:#gikqf[Installation Root Directory], also called as-install
+|References an existing xref:#installation-root-directory[Installation Root Directory], also called as-install
 a|[source]
 ----
 setInstallRoot(String as-install)
 ----
 
 |None. If `glassfish-embedded-static-shell.jar` is used, the
-xref:#gikqf[Installation Root Directory] is automatically determined and
+xref:#installation-root-directory[Installation Root Directory] is automatically determined and
 need not be specified.
 |===
 
@@ -282,7 +282,7 @@ Table 1-2 Methods of the `GlassFishProperties` Class
 [width="100%",cols="<24%,<37%,<39%",options="header",]
 |===
 |Purpose |Method |Default Value
-|References an existing xref:#gikvf[Instance Root Directory], also
+|References an existing xref:#instance-root-directory[Instance Root Directory], also
 called domain-dir
 a|
 [source]
@@ -373,12 +373,12 @@ import org.glassfish.embeddable.*;
 ===== Running an Embedded {productName}
 
 After you create an embedded {productName} as described in
-xref:#gihyr[Creating and Configuring an Embedded {productName}], you
+xref:#creating-and-configuring-an-embedded-glassfish-server[Creating and Configuring an Embedded {productName}], you
 can perform operations such as:
 
-* xref:#gjkxx[Setting the Port of an Embedded {productName} From an Application]
-* xref:#gihzg[Starting an Embedded {productName} From an Application]
-* xref:#gihzy[Stopping an Embedded {productName} From an Application]
+* xref:#setting-the-port-of-an-embedded-glassfish-server-from-an-application[Setting the Port of an Embedded {productName} From an Application]
+* xref:#starting-an-embedded-glassfish-server-from-an-application[Starting an Embedded {productName} From an Application]
+* xref:#stopping-an-embedded-glassfish-server-from-an-application[Stopping an Embedded {productName} From an Application]
 
 [[gjkxx]][[GSESG00002]][[setting-the-port-of-an-embedded-glassfish-server-from-an-application]]
 
@@ -398,7 +398,7 @@ Do not use `setPort` if you are using `setInstanceRoot` or
 * To set the port directly, invoke the `setPort` method of the
 `GlassFishProperties` object.
 * To set the port indirectly, use a `domain.xml` file that sets the
-port. For more information, see xref:#giiak[The `domain.xml` File].
+port. For more information, see xref:#GSESG00056[The `domain.xml` File].
 
 [[GSESG00007]][[gjkxc]]
 Example 1-3 Setting the port of an Embedded {productName}
@@ -492,10 +492,10 @@ ready to run. By default, an application is enabled when it is deployed.
 
 The following topics are addressed here:
 
-* xref:#gilrf[To Deploy an Application From an Archive File or a Directory]
-* xref:#gilpm[Undeploying an Application]
-* xref:#gjrcs[Creating a Scattered Archive]
-* xref:#gkvgc[Creating a Scattered Enterprise Archive]
+* xref:#to-deploy-an-application-from-an-archive-file-or-a-directory[To Deploy an Application From an Archive File or a Directory]
+* xref:#undeploying-an-application[Undeploying an Application]
+* xref:#creating-a-scattered-archive[Creating a Scattered Archive]
+* xref:#creating-a-scattered-enterprise-archive[Creating a Scattered Enterprise Archive]
 
 For general information about deploying applications in {productName}, see the link:application-deployment-guide.html#GSDPG[{productName}
 Application Deployment Guide].
@@ -508,7 +508,7 @@ An archive file contains the resources, deployment descriptor, and
 classes of an application. The content of the file must be organized in
 the directory structure that the Jakarta EE specifications define for the
 type of archive that the file contains. For more information, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#beact[Deploying Applications]" in {productName} Application Deployment Guide.
 
 Deploying an application from a directory enables you to deploy an
 application without the need to package the application in an archive
@@ -516,11 +516,11 @@ file. The contents of the directory must match the contents of the
 expanded Jakarta EE archive file as laid out by the {productName}. The
 directory must be accessible to the machine on which the deploying
 application runs. For more information about the requirements for
-deploying an application from a directory, see "link:application-deployment-guide/deploying-applications.html#GSDPG00043[To
+deploying an application from a directory, see "link:application-deployment-guide/deploying-applications.html#to-deploy-an-application-or-module-in-a-directory-format[To
 Deploy an Application or Module in a Directory Format]" in {productName} Application Deployment Guide.
 
 If some of the resources needed by an application are not under the
-application's directory, see xref:#gjrcs[Creating a Scattered Archive].
+application's directory, see xref:#creating-a-scattered-archive[Creating a Scattered Archive].
 
 1. Instantiate the `java.io.File` class to represent the archive file or directory.
 
@@ -533,7 +533,7 @@ Specify the `java.io.File` class instance you created previously as the
 first method parameter. +
 For information about optional parameters you can set, see the
 descriptions of the
-link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] subcommand parameters.
+link:reference-manual/deploy.html#deploy[`deploy`(1)] subcommand parameters.
 Simply quote each parameter in the method, for example `"--force=true"`.
 
 [[gioph]]
@@ -591,7 +591,7 @@ is deployed.
 
 For information about optional parameters you can set, see the
 descriptions of the
-link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] command parameters.
+link:reference-manual/deploy.html#deploy[`deploy`(1)] command parameters.
 Simply quote each parameter in the method, for example
 `"--cascade=true"`.
 
@@ -902,7 +902,7 @@ Manual].
 ====
 Ensure that your application has started an embedded {productName}
 before the application attempts to run `asadmin` commands. For more
-information, see xref:#gihyz[Running an Embedded {productName}].
+information, see xref:#running-an-embedded-glassfish-server[Running an Embedded {productName}].
 ====
 
 
@@ -952,7 +952,7 @@ import org.glassfish.embeddable.*;
 ...
 ----
 
-For another way to change log levels, see xref:#gjlfe[Changing Log
+For another way to change log levels, see xref:#changing-log-levels-in-embedded-glassfish-server[Changing Log
 Levels in Embedded {productName}].
 
 [[gikrt]][[sample-applications]]
@@ -1027,17 +1027,17 @@ build and start an unpackaged application with a single Maven goal.
 
 The following topics are addressed here:
 
-* xref:#gihus[To Set Up Your Maven Environment]
-* xref:#giivt[To Build and Start an Application From Maven]
-* xref:#gijly[To Stop Embedded {productName}]
-* xref:#gijjn[To Redeploy an Application That Was Built and Started From Maven]
-* xref:#gjkps[Maven Goals for Embedded {productName}]
+* xref:#to-set-up-your-maven-environment[To Set Up Your Maven Environment]
+* xref:#to-build-and-start-an-application-from-maven[To Build and Start an Application From Maven]
+* xref:#to-stop-embedded-glassfish-server[To Stop Embedded {productName}]
+* xref:#to-redeploy-an-application-that-was-built-and-started-from-maven[To Redeploy an Application That Was Built and Started From Maven]
+* xref:#maven-goals-for-embedded-glassfish-server[Maven Goals for Embedded {productName}]
 
 Predefined Maven goals for embedded {productName} are described in
-xref:#gjkps[Maven Goals for Embedded {productName}].
+xref:#maven-goals-for-embedded-glassfish-server[Maven Goals for Embedded {productName}].
 
 To use Maven with Embedded {productName} and the EJB 3.1 Embeddable
-API, see xref:#gjxff[Using Maven with the EJB 3.1 Embeddable API and
+API, see xref:#GSESG00064[Using Maven with the EJB 3.1 Embeddable API and
 Embedded {productName}].
 
 [[gihus]][[GSESG00022]][[to-set-up-your-maven-environment]]
@@ -1110,7 +1110,7 @@ Add the following `configuration` element to your POM file:
 app::
   In the app parameter, substitute the archive file or directory for your
   application. The optional port, contextRoot, and autoDelete parameters
-  show example values. For details, see xref:#gjkps[Maven Goals for
+  show example values. For details, see xref:#maven-goals-for-embedded-glassfish-server[Maven Goals for
   Embedded {productName}].
 
 3. Perform advanced plug-in configuration. This step is optional.
@@ -1186,7 +1186,7 @@ Add `execution` elements to your POM file:
 ...
 ----
 goal::
-  The goal to use. See xref:#gjkps[Maven Goals for Embedded {productName}].
+  The goal to use. See xref:#maven-goals-for-embedded-glassfish-server[Maven Goals for Embedded {productName}].
 
 5. Configure the repository.
 Add the following `repository` element to your POM file:
@@ -1268,14 +1268,14 @@ you can use a Maven goal to build and start the application in embedded
 Before You Begin
 
 Ensure that your Maven environment is configured, as described in
-xref:#gihus[To Set Up Your Maven Environment].
+xref:#to-set-up-your-maven-environment[To Set Up Your Maven Environment].
 
 1. Include the path to the Maven executable file `mvn` in your path
 statement.
 2. Ensure that the `JAVA_HOME` environment variable is defined.
 3. Create a directory for the Maven project for your application.
 4. Copy to your project directory the POM file that you created in
-xref:#gihus[To Set Up Your Maven Environment].
+xref:#to-set-up-your-maven-environment[To Set Up Your Maven Environment].
 5. Run the following command in your project directory:
 +
 [source]
@@ -1305,7 +1305,7 @@ mvn embedded-glassfish:stop
 ----
 This runs the `stop` method of the `GlassFish` object and any other
 methods that are required to shut down the server in an orderly fashion.
-See xref:#gihzy[Stopping an Embedded {productName} From an
+See xref:#stopping-an-embedded-glassfish-server-from-an-application[Stopping an Embedded {productName} From an
 Application].
 
 [[gijjn]][[GSESG00025]][[to-redeploy-an-application-that-was-built-and-started-from-maven]]
@@ -1327,12 +1327,12 @@ started from Maven, press Enter.
 You can use the following Maven goals to test your applications with
 embedded {productName}:
 
-* xref:#gjkxo[`embedded-glassfish:run` Goal]
-* xref:#gjkwy[`embedded-glassfish:start` Goal]
-* xref:#gjkvc[`embedded-glassfish:deploy` Goal]
-* xref:#gjkvg[`embedded-glassfish:undeploy` Goal]
-* xref:#gjkyl[`embedded-glassfish:stop` Goal]
-* xref:#gjkxq[`embedded-glassfish:admin` Goal]
+* xref:#embedded-glassfishrun-goal[`embedded-glassfish:run` Goal]
+* xref:#embedded-glassfishstart-goal[`embedded-glassfish:start` Goal]
+* xref:#embedded-glassfishdeploy-goal[`embedded-glassfish:deploy` Goal]
+* xref:#embedded-glassfishundeploy-goal[`embedded-glassfish:undeploy` Goal]
+* xref:#embedded-glassfishstop-goal[`embedded-glassfish:stop` Goal]
+* xref:#embedded-glassfishadmin-goal[`embedded-glassfish:admin` Goal]
 
 [[gjkxo]][[GSESG00048]][[embedded-glassfishrun-goal]]
 
@@ -1356,7 +1356,7 @@ Table 1-5 `embedded-glassfish:run` Parameters
 
 |containerType |`all` |(optional) The container to start: `web`, `ejb`, `jpa`, or `all`.
 
-|installRoot |None |(optional) The xref:#gikqf[Installation Root Directory].
+|installRoot |None |(optional) The xref:#installation-root-directory[Installation Root Directory].
 
 |instanceRoot a|
 In order of precedence:
@@ -1366,7 +1366,7 @@ In order of precedence:
 * `java.io.tmp` system property value
 * as-install``/domains/domain1`` if a nonembedded installation is referenced
 
- |(optional) The xref:#gikvf[Instance Root Directory]
+ |(optional) The xref:#instance-root-directory[Instance Root Directory]
 
 |configFile |domain-dir``/config/domain.xml`` |(optional) The
 configuration file.
@@ -1380,7 +1380,7 @@ In order of precedence:
 * The `application-name` or `module-name` in the deployment descriptor.
 * The name of the archive file without the extension or the directory name.
 
-For more information, see "link:application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
+For more information, see "link:application-deployment-guide/overview.html#naming-standards[Naming Standards]" in
 {productName} Application Deployment Guide.
 
  |(optional) The name of the application.
@@ -1410,7 +1410,7 @@ If `true`, the name parameter must be specified or tables may not be
 dropped.
 
 |autoDelete |`false` a|
-(optional) If `true`, deletes the contents of the xref:#gikvf[Instance
+(optional) If `true`, deletes the contents of the xref:#instance-root-directory[Instance
 Root Directory] when the server is stopped.
 
 Caution: Do not set `autoDelete` to `true` if you are using
@@ -1438,7 +1438,7 @@ Table 1-6 `embedded-glassfish:start` Parameters
 |containerType |`all` |(optional) The container to start: `web`, `ejb`,
 `jpa`, or `all`.
 
-|installRoot |None |(optional) The xref:#gikqf[Installation Root
+|installRoot |None |(optional) The xref:#installation-root-directory[Installation Root
 Directory].
 
 |instanceRoot a|
@@ -1448,7 +1448,7 @@ In order of precedence:
 * `java.io.tmpdir` system property value
 * as-install``/domains/domain1``
 
- |(optional) The xref:#gikvf[Instance Root Directory]
+ |(optional) The xref:#instance-root-directory[Instance Root Directory]
 
 |configFile |domain-dir`/config/domain.xml` |(optional) The
 configuration file.
@@ -1457,7 +1457,7 @@ configuration file.
 file. |The HTTP or HTTPS port.
 
 |autoDelete |`false` a|
-(optional) If `true`, deletes the contents of the xref:#gikvf[Instance
+(optional) If `true`, deletes the contents of the xref:#instance-root-directory[Instance
 Root Directory] when the server is stopped.
 
 Caution: Do not set `autoDelete` to `true` if you are using
@@ -1494,7 +1494,7 @@ In order of precedence:
 * The name of the archive file without the extension or the directory
 name.
 
-For more information, see "link:application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
+For more information, see "link:application-deployment-guide/overview.html#naming-standards[Naming Standards]" in
 {productName} Application Deployment Guide.
 
  |(optional) The name of the application.
@@ -1632,7 +1632,7 @@ Embedded {productName} is not related to the EJB 3.1 Embeddable API,
 but you can use these APIs together.
 
 The Maven plug-in does not apply to embeddable EJB applications.
-However, you can use Maven with the POM file shown in xref:#gjxff[Using
+However, you can use Maven with the POM file shown in xref:#GSESG00064[Using
 Maven with the EJB 3.1 Embeddable API and Embedded {productName}].
 
 The EJB 3.1 Embeddable API is described in
@@ -1659,9 +1659,9 @@ and can't be loaded by the client class loader.
 
 The following topics are addressed here:
 
-* xref:#gjlcr[To Use the EJB 3.1 Embeddable API with Embedded {productName}]
-* xref:#gksnv[EJB 3.1 Embeddable API Properties]
-* xref:#gjxff[Using Maven with the EJB 3.1 Embeddable API and Embedded
+* xref:#GSESG00026[To Use the EJB 3.1 Embeddable API with Embedded {productName}]
+* xref:#GSESG00063[EJB 3.1 Embeddable API Properties]
+* xref:#GSESG00064[Using Maven with the EJB 3.1 Embeddable API and Embedded
 {productName}]
 
 [[gjlcr]][[GSESG00026]][[to-use-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server]]
@@ -1676,12 +1676,12 @@ Reference the `glassfish-embedded-static-shell.jar` file from the
 as-install``/lib/embedded`` directory of a {productName} installation.
 Do not move this file or it will not work.
 +
-See xref:#giide[Setting the Class Path] and Section 22.3.3 of the EJB
+See xref:#setting-the-class-path[Setting the Class Path] and Section 22.3.3 of the EJB
 3.1 Specification, Embeddable Container Bootstrapping.
 2. Configure any required resources.
 +
 For more information about configuring resources, see the Administration
-Console Online Help or "link:administration-guide.html#GSADG00298[Resources and Services
+Console Online Help or "link:administration-guide.html#part-ii[Resources and Services
 Administration]" in {productName} Administration
 Guide. The `jdbc/__default` Java DB database is preconfigured with all
 distributions of {productName}. However, if you are using
@@ -1689,7 +1689,7 @@ distributions of {productName}. However, if you are using
 manually.
 +
 If your embeddable EJB application uses Java Persistence, you do not
-need to specify a JDBC resource. See xref:#gksmw[Default Java
+need to specify a JDBC resource. See xref:#default-java-persistence-data-source-for-embedded-glassfish-server[Default Java
 Persistence Data Source for Embedded {productName}].
 3. Invoke one of the `createEJBContainer` methods.
 +
@@ -1702,11 +1702,11 @@ These methods perform deployment in the background and do not load
 previously deployed applications or modules.
 ====
 
-4. To change the xref:#gikvf[Instance Root Directory], set the
+4. To change the xref:#instance-root-directory[Instance Root Directory], set the
 `org.glassfish.ejb.embedded.glassfish.instance.root` system property
 value by using the `createEJBContainer``(Map<?, ?> properties)` method.
 +
-The default xref:#gikvf[Instance Root Directory] location is
+The default xref:#instance-root-directory[Instance Root Directory] location is
 as-install``/domains/domain1`` if a nonembedded installation is
 referenced. This system property applies only to embeddable EJB
 applications used with nonembedded {productName}.
@@ -1733,7 +1733,7 @@ Table 1-11 EJB 3.1 Embeddable API Properties
 |Property |Default |Description
 |`installation.root` |{productName} installation location from which
 `glassfish-embedded-static-shell.jar` is referenced |The
-xref:#gikqf[Installation Root Directory].
+xref:#installation-root-directory[Installation Root Directory].
 
 |`instance.root` a|
 In order of precedence:
@@ -1744,7 +1744,7 @@ In order of precedence:
 * `java.io.tmp` system property value
 * as-install``/domains/domain1`` if a nonembedded installation is referenced
 
- |The xref:#gikvf[Instance Root Directory].
+ |The xref:#instance-root-directory[Instance Root Directory].
 
 |`configuration.file` |domain-dir`/config/domain.xml` |The configuration
 file.
@@ -1855,7 +1855,7 @@ following ways:
 * Creating a custom logging configuration file
 
 Both these ways use logger names. For a list of logger names, use the
-link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
+link:reference-manual/list-log-levels.html#list-log-levels[`list-log-levels`] subcommand.
 
 [[GSESG00019]][[gkrhh]]
 Example 1-15 Using the {productName} Embedded Server API

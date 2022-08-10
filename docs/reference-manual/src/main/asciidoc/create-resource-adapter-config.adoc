@@ -92,8 +92,8 @@ Command create-resource-adapter-config executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-threadpool.html#create-threadpool-1[`create-threadpool`(1)],
-link:delete-resource-adapter-config.html#delete-resource-adapter-config-1[`delete-resource-adapter-config`(1)],
-link:list-resource-adapter-configs.html#list-resource-adapter-configs-1[`list-resource-adapter-configs`(1)]
+link:create-threadpool.html#create-threadpool[`create-threadpool`(1)],
+link:delete-resource-adapter-config.html#delete-resource-adapter-config[`delete-resource-adapter-config`(1)],
+link:list-resource-adapter-configs.html#list-resource-adapter-configs[`list-resource-adapter-configs`(1)]
 
 

@@ -18,11 +18,11 @@ supported in the {productName}.
 
 The following topics are addressed here:
 
-* xref:#beahn[Value Added Features]
-* xref:#beahw[EJB Timer Service]
-* xref:#beahx[Using Session Beans]
-* xref:#beail[Using Read-Only Beans]
-* xref:#beait[Using Message-Driven Beans]
+* xref:#value-added-features[Value Added Features]
+* xref:#ejb-timer-service[EJB Timer Service]
+* xref:#using-session-beans[Using Session Beans]
+* xref:#using-read-only-beans[Using Read-Only Beans]
+* xref:#using-message-driven-beans[Using Message-Driven Beans]
 
 For general information about enterprise beans, see
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#enterprise-beans[Enterprise Beans]
@@ -53,11 +53,11 @@ EJB development. References to more in-depth material are included.
 
 The following topics are addressed here:
 
-* xref:#beaho[Read-Only Beans]
-* xref:#beahp[The `pass-by-reference` Element]
-* xref:#beahq[Pooling and Caching]
-* xref:#beahu[Priority Based Scheduling of Remote Bean Invocations]
-* xref:#beahv[Immediate Flushing]
+* xref:#read-only-beans[Read-Only Beans]
+* xref:#the-pass-by-reference-element[The `pass-by-reference` Element]
+* xref:#pooling-and-caching[Pooling and Caching]
+* xref:#priority-based-scheduling-of-remote-bean-invocations[Priority Based Scheduling of Remote Bean Invocations]
+* xref:#immediate-flushing[Immediate Flushing]
 
 [[beaho]][[GSDVG00420]][[read-only-beans]]
 
@@ -98,7 +98,7 @@ read-only bean that is one of the following:
 
 Read-only beans are best suited for situations where the underlying data
 never changes, or changes infrequently. For further information and
-usage guidelines, see xref:#beail[Using Read-Only Beans].
+usage guidelines, see xref:#using-read-only-beans[Using Read-Only Beans].
 
 [[beahp]][[GSDVG00421]][[the-pass-by-reference-element]]
 
@@ -108,7 +108,7 @@ The `pass-by-reference` element in the `glassfish-ejb-jar.xml` file
 allows you to specify the parameter passing semantics for colocated
 remote EJB invocations. This is an opportunity to improve performance.
 However, use of this feature results in non-portable applications. See
-"link:application-deployment-guide/dd-elements.html#GSDPG00219[pass-by-reference]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#pass-by-reference[pass-by-reference]" in {productName} Application Deployment Guide.
 
 [[beahq]][[GSDVG00422]][[pooling-and-caching]]
 
@@ -141,7 +141,7 @@ each cache can be controlled using the cache-related properties in the
 EJB container or the `glassfish-ejb-jar.xml` file.
 
 Pooling and caching parameters for the `glassfish-ejb-jar.xml` file are
-described in "link:application-deployment-guide/dd-elements.html#GSDPG00095[bean-cache]" in {productName} Application Deployment Guide.
+described in "link:application-deployment-guide/dd-elements.html#bean-cache[bean-cache]" in {productName} Application Deployment Guide.
 
 [[beahr]][[GSDVG00285]][[pooling-parameters]]
 
@@ -181,7 +181,7 @@ this specified duration.
 beans, using commit option C. Commit option C is particularly useful if
 beans are accessed in large number but very rarely reused. For
 additional information, refer to
-link:transaction-service.html#beajh[Commit Options].
+link:transaction-service.html#commit-options[Commit Options].
 
 The {productName} caches can be either bounded or unbounded. Bounded
 caches have limits on the number of beans that they can hold beyond
@@ -218,7 +218,7 @@ execution, use the `flush-at-end-of-method` element in the
 `glassfish-ejb-jar.xml` file. Only non-finder methods in an entity bean
 can be flush-enabled. (For an EJB 2.1 bean, these methods must be in the
 Local, Local Home, Remote, or Remote Home interface.) See
-"link:application-deployment-guide/dd-elements.html#GSDPG00156[flush-at-end-of-method]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#flush-at-end-of-method[flush-at-end-of-method]" in {productName} Application Deployment Guide.
 
 Upon completion of the method, the EJB container updates the database.
 Any exception thrown by the underlying data store is wrapped as follows:
@@ -245,7 +245,7 @@ The EJB Timer Service configuration can store persistent timer
 information in any database supported by the {productName} for
 persistence. For a list of the JDBC drivers currently supported by the
 {productName}, see the link:release-notes.html#GSRLN[{productName} Release Notes]. For configurations of supported and other
-drivers, see "link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC
+drivers, see "link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC
 Drivers]" in {productName} Administration Guide.
 
 The timer service is automatically enabled when you deploy an
@@ -295,16 +295,16 @@ Timer DataSource::
 Do not use the `jdbc/\__TimerPool` resource for timers in clustered
 {productName} environments.
 You must instead use a custom JDBC resource or the `jdbc/__default` resource.
-See the instructions below, in xref:#gktqo[To Deploy an EJB Timer to a Cluster].
+See the instructions below, in xref:#to-deploy-an-ejb-timer-to-a-cluster[To Deploy an EJB Timer to a Cluster].
 Also refer to
-"link:administration-guide/jdbc.html#GSADG00747[Enabling the jdbc/__default Resource in a Clustered Environment]"
+"link:administration-guide/jdbc.html#enabling-the-jdbc__default-resource-in-a-clustered-environment[Enabling the jdbc/__default Resource in a Clustered Environment]"
 in {productName} Administration Guide.
 ====
 
 
 For information about the `asadmin list-timers` and
 `asadmin migrate-timers` subcommands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual]. For information about
-migrating EJB timers, see "link:ha-administration-guide/instances.html#GSHAG00190[Migrating EJB Timers]" in
+migrating EJB timers, see "link:ha-administration-guide/instances.html#migrating-ejb-timers[Migrating EJB Timers]" in
 {productName} High Availability Administration
 Guide.
 
@@ -413,9 +413,9 @@ This section provides guidelines for creating session beans in the
 
 The following topics are addressed here:
 
-* xref:#beahy[About the Session Bean Containers]
-* xref:#beaib[Stateful Session Bean Failover]
-* xref:#beaii[Session Bean Restrictions and Optimizations]
+* xref:#about-the-session-bean-containers[About the Session Bean Containers]
+* xref:#stateful-session-bean-failover[Stateful Session Bean Failover]
+* xref:#session-bean-restrictions-and-optimizations[Session Bean Restrictions and Optimizations]
 
 Information on session beans is contained in the Enterprise JavaBeans
 Specification, v3.1.
@@ -435,8 +435,8 @@ from a container managing stateful session beans.
 
 The following topics are addressed here:
 
-* xref:#beahz[Stateless Container]
-* xref:#beaia[Stateful Container]
+* xref:#stateless-container[Stateless Container]
+* xref:#stateful-container[Stateful Container]
 
 [[beahz]][[GSDVG00287]][[stateless-container]]
 
@@ -504,14 +504,14 @@ subdirectories created under domain-dir`/session-store`.
 ====
 Make sure the `delete` option is set in the `server.policy` file, or
 expired file-based sessions might not be deleted properly. For more
-information about `server.policy`, see link:securing-apps.html#beabx[The
+information about `server.policy`, see link:securing-apps.html#GSDVG00121[The
 `server.policy` File].
 ====
 
 
 The Session Store Location setting also determines where the session
 state is persisted if it is not highly available; see
-xref:#beaic[Choosing a Persistence Store].
+xref:#choosing-a-persistence-store[Choosing a Persistence Store].
 
 [[beaib]][[GSDVG00426]][[stateful-session-bean-failover]]
 
@@ -596,17 +596,17 @@ correctly rolled back or committed.
 
 
 For more information about the `InitialContext`, see
-link:jndi.html#beans[Accessing the Naming Context]. For more information
+link:jndi.html#accessing-the-naming-context[Accessing the Naming Context]. For more information
 about transaction recovery, see link:transaction-service.html#beanm[Using
 the Transaction Service]. For more information about Administered
-Objects, see "link:administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
+Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
 
 
 [NOTE]
 ====
 Idempotent URLs are supported along the HTTP path, but not the RMI-IIOP
-path. For more information, see link:webapps.html#beage[Configuring
+path. For more information, see link:webapps.html#configuring-idempotent-url-requests[Configuring
 Idempotent URL Requests].
 
 If a server instance to which an RMI-IIOP client request is sent crashes
@@ -620,7 +620,7 @@ HTTP sessions can also be saved in a persistent store in case a server
 instance fails. In addition, if a distributable web application
 references an SFSB, and the web application's session fails over, the
 EJB reference is also failed over. For more information, see
-link:webapps.html#beahe[Distributed Sessions and Persistence].
+link:webapps.html#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
 
 If an SFSB that uses session persistence is undeployed while the
 {productName} instance is stopped, the session data in the
@@ -631,9 +631,9 @@ SFSB while the {productName} instance is running.
 
 Configure SFSB failover by:
 
-* xref:#beaic[Choosing a Persistence Store]
-* xref:#beaid[Enabling Checkpointing]
-* xref:#beaih[Specifying Methods to Be Checkpointed]
+* xref:#choosing-a-persistence-store[Choosing a Persistence Store]
+* xref:#enabling-checkpointing[Enabling Checkpointing]
+* xref:#specifying-methods-to-be-checkpointed[Specifying Methods to Be Checkpointed]
 
 [[beaic]][[GSDVG00289]][[choosing-a-persistence-store]]
 
@@ -721,16 +721,16 @@ link:reference-manual.html#GSRFM[{productName} Reference Manual].
 
 The following sections describe how to enable SFSB checkpointing:
 
-* xref:#beaie[Server Instance and EJB Container Levels]
-* xref:#beaif[Application and EJB Module Levels]
-* xref:#beaig[SFSB Level]
+* xref:#server-instance-and-ejb-container-levels[Server Instance and EJB Container Levels]
+* xref:#application-and-ejb-module-levels[Application and EJB Module Levels]
+* xref:#sfsb-level[SFSB Level]
 
 [[beaie]][[GSDVG00035]][[server-instance-and-ejb-container-levels]]
 
 Server Instance and EJB Container Levels
 
 To enable SFSB checkpointing at the server instance or EJB container
-level, see xref:#beaic[Choosing a Persistence Store].
+level, see xref:#choosing-a-persistence-store[Choosing a Persistence Store].
 
 [[beaif]][[GSDVG00036]][[application-and-ejb-module-levels]]
 
@@ -798,7 +798,7 @@ For example:
 </glassfish-ejb-jar>
 ----
 
-For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00108[checkpoint-at-end-of-method]" in
+For details, see "link:application-deployment-guide/dd-elements.html#checkpoint-at-end-of-method[checkpoint-at-end-of-method]" in
 {productName} Application Deployment Guide.
 
 The non-transactional methods in the `checkpoint-at-end-of-method`
@@ -839,9 +839,9 @@ to the bean's state.
 This section discusses restrictions on developing session beans and
 provides some optimization guidelines.
 
-* xref:#beaij[Optimizing Session Bean Performance]
-* xref:#beaik[Restricting Transactions]
-* xref:#glanq[EJB Singletons]
+* xref:#optimizing-session-bean-performance[Optimizing Session Bean Performance]
+* xref:#restricting-transactions[Restricting Transactions]
+* xref:#ejb-singletons[EJB Singletons]
 
 [[beaij]][[GSDVG00292]][[optimizing-session-bean-performance]]
 
@@ -902,10 +902,10 @@ never changes, or changes infrequently.
 
 The following topics are addressed here:
 
-* xref:#beaim[Read-Only Bean Characteristics and Life Cycle]
-* xref:#beain[Read-Only Bean Good Practices]
-* xref:#beaio[Refreshing Read-Only Beans]
-* xref:#beais[Deploying Read-Only Beans]
+* xref:#read-only-bean-characteristics-and-life-cycle[Read-Only Bean Characteristics and Life Cycle]
+* xref:#read-only-bean-good-practices[Read-Only Bean Good Practices]
+* xref:#refreshing-read-only-beans[Refreshing Read-Only Beans]
+* xref:#deploying-read-only-beans[Deploying Read-Only Beans]
 
 [[beaim]][[GSDVG00428]][[read-only-bean-characteristics-and-life-cycle]]
 
@@ -977,9 +977,9 @@ used to force `ejbLoad`.
 There are several ways of refreshing read-only beans, as addressed in
 the following sections:
 
-* xref:#beaip[Invoking a Transactional Method]
-* xref:#beaiq[Refreshing Periodically]
-* xref:#beair[Refreshing Programmatically]
+* xref:#invoking-a-transactional-method[Invoking a Transactional Method]
+* xref:#refreshing-periodically[Refreshing Periodically]
+* xref:#refreshing-programmatically[Refreshing Programmatically]
 
 [[beaip]][[GSDVG00295]][[invoking-a-transactional-method]]
 
@@ -1105,8 +1105,8 @@ requirements for creating them in the {productName} environment.
 
 The following topics are addressed here:
 
-* xref:#beaiu[Message-Driven Bean Configuration]
-* xref:#beaiy[Message-Driven Bean Restrictions and Optimizations]
+* xref:#message-driven-bean-configuration[Message-Driven Bean Configuration]
+* xref:#message-driven-bean-restrictions-and-optimizations[Message-Driven Bean Restrictions and Optimizations]
 
 [[beaiu]][[GSDVG00432]][[message-driven-bean-configuration]]
 
@@ -1114,12 +1114,12 @@ The following topics are addressed here:
 
 The following topics are addressed here:
 
-* xref:#beaiv[Connection Factory and Destination]
-* xref:#beaiw[Message-Driven Bean Pool]
-* xref:#beaix[Domain-Level Settings]
+* xref:#connection-factory-and-destination[Connection Factory and Destination]
+* xref:#message-driven-bean-pool[Message-Driven Bean Pool]
+* xref:#domain-level-settings[Domain-Level Settings]
 
 For information about setting up load balancing for message-driven
-beans, see link:jms.html#beaop[Load-Balanced Message Inflow].
+beans, see link:jms.html#load-balanced-message-inflow[Load-Balanced Message Inflow].
 
 [[beaiv]][[GSDVG00298]][[connection-factory-and-destination]]
 
@@ -1207,8 +1207,8 @@ details, see "olink:GSADG00011[Administering the Monitoring Service]" in
 This section discusses the following restrictions and performance
 optimizations that pertain to developing message-driven beans:
 
-* xref:#beaiz[Pool Tuning and Monitoring]
-* xref:#beaja[The `onMessage` Runtime Exception]
+* xref:#pool-tuning-and-monitoring[Pool Tuning and Monitoring]
+* xref:#the-onmessage-runtime-exception[The `onMessage` Runtime Exception]
 
 [[beaiz]][[GSDVG00301]][[pool-tuning-and-monitoring]]
 
@@ -1234,7 +1234,7 @@ Message Queue flow control related properties for connection factory in
 situations where the message incoming rate is much higher than
 `max-pool-size` can handle.
 
-Refer to "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
+Refer to "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in
 {productName} Administration Guide for
 information on how to get message-driven bean pool statistics.
 

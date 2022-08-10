@@ -39,7 +39,7 @@ DCOM protocol is available only on Windows systems.
 ====
 To install {productName} software on hosts that use secure shell
 (SSH), use the
-link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)]
+link:install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)]
 subcommand.
 ====
 
@@ -200,7 +200,7 @@ Command install-node-dcom executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)]
+link:install-node-ssh.html#install-node-ssh[`install-node-ssh`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom[`uninstall-node-dcom`(1)]
 
 

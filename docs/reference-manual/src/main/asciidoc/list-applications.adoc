@@ -34,7 +34,7 @@ types are listed in the Options section of this help page.
 If multiple versions of a module or application are deployed, this
 subcommand lists all versions. To list which version is enabled, set the
 `--long` option to `true`. For more information about module and
-application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application
+application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application
 Versions]" in {productName} Application
 Deployment Guide.
 
@@ -114,9 +114,9 @@ Command list-applications executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-components.html#list-components-1[`list-components`(1)],
-link:list-sub-components.html#list-sub-components-1[`list-sub-components`(1)],
-link:show-component-status.html#show-component-status-1[`show-component-status`(1)]
+link:list-components.html#list-components[`list-components`(1)],
+link:list-sub-components.html#list-sub-components[`list-sub-components`(1)],
+link:show-component-status.html#show-component-status[`show-component-status`(1)]
 
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]

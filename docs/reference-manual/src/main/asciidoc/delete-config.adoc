@@ -73,9 +73,9 @@ Command delete-config executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:copy-config.html#copy-config-1[`copy-config`(1)],
-link:list-configs.html#list-configs-1[`list-configs`(1)]
+link:copy-config.html#copy-config[`copy-config`(1)],
+link:list-configs.html#list-configs[`list-configs`(1)]
 
-link:configuration.html#configuration-5asc[`configuration`(5ASC)]
+link:configuration.html#configuration[`configuration`(5ASC)]
 
 

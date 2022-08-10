@@ -26,9 +26,9 @@ regardless of how the configuration was created.
 
 The following topics are addressed here:
 
-* xref:#abdjl[About Named Configurations]
-* xref:#abdjq[Creating, Listing, and Deleting Named Configurations]
-* xref:#gkrgf[Modifying Properties for Named Configurations and Instances]
+* xref:#about-named-configurations[About Named Configurations]
+* xref:#creating-listing-and-deleting-named-configurations[Creating, Listing, and Deleting Named Configurations]
+* xref:#modifying-properties-for-named-configurations-and-instances[Modifying Properties for Named Configurations and Instances]
 
 [[abdjl]][[GSHAG00191]][[about-named-configurations]]
 
@@ -61,7 +61,7 @@ Shared configuration::
 
 The type of an unclustered instance is determined by the type of the
 configuration that the instance references. For more information, see
-link:instances.html#gkrbn[Types of {productName} Instances].
+link:instances.html#types-of-glassfish-server-instances[Types of {productName} Instances].
 
 [[abdjn]][[GSHAG00269]][[the-default-config-configuration]]
 
@@ -83,15 +83,15 @@ specifying an existing configuration, {productName} automatically
 creates a configuration for the cluster or instance. For more
 information, see the following sections:
 
-* link:clusters.html#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* link:clusters.html#to-create-a-cluster[To Create a Cluster]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 
 {productName} automatically creates a configuration by copying the
 `default-config` configuration. If you require an instance or cluster to
 reference a copy of a different configuration, copy the configuration
 and specify the copy when you create the instance or cluster. For
-information about how to copy a configuration, see xref:#abdjr[To Create
+information about how to copy a configuration, see xref:#to-create-a-named-configuration[To Create
 a Named Configuration].
 
 {productName} assigns the name cluster-or-instance`-config` to an
@@ -126,10 +126,10 @@ delete configurations that are no longer required.
 
 The following topics are addressed here:
 
-* xref:#abdjr[To Create a Named Configuration]
-* xref:#gkrgg[To List the Named Configurations in a Domain]
-* xref:#abdju[To List the Targets of a Named Configuration]
-* xref:#abdjv[To Delete a Named Configuration]
+* xref:#to-create-a-named-configuration[To Create a Named Configuration]
+* xref:#to-list-the-named-configurations-in-a-domain[To List the Named Configurations in a Domain]
+* xref:#to-list-the-targets-of-a-named-configuration[To List the Targets of a Named Configuration]
+* xref:#to-delete-a-named-configuration[To Delete a Named Configuration]
 
 [[abdjr]][[GSHAG00128]][[to-create-a-named-configuration]]
 
@@ -155,10 +155,10 @@ default configuration for the cluster or instance.
 
 For more information, see the following sections:
 
-* link:clusters.html#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* link:clusters.html#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
+* link:clusters.html#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* link:clusters.html#to-create-a-cluster[To Create a Cluster]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
 ====
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
@@ -168,7 +168,7 @@ For more information, see the following sections:
 ====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for configuring the
-named configuration, see the link:reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
+named configuration, see the link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
 help page.
 ====
 +
@@ -198,11 +198,11 @@ Command copy-config executed successfully.
 
 See Also
 
-* link:clusters.html#gkoac[To Preconfigure Nondefault GMS Configuration Settings]
-* link:clusters.html#gkqdm[To Create a Cluster]
-* link:instances.html#gkqch[To Create an Instance Centrally]
-* link:instances.html#gkqbl[To Create an Instance Locally]
-* link:reference-manual/copy-config.html#GSRFM00011[`copy-config`(1)]
+* link:clusters.html#to-preconfigure-nondefault-gms-configuration-settings[To Preconfigure Nondefault GMS Configuration Settings]
+* link:clusters.html#to-create-a-cluster[To Create a Cluster]
+* link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally]
+* link:instances.html#to-create-an-instance-locally[To Create an Instance Locally]
+* link:reference-manual/copy-config.html#copy-config[`copy-config`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help copy-config` at the command line.
@@ -215,7 +215,7 @@ Use the `list-configs` subcommand in remote mode to list existing named
 configurations in a domain.
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
-2. Run the link:reference-manual/list-configs.html#GSRFM00156[`list-configs`] subcommand.
+2. Run the link:reference-manual/list-configs.html#list-configs[`list-configs`] subcommand.
 +
 [source]
 ----
@@ -239,7 +239,7 @@ Command list-configs executed successfully.
 
 See Also
 
-link:reference-manual/list-configs.html#GSRFM00156[`list-configs`(1)]
+link:reference-manual/list-configs.html#list-configs[`list-configs`(1)]
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-configs` at the command line.
@@ -293,8 +293,8 @@ Command list-instances executed successfully.
 
 See Also
 
-* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -327,9 +327,9 @@ required, delete the cluster or instance. For information about how to
 delete an instance and how to delete a cluster, see the following
 sections:
 
-* link:instances.html#gkqcw[To Delete an Instance Centrally]
-* link:instances.html#gkqed[To Delete an Instance Locally]
-* link:clusters.html#gkqcp[To Delete a Cluster]
+* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* link:clusters.html#to-delete-a-cluster[To Delete a Cluster]
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 
@@ -352,7 +352,7 @@ asadmin> list-instances config-name
 config-name::
   The name of the configuration that you are deleting.
 
-4. Run the link:reference-manual/delete-config.html#GSRFM00069[`delete-config`] subcommand.
+4. Run the link:reference-manual/delete-config.html#delete-config[`delete-config`] subcommand.
 +
 [source]
 ----
@@ -382,12 +382,12 @@ Command delete-config executed successfully.
 
 See Also
 
-* link:instances.html#gkqcw[To Delete an Instance Centrally]
-* link:instances.html#gkqed[To Delete an Instance Locally]
-* link:clusters.html#gkqcp[To Delete a Cluster]
-* link:reference-manual/delete-config.html#GSRFM00069[`delete-config`(1)]
-* link:reference-manual/list-clusters.html#GSRFM00153[`list-clusters`(1)]
-* link:reference-manual/list-instances.html#GSRFM00170[`list-instances`(1)]
+* link:instances.html#to-delete-an-instance-centrally[To Delete an Instance Centrally]
+* link:instances.html#to-delete-an-instance-locally[To Delete an Instance Locally]
+* link:clusters.html#to-delete-a-cluster[To Delete a Cluster]
+* link:reference-manual/delete-config.html#delete-config[`delete-config`(1)]
+* link:reference-manual/list-clusters.html#list-clusters[`list-clusters`(1)]
+* link:reference-manual/list-instances.html#list-instances[`list-instances`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -409,9 +409,9 @@ configurations and instances.
 
 The following topics are addressed here:
 
-* xref:#gkrls[Properties for Port Numbers in a Named Configuration]
-* xref:#fxxvk[To Modify a Named Configuration's Properties]
-* xref:#abdjt[To Modify Port Numbers of an Instance]
+* xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a Named Configuration]
+* xref:#to-modify-a-named-configurations-properties[To Modify a Named Configuration's Properties]
+* xref:#to-modify-port-numbers-of-an-instance[To Modify Port Numbers of an Instance]
 
 [[gkrls]][[GSHAG00272]][[properties-for-port-numbers-in-a-named-configuration]]
 
@@ -425,8 +425,8 @@ the instance.
 
 You can create additional system properties for a configuration either
 by specifying the `--systemproperties` option of the
-link:reference-manual/copy-config.html#GSRFM00011[`copy-config`] subcommand or by using the
-link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand. To reference a
+link:reference-manual/copy-config.html#copy-config[`copy-config`] subcommand or by using the
+link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`] subcommand. To reference a
 system property from the configuration, use the `${`prop-name`}`
 notation, where prop-name is the name of the system property.
 
@@ -522,7 +522,7 @@ config-name::
   The name of the configuration whose properties you are modifying.
 property-name::
   The name of the property that you are modifying. For a list of
-  available properties, see xref:#gkrls[Properties for Port Numbers in a
+  available properties, see xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a
   Named Configuration].
 
 .. Set the property to its new value.
@@ -536,7 +536,7 @@ config-name::
   The name of the configuration whose properties you are modifying.
 property-name::
   The name of the property that you are modifying. For a list of
-  available properties, see xref:#gkrls[Properties for Port Numbers in a
+  available properties, see xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a
   Named Configuration].
 new-value::
   The value to which you are setting the property.
@@ -561,8 +561,8 @@ Command set executed successfully.
 
 See Also
 
-* link:reference-manual/get.html#GSRFM00139[`get`(1)]
-* link:reference-manual/set.html#GSRFM00226[`set`(1)]
+* link:reference-manual/get.html#get[`get`(1)]
+* link:reference-manual/set.html#set[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:
@@ -611,7 +611,7 @@ instance-name::
 port-property::
   The name of the property that corresponds to the port number that you
   are modifying. For a list of available properties, see
-  xref:#gkrls[Properties for Port Numbers in a Named Configuration].
+  xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a Named Configuration].
 
 .. Set the port number to its new value.
 +
@@ -625,7 +625,7 @@ instance-name::
 port-property::
   The name of the property that corresponds to the port number that you
   are modifying. For a list of available properties, see
-  xref:#gkrls[Properties for Port Numbers in a Named Configuration].
+  xref:#properties-for-port-numbers-in-a-named-configuration[Properties for Port Numbers in a Named Configuration].
 new-value::
   The value to which you are setting the port number.
 
@@ -649,8 +649,8 @@ Command set executed successfully.
 
 See Also
 
-* link:reference-manual/get.html#GSRFM00139[`get`(1)]
-* link:reference-manual/set.html#GSRFM00226[`set`(1)]
+* link:reference-manual/get.html#get[`get`(1)]
+* link:reference-manual/set.html#set[`set`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

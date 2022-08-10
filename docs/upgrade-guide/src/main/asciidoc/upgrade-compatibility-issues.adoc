@@ -21,17 +21,17 @@ address these issues.
 
 The following topics are addressed here:
 
-* xref:#gjwpd[Binary-Compatible Releases For {productName} 7]
-* xref:#gkric[New Default Installation Directory]
-* xref:#gklhr[Changes to Group Management Service Settings]
-* xref:#geyyk[Application Client Interoperability]
-* xref:#gktad[Node Agent Support]
-* xref:#gkrjm[HADB and `hadbm` Command Support]
-* xref:#abmbc[Command Line Interface: The `asadmin` Command]
-* xref:#gflnv[Applications That Use Java DB]
-* xref:#gjizi[Applications That Use Persistence]
-* xref:#gjiqj[HTTP Service to Network Service Changes]
-* xref:#gktkt[NSS Cryptographic Token Support]
+* xref:#binary-compatible-releases-for-glassfish-server[Binary-Compatible Releases For {productName} 7]
+* xref:#new-default-installation-directory[New Default Installation Directory]
+* xref:#changes-to-group-management-service-settings[Changes to Group Management Service Settings]
+* xref:#application-client-interoperability[Application Client Interoperability]
+* xref:#node-agent-support[Node Agent Support]
+* xref:#hadb-and-hadbm-command-support[HADB and `hadbm` Command Support]
+* xref:#command-line-interface-the-asadmin-command[Command Line Interface: The `asadmin` Command]
+* xref:#applications-that-use-java-db[Applications That Use Java DB]
+* xref:#applications-that-use-persistence[Applications That Use Persistence]
+* xref:#http-service-to-network-service-changes[HTTP Service to Network Service Changes]
+* xref:#nss-cryptographic-token-support[NSS Cryptographic Token Support]
 
 [[gjwpd]][[GSUPG00028]][[binary-compatible-releases-for-glassfish-server]]
 
@@ -170,7 +170,7 @@ clients and servers synchronized and using the same runtime.
 installations of earlier product versions in which node agents were
 configured, the cluster definitions will be migrated, but the clustered
 instances themselves must be manually re-created. See
-link:upgrading-legacy-installation.html#gfybw[Upgrading Clusters and Node
+link:upgrading-legacy-installation.html#upgrading-clusters-and-node-agent-configurations[Upgrading Clusters and Node
 Agent Configurations] for more information.
 
 [[gkrjm]][[GSUPG00033]][[hadb-and-hadbm-command-support]]
@@ -182,7 +182,7 @@ Agent Configurations] for more information.
 Instead of HADB, {productName} 7 supports high availability
 clustering by means of in-memory session state replication and
 ActiveCache for GlassFish.
-See "link:ha-administration-guide/overview.html#GSHAG00002[
+See "link:ha-administration-guide/overview.html#abdaq[
 High Availability in {productName}]" in
 {productName} High Availability Administration Guide
 for more information.
@@ -193,8 +193,8 @@ for more information.
 
 The following sections describe changes to the command line utility `asadmin`:
 
-* xref:#abmbd[Deprecated `asadmin` Subcommands]
-* xref:#abmbf[Deprecated, Unsupported, and Obsolete Options]
+* xref:#deprecated-asadmin-subcommands[Deprecated `asadmin` Subcommands]
+* xref:#deprecated-unsupported-and-obsolete-options[Deprecated, Unsupported, and Obsolete Options]
 
 For more information about `asadmin` and its subcommands, see the
 link:reference-manual.html#GSRFM[{productName} Reference Manual].
@@ -439,10 +439,10 @@ Enterprise Server v3.
 
 The changes are described in the following sections.
 
-* xref:#gipsa[Changes to Dotted Names]
-* xref:#giprg[Changes to `asadmin` Subcommands]
-* xref:#gipfo[Remapping of HTTP Service Attributes and Properties]
-* xref:#gipcg[New Network Service Elements and Attributes]
+* xref:#changes-to-dotted-names[Changes to Dotted Names]
+* xref:#changes-to-asadmin-subcommands[Changes to `asadmin` Subcommands]
+* xref:#remapping-of-http-service-attributes-and-properties[Remapping of HTTP Service Attributes and Properties]
+* xref:#new-network-service-elements-and-attributes[New Network Service Elements and Attributes]
 
 [[gipsa]][[GSUPG00055]][[changes-to-dotted-names]]
 
@@ -536,11 +536,11 @@ To accommodate the move of HTTP Service into the new Network Service
 configuration, link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommands are changed as
 follows:
 
-* The link:reference-manual/create-ssl.html#GSRFM00058[`create-ssl`] subcommand has a new `--type`
+* The link:reference-manual/create-ssl.html#create-ssl[`create-ssl`] subcommand has a new `--type`
 parameter value, `network-listener`.
-* The link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`] SUBcommand has a new
+* The link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`] SUBcommand has a new
 parameter, `--networklisteners`.
-* The link:reference-manual/create-http-listener.html#GSRFM00030[`create-http-listener`] subcommand adds a
+* The link:reference-manual/create-http-listener.html#create-http-listener[`create-http-listener`] subcommand adds a
 `network-listener` element to the domain configuration. The syntax and
 options of this commands are unchanged.
 
@@ -852,7 +852,7 @@ still properties
 The following tables describe the Network Service elements and
 attributes that were introduced in Sun GlassFish Enterprise Server v3.
 For attributes and properties remapped from discontinued elements to new
-elements, see xref:#gipfo[Remapping of HTTP Service Attributes and
+elements, see xref:#remapping-of-http-service-attributes-and-properties[Remapping of HTTP Service Attributes and
 Properties].
 
 The new `file-cache` element has no new attributes. All of its
@@ -1071,5 +1071,5 @@ xref:#gipfn[Table 1-4], xref:#gipev[Table 1-6], and xref:#gipdo[Table
 cryptographic tokens. When upgrading to {productName} 7 from
 Enterprise Server v2.x, additional manual configuration steps must be
 performed. These steps are explained later in this guide, in
-link:upgrading-legacy-installation.html#gktnh[Upgrading Installations
+link:upgrading-legacy-installation.html#upgrading-installations-that-use-nss-cryptographic-tokens[Upgrading Installations
 That Use NSS Cryptographic Tokens].

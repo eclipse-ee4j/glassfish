@@ -82,6 +82,6 @@ Command delete-http executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http.html#create-http-1[`create-http`(1)]
+link:create-http.html#create-http[`create-http`(1)]
 
 

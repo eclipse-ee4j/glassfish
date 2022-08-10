@@ -66,7 +66,7 @@ protocol-name::
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol-finder.html#create-protocol-finder-1[`create-protocol-finder`(1)],
-link:delete-protocol-finder.html#delete-protocol-finder-1[`delete-protocol-finder`(1)]
+link:create-protocol-finder.html#create-protocol-finder[`create-protocol-finder`(1)],
+link:delete-protocol-finder.html#delete-protocol-finder[`delete-protocol-finder`(1)]
 
 

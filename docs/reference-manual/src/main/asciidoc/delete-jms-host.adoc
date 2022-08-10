@@ -85,8 +85,8 @@ Command delete-jms-host executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jms-host.html#create-jms-host-1[`create-jms-host`(1)],
-link:jms-ping.html#jms-ping-1[`jms-ping`(1)],
-link:list-jms-hosts.html#list-jms-hosts-1[`list-jms-hosts`(1)]
+link:create-jms-host.html#create-jms-host[`create-jms-host`(1)],
+link:jms-ping.html#jms-ping[`jms-ping`(1)],
+link:list-jms-hosts.html#list-jms-hosts[`list-jms-hosts`(1)]
 
 

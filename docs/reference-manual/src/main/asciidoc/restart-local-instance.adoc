@@ -35,7 +35,7 @@ command from the host where the instance resides.
 The subcommand can restart any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can restart
 an instance that was created by using the
-link:create-instance.html#create-instance-1[`create-instance`(1)] subcommand.
+link:create-instance.html#create-instance[`create-instance`(1)] subcommand.
 
 The `restart-local-instance` subcommand does not contact the domain
 administration server (DAS) to determine the node on which the instance
@@ -62,8 +62,8 @@ with the change.
 If different synchronization behavior is required, the instance must be
 stopped and restarted by using following sequence of subcommands:
 
-1. link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
-2. link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)]
+1. link:stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)]
+2. link:start-local-instance.html#start-local-instance[`start-local-instance`(1)]
 
 This subcommand is supported in local mode. However, to synchronize the
 instance with the DAS, this subcommand must be run in remote mode.
@@ -156,15 +156,15 @@ Command restart-local-instance executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:restart-instance.html#restart-instance-1[`restart-instance`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+link:create-instance.html#create-instance[`create-instance`(1)],
+link:create-local-instance.html#create-local-instance[`create-local-instance`(1)],
+link:delete-instance.html#delete-instance[`delete-instance`(1)],
+link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)],
+link:restart-instance.html#restart-instance[`restart-instance`(1)],
+link:start-instance.html#start-instance[`start-instance`(1)],
+link:start-local-instance.html#start-local-instance[`start-local-instance`(1)],
+link:stop-instance.html#stop-instance[`stop-instance`(1)],
+link:stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)]
 
 Java Platform Debugger Architecture (JPDA)
 (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)

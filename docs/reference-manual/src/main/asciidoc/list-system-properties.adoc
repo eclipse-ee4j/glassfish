@@ -87,7 +87,7 @@ Command list-system-properties executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)]
+link:create-system-properties.html#create-system-properties[`create-system-properties`(1)],
+link:delete-system-property.html#delete-system-property[`delete-system-property`(1)]
 
 

@@ -21,10 +21,10 @@ of development tools. In addition, sample applications are available.
 
 The following topics are addressed here:
 
-* xref:#beaar[Installing and Preparing the Server for Development]
-* xref:#beaas[High Availability Features]
-* xref:#beaat[Development Tools]
-* xref:#beabf[Sample Applications]
+* xref:#installing-and-preparing-the-server-for-development[Installing and Preparing the Server for Development]
+* xref:#high-availability-features[High Availability Features]
+* xref:#development-tools[Development Tools]
+* xref:#sample-applications[Sample Applications]
 
 [[beaar]][[GSDVG00090]][[installing-and-preparing-the-server-for-development]]
 
@@ -57,11 +57,11 @@ server for development in these ways:
 
 * Locate utility classes and libraries so they can be accessed by the
 proper class loaders. For more information, see
-link:class-loaders.html#beadj[Using the Common Class Loader].
+link:class-loaders.html#using-the-common-class-loader[Using the Common Class Loader].
 * Set up debugging. For more information, see
 link:debugging-apps.html#beafc[Debugging Applications].
 * Configure the Virtual Machine for the Java platform (JVM software).
-For more information, see "link:administration-guide/jvm.html#ablwj[
+For more information, see "link:administration-guide/jvm.html#administering-the-virtual-machine-for-the-java-platform[
 Administering the Virtual Machine for the Java Platform]"
 in {productName} Administration Guide.
 
@@ -75,13 +75,13 @@ High Availability Administration Guide]. This book describes the
 following features in the following sections:
 
 * For information about HTTP session persistence, see
-link:webapps.html#beahe[Distributed Sessions and Persistence].
+link:webapps.html#distributed-sessions-and-persistence[Distributed Sessions and Persistence].
 * For information about checkpointing of the stateful session bean
-state, see link:ejb.html#beaib[Stateful Session Bean Failover].
+state, see link:ejb.html#stateful-session-bean-failover[Stateful Session Bean Failover].
 * For information about failover and load balancing for Java clients,
 see link:java-clients.html#beakt[Developing Java Clients].
 * For information about load balancing for message-driven beans, see
-link:jms.html#beaop[Load-Balanced Message Inflow].
+link:jms.html#load-balanced-message-inflow[Load-Balanced Message Inflow].
 
 [[beaat]][[GSDVG00092]][[development-tools]]
 
@@ -89,19 +89,19 @@ link:jms.html#beaop[Load-Balanced Message Inflow].
 
 The following general tools are provided with the {productName}:
 
-* xref:#beaau[The `asadmin` Command]
-* xref:#beaav[The Administration Console]
+* xref:#the-asadmin-command[The `asadmin` Command]
+* xref:#the-administration-console[The Administration Console]
 
 The following development tools are provided with the {productName}
 or downloadable from Oracle:
 
-* xref:#beaba[The Migration Tool]
-* xref:#beaaw[The NetBeans IDE]
+* xref:#the-migration-tool[The Migration Tool]
+* xref:#the-netbeans-ide[The NetBeans IDE]
 
 The following third-party tools might also be useful:
 
-* xref:#beabb[Debugging Tools]
-* xref:#beabc[Profiling Tools]
+* xref:#debugging-tools[Debugging Tools]
+* xref:#profiling-tools[Profiling Tools]
 
 [[beaau]][[GSDVG00333]][[the-asadmin-command]]
 
@@ -169,7 +169,7 @@ information, see link:debugging-apps.html#beafc[Debugging Applications].
 ==== Profiling Tools
 
 You can use several profilers with the {productName}. For more
-information, see link:debugging-apps.html#beafn[Profiling Tools].
+information, see link:debugging-apps.html#profiling-tools[Profiling Tools].
 
 [[beabf]][[GSDVG00093]][[sample-applications]]
 

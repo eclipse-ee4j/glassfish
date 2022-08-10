@@ -41,7 +41,7 @@ commands and closed when execution completes.
 A related subcommand is the `osgi-shell` subcommand, which enables you
 to run multiple commands from a file or run commands interactively. For
 more information about the `osgi-shell` subcommand, see the
-link:osgi-shell.html#osgi-shell-1[`osgi-shell`(1)] help page.
+link:osgi-shell.html#osgi-shell[`osgi-shell`(1)] help page.
 
 This subcommand is supported in remote mode only.
 
@@ -178,6 +178,6 @@ Command osgi executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:osgi-shell.html#osgi-shell-1[`osgi-shell`(1)]
+link:osgi-shell.html#osgi-shell[`osgi-shell`(1)]
 
 

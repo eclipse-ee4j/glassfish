@@ -96,13 +96,13 @@ customarily includes the mail/ naming subcontext, For example:
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a JavaMail resource by using the
-link:reference-manual/create-javamail-resource.html#GSRFM00035[`create-javamail-resource`] subcommand.
+link:reference-manual/create-javamail-resource.html#create-javamail-resource[`create-javamail-resource`] subcommand.
 +
 Information about the properties for the subcommand is included in this
 help page.
 3. To apply your changes, restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00267]][[gipfs]]
 Example 16-1 Creating a JavaMail Resource
@@ -132,7 +132,7 @@ existing JavaMail session resources.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JavaMail resources by using the
-link:reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommand.
+link:reference-manual/list-javamail-resources.html#list-javamail-resources[`list-javamail-resources`] subcommand.
 
 [[GSADG00268]][[gipfe]]
 Example 16-2 Listing JavaMail Resources
@@ -156,9 +156,9 @@ typing `asadmin help list-javamail-resources` at the command line.
 ==== To Update a JavaMail Resource
 
 1. List the JavaMail resources by using the
-link:reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommand.
+link:reference-manual/list-javamail-resources.html#list-javamail-resources[`list-javamail-resources`] subcommand.
 2. Modify the values for the specified JavaMail source by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 +
 The resource is identified by its dotted name.
 
@@ -189,12 +189,12 @@ References to the specified resource must be removed before running the
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the JavaMail resources by using the
-link:reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommands.
+link:reference-manual/list-javamail-resources.html#list-javamail-resources[`list-javamail-resources`] subcommands.
 3. Delete a JavaMail resource by using the
-link:reference-manual/delete-javamail-resource.html#GSRFM00087[`delete-javamail-resource`] subcommands.
+link:reference-manual/delete-javamail-resource.html#delete-javamail-resource[`delete-javamail-resource`] subcommands.
 4. To apply your changes, restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00270]][[gipcd]]
 Example 16-4 Deleting a JavaMail Resource

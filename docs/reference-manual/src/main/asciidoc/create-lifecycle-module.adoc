@@ -119,9 +119,9 @@ the equal sign (=) and colon (:) are part of the `rmi` property value.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-lifecycle-module.html#delete-lifecycle-module-1[`delete-lifecycle-module`(1)],
-link:list-lifecycle-modules.html#list-lifecycle-modules-1[`list-lifecycle-modules`(1)]
+link:delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`(1)],
+link:list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`(1)]
 
-"link:application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners]" in {productName} Application Development Guide
+"link:application-development-guide/lifecycle-listeners.html#beamc[Developing Lifecycle Listeners]" in {productName} Application Development Guide
 
 

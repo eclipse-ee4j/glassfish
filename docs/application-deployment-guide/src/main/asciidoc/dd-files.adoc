@@ -19,15 +19,15 @@ deployment descriptors that are included in this release of the
 
 The following topics are addressed here:
 
-* xref:#giiie[About the {productName} Deployment Descriptors]
-* xref:#beaqk[The glassfish-application.xml File]
-* xref:#beaql[The glassfish-web.xml File]
-* xref:#beaqm[The glassfish-ejb-jar.xml File]
-* xref:#beaqn[The sun-cmp-mappings.xml File]
-* xref:#beaqo[The glassfish-application-client.xml file]
-* xref:#beaqp[The sun-acc.xml File]
-* xref:#giyhh[The glassfish-resources.xml File]
-* xref:#gkiot[WebLogic Server Deployment Descriptor Support in {productName}]
+* xref:#about-the-glassfish-server-deployment-descriptors[About the {productName} Deployment Descriptors]
+* xref:#GSDPG00077[The glassfish-application.xml File]
+* xref:#GSDPG00078[The glassfish-web.xml File]
+* xref:#GSDPG00079[The glassfish-ejb-jar.xml File]
+* xref:#GSDPG00080[The sun-cmp-mappings.xml File]
+* xref:#GSDPG00081[The glassfish-application-client.xml file]
+* xref:#GSDPG00082[The sun-acc.xml File]
+* xref:#GSDPG00083[The glassfish-resources.xml File]
+* xref:#weblogic-server-deployment-descriptor-support-in-glassfish-server[WebLogic Server Deployment Descriptor Support in {productName}]
 
 [[giiie]][[GSDPG00076]][[about-the-glassfish-server-deployment-descriptors]]
 

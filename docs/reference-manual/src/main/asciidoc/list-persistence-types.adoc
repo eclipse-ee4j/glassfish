@@ -104,8 +104,8 @@ Command list-persistence-types executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)], link:list.html#list-1[`list`(1)],
-link:set.html#set-1[`set`(1)]
+link:get.html#get[`get`(1)], link:list.html#list[`list`(1)],
+link:set.html#set[`set`(1)]
 
 link:add-on-component-development-guide.html#GSACG[{productName} Add-On Component
 Development Guide]

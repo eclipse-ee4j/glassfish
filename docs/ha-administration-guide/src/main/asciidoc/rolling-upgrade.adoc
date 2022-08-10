@@ -21,7 +21,7 @@ while new users transparently get the new version of the application.
 With a rolling upgrade, users are unaware that the upgrade occurs.
 
 For more information about application versions and how they are
-identified, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+identified, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application Versions]" in
 {productName} Application Deployment Guide.
 
 In a clustered environment, a rolling upgrade redeploys an application
@@ -73,7 +73,7 @@ Compatible applications must:
 
 You can perform a rolling upgrade of a compatible application in either
 a single cluster or multiple clusters. For more information, see
-xref:#abdim[Upgrading In a Single Cluster].
+xref:#upgrading-in-a-single-cluster[Upgrading In a Single Cluster].
 
 If the two versions of an application do not meet all the above
 criteria, then the applications are considered incompatible. Executing
@@ -83,7 +83,7 @@ The problems depend on the type and extent of the incompatibility. It is
 good practice to upgrade an incompatible application by creating a
 "shadow cluster" to which to deploy the new version and slowly quiesce
 the old cluster and application. For more information, see
-xref:#abdio[Upgrading Incompatible Applications].
+xref:#upgrading-incompatible-applications[Upgrading Incompatible Applications].
 
 The application developer and administrator are the best people to
 determine whether application versions are compatible. If in doubt,
@@ -191,7 +191,7 @@ previous version.
 
 If the new version of the application is incompatible with the old
 version, use the following procedure. For information on what makes
-applications compatible, see xref:#abdil[Application Compatibility].
+applications compatible, see xref:#application-compatibility[Application Compatibility].
 Also, you must upgrade incompatible application in two or more clusters.
 If you have only one cluster, create a "shadow cluster" for the upgrade,
 as described below.

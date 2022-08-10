@@ -18,9 +18,9 @@ of the Java Message Service (JMS). It covers how to configure Message
 Queue broker clusters and how to use them to provide connection failover
 and load balancing, as described in the following topics:
 
-* xref:#abdbx[Using Message Queue Broker Clusters With {productName}]
-* xref:#abdbv[Connection Failover]
-* xref:#abdbw[Load-Balanced Delivery to MDBs]
+* xref:#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}]
+* xref:#connection-failover[Connection Failover]
+* xref:#load-balanced-delivery-to-mdbs[Load-Balanced Delivery to MDBs]
 
 [[abdbx]][[GSHAG00212]][[using-message-queue-broker-clusters-with-glassfish-server]]
 
@@ -33,20 +33,20 @@ supported and how to configure them.
 
 The following topics are addressed here:
 
-* xref:#gktgs[About Message Queue Broker Clusters]
-* xref:#gktft[Configuring GlassFish Clusters to Use Message Queue Broker
+* xref:#about-message-queue-broker-clusters[About Message Queue Broker Clusters]
+* xref:#configuring-glassfish-clusters-to-use-message-queue-broker-clusters[Configuring GlassFish Clusters to Use Message Queue Broker
 Clusters]
-* xref:#gktge[To Configure a GlassFish Cluster to Use an Embedded or
+* xref:#to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-with-master-broker[To Configure a GlassFish Cluster to Use an Embedded or
 Local Conventional Broker Cluster With Master Broker]
-* xref:#gktfr[To Configure a GlassFish Cluster to Use an Embedded or
+* xref:#to-configure-a-glassfish-cluster-to-use-an-embedded-or-local-conventional-broker-cluster-of-peer-brokers[To Configure a GlassFish Cluster to Use an Embedded or
 Local Conventional Broker Cluster of Peer Brokers]
-* xref:#gkthc[To Change the Master Broker in an Embedded or Local Broker
+* xref:#to-change-the-master-broker-in-an-embedded-or-local-broker-cluster[To Change the Master Broker in an Embedded or Local Broker
 Cluster]
-* xref:#gktgj[To Migrate Between Types of Embedded or Local Conventional
+* xref:#to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters[To Migrate Between Types of Embedded or Local Conventional
 Broker Clusters]
-* xref:#gktfl[To Configure a GlassFish Cluster to Use a Local Enhanced
+* xref:#to-configure-a-glassfish-cluster-to-use-a-local-enhanced-broker-cluster[To Configure a GlassFish Cluster to Use a Local Enhanced
 Broker Cluster]
-* xref:#abdby[To Configure a GlassFish Cluster to Use a Remote Broker
+* xref:#to-configure-a-glassfish-cluster-to-use-a-remote-broker-cluster[To Configure a GlassFish Cluster to Use a Remote Broker
 Cluster]
 
 [[gktgs]][[GSHAG00311]][[about-message-queue-broker-clusters]]
@@ -186,7 +186,7 @@ the cluster.
 ====
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate to another type of broker
-cluster, as described in xref:#gktgj[To Migrate Between Types of
+cluster, as described in xref:#to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters[To Migrate Between Types of
 Embedded or Local Conventional Broker Clusters]. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
@@ -198,7 +198,7 @@ Remote `asadmin` subcommands require a running server.
 
 2. Configure the {productName} cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+link:reference-manual/configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -231,7 +231,7 @@ the cluster.
 ====
 Before using this procedure to reconfigure an existing cluster, you must
 follow the special procedures to migrate to another type of broker
-cluster, as described in xref:#gktgj[To Migrate Between Types of
+cluster, as described in xref:#to-migrate-between-types-of-embedded-or-local-conventional-broker-clusters[To Migrate Between Types of
 Embedded or Local Conventional Broker Clusters]. Failing to perform
 these special procedures could lead to data loss or corruption and even
 render your setup unusable, depending on the JMS operations performed on
@@ -255,7 +255,7 @@ each host where a {productName} cluster instance is to run:
 
 4. Configure the {productName} cluster to use a Message Queue
 conventional broker cluster with master broker by using the
-link:reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+link:reference-manual/configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -294,7 +294,7 @@ broker.
 Remote `asadmin` subcommands require a running server.
 
 2. Change the master broker by using the
-link:reference-manual/change-master-broker.html#GSRFM00005[`change-master-broker`]
+link:reference-manual/change-master-broker.html#change-master-broker[`change-master-broker`]
 subcommand:
 +
 [source]
@@ -356,7 +356,7 @@ a {productName} cluster instance is to run.
 
 4. Configure the {productName} cluster to use a Message Queue
 enhanced broker cluster by using the
-link:reference-manual/configure-jms-cluster.html#GSRFM00008[`configure-jms-cluster`]
+link:reference-manual/configure-jms-cluster.html#configure-jms-cluster[`configure-jms-cluster`]
 subcommand:
 +
 [source]
@@ -388,7 +388,7 @@ for the cluster.
 The remote subcommands used in this procedure require a running server.
 
 2. Delete the `default_JMS_host` JMS host by using the
-link:reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subcommand:
+link:reference-manual/delete-jms-host.html#delete-jms-host[`delete-jms-host`] subcommand:
 +
 [source]
 ----
@@ -396,7 +396,7 @@ link:reference-manual/delete-jms-host.html#GSRFM00091[`delete-jms-host`] subcomm
 ----
 
 3. Create a JMS host for each broker in the broker cluster by using the
-link:reference-manual/create-jms-host.html#GSRFM00039[`create-jms-host`] subcommand. +
+link:reference-manual/create-jms-host.html#create-jms-host[`create-jms-host`] subcommand. +
 For each broker, use an `asadmin create-jms-host` of the form:
 +
 [source]
@@ -412,8 +412,8 @@ jms-host-name-for-broker
 in Open Message Queue Administration Guide.
 
 5. Create instances in the {productName} cluster, as described in
-link:instances.html#gkqch[To Create an Instance Centrally] and
-link:instances.html#gkqbl[To Create an Instance Locally].
+link:instances.html#to-create-an-instance-centrally[To Create an Instance Centrally] and
+link:instances.html#to-create-an-instance-locally[To Create an Instance Locally].
 
 [[abdbv]][[GSHAG00213]][[connection-failover]]
 
@@ -500,7 +500,7 @@ Address List Iterations::
   is not used when performing reconnection.
 
 You can override these settings using JMS connection factory settings.
-For details, see "link:administration-guide/jms.html#GSADG00598[Administering JMS Connection
+For details, see "link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection
 Factories and Destinations]" in {productName}
 Administration Guide.
 

@@ -106,7 +106,7 @@ Where `jms/qConnFactory` is the connector resource that is removed.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-resource.html#create-connector-resource-1[`create-connector-resource`(1)],
-link:list-connector-resources.html#list-connector-resources-1[`list-connector-resources`(1)]
+link:create-connector-resource.html#create-connector-resource[`create-connector-resource`(1)],
+link:list-connector-resources.html#list-connector-resources[`list-connector-resources`(1)]
 
 

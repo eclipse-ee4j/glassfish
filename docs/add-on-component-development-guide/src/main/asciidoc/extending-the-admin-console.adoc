@@ -30,14 +30,14 @@ hypothetical add-on component.
 
 The following topics are addressed here:
 
-* xref:#ghmof[Administration Console Architecture]
-* xref:#ghmom[About Administration Console Templates]
-* xref:#ghmqr[About Integration Points]
-* xref:#ghmpg[Specifying the ID of an Add-On Component]
-* xref:#ghmpk[Adding Functionality to the Administration Console]
-* xref:#ghmqi[Adding Internationalization Support]
-* xref:#ghmqg[Changing the Theme or Brand of the Administration Console]
-* xref:#ghpkz[Creating an Integration Point Type]
+* xref:#administration-console-architecture[Administration Console Architecture]
+* xref:#about-administration-console-templates[About Administration Console Templates]
+* xref:#about-integration-points[About Integration Points]
+* xref:#specifying-the-id-of-an-add-on-component[Specifying the ID of an Add-On Component]
+* xref:#adding-functionality-to-the-administration-console[Adding Functionality to the Administration Console]
+* xref:#adding-internationalization-support[Adding Internationalization Support]
+* xref:#changing-the-theme-or-brand-of-the-administration-console[Changing the Theme or Brand of the Administration Console]
+* xref:#creating-an-integration-point-type[Creating an Integration Point Type]
 
 [[ghmof]][[GSACG00097]][[administration-console-architecture]]
 
@@ -68,8 +68,8 @@ interface name for this service is
 `org.glassfish.api.admingui.ConsolePluginService`.
 
 For details about the Hundred-Kilobyte Kernel (HK2) project, see
-link:introduction.html#ghmnq[Hundred-Kilobyte Kernel] and
-link:writing-hk2-components.html#ghokq[HK2 Component Model].
+link:introduction.html#hundred-kilobyte-kernel[Hundred-Kilobyte Kernel] and
+link:writing-hk2-components.html#hk2-component-model[HK2 Component Model].
 
 Each add-on component must contain a console provider implementation.
 This is a Java class that implements the
@@ -89,7 +89,7 @@ required method, `getConfiguration`. The `getConfiguration` method
 returns the location of the `console-config.xml` file as a
 `java.net.URL`. If `getConfiguration` returns `null`, the default
 location, `META-INF/admingui/console-config.xml`, is used. The
-`console-config.xml` file is described in xref:#ghmqr[About Integration
+`console-config.xml` file is described in xref:#about-integration-points[About Integration
 Points].
 
 To implement the console provider for your add-on component, write a
@@ -136,12 +136,12 @@ JSFTemplating.
 Examples of JSFTemplating technology can be found in the following
 sections of this chapter:
 
-* xref:#ghoej[Creating a Jakarta Server Faces Page for Your Node]
-* xref:#ghovg[Creating Jakarta Server Faces Pages for Your Tabs]
-* xref:#ghoeu[Creating a Jakarta Server Faces Page for Your Task]
-* xref:#ghoya[Creating a Jakarta Server Faces Page for Your Task Group]
-* xref:#ghpao[Creating a Jakarta Server Faces Page for Your Page Content]
-* xref:#ghmqe[Adding a Page to the Administration Console]
+* xref:#creating-a-javaserver-faces-page-for-your-node[Creating a Jakarta Server Faces Page for Your Node]
+* xref:#creating-javaserver-faces-pages-for-your-tabs[Creating Jakarta Server Faces Pages for Your Tabs]
+* xref:#creating-a-javaserver-faces-page-for-your-task[Creating a Jakarta Server Faces Page for Your Task]
+* xref:#creating-a-javaserver-faces-page-for-your-task-group[Creating a Jakarta Server Faces Page for Your Task Group]
+* xref:#creating-a-javaserver-faces-page-for-your-page-content[Creating a Jakarta Server Faces Page for Your Page Content]
+* xref:#adding-a-page-to-the-administration-console[Adding a Page to the Administration Console]
 
 [[ghmqr]][[GSACG00099]][[about-integration-points]]
 
@@ -190,7 +190,7 @@ In the example, the element is declared as follows:
 ----
 
 You will also specify this ID value when you construct URLs to images,
-resources and pages in your add-on component. See xref:#ghocf[Adding a
+resources and pages in your add-on component. See xref:#adding-a-node-to-the-navigation-tree[Adding a
 Node to the Navigation Tree] for an example.
 
 For example, a URL to an image named `my.gif` might look like this:
@@ -249,12 +249,12 @@ readability, this chapter uses the same order throughout.
 
 The following topics are addressed here:
 
-* xref:#ghocf[Adding a Node to the Navigation Tree]
-* xref:#ghotv[Adding Tabs to a Page]
-* xref:#ghmqw[Adding a Task to the Common Tasks Page]
-* xref:#ghozn[Adding a Task Group to the Common Tasks Page]
-* xref:#ghmrg[Adding Content to a Page]
-* xref:#ghmqe[Adding a Page to the Administration Console]
+* xref:#adding-a-node-to-the-navigation-tree[Adding a Node to the Navigation Tree]
+* xref:#adding-tabs-to-a-page[Adding Tabs to a Page]
+* xref:#adding-a-task-to-the-common-tasks-page[Adding a Task to the Common Tasks Page]
+* xref:#adding-a-task-group-to-the-common-tasks-page[Adding a Task Group to the Common Tasks Page]
+* xref:#adding-content-to-a-page[Adding Content to a Page]
+* xref:#adding-a-page-to-the-administration-console[Adding a Page to the Administration Console]
 
 [[ghocf]][[GSACG00188]][[adding-a-node-to-the-navigation-tree]]
 
@@ -368,7 +368,7 @@ pages, specify the attributes of this tag as follows:
   simple Jakarta Server Faces page called `testPage.jsf`, which is in the
   `src/main/resources/page/` directory. Specify the integration point
   `id` value as the root of the URL; in this case, it is `sample` (see
-  xref:#ghmpg[Specifying the ID of an Add-On Component]). The rest of
+  xref:#specifying-the-id-of-an-add-on-component[Specifying the ID of an Add-On Component]). The rest of
   the URL is relative to the `src/main/resources/` directory, where
   `sampleNode.jsf` resides.
   The `url` tag in this example passes a `name` parameter to the
@@ -379,7 +379,7 @@ pages, specify the attributes of this tag as follows:
   `src/main/resources/images/` directory. The URL for this image is an
   absolute path, `/resource/`sample`/images/sample.png`, where sample in
   the path is the integration point `id` value (see
-  xref:#ghmpg[Specifying the ID of an Add-On Component]).
+  xref:#specifying-the-id-of-an-add-on-component[Specifying the ID of an Add-On Component]).
 
 [[ghotv]][[GSACG00189]][[adding-tabs-to-a-page]]
 
@@ -546,7 +546,7 @@ You can add either a single task or a group of tasks to the Common Tasks
 page of the Administration Console. To add a task or task group, use an
 integration point of type `org.glassfish.admingui:commonTask`.
 
-See xref:#ghozn[Adding a Task Group to the Common Tasks Page] for
+See xref:#adding-a-task-group-to-the-common-tasks-page[Adding a Task Group to the Common Tasks Page] for
 information on adding a task group.
 
 [[GSACG00025]][[ghpox]]

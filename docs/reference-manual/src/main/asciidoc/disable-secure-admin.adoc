@@ -70,6 +70,6 @@ Command disable-secure-admin executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)]
+link:enable-secure-admin.html#enable-secure-admin[`enable-secure-admin`(1)]
 
 

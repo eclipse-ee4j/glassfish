@@ -78,7 +78,7 @@ Command list-jdbc-resources executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jdbc-resource.html#create-jdbc-resource-1[`create-jdbc-resource`(1)],
-link:delete-jdbc-resource.html#delete-jdbc-resource-1[`delete-jdbc-resource`(1)]
+link:create-jdbc-resource.html#create-jdbc-resource[`create-jdbc-resource`(1)],
+link:delete-jdbc-resource.html#delete-jdbc-resource[`delete-jdbc-resource`(1)]
 
 

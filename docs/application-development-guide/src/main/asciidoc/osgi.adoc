@@ -16,9 +16,9 @@ This chapter describes the features and interfaces that {productName}
 provides to develop OSGi-enabled enterprise applications. This chapter
 includes the following sections:
 
-* xref:#gkpay[Overview of OSGi Application and {productName}]
-* xref:#gkqff[Developing OSGi Application Bundles for {productName}]
-* xref:#gkveh[Deploying OSGi Bundles in {productName}]
+* xref:#overview-of-osgi-application-and-glassfish-server[Overview of OSGi Application and {productName}]
+* xref:#developing-osgi-application-bundles-for-glassfish-server[Developing OSGi Application Bundles for {productName}]
+* xref:#deploying-osgi-bundles-in-glassfish-server[Deploying OSGi Bundles in {productName}]
 
 [[gkpay]][[GSDVG00173]][[overview-of-osgi-application-and-glassfish-server]]
 
@@ -37,7 +37,7 @@ platform services, such as the transaction service, HTTP service, JDBC
 Service and JMS, as OSGi services. It also enables use of Jakarta EE
 programming model in OSGi applications, so enterprise Java application
 developers can continue to leverage their existing skills in OSGi-based
-applications. See xref:#glhek[Benefits of Using OSGi in Enterprise Java
+applications. See xref:#benefits-of-using-osgi-in-enterprise-java-applications[Benefits of Using OSGi in Enterprise Java
 Applications] for more information.
 
 OSGi applications are deployed as one or more OSGi bundles, and the
@@ -46,16 +46,16 @@ you to deploy and manage your OSGi bundles. This chapter classifies OSGi
 bundles into two categories based on the features they use:
 
 * Plain OSGi Application Bundles - bundles that do not contain any Jakarta EE
-components. See xref:#gkupd[Developing Plain OSGi Bundles].
+components. See xref:#developing-plain-osgi-bundles[Developing Plain OSGi Bundles].
 * Hybrid Application Bundles - bundles that are an OSGi bundle as wells
 as a Jakarta EE module. At runtime, such modules have both an OSGi bundle
 context and a Jakarta EE context. {productName} supports the following
 hybrid application bundles:
 
-** Web Application Bundles (or WABs) , see xref:#gkunr[Developing Web
+** Web Application Bundles (or WABs) , see xref:#developing-web-application-bundles[Developing Web
 Application Bundles].
 
-** EJB Application Bundles, see xref:#gkunh[Developing EJB Application
+** EJB Application Bundles, see xref:#developing-ejb-application-bundles[Developing EJB Application
 Bundles].
 
 [[glhek]][[GSDVG00488]][[benefits-of-using-osgi-in-enterprise-java-applications]]
@@ -108,9 +108,9 @@ services provided by plain OSGi bundles and use them as well.
 framework to make it easier for Jakarta EE components to consume dynamic
 OSGi services in a type-safe manner.
 
-* xref:#gkupd[Developing Plain OSGi Bundles]
-* xref:#gkunr[Developing Web Application Bundles]
-* xref:#gkunh[Developing EJB Application Bundles]
+* xref:#developing-plain-osgi-bundles[Developing Plain OSGi Bundles]
+* xref:#developing-web-application-bundles[Developing Web Application Bundles]
+* xref:#developing-ejb-application-bundles[Developing EJB Application Bundles]
 
 [[gkupd]][[GSDVG00489]][[developing-plain-osgi-bundles]]
 
@@ -128,10 +128,10 @@ platform available as OSGi services. Thus, an OSGi bundle deployed in
 APIs or by using a white board pattern. The following Jakarta EE services
 are available as OSGi services:
 
-* xref:#gkunk[HTTP Service]
-* xref:#gkunn[Transaction Service]
-* xref:#gkuof[JDBC Data Source Service]
-* xref:#gkuoq[JMS Resource Service]
+* xref:#http-service[HTTP Service]
+* xref:#transaction-service[Transaction Service]
+* xref:#jdbc-data-source-service[JDBC Data Source Service]
+* xref:#jms-resource-service[JMS Resource Service]
 
 [[gkunk]][[GSDVG00319]][[http-service]]
 
@@ -393,7 +393,7 @@ Servlet:
   }
 ----
 
-To learn more about this feature, refer to xref:#gkvbi[OSGi CDI
+To learn more about this feature, refer to xref:#osgi-cdi-extension-for-wabs[OSGi CDI
 Extension for WABs].
 
 [[gkvbi]][[GSDVG00325]][[osgi-cdi-extension-for-wabs]]
@@ -514,7 +514,7 @@ an example of injection of an OSGi Service into a servlet:
   }
 ----
 
-To learn more about this feature, refer to xref:#gkvbj[Using the OSGi
+To learn more about this feature, refer to xref:#using-the-osgi-cdi-extension-with-ejb-bundles[Using the OSGi
 CDI Extension With EJB Bundles].
 
 [[gkvbj]][[GSDVG00328]][[using-the-osgi-cdi-extension-with-ejb-bundles]]
@@ -543,7 +543,7 @@ in the OSGi service registry.
 === Deploying OSGi Bundles in {productName}
 
 For instruction on deploying OSGi bundle, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00073[
+"link:application-deployment-guide/deploying-applications.html#osgi-bundle-deployment-guidelines[
 OSGi Bundle Deployment Guidelines]"
 in {productName} Application Deployment Guide.
 

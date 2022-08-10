@@ -117,9 +117,9 @@ basis of an algorithm that is internal to the subcommand. Use the
 `--systemproperties` option to resolve port conflicts for additional
 instances on the same node. System properties of an instance can be
 manipulated by using the
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)]
+link:create-system-properties.html#create-system-properties[`create-system-properties`(1)]
 subcommand and the
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)]
+link:delete-system-property.html#delete-system-property[`delete-system-property`(1)]
 subcommand.
 
 When creating an instance, the subcommand retrieves the files that are
@@ -379,15 +379,15 @@ Command create-local-instance executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)],
-link:list-instances.html#list-instances-1[`list-instances`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+link:create-instance.html#create-instance[`create-instance`(1)],
+link:create-node-config.html#create-node-config[`create-node-config`(1)],
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
+link:create-system-properties.html#create-system-properties[`create-system-properties`(1)],
+link:delete-local-instance.html#delete-local-instance[`delete-local-instance`(1)],
+link:delete-system-property.html#delete-system-property[`delete-system-property`(1)],
+link:list-instances.html#list-instances[`list-instances`(1)],
+link:start-local-instance.html#start-local-instance[`start-local-instance`(1)],
+link:stop-local-instance.html#stop-local-instance[`stop-local-instance`(1)]
 
 

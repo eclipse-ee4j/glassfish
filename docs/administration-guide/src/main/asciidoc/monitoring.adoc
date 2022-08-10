@@ -20,14 +20,14 @@ The following topics are addressed here:
 * <<Configuring Monitoring>>
 * <<Viewing Common Monitoring Data>>
 * <<Viewing Comprehensive Monitoring Data>>
-* xref:#giwqm[Configuring JConsole to View {productName} Monitoring
+* xref:#configuring-jconsole-to-view-glassfish-server-monitoring-data[Configuring JConsole to View {productName} Monitoring
 Data]
 
 Instructions for monitoring by using the Administration Console are
 contained in the Administration Console online help.
 
 For information on using REST interfaces for monitoring, see
-xref:general-administration.adoc#gjipx[Using REST Interfaces to
+xref:general-administration.adoc#using-rest-interfaces-to-administer-glassfish-server[Using REST Interfaces to
 Administer {productName}].
 
 [[ablus]][[GSADG00557]][[about-monitoring]]
@@ -69,7 +69,7 @@ represent exactly what can be monitored for that object. All child
 objects are addressed using the dot (.) character as a separator. These
 constructed names are referred to as dotted names. Detailed information
 on dotted names is available in the
-link:reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
 The following command lists the monitorable child objects of the
 instance `server`:
@@ -217,7 +217,7 @@ server.connector-service
 
 An example dotted name might be
 `server.connector-service.resource-adapter-1.connection-pools.pool-1`.
-For available statistics, see xref:#ablvi[JMS/Connector Service Statistics].
+For available statistics, see xref:#jmsconnector-service-statistics[JMS/Connector Service Statistics].
 
 [[ghlin]][[GSADG00042]][[http-service-tree-hierarchy]]
 
@@ -329,7 +329,7 @@ server.orb
 
 An example dotted name might be
 `server.orb.transport.connectioncache.inbound.connectionsidle-count`.
-For available statistics, see xref:#ablvj[ORB Statistics (Connection
+For available statistics, see xref:#orb-statistics-connection-manager[ORB Statistics (Connection
 Manager)].
 
 [[giqdo]][[GSADG00047]][[resources-tree-hierarchy]]
@@ -350,7 +350,7 @@ server.resources
 
 An example dotted name might be
 `server.resources.jdbc-connection-pool1.numconnfree.count`. For
-available statistics, see xref:#gipzv[Resource Statistics (Connection
+available statistics, see xref:#resource-statistics-connection-pool[Resource Statistics (Connection
 Pool)].
 
 [[gjios]][[GSADG00048]][[security-tree-hierarchy]]
@@ -409,7 +409,7 @@ server.transaction-service
 ----
 
 An example dotted name might be `server.tranaction-service.activeids`.
-For available statistics, see xref:#ablvl[Transaction Service
+For available statistics, see xref:#transaction-service-statistics[Transaction Service
 Statistics].
 
 [[ghlff]][[GSADG00051]][[web-tree-hierarchy]]
@@ -462,13 +462,13 @@ particular type of monitorable object. For instructions, see
 <<Viewing Common Monitoring Data>>.
 * The `list` `--monitor` subcommand is used to display the objects that
 can be monitored with the `monitor` subcommand. For guidelines and
-instructions, see xref:#ablwh[Guidelines for Using the `list` and `get`
+instructions, see xref:#guidelines-for-using-the-list-and-get-subcommands-for-monitoring[Guidelines for Using the `list` and `get`
 Subcommands for Monitoring].
 * The `get` subcommand is used to display comprehensive data, such as
 the attributes and values for a dotted name. The `get` subcommand used
 with a wildcard parameter displays all available attributes for any
 monitorable object. For additional information, see
-xref:#ablwh[Guidelines for Using the `list` and `get` Subcommands for
+xref:#guidelines-for-using-the-list-and-get-subcommands-for-monitoring[Guidelines for Using the `list` and `get` Subcommands for
 Monitoring].
 
 [[ablvp]][[GSADG00558]][[configuring-monitoring]]
@@ -499,7 +499,7 @@ Use the `enable-monitoring` subcommand to enable the monitoring service
 itself, or to enable monitoring for individual modules. Monitoring is
 immediately activated, without restarting {productName}.
 
-You can also use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to enable
+You can also use the link:reference-manual/set.html#set[`set`] subcommand to enable
 monitoring for a module. Using the `set` command is not a dynamic
 procedure, so you need to restart {productName} for your changes to
 take effect.
@@ -575,7 +575,7 @@ Use the `disable-monitoring` subcommand to disable the monitoring
 service itself, or to disable monitoring for individual modules.
 Monitoring is immediately stopped, without restarting {productName}.
 
-You can also use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to disable
+You can also use the link:reference-manual/set.html#set[`set`] subcommand to disable
 monitoring for a module. Using the `set` command is not a dynamic
 procedure, so you need to restart {productName} for your changes to
 take effect.
@@ -597,7 +597,7 @@ configs.config.server-config.monitoring-service.module-monitoring-levels.web-con
               configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
 ----
 2. Disable monitoring for a service or module by using the
-link:reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`] subcommand.
+link:reference-manual/disable-monitoring.html#disable-monitoring[`disable-monitoring`] subcommand.
 +
 Server restart is not required.
 
@@ -673,7 +673,7 @@ display data on the object. See <<To Enable Monitoring>>.
 1. Determine which type of monitorable object you want to monitor.
 +
 Your choices for 5.0 are `jvm`, `httplistener`, and `webmodule`.
-2. Request the monitoring data by using the link:reference-manual/monitor.html#GSRFM00212[`monitor`]
+2. Request the monitoring data by using the link:reference-manual/monitor.html#monitor[`monitor`]
 subcommand.
 
 [[GSADG00194]][[ghljw]]
@@ -813,7 +813,7 @@ measurement.
 
 The following topics are addressed here:
 
-* xref:#ablwh[Guidelines for Using the `list` and `get` Subcommands for
+* xref:#guidelines-for-using-the-list-and-get-subcommands-for-monitoring[Guidelines for Using the `list` and `get` Subcommands for
 Monitoring]
 * <<To View Comprehensive Monitoring Data>>
 * <<Comprehensive Monitoring Statistics>>
@@ -873,7 +873,7 @@ attributes and values corresponding to connection pool attributes.
 
 
 For detailed information on dotted names, see the
-link:reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page.
+link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page.
 
 [[ablvv]][[GSADG00389]][[to-view-comprehensive-monitoring-data]]
 
@@ -888,11 +888,11 @@ object.
 Before You Begin
 
 A monitorable object must be configured for monitoring before you can
-display information about the object. See xref:#ablvr[To Enable
+display information about the object. See xref:#to-enable-monitoring[To Enable
 Monitoring] if needed.
 
 1. List the objects that are enabled for monitoring by using the
-link:reference-manual/list.html#GSRFM00145[`list`] subcommand.
+link:reference-manual/list.html#list[`list`] subcommand.
 +
 For example, the following subcommand lists all components and services
 that have monitoring enabled for instance `server`.
@@ -909,7 +909,7 @@ server.http-service
 server.thread-pools
 ----
 2. Get data for a monitored component or service by using the
-link:reference-manual/get.html#GSRFM00139[`get`] subcommand.
+link:reference-manual/get.html#get[`get`] subcommand.
 
 [[GSADG00195]][[ghlre]]
 Example 8-8 Viewing Attributes for a Specific Type
@@ -1042,7 +1042,7 @@ available for each monitorable object:
 
 ===== EJB Statistics
 
-EJBs fit into the tree of objects as shown in xref:#abluw[Applications
+EJBs fit into the tree of objects as shown in xref:#applications-tree-hierarchy[Applications
 Tree Hierarchy]. Use the following dotted name pattern to get EJB
 statistics for an application:
 
@@ -1494,7 +1494,7 @@ work object before it gets executed.
 
 ===== JVM Statistics
 
-The JVM fits into the tree of objects as show in xref:#ghlic[JVM Tree
+The JVM fits into the tree of objects as show in xref:#jvm-tree-hierarchy[JVM Tree
 Hierarchy].
 
 The statistics that are available for the Virtual Machine for Java
@@ -1783,7 +1783,7 @@ specification version implemented by the JVM
 
 ===== Network Statistics
 
-Network fits into the tree of objects as shown in xref:#giznj[Network
+Network fits into the tree of objects as shown in xref:#network-tree-hierarchy[Network
 Tree Hierarchy].
 
 Network statistics are described in the following sections:
@@ -1968,7 +1968,7 @@ tasks, which were executed by the thread pool
 
 ===== ORB Statistics (Connection Manager)
 
-The ORB fits into the tree of objects as shown in xref:#ablvb[ORB Tree Hierarchy].
+The ORB fits into the tree of objects as shown in xref:#orb-tree-hierarchy[ORB Tree Hierarchy].
 
 Use the following dotted name patterns for ORB statistics:
 
@@ -2146,7 +2146,7 @@ connections that were used (high water mark)
 
 ===== Security Statistics
 
-Security fits into the tree of objects as shown in xref:#gjios[Security
+Security fits into the tree of objects as shown in xref:#security-tree-hierarchy[Security
 Tree Hierarchy].
 
 Statistics available for security are shown in the following sections:
@@ -2390,7 +2390,7 @@ been frozen.
 
 ===== Web Statistics
 
-The web module fits into the tree of objects as shown in xref:#ghlff[Web
+The web module fits into the tree of objects as shown in xref:#web-tree-hierarchy[Web
 Tree Hierarchy].
 
 The available web statistics shown in the following sections:
@@ -2611,7 +2611,7 @@ the loopback address) by setting `address` to `locahost`.
 
 1. Start the domain.
 +
-For instructions, see xref:domains.adoc#ggoda[To Start a Domain].
+For instructions, see xref:domains.adoc#to-start-a-domain[To Start a Domain].
 2. Start JConsole using this format: JDK_HOME``/bin/jconsole``
 +
 For example:

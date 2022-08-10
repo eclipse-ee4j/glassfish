@@ -19,9 +19,9 @@ EE applications is beyond the scope of this document.
 
 The following topics are addressed here:
 
-* xref:#abebf[Java Programming Guidelines]
-* xref:#abebp[Java Server Page and Servlet Tuning]
-* xref:#abebw[EJB Performance Tuning]
+* xref:#java-programming-guidelines[Java Programming Guidelines]
+* xref:#java-server-page-and-servlet-tuning[Java Server Page and Servlet Tuning]
+* xref:#ejb-performance-tuning[EJB Performance Tuning]
 
 [[abebf]][[GSPTG00052]][[java-programming-guidelines]]
 
@@ -37,15 +37,15 @@ Blueprints]
 
 The following topics are addressed here:
 
-* xref:#abebg[Avoid Serialization and Deserialization]
-* xref:#abebh[Use `StringBuilder` to Concatenate Strings]
-* xref:#abebi[Assign null to Variables That Are No Longer Needed]
-* xref:#abebj[Declare Methods as final Only If Necessary]
-* xref:#abebk[Declare Constants as static final]
-* xref:#abebl[Avoid Finalizers]
-* xref:#abebm[Declare Method Arguments final]
-* xref:#abebn[Synchronize Only When Necessary]
-* xref:#abebo[Use DataHandlers for SOAP Attachments]
+* xref:#avoid-serialization-and-deserialization[Avoid Serialization and Deserialization]
+* xref:#use-stringbuilder-to-concatenate-strings[Use `StringBuilder` to Concatenate Strings]
+* xref:#assign-null-to-variables-that-are-no-longer-needed[Assign null to Variables That Are No Longer Needed]
+* xref:#declare-methods-as-final-only-if-necessary[Declare Methods as final Only If Necessary]
+* xref:#declare-constants-as-static-final[Declare Constants as static final]
+* xref:#avoid-finalizers[Avoid Finalizers]
+* xref:#declare-method-arguments-final[Declare Method Arguments final]
+* xref:#synchronize-only-when-necessary[Synchronize Only When Necessary]
+* xref:#use-datahandlers-for-soap-attachments[Use DataHandlers for SOAP Attachments]
 
 [[abebg]][[GSPTG00161]][[avoid-serialization-and-deserialization]]
 
@@ -217,10 +217,10 @@ and JSP application performance.
 
 The following topics are addressed here:
 
-* xref:#abebr[General Guidelines]
-* xref:#abebs[Avoid Shared Modified Class Variables]
-* xref:#abebt[HTTP Session Handling]
-* xref:#abebu[Configuration and Deployment Tips]
+* xref:#general-guidelines[General Guidelines]
+* xref:#avoid-shared-modified-class-variables[Avoid Shared Modified Class Variables]
+* xref:#http-session-handling[HTTP Session Handling]
+* xref:#configuration-and-deployment-tips[Configuration and Deployment Tips]
 
 [[abebr]][[GSPTG00082]][[general-guidelines]]
 
@@ -283,9 +283,9 @@ intended for production environments, not development environments.
 the server `CLASSPATH`. Put application-related classes into JAR files.
 * HTTP response times are dependent on how the keep-alive subsystem and
 the HTTP server is tuned in general. For more information, see
-link:tuning-glassfish.html#abeet[HTTP Service Settings].
+link:tuning-glassfish.html#http-service-settings[HTTP Service Settings].
 * Cache servlet results when possible. For more information, see
-"link:application-development-guide/webapps.html#GSDVG00009[Developing Web Applications]" in {productName} Application Development Guide.
+"link:application-development-guide/webapps.html#beafs[Developing Web Applications]" in {productName} Application Development Guide.
 * If an application does not contain any EJB components, deploy the
 application as a WAR file, not an EAR file.
 
@@ -327,7 +327,7 @@ with the `server.policy` file. If you are sure that no malicious code
 will be run on the server and you do not use authentication within your
 application, then you can disable the security manager.
 
-See "link:application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security Manager]" in
+See "link:application-development-guide/securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security Manager]" in
 {productName} Application Development Guide for
 instructions on enabling or disabling the security manager. If using the
 {productName} Administration Console, navigate to the
@@ -349,15 +349,15 @@ other system configurations.
 
 The following topics are addressed here:
 
-* xref:#abebx[Goals]
-* xref:#abeby[Monitoring EJB Components]
-* xref:#abeca[General Guidelines]
-* xref:#abecg[Using Local and Remote Interfaces]
-* xref:#abecj[Improving Performance of EJB Transactions]
-* xref:#abecs[Using Special Techniques]
-* xref:#abecv[Tuning Tips for Specific Types of EJB Components]
-* xref:#abedd[JDBC and Database Access]
-* xref:#abedi[Tuning Message-Driven Beans]
+* xref:#goals[Goals]
+* xref:#monitoring-ejb-components[Monitoring EJB Components]
+* xref:#general-guidelines-1[General Guidelines]
+* xref:#using-local-and-remote-interfaces[Using Local and Remote Interfaces]
+* xref:#improving-performance-of-ejb-transactions[Improving Performance of EJB Transactions]
+* xref:#using-special-techniques[Using Special Techniques]
+* xref:#tuning-tips-for-specific-types-of-ejb-components[Tuning Tips for Specific Types of EJB Components]
+* xref:#jdbc-and-database-access[JDBC and Database Access]
+* xref:#tuning-message-driven-beans[Tuning Message-Driven Beans]
 
 [[abebx]][[GSPTG00171]][[goals]]
 
@@ -517,10 +517,10 @@ asadmin get -m serverInstance.application.appName.ejb-module.moduleName
 ----
 
 For more information about administering the monitoring service in
-general, see "link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in
+general, see "link:administration-guide/monitoring.html#ablur[Administering the Monitoring Service]" in
 {productName} Administration Guide. For
 information about viewing comprehensive EJB monitoring statistics, see
-"link:administration-guide/monitoring.html#GSADG00651[EJB Statistics]" in {productName} Administration Guide.
+"link:administration-guide/monitoring.html#ejb-statistics[EJB Statistics]" in {productName} Administration Guide.
 
 To configure EJB monitoring using the {productName} Administration
 Console, navigate to the Configurations>configuration-name>Monitoring
@@ -530,7 +530,7 @@ Monitor tab. Refer to the Administration Console online help for
 instructions on each of these procedures.
 
 Alternatively, to list EJB statistics, use the `asadmin list`
-subcommand. For more information, see link:reference-manual/list.html#GSRFM00145[`list`(1)].
+subcommand. For more information, see link:reference-manual/list.html#list[`list`(1)].
 
 For statistics on stateful session bean passivations, use this command:
 
@@ -560,7 +560,7 @@ security, and transactions, as well as properties and methods.
 
 Use high-performance beans as much as possible to improve the overall
 performance of your application. For more information, see
-xref:#abecv[Tuning Tips for Specific Types of EJB Components].
+xref:#tuning-tips-for-specific-types-of-ejb-components[Tuning Tips for Specific Types of EJB Components].
 
 The types of EJB components are listed below, from the highest
 performance to the lowest:
@@ -574,7 +574,7 @@ read-only
 6. BMP beans
 
 For more information about configuring high availability session
-persistence, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
+persistence, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide. To configure EJB beans using the
 {productName} Administration Console, navigate to the
@@ -640,10 +640,10 @@ response for initial requests.
 cache bean specific resources and release them using the
 `unSetEntityContext()` method.
 * Load related data efficiently for container-managed relationships
-(CMRs). For more information, see xref:#abedc[Pre-Fetching Container
+(CMRs). For more information, see xref:#pre-fetching-container-managed-relationship-cmr-beans[Pre-Fetching Container
 Managed Relationship (CMR) Beans].
 * Identify read-only beans: Configure read-only entity beans for read
-only operations. For more information, see xref:#abeda[Read-Only Entity
+only operations. For more information, see xref:#read-only-entity-beans[Read-Only Entity
 Beans].
 
 [[abecg]][[GSPTG00174]][[using-local-and-remote-interfaces]]
@@ -713,7 +713,7 @@ or a single EJB component. When specified at the application level, all
 beans in the application use pass-by-reference semantics when passing
 arguments to their remote interfaces. When specified at the bean level,
 all calls to the remote interface of the bean use pass-by-reference
-semantics. See "link:application-development-guide/ejb.html#GSDVG00145[Value Added Features]" in {productName} Application Development Guide for more
+semantics. See "link:application-development-guide/ejb.html#value-added-features[Value Added Features]" in {productName} Application Development Guide for more
 details about the pass-by-reference flag.
 
 To specify that an EJB component will use pass by reference semantics,
@@ -738,14 +738,14 @@ transactions.
 
 The following topics are addressed here:
 
-* xref:#abeck[Use Container-Managed Transactions]
-* xref:#abecl[Do Not Encompass User Input Time]
-* xref:#abecm[Identify Non-Transactional Methods]
-* xref:#abecn[Use `TX_REQUIRED` for Long Transaction Chains]
-* xref:#abeco[Use Lowest Cost Database Locking]
-* xref:#abecp[Use XA-Capable Data Sources Only When Needed]
-* xref:#abecq[Configure JDBC Resources as One-Phase Commit Resources]
-* xref:#abecr[Use the Least Expensive Transaction Attribute]
+* xref:#use-container-managed-transactions[Use Container-Managed Transactions]
+* xref:#do-not-encompass-user-input-time[Do Not Encompass User Input Time]
+* xref:#identify-non-transactional-methods[Identify Non-Transactional Methods]
+* xref:#use-tx_required-for-long-transaction-chains[Use `TX_REQUIRED` for Long Transaction Chains]
+* xref:#use-lowest-cost-database-locking[Use Lowest Cost Database Locking]
+* xref:#use-xa-capable-data-sources-only-when-needed[Use XA-Capable Data Sources Only When Needed]
+* xref:#configure-jdbc-resources-as-one-phase-commit-resources[Configure JDBC Resources as One-Phase Commit Resources]
+* xref:#use-the-least-expensive-transaction-attribute[Use the Least Expensive Transaction Attribute]
 
 [[abeck]][[GSPTG00094]][[use-container-managed-transactions]]
 
@@ -841,8 +841,8 @@ attribute that will provide the functionality your application needs:
 Special performance-enhancing techniques are discussed in the following
 sections:
 
-* xref:#abect[Version Consistency]
-* xref:#abecu[Request Partitioning]
+* xref:#version-consistency[Version Consistency]
+* xref:#request-partitioning[Request Partitioning]
 
 [[abect]][[GSPTG00102]][[version-consistency]]
 
@@ -976,7 +976,7 @@ Using the {productName} Administration Console, navigate to the
 Configurations>configuration-name>Thread Pools node.
 Refer to the Administration Console online help for more information.
 Alternatively, you can follow the instructions in
-"link:administration-guide/threadpools.html#GSADG00008[
+"link:administration-guide/threadpools.html#abluc[
 Administering Thread Pools]" in {productName} Administration Guide.
 +
 Configure the threadpools as follows:
@@ -1023,16 +1023,16 @@ an EJB component named "`TheGreeter`" is assigned to a thread pool named `priori
 
 This section provides tips for tuning various specific types of EJB components:
 
-* xref:#abecw[Entity Beans]
-* xref:#abecx[Stateful Session Beans]
-* xref:#abecz[Stateless Session Beans]
-* xref:#abeda[Read-Only Entity Beans]
-* xref:#abedc[Pre-Fetching Container Managed Relationship (CMR) Beans]
+* xref:#entity-beans[Entity Beans]
+* xref:#stateful-session-beans[Stateful Session Beans]
+* xref:#stateless-session-beans[Stateless Session Beans]
+* xref:#read-only-entity-beans[Read-Only Entity Beans]
+* xref:#pre-fetching-container-managed-relationship-cmr-beans[Pre-Fetching Container Managed Relationship (CMR) Beans]
 
 These components can all be configured in the {productName}
 Administration Console from the Configurations>configuration-name>EJB
 Container node. Alternatively, you can perform these configurations by
-following the instructions in "link:ha-administration-guide/rmi-iiop.html#GSHAG00013[
+following the instructions in "link:ha-administration-guide/rmi-iiop.html#fxxqs[
 RMI-IIOP Load Balancing and Failover]"
 in {productName} High Availability Administration Guide.
 
@@ -1278,10 +1278,10 @@ the `Orderlines`. However, you can prevent pre-fetching for the
 The following are some tips to improve the performance of database
 access:
 
-* xref:#abede[Use JDBC Directly]
-* xref:#abedf[Encapsulate Business Logic in Entity EJB Components]
-* xref:#abedg[Close Connections]
-* xref:#abedh[Minimize the Database Transaction Isolation Level]
+* xref:#use-jdbc-directly[Use JDBC Directly]
+* xref:#encapsulate-business-logic-in-entity-ejb-components[Encapsulate Business Logic in Entity EJB Components]
+* xref:#close-connections[Close Connections]
+* xref:#minimize-the-database-transaction-isolation-level[Minimize the Database Transaction Isolation Level]
 
 [[abede]][[GSPTG00109]][[use-jdbc-directly]]
 
@@ -1321,10 +1321,10 @@ carefully analyzing the database table usage patterns.
 To set the database transaction isolation level using the {productName} Administration Console, navigate to the Resources>JDBC>JDBC
 Connection Pools>pool-name node. Refer to the Administration Console
 online help for complete instructions. Alternatively, follow the
-instructions in "link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]"
+instructions in "link:administration-guide/jdbc.html#ablih[Administering Database Connectivity]"
 in {productName} Administration Guide. For more
 information on tuning JDBC connection pools, see
-link:tuning-glassfish.html#abehq[JDBC Connection Pool Settings].
+link:tuning-glassfish.html#jdbc-connection-pool-settings[JDBC Connection Pool Settings].
 
 [[abedi]][[GSPTG00179]][[tuning-message-driven-beans]]
 

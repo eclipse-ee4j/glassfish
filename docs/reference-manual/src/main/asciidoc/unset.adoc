@@ -91,7 +91,7 @@ Command unset executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:export.html#export-1[`export`(1)],
-link:multimode.html#multimode-1[`multimode`(1)]
+link:export.html#export[`export`(1)],
+link:multimode.html#multimode[`multimode`(1)]
 
 

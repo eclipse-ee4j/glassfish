@@ -107,9 +107,9 @@ Command stop-cluster executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-cluster.html#create-cluster-1[`create-cluster`(1)],
-link:delete-cluster.html#delete-cluster-1[`delete-cluster`(1)],
-link:list-clusters.html#list-clusters-1[`list-clusters`(1)],
-link:start-cluster.html#start-cluster-1[`start-cluster`(1)]
+link:create-cluster.html#create-cluster[`create-cluster`(1)],
+link:delete-cluster.html#delete-cluster[`delete-cluster`(1)],
+link:list-clusters.html#list-clusters[`list-clusters`(1)],
+link:start-cluster.html#start-cluster[`start-cluster`(1)]
 
 

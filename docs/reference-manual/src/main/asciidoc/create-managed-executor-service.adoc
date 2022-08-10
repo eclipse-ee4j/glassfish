@@ -165,7 +165,7 @@ Command create-managed-executor-service executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-managed-executor-service.html#delete-managed-executor-service-1[`delete-managed-executor-service`(1)],
-link:list-managed-executor-services.html#list-managed-executor-services-1[`list-managed-executor-services`(1)]
+link:delete-managed-executor-service.html#delete-managed-executor-service[`delete-managed-executor-service`(1)],
+link:list-managed-executor-services.html#list-managed-executor-services[`list-managed-executor-services`(1)]
 
 

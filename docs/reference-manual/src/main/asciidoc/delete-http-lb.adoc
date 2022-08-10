@@ -71,7 +71,7 @@ Command delete-http-lb executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
-link:list-http-lbs.html#list-http-lbs-1[`list-http-lbs`(1)]
+link:create-http-lb.html#create-http-lb[`create-http-lb`(1)],
+link:list-http-lbs.html#list-http-lbs[`list-http-lbs`(1)]
 
 

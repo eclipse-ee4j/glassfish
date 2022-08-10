@@ -17,10 +17,10 @@ This chapter describes the high availability features in {productName} 7.
 
 The following topics are addressed here:
 
-* xref:#abdar[Overview of High Availability]
-* xref:#gaymr[How {productName} Provides High Availability]
-* xref:#gbcot[Recovering from Failures]
-* xref:#abdaz[More Information]
+* xref:#overview-of-high-availability[Overview of High Availability]
+* xref:#how-glassfish-server-provides-high-availability[How {productName} Provides High Availability]
+* xref:#recovering-from-failures[Recovering from Failures]
+* xref:#more-information[More Information]
 
 [[abdar]][[GSHAG00168]][[overview-of-high-availability]]
 
@@ -38,10 +38,10 @@ minimum application downtime and enhanced transactional security.
 
 {productName} provides the following high availability features:
 
-* xref:#gksdm[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
-* xref:#gaynn[High Availability Session Persistence]
-* xref:#gayna[High Availability Java Message Service]
-* xref:#gaymz[RMI-IIOP Load Balancing and Failover]
+* xref:#load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module[Load Balancing With the Apache `mod_jk` or `mod_proxy_ajp` Module]
+* xref:#high-availability-session-persistence[High Availability Session Persistence]
+* xref:#high-availability-java-message-service[High Availability Java Message Service]
+* xref:#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover]
 
 [[gksdm]][[GSHAG00252]][[load-balancing-with-the-apache-mod_jk-or-mod_proxy_ajp-module]]
 
@@ -51,9 +51,9 @@ A common load balancing configuration for {productName} 7 is to use
 the Apache HTTP Server as the web server front-end, and the Apache
 `mod_jk` or `mod_proxy_ajp` module as the connector between the web
 server and {productName}. See
-link:http-load-balancing.html#gksdt[Configuring {productName} with
+link:http-load-balancing.html#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with
 Apache HTTP Server and `mod_jk`] and
-link:http-load-balancing.html#CHDCCGDC[Configuring {productName} with
+link:http-load-balancing.html#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with
 Apache HTTP Server and `mod_proxy_ajp`] for more information.
 
 [[gaynn]][[GSHAG00253]][[high-availability-session-persistence]]
@@ -77,7 +77,7 @@ session can continue without loss of information. High availability is
 implemented in {productName} by means of in-memory session
 replication on {productName} instances running in a cluster.
 
-For more information about in-memory session replication in {productName}, see xref:#gaymr[How {productName} Provides High
+For more information about in-memory session replication in {productName}, see xref:#how-glassfish-server-provides-high-availability[How {productName} Provides High
 Availability]. For detailed instructions on configuring high
 availability session persistence, see
 link:session-persistence-and-failover.html#abdkz[Configuring High
@@ -108,7 +108,7 @@ Message Queue Broker Clusters::
   GlassFish instances they service, or deploying different numbers of
   Message Queue brokers and GlassFish instances. +
   For more information about Message Queue clustering, see
-  link:jms.html#abdbx[Using Message Queue Broker Clusters With {productName}].
+  link:jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using Message Queue Broker Clusters With {productName}].
 Connection Failover::
   The use of Message Queue broker clusters allows connection failover in
   the event of a broker failure. If the primary JMS host (Message Queue
@@ -117,7 +117,7 @@ Connection Failover::
   JMS host list, allowing messaging operations to continue and
   maintaining JMS messaging semantics. +
   For more information about JMS connection failover, see
-  link:jms.html#abdbv[Connection Failover].
+  link:jms.html#connection-failover[Connection Failover].
 
 [[gaymz]][[GSHAG00255]][[rmi-iiop-load-balancing-and-failover]]
 
@@ -158,8 +158,8 @@ link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
 {productName} provides high availability through the following
 subcomponents and features:
 
-* xref:#gjghv[Storage for Session State Data]
-* xref:#abdax[Highly Available Clusters]
+* xref:#storage-for-session-state-data[Storage for Session State Data]
+* xref:#highly-available-clusters[Highly Available Clusters]
 
 [[gjghv]][[GSHAG00256]][[storage-for-session-state-data]]
 
@@ -180,7 +180,7 @@ replica or replicated data when a container needs to retrieve the data.
 
 The use of in-memory replication requires the Group Management Service
 (GMS) to be enabled. For more information about GMS, see
-link:clusters.html#gjfnl[Group Management Service].
+link:clusters.html#group-management-service[Group Management Service].
 
 If server instances in a cluster are located on different hosts, ensure
 that the following prerequisites are met:
@@ -226,7 +226,7 @@ cluster.
 * A particular load balancer can forward requests to server instances on
 multiple clusters. You can use this ability of the load balancer to
 perform an online upgrade without loss of service. For more information,
-see link:rolling-upgrade.html#abdin[Upgrading in Multiple Clusters].
+see link:rolling-upgrade.html#upgrading-in-multiple-clusters[Upgrading in Multiple Clusters].
 * A single cluster can receive requests from multiple load balancers. If
 a cluster is served by more than one load balancer, you must configure
 the cluster in exactly the same way on each load balancer.
@@ -280,10 +280,10 @@ subcomponents after hardware failures such as disk crashes.
 
 The following topics are addressed here:
 
-* xref:#gcmkp[Recovering the Domain Administration Server]
-* xref:#gcmkc[Recovering {productName} Instances]
-* xref:#gcmjs[Recovering the HTTP Load Balancer and Web Server]
-* xref:#gcmjr[Recovering Message Queue]
+* xref:#recovering-the-domain-administration-server[Recovering the Domain Administration Server]
+* xref:#recovering-glassfish-server-instances[Recovering {productName} Instances]
+* xref:#recovering-the-http-load-balancer-and-web-server[Recovering the HTTP Load Balancer and Web Server]
+* xref:#recovering-message-queue[Recovering Message Queue]
 
 [[gcmkp]][[GSHAG00258]][[recovering-the-domain-administration-server]]
 
@@ -298,7 +298,7 @@ Use any of the following methods to recover the DAS:
 
 * Back up the domain periodically, so you have periodic snapshots. After
 a hardware failure, re-create the DAS on a new host, as described in
-"link:administration-guide/domains.html#GSADG00542[Re-Creating the Domain Administration Server (DAS)]"
+"link:administration-guide/domains.html#re-creating-the-domain-administration-server-das[Re-Creating the Domain Administration Server (DAS)]"
 in {productName} Administration Guide.
 * Put the domain installation and configuration on a shared and robust
 file system (NFS for example). If the primary DAS host fails, a second
@@ -311,7 +311,7 @@ Restore it on the new host, assigning it the same network identity.
 
 ==== Recovering {productName} Instances
 
-{productName} provide tools for backing up and restoring {productName} instances. For more information, see link:instances.html#gksdy[To
+{productName} provide tools for backing up and restoring {productName} instances. For more information, see link:instances.html#to-resynchronize-an-instance-and-the-das-offline[To
 Resynchronize an Instance and the DAS Offline].
 
 [[gcmjs]][[GSHAG00260]][[recovering-the-http-load-balancer-and-web-server]]

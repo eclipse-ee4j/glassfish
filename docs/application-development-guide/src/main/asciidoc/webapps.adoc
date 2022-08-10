@@ -17,11 +17,11 @@ This chapter describes how web applications are supported in the {productName}.
 
 The following topics are addressed here:
 
-* xref:#beagj[Using Servlets]
-* xref:#beagu[Using JavaServer Pages]
-* xref:#beaha[Creating and Managing Sessions]
-* xref:#ggrgt[Using Comet]
-* xref:#beaft[Advanced Web Application Features]
+* xref:#using-servlets[Using Servlets]
+* xref:#using-javaserver-pages[Using JavaServer Pages]
+* xref:#creating-and-managing-sessions[Creating and Managing Sessions]
+* xref:#using-comet[Using Comet]
+* xref:#advanced-web-application-features[Advanced Web Application Features]
 
 For general information about web applications, see
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#getting-started-with-web-applications[
@@ -69,8 +69,8 @@ standard-based servlets. In addition, this section describes the
 
 The following topics are addressed here:
 
-* xref:#beagm[Caching Servlet Results]
-* xref:#beagr[About the Servlet Engine]
+* xref:#caching-servlet-results[Caching Servlet Results]
+* xref:#about-the-servlet-engine[About the Servlet Engine]
 
 [[beagm]][[GSDVG00397]][[caching-servlet-results]]
 
@@ -104,14 +104,14 @@ A servlet that uses caching is not portable.
 For Javadoc tool pages relevant to caching servlet results, see the
 `com.sun.appserv.web.cache` package.
 
-For information about JSP caching, see xref:#beagw[JSP Caching].
+For information about JSP caching, see xref:#jsp-caching[JSP Caching].
 
 The following topics are addressed here:
 
-* xref:#beagn[Caching Features]
-* xref:#beago[Default Cache Configuration]
-* xref:#beagp[Caching Example]
-* xref:#beagq[The CacheKeyGenerator Interface]
+* xref:#caching-features[Caching Features]
+* xref:#default-cache-configuration[Default Cache Configuration]
+* xref:#caching-example[Caching Example]
+* xref:#the-cachekeygenerator-interface[The CacheKeyGenerator Interface]
 
 [[beagn]][[GSDVG00251]][[caching-features]]
 
@@ -139,7 +139,7 @@ timestamp from the data source and decide whether to cache the response
 based on that timestamp.
 * To determine cache key generation programmatically, write a class that
 implements the com.sun.appserv.web.cache.CacheKeyGenerator interface.
-See xref:#beagq[The CacheKeyGenerator Interface].
+See xref:#the-cachekeygenerator-interface[The CacheKeyGenerator Interface].
 * All non-ASCII request parameter values specified in cache key elements
 must be URL encoded. The caching subsystem attempts to match the raw
 parameter values in the request query string.
@@ -153,7 +153,7 @@ clears the cache during dynamic deployment or reloading of classes.
 * Results produced by resources that are the target of a
 `RequestDispatcher.include()` or `RequestDispatcher.forward()` call are
 cached if caching has been enabled for those resources. For details, see
-"link:application-deployment-guide/dd-elements.html#GSDPG00101[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#GSDPG00140[dispatcher]"
+"link:application-deployment-guide/dd-elements.html#cache-mapping[cache-mapping]" in {productName} Application Deployment Guide and "link:../application-deployment-guide/dd-elements.html#dispatcher[dispatcher]"
 in {productName} Application Deployment Guide.
 These are elements in the `glassfish-web.xml` file.
 
@@ -232,7 +232,7 @@ Here is an example cache element in the `glassfish-web.xml` file:
 ----
 
 For more information about the `glassfish-web.xml` caching settings, see
-"link:application-deployment-guide/dd-elements.html#GSDPG00097[cache]" in {productName}
+"link:application-deployment-guide/dd-elements.html#cache[cache]" in {productName}
 Application Deployment Guide.
 
 [[beagq]][[GSDVG00254]][[the-cachekeygenerator-interface]]
@@ -247,7 +247,7 @@ attribute in the `ServletContext`.
 The name of the context attribute is configurable as the `value` of the
 `cacheKeyGeneratorAttrName` property in the `default-helper` element of
 the `glassfish-web.xml` deployment descriptor. For more information, see
-"link:application-deployment-guide/dd-elements.html#GSDPG00136[default-helper]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#default-helper[default-helper]" in {productName} Application Deployment Guide.
 
 [[beagr]][[GSDVG00398]][[about-the-servlet-engine]]
 
@@ -260,8 +260,8 @@ configuration management.
 
 The following topics are addressed here:
 
-* xref:#beags[Instantiating and Removing Servlets]
-* xref:#beagt[Request Handling]
+* xref:#instantiating-and-removing-servlets[Instantiating and Removing Servlets]
+* xref:#request-handling[Request Handling]
 
 [[beags]][[GSDVG00255]][[instantiating-and-removing-servlets]]
 
@@ -330,9 +330,9 @@ templates in a {productName} web application.
 
 The following topics are addressed here:
 
-* xref:#beagv[JSP Tag Libraries and Standard Portable Tags]
-* xref:#beagw[JSP Caching]
-* xref:#beagz[Options for Compiling JSP Files]
+* xref:#jsp-tag-libraries-and-standard-portable-tags[JSP Tag Libraries and Standard Portable Tags]
+* xref:#jsp-caching[JSP Caching]
+* xref:#options-for-compiling-jsp-files[Options for Compiling JSP Files]
 
 [[beagv]][[GSDVG00399]][[jsp-tag-libraries-and-standard-portable-tags]]
 
@@ -349,7 +349,7 @@ are automatically available to all web applications.
 
 However, the as-install``/lib/jspcachtags.jar`` tag library for JSP
 caching is not automatically available to web applications. See
-xref:#beagw[JSP Caching], next.
+xref:#jsp-caching[JSP Caching], next.
 
 [[beagw]][[GSDVG00400]][[jsp-caching]]
 
@@ -363,13 +363,13 @@ weather report result for 30 minutes, and so on.
 
 The following topics are addressed here:
 
-* xref:#gaxbq[Enabling JSP Caching]
-* xref:#gaxcr[Caching Scope]
-* xref:#beagx[The `cache` Tag]
-* xref:#beagy[The `flush` Tag]
+* xref:#enabling-jsp-caching[Enabling JSP Caching]
+* xref:#caching-scope[Caching Scope]
+* xref:#the-cache-tag[The `cache` Tag]
+* xref:#the-flush-tag[The `flush` Tag]
 
 For more information about response caching as it pertains to servlets,
-see xref:#beagm[Caching Servlet Results].
+see xref:#caching-servlet-results[Caching Servlet Results].
 
 [[gaxbq]][[GSDVG00257]][[enabling-jsp-caching]]
 
@@ -500,7 +500,7 @@ programmatically refresh the cache immediately regardless of the
 `timeout` setting.
 
 |`scope` |`application` |(optional) The scope of the cache. Can be
-`request`, `session`, or `application`. See xref:#gaxcr[Caching Scope].
+`request`, `session`, or `application`. See xref:#caching-scope[Caching Scope].
 |===
 
 
@@ -561,7 +561,7 @@ specified, a number is generated according to the position of the tag in
 the page.
 
 |`scope` |`application` |(optional) The scope of the cache. Can be
-`request`, `session`, or `application`. See xref:#gaxcr[Caching Scope].
+`request`, `session`, or `application`. See xref:#caching-scope[Caching Scope].
 |===
 
 
@@ -609,8 +609,8 @@ interactions.
 
 The following topics are addressed here:
 
-* xref:#beahb[Configuring Sessions]
-* xref:#beahf[Session Managers]
+* xref:#configuring-sessions[Configuring Sessions]
+* xref:#session-managers[Session Managers]
 
 [[beahb]][[GSDVG00402]][[configuring-sessions]]
 
@@ -618,11 +618,11 @@ The following topics are addressed here:
 
 The following topics are addressed here:
 
-* xref:#beahc[HTTP Sessions, Cookies, and URL Rewriting]
-* xref:#beahd[Coordinating Session Access]
-* xref:#ghmih[Saving Sessions During Redeployment]
-* xref:#gixeb[Logging Session Attributes]
-* xref:#beahe[Distributed Sessions and Persistence]
+* xref:#http-sessions-cookies-and-url-rewriting[HTTP Sessions, Cookies, and URL Rewriting]
+* xref:#coordinating-session-access[Coordinating Session Access]
+* xref:#saving-sessions-during-redeployment[Saving Sessions During Redeployment]
+* xref:#logging-session-attributes[Logging Session Attributes]
+* xref:#distributed-sessions-and-persistence[Distributed Sessions and Persistence]
 
 [[beahc]][[GSDVG00261]][[http-sessions-cookies-and-url-rewriting]]
 
@@ -632,11 +632,11 @@ To configure whether and how HTTP sessions use cookies and URL
 rewriting, edit the `session-properties` and `cookie-properties`
 elements in the `glassfish-web.xml` file for an individual web
 application. For more about the properties you can configure, see
-"link:application-deployment-guide/dd-elements.html#GSDPG00276[session-properties]" in {productName} Application Deployment Guide and
-"link:application-deployment-guide/dd-elements.html#GSDPG00130[cookie-properties]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#session-properties[session-properties]" in {productName} Application Deployment Guide and
+"link:application-deployment-guide/dd-elements.html#cookie-properties[cookie-properties]" in {productName} Application Deployment Guide.
 
 For information about configuring default session properties for the
-entire web container, see xref:#beagc[Using the `default-web.xml` File]
+entire web container, see xref:#GSDVG00410[Using the `default-web.xml` File]
 and the link:ha-administration-guide.html#GSHAG[{productName} High
 Availability Administration Guide].
 
@@ -646,7 +646,7 @@ Availability Administration Guide].
 
 Make sure that multiple threads don't simultaneously modify the same
 session object in conflicting ways. If the persistence type is
-`replicated` (see xref:#gdshu[The `replicated` Persistence Type]), the
+`replicated` (see xref:#the-replicated-persistence-type[The `replicated` Persistence Type]), the
 following message in the log file indicates that this might be
 happening:
 
@@ -723,7 +723,7 @@ descriptor file must have the `distributable` subelement specified.
 * The web application uses high-availability session persistence. If a
 non-distributable web application is configured to use high-availability
 session persistence, a warning is written to the server log, and the
-session persistence type reverts to `memory`. See xref:#gdshu[The
+session persistence type reverts to `memory`. See xref:#the-replicated-persistence-type[The
 `replicated` Persistence Type].
 * All objects bound into a distributed session must be of the types
 listed in xref:#fvyem[Table 7-3].
@@ -762,10 +762,10 @@ example, failover might work because the class implementing that type is
 serializable.
 
 For more information about the `InitialContext`, see
-link:jndi.html#beans[Accessing the Naming Context]. For more information
+link:jndi.html#accessing-the-naming-context[Accessing the Naming Context]. For more information
 about transaction recovery, see link:transaction-service.html#beanm[Using
 the Transaction Service]. For more information about Administered
-Objects, see "link:administration-guide/jms.html#GSADG00599[Administering JMS Physical Destinations]"
+Objects, see "link:administration-guide/jms.html#administering-jms-physical-destinations[Administering JMS Physical Destinations]"
 in {productName} Administration Guide.
 
 [[fvyem]]
@@ -815,10 +815,10 @@ does not accept cookies.
 the `session-manager` element's `persistence-type` attribute in the
 `glassfish-web.xml` file:
 
-* xref:#beahg[The `memory` Persistence Type], the default
-* xref:#beahh[The `file` Persistence Type], which uses a file to store
+* xref:#the-memory-persistence-type[The `memory` Persistence Type], the default
+* xref:#the-file-persistence-type[The `file` Persistence Type], which uses a file to store
 session data
-* xref:#gdshu[The `replicated` Persistence Type], which uses other
+* xref:#the-replicated-persistence-type[The `replicated` Persistence Type], which uses other
 servers in the cluster for session persistence
 
 
@@ -830,7 +830,7 @@ used.
 ====
 
 
-For more information, see "link:application-deployment-guide/dd-elements.html#GSDPG00275[session-manager]" in
+For more information, see "link:application-deployment-guide/dd-elements.html#session-manager[session-manager]" in
 {productName} Application Deployment Guide.
 
 [[beahg]][[GSDVG00266]][[the-memory-persistence-type]]
@@ -867,7 +867,7 @@ web application.
 
 The only manager property that the `memory` persistence type supports is
 `sessionFilename`, which is listed under
-"link:application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
+"link:application-deployment-guide/dd-elements.html#manager-properties[manager-properties]" in {productName} Application Deployment Guide. The `sessionFilename` property
 specifies the name of the file where sessions are serialized and
 persisted if the web application or the server is stopped. To disable
 this behavior, specify an empty string as the value of
@@ -895,7 +895,7 @@ with a single server instance.
 ====
 Make sure the `delete` option is set in the `server.policy` file, or
 expired file-based sessions might not be deleted properly. For more
-information about `server.policy`, see link:securing-apps.html#beabx[The
+information about `server.policy`, see link:securing-apps.html#GSDVG00121[The
 `server.policy` File].
 ====
 
@@ -922,9 +922,9 @@ container availability settings for the web application.
 ----
 
 The `file` persistence type supports all the manager properties listed
-under "link:application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
+under "link:application-deployment-guide/dd-elements.html#manager-properties[manager-properties]" in {productName} Application Deployment Guide except `sessionFilename`,
 and supports the `directory` store property listed under
-"link:application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
@@ -937,7 +937,7 @@ Guide].
 The replicated persistence type uses other servers in the cluster for
 session persistence. Clustered server instances replicate session state.
 Each backup instance stores the replicated data in memory. This allows
-sessions to be distributed. For details, see xref:#beahe[Distributed
+sessions to be distributed. For details, see xref:#distributed-sessions-and-persistence[Distributed
 Sessions and Persistence]. In addition, you can configure the frequency
 and scope of session persistence. The other servers are also used as the
 passivation and activation store. Use this option in a production
@@ -995,9 +995,9 @@ application.
 ----
 
 The `replicated` persistence type supports all the manager properties
-listed under "link:application-deployment-guide/dd-elements.html#GSDPG00192[manager-properties]" in {productName} Application Deployment Guide except
+listed under "link:application-deployment-guide/dd-elements.html#manager-properties[manager-properties]" in {productName} Application Deployment Guide except
 `sessionFilename`, and supports the `persistenceScope` store property
-listed under "link:application-deployment-guide/dd-elements.html#GSDPG00279[store-properties]" in {productName} Application Deployment Guide.
+listed under "link:application-deployment-guide/dd-elements.html#store-properties[store-properties]" in {productName} Application Deployment Guide.
 
 For more information about the `glassfish-web.xml` file, see the
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
@@ -1029,9 +1029,9 @@ and deploy a Comet-enabled application with the {productName}.
 
 The following topics are addressed here:
 
-* xref:#ggrgy[Introduction to Comet]
-* xref:#ghgxk[Grizzly Comet]
-* xref:#ghgxn[Bayeux Protocol]
+* xref:#introduction-to-comet[Introduction to Comet]
+* xref:#grizzly-comet[Grizzly Comet]
+* xref:#bayeux-protocol[Bayeux Protocol]
 
 [[ggrgy]][[GSDVG00404]][[introduction-to-comet]]
 
@@ -1091,10 +1091,10 @@ thread for each of them.
 
 Grizzly supports two different implementations of Comet:
 
-* xref:#ghgxk[Grizzly Comet] — Based on ARP, this includes a set of APIs
+* xref:#grizzly-comet[Grizzly Comet] — Based on ARP, this includes a set of APIs
 that you use from a web component to enable Comet functionality in your
 web application. Grizzly Comet is specific to the {productName}.
-* xref:#ghgxn[Bayeux Protocol] — Often referred to as `Cometd`, it
+* xref:#bayeux-protocol[Bayeux Protocol] — Often referred to as `Cometd`, it
 consists of the JSON-based Bayeux message protocol, a set of Dojo or
 Ajax libraries, and an event handler. The Bayeux protocol uses a
 publish/subscribe model for server/client communication. The Bayeux
@@ -1249,9 +1249,9 @@ the Bayeux protocol, then write and deploy the client.
 
 The following topics are addressed here:
 
-* xref:#ghhaw[Enabling Comet]
-* xref:#ghhap[To Configure the `web.xml` File]
-* xref:#ghhtv[To Write, Deploy, and Run the Client]
+* xref:#enabling-comet[Enabling Comet]
+* xref:#GSDVG00067[To Configure the `web.xml` File]
+* xref:#to-write-deploy-and-run-the-client[To Write, Deploy, and Run the Client]
 
 [[ghhaw]][[GSDVG00280]][[enabling-comet]]
 
@@ -1378,19 +1378,19 @@ For more information about the Dojo toolkit, see
 
 The following topics are addressed here:
 
-* xref:#beafu[Internationalization Issues]
-* xref:#gilyj[Virtual Server Properties]
-* xref:#beagb[Class Loader Delegation]
-* xref:#beagc[Using the `default-web.xml` File]
-* xref:#beagd[Configuring Logging and Monitoring in the Web Container]
-* xref:#beage[Configuring Idempotent URL Requests]
-* xref:#beagi[Header Management]
-* xref:#geqrh[Configuring Valves and Catalina Listeners]
-* xref:#geqpl[Alternate Document Roots]
-* xref:#geurd[Using a context.xml File]
-* xref:#gezcx[Enabling WebDav]
-* xref:#ghepd[Using SSI]
-* xref:#ghepi[Using CGI]
+* xref:#internationalization-issues[Internationalization Issues]
+* xref:#virtual-server-properties[Virtual Server Properties]
+* xref:#class-loader-delegation[Class Loader Delegation]
+* xref:#GSDVG00410[Using the `default-web.xml` File]
+* xref:#configuring-logging-and-monitoring-in-the-web-container[Configuring Logging and Monitoring in the Web Container]
+* xref:#configuring-idempotent-url-requests[Configuring Idempotent URL Requests]
+* xref:#header-management[Header Management]
+* xref:#configuring-valves-and-catalina-listeners[Configuring Valves and Catalina Listeners]
+* xref:#alternate-document-roots[Alternate Document Roots]
+* xref:#GSDVG00416[Using a context.xml File]
+* xref:#enabling-webdav[Enabling WebDav]
+* xref:#using-ssi[Using SSI]
+* xref:#using-cgi[Using CGI]
 
 [[beafu]][[GSDVG00407]][[internationalization-issues]]
 
@@ -1398,8 +1398,8 @@ The following topics are addressed here:
 
 The following topics are addressed here:
 
-* xref:#beafv[The Server's Default Locale]
-* xref:#beafw[Servlet Character Encoding]
+* xref:#the-servers-default-locale[The Server's Default Locale]
+* xref:#servlet-character-encoding[Servlet Character Encoding]
 
 [[beafv]][[GSDVG00281]][[the-servers-default-locale]]
 
@@ -1437,7 +1437,7 @@ the `glassfish-web.xml` file
 * The default, which is `ISO-8859-1`
 
 For details about the `parameter-encoding` element, see
-"link:application-deployment-guide/dd-elements.html#GSDPG00218[parameter-encoding]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#parameter-encoding[parameter-encoding]" in {productName} Application Deployment Guide.
 
 [[beafy]][[GSDVG00032]][[servlet-response]]
 
@@ -1465,7 +1465,7 @@ You can set virtual server properties in the following ways:
 asadmin create-virtual-server --hosts localhost --property authRealm=ldap MyVS
 ----
 For details and a complete list of virtual server properties, see
-link:reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
+link:reference-manual/create-virtual-server.html#create-virtual-server[`create-virtual-server`(1)].
 * You can define virtual server properties using the `asadmin set`
 command. For example:
 +
@@ -1473,7 +1473,7 @@ command. For example:
 ----
 asadmin set server-config.http-service.virtual-server.MyVS.property.authRealm="ldap"
 ----
-For details, see link:reference-manual/set.html#GSRFM00226[`set`(1)].
+For details, see link:reference-manual/set.html#set[`set`(1)].
 * You can define virtual server properties using the Administration
 Console. Select the HTTP Service component under the relevant
 configuration, select Virtual Servers, and select the desired virtual
@@ -1483,7 +1483,7 @@ virtual server properties, click the Help button in the Administration
 Console.
 
 Some virtual server properties can be set for a specific web
-application. For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in
+application. For details, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in
 {productName} Application Deployment Guide.
 
 [[beagb]][[GSDVG00409]][[class-loader-delegation]]
@@ -1592,8 +1592,8 @@ request.
 
 The following topics are addressed here:
 
-* xref:#beagf[Specifying an Idempotent URL]
-* xref:#beagg[Characteristics of an Idempotent URL]
+* xref:#specifying-an-idempotent-url[Specifying an Idempotent URL]
+* xref:#characteristics-of-an-idempotent-url[Characteristics of an Idempotent URL]
 
 [[beagf]][[GSDVG00283]][[specifying-an-idempotent-url]]
 
@@ -1608,7 +1608,7 @@ safely retried in `idempotent-url-pattern` elements in the
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
 
-For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00164[idempotent-url-pattern]" in {productName} Application Deployment Guide.
+For details, see "link:application-deployment-guide/dd-elements.html#idempotent-url-pattern[idempotent-url-pattern]" in {productName} Application Deployment Guide.
 
 If none of the server instances can successfully serve the request, an
 error page is returned.
@@ -1689,7 +1689,7 @@ module look like this:
 ----
 
 You can define these same properties for a virtual server. For more
-information, see xref:#gilyj[Virtual Server Properties].
+information, see xref:#virtual-server-properties[Virtual Server Properties].
 
 [[geqpl]][[GSDVG00415]][[alternate-document-roots]]
 
@@ -1705,7 +1705,7 @@ server, use the `alternatedocroot_n` property, where n is a positive
 integer that allows specification of more than one. This property can be
 a subelement of a `glassfish-web-app` element in the `glassfish-web.xml`
 file or a virtual server property. For more information about these
-elements, see "link:application-deployment-guide/dd-elements.html#GSDPG00161[glassfish-web-app]" in {productName} Application Deployment Guide.
+elements, see "link:application-deployment-guide/dd-elements.html#glassfish-web-app[glassfish-web-app]" in {productName} Application Deployment Guide.
 
 A virtual server's alternate docroots are considered only if a request
 does not map to any of the web modules deployed on that virtual server.
@@ -1852,7 +1852,7 @@ To define a `context.xml` file for a specific web application, place the
 file in the `META-INF` directory and name it `context.xml`.
 
 For more information about virtual server properties, see
-xref:#gilyj[Virtual Server Properties]. For more information about the
+xref:#virtual-server-properties[Virtual Server Properties]. For more information about the
 `context.xml` file, see
 http://tomcat.apache.org/tomcat-5.5-doc/config/context.html[The Context
 Container]
@@ -1945,7 +1945,7 @@ asadmin create-file-user --groups Admin --authrealmname default admin
 ----
 
 Enable the security manager as described in
-link:securing-apps.html#gbyah[Enabling and Disabling the Security
+link:securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
 Manager].
 
 You can now use any WebDav client by connecting to the WebDav servlet
@@ -2062,7 +2062,7 @@ Package the CGI program under the `cgiPathPrefix`. The default
 `cgiPathPrefix` is `WEB-INF/cgi`. For security, it is highly recommended
 that the contents and binaries of CGI programs be prohibited from direct
 viewing or download. For information about hiding directory listings,
-see xref:#beagc[Using the `default-web.xml` File].
+see xref:#GSDVG00410[Using the `default-web.xml` File].
 
 Invoke the CGI program using a URL of the following format:
 

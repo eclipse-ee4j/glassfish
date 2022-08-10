@@ -91,7 +91,7 @@ Command create-module-config executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-module-config.html#delete-module-config-1[`delete-module-config`(1)],
-link:get-active-module-config.html#get-active-module-config-1[`get-active-module-config`(1)]
+link:delete-module-config.html#delete-module-config[`delete-module-config`(1)],
+link:get-active-module-config.html#get-active-module-config[`get-active-module-config`(1)]
 
 

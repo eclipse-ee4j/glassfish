@@ -20,9 +20,9 @@ performance, clustering, security, and integration capabilities.
 
 The following topics are addressed here:
 
-* xref:#abfar[Jakarta EE Platform Overview]
-* xref:#abfay[{productName} Components]
-* xref:#abfca[Configuration Roadmap for High Availability of {productName}]
+* xref:#java-ee-platform-overview[Jakarta EE Platform Overview]
+* xref:#glassfish-server-components[{productName} Components]
+* xref:#configuration-roadmap-for-high-availability-of-glassfish-server[Configuration Roadmap for High Availability of {productName}]
 
 [[abfar]][[GSPLG00016]][[java-ee-platform-overview]]
 
@@ -172,13 +172,13 @@ This section describes the components in {productName}.
 
 The following topics are addressed here:
 
-* xref:#abfaz[Server Instances]
-* xref:#abfba[Administrative Domains]
-* xref:#abfbc[Clusters]
-* xref:#abfbe[Named Configurations]
-* xref:#abfbf[HTTP Load Balancer Plug-in]
-* xref:#abfbh[IIOP Load Balancing in a Cluster]
-* xref:#abfbi[Message Queue and JMS Resources]
+* xref:#server-instances[Server Instances]
+* xref:#administrative-domains[Administrative Domains]
+* xref:#clusters[Clusters]
+* xref:#named-configurations[Named Configurations]
+* xref:#http-load-balancer-plug-in[HTTP Load Balancer Plug-in]
+* xref:#iiop-load-balancing-in-a-cluster[IIOP Load Balancing in a Cluster]
+* xref:#message-queue-and-jms-resources[Message Queue and JMS Resources]
 
 The administration tools, such as the browser-based Administration
 Console, communicate with the domain administration server (DAS), which
@@ -371,7 +371,7 @@ balancer configuration file to your web server `config` directory. An
 administrator can create a script to automate this entire process.
 
 For more details and complete configuration instructions, see
-"link:ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/http-load-balancing.html#abdgs[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 [[abfbg]][[GSPLG00051]][[session-persistence]]
 
@@ -417,8 +417,8 @@ Checking an SFSB's state for changes that need to be saved is called
 checkpointing. When enabled, checkpointing generally occurs after any
 transaction involving the SFSB is completed, even if the transaction
 rolls back. For more information on developing stateful session beans,
-see "link:application-development-guide/ejb.html#GSDVG00147[Using Session Beans]" in {productName} Application Development Guide. For more information on
-enabling SFSB failover, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00211[Stateful Session Bean
+see "link:application-development-guide/ejb.html#using-session-beans[Using Session Beans]" in {productName} Application Development Guide. For more information on
+enabling SFSB failover, see "link:ha-administration-guide/session-persistence-and-failover.html#stateful-session-bean-failover[Stateful Session Bean
 Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -427,7 +427,7 @@ session persistence configuration settings also affect the session
 information in each request.
 
 For more information on configuring session persistence, see
-"link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session Persistence and
+"link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High Availability Session Persistence and
 Failover]" in {productName} High Availability
 Administration Guide.
 
@@ -502,7 +502,7 @@ about administering Message Queue, see the link:../openmq/mq-admin-guide.html#GM
 Queue Administration Guide].
 
 For information on deploying JMS applications and Message Queue
-clustering for message failover, see link:planning.html#abfdn[Planning
+clustering for message failover, see link:planning.html#planning-message-queue-broker-deployment[Planning
 Message Queue Broker Deployment].
 
 [[abfca]][[GSPLG00018]][[configuration-roadmap-for-high-availability-of-glassfish-server]]
@@ -518,12 +518,12 @@ cross-references to detailed instructions for performing each task.
 
 1. Determine your requirements and goals for performance and QoS. +
 For more information, see the following documentation:
-* link:planning.html#abfcc[Establishing Performance Goals]
-* link:planning.html#abfcp[Planning the Network Configuration]
-* link:planning.html#abfcy[Planning for Availability]
+* link:planning.html#establishing-performance-goals[Establishing Performance Goals]
+* link:planning.html#planning-the-network-configuration[Planning the Network Configuration]
+* link:planning.html#planning-for-availability[Planning for Availability]
 
 2. Size your system. +
-For more information, see link:planning.html#abfdg[Design Decisions].
+For more information, see link:planning.html#design-decisions[Design Decisions].
 
 3. Install {productName} and related subcomponents such as a web server. +
 For more information, see the following documentation:
@@ -534,7 +534,7 @@ iPlanet Web Server 7.0.9 Installation and Migration Guide
 
 4. If you plan to administer your clusters centrally, set up secure
 shell (SSH) for centralized administration. +
-For more information, see "link:ha-administration-guide/ssh-setup.html#GSHAG00003[
+For more information, see "link:ha-administration-guide/ssh-setup.html#gkshg[
 Setting Up SSH for Centralized Administration]" in {productName}
 High Availability Administration Guide.
 
@@ -542,26 +542,26 @@ High Availability Administration Guide.
 virtual servers as required. +
 For more information, see the following documentation:
 * "link:administration-guide/domains.html#administering-domains[Administering Domains]" in {productName} Administration Guide
-* "link:ha-administration-guide/nodes.html#GSHAG00004[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
-* "link:ha-administration-guide/clusters.html#GSHAG00005[Administering {productName} Clusters]" in
+* "link:ha-administration-guide/nodes.html#gkrle[Administering {productName} Nodes]" in {productName} High Availability Administration Guide
+* "link:ha-administration-guide/clusters.html#gjfom[Administering {productName} Clusters]" in
 {productName} High Availability Administration Guide
-* "link:ha-administration-guide/instances.html#GSHAG00006[Administering {productName} Instances]" in
+* "link:ha-administration-guide/instances.html#gkrbv[Administering {productName} Instances]" in
 {productName} High Availability Administration Guide
-* "link:administration-guide/http_https.html#GSADG00589[Administering Virtual Servers]" in {productName} Administration Guide
+* "link:administration-guide/http_https.html#administering-virtual-servers[Administering Virtual Servers]" in {productName} Administration Guide
 
 6. Configure your load balancer. +
-For more information, see "link:administration-guide/webapps.html#GSADG00552[Administering mod_jk]" in
+For more information, see "link:administration-guide/webapps.html#administering-mod_jk[Administering mod_jk]" in
 {productName} Administration Guide.
 
 7. Configure the web container and EJB container for replicated session persistence. +
-For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High
+For more information, see "link:ha-administration-guide/session-persistence-and-failover.html#abdkz[Configuring High
 Availability Session Persistence and Failover]" in {productName} High Availability Administration Guide.
 
 8. If you are using messaging extensively, configure Java Message
 Service (JMS) clusters for failover . +
 For more information, see the following documentation:
-* link:planning.html#abfdn[Planning Message Queue Broker Deployment]
-* "link:ha-administration-guide/jms.html#GSHAG00012[Configuring Java Message Service High Availability]"
+* link:planning.html#planning-message-queue-broker-deployment[Planning Message Queue Broker Deployment]
+* "link:ha-administration-guide/jms.html#abdbk[Configuring Java Message Service High Availability]"
 in {productName} High Availability Administration
 Guide
 * link:../openmq/mq-admin-guide.html#GMADG[Open Message Queue Administration Guide]

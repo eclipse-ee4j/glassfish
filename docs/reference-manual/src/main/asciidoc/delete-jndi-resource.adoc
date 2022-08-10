@@ -92,7 +92,7 @@ Command delete-jndi-resource executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jndi-resource.html#create-jndi-resource-1[`create-jndi-resource`(1)],
-link:list-jndi-resources.html#list-jndi-resources-1[`list-jndi-resources`(1)]
+link:create-jndi-resource.html#create-jndi-resource[`create-jndi-resource`(1)],
+link:list-jndi-resources.html#list-jndi-resources[`list-jndi-resources`(1)]
 
 

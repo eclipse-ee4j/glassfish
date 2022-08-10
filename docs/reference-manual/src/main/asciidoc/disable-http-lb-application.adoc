@@ -103,6 +103,6 @@ Command disable-http-lb-application executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:enable-http-lb-application.html#enable-http-lb-application-1[`enable-http-lb-application`(1)]
+link:enable-http-lb-application.html#enable-http-lb-application[`enable-http-lb-application`(1)]
 
 

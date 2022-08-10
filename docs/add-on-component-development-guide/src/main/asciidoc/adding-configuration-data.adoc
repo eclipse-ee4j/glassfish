@@ -25,15 +25,15 @@ other {productName} components.
 
 The following topics are addressed here:
 
-* xref:#gjrdv[How {productName} Stores Configuration Data]
-* xref:#gjlop[Defining an Element]
-* xref:#gjlpb[Defining an Attribute of an Element]
-* xref:#gjlov[Defining a Subelement]
-* xref:#gjlpu[Validating Configuration Data]
-* xref:#gjrdj[Initializing a Component's Configuration Data]
-* xref:#gjrcz[Creating a Transaction to Update Configuration Data]
-* xref:#gjmkt[Dotted Names and REST URLs of Configuration Attributes]
-* xref:#gkaal[Examples of Adding Configuration Data for a Component]
+* xref:#how-glassfish-server-stores-configuration-data[How {productName} Stores Configuration Data]
+* xref:#defining-an-element[Defining an Element]
+* xref:#defining-an-attribute-of-an-element[Defining an Attribute of an Element]
+* xref:#defining-a-subelement[Defining a Subelement]
+* xref:#validating-configuration-data[Validating Configuration Data]
+* xref:#initializing-a-components-configuration-data[Initializing a Component's Configuration Data]
+* xref:#creating-a-transaction-to-update-configuration-data[Creating a Transaction to Update Configuration Data]
+* xref:#dotted-names-and-rest-urls-of-configuration-attributes[Dotted Names and REST URLs of Configuration Attributes]
+* xref:#examples-of-adding-configuration-data-for-a-component[Examples of Adding Configuration Data for a Component]
 
 [[gjrdv]][[GSACG00121]][[how-glassfish-server-stores-configuration-data]]
 
@@ -247,7 +247,7 @@ the `network-listener` element, which is a subelement of
 ==== To Define a Subelement
 
 1. Define an interface to represent the subelement.
-For more information, see xref:#gjlop[Defining an Element].
+For more information, see xref:#defining-an-element[Defining an Element].
 The interface that represents the subelement must extend the
 `org.jvnet.hk2.config.ConfigBeanProxy` interface.
 
@@ -403,8 +403,8 @@ initialize the component's configuration data.
 Initializing a component's configuration data involves the following
 tasks:
 
-* xref:#gkbgi[To Define a Component's Initial Configuration Data]
-* xref:#gjses[To Write a Component's Initial Configuration Data to the
+* xref:#to-define-a-components-initial-configuration-data[To Define a Component's Initial Configuration Data]
+* xref:#GSACG00077[To Write a Component's Initial Configuration Data to the
 `domain.xml` File]
 
 [[gkbgi]][[GSACG00076]][[to-define-a-components-initial-configuration-data]]
@@ -561,7 +561,7 @@ element.
 
 Creating a transaction to update configuration data enables the data to
 be updated without the need to specify a dotted name in the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand. You can make the transaction
+link:reference-manual/set.html#set[`set`] subcommand. You can make the transaction
 available to system administrators in the following ways:
 
 * By adding an link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommand. If you are adding
@@ -649,8 +649,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 === Dotted Names and REST URLs of Configuration Attributes
 
-The {productName} administrative subcommands link:reference-manual/get.html#GSRFM00139[`get`],
-link:reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a
+The {productName} administrative subcommands link:reference-manual/get.html#get[`get`],
+link:reference-manual/list.html#list[`list`], and olink:GSRFM00226[`set`] locate a
 configuration attribute through the dotted name of the attribute. The
 dotted name of an attribute of a configuration element is as follows:
 
@@ -716,7 +716,7 @@ This example also shows an XML data fragment for initializing an
 element. See xref:#gkamk[Example 6-13].
 
 Code for the Greeter Container component is shown in
-link:adding-container-capabilities.html#gkane[Example of Adding Container
+link:adding-container-capabilities.html#example-of-adding-container-capabilities[Example of Adding Container
 Capabilities].
 
 Code for an `asadmin` subcommand that updates the configuration data in

@@ -37,7 +37,7 @@ is being uninstalled.
 ====
 To uninstall {productName} software on hosts that use secure shell
 (SSH), use the
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
+link:uninstall-node-ssh.html#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 subcommand.
 ====
 
@@ -159,7 +159,7 @@ Command uninstall-node-dcom executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
+link:install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)],
+link:uninstall-node-ssh.html#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 
 

@@ -77,7 +77,7 @@ name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To delete multiple versions, you can use an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
+  application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[
   Module and Application Versions]" in {productName} Application
   Deployment Guide.
 
@@ -133,9 +133,9 @@ Command undeploy executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy-1[`deploy`(1)],
-link:list-components.html#list-components-1[`list-components`(1)],
-link:redeploy.html#redeploy-1[`redeploy`(1)]
+link:deploy.html#deploy[`deploy`(1)],
+link:list-components.html#list-components[`list-components`(1)],
+link:redeploy.html#redeploy[`redeploy`(1)]
 
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]

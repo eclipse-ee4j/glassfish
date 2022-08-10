@@ -56,7 +56,7 @@ asadmin-options::
 --
 +
 For more information about these directories, see
-  "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
+  "link:application-development-guide/class-loaders.html#beade[Class Loaders]" in {productName} Application Development Guide.
 
 === Examples
 
@@ -88,9 +88,9 @@ Command list-libraries executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:add-library.html#add-library-1[`add-library`(1)],
-link:remove-library.html#remove-library-1[`remove-library`(1)]
+link:add-library.html#add-library[`add-library`(1)],
+link:remove-library.html#remove-library[`remove-library`(1)]
 
-"link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
+"link:application-development-guide/class-loaders.html#beade[Class Loaders]" in {productName} Application Development Guide
 
 

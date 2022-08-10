@@ -175,10 +175,10 @@ Command validate-dcom executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:ping-node-dcom.html#ping-node-dcom-1[`ping-node-dcom`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)]
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:delete-node-dcom.html#delete-node-dcom[`delete-node-dcom`(1)],
+link:list-nodes.html#list-nodes[`list-nodes`(1)],
+link:ping-node-dcom.html#ping-node-dcom[`ping-node-dcom`(1)],
+link:update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)]
 
 

@@ -74,7 +74,7 @@ Use the `list-batch-jobs` subcommand in remote mode to list batch jobs
 and job details.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List batch jobs by using the link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-jobs`]
+2. List batch jobs by using the link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-batch-jobs`]
 subcommand.
 
 [[sthref67]]
@@ -111,7 +111,7 @@ batch job executions and execution details.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List batch job executions by using the
-link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-job-executions`] subcommand.
+link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-batch-job-executions`] subcommand.
 
 [[sthref68]]
 Example 10-2 Listing Batch Job Executions
@@ -148,7 +148,7 @@ and step details for a specific batch job execution.
 2. List the execution ID of an execution by using the
 `list-batch-job-executions` subcommand.
 3. List steps for a specific batch job execution by using the
-link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-job-steps`] subcommand.
+link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-batch-job-steps`] subcommand.
 
 [[sthref69]]
 Example 10-3 Listing Batch Job Steps
@@ -219,7 +219,7 @@ display the configuration of the batch runtime.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Display the configuration of the batch runtime by using the
-link:reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-runtime-configuration`] subcommand.
+link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`list-batch-runtime-configuration`] subcommand.
 3. If desired, use the `get` subcommand to view the attributes of the
 data source and managed executor service resources.
 +
@@ -277,7 +277,7 @@ submitted to the batch runtime without affecting execution of the job.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Configure the batch runtime by using the
-link:reference-manual/list-jdbc-resources.html#GSRFM00174[`set-batch-runtime-configuration`] subcommand.
+link:reference-manual/list-jdbc-resources.html#list-jdbc-resources[`set-batch-runtime-configuration`] subcommand.
 
 [[sthref71]]
 Example 10-5 Configuring the Batch Runtime

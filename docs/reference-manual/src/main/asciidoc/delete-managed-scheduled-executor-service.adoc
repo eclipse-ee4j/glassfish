@@ -86,7 +86,7 @@ Command delete-managed-scheduled-executor-service executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-managed-scheduled-executor-service.html#create-managed-scheduled-executor-service-1[`create-managed-scheduled-executor-service`(1)],
-link:list-managed-scheduled-executor-services.html#list-managed-scheduled-executor-services-1[`list-managed-scheduled-executor-services`(1)]
+link:create-managed-scheduled-executor-service.html#create-managed-scheduled-executor-service[`create-managed-scheduled-executor-service`(1)],
+link:list-managed-scheduled-executor-services.html#list-managed-scheduled-executor-services[`list-managed-scheduled-executor-services`(1)]
 
 

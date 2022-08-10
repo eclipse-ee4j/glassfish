@@ -160,7 +160,7 @@ feature in the domain-dir``/lib`` directory.
 2. Edit the domain-dir``/config/default-web.xml`` file to refer to the JAR file.
 3. To apply your changes, restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[gixrb]][[GSADG00551]][[redirecting-a-url]]
 
@@ -203,15 +203,15 @@ container with web servers such as Apache HTTP Server. By using
 You can also use `mod_jk` directly at the JSP/servlet engine for load
 balancing. For more information about configuring `mod_jk` and Apache
 HTTP Server for load balancing with {productName} 7 refer to
-"link:ha-administration-guide/http-load-balancing.html#GSHAG00009[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
+"link:ha-administration-guide/http-load-balancing.html#abdgs[Configuring HTTP Load Balancing]" in {productName} High Availability Administration Guide.
 
 The following topics are addressed here:
 
 * <<To Enable `mod_jk`>>
 * <<To Load Balance Using `mod_jk` and {productName}>>
-* xref:#gjpat[To Enable SSL Between the `mod_jk` Load Balancer and the
+* xref:#to-enable-ssl-between-the-mod_jk-load-balancer-and-the-browser[To Enable SSL Between the `mod_jk` Load Balancer and the
 Browser]
-* xref:#gjpan[To Enable SSL Between the `mod_jk` Load Balancer and
+* xref:#to-enable-ssl-between-the-mod_jk-load-balancer-and-glassfish-server[To Enable SSL Between the `mod_jk` Load Balancer and
 {productName}]
 
 [[gixqw]][[GSADG00371]][[to-enable-mod_jk]]
@@ -249,7 +249,7 @@ In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
 achieved by deploying a web application.
 5. Create a jk-enabled network listener by using the
-link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
+link:reference-manual/create-network-listener.html#create-network-listener[`create-network-listener`] subcommand.
 +
 [source]
 ----
@@ -277,7 +277,7 @@ http-thread-pool.max-thread-pool-size=value
 ----
 8. To apply your changes, restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00169]][[gixrq]]
 Example 6-4 `httpd.conf` File for `mod_jk`
@@ -344,7 +344,7 @@ received by the load balancer. This means that every {productName}
 instance that is front-ended by the Apache load balancer must be
 configured with a unique `jvmRoute` system property.
 
-1. On each of the instances, perform the steps in xref:#gixqw[To Enable
+1. On each of the instances, perform the steps in xref:#to-enable-mod_jk[To Enable
 `mod_jk`].
 +
 If your instances run on the same machine, you must choose different JK
@@ -352,7 +352,7 @@ ports. The ports must match `worker.worker*.port` in your
 `workers.properties` file. See the properties file in
 <<Example 6-5>>.
 2. On each of the instances, create the `jvmRoute` system property of
-{productName} by using the link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]
+{productName} by using the link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`]
 subcommand.
 +
 Use the following format:
@@ -508,7 +508,7 @@ deployed.
 In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
 achieved by deploying a web application.
-3. Follow instructions from xref:http_https.adoc#ggnbj[To Configure an
+3. Follow instructions from xref:http_https.adoc#to-configure-an-http-listener-for-ssl[To Configure an
 HTTP Listener for SSL] on the `mod_jk` connector.
 +
 Use the following format:
@@ -604,7 +604,7 @@ http-thread-pool.max-thread-pool-size=value
 ----
 6. To apply your changes, restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 See Also
 
@@ -728,6 +728,6 @@ In this example, `instance1`, `instance2` and `instance3` are the names
 of the {productName} instances in the cluster.
 8. To apply your changes, restart {productName}.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 

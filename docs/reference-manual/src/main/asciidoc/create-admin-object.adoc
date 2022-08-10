@@ -86,7 +86,7 @@ multiple targets if needed.
 `--property`::
   Description of the name/values pairs for configuring the resource.
   Dependent on the resource adapter. For JMS properties, see
-  link:create-jms-resource.html#create-jms-resource-1[`create-jms-resource`(1)]
+  link:create-jms-resource.html#create-jms-resource[`create-jms-resource`(1)]
   for JMS destination resources.
 
 === Operands
@@ -122,8 +122,8 @@ Command create-admin-object executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-resource-ref.html#create-resource-ref-1[`create-resource-ref`(1)],
-link:delete-admin-object.html#delete-admin-object-1[`delete-admin-object`(1)],
-link:list-admin-objects.html#list-admin-objects-1[`list-admin-objects`(1)]
+link:create-resource-ref.html#create-resource-ref[`create-resource-ref`(1)],
+link:delete-admin-object.html#delete-admin-object[`delete-admin-object`(1)],
+link:list-admin-objects.html#list-admin-objects[`list-admin-objects`(1)]
 
 

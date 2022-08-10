@@ -48,11 +48,11 @@ the link:application-deployment-guide.html#GSDPG[
 
 The following topics are addressed here:
 
-* xref:#beall[Connector Support in the {productName}]
-* xref:#bealr[Advanced Connector Configuration Options]
-* xref:#bealz[Inbound Communication Support]
-* xref:#gizdm[Outbound Communication Support]
-* xref:#beama[Configuring a Message Driven Bean to Use a Resource Adapter]
+* xref:#connector-support-in-the-glassfish-server[Connector Support in the {productName}]
+* xref:#advanced-connector-configuration-options[Advanced Connector Configuration Options]
+* xref:#inbound-communication-support[Inbound Communication Support]
+* xref:#outbound-communication-support[Outbound Communication Support]
+* xref:#configuring-a-message-driven-bean-to-use-a-resource-adapter[Configuring a Message Driven Bean to Use a Resource Adapter]
 
 [[beall]][[GSDVG00162]][[connector-support-in-the-glassfish-server]]
 
@@ -135,18 +135,18 @@ pools and the connector resource properties without restarting the
 
 The following topics are addressed here:
 
-* xref:#beals[Thread Associations]
-* xref:#bealt[Security Maps]
-* xref:#giqgt[Work Security Maps]
-* xref:#bealu[Overriding Configuration Properties]
-* xref:#bealv[Testing a Connector Connection Pool]
-* xref:#gizcv[Flushing a Connector Connection Pool]
-* xref:#bealw[Handling Invalid Connections]
-* xref:#bealx[Setting the Shutdown Timeout]
-* xref:#gjjyy[Specifying the Class Loading Policy]
-* xref:#bealy[Using Last Agent Optimization of Transactions]
-* xref:#gizba[Disabling Pooling for a Connection]
-* xref:#gizcs[Using Application-Scoped Connectors]
+* xref:#thread-associations[Thread Associations]
+* xref:#security-maps[Security Maps]
+* xref:#work-security-maps[Work Security Maps]
+* xref:#overriding-configuration-properties[Overriding Configuration Properties]
+* xref:#testing-a-connector-connection-pool[Testing a Connector Connection Pool]
+* xref:#flushing-a-connector-connection-pool[Flushing a Connector Connection Pool]
+* xref:#handling-invalid-connections[Handling Invalid Connections]
+* xref:#setting-the-shutdown-timeout[Setting the Shutdown Timeout]
+* xref:#specifying-the-class-loading-policy[Specifying the Class Loading Policy]
+* xref:#using-last-agent-optimization-of-transactions[Using Last Agent Optimization of Transactions]
+* xref:#disabling-pooling-for-a-connection[Disabling Pooling for a Connection]
+* xref:#using-application-scoped-connectors[Using Application-Scoped Connectors]
 
 [[beals]][[GSDVG00476]][[thread-associations]]
 
@@ -467,7 +467,7 @@ You can define an application-scoped connector or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 [[bealz]][[GSDVG00164]][[inbound-communication-support]]
 

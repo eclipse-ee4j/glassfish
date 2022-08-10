@@ -50,7 +50,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
+  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[
   Module and Application Versions]" in
   {productName} Application Deployment Guide.
 
@@ -83,12 +83,12 @@ Command get-client-stubs executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy-1[`deploy`(1)],
-link:redeploy.html#redeploy-1[`redeploy`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+link:deploy.html#deploy[`deploy`(1)],
+link:redeploy.html#redeploy[`redeploy`(1)],
+link:undeploy.html#undeploy[`undeploy`(1)]
 
-link:appclient.html#appclient-1m[`appclient`(1M)],
-link:package-appclient.html#package-appclient-1m[`package-appclient`(1M)]
+link:appclient.html#appclient[`appclient`(1M)],
+link:package-appclient.html#package-appclient[`package-appclient`(1M)]
 
 link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
 Guide]

@@ -198,12 +198,12 @@ Command create-node-dcom executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
-link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)]
+link:create-node-config.html#create-node-config[`create-node-config`(1)],
+link:create-node-ssh.html#create-node-ssh[`create-node-ssh`(1)],
+link:delete-node-dcom.html#delete-node-dcom[`delete-node-dcom`(1)],
+link:install-node-dcom.html#install-node-dcom[`install-node-dcom`(1)],
+link:list-nodes.html#list-nodes[`list-nodes`(1)],
+link:uninstall-node-dcom.html#uninstall-node-dcom[`uninstall-node-dcom`(1)],
+link:update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)]
 
 

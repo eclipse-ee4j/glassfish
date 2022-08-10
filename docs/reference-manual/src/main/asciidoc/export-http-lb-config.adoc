@@ -135,8 +135,8 @@ Command export-http-lb-config executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb.html#create-http-lb-1[`create-http-lb`(1)],
-link:create-http-lb-config.html#create-http-lb-config-1[`create-http-lb-config`(1)],
-link:list-http-lb-configs.html#list-http-lb-configs-1[`list-http-lb-configs`(1)]
+link:create-http-lb.html#create-http-lb[`create-http-lb`(1)],
+link:create-http-lb-config.html#create-http-lb-config[`create-http-lb-config`(1)],
+link:list-http-lb-configs.html#list-http-lb-configs[`list-http-lb-configs`(1)]
 
 

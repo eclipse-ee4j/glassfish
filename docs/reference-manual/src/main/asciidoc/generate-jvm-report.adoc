@@ -160,9 +160,9 @@ Command generate-jvm-report executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jvm-options.html#create-jvm-options-1[`create-jvm-options`(1)],
-link:delete-jvm-options.html#delete-jvm-options-1[`delete-jvm-options`(1)],
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)]
+link:create-jvm-options.html#create-jvm-options[`create-jvm-options`(1)],
+link:delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`(1)],
+link:list-jvm-options.html#list-jvm-options[`list-jvm-options`(1)]
 
 '''''
 

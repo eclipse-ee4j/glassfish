@@ -672,7 +672,7 @@ optionally specify one of the following targets:
 
 1. Ensure that the DAS is running. Remote commands require a running server.
 
-2. Use the link:reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]
+2. Use the link:reference-manual/list-log-attributes.html#list-log-attributes[`list-log-attributes`]
 command in remote mode to obtain the current log attribute settings.
 The name and location of the log file is set with the
 `org.glassfish.main.jul.handler.GlassFishLogHandler.file` attribute of the
@@ -680,7 +680,7 @@ The name and location of the log file is set with the
 Optionally you can target a configuration, server, instance, or cluster.
 If you do not specify a target, the log attribute settings for the DAS are displayed.
 
-3. Use the link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
+3. Use the link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`]
 command in remote mode to define a custom name or location of the log file.
 If you do not specify a target, the log file for the DAS is targeted by default.
 If you target a cluster, the name of the cluster log file for
@@ -787,7 +787,7 @@ However, you can optionally specify one of the following targets:
 
 1. Ensure that the DAS is running. Remote subcommands require a running server.
 2. List the existing module loggers and log levels by using the
-link:reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
+link:reference-manual/list-log-levels.html#list-log-levels[`list-log-levels`] subcommand.
 
 [[example-7-2]]
 Example 7-2 Listing Logger Levels for DAS
@@ -915,7 +915,7 @@ However, you can optionally specify one of the following targets using the `--ta
 
 1. Ensure that the DAS is running.
 2. Set the log level by using the
-link:reference-manual/set-log-attributes.html#GSRFM00228[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#set-log-levels[`set-log-attributes`] subcommand,
 specifying the log level of the `org.glassfish.main.jul.handler.GlassFishLogHandler` handler.
 For example:
 +
@@ -973,7 +973,7 @@ Changing the log format forces log rotation to avoid mixed format in the same fi
 
 1. Ensure that the DAS is running. Remote commands require a running server.
 2. Set the formatter by using the
-link:reference-manual/redeploy.html#GSRFM00217[`set-log-file-format`] subcommand.
+link:reference-manual/redeploy.html#redeploy[`set-log-file-format`] subcommand.
 3. To apply your change, restart affected instances or clusters with the synchronization enabled.
 
 [[example-7-7]]
@@ -1030,7 +1030,7 @@ The following fields can be excluded:
 
 1. Ensure that the DAS is running. Remote commands require a running server.
 
-2. Exclude fields by using the link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
+2. Exclude fields by using the link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`]
 subcommand, specifying the attribute and the fields to exclude.
 
 3. To apply your change, restart {productName}.
@@ -1090,7 +1090,7 @@ message starts on a new line after the message header and is indented.
 1. Ensure that the DAS is running. Remote commands require a running server.
 
 2. Set multiline mode by using the
-link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`] subcommand,
 specifying the formatter attribute and its value (`true` or `false`):
 
 3. To apply your change, restart the instance.
@@ -1161,7 +1161,7 @@ Optionally, you can target a configuration, server, instance, or cluster.
 1. Ensure that the DAS is running.
 
 2. Change the rotation file size limit by using the
-link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`] subcommand,
 specifying the attribute and the desired limit in megabytes:
 +
 [source]
@@ -1207,7 +1207,7 @@ The default value is `0`.
 1. Ensure that the DAS is running.
 
 2. Change the rotation time limit by using the
-link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`] subcommand,
 specifying the following attribute and the desired limit in minutes:
 +
 [source]
@@ -1253,7 +1253,7 @@ of rotated log files that are retained.
 
 1. Ensure that the DAS is running.
 2. Change the limit number of retained log files by using the
-link:reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+link:reference-manual/set-log-attributes.html#set-log-attributes[`set-log-attributes`] subcommand,
 specifying the following attribute and the desired file limit number:
 +
 [source]
@@ -1301,7 +1301,7 @@ Because log rotation is a dynamic operation, you do not need to restart
 
 1. Ensure that the target server or cluster is running.
 2. Rotate log files by using
-the link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`] subcommand.
+the link:reference-manual/rotate-log.html#rotate-log[`rotate-log`] subcommand.
 
 [[example-7-15]]
 Example 7-15 Rotating Log Files Manually
@@ -1348,7 +1348,7 @@ files into a ZIP archive. The default target of this subcommand is the DAS.
 Optionally you can target a configuration, server, instance, or cluster.
 
 1. Ensure that the target server or cluster is running. Remote subcommands require a running server.
-2. Use the link:reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] subcommand
+2. Use the link:reference-manual/collect-log-files.html#collect-log-files[`collect-log-files`] subcommand
 to create the ZIP archive.
 +
 The default location in which the ZIP archive is created is the

@@ -39,7 +39,7 @@ be executed in sequence from a text file.
 A related subcommand is the `osgi` subcommand, which passes a single
 command to the remote shell for execution. Results are returned by the
 `asadmin` utility. For more information about the `osgi` subcommand, see
-the link:osgi.html#osgi-1[`osgi`(1)] help page.
+the link:osgi.html#osgi[`osgi`(1)] help page.
 
 This subcommand is supported in local mode only. Unlike other local
 subcommands, however, the domain administration server (DAS) and the
@@ -135,6 +135,6 @@ gogo$
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:osgi.html#osgi-1[`osgi`(1)]
+link:osgi.html#osgi[`osgi`(1)]
 
 

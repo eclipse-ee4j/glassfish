@@ -23,8 +23,8 @@ link:system-security.html#ablnk[Administering System Security].
 
 The following topics are addressed here:
 
-* xref:#ggkuk[Administering Authentication Realms]
-* xref:#ggnxq[Administering File Users]
+* xref:#administering-authentication-realms[Administering Authentication Realms]
+* xref:#administering-file-users[Administering File Users]
 
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
@@ -47,15 +47,15 @@ in The Jakarta EE Tutorial for more information about Identity Stores.
 
 The following topics are addressed here:
 
-* xref:#gkbiy[Overview of Authentication Realms]
-* xref:#ggnca[To Create an Authentication Realm]
-* xref:#ggngh[To List Authentication Realms]
-* xref:#giwlt[To Update an Authentication Realm]
-* xref:#ggngf[To Delete an Authentication Realm]
-* xref:#ggmww[To Configure a JDBC or Digest Authentication Realm]
-* xref:#gkbeo[To Configure LDAP Authentication with OID]
-* xref:#gksgi[To Configure LDAP Authentication with OVD]
-* xref:#gkbjp[To Enable LDAP Authentication on the {productName} DAS]
+* xref:#overview-of-authentication-realms[Overview of Authentication Realms]
+* xref:#to-create-an-authentication-realm[To Create an Authentication Realm]
+* xref:#to-list-authentication-realms[To List Authentication Realms]
+* xref:#to-update-an-authentication-realm[To Update an Authentication Realm]
+* xref:#to-delete-an-authentication-realm[To Delete an Authentication Realm]
+* xref:#to-configure-a-jdbc-or-digest-authentication-realm[To Configure a JDBC or Digest Authentication Realm]
+* xref:#to-configure-ldap-authentication-with-oid[To Configure LDAP Authentication with OID]
+* xref:#to-configure-ldap-authentication-with-ovd[To Configure LDAP Authentication with OVD]
+* xref:#to-enable-ldap-authentication-on-the-glassfish-server-das[To Enable LDAP Authentication on the {productName} DAS]
 
 [[gkbiy]][[GSSCG00217]][[overview-of-authentication-realms]]
 
@@ -91,7 +91,7 @@ LDAP realm::
   LDAP is a protocol for enabling anyone to locate organizations,
   individuals, and other resources such as files and devices in a
   network, whether on the public Internet or on a corporate intranet. +
-  See xref:#gkbeo[To Configure LDAP Authentication with OID] for
+  See xref:#to-configure-ldap-authentication-with-oid[To Configure LDAP Authentication with OID] for
   instructions on configuring {productName} to work with an OVD/OID
   LDAP provider.
 +
@@ -141,7 +141,7 @@ Custom realm::
   relational database or third-party components. For more information
   about custom realms, see the Administration Console online help. For
   instructions on creating a custom realm, see
-  "link:application-development-guide/securing-apps.html#GSDVG00367[
+  "link:application-development-guide/securing-apps.html#creating-a-custom-realm[
   Creating a Custom Realm]" in
   {productName} Application Development Guide.
 
@@ -156,7 +156,7 @@ authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a realm by using the
-link:reference-manual/create-auth-realm.html#GSRFM00015[`create-auth-realm`] subcommand. +
+link:reference-manual/create-auth-realm.html#create-auth-realm[`create-auth-realm`] subcommand. +
 Information about properties for this subcommand is included in this help page.
 
 [[GSSCG00079]][[ggpjx]]
@@ -177,7 +177,7 @@ You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-auth-realm` at the command line.
 
 For information on creating a custom realm, see
-"link:application-development-guide/securing-apps.html#GSDVG00367[Creating a Custom Realm]" in {productName} Application Development Guide.
+"link:application-development-guide/securing-apps.html#creating-a-custom-realm[Creating a Custom Realm]" in {productName} Application Development Guide.
 
 [[ggngh]][[GSSCG00111]][[to-list-authentication-realms]]
 
@@ -187,7 +187,7 @@ Use the `list-auth-realms` subcommand in remote mode to list the
 existing authentication realms.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List realms by using the link:reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
+2. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
 subcommand.
 
 [[GSSCG00080]][[ggpkw]]
@@ -223,15 +223,15 @@ A custom realm does not require server restart.
 ====
 
 
-1. List realms by using the link:reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`]
+1. List realms by using the link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`]
 subcommand.
 2. Modify the values for the specified thread pool by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 +
 The thread pool is identified by its dotted name.
 3. To apply your changes, restart {productName}.
 +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[ggngf]][[GSSCG00113]][[to-delete-an-authentication-realm]]
 
@@ -242,12 +242,12 @@ existing authentication realm.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List realms by using the
-link:reference-manual/list-auth-realms.html#GSRFM00150[`list-auth-realms`] subcommand.
+link:reference-manual/list-auth-realms.html#list-auth-realms[`list-auth-realms`] subcommand.
 3. If necessary, notify users that the realm is being deleted.
 4. Delete the realm by using the
-link:reference-manual/delete-auth-realm.html#GSRFM00066[`delete-auth-realm`] subcommand.
+link:reference-manual/delete-auth-realm.html#delete-auth-realm[`delete-auth-realm`] subcommand.
 5. To apply your changes, restart {productName}. See
-"link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+"link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
 [[GSSCG00081]][[ggpjf]]
 Example 2-3 Deleting a Realm
@@ -292,16 +292,16 @@ How you add user credentials to the database tables depends on the
 database that you are using.
 
 3. Create a JDBC connection pool for the database. +
-See "link:administration-guide/jdbc.html#GSADG00420[
+See "link:administration-guide/jdbc.html#to-create-a-jdbc-connection-pool[
 To Create a JDBC Connection Pool]" in {productName} Administration Guide.
 
 4. Create a JDBC resource for the database. +
-"link:administration-guide/jdbc.html#GSADG00426[
+"link:administration-guide/jdbc.html#to-create-a-jdbc-resource[
 To Create a JDBC Resource]" in {productName} Administration Guide.
 
 5. [[ggmvo]]
 Create a realm. +
-For instructions, see xref:#ggnca[To Create an Authentication Realm].
+For instructions, see xref:#to-create-an-authentication-realm[To Create an Authentication Realm].
 +
 [NOTE]
 ====
@@ -319,7 +319,7 @@ Modify the deployment descriptor that is associated with your application.
 
 +
 For more information about how to specify a realm, see
-"link:application-development-guide/securing-apps.html#GSDVG00365[
+"link:application-development-guide/securing-apps.html#how-to-configure-a-realm[
 How to Configure a Realm]" in {productName} Application Development Guide.
 
 7. Assign security roles to users in the realm. +
@@ -327,11 +327,11 @@ To assign a security role to a user, add a `security-role-mapping`
 element to the deployment descriptor that you modified.
 
 8. Verify that the database is running. +
-If needed, see "link:administration-guide/jdbc.html#GSADG00417[To Start the Database]"
+If needed, see "link:administration-guide/jdbc.html#to-start-the-database[To Start the Database]"
 in {productName} Administration Guide.
 
 9. To apply the authentication, restart the server. +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[GSSCG00082]][[ghysu]]
@@ -414,7 +414,7 @@ keytool -importcert -alias "OID self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file oid.cer
 ----
 6. Restart the {productName} domain. +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 7. Use the Oracle Enterprise Manager `ldapmodify` command to enable
 Anonymous Bind for OID. +
@@ -503,7 +503,7 @@ keytool -importcert -alias "OVD self signed certificate" -keystore \
 /glassfish7/glassfish/domains/domain1/config/cacerts.jks -file ovd.cer
 ----
 5. Restart the {productName} domain. +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[gkbjp]][[GSSCG00117]][[to-enable-ldap-authentication-on-the-glassfish-server-das]]
@@ -514,11 +514,11 @@ This procedure explains how to enable LDAP authentication for logins to
 the {productName} Domain Administration Server (DAS). Logging in to
 the DAS is typically only performed by {productName} administrators
 who want to use the {productName} Administration Console or `asadmin`
-command. See xref:#gkbeo[To Configure LDAP Authentication with OID] for
+command. See xref:#to-configure-ldap-authentication-with-oid[To Configure LDAP Authentication with OID] for
 instructions on enabling general LDAP authentication for {productName}.
 
 Before you begin, ensure that you have followed the configuration instructions in
-xref:#gkbeo[To Configure LDAP Authentication with OID]
+xref:#to-configure-ldap-authentication-with-oid[To Configure LDAP Authentication with OID]
 
 Use the `asadmin configure-ldap-for-admin` subcommand to enable user
 authentication to the {productName} DAS.
@@ -554,7 +554,7 @@ asadmin configure-ldap-for-admin --basedn "dc=red,dc=iplanet,dc=com" \
 
 See Also
 
-See link:reference-manual/configure-ldap-for-admin.html#GSRFM00010[`configure-ldap-for-admin`] for more information
+See link:reference-manual/configure-ldap-for-admin.html#configure-ldap-for-admin[`configure-ldap-for-admin`] for more information
 about the `configure-ldap-for-admin subcommand`.
 
 [[ggnxq]][[GSSCG00152]][[administering-file-users]]
@@ -572,11 +572,11 @@ services that they are entitled to use.
 
 The following topics are addressed here:
 
-* xref:#ggocf[To Create a File User]
-* xref:#ggoab[To List File Users]
-* xref:#ghlgs[To List File Groups]
-* xref:#ggoaw[To Update a File User]
-* xref:#ggoah[To Delete a File User]
+* xref:#to-create-a-file-user[To Create a File User]
+* xref:#to-list-file-users[To List File Users]
+* xref:#to-list-file-groups[To List File Groups]
+* xref:#to-update-a-file-user[To Update a File User]
+* xref:#to-delete-a-file-user[To Delete a File User]
 
 [[ggocf]][[GSSCG00118]][[to-create-a-file-user]]
 
@@ -590,7 +590,7 @@ specified by separating the groups with colons (:).
 [NOTE]
 ====
 If secure administration is enabled as described in
-link:administrative-security.html#gkomz[Running Secure Admin], you cannot
+link:administrative-security.html#running-secure-admin[Running Secure Admin], you cannot
 create an administrative user with a blank password.
 ====
 
@@ -600,9 +600,9 @@ server restart.
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. If the user will belong to a particular group, see the current
 groups by using the
-link:reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
+link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
 3. Create a file user by using the
-link:reference-manual/create-file-user.html#GSRFM00024[`create-file-user`] subcommand.
+link:reference-manual/create-file-user.html#create-file-user[`create-file-user`] subcommand.
 
 [[GSSCG00083]][[ggpkq]]
 Example 2-5 Creating a User
@@ -635,7 +635,7 @@ Use the `list-file-users` subcommand in remote mode to list the users
 that are in the `keyfile`.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List users by using the link:reference-manual/list-file-users.html#GSRFM00165[`list-file-users`]
+2. List users by using the link:reference-manual/list-file-users.html#list-file-users[`list-file-users`]
 subcommand.
 
 [[GSSCG00084]][[ggpgf]]
@@ -679,7 +679,7 @@ a file user, or all file groups if the `--name` option is not specified.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List file groups by using the
-link:reference-manual/list-file-groups.html#GSRFM00164[`list-file-groups`] subcommand.
+link:reference-manual/list-file-groups.html#list-file-groups[`list-file-groups`] subcommand.
 
 [[GSSCG00085]][[ghlgb]]
 Example 2-7 Listing Groups for a User
@@ -704,15 +704,15 @@ information in the `keyfile` for a specified user.
 [NOTE]
 ====
 If secure administration is enabled as described in
-link:administrative-security.html#gkomz[Running Secure Admin], you cannot
+link:administrative-security.html#running-secure-admin[Running Secure Admin], you cannot
 update an administrative user to have a blank password.
 ====
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Update the user information by using the
-link:reference-manual/update-file-user.html#GSRFM00254[`update-file-user`] subcommand.
+link:reference-manual/update-file-user.html#update-file-user[`update-file-user`] subcommand.
 3. To apply your changes, restart {productName}. +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]"
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]"
 in {productName} Administration Guide.
 
 [[GSSCG00086]][[ggpgh]]
@@ -743,9 +743,9 @@ during your session.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List users by using the
-link:reference-manual/list-file-users.html#GSRFM00165[`list-file-users`] subcommand.
+link:reference-manual/list-file-users.html#list-file-users[`list-file-users`] subcommand.
 3. Delete the user by using the
-link:reference-manual/delete-file-user.html#GSRFM00076[`delete-file-user`] subcommand.
+link:reference-manual/delete-file-user.html#delete-file-user[`delete-file-user`] subcommand.
 
 [[GSSCG00087]][[ggpib]]
 Example 2-9 Deleting a User

@@ -78,6 +78,6 @@ This command was successfully executed.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-timers.html#list-timers-1[`list-timers`(1)]
+link:list-timers.html#list-timers[`list-timers`(1)]
 
 

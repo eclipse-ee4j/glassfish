@@ -81,7 +81,7 @@ Command list-iiop-listeners executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-iiop-listener.html#create-iiop-listener-1[`create-iiop-listener`(1)],
-link:delete-iiop-listener.html#delete-iiop-listener-1[`delete-iiop-listener`(1)]
+link:create-iiop-listener.html#create-iiop-listener[`create-iiop-listener`(1)],
+link:delete-iiop-listener.html#delete-iiop-listener[`delete-iiop-listener`(1)]
 
 

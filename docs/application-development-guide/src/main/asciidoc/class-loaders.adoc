@@ -24,12 +24,12 @@ class loaders loads the relevant class into the environment.
 
 The following topics are addressed here:
 
-* xref:#beadf[The Class Loader Hierarchy]
-* xref:#gfqpi[Delegation]
-* xref:#beadk[Using the Java Optional Package Mechanism]
-* xref:#beadg[Class Loader Universes]
-* xref:#gatej[Application-Specific Class Loading]
-* xref:#beadh[Circumventing Class Loader Isolation]
+* xref:#the-class-loader-hierarchy[The Class Loader Hierarchy]
+* xref:#delegation[Delegation]
+* xref:#using-the-java-optional-package-mechanism[Using the Java Optional Package Mechanism]
+* xref:#class-loader-universes[Class Loader Universes]
+* xref:#application-specific-class-loading[Application-Specific Class Loading]
+* xref:#circumventing-class-loader-isolation[Circumventing Class Loader Isolation]
 
 
 [NOTE]
@@ -44,7 +44,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 
 
 For information about class loader debugging, see
-link:debugging-apps.html#gkpdk[Class Loader Debugging].
+link:debugging-apps.html#class-loader-debugging[Class Loader Debugging].
 
 [[beadf]][[GSDVG00094]][[the-class-loader-hierarchy]]
 
@@ -68,7 +68,7 @@ provided by the JVM software.
 
 |Extension |The Extension class loader loads classes from JAR files
 present in the system extensions directory, domain-dir``/lib/ext``. It is
-parent to the Public API class loader. See xref:#beadk[Using the Java
+parent to the Public API class loader. See xref:#using-the-java-optional-package-mechanism[Using the Java
 Optional Package Mechanism].
 
 |Public API |The Public API class loader makes available all classes
@@ -80,7 +80,7 @@ APIs and other Oracle APIs. It is parent to the Common class loader.
 directory, followed by JAR files in the domain-dir``/lib`` directory.
 Using domain-dir``/lib`` is recommended whenever possible, and required
 for custom login modules and realms. It is parent to the Connector class
-loader. See xref:#beadj[Using the Common Class Loader].
+loader. See xref:#using-the-common-class-loader[Using the Common Class Loader].
 
 |Connector |The Connector class loader is a single class loader instance
 that loads individually deployed connector modules, which are shared
@@ -95,9 +95,9 @@ link:lifecycle-listeners.html#beamc[Developing Lifecycle Listeners].
 |Applib a|
 The Applib class loader loads the library classes, specified during
 deployment, for a specific enabled module or Jakarta EE application; see
-xref:#gatej[Application-Specific Class Loading]. One instance of this
+xref:#application-specific-class-loading[Application-Specific Class Loading]. One instance of this
 class loader is present in each class loader universe; see
-xref:#beadg[Class Loader Universes]. It is parent to the Archive class loader.
+xref:#class-loader-universes[Class Loader Universes]. It is parent to the Archive class loader.
 
 When multiple deployed applications use the same library, they share the
 same instance of the library. One library cannot reference classes from
@@ -121,9 +121,9 @@ The `classpath-prefix` was typically used to substitute another package
 for one of the {productName} packages, for example if a newer one was
 available. This same result can be achieved on a per-application basis with the
 `--libraries` option for the `deploy` subcommand. For more information,
-see the link:reference-manual/deploy.html#GSRFM00114[`deploy`(1)] help page.
+see the link:reference-manual/deploy.html#deploy[`deploy`(1)] help page.
 The Java Optional Package Mechanism does what `classpath-suffix` used to do. For more
-information, see xref:#beadk[Using the Java Optional Package Mechanism].
+information, see xref:#using-the-java-optional-package-mechanism[Using the Java Optional Package Mechanism].
 
 [[gfqpi]][[GSDVG00095]][[delegation]]
 
@@ -144,7 +144,7 @@ You can make this class loader follow the delegation inversion model in
 the Servlet specification by setting `delegate="false"` in the
 `class-loader` element of the `glassfish-web.xml` file. It is safe to do
 this only for a web module that does not interact with any other
-modules. For details, see "link:application-deployment-guide/dd-elements.html#GSDPG00110[class-loader]" in {productName} Application Deployment Guide.
+modules. For details, see "link:application-deployment-guide/dd-elements.html#class-loader[class-loader]" in {productName} Application Deployment Guide.
 
 The default value is `delegate="true"`, which causes a web module's
 class loader to delegate in the same manner as the other class loaders.
@@ -248,7 +248,7 @@ then restart the server. For details, see the link:reference-manual.html#GSRFM[{
 [NOTE]
 ====
 None of these alternatives apply to application clients. For more
-information, see link:java-clients.html#gjpjt[Using Libraries with
+information, see link:java-clients.html#using-libraries-with-application-clients[Using Libraries with
 Application Clients].
 ====
 
@@ -280,7 +280,7 @@ in those libraries are automatically shared. This can reduce the memory
 footprint and allow sharing of static information. However, applications
 or modules using application-specific libraries are not portable. Other
 ways to make libraries available are described in
-xref:#beadh[Circumventing Class Loader Isolation].
+xref:#circumventing-class-loader-isolation[Circumventing Class Loader Isolation].
 
 One library cannot reference classes from another library.
 
@@ -294,7 +294,7 @@ Deployment Guide].
 If you see an access control error message when you try to use a
 library, you may need to grant permission to the library in the
 `server.policy` file. For more information, see
-link:securing-apps.html#beabz[Changing Permissions for an Application].
+link:securing-apps.html#changing-permissions-for-an-application[Changing Permissions for an Application].
 ====
 
 
@@ -312,9 +312,9 @@ individually deployed modules accessed by more than one application, you
 can include the relevant path to the required classes in one of these
 ways:
 
-* xref:#beadj[Using the Common Class Loader]
-* xref:#gcrnt[Sharing Libraries Across a Cluster]
-* xref:#beadl[Packaging the Client JAR for One Application in Another
+* xref:#using-the-common-class-loader[Using the Common Class Loader]
+* xref:#sharing-libraries-across-a-cluster[Sharing Libraries Across a Cluster]
+* xref:#packaging-the-client-jar-for-one-application-in-another-application[Packaging the Client JAR for One Application in Another
 Application]
 
 [[beadj]][[GSDVG00342]][[using-the-common-class-loader]]
@@ -331,14 +331,14 @@ Using the Common class loader makes an application or module accessible
 to all applications or modules deployed on servers that share the same
 configuration. However, this accessibility does not extend to
 application clients. For more information, see
-link:java-clients.html#gjpjt[Using Libraries with Application Clients].
+link:java-clients.html#using-libraries-with-application-clients[Using Libraries with Application Clients].
 
 For example, using the Common class loader is the recommended way of
 adding JDBC drivers to the {productName}. For a list of the JDBC
 drivers currently supported by the {productName}, see the
 link:release-notes.html#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 To activate custom login modules and realms, place the JAR files in the
@@ -362,7 +362,7 @@ either of them accessible to any other application or module.
 
 As an alternative for a production environment, you can have the Common
 class loader load the client JAR of the dependent application as
-described in xref:#beadj[Using the Common Class Loader]. Restart the
+described in xref:#using-the-common-class-loader[Using the Common Class Loader]. Restart the
 server to make the dependent application accessible to all applications
 or modules deployed on servers that share the same configuration.
 

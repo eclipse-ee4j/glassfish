@@ -50,7 +50,7 @@ the containers.
 subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
-on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing
+on creating life cycle modules, see "link:application-development-guide/lifecycle-listeners.html#beamc[Developing
 Lifecycle Listeners]" in {productName}
 Application Development Guide.
 
@@ -83,13 +83,13 @@ life cycle module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create a new life cycle modules by using the
-link:reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`] subcommand.
+link:reference-manual/create-lifecycle-module.html#create-lifecycle-module[`create-lifecycle-module`] subcommand.
 +
 Information about options and properties for the subcommand are included
 in this help page.
 3. Restart the server for your changes to take effect.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00206]][[giuyo]]
 Example 9-1 Creating a Life Cycle Module
@@ -119,7 +119,7 @@ existing life cycle modules.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List life cycle modules by using the
-link:reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`] subcommand.
+link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 
 [[GSADG00207]][[giuyr]]
 Example 9-2 Listing Life Cycle Modules
@@ -145,7 +145,7 @@ typing `asadmin help list-lifecycle-modules` at the command line.
 Use the `set` subcommand to update an existing life cycle module.
 
 1. List the properties that can be updated for a life cycle module by
-using the link:reference-manual/get.html#GSRFM00139[`get`] subcommand.
+using the link:reference-manual/get.html#get[`get`] subcommand.
 +
 For example (single mode):
 +
@@ -166,7 +166,7 @@ applications.application.sampleLCMmodule.property.isLifecycle=true
 subcommand.
 3. Restart the server for your changes to take effect.
 +
-See xref:domains.adoc#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
 [[GSADG00208]][[giuyq]]
 Example 9-3 Updating a Life Cycle Module
@@ -195,9 +195,9 @@ life cycle module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the current life cycle modules by using the
-link:reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`] subcommand.
+link:reference-manual/list-lifecycle-modules.html#list-lifecycle-modules[`list-lifecycle-modules`] subcommand.
 3. Delete a life cycle module by using the
-link:reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`] subcommand.
+link:reference-manual/delete-lifecycle-module.html#delete-lifecycle-module[`delete-lifecycle-module`] subcommand.
 
 [[GSADG00209]][[giuyi]]
 Example 9-4 Deleting a Life Cycle Module

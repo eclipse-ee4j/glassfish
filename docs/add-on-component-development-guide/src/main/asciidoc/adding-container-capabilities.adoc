@@ -21,10 +21,10 @@ you to run new types of applications and to deploy new archive types in
 
 The following topics are addressed here:
 
-* xref:#ghpjl[Creating a `Container` Implementation]
-* xref:#ghozu[Adding an Archive Type]
-* xref:#ghphp[Creating Connector Modules]
-* xref:#gkane[Example of Adding Container Capabilities]
+* xref:#creating-a-container-implementation[Creating a `Container` Implementation]
+* xref:#adding-an-archive-type[Adding an Archive Type]
+* xref:#creating-connector-modules[Creating Connector Modules]
+* xref:#example-of-adding-container-capabilities[Example of Adding Container Capabilities]
 
 [[ghpjl]][[GSACG00132]][[creating-a-container-implementation]]
 
@@ -398,13 +398,13 @@ deployment request.
 This example shows a custom container and a web client of the container.
 The example is comprised of the following code:
 
-* Code for the container, which is shown in xref:#gkbah[Container
+* Code for the container, which is shown in xref:#container-component-code[Container
 Component Code]
 * Code for a web client of the container, which is shown in
-xref:#gkbcq[Web Client Code]
+xref:#web-client-code[Web Client Code]
 
 Code that defines the configuration data for the container component is
-shown in link:adding-configuration-data.html#gkaal[Examples of Adding
+shown in link:adding-configuration-data.html#examples-of-adding-configuration-data-for-a-component[Examples of Adding
 Configuration Data for a Component].
 
 Code for an `asadmin` subcommand that updates the configuration data in

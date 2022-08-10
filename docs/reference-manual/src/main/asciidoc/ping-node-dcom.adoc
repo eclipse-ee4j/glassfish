@@ -38,7 +38,7 @@ includes the name of the host that the node represents.
 Optionally, the subcommand can also validate the node to determine if
 the xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility can run on the
 host that the node represents. To validate a node, the subcommand runs
-the link:version.html#version-1[`version`(1)] subcommand. If the node is
+the link:version.html#version[`version`(1)] subcommand. If the node is
 valid, the subcommand displays the version that the `version` subcommand
 returns.
 
@@ -46,14 +46,14 @@ The node that is specified as the operand of this subcommand must be
 enabled for communication over DCOM. If the node is not enabled for
 communication over DCOM, an error occurs. To determine whether a node is
 enabled for communication over DCOM, use the
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)] subcommand.
+link:list-nodes.html#list-nodes[`list-nodes`(1)] subcommand.
 
 
 [NOTE]
 ====
 To test whether a node that is enabled for communication over secure
 shell (SSH) is usable, use the
-link:ping-node-ssh.html#ping-node-ssh-1[`ping-node-ssh`(1)] subcommand.
+link:ping-node-ssh.html#ping-node-ssh[`ping-node-ssh`(1)] subcommand.
 ====
 
 
@@ -125,12 +125,12 @@ Command ping-node-dcom executed successfully.
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:delete-node-dcom.html#delete-node-dcom-1[`delete-node-dcom`(1)],
-link:list-nodes.html#list-nodes-1[`list-nodes`(1)],
-link:ping-node-ssh.html#ping-node-ssh-1[`ping-node-ssh`(1)],
-link:update-node-ssh.html#update-node-dcom-1[`update-node-dcom`(1)],
-link:validate-dcom.html#validate-dcom-1[`validate-dcom`(1)],
-link:version.html#version-1[`version`(1)]
+link:create-node-dcom.html#create-node-dcom[`create-node-dcom`(1)],
+link:delete-node-dcom.html#delete-node-dcom[`delete-node-dcom`(1)],
+link:list-nodes.html#list-nodes[`list-nodes`(1)],
+link:ping-node-ssh.html#ping-node-ssh[`ping-node-ssh`(1)],
+link:update-node-ssh.html#update-node-dcom[`update-node-dcom`(1)],
+link:validate-dcom.html#validate-dcom[`validate-dcom`(1)],
+link:version.html#version[`version`(1)]
 
 

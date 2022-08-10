@@ -23,12 +23,12 @@ service implements an HK2 contract.
 
 The following topics are addressed here:
 
-* xref:#ghokq[HK2 Component Model]
-* xref:#ghojt[Services in the HK2 Component Model]
-* xref:#ghokt[HK2 Runtime]
-* xref:#ghojb[Inversion of Control]
-* xref:#ghmoe[Identifying a Class as an Add-On Component]
-* xref:#ghpvp[Using the Apache Maven Build System to Develop HK2 Components]
+* xref:#hk2-component-model[HK2 Component Model]
+* xref:#services-in-the-hk2-component-model[Services in the HK2 Component Model]
+* xref:#hk2-runtime[HK2 Runtime]
+* xref:#inversion-of-control[Inversion of Control]
+* xref:#identifying-a-class-as-an-add-on-component[Identifying a Class as an Add-On Component]
+* xref:#using-the-apache-maven-build-system-to-develop-hk2-components[Using the Apache Maven Build System to Develop HK2 Components]
 
 [[ghokq]][[GSACG00091]][[hk2-component-model]]
 

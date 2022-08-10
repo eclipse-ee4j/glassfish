@@ -15,20 +15,20 @@ prev=overview.html
 
 This chapter lists problems that you might encounter when using {productName} 7. The following topics are addressed:
 
-* xref:#abgca[Cannot Access Local Server (`http://localhost:8080`)]
-* xref:#abgcf[Cannot Access Remote Server]
-* xref:#abgcm[Cannot Access the Administration Console]
-* xref:#abgcw[Cannot Access a Server Application]
-* xref:#gjjoz[Administrator User Name or Password Not Known]
-* xref:#gjjpj[Experience Issues Related to the JDK]
-* xref:#abgdi[Server Will Not Start on Windows (Port Conflict)]
-* xref:#gkvcs[{productName} Fails to Start in an OpenSolaris Zone]
-* xref:#abgdr[Two Server Instances Bind to Same Port on Windows]
-* xref:#abgel[Cannot Produce a JVM Thread Dump After Server Crash]
-* xref:#ghvgk[Issues Related to Applications]
-* xref:#ghvhy[Issues Related to `asadmin`]
-* xref:#ghvgu[Issues Related to Installation]
-* xref:#ghvrh[Issues Related to Security]
+* xref:#cannot-access-local-server-httplocalhost8080[Cannot Access Local Server (`http://localhost:8080`)]
+* xref:#cannot-access-remote-server[Cannot Access Remote Server]
+* xref:#cannot-access-the-administration-console[Cannot Access the Administration Console]
+* xref:#cannot-access-a-server-application[Cannot Access a Server Application]
+* xref:#administrator-user-name-or-password-not-known[Administrator User Name or Password Not Known]
+* xref:#experience-issues-related-to-the-jdk[Experience Issues Related to the JDK]
+* xref:#server-will-not-start-on-windows-port-conflict[Server Will Not Start on Windows (Port Conflict)]
+* xref:#glassfish-server-fails-to-start-in-an-opensolaris-zone[{productName} Fails to Start in an OpenSolaris Zone]
+* xref:#two-server-instances-bind-to-same-port-on-windows[Two Server Instances Bind to Same Port on Windows]
+* xref:#cannot-produce-a-jvm-thread-dump-after-server-crash[Cannot Produce a JVM Thread Dump After Server Crash]
+* xref:#issues-related-to-applications[Issues Related to Applications]
+* xref:#issues-related-to-asadmin[Issues Related to `asadmin`]
+* xref:#issues-related-to-installation[Issues Related to Installation]
+* xref:#issues-related-to-security[Issues Related to Security]
 
 [[abgca]][[GSTSG00043]][[cannot-access-local-server-httplocalhost8080]]
 
@@ -36,9 +36,9 @@ This chapter lists problems that you might encounter when using {productName} 7.
 
 When this error occurs, check the following:
 
-* xref:#abgcb[Did the Server Start?]
-* xref:#abgcd[Was the Server Started at the Expected Port?]
-* xref:#gjjpn[Is a Personal Firewall Enabled?]
+* xref:#did-the-server-start[Did the Server Start?]
+* xref:#was-the-server-started-at-the-expected-port[Was the Server Started at the Expected Port?]
+* xref:#is-a-personal-firewall-enabled[Is a Personal Firewall Enabled?]
 
 [[abgcb]][[GSTSG00179]][[did-the-server-start]]
 
@@ -63,7 +63,7 @@ If startup was successful, the expected message is similar to that on
 the console, and appears at the end of the log file.
 
 For more information about starting a domain, see
-"link:administration-guide/domains.html#GSADG00537[
+"link:administration-guide/domains.html#starting-and-stopping-a-domain[
 Starting and Stopping a Domain]"
 in {productName} Administration Guide.
 To easily determine if a domain is running, use the `asadmin list-domains` command.
@@ -124,8 +124,8 @@ screen does not appear.
 
 When this error occurs, check the following:
 
-* xref:#abgcg[Is the Server Available Locally?]
-* xref:#abgcj[Is the Proxy Setting Causing a Problem?]
+* xref:#is-the-server-available-locally[Is the Server Available Locally?]
+* xref:#is-the-proxy-setting-causing-a-problem[Is the Proxy Setting Causing a Problem?]
 
 [[abgcg]][[GSTSG00182]][[is-the-server-available-locally]]
 
@@ -159,7 +159,7 @@ http://localhost:8080/
 ----
 If the start page does appear, the web connection is encountering a
 problem that prevents accessing the server remotely. If the start page
-does not appear, see xref:#abgcb[Did the Server Start?].
+does not appear, see xref:#did-the-server-start[Did the Server Start?].
 
 [[abgcj]][[GSTSG00183]][[is-the-proxy-setting-causing-a-problem]]
 
@@ -211,12 +211,12 @@ The Administration Console provides a graphical interface for
 administrative functions. If the Administration Console is not
 accessible, check the following:
 
-* xref:#abgcn[Is the Application Server Running?]
-* xref:#abgcq[Is the Administration Console Running on the Expected
+* xref:#is-the-application-server-running[Is the Application Server Running?]
+* xref:#is-the-administration-console-running-on-the-expected-port[Is the Administration Console Running on the Expected
 Port?]
 
 For more information about the Administration Console, see
-"link:administration-guide/overview.html#GSADG00698[Administration Console]" in {productName} Administration Guide.
+"link:administration-guide/overview.html#administration-console[Administration Console]" in {productName} Administration Guide.
 
 [[abgcn]][[GSTSG00184]][[is-the-application-server-running]]
 
@@ -233,7 +233,7 @@ accessed.
 
 ===== Solution
 
-Review the information in xref:#abgcb[Did the Server Start?] to
+Review the information in xref:#did-the-server-start[Did the Server Start?] to
 determine if the server is running.
 
 [[abgcq]][[GSTSG00185]][[is-the-administration-console-running-on-the-expected-port]]
@@ -253,7 +253,7 @@ port was in use when the server was started.
 
 ===== Solution
 
-Refer to xref:#abgcd[Was the Server Started at the Expected Port?] for
+Refer to xref:#was-the-server-started-at-the-expected-port[Was the Server Started at the Expected Port?] for
 guidelines on verifying the port on which the Administration Console is
 running. Be sure to enter the correct port number and HTTP protocol when
 invoking the Administration Console.
@@ -265,8 +265,8 @@ invoking the Administration Console.
 If a particular application cannot be accessed through {productName},
 check the following:
 
-* xref:#abgcx[Is the Application Server Running?]
-* xref:#abgda[Was Application Deployment Successful?]
+* xref:#is-the-application-server-running-1[Is the Application Server Running?]
+* xref:#was-application-deployment-successful[Was Application Deployment Successful?]
 
 [[abgcx]][[GSTSG00186]][[is-the-application-server-running-1]]
 
@@ -282,7 +282,7 @@ If {productName} is not running, applications are not accessible.
 
 ===== Solution
 
-Review the information in xref:#abgcb[Did the Server Start?] to
+Review the information in xref:#did-the-server-start[Did the Server Start?] to
 determine if the server is running. The server must be running before a
 server application can be accessed.
 
@@ -315,7 +315,7 @@ applications are deployed.
 clicking the Applications node.
 
 For more information about deploying applications, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00004[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
+"link:application-deployment-guide/deploying-applications.html#beact[Deploying Applications]" in {productName} Application Deployment Guide. Also see the Administration
 Console online help.
 
 [[gjjoz]][[GSTSG00047]][[administrator-user-name-or-password-not-known]]
@@ -374,8 +374,8 @@ This error occurs when another application is running on the {productName} port 
 
 You might also check the following:
 
-* xref:#abgdj[Is Another Application Running on the Server's Port?]
-* xref:#abgdk[Has an Ungraceful Shutdown Occurred on a Previously Running Server?]
+* xref:#is-another-application-running-on-the-servers-port[Is Another Application Running on the Server's Port?]
+* xref:#has-an-ungraceful-shutdown-occurred-on-a-previously-running-server[Has an Ungraceful Shutdown Occurred on a Previously Running Server?]
 
 [[abgdj]][[GSTSG00190]][[is-another-application-running-on-the-servers-port]]
 
@@ -503,7 +503,7 @@ asadmin generate-jvm-report --type=thread
 
 See Also
 
-link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`(1)]
+link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`(1)]
 
 [[ghvgk]][[GSTSG00053]][[issues-related-to-applications]]
 
@@ -727,7 +727,7 @@ It is safe to remove uninstallation and installation log files after you
 have examined them.
 
 For information related to uninstallation, see
-"link:installation-guide/uninstalling.html#GSING00003[Uninstalling GlassFish]"
+"link:installation-guide/uninstalling.html#ghmlt[Uninstalling GlassFish]"
 in {productName} Installation Guide.
 
 [[ghvrh]][[GSTSG00056]][[issues-related-to-security]]

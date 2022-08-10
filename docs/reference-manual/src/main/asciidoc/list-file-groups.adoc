@@ -84,9 +84,9 @@ Command list-file-groups executed successfully
 
 xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
-link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
-link:list-file-users.html#list-file-users-1[`list-file-users`(1)],
-link:update-file-user.html#update-file-user-1[`update-file-user`(1)]
+link:create-file-user.html#create-file-user[`create-file-user`(1)],
+link:delete-file-user.html#delete-file-user[`delete-file-user`(1)],
+link:list-file-users.html#list-file-users[`list-file-users`(1)],
+link:update-file-user.html#update-file-user[`update-file-user`(1)]
 
 

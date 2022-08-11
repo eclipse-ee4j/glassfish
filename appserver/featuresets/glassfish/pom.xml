@@ -40,8 +40,8 @@
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
-        
-        
+
+
         <!-- Jakarta Batch -->
         <dependency>
             <groupId>jakarta.batch</groupId>
@@ -107,8 +107,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        
+
+
         <!-- Jakarta Enterprise Beans (features on top of Enterprise Beans Lite -->
         <dependency>
             <groupId>org.glassfish.main.ejb</groupId>
@@ -338,7 +338,7 @@
             </exclusions>
         </dependency>
 
-        
+
         <!-- Jakarta XML Web Services -->
         <dependency><!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
             <groupId>org.glassfish.metro</groupId>
@@ -499,8 +499,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        
+
+
         <!-- Jakarta XML Binding -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
@@ -522,8 +522,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        
+
+
         <!-- Jakarta Activation -->
         <dependency>
             <groupId>jakarta.activation</groupId>
@@ -545,8 +545,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
-        
+
+
         <!-- Jakarta Messaging -->
         <dependency>
             <groupId>jakarta.jms</groupId>
@@ -637,7 +637,7 @@
                 </exclusion>
             </exclusions>
        </dependency>
-        
+
 
         <!-- GlassFish Application Client Container-->
         <dependency>
@@ -728,7 +728,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-       
+
 
         <!-- GlassFish Admin GUI -->
         <dependency>
@@ -786,7 +786,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- glassfish-common-full -->
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -800,7 +800,7 @@
             </exclusions>
         </dependency>
     </dependencies>
-    
+
     <profiles>
         <profile>
             <id>jdk17</id>
@@ -820,7 +820,7 @@
                         </exclusion>
                     </exclusions>
                 </dependency>
-        
+
                 <!-- MicroProfile Config -->
                 <dependency>
                     <groupId>org.eclipse.microprofile.config</groupId>

@@ -675,6 +675,16 @@
                 <version>${schema2beans.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>io.helidon.microprofile.config</groupId>
+                <artifactId>helidon-microprofile-config</artifactId>
+                <version>${helidon-config.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>${microprofile.config-api.version}</version>
+            </dependency>
 
             <!-- Other -->
             <dependency>

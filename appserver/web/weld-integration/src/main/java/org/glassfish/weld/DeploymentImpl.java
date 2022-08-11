@@ -275,9 +275,10 @@ public class DeploymentImpl implements CDI11Deployment {
 
         for (BeanDeploymentArchive beanDeploymentArchive : getBeanDeploymentArchives()) {
             if (!(beanDeploymentArchive instanceof RootBeanDeploymentArchive)) {
-                extensions =
-                    context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
-                           .loadExtensions(((BeanDeploymentArchiveImpl) beanDeploymentArchive).getModuleClassLoaderForBDA());
+                ClassLoader classLoader = new FilteringClassLoader(((BeanDeploymentArchiveImpl) beanDeploymentArchive)
+                    .getModuleClassLoaderForBDA());
+                extensions = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
+                    .loadExtensions(classLoader);
 
                 if (extensions != null) {
                     for (Metadata<Extension> beanDeploymentArchiveExtension : extensions) {

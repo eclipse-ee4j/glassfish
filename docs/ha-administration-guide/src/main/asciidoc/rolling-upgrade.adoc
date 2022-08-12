@@ -7,9 +7,6 @@ prev=http-load-balancing.html
 
 = Upgrading Applications Without Loss of Availability
 
-[[GSHAG00010]][[abdik]]
-
-
 [[upgrading-applications-without-loss-of-availability]]
 == 8 Upgrading Applications Without Loss of Availability
 
@@ -21,7 +18,7 @@ while new users transparently get the new version of the application.
 With a rolling upgrade, users are unaware that the upgrade occurs.
 
 For more information about application versions and how they are
-identified, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+identified, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application Versions]" in
 {productName} Application Deployment Guide.
 
 In a clustered environment, a rolling upgrade redeploys an application
@@ -53,7 +50,7 @@ boundary for session failover for instances in the cluster. Sessions in
 one cluster can never fail over to sessions in another cluster.
 Therefore, the risk of version mismatch is avoided.
 
-[[abdil]][[GSHAG00205]][[application-compatibility]]
+[[application-compatibility]]
 
 === Application Compatibility
 
@@ -73,7 +70,7 @@ Compatible applications must:
 
 You can perform a rolling upgrade of a compatible application in either
 a single cluster or multiple clusters. For more information, see
-link:#abdim[Upgrading In a Single Cluster].
+xref:#upgrading-in-a-single-cluster[Upgrading In a Single Cluster].
 
 If the two versions of an application do not meet all the above
 criteria, then the applications are considered incompatible. Executing
@@ -83,14 +80,14 @@ The problems depend on the type and extent of the incompatibility. It is
 good practice to upgrade an incompatible application by creating a
 "shadow cluster" to which to deploy the new version and slowly quiesce
 the old cluster and application. For more information, see
-link:#abdio[Upgrading Incompatible Applications].
+xref:#upgrading-incompatible-applications[Upgrading Incompatible Applications].
 
 The application developer and administrator are the best people to
 determine whether application versions are compatible. If in doubt,
 assume that the versions are incompatible, since this is the safest
 approach.
 
-[[abdim]][[GSHAG00206]][[upgrading-in-a-single-cluster]]
+[[upgrading-in-a-single-cluster]]
 
 === Upgrading In a Single Cluster
 
@@ -98,7 +95,7 @@ You can perform a rolling upgrade of an application deployed to a single
 cluster, providing the cluster's configuration is not shared with any
 other cluster.
 
-[[fxxvd]][[GSHAG00151]][[to-upgrade-an-application-in-a-single-cluster]]
+[[to-upgrade-an-application-in-a-single-cluster]]
 
 ==== To Upgrade an Application in a Single Cluster
 
@@ -138,11 +135,11 @@ Enabling the upgraded application version automatically disables the previous ve
     `asadmin export-http-lb-config`.
 ... Copy the configuration file to the web server's configuration directory.
 
-[[abdin]][[GSHAG00207]][[upgrading-in-multiple-clusters]]
+[[upgrading-in-multiple-clusters]]
 
 === Upgrading in Multiple Clusters
 
-[[fxxvb]][[GSHAG00152]][[to-upgrade-a-compatible-application-in-two-or-more-clusters]]
+[[to-upgrade-a-compatible-application-in-two-or-more-clusters]]
 
 ==== To Upgrade a Compatible Application in Two or More Clusters
 
@@ -185,13 +182,13 @@ previous version.
    `asadmin export-http-lb-config`.
 .. Copy the configuration file to the web server's configuration directory.
 
-[[abdio]][[GSHAG00208]][[upgrading-incompatible-applications]]
+[[upgrading-incompatible-applications]]
 
 === Upgrading Incompatible Applications
 
 If the new version of the application is incompatible with the old
 version, use the following procedure. For information on what makes
-applications compatible, see link:#abdil[Application Compatibility].
+applications compatible, see xref:#application-compatibility[Application Compatibility].
 Also, you must upgrade incompatible application in two or more clusters.
 If you have only one cluster, create a "shadow cluster" for the upgrade,
 as described below.
@@ -210,7 +207,7 @@ application before you take it offline, because the requests for the
 application won't fail over to the new cluster. These user sessions will
 simply fail.
 
-[[abdip]][[GSHAG00153]][[to-upgrade-an-incompatible-application-by-creating-a-second-cluster]]
+[[to-upgrade-an-incompatible-application-by-creating-a-second-cluster]]
 
 ==== To Upgrade an Incompatible Application by Creating a Second Cluster
 

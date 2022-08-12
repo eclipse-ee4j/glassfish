@@ -5,9 +5,6 @@ prev=part-runtime-admin.adoc
 
 = General Administration
 
-[[GSADG00005]][[gitya]]
-
-
 [[general-administration]]
 == 2 General Administration
 
@@ -17,18 +14,18 @@ using the `asadmin` command-line utility.
 
 The following topics are addressed here:
 
-* link:#giobi[Using the `asadmin` Utility]
-* link:#ghcjc[Administering System Properties]
-* link:#CHDJBJDA[Using Configuration Modularity]
-* link:#gixps[Administering Resources]
-* link:#ggocm[Listing Various System Elements]
-* link:#gjipx[Using REST Interfaces to Administer {productName}]
+* <<Using the `asadmin` Utility>>
+* <<Administering System Properties>>
+* <<Using Configuration Modularity>>
+* <<Administering Resources>>
+* <<Listing Various System Elements>>
+* <<Using REST Interfaces to Administer {productName}>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[giobi]][[GSADG00530]][[using-the-asadmin-utility]]
+[[using-the-asadmin-utility]]
 
 === Using the `asadmin` Utility
 
@@ -37,17 +34,17 @@ instead of the Administration Console interface.
 
 The following topics are addressed here:
 
-* link:#giwdb[Path to the `asadmin` Utility]
-* link:#givvn[`asadmin` Utility Syntax]
-* link:#ghvzx[To Run an `asadmin` Utility Subcommand in Single Mode]
-* link:#givlw[To Display Help Information for the `asadmin` Utility or a
+* <<Path to the `asadmin` Utility>>
+* <<`asadmin` Utility Syntax>>
+* <<To Run an `asadmin` Utility Subcommand in Single Mode>>
+* xref:#to-display-help-information-for-the-asadmin-utility-or-a-subcommand[To Display Help Information for the `asadmin` Utility or a
 Subcommand]
-* link:#giodz[To Start a Multimode Session]
-* link:#givjn[To End a Multimode Session]
-* link:#givjd[To Run a Set of `asadmin` Subcommands From a File]
-* link:#CACDDHBA[To Run `asadmin` Subcommands in `--detach` Mode]
+* <<To Start a Multimode Session>>
+* <<To End a Multimode Session>>
+* <<To Run a Set of `asadmin` Subcommands From a File>>
+* <<To Run `asadmin` Subcommands in `--detach` Mode>>
 
-[[giwdb]][[GSADG00705]][[path-to-the-asadmin-utility]]
+[[path-to-the-asadmin-utility]]
 
 ==== Path to the `asadmin` Utility
 
@@ -55,7 +52,7 @@ The `asadmin` utility is located in the as-install``/bin`` directory. To
 run the `asadmin` utility without specifying the path, ensure that this
 directory is in your path.
 
-[[givvn]][[GSADG00706]][[asadmin-utility-syntax]]
+[[asadmin-utility-syntax]]
 
 ==== `asadmin` Utility Syntax
 
@@ -71,7 +68,7 @@ that follow. For full details of this syntax, see the
 https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[`asadmin`(1M)]
 help page.
 
-[[ghvzn]][[GSADG00631]][[subcommands-of-the-asadmin-utility]]
+[[subcommands-of-the-asadmin-utility]]
 
 ===== Subcommands of the `asadmin` Utility
 
@@ -90,7 +87,7 @@ For a list of the subcommands for this release of {productName}, see
 Section 1 of the
 https://github.com/eclipse-ee4j/glassfishdoc/5.0/reference-manual.pdf[{productName} Reference Manual].
 
-[[ghvyd]][[GSADG00632]][[asadmin-utility-options-and-subcommand-options]]
+[[asadmin-utility-options-and-subcommand-options]]
 
 ===== `asadmin` Utility Options and Subcommand Options
 
@@ -106,7 +103,7 @@ the subcommand are deprecated. All `asadmin` utility options must either
 precede or follow the subcommand. If `asadmin` utility options are
 specified both before and after the subcommand, an error occurs. For a
 description of the `asadmin` utility options, see the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] help page.
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] help page.
 * Subcommand Options. These options control the behavior of the
 subcommand, not the `asadmin` utility. Subcommand options must follow
 the subcommand. For a description of a subcommand's options, see the
@@ -141,7 +138,7 @@ specifying terse output are as follows:
 Most options require argument values, except Boolean options, which
 toggle to enable or disable a feature.
 
-[[ghvyj]][[GSADG00633]][[operands-of-asadmin-utility-subcommands]]
+[[operands-of-asadmin-utility-subcommands]]
 
 ===== Operands of `asadmin` Utility Subcommands
 
@@ -151,7 +148,7 @@ by a space, a tab, or double dashes (`--`). The `asadmin` utility treats
 anything that follows the subcommand options and their values as an
 operand.
 
-[[ghvzx]][[GSADG00304]][[to-run-an-asadmin-utility-subcommand-in-single-mode]]
+[[to-run-an-asadmin-utility-subcommand-in-single-mode]]
 
 ==== To Run an `asadmin` Utility Subcommand in Single Mode
 
@@ -161,17 +158,17 @@ returned to the operating system's command shell. Any `asadmin` utility
 options must be specified in each separate `asadmin` command that you
 run. If you require the same `asadmin` utility options for multiple
 subcommands, use the `asadmin` utility in multimode. For more
-information, see link:#giodz[To Start a Multimode Session].
+information, see <<To Start a Multimode Session>>.
 
 1. In the operating system's command shell, run the `asadmin` utility,
 specifying the subcommand.
 2. If necessary, also specify any required `asadmin` utility options,
 subcommand options, and operands.
 
-[[GSADG00098]][[giwdr]]
+[[giwdr]]
 Example 2-1 Running an `asadmin` Utility Subcommand in Single Mode
 
-This example runs the link:reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand
+This example runs the link:reference-manual/list-applications.html#list-applications[`list-applications`] subcommand
 in single mode. In this example, the default values for all options are
 used.
 
@@ -185,7 +182,7 @@ hello <web>
 Command list-applications executed successfully.
 ----
 
-[[GSADG00099]][[giwbf]]
+[[giwbf]]
 Example 2-2 Specifying an `asadmin` Utility Option With a Subcommand in
 Single Mode
 
@@ -207,7 +204,7 @@ automatic-timer-ejb <ejb>
 Command list-applications executed successfully.
 ----
 
-[[GSADG00100]][[ghvyk]]
+[[ghvyk]]
 Example 2-3 Specifying an `asadmin` Utility Option and a Subcommand
 Option in Single Mode
 
@@ -225,14 +222,14 @@ ejb31-war <ejb, web>
 Command list-applications executed successfully.
 ----
 
-[[givlw]][[GSADG00305]][[to-display-help-information-for-the-asadmin-utility-or-a-subcommand]]
+[[to-display-help-information-for-the-asadmin-utility-or-a-subcommand]]
 
 ==== To Display Help Information for the `asadmin` Utility or a Subcommand
 
 {productName} provides help information about the syntax, purpose,
 and options of the `asadmin` utility and its subcommands. This help
 information is written in the style of UNIX platform man pages. This
-help information is also available in the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+help information is also available in the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 1. If you are displaying help information for a remote subcommand,
 ensure that the server is running.
@@ -244,7 +241,7 @@ subcommand.
 If you run the `help` subcommand without an operand, help information
 for the `asadmin` utility is displayed.
 
-[[GSADG00101]][[giwgs]]
+[[giwgs]]
 Example 2-4 Displaying Help Information for the `asadmin` Utility
 
 This example displays the help information for the `asadmin` utility.
@@ -254,7 +251,7 @@ This example displays the help information for the `asadmin` utility.
 asadmin help
 ----
 
-[[GSADG00102]][[giusg]]
+[[giusg]]
 Example 2-5 Displaying Help Information for an `asadmin` Utility
 Subcommand
 
@@ -266,16 +263,14 @@ This example displays the help information for the
 asadmin help create-jdbc-resource
 ----
 
-[[GSADG800]]
-
 See Also
 
 To display the available subcommands, use the
-link:reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand. Local subcommands are
+link:reference-manual/list-commands.html#list-commands[`list-commands`] subcommand. Local subcommands are
 displayed before remote subcommands. If the server is not running, only
 local subcommands are displayed.
 
-[[giodz]][[GSADG00306]][[to-start-a-multimode-session]]
+[[to-start-a-multimode-session]]
 
 ==== To Start a Multimode Session
 
@@ -295,14 +290,14 @@ Starting a multimode session does not require a running DAS.
 
 1. Do one of the following:
 * Run the `asadmin` utility without a subcommand.
-* Use the link:reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand.
+* Use the link:reference-manual/multimode.html#multimode[`multimode`] subcommand.
 2. If necessary, also specify any `asadmin` utility options that will
 apply throughout the multimode session.
 3. In a multimode session, the `asadmin>` prompt is displayed on the
 command line. You can now type `asadmin` subcommands at this prompt to
 administer {productName}.
 
-[[GSADG00103]][[givuq]]
+[[givuq]]
 Example 2-6 Starting a Multimode Session With `asadmin` Utility Options
 
 This example starts a multimode session in which the `asadmin` utility
@@ -313,7 +308,7 @@ options `--user` and `--passwordfile` are set for the session.
 asadmin --user admin1 --passwordfile pwd.txt multimode
 ----
 
-[[GSADG00104]][[giwgh]]
+[[giwgh]]
 Example 2-7 Starting a Multimode Session by Using the `multimode`
 Subcommand
 
@@ -327,7 +322,7 @@ asadmin multimode
 
 The `asadmin>` prompt is displayed on the command line.
 
-[[GSADG00105]][[ghvzc]]
+[[ghvzc]]
 Example 2-8 Running a Subcommand in a Multimode Session
 
 This example starts a multimode session and runs the `list-domains`
@@ -352,14 +347,12 @@ running the `multimode` subcommand from within the existing session.
 After you end the second multimode session, you return to your original
 multimode session.
 
-[[GSADG802]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help multimode` at the command line.
 
-[[givjn]][[GSADG00307]][[to-end-a-multimode-session]]
+[[to-end-a-multimode-session]]
 
 ==== To End a Multimode Session
 
@@ -385,7 +378,7 @@ still displayed, you might have opened a multimode session within a
 multimode session. In this situation, repeat this procedure to end the
 remaining multimode session.
 
-[[givjd]][[GSADG00308]][[to-run-a-set-of-asadmin-subcommands-from-a-file]]
+[[to-run-a-set-of-asadmin-subcommands-from-a-file]]
 
 ==== To Run a Set of `asadmin` Subcommands From a File
 
@@ -394,13 +387,13 @@ automate repetitive tasks.
 
 1. Create a plain text file that contains the sequence of subcommands
 that you want to run.
-2. Run the link:reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand, specifying the
+2. Run the link:reference-manual/multimode.html#multimode[`multimode`] subcommand, specifying the
 file that you created.
 +
 If necessary, also specify any `asadmin` utility options that are
 required to enable subcommands in the file to run.
 
-[[GSADG00106]][[givul]]
+[[givul]]
 Example 2-9 Running a Set of `asadmin` Subcommands From a File
 
 This example contains the following:
@@ -439,21 +432,19 @@ option must also be set.
 asadmin --port 9048 multimode --file commands_file.txt
 ----
 
-[[GSADG803]]
-
 See Also
 
 For more information about the subcommands in the preceding example, see
 the following help pages:
 
-* link:reference-manual/create-domain.html#GSRFM00023[`create-domain`(1)]
-* link:reference-manual/delete-domain.html#GSRFM00075[`delete-domain`(1)]
-* link:reference-manual/list-commands.html#GSRFM00154[`list-commands`(1)]
-* link:reference-manual/multimode.html#GSRFM00213[`multimode`(1)]
-* link:reference-manual/start-domain.html#GSRFM00235[`start-domain`(1)]
-* link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`(1)]
+* link:reference-manual/create-domain.html#create-domain[`create-domain`(1)]
+* link:reference-manual/delete-domain.html#delete-domain[`delete-domain`(1)]
+* link:reference-manual/list-commands.html#list-commands[`list-commands`(1)]
+* link:reference-manual/multimode.html#multimode[`multimode`(1)]
+* link:reference-manual/start-domain.html#start-domain[`start-domain`(1)]
+* link:reference-manual/stop-domain.html#stop-domain[`stop-domain`(1)]
 
-[[CACDDHBA]][[GSADG1055]][[to-run-asadmin-subcommands-in---detach-mode]]
+[[to-run-asadmin-subcommands-in---detach-mode]]
 
 ==== To Run `asadmin` Subcommands in `--detach` Mode
 
@@ -466,7 +457,7 @@ script.
 1. Ensure that the server is running. Remote commands require a running server.
 2. Detach and run the subcommand by using the `asadmin` `--detach` option.
 
-[[GSADG1056]][[sthref7]]
+[[ga-example-2-10]]
 Example 2-10 Using the `--detach` Option in Single Mode
 
 This example uses the `asadmin` `--detach` option in single mode to run
@@ -479,7 +470,7 @@ Job ID: 1
 Command create-cluster started successfully.
 ----
 
-[[GSADG1057]][[sthref8]]
+[[GSADG1057]]
 Example 2-11 Using the `--detach` Option in Multimode
 
 This example uses the `asadmin` `--detach` option in multimode to run
@@ -499,7 +490,7 @@ subcommand to reattach to a job and view its status, and the
 `configure-managed-jobs` subcommand to configure how long information
 about jobs is kept.
 
-[[GSADG1058]][[sthref9]]
+[[GSADG1058]]
 Example 2-12 Listing Jobs
 
 This example runs the `list-jobs` subcommand in multimode to list jobs
@@ -514,7 +505,7 @@ JOB ID     COMMAND           STATE       EXIT CODE TIME OF COMPLETION
 Command list-jobs executed successfully
 ----
 
-[[GSADG1059]][[sthref10]]
+[[GSADG1059]]
 Example 2-13 Attaching to a Subcommand and Checking Its Status
 
 This example runs the `attach` subcommand in multimode to attach to the
@@ -529,7 +520,7 @@ Command create-cluster executed with status SUCCESS.
 Command attach executed successfully.
 ----
 
-[[GSADG1060]][[sthref11]]
+[[GSADG1060]]
 Example 2-14 Configuring Managed Jobs
 
 This example runs the `configure-managed-jobs` subcommand in multimode
@@ -542,18 +533,16 @@ asadmin> configure-managed-jobs --job-retention-period=36h
 Command configure-managed-jobs executed successfully.
 ----
 
-[[GSADG1061]]
-
 See Also
 
 For the full syntax and options of the subcommands in the preceding
 examples, see the following help pages:
 
-* link:reference-manual/attach.html#GSRFM825[`attach`(1)]
-* link:reference-manual/configure-managed-jobs.html#GSRFM836[`configure-managed-jobs`(1)]
-* link:reference-manual/list-jobs.html#GSRFM867[`list-jobs`(1)]
+* link:reference-manual/attach.html#attach[`attach`(1)]
+* link:reference-manual/configure-managed-jobs.html#configure-managed-jobs[`configure-managed-jobs`(1)]
+* link:reference-manual/list-jobs.html#list-jobs[`list-jobs`(1)]
 
-[[ghcjc]][[GSADG00531]][[administering-system-properties]]
+[[administering-system-properties]]
 
 === Administering System Properties
 
@@ -563,11 +552,11 @@ overridden through a system property of the corresponding name.
 
 The following topics are addressed here:
 
-* link:#ggonc[To Create System Properties]
-* link:#ggodt[To List System Properties]
-* link:#ggomm[To Delete a System Property]
+* <<To Create System Properties>>
+* <<To List System Properties>>
+* <<To Delete a System Property>>
 
-[[ggonc]][[GSADG00309]][[to-create-system-properties]]
+[[to-create-system-properties]]
 
 ==== To Create System Properties
 
@@ -578,12 +567,12 @@ of the corresponding name.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create system properties by using the
-link:reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand.
+link:reference-manual/create-system-properties.html#create-system-properties[`create-system-properties`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 
-[[GSADG00107]][[ggovp]]
+[[ggovp]]
 Example 2-15 Creating a System Property
 
 This example creates a system property associated with
@@ -595,14 +584,12 @@ asadmin> create-system-properties http-listener-port=1088
 Command create-system-properties executed successfully.
 ----
 
-[[GSADG804]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-system-properties` at the command line.
 
-[[ggodt]][[GSADG00310]][[to-list-system-properties]]
+[[to-list-system-properties]]
 
 ==== To List System Properties
 
@@ -612,12 +599,12 @@ configuration.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List system properties by using the
-link:reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
+link:reference-manual/list-system-properties.html#list-system-properties[`list-system-properties`] subcommand.
 +
 The existing system properties are displayed, including predefined
 properties such as `HTTP_LISTENER_PORT` and `HTTP_SSL_LISTENER_PORT`.
 
-[[GSADG00108]][[ggopn]]
+[[ggopn]]
 Example 2-16 Listing System Properties
 
 This example lists the system properties on host `localhost`.
@@ -629,14 +616,12 @@ http-listener-port=1088
 Command list-system-properties executed successfully.
 ----
 
-[[GSADG805]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-system-properties` at the command line.
 
-[[ggomm]][[GSADG00311]][[to-delete-a-system-property]]
+[[to-delete-a-system-property]]
 
 ==== To Delete a System Property
 
@@ -645,13 +630,13 @@ system properties.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the existing system properties by using the
-link:reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
+link:reference-manual/list-system-properties.html#list-system-properties[`list-system-properties`] subcommand.
 3. Delete the system property by using the
-link:reference-manual/delete-system-property.html#GSRFM00110[`delete-system-property`] subcommand.
+link:reference-manual/delete-system-property.html#delete-system-property[`delete-system-property`] subcommand.
 4. If necessary, notify users that the system property has been
 deleted.
 
-[[GSADG00109]][[ggoph]]
+[[ggoph]]
 Example 2-17 Deleting a System Property
 
 This example deletes a system property named `http-listener-port` from
@@ -663,14 +648,12 @@ asadmin> delete-system-property http-listener-port
 Command delete-system-property executed successfully.
 ----
 
-[[GSADG806]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-system-property` at the command line.
 
-[[CHDJBJDA]][[GSADG1096]][[using-configuration-modularity]]
+[[using-configuration-modularity]]
 
 === Using Configuration Modularity
 
@@ -688,7 +671,7 @@ removes module configuration elements from `domain.xml`, and the
 `get-active-module-config` subcommand displays the current active
 configuration of a module.
 
-[[CHDGCJCF]][[GSADG1097]][[to-add-the-default-configuration-of-a-module-to-domain.xml]]
+[[GSADG1097]][[to-add-the-default-configuration-of-a-module-to-domain.xml]]
 
 ==== To Add the Default Configuration of a Module to `domain.xml`
 
@@ -697,9 +680,9 @@ configuration of a module to `domain.xml`.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Add the default configuration of a module to `domain.xml` by using
-the link:reference-manual/create-jdbc-resource.html#GSRFM00037[`create-module-config`] subcommand.
+the link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`create-module-config`] subcommand.
 
-[[GSADG1098]][[sthref12]]
+[[GSADG1098]]
 Example 2-18 Adding Module Configuration to `domain.xml`
 
 This example adds the default configuration of the web container module
@@ -712,14 +695,12 @@ asadmin> create-module-config web-container
 Command create-module-config executed successfully.
 ----
 
-[[GSADG1099]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-module-config` at the command line.
 
-[[CHDJCJFA]][[GSADG1100]][[to-remove-the-configuration-of-a-module-from-domain.xml]]
+[[GSADG1100]][[to-remove-the-configuration-of-a-module-from-domain.xml]]
 
 ==== To Remove the Configuration of a Module From `domain.xml`
 
@@ -729,9 +710,9 @@ configuration included in the module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Remove the configuration of a module from `domain.xml` by using the
-link:reference-manual/create-jdbc-resource.html#GSRFM00037[`delete-module-config`] subcommand.
+link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`delete-module-config`] subcommand.
 
-[[GSADG1101]][[sthref13]]
+[[ex-rmcfd]]
 Example 2-19 Removing Module Configuration From `domain.xml`
 
 This example deletes the configuration of the web container module from
@@ -743,14 +724,12 @@ asadmin> delete-module-config web-container
 Command delete-module-config executed successfully.
 ----
 
-[[GSADG1102]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-module-config` at the command line.
 
-[[CHDICIJE]][[GSADG1103]][[to-display-the-current-active-configuration-of-a-module]]
+[[to-display-the-current-active-configuration-of-a-module]]
 
 ==== To Display the Current Active Configuration of a Module
 
@@ -759,9 +738,9 @@ active configuration of a module.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Display the current active configuration of a module by using the
-link:reference-manual/create-jdbc-resource.html#GSRFM00037[`get-active-module-config`] subcommand.
+link:reference-manual/create-jdbc-resource.html#create-jdbc-resource[`get-active-module-config`] subcommand.
 
-[[GSADG1104]][[sthref14]]
+[[ex-dcacm]]
 Example 2-20 Displaying the Current Active Configuration of a Module
 
 This example displays the current active configuration of the JMS
@@ -777,14 +756,12 @@ At location: domain/configs/config[server-config]
 Command get-active-module-config executed successfully.
 ----
 
-[[GSADG1105]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help get-active-module-config` at the command line.
 
-[[gixps]][[GSADG00532]][[administering-resources]]
+[[administering-resources]]
 
 === Administering Resources
 
@@ -792,7 +769,7 @@ This section contains instructions for integrating resources into the
 {productName} environment. Information about administering specific
 resources, such as JDBC, is contained in other chapters.
 
-[[ggoeh]][[GSADG00312]][[to-add-resources-from-an-xml-file]]
+[[to-add-resources-from-an-xml-file]]
 
 ==== To Add Resources From an XML File
 
@@ -808,15 +785,15 @@ subcommand will prepend domain-dir``/config`` to this operand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Add resources from an XML file by using the
-link:reference-manual/add-resources.html#GSRFM00001[`add-resources`] subcommand.
+link:reference-manual/add-resources.html#add-resources[`add-resources`] subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 3. Restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00110]][[ggozc]]
+[[ggozc]]
 Example 2-21 Adding Resources
 
 This example creates resources using the contents of the `resource.xml`
@@ -830,28 +807,26 @@ Command : JDBC connection pool poolA created successfully.
 Command add-resources executed successfully.
 ----
 
-[[GSADG807]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help add-resources` at the command line.
 
-[[ggocm]][[GSADG00533]][[listing-various-system-elements]]
+[[listing-various-system-elements]]
 
 === Listing Various System Elements
 
 The following topics are addressed here:
 
-* link:#ghhox[To Display the {productName} Version]
-* link:#ggocy[To List Applications]
-* link:#ggocv[To List Containers]
-* link:#ghlgf[To List Modules]
-* link:#ggoeg[To List Subcommands]
-* link:#giojd[To List Timers]
-* link:#giyjd[To Show Component Status]
+* <<To Display the {productName} Version>>
+* <<To List Applications>>
+* <<To List Containers>>
+* <<To List Modules>>
+* <<To List Subcommands>>
+* <<To List Timers>>
+* <<To Show Component Status>>
 
-[[ghhox]][[GSADG00316]][[to-display-the-glassfish-server-version]]
+[[to-display-the-glassfish-server-version]]
 
 ==== To Display the {productName} Version
 
@@ -862,10 +837,10 @@ cannot communicate with the server by using the specified login
 version is displayed along with a warning message.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Display the version by using the link:reference-manual/version.html#GSRFM00261[`version`]
+2. Display the version by using the link:reference-manual/version.html#version[`version`]
 subcommand.
 
-[[GSADG00114]][[ghjnb]]
+[[ghjnb]]
 Example 2-22 Displaying Version Information
 
 This example displays the version of {productName} on the local host.
@@ -877,14 +852,12 @@ Version = Eclipse GlassFish 7.0.0 (build 19)
 Command version executed successfully.
 ----
 
-[[GSADG811]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help version` at the command line.
 
-[[ggocy]][[GSADG00317]][[to-list-applications]]
+[[to-list-applications]]
 
 ==== To List Applications
 
@@ -893,10 +866,10 @@ deployed Java applications. If the `--type` option is not specified, all
 applications are listed.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List applications by using the link:reference-manual/list-applications.html#GSRFM00148[`list-applications`]
+2. List applications by using the link:reference-manual/list-applications.html#list-applications[`list-applications`]
 subcommand.
 
-[[GSADG00115]][[ggouk]]
+[[ggouk]]
 Example 2-23 Listing Applications
 
 This example lists the web applications on `localhost`.
@@ -908,14 +881,12 @@ hellojsp <web>
 Command list-applications executed successfully.
 ----
 
-[[GSADG812]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-applications` at the command line.
 
-[[ggocv]][[GSADG00319]][[to-list-containers]]
+[[to-list-containers]]
 
 ==== To List Containers
 
@@ -923,10 +894,10 @@ Use the `list-containers` subcommand in remote mode to list application
 containers.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List containers by using the link:reference-manual/list-containers.html#GSRFM00161[`list-containers`]
+2. List containers by using the link:reference-manual/list-containers.html#list-containers[`list-containers`]
 subcommand.
 
-[[GSADG00116]][[ggown]]
+[[ggown]]
 Example 2-24 Listing Containers
 
 This example lists the containers on `localhost`.
@@ -948,14 +919,12 @@ Container : webbeans
 Command list-containers executed successfully.
 ----
 
-[[GSADG813]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-containers` at the command line.
 
-[[ghlgf]][[GSADG00320]][[to-list-modules]]
+[[to-list-modules]]
 
 ==== To List Modules
 
@@ -964,10 +933,10 @@ that are accessible to the {productName} module subsystem. The status
 of each module is included. Possible statuses include NEW and READY.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List modules by using the link:reference-manual/list-modules.html#GSRFM00185[`list-modules`]
+2. List modules by using the link:reference-manual/list-modules.html#list-modules[`list-modules`]
 subcommand.
 
-[[GSADG00117]][[ghlfw]]
+[[ghlfw]]
 Example 2-25 Listing Modules
 
 This example lists the accessible modules.
@@ -1006,14 +975,12 @@ fish/modules/tiger-types-osgi.jar.
 Command list-modules executed successfully.
 ----
 
-[[GSADG814]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-modules` at the command line.
 
-[[ggoeg]][[GSADG00321]][[to-list-subcommands]]
+[[to-list-subcommands]]
 
 ==== To List Subcommands
 
@@ -1023,10 +990,10 @@ only local subcommands are listed. By default, this subcommand displays
 a list of local subcommands followed by a list of remote subcommands.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List subcommands by using the link:reference-manual/list-commands.html#GSRFM00154[`list-commands`]
+2. List subcommands by using the link:reference-manual/list-commands.html#list-commands[`list-commands`]
 subcommand.
 
-[[GSADG00118]][[ggpdl]]
+[[ggpdl]]
 Example 2-26 Listing Subcommands
 
 This example lists only local subcommands.
@@ -1048,14 +1015,12 @@ version
 Command list-commands executed successfully.
 ----
 
-[[GSADG815]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-commands` at the command line.
 
-[[giojd]][[GSADG00322]][[to-list-timers]]
+[[to-list-timers]]
 
 ==== To List Timers
 
@@ -1072,9 +1037,9 @@ to decide whether to do a timer migration, or to verify that a migration
 has been completed successfully.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List timers by using the link:reference-manual/list-timers.html#GSRFM00205[`list-timers`] subcommand.
+2. List timers by using the link:reference-manual/list-timers.html#list-timers[`list-timers`] subcommand.
 
-[[GSADG00119]][[giojj]]
+[[giojj]]
 Example 2-27 Listing Timers
 
 This example lists the timers in a particular standalone server
@@ -1087,7 +1052,7 @@ asadmin> list-timers server
 The list-timers command was executed successfully.
 ----
 
-[[giyjd]][[GSADG00323]][[to-show-component-status]]
+[[to-show-component-status]]
 
 ==== To Show Component Status
 
@@ -1096,9 +1061,9 @@ status (either enabled or disabled) of the specified deployed component.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Show component status by using the
-link:reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
+link:reference-manual/show-component-status.html#show-component-status[`show-component-status`] subcommand.
 
-[[GSADG00120]][[gjhkk]]
+[[gjhkk]]
 Example 2-28 Showing Status of a Component
 
 This example shows the status of the `MEjbApp` component.
@@ -1110,7 +1075,7 @@ Status of MEjbApp is enabled
 Command show-component-status executed successfully.
 ----
 
-[[gjipx]][[GSADG00534]][[using-rest-interfaces-to-administer-glassfish-server]]
+[[using-rest-interfaces-to-administer-glassfish-server]]
 
 === Using REST Interfaces to Administer {productName}
 
@@ -1146,18 +1111,18 @@ https://jakarta.ee/specifications/restful-ws/
 
 The following topics are addressed here:
 
-* link:#gjipk[Using REST URLs to Administer {productName}]
-* link:#gjijx[Using REST Resource Methods to Administer {productName}]
-* link:#gjjdg[Resources for `asadmin` Subcommands That Perform Non-CRUD
+* <<Using REST URLs to Administer {productName}>>
+* <<Using REST Resource Methods to Administer {productName}>>
+* xref:#resources-for-asadmin-subcommands-that-perform-non-crud-operations[Resources for `asadmin` Subcommands That Perform Non-CRUD
 Operations]
-* link:#gjiut[Securing {productName} REST Interfaces]
-* link:#gjijz[Formats for Resource Representation of Configuration
+* <<Securing {productName} REST Interfaces>>
+* xref:#formats-for-resource-representation-of-configuration-objects[Formats for Resource Representation of Configuration
 Objects]
-* link:#gkwdd[Formats for Resource Representation of Monitoring Objects]
-* link:#gkwid[Formats for Resource Representation of Log File Details]
-* link:#gkwsq[Supported Content Types in Requests to REST Resources]
+* <<Formats for Resource Representation of Monitoring Objects>>
+* <<Formats for Resource Representation of Log File Details>>
+* <<Supported Content Types in Requests to REST Resources>>
 
-[[gjipk]][[GSADG00707]][[using-rest-urls-to-administer-glassfish-server]]
+[[using-rest-urls-to-administer-glassfish-server]]
 
 ==== Using REST URLs to Administer {productName}
 
@@ -1165,7 +1130,7 @@ Each object in the configuration and monitoring object trees is
 represented as a REST resource that is accessible through an HTTP
 uniform resource locator (URL). Access to REST resources for {productName} monitoring and configuration data requires a running DAS.
 
-[[gkwhy]][[GSADG00634]][[rest-urls-to-resources-for-configuration-and-monitoring-objects]]
+[[rest-urls-to-resources-for-configuration-and-monitoring-objects]]
 
 ===== REST URLs to Resources for Configuration and Monitoring Objects
 
@@ -1195,9 +1160,9 @@ For the DAS, instance-name is `server` and the path is `servers/server/server`.
 
 For more information, see the following documentation:
 
-* The link:reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page
-* link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works]
-* link:overview.html#giusb[How Dotted Names Work for Configuration]
+* The link:reference-manual/dotted-names.html#dotted-names[`dotted-names`(5ASC)] help page
+* xref:monitoring.adoc#how-the-monitoring-tree-structure-works[How the Monitoring Tree Structure Works]
+* xref:overview.adoc#how-dotted-names-work-for-configuration[How Dotted Names Work for Configuration]
 
 If the URL to a REST resource for {productName} monitoring or
 configuration data is opened in a web browser, the browser displays a
@@ -1217,15 +1182,14 @@ subcommands for non-CRUD operations on the resource.
 The following figure shows the web page for the REST resource for
 managing a domain.
 
-[[GSADG00001]][[gjjce]]
+[[gjjce]]
 
-
-.*Figure 2-1 Web Page for the REST Resource for Managing a Domain*
+====== Figure 2-1 Web Page for the REST Resource for Managing a Domain
 image:img/rest-management.png[
 "Screen capture showing the web page for the REST resource for managing a domain."]
 
 
-[[gkwib]][[GSADG00635]][[rest-urls-for-accessing-the-log-file]]
+[[rest-urls-for-accessing-the-log-file]]
 
 ===== REST URLs for Accessing the Log File
 
@@ -1261,7 +1225,7 @@ particular interval. For example, by testing the value of the
 `"X-Text-Append-Next"` header in a client thread every 10 seconds, you
 can monitor the log entries that were added in the last 10 seconds.
 
-[[gjijx]][[GSADG00708]][[using-rest-resource-methods-to-administer-glassfish-server]]
+[[using-rest-resource-methods-to-administer-glassfish-server]]
 
 ==== Using REST Resource Methods to Administer {productName}
 
@@ -1275,8 +1239,7 @@ specification of these primitives, see
 http://www.w3.org/Protocols/rfc2616/rfc2616.html[Hypertext Transfer
 Protocol -- HTTP/1.1] .
 
-[[GSADG816]][[sthref16]][[gkame]]
-
+[[gkame]]
 
 Table 2-1 REST Resource Methods for Administering Monitoring and
 Configuration Data
@@ -1305,12 +1268,12 @@ REST requests that add, update, or delete objects must specify the
 
 The `GET` method determines the methods and method parameters that an
 object in the tree supports and provides additional information about
-the object. For details, see link:#gjjel[To Retrieve Data for an Object
+the object. For details, see xref:#to-retrieve-data-for-an-object-in-the-tree[To Retrieve Data for an Object
 in the Tree].
 ====
 
 
-[[gjjei]][[GSADG00324]][[to-determine-the-methods-and-method-parameters-that-an-object-in-the-tree-supports]]
+[[to-determine-the-methods-and-method-parameters-that-an-object-in-the-tree-supports]]
 
 ===== To Determine the Methods and Method Parameters That an Object in the Tree Supports
 
@@ -1326,7 +1289,7 @@ Before performing any operations on an object in the tree, determine the
 methods and method parameters that the object supports.
 
 You can specify the format in which this information is presented. For
-more information, see link:#gjijz[Formats for Resource Representation of
+more information, see xref:#formats-for-resource-representation-of-configuration-objects[Formats for Resource Representation of
 Configuration Objects].
 
 
@@ -1352,7 +1315,7 @@ The `GET` method returns the list of methods that the resource supports.
 For each method, the list of acceptable message parameters or the list
 of acceptable query parameters are returned.
 
-[[GSADG00121]][[gjjdi]]
+[[gjjdi]]
 Example 2-29 Determining the Methods and Method Parameters That an
 Object in the Tree Supports
 
@@ -1413,7 +1376,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
 }
 ----
 
-[[gjjel]][[GSADG00325]][[to-retrieve-data-for-an-object-in-the-tree]]
+[[to-retrieve-data-for-an-object-in-the-tree]]
 
 ===== To Retrieve Data for an Object in the Tree
 
@@ -1425,7 +1388,7 @@ information about the REST resource that represents the object:
 * A list of URLs to the children of the resource
 
 You can specify the format in which this information is presented. For
-more information, see link:#gjijz[Formats for Resource Representation of
+more information, see xref:#formats-for-resource-representation-of-configuration-objects[Formats for Resource Representation of
 Configuration Objects].
 
 1. Ensure that the server is running.
@@ -1435,7 +1398,7 @@ server.
 2. Use the `GET` method on the REST resource that represents the
 object.
 
-[[GSADG00122]][[gjjed]]
+[[gjjed]]
 Example 2-30 Retrieving Data for an Object in the Tree
 
 This example uses the cURL utility to retrieve data for the resource for
@@ -1494,7 +1457,7 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
 }
 ----
 
-[[gjjdv]][[GSADG00326]][[to-add-an-object-to-the-tree]]
+[[to-add-an-object-to-the-tree]]
 
 ===== To Add an Object to the Tree
 
@@ -1505,7 +1468,7 @@ server.
 2. Determine the acceptable message parameters for the `POST` method of
 the resource that represents the parent of the object.
 +
-For information about how to perform this step, see link:#gjjei[To
+For information about how to perform this step, see xref:#to-determine-the-methods-and-method-parameters-that-an-object-in-the-tree-supports[To
 Determine the Methods and Method Parameters That an Object in the Tree
 Supports].
 3. Use the `POST` method on the REST resource that represents the
@@ -1514,9 +1477,9 @@ parent of the object that you are adding.
 +
 Perform this step on the resource that represents the object that you
 have just added, not the parent. For information about how to perform
-this step, see link:#gjjel[To Retrieve Data for an Object in the Tree].
+this step, see <<To Retrieve Data for an Object in the Tree>>.
 
-[[GSADG00123]][[gjjen]]
+[[gjjen]]
 Example 2-31 Adding an Object to the Tree
 
 This example uses the cURL utility to add a JDBC resource object to the
@@ -1610,7 +1573,7 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 }
 ----
 
-[[gjjgj]][[GSADG00327]][[to-update-an-object-in-the-tree]]
+[[to-update-an-object-in-the-tree]]
 
 ===== To Update an Object in the Tree
 
@@ -1620,15 +1583,15 @@ Operations on REST resources for {productName} data require a running server.
 2. Determine the acceptable message parameters for the `POST` method of
 the resource that represents the object.
 For information about how to perform this step,
-see link:#gjjei[To Determine the Methods and Method Parameters That an Object in the Tree Supports].
+see <<To Determine the Methods and Method Parameters That an Object in the Tree Supports>>.
 
 3. Use the `POST` method on the REST resource that represents the
 object that you are updating.
 
 4. Confirm that the object has been updated.
-For information about how to perform this step, see link:#gjjel[To Retrieve Data for an Object in the Tree].
+For information about how to perform this step, see <<To Retrieve Data for an Object in the Tree>>.
 
-[[GSADG00124]][[gjjhd]]
+[[gjjhd]]
 Example 2-32 Updating an Object in the Tree
 
 This example uses the cURL utility to update a JDBC resource in the tree
@@ -1730,7 +1693,7 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 }
 ----
 
-[[gjjgm]][[GSADG00328]][[to-delete-an-object-from-the-tree]]
+[[to-delete-an-object-from-the-tree]]
 
 ===== To Delete an Object From the Tree
 
@@ -1740,16 +1703,16 @@ Operations on REST resources for {productName} data require a running
 server.
 2. Confirm that the object can be deleted.
 +
-For information about how to perform this step, see link:#gjjei[To
+For information about how to perform this step, see xref:#to-determine-the-methods-and-method-parameters-that-an-object-in-the-tree-supports[To
 Determine the Methods and Method Parameters That an Object in the Tree
 Supports].
 3. Confirm that the object has been deleted.
 +
 Perform this step on the resource that represents the parent of the
 object that you have just deleted. For information about how to perform
-this step, see link:#gjjel[To Retrieve Data for an Object in the Tree].
+this step, see <<To Retrieve Data for an Object in the Tree>>.
 
-[[GSADG00125]][[gjjgp]]
+[[gjjgp]]
 Example 2-33 Deleting an Object From the Tree
 
 This example uses the cURL utility to delete a JDBC resource from the
@@ -1838,7 +1801,7 @@ http://localhost:4848/management/domain/resources/jdbc-resource
 }
 ----
 
-[[gjjdg]][[GSADG00709]][[resources-for-asadmin-subcommands-that-perform-non-crud-operations]]
+[[resources-for-asadmin-subcommands-that-perform-non-crud-operations]]
 
 ==== Resources for `asadmin` Subcommands That Perform Non-CRUD Operations
 
@@ -1862,7 +1825,7 @@ operations on the node:
 * `update-node-config`
 * `update-node-ssh`
 
-[[gjiut]][[GSADG00710]][[securing-glassfish-server-rest-interfaces]]
+[[securing-glassfish-server-rest-interfaces]]
 
 ==== Securing {productName} REST Interfaces
 
@@ -1875,7 +1838,7 @@ authentication schemes for securing the REST interfaces:
 When security is enabled, you must specify `https` as the protocol in
 the URLs to REST resources and provide a user name and password.
 
-[[GSADG817]][[sthref17]]
+
 
 
 [[setting-up-basic-authentication-over-a-secure-connection]]
@@ -1891,9 +1854,9 @@ tasks:
 For information about how to perform these tasks from the command line,
 see the following documentation:
 
-* "link:security-guide/user-security.html#GSSCG00110[To Create an Authentication Realm]" in {productName} Security Guide
-* "link:security-guide/user-security.html#GSSCG00118[To Create a File User]" in {productName} Security Guide
-* link:http_https.html#ggnbj[To Configure an HTTP Listener for SSL]
+* "link:security-guide/user-security.html#to-create-an-authentication-realm[To Create an Authentication Realm]" in {productName} Security Guide
+* "link:security-guide/user-security.html#to-create-a-file-user[To Create a File User]" in {productName} Security Guide
+* xref:http_https.adoc#to-configure-an-http-listener-for-ssl[To Configure an HTTP Listener for SSL]
 
 For information about how to perform these tasks by using the
 Administration Console, see the following topics in the Administration
@@ -1902,7 +1865,7 @@ Console online help:
 * To Add a User to the Admin Realm
 * To Edit SSL Settings for a Protocol
 
-[[gkvtj]][[GSADG00329]][[to-secure-rest-interfaces-by-using-session-tokens]]
+[[to-secure-rest-interfaces-by-using-session-tokens]]
 
 ===== To Secure REST Interfaces by Using Session Tokens
 
@@ -1931,15 +1894,15 @@ after 30 minutes of inactivity.
 ====
 
 
-[[gjijz]][[GSADG00711]][[formats-for-resource-representation-of-configuration-objects]]
+[[formats-for-resource-representation-of-configuration-objects]]
 
 ==== Formats for Resource Representation of Configuration Objects
 
 The {productName} REST interfaces represent resources for
 configuration objects in the following formats:
 
-* http://www.json.org/[JSON]
-* XML
+* https://www.json.org/[JSON]
+* https://www.w3.org/XML/[XML]
 * HTML
 
 {productName} enables you to specify the resource representation
@@ -1964,7 +1927,7 @@ representation through the `-H` option as follows:
 
 ** For HTML, omit the `-H` option.
 
-[[gjiji]][[GSADG00636]][[json-resource-representation-for-configuration-objects]]
+[[json-resource-representation-for-configuration-objects]]
 
 ===== JSON Resource Representation for Configuration Objects
 
@@ -1994,12 +1957,12 @@ code::
 command-list::
   One or more metadata sets separated by a comma (`,`) that represent
   the `asadmin` subcommands for performing non—CRUD operations on the
-  resource. For the format of each metadata set, see link:#gkvyr[JSON
+  resource. For the format of each metadata set, see xref:#json-representation-of-a-command-in-a-command-list[JSON
   Representation of a Command in a Command List].
 method-list::
   One or more metadata sets separated by a comma (`,`) that represent
   the methods that the resource supports. For the format of each
-  metadata set, see link:#gjjas[JSON Representation of a Method in a
+  metadata set, see xref:#json-representation-of-a-method-in-a-method-list[JSON Representation of a Method in a
   Method List].
 attributes::
   Zero or more name-value pairs separated by a comma (`,`). Each
@@ -2015,9 +1978,9 @@ children::
     The URL to the child resource.
 
 
-[[gkvyr]][[GSADG00024]][[json-representation-of-a-command-in-a-command-list]]
+[[json-representation-of-a-command-in-a-command-list]]
 
-JSON Representation of a Command in a Command List
+====== JSON Representation of a Command in a Command List
 
 The JSON representation of a command in a command list is as follows:
 
@@ -2043,9 +2006,9 @@ rest-method::
   The REST resource method that the command invokes when the command is
   run. The method is `GET`, `POST`, or `DELETE`.
 
-[[gjjas]][[GSADG00025]][[json-representation-of-a-method-in-a-method-list]]
+[[json-representation-of-a-method-in-a-method-list]]
 
-JSON Representation of a Method in a Method List
+====== JSON Representation of a Method in a Method List
 
 The JSON representation of a method in a method list is as follows:
 
@@ -2069,20 +2032,19 @@ method-name::
 message-parameter-list::
   Zero or more metadata sets separated by a comma (`,`) that represent
   the message parameters that are allowed for the method. For the format
-  of each metadata set, see link:#gjjbb[JSON Representation of a Message
+  of each metadata set, see xref:#json-representation-of-a-message-parameter-or-a-query-parameter[JSON Representation of a Message
   Parameter or a Query Parameter].
 query-parameter-list::
   Zero or more metadata sets separated by a comma (`,`) that represent
   the query parameters that are allowed for the method. For the format
-  of each metadata set, see link:#gjjbb[JSON Representation of a Message
+  of each metadata set, see xref:#json-representation-of-a-message-parameter-or-a-query-parameter[JSON Representation of a Message
   Parameter or a Query Parameter].
 
-[[gjjbb]][[GSADG00026]][[json-representation-of-a-message-parameter-or-a-query-parameter]]
+[[json-representation-of-a-message-parameter-or-a-query-parameter]]
 
-JSON Representation of a Message Parameter or a Query Parameter
+====== JSON Representation of a Message Parameter or a Query Parameter
 
-The JSON representation of a message parameter or a query parameter is
-as follows:
+The JSON representation of a message parameter or a query parameter is as follows:
 
 [source,json]
 ----
@@ -2120,7 +2082,7 @@ Possible attributes are as follows:
     Indicates whether the parameter is key. If `true`, the parameter is
     key. If `false`, the parameter is not key.
 
-[[gjjgg]][[GSADG00027]][[example-json-resource-representation-for-a-configuration-object]]
+[[example-json-resource-representation-for-a-configuration-object]]
 
 Example JSON Resource Representation for a Configuration Object
 
@@ -2173,7 +2135,7 @@ Line breaks and white space are added to enhance readability.
 }
 ----
 
-[[gkvzs]][[GSADG00637]][[xml-resource-representation-for-configuration-objects]]
+[[xml-resource-representation-for-configuration-objects]]
 
 ===== XML Resource Representation for Configuration Objects
 
@@ -2217,7 +2179,7 @@ The replaceable items in this format are as follows:
 
 methods::
   One or more XML elements that represent the methods that the resource
-  supports. For the format of each element, see link:#gjizh[XML
+  supports. For the format of each element, see xref:#xml-representation-of-a-resource-method[XML
   Representation of a Resource Method].
 attributes::
   Zero or more XML elements that represent the attributes of the
@@ -2230,7 +2192,7 @@ attributes::
 commands::
   One or more XML elements that represent the `asadmin` subcommands for
   performing non—CRUD operations on the resource. For the format of each
-  element, see link:#gkwaw[XML Representation of a Command].
+  element, see <<XML Representation of a Command>>.
 children::
   Zero or more XML elements that represent the children of the resource.
   Each element is specified as follows:
@@ -2249,9 +2211,9 @@ code::
 resource::
   The name of the resource.
 
-[[gjizh]][[GSADG00028]][[xml-representation-of-a-resource-method]]
+[[xml-representation-of-a-resource-method]]
 
-XML Representation of a Resource Method
+====== XML Representation of a Resource Method
 
 The XML representation of a method in a method list is as follows:
 
@@ -2275,17 +2237,17 @@ method-name::
 message-parameter-list::
   Zero or more XML elements that represent the message parameters that
   are allowed for the method. For the format of each element, see
-  link:#gjizn[XML Representation of a Message Parameter or a Query
+  xref:#xml-representation-of-a-message-parameter-or-a-query-parameter[XML Representation of a Message Parameter or a Query
   Parameter].
 query-parameter-list::
   Zero or more XML elements that represent the query parameters that are
   allowed for the method. For the format of each element, see
-  link:#gjizn[XML Representation of a Message Parameter or a Query
+  xref:#xml-representation-of-a-message-parameter-or-a-query-parameter[XML Representation of a Message Parameter or a Query
   Parameter].
 
-[[gkwaw]][[GSADG00029]][[xml-representation-of-a-command]]
+[[xml-representation-of-a-command]]
 
-XML Representation of a Command
+====== XML Representation of a Command
 
 The XML representation of a command is as follows:
 
@@ -2311,9 +2273,9 @@ rest-method::
   The REST resource method that the command invokes when the command is
   run. The method is `GET`, `POST`, or `DELETE`.
 
-[[gjizn]][[GSADG00030]][[xml-representation-of-a-message-parameter-or-a-query-parameter]]
+[[xml-representation-of-a-message-parameter-or-a-query-parameter]]
 
-XML Representation of a Message Parameter or a Query Parameter
+====== XML Representation of a Message Parameter or a Query Parameter
 
 The XML representation of a message parameter or a query parameter is as
 follows:
@@ -2360,9 +2322,9 @@ attributes::
     Indicates whether the parameter is key. If `true`, the parameter is
     key. If `false`, the parameter is not key.
 
-[[gjjgi]][[GSADG00031]][[example-xml-resource-representation]]
+[[example-xml-resource-representation]]
 
-Example XML Resource Representation
+====== Example XML Resource Representation
 
 This example shows the XML representation of the resource for the node
 `sj01`. In this example, the DAS is running on the local host and the
@@ -2475,7 +2437,7 @@ Line breaks and white space are added to enhance readability.
 </map>
 ----
 
-[[gjipm]][[GSADG00638]][[html-resource-representation-for-configuration-objects]]
+[[html-resource-representation-for-configuration-objects]]
 
 ===== HTML Resource Representation for Configuration Objects
 
@@ -2491,23 +2453,23 @@ appropriate type in an HTML form.
 * A list of hypertext links to resources that represent `asadmin`
 subcommands for non-CRUD operations on the resource.
 
-For a sample web page, see link:#gjjce[Figure 2-1]. In this example, the
-DAS is running on the local host and the HTTP port for administration is
-4848. The URL to the resource in this example is
+For a sample web page, see <<gjjce>>. In this example, the
+DAS is running on the local host and the HTTP port for administration is 4848.
+The URL to the resource in this example is
 `http://localhost:4848/management/domain/nodes/node/sj01`.
 
-[[gkwdd]][[GSADG00712]][[formats-for-resource-representation-of-monitoring-objects]]
+[[formats-for-resource-representation-of-monitoring-objects]]
 
 ==== Formats for Resource Representation of Monitoring Objects
 
 The {productName} REST interfaces represent resources for monitoring
 data in the following formats:
 
-* http://www.json.org/[JSON]
-* XML
+* https://www.json.org/[JSON]
+* https://www.w3.org/XML/[XML]
 * HTML
 
-[[gkwgi]][[GSADG00639]][[json-resource-representation-for-monitoring-objects]]
+[[json-resource-representation-for-monitoring-objects]]
 
 ===== JSON Resource Representation for Monitoring Objects
 
@@ -2538,7 +2500,7 @@ code::
 statistics-list::
   Zero or more metadata sets separated by a comma (`,`) that represent
   the statistics that the monitoring object provides. For the format of
-  each metadata set, see link:#gkwkl[JSON Representation of a Statistic
+  each metadata set, see xref:#json-representation-of-a-statistic-in-a-statistics-list[JSON Representation of a Statistic
   in a Statistics List].
 children::
   Zero or more child resources separated by a comma (`,`). Each child
@@ -2550,9 +2512,9 @@ children::
   url;;
     The URL to the child resource.
 
-[[gkwkl]][[GSADG00032]][[json-representation-of-a-statistic-in-a-statistics-list]]
+[[json-representation-of-a-statistic-in-a-statistics-list]]
 
-JSON Representation of a Statistic in a Statistics List
+====== JSON Representation of a Statistic in a Statistics List
 
 The JSON representation of a counter statistic in a statistics list is
 as follows:
@@ -2569,8 +2531,7 @@ as follows:
 }
 ----
 
-The JSON representation of a range statistic in a statistics list is as
-follows:
+The JSON representation of a range statistic in a statistics list is as follows:
 
 [source,json]
 ----
@@ -2629,8 +2590,7 @@ unit::
     * The number of times the operation was performed.
     * The maximum amount of time to perform the operation once.
     * The minimum amount of time to perform the operation once.
-    * The total amount of time that has been spent performing the
-    operation.
+    * The total amount of time that has been spent performing the operation.
     * The average amount of time to perform the operation.
 name::
   The name of the statistic as displayed in client applications that
@@ -2638,9 +2598,9 @@ name::
 start-time::
   The time in UNIX time at which monitoring of the statistic began.
 
-[[gkwht]][[GSADG00033]][[example-json-resource-representation-for-a-monitoring-object]]
+[[example-json-resource-representation-for-a-monitoring-object]]
 
-Example JSON Resource Representation for a Monitoring Object
+====== Example JSON Resource Representation for a Monitoring Object
 
 This example shows the JSON representation of the monitoring object that
 provides class loader statistics for the virtual machine for the Java
@@ -2691,7 +2651,7 @@ Line breaks and white space are added to enhance readability.
 }
 ----
 
-[[gkwew]][[GSADG00640]][[xml-resource-representation-for-monitoring-objects]]
+[[xml-resource-representation-for-monitoring-objects]]
 
 ===== XML Resource Representation for Monitoring Objects
 
@@ -2727,7 +2687,7 @@ The replaceable items in this format are as follows:
 statistics::
   Zero or more XML elements that represent the statistics that the
   monitoring object provides. For the format of each element, see
-  link:#gkwjv[XML Representation of a Statistic].
+  <<XML Representation of a Statistic>>.
 children::
   Zero or more XML elements that represent the children of the resource.
   Each element is specified as follows:
@@ -2744,9 +2704,9 @@ children::
 code::
   The result of the attempt to get the resource.
 
-[[gkwjv]][[GSADG00034]][[xml-representation-of-a-statistic]]
+[[xml-representation-of-a-statistic]]
 
-XML Representation of a Statistic
+====== XML Representation of a Statistic
 
 The XML representation of a counter statistic is as follows:
 
@@ -2850,9 +2810,9 @@ name::
 last-sample-time::
   The time in UNIX time at which the statistic was last sampled.
 
-[[gkwhz]][[GSADG00035]][[example-xml-resource-representation-for-a-monitoring-object]]
+[[example-xml-resource-representation-for-a-monitoring-object]]
 
-Example XML Resource Representation for a Monitoring Object
+====== Example XML Resource Representation for a Monitoring Object
 
 This example shows the XML representation of the monitoring object that
 provides class loader statistics for the virtual machine for the Java
@@ -2933,7 +2893,7 @@ Line breaks and white space are added to enhance readability.
 </map>
 ----
 
-[[gkwij]][[GSADG00641]][[html-resource-representation-for-monitoring-objects]]
+[[html-resource-representation-for-monitoring-objects]]
 
 ===== HTML Resource Representation for Monitoring Objects
 
@@ -2948,7 +2908,7 @@ The following figure shows the web page for the REST resource that
 provides class loader statistics for the virtual machine for the Java
 platform.
 
-[[GSADG00002]][[gkwku]]
+[[gkwku]]
 
 
 .*Figure 2-2 Web Page for the REST Resource That Provides Class Loader Statistics*
@@ -2957,17 +2917,17 @@ image:img/rest-monitoring.png[
 class loader statistics."]
 
 
-[[gkwid]][[GSADG00713]][[formats-for-resource-representation-of-log-file-details]]
+[[formats-for-resource-representation-of-log-file-details]]
 
 ==== Formats for Resource Representation of Log File Details
 
 The {productName} REST interfaces represent resources for log file
 details in the following formats:
 
-* http://www.json.org/[JSON]
-* XML
+* https://www.json.org/[JSON]
+* https://www.w3.org/XML/[XML]
 
-[[gkwnp]][[GSADG00642]][[json-resource-representation-for-log-file-details]]
+[[json-resource-representation-for-log-file-details]]
 
 ===== JSON Resource Representation for Log File Details
 
@@ -2986,11 +2946,11 @@ file details is as follows:
 The replaceable item in this format is the record-list, which is one or
 more metadata sets separated by a comma (`,`) that represent the log
 records in the log file. For the format of each metadata set, see
-link:#gkwme[JSON Representation of a Log Record in a Record List].
+<<JSON Representation of a Log Record in a Record List>>.
 
-[[gkwme]][[GSADG00036]][[json-representation-of-a-log-record-in-a-record-list]]
+[[json-representation-of-a-log-record-in-a-record-list]]
 
-JSON Representation of a Log Record in a Record List
+====== JSON Representation of a Log Record in a Record List
 
 The JSON representation of a log record in a record list is as follows:
 
@@ -3035,14 +2995,14 @@ message-id::
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
   identifier. For more information, see the
-  link:error-messages-reference.html#GSEMR[
+  xref:error-messages-reference.adoc#GSEMR[
   {productName} Error Message Reference].
 message-text::
   The text of the log message.
 
-[[gkwoz]][[GSADG00037]][[example-json-resource-representation-for-log-file-details]]
+[[example-json-resource-representation-for-log-file-details]]
 
-Example JSON Resource Representation for Log File Details
+====== Example JSON Resource Representation for Log File Details
 
 This example shows the JSON representation of the resource for log file
 details. In this example, the DAS is running on the local host and the
@@ -3089,7 +3049,7 @@ Line breaks and white space are added to enhance readability.
 }
 ----
 
-[[gkwmi]][[GSADG00643]][[xml-resource-representation-for-log-file-details]]
+[[xml-resource-representation-for-log-file-details]]
 
 ===== XML Resource Representation for Log File Details
 
@@ -3105,12 +3065,12 @@ details is as follows:
 
 The replaceable item in this format is the records, which is one or more
 XML elements that represent the log records in the log file. For the
-format of each element, see link:#gkwot[XML Representation of a Log
+format of each element, see xref:#xml-representation-of-a-log-record[XML Representation of a Log
 Record].
 
-[[gkwot]][[GSADG00038]][[xml-representation-of-a-log-record]]
+[[xml-representation-of-a-log-record]]
 
-XML Representation of a Log Record
+====== XML Representation of a Log Record
 
 The XML representation of a log record is as follows:
 
@@ -3139,7 +3099,7 @@ message-id::
   A unique identifier for the message. For messages from {productName}, this identifier consists of a module code and a numerical
   value, for example, `CORE5004`. All `SEVERE` and `WARNING` messages
   and some `INFO` messages from {productName} contain a message
-  identifier. For more information, see the link:error-messages-reference.html#GSEMR[{productName} Error Message Reference].
+  identifier. For more information, see the xref:error-messages-reference.adoc#GSEMR[{productName} Error Message Reference].
 thread-id::
   The numerical identifier of the thread that created the message.
 thread-name::
@@ -3150,9 +3110,9 @@ record-number::
   A serial number in the form of a decimal integer that uniquely
   identifies the log record.
 
-[[gkwoq]][[GSADG00039]][[example-xml-resource-representation-for-log-file-details]]
+[[example-xml-resource-representation-for-log-file-details]]
 
-Example XML Resource Representation for Log File Details
+====== Example XML Resource Representation for Log File Details
 
 This example shows the XML representation of the resource for log file
 details. In this example, the DAS is running on the local host and the
@@ -3179,16 +3139,16 @@ Line breaks and white space are added to enhance readability.
 </records>
 ----
 
-[[gkwsq]][[GSADG00714]][[supported-content-types-in-requests-to-rest-resources]]
+[[supported-content-types-in-requests-to-rest-resources]]
 
 ==== Supported Content Types in Requests to REST Resources
 
 The {productName} REST interfaces support the following types in the
 content-type header of a client request:
 
-* http://www.json.org/[JSON]
+* https://www.json.org/[JSON]
 * https://www.w3.org/XML/[XML]
-* http://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1[Form URL encoded]
+* https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4.1[Form URL encoded]
 
 How to specify the type in the content-type header depends on how you
 are sending the request. For example, if you are using the cURL utility,

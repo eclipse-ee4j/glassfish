@@ -6,9 +6,6 @@ prev=jms.html
 
 = Using the Jakarta Mail API
 
-[[GSDVG00021]][[beaow]]
-
-
 [[using-the-jakarta-mail-api]]
 == 18 Using the Jakarta Mail API
 
@@ -17,12 +14,12 @@ of abstract classes defining objects that comprise a mail system.
 
 The following topics are addressed here:
 
-* link:#beaox[Introducing Jakarta Mail]
-* link:#beaoy[Creating a Jakarta Mail Session]
-* link:#beaoz[Jakarta Mail Session Properties]
-* link:#beapa[Looking Up a Jakarta Mail Session]
-* link:#fwfiy[Sending and Reading Messages Using Jakarta Mail]
-* link:#gkpfg[Using Application-Scoped Jakarta Mail Resources]
+* xref:#introducing-jakarta-mail[Introducing Jakarta Mail]
+* xref:#creating-a-jakarta-mail-session[Creating a Jakarta Mail Session]
+* xref:#jakarta-mail-session-properties[Jakarta Mail Session Properties]
+* xref:#looking-up-a-jakarta-mail-session[Looking Up a Jakarta Mail Session]
+* xref:#sending-and-reading-messages-using-jakarta-mail[Sending and Reading Messages Using Jakarta Mail]
+* xref:#using-application-scoped-jakarta-mail-resources[Using Application-Scoped Jakarta Mail Resources]
 
 
 [NOTE]
@@ -31,7 +28,7 @@ Jakarta Mail resources are supported only in the full {productName}, not in the 
 ====
 
 
-[[beaox]][[GSDVG00200]][[introducing-jakarta-mail]]
+[[introducing-jakarta-mail]]
 
 === Introducing Jakarta Mail
 
@@ -55,12 +52,12 @@ layer using the RFC822 and MIME internet standards.
 message data and to handle commands intended to interact with that data.
 
 For more information, see
-"link:administration-guide/mail.html#GSADG00019[Administering the Jakarta Mail Service]"
+"link:administration-guide/mail.html#administering-the-javamail-service[Administering the Jakarta Mail Service]"
 in {productName} Administration Guide
 and the Jakarta Mail specification at
 `https://jakarta.ee/specifications/mail`.
 
-[[beaoy]][[GSDVG00201]][[creating-a-jakarta-mail-session]]
+[[creating-a-jakarta-mail-session]]
 
 === Creating a Jakarta Mail Session
 
@@ -70,9 +67,9 @@ You can create a Jakarta Mail session in the following ways:
 Jakarta Mail Sessions. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin create-mail-resource` command. For details, see
-the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
-[[beaoz]][[GSDVG00202]][[jakarta-mail-session-properties]]
+[[jakarta-mail-session-properties]]
 
 === Jakarta Mail Session Properties
 
@@ -89,7 +86,7 @@ Jakarta Mail `Session` object, first define the property as follows:
 * Name - `mail-from`
 * Value - `john.doe@sun.com`
 
-[[beapa]][[GSDVG00203]][[looking-up-a-jakarta-mail-session]]
+[[looking-up-a-jakarta-mail-session]]
 
 === Looking Up a Jakarta Mail Session
 
@@ -114,19 +111,19 @@ String snName = "java:comp/env/mail/MyMailSession";
 Session session = (Session)ic.lookup(snName);
 ----
 
-For more information about the JNDI API, see link:jndi.html#beanr[Using
+For more information about the JNDI API, see xref:jndi.adoc#using-the-java-naming-and-directory-interface[Using
 the Java Naming and Directory Interface].
 
-[[fwfiy]][[GSDVG00204]][[sending-and-reading-messages-using-jakarta-mail]]
+[[sending-and-reading-messages-using-jakarta-mail]]
 
 === Sending and Reading Messages Using Jakarta Mail
 
 The following topics are addressed here:
 
-* link:#beapb[To Send a Message Using Jakarta Mail]
-* link:#beapc[To Read a Message Using Jakarta Mail]
+* xref:#to-send-a-message-using-jakarta-mail[To Send a Message Using Jakarta Mail]
+* xref:#to-read-a-message-using-jakarta-mail[To Read a Message Using Jakarta Mail]
 
-[[beapb]][[GSDVG00079]][[to-send-a-message-using-jakarta-mail]]
+[[to-send-a-message-using-jakarta-mail]]
 
 ==== To Send a Message Using Jakarta Mail
 
@@ -148,7 +145,7 @@ InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
 Session session = (Session)ic.lookup(snName);
 ----
-For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
+For more information, see xref:#looking-up-a-jakarta-mail-session[Looking Up a Jakarta Mail Session].
 3. Override the Jakarta Mail session properties if necessary.
 +
 For example:
@@ -180,7 +177,7 @@ msg.setText(msgTxt);
 Transport.send(msg);
 ----
 
-[[beapc]][[GSDVG00080]][[to-read-a-message-using-jakarta-mail]]
+[[to-read-a-message-using-jakarta-mail]]
 
 ==== To Read a Message Using Jakarta Mail
 
@@ -202,7 +199,7 @@ InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
 Session session = (jakarta.mail.Session)ic.lookup(snName);
 ----
-For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
+For more information, see xref:#looking-up-a-jakarta-mail-session[Looking Up a Jakarta Mail Session].
 3. Override the Jakarta Mail session properties if necessary.
 +
 For example:
@@ -236,7 +233,7 @@ messages on the server) into an array.
 Message[] messages = folder.getMessages();
 ----
 
-[[gkpfg]][[GSDVG00205]][[using-application-scoped-jakarta-mail-resources]]
+[[using-application-scoped-jakarta-mail-resources]]
 
 === Using Application-Scoped Jakarta Mail Resources
 
@@ -244,6 +241,6 @@ You can define an application-scoped Jakarta Mail or other resource for an
 enterprise application, web module, EJB module, connector module, or
 application client module by supplying a `glassfish-resources.xml`
 deployment descriptor file. For details, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00075[Application-Scoped Resources]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/deploying-applications.html#application-scoped-resources[Application-Scoped Resources]" in {productName} Application Deployment Guide.
 
 

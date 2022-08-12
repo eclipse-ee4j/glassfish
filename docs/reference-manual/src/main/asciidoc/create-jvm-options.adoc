@@ -7,13 +7,11 @@ prev=create-jndi-resource.html
 
 = create-jvm-options
 
-[[create-jvm-options-1]][[GSRFM00042]][[create-jvm-options]]
+[[create-jvm-options]]
 
 == create-jvm-options
 
 Creates options for the Java application launcher
-
-[[sthref369]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] create-jvm-options [--help]
 [--target target] [--profiler={true|false}]
 (jvm-option-name=jvm-option-value) [:jvm-option-name=jvm-option-value*]
 ----
-
-[[sthref370]]
 
 === Description
 
@@ -41,7 +37,7 @@ options are sent to the command line in the order they appear in the
 Profiler options are used to record the settings that are required to
 start a particular profiler. The profiler must already exist. If
 necessary, use the
-link:create-profiler.html#create-profiler-1[`create-profiler`(1)]
+xref:create-profiler.adoc#create-profiler[`create-profiler`(1)]
 subcommand to create the profiler.
 
 This subcommand can be used to create the following types of options:
@@ -106,17 +102,15 @@ example, restart is not required for the following Java system property:
 `-d64`
 
 To restart the DAS, use the
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)] command.
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)] command.
 
 This subcommand is supported in remote mode only.
-
-[[sthref371]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -138,8 +132,6 @@ asadmin-options::
   Indicates whether the Java application launcher options are for the
   profiler. The profiler must exist for this option to be true. Default
   is false.
-
-[[sthref372]]
 
 === Operands
 
@@ -173,14 +165,12 @@ If an option name or option value contains a colon, the backslash
 (`\`) must be used to escape the colon in the name or value. Other
 characters might also require an escape character. For more
 information about escape characters in subcommand options, see the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] man page.
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] man page.
 ====
-
-[[sthref373]]
 
 === Examples
 
-[[GSRFM500]][[sthref374]]
+[[sthref374]]
 
 ==== Example 1   Setting Java System Properties
 
@@ -194,7 +184,7 @@ created 4 option(s)
 Command create-jvm-options executed successfully.
 ----
 
-[[GSRFM501]][[sthref375]]
+[[sthref375]]
 
 ==== Example 2   Setting a Startup Parameter for the Java Application
 Launcher
@@ -208,7 +198,7 @@ created 1 option(s)
 Command create-jvm-options executed successfully.
 ----
 
-[[GSRFM502]][[sthref376]]
+[[sthref376]]
 
 ==== Example 3   Setting Multiple Startup Parameters for the Java Application
 Launcher
@@ -226,7 +216,7 @@ Command create-jvm-options executed successfully.
 In this case, one of the two parameters already exists, so the
 subcommand reports that only one option was set.
 
-[[GSRFM503]][[sthref377]]
+[[sthref377]]
 
 ==== Example 4   Setting a JVM Startup Parameter for the Profiler
 
@@ -239,8 +229,6 @@ created 1 option(s)
 Command create-jvm-options executed successfully.
 ----
 
-[[sthref378]]
-
 === Exit Status
 
 0::
@@ -248,16 +236,14 @@ Command create-jvm-options executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref379]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-profiler.html#create-profiler-1[`create-profiler`(1)],
-link:delete-jvm-options.html#delete-jvm-options-1[`delete-jvm-options`(1)],
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)],
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)]
+xref:create-profiler.adoc#create-profiler[`create-profiler`(1)],
+xref:delete-jvm-options.adoc#delete-jvm-options[`delete-jvm-options`(1)],
+xref:list-jvm-options.adoc#list-jvm-options[`list-jvm-options`(1)],
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)]
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

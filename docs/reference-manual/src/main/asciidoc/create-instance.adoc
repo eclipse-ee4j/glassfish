@@ -7,13 +7,11 @@ prev=create-iiop-listener.html
 
 = create-instance
 
-[[create-instance-1]][[GSRFM00033]][[create-instance]]
+[[create-instance]]
 
 == create-instance
 
 Creates a {productName} instance
-
-[[sthref293]]
 
 === Synopsis
 
@@ -27,8 +25,6 @@ asadmin [asadmin-options] create-instance [--help]
 [--systemproperties (name=value)[:name=value]* ]
 instance-name
 ----
-
-[[sthref294]]
 
 === Description
 
@@ -108,20 +104,18 @@ basis of an algorithm that is internal to the subcommand. Use the
 `--systemproperties` option to resolve port conflicts for additional
 instances on the same node. System properties of an instance can be
 manipulated by using the
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)]
+xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)]
 subcommand and the
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)]
+xref:delete-system-property.adoc#delete-system-property[`delete-system-property`(1)]
 subcommand.
 
 This subcommand is supported in remote mode only.
-
-[[sthref295]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -240,8 +234,6 @@ When the `--portbase` option is specified, the output of this
     creating sockets that listen on ports 1-1024 requires superuser
     privileges.
 
-[[sthref296]]
-
 === Operands
 
 instance-name::
@@ -263,11 +255,9 @@ instance-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
 
-[[sthref297]]
-
 === Examples
 
-[[GSRFM487]][[sthref298]]
+[[sthref298]]
 
 ==== Example 1   Creating a Standalone {productName} Instance
 
@@ -290,7 +280,7 @@ IIOP_SSL_MUTUALAUTH_PORT=23922
 Command create-instance executed successfully.
 ----
 
-[[GSRFM488]][[sthref299]]
+[[sthref299]]
 
 ==== Example 2   Creating a Standalone {productName} Instance With Custom
 Port Assignments
@@ -322,7 +312,7 @@ ASADMIN_LISTENER_PORT=24851
 Command create-instance executed successfully.
 ----
 
-[[GSRFM489]][[sthref300]]
+[[sthref300]]
 
 ==== Example 3   Creating a Shared {productName} Instance
 
@@ -347,7 +337,7 @@ IIOP_SSL_MUTUALAUTH_PORT=23921
 Command create-instance executed successfully.
 ----
 
-[[GSRFM490]][[sthref301]]
+[[sthref301]]
 
 ==== Example 4   Creating a Clustered {productName} Instance
 
@@ -371,8 +361,6 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-instance executed successfully.
 ----
 
-[[sthref302]]
-
 === Exit Status
 
 0::
@@ -380,22 +368,20 @@ Command create-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref303]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)],
-link:list-instances.html#list-instances-1[`list-instances`(1)],
-link:setup-ssh.html#setup-ssh-1[`setup-ssh`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
+xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-system-property.adoc#delete-system-property[`delete-system-property`(1)],
+xref:list-instances.adoc#list-instances[`list-instances`(1)],
+xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)]
 
 

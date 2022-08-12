@@ -7,13 +7,11 @@ prev=unset-web-context-param.html
 
 = unset-web-env-entry
 
-[[unset-web-env-entry-1]][[GSRFM00249]][[unset-web-env-entry]]
+[[unset-web-env-entry]]
 
 == unset-web-env-entry
 
 Unsets an environment entry for a deployed web application or module
-
-[[sthref2250]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Unsets an environment entry for a deployed web application or module
 asadmin [asadmin-options] unset-web-env-entry [--help]
 --name=env-entry-name application-name[/module]
 ----
-
-[[sthref2251]]
 
 === Description
 
@@ -39,7 +35,7 @@ set in the application's deployment descriptor.
 The application must already be deployed. Otherwise, an error occurs.
 
 The entry must have previously been set by using the
-link:set-web-env-entry.html#set-web-env-entry-1[`set-web-env-entry`(1)]
+xref:set-web-env-entry.adoc#set-web-env-entry[`set-web-env-entry`(1)]
 subcommand. Otherwise, an error occurs.
 
 [NOTE]
@@ -56,13 +52,11 @@ descriptors and repackage and redeploy the application.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2252]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -73,14 +67,12 @@ asadmin-options::
   been set by using the `set-web-env-entry` subcommand. Otherwise, an
   error occurs.
 
-[[sthref2253]]
-
 === Operands
 
 application-name::
   The name of the application. This name can be obtained from the
   Administration Console or by using the
-  link:list-applications.html#list-applications-1[`list-applications`(1)] subcommand. +
+  xref:list-applications.adoc#list-applications[`list-applications`(1)] subcommand. +
   The application must already be deployed. Otherwise, an error occurs.
 module::
   The relative path to the module within the application's enterprise
@@ -103,11 +95,9 @@ module::
 +
 The module would be specified as the operand of this command as `myApp/myWebModule.war`.
 
-[[sthref2254]]
-
 === Examples
 
-[[GSRFM784]][[sthref2255]]
+[[sthref2255]]
 
 ==== Example 1   Unsetting an Environment Entry for a Web Application
 
@@ -122,8 +112,6 @@ asadmin> unset-web-env-entry --name="Hello User" hello
 Command unset-web-env-entry executed successfully.
 ----
 
-[[sthref2256]]
-
 === Exit Status
 
 0::
@@ -131,14 +119,12 @@ Command unset-web-env-entry executed successfully.
 1::
   error in executing the command
 
-[[sthref2257]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-applications.html#list-applications-1[`list-applications`(1)],
-link:list-web-env-entry.html#list-web-env-entry-1[`list-web-env-entry`(1)],
-link:set-web-env-entry.html#set-web-env-entry-1[`set-web-env-entry`(1)]
+xref:list-applications.adoc#list-applications[`list-applications`(1)],
+xref:list-web-env-entry.adoc#list-web-env-entry[`list-web-env-entry`(1)],
+xref:set-web-env-entry.adoc#set-web-env-entry[`set-web-env-entry`(1)]
 
 

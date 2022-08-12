@@ -5,7 +5,7 @@ prev=transactions.adoc
 
 = Appendixes
 
-[[gitym]][[GSADG00299]][[part-iii]]
+[[part-iii]]
 
 == Part III
 

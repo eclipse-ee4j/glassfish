@@ -7,14 +7,12 @@ prev=list-virtual-servers.html
 
 = list-web-context-param
 
-[[list-web-context-param-1]][[GSRFM00208]][[list-web-context-param]]
+[[list-web-context-param]]
 
 == list-web-context-param
 
 Lists servlet context-initialization parameters of a deployed web
 application or module
-
-[[sthref1858]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ application or module
 asadmin [asadmin-options] list-web-context-param [--help]
 [--name=context-param-name] application-name[/module]
 ----
-
-[[sthref1859]]
 
 === Description
 
@@ -38,7 +34,7 @@ The application must already be deployed. Otherwise, an error occurs.
 
 The `list-web-context-param` subcommand lists only parameters that have
 previously been set by using the
-link:set-web-context-param.html#set-web-context-param-1[`set-web-context-param`(1)]
+xref:set-web-context-param.adoc#set-web-context-param[`set-web-context-param`(1)]
 subcommand. The subcommand does not list parameters that are set only in
 the application's deployment descriptor.
 
@@ -51,13 +47,11 @@ For each parameter, the following information is displayed:
 * The description of the parameter or `null` if no description was
   specified when the parameter was set
 
-[[sthref1860]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -66,14 +60,12 @@ asadmin-options::
   listed. If this option is omitted, all parameters of the application
   that have previously been set are listed.
 
-[[sthref1861]]
-
 === Operands
 
 application-name::
   The name of the application. This name can be obtained from the
   Administration Console or by using the
-  link:list-applications.html#list-applications-1[`list-applications`(1)] subcommand. +
+  xref:list-applications.adoc#list-applications[`list-applications`(1)] subcommand. +
   The application must already be deployed. Otherwise, an error occurs.
 module::
   The relative path to the module within the application's enterprise
@@ -96,11 +88,9 @@ module::
 +
 The module would be specified as the operand of this command as `myApp/myWebModule.war`.
 
-[[sthref1862]]
-
 === Examples
 
-[[GSRFM718]][[sthref1863]]
+[[sthref1863]]
 
 ==== Example 1   Listing Servlet Context-Initialization Parameters for a Web
 Application
@@ -121,8 +111,6 @@ javax.faces.PROJECT_STAGE = null ignoreDescriptorItem=true //null
 Command list-web-context-param executed successfully.
 ----
 
-[[sthref1864]]
-
 === Exit Status
 
 0::
@@ -130,14 +118,12 @@ Command list-web-context-param executed successfully.
 1::
   error in executing the command
 
-[[sthref1865]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-applications.html#list-applications-1[`list-applications`(1)],
-link:set-web-context-param.html#set-web-context-param-1[`set-web-context-param`(1)],
-link:unset-web-context-param.html#unset-web-context-param-1[`unset-web-context-param`(1)]
+xref:list-applications.adoc#list-applications[`list-applications`(1)],
+xref:set-web-context-param.adoc#set-web-context-param[`set-web-context-param`(1)],
+xref:unset-web-context-param.adoc#unset-web-context-param[`unset-web-context-param`(1)]
 
 

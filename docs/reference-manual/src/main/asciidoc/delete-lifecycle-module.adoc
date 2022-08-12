@@ -7,13 +7,11 @@ prev=delete-jvm-options.html
 
 = delete-lifecycle-module
 
-[[delete-lifecycle-module-1]][[GSRFM00095]][[delete-lifecycle-module]]
+[[delete-lifecycle-module]]
 
 == delete-lifecycle-module
 
 Removes the lifecycle module
-
-[[sthref834]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-lifecycle-module [--help]
 [--target target] module_name
 ----
 
-[[sthref835]]
-
 === Description
 
 The `delete-lifecycle-module` subcommand removes a lifecycle module. A
@@ -32,13 +28,11 @@ lifecycle module provides a means of running a short or long duration
 Java-based task at a specific stage in the server life cycle. This
 subcommand is supported in remote mode only.
 
-[[sthref836]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -54,19 +48,15 @@ asadmin-options::
   * instance_name- Specifies a particular server instance as the target
   for deleting the lifecycle module.
 
-[[sthref837]]
-
 === Operands
 
 module_name::
   This operand is a unique identifier for the deployed server lifecycle
   event listener module.
 
-[[sthref838]]
-
 === Examples
 
-[[GSRFM564]][[sthref839]]
+[[sthref839]]
 
 ==== Example 1   Deleting a Lifecycle Module
 
@@ -78,8 +68,6 @@ asadmin> delete-lifecycle-module customSetup
 Command delete-lifecycle-module executed successfully
 ----
 
-[[sthref840]]
-
 === Exit Status
 
 0::
@@ -87,13 +75,11 @@ Command delete-lifecycle-module executed successfully
 1::
   error in executing the command
 
-[[sthref841]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-lifecycle-module.html#create-lifecycle-module-1[`create-lifecycle-module`(1)],
-link:list-lifecycle-modules.html#list-lifecycle-modules-1[`list-lifecycle-modules`(1)]
+xref:create-lifecycle-module.adoc#create-lifecycle-module[`create-lifecycle-module`(1)],
+xref:list-lifecycle-modules.adoc#list-lifecycle-modules[`list-lifecycle-modules`(1)]
 
 

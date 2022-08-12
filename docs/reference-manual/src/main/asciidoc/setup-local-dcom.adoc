@@ -7,13 +7,11 @@ prev=set-log-levels.html
 
 = setup-local-dcom
 
-[[setup-local-dcom-1]][[GSRFM893]][[setup-local-dcom]]
+[[setup-local-dcom]]
 
 == setup-local-dcom
 
 Sets up DCOM on a host
-
-[[sthref2066]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] setup-local-dcom [--help]
 --force={false|true}
 ----
 
-[[sthref2067]]
-
 === Description
 
 The `setup-local-dcom` subcommand sets up the Distributed Component
@@ -35,7 +31,7 @@ run. The DCOM remote protocol is available only on Windows systems.
 This subcommand must be run by the operating-system-level administrator
 user on the host where DCOM is being set up. Before running this
 command, ensure that items in the Windows operating system are set as
-described in "link:ha-administration-guide/ssh-setup.html#GSHAG449[
+described in "link:ha-administration-guide/ssh-setup.html#windows-operating-system-settings[
 Windows Operating System Settings]" in
 {productName} High Availability Administration Guide.
 
@@ -60,13 +56,11 @@ prompted, set the `--force` option to `true`.
 
 This subcommand is supported in local mode only.
 
-[[sthref2068]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -96,11 +90,9 @@ asadmin-options::
     The subcommand forcibly updates the Windows registry without
     prompting you.
 
-[[sthref2069]]
-
 === Examples
 
-[[GSRFM737]][[sthref2070]]
+[[sthref2070]]
 
 ==== Example 1   Setting Up DCOM on a Host
 
@@ -118,7 +110,7 @@ Are you sure that you want to edit the Windows registry? If so, type yes in full
 Command setup-local-dcom executed successfully.
 ----
 
-[[GSRFM894]][[sthref2071]]
+[[sthref2071]]
 
 ==== Example 2   Forcibly Setting Up DCOM on a Host
 
@@ -131,8 +123,6 @@ asadmin> setup-local-dcom --force=true
 Command setup-local-dcom executed successfully.
 ----
 
-[[sthref2072]]
-
 === Exit Status
 
 0::
@@ -140,12 +130,10 @@ Command setup-local-dcom executed successfully.
 1::
   error in executing the command
 
-[[sthref2073]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-"link:ha-administration-guide/ssh-setup.html#GSHAG449[Windows Operating System Settings]" in {productName} High Availability Administration Guide
+"link:ha-administration-guide/ssh-setup.html#windows-operating-system-settings[Windows Operating System Settings]" in {productName} High Availability Administration Guide
 
 

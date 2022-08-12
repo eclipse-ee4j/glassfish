@@ -7,9 +7,6 @@ prev=preface.html
 
 = Overview of {productName} Performance Tuning
 
-[[GSPTG00003]][[giekg]]
-
-
 [[overview-of-glassfish-server-performance-tuning]]
 == 1 Overview of {productName} Performance Tuning
 
@@ -22,12 +19,12 @@ environment.
 
 The following topics are addressed here:
 
-* link:#abear[Process Overview]
-* link:#abeat[Understanding Operational Requirements]
-* link:#abeba[General Tuning Concepts]
-* link:#abebd[Further Information]
+* xref:#process-overview[Process Overview]
+* xref:#understanding-operational-requirements[Understanding Operational Requirements]
+* xref:#general-tuning-concepts[General Tuning Concepts]
+* xref:#overview-further-information[Further Information]
 
-[[abear]][[GSPTG00048]][[process-overview]]
+[[process-overview]]
 
 === Process Overview
 
@@ -35,7 +32,7 @@ The following table outlines the overall {productName} 7
 administration process, and shows where performance tuning fits in the
 sequence.
 
-[[sthref4]][[gacmh]]
+[[gacmh]]
 
 Table 1-1 Performance Tuning Roadmap
 
@@ -44,17 +41,17 @@ Table 1-1 Performance Tuning Roadmap
 |Step |Description of Task |Location of Instructions
 |1
 |Design: Decide on the high-availability topology and set up {productName}.
-a|link:deployment-planning-guide.html#GSPLG[
+a|xref:deployment-planning-guide.adoc#GSPLG[
 {productName} Deployment Planning Guide]
 
 |2
 |Capacity Planning: Make sure the systems have sufficient resources to perform well.
-a|link:deployment-planning-guide.html#GSPLG[
+a|xref:deployment-planning-guide.adoc#GSPLG[
 {productName} Deployment Planning Guide]
 
 |3
 |Installation: Configure your DAS, clusters, and clustered server instances.
-a|link:installation-guide.html#GSING[
+a|xref:installation-guide.adoc#GSING[
 {productName} Installation Guide]
 
 |4
@@ -62,15 +59,15 @@ a|link:installation-guide.html#GSING[
 Familiarize yourself with how to configure and administer the {productName}.
 a|The following books:
 
-* link:application-deployment-guide.html#GSDPG[
+* xref:application-deployment-guide.adoc#GSDPG[
 {productName} Application Deployment Guide]
-* link:administration-guide.html#GSADG[
+* xref:administration-guide.adoc#GSADG[
 {productName} Administration Guide]
 
 |5
 |High Availability Configuration: Configuring your DAS, clusters, and
 clustered server instances for high availability and failover
-a|link:ha-administration-guide.html#GSHAG[
+a|xref:ha-administration-guide.adoc#GSHAG[
 {productName} High Availability Administration Guide]
 
 |6
@@ -83,14 +80,14 @@ a|Performance Tuning: Tune the following items:
 
 a|The following chapters:
 
-* link:tuning-apps.html#abebe[Tuning Your Application]
-* link:tuning-glassfish.html#abedn[Tuning the {productName}]
-* link:tuning-java.html#abeia[Tuning the Java Runtime System]
-* link:tuning-os.html#abeir[Tuning the Operating System and Platform]
+* xref:tuning-apps.adoc#tuning-your-application[Tuning Your Application]
+* xref:tuning-glassfish.adoc#tuning-the-glassfish-server[Tuning the {productName}]
+* xref:tuning-java.adoc#tuning-the-java-runtime-system[Tuning the Java Runtime System]
+* xref:tuning-os.adoc#tuning-the-operating-system-and-platform[Tuning the Operating System and Platform]
 |===
 
 
-[[abeas]][[GSPTG00035]][[performance-tuning-sequence]]
+[[performance-tuning-sequence]]
 
 ==== Performance Tuning Sequence
 
@@ -103,15 +100,15 @@ you want to improve performance as much as possible in the meantime.
 Ideally, follow this sequence of steps when you are tuning performance:
 
 1. Tune your application, described in
-link:tuning-apps.html#abebe[Tuning Your Application].
-2. Tune the server, described in link:tuning-glassfish.html#abedn[Tuning
+xref:tuning-apps.adoc#tuning-your-application[Tuning Your Application].
+2. Tune the server, described in xref:tuning-glassfish.adoc#tuning-the-glassfish-server[Tuning
 the {productName}].
 3. Tune the Java runtime system, described in
-link:tuning-java.html#abeia[Tuning the Java Runtime System].
+xref:tuning-java.adoc#tuning-the-java-runtime-system[Tuning the Java Runtime System].
 4. Tune the operating system, described in
-link:tuning-os.html#abeir[Tuning the Operating System and Platform].
+xref:tuning-os.adoc#tuning-the-operating-system-and-platform[Tuning the Operating System and Platform].
 
-[[abeat]][[GSPTG00049]][[understanding-operational-requirements]]
+[[understanding-operational-requirements]]
 
 === Understanding Operational Requirements
 
@@ -119,13 +116,13 @@ Before you begin to deploy and tune your application on the {productName}, it is
 The operational environment is determined by high-level constraints and
 requirements such as:
 
-* link:#abeau[Application Architecture]
-* link:#abeav[Security Requirements]
-* link:#gkvjf[High Availability Clustering, Load Balancing, and Failover]
-* link:#abeay[Hardware Resources]
-* link:#abeaz[Administration]
+* xref:#application-architecture[Application Architecture]
+* xref:#security-requirements[Security Requirements]
+* xref:#high-availability-clustering-load-balancing-and-failover[High Availability Clustering, Load Balancing, and Failover]
+* xref:#hardware-resources[Hardware Resources]
+* xref:#administration[Administration]
 
-[[abeau]][[GSPTG00154]][[application-architecture]]
+[[application-architecture]]
 
 ==== Application Architecture
 
@@ -135,7 +132,7 @@ functionally into many tiers. The presentation layer is typically
 implemented using servlets and JSP technology and executes in the web
 container.
 
-[[GSPTG00001]][[gacmj]]
+[[gacmj]]
 
 
 .*Figure 1-1 Jakarta EE Application Model*
@@ -157,14 +154,14 @@ It is important to understand the application architecture before
 designing a new {productName} deployment, and when deploying a new
 business application to an existing application server deployment.
 
-[[abeav]][[GSPTG00155]][[security-requirements]]
+[[security-requirements]]
 
 ==== Security Requirements
 
 Most business applications require security. This section discusses
 security considerations and decisions.
 
-[[abeaw]][[GSPTG00080]][[user-authentication-and-authorization]]
+[[user-authentication-and-authorization]]
 
 ===== User Authentication and Authorization
 
@@ -183,7 +180,7 @@ already use a directory server may find it advantageous to leverage
 investment in Solaris security infrastructure.
 
 For more information on security realms, see
-"link:security-guide/user-security.html#GSSCG00151[Administering Authentication Realms]" in {productName} Security Guide.
+"link:security-guide/user-security.html#administering-authentication-realms[Administering Authentication Realms]" in {productName} Security Guide.
 
 The type of authentication mechanism chosen may require additional
 hardware for the deployment. Typically a directory server executes on a
@@ -201,7 +198,7 @@ authorization checks, the application server performs some additional
 checking, which incurs additional overheads. When you perform capacity
 planning, you must take this additional overhead into account.
 
-[[abeax]][[GSPTG00081]][[encryption]]
+[[encryption]]
 
 ===== Encryption
 
@@ -252,10 +249,10 @@ system, given the security requirements?
 choices?
 
 For information on how to encrypt the communication between web servers
-and {productName}, see "link:security-guide/message-security.html#GSSCG00037[Administering Message
+and {productName}, see "link:security-guide/message-security.html#administering-message-security[Administering Message
 Security]" in {productName} Security Guide.
 
-[[gkvjf]][[GSPTG00156]][[high-availability-clustering-load-balancing-and-failover]]
+[[high-availability-clustering-load-balancing-and-failover]]
 
 ==== High Availability Clustering, Load Balancing, and Failover
 
@@ -279,15 +276,15 @@ minimum application downtime and enhanced transactional security.
 * High Availability Java Message Service
 * RMI-IIOP Load Balancing and Failover
 
-See link:tuning-java.html#glaat[Tuning High Availability Persistence] for
+See xref:tuning-java.adoc#tuning-high-availability-persistence[Tuning High Availability Persistence] for
 high availability persistence tuning recommendations.
 
-See the link:ha-administration-guide.html#GSHAG[{productName} High
+See the xref:ha-administration-guide.adoc#GSHAG[{productName} High
 Availability Administration Guide] for complete information about
 configuring high availability clustering, load balancing, and failover
 features in {productName} 7.
 
-[[abeay]][[GSPTG00157]][[hardware-resources]]
+[[hardware-resources]]
 
 ==== Hardware Resources
 
@@ -313,7 +310,7 @@ hardware costs and is suitable for some types of applications. However,
 this approach requires administration of more application server
 instances and hardware nodes.
 
-[[abeaz]][[GSPTG00158]][[administration]]
+[[administration]]
 
 ==== Administration
 
@@ -342,9 +339,9 @@ can host different URL domains on a single {productName} process for
 efficient administration.
 
 For detailed information on administration, see the
-link:administration-guide.html#GSADG[{productName} Administration Guide].
+xref:administration-guide.adoc#GSADG[{productName} Administration Guide].
 
-[[abeba]][[GSPTG00050]][[general-tuning-concepts]]
+[[general-tuning-concepts]]
 
 === General Tuning Concepts
 
@@ -360,7 +357,7 @@ second column gives the practical ramifications of the concept, the
 third column describes the measurements, and the right most column
 describes the value sources.
 
-[[sthref6]][[gacmp]]
+[[gacmp]]
 
 Table 1-2 Factors That Affect Performance
 
@@ -419,7 +416,7 @@ Measure your deployment under real and simulated peak loads.
 |===
 
 
-[[abebb]][[GSPTG00159]][[capacity-planning]]
+[[capacity-planning]]
 
 ==== Capacity Planning
 
@@ -435,7 +432,7 @@ and performance.
 You can estimate these values through careful performance benchmarking,
 using an application with realistic data sets and workloads.
 
-[[gacmz]][[GSPTG00036]][[to-determine-capacity]]
+[[to-determine-capacity]]
 
 ===== To Determine Capacity
 
@@ -470,9 +467,9 @@ hardware node may meet the performance requirements. However for better
 availability, you can cluster two or more systems. Employing external
 load balancers and workload simulation, determine the performance
 benefits of replicating one well-tuned application server node, as
-determined in step link:#CEGHGCGI[2].
+determined in step xref:#CEGHGCGI[2].
 
-[[abebc]][[GSPTG00160]][[user-expectations]]
+[[user-expectations]]
 
 ==== User Expectations
 
@@ -505,7 +502,7 @@ network capacity needs.
 ahead for the future will help avoid crisis situations and system
 downtimes for upgrades.
 
-[[abebd]][[GSPTG00051]][[further-information]]
+[[overview-further-information]]
 
 === Further Information
 
@@ -515,7 +512,7 @@ http://java.sun.com/docs/performance[Java Performance Documentation]
 http://java.sun.com/blueprints/performance/index.html[Java Performance
 BluePrints] (`http://java.sun.com/blueprints/performance/index.html`).
 * For more information about performance tuning for high availability
-configurations, see the link:ha-administration-guide.html#GSHAG[{productName}
+configurations, see the xref:ha-administration-guide.adoc#GSHAG[{productName}
 High Availability Administration Guide].
 * For complete information about using the Performance Tuning features
 available through the {productName} Administration Console, refer to
@@ -525,7 +522,7 @@ http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/[Seven
 Rules for Optimizing Entity Beans]
 (`http://java.sun.com/developer/technicalArticles/ebeans/sevenrules/`)
 * For details on profiling,
-see "link:application-development-guide/setting-up-dev-env.html#GSDVG00341[
+see "link:application-development-guide/setting-up-dev-env.html#profiling-tools[
 Profiling Tools]" in {productName} Application Development Guide.
 * To view a demonstration video showing how to use the {productName} Performance Tuner,
 see the http://www.youtube.com/watch?v=FavsE2pzAjc[

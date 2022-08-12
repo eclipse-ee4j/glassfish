@@ -7,10 +7,6 @@ prev=introduction.html
 
 = Writing HK2 Components
 
-[[GSACG00002]][[ghmna]]
-
-
-[[writing-hk2-components]]
 == Writing HK2 Components
 
 The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
@@ -23,14 +19,14 @@ service implements an HK2 contract.
 
 The following topics are addressed here:
 
-* link:#ghokq[HK2 Component Model]
-* link:#ghojt[Services in the HK2 Component Model]
-* link:#ghokt[HK2 Runtime]
-* link:#ghojb[Inversion of Control]
-* link:#ghmoe[Identifying a Class as an Add-On Component]
-* link:#ghpvp[Using the Apache Maven Build System to Develop HK2 Components]
+* xref:#hk2-component-model[HK2 Component Model]
+* xref:#services-in-the-hk2-component-model[Services in the HK2 Component Model]
+* xref:#hk2-runtime[HK2 Runtime]
+* xref:#inversion-of-control[Inversion of Control]
+* xref:#identifying-a-class-as-an-add-on-component[Identifying a Class as an Add-On Component]
+* xref:#using-the-apache-maven-build-system-to-develop-hk2-components[Using the Apache Maven Build System to Develop HK2 Components]
 
-[[ghokq]][[GSACG00091]][[hk2-component-model]]
+[[hk2-component-model]]
 
 === HK2 Component Model
 
@@ -47,7 +43,7 @@ the module system by creating objects. It configures such objects by:
 * Making newly created objects available, so that they can then be
 injected to other objects that need it
 
-[[ghojt]][[GSACG00092]][[services-in-the-hk2-component-model]]
+[[services-in-the-hk2-component-model]]
 
 === Services in the HK2 Component Model
 
@@ -93,7 +89,7 @@ For more information, see
 http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[`Service`]
 (`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html`).
 
-[[ghokt]][[GSACG00093]][[hk2-runtime]]
+[[hk2-runtime]]
 
 === HK2 Runtime
 
@@ -101,7 +97,7 @@ Once Services are defined, the HK2 runtime can be used to instantiate or
 retrieve instances of services. Each service instance has a scope,
 specified as singleton, per thread, per application, or a custom scope.
 
-[[ghoib]][[GSACG00181]][[scopes-of-services]]
+[[scopes-of-services]]
 
 ==== Scopes of Services
 
@@ -143,7 +139,7 @@ You can define a new `Scope` implementation and use that scope on your
 `Scope` instance to store and retrieve service instances tied to that
 scope.
 
-[[ghoky]][[GSACG00182]][[instantiation-of-components-in-hk2]]
+[[instantiation-of-components-in-hk2]]
 
 ==== Instantiation of Components in HK2
 
@@ -161,7 +157,7 @@ More APIs are available at
 http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html[`Habitat`]
 (`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html`).
 
-[[ghois]][[GSACG00183]][[hk2-lifecycle-interfaces]]
+[[hk2-lifecycle-interfaces]]
 
 ==== HK2 Lifecycle Interfaces
 
@@ -182,7 +178,7 @@ dependencies have been injected.
 The `PreDestroy` interface defines a single method, `preDestroy`, which
 is called just before a component is removed from the system.
 
-[[GSACG00014]][[ghoqv]]
+[[ghoqv]]
 Example 2-1 Example Implementation of `PostContruct` and `PreDestroy`
 
 [source,java]
@@ -203,7 +199,7 @@ public class MyContainer implements Container, PostConstruct, PreDestroy {
 
 ----
 
-[[ghojb]][[GSACG00094]][[inversion-of-control]]
+[[inversion-of-control]]
 
 === Inversion of Control
 
@@ -217,7 +213,7 @@ to perform actions. While performing these actions, the components
 typically rely on other components to provide other actions. In an IoC
 system, components use injection to gain access to other components.
 
-[[ghoiz]][[GSACG00184]][[injecting-hk2-components]]
+[[injecting-hk2-components]]
 
 ==== Injecting HK2 Components
 
@@ -257,7 +253,7 @@ be available:
 AdminCommand deployCommand;
 ----
 
-[[ghoic]][[GSACG00186]][[instantiation-cascading-in-hk2]]
+[[instantiation-cascading-in-hk2]]
 
 ==== Instantiation Cascading in HK2
 
@@ -269,7 +265,7 @@ lower level services. This cascading feature keeps the implementation as
 private as possible while relying on interfaces and the separation of
 contracts and providers.
 
-[[GSACG00015]][[ghquz]]
+[[ghquz]]
 Example 2-2 Example of Instantiation Cascading
 
 The following example shows how the instantiation of `DeploymentService`
@@ -294,7 +290,7 @@ public class DeploymentService implements Startup {
 public Class ConfigService implements ... {...}
 ----
 
-[[ghmoe]][[GSACG00095]][[identifying-a-class-as-an-add-on-component]]
+[[identifying-a-class-as-an-add-on-component]]
 
 === Identifying a Class as an Add-On Component
 
@@ -330,7 +326,7 @@ optional.
   constructor. The default value of the `factory` element is
   `org.jvnet.hk2.component.Factory.class`.
 
-[[GSACG00016]][[ghoip]]
+[[ghoip]]
 Example 2-3 Example of the Optional Elements of the `@Service` Annotation
 
 The following example shows how to use the optional elements of the
@@ -346,7 +342,7 @@ public class SamplePlugin implements ConsoleProvider {
 }
 ----
 
-[[ghpvp]][[GSACG00096]][[using-the-apache-maven-build-system-to-develop-hk2-components]]
+[[using-the-apache-maven-build-system-to-develop-hk2-components]]
 
 === Using the Apache Maven Build System to Develop HK2 Components
 
@@ -354,7 +350,7 @@ If you are using Maven 2 to build HK2 components, invoke the
 `auto-depends` plug-in for Maven so that the `META-INF/services` files
 are generated automatically during build time.
 
-[[GSACG00017]][[ghqsa]]
+[[ghqsa]]
 Example 2-4 Example of the Maven Plug-In Configuration
 
 [source,xml]
@@ -370,7 +366,7 @@ Example 2-4 Example of the Maven Plug-In Configuration
 </plugin>
 ----
 
-[[GSACG00018]][[ghoik]]
+[[ghoik]]
 Example 2-5 Example of `META-INF/services` File Generation
 
 This example shows how to use

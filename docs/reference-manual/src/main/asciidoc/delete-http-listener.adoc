@@ -7,13 +7,13 @@ prev=delete-http-lb-ref.html
 
 = delete-http-listener
 
-[[delete-http-listener-1]][[GSRFM00082]][[delete-http-listener]]
+[[delete-http-listener]]
 
 == delete-http-listener
 
 Removes a network listener
 
-[[sthref731]]
+[[administering-concurrent-resources1]]
 
 === Synopsis
 
@@ -24,7 +24,7 @@ asadmin [asadmin-options] delete-http-listener [--help]
 listener-id
 ----
 
-[[sthref732]]
+[[administering-concurrent-resources2]]
 
 === Description
 
@@ -33,13 +33,13 @@ listener.
 
 This subcommand is supported in remote mode only.
 
-[[sthref733]]
+[[administering-concurrent-resources3]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -59,18 +59,18 @@ asadmin-options::
     Deletes the network listener from the specified standalone server
     instance.
 
-[[sthref734]]
+[[administering-concurrent-resources4]]
 
 === Operands
 
 listener-id::
   The unique identifier for the network listener to be deleted.
 
-[[sthref735]]
+[[administering-concurrent-resources5]]
 
 === Examples
 
-[[GSRFM551]][[sthref736]]
+[[administering-concurrent-resources6]]
 
 ==== Example 1   Using the delete-http-listener subcommand
 
@@ -83,7 +83,7 @@ asadmin> delete-http-listener sampleListener
 Command delete-http-listener executed successfully.
 ----
 
-[[sthref737]]
+[[administering-concurrent-resources7]]
 
 === Exit Status
 
@@ -92,13 +92,13 @@ Command delete-http-listener executed successfully.
 1::
   error in executing the command
 
-[[sthref738]]
+[[administering-concurrent-resources8]]
 
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
-link:list-http-listeners.html#list-http-listeners-1[`list-http-listeners`(1)]
+xref:create-http-listener.adoc#create-http-listener[`create-http-listener`(1)],
+xref:list-http-listeners.adoc#list-http-listeners[`list-http-listeners`(1)]
 
 

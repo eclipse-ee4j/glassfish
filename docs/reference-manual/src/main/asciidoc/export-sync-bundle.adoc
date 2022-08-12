@@ -7,14 +7,12 @@ prev=export-http-lb-config.html
 
 = export-sync-bundle
 
-[[export-sync-bundle-1]][[GSRFM00134]][[export-sync-bundle]]
+[[export-sync-bundle]]
 
 == export-sync-bundle
 
 Exports the configuration data of a cluster or standalone instance to an
 archive file
-
-[[sthref1170]]
 
 === Synopsis
 
@@ -26,14 +24,12 @@ asadmin [asadmin-options] export-sync-bundle [--help]
 [file-name]
 ----
 
-[[sthref1171]]
-
 === Description
 
 The `export-sync-bundle` subcommand exports the configuration data of a
 cluster or standalone instance to an archive file. The archive file can
 then be used with the
-link:import-sync-bundle.html#import-sync-bundle-1[`import-sync-bundle`(1)]
+xref:import-sync-bundle.adoc#import-sync-bundle[`import-sync-bundle`(1)]
 subcommand to restore the configuration data.
 
 Importing an instance's configuration data transfers the data to a host
@@ -62,13 +58,11 @@ for which configuration data is being exported
 
 This subcommand is supported in remote mode only.
 
-[[sthref1172]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -90,8 +84,6 @@ asadmin-options::
   `false`;;
     The archive file is not downloaded and remains on the DAS host
     (default).
-
-[[sthref1173]]
 
 === Operands
 
@@ -118,11 +110,9 @@ If an existing directory is specified without a filename, the file
   name of the archive file is target``-sync-bundle.zip``, where target is
   the cluster or standalone instance that the `--target` option specifies.
 
-[[sthref1174]]
-
 === Examples
 
-[[GSRFM614]][[sthref1175]]
+[[sthref1175]]
 
 ==== Example 1   Exporting the Configuration Data of a Cluster
 
@@ -137,8 +127,6 @@ pmdcluster-sync-bundle.zip
 Command export-sync-bundle executed successfully.
 ----
 
-[[sthref1176]]
-
 === Exit Status
 
 0::
@@ -146,12 +134,10 @@ Command export-sync-bundle executed successfully.
 1::
   error in executing the command
 
-[[sthref1177]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:import-sync-bundle.html#import-sync-bundle-1[`import-sync-bundle`(1)]
+xref:import-sync-bundle.adoc#import-sync-bundle[`import-sync-bundle`(1)]
 
 

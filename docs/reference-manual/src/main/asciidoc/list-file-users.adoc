@@ -7,13 +7,11 @@ prev=list-file-groups.html
 
 = list-file-users
 
-[[list-file-users-1]][[GSRFM00165]][[list-file-users]]
+[[list-file-users]]
 
 == list-file-users
 
 Lists the file users
-
-[[sthref1476]]
 
 === Synopsis
 
@@ -23,14 +21,10 @@ asadmin [asadmin-options] list-file-users [--help]
 [--authrealmname auth_realm_name] [target]
 ----
 
-[[sthref1477]]
-
 === Description
 
 The `list-file-users` subcommand displays a list of file users supported
 by file realm authentication.
-
-[[sthref1478]]
 
 === Options
 
@@ -39,8 +33,6 @@ by file realm authentication.
   Displays the help text for the subcommand.
 `--authrealmname`::
   Lists only the users in the specified authentication realm.
-
-[[sthref1479]]
 
 === Operands
 
@@ -59,11 +51,9 @@ target::
   instance_name;;
     Lists the file users on a specified server instance.
 
-[[sthref1480]]
-
 === Examples
 
-[[GSRFM658]][[sthref1481]]
+[[sthref1481]]
 
 ==== Example 1   Listing Users in a Specific File Realm
 
@@ -79,8 +69,6 @@ sample_user12
 Command list-file-users executed successfully
 ----
 
-[[sthref1482]]
-
 === Exit Status
 
 0::
@@ -88,15 +76,13 @@ Command list-file-users executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1483]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-file-user.html#create-file-user-1[`create-file-user`(1)],
-link:delete-file-user.html#delete-file-user-1[`delete-file-user`(1)],
-link:list-file-groups.html#list-file-groups-1[`list-file-groups`(1)],
-link:update-file-user.html#update-file-user-1[`update-file-user`(1)]
+xref:create-file-user.adoc#create-file-user[`create-file-user`(1)],
+xref:delete-file-user.adoc#delete-file-user[`delete-file-user`(1)],
+xref:list-file-groups.adoc#list-file-groups[`list-file-groups`(1)],
+xref:update-file-user.adoc#update-file-user[`update-file-user`(1)]
 
 

@@ -7,13 +7,11 @@ prev=start-cluster.html
 
 = start-database
 
-[[start-database-1]][[GSRFM00234]][[start-database]]
+[[start-database]]
 
 == start-database
 
 Starts the Java DB
-
-[[sthref2117]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] start-database [--help]
 [--dbhost host] [--dbport port-no]
 [--dbhome db-file-path]
 ----
-
-[[sthref2118]]
 
 === Description
 
@@ -63,13 +59,11 @@ cannot write to the log file.
 
 This subcommand is supported in local mode only.
 
-[[sthref2119]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -108,11 +102,9 @@ asadmin-options::
 To create the database files at a particular location, you must set
   the `--dbhome` option.
 
-[[sthref2120]]
-
 === Examples
 
-[[GSRFM759]][[sthref2121]]
+[[sthref2121]]
 
 ==== Example 1   Starting Java DB
 
@@ -125,7 +117,7 @@ Starting database in the background.  Log redirected to
 /opt/SUNWappserver/databases/derby.log.
 ----
 
-[[GSRFM833]][[sthref2122]]
+[[sthref2122]]
 
 ==== Example 2   Starting Java DB With Options for the Java Application
 Launcher
@@ -141,8 +133,6 @@ Starting database in the background.
 Log redirected to /export/glassfish7/glassfish/databases/derby.log.
 ----
 
-[[sthref2123]]
-
 === Exit Status
 
 The exit status applies to errors in executing the `asadmin` utility.
@@ -156,15 +146,13 @@ when you run the `start-database` subcommand. If you did not specify
 1::
   error in executing the subcommand
 
-[[sthref2124]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:stop-database.html#stop-database-1[`stop-database`(1)]
+xref:stop-database.adoc#stop-database[`stop-database`(1)]
 
-"link:administration-guide/jdbc.html#GSADG00015[Administering Database Connectivity]" in {productName} Administration Guide
+"link:administration-guide/jdbc.html#administering-database-connectivity[Administering Database Connectivity]" in {productName} Administration Guide
 
 For more information about the Java application launcher, see the
 reference page for the operating system that you are using:

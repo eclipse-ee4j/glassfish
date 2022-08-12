@@ -7,9 +7,6 @@ prev=preface.html
 
 = Introduction to the Development Environment for {productName} Add-On Components
 
-[[GSACG00001]][[ghmlv]]
-
-
 [[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
 == Introduction to the Development Environment for {productName} Add-On Components
 
@@ -25,14 +22,12 @@ the `asadmin` utility.
 
 The following topics are addressed here:
 
-* link:#ghmje[{productName} Modular Architecture and Add-On
-Components]
-* link:#ghmrf[OSGi Alliance Module Management Subsystem]
-* link:#ghmnq[Hundred-Kilobyte Kernel]
-* link:#ghmns[Overview of the Development Process for an Add-On
-Component]
+* <<{productName} Modular Architecture and Add-On Components>>
+* <<OSGi Alliance Module Management Subsystem>>
+* <<Hundred-Kilobyte Kernel>>
+* <<Overview of the Development Process for an Add-On Component>>
 
-[[ghmje]][[GSACG00087]][[glassfish-server-modular-architecture-and-add-on-components]]
+[[glassfish-server-modular-architecture-and-add-on-components]]
 
 === {productName} Modular Architecture and Add-On Components
 
@@ -53,8 +48,7 @@ has the following characteristics:
 
 * The component provides a set of Java classes.
 * The component offers services and public interfaces.
-* The component implements the public interfaces with a set of private
-classes.
+* The component implements the public interfaces with a set of private classes.
 * The component depends on other components.
 
 Add-on components that you develop interact with {productName} in the
@@ -64,9 +58,9 @@ distributions.
 You can create and offer new or updated add-on components at any time.
 {productName} administrators can install add-on components and update
 or remove installed components after {productName} is installed. For
-more information, see "link:administration-guide.html#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
+more information, see "xref:administration-guide.adoc#GSADG00014[Extending and Updating {productName}]" in {productName} Administration Guide.
 
-[[ghmrf]][[GSACG00088]][[osgi-alliance-module-management-subsystem]]
+[[osgi-alliance-module-management-subsystem]]
 
 === OSGi Alliance Module Management Subsystem
 
@@ -78,7 +72,7 @@ to this kernel must be implemented as an OSGi bundle. To enable an
 add-on component to plug in to the {productName} kernel in the same
 way as other components, package the component as an OSGi bundle. For
 more information, see
-link:packaging-integrating-delivering.html#ghpun[Packaging an Add-On
+xref:packaging-integrating-delivering.adoc#packaging-an-add-on-component[Packaging an Add-On
 Component].
 
 The default OSGi module management subsystem in {productName} is the
@@ -89,7 +83,7 @@ Release 4] (`http://www.osgi.org/Release4/HomePage`) API. Therefore,
 {productName} supports other OSGi module management subsystems that
 are compatible with the OSGi Service Platform Release 4 API.
 
-[[ghmnq]][[GSACG00089]][[hundred-kilobyte-kernel]]
+[[hundred-kilobyte-kernel]]
 
 === Hundred-Kilobyte Kernel
 
@@ -106,10 +100,10 @@ components automatically and dynamically. HK2 components use injection
 of dependencies to express dependencies on other components. {productName} provides two-way mappings between the services of an HK2
 component and OSGi services.
 
-For more information, see link:writing-hk2-components.html#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#writing-hk2-components[Writing
 HK2 Components].
 
-[[ghmns]][[GSACG00090]][[overview-of-the-development-process-for-an-add-on-component]]
+[[overview-of-the-development-process-for-an-add-on-component]]
 
 === Overview of the Development Process for an Add-On Component
 
@@ -128,16 +122,14 @@ monitoring data, it must provide that data to users through {productName} admini
 To develop add-on components that meet these requirements, follow the
 development process that is described in the following sections:
 
-* link:#ghpqc[Writing HK2 Components]
-* link:#ghokn[Extending the Administration Console]
-* link:#ghohx[Extending the `asadmin` Utility]
-* link:#ghojs[Adding Monitoring Capabilities]
-* link:#gkahs[Adding Configuration Data for a Component]
-* link:#ghojq[Adding Container Capabilities]
-* link:#gktld[Creating a Session Persistence Module]
-* link:#ghoiu[Packaging and Delivering an Add-On Component]
-
-[[ghpqc]][[GSACG00173]][[writing-hk2-components]]
+* <<Writing HK2 Components>>
+* <<Extending the Administration Console]
+* <<Extending the `asadmin` Utility]
+* <<Adding Monitoring Capabilities>>
+* <<Adding Configuration Data for a Component>>
+* <<Adding Container Capabilities>>
+* <<Creating a Session Persistence Module>>
+* <<Packaging and Delivering an Add-On Component>>
 
 ==== Writing HK2 Components
 
@@ -149,10 +141,8 @@ implementation paradigm. An HK2 contract identifies and describes the
 building blocks or the extension points of an application. An HK2
 service implements an HK2 contract.
 
-For more information, see link:writing-hk2-components.html#ghmna[Writing
+For more information, see xref:writing-hk2-components.adoc#writing-hk2-components[Writing
 HK2 Components].
-
-[[ghokn]][[GSACG00174]][[extending-the-administration-console]]
 
 ==== Extending the Administration Console
 
@@ -168,10 +158,8 @@ file that describes how your customizations integrate with the
 Administration Console.
 
 For more information, see
-link:extending-the-admin-console.html#ghmrb[Extending the Administration
+xref:extending-the-admin-console.adoc#extending-the-administration-console[Extending the Administration
 Console].
-
-[[ghohx]][[GSACG00175]][[extending-the-asadmin-utility]]
 
 ==== Extending the `asadmin` Utility
 
@@ -181,12 +169,10 @@ you to provide administrative interfaces for an add-on component that
 are consistent with the interfaces of other {productName} components.
 A user can run `asadmin` subcommands either from a command prompt or
 from a script. For more information about the `asadmin` utility, see the
-link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
+link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] man page.
 
-For more information, see link:extending-asadmin.html#ghmrd[Extending the
+For more information, see xref:extending-asadmin.adoc#extending-the-asadmin-utility[Extending the
 `asadmin` Utility].
-
-[[ghojs]][[GSACG00176]][[adding-monitoring-capabilities]]
 
 ==== Adding Monitoring Capabilities
 
@@ -206,10 +192,7 @@ interfaces to monitor statistics from any installed {productName}
 component, regardless of the origin of the component.
 
 For more information, see
-link:adding-monitoring-capabilities.html#ghmos[Adding Monitoring
-Capabilities].
-
-[[gkahs]][[GSACG00177]][[adding-configuration-data-for-a-component]]
+xref:adding-monitoring-capabilities.adoc#adding-monitoring-capabilities[Adding Monitoring Capabilities].
 
 ==== Adding Configuration Data for a Component
 
@@ -226,10 +209,8 @@ configure an add-on component in the same way as they can configure
 other {productName} components.
 
 For more information, see
-link:adding-configuration-data.html#gjlpe[Adding Configuration Data for a
-Component].
-
-[[ghojq]][[GSACG00178]][[adding-container-capabilities]]
+xref:adding-configuration-data.adoc#adding-configuration-data-for-a-component[
+Adding Configuration Data for a Component].
 
 ==== Adding Container Capabilities
 
@@ -240,10 +221,7 @@ you to run new types of applications and to deploy new archive types in
 {productName}.
 
 For more information, see
-link:adding-container-capabilities.html#ghmon[Adding Container
-Capabilities].
-
-[[gktld]][[GSACG00179]][[creating-a-session-persistence-module]]
+xref:adding-container-capabilities.adoc#adding-container-capabilities[Adding Container Capabilities].
 
 ==== Creating a Session Persistence Module
 
@@ -255,15 +233,13 @@ session manager extensible because you can implement a new persistence
 type without having to modify the web container code.
 
 For information about other high-availability, session persistence
-solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#GSHAG00011[Configuring High Availability Session
+solutions, see "link:ha-administration-guide/session-persistence-and-failover.html#configuring-high-availability-session-persistence-and-failover[Configuring High Availability Session
 Persistence and Failover]" in {productName} High
 Availability Administration Guide.
 
 For more information, see
-link:session-persistence-modules.html#gkmhj[Creating a Session
+xref:session-persistence-modules.adoc#creating-a-session-persistence-module[Creating a Session
 Persistence Module].
-
-[[ghoiu]][[GSACG00180]][[packaging-and-delivering-an-add-on-component]]
 
 ==== Packaging and Delivering an Add-On Component
 
@@ -275,6 +251,6 @@ update to existing installations of {productName}, deliver the
 component through Update Tool.
 
 For more information, see
-link:packaging-integrating-delivering.html#ghmxp[Packaging, Integrating,
+xref:packaging-integrating-delivering.adoc#packaging-integrating-and-delivering-an-add-on-component[Packaging, Integrating,
 and Delivering an Add-On Component].
 

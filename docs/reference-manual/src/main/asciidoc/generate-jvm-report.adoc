@@ -10,13 +10,11 @@ prev=freeze-transaction-service.html
 The script content on this page is for navigation purposes only and does
 not alter the content in any way.
 
-[[generate-jvm-report-1]][[GSRFM00138]][[generate-jvm-report]]
+[[generate-jvm-report]]
 
 == generate-jvm-report
 
 Shows the JVM machine statistics for a given target instance
-
-[[sthref1200]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ Shows the JVM machine statistics for a given target instance
 ----
 generate-jvm-report [--help] [--type=jvm-statistic-type] [--target target]
 ----
-
-[[sthref1201]]
 
 === Description
 
@@ -56,13 +52,11 @@ the text `NOT_AVAILABLE`.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1202]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -97,13 +91,11 @@ asadmin-options::
   `log`;;
     Provides information about the loggers that are registered in the
     Virtual Machine for the Java platform (Java Virtual Machine or JVM
-    machine).link:#sthref1203[^Foot 1 ^]
-
-[[sthref1204]]
+    machine).
 
 === Examples
 
-[[GSRFM617]][[sthref1205]]
+[[sthref1205]]
 
 ==== Example 1   Obtaining Summary Information for the JVM Machine
 
@@ -136,7 +128,7 @@ user.timezone = US/Pacific
 Command generate-jvm-report executed successfully
 ----
 
-[[GSRFM618]][[sthref1206]]
+[[sthref1206]]
 
 ==== Example 2   Obtaining Information for a Particular JVM Machine Type
 
@@ -157,8 +149,6 @@ Total time spent in compilation: 0 Hours 0 Minutes 4 Seconds
 Command generate-jvm-report executed successfully.
 ----
 
-[[sthref1207]]
-
 === Exit Status
 
 0::
@@ -166,15 +156,13 @@ Command generate-jvm-report executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1208]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jvm-options.html#create-jvm-options-1[`create-jvm-options`(1)],
-link:delete-jvm-options.html#delete-jvm-options-1[`delete-jvm-options`(1)],
-link:list-jvm-options.html#list-jvm-options-1[`list-jvm-options`(1)]
+xref:create-jvm-options.adoc#create-jvm-options[`create-jvm-options`(1)],
+xref:delete-jvm-options.adoc#delete-jvm-options[`delete-jvm-options`(1)],
+xref:list-jvm-options.adoc#list-jvm-options[`list-jvm-options`(1)]
 
 '''''
 

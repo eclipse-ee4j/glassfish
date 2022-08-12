@@ -7,13 +7,11 @@ prev=delete-module-config.html
 
 = delete-network-listener
 
-[[delete-network-listener-1]][[GSRFM00098]][[delete-network-listener]]
+[[delete-network-listener]]
 
 == delete-network-listener
 
 Removes a network listener
-
-[[sthref890]]
 
 === Synopsis
 
@@ -24,20 +22,16 @@ asadmin [asadmin-options] delete-network-listener [--help]
 listener-name
 ----
 
-[[sthref891]]
-
 === Description
 
 The `delete-network-listener` subcommand removes the specified network
 listener. This subcommand is supported in remote mode only.
 
-[[sthref892]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -57,18 +51,14 @@ asadmin-options::
     Deletes the network listener from the specified standalone server
     instance.
 
-[[sthref893]]
-
 === Operands
 
 listener-name::
   The name of the network listener to be deleted.
 
-[[sthref894]]
-
 === Examples
 
-[[GSRFM567]][[sthref895]]
+[[sthref895]]
 
 ==== Example 1   Deleting a Network Listener
 
@@ -81,8 +71,6 @@ asadmin> delete-network-listener sampleListener
 Command delete-network-listener executed successfully.
 ----
 
-[[sthref896]]
-
 === Exit Status
 
 0::
@@ -90,13 +78,11 @@ Command delete-network-listener executed successfully.
 1::
   error in executing the command
 
-[[sthref897]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-network-listener.html#create-network-listener-1[`create-network-listener`(1)],
-link:list-network-listeners.html#list-network-listeners-1[`list-network-listeners`(1)]
+xref:create-network-listener.adoc#create-network-listener[`create-network-listener`(1)],
+xref:list-network-listeners.adoc#list-network-listeners[`list-network-listeners`(1)]
 
 

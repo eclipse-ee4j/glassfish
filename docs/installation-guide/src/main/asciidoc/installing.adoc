@@ -7,7 +7,7 @@ prev=preface.html
 
 = Installing {productName} 7
 
-[[GSING00002]][[ggssq]]
+[[ggssq]]
 
 
 [[installing-glassfish-server-5.0]]
@@ -18,16 +18,16 @@ software on Solaris, Linux, Mac OS X, and Windows systems.
 
 The following topics are addressed here:
 
-* link:#gjiaz[Installation Requirements]
-* link:#ggrlg[Installation Files for {productName} 7]
-* link:#ghmxb[Installing {productName} From a ZIP File]
+* xref:#installation-requirements[Installation Requirements]
+* xref:#GSING00023[Installation Files for {productName} 7]
+* xref:#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File]
 
-[[gjiaz]][[GSING00022]][[installation-requirements]]
+[[installation-requirements]]
 
 === Installation Requirements
 
 Before installing {productName} 7, ensure that
-your system meets the requirements listed in "link:release-notes/release-notes.html#GSRLN00131[Hardware
+your system meets the requirements listed in "link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware
 and Software Requirements]" in {productName}
 Release Notes. If necessary, download and install the required JDK
 software. Problems are likely to arise if you attempt to install on a
@@ -39,7 +39,7 @@ issues related to installation.
 * On Solaris, Linux, macOS and Windows systems, JDK software is available from the
 http://www.oracle.com/technetwork/java/javase/downloads/index.html[Java SE downloads page].
 
-[[gkxfw]][[javassist-library-license-notice]]
+[[javassist-library-license-notice]]
 
 ==== Javassist Library License Notice
 
@@ -561,18 +561,18 @@ provisions required by the LGPL. If you do not delete the provisions
 above, a recipient may use your version of this file under the terms of
 either the MPL or the LGPL.
 
-[[ggrlg]][[GSING00023]][[installation-files-for-glassfish-server-5.0]]
+[[GSING00023]][[installation-files-for-glassfish-server-5.0]]
 
 === Installation Files for {productName} 7
 
 The following topics are addressed here:
 
-* link:#gkbaj[{productName} Download Locations]
-* link:#gkbby[{productName} Installation Methods]
-* link:#gkudi[Choosing an Installation Method]
-* link:#gkbbb[{productName} ZIP Files]
+* xref:#glassfish-server-download-locations[{productName} Download Locations]
+* xref:#glassfish-server-installation-methods[{productName} Installation Methods]
+* xref:#choosing-an-installation-method[Choosing an Installation Method]
+* xref:#glassfish-server-zip-files[{productName} ZIP Files]
 
-[[gkbaj]][[GSING00035]][[glassfish-server-download-locations]]
+[[glassfish-server-download-locations]]
 
 ==== {productName} Download Locations
 
@@ -586,11 +586,11 @@ distributions. The SDK distributions are available from the
 http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
 EE downloads page] and are not described in this document.
 
-[[gkbby]][[GSING00036]][[glassfish-server-installation-methods]]
+[[glassfish-server-installation-methods]]
 
 ==== {productName} Installation Methods
 
-link:#ghtqe[Table 1-1] lists the various {productName} installation methods. The table also provides links to
+xref:#ghtqe[Table 1-1] lists the various {productName} installation methods. The table also provides links to
 installation instructions for each method.
 
 
@@ -603,7 +603,7 @@ Environment Settings for the JDK Software]" in {productName} Release Notes.
 ====
 
 
-[[GSING103]][[sthref3]][[ghtqe]]
+[[ghtqe]]
 
 
 Table 1-1 {productName} 7 Installation Methods
@@ -611,25 +611,25 @@ Table 1-1 {productName} 7 Installation Methods
 [width="100%",cols="39%,61%",options="header",]
 |===
 |Installation Method |Installation Instructions
-|Multi-platform ZIP file |link:#ghmxb[Installing {productName} From a ZIP File].
+|Multi-platform ZIP file |xref:#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File].
 |===
 
 
-Each of the installation methods listed in link:#ghtqe[Table 1-1] also
+Each of the installation methods listed in xref:#ghtqe[Table 1-1] also
 let you choose between installing the Full Platform or the Web Profile.
 These two distributions are explained in the next section.
 
-[[gkudi]][[GSING00037]][[choosing-an-installation-method]]
+[[choosing-an-installation-method]]
 
 ==== Choosing an Installation Method
 
 There are two general sets of questions you should consider when
 deciding which {productName} 7 installation method to use.
 
-* link:#gkuau[ZIP Package]
-* link:#gkudp[Full Platform or Web Profile Distribution]
+* xref:#zip-package[ZIP Package]
+* xref:#full-platform-or-web-profile-distribution[Full Platform or Web Profile Distribution]
 
-[[gkuau]][[GSING00029]][[zip-package]]
+[[zip-package]]
 
 ===== ZIP Package
 
@@ -643,17 +643,17 @@ the installation
 ** Any additional configurations must be performed manually, after installation
 ** If uninstallation is desired, product must be uninstalled manually
 
-[[gkudp]][[GSING00030]][[full-platform-or-web-profile-distribution]]
+[[full-platform-or-web-profile-distribution]]
 
 ===== Full Platform or Web Profile Distribution
 
-Each of the installation methods listed in link:#ghtqe[Table 1-1] also
+Each of the installation methods listed in xref:#ghtqe[Table 1-1] also
 let you choose to install either the {productName} Full Platform or
-Web Profile distribution. link:#gkuap[Table 1-2] lists the features
+Web Profile distribution. xref:#gkuap[Table 1-2] lists the features
 available in each of these two distributions. Note that some of these
 features are value-adds, and are not required by the Jakarta EE specification.
 
-[[GSING104]][[sthref4]][[gkuap]]
+[[gkuap]]
 
 Table 1-2 {productName} Full Profile and Web Profile Features
 
@@ -746,19 +746,18 @@ CORBA v3.0 APIs are available in the Jakarta EE Web Profile.
 
 ** Transaction propagation not supported.
 
-[[gkbbb]][[GSING00038]][[glassfish-server-zip-files]]
+[[glassfish-server-zip-files]]
 
 ==== {productName} ZIP Files
 
 The {productName} 7 multi-platform ZIP files
 are compatible with Solaris, Linux, Mac OS, UNIX, and Windows operating
-systems. See link:#gkbaj[{productName} Download Locations] for a list
+systems. See xref:#glassfish-server-download-locations[{productName} Download Locations] for a list
 of download locations.
 
-link:#gkbac[Table 1-3] lists the available ZIP file downloads.
+xref:#gkbac[Table 1-3] lists the available ZIP file downloads.
 
-[[GSING105]][[sthref5]][[gkbac]]
-
+[[gkbac]]
 
 Table 1-3 {productName} Downloadable ZIP Files
 
@@ -782,7 +781,7 @@ glassfish-7.0.0-web.zip
 |===
 
 
-[[ghmxb]][[GSING00024]][[installing-glassfish-server-from-a-zip-file]]
+[[installing-glassfish-server-from-a-zip-file]]
 
 === Installing {productName} From a ZIP File
 
@@ -800,21 +799,21 @@ after installation.
 ====
 
 
-[[ggrks]][[GSING00006]][[to-install-glassfish-server-using-the-zip-file]]
+[[to-install-glassfish-server-using-the-zip-file]]
 
 ==== To Install {productName} Using the ZIP File
 
 Before You Begin
 
 Ensure that your system meets the requirements listed in
-"link:release-notes/release-notes.html#GSRLN00131[Hardware and Software Requirements]"
+"link:release-notes/release-notes.html#hardware-and-software-requirements[Hardware and Software Requirements]"
 in {productName} Release Notes.
 
 Also see "link:release-notes/release-notes.html#GSRLN00253[Known Issues]" in {productName} Release Notes for known issues related to installation.
 
 1. Download the desired {productName} 7 ZIP file. +
-See link:#gkbaj[{productName} Download Locations] for a list of
-download locations. See link:#gkbac[Table 1-3] for a list of available ZIP files.
+See xref:#glassfish-server-download-locations[{productName} Download Locations] for a list of
+download locations. See xref:#gkbac[Table 1-3] for a list of available ZIP files.
 
 2. Change to the directory where you downloaded the ZIP file.
 
@@ -842,7 +841,7 @@ under your current directory. This `glassfish7` directory is referred to
 throughout the {productName} documentation set as as-install-parent.
 
 4. Start {productName} using the instructions in the
-link:quick-start-guide.html#GSQSG[{productName} Quick Start Guide].
+xref:quick-start-guide.adoc#GSQSG[{productName} Quick Start Guide].
 +
 The guide explains how to perform basic tasks such as starting the
 server, accessing the Administration Console, and deploying a sample application.

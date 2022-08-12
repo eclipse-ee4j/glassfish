@@ -7,13 +7,11 @@ prev=list-custom-resources.html
 
 = list-domains
 
-[[list-domains-1]][[GSRFM00163]][[list-domains]]
+[[list-domains]]
 
 == list-domains
 
 Lists the domains in the specified directory
-
-[[sthref1462]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] list-domains [--help]
 [--header={false|true}]
 ----
 
-[[sthref1463]]
-
 === Description
 
 The `list-domains` subcommand lists the domains in the specified domains
@@ -37,13 +33,11 @@ each domain is included.
 
 This subcommand is supported in local mode only.
 
-[[sthref1464]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -63,11 +57,9 @@ asadmin-options::
   used. The default value is `true`. To suppress the header, set the
   `--header` option to `false`.
 
-[[sthref1465]]
-
 === Examples
 
-[[GSRFM656]][[sthref1466]]
+[[sthref1466]]
 
 ==== Example 1   Listing Domains
 
@@ -82,8 +74,6 @@ Name: domain4 Status: Running, restart required to apply configuration changes
 Command list-domains executed successfully
 ----
 
-[[sthref1467]]
-
 === Exit Status
 
 0::
@@ -91,15 +81,13 @@ Command list-domains executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1468]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-domain.html#create-domain-1[`create-domain`(1)],
-link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
-link:start-domain.html#start-domain-1[`start-domain`(1)],
-link:stop-domain.html#stop-domain-1[`stop-domain`(1)],
+xref:create-domain.adoc#create-domain[`create-domain`(1)],
+xref:delete-domain.adoc#delete-domain[`delete-domain`(1)],
+xref:start-domain.adoc#start-domain[`start-domain`(1)],
+xref:stop-domain.adoc#stop-domain[`stop-domain`(1)],
 
 

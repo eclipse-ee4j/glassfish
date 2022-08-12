@@ -7,8 +7,6 @@ prev=lifecycle-listeners.html
 
 = Developing OSGi-enabled Jakarta EE Applications
 
-[[GSDVG00015]][[gkpch]]
-
 [[developing-osgi-enabled-java-ee-applications]]
 == 13 Developing OSGi-enabled Jakarta EE Applications
 
@@ -16,11 +14,11 @@ This chapter describes the features and interfaces that {productName}
 provides to develop OSGi-enabled enterprise applications. This chapter
 includes the following sections:
 
-* link:#gkpay[Overview of OSGi Application and {productName}]
-* link:#gkqff[Developing OSGi Application Bundles for {productName}]
-* link:#gkveh[Deploying OSGi Bundles in {productName}]
+* xref:#overview-of-osgi-application-and-glassfish-server[Overview of OSGi Application and {productName}]
+* xref:#developing-osgi-application-bundles-for-glassfish-server[Developing OSGi Application Bundles for {productName}]
+* xref:#deploying-osgi-bundles-in-glassfish-server[Deploying OSGi Bundles in {productName}]
 
-[[gkpay]][[GSDVG00173]][[overview-of-osgi-application-and-glassfish-server]]
+[[overview-of-osgi-application-and-glassfish-server]]
 
 === Overview of OSGi Application and {productName}
 
@@ -37,7 +35,7 @@ platform services, such as the transaction service, HTTP service, JDBC
 Service and JMS, as OSGi services. It also enables use of Jakarta EE
 programming model in OSGi applications, so enterprise Java application
 developers can continue to leverage their existing skills in OSGi-based
-applications. See link:#glhek[Benefits of Using OSGi in Enterprise Java
+applications. See xref:#benefits-of-using-osgi-in-enterprise-java-applications[Benefits of Using OSGi in Enterprise Java
 Applications] for more information.
 
 OSGi applications are deployed as one or more OSGi bundles, and the
@@ -46,19 +44,19 @@ you to deploy and manage your OSGi bundles. This chapter classifies OSGi
 bundles into two categories based on the features they use:
 
 * Plain OSGi Application Bundles - bundles that do not contain any Jakarta EE
-components. See link:#gkupd[Developing Plain OSGi Bundles].
+components. See xref:#developing-plain-osgi-bundles[Developing Plain OSGi Bundles].
 * Hybrid Application Bundles - bundles that are an OSGi bundle as wells
 as a Jakarta EE module. At runtime, such modules have both an OSGi bundle
 context and a Jakarta EE context. {productName} supports the following
 hybrid application bundles:
 
-** Web Application Bundles (or WABs) , see link:#gkunr[Developing Web
+** Web Application Bundles (or WABs) , see xref:#developing-web-application-bundles[Developing Web
 Application Bundles].
 
-** EJB Application Bundles, see link:#gkunh[Developing EJB Application
+** EJB Application Bundles, see xref:#developing-ejb-application-bundles[Developing EJB Application
 Bundles].
 
-[[glhek]][[GSDVG00488]][[benefits-of-using-osgi-in-enterprise-java-applications]]
+[[benefits-of-using-osgi-in-enterprise-java-applications]]
 
 ==== Benefits of Using OSGi in Enterprise Java Applications
 
@@ -92,7 +90,7 @@ platforms. A hybrid approach like OSGi enabling your Jakarta EE
 applications allows new capabilities to applications hitherto
 unavailable to applications built using just one of the two platforms.
 
-[[gkqff]][[GSDVG00174]][[developing-osgi-application-bundles-for-glassfish-server]]
+[[developing-osgi-application-bundles-for-glassfish-server]]
 
 === Developing OSGi Application Bundles for {productName}
 
@@ -108,11 +106,11 @@ services provided by plain OSGi bundles and use them as well.
 framework to make it easier for Jakarta EE components to consume dynamic
 OSGi services in a type-safe manner.
 
-* link:#gkupd[Developing Plain OSGi Bundles]
-* link:#gkunr[Developing Web Application Bundles]
-* link:#gkunh[Developing EJB Application Bundles]
+* xref:#developing-plain-osgi-bundles[Developing Plain OSGi Bundles]
+* xref:#developing-web-application-bundles[Developing Web Application Bundles]
+* xref:#developing-ejb-application-bundles[Developing EJB Application Bundles]
 
-[[gkupd]][[GSDVG00489]][[developing-plain-osgi-bundles]]
+[[developing-plain-osgi-bundles]]
 
 ==== Developing Plain OSGi Bundles
 
@@ -128,12 +126,12 @@ platform available as OSGi services. Thus, an OSGi bundle deployed in
 APIs or by using a white board pattern. The following Jakarta EE services
 are available as OSGi services:
 
-* link:#gkunk[HTTP Service]
-* link:#gkunn[Transaction Service]
-* link:#gkuof[JDBC Data Source Service]
-* link:#gkuoq[JMS Resource Service]
+* xref:#http-service[HTTP Service]
+* xref:#transaction-service[Transaction Service]
+* xref:#jdbc-data-source-service[JDBC Data Source Service]
+* xref:#jms-resource-service[JMS Resource Service]
 
-[[gkunk]][[GSDVG00319]][[http-service]]
+[[http-service]]
 
 ===== HTTP Service
 
@@ -189,7 +187,7 @@ httpService.registerServlet(httpService.registerServlet("/helloworld",
 new HelloWorldServlet(), null, ctx);
 ----
 
-[[gkunn]][[GSDVG00320]][[transaction-service]]
+[[transaction-service]]
 
 ===== Transaction Service
 
@@ -241,7 +239,7 @@ UserTransaction utx = (UserTransaction);
 context.getService(txRef);
 ----
 
-[[gkuof]][[GSDVG00321]][[jdbc-data-source-service]]
+[[jdbc-data-source-service]]
 
 ===== JDBC Data Source Service
 
@@ -251,7 +249,7 @@ availability of JDBC data sources using the `ServiceTracking` facility
 of the OSGi platform. The life of the OSGi service matches that of the
 underlying data source created in {productName}. For instructions on
 administering JDBC resources in {productName}, see the
-link:administration-guide.html#GSADG[{productName} Administration Guide].
+xref:administration-guide.adoc#GSADG[{productName} Administration Guide].
 
 {productName} registers each JDBC data source as an OSGi service with
 `objectClass = "javax.sql.DataSource"` and a service property called
@@ -265,7 +263,7 @@ code sample that looks up a data source service:
   private DataSource ds;
 ----
 
-[[gkuoq]][[GSDVG00322]][[jms-resource-service]]
+[[jms-resource-service]]
 
 ===== JMS Resource Service
 
@@ -299,7 +297,7 @@ was created.
 |===
 
 
-[[gkunr]][[GSDVG00490]][[developing-web-application-bundles]]
+[[developing-web-application-bundles]]
 
 ==== Developing Web Application Bundles
 
@@ -329,7 +327,7 @@ development time tools that understand WAR structure. Therefore, we
 strongly recommend that you package the WAB exactly like a WAR, with
 only additional OSGi metadata.
 
-[[gkvau]][[GSDVG00323]][[required-wab-metadata]]
+[[required-wab-metadata]]
 
 ===== Required WAB Metadata
 
@@ -372,7 +370,7 @@ Then the OSGi metadata for the WAB as specified in
   Web-ContextPath: /foo
 ----
 
-[[gkvat]][[GSDVG00324]][[how-wabs-consume-osgi-services]]
+[[how-wabs-consume-osgi-services]]
 
 ===== How WABs Consume OSGi Services
 
@@ -393,10 +391,10 @@ Servlet:
   }
 ----
 
-To learn more about this feature, refer to link:#gkvbi[OSGi CDI
+To learn more about this feature, refer to xref:#osgi-cdi-extension-for-wabs[OSGi CDI
 Extension for WABs].
 
-[[gkvbi]][[GSDVG00325]][[osgi-cdi-extension-for-wabs]]
+[[osgi-cdi-extension-for-wabs]]
 
 ===== OSGi CDI Extension for WABs
 
@@ -428,7 +426,7 @@ container then injects a proxy to the service and dynamically switches
 to an available implementation when the current service reference is
 invalid.
 
-[[GSDVG00044]][[gkvbk]]
+[[gkvbk]]
 Example 13-1 Example of a WAB Using CDI
 
 In this example, Bundle B0 defines a service contract called
@@ -454,7 +452,7 @@ BarServlet could look like:
   }
 ----
 
-[[gkunh]][[GSDVG00491]][[developing-ejb-application-bundles]]
+[[developing-ejb-application-bundles]]
 
 ==== Developing EJB Application Bundles
 
@@ -463,7 +461,7 @@ When an EJB Jar is packaged with additional OSGi metadata and deployed
 as an OSGi bundle it is called an EJB Application Bundle. {productName}supports only packaging the OSGi bundle as a simple JAR file with
 required OSGi metadata, just as you would package an `ejb-jar` file.
 
-[[gkvck]][[GSDVG00326]][[required-ejb-metadata]]
+[[required-ejb-metadata]]
 
 ===== Required EJB Metadata
 
@@ -493,7 +491,7 @@ MANIFEST.MF:
   Import-Package: javax.ejb; version=[3.0, 4.0), com.acme; version=[1.0, 1.1)
 ----
 
-[[gkvcj]][[GSDVG00327]][[how-ejb-bundles-consume-osgi-services]]
+[[how-ejb-bundles-consume-osgi-services]]
 
 ===== How EJB Bundles Consume OSGi Services
 
@@ -514,10 +512,10 @@ an example of injection of an OSGi Service into a servlet:
   }
 ----
 
-To learn more about this feature, refer to link:#gkvbj[Using the OSGi
+To learn more about this feature, refer to xref:#using-the-osgi-cdi-extension-with-ejb-bundles[Using the OSGi
 CDI Extension With EJB Bundles].
 
-[[gkvbj]][[GSDVG00328]][[using-the-osgi-cdi-extension-with-ejb-bundles]]
+[[using-the-osgi-cdi-extension-with-ejb-bundles]]
 
 ===== Using the OSGi CDI Extension With EJB Bundles
 
@@ -538,12 +536,12 @@ available:
 in the OSGi service registry.
 * `serviceCriteria` — An LDAP filter query used for service selection.
 
-[[gkveh]][[GSDVG00175]][[deploying-osgi-bundles-in-glassfish-server]]
+[[deploying-osgi-bundles-in-glassfish-server]]
 
 === Deploying OSGi Bundles in {productName}
 
 For instruction on deploying OSGi bundle, see
-"link:application-deployment-guide/deploying-applications.html#GSDPG00073[
+"link:application-deployment-guide/deploying-applications.html#osgi-bundle-deployment-guidelines[
 OSGi Bundle Deployment Guidelines]"
 in {productName} Application Deployment Guide.
 

@@ -6,9 +6,6 @@ prev=administrative-security.html
 
 = Running in a Secure Environment
 
-[[GSSCG00040]][[gkscr]]
-
-
 [[running-in-a-secure-environment]]
 == 6 Running in a Secure Environment
 
@@ -16,7 +13,7 @@ This chapter describes important information about running {productName} in a se
 
 This chapter assumes that you are familiar with security features such
 as authentication, authorization, and certificates. If you are not, see
-link:system-security.html#ablnk[Administering System Security].
+xref:system-security.adoc#administering-system-security[Administering System Security].
 
 Instructions for accomplishing the tasks specific to {productName} by
 using the Administration Console are contained in the Administration
@@ -24,14 +21,14 @@ Console online help.
 
 The chapter describes the following topics:
 
-* link:#gksbk[Determining Your Security Needs]
-* link:#gksbw[Installing {productName} in a Secure Environment]
-* link:#gksby[Run on the Web Profile if Possible]
-* link:#gksct[Securing the {productName} Host]
-* link:#gksca[Securing {productName}]
-* link:#gksbf[Securing Applications]
+* xref:#determining-your-security-needs[Determining Your Security Needs]
+* xref:#installing-glassfish-server-in-a-secure-environment[Installing {productName} in a Secure Environment]
+* xref:#run-on-the-web-profile-if-possible[Run on the Web Profile if Possible]
+* xref:#securing-the-glassfish-server-host[Securing the {productName} Host]
+* xref:#securing-glassfish-server[Securing {productName}]
+* xref:#securing-applications[Securing Applications]
 
-[[gksbk]][[GSSCG00169]][[determining-your-security-needs]]
+[[determining-your-security-needs]]
 
 === Determining Your Security Needs
 
@@ -40,10 +37,10 @@ production environment, determine your security needs and make sure that
 you take the appropriate security measures, as described in the
 following sections:
 
-* link:#gkscs[Understand Your Environment]
-* link:#gksce[Read Security Publications]
+* xref:#understand-your-environment[Understand Your Environment]
+* xref:#gksce[Read Security Publications]
 
-[[gkscs]][[GSSCG00237]][[understand-your-environment]]
+[[understand-your-environment]]
 
 ==== Understand Your Environment
 
@@ -78,9 +75,7 @@ might cause great damage to companies or individual clients that use the
 Web site. Understanding the security ramifications of each resource will
 help you protect it properly.
 
-See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]]
-
-[[GSSCG00239]][[read-security-publications]]
+See Also: `http://www.oracle.com/us/products/ondemand/index.html`[[gksce]][[read-security-publications]]
 
 ==== Read Security Publications
 
@@ -91,15 +86,15 @@ recommends the "Security Practices & Evaluations" information available
 from the CERT Coordination Center operated by Carnegie Mellon University
 at `http://www.cert.org/`.
 
-[[gksbw]][[GSSCG00170]][[installing-glassfish-server-in-a-secure-environment]]
+[[installing-glassfish-server-in-a-secure-environment]]
 
 === Installing {productName} in a Secure Environment
 
 This section describes recommendations for installing {productName}
-in a secure environment. The link:#gkscn[Enable the Secure
+in a secure environment. The xref:#enable-the-secure-administration-feature[Enable the Secure
 Administration Feature] topic is described.
 
-[[gkscn]][[GSSCG00240]][[enable-the-secure-administration-feature]]
+[[enable-the-secure-administration-feature]]
 
 ==== Enable the Secure Administration Feature
 
@@ -117,10 +112,10 @@ communication among the system components and does not accept
 administrative connections from remote hosts. Imposing a heightened
 level of security is optional.
 
-See link:administrative-security.html#gknqh[Managing Administrative
+See xref:administrative-security.adoc#managing-administrative-security[Managing Administrative
 Security] for information on enabling the secure administration feature.
 
-[[gksby]][[GSSCG00172]][[run-on-the-web-profile-if-possible]]
+[[run-on-the-web-profile-if-possible]]
 
 === Run on the Web Profile if Possible
 
@@ -142,11 +137,11 @@ of the full Java platform, and is designed for developers who do not
 require the full set of Jakarta EE APIs.
 
 For the list of APIs in each profile, see
-"link:release-notes/release-notes.html#GSRLN00136[
+"link:release-notes/release-notes.html#java-ee-standards-support[
 Jakarta EE Standards Support]"
 in {productName} Release Notes.
 
-[[gksct]][[GSSCG00173]][[securing-the-glassfish-server-host]]
+[[securing-the-glassfish-server-host]]
 
 === Securing the {productName} Host
 
@@ -167,7 +162,7 @@ the operating system users who configure or execute {productName}.
 ====
 
 
-[[sthref39]][[gksbt]]
+[[gksbt]]
 
 Table 6-1 Securing the {productName} Host
 
@@ -329,7 +324,7 @@ and critical patch updates.
 |===
 
 
-[[gksca]][[GSSCG00174]][[securing-glassfish-server]]
+[[securing-glassfish-server]]
 
 === Securing {productName}
 
@@ -338,7 +333,7 @@ for securing the subsystems and applications that run on a server
 instance. The following table provides a checklist of essential features
 that Oracle recommends you use to secure your production environment.
 
-[[sthref40]][[gkscz]]
+[[gkscz]]
 
 Table 6-2 Securing {productName}
 
@@ -360,7 +355,7 @@ which you can be confident that rogue users or processes cannot
 intercept or corrupt administration traffic or impersonate legitimate
 {productName} components.
 
-See link:administrative-security.html#gknqh[Managing Administrative
+See xref:administrative-security.adoc#managing-administrative-security[Managing Administrative
 Security].
 
 |Protect the `.asadminpass` file a|
@@ -407,7 +402,7 @@ by clients by default because a certificate authority does not vouch for
 the authenticity of the certificate.
 
 You can instead use your own certificates, as described in
-link:administrative-security.html#gkped[Using Your Own Certificates].
+xref:administrative-security.adoc#using-your-own-certificates[Using Your Own Certificates].
 
 |Restrict the size and the time limit of requests on external channels
 to prevent Denial of Service attacks. a|
@@ -440,7 +435,7 @@ levels may produce a large log file.
 
 By default, {productName} logging messages are recorded in the server
 log, and you can set the file rotation limit, as described in
-link:reference-manual/rotate-log.html#GSRFM00224[`rotate-log`(1)]
+link:reference-manual/rotate-log.html#rotate-log[`rotate-log`(1)]
 
 |Ensure that you have correctly assigned users to the correct groups.
 |Make sure you have assigned the desired set of users to the right
@@ -460,7 +455,7 @@ should set a password for admin.
 |===
 
 
-[[gksbf]][[GSSCG00175]][[securing-applications]]
+[[securing-applications]]
 
 === Securing Applications
 
@@ -473,7 +468,7 @@ application that you deploy in a production environment, review the
 items in the following table to verify that you have secured its
 resources.
 
-[[sthref41]][[gkscv]]
+[[gkscv]]
 
 Table 6-3 Securing Applications
 
@@ -522,7 +517,7 @@ classes that run within a JVM. In many cases, where the threat model
 does not include malicious code being run in the JVM, the Java security
 manager is unnecessary. However, when third parties use {productName}
 and untrusted classes are being run, the Java security manager may be
-useful. See "link:application-development-guide/securing-apps.html#GSDVG00373[Enabling and Disabling the Security
+useful. See "link:application-development-guide/securing-apps.html#enabling-and-disabling-the-security-manager[Enabling and Disabling the Security
 Manager]" in {productName} Application
 Development Guide.
 

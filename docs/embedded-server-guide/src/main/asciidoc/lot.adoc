@@ -10,25 +10,25 @@ prev=loe.html
 [[list-of-tables]]
 == List of Tables
 
-* link:embedded-server-guide.html#gksir[1-1 Methods of the
+* xref:embedded-server-guide.adoc#gksir[1-1 Methods of the
 BootstrapProperties Class]
-* link:embedded-server-guide.html#gkskl[1-2 Methods of the
+* xref:embedded-server-guide.adoc#gkskl[1-2 Methods of the
 GlassFishProperties Class]
-* link:embedded-server-guide.html#gjrdg[1-3 Constructors and Methods of
+* xref:embedded-server-guide.adoc#gjrdg[1-3 Constructors and Methods of
 the ScatteredArchive Class]
-* link:embedded-server-guide.html#gkvgb[1-4 Constructors and Methods of
+* xref:embedded-server-guide.adoc#gkvgb[1-4 Constructors and Methods of
 the ScatteredEnterpriseArchive Class]
-* link:embedded-server-guide.html#gjkws[1-5 embedded-glassfish:run
+* xref:embedded-server-guide.adoc#gjkws[1-5 embedded-glassfish:run
 Parameters]
-* link:embedded-server-guide.html#gjkye[1-6 embedded-glassfish:start
+* xref:embedded-server-guide.adoc#gjkye[1-6 embedded-glassfish:start
 Parameters]
-* link:embedded-server-guide.html#gjkvv[1-7 embedded-glassfish:deploy
+* xref:embedded-server-guide.adoc#gjkvv[1-7 embedded-glassfish:deploy
 Parameters]
-* link:embedded-server-guide.html#gjkxf[1-8 embedded-glassfish:undeploy
+* xref:embedded-server-guide.adoc#gjkxf[1-8 embedded-glassfish:undeploy
 Parameters]
-* link:embedded-server-guide.html#gjkwm[1-9 embedded-glassfish:stop
+* xref:embedded-server-guide.adoc#gjkwm[1-9 embedded-glassfish:stop
 Parameters]
-* link:embedded-server-guide.html#gjkwe[1-10 embedded-glassfish:start
+* xref:embedded-server-guide.adoc#gjkwe[1-10 embedded-glassfish:start
 Parameters]
-* link:embedded-server-guide.html#gksop[1-11 EJB 3.1 Embeddable API
+* xref:embedded-server-guide.adoc#gksop[1-11 EJB 3.1 Embeddable API
 Properties]

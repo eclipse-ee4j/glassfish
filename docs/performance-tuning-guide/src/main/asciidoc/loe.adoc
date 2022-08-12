@@ -10,8 +10,7 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:tuning-java.html#fxxpw[4-1 Heap Configuration on Solaris]
-* link:tuning-java.html#fxxpz[4-2 Heap Configuration on Windows]
-* link:tuning-os.html#sthref14[5-1 Setting the UDP Buffer Size in the
-/etc/sysctl.conf File]
-* link:tuning-os.html#glgjp[5-2 Setting the UDP Buffer Size at Runtime]
+* xref:tuning-java.adoc#fxxpw[4-1 Heap Configuration on Solaris]
+* xref:tuning-java.adoc#fxxpz[4-2 Heap Configuration on Windows]
+* xref:tuning-os.adoc#sthref14[5-1 Setting the UDP Buffer Size in the /etc/sysctl.conf File]
+* xref:tuning-os.adoc#glgjp[5-2 Setting the UDP Buffer Size at Runtime]

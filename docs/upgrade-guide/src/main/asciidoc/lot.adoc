@@ -10,53 +10,53 @@ prev=loe.html
 [[list-of-tables]]
 == List of Tables
 
-* link:upgrade-compatibility-issues.html#gklho[1-1 GMS Administration
+* xref:upgrade-compatibility-issues.adoc#gklho[1-1 GMS Administration
 Console Settings Changes from 2.1.1 to 4.0]
-* link:upgrade-compatibility-issues.html#gaeki[1-2 Deprecated,
+* xref:upgrade-compatibility-issues.adoc#gaeki[1-2 Deprecated,
 Unsupported, and Obsolete Options for asadmin and Subcommands]
-* link:upgrade-compatibility-issues.html#gipfy[1-3 com.sun.grizzly
+* xref:upgrade-compatibility-issues.adoc#gipfy[1-3 com.sun.grizzly
 Property Remapping]
-* link:upgrade-compatibility-issues.html#gipfn[1-4 connection-pool
+* xref:upgrade-compatibility-issues.adoc#gipfn[1-4 connection-pool
 Attribute Remapping]
-* link:upgrade-compatibility-issues.html#gipcv[1-5 http-file-cache
+* xref:upgrade-compatibility-issues.adoc#gipcv[1-5 http-file-cache
 Attribute Remapping]
-* link:upgrade-compatibility-issues.html#gipev[1-6 http-listener
+* xref:upgrade-compatibility-issues.adoc#gipev[1-6 http-listener
 Attribute Remapping]
-* link:upgrade-compatibility-issues.html#gipdo[1-7 http-listener Property
+* xref:upgrade-compatibility-issues.adoc#gipdo[1-7 http-listener Property
 Remapping]
-* link:upgrade-compatibility-issues.html#gipel[1-8 http-protocol
+* xref:upgrade-compatibility-issues.adoc#gipel[1-8 http-protocol
 Attribute Remapping]
-* link:upgrade-compatibility-issues.html#gipfa[1-9 http-service Property
+* xref:upgrade-compatibility-issues.adoc#gipfa[1-9 http-service Property
 Remapping]
-* link:upgrade-compatibility-issues.html#gipea[1-10 keep-alive Attribute
+* xref:upgrade-compatibility-issues.adoc#gipea[1-10 keep-alive Attribute
 Remapping]
-* link:upgrade-compatibility-issues.html#gipdh[1-11 request-processing
+* xref:upgrade-compatibility-issues.adoc#gipdh[1-11 request-processing
 Attribute Remapping]
-* link:upgrade-compatibility-issues.html#gipdv[1-12 ssl Attribute
+* xref:upgrade-compatibility-issues.adoc#gipdv[1-12 ssl Attribute
 Changes]
-* link:upgrade-compatibility-issues.html#gipcj[1-13 thread-pool Attribute
+* xref:upgrade-compatibility-issues.adoc#gipcj[1-13 thread-pool Attribute
 Changes]
-* link:upgrade-compatibility-issues.html#gipep[1-14 virtual-server
+* xref:upgrade-compatibility-issues.adoc#gipep[1-14 virtual-server
 Attribute Changes]
-* link:upgrade-compatibility-issues.html#gipds[1-15 New http Attributes]
-* link:upgrade-compatibility-issues.html#gipey[1-16 New network-listener
+* xref:upgrade-compatibility-issues.adoc#gipds[1-15 New http Attributes]
+* xref:upgrade-compatibility-issues.adoc#gipey[1-16 New network-listener
 Attributes]
-* link:upgrade-compatibility-issues.html#gipfg[1-17 New port-unification
+* xref:upgrade-compatibility-issues.adoc#gipfg[1-17 New port-unification
 Attributes]
-* link:upgrade-compatibility-issues.html#gipdj[1-18 New protocol
+* xref:upgrade-compatibility-issues.adoc#gipdj[1-18 New protocol
 Attributes]
-* link:upgrade-compatibility-issues.html#gipcr[1-19 New protocol-chain
+* xref:upgrade-compatibility-issues.adoc#gipcr[1-19 New protocol-chain
 Attributes]
-* link:upgrade-compatibility-issues.html#gipfq[1-20 New
+* xref:upgrade-compatibility-issues.adoc#gipfq[1-20 New
 protocol-chain-instance-handler Attributes]
-* link:upgrade-compatibility-issues.html#gipeq[1-21 New protocol-filter
+* xref:upgrade-compatibility-issues.adoc#gipeq[1-21 New protocol-filter
 Attributes]
-* link:upgrade-compatibility-issues.html#gipfd[1-22 New protocol-finder
+* xref:upgrade-compatibility-issues.adoc#gipfd[1-22 New protocol-finder
 Attributes]
-* link:upgrade-compatibility-issues.html#gipft[1-23 New
+* xref:upgrade-compatibility-issues.adoc#gipft[1-23 New
 selection-key-handler Attributes]
-* link:upgrade-compatibility-issues.html#gipfi[1-24 New ssl Attributes]
-* link:upgrade-compatibility-issues.html#gipcc[1-25 New thread-pool
+* xref:upgrade-compatibility-issues.adoc#gipfi[1-24 New ssl Attributes]
+* xref:upgrade-compatibility-issues.adoc#gipcc[1-25 New thread-pool
 Attributes]
-* link:upgrade-compatibility-issues.html#gipem[1-26 New transport
+* xref:upgrade-compatibility-issues.adoc#gipem[1-26 New transport
 Attributes]

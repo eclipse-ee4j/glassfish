@@ -7,9 +7,6 @@ prev=concepts.html
 
 = Planning your Deployment
 
-[[GSPLG00002]][[abfcb]]
-
-
 [[planning-your-deployment]]
 == 2 Planning your Deployment
 
@@ -19,13 +16,13 @@ and storage requirements accordingly.
 
 The following topics are addressed here:
 
-* link:#abfcc[Establishing Performance Goals]
-* link:#abfcp[Planning the Network Configuration]
-* link:#abfcy[Planning for Availability]
-* link:#abfdg[Design Decisions]
-* link:#abfdn[Planning Message Queue Broker Deployment]
+* xref:#establishing-performance-goals[Establishing Performance Goals]
+* xref:#planning-the-network-configuration[Planning the Network Configuration]
+* xref:#planning-for-availability[Planning for Availability]
+* xref:#design-decisions[Design Decisions]
+* xref:#planning-message-queue-broker-deployment[Planning Message Queue Broker Deployment]
 
-[[abfcc]][[GSPLG00019]][[establishing-performance-goals]]
+[[establishing-performance-goals]]
 
 === Establishing Performance Goals
 
@@ -55,12 +52,12 @@ fine-tune the performance of {productName} and your applications.
 
 The following topics are addressed here:
 
-* link:#abfcd[Estimating Throughput]
-* link:#abfce[Estimating Load on {productName} Instances]
-* link:#abfcq[Estimating Bandwidth Requirements]
-* link:#abfct[Estimating Peak Load]
+* xref:#estimating-throughput[Estimating Throughput]
+* xref:#estimating-load-on-glassfish-server-instances[Estimating Load on {productName} Instances]
+* xref:#estimating-bandwidth-requirements[Estimating Bandwidth Requirements]
+* xref:#estimating-peak-load[Estimating Peak Load]
 
-[[abfcd]][[GSPLG00054]][[estimating-throughput]]
+[[estimating-throughput]]
 
 ==== Estimating Throughput
 
@@ -80,7 +77,7 @@ amount of data, how frequently it changes, and how often it is saved.
 The first two factors depend on the application in question; the latter
 is also affected by server settings.
 
-[[abfce]][[GSPLG00055]][[estimating-load-on-glassfish-server-instances]]
+[[estimating-load-on-glassfish-server-instances]]
 
 ==== Estimating Load on {productName} Instances
 
@@ -89,12 +86,12 @@ instances.
 
 The following topics are addressed here:
 
-* link:#abfcf[Maximum Number of Concurrent Users]
-* link:#abfcg[Think Time]
-* link:#abfch[Average Response Time]
-* link:#abfcj[Requests Per Minute]
+* xref:#maximum-number-of-concurrent-users[Maximum Number of Concurrent Users]
+* xref:#think-time[Think Time]
+* xref:#average-response-time[Average Response Time]
+* xref:#requests-per-minute[Requests Per Minute]
 
-[[abfcf]][[GSPLG00025]][[maximum-number-of-concurrent-users]]
+[[maximum-number-of-concurrent-users]]
 
 ===== Maximum Number of Concurrent Users
 
@@ -117,7 +114,7 @@ degrade. Generally, strive to operate the system at optimal throughput
 as much as possible. You might need to add processing power to handle
 additional load and increase throughput.
 
-[[abfcg]][[GSPLG00026]][[think-time]]
+[[think-time]]
 
 ===== Think Time
 
@@ -136,7 +133,7 @@ duration to calculate the number of requests that need to be completed
 per minute, as well as the number of concurrent users the system can
 support.
 
-[[abfch]][[GSPLG00027]][[average-response-time]]
+[[average-response-time]]
 
 ===== Average Response Time
 
@@ -182,7 +179,7 @@ where
 To obtain an accurate response time result, always include think time in
 the equation.
 
-[[GSPLG00007]][[fygam]]
+[[fygam]]
 Example 2-1 Calculation of Response Time
 
 If the following conditions exist:
@@ -205,7 +202,7 @@ peak load, compare it to the acceptable response time for the
 application. Response time, along with throughput, is one of the main
 factors critical to {productName} performance.
 
-[[abfcj]][[GSPLG00028]][[requests-per-minute]]
+[[requests-per-minute]]
 
 ===== Requests Per Minute
 
@@ -238,7 +235,7 @@ Solving for r in the equation in the previous section gives:
 
 r = n/(T~response~ + T~think~)
 
-[[GSPLG00008]][[fygaj]]
+[[fygaj]]
 Example 2-2 Calculation of Requests Per Second
 
 For the values:
@@ -257,7 +254,7 @@ r = 2800 / (1+3) = 700
 Therefore, the number of requests per second is 700 and the number of
 requests per minute is 42000.
 
-[[abfcp]][[GSPLG00020]][[planning-the-network-configuration]]
+[[planning-the-network-configuration]]
 
 === Planning the Network Configuration
 
@@ -267,14 +264,14 @@ that it can meet users' performance requirements.
 
 The following topics are addressed here:
 
-* link:#gkvdm[Setting Up Traffic Separation]
-* link:#abfcq[Estimating Bandwidth Requirements]
-* link:#abfcr[Calculating Bandwidth Required]
-* link:#abfct[Estimating Peak Load]
-* link:#abfcw[Choosing Network Cards]
-* link:#abfdc[Identifying Failure Classes]
+* xref:#setting-up-traffic-separation[Setting Up Traffic Separation]
+* xref:#estimating-bandwidth-requirements[Estimating Bandwidth Requirements]
+* xref:#calculating-bandwidth-required[Calculating Bandwidth Required]
+* xref:#estimating-peak-load[Estimating Peak Load]
+* xref:#choosing-network-cards[Choosing Network Cards]
+* xref:#identifying-failure-classes[Identifying Failure Classes]
 
-[[gkvdm]][[GSPLG00056]][[setting-up-traffic-separation]]
+[[setting-up-traffic-separation]]
 
 ==== Setting Up Traffic Separation
 
@@ -288,17 +285,17 @@ machine. A multi-homed machine has two IP addresses belonging to
 different networks, an external IP and an internal IP. The objective is
 to expose only the external IP to user requests. The internal IP is used
 only by the cluster instances for internal communication. For details,
-see "link:ha-administration-guide/clusters.html#GSHAG00266[Using the Multi-Homing Feature With GMS]" in
+see "link:ha-administration-guide/clusters.html#using-the-multi-homing-feature-with-gms[Using the Multi-Homing Feature With GMS]" in
 {productName} High Availability Administration
 Guide.
 
-To plan for traffic on both networks, see link:#abfcq[Estimating
+To plan for traffic on both networks, see xref:#estimating-bandwidth-requirements[Estimating
 Bandwidth Requirements]. For external networks, follow the guidelines in
-link:#abfcr[Calculating Bandwidth Required] and link:#abfct[Estimating
+xref:#calculating-bandwidth-required[Calculating Bandwidth Required] and xref:#estimating-peak-load[Estimating
 Peak Load]. To size the interfaces for internal networks, see
-link:#abfcw[Choosing Network Cards].
+xref:#choosing-network-cards[Choosing Network Cards].
 
-[[abfcq]][[GSPLG00057]][[estimating-bandwidth-requirements]]
+[[estimating-bandwidth-requirements]]
 
 ==== Estimating Bandwidth Requirements
 
@@ -323,11 +320,11 @@ another percentage will retry. As a result, the peak appears longer
 because peak use is spread out over time as users continue to attempt
 access.
 
-[[abfcr]][[GSPLG00058]][[calculating-bandwidth-required]]
+[[calculating-bandwidth-required]]
 
 ==== Calculating Bandwidth Required
 
-Based on the calculations made in link:#abfcc[Establishing Performance
+Based on the calculations made in xref:#establishing-performance-goals[Establishing Performance
 Goals], determine the additional bandwidth required for deploying
 {productName} at your site.
 
@@ -339,7 +336,7 @@ the network, based on the average number of requests generated per
 second at your site and the maximum peak load. Calculate these figures
 using a web site analysis and monitoring tool.
 
-[[GSPLG00009]][[fygad]]
+[[fygad]]
 Example 2-3 Calculation of Bandwidth Required
 
 A single T-1 line can handle 1.544 Mbps. Therefore, a network of four
@@ -358,7 +355,7 @@ per day maximum, assuming an even load throughout the day. If the
 maximum peak load is greater than this, increase the bandwidth
 accordingly.
 
-[[abfct]][[GSPLG00059]][[estimating-peak-load]]
+[[estimating-peak-load]]
 
 ==== Estimating Peak Load
 
@@ -366,7 +363,7 @@ Having an even load throughout the day is probably not realistic. You
 need to determine when the peak load occurs, how long it lasts, and what
 percentage of the total load is the peak load.
 
-[[GSPLG00010]][[fygai]]
+[[fygai]]
 Example 2-4 Calculation of Peak Load
 
 If the peak load lasts for two hours and takes up 30 percent of the
@@ -386,7 +383,7 @@ times that many pages requires four times that many lines, in this case
 30 percent peak load. Obviously, the other 70 percent of the load can be
 handled throughout the rest of the day by these many lines.
 
-[[abfcw]][[GSPLG00060]][[choosing-network-cards]]
+[[choosing-network-cards]]
 
 ==== Choosing Network Cards
 
@@ -394,17 +391,17 @@ For greater bandwidth and optimal network performance, use at least 100
 Mbps Ethernet cards or, preferably, 1 Gbps Ethernet cards between
 servers hosting {productName}.
 
-[[abfcy]][[GSPLG00021]][[planning-for-availability]]
+[[planning-for-availability]]
 
 === Planning for Availability
 
 The following topics are addressed here:
 
-* link:#abfcz[Rightsizing Availability]
-* link:#abfda[Using Clusters to Improve Availability]
-* link:#abfdb[Adding Redundancy to the System]
+* xref:#rightsizing-availability[Rightsizing Availability]
+* xref:#using-clusters-to-improve-availability[Using Clusters to Improve Availability]
+* xref:#adding-redundancy-to-the-system[Adding Redundancy to the System]
 
-[[abfcz]][[GSPLG00061]][[rightsizing-availability]]
+[[rightsizing-availability]]
 
 ==== Rightsizing Availability
 
@@ -431,7 +428,7 @@ unavailability of the account management function (where existing
 customers can view their current coverage) is unlikely to turn away
 existing customers.
 
-[[abfda]][[GSPLG00062]][[using-clusters-to-improve-availability]]
+[[using-clusters-to-improve-availability]]
 
 ==== Using Clusters to Improve Availability
 
@@ -448,7 +445,7 @@ unresponsive, requests are redirected only to existing, available
 machines. The load balancer can also recognize when a failed instance
 has recovered and redistribute load accordingly.
 
-[[abfdb]][[GSPLG00063]][[adding-redundancy-to-the-system]]
+[[adding-redundancy-to-the-system]]
 
 ==== Adding Redundancy to the System
 
@@ -458,7 +455,7 @@ over. This is also referred to as fault tolerance. In general, to
 maximize high availability, determine and remove every possible point of
 failure in the system.
 
-[[abfdc]][[GSPLG00029]][[identifying-failure-classes]]
+[[identifying-failure-classes]]
 
 ===== Identifying Failure Classes
 
@@ -482,7 +479,7 @@ single-building fire can be tolerated. By keeping them in separate
 geographical locations, natural catastrophes like earthquakes can be
 tolerated.
 
-[[abfdf]][[GSPLG00030]][[planning-failover-capacity]]
+[[planning-failover-capacity]]
 
 ===== Planning Failover Capacity
 
@@ -503,7 +500,7 @@ system will be able to handle only 150 requests, assuming an even load
 distribution between the machines. Therefore, half the requests during
 peak load will not be served.
 
-[[abfdg]][[GSPLG00022]][[design-decisions]]
+[[design-decisions]]
 
 === Design Decisions
 
@@ -513,11 +510,11 @@ sizes, and the size of the administration thread pool.
 
 The following topics are addressed here:
 
-* link:#abfdh[Designing for Peak or Steady State Load]
-* link:#abfdi[System Sizing]
-* link:#gkvcu[Sizing the Administration Thread Pool]
+* xref:#designing-for-peak-or-steady-state-load[Designing for Peak or Steady State Load]
+* xref:#system-sizing[System Sizing]
+* xref:#sizing-the-administration-thread-pool[Sizing the Administration Thread Pool]
 
-[[abfdh]][[GSPLG00064]][[designing-for-peak-or-steady-state-load]]
+[[designing-for-peak-or-steady-state-load]]
 
 ==== Designing for Peak or Steady State Load
 
@@ -546,18 +543,18 @@ slower only 10 percent of the time. Decide if the frequency or duration
 of time that the system operates at peak justifies the need to add
 resources to the system.
 
-[[abfdi]][[GSPLG00065]][[system-sizing]]
+[[system-sizing]]
 
 ==== System Sizing
 
 Based on the load on the {productName} instances and failover
 requirements, you can determine the number of applications server
 instances (hosts) needed. Evaluate your environment on the basis of the
-factors explained in link:#abfce[Estimating Load on {productName}
+factors explained in xref:#estimating-load-on-glassfish-server-instances[Estimating Load on {productName}
 Instances] to each {productName} instance, although each instance can
 use more than one Central Processing Unit (CPU).
 
-[[gkvcu]][[GSPLG00066]][[sizing-the-administration-thread-pool]]
+[[sizing-the-administration-thread-pool]]
 
 ==== Sizing the Administration Thread Pool
 
@@ -568,7 +565,7 @@ to increase this thread pool size. In this case, set the
 largest cluster, but not larger than the number of incoming
 synchronization requests that the DAS can handle.
 
-[[abfdn]][[GSPLG00023]][[planning-message-queue-broker-deployment]]
+[[planning-message-queue-broker-deployment]]
 
 === Planning Message Queue Broker Deployment
 
@@ -605,11 +602,11 @@ traffic fault-tolerant and highly available.
 
 The following topics are addressed here:
 
-* link:#abfdo[Multi-Broker Clusters]
-* link:#abfdq[Configuring {productName} to Use Message Queue Brokers]
-* link:#abfdx[Example Deployment Scenarios]
+* xref:#multi-broker-clusters[Multi-Broker Clusters]
+* xref:#configuring-glassfish-server-to-use-message-queue-brokers[Configuring {productName} to Use Message Queue Brokers]
+* xref:#example-deployment-scenarios[Example Deployment Scenarios]
 
-[[abfdo]][[GSPLG00067]][[multi-broker-clusters]]
+[[multi-broker-clusters]]
 
 ==== Multi-Broker Clusters
 
@@ -652,7 +649,7 @@ the failed broker are taken over by another running broker in the
 cluster and non-prepared transactions are rolled back. Data failover is
 ensured for prepared transactions and persisted messages.
 
-[[abfdp]][[GSPLG00031]][[master-broker-and-client-synchronization-for-conventional-clusters]]
+[[master-broker-and-client-synchronization-for-conventional-clusters]]
 
 ===== Master Broker and Client Synchronization for Conventional Clusters
 
@@ -681,10 +678,10 @@ brokers in a cluster.
 A shared database of cluster change records can be configured as an
 alternative to using a master broker. For more information, see
 "link:../openmq/mq-admin-guide/broker-clusters.html#GMADG00041[Configuring and Managing Broker Clusters]" in Open
-Message Queue Administration Guide and "link:ha-administration-guide/jms.html#GSHAG00212[Using Message
+Message Queue Administration Guide and "link:ha-administration-guide/jms.html#using-message-queue-broker-clusters-with-glassfish-server[Using Message
 Queue Broker Clusters With {productName}]" in {productName} High Availability Administration Guide.
 
-[[abfdq]][[GSPLG00068]][[configuring-glassfish-server-to-use-message-queue-brokers]]
+[[configuring-glassfish-server-to-use-message-queue-brokers]]
 
 ==== Configuring {productName} to Use Message Queue Brokers
 
@@ -704,7 +701,7 @@ In {productName}, a JMS host refers to a Message Queue broker. The
 Host List (also called AddressList) that contains all the JMS hosts that
 will be used.
 
-[[abfdt]][[GSPLG00032]][[java-message-service-type]]
+[[java-message-service-type]]
 
 ===== Java Message Service Type
 
@@ -712,7 +709,7 @@ There are three types of integration between {productName} and
 Message Queue brokers: embedded, local, and remote. You can set this
 type attribute on the Administration Console's Java Message Service page.
 
-[[gktcw]][[GSPLG00004]][[embedded-java-message-service]]
+[[embedded-java-message-service]]
 
 Embedded Java Message Service
 
@@ -730,7 +727,7 @@ Message Queue broker startup parameters.
 With the EMBEDDED type, make sure the Java heap size is large enough to
 allow {productName} and Message Queue to run in the same virtual machine.
 
-[[abfdu]][[GSPLG00005]][[local-java-message-service]]
+[[local-java-message-service]]
 
 Local Java Message Service
 
@@ -745,7 +742,7 @@ use of separate JVMs.
 With the LOCAL type, use the Start Arguments attribute to specify
 Message Queue broker startup parameters.
 
-[[abfdv]][[GSPLG00006]][[remote-java-message-service]]
+[[remote-java-message-service]]
 
 Remote Java Message Service
 
@@ -761,14 +758,14 @@ brokers and server instances.
 With the REMOTE type, you must specify Message Queue broker startup
 parameters using Message Queue tools. The Start Arguments attribute is ignored.
 
-[[abfdr]][[GSPLG00033]][[managing-jms-with-the-administration-console]]
+[[managing-jms-with-the-administration-console]]
 
 ===== Managing JMS with the Administration Console
 
 In the Administration Console, you can set JMS properties using the Java
 Message Service node for a particular configuration. You can set
 properties such as Reconnect Interval and Reconnect Attempts. For more
-information, see "link:administration-guide/jms.html#GSADG00020[Administering the Java Message
+information, see "link:administration-guide/jms.html#administering-the-java-message-service-jms[Administering the Java Message
 Service (JMS)]" in {productName} Administration
 Guide.
 
@@ -786,7 +783,7 @@ Message Service for each one. Message Queue clients use the
 configuration information in the Java Message Service to communicate
 with Message Queue broker.
 
-[[abfds]][[GSPLG00034]][[managing-jms-with-asadmin]]
+[[managing-jms-with-asadmin]]
 
 ===== Managing JMS with asadmin
 
@@ -807,9 +804,9 @@ Use the following `asadmin` commands:
 ** `asadmin list-jms-resources`
 
 +
-For more information on these commands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual] or the corresponding man pages.
+For more information on these commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual] or the corresponding man pages.
 
-[[abfdw]][[GSPLG00035]][[default-jms-host]]
+[[default-jms-host]]
 
 ===== Default JMS Host
 
@@ -831,7 +828,7 @@ when a physical destination is created for a Message Queue broker
 cluster, the default JMS host executes the command to create the
 physical destinations, but all brokers in the cluster use the physical destination.
 
-[[abfdx]][[GSPLG00069]][[example-deployment-scenarios]]
+[[example-deployment-scenarios]]
 
 ==== Example Deployment Scenarios
 
@@ -844,7 +841,7 @@ For best availability, deploy Message Queue brokers and {productName}s on differ
 and a Message Queue broker instance on each machine until there is
 sufficient messaging capacity.
 
-[[abfdy]][[GSPLG00036]][[default-deployment]]
+[[default-deployment]]
 
 ===== Default Deployment
 
@@ -858,7 +855,7 @@ add a stand-alone server instance or a cluster to the domain, its Java
 Message Service is configured as EMBEDDED and its default JMS host is
 the broker started by the DAS.
 
-[[abfdz]][[GSPLG00037]][[using-a-message-queue-broker-cluster-with-a-glassfish-server-cluster]]
+[[using-a-message-queue-broker-cluster-with-a-glassfish-server-cluster]]
 
 ===== Using a Message Queue Broker Cluster with a {productName} Cluster
 
@@ -870,7 +867,7 @@ Queue broker cluster, add all the Message Queue brokers as JMS hosts in
 the {productName}'s Java Message Service. Any JMS connection
 factories created and MDBs deployed then uses the JMS configuration specified.
 
-[[abfeb]][[GSPLG00038]][[specifying-an-application-specific-message-queue-broker-cluster]]
+[[specifying-an-application-specific-message-queue-broker-cluster]]
 
 ===== Specifying an Application-Specific Message Queue Broker Cluster
 
@@ -881,13 +878,13 @@ so, use the `AddressList` property of a JMS connection factory or the
 the Message Queue broker cluster.
 
 For more information about configuring connection factories, see
-"link:administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
+"link:administration-guide/jms.html#administering-jms-connection-factories-and-destinations[Administering JMS Connection Factories and
 Destinations]" in {productName} Administration
-Guide. For more information about MDBs, see "link:application-development-guide/ejb.html#GSDVG00149[Using
+Guide. For more information about MDBs, see "link:application-development-guide/ejb.html#using-message-driven-beans[Using
 Message-Driven Beans]" in {productName}
 Application Development Guide.
 
-[[abfec]][[GSPLG00039]][[application-clients]]
+[[application-clients]]
 
 ===== Application Clients
 

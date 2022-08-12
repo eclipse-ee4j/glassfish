@@ -7,13 +7,11 @@ prev=disable-http-lb-application.html
 
 = disable-http-lb-server
 
-[[disable-http-lb-server-1]][[GSRFM00119]][[disable-http-lb-server]]
+[[disable-http-lb-server]]
 
 == disable-http-lb-server
 
 Disables a sever or cluster managed by a load balancer
-
-[[sthref1055]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] disable-http-lb-server [--help]
 [--timeout 30]
 target
 ----
-
-[[sthref1056]]
 
 === Description
 
@@ -50,13 +46,11 @@ subcommand is not applicable to {productName}.
 ====
 
 
-[[sthref1057]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -65,8 +59,6 @@ asadmin-options::
   target. This time allows for the graceful shutdown (quiescing) of the
   specified target. The default value is 30 minutes. The minimum value
   is 1 minute.
-
-[[sthref1058]]
 
 === Operands
 
@@ -77,11 +69,9 @@ target::
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
-[[sthref1059]]
-
 === Examples
 
-[[GSRFM593]][[sthref1060]]
+[[sthref1060]]
 
 ==== Example 1   Disabling a Cluster for Load Balancing
 
@@ -94,8 +84,6 @@ asadmin> disable-http-lb-server mycluster
 Command disable-http-lb-server executed successfully.
 ----
 
-[[sthref1061]]
-
 === Exit Status
 
 0::
@@ -103,13 +91,11 @@ Command disable-http-lb-server executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1062]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)],
-link:enable-http-lb-server.html#enable-http-lb-server-1[`enable-http-lb-server`(1)]
+xref:create-http-lb-ref.adoc#create-http-lb-ref[`create-http-lb-ref`(1)],
+xref:enable-http-lb-server.adoc#enable-http-lb-server[`enable-http-lb-server`(1)]
 
 

@@ -7,9 +7,6 @@ prev=jndi.html
 
 = Administering Transactions
 
-[[GSADG00022]][[ablsn]]
-
-
 [[administering-transactions]]
 == 19 Administering Transactions
 
@@ -20,11 +17,11 @@ are also included.
 
 The following topics are addressed here:
 
-* link:#ablso[About Transactions]
-* link:#beanp[Configuring the Transaction Service]
-* link:#giubd[Managing the Transaction Service for Rollbacks]
-* link:#gjjpy[Recovering Transactions]
-* link:#beanq[Transaction Logging]
+* <<About Transactions>>
+* <<Configuring the Transaction Service>>
+* <<Managing the Transaction Service for Rollbacks>>
+* <<Recovering Transactions>>
+* <<Transaction Logging>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
@@ -39,7 +36,7 @@ You might also want to read
 "https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]"
 in The Jakarta EE Tutorial.
 
-[[ablso]][[GSADG00605]][[about-transactions]]
+[[about-transactions]]
 
 === About Transactions
 
@@ -88,24 +85,24 @@ is typically specific to a resource manager. The resource adapter is
 available as a library and is used within the address space of the
 client using it. An example of such a resource adapter is a Java
 Database Connectivity (JDBC) driver. For information on supported JDBC
-drivers, see link:jdbc.html#beamw[Configuration Specifics for JDBC
+drivers, see xref:jdbc.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC
 Drivers].
 * Transactional User Application. In the {productName} environment,
 the transactional user application uses Java Naming and Directory
 Interface (JNDI) to look up transactional data sources and, optionally,
 the user transaction). The application might use declarative transaction
 attribute settings for enterprise beans, or explicit programmatic
-transaction demarcation. For more information, see "link:application-development-guide/transaction-service.html#GSDVG00191[The
+transaction demarcation. For more information, see "link:application-development-guide/transaction-service.html#the-transaction-manager-the-transaction-synchronization-registry-and-usertransaction[The
 Transaction Manager, the Transaction Synchronization Registry, and
 UserTransaction]" in {productName} Application
 Development Guide.
 
 The following topics are addressed here:
 
-* link:#beann[Transaction Resource Managers]
-* link:#beano[Transaction Scope]
+* <<Transaction Resource Managers>>
+* <<Transaction Scope>>
 
-[[beann]][[GSADG00785]][[transaction-resource-managers]]
+[[transaction-resource-managers]]
 
 ==== Transaction Resource Managers
 
@@ -113,26 +110,26 @@ There are three types of transaction resource managers:
 
 * Databases - Use of transactions prevents databases from being left in
 inconsistent states due to incomplete updates. For information about
-JDBC transaction isolation levels, see "link:application-development-guide/transaction-service.html#GSDVG00511[Using JDBC
+JDBC transaction isolation levels, see "link:application-development-guide/transaction-service.html#using-jdbc-transaction-isolation-levels[Using JDBC
 Transaction Isolation Levels]" in {productName}
 Application Development Guide.
 +
 The {productName} supports a variety of JDBC XA drivers. For a list
 of the JDBC drivers currently supported by the {productName}, see the
-link:release-notes.html#GSRLN[{productName} Release Notes]. For
+xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-link:jdbc.html#beamw[Configuration Specifics for JDBC Drivers].
+xref:jdbc.adoc#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers].
 * Java Message Service (JMS) Providers - Use of transactions ensures
 that messages are reliably delivered. The {productName} is integrated
 with Open Message Queue, a fully capable JMS provider. For more
 information about transactions and the JMS API, see
-link:jms.html#abljw[Administering the Java Message Service (JMS)].
+xref:jms.adoc#administering-the-java-message-service-jms[Administering the Java Message Service (JMS)].
 * J2EE Connector Architecture (CA) components - Use of transactions
 prevents legacy EIS systems from being left in inconsistent states due
 to incomplete updates. For more information about connectors, see
-link:connectors.html#abllp[Administering EIS Connectivity].
+xref:connectors.adoc#administering-eis-connectivity[Administering EIS Connectivity].
 
-[[beano]][[GSADG00786]][[transaction-scope]]
+[[transaction-scope]]
 
 ==== Transaction Scope
 
@@ -160,7 +157,7 @@ processes are distributed or global transactions. A global transaction
 can involve one non-XA resource if last agent optimization is enabled.
 Otherwise, all resources must be XA. The `use-last-agent-optimization`
 property is set to `true` by default. For details about how to set this
-property, see link:#beanp[Configuring the Transaction Service].
+property, see <<Configuring the Transaction Service>>.
 
 If only one XA resource is used in a transaction, one-phase commit
 occurs, otherwise the transaction is coordinated with a two-phase commit
@@ -178,7 +175,7 @@ transaction manager issue a commit request (`COMMIT`) to all the
 resource managers. Otherwise, the transaction manager issues a rollback
 request (`ABORT`) and the transaction is rolled back.
 
-[[beanp]][[GSADG00606]][[configuring-the-transaction-service]]
+[[configuring-the-transaction-service]]
 
 === Configuring the Transaction Service
 
@@ -188,7 +185,7 @@ following ways:
 * To configure the transaction service using the Administration Console,
 open the Transaction Service component under the relevant configuration.
 For details, click the Help button in the Administration Console.
-* To configure the transaction service, use the link:reference-manual/set.html#GSRFM00226[`set`]
+* To configure the transaction service, use the link:reference-manual/set.html#set[`set`]
 subcommand to set the following attributes.
 +
 The following examples show the `server-config` configuration, but
@@ -249,9 +246,9 @@ empty value, the value used is `jdbc/TxnDS`.
 ** The `xa-servername` property does not have a default value. Use this
 property to override server names that can cause errors.
 +
-You can use the link:reference-manual/get.html#GSRFM00139[`get`] subcommand to list all the
+You can use the link:reference-manual/get.html#get[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
-For details, see the link:reference-manual.html#GSRFM[{productName}
+For details, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual].
 +
 Changing `keypoint-interval`, `retry-timeout-in-seconds`, or
@@ -268,7 +265,7 @@ JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR=0.75f
 The `JTA_RESOURCE_TABLE_DEFAULT_LOAD_FACTOR` default is the default
 `Map` resizing value.
 
-[[giubd]][[GSADG00607]][[managing-the-transaction-service-for-rollbacks]]
+[[managing-the-transaction-service-for-rollbacks]]
 
 === Managing the Transaction Service for Rollbacks
 
@@ -280,12 +277,12 @@ back.
 
 The following topics are addressed here:
 
-* link:#giufn[To Stop the Transaction Service]
-* link:#giugk[To Roll Back a Transaction]
-* link:#giuet[To Restart the Transaction Service]
-* link:#gkrbo[Determining Local Transaction Completion at Shutdown]
+* <<To Stop the Transaction Service>>
+* <<To Roll Back a Transaction>>
+* <<To Restart the Transaction Service>>
+* <<Determining Local Transaction Completion at Shutdown>>
 
-[[giufn]][[GSADG00513]][[to-stop-the-transaction-service]]
+[[to-stop-the-transaction-service]]
 
 ==== To Stop the Transaction Service
 
@@ -300,9 +297,9 @@ by using the `unfreeze-transaction-service` subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Stop the transaction service by using the
-link:reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`] subcommand.
+link:reference-manual/freeze-transaction-service.html#freeze-transaction-service[`freeze-transaction-service`] subcommand.
 
-[[GSADG00293]][[giufq]]
+[[giufq]]
 Example 19-1 Stopping the Transaction Service
 
 This example stops the transaction service.
@@ -313,14 +310,12 @@ asadmin> freeze-transaction-service --target instance1
 Command freeze-transaction-service executed successfully
 ----
 
-[[GSADG1038]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help freeze-transaction-service` at the command line.
 
-[[giugk]][[GSADG00514]][[to-roll-back-a-transaction]]
+[[to-roll-back-a-transaction]]
 
 ==== To Roll Back a Transaction
 
@@ -338,12 +333,12 @@ specific transaction.
 asadmin> set cluster1-config.monitoring-service.module-monitoring-levels.transaction-service=HIGH
 ----
 3. Use the `freeze-transaction-service` subcommand to halt in-process
-transactions. See link:#giufn[To Stop the Transaction Service].
+transactions. See <<To Stop the Transaction Service>>.
 4. Identify the ID of the transaction you want to roll back.
 +
 To see a list of IDs of active transactions, use the `get` subcommand
 with the `--monitor` option to get the monitoring data for the
-`activeids` statistic. See link:monitoring.html#ablvl[Transaction Service
+`activeids` statistic. See xref:monitoring.adoc#transaction-service-statistics[Transaction Service
 Statistics]. For example:
 +
 [source]
@@ -351,13 +346,13 @@ Statistics]. For example:
 asadmin> get --monitor instance1.server.transaction-service.activeids-current
 ----
 5. Roll back the transaction by using the
-link:reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`] subcommand.
+link:reference-manual/rollback-transaction.html#rollback-transaction[`rollback-transaction`] subcommand.
 +
 The transaction is not rolled back at the time of this command's
 execution, but only marked for rollback. The transaction is rolled back
 when it is completed.
 
-[[GSADG00294]][[giufy]]
+[[giufy]]
 Example 19-2 Rolling Back a Transaction
 
 This example rolls back the transaction with transaction ID
@@ -369,14 +364,12 @@ asadmin> rollback-transaction --target instance1 0000000000000001_00
 Command rollback-transaction executed successfully
 ----
 
-[[GSADG1039]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help rollback-transaction` at the command line.
 
-[[giuet]][[GSADG00515]][[to-restart-the-transaction-service]]
+[[to-restart-the-transaction-service]]
 
 ==== To Restart the Transaction Service
 
@@ -386,9 +379,9 @@ restart the transaction service after it has been frozen.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Restart the suspended transaction service by using the
-link:reference-manual/unfreeze-transaction-service.html#GSRFM00245[`unfreeze-transaction-service`] subcommand.
+link:reference-manual/unfreeze-transaction-service.html#unfreeze-transaction-service[`unfreeze-transaction-service`] subcommand.
 
-[[GSADG00295]][[giuef]]
+[[giuef]]
 Example 19-3 Restarting the Transaction Service
 
 This example restarts the transaction service after it has been frozen.
@@ -399,14 +392,12 @@ asadmin> unfreeze-transaction-service --target instance1
 Command unfreeze-transaction-service executed successfully
 ----
 
-[[GSADG1040]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help unfreeze-transaction-service` at the command line.
 
-[[gkrbo]][[GSADG00787]][[determining-local-transaction-completion-at-shutdown]]
+[[determining-local-transaction-completion-at-shutdown]]
 
 ==== Determining Local Transaction Completion at Shutdown
 
@@ -422,14 +413,14 @@ To explicitly specify whether {productName} commits or rolls back
 non-XA transactions at server shutdown, set the
 `com.sun.enterprise.in-progress-local-transaction.completion-mode` JVM
 option to either `commit` or `rollback` using the
-link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand. For example:
+link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`] subcommand. For example:
 
 [source]
 ----
 asadmin> create-jvm-options -Dcom.sun.enterprise.in-progress-local-transaction.completion-mode=rollback
 ----
 
-[[gjjpy]][[GSADG00608]][[recovering-transactions]]
+[[recovering-transactions]]
 
 === Recovering Transactions
 
@@ -445,12 +436,12 @@ outcome.
 
 The following topics are addressed here:
 
-* link:#gkoen[Automatic Transaction Recovery]
-* link:#giuhe[To Manually Recover Transactions]
-* link:#gaxim[Distributed Transaction Recovery]
-* link:#gaxig[Recovery Workarounds and Limitations]
+* <<Automatic Transaction Recovery>>
+* <<To Manually Recover Transactions>>
+* <<Distributed Transaction Recovery>>
+* <<Recovery Workarounds and Limitations>>
 
-[[gkoen]][[GSADG00788]][[automatic-transaction-recovery]]
+[[automatic-transaction-recovery]]
 
 ==== Automatic Transaction Recovery
 
@@ -462,12 +453,12 @@ The following topics are addressed here:
 `pending-txn-cleanup-interval` property is set to a positive value.
 
 Changing these settings requires a server restart. For more information
-about how to change these settings, see link:#beanp[Configuring the
+about how to change these settings, see xref:#configuring-the-transaction-service[Configuring the
 Transaction Service].
 
 If commit fails during recovery, a message is written to the server log.
 
-[[giuhe]][[GSADG00516]][[to-manually-recover-transactions]]
+[[to-manually-recover-transactions]]
 
 ==== To Manually Recover Transactions
 
@@ -486,7 +477,7 @@ For an installation of multiple server instances, you can use manual
 transaction recovery from a surviving server instance to recover
 transactions after a server failure. For manual transaction recovery to
 work properly, transaction logs must be stored on a shared file system
-that is accessible to all server instances. See link:#beanq[Transaction
+that is accessible to all server instances. See xref:#transaction-logging[Transaction
 Logging].
 
 When you execute `recover-transactions` in non-delegated mode, you can
@@ -498,7 +489,7 @@ following conditions must be met:
 resource is restarted.
 * Connection validation should be enabled so the connection pool is
 refreshed when the resource is accessed after the recovery. For more
-information, see "link:performance-tuning-guide/tuning-glassfish.html#GSPTG00030[Connection Validation Settings]" in
+information, see "link:performance-tuning-guide/tuning-glassfish.html#connection-validation-settings[Connection Validation Settings]" in
 {productName} Performance Tuning Guide.
 
 If commit fails during recovery, a message is written to the server log.
@@ -517,9 +508,9 @@ Administration Guide.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Manually recover transactions by using the
-link:reference-manual/recover-transactions.html#GSRFM00216[`recover-transactions`] subcommand.
+link:reference-manual/recover-transactions.html#recover-transactions[`recover-transactions`] subcommand.
 
-[[GSADG00296]][[giugn]]
+[[giugn]]
 Example 19-4 Manually Recovering Transactions
 
 This example performs manual recovery of transactions on `instance1`,
@@ -531,27 +522,25 @@ asadmin recover-transactions --target instance2 instance1
 Transaction recovered.
 ----
 
-[[GSADG1041]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help recover-transactions` at the command line.
 
-[[gaxim]][[GSADG00789]][[distributed-transaction-recovery]]
+[[distributed-transaction-recovery]]
 
 ==== Distributed Transaction Recovery
 
 To enable cluster-wide automatic recovery, you must first facilitate
 storing of transaction logs in a shared file system. See
-link:#beanq[Transaction Logging].
+<<Transaction Logging>>.
 
 Next, you must set the transaction service's `delegated-recovery`
 property to `true` (the default is `false`). For information about
 setting `tx-log-dir` and `delegated-recovery`, see
-link:#beanp[Configuring the Transaction Service].
+<<Configuring the Transaction Service>>.
 
-[[gaxig]][[GSADG00790]][[recovery-workarounds-and-limitations]]
+[[recovery-workarounds-and-limitations]]
 
 ==== Recovery Workarounds and Limitations
 
@@ -565,7 +554,7 @@ These workarounds do not imply support for any particular JDBC driver.
 ====
 
 
-[[gknau]][[GSADG00689]][[general-recovery-limitations]]
+[[general-recovery-limitations]]
 
 ===== General Recovery Limitations
 
@@ -590,7 +579,7 @@ on server instance restart is possible. This is because for conventional
 Message Queue clustering, state information in a failed broker is not
 available until the broker restarts.
 
-[[gknee]][[GSADG00690]][[oracle-setup-for-transaction-recovery]]
+[[oracle-setup-for-transaction-recovery]]
 
 ===== Oracle Setup for Transaction Recovery
 
@@ -610,7 +599,7 @@ grant select on SYS.DBA_2PC_PENDING to user;
 The user is the database administrator. On some versions of the Oracle
 driver the last `grant execute` fails. You can ignore this.
 
-[[gjiep]][[GSADG00691]][[oracle-thin-driver]]
+[[oracle-thin-driver]]
 
 ===== Oracle Thin Driver
 
@@ -623,11 +612,11 @@ issues.
 
 To disable the {productName} workaround, set the
 `oracle-xa-recovery-workaround` property value to `false`. For details
-about how to set this property, see link:#beanp[Configuring the
+about how to set this property, see xref:#configuring-the-transaction-service[Configuring the
 Transaction Service]. This workaround is used unless explicitly
 disabled.
 
-[[gkneq]][[GSADG00692]][[delegated-recovery-after-server-crash-doesnt-work-on-mysql]]
+[[delegated-recovery-after-server-crash-doesnt-work-on-mysql]]
 
 ===== Delegated Recovery After Server Crash Doesn't Work on MySQL
 
@@ -635,7 +624,7 @@ The MySQL database supports XA transaction recovery only when the
 database crashes. When a {productName} instance crashes, MySQL rolls
 back prepared transactions.
 
-[[glclh]][[GSADG00693]][[call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled]]
+[[GSADG00693]][[call-to-xateminator.recover-during-resourceadapter.start-hangs-if-automatic-recovery-is-enabled]]
 
 ===== Call to `XATeminator.recover()` During `ResourceAdapter.start()` Hangs If Automatic Recovery Is Enabled
 
@@ -648,7 +637,7 @@ transaction or calling `XATerminator.recover()`, during
 `ResourceAdapter.start()`. For more information, see
 `http://markmail.org/message/ogc7qndhaywfkdrp#query:+page:1+mid:kyyzpcexusbnv7ri+state:results`.
 
-[[beanq]][[GSADG00609]][[transaction-logging]]
+[[transaction-logging]]
 
 === Transaction Logging
 
@@ -673,7 +662,7 @@ directory. For example:
 asadmin> create-system-properties --target server TX-LOG-DIR=/inst1/logs
 ----
 For information about setting `log-root` and other general logging
-settings, see link:logging.html#administering-the-logging-service[Administering the Logging Service].
+settings, see xref:logging.adoc#administering-the-logging-service[Administering the Logging Service].
 * Turn off transaction logging by setting the
 `disable-distributed-transaction-logging` property to `true` and the
 `automatic-recovery` attribute to `false`. Do this only if performance
@@ -691,7 +680,7 @@ system (NFS) to avoid a single point of failure.
 ====
 
 
-[[gcmam]][[GSADG00517]][[to-store-transaction-logs-in-a-database]]
+[[to-store-transaction-logs-in-a-database]]
 
 ==== To Store Transaction Logs in a Database
 
@@ -705,7 +694,7 @@ Notes.
 Create a JDBC connection Pool. To use non-transactional connections to
 insert log records, you can either set the
 `non-transactional-connections` attribute to `true` in this step, or you
-can perform step link:#CIHGIHJC[5] later.
+can perform step <<CIHGIHJC, 5>> later.
 
 2. Create a JDBC resource that uses the connection pool and note the
 JNDI name of the JDBC resource.
@@ -738,7 +727,7 @@ configured previously.
 
 5. [[CIHGIHJC]]
 If you didn't set the `non-transactional-connections` attribute to
-`true` in step link:#CIHDBIJI[1] and you want to use non-transactional
+`true` in step <<CIHDBIJI, 1>> and you want to use non-transactional
 connections to insert log records, use the following
 `asadmin create-jvm-options` command to reference an existing
 transactional resource but use non-transactional connections for the
@@ -796,14 +785,12 @@ example:
 
 `'-Dcom.sun.jts.dblogging.deletequery=delete from txn_log_table where gtrid = ?'`
 
-[[GSADG1043]]
-
 See Also
 
 For information about JDBC connection pools and resources, see
-link:jdbc.html#ablih[Administering Database Connectivity]. For more
+xref:jdbc.adoc#administering-database-connectivity[Administering Database Connectivity]. For more
 information about the `asadmin set` and `asadmin create-jvm-options`
-commands, see the link:reference-manual.html#GSRFM[{productName}
+commands, see the xref:reference-manual.adoc#GSRFM[{productName}
 Reference Manual]. For databases with which transaction logging has been
 tested, see the {productName} Release Notes.
 

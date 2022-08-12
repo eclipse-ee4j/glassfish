@@ -7,13 +7,11 @@ prev=create-http-listener.html
 
 = create-http-redirect
 
-[[create-http-redirect-1]][[GSRFM00031]][[create-http-redirect]]
+[[create-http-redirect]]
 
 == create-http-redirect
 
 Adds a new HTTP redirect
-
-[[sthref278]]
 
 === Synopsis
 
@@ -26,20 +24,16 @@ asadmin [asadmin-options] create-http-redirect [--help]
 protocol-name
 ----
 
-[[sthref279]]
-
 === Description
 
 The `create-http-redirect` subcommand creates an HTTP redirect. This
 subcommand is supported in remote mode only.
 
-[[sthref280]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -67,14 +61,10 @@ asadmin-options::
     Creates the HTTP redirect on the specified standalone server
     instance.
 
-[[sthref281]]
-
 === Operands
 
 protocol-name::
   The name of the protocol to which to apply the redirect.
-
-[[sthref282]]
 
 === Exit Status
 
@@ -83,12 +73,10 @@ protocol-name::
 1::
   error in executing the command
 
-[[sthref283]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-http-redirect.html#delete-http-redirect-1[`delete-http-redirect`(1)]
+xref:delete-http-redirect.adoc#delete-http-redirect[`delete-http-redirect`(1)]
 
 

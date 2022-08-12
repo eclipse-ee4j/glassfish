@@ -10,121 +10,108 @@ prev=toc.html
 [[list-of-examples]]
 == List of Examples
 
-* link:ssh-setup.html#sthref7[2-1 Creating an Alias for the Windows
-User's Password]
-* link:ssh-setup.html#sthref8[2-2 Testing the Connection Over DCOM to a
-Remote Host]
-* link:ssh-setup.html#gksnj[2-3 Setting the Home Directory for the MKS
-Toolkit User]
-* link:ssh-setup.html#gkspo[2-4 Determining if the sshd Daemon Is Running
-on an Oracle Solaris System]
-* link:ssh-setup.html#gkssf[2-5 Determining if the sshd Daemon Is Running
-on a Linux System]
-* link:ssh-setup.html#gktat[2-6 Setting Up Public Key Authentication
-Without Encryption]
-* link:ssh-setup.html#gktav[2-7 Setting Up Encrypted Public Key
-Authentication]
-* link:ssh-setup.html#gktba[2-8 Creating an Alias for the SSH User's
-Password]
-* link:ssh-setup.html#sthref9[2-9 Copying a {productName} Installation
+* xref:ssh-setup.adoc#ssh-example-2-1[2-1 Creating an Alias for the Windows User's Password]
+* xref:ssh-setup.adoc#ssh-example-2-2[2-2 Testing the Connection Over DCOM to a Remote Host]
+* xref:ssh-setup.adoc#ssh-example-2-3[2-3 Setting the Home Directory for the MKS Toolkit User]
+* xref:ssh-setup.adoc#ssh-example-2-4[2-4 Determining if the sshd Daemon Is Running on an Oracle Solaris System]
+* xref:ssh-setup.adoc#ssh-example-2-5[2-5 Determining if the sshd Daemon Is Running on a Linux System]
+* xref:ssh-setup.adoc#ssh-example-2-6[2-6 Setting Up Public Key Authentication Without Encryption]
+* xref:ssh-setup.adoc#ssh-example-2-7[2-7 Setting Up Encrypted Public Key Authentication]
+* xref:ssh-setup.adoc#ssh-example-2-8[2-8 Creating an Alias for the SSH User's Password]
+* xref:ssh-setup.adoc#ssh-example-2-9[2-9 Copying a {productName} Installation
 to Multiple DCOM-Enabled Hosts]
-* link:ssh-setup.html#sthref10[2-10 Copying a {productName}
+* xref:ssh-setup.adoc#ssh-example-2-10[2-10 Copying a {productName}
 Installation to Multiple SSH-Enabled Hosts]
-* link:ssh-setup.html#sthref11[2-11 Removing {productName} Software
+* xref:ssh-setup.adoc#ssh-example-2-11[2-11 Removing {productName} Software
 From Multiple DCO\M-Enabled Hosts]
-* link:ssh-setup.html#sthref12[2-12 Removing {productName} Software
+* xref:ssh-setup.adoc#ssh-example-2-12[2-12 Removing {productName} Software
 From Multiple SSH-Enabled Hosts]
-* link:nodes.html#sthref13[3-1 Creating a DCOM Node]
-* link:nodes.html#sthref14[3-2 Listing Basic Information About All DCOM
+* xref:nodes.adoc#nodes-example-3-1[3-1 Creating a DCOM Node]
+* xref:nodes.adoc#nodes-example-3-2[3-2 Listing Basic Information About All DCOM
 Nodes in a Domain]
-* link:nodes.html#sthref15[3-3 Listing Detailed Information About All
+* xref:nodes.adoc#nodes-example-3-3[3-3 Listing Detailed Information About All
 DCOM Nodes in a Domain]
-* link:nodes.html#sthref16[3-4 Testing if a DCOM Node Is Reachable]
-* link:nodes.html#sthref17[3-5 Deleting a DCOM Node]
-* link:nodes.html#gksih[3-6 Creating an SSH Node]
-* link:nodes.html#gkskt[3-7 Listing Basic Information About All SSH Nodes
+* xref:nodes.adoc#nodes-example-3-4[3-4 Testing if a DCOM Node Is Reachable]
+* xref:nodes.adoc#nodes-example-3-5[3-5 Deleting a DCOM Node]
+* xref:nodes.adoc#nodes-example-3-6[3-6 Creating an SSH Node]
+* xref:nodes.adoc#nodes-example-3-7[3-7 Listing Basic Information About All SSH Nodes
 in a Domain]
-* link:nodes.html#gkske[3-8 Listing Detailed Information About All SSH
+* xref:nodes.adoc#nodes-example-3-8[3-8 Listing Detailed Information About All SSH
 Nodes in a Domain]
-* link:nodes.html#gkshk[3-9 Testing if an SSH Node Is Reachable]
-* link:nodes.html#gksjg[3-10 Deleting an SSH Node]
-* link:nodes.html#gkshu[3-11 Creating a CONFIG Node]
-* link:nodes.html#gkskp[3-12 Listing Basic Information About All CONFIG
+* xref:nodes.adoc#nodes-example-3-9[3-9 Testing if an SSH Node Is Reachable]
+* xref:nodes.adoc#nodes-example-3-10[3-10 Deleting an SSH Node]
+* xref:nodes.adoc#nodes-example-3-11[3-11 Creating a CONFIG Node]
+* xref:nodes.adoc#nodes-example-3-12[3-12 Listing Basic Information About All CONFIG
 Nodes in a Domain]
-* link:nodes.html#gksjs[3-13 Listing Detailed Information About All
+* xref:nodes.adoc#nodes-example-3-13[3-13 Listing Detailed Information About All
 CONFIG Nodes in a Domain]
-* link:nodes.html#gksla[3-14 Deleting a CONFIG Node]
-* link:nodes.html#sthref18[3-15 Updating a DCOM Node]
-* link:nodes.html#gkslc[3-16 Updating an SSH Node]
-* link:nodes.html#gkskc[3-17 Updating a CONFIG Node]
-* link:nodes.html#gkshw[3-18 Changing a CONFIG Node to an SSH Node]
-* link:clusters.html#gklgw[4-1 Checking the Health of Instances in a
+* xref:nodes.adoc#nodes-example-3-14[3-14 Deleting a CONFIG Node]
+* xref:nodes.adoc#nodes-example-3-15[3-15 Updating a DCOM Node]
+* xref:nodes.adoc#nodes-example-3-16[3-16 Updating an SSH Node]
+* xref:nodes.adoc#nodes-example-3-17[3-17 Updating a CONFIG Node]
+* xref:nodes.adoc#nodes-example-3-18[3-18 Changing a CONFIG Node to an SSH Node]
+* xref:clusters.adoc#gklgw[4-1 Checking the Health of Instances in a
 Cluster]
-* link:clusters.html#gklhv[4-2 Validating That Multicast Transport Is
-Available for a Cluster]
-* link:clusters.html#sthref19[4-3 Discovering a Cluster When Multiple
-Instances are Running on a Host]
-* link:clusters.html#sthref20[4-4 Discovering a Cluster by Specifying a
-List of IP Addresses]
-* link:clusters.html#sthref21[4-5 Discovering a Cluster by Generating a
-List of Locations of Instances]
-* link:clusters.html#gkqaz[4-6 Creating a Cluster for a Network in Which
+* xref:clusters.adoc#gklhv[4-2 Validating That Multicast Transport Is Available for a Cluster]
+* xref:clusters.adoc#clusters-ex-4-3[4-3 Discovering a Cluster When Multiple Instances are Running on a Host]
+* xref:clusters.adoc#clusters-example-4-4[4-4 Discovering a Cluster by Specifying a List of IP Addresses]
+* xref:clusters.adoc#clusters-example-4-5[4-5 Discovering a Cluster by Generating a List of Locations of Instances]
+* xref:clusters.adoc#clusters-example-4-6[4-6 Creating a Cluster for a Network in Which Multicast
+Transport Is Available]
+* xref:clusters.adoc#clusters-example-4-7[4-7 Creating a Cluster and Setting GMS Options for a Network in Which
 Multicast Transport Is Available]
-* link:clusters.html#gkqiq[4-7 Creating a Cluster and Setting GMS Options
-for a Network in Which Multicast Transport Is Available]
-* link:clusters.html#gksfc[4-8 Listing All Clusters in a Domain]
-* link:clusters.html#gkhsp[4-9 Listing All Clusters That Are Associated
-With a Node]
-* link:clusters.html#gkqkr[4-10 Deleting a Cluster]
-* link:instances.html#gkqmv[5-1 Creating a Clustered Instance Centrally]
-* link:instances.html#gksfe[5-2 Listing Basic Information About All
+* xref:clusters.adoc#clusters-example-4-8[4-8 Listing All Clusters in a Domain]
+* xref:clusters.adoc#clusters-example-4-9[4-9 Listing All Clusters That Are Associated With a Node]
+* xref:clusters.adoc#clusters-example-4-10[4-10 Deleting a Cluster]
+* xref:instances.adoc#gkqmv[5-1 Creating a Clustered Instance Centrally]
+* xref:instances.adoc#gksfe[5-2 Listing Basic Information About All
 {productName} Instances in a Domain]
-* link:instances.html#gkabz[5-3 Listing Detailed Information About All
+* xref:instances.adoc#gkabz[5-3 Listing Detailed Information About All
 {productName} Instances in a Domain]
-* link:instances.html#gkqms[5-4 Deleting an Instance Centrally]
-* link:instances.html#gkqml[5-5 Starting a Cluster]
-* link:instances.html#gkqmn[5-6 Stopping a Cluster]
-* link:instances.html#gkqoa[5-7 Starting an Individual Instance
+* xref:instances.adoc#gkqms[5-4 Deleting an Instance Centrally]
+* xref:instances.adoc#gkqml[5-5 Starting a Cluster]
+* xref:instances.adoc#gkqmn[5-6 Stopping a Cluster]
+* xref:instances.adoc#gkqoa[5-7 Starting an Individual Instance
 Centrally]
-* link:instances.html#gkqpy[5-8 Stopping an Individual Instance
+* xref:instances.adoc#gkqpy[5-8 Stopping an Individual Instance
 Centrally]
-* link:instances.html#gkqqt[5-9 Restarting an Individual Instance
+* xref:instances.adoc#gkqqt[5-9 Restarting an Individual Instance
 Centrally]
-* link:instances.html#gktfa[5-10 Creating a Clustered Instance Locally
+* xref:instances.adoc#gktfa[5-10 Creating a Clustered Instance Locally
 Without Specifying a Node]
-* link:instances.html#gkqps[5-11 Creating a Clustered Instance Locally]
-* link:instances.html#gkqqu[5-12 Deleting an Instance Locally]
-* link:instances.html#gkqpu[5-13 Starting an Individual Instance Locally]
-* link:instances.html#gkqoo[5-14 Stopping an Individual Instance Locally]
-* link:instances.html#gkqnt[5-15 Restarting an Individual Instance
+* xref:instances.adoc#gkqps[5-11 Creating a Clustered Instance Locally]
+* xref:instances.adoc#gkqqu[5-12 Deleting an Instance Locally]
+* xref:instances.adoc#gkqpu[5-13 Starting an Individual Instance Locally]
+* xref:instances.adoc#gkqoo[5-14 Stopping an Individual Instance Locally]
+* xref:instances.adoc#gkqnt[5-15 Restarting an Individual Instance
 Locally]
-* link:instances.html#gksfu[5-16 Resynchronizing an Instance and the DAS
+* xref:instances.adoc#gksfu[5-16 Resynchronizing an Instance and the DAS
 Online]
-* link:instances.html#gksfr[5-17 Updating the Option for Locating a
+* xref:instances.adoc#gksfr[5-17 Updating the Option for Locating a
 Configuration File]
-* link:instances.html#gksgl[5-18 config-files File]
-* link:instances.html#gksgg[5-19 Resynchronizing an Instance and the DAS
+* xref:instances.adoc#gksgl[5-18 config-files File]
+* xref:instances.adoc#gksgg[5-19 Resynchronizing an Instance and the DAS
 Offline]
-* link:instances.html#gkmgw[5-20 Migrating an EJB Timer]
-* link:named-configurations.html#gkrhn[6-1 Creating a Named
+* xref:instances.adoc#gkmgw[5-20 Migrating an EJB Timer]
+* xref:named-configurations.adoc#gkrhn[6-1 Creating a Named
 Configuration]
-* link:named-configurations.html#gkrhp[6-2 Listing All Named
+* xref:named-configurations.adoc#gkrhp[6-2 Listing All Named
 Configurations in a Domain]
-* link:named-configurations.html#gkrfz[6-3 Listing the Targets of a Named
+* xref:named-configurations.adoc#gkrfz[6-3 Listing the Targets of a Named
 Configuration]
-* link:named-configurations.html#gkrgs[6-4 Deleting a Named
+* xref:named-configurations.adoc#gkrgs[6-4 Deleting a Named
 Configuration]
-* link:named-configurations.html#gkrky[6-5 Modifying a Property of a
+* xref:named-configurations.adoc#gkrky[6-5 Modifying a Property of a
 Named Configuration]
-* link:named-configurations.html#gkrma[6-6 Modifying a Port Number for an
+* xref:named-configurations.adoc#gkrma[6-6 Modifying a Port Number for an
 Instance]
-* link:http-load-balancing.html#gktpu[7-1 httpd.conf File for Load
+* xref:http-load-balancing.adoc#gktpu[7-1 httpd.conf File for Load
 Balancing]
-* link:http-load-balancing.html#gktpe[7-2 workers.properties File for
+* xref:http-load-balancing.adoc#gktpe[7-2 workers.properties File for
 Load Balancing]
-* link:session-persistence-and-failover.html#fxjqx[9-1 Example of an EJB
+* xref:session-persistence-and-failover.adoc#fxjqx[9-1 Example of an EJB
 Deployment Descriptor With Availability Enabled]
-* link:session-persistence-and-failover.html#fxjqg[9-2 Example of EJB
+* xref:session-persistence-and-failover.adoc#fxjqg[9-2 Example of EJB
 Deployment Descriptor Specifying Methods Checkpointing]
-* link:rmi-iiop.html#gfohj[11-1 Setting Load-Balancing Weights for
+* xref:rmi-iiop.adoc#gfohj[11-1 Setting Load-Balancing Weights for
 RMI-IIOP Weighted Round-Robin Load Balancing]

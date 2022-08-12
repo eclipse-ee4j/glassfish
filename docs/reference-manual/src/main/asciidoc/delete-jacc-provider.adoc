@@ -7,13 +7,11 @@ prev=delete-instance.html
 
 = delete-jacc-provider
 
-[[delete-jacc-provider-1]][[GSRFM00086]][[delete-jacc-provider]]
+[[delete-jacc-provider]]
 
 == delete-jacc-provider
 
 Enables administrators to delete JACC providers defined for a domain
-
-[[sthref761]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Enables administrators to delete JACC providers defined for a domain
 asadmin [asadmin-options] delete-jacc-provider [--help]
 [--target target] jacc-provider-name
 ----
-
-[[sthref762]]
 
 === Description
 
@@ -49,8 +45,6 @@ provider, you must restart {productName}.
 
 This subcommand is supported in remote mode only.
 
-[[sthref763]]
-
 === Options
 
 If an option has a short option name, then the short option precedes the
@@ -59,7 +53,7 @@ two dashes.
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -78,18 +72,14 @@ asadmin-options::
   instance_name;;
     Deletes the JACC provider on a specified server instance.
 
-[[sthref764]]
-
 === Operands
 
 jacc-provider-name::
   The name of the JACC provider to be deleted.
 
-[[sthref765]]
-
 === Examples
 
-[[GSRFM554]][[sthref766]]
+[[sthref766]]
 
 ==== Example 1   Deleting a JACC provider
 
@@ -103,8 +93,6 @@ asadmin> delete-jacc-provider testJACC
 Command delete-jacc-provider executed successfully.
 ----
 
-[[sthref767]]
-
 === Exit Status
 
 0::
@@ -112,13 +100,11 @@ Command delete-jacc-provider executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref768]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jacc-provider.html#create-jacc-provider-1[`create-jacc-provider`(1)],
-link:list-jacc-providers.html#list-jacc-providers-1[`list-jacc-providers`(1)]
+xref:create-jacc-provider.adoc#create-jacc-provider[`create-jacc-provider`(1)],
+xref:list-jacc-providers.adoc#list-jacc-providers[`list-jacc-providers`(1)]
 
 

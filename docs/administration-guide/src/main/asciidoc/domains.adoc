@@ -5,8 +5,6 @@ prev=general-administration.adoc
 
 = Administering Domains
 
-[[GSADG00006]][[ggnop]]
-
 
 [[administering-domains]]
 == 3 Administering Domains
@@ -17,19 +15,19 @@ command-line utility.
 
 The following topics are addressed here:
 
-* link:#ggoek[About Administering Domains]
-* link:#gitvz[Creating, Logging In To, and Deleting a Domain]
-* link:#gitwj[Starting and Stopping a Domain]
-* link:#gglqp[Configuring a DAS or a {productName} Instance for Automatic Restart]
-* link:#gityo[Backing Up and Restoring a Domain]
-* link:#gglri[Re-Creating the Domain Administration Server (DAS)]
-* link:#gitvn[Additional Domain Tasks]
+* <<About Administering Domains>>
+* <<creating-logging-in-to-and-deleting-a-domain, Creating, Logging In To, and Deleting a Domain>>
+* <<Starting and Stopping a Domain>>
+* <<Configuring a DAS or a {productName} Instance for Automatic Restart>>
+* <<Backing Up and Restoring a Domain>>
+* <<Re-Creating the Domain Administration Server (DAS)>>
+* <<Additional Domain Tasks>>
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console
 online help.
 
-[[ggoek]][[GSADG00535]][[about-administering-domains]]
+[[about-administering-domains]]
 
 === About Administering Domains
 
@@ -38,11 +36,11 @@ administered together. Each domain has a domain administration server
 (DAS) that hosts administrative applications. These concepts are
 explained in more detail in the following sections:
 
-* link:#geolm[{productName} Instances]
-* link:#geojp[Domains for Administering {productName}]
-* link:#geojl[Domain Administration Server (DAS)]
+* <<{productName} Instances>>
+* <<Domains for Administering {productName}>>
+* <<Domain Administration Server (DAS)>>
 
-[[geolm]][[GSADG00715]][[glassfish-server-instances]]
+[[glassfish-server-instances]]
 
 ==== {productName} Instances
 
@@ -60,7 +58,7 @@ without the need to administer {productName} instances explicitly.
 You administer the default instance when you administer its domain.
 
 If you require multiple instances, you must administer the instances
-explicitly. For more information, see "link:ha-administration-guide/instances.html#GSHAG00006[Administering
+explicitly. For more information, see "link:ha-administration-guide/instances.html#administering-glassfish-server-instances[Administering
 {productName} Instances]" in {productName}
 High Availability Administration Guide.
 
@@ -74,9 +72,9 @@ like a dedicated web server, but without the hardware and basic web
 server maintenance.
 
 For more information about virtual servers, see
-link:http_https.html#ggncs[Administering Virtual Servers].
+xref:http_https.adoc#administering-virtual-servers[Administering Virtual Servers].
 
-[[geojp]][[GSADG00716]][[domains-for-administering-glassfish-server]]
+[[domains-for-administering-glassfish-server]]
 
 ==== Domains for Administering {productName}
 
@@ -100,9 +98,9 @@ as necessary.
 When a domain is created, you are prompted for the administration user
 name and password. If you accept the default, the user `admin` is
 created without password. To reset the administration password, see
-"link:security-guide/system-security.html#GSSCG00095[To Change an Administration Password]" in {productName} Security Guide.
+"link:security-guide/system-security.html#to-change-an-administration-password[To Change an Administration Password]" in {productName} Security Guide.
 
-[[geojl]][[GSADG00717]][[domain-administration-server-das]]
+[[domain-administration-server-das]]
 
 ==== Domain Administration Server (DAS)
 
@@ -132,19 +130,19 @@ Administration Console session enables you to configure and manage only
 one domain. If you create multiple domains, you must start a separate
 Administration Console session to manage each domain.
 
-[[gitvz]][[GSADG00536]][[creating-logging-in-to-and-deleting-a-domain]]
+[[creating-logging-in-to-and-deleting-a-domain]]
 
 === Creating, Logging In To, and Deleting a Domain
 
 The following topics are addressed here:
 
-* link:#ggoei[To Create a Domain]
-* link:#gldel[To Create a Domain From a Custom Template]
-* link:#ggoco[To List Domains]
-* link:#ghhjz[To Log In to a Domain]
-* link:#ggofa[To Delete a Domain]
+* <<To Create a Domain>>
+* <<To Create a Domain From a Custom Template>>
+* <<To List Domains>>
+* <<To Log In to a Domain>>
+* <<To Delete a Domain>>
 
-[[ggoei]][[GSADG00330]][[to-create-a-domain]]
+[[to-create-a-domain]]
 
 ==== To Create a Domain
 
@@ -163,14 +161,14 @@ domain, or you can accept the default login identity which is username
 
 1. Select a name for the domain that you are creating.
 You can verify that a name is not already in use by using the
-link:reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand
-2. Create a domain by using the link:reference-manual/create-domain.html#GSRFM00023[`create-domain`] subcommand.
+link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand
+2. Create a domain by using the link:reference-manual/create-domain.html#create-domain[`create-domain`] subcommand.
 Information about the options for this subcommand is included in this help page.
 3. Type an admin user name and password for the domain.
 To avoid setting up an admin login, you can accept the default `admin`,
 with no password. Pressing Return also selects the default.
 
-[[GSADG00126]][[ggoeu]]
+[[ggoeu]]
 Example 3-1 Creating a Domain
 
 This example creates a domain named `domain1` . When you type the
@@ -208,14 +206,12 @@ deployed applications now reside in the following directory:
 
 domain-root-dir``/mydomain``
 
-[[GSADG819]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-domain` at the command line.
 
-[[gldel]][[GSADG00331]][[to-create-a-domain-from-a-custom-template]]
+[[to-create-a-domain-from-a-custom-template]]
 
 ==== To Create a Domain From a Custom Template
 
@@ -223,7 +219,7 @@ A custom template enables you to customize the configuration of any
 domain that you create from the template.
 
 1. Create a domain to use as the basis for the template.
-For more information, see link:#ggoei[To Create a Domain].
+For more information, see <<To Create a Domain>>.
 
 2. Use the `asadmin` utility or the Administration Console to configure the domain.
 Your configuration changes will be included in the template that you create from the domain.
@@ -336,20 +332,18 @@ examine the as-install``/lib/templates/domain.xml`` file.
 5. Create the domain that you want to be based on a custom template.
 In the command to create the domain, pass the name of file that you
 edited in the previous step as the `--template` option of the
-link:reference-manual/create-domain.html#GSRFM00023[`create-domain`] subcommand.
+link:reference-manual/create-domain.html#create-domain[`create-domain`] subcommand.
 
 6. Before starting the domain, verify that the domain's `domain.xml` file is valid.
-Use the link:reference-manual/verify-domain-xml.html#GSRFM00260[`verify-domain-xml`]
+Use the link:reference-manual/verify-domain-xml.html#verify-domain-xml[`verify-domain-xml`]
 subcommand for this purpose.
 Information about the options for this subcommand is included in the subcommand's help page.
 
-[[GSADG820]]
-
 See Also
 
-* link:#ggoei[To Create a Domain]
-* link:reference-manual/create-domain.html#GSRFM00023[`create-domain`(1)]
-* link:reference-manual/verify-domain-xml.html#GSRFM00260[`verify-domain-xml`(1)]
+* <<To Create a Domain>>
+* link:reference-manual/create-domain.html#create-domain[`create-domain`(1)]
+* link:reference-manual/verify-domain-xml.html#verify-domain-xml[`verify-domain-xml`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line.
@@ -357,7 +351,7 @@ typing the following commands at the command line.
 * `asadmin help create-domain`
 * `asadmin help verify-domain-xml`
 
-[[ggoco]][[GSADG00332]][[to-list-domains]]
+[[to-list-domains]]
 
 ==== To List Domains
 
@@ -368,9 +362,9 @@ If there is more than one domain, the domain name must be specified.
 
 To list domains that were created in other directories, specify the `--domaindir` option.
 
-List domains by using the link:reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand.
+List domains by using the link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand.
 
-[[GSADG00127]][[ggpfv]]
+[[ggpfv]]
 Example 3-2 Listing Domains
 
 This example lists the domains in the default domain root directory:
@@ -384,14 +378,12 @@ Name: domain6 Status: Not Running
 Command list-domains executed successfully.
 ----
 
-[[GSADG821]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-domain` at the command line.
 
-[[ghhjz]][[GSADG00333]][[to-log-in-to-a-domain]]
+[[to-log-in-to-a-domain]]
 
 ==== To Log In to a Domain
 
@@ -445,7 +437,7 @@ asadmin list-domains
 ----
 2. Log in to the domain by using the olink:GSRFM00210[`login`] command.
 
-[[GSADG00128]][[ghlfx]]
+[[ghlfx]]
 Example 3-3 Logging In To a Domain on a Remote Machine
 
 This example logs into a domain located on another machine. Options are
@@ -462,7 +454,7 @@ Make sure that this file remains protected. Information stored in this
 file will be used by asadmin commands to manage associated domain.
 ----
 
-[[GSADG00129]][[ghldv]]
+[[ghldv]]
 Example 3-4 Logging In to a Domain on the Default Port of Localhost
 
 This example logs into a domain on `myhost` on the default port. Options
@@ -483,16 +475,14 @@ Make sure that this file remains protected. Information stored in this file will
 asadmin commands to manage associated domain.
 ----
 
-[[GSADG822]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help login` at the command line. For additional
-information about passwords, see "link:security-guide/system-security.html#GSSCG00144[Administering
+information about passwords, see "link:security-guide/system-security.html#administering-passwords[Administering
 Passwords]" in {productName} Security Guide.
 
-[[ggofa]][[GSADG00334]][[to-delete-a-domain]]
+[[to-delete-a-domain]]
 
 ==== To Delete a Domain
 
@@ -500,18 +490,16 @@ Use the `delete-domain` subcommand to delete an existing domain from a
 server. Only the root user or the operating system user who is
 authorized to administer the domain can run this subcommand.
 
-[[GSADG823]]
-
 Before You Begin
 
 A domain must be stopped before it can be deleted.
 
-1. List domains by using the link:reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand.
+1. List domains by using the link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand.
 2. If necessary, notify domain users that the domain is being deleted.
-3. Ensure that the domain you want to delete is stopped. If needed, see link:#ggoch[To Stop a Domain].
-4. Delete the domain by using the link:reference-manual/delete-domain.html#GSRFM00075[`delete-domain`] subcommand.
+3. Ensure that the domain you want to delete is stopped. If needed, see <<To Stop a Domain>>.
+4. Delete the domain by using the link:reference-manual/delete-domain.html#delete-domain[`delete-domain`] subcommand.
 
-[[GSADG00130]][[ggoiy]]
+[[ggoiy]]
 Example 3-5 Deleting a Domain
 
 This example deletes a domain named `domain1` from the location
@@ -524,24 +512,22 @@ Domain domain1 deleted.
 Command delete-domain executed successfully.
 ----
 
-[[GSADG824]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-domain` at the command line.
 
-[[gitwj]][[GSADG00537]][[starting-and-stopping-a-domain]]
+[[starting-and-stopping-a-domain]]
 
 === Starting and Stopping a Domain
 
 The following topics are addressed here:
 
-* link:#ggoda[To Start a Domain]
-* link:#ggoch[To Stop a Domain]
-* link:#ginqj[To Restart a Domain]
+* <<To Start a Domain>>
+* <<To Stop a Domain>>
+* <<To Restart a Domain>>
 
-[[ggoda]][[GSADG00335]][[to-start-a-domain]]
+[[to-start-a-domain]]
 
 ==== To Start a Domain
 
@@ -568,9 +554,9 @@ distribution of {productName}:
 
 This subcommand is supported in local mode only.
 
-Start a domain by using the link:reference-manual/start-domain.html#GSRFM00235[`start-domain`] subcommand.
+Start a domain by using the link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand.
 
-[[GSADG00131]][[ggocw]]
+[[ggocw]]
 Example 3-6 Starting a Domain
 
 This example starts `domain2` in the default domain directory.
@@ -591,14 +577,12 @@ domains\domain1].
 Admin port for the domain: [4848].
 ----
 
-[[GSADG825]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help start-domain` at the command line.
 
-[[ggoch]][[GSADG00336]][[to-stop-a-domain]]
+[[to-stop-a-domain]]
 
 ==== To Stop a Domain
 
@@ -609,7 +593,7 @@ shutdown process takes a few seconds. While the domain is stopped, the
 Administration Console and most of the `asadmin` subcommands cannot be
 used. This subcommand is particularly useful in stopping a runaway
 server. For more controlled situations, you can use the
-link:reference-manual/restart-domain.html#GSRFM00218[`restart-domain`] subcommand.
+link:reference-manual/restart-domain.html#restart-domain[`restart-domain`] subcommand.
 
 
 [NOTE]
@@ -624,10 +608,10 @@ From the Start menu, select the command for your distribution of
 
 
 1. If necessary, notify users that you are going to stop the domain.
-2. Stop the domain by using the link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`]
+2. Stop the domain by using the link:reference-manual/stop-domain.html#stop-domain[`stop-domain`]
 subcommand.
 
-[[GSADG00132]][[gioes]]
+[[gioes]]
 Example 3-7 Stopping a Domain (or Server)
 
 This example stops `domain1` in the default directory, where `domain1`
@@ -640,14 +624,12 @@ Waiting for the domain to stop ...........
 Command stop-domain executed successfully.
 ----
 
-[[GSADG826]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help stop-domain` at the command line.
 
-[[ginqj]][[GSADG00337]][[to-restart-a-domain]]
+[[to-restart-a-domain]]
 
 ==== To Restart a Domain
 
@@ -663,13 +645,13 @@ machine is secured and difficult to get to. With the right credentials,
 you can restart the server from a remote location as well as from the
 same machine.
 
-If the server will not restart, use the link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`]
-subcommand followed by the link:reference-manual/start-domain.html#GSRFM00235[`start-domain`] subcommand.
+If the server will not restart, use the link:reference-manual/stop-domain.html#stop-domain[`stop-domain`]
+subcommand followed by the link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Restart the domain by using the link:reference-manual/restart-domain.html#GSRFM00218[`restart-domain`] subcommand.
+2. Restart the domain by using the link:reference-manual/restart-domain.html#restart-domain[`restart-domain`] subcommand.
 
-[[GSADG00133]][[ggoet]]
+[[ggoet]]
 Example 3-8 Restarting a Domain (or Server)
 
 This example restarts `mydoimain4` in the default directory.
@@ -681,7 +663,7 @@ Waiting for the domain to restart ...........
 Command restart-domain executed successfully.
 ----
 
-[[GSADG00134]][[giupx]]
+[[giupx]]
 Example 3-9 Restarting a Domain in a Browser
 
 This example invokes the `restart-domain` subcommand in a browser.
@@ -691,14 +673,12 @@ This example invokes the `restart-domain` subcommand in a browser.
 http://yourhost:4848/__asadmin/restart-domain
 ----
 
-[[GSADG827]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help restart-domain` at the command line.
 
-[[gglqp]][[GSADG00538]][[configuring-a-das-or-a-glassfish-server-instance-for-automatic-restart]]
+[[configuring-a-das-or-a-glassfish-server-instance-for-automatic-restart]]
 
 === Configuring a DAS or a {productName} Instance for Automatic Restart
 
@@ -717,12 +697,12 @@ must prevent service shutdown when a user logs out.
 
 The following topics are addressed here:
 
-* link:#gjzfg[To Configure a DAS or an Instance for Automatic Restart on Windows]
-* link:#giurs[To Configure a DAS or an Instance for Automatic Restart on Linux]
-* link:#giusi[To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris]
-* link:#giurf[To Prevent Service Shutdown When a User Logs Out on Windows]
+* <<To Configure a DAS or an Instance for Automatic Restart on Windows>>
+* <<To Configure a DAS or an Instance for Automatic Restart on Linux>>
+* <<To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris>>
+* <<To Prevent Service Shutdown When a User Logs Out on Windows>>
 
-[[gjzfg]][[GSADG00338]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-windows]]
+[[to-configure-a-das-or-an-instance-for-automatic-restart-on-windows]]
 
 ==== To Configure a DAS or an Instance for Automatic Restart on Windows
 
@@ -735,7 +715,7 @@ the Windows command line, use the `sc.exe` tool.
 
 This subcommand must be run as the OS-level administrator user.
 
-1. Create the service by using the link:reference-manual/create-service.html#GSRFM00057[`create-service`]
+1. Create the service by using the link:reference-manual/create-service.html#create-service[`create-service`]
 subcommand.
 2. After the service is created, start the service by using the Windows
 Services Manager or the Windows Services Wrapper.
@@ -753,7 +733,7 @@ tool as follows:
 * To stop the service, use the `sc stop` command.
 * To uninstall the service, use the `sc delete` command.
 
-[[GSADG00135]][[gjzix]]
+[[gjzix]]
 Example 3-10 Creating a Service to Restart a DAS Automatically on
 Windows
 
@@ -785,7 +765,7 @@ root directory
 Command create-service executed successfully.
 ----
 
-[[GSADG00136]][[gktso]]
+[[gktso]]
 Example 3-11 Querying the Service to Restart a DAS Automatically on
 Windows
 
@@ -805,7 +785,7 @@ SERVICE_NAME: domain1
         WAIT_HINT          : 0x0
 ----
 
-[[giurs]][[GSADG00339]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-linux]]
+[[to-configure-a-das-or-an-instance-for-automatic-restart-on-linux]]
 
 ==== To Configure a DAS or an Instance for Automatic Restart on Linux
 
@@ -829,10 +809,10 @@ to delete the initialization script and the link to the script that the
 
 The `create-service` subcommand must be run as the OS-level root user.
 
-Create the service by using the link:reference-manual/create-service.html#GSRFM00057[`create-service`]
+Create the service by using the link:reference-manual/create-service.html#create-service[`create-service`]
 subcommand.
 
-[[GSADG828]][[sthref19]]
+[[domains-ex-3-12]]
 Example 3-12 Creating a Service to Restart a DAS Automatically on Linux
 
 This example creates a service for the default domain on a system that
@@ -859,7 +839,7 @@ For your convenience this message has also been saved to this file:
 Command create-service executed successfully.
 ----
 
-[[giusi]][[GSADG00340]][[to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris]]
+[[to-configure-a-das-or-an-instance-for-automatic-restart-on-oracle-solaris]]
 
 ==== To Configure a DAS or an Instance for Automatic Restart on Oracle Solaris
 
@@ -879,8 +859,6 @@ user and type the command `ppriv -l | grep net_privaddr`.
 
 After you create and enable the SMF service, if the domain or instance
 is stopped, SMF restarts it.
-
-[[GSADG829]]
 
 Before You Begin
 
@@ -904,7 +882,7 @@ If a particular {productName} domain or instance should not have
 default user privileges, modify the manifest of the service and reimport
 the service.
 
-1. Create the service by using the link:reference-manual/create-service.html#GSRFM00057[`create-service`]
+1. Create the service by using the link:reference-manual/create-service.html#create-service[`create-service`]
 subcommand.
 2. After the service is created, enable the service by using the
 `svacdm enable` command.
@@ -916,7 +894,7 @@ For example, to enable the SMF service for the default domain, type:
 svacdm enable /appserver/domains/domain1
 ----
 
-[[GSADG00137]][[giuqp]]
+[[giuqp]]
 Example 3-13 Creating a Service to Restart a Domain Automatically on
 Oracle Solaris
 
@@ -943,8 +921,6 @@ Here are the most typical Solaris commands of interest:
 Command create-service executed successfully
 ----
 
-[[GSADG830]]
-
 See Also
 
 For information about administering the service, see the following
@@ -964,7 +940,7 @@ Services (Tasks)]" in System Administration Guide: Basic Administration
 * http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5rbac-5[`rbac`(5)]
 * http://www.oracle.com/pls/topic/lookup?ctx=E18752&id=REFMAN5smf-security-5[`smf_security`(5)]
 
-[[giurf]][[GSADG00341]][[to-prevent-service-shutdown-when-a-user-logs-out-on-windows]]
+[[to-prevent-service-shutdown-when-a-user-logs-out-on-windows]]
 
 ==== To Prevent Service Shutdown When a User Logs Out on Windows
 
@@ -979,7 +955,7 @@ set the `-Xrs` Java VM option
 1. Ensure that the DAS is running.
 
 2. Set the `-Xrs` Java VM option for the DAS.
-Use the link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand for this purpose.
+Use the link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`] subcommand for this purpose.
 +
 [source]
 ----
@@ -1004,17 +980,17 @@ to the line that runs the `admin-cli.jar` file.
 
 4. If the {productName} service is running, restart the service for your changes to take effect.
 
-[[gityo]][[GSADG00541]][[backing-up-and-restoring-a-domain]]
+[[backing-up-and-restoring-a-domain]]
 
 === Backing Up and Restoring a Domain
 
 The following topics are addressed here:
 
-* link:#ggocq[To Back Up a Domain]
-* link:#ggody[To Restore a Domain]
-* link:#ghgod[To List Domain Backups]
+* <<To Back Up a Domain>>
+* <<To Restore a Domain>>
+* <<To List Domain Backups>>
 
-[[ggocq]][[GSADG00352]][[to-back-up-a-domain]]
+[[to-back-up-a-domain]]
 
 ==== To Back Up a Domain
 
@@ -1037,13 +1013,13 @@ the backup itself.
 1. Ensure that the domain is stopped .
 +
 The `backup-domain` subcommand operates only when the domain is stopped.
-2. Back up the domain by using the link:reference-manual/backup-domain.html#GSRFM00003[`backup-domain`]
+2. Back up the domain by using the link:reference-manual/backup-domain.html#backup-domain[`backup-domain`]
 subcommand.
 3. Restore the domain to its previous state, if necessary.
 +
 Start or resume the domain.
 
-[[GSADG00149]][[ggoxt]]
+[[ggoxt]]
 Example 3-14 Backing Up the Default Domain
 
 This example makes a backup of the default domain, `domain1`, storing
@@ -1056,14 +1032,12 @@ Backed up domain1 at Mon Jan 17 08:16:22 PST 2011.
 Command backup-domain executed successfully
 ----
 
-[[GSADG842]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help backup-domain` at the command line.
 
-[[ggody]][[GSADG00353]][[to-restore-a-domain]]
+[[to-restore-a-domain]]
 
 ==== To Restore a Domain
 
@@ -1084,18 +1058,18 @@ The `restore-domain` subcommand operates only when the domain is
 stopped.
 +
 To determine whether the domain is running, use the
-link:reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand, as described in
-link:#ggoco[To List Domains].
+link:reference-manual/list-domains.html#list-domains[`list-domains`] subcommand, as described in
+<<To List Domains>>.
 +
-To stop the domain, use the link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`] subcommand
-as described in link:#ggoch[To Stop a Domain].
+To stop the domain, use the link:reference-manual/stop-domain.html#stop-domain[`stop-domain`] subcommand
+as described in <<To Stop a Domain>>.
 3. Restore backup files for a domain by using the
-link:reference-manual/restore-domain.html#GSRFM00221[`restore-domain`] subcommand.
+link:reference-manual/restore-domain.html#restore-domain[`restore-domain`] subcommand.
 4. Verify that the restore has succeeded.
 5. If necessary, notify users that the domain has been restored and is
 available.
 
-[[GSADG00150]][[ggoys]]
+[[ggoys]]
 Example 3-15 Restoring the Default Domain
 
 This example restores files for the default domain, `domain1`, from the
@@ -1108,14 +1082,12 @@ Restored the domain (domain1) to /home/user1/glassfish7/glassfish/domains/domain
 Command restore-domain executed successfully.
 ----
 
-[[GSADG843]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin restore-domain --help` at the command line.
 
-[[ghgod]][[GSADG00354]][[to-list-domain-backups]]
+[[to-list-domain-backups]]
 
 ==== To List Domain Backups
 
@@ -1129,7 +1101,7 @@ backups are stored instead of the default domain-dir``/backups``.
 
 List backups by using the `list-backups` subcommand.
 
-[[GSADG00151]][[ghgsv]]
+[[ghgsv]]
 Example 3-16 Listing Backups of the Default Domain
 
 This example lists the backups of the default domain, `domain1`, that
@@ -1149,14 +1121,12 @@ Command list-backups executed successfully.
 Note that this listing includes backups created automatically by a
 backup configuration. This feature is available only in {productName}.
 
-[[GSADG844]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-backups` at the command line.
 
-[[gglri]][[GSADG00542]][[re-creating-the-domain-administration-server-das]]
+[[re-creating-the-domain-administration-server-das]]
 
 === Re-Creating the Domain Administration Server (DAS)
 
@@ -1175,7 +1145,7 @@ situation where the first host crashes or is being taken out of service.
 ====
 You must maintain a backup of the DAS from the first host using the
 olink:GSRFM00003[`backup-domain`] subcommand as described in
-link:#ggocq[To Back Up a Domain]. You can automatically maintain a
+<<To Back Up a Domain>>. You can automatically maintain a
 backup of the DAS using the automatic backups feature of {productName}.
 ====
 
@@ -1185,11 +1155,11 @@ backup of the DAS using the automatic backups feature of {productName}.
 ====
 {productName} includes `asadmin` subcommands that simplify
 this procedure. If you are using {productName}, see
-link:#gglnp[To Migrate the DAS].
+<<To Migrate the DAS>>.
 ====
 
 
-[[gglnp]][[GSADG00355]][[to-migrate-the-das]]
+[[to-migrate-the-das]]
 
 ==== To Migrate the DAS
 
@@ -1215,7 +1185,7 @@ domain name should be same as the original.
 3. Stop the domain on olddashost, if it is running.
 
 4. Start the domain on newdashost by using the
-link:reference-manual/start-domain.html#GSRFM00235[`start-domain`] subcommand.
+link:reference-manual/start-domain.html#start-domain[`start-domain`] subcommand.
 For example:
 +
 [source]
@@ -1225,7 +1195,7 @@ asadmin> start-domain domain1
 
 5. If the domain on olddashost was centrally administered, set up
 centralized administration on newdashost.
-See "link:ha-administration-guide/ssh-setup.html#GSHAG00003[Enabling Centralized Administration of {productName} Instances]"
+See "link:ha-administration-guide/ssh-setup.html#enabling-centralized-administration-of-glassfish-server-instances[Enabling Centralized Administration of {productName} Instances]"
 in {productName} High Availability Administration Guide for instructions.
 
 6. Verify that instances on other hosts are visible to the new DAS on newdashost:
@@ -1258,17 +1228,17 @@ asadmin> list-instances --long
 ----
 10. Decommission and discontinue use of the DAS on olddashost.
 
-[[gitvn]][[GSADG00543]][[additional-domain-tasks]]
+[[additional-domain-tasks]]
 
 === Additional Domain Tasks
 
 The following topics are addressed here:
 
-* link:#ghhnt[To Display Domain Uptime]
-* link:#ghmbn[To Switch a Domain to Another Supported Java Version]
-* link:#gkvkb[To Change the Administration Port of a Domain]
+* <<To Display Domain Uptime>>
+* <<To Switch a Domain to Another Supported Java Version>>
+* <<To Change the Administration Port of a Domain>>
 
-[[ghhnt]][[GSADG00356]][[to-display-domain-uptime]]
+[[to-display-domain-uptime]]
 
 ==== To Display Domain Uptime
 
@@ -1277,9 +1247,9 @@ that the domain administration server (DAS) has been running since it
 was last started.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Display uptime by using the link:reference-manual/uptime.html#GSRFM00258[`uptime`] subcommand.
+2. Display uptime by using the link:reference-manual/uptime.html#uptime[`uptime`] subcommand.
 
-[[GSADG00152]][[ghlds]]
+[[ghlds]]
 Example 3-17 Displaying the DAS Uptime
 
 This example displays the length of time that the DAS has been running.
@@ -1291,14 +1261,12 @@ Uptime: 1 Weeks, 4 days, 0 hours, 17 minutes, 14 seconds, Total milliseconds: 95
 Command uptime executed successfully.
 ----
 
-[[GSADG845]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help uptime` at the command line.
 
-[[ghmbn]][[GSADG00357]][[to-switch-a-domain-to-another-supported-java-version]]
+[[to-switch-a-domain-to-another-supported-java-version]]
 
 ==== To Switch a Domain to Another Supported Java Version
 
@@ -1340,7 +1308,7 @@ variable. For example, to change the `JAVA_HOME` variable, type:
 as-install/bin/asadmin set "server.java-config.java-home=path-to-java-home"
 ----
 
-[[gkvkb]][[GSADG00358]][[to-change-the-administration-port-of-a-domain]]
+[[to-change-the-administration-port-of-a-domain]]
 
 ==== To Change the Administration Port of a Domain
 
@@ -1349,13 +1317,13 @@ port of a domain.
 
 The HTTP port or the HTTPS port for administration of a domain is
 defined by the `--adminport` option of the
-link:reference-manual/create-domain.html#GSRFM00023[`create-domain`] subcommand when the domain is created.
+link:reference-manual/create-domain.html#create-domain[`create-domain`] subcommand when the domain is created.
 If this port must be reallocated for another purpose, change the port on
 which the DAS listens for administration requests.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Set the port number to its new value.
-Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand for this purpose.
+Use the link:reference-manual/set.html#set[`set`] subcommand for this purpose.
 +
 [source]
 ----
@@ -1420,7 +1388,7 @@ The domain-name is the name of the domain to start. If only one domain
 subdirectory is contained in the `domains` directory, you may omit this
 option.
 
-[[GSADG00153]][[gkvkl]]
+[[gkvkl]]
 Example 3-18 Changing the Administration Port of a Domain
 
 This example changes the administration port of the domain `domain1`
@@ -1444,14 +1412,12 @@ Admin Port: 4849
 Command start-domain executed successfully.
 ----
 
-[[GSADG846]]
-
 See Also
 
-* link:reference-manual/create-domain.html#GSRFM00023[`create-domain`(1)]
-* link:reference-manual/set.html#GSRFM00226[`set`(1)]
-* link:reference-manual/start-domain.html#GSRFM00235[`start-domain`(1)]
-* link:reference-manual/stop-domain.html#GSRFM00240[`stop-domain`(1)]
+* link:reference-manual/create-domain.html#create-domain[`create-domain`(1)]
+* link:reference-manual/set.html#set[`set`(1)]
+* link:reference-manual/start-domain.html#start-domain[`start-domain`(1)]
+* link:reference-manual/stop-domain.html#stop-domain[`stop-domain`(1)]
 
 You can also view the full syntax and options of the subcommands by
 typing the following commands at the command line:

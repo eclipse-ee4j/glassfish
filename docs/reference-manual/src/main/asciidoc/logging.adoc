@@ -7,13 +7,11 @@ prev=instance.html
 
 = logging
 
-[[logging-5asc]][[GSRFM00270]][[logging]]
+[[logging]]
 
 == logging
 
 Capturing information on {productName} runtime events
-
-[[sthref2404]]
 
 === Description
 
@@ -44,15 +42,13 @@ Although application components can use the Apache Commons Logging
 Library to record messages, the platform standard JSR 047 API is
 recommended for better log configuration.
 
-[[sthref2405]]
-
 === See Also
 
-link:list-log-levels.html#list-log-levels-1[`list-log-levels`(1)],
-link:rotate-log.html#rotate-log-1[`rotate-log`(1)],
-link:set-log-levels.html#set-log-levels-1[`set-log-levels`(1)]
+xref:list-log-levels.adoc#list-log-levels[`list-log-levels`(1)],
+xref:rotate-log.adoc#rotate-log[`rotate-log`(1)],
+xref:set-log-levels.adoc#set-log-levels[`set-log-levels`(1)]
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 "link:administration-guide/logging.html#administering-the-logging-service[Administering the Logging Service]" in {productName} Administration Guide
 

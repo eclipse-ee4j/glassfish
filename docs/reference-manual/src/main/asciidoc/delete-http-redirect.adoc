@@ -7,13 +7,13 @@ prev=delete-http-listener.html
 
 = delete-http-redirect
 
-[[delete-http-redirect-1]][[GSRFM00083]][[delete-http-redirect]]
+[[delete-http-redirect]]
 
 == delete-http-redirect
 
 Removes an HTTP redirect
 
-[[sthref739]]
+[[administering-concurrent-resources9]]
 
 === Synopsis
 
@@ -24,20 +24,16 @@ delete-http-redirect [--help]
 protocol-name
 ----
 
-[[sthref740]]
-
 === Description
 
 The `delete-http-redirect` subcommand removes the specified HTTP
 redirect. This subcommand is supported in remote mode only.
 
-[[sthref741]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -57,14 +53,10 @@ asadmin-options::
     Deletes the HTTP redirect from the specified standalone server
     instance.
 
-[[sthref742]]
-
 === Operands
 
 protocol-name::
   The name of the associated protocol.
-
-[[sthref743]]
 
 === Exit Status
 
@@ -73,12 +65,10 @@ protocol-name::
 1::
   error in executing the command
 
-[[sthref744]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-redirect.html#create-http-redirect-1[`create-http-redirect`(1)]
+xref:create-http-redirect.adoc#create-http-redirect[`create-http-redirect`(1)]
 
 

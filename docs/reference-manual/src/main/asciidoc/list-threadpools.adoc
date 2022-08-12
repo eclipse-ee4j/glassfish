@@ -7,13 +7,11 @@ prev=list-system-properties.html
 
 = list-threadpools
 
-[[list-threadpools-1]][[GSRFM00204]][[list-threadpools]]
+[[list-threadpools]]
 
 == list-threadpools
 
 Lists all the thread pools
-
-[[sthref1826]]
 
 === Synopsis
 
@@ -23,26 +21,20 @@ asadmin [asadmin-options] list-threadpools [--help]
 target
 ----
 
-[[sthref1827]]
-
 === Description
 
 The `list-threadpools` subcommand lists the {productName} thread pools.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1828]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1829]]
 
 === Operands
 
@@ -61,11 +53,9 @@ target::
   instance-name;;
     Lists the thread pools for a particular instance.
 
-[[sthref1830]]
-
 === Examples
 
-[[GSRFM714]][[sthref1831]]
+[[sthref1831]]
 
 ==== Example 1   Listing Thread Pools
 
@@ -80,8 +70,6 @@ thread-pool-1
 Command list-threadpools executed successfully.
 ----
 
-[[sthref1832]]
-
 === Exit Status
 
 0::
@@ -89,13 +77,11 @@ Command list-threadpools executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1833]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-threadpool.html#create-threadpool-1[`create-threadpool`(1)],
-link:delete-threadpool.html#delete-threadpool-1[`delete-threadpool`(1)]
+xref:create-threadpool.adoc#create-threadpool[`create-threadpool`(1)],
+xref:delete-threadpool.adoc#delete-threadpool[`delete-threadpool`(1)]
 
 

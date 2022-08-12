@@ -7,9 +7,6 @@ prev=class-loaders.html
 
 = Debugging Applications
 
-[[GSDVG00004]][[beafc]]
-
-
 [[debugging-applications]]
 == 3 Debugging Applications
 
@@ -17,17 +14,17 @@ This chapter gives guidelines for debugging applications in the {productName}.
 
 The following topics are addressed here:
 
-* link:#beafd[Enabling Debugging]
-* link:#beafe[JPDA Options]
-* link:#beaff[Generating a Stack Trace for Debugging]
-* link:#gekvq[Application Client Debugging]
-* link:#beafk[Open Message Queue Debugging]
-* link:#beafl[Enabling Verbose Mode]
-* link:#gkpdk[Class Loader Debugging]
-* link:#beafm[{productName} Logging]
-* link:#beafn[Profiling Tools]
+* xref:#enabling-debugging[Enabling Debugging]
+* xref:#jpda-options[JPDA Options]
+* xref:#generating-a-stack-trace-for-debugging[Generating a Stack Trace for Debugging]
+* xref:#application-client-debugging[Application Client Debugging]
+* xref:#open-message-queue-debugging[Open Message Queue Debugging]
+* xref:#enabling-verbose-mode[Enabling Verbose Mode]
+* xref:#class-loader-debugging[Class Loader Debugging]
+* xref:#glassfish-server-logging[{productName} Logging]
+* xref:#debug-profiling-tools[Profiling Tools]
 
-[[beafd]][[GSDVG00101]][[enabling-debugging]]
+[[enabling-debugging]]
 
 === Enabling Debugging
 
@@ -48,13 +45,6 @@ For example, for UNIX systems:
 jdb -attach 9009
 ----
 
-For Windows:
-
-[source]
-----
-jdb -connect com.sun.jdi.SocketAttach:port=9009
-----
-
 For more information about the `jdb` debugger, see the following links:
 
 * Java Platform Debugger Architecture - The Java Debugger:
@@ -64,7 +54,7 @@ For more information about the `jdb` debugger, see the following links:
 `https://docs.oracle.com/en/java/javase/17/docs/specs/man/jdb.html`
 
 {productName} debugging is based on the JPDA. For more information,
-see link:#beafe[JPDA Options].
+see xref:#jpda-options[JPDA Options].
 
 You can attach to the {productName} using any JPDA compliant debugger.
 
@@ -73,7 +63,7 @@ without the `--debug` option.
 This is useful if you start the {productName} from the Windows Start Menu,
 or if you want to make sure that debugging is always turned on.
 
-[[fvyit]][[GSDVG00049]][[to-set-the-server-to-automatically-start-up-in-debug-mode]]
+[[to-set-the-server-to-automatically-start-up-in-debug-mode]]
 
 ==== To Set the Server to Automatically Start Up in Debug Mode
 
@@ -84,16 +74,14 @@ under the relevant configuration.
 attaching the JVM software to a debugger, specify ``address=``port-number
 in the Debug Options field.
 4. To add JPDA options, add any desired JPDA debugging options in Debug
-Options. See link:#beafe[JPDA Options].
-
-[[GSDVG532]]
+Options. See xref:#jpda-options[JPDA Options].
 
 See Also
 
 For details, click the Help button in the Administration Console from
 the JVM Settings page.
 
-[[beafe]][[GSDVG00102]][[jpda-options]]
+[[jpda-options]]
 
 === JPDA Options
 
@@ -117,7 +105,7 @@ You can include additional options. A list of JPDA debugging options is
 available at
 `http://java.sun.com/javase/technologies/core/toolsapis/jpda/`.
 
-[[beaff]][[GSDVG00103]][[generating-a-stack-trace-for-debugging]]
+[[generating-a-stack-trace-for-debugging]]
 
 === Generating a Stack Trace for Debugging
 
@@ -125,9 +113,9 @@ To generate a Java stack trace for debugging, use the
 `asadmin generate-jvm-report --type=thread` command. The stack trace
 goes to the domain-dir`/logs/server.log` file and also appears on the
 command prompt screen. For more information about the
-`asadmin generate-jvm-report` command, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+`asadmin generate-jvm-report` command, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
-[[gekvq]][[GSDVG00104]][[application-client-debugging]]
+[[application-client-debugging]]
 
 === Application Client Debugging
 
@@ -148,20 +136,20 @@ point you want to examine.
 
 You should use different ports for the server and client if you are
 debugging both concurrently. For details about setting the port, see
-link:#beafe[JPDA Options].
+xref:#jpda-options[JPDA Options].
 
 You can also include JVM options in the `appclient` script directly. For
-information about the `appclient` script, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+information about the `appclient` script, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 
 [NOTE]
 ====
 The Application Client Container is supported only in the full {productName}, not in the Web Profile. See
-link:java-clients.html#beakt[Developing Java Clients].
+xref:java-clients.adoc#developing-java-clients[Developing Java Clients].
 ====
 
 
-[[beafk]][[GSDVG00105]][[open-message-queue-debugging]]
+[[open-message-queue-debugging]]
 
 === Open Message Queue Debugging
 
@@ -176,11 +164,11 @@ Message Queue Administration Guide].
 [NOTE]
 ====
 JMS resources are supported only in the full {productName}, not in
-the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
+the Web Profile. See xref:jms.adoc#using-the-java-message-service[Using the Java Message Service].
 ====
 
 
-[[beafl]][[GSDVG00106]][[enabling-verbose-mode]]
+[[enabling-verbose-mode]]
 
 === Enabling Verbose Mode
 
@@ -206,7 +194,7 @@ platforms, you can also print a thread dump using the `jstack` command
 `http://docs.oracle.com/javase/8/docs/technotes/tools/share/jstack.html`)
 or the command `kill -QUIT` process_id.
 
-[[gkpdk]][[GSDVG00107]][[class-loader-debugging]]
+[[class-loader-debugging]]
 
 === Class Loader Debugging
 
@@ -237,9 +225,9 @@ not work with the JRockit JVM.
 
 To send the {productName} messages to the Administration Console
 instead of `stderr`, start the domain in verbose mode as described in
-link:#beafl[Enabling Verbose Mode].
+xref:#enabling-verbose-mode[Enabling Verbose Mode].
 
-[[beafm]][[GSDVG00108]][[glassfish-server-logging]]
+[[glassfish-server-logging]]
 
 === {productName} Logging
 
@@ -255,7 +243,7 @@ To change logging settings, select Logger Settings under the relevant configurat
 
 For details about logging, click the Help button in the Administration Console.
 
-[[beafn]][[GSDVG00109]][[profiling-tools]]
+[[debug-profiling-tools]]
 
 === Profiling Tools
 
@@ -264,22 +252,22 @@ describes how to configure profilers for use with {productName}.
 
 The following topics are addressed here:
 
-* link:#gcicc[The NetBeans Profiler]
-* link:#beafo[The HPROF Profiler]
-* link:#beafr[The JProbe Profiler]
+* xref:#the-netbeans-profiler[The NetBeans Profiler]
+* xref:#the-hprof-profiler[The HPROF Profiler]
+* xref:#the-jprobe-profiler[The JProbe Profiler]
 
 Information about comprehensive monitoring and management support in the
 Java 2 Platform, Standard Edition ( J2SE platform) is available at
 `http://docs.oracle.com/javase/8/docs/technotes/guides/management/index.html`.
 
-[[gcicc]][[GSDVG00345]][[the-netbeans-profiler]]
+[[the-netbeans-profiler]]
 
 ==== The NetBeans Profiler
 
 For information on how to use the NetBeans profiler, see
 `http://profiler.netbeans.org/index.html`.
 
-[[beafo]][[GSDVG00346]][[the-hprof-profiler]]
+[[the-hprof-profiler]]
 
 ==== The HPROF Profiler
 
@@ -298,7 +286,7 @@ details on the HPROF profiler, see the technical article at
 After HPROF is enabled using the following instructions, its libraries
 are loaded into the server process.
 
-[[fvylg]][[GSDVG00050]][[to-use-hprof-profiling-on-unix]]
+[[to-use-hprof-profiling-on-unix]]
 
 ===== To Use HPROF Profiling on UNIX
 
@@ -360,7 +348,7 @@ Restart the {productName}.
 This writes an HPROF stack dump to the file you specified using the file
 HPROF parameter.
 
-[[beafr]][[GSDVG00347]][[the-jprobe-profiler]]
+[[the-jprobe-profiler]]
 
 ==== The JProbe Profiler
 
@@ -370,7 +358,7 @@ Information about JProbe from Sitraka is available at
 After JProbe is installed using the following instructions, its
 libraries are loaded into the server process.
 
-[[fvymj]][[GSDVG00051]][[to-enable-remote-profiling-with-jprobe]]
+[[to-enable-remote-profiling-with-jprobe]]
 
 ===== To Enable Remote Profiling With JProbe
 
@@ -411,7 +399,7 @@ profiler.
 ----
 JPROBE_ARGS_0=-jp_input=JPL-file-path
 ----
-See Step link:#jprbstp6[6] for instructions on how to create the JPL
+See Step xref:#jprbstp6[6] for instructions on how to create the JPL
 file.
 4. Start the server instance.
 

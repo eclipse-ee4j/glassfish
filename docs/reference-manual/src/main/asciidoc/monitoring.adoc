@@ -7,13 +7,11 @@ prev=logging.html
 
 = monitoring
 
-[[monitoring-5asc]][[GSRFM00271]][[monitoring]]
+[[monitoring]]
 
 == monitoring
 
 Reviewing the runtime state of components and services deployed in {productName}
-
-[[sthref2406]]
 
 === Description
 
@@ -54,20 +52,18 @@ identifying performance issues during runtime. Monitoring Scripting
 Client or DTrace Monitoring are only usable if their modules are
 present.
 
-[[sthref2407]]
-
 === See Also
 
-link:monitor.html#monitor-1[`monitor`(1)],
-link:enable-monitoring.html#enable-monitoring-1[`enable-monitoring`(1)],
-link:disable-monitoring.html#disable-monitoring-1[`disable-monitoring`(1)],
-link:list.html#list-1[`list`(1)], link:get.html#get-1[`get`(1)],
-link:set.html#set-1[`set`(1)]
+xref:monitor.adoc#monitor[`monitor`(1)],
+xref:enable-monitoring.adoc#enable-monitoring[`enable-monitoring`(1)],
+xref:disable-monitoring.adoc#disable-monitoring[`disable-monitoring`(1)],
+xref:list.adoc#list[`list`(1)], xref:get.adoc#get[`get`(1)],
+xref:set.adoc#set[`set`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-"link:administration-guide/monitoring.html#GSADG00011[Administering the Monitoring Service]" in {productName} Administration Guide
+"link:administration-guide/monitoring.html#administering-the-monitoring-service[Administering the Monitoring Service]" in {productName} Administration Guide
 
 

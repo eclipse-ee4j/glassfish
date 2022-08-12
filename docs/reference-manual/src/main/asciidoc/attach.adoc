@@ -7,14 +7,12 @@ prev=apply-http-lb-changes.html
 
 = attach
 
-[[attach-1]][[GSRFM825]][[attach]]
+[[attach]]
 
 == attach
 
 Attaches to subcommands that were started using `asadmin --detach` or
 that contain progress information
-
-[[sthref32]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ that contain progress information
 asadmin [asadmin-options] attach [--help]
 job_id
 ----
-
-[[sthref33]]
 
 === Description
 
@@ -35,36 +31,30 @@ executes them in the background in detach mode.
 
 Job IDs are assigned to the subcommands (jobs), and can be used to view
 the status of a job and its output. Use the
-link:list-jobs.html#list-jobs-1[`list-jobs`(1)] subcommand to view the
+xref:list-jobs.adoc#list-jobs[`list-jobs`(1)] subcommand to view the
 jobs and their job IDs, and the
-link:configure-managed-jobs.html#configure-managed-jobs-1[`configure-managed-jobs`(1)]
+xref:configure-managed-jobs.adoc#configure-managed-jobs[`configure-managed-jobs`(1)]
 subcommand to configure how long information about the jobs is kept.
 
 This subcommand is supported in remote mode only.
-
-[[sthref34]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref35]]
 
 === Operands
 
 job_id::
   The ID of the job for which you want to view status and output.
 
-[[sthref36]]
-
 === Examples
 
-[[GSRFM826]][[CBHDFEGB]]
+[[CBHDFEGB]]
 
 ==== Example 1   Attaching to a Subcommand and Checking Its Status
 
@@ -80,8 +70,6 @@ Finished execution of deploy
 Command attach executed successfully.
 ----
 
-[[sthref37]]
-
 === Exit Status
 
 0::
@@ -89,13 +77,11 @@ Command attach executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref38]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:configure-managed-jobs.html#configure-managed-jobs-1[`configure-managed-jobs`(1)],
-link:list-jobs.html#list-jobs-1[`list-jobs`(1)]
+xref:configure-managed-jobs.adoc#configure-managed-jobs[`configure-managed-jobs`(1)],
+xref:list-jobs.adoc#list-jobs[`list-jobs`(1)]
 
 

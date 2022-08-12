@@ -7,9 +7,6 @@ prev=adding-monitoring-capabilities.html
 
 = Adding Configuration Data for a Component
 
-[[GSACG00006]][[gjlpe]]
-
-[[adding-configuration-data-for-a-component]]
 == Adding Configuration Data for a Component
 
 The configuration data of a component determines the characteristics and
@@ -25,17 +22,17 @@ other {productName} components.
 
 The following topics are addressed here:
 
-* link:#gjrdv[How {productName} Stores Configuration Data]
-* link:#gjlop[Defining an Element]
-* link:#gjlpb[Defining an Attribute of an Element]
-* link:#gjlov[Defining a Subelement]
-* link:#gjlpu[Validating Configuration Data]
-* link:#gjrdj[Initializing a Component's Configuration Data]
-* link:#gjrcz[Creating a Transaction to Update Configuration Data]
-* link:#gjmkt[Dotted Names and REST URLs of Configuration Attributes]
-* link:#gkaal[Examples of Adding Configuration Data for a Component]
+* xref:#how-glassfish-server-stores-configuration-data[How {productName} Stores Configuration Data]
+* xref:#defining-an-element[Defining an Element]
+* xref:#defining-an-attribute-of-an-element[Defining an Attribute of an Element]
+* xref:#defining-a-subelement[Defining a Subelement]
+* xref:#validating-configuration-data[Validating Configuration Data]
+* xref:#initializing-a-components-configuration-data[Initializing a Component's Configuration Data]
+* xref:#creating-a-transaction-to-update-configuration-data[Creating a Transaction to Update Configuration Data]
+* xref:#dotted-names-and-rest-urls-of-configuration-attributes[Dotted Names and REST URLs of Configuration Attributes]
+* xref:#examples-of-adding-configuration-data-for-a-component[Examples of Adding Configuration Data for a Component]
 
-[[gjrdv]][[GSACG00121]][[how-glassfish-server-stores-configuration-data]]
+[[how-glassfish-server-stores-configuration-data]]
 
 === How {productName} Stores Configuration Data
 
@@ -49,7 +46,7 @@ interfaces with appropriate annotations. You use these annotations to
 add configuration data for a component as explained in the sections that
 follow.
 
-[[gjlop]][[GSACG00122]][[defining-an-element]]
+[[defining-an-element]]
 
 === Defining an Element
 
@@ -59,7 +56,7 @@ represent the configuration data for a network listener, {productName} defines t
 Define an element for each item of configuration data that you are
 adding.
 
-[[gjcnt]][[GSACG00074]][[to-define-an-element]]
+[[to-define-an-element]]
 
 ==== To Define an Element
 
@@ -95,7 +92,7 @@ as shown in the following table.
 3. Annotate the declaration of the interface with the
 `org.jvnet.hk2.config.Configured` annotation.
 
-[[GSACG00053]][[gjcne]]
+[[gjcne]]
 Example 6-1 Declaration of an Interface That Defines an Element
 
 This example shows the declaration of the `WombatContainerConfig`
@@ -115,8 +112,6 @@ public interface WombatContainerConfig extends Container {
 }
 ----
 
-[[sthref6]]
-
 How Interfaces That Are Annotated With @Configured Are Implemented
 
 You are not required to implement any interfaces that you annotate with
@@ -124,7 +119,7 @@ the `@Configured` annotation. {productName} implements these
 interfaces by using the `Dom` class. {productName} creates a proxy
 for each `Dom` object to implement the interface.
 
-[[gjlpb]][[GSACG00123]][[defining-an-attribute-of-an-element]]
+[[defining-an-attribute-of-an-element]]
 
 === Defining an Attribute of an Element
 
@@ -133,7 +128,7 @@ element.
 For example, the `port` attribute of the `network-listener`
 element identifies the port number on which the listener listens.
 
-[[gjorj]][[GSACG00227]][[representing-an-attribute-of-an-element]]
+[[representing-an-attribute-of-an-element]]
 
 ==== Representing an Attribute of an Element
 
@@ -143,7 +138,7 @@ defines the element. The component for which the configuration data is
 being defined can then access the attribute through the getter method.
 The setter method enables the attribute to be updated.
 
-[[gjopa]][[GSACG00228]][[specifying-the-data-type-of-an-attribute]]
+[[specifying-the-data-type-of-an-attribute]]
 
 ==== Specifying the Data Type of an Attribute
 
@@ -152,7 +147,7 @@ that is associated with the attribute. To enable the attribute take
 properties in the form `${`property-name`}` as values, specify the data
 type as `String`.
 
-[[gjopm]][[GSACG00229]][[identifying-an-attribute-of-an-element]]
+[[identifying-an-attribute-of-an-element]]
 
 ==== Identifying an Attribute of an Element
 
@@ -163,7 +158,7 @@ getter method that is associated with the attribute with the
 To specify the properties of the attribute, use the elements of the
 `@Attribute` annotation as explained in the sections that follow.
 
-[[gjopq]][[GSACG00230]][[specifying-the-name-of-an-attribute]]
+[[specifying-the-name-of-an-attribute]]
 
 ==== Specifying the Name of an Attribute
 
@@ -180,7 +175,7 @@ For example, if the getter method `getNumberOfInstances` is defined for
 the property `NumberOfInstances` to represent an attribute, the name of
 the attribute is `number-of-instances`.
 
-[[gjoqj]][[GSACG00231]][[specifying-the-default-value-of-an-attribute]]
+[[specifying-the-default-value-of-an-attribute]]
 
 ==== Specifying the Default Value of an Attribute
 
@@ -193,7 +188,7 @@ element of the `@Attribute` annotation to a string that contains the
 default value. If you do not set this element, the parameter has no
 default value.
 
-[[gjoui]][[GSACG00232]][[specifying-whether-an-attribute-is-required-or-optional]]
+[[specifying-whether-an-attribute-is-required-or-optional]]
 
 ==== Specifying Whether an Attribute Is Required or Optional
 
@@ -211,11 +206,11 @@ To specify whether an attribute is required or optional, set the
 * If the attribute is optional, set the `required` element to `false`.
 This value is the default.
 
-[[gjrdz]][[GSACG00233]][[example-of-defining-an-attribute-of-an-element]]
+[[example-of-defining-an-attribute-of-an-element]]
 
 ==== Example of Defining an Attribute of an Element
 
-[[sthref7]]
+[[addon-example-6-2]]
 
 Example 6-2 Defining an Attribute of an Element
 
@@ -233,7 +228,7 @@ import org.jvnet.hk2.config.Attribute;
 ...
 ----
 
-[[gjlov]][[GSACG00124]][[defining-a-subelement]]
+[[defining-a-subelement]]
 
 === Defining a Subelement
 
@@ -244,12 +239,12 @@ configuration data for an individual network listener is represented by
 the `network-listener` element, which is a subelement of
 `network-listeners` element.
 
-[[gjzlb]][[GSACG00075]][[to-define-a-subelement]]
+[[to-define-a-subelement]]
 
 ==== To Define a Subelement
 
 1. Define an interface to represent the subelement.
-For more information, see link:#gjlop[Defining an Element].
+For more information, see xref:#defining-an-element[Defining an Element].
 The interface that represents the subelement must extend the
 `org.jvnet.hk2.config.ConfigBeanProxy` interface.
 
@@ -263,7 +258,7 @@ specification getter or setter method.
 associated with the subelement with the `org.jvnet.hk2.config.Element`
 annotation.
 
-[[GSACG00054]][[gjzjt]]
+[[gjzjt]]
 Example 6-3 Declaring an Interface to Represent a Subelement
 
 This example shows the declaration of the `WombatElement` interface to
@@ -282,7 +277,7 @@ public interface WombatElement extends ConfigBeanProxy {
 ...
 ----
 
-[[GSACG00055]][[gjzkh]]
+[[gjzkh]]
 Example 6-4 Identifying a Subelement to its Parent Element
 
 This example identifies the `wombat-element` element as a subelement.
@@ -300,7 +295,7 @@ import java.beans.PropertyVetoException;
 ...
 ----
 
-[[gjlpu]][[GSACG00125]][[validating-configuration-data]]
+[[validating-configuration-data]]
 
 === Validating Configuration Data
 
@@ -330,7 +325,7 @@ https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation
 package summary]
 (`https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html`).
 
-[[sthref8]][[gjrlg]]
+[[gjrlg]]
 
 Table 6-1 Commonly Used Annotations for Validating {productName}
 Configuration Data
@@ -361,7 +356,7 @@ that is to be matched.
 |===
 
 
-[[GSACG00056]][[gjrmp]]
+[[gjrmp]]
 Example 6-5 Specifying a Range of Valid Values for an Integer
 
 This example specifies that the attribute `rotation-interval-in-minutes`
@@ -379,7 +374,7 @@ String getRotationIntervalInMinutes();
 ...
 ----
 
-[[GSACG00057]][[gjzkq]]
+[[gjzkq]]
 Example 6-6 Specifying Regular Expression Matching
 
 This example specifies that the attribute `classname` must contain only
@@ -394,7 +389,7 @@ String getClassname();
 ...
 ----
 
-[[gjrdj]][[GSACG00126]][[initializing-a-components-configuration-data]]
+[[initializing-a-components-configuration-data]]
 
 === Initializing a Component's Configuration Data
 
@@ -405,11 +400,11 @@ initialize the component's configuration data.
 Initializing a component's configuration data involves the following
 tasks:
 
-* link:#gkbgi[To Define a Component's Initial Configuration Data]
-* link:#gjses[To Write a Component's Initial Configuration Data to the
+* xref:#to-define-a-components-initial-configuration-data[To Define a Component's Initial Configuration Data]
+* xref:#GSACG00077[To Write a Component's Initial Configuration Data to the
 `domain.xml` File]
 
-[[gkbgi]][[GSACG00076]][[to-define-a-components-initial-configuration-data]]
+[[to-define-a-components-initial-configuration-data]]
 
 ==== To Define a Component's Initial Configuration Data
 
@@ -422,7 +417,7 @@ the configuration data.
 2. When you package the component, include the file that contains the
 XML fragment in the component's JAR file.
 
-[[GSACG00058]][[gkaba]]
+[[gkaba]]
 Example 6-7 XML Data Fragment
 
 This example shows the XML data fragment for adding the
@@ -441,7 +436,7 @@ follows:
 </wombat-container-config>
 ----
 
-[[gjses]][[GSACG00077]][[to-write-a-components-initial-configuration-data-to-the-domain.xml-file]]
+[[GSACG00077]][[to-write-a-components-initial-configuration-data-to-the-domain.xml-file]]
 
 ==== To Write a Component's Initial Configuration Data to the `domain.xml` File
 
@@ -449,7 +444,7 @@ Add code to write the component's initial configuration data in the
 class that represents your add-on component. If your add-on component is
 a container, add this code to the sniffer class. For more information
 about adding a container, see
-link:adding-container-capabilities.html#ghmon[Adding Container
+xref:adding-container-capabilities.adoc#adding-container-capabilities[Adding Container
 Capabilities].
 
 1. Set an optional dependency on an instance of the class that
@@ -485,7 +480,7 @@ following items as parameters:
 * The `Habitat` object on which you set a dependency
 * The URL to the file that contains the XML fragment that represents the configuration data
 
-[[GSACG00059]][[gkabo]]
+[[gkabo]]
 Example 6-8 Writing a Component's Initial Configuration Data to the
 `domain.xml` File
 
@@ -536,7 +531,7 @@ import java.net.URL;
 ...
 ----
 
-[[GSACG00060]][[gjski]]
+[[gjski]]
 Example 6-9 `domain.xml` File After Initialization
 
 This example shows the `domain.xml` file after the `setup` method was
@@ -557,24 +552,24 @@ element.
 </domain>
 ----
 
-[[gjrcz]][[GSACG00127]][[creating-a-transaction-to-update-configuration-data]]
+[[creating-a-transaction-to-update-configuration-data]]
 
 === Creating a Transaction to Update Configuration Data
 
 Creating a transaction to update configuration data enables the data to
 be updated without the need to specify a dotted name in the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand. You can make the transaction
+link:reference-manual/set.html#set[`set`] subcommand. You can make the transaction
 available to system administrators in the following ways:
 
-* By adding an link:reference-manual/asadmin.html#GSRFM00263[`asadmin`] subcommand. If you are adding
+* By adding an link:reference-manual/asadmin.html#asadmin[`asadmin`] subcommand. If you are adding
 an `asadmin` subcommand, include the code for the transaction in the
 body of the subcommand's `execute` method. For more information, see
-link:extending-asadmin.html#ghmrd[Extending the `asadmin` Utility].
+xref:extending-asadmin.adoc#extending-the-asadmin-utility[Extending the `asadmin` Utility].
 * By extending the Administration Console. For more information, see
-link:extending-the-admin-console.html#ghmrb[Extending the Administration
+xref:extending-the-admin-console.adoc#extending-the-administration-console[Extending the Administration
 Console].
 
-[[gkakw]][[GSACG00078]][[to-create-a-transaction-to-update-configuration-data]]
+[[to-create-a-transaction-to-update-configuration-data]]
 
 ==== To Create a Transaction to Update Configuration Data
 
@@ -604,10 +599,10 @@ element whose elements you are setting.
 .  Invoke the static method
 `org.jvnet.hk2.config.ConfigSupport.ConfigSupport.apply`.
 In the invocation, pass the following information as parameters to the method:
-* The code of the method that you defined in Step  link:#gkalq[2].
-* The configuration object to update, on which you set the dependency in Step link:#gkakq[1].
+* The code of the method that you defined in Step  xref:#gkalq[2].
+* The configuration object to update, on which you set the dependency in Step xref:#gkakq[1].
 
-[[sthref9]]
+[[gkama]]
 
 Example 6-10 Creating a Transaction to Update Configuration Data
 
@@ -647,12 +642,12 @@ import org.jvnet.hk2.config.TransactionFailure;
 ...
 ----
 
-[[gjmkt]][[GSACG00128]][[dotted-names-and-rest-urls-of-configuration-attributes]]
+[[dotted-names-and-rest-urls-of-configuration-attributes]]
 
 === Dotted Names and REST URLs of Configuration Attributes
 
-The {productName} administrative subcommands link:reference-manual/get.html#GSRFM00139[`get`],
-link:reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set`] locate a
+The {productName} administrative subcommands link:reference-manual/get.html#get[`get`],
+link:reference-manual/list.html#list[`list`], and olink:GSRFM00226[`set`] locate a
 configuration attribute through the dotted name of the attribute. The
 dotted name of an attribute of a configuration element is as follows:
 
@@ -702,7 +697,7 @@ http://localhost:4848/management/domain/configs/config/server-config/wombat-cont
 In this example, the DAS is running on the local host and the HTTP port
 for administration is 4848.
 
-[[gkaal]][[GSACG00131]][[examples-of-adding-configuration-data-for-a-component]]
+[[examples-of-adding-configuration-data-for-a-component]]
 
 === Examples of Adding Configuration Data for a Component
 
@@ -710,21 +705,21 @@ This example shows the interfaces that define the configuration data for
 the Greeter Container component. The data is comprised of the following
 elements:
 
-* A parent element, which is shown in link:#gkamy[Example 6-11]
+* A parent element, which is shown in xref:#gkamy[Example 6-11]
 * A subelement that is contained by the parent element, which is shown
-in link:#gkamb[Example 6-12]
+in xref:#gkamb[Example 6-12]
 
 This example also shows an XML data fragment for initializing an
-element. See link:#gkamk[Example 6-13].
+element. See xref:#gkamk[Example 6-13].
 
 Code for the Greeter Container component is shown in
-link:adding-container-capabilities.html#gkane[Example of Adding Container
+xref:adding-container-capabilities.adoc#example-of-adding-container-capabilities[Example of Adding Container
 Capabilities].
 
 Code for an `asadmin` subcommand that updates the configuration data in
-this example is shown in link:extending-asadmin.html#gkbdf[Example 4-7].
+this example is shown in xref:extending-asadmin.adoc#gkbdf[Example 4-7].
 
-[[GSACG00061]][[gkamy]]
+[[gkamy]]
 Example 6-11 Parent Element Definition
 
 This example shows the definition of the `greeter-container-config` element.
@@ -736,7 +731,7 @@ The attributes of the `greeter-container-config` element are as follows:
 
 The `greeter-element` element is identified as a subelement of the
 `greeter-container-config` element. The definition of the
-`greeter-element` element is shown in link:#gkamb[Example 6-12].
+`greeter-element` element is shown in xref:#gkamb[Example 6-12].
 
 [source,java]
 ----
@@ -780,12 +775,12 @@ public interface GreeterContainerConfig extends Container {
 }
 ----
 
-[[GSACG00062]][[gkamb]]
+[[gkamb]]
 Example 6-12 Subelement Definition
 
 This example shows the definition of the `greeter-element` element,
 which is identified as a subelement of the `greeter-container-config`
-element in link:#gkamy[Example 6-11]. The only attribute of the
+element in xref:#gkamy[Example 6-11]. The only attribute of the
 `greeter-element` element is `greeter-port`, which must be in the range 1030-1050.
 
 [source,java]
@@ -813,7 +808,7 @@ public interface GreeterElement extends ConfigBeanProxy {
 }
 ----
 
-[[GSACG00063]][[gkamk]]
+[[gkamk]]
 Example 6-13 XML Data Fragment for Initializing the `greeter-container-config` Element
 
 This example shows the XML data fragment for adding the
@@ -836,5 +831,5 @@ The `greeter-port` attribute of the `greeter-element` element is set to `1040`.
 ----
 
 The definition of the `greeter-container-config` element is shown in
-link:#gkamy[Example 6-11]. The definition of the `greeter-element`
-element is shown in link:#gkamb[Example 6-12].
+xref:#gkamy[Example 6-11]. The definition of the `greeter-element`
+element is shown in xref:#gkamb[Example 6-12].

@@ -7,14 +7,12 @@ prev=enable-secure-admin-internal-user.html
 
 = enable-secure-admin-principal
 
-[[enable-secure-admin-principal-1]][[GSRFM00131]][[enable-secure-admin-principal]]
+[[enable-secure-admin-principal]]
 
 == enable-secure-admin-principal
 
 Instructs {productName}, when secure admin is enabled, to accept
 admin requests from clients identified by the specified SSL certificate.
-
-[[sthref1143]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ admin requests from clients identified by the specified SSL certificate.
 asadmin [asadmin-options] enable-secure-admin-principal [--help]
 --alias aliasname | DN
 ----
-
-[[sthref1144]]
 
 === Description
 
@@ -51,13 +47,11 @@ for any other DN that {productName} should authorize to send admin
 requests. This includes DNs corresponding to trusted certificates (those
 with a certificate chain to a trusted authority.)
 
-[[sthref1145]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -69,8 +63,6 @@ asadmin-options::
   with a certificate currently in the trust store, you may find it most
   useful for self-signed certificates.
 
-[[sthref1146]]
-
 === Operands
 
 DN::
@@ -78,11 +70,9 @@ DN::
   comma-separated list in quotes. For example,
   `"CN=system.amer.oracle.com,OU=GlassFish,O=Oracle Corporation,L=Santa Clara,ST=California,C=US"`.
 
-[[sthref1147]]
-
 === Examples
 
-[[GSRFM608]][[sthref1148]]
+[[sthref1148]]
 
 ==== Example 1   Trusting a DN for secure administration
 
@@ -98,8 +88,6 @@ O=Oracle Corporation,L=Santa Clara,ST=California,C=US"
 Command enable-secure-admin-principal executed successfully.
 ----
 
-[[sthref1149]]
-
 === Exit Status
 
 0::
@@ -107,13 +95,11 @@ Command enable-secure-admin-principal executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1150]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:disable-secure-admin-principal.html#disable-secure-admin-principal-1[`disable-secure-admin-principal`(1)],
-link:enable-secure-admin.html#enable-secure-admin-1[`enable-secure-admin`(1)]
+xref:disable-secure-admin-principal.adoc#disable-secure-admin-principal[`disable-secure-admin-principal`(1)],
+xref:enable-secure-admin.adoc#enable-secure-admin[`enable-secure-admin`(1)]
 
 

@@ -7,14 +7,12 @@ prev=export-sync-bundle.html
 
 = flush-connection-pool
 
-[[flush-connection-pool-1]][[GSRFM00135]][[flush-connection-pool]]
+[[flush-connection-pool]]
 
 == flush-connection-pool
 
 Reintializes all connections established in the specified connection
 pool
-
-[[sthref1178]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] flush-connection-pool [--help]
 [--appname application [--modulename module]
 pool_name
 ----
-
-[[sthref1179]]
 
 === Description
 
@@ -56,13 +52,11 @@ module-scoped-resources are specified using the format
 in the Jakarta EE Specification
 (`https://jakarta.ee/specifications/platform/10/`).
 
-[[sthref1180]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -71,8 +65,6 @@ asadmin-options::
   defined.
 `--modulename`::
   Name of the module in which the module scoped resource is defined.
-
-[[sthref1181]]
 
 === Operands
 
@@ -91,8 +83,6 @@ asadmin> flush-connection-pool __TimerPool
 Command flush-connection-pool executed successfully.
 ----
 
-[[sthref1183]]
-
 === Exit Status
 
 0::
@@ -100,13 +90,11 @@ Command flush-connection-pool executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1184]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-connector-connection-pools.html#list-connector-connection-pools-1[`list-connector-connection-pools`(1)],
-link:list-jdbc-connection-pools.html#list-jdbc-connection-pools-1[`list-jdbc-connection-pools`(1)]
+xref:list-connector-connection-pools.adoc#list-connector-connection-pools[`list-connector-connection-pools`(1)],
+xref:list-jdbc-connection-pools.adoc#list-jdbc-connection-pools[`list-jdbc-connection-pools`(1)]
 
 

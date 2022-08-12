@@ -7,13 +7,11 @@ prev=list-jvm-options.html
 
 = list-libraries
 
-[[list-libraries-1]][[GSRFM00819]][[list-libraries]]
+[[list-libraries]]
 
 == list-libraries
 
 Lists library JAR files on {productName}
-
-[[sthref1615]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Lists library JAR files on {productName}
 asadmin [asadmin-options] list-libraries [--help]
 [--type={common|ext|app}]
 ----
-
-[[sthref1616]]
 
 === Description
 
@@ -35,13 +31,11 @@ directory for which libraries are to be listed.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1617]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -62,13 +56,11 @@ asadmin-options::
 --
 +
 For more information about these directories, see
-  "link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide.
-
-[[sthref1618]]
+  "link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide.
 
 === Examples
 
-[[GSRFM831]][[sthref1619]]
+[[sthref1619]]
 
 ==== Example 1   Listing Libraries
 
@@ -85,8 +77,6 @@ zlib.jar
 Command list-libraries executed successfully.
 ----
 
-[[sthref1620]]
-
 === Exit Status
 
 0::
@@ -94,15 +84,13 @@ Command list-libraries executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1621]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:add-library.html#add-library-1[`add-library`(1)],
-link:remove-library.html#remove-library-1[`remove-library`(1)]
+xref:add-library.adoc#add-library[`add-library`(1)],
+xref:remove-library.adoc#remove-library[`remove-library`(1)]
 
-"link:application-development-guide/class-loaders.html#GSDVG00003[Class Loaders]" in {productName} Application Development Guide
+"link:application-development-guide/class-loaders.html#class-loaders[Class Loaders]" in {productName} Application Development Guide
 
 

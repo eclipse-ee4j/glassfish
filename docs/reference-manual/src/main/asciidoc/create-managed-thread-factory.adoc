@@ -7,13 +7,11 @@ prev=create-managed-scheduled-executor-service.html
 
 = create-managed-thread-factory
 
-[[create-managed-thread-factory-1]][[GSRFM842]][[create-managed-thread-factory]]
+[[create-managed-thread-factory]]
 
 == create-managed-thread-factory
 
 Creates a managed thread factory resource
-
-[[sthref413]]
 
 === Synopsis
 
@@ -30,8 +28,6 @@ asadmin [asadmin-options] create-managed-thread-factory [--help]
 jndi_name
 ----
 
-[[sthref414]]
-
 === Description
 
 The `create-managed-thread-factory` subcommand creates a managed thread
@@ -39,13 +35,11 @@ factory resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref415]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -87,18 +81,12 @@ asadmin-options::
   instance_name;;
     Creates the resource for the specified server instance.
 
-[[sthref416]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this resource.
 
-[[sthref417]]
-
 === Examples
-
-[[GSRFM843]][[sthref418]]
 
 ==== Example 1   Creating a Managed Thread Factory Resource
 
@@ -112,8 +100,6 @@ Managed thread factory concurrent/myThreadFactory created successfully.
 Command create-managed-thread-factory executed successfully.
 ----
 
-[[sthref419]]
-
 === Exit Status
 
 0::
@@ -121,13 +107,11 @@ Command create-managed-thread-factory executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref420]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-managed-thread-factory.html#delete-managed-thread-factory-1[`delete-managed-thread-factory`(1)],
-link:list-managed-thread-factories.html#list-managed-thread-factories-1[`list-managed-thread-factories`(1)]
+xref:delete-managed-thread-factory.adoc#delete-managed-thread-factory[`delete-managed-thread-factory`(1)],
+xref:list-managed-thread-factories.adoc#list-managed-thread-factories[`list-managed-thread-factories`(1)]
 
 

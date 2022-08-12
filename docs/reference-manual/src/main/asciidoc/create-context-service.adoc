@@ -7,13 +7,11 @@ prev=create-connector-work-security-map.html
 
 = create-context-service
 
-[[create-context-service-1]][[GSRFM838]][[create-context-service]]
+[[create-context-service]]
 
 == create-context-service
 
 Creates a context service resource
-
-[[sthref192]]
 
 === Synopsis
 
@@ -29,8 +27,6 @@ asadmin [asadmin-options] create-context-service [--help]
 jndi_name
 ----
 
-[[sthref193]]
-
 === Description
 
 The `create-context-service` subcommand creates a context service
@@ -38,13 +34,11 @@ resource.
 
 This subcommand is supported in remote mode only.
 
-[[sthref194]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -82,18 +76,14 @@ asadmin-options::
   instance_name;;
     Creates the resource for the specified server instance.
 
-[[sthref195]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this resource.
 
-[[sthref196]]
-
 === Examples
 
-[[GSRFM839]][[sthref197]]
+[[sthref197]]
 
 ==== Example 1   Creating a Context Service Resource
 
@@ -107,8 +97,6 @@ Context service concurrent/myContextService created successfully.
 Command create-context-service executed successfully.
 ----
 
-[[sthref198]]
-
 === Exit Status
 
 0::
@@ -116,13 +104,11 @@ Command create-context-service executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref199]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-context-service.html#delete-context-service-1[`delete-context-service`(1)],
-link:list-context-services.html#list-context-services-1[`list-context-services`(1)]
+xref:delete-context-service.adoc#delete-context-service[`delete-context-service`(1)],
+xref:list-context-services.adoc#list-context-services[`list-context-services`(1)]
 
 

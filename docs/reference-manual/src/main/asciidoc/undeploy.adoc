@@ -7,13 +7,11 @@ prev=stop-local-instance.html
 
 = undeploy
 
-[[undeploy-1]][[GSRFM00244]][[undeploy]]
+[[undeploy]]
 
 == undeploy
 
 Removes a deployed component
-
-[[sthref2189]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] undeploy [--help]
 [--cascade={false|true}] name
 ----
 
-[[sthref2190]]
-
 === Description
 
 The `undeploy` subcommand uninstalls a deployed application or module
@@ -33,13 +29,11 @@ and removes it from the repository.
 
 This subcommand is supported in remote mode only.
 
-[[sthref2191]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -73,8 +67,6 @@ asadmin-options::
     Undeploys the component from a particular stand-alone server
     instance.
 
-[[sthref2192]]
-
 === Operands
 
 name::
@@ -85,15 +77,13 @@ name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To delete multiple versions, you can use an asterisk
   (`*`) as a wildcard character. For more information about module and
-  application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[
+  application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[
   Module and Application Versions]" in {productName} Application
   Deployment Guide.
 
-[[sthref2193]]
-
 === Examples
 
-[[GSRFM769]][[sthref2194]]
+[[sthref2194]]
 
 ==== Example 1   Undeploying an Enterprise Application
 
@@ -105,7 +95,7 @@ asadmin> undeploy Cart
 Command undeploy executed successfully.
 ----
 
-[[GSRFM770]][[sthref2195]]
+[[sthref2195]]
 
 ==== Example 2   Undeploying an Enterprise Bean With Container-Managed Persistence (CMP)
 
@@ -118,7 +108,7 @@ asadmin> undeploy --droptables=true myejb
 Command undeploy executed successfully.
 ----
 
-[[GSRFM771]][[sthref2196]]
+[[sthref2196]]
 
 ==== Example 3   Undeploying a Connector (Resource Adapter)
 
@@ -132,8 +122,6 @@ asadmin> undeploy --cascade=true jdbcra
 Command undeploy executed successfully.
 ----
 
-[[sthref2197]]
-
 === Exit Status
 
 0::
@@ -141,17 +129,15 @@ Command undeploy executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2198]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy-1[`deploy`(1)],
-link:list-components.html#list-components-1[`list-components`(1)],
-link:redeploy.html#redeploy-1[`redeploy`(1)]
+xref:deploy.adoc#deploy[`deploy`(1)],
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:redeploy.adoc#redeploy[`redeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

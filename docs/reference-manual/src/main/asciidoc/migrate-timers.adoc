@@ -7,13 +7,11 @@ prev=login.html
 
 = migrate-timers
 
-[[migrate-timers-1]][[GSRFM00211]][[migrate-timers]]
+[[migrate-timers]]
 
 == migrate-timers
 
 Moves EJB timers when a clustered instance was stopped or has crashed
-
-[[sthref1882]]
 
 === Synopsis
 
@@ -24,8 +22,6 @@ asadmin [asadmin-options] migrate-timers [--help]
 server_name
 ----
 
-[[sthref1883]]
-
 === Description
 
 The `migrate-timers` subcommand moves EJB timers to a specified server
@@ -33,13 +29,11 @@ when a server instance stops or crashes, if automatic timer migration is
 not enabled in the cluster configuration. This subcommand is supported
 in remote mode only.
 
-[[sthref1884]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -51,8 +45,6 @@ asadmin-options::
   This option is deprecated. It works exactly as the `--target` option
   does.
 
-[[sthref1885]]
-
 === Operands
 
 server_name::
@@ -60,11 +52,9 @@ server_name::
   This server instance should not be running during the migration
   process.
 
-[[sthref1886]]
-
 === Examples
 
-[[GSRFM722]][[sthref1887]]
+[[sthref1887]]
 
 ==== Example 1   Migrating Timers
 
@@ -77,8 +67,6 @@ asadmin>migrate-timers --target instance2 instance1
 This command was successfully executed.
 ----
 
-[[sthref1888]]
-
 === Exit Status
 
 0::
@@ -86,12 +74,10 @@ This command was successfully executed.
 1::
   error in executing the command
 
-[[sthref1889]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:list-timers.html#list-timers-1[`list-timers`(1)]
+xref:list-timers.adoc#list-timers[`list-timers`(1)]
 
 

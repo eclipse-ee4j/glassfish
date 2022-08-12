@@ -7,14 +7,12 @@ prev=osgi.html
 
 = osgi-shell
 
-[[osgi-shell-1]][[GSRFM890]][[osgi-shell]]
+[[osgi-shell]]
 
 == osgi-shell
 
 Provides interactive access to the Apache Felix Gogo remote shell for
 the execution of OSGi shell commands
-
-[[sthref1918]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] osgi-shell [--help]
 [--printprompt={false|true}]
 [--encoding encoding]
 ----
-
-[[sthref1919]]
 
 === Description
 
@@ -43,19 +39,17 @@ be executed in sequence from a text file.
 A related subcommand is the `osgi` subcommand, which passes a single
 command to the remote shell for execution. Results are returned by the
 `asadmin` utility. For more information about the `osgi` subcommand, see
-the link:osgi.html#osgi-1[`osgi`(1)] help page.
+the xref:osgi.adoc#osgi[`osgi`(1)] help page.
 
 This subcommand is supported in local mode only. Unlike other local
 subcommands, however, the domain administration server (DAS) and the
 server instance whose shell is being accessed must be running.
 
-[[sthref1920]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -69,11 +63,9 @@ asadmin-options::
   Specifies the character set for the file to be decoded. By default,
   the system character set is used.
 
-[[sthref1921]]
-
 === Examples
 
-[[GSRFM891]][[sthref1922]]
+[[sthref1922]]
 
 ==== Example 1   Listing Apache Felix Gogo Remote Shell Commands
 
@@ -108,7 +100,7 @@ gogo:grep
 gogo$
 ----
 
-[[GSRFM892]][[sthref1923]]
+[[sthref1923]]
 
 ==== Example 2   Running a Remote Shell Command
 
@@ -132,8 +124,6 @@ ID|State      |Level|Name
 gogo$
 ----
 
-[[sthref1924]]
-
 === Exit Status
 
 0::
@@ -141,12 +131,10 @@ gogo$
 1::
   error in executing the subcommand
 
-[[sthref1925]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:osgi.html#osgi-1[`osgi`(1)]
+xref:osgi.adoc#osgi[`osgi`(1)]
 
 

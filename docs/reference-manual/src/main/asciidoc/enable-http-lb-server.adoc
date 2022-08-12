@@ -7,14 +7,12 @@ prev=enable-http-lb-application.html
 
 = enable-http-lb-server
 
-[[enable-http-lb-server-1]][[GSRFM00127]][[enable-http-lb-server]]
+[[enable-http-lb-server]]
 
 == enable-http-lb-server
 
 Enables a previously disabled sever or cluster managed by a load
 balancer
-
-[[sthref1111]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ balancer
 asadmin [asadmin-options] enable-http-lb-server [--help]
 target
 ----
-
-[[sthref1112]]
 
 === Description
 
@@ -38,18 +34,14 @@ This subcommand is only applicable to {productName}. This
 subcommand is not applicable to {productName}.
 ====
 
-[[sthref1113]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1114]]
 
 === Operands
 
@@ -60,11 +52,9 @@ target::
   * cluster_name- The name of a target cluster.
   * instance_name- The name of a target server instance.
 
-[[sthref1115]]
-
 === Examples
 
-[[GSRFM602]][[sthref1116]]
+[[sthref1116]]
 
 ==== Example 1   Enabling a Cluster for Load Balancing
 
@@ -77,8 +67,6 @@ asadmin> enable-http-lb-server mycluster
 Command enable-http-lb-server executed successfully.
 ----
 
-[[sthref1117]]
-
 === Exit Status
 
 0::
@@ -86,13 +74,11 @@ Command enable-http-lb-server executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1118]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-lb-ref.html#create-http-lb-ref-1[`create-http-lb-ref`(1)],
-link:disable-http-lb-server.html#disable-http-lb-server-1[`disable-http-lb-server`(1)]
+xref:create-http-lb-ref.adoc#create-http-lb-ref[`create-http-lb-ref`(1)],
+xref:disable-http-lb-server.adoc#disable-http-lb-server[`disable-http-lb-server`(1)]
 
 

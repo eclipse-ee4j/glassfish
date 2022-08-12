@@ -7,13 +7,11 @@ prev=delete-lifecycle-module.html
 
 = delete-local-instance
 
-[[delete-local-instance-1]][[GSRFM00096]][[delete-local-instance]]
+[[delete-local-instance]]
 
 == delete-local-instance
 
 Deletes a {productName} instance on the machine where the subcommand is run
-
-[[sthref842]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-local-instance [--help]
 [--nodedir node-dir] [--node node-name]
 [instance-name]
 ----
-
-[[sthref843]]
 
 === Description
 
@@ -37,7 +33,7 @@ command from the machine where the instance resides.
 The subcommand can delete any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can delete an
 instance that was created by using the
-link:create-instance.html#create-instance-1[`create-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)]
 subcommand.
 
 The instance that is being deleted must not be running. Otherwise, an
@@ -69,13 +65,11 @@ specified and multiple instances reside on the node, an error occurs.
 
 This subcommand is supported in remote mode only.
 
-[[sthref844]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -88,8 +82,6 @@ asadmin-options::
   omitted only if the directory that the `--nodedir` option specifies
   contains only one node directory. Otherwise, this option is required.
 
-[[sthref845]]
-
 === Operands
 
 instance-name::
@@ -97,11 +89,9 @@ instance-name::
   only one instance resides on the specified node. Otherwise, this
   operand is required.
 
-[[sthref846]]
-
 === Examples
 
-[[GSRFM565]][[sthref847]]
+[[sthref847]]
 
 ==== Example 1   Deleting an Instance
 
@@ -114,8 +104,6 @@ asadmin> delete-local-instance pmdsainst
 Command delete-local-instance executed successfully.
 ----
 
-[[sthref848]]
-
 === Exit Status
 
 0::
@@ -123,18 +111,16 @@ Command delete-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref849]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)],
+xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 

@@ -7,14 +7,12 @@ prev=create-lifecycle-module.html
 
 = create-local-instance
 
-[[create-local-instance-1]][[GSRFM00044]][[create-local-instance]]
+[[create-local-instance]]
 
 == create-local-instance
 
 Creates a {productName} instance on the host where the subcommand is
 run
-
-[[sthref388]]
 
 === Synopsis
 
@@ -31,8 +29,6 @@ asadmin [asadmin-options] create-local-instance [--help]
 instance-name
 ----
 
-[[sthref389]]
-
 === Description
 
 The `create-local-instance` subcommand creates a {productName}
@@ -47,7 +43,7 @@ host where the DAS is running. If a nondefault port is used for
 administration, this subcommand also requires the port number. If you
 are adding the first instance to a node, you must provide this
 information through the `--host` option and the `--port` option of the
-link:asadmin.html#asadmin-1m[`asadmin`(1M)] utility. For the second and
+xref:asadmin.adoc#asadmin[`asadmin`(1M)] utility. For the second and
 later instances, this information is obtained from the DAS properties of
 the node.
 
@@ -121,9 +117,9 @@ basis of an algorithm that is internal to the subcommand. Use the
 `--systemproperties` option to resolve port conflicts for additional
 instances on the same node. System properties of an instance can be
 manipulated by using the
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)]
+xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)]
 subcommand and the
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)]
+xref:delete-system-property.adoc#delete-system-property[`delete-system-property`(1)]
 subcommand.
 
 When creating an instance, the subcommand retrieves the files that are
@@ -131,13 +127,11 @@ required for secure synchronization with the domain administration
 server (DAS). The instance is synchronized with the DAS when the
 instance is started
 
-[[sthref390]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -230,7 +224,7 @@ When the `--portbase` option is specified, the output of this
   `AS_ADMIN_MASTERPASSWORD` entry in the password file or prompts for
   the master password. The password file is specified in the
   `--passwordfile` option of the
-  link:asadmin.html#asadmin-1m[`asadmin`(1M)]utility. +
+  xref:asadmin.adoc#asadmin[`asadmin`(1M)]utility. +
   If the `--savemasterpassword` option is `true`, this option is also
   true, regardless of the value that is specified on the command line. +
   The master password must be the same for all instances in a domain.
@@ -294,8 +288,6 @@ When the `--portbase` option is specified, the output of this
     creating sockets that listen on ports 1-1024 requires superuser
     privileges.
 
-[[sthref391]]
-
 === Operands
 
 instance-name::
@@ -317,11 +309,9 @@ instance-name::
   * The name must not be `domain`, `server`, or any other keyword that
   is reserved by {productName}.
 
-[[sthref392]]
-
 === Examples
 
-[[GSRFM505]][[sthref393]]
+[[sthref393]]
 
 ==== Example 1   Creating a Standalone {productName} Instance
 
@@ -347,7 +337,7 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-local-instance executed successfully.
 ----
 
-[[GSRFM506]][[sthref394]]
+[[sthref394]]
 
 ==== Example 2   Creating a Clustered {productName} Instance on a Specific Node
 
@@ -378,8 +368,6 @@ IIOP_SSL_MUTUALAUTH_PORT=23920
 Command create-local-instance executed successfully.
 ----
 
-[[sthref395]]
-
 === Exit Status
 
 0::
@@ -387,21 +375,19 @@ Command create-local-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref396]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-node-config.html#create-node-config-1[`create-node-config`(1)],
-link:create-node-dcom.html#create-node-dcom-1[`create-node-dcom`(1)],
-link:create-node-ssh.html#create-node-ssh-1[`create-node-ssh`(1)],
-link:create-system-properties.html#create-system-properties-1[`create-system-properties`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:delete-system-property.html#delete-system-property-1[`delete-system-property`(1)],
-link:list-instances.html#list-instances-1[`list-instances`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-node-config.adoc#create-node-config[`create-node-config`(1)],
+xref:create-node-dcom.adoc#create-node-dcom[`create-node-dcom`(1)],
+xref:create-node-ssh.adoc#create-node-ssh[`create-node-ssh`(1)],
+xref:create-system-properties.adoc#create-system-properties[`create-system-properties`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:delete-system-property.adoc#delete-system-property[`delete-system-property`(1)],
+xref:list-instances.adoc#list-instances[`list-instances`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 

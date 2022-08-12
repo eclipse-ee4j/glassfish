@@ -7,9 +7,6 @@ prev=named-configurations.html
 
 = Configuring HTTP Load Balancing
 
-[[GSHAG00009]][[abdgs]]
-
-
 [[configuring-http-load-balancing]]
 == 7 Configuring HTTP Load Balancing
 
@@ -17,13 +14,13 @@ This chapter describes how to configure HTTP load balancing on {productName} 7.
 
 The following topics are addressed here:
 
-* link:#abdgx[Setting Up HTTP Load Balancing]
+* xref:#setting-up-http-load-balancing[Setting Up HTTP Load Balancing]
 
 For information on other types of load balancing, see
-link:jms.html#abdbk[Configuring Java Message Service High Availability]
-and link:rmi-iiop.html#fxxqs[RMI-IIOP Load Balancing and Failover].
+xref:jms.adoc#configuring-java-message-service-high-availability[Configuring Java Message Service High Availability]
+and xref:rmi-iiop.adoc#rmi-iiop-load-balancing-and-failover[RMI-IIOP Load Balancing and Failover].
 
-[[abdgx]][[GSHAG00202]][[setting-up-http-load-balancing]]
+[[setting-up-http-load-balancing]]
 
 === Setting Up HTTP Load Balancing
 
@@ -31,12 +28,12 @@ This section describes how to set up load balancing for {productName}.
 
 The following topics are addressed here:
 
-* link:#abdgy[Prerequisites for Setting Up HTTP Load Balancing]
-* link:#gksdt[Configuring {productName} with Apache HTTP Server and `mod_jk`]
-* link:#CHDCCGDC[Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`]
-* link:#abdgz[HTTP Load Balancer Deployments]
+* xref:#prerequisites-for-setting-up-http-load-balancing[Prerequisites for Setting Up HTTP Load Balancing]
+* xref:#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with Apache HTTP Server and `mod_jk`]
+* xref:#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`]
+* xref:#http-load-balancer-deployments[HTTP Load Balancer Deployments]
 
-[[abdgy]][[GSHAG00281]][[prerequisites-for-setting-up-http-load-balancing]]
+[[prerequisites-for-setting-up-http-load-balancing]]
 
 ==== Prerequisites for Setting Up HTTP Load Balancing
 
@@ -46,16 +43,16 @@ Before configuring your load balancer, you must:
 or `mod_proxy_ajp` modules, the only supported web server is Apache HTTP Server 2.2.x.
 
 * Configure the `mod_jk` connector module, as described in
-link:#gksdt[Configuring {productName} with Apache HTTP Server and `mod_jk`],
+xref:#configuring-glassfish-server-with-apache-http-server-and-mod_jk[Configuring {productName} with Apache HTTP Server and `mod_jk`],
 or configure the `mod_proxy_ajp` connector module, as
-described in link:#CHDCCGDC[Configuring {productName} with Apache
+described in xref:#configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp[Configuring {productName} with Apache
 HTTP Server and `mod_proxy_ajp`].
 
 * Create {productName} clusters or server instances to participate in load balancing.
 
 * Deploy applications to these clusters or instances.
 
-[[gksdt]][[GSHAG00282]][[configuring-glassfish-server-with-apache-http-server-and-mod_jk]]
+[[configuring-glassfish-server-with-apache-http-server-and-mod_jk]]
 
 ==== Configuring {productName} with Apache HTTP Server and `mod_jk`
 
@@ -66,7 +63,7 @@ module. To enable the `mod_jk` module in {productName}, set the
 create `jk-connectors` under different virtual-servers using the
 `jk-enabled` `network-listener` attribute.
 
-[[gksde]][[GSHAG00143]][[to-configure-the-mod_jk-connector-module]]
+[[to-configure-the-mod_jk-connector-module]]
 
 ===== To Configure the `mod_jk` Connector Module
 
@@ -111,7 +108,7 @@ JkMount /examples/* worker1
 3. Start Apache HTTP Server.
 
 4. Create a jk-enabled network listener by using the
-link:reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
+link:reference-manual/create-network-listener.html#create-network-listener[`create-network-listener`] subcommand.
 +
 [source]
 ----
@@ -140,7 +137,7 @@ http-thread-pool.max-thread-pool-size=value
 
 7. Restart {productName}.
 
-[[GSHAG00065]][[gktpu]]
+[[gktpu]]
 Example 7-1 `httpd.conf` File for Load Balancing
 
 This example shows an `httpd.conf` file that is set for load balancing.
@@ -165,7 +162,7 @@ JkMount /*.jsp worker1
 JkMount /glassfish-test/* loadbalancer
 ----
 
-[[GSHAG00066]][[gktpe]]
+[[gktpe]]
 Example 7-2 `workers.properties` File for Load Balancing
 
 This example shows a `workers.properties` or `glassfish-jk.properties`
@@ -191,7 +188,7 @@ worker.loadbalancer.type=lb
 worker.loadbalancer.balance_workers=worker1,worker2
 ----
 
-[[CHDCCGDC]][[GSHAG494]][[configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp]]
+[[configuring-glassfish-server-with-apache-http-server-and-mod_proxy_ajp]]
 
 ==== Configuring {productName} with Apache HTTP Server and `mod_proxy_ajp`
 
@@ -201,7 +198,7 @@ connector module. To enable the `mod_proxy_ajp` module in {productName}, set the
 attribute. You can also create `jk-connectors` under different
 virtual-servers using the `jk-enabled` `network-listener` attribute.
 
-[[GSHAG495]][[sthref22]]
+
 
 
 [[to-configure-the-mod_proxy_ajp-connector-module]]
@@ -256,17 +253,17 @@ http-thread-pool.max-thread-pool-size=value
 
 6. Restart {productName}.
 
-[[abdgz]][[GSHAG00284]][[http-load-balancer-deployments]]
+[[http-load-balancer-deployments]]
 
 ==== HTTP Load Balancer Deployments
 
 You can configure your load balancer in different ways, depending on
 your goals and environment, as described in the following sections:
 
-* link:#abdha[Using Clustered Server Instances]
-* link:#abdhc[Using Multiple Standalone Instances]
+* xref:#using-clustered-server-instances[Using Clustered Server Instances]
+* xref:#using-multiple-standalone-instances[Using Multiple Standalone Instances]
 
-[[abdha]][[GSHAG00232]][[using-clustered-server-instances]]
+[[using-clustered-server-instances]]
 
 ===== Using Clustered Server Instances
 
@@ -282,7 +279,7 @@ If you have multiple clusters, requests can be load balanced across
 clusters but are only failed over between the instances in a single
 cluster. Use multiple clusters in a load balancer to easily enable
 rolling upgrades of applications. For more information, see
-link:rolling-upgrade.html#abdik[Upgrading Applications Without Loss of Availability].
+xref:rolling-upgrade.adoc#upgrading-applications-without-loss-of-availability[Upgrading Applications Without Loss of Availability].
 
 
 [NOTE]
@@ -291,7 +288,7 @@ Requests cannot be load balanced across clusters and standalone instances.
 ====
 
 
-[[abdhc]][[GSHAG00233]][[using-multiple-standalone-instances]]
+[[using-multiple-standalone-instances]]
 
 ===== Using Multiple Standalone Instances
 

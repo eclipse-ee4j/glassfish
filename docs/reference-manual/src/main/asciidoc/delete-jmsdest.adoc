@@ -7,13 +7,11 @@ prev=delete-jdbc-resource.html
 
 = delete-jmsdest
 
-[[delete-jmsdest-1]][[GSRFM00090]][[delete-jmsdest]]
+[[delete-jmsdest]]
 
 == delete-jmsdest
 
 Removes a JMS physical destination
-
-[[sthref793]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] delete-jmsdest [--help]
 dest_name
 ----
 
-[[sthref794]]
-
 === Description
 
 The `delete-jmsdest` subcommand removes the specified Java Message
@@ -35,13 +31,11 @@ Service (JMS) physical destination.
 This subcommand is supported in remote mode only. Remote `asadmin`
 subcommands require a running domain administration server (DAS).
 
-[[sthref795]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -65,18 +59,14 @@ asadmin-options::
   instance-name;;
     Creates the physical destination from the specified server instance.
 
-[[sthref796]]
-
 === Operands
 
 dest_name::
   The unique identifier of the JMS destination to be deleted.
 
-[[sthref797]]
-
 === Examples
 
-[[GSRFM558]][[sthref798]]
+[[sthref798]]
 
 ==== Example 1   Deleting a physical destination
 
@@ -88,8 +78,6 @@ asadmin> delete-jmsdest --desttype queue PhysicalQueue
 Command delete-jmsdest executed successfully.
 ----
 
-[[sthref799]]
-
 === Exit Status
 
 0::
@@ -97,14 +85,12 @@ Command delete-jmsdest executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref800]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-jmsdest.html#create-jmsdest-1[`create-jmsdest`(1)],
-link:flush-jmsdest.html#flush-jmsdest-1[`flush-jmsdest`(1)],
-link:list-jmsdest.html#list-jmsdest-1[`list-jmsdest`(1)]
+xref:create-jmsdest.adoc#create-jmsdest[`create-jmsdest`(1)],
+xref:flush-jmsdest.adoc#flush-jmsdest[`flush-jmsdest`(1)],
+xref:list-jmsdest.adoc#list-jmsdest[`list-jmsdest`(1)]
 
 

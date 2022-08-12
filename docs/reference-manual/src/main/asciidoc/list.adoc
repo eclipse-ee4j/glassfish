@@ -7,13 +7,11 @@ prev=jms-ping.html
 
 = list
 
-[[list-1]][[GSRFM00145]][[list]]
+[[list]]
 
 == list
 
 Lists configurable or monitorable elements
-
-[[sthref1282]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list [--help]
 [--monitor={false|true}]
 [dotted-parent-attribute-name]
 ----
-
-[[sthref1283]]
 
 === Description
 
@@ -73,15 +69,13 @@ their child nodes that match the regular expression created by the
 provided matching pattern.
 
 For detailed information about dotted names, see the
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)] help page.
-
-[[sthref1284]]
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)] help page.
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -91,18 +85,14 @@ asadmin-options::
   are returned. If set to true, the monitorable attribute values are
   returned.
 
-[[sthref1285]]
-
 === Operands
 
 dotted-parent-element-name::
   Configurable or monitorable element name
 
-[[sthref1286]]
-
 === Examples
 
-[[GSRFM631]][[sthref1287]]
+[[sthref1287]]
 
 ==== Example 1   Listing Dotted Names of Configurable Elements
 
@@ -159,7 +149,7 @@ system-applications
 Command list executed successfully.
 ----
 
-[[GSRFM632]][[sthref1288]]
+[[sthref1288]]
 
 ==== Example 2   Listing Attributes of a Configurable Element
 
@@ -173,7 +163,7 @@ configs.config.server-config.web-container.session-config
 Command list executed successfully.
 ----
 
-[[GSRFM633]][[sthref1289]]
+[[sthref1289]]
 
 ==== Example 3   Listing Dotted Names of Monitorable Objects
 
@@ -207,8 +197,6 @@ server.transaction-service
 Command list executed successfully.
 ----
 
-[[sthref1290]]
-
 === Exit Status
 
 0::
@@ -216,16 +204,14 @@ Command list executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1291]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get.html#get-1[`get`(1)], link:set.html#set-1[`set`(1)]
+xref:get.adoc#get[`get`(1)], xref:set.adoc#set[`set`(1)]
 
-link:dotted-names.html#dotted-names-5asc[`dotted-names`(5ASC)]
+xref:dotted-names.adoc#dotted-names[`dotted-names`(5ASC)]
 
-link:administration-guide.html#GSADG[{productName} Administration Guide]
+xref:administration-guide.adoc#GSADG[{productName} Administration Guide]
 
 

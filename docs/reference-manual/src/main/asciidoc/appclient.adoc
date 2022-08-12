@@ -7,14 +7,12 @@ prev=manvol1m.html
 
 = appclient
 
-[[appclient-1m]][[GSRFM00262]][[appclient]]
+[[appclient]]
 
 == appclient
 
 Launches the Application Client Container and invokes the client
 application typically packaged in the application JAR file
-
-[[sthref2357]]
 
 === Synopsis
 
@@ -34,8 +32,6 @@ appclient [jvm-options]
 [-user username] [-passwordfile password_file]
 class-selector [application-options]
 ----
-
-[[sthref2358]]
 
 === Description
 
@@ -68,8 +64,6 @@ the Application Client Container launches the client anyway but issues a
 warning that the selection did not match the information in the client.
 The warning also displays what the actual main class and name values are
 for the client.
-
-[[sthref2359]]
 
 === Options
 
@@ -169,11 +163,9 @@ class-selector::
 application-options::
   optional; you can set client application arguments.
 
-[[sthref2360]]
-
 === Examples
 
-[[GSRFM804]][[sthref2361]]
+[[sthref2361]]
 
 ==== Example 1   Using the `appclient` command
 
@@ -205,13 +197,11 @@ for descriptions of the following attributes:
 |===
 
 
-[[sthref2363]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get-client-stubs.html#get-client-stubs-1[`get-client-stubs`(1)],
-link:package-appclient.html#package-appclient-1m[`package-appclient`(1M)]
+xref:get-client-stubs.adoc#get-client-stubs[`get-client-stubs`(1)],
+xref:package-appclient.adoc#package-appclient[`package-appclient`(1M)]
 
 

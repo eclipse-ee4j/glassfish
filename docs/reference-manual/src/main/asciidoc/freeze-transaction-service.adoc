@@ -7,13 +7,11 @@ prev=flush-jmsdest.html
 
 = freeze-transaction-service
 
-[[freeze-transaction-service-1]][[GSRFM00137]][[freeze-transaction-service]]
+[[freeze-transaction-service]]
 
 == freeze-transaction-service
 
 Freezes the transaction subsystem
-
-[[sthref1193]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Freezes the transaction subsystem
 asadmin [asadmin-options] freeze-transaction-service [--help]
 [--target target]
 ----
-
-[[sthref1194]]
 
 === Description
 
@@ -35,13 +31,11 @@ on an already frozen transaction subsystem has no effect. Restarting the
 server unfreezes the transaction subsystem. This subcommand is supported
 in remote mode only.
 
-[[sthref1195]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -61,11 +55,9 @@ asadmin-options::
   instance_name;;
     Freezes the transaction service for a particular server instance.
 
-[[sthref1196]]
-
 === Examples
 
-[[GSRFM616]][[sthref1197]]
+[[sthref1197]]
 
 ==== Example 1   Using freeze-transaction-service
 
@@ -75,8 +67,6 @@ asadmin-options::
 Command freeze-transaction-service executed successfully
 ----
 
-[[sthref1198]]
-
 === Exit Status
 
 0::
@@ -84,17 +74,15 @@ Command freeze-transaction-service executed successfully
 1::
   error in executing the command
 
-[[sthref1199]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:recover-transactions.html#recover-transactions-1[`recover-transactions`(1)],
-link:rollback-transaction.html#rollback-transaction-1[`rollback-transaction`(1)],
-link:unfreeze-transaction-service.html#unfreeze-transaction-service-1[`unfreeze-transaction-service`(1)]
+xref:recover-transactions.adoc#recover-transactions[`recover-transactions`(1)],
+xref:rollback-transaction.adoc#rollback-transaction[`rollback-transaction`(1)],
+xref:unfreeze-transaction-service.adoc#unfreeze-transaction-service[`unfreeze-transaction-service`(1)]
 
-link:administration-guide/transactions.html#GSADG00022[Administering Transactions]
+link:administration-guide/transactions.html#administering-transactions[Administering Transactions]
 in {productName} Administration Guide
 
 https://eclipse-ee4j.github.io/jakartaee-tutorial/#transactions[Transactions]

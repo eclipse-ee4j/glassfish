@@ -10,18 +10,18 @@ prev=lof.html
 [[list-of-tables]]
 == List of Tables
 
-* link:message-security.html#fxjcu[3-1 Message Protection Policy Mapping
+* xref:message-security.adoc#fxjcu[3-1 Message Protection Policy Mapping
 to WS-Security SOAP Operations]
-* link:administrative-security.html#gkobl[5-1 Authentication Methods
+* xref:administrative-security.adoc#gkobl[5-1 Authentication Methods
 Employed]
-* link:administrative-security.html#gkode[5-2 Accepted and Rejected
+* xref:administrative-security.adoc#gkode[5-2 Accepted and Rejected
 Operations if Secure Admin is Disabled]
-* link:administrative-security.html#gkqax[5-3 asadmin --secure=false,
+* xref:administrative-security.adoc#gkqax[5-3 asadmin --secure=false,
 With Username and Password]
-* link:running-in-secure-environment.html#gksbt[6-1 Securing the
+* xref:running-in-secure-environment.adoc#gksbt[6-1 Securing the
 {productName} Host]
-* link:running-in-secure-environment.html#gkscz[6-2 Securing {productName}]
-* link:running-in-secure-environment.html#gkscv[6-3 Securing
+* xref:running-in-secure-environment.adoc#gkscz[6-2 Securing {productName}]
+* xref:running-in-secure-environment.adoc#gkscv[6-3 Securing
 Applications]
 
 

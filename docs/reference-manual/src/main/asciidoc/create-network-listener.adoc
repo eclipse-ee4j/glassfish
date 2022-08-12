@@ -7,13 +7,11 @@ prev=create-module-config.html
 
 = create-network-listener
 
-[[create-network-listener-1]][[GSRFM00046]][[create-network-listener]]
+[[create-network-listener]]
 
 == create-network-listener
 
 Adds a new network listener socket
-
-[[sthref437]]
 
 === Synopsis
 
@@ -30,8 +28,6 @@ asadmin [asadmin-options] create-network-listener [--help]
 [--target target]
 listener-name
 ----
-
-[[sthref438]]
 
 === Description
 
@@ -59,13 +55,11 @@ options.
 ====
 
 
-[[sthref439]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -105,18 +99,12 @@ asadmin-options::
     Creates the network listener on the specified standalone server
     instance.
 
-[[sthref440]]
-
 === Operands
 
 listener-name::
   The name of the network listener.
 
-[[sthref441]]
-
 === Examples
-
-[[GSRFM508]][[sthref442]]
 
 ==== Example 1   Creating a Network Listener
 
@@ -130,8 +118,6 @@ asadmin> create-network-listener --listenerport 7272 protocol http-1
 Command create-network-listener executed successfully.
 ----
 
-[[sthref443]]
-
 === Exit Status
 
 0::
@@ -139,17 +125,15 @@ Command create-network-listener executed successfully.
 1::
   error in executing the command
 
-[[sthref444]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-http-listener.html#create-http-listener-1[`create-http-listener`(1)],
-link:create-protocol.html#create-protocol-1[`create-protocol`(1)],
-link:create-threadpool.html#create-threadpool-1[`create-threadpool`(1)],
-link:create-transport.html#create-transport-1[`create-transport`(1)],
-link:delete-network-listener.html#delete-network-listener-1[`delete-network-listener`(1)],
-link:list-network-listeners.html#list-network-listeners-1[`list-network-listeners`(1)]
+xref:create-http-listener.adoc#create-http-listener[`create-http-listener`(1)],
+xref:create-protocol.adoc#create-protocol[`create-protocol`(1)],
+xref:create-threadpool.adoc#create-threadpool[`create-threadpool`(1)],
+xref:create-transport.adoc#create-transport[`create-transport`(1)],
+xref:delete-network-listener.adoc#delete-network-listener[`delete-network-listener`(1)],
+xref:list-network-listeners.adoc#list-network-listeners[`list-network-listeners`(1)]
 
 

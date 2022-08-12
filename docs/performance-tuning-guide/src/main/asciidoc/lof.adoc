@@ -10,4 +10,4 @@ prev=loe.html
 [[list-of-figures]]
 == List of Figures
 
-* link:overview.html#gacmj[1-1 Jakarta EE Application Model]
+* xref:overview.adoc#gacmj[1-1 Jakarta EE Application Model]

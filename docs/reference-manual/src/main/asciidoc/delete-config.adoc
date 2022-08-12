@@ -7,13 +7,11 @@ prev=delete-cluster.html
 
 = delete-config
 
-[[delete-config-1]][[GSRFM00069]][[delete-config]]
+[[delete-config]]
 
 == delete-config
 
 Deletes an existing named configuration
-
-[[sthref617]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Deletes an existing named configuration
 asadmin [asadmin-options] delete-config [--help]
 configuration-name
 ----
-
-[[sthref618]]
 
 === Description
 
@@ -37,29 +33,23 @@ copied to create standalone configurations.
 
 This subcommand is supported in remote mode only.
 
-[[sthref619]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref620]]
 
 === Operands
 
 configuration-name::
   The name of the configuration that you are deleting.
 
-[[sthref621]]
-
 === Examples
 
-[[GSRFM536]][[sthref622]]
+[[sthref622]]
 
 ==== Example 1   Deleting a Named Configuration
 
@@ -72,8 +62,6 @@ asadmin> delete-config pmdconfig
 Command delete-config executed successfully.
 ----
 
-[[sthref623]]
-
 === Exit Status
 
 0::
@@ -81,15 +69,13 @@ Command delete-config executed successfully.
 1::
   error in executing the command
 
-[[sthref624]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:copy-config.html#copy-config-1[`copy-config`(1)],
-link:list-configs.html#list-configs-1[`list-configs`(1)]
+xref:copy-config.adoc#copy-config[`copy-config`(1)],
+xref:list-configs.adoc#list-configs[`list-configs`(1)]
 
-link:configuration.html#configuration-5asc[`configuration`(5ASC)]
+xref:configuration.adoc#configuration[`configuration`(5ASC)]
 
 

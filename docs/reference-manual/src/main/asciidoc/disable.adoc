@@ -7,13 +7,11 @@ prev=deploydir.html
 
 = disable
 
-[[disable-1]][[GSRFM00116]][[disable]]
+[[disable]]
 
 == disable
 
 Disables the component
-
-[[sthref1039]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] disable [--help]
 [--target target_name] component_name
 ----
 
-[[sthref1040]]
-
 === Description
 
 The `disable` subcommand immediately disables the specified deployed
@@ -33,13 +29,11 @@ returned.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1041]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -58,8 +52,6 @@ asadmin-options::
     Disables the component on a particular clustered or stand-alone
     server instance.
 
-[[sthref1042]]
-
 === Operands
 
 component_name::
@@ -70,15 +62,13 @@ component_name::
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. To disable multiple versions, you can use an
   asterisk (`*`) as a wildcard character. For more information about
-  module and application versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and
+  module and application versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and
   Application Versions]" in {productName}
   Application Deployment Guide.
 
-[[sthref1043]]
-
 === Examples
 
-[[GSRFM590]][[sthref1044]]
+[[sthref1044]]
 
 ==== Example 1   Disabling a Component
 
@@ -90,8 +80,6 @@ asadmin> disable sampleApp
 Command disable executed successfully
 ----
 
-[[sthref1045]]
-
 === Exit Status
 
 0::
@@ -99,17 +87,15 @@ Command disable executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1046]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy-1[`deploy`(1)],
-link:enable.html#enable-1[`enable`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+xref:deploy.adoc#deploy[`deploy`(1)],
+xref:enable.adoc#enable[`enable`(1)],
+xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

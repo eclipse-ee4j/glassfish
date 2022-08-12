@@ -7,13 +7,11 @@ prev=validate-multicast.html
 
 = verify-domain-xml
 
-[[verify-domain-xml-1]][[GSRFM00260]][[verify-domain-xml]]
+[[verify-domain-xml]]
 
 == verify-domain-xml
 
 Verifies the content of the domain.xml file
-
-[[sthref2339]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Verifies the content of the domain.xml file
 asadmin [asadmin-options] verify-domain-xml [--help]
 [--domaindir domain-dir] [domain-name]
 ----
-
-[[sthref2340]]
 
 === Description
 
@@ -34,13 +30,11 @@ Verifies the content of the `domain.xml` file by checking the following:
 
 This subcommand is supported in local mode only.
 
-[[sthref2341]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `-h` `--help`::
   Displays the help text for the subcommand.
 `--domaindir`::
@@ -48,18 +42,14 @@ asadmin-options::
   The path must be accessible in the file system. The default is
   as-install``/domains``.
 
-[[sthref2342]]
-
 === Operands
 
 domain_name::
   Specifies the name of the domain. The default is `domain1`.
 
-[[sthref2343]]
-
 === Examples
 
-[[GSRFM799]][[sthref2344]]
+[[sthref2344]]
 
 ==== Example 1   Using verify-domain-xml
 
@@ -70,8 +60,6 @@ All Tests Passed.
 domain.xml is valid
 ----
 
-[[sthref2345]]
-
 === Exit Status
 
 0::
@@ -79,10 +67,8 @@ domain.xml is valid
 1::
   error in executing the command
 
-[[sthref2346]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
 

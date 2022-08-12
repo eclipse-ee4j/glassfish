@@ -7,13 +7,11 @@ prev=recover-transactions.html
 
 = redeploy
 
-[[redeploy-1]][[GSRFM00217]][[redeploy]]
+[[redeploy]]
 
 == redeploy
 
 Redeploys the specified component
-
-[[sthref1961]]
 
 === Synopsis
 
@@ -47,8 +45,6 @@ asadmin [asadmin-options] redeploy [--help]
 [file_archive|filepath]
 ----
 
-[[sthref1962]]
-
 === Description
 
 The `redeploy` subcommand redeploys an enterprise application, web
@@ -61,13 +57,11 @@ deployed. Otherwise, an error occurs.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1963]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -92,7 +86,7 @@ asadmin-options::
   identifier must begin with a letter or number. It can contain
   alphanumeric characters plus underscore (`_`), dash (`-`), and period
   (`.`) characters. For more information about module and application
-  versions, see "link:application-deployment-guide/overview.html#GSDPG00324[Module and Application Versions]" in
+  versions, see "link:application-deployment-guide/overview.html#module-and-application-versions[Module and Application Versions]" in
   {productName} Application Deployment Guide.
 `--upload`::
   Specifies whether the subcommand uploads the file to the DAS. In most
@@ -379,9 +373,7 @@ Other available properties are determined by the implementation of the
   OSGi web container registers a URL stream handler named `webbundle`,
   which is used to wrap a plain WAR file as a WAB. For more information
   about usage, see the related example in the
-  link:deploy.html#deploy-1[`deploy`(1)] help page.
-
-[[sthref1964]]
+  xref:deploy.adoc#deploy[`deploy`(1)] help page.
 
 === Operands
 
@@ -407,11 +399,9 @@ Whether this operand is required depends on how the application was
   * If the application was originally deployed from a directory, the
     archive-path operand is optional.
 
-[[sthref1965]]
-
 === Examples
 
-[[GSRFM735]][[sthref1966]]
+[[sthref1966]]
 
 ==== Example 1   Redeploying a Web Application From a File
 
@@ -427,7 +417,7 @@ Application deployed successfully with name hello.
 Command redeploy executed successfully
 ----
 
-[[GSRFM736]][[sthref1967]]
+[[sthref1967]]
 
 ==== Example 2   Redeploying a Web Application From a Directory
 
@@ -441,8 +431,6 @@ Application deployed successfully with name hellodir.
 Command redeploy executed successfully
 ----
 
-[[sthref1968]]
-
 === Exit Status
 
 0::
@@ -450,17 +438,15 @@ Command redeploy executed successfully
 1::
   error in executing the subcommand
 
-[[sthref1969]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:deploy.html#deploy-1[`deploy`(1)], link:get.html#get-1[`get`(1)],
-link:list-components.html#list-components-1[`list-components`(1)],
-link:undeploy.html#undeploy-1[`undeploy`(1)]
+xref:deploy.adoc#deploy[`deploy`(1)], xref:get.adoc#get[`get`(1)],
+xref:list-components.adoc#list-components[`list-components`(1)],
+xref:undeploy.adoc#undeploy[`undeploy`(1)]
 
-link:application-deployment-guide.html#GSDPG[{productName} Application Deployment
+xref:application-deployment-guide.adoc#GSDPG[{productName} Application Deployment
 Guide]
 
 

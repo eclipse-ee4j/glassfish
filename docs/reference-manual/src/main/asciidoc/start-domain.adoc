@@ -7,13 +7,11 @@ prev=start-database.html
 
 = start-domain
 
-[[start-domain-1]][[GSRFM00235]][[start-domain]]
+[[start-domain]]
 
 == start-domain
 
 Starts the DAS of the specified domain
-
-[[sthref2125]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] start-domain [--help]
 [--verbose={true|false}] [--watchdog={true|false}]
 [domain-name]
 ----
-
-[[sthref2126]]
 
 === Description
 
@@ -53,17 +49,15 @@ administration is enabled; otherwise, the `start-domain` subcommand
 fails.
 
 To provide the new admin user password, you can use the `--passwordfile`
-utility option of the link:asadmin.html#asadmin-1m[`asadmin`(1M)] command
+utility option of the xref:asadmin.adoc#asadmin[`asadmin`(1M)] command
 after adding the entry `AS_ADMIN_NEWPASSWORD` to the password file.
 ====
-
-[[sthref2127]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -136,7 +130,7 @@ asadmin-options::
     Detailed startup messages and log messages about the domain are
     displayed in the console window where the subcommand is run. If the
     domain is later restarted by running the
-    link:restart-domain.html#restart-domain-1[`restart-domain`(1)]
+    xref:restart-domain.adoc#restart-domain[`restart-domain`(1)]
     subcommand from a different console window, messages continue to be
     displayed in the original console window. +
     You can kill the {productName} process by typing `CTRL-C` in the
@@ -166,19 +160,15 @@ asadmin-options::
     Limited information is not displayed in the console window
     (default).
 
-[[sthref2128]]
-
 === Operands
 
 domain-name::
   The unique name of the domain you want to start. +
   This operand is optional if only one domain exists in the {productName} installation.
 
-[[sthref2129]]
-
 === Examples
 
-[[GSRFM760]][[sthref2130]]
+[[sthref2130]]
 
 ==== Example 1   Starting a Domain
 
@@ -195,8 +185,6 @@ Admin port for the domain: 4848
 Command start-domain executed successfully.
 ----
 
-[[sthref2131]]
-
 === Exit Status
 
 0::
@@ -204,17 +192,15 @@ Command start-domain executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref2132]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-domain.html#create-domain-1[`create-domain`(1)],
-link:delete-domain.html#delete-domain-1[`delete-domain`(1)],
-link:list-domains.html#list-domains-1[`list-domains`(1)],
-link:restart-domain.html#restart-domain-1[`restart-domain`(1)],
-link:stop-domain.html#stop-domain-1[`stop-domain`(1)]
+xref:create-domain.adoc#create-domain[`create-domain`(1)],
+xref:delete-domain.adoc#delete-domain[`delete-domain`(1)],
+xref:list-domains.adoc#list-domains[`list-domains`(1)],
+xref:restart-domain.adoc#restart-domain[`restart-domain`(1)],
+xref:stop-domain.adoc#stop-domain[`stop-domain`(1)]
 
 Java Platform Debugger Architecture (JPDA)
 (https://docs.oracle.com/en/java/javase/11/docs/specs/jpda/conninv.html)

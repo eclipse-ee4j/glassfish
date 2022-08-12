@@ -7,13 +7,11 @@ prev=list-timers.html
 
 = list-transports
 
-[[list-transports-1]][[GSRFM00206]][[list-transports]]
+[[list-transports]]
 
 == list-transports
 
 Lists the existing transports
-
-[[sthref1842]]
 
 === Synopsis
 
@@ -23,25 +21,19 @@ asadmin [asadmin-options] list-transports [--help]
 [target]
 ----
 
-[[sthref1843]]
-
 === Description
 
 The `list-transports` subcommand lists the existing transports. This
 subcommand is supported in remote mode only.
 
-[[sthref1844]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1845]]
 
 === Operands
 
@@ -60,11 +52,9 @@ target::
   instance-name;;
     Lists the transports for the specified server instance.
 
-[[sthref1846]]
-
 === Examples
 
-[[GSRFM716]][[sthref1847]]
+[[sthref1847]]
 
 ==== Example 1   Listing Transports
 
@@ -78,8 +68,6 @@ tcp
 Command list-transports executed successfully.
 ----
 
-[[sthref1848]]
-
 === Exit Status
 
 0::
@@ -87,13 +75,11 @@ Command list-transports executed successfully.
 1::
   error in executing the command
 
-[[sthref1849]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-transport.html#create-transport-1[`create-transport`(1)],
-link:delete-transport.html#delete-transport-1[`delete-transport`(1)]
+xref:create-transport.adoc#create-transport[`create-transport`(1)],
+xref:delete-transport.adoc#delete-transport[`delete-transport`(1)]
 
 

@@ -7,13 +7,11 @@ prev=delete-iiop-listener.html
 
 = delete-instance
 
-[[delete-instance-1]][[GSRFM00085]][[delete-instance]]
+[[delete-instance]]
 
 == delete-instance
 
 Deletes a {productName} instance
-
-[[sthref753]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Deletes a {productName} instance
 asadmin [asadmin-options] delete-instance [--help]
 instance-name
 ----
-
-[[sthref754]]
 
 === Description
 
@@ -45,7 +41,7 @@ You may run this subcommand from any host that can contact the DAS.
 The subcommand can delete any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can delete an
 instance that was created by using the
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)]
 subcommand.
 
 The instance that is being deleted must not be running. Otherwise, an
@@ -67,29 +63,23 @@ clusters or unclustered instances refer.
 
 This subcommand is supported in remote mode only.
 
-[[sthref755]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref756]]
 
 === Operands
 
 instance-name::
   The name of the instance to delete.
 
-[[sthref757]]
-
 === Examples
 
-[[GSRFM553]][[sthref758]]
+[[sthref758]]
 
 ==== Example 1   Deleting a {productName} Instance
 
@@ -102,8 +92,6 @@ asadmin> delete-instance pmdsainst
 Command delete-instance executed successfully.
 ----
 
-[[sthref759]]
-
 === Exit Status
 
 0::
@@ -111,20 +99,18 @@ Command delete-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref760]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:setup-ssh.html#setup-ssh-1[`setup-ssh`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)],
-link:validate-dcom.html#validate-dcom-1[`validate-dcom`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)],
+xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)],
+xref:validate-dcom.adoc#validate-dcom[`validate-dcom`(1)]
 
 

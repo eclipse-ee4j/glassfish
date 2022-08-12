@@ -6,21 +6,18 @@ prev=installing.html
 
 = Uninstalling GlassFish
 
-[[GSING00003]][[ghmlt]]
-
-
 [[uninstalling-glassfish]]
 == 2 Uninstalling GlassFish
 
 This chapter describes how to uninstall {productName}.
 
-[[gjxfv]][[GSING00028]][[removing-a-glassfish-server-installation]]
+[[removing-a-glassfish-server-installation]]
 
 === Removing a {productName} Installation
 
 This procedure describes how to uninstall {productName} software that
 was installed using a ZIP file, as described in
-link:installing.html#ghmxb[Installing {productName} From a ZIP File].
+xref:installing.adoc#installing-glassfish-server-from-a-zip-file[Installing {productName} From a ZIP File].
 
 Before You Begin
 
@@ -30,7 +27,7 @@ applications using Java SE files.
 
 To stop domains, use the `asadmin stop-domain` command. For more
 information about stopping a domain, see
-"link:administration-guide/domains.html#GSADG00336[To Stop a Domain]"
+"link:administration-guide/domains.html#to-stop-a-domain[To Stop a Domain]"
 in {productName} Administration Guide.
 
 If orphaned processes remain, identify and terminate the processes as follows:

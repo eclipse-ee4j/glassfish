@@ -7,13 +7,11 @@ prev=delete-profiler.html
 
 = delete-protocol
 
-[[delete-protocol-1]][[GSRFM00103]][[delete-protocol]]
+[[delete-protocol]]
 
 == delete-protocol
 
 Removes a protocol
-
-[[sthref937]]
 
 === Synopsis
 
@@ -24,20 +22,16 @@ asadmin [asadmin-options] delete-protocol [--help]
 protocol-name
 ----
 
-[[sthref938]]
-
 === Description
 
 The `delete-protocol` subcommand removes the specified protocol. This
 subcommand is supported in remote mode only.
 
-[[sthref939]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -56,18 +50,14 @@ asadmin-options::
   standalone-instance-name;;
     Deletes the protocol from the specified standalone server instance.
 
-[[sthref940]]
-
 === Operands
 
 protocol-name::
   The name of the protocol to be deleted.
 
-[[sthref941]]
-
 === Examples
 
-[[GSRFM574]][[sthref942]]
+[[sthref942]]
 
 ==== Example 1   Deleting a Protocol
 
@@ -79,8 +69,6 @@ asadmin> delete-protocol http-1
 Command delete-protocol executed successfully.
 ----
 
-[[sthref943]]
-
 === Exit Status
 
 0::
@@ -88,13 +76,11 @@ Command delete-protocol executed successfully.
 1::
   error in executing the command
 
-[[sthref944]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-protocol.html#create-protocol-1[`create-protocol`(1)],
-link:list-protocols.html#list-protocols-1[`list-protocols`(1)]
+xref:create-protocol.adoc#create-protocol[`create-protocol`(1)],
+xref:list-protocols.adoc#list-protocols[`list-protocols`(1)]
 
 

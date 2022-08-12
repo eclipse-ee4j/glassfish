@@ -7,9 +7,6 @@ prev=ejb.html
 
 = Using Container-Managed Persistence
 
-[[GSDVG00011]][[beajj]]
-
-
 [[using-container-managed-persistence]]
 == 9 Using Container-Managed Persistence
 
@@ -18,14 +15,14 @@ persistence (CMP) works in {productName}.
 
 The following topics are addressed here:
 
-* link:#beajk[{productName} Support for CMP]
-* link:#beajl[CMP Mapping]
-* link:#beajv[Automatic Schema Generation for CMP]
-* link:#beajy[Schema Capture]
-* link:#beakb[Configuring the CMP Resource]
-* link:#beaki[Performance-Related Features]
-* link:#beakc[Configuring Queries for 1.1 Finders]
-* link:#beakm[CMP Restrictions and Optimizations]
+* <<{productName} Support for CMP>>
+* <<CMP Mapping>>
+* <<Automatic Schema Generation for CMP>>
+* <<Schema Capture>>
+* <<Configuring the CMP Resource>>
+* <<Performance-Related Features>>
+* <<Configuring Queries for 1.1 Finders>>
+* <<CMP Restrictions and Optimizations>>
 
 
 [NOTE]
@@ -39,7 +36,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 ====
 
 
-[[beajk]][[GSDVG00150]][[glassfish-server-support-for-cmp]]
+[[glassfish-server-support-for-cmp]]
 
 === {productName} Support for CMP
 
@@ -50,7 +47,7 @@ information on CMP is contained in chapters 10, 11, and 14 of the
 Enterprise JavaBeans Specification, v2.1. This includes the following:
 
 ** Support for commit options B and C for transactions.
-   See link:transaction-service.html#beajh[Commit Options].
+   See xref:transaction-service.adoc#commit-options[Commit Options].
 ** The primary key class must be a subclass of `java.lang.Object`.
    This ensures portability, and is noted because some vendors allow primitive
    types (such as `int`) to be used as the primary key class.
@@ -61,7 +58,7 @@ Enterprise JavaBeans Specification, v2.1. This includes the following:
 ** Support for compound (multi-column) primary keys.
 ** Support for sophisticated custom finder methods.
 ** Standards-based query language (EJB QL).
-** CMP runtime support. See link:#beakb[Configuring the CMP Resource].
+** CMP runtime support. See <<Configuring the CMP Resource>>.
 
 * {productName} performance-related features, including the following:
 ** Version column consistency checking
@@ -69,9 +66,9 @@ Enterprise JavaBeans Specification, v2.1. This includes the following:
 ** Read-Only Beans
 
 +
-For details, see link:#beaki[Performance-Related Features].
+For details, see <<Performance-Related Features>>.
 
-[[beajl]][[GSDVG00151]][[cmp-mapping]]
+[[cmp-mapping]]
 
 === CMP Mapping
 
@@ -80,11 +77,11 @@ mapping CMP fields and CMR fields (relationships) to the database.
 
 The following topics are addressed here:
 
-* link:#beajm[Mapping Capabilities]
-* link:#beajn[The Mapping Deployment Descriptor File]
-* link:#beajo[Mapping Considerations]
+* <<Mapping Capabilities>>
+* <<The Mapping Deployment Descriptor File>>
+* <<Mapping Considerations>>
 
-[[beajm]][[GSDVG00434]][[mapping-capabilities]]
+[[mapping-capabilities]]
 
 ==== Mapping Capabilities
 
@@ -108,7 +105,7 @@ The mapping capabilities provided by the {productName} include:
 * Mapping CMP relationships to foreign keys
 * Mapping tables with overlapping primary and foreign keys
 
-[[beajn]][[GSDVG00435]][[the-mapping-deployment-descriptor-file]]
+[[the-mapping-deployment-descriptor-file]]
 
 ==== The Mapping Deployment Descriptor File
 
@@ -128,7 +125,7 @@ Guide.
 
 The `sun-cmp-mappings.xml` file can be automatically generated and does
 not have to exist prior to deployment. For details, see
-link:#beajx[Generation Options for CMP].
+<<Generation Options for CMP>>.
 
 The `sun-cmp-mappings.xml` file maps CMP fields and CMR fields
 (relationships) to the database. A primary table must be selected for
@@ -162,28 +159,28 @@ are proficient in editing XML.
 
 The mapping information is developed in conjunction with the database
 schema (`.dbschema`) file, which can be automatically captured when you
-deploy the bean (see link:#beajz[Automatic Database Schema Capture]).
+deploy the bean (see <<Automatic Database Schema Capture>>).
 You can manually generate the schema using the `capture-schema` utility
-(link:#beaka[Using the `capture-schema` Utility]).
+(<<Using the `capture-schema` Utility>>).
 
-[[beajo]][[GSDVG00436]][[mapping-considerations]]
+[[mapping-considerations]]
 
 ==== Mapping Considerations
 
 The following topics are addressed here:
 
-* link:#beajp[Join Tables and Relationships]
-* link:#beajq[Automatic Primary Key Generation]
-* link:#beajr[Fixed Length CHAR Primary Keys]
-* link:#beajs[Managed Fields]
-* link:#beajt[BLOB Support]
-* link:#beaju[CLOB Support]
+* <<Join Tables and Relationships>>
+* <<Automatic Primary Key Generation>>
+* <<Fixed Length CHAR Primary Keys>>
+* <<Managed Fields>>
+* <<BLOB Support>>
+* <<CLOB Support>>
 
 The data types used in automatic schema generation are also suggested
 for manual mapping. These data types are described in
-link:#beajw[Supported Data Types for CMP].
+<<Supported Data Types for CMP>>.
 
-[[beajp]][[GSDVG00303]][[join-tables-and-relationships]]
+[[join-tables-and-relationships]]
 
 ===== Join Tables and Relationships
 
@@ -192,7 +189,7 @@ relationships, not just many-to-many relationships. For general
 information about relationships, see section 10.3.7 of the Enterprise
 JavaBeans Specification, v2.1.
 
-[[beajq]][[GSDVG00304]][[automatic-primary-key-generation]]
+[[automatic-primary-key-generation]]
 
 ===== Automatic Primary Key Generation
 
@@ -210,7 +207,7 @@ If the database schema is not created during deployment, the primary key
 column in the mapped table must be of type `NUMERIC` with a precision of
 19 or more, and must not be mapped to any CMP field. The {productName} generates unique values for the primary key column at runtime.
 
-[[beajr]][[GSDVG00305]][[fixed-length-char-primary-keys]]
+[[fixed-length-char-primary-keys]]
 
 ===== Fixed Length CHAR Primary Keys
 
@@ -221,7 +218,7 @@ primary key values. It is not a good practice to use a fixed length
 `CHAR` column as a primary key. Use this feature with schemas that
 cannot be changed, such as a schema inherited from a legacy application.
 
-[[beajs]][[GSDVG00306]][[managed-fields]]
+[[managed-fields]]
 
 ===== Managed Fields
 
@@ -236,11 +233,11 @@ synchronized with the database.
 A managed field can have any `fetched-with` subelement. If the
 `fetched-with` subelement is `<default/>`, the
 `-DAllowManagedFieldsInDefaultFetchGroup` flag must be set to `true`.
-See link:#gemln[Default Fetch Group Flags] and
-"link:application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName}
+See <<Default Fetch Group Flags>> and
+"link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName}
 Application Deployment Guide.
 
-[[beajt]][[GSDVG00307]][[blob-support]]
+[[blob-support]]
 
 ===== BLOB Support
 
@@ -264,9 +261,9 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For automatic mapping, you might need to change the default BLOB column
@@ -290,7 +287,7 @@ example:
 </schema-generator-properties>
 ----
 
-[[beaju]][[GSDVG00308]][[clob-support]]
+[[clob-support]]
 
 ===== CLOB Support
 
@@ -305,9 +302,9 @@ To use BLOB or CLOB data types larger than 4 KB for CMP using the Inet
 Oraxo JDBC Driver for Oracle Databases, you must set the `streamstolob`
 property value to `true`.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For automatic mapping, you might need to change the default CLOB column
@@ -331,7 +328,7 @@ example:
 </schema-generator-properties>
 ----
 
-[[beajv]][[GSDVG00152]][[automatic-schema-generation-for-cmp]]
+[[automatic-schema-generation-for-cmp]]
 
 === Automatic Schema Generation for CMP
 
@@ -345,8 +342,8 @@ performance, security, and so on.
 
 The following topics are addressed here:
 
-* link:#beajw[Supported Data Types for CMP]
-* link:#beajx[Generation Options for CMP]
+* <<Supported Data Types for CMP>>
+* <<Generation Options for CMP>>
 
 
 [NOTE]
@@ -364,7 +361,7 @@ application.
 ====
 
 
-[[beajw]][[GSDVG00437]][[supported-data-types-for-cmp]]
+[[supported-data-types-for-cmp]]
 
 ==== Supported Data Types for CMP
 
@@ -376,8 +373,7 @@ REAL, SMALLINT, TIME, TIMESTAMP, TINYINT, VARCHAR.
 The following table contains the mappings of Java types to JDBC types
 when automatic mapping is used.
 
-[[GSDVG550]][[sthref19]][[fvyaq]]
-
+[[fvyaq]]
 
 Table 9-1 Java Type to JDBC Type Mappings for CMP
 
@@ -430,13 +426,12 @@ type (or a collection of such) can be the type of a CMR field.
 The following table contains the mappings of JDBC types to database
 vendor-specific types when automatic mapping is used. For a list of the
 JDBC drivers currently supported by the {productName}, see the
-link:release-notes.html#GSRLN[{productName} Release Notes]. For
+xref:release-notes.adoc#GSRLN[{productName} Release Notes]. For
 configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
-[[GSDVG551]][[sthref20]][[fvymp]]
-
+[[fvymp]]
 
 Table 9-2 Mappings of JDBC Types to Database Vendor Specific Types for
 CMP
@@ -478,7 +473,7 @@ CMP
 |===
 
 
-[[beajx]][[GSDVG00438]][[generation-options-for-cmp]]
+[[generation-options-for-cmp]]
 
 ==== Generation Options for CMP
 
@@ -496,45 +491,44 @@ control automatic schema generation by the following:
 [NOTE]
 ====
 Before using these options, make sure you have a properly configured CMP
-resource. See link:#beakb[Configuring the CMP Resource].
+resource. See <<Configuring the CMP Resource>>.
 
 For a read-only bean, do not create the database schema during
 deployment. Instead, work with your database administrator to populate
-the data into the tables. See link:ejb.html#beail[Using Read-Only Beans].
+the data into the tables. See xref:ejb.adoc#using-read-only-beans[Using Read-Only Beans].
 
 Automatic schema generation is not supported for beans with version
 column consistency checking. Instead, work with your database
 administrator to create the schema and add the required triggers. See
-link:#beakj[Version Column Consistency Checking].
+<<Version Column Consistency Checking>>.
 ====
 
 
 The following optional data subelements of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file control the automatic creation of
 database tables at deployment. For more information about the
-`cmp-resource` element, see "link:application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
+`cmp-resource` element, see "link:application-deployment-guide/dd-elements.html#cmp-resource[cmp-resource]" in
 {productName} Application Deployment Guide and
-link:#beakb[Configuring the CMP Resource].
+<<Configuring the CMP Resource>>.
 
-[[GSDVG552]][[sthref21]][[fvymo]]
-
+[[fvymo]]
 
 Table 9-3 The `glassfish-ejb-jar.xml` Generation Elements
 
 [width="172%",cols="20%,46%,34%",options="header",]
 |===
 |Element |Default |Description
-|link:application-deployment-guide/dd-elements.html#GSDPG00131[`create-tables-at-deploy`] |`false` |If `true`, causes
+|link:application-deployment-guide/dd-elements.html#create-tables-at-deploy[`create-tables-at-deploy`] |`false` |If `true`, causes
 database tables to be created for beans that are automatically mapped by
 the EJB container. No unique constraints are created. If `false`, does
 not create tables.
 
-|link:application-deployment-guide/dd-elements.html#GSDPG00141[`drop-tables-at-undeploy`] |`false` |If `true`, causes
+|link:application-deployment-guide/dd-elements.html#drop-tables-at-undeploy[`drop-tables-at-undeploy`] |`false` |If `true`, causes
 database tables that were automatically created when the bean(s) were
 last deployed to be dropped when the bean(s) are undeployed. If `false`,
 does not drop tables.
 
-|link:application-deployment-guide/dd-elements.html#GSDPG00133[`database-vendor-name`] |none a|
+|link:application-deployment-guide/dd-elements.html#database-vendor-name[`database-vendor-name`] |none a|
 Specifies the name of the database vendor for which tables are created.
 Allowed values are `javadb`, `db2`, `mssql`, `mysql`, `oracle`,
 `postgresql`, `pointbase`, `derby` (also for CloudScape), and `sybase`,
@@ -546,7 +540,7 @@ by the `jndi-name` subelement of the `cmp-resource` element in the
 the connection cannot be established, or if the value is not recognized,
 SQL-92 compliance is presumed.
 
-|link:application-deployment-guide/dd-elements.html#GSDPG00261[`schema-generator-properties`] |none a|
+|link:application-deployment-guide/dd-elements.html#schema-generator-properties[`schema-generator-properties`] |none a|
 Specifies field-specific column attributes in `property` subelements.
 Each property name is of the following format:
 
@@ -561,7 +555,7 @@ this property specifies that generated table names are unique within
 each {productName} domain. The default is `false`.
 
 For further information and an example, see
-"link:application-deployment-guide/dd-elements.html#GSDPG00261[schema-generator-properties]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#schema-generator-properties[schema-generator-properties]" in {productName} Application Deployment Guide.
 
 |===
 
@@ -569,7 +563,7 @@ For further information and an example, see
 The following options of the `asadmin deploy` or `asadmin deploydir`
 command control the automatic creation of database tables at deployment.
 
-[[GSDVG553]][[sthref22]][[fvymn]]
+[[fvymn]]
 
 
 Table 9-4 The `asadmin deploy` and `asadmin deploydir` Generation
@@ -629,7 +623,7 @@ a warning is written to the server log.
 The following options of the `asadmin undeploy` command control the
 automatic removal of database tables at undeployment.
 
-[[GSDVG554]][[sthref23]][[fvymt]]
+[[fvymt]]
 
 
 Table 9-5 The `asadmin undeploy` Generation Options for CMP
@@ -649,21 +643,21 @@ in `glassfish-ejb-jar.xml` is used.
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
-and `asadmin undeploy` commands, see the link:reference-manual.html#GSRFM[{productName} Reference Manual].
+and `asadmin undeploy` commands, see the xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 When command line and `glassfish-ejb-jar.xml` options are both
 specified, the `asadmin` options take precedence.
 
-[[beajy]][[GSDVG00153]][[schema-capture]]
+[[schema-capture]]
 
 === Schema Capture
 
 The following topics are addressed here:
 
-* link:#beajz[Automatic Database Schema Capture]
-* link:#beaka[Using the `capture-schema` Utility]
+* <<Automatic Database Schema Capture>>
+* <<Using the `capture-schema` Utility>>
 
-[[beajz]][[GSDVG00439]][[automatic-database-schema-capture]]
+[[automatic-database-schema-capture]]
 
 ==== Automatic Database Schema Capture
 
@@ -678,18 +672,17 @@ database, and automatic generation of the schema is performed.
 [NOTE]
 ====
 Before capturing the database schema automatically, make sure you have a
-properly configured CMP resource. See link:#beakb[Configuring the CMP
-Resource].
+properly configured CMP resource. See xref:#configuring-the-cmp-resource[Configuring the CMP Resource].
 ====
 
 
-[[beaka]][[GSDVG00440]][[using-the-capture-schema-utility]]
+[[using-the-capture-schema-utility]]
 
 ==== Using the `capture-schema` Utility
 
 You can use the `capture-schema` command to manually generate the
 database metadata (`.dbschema`) file. For details, see the
-link:reference-manual.html#GSRFM[{productName} Reference Manual].
+xref:reference-manual.adoc#GSRFM[{productName} Reference Manual].
 
 The `capture-schema` utility does not modify the schema in any way. Its
 only purpose is to provide the persistence engine with information about
@@ -713,7 +706,7 @@ make sure table and column names are lower case in the
 ANALYZE ANY TABLE privileges if that user does not own the schema. These
 privileges are granted to the user by the database administrator.
 
-[[beakb]][[GSDVG00154]][[configuring-the-cmp-resource]]
+[[configuring-the-cmp-resource]]
 
 === Configuring the CMP Resource
 
@@ -721,16 +714,16 @@ An EJB module that contains CMP beans requires the JNDI name of a JDBC
 resource in the `jndi-name` subelement of the `cmp-resource` element in
 the `glassfish-ejb-jar.xml` file. Set `PersistenceManagerFactory`
 properties as properties of the `cmp-resource` element in the
-`glassfish-ejb-jar.xml` file. See "link:application-deployment-guide/dd-elements.html#GSDPG00115[cmp-resource]" in
+`glassfish-ejb-jar.xml` file. See "link:application-deployment-guide/dd-elements.html#cmp-resource[cmp-resource]" in
 {productName} Application Deployment Guide.
 
 In the Administration Console, open the Resources component, then select
 JDBC. Click the Help button in the Administration Console for
 information on creating a new JDBC resource.
 
-For a list of the JDBC drivers currently supported by the {productName}, see the link:release-notes.html#GSRLN[{productName} Release
+For a list of the JDBC drivers currently supported by the {productName}, see the xref:release-notes.adoc#GSRLN[{productName} Release
 Notes]. For configurations of supported and other drivers, see
-"link:administration-guide/jdbc.html#GSADG00579[Configuration Specifics for JDBC Drivers]" in
+"link:administration-guide/jdbc.html#configuration-specifics-for-jdbc-drivers[Configuration Specifics for JDBC Drivers]" in
 {productName} Administration Guide.
 
 For example, if the JDBC resource has the JNDI name `jdbc/MyDatabase`,
@@ -743,7 +736,7 @@ set the CMP resource in the `glassfish-ejb-jar.xml` file as follows:
 </cmp-resource>
 ----
 
-[[beaki]][[GSDVG00155]][[performance-related-features]]
+[[performance-related-features]]
 
 === Performance-Related Features
 
@@ -753,10 +746,10 @@ supported only for entity beans with container managed persistence.
 
 The following topics are addressed here:
 
-* link:#beakj[Version Column Consistency Checking]
-* link:#beakk[Relationship Prefetching]
-* link:#beakl[Read-Only Beans]
-* link:#gemln[Default Fetch Group Flags]
+* <<Version Column Consistency Checking>>
+* <<Relationship Prefetching>>
+* <<Read-Only Beans>>
+* <<Default Fetch Group Flags>>
 
 
 [NOTE]
@@ -765,7 +758,7 @@ Use of any of these features results in a non-portable application.
 ====
 
 
-[[beakj]][[GSDVG00441]][[version-column-consistency-checking]]
+[[version-column-consistency-checking]]
 
 ==== Version Column Consistency Checking
 
@@ -776,7 +769,7 @@ state is verified by primary key and version column values at flush for
 custom queries (for dirty instances only) and at commit (for clean and
 dirty instances).
 
-[[fwbei]][[GSDVG00071]][[to-use-version-consistency]]
+[[to-use-version-consistency]]
 
 ===== To Use Version Consistency
 
@@ -788,14 +781,14 @@ specified row.
 4. Specify the version column. +
 This is specified in the `check-version-of-accessed-instances`
 subelement of the `consistency` element in the `sun-cmp-mappings.xml`
-file. See "link:application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
+file. See "link:application-deployment-guide/dd-elements.html#consistency[consistency]" in {productName} Application Deployment Guide.
 5. Map the CMP bean to an existing schema.
 +
 Automatic schema generation is not supported for beans with version
 column consistency checking. Instead, work with your database
 administrator to create the schema and add the required triggers.
 
-[[beakk]][[GSDVG00442]][[relationship-prefetching]]
+[[relationship-prefetching]]
 
 ==== Relationship Prefetching
 
@@ -811,11 +804,12 @@ file. By default, these CMR fields are prefetched whenever
 `findByPrimaryKey` or a custom finder is executed for the entity, or
 when the entity is navigated to from a relationship. (Recursive
 prefetching is not supported, because it does not usually enhance
-performance.) See "link:application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
+performance.) See "link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName} Application Deployment Guide.
 
 To disable prefetching for specific custom finders, use the
 `prefetch-disabled` element in the `glassfish-ejb-jar.xml` file. See
-"link:application-deployment-guide/dd-elements.html#GSDPG00226[prefetch-disabled]" in {productName} Application Deployment Guide.
+"link:application-deployment-guide/dd-elements.html#prefetch-disabled[prefetch-disabled]"
+in {productName} Application Deployment Guide.
 
 Multilevel relationship prefetching is supported for CMP 2.1 entity
 beans. To enable multilevel relationship prefetching, set the following
@@ -825,8 +819,6 @@ property using the `asadmin create-jvm-options` command:
 ----
 asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH=true
 ----
-
-[[beakl]][[GSDVG00443]][[read-only-beans]]
 
 ==== Read-Only Beans
 
@@ -866,9 +858,9 @@ method is invoked.
 
 Read-only beans are best suited for situations where the underlying data
 never changes, or changes infrequently. For further information and
-usage guidelines, see link:ejb.html#beail[Using Read-Only Beans].
+usage guidelines, see xref:ejb.adoc#using-read-only-beans[Using Read-Only Beans].
 
-[[gemln]][[GSDVG00156]][[default-fetch-group-flags]]
+[[default-fetch-group-flags]]
 
 === Default Fetch Group Flags
 
@@ -881,7 +873,7 @@ is loaded into memory. These could be multiple fields mapped to the same
 column in the database table, for example, an instance field and a CMR.
 By default this flag is set to `false`.
 
-For additional information, see "link:application-deployment-guide/dd-elements.html#GSDPG00181[level]" in {productName} Application Deployment Guide.
+For additional information, see "link:application-deployment-guide/dd-elements.html#level[level]" in {productName} Application Deployment Guide.
 
 Setting `-DAllowMediatedWriteInDefaultFetchGroup` specifies how updated
 CMP fields are written back to the database. If the flag is `false`, all
@@ -900,19 +892,19 @@ For example:
 asadmin create-jvm-options -DAllowManagedFieldsInDefaultFetchGroup=true
 ----
 
-[[beakc]][[GSDVG00157]][[configuring-queries-for-1.1-finders]]
+[[GSDVG00157]][[configuring-queries-for-1.1-finders]]
 
 === Configuring Queries for 1.1 Finders
 
 The following topics are addressed here:
 
-* link:#ganjq[About JDOQL Queries]
-* link:#gankm[Query Filter Expression]
-* link:#ganjt[Query Parameters]
-* link:#ganky[Query Variables]
-* link:#ganla[JDOQL Examples]
+* <<About JDOQL Queries>>
+* <<Query Filter Expression>>
+* <<Query Parameters>>
+* <<Query Variables>>
+* <<JDOQL Examples>>
 
-[[ganjq]][[GSDVG00444]][[about-jdoql-queries]]
+[[about-jdoql-queries]]
 
 ==== About JDOQL Queries
 
@@ -957,7 +949,7 @@ The JDO specification, http://jcp.org/en/jsr/detail?id=12[JSR 12]
 description of JDOQL. The following information summarizes the elements
 used to define EJB 1.1 finders.
 
-[[gankm]][[GSDVG00445]][[query-filter-expression]]
+[[query-filter-expression]]
 
 ==== Query Filter Expression
 
@@ -1037,7 +1029,7 @@ The rules for promotion follow the Java rules extended by BigDecimal,
 BigInteger, and numeric wrapper classes. See the numeric promotions of
 the Java language specification.
 
-[[ganjt]][[GSDVG00446]][[query-parameters]]
+[[query-parameters]]
 
 ==== Query Parameters
 
@@ -1045,20 +1037,20 @@ The parameter declaration is a String containing one or more parameter
 type declarations separated by commas. This follows the Java syntax for
 method signatures.
 
-[[ganky]][[GSDVG00447]][[query-variables]]
+[[query-variables]]
 
 ==== Query Variables
 
 The type declarations follow the Java syntax for local variable
 declarations.
 
-[[ganla]][[GSDVG00448]][[jdoql-examples]]
+[[jdoql-examples]]
 
 ==== JDOQL Examples
 
 This section provides a few query examples.
 
-[[gankk]][[GSDVG00309]][[example-1]]
+[[example-1]]
 
 ===== Example 1
 
@@ -1081,7 +1073,7 @@ this:
 </finder>
 ----
 
-[[ganjz]][[GSDVG00310]][[example-2]]
+[[example-2]]
 
 ===== Example 2
 
@@ -1110,7 +1102,7 @@ this:
 </finder>
 ----
 
-[[gankz]][[GSDVG00311]][[example-3]]
+[[example-3]]
 
 ===== Example 3
 
@@ -1150,7 +1142,7 @@ this:
 </finder>
 ----
 
-[[beakm]][[GSDVG00158]][[cmp-restrictions-and-optimizations]]
+[[cmp-restrictions-and-optimizations]]
 
 === CMP Restrictions and Optimizations
 
@@ -1159,18 +1151,18 @@ pertain to using CMP.
 
 The following topics are addressed here:
 
-* link:#gdtfj[Disabling ORDER BY Validation]
-* link:#geprt[Setting the Heap Size on DB2]
-* link:#beakn[Eager Loading of Field State]
-* link:#beako[Restrictions on Remote Interfaces]
-* link:#gcnto[PostgreSQL Case Insensitivity]
-* link:#beakr[No Support for `lock-when-loaded` on Sybase]
-* link:#beakp[Sybase Finder Limitation]
-* link:#beakq[Date and Time Fields]
-* link:#beaks[Set `RECURSIVE_TRIGGERS` to `false` on MSSQL]
-* link:#gbhbr[MySQL Database Restrictions]
+* <<Disabling ORDER BY Validation>>
+* <<Setting the Heap Size on DB2>>
+* <<Eager Loading of Field State>>
+* <<Restrictions on Remote Interfaces>>
+* <<PostgreSQL Case Insensitivity>>
+* <<No Support for `lock-when-loaded` on Sybase>>
+* <<Sybase Finder Limitation>>
+* <<Date and Time Fields>>
+* <<set-recursive_triggers-to-false-on-mssql, Set `RECURSIVE_TRIGGERS` to `false` on MSSQL>>
+* <<MySQL Database Restrictions>>
 
-[[gdtfj]][[GSDVG00449]][[disabling-order-by-validation]]
+[[disabling-order-by-validation]]
 
 ==== Disabling ORDER BY Validation
 
@@ -1195,7 +1187,7 @@ asadmin create-jvm-options
 The `DISABLE_ORDERBY_VALIDATION` option is set to `false` by default.
 Setting it to `true` results in a non-portable module or application.
 
-[[geprt]][[GSDVG00450]][[setting-the-heap-size-on-db2]]
+[[setting-the-heap-size-on-db2]]
 
 ==== Setting the Heap Size on DB2
 
@@ -1204,7 +1196,7 @@ heap size. If you are using the Oracle or DataDirect database driver,
 set this parameter to at least `2048` for CMP. For more information, see
 `http://publib.boulder.ibm.com/infocenter/db2luw/v8/index.jsp?topic=/com.ibm.db2.udb.doc/opt/tsbp2024.html`.
 
-[[beakn]][[GSDVG00451]][[eager-loading-of-field-state]]
+[[eager-loading-of-field-state]]
 
 ==== Eager Loading of Field State
 
@@ -1215,9 +1207,9 @@ optimal for entity objects with large state if most business methods
 require access to only parts of the state.
 
 Use the `fetched-with` element in `sun-cmp-mappings.xml` for fields that
-are used infrequently. See "link:application-deployment-guide/dd-elements.html#GSDPG00153[fetched-with]" in {productName} Application Deployment Guide.
+are used infrequently. See "link:application-deployment-guide/dd-elements.html#fetched-with[fetched-with]" in {productName} Application Deployment Guide.
 
-[[beako]][[GSDVG00452]][[restrictions-on-remote-interfaces]]
+[[restrictions-on-remote-interfaces]]
 
 ==== Restrictions on Remote Interfaces
 
@@ -1239,7 +1231,7 @@ through the remote interface or remote home interface of the bean.
 Dependent value classes can be exposed in the remote interface or remote
 home interface, and can be included in the client EJB JAR file.
 
-[[gcnto]][[GSDVG00453]][[postgresql-case-insensitivity]]
+[[postgresql-case-insensitivity]]
 
 ==== PostgreSQL Case Insensitivity
 
@@ -1253,7 +1245,7 @@ quoted, which makes these names case insensitive.
 make sure table and column names are lower case in the
 `sun-cmp-mappings.xml` file.
 
-[[beakr]][[GSDVG00454]][[no-support-for-lock-when-loaded-on-sybase]]
+[[no-support-for-lock-when-loaded-on-sybase]]
 
 ==== No Support for `lock-when-loaded` on Sybase
 
@@ -1262,9 +1254,7 @@ implemented by placing update locks on the data corresponding to a bean
 when the data is loaded from the database. There is no suitable
 mechanism available on Sybase databases to implement this feature.
 Therefore, the `lock-when-loaded` consistency level is not supported on
-Sybase databases. See "link:application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in {productName} Application Deployment Guide.
-
-[[beakp]][[GSDVG00455]][[sybase-finder-limitation]]
+Sybase databases. See "link:application-deployment-guide/dd-elements.html#consistency[consistency]" in {productName} Application Deployment Guide.
 
 ==== Sybase Finder Limitation
 
@@ -1282,7 +1272,7 @@ com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype
 To avoid this error, make sure the finder method input is less than 255
 characters.
 
-[[beakq]][[GSDVG00456]][[date-and-time-fields]]
+[[date-and-time-fields]]
 
 ==== Date and Time Fields
 
@@ -1319,7 +1309,7 @@ For automatic mapping to an Oracle database, fields of type
 Oracle's DATE data type. Fields of type `java.sql.Timestamp` are mapped
 to Oracle's `TIMESTAMP(9)` data type.
 
-[[beaks]][[GSDVG00457]][[set-recursive_triggers-to-false-on-mssql]]
+[[set-recursive_triggers-to-false-on-mssql]]
 
 ==== Set `RECURSIVE_TRIGGERS` to `false` on MSSQL
 
@@ -1342,8 +1332,6 @@ You can test this property as follows:
 SELECT DATABASEPROPERTYEX('database-name', 'IsRecursiveTriggersEnabled')
 go
 ----
-
-[[gbhbr]][[GSDVG00458]][[mysql-database-restrictions]]
 
 ==== MySQL Database Restrictions
 

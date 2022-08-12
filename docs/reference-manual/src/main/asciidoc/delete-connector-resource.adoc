@@ -7,13 +7,11 @@ prev=delete-connector-connection-pool.html
 
 = delete-connector-resource
 
-[[delete-connector-resource-1]][[GSRFM00071]][[delete-connector-resource]]
+[[delete-connector-resource]]
 
 == delete-connector-resource
 
 Removes the connector resource with the specified JNDI name
-
-[[sthref633]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] delete-connector-resource [--help]
 [--target target] jndi_name
 ----
 
-[[sthref634]]
-
 === Description
 
 The `delete-connector-resource` subcommand removes the connector
@@ -32,13 +28,11 @@ resource with the specified JNDI name.
 
 This subcommand is supported in remote mode only.
 
-[[sthref635]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -68,18 +62,14 @@ deletion.
   instance_name;;
     Deletes the connector resource from a specified server instance.
 
-[[sthref636]]
-
 === Operands
 
 jndi_name::
   The JNDI name of this connector resource.
 
-[[sthref637]]
-
 === Examples
 
-[[GSRFM538]][[sthref638]]
+[[sthref638]]
 
 ==== Example 1   Deleting a Connector Resource
 
@@ -91,7 +81,7 @@ asadmin> delete-connector-resource jms/qConnFactory
 Command delete-connector-resource executed successfully
 ----
 
-[[GSRFM539]][[sthref639]]
+[[sthref639]]
 
 ==== Example 2   Using the delete-connector-resource subcommand
 
@@ -105,8 +95,6 @@ Command delete-connector-resource executed successfully
 
 Where `jms/qConnFactory` is the connector resource that is removed.
 
-[[sthref640]]
-
 === Exit Status
 
 0::
@@ -114,13 +102,11 @@ Where `jms/qConnFactory` is the connector resource that is removed.
 1::
   error in executing the subcommand
 
-[[sthref641]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-connector-resource.html#create-connector-resource-1[`create-connector-resource`(1)],
-link:list-connector-resources.html#list-connector-resources-1[`list-connector-resources`(1)]
+xref:create-connector-resource.adoc#create-connector-resource[`create-connector-resource`(1)],
+xref:list-connector-resources.adoc#list-connector-resources[`list-connector-resources`(1)]
 
 

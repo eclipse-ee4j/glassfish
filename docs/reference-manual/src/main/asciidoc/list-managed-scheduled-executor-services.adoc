@@ -7,13 +7,11 @@ prev=list-managed-executor-services.html
 
 = list-managed-scheduled-executor-services
 
-[[list-managed-scheduled-executor-services-1]][[GSRFM873]][[list-managed-scheduled-executor-services]]
+[[list-managed-scheduled-executor-services]]
 
 == list-managed-scheduled-executor-services
 
 Lists managed scheduled executor service resources
-
-[[sthref1661]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-managed-scheduled-executor-services [--help]
 [target]
 ----
 
-[[sthref1662]]
-
 === Description
 
 The `list-managed-scheduled-executor-services` subcommand lists managed
@@ -32,18 +28,14 @@ scheduled executor service resources.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1663]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1664]]
 
 === Operands
 
@@ -62,11 +54,9 @@ target::
   instance-name;;
     Lists the resources on a specified server instance.
 
-[[sthref1665]]
-
 === Examples
 
-[[GSRFM874]][[sthref1666]]
+[[sthref1666]]
 
 ==== Example 1   Listing Managed Scheduled Executor Service Resources
 
@@ -82,8 +72,6 @@ concurrent/myScheduledExecutor2
 Command list-managed-scheduled-executor-services executed successfully.
 ----
 
-[[sthref1667]]
-
 === Exit Status
 
 0::
@@ -91,13 +79,11 @@ Command list-managed-scheduled-executor-services executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1668]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-managed-scheduled-executor-service.html#create-managed-scheduled-executor-service-1[`create-managed-scheduled-executor-service`(1)],
-link:delete-managed-scheduled-executor-service.html#delete-managed-scheduled-executor-service-1[`delete-managed-scheduled-executor-service`(1)]
+xref:create-managed-scheduled-executor-service.adoc#create-managed-scheduled-executor-service[`create-managed-scheduled-executor-service`(1)],
+xref:delete-managed-scheduled-executor-service.adoc#delete-managed-scheduled-executor-service[`delete-managed-scheduled-executor-service`(1)]
 
 

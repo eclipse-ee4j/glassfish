@@ -5,9 +5,6 @@ prev=domains.adoc
 
 = Administering the Virtual Machine for the Java Platform
 
-[[GSADG00007]][[ablwj]]
-
-
 [[administering-the-virtual-machine-for-the-java-platform]]
 == 4 Administering the Virtual Machine for the Java Platform
 
@@ -18,13 +15,13 @@ for the Java platform (Java Virtual Machine) or JVM machine) in the
 
 The following topics are addressed here:
 
-* link:#gepzd[Administering JVM Options]
-* link:#ggnde[Administering the Profiler]
+* <<Administering JVM Options>>
+* <<Administering the Profiler>>
 
 Instructions for accomplishing these tasks by using the Administration
 Console are contained in the Administration Console online help.
 
-[[gepzd]][[GSADG00544]][[administering-jvm-options]]
+[[administering-jvm-options]]
 
 === Administering JVM Options
 
@@ -37,12 +34,12 @@ JVM settings are part of an {productName} configuration.
 
 The following topics are addressed here:
 
-* link:#ggnes[To Create JVM Options]
-* link:#ggnce[To List JVM Options]
-* link:#ggnfi[To Delete JVM Options]
-* link:#ggnbu[To Generate a JVM Report]
+* <<To Create JVM Options>>
+* <<To List JVM Options>>
+* <<To Delete JVM Options>>
+* <<To Generate a JVM Report>>
 
-[[ggnes]][[GSADG00359]][[to-create-jvm-options]]
+[[to-create-jvm-options]]
 
 ==== To Create JVM Options
 
@@ -53,7 +50,7 @@ options are used to record the settings that initiate the profiler.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create JVM options by using the
-link:reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand.
+link:reference-manual/create-jvm-options.html#create-jvm-options[`create-jvm-options`] subcommand.
 +
 To create more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon (:), use the
@@ -62,9 +59,9 @@ backslash (\) to offset the colon delimiter.
 Information about properties for the subcommand is included in this help
 page.
 3. To apply your changes, restart {productName}. See
-link:domains.html#ginqj[To Restart a Domain].
+xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00154]][[ghqwm]]
+[[ghqwm]]
 Example 4-1 Creating JVM Options
 
 This example sets multiple Java system properties.
@@ -79,14 +76,12 @@ created 4 option(s)
 Command create-jvm-options executed successfully.
 ----
 
-[[GSADG847]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-jvm-options` at the command line.
 
-[[ggnce]][[GSADG00360]][[to-list-jvm-options]]
+[[to-list-jvm-options]]
 
 ==== To List JVM Options
 
@@ -94,10 +89,10 @@ Use the `list-jvm-options` subcommand in remote mode to list the
 existing JVM options.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List JVM options by using the link:reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
+2. List JVM options by using the link:reference-manual/list-jvm-options.html#list-jvm-options[`list-jvm-options`]
 subcommand.
 
-[[GSADG00155]][[ggphx]]
+[[ggphx]]
 Example 4-2 Listing JVM Options
 
 This example lists all JVM options.
@@ -124,14 +119,12 @@ parator}${com.sun.aas.derbyRoot}/lib
 Command list-jvm-options executed successfully.
 ----
 
-[[GSADG848]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-jvm-options` at the command line.
 
-[[ggnfi]][[GSADG00361]][[to-delete-jvm-options]]
+[[to-delete-jvm-options]]
 
 ==== To Delete JVM Options
 
@@ -140,19 +133,19 @@ options from the Java configuration or profiler elements of the
 `domain.xml` file.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. List JVM options by using the link:reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
+2. List JVM options by using the link:reference-manual/list-jvm-options.html#list-jvm-options[`list-jvm-options`]
 subcommand.
 3. If necessary, notify users that the JVM option is being deleted.
 4. Delete JVM options by using the
-link:reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`] subcommand.
+link:reference-manual/delete-jvm-options.html#delete-jvm-options[`delete-jvm-options`] subcommand.
 +
 To remove more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon, use the backslash
 (\) to offset the colon delimiter.
 5. To apply your changes, restart {productName}. See
-link:domains.html#ginqj[To Restart a Domain].
+xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00156]][[ggpgz]]
+[[ggpgz]]
 Example 4-3 Deleting a JVM Option
 
 This example removes a single JVM option.
@@ -165,7 +158,7 @@ deleted 1 option(s)
 Command delete-jvm-options executed successfully.
 ----
 
-[[GSADG00157]][[ggpkr]]
+[[ggpkr]]
 Example 4-4 Deleting Multiple JVM Options
 
 This example removes multiple JVM options.
@@ -177,14 +170,12 @@ deleted 2 option(s)
 Command delete-jvm-options executed successfully.
 ----
 
-[[GSADG849]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-jvm-options` at the command line.
 
-[[ggnbu]][[GSADG00362]][[to-generate-a-jvm-report]]
+[[to-generate-a-jvm-report]]
 
 ==== To Generate a JVM Report
 
@@ -196,9 +187,9 @@ reports: summary (default), class, thread, log.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Generate the report by using the
-link:reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`] subcommand.
+link:reference-manual/generate-jvm-report.html#generate-jvm-report[`generate-jvm-report`] subcommand.
 
-[[GSADG00158]][[ghhkr]]
+[[ghhkr]]
 Example 4-5 Generating a JVM Report
 
 This example displays summary information about the threads, classes,
@@ -227,14 +218,12 @@ glassfish\modules\web
 Command generate-jvm-report executed successfully.
 ----
 
-[[GSADG850]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help generate-jvm-report` at the command line.
 
-[[ggnde]][[GSADG00545]][[administering-the-profiler]]
+[[administering-the-profiler]]
 
 === Administering the Profiler
 
@@ -242,10 +231,10 @@ A profiler generates information used to analyze server performance.
 
 The following topics are addressed here:
 
-* link:#ggneb[To Create a Profiler]
-* link:#ggnem[To Delete a Profiler]
+* <<To Create a Profiler>>
+* <<To Delete a Profiler>>
 
-[[ggneb]][[GSADG00363]][[to-create-a-profiler]]
+[[to-create-a-profiler]]
 
 ==== To Create a Profiler
 
@@ -260,16 +249,16 @@ an error message that directs you to delete the existing profiler before
 creating a new one.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Create a profiler by using the link:reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]
+2. Create a profiler by using the link:reference-manual/create-profiler.html#create-profiler[`create-profiler`]
 subcommand.
 +
 Information about properties for the subcommand is included in this help
 page.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00159]][[ggpla]]
+[[ggpla]]
 Example 4-6 Creating a Profiler
 
 This example creates a profiler named `sample_profiler`.
@@ -281,14 +270,12 @@ asadmin> create-profiler --classpath=/home/appserver/ --nativelibrarypath=/u/hom
 Command create-profiler executed successfully.
 ----
 
-[[GSADG851]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-profiler` at the command line.
 
-[[ggnem]][[GSADG00365]][[to-delete-a-profiler]]
+[[to-delete-a-profiler]]
 
 ==== To Delete a Profiler
 
@@ -297,13 +284,13 @@ profiler element from the Java configuration. You can then create a new
 profiler.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
-2. Delete the profiler by using the link:reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]
+2. Delete the profiler by using the link:reference-manual/delete-profiler.html#delete-profiler[`delete-profiler`]
 subcommand.
 3. To apply your changes, restart {productName}.
 +
-See link:domains.html#ginqj[To Restart a Domain].
+See xref:domains.adoc#to-restart-a-domain[To Restart a Domain].
 
-[[GSADG00161]][[ggpkc]]
+[[ggpkc]]
 Example 4-7 Deleting a Profiler
 
 This example deletes the profiler named `sample_profiler`.
@@ -313,8 +300,6 @@ This example deletes the profiler named `sample_profiler`.
 asadmin> delete-profiler sample_profiler
 Command delete-profiler executed successfully.
 ----
-
-[[GSADG852]]
 
 See Also
 

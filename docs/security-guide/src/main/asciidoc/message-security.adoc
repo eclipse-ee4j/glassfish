@@ -7,9 +7,6 @@ prev=user-security.html
 
 = Administering Message Security
 
-[[GSSCG00037]][[ablrk]]
-
-
 [[administering-message-security]]
 == 3 Administering Message Security
 
@@ -24,21 +21,21 @@ Profile of {productName}, not in the Web Profile.
 
 The following topics are addressed here:
 
-* link:#ablrn[About Message Security in {productName}]
-* link:#giood[Enabling Default Message Security Providers for Web Services]
-* link:#giouf[Configuring Message Protection Policies]
-* link:#giosl[Administering Non-default Message Security Providers]
-* link:#gdhgg[Enabling Message Security for Application Clients]
-* link:#gglrb[Additional Information About Message Security]
+* xref:#about-message-security-in-glassfish-server[About Message Security in {productName}]
+* xref:#enabling-default-message-security-providers-for-web-services[Enabling Default Message Security Providers for Web Services]
+* xref:#configuring-message-protection-policies[Configuring Message Protection Policies]
+* xref:#administering-non-default-message-security-providers[Administering Non-default Message Security Providers]
+* xref:#enabling-message-security-for-application-clients[Enabling Message Security for Application Clients]
+* xref:#additional-information-about-message-security[Additional Information About Message Security]
 
 Some of the material in this chapter assumes a basic understanding of
 security and web services concepts. For more information about security,
-see link:system-security.html#ggktf[About System Security in {productName}].
+see xref:system-security.adoc#about-system-security-in-glassfish-server[About System Security in {productName}].
 
 Instructions for accomplishing the tasks in this chapter by using the
 Administration Console are contained in the Administration Console online help.
 
-[[ablrn]][[GSSCG00153]][[about-message-security-in-glassfish-server]]
+[[about-message-security-in-glassfish-server]]
 
 === About Message Security in {productName}
 
@@ -61,19 +58,19 @@ references declared by client applications.
 Message-level security can be configured for the entire {productName}
 or for specific applications or methods. Configuring message security at
 the application level is discussed in the
-link:application-development-guide.html#GSDVG[
+xref:application-development-guide.adoc#GSDVG[
 {productName} Application Development Guide].
 
 The following topics are addressed here:
 
-* link:#ablrs[Security Tokens and Security Mechanisms]
-* link:#ablrx[Authentication Providers]
-* link:#ablrw[Message Protection Policies]
-* link:#ablrz[Application-Specific Web Services Security]
-* link:#gioom[Message Security Administration]
-* link:#ablsa[Sample Application for Web Services]
+* xref:#security-tokens-and-security-mechanisms[Security Tokens and Security Mechanisms]
+* xref:#authentication-providers[Authentication Providers]
+* xref:#message-protection-policies[Message Protection Policies]
+* xref:#application-specific-web-services-security[Application-Specific Web Services Security]
+* xref:#message-security-administration[Message Security Administration]
+* xref:#sample-application-for-web-services[Sample Application for Web Services]
 
-[[ablrs]][[GSSCG00218]][[security-tokens-and-security-mechanisms]]
+[[security-tokens-and-security-mechanisms]]
 
 ==== Security Tokens and Security Mechanisms
 
@@ -117,7 +114,7 @@ identity of the parties who are authorized to read a message.
 When using encryption, a Java Cryptography Extension (JCE) provider that
 supports encryption must be installed.
 
-[[ablrx]][[GSSCG00219]][[authentication-providers]]
+[[authentication-providers]]
 
 ==== Authentication Providers
 
@@ -164,7 +161,7 @@ The default server provider is used to identify the server—side provider
 to be invoked for any application for which a specific server provider
 has not been bound.
 
-[[ablrw]][[GSSCG00220]][[message-protection-policies]]
+[[message-protection-policies]]
 
 ==== Message Protection Policies
 
@@ -202,9 +199,9 @@ situation where message protection policies are defined, the request and
 response message protection policies of the client must be equivalent t)
 the request and response message protection policies of the server. For
 more information about defining application-specific message protection
-policies, see "link:application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in {productName} Application Development Guide.
+policies, see "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]" in {productName} Application Development Guide.
 
-[[ablrz]][[GSSCG00221]][[application-specific-web-services-security]]
+[[application-specific-web-services-security]]
 
 ==== Application-Specific Web Services Security
 
@@ -218,9 +215,9 @@ that they apply to a specific port or method of the corresponding
 endpoint or referenced service.
 
 For information about defining application-specific message protection
-policies, see "link:application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]" in {productName} Application Development Guide.
+policies, see "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]" in {productName} Application Development Guide.
 
-[[gioom]][[GSSCG00222]][[message-security-administration]]
+[[message-security-administration]]
 
 ==== Message Security Administration
 
@@ -245,12 +242,12 @@ message protection policies
 Analogous administrative operations can be performed on the SOAP message
 layer security configuration of the application client container. If you
 want web services security to protect all web services applications
-deployed on {productName}. See link:#gdhgg[Enabling Message Security
+deployed on {productName}. See xref:#enabling-message-security-for-application-clients[Enabling Message Security
 for Application Clients].
 
 By default, message layer security is disabled on {productName}. To
 configure message layer security for the {productName} see
-link:#giood[Enabling Default Message Security Providers for Web
+xref:#enabling-default-message-security-providers-for-web-services[Enabling Default Message Security Providers for Web
 Services].
 
 In most cases, you must restart {productName} after performing
@@ -259,7 +256,7 @@ the administrative change to be applied to applications that were
 already deployed on {productName} at the time the operation was
 performed.
 
-[[giose]][[GSSCG00199]][[message-security-tasks]]
+[[message-security-tasks]]
 
 ===== Message Security Tasks
 
@@ -277,7 +274,7 @@ When using a username/password token, an appropriate realm must be
 4. Enabling the {productName} default providers
 5. Configuring new message security providers
 
-[[ablro]][[GSSCG00200]][[message-security-roles]]
+[[message-security-roles]]
 
 ===== Message Security Roles
 
@@ -286,7 +283,7 @@ expected to take primary responsibility for configuring message
 security. In some situations, the application developer might also
 contribute.
 
-[[ablrp]][[GSSCG00057]][[system-administrator]]
+[[system-administrator]]
 
 System Administrator
 
@@ -299,7 +296,7 @@ security tasks:
 * Turning on message security
 * (If needed) Installing the samples server
 
-[[ablrq]][[GSSCG00058]][[application-deployer]]
+[[application-deployer]]
 
 Application Deployer
 
@@ -313,7 +310,7 @@ not already been specified by the developer/assembler.
 application-specific message protection policies information
 (message-security-binding elements) to web service endpoint and service references.
 
-[[ablrr]][[GSSCG00059]][[application-developerassembler]]
+[[application-developerassembler]]
 
 Application Developer/Assembler
 
@@ -333,7 +330,7 @@ provider or protection policy bound to the application must be different
 from that bound to the container.
 * Turning on message security if authorized to do so by the administrator
 
-[[ablsa]][[GSSCG00223]][[sample-application-for-web-services]]
+[[sample-application-for-web-services]]
 
 ==== Sample Application for Web Services
 
@@ -350,18 +347,18 @@ services application. The instructions which accompany the sample
 describe how to enable the WS-Security functionality of {productName}
 such that it is used to secure the `xms` application. The sample also
 demonstrates the binding of WS-Security functionality directly to the
-application as described in link:#ablrz[Application-Specific Web
+application as described in xref:#application-specific-web-services-security[Application-Specific Web
 Services Security] application.
 
 For information about compiling, packaging, and running the `xms` sample
-application, "link:application-development-guide/securing-apps.html#GSDVG00006[
+application, "link:application-development-guide/securing-apps.html#securing-applications[
 Securing Applications]" in
 {productName} Application Development Guide.
 
 The `xms` sample application is installed in the following directory:
 as-install``/samples/webservices/security/ejb/apps/xms/``
 
-[[giood]][[GSSCG00154]][[enabling-default-message-security-providers-for-web-services]]
+[[enabling-default-message-security-providers-for-web-services]]
 
 === Enabling Default Message Security Providers for Web Services
 
@@ -372,10 +369,10 @@ is enabled.
 
 The following topics are addressed here:
 
-* link:#giork[To Enable a Default Server Provider]
-* link:#giort[To Enable a Default Client Provider]
+* xref:#to-enable-a-default-server-provider[To Enable a Default Server Provider]
+* xref:#to-enable-a-default-client-provider[To Enable a Default Client Provider]
 
-[[giork]][[GSSCG00123]][[to-enable-a-default-server-provider]]
+[[to-enable-a-default-server-provider]]
 
 ==== To Enable a Default Server Provider
 
@@ -386,7 +383,7 @@ security, you also need to enable providers to be used by clients of the
 web services deployed in {productName}.
 
 1. Specify the default server provider by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 +
 Use the following syntax:
 +
@@ -399,9 +396,9 @@ default_provider=ServerProvider
 2. To apply your changes to applications that are already running,
 restart {productName}.
 +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[giort]][[GSSCG00124]][[to-enable-a-default-client-provider]]
+[[to-enable-a-default-client-provider]]
 
 ==== To Enable a Default Client Provider
 
@@ -412,7 +409,7 @@ that any services invoked from endpoints deployed in {productName}
 are compatibly configured for message layer security.
 
 1. Specify the default client provider by using the
-link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+link:reference-manual/set.html#set[`set`] subcommand.
 +
 Use the following syntax:
 +
@@ -425,9 +422,9 @@ default_client_provider=ClientProvider
 2. To apply your changes to applications that are already running,
 restart {productName}.
 +
-See "link:administration-guide/domains.html#GSADG00337[To Restart a Domain]" in {productName} Administration Guide.
+See "link:administration-guide/domains.html#to-restart-a-domain[To Restart a Domain]" in {productName} Administration Guide.
 
-[[giouf]][[GSSCG00155]][[configuring-message-protection-policies]]
+[[configuring-message-protection-policies]]
 
 === Configuring Message Protection Policies
 
@@ -440,13 +437,13 @@ messages.
 
 The following topics are addressed here:
 
-* link:#giraj[Message Protection Policy Mapping]
-* link:#gioqu[To Configure the Message Protection Policies for a
+* xref:#message-protection-policy-mapping[Message Protection Policy Mapping]
+* xref:#to-configure-the-message-protection-policies-for-a-provider[To Configure the Message Protection Policies for a
 Provider]
-* link:#ablsl[Setting the Request and Response Policy for the
+* xref:#setting-the-request-and-response-policy-for-the-application-client-configuration[Setting the Request and Response Policy for the
 Application Client Configuration]
 
-[[giraj]][[GSSCG00224]][[message-protection-policy-mapping]]
+[[message-protection-policy-mapping]]
 
 ==== Message Protection Policy Mapping
 
@@ -454,7 +451,7 @@ The following table shows message protection policy configurations and
 the resulting message security operations performed by the WS-Security
 SOAP message security providers for that configuration.
 
-[[sthref30]][[fxjcu]]
+[[fxjcu]]
 
 Table 3-1 Message Protection Policy Mapping to WS-Security SOAP Operations
 
@@ -513,7 +510,7 @@ body. The key is encrypted in the public key of the recipient.
 |===
 
 
-[[gioqu]][[GSSCG00125]][[to-configure-the-message-protection-policies-for-a-provider]]
+[[to-configure-the-message-protection-policies-for-a-provider]]
 
 ==== To Configure the Message Protection Policies for a Provider
 
@@ -521,14 +518,14 @@ Typically, you would not reconfigure a provider. However, if needed for
 your situation, you can modify a provider's message protection policies
 by changing provider type, implementation class, and provider-specific
 configuration properties. To understand the results of different
-combinations, see link:#fxjcu[Table 3-1].
+combinations, see xref:#fxjcu[Table 3-1].
 
-Use the link:reference-manual/set.html#GSRFM00226[`set`] subcommand to set the response policy,
+Use the link:reference-manual/set.html#set[`set`] subcommand to set the response policy,
 then replace the word `request` in the following commands with the word
 `response`.
 
 1. Add a request policy to the client and set the authentication source
-by using the link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+by using the link:reference-manual/set.html#set[`set`] subcommand.
 +
 For example:
 +
@@ -568,7 +565,7 @@ asadmin> set server-config.security-service.message-security-config.SOAP.
 provider-config.ServerProvider.request-policy.auth_recipient=[before-content | after-content]
 ----
 
-[[ablsl]][[GSSCG00225]][[setting-the-request-and-response-policy-for-the-application-client-configuration]]
+[[setting-the-request-and-response-policy-for-the-application-client-configuration]]
 
 ==== Setting the Request and Response Policy for the Application Client Configuration
 
@@ -587,10 +584,10 @@ message binding.
 
 To set the request policy for the application client configuration,
 modify the {productName}-specific configuration for the application
-client container as described in link:#gdhgg[Enabling Message Security
+client container as described in xref:#enabling-message-security-for-application-clients[Enabling Message Security
 for Application Clients].
 
-[[GSSCG00088]][[gipxo]]
+[[gipxo]]
 Example 3-1 Message Security Policy Setting for Application Clients
 
 In the application client configuration file, the `request-policy` and
@@ -624,7 +621,7 @@ Do not change the additional code.)
 Valid values for `auth-source` include `sender` and `content`. Valid
 values for `auth-recipient` include `before-content` and
 `after-content`. A table describing the results of various combinations
-of these values can be found in link:#giouf[Configuring Message
+of these values can be found in xref:#configuring-message-protection-policies[Configuring Message
 Protection Policies].
 
 To not specify a request or response policy, leave the element blank,
@@ -635,20 +632,20 @@ for example:
 <response-policy/>
 ----
 
-[[giosl]][[GSSCG00156]][[administering-non-default-message-security-providers]]
+[[administering-non-default-message-security-providers]]
 
 === Administering Non-default Message Security Providers
 
 The following topics are addressed here:
 
-* link:#giory[To Create a Message Security Provider]
-* link:#giotv[To List Message Security Providers]
-* link:#giwkd[To Update a Message Security Provider]
-* link:#giorr[To Delete a Message Security Provider]
-* link:#gkxru[To Configure a Servlet Layer Server Authentication Module
+* xref:#to-create-a-message-security-provider[To Create a Message Security Provider]
+* xref:#to-list-message-security-providers[To List Message Security Providers]
+* xref:#to-update-a-message-security-provider[To Update a Message Security Provider]
+* xref:#to-delete-a-message-security-provider[To Delete a Message Security Provider]
+* xref:#to-configure-a-servlet-layer-server-authentication-module-sam[To Configure a Servlet Layer Server Authentication Module
 (SAM)]
 
-[[giory]][[GSSCG00126]][[to-create-a-message-security-provider]]
+[[to-create-a-message-security-provider]]
 
 ==== To Create a Message Security Provider
 
@@ -659,19 +656,19 @@ created under it.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the message security provider by using the
-link:reference-manual/create-message-security-provider.html#GSRFM00045[`create-message-security-provider`] subcommand.
+link:reference-manual/create-message-security-provider.html#create-message-security-provider[`create-message-security-provider`] subcommand.
 +
 Information about properties for this subcommand is included in the help
 page.
 3. If needed, restart the server.
 +
 Some properties require server restart. See
-"link:administration-guide/overview.html#GSADG00628[Configuration Changes That Require Restart]" in
+"link:administration-guide/overview.html#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
 {productName} Administration Guide. If your
-server needs to be restarted, see "link:administration-guide/domains.html#GSADG00337[To Restart a
+server needs to be restarted, see "link:administration-guide/domains.html#to-restart-a-domain[To Restart a
 Domain]" in {productName} Administration Guide.
 
-[[GSSCG00089]][[giosd]]
+[[giosd]]
 Example 3-2 Creating a Message Security Provider
 
 This example creates the new message security provider
@@ -685,15 +682,12 @@ asadmin> create-message-security-provider
 Command create-message-security-provider executed successfully.
 ----
 
-[[sthref31]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
-typing `asadmin help create-message-security-provider` at the command
-line.
+typing `asadmin help create-message-security-provider` at the command line.
 
-[[giotv]][[GSSCG00127]][[to-list-message-security-providers]]
+[[to-list-message-security-providers]]
 
 ==== To List Message Security Providers
 
@@ -702,9 +696,9 @@ list the message providers for the security layer.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
-link:reference-manual/list-message-security-providers.html#GSRFM00184[`list-message-security-providers`] subcommand.
+link:reference-manual/list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`] subcommand.
 
-[[GSSCG00090]][[gioui]]
+[[gioui]]
 Example 3-3 Listing Message Security Providers
 
 This example lists the message security providers for a message layer.
@@ -719,27 +713,25 @@ ServerProvider
 Command list-message-security-providers executed successfully.
 ----
 
-[[sthref32]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help list-message-security-providers` at the command
 line.
 
-[[giwkd]][[GSSCG00128]][[to-update-a-message-security-provider]]
+[[to-update-a-message-security-provider]]
 
 ==== To Update a Message Security Provider
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
-link:reference-manual/list-message-security-providers.html#GSRFM00184[`list-message-security-providers`] subcommand.
+link:reference-manual/list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`] subcommand.
 3. Modify the values for the specified message security provider by
-using the link:reference-manual/set.html#GSRFM00226[`set`] subcommand.
+using the link:reference-manual/set.html#set[`set`] subcommand.
 +
 The message security provider is identified by its dotted name.
 
-[[giorr]][[GSSCG00129]][[to-delete-a-message-security-provider]]
+[[to-delete-a-message-security-provider]]
 
 ==== To Delete a Message Security Provider
 
@@ -748,11 +740,11 @@ remove a message security provider.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. List the message security providers by using the
-link:reference-manual/list-message-security-providers.html#GSRFM00184[`list-message-security-providers`] subcommand.
+link:reference-manual/list-message-security-providers.html#list-message-security-providers[`list-message-security-providers`] subcommand.
 3. Delete the message security provider by using the
-link:reference-manual/delete-message-security-provider.html#GSRFM00097[`delete-message-security-provider`] subcommand.
+link:reference-manual/delete-message-security-provider.html#delete-message-security-provider[`delete-message-security-provider`] subcommand.
 
-[[GSSCG00091]][[gioug]]
+[[gioug]]
 Example 3-4 Deleting a Message Security Provider
 
 This example deletes the `myServerityProvider` message security
@@ -764,15 +756,13 @@ asadmin> delete-message-security-provider --layer SOAP myServerityProvider
 Command delete-message-security-provider executed successfully.
 ----
 
-[[sthref33]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help delete-message-security-provider` at the command
 line.
 
-[[gkxru]][[GSSCG00130]][[to-configure-a-servlet-layer-server-authentication-module-sam]]
+[[to-configure-a-servlet-layer-server-authentication-module-sam]]
 
 ==== To Configure a Servlet Layer Server Authentication Module (SAM)
 
@@ -783,7 +773,7 @@ subcommand.
 
 1. Ensure that the server is running. Remote subcommands require a running server.
 2. Create the message security provider by using the
-link:reference-manual/create-message-security-provider.html#GSRFM00045[`create-message-security-provider`] subcommand.
+link:reference-manual/create-message-security-provider.html#create-message-security-provider[`create-message-security-provider`] subcommand.
 +
 Information about properties for this subcommand is included in the help page.
 3. Bind the message security provider for use with your application.
@@ -797,12 +787,12 @@ httpservlet-security-provider="MySAM".
 4. If needed, restart the server.
 +
 Some properties require server restart. See
-"link:administration-guide/overview.html#GSADG00628[Configuration Changes That Require Restart]" in
+"link:administration-guide/overview.html#configuration-changes-that-require-restart[Configuration Changes That Require Restart]" in
 {productName} Administration Guide. If your
-server needs to be restarted, see "link:administration-guide/domains.html#GSADG00337[To Restart a
+server needs to be restarted, see "link:administration-guide/domains.html#to-restart-a-domain[To Restart a
 Domain]" in {productName} Administration Guide.
 
-[[GSSCG00092]][[gkxqz]]
+[[gkxqz]]
 Example 3-5 Creating a Message Security Provider
 
 This example creates the new message security provider `mySAM`.
@@ -843,14 +833,12 @@ mySAM
 Command list-message-security-providers executed successfully.
 ----
 
-[[sthref34]]
-
 See Also
 
 You can also view the full syntax and options of the subcommand by
 typing `asadmin help create-message-security-provider` at the command line.
 
-[[gdhgg]][[GSSCG00157]][[enabling-message-security-for-application-clients]]
+[[enabling-message-security-for-application-clients]]
 
 === Enabling Message Security for Application Clients
 
@@ -860,10 +848,10 @@ server-side providers they will be interacting with. This is already the
 situation for the providers configured (but not enabled) when {productName} is installed.
 
 To enable message security for client applications, modify the {productName} specific configuration for the application client container. The
-process is analogous to the process in link:#giouf[Configuring Message
+process is analogous to the process in xref:#configuring-message-protection-policies[Configuring Message
 Protection Policies].
 
-[[gglrb]][[GSSCG00158]][[additional-information-about-message-security]]
+[[additional-information-about-message-security]]
 
 === Additional Information About Message Security
 
@@ -871,7 +859,7 @@ For additional information about message security, see the following documentati
 
 * https://eclipse-ee4j.github.io/jakartaee-tutorial/#security-2[
 Introduction to Security in the Jakarta EE Platform] in The Jakarta EE Tutorial
-* "link:application-development-guide/securing-apps.html#GSDVG00006[Securing Applications]"
+* "link:application-development-guide/securing-apps.html#securing-applications[Securing Applications]"
 in {productName} Application Development Guide
 
 

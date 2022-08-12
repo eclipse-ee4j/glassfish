@@ -86,6 +86,12 @@
                     </dependency>
                 </dependencies>
                 <configuration>
+                    <enableVerbose>true</enableVerbose>
+                    <logHandler>
+                        <failIf>
+                            <severity>INFO</severity>
+                        </failIf>
+                    </logHandler>
                     <attributes>
                         <status>${status}</status>
                         <data-uri />

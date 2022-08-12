@@ -7,9 +7,6 @@ prev=session-persistence-modules.html
 
 = Packaging, Integrating, and Delivering an Add-On Component
 
-[[GSACG00009]][[ghmxp]]
-
-
 [[packaging-integrating-and-delivering-an-add-on-component]]
 == Packaging, Integrating, and Delivering an Add-On Component
 
@@ -22,11 +19,11 @@ component through Update Tool.
 
 The following topics are addressed here:
 
-* link:#ghpun[Packaging an Add-On Component]
-* link:#ghmne[Integrating an Add-On Component With {productName}]
-* link:#ghpuz[Delivering an Add-On Component Through Update Tool]
+* xref:#packaging-an-add-on-component[Packaging an Add-On Component]
+* xref:#integrating-an-add-on-component-with-glassfish-server[Integrating an Add-On Component With {productName}]
+* xref:#delivering-an-add-on-component-through-update-tool[Delivering an Add-On Component Through Update Tool]
 
-[[ghpun]][[GSACG00142]][[packaging-an-add-on-component]]
+[[packaging-an-add-on-component]]
 
 === Packaging an Add-On Component
 
@@ -46,7 +43,7 @@ plugged into the {productName} kernel, such as:
 * Dependencies
 * Capabilities
 
-[[ghmne]][[GSACG00143]][[integrating-an-add-on-component-with-glassfish-server]]
+[[integrating-an-add-on-component-with-glassfish-server]]
 
 === Integrating an Add-On Component With {productName}
 
@@ -55,7 +52,7 @@ discover the component at runtime. To integrate an add-on
 component with {productName}, ensure that the JAR file that contains
 the component is copied to or installed in the as-install``/modules/`` directory.
 
-[[ghpuz]][[GSACG00144]][[delivering-an-add-on-component-through-update-tool]]
+[[delivering-an-add-on-component-through-update-tool]]
 
 === Delivering an Add-On Component Through Update Tool
 

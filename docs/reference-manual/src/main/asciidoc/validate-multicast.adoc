@@ -7,13 +7,11 @@ prev=validate-dcom.html
 
 = validate-multicast
 
-[[validate-multicast-1]][[GSRFM00259]][[validate-multicast]]
+[[validate-multicast]]
 
 == validate-multicast
 
 Validates that multicast transport is available for clusters
-
-[[sthref2332]]
 
 === Synopsis
 
@@ -28,8 +26,6 @@ asadmin [asadmin-options] validate-multicast [--help]
 [--timetolive timetolive]
 [--verbose={false|true}]
 ----
-
-[[sthref2333]]
 
 === Description
 
@@ -58,13 +54,11 @@ resolve the multicast issues, ask the network administrator to verify
 that the network is configured so the multicast messages can be seen
 between all the machines used to run the cluster.
 
-[[sthref2334]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -101,11 +95,9 @@ asadmin-options::
   If used without a value or set to `true`, provides additional
   debugging information. The default is `false`.
 
-[[sthref2335]]
-
 === Examples
 
-[[GSRFM798]][[sthref2336]]
+[[sthref2336]]
 
 ==== Example 1   Validating multicast transport
 
@@ -145,8 +137,6 @@ Exiting after 20 seconds. To change this timeout, use the --timeout command line
 Command validate-multicast executed successfully
 ----
 
-[[sthref2337]]
-
 === Exit Status
 
 0::
@@ -154,12 +144,10 @@ Command validate-multicast executed successfully
 1::
   error in executing the command
 
-[[sthref2338]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:get-health.html#get-health-1[`get-health`(1)]
+xref:get-health.adoc#get-health[`get-health`(1)]
 
 

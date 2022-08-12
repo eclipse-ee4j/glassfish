@@ -7,13 +7,11 @@ prev=restart-domain.html
 
 = restart-instance
 
-[[restart-instance-1]][[GSRFM00219]][[restart-instance]]
+[[restart-instance]]
 
 == restart-instance
 
 Restarts a running {productName} instance
-
-[[sthref1986]]
 
 === Synopsis
 
@@ -22,8 +20,6 @@ Restarts a running {productName} instance
 asadmin [asadmin-options] restart-instance [--help]
 [--debug={false|true}] instance-name
 ----
-
-[[sthref1987]]
 
 === Description
 
@@ -44,7 +40,7 @@ You may run this subcommand from any machine that can contact the DAS.
 The subcommand can restart any {productName} instance, regardless of
 how the instance was created. For example, this subcommand can restart
 an instance that was created by using the
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)]
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)]
 subcommand.
 
 When this subcommand restarts an instance, the DAS synchronizes the
@@ -65,18 +61,16 @@ with the change.
 If different synchronization behavior is required, the instance must be
 stopped and restarted by using following sequence of subcommands:
 
-1. link:stop-instance.html#stop-instance-1[`stop-instance`(1)]
-2. link:start-instance.html#start-instance-1[`start-instance`(1)]
+1. xref:stop-instance.adoc#stop-instance[`stop-instance`(1)]
+2. xref:start-instance.adoc#start-instance[`start-instance`(1)]
 
 This subcommand is supported in remote mode only.
-
-[[sthref1988]]
 
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -97,8 +91,6 @@ asadmin-options::
 The default is the current setting of this option for the instance
   that is being restarted.
 
-[[sthref1989]]
-
 === Operands
 
 instance-name::
@@ -106,11 +98,9 @@ instance-name::
   is not running, the subcommand displays a warning message and attempts
   to start the instance.
 
-[[sthref1990]]
-
 === Examples
 
-[[GSRFM739]][[sthref1991]]
+[[sthref1991]]
 
 ==== Example 1   Restarting a {productName} Instance
 
@@ -124,8 +114,6 @@ Instance pmdsa1 was restarted.
 Command restart-instance executed successfully.
 ----
 
-[[sthref1992]]
-
 === Exit Status
 
 0::
@@ -133,22 +121,20 @@ Command restart-instance executed successfully.
 1::
   error in executing the command
 
-[[sthref1993]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:create-instance.html#create-instance-1[`create-instance`(1)],
-link:create-local-instance.html#create-local-instance-1[`create-local-instance`(1)],
-link:delete-instance.html#delete-instance-1[`delete-instance`(1)],
-link:delete-local-instance.html#delete-local-instance-1[`delete-local-instance`(1)],
-link:restart-local-instance.html#restart-local-instance-1[`restart-local-instance`(1)],
-link:setup-ssh.html#setup-ssh-1[`setup-ssh`(1)],
-link:start-instance.html#start-instance-1[`start-instance`(1)],
-link:start-local-instance.html#start-local-instance-1[`start-local-instance`(1)],
-link:stop-instance.html#stop-instance-1[`stop-instance`(1)],
-link:stop-local-instance.html#stop-local-instance-1[`stop-local-instance`(1)]
+xref:create-instance.adoc#create-instance[`create-instance`(1)],
+xref:create-local-instance.adoc#create-local-instance[`create-local-instance`(1)],
+xref:delete-instance.adoc#delete-instance[`delete-instance`(1)],
+xref:delete-local-instance.adoc#delete-local-instance[`delete-local-instance`(1)],
+xref:restart-local-instance.adoc#restart-local-instance[`restart-local-instance`(1)],
+xref:setup-ssh.adoc#setup-ssh[`setup-ssh`(1)],
+xref:start-instance.adoc#start-instance[`start-instance`(1)],
+xref:start-local-instance.adoc#start-local-instance[`start-local-instance`(1)],
+xref:stop-instance.adoc#stop-instance[`stop-instance`(1)],
+xref:stop-local-instance.adoc#stop-local-instance[`stop-local-instance`(1)]
 
 Java Platform Debugger Architecture (JPDA)
 (http://www.oracle.com/technetwork/java/javase/tech/jpda-141715.html)

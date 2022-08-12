@@ -7,9 +7,6 @@ prev=title.html
 
 = Preface
 
-[[GSUPG00001]][[gkbei]]
-
-
 [[preface]]
 == Preface
 
@@ -45,13 +42,11 @@ of Jakarta EE: compatibility. It enables Java developers to access the
 
 The following topics are addressed here:
 
-* link:#ghpbz[{productName} Documentation Set]
-* link:#giprl[Related Documentation]
-* link:#fwbkx[Typographic Conventions]
-* link:#fquvc[Symbol Conventions]
-* link:#ghpfg[Default Paths and File Names]
-
-[[GSUPG00020]][[ghpbz]]
+* <<{productName} Documentation Set>>
+* <<Related Documentation>>
+* <<Typographic Conventions>>
+* <<Symbol Conventions>>
+* <<Default Paths and File Names>>
 
 [[glassfish-server-documentation-set]]
 === {productName} Documentation Set
@@ -63,70 +58,70 @@ the books in the order in which they are listed in the following table.
 [width="100%",cols="<30%,<70%",options="header",]
 |===
 |Book Title |Description
-|link:release-notes.html#GSRLN[Release Notes] |Provides late-breaking information about
+|xref:release-notes.adoc#GSRLN[Release Notes] |Provides late-breaking information about
 the software and the documentation and includes a comprehensive,
 table-based summary of the supported hardware, operating system, Java
 Development Kit (JDK), and database drivers.
 
-|link:quick-start-guide.html#GSQSG[Quick Start Guide]
+|xref:quick-start-guide.adoc#GSQSG[Quick Start Guide]
 |Explains how to get started with the {productName} product.
 
-|link:installation-guide.html#GSING[Installation Guide]
+|xref:installation-guide.adoc#GSING[Installation Guide]
 |Explains how to install the software and its components.
 
-|link:upgrade-guide.html#GSUPG[Upgrade Guide]
+|xref:upgrade-guide.adoc#GSUPG[Upgrade Guide]
 |Explains how to upgrade to the latest version of {productName}.
 This guide also describes differences between adjacent product releases and configuration
 options that can result in incompatibility with the product specifications.
 
-|link:deployment-planning-guide.html#GSPLG[Deployment Planning Guide]
+|xref:deployment-planning-guide.adoc#GSPLG[Deployment Planning Guide]
 |Explains how to build a production deployment of {productName} that meets the requirements of
 your system and enterprise.
 
-|link:administration-guide.html#GSADG[Administration Guide]
+|xref:administration-guide.adoc#GSADG[Administration Guide]
 |Explains how to configure, monitor, and manage {productName} subsystems and components
-from the command line by using the link:reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] utility.
+from the command line by using the link:reference-manual/asadmin.html#asadmin[`asadmin`(1M)] utility.
 Instructions for performing these tasks from the Administration Console are provided
 in the Administration Console online help.
 
-|link:security-guide.html#GSSCG[Security Guide]
+|xref:security-guide.adoc#GSSCG[Security Guide]
 |Provides instructions for configuring and administering {productName} security.
 
-|link:application-deployment-guide.html#GSDPG[Application Deployment Guide]
+|xref:application-deployment-guide.adoc#GSDPG[Application Deployment Guide]
 |Explains how to assemble and deploy applications to the {productName} and provides information
 about deployment descriptors.
 
-|link:application-development-guide.html#GSDVG[Application Development Guide]
+|xref:application-development-guide.adoc#GSDVG[Application Development Guide]
 |Explains how to create and implement Java Platform, Enterprise Edition (Jakarta EE platform)
 applications that are intended to run on the {productName}.
 These applications follow the open Java standards model for Jakarta EE components
 and application programmer interfaces (APIs).
 This guide provides information about developer tools, security, and debugging.
 
-|link:add-on-component-development-guide.html#GSACG[Add-On Component Development Guide]
+|xref:add-on-component-development-guide.adoc#GSACG[Add-On Component Development Guide]
 |Explains how to use published interfaces of {productName} to develop add-on components
 for {productName}.
 This document explains how to perform only those tasks that ensure that the add-on component
 is suitable for {productName}.
 
-|link:embedded-server-guide.html#GSESG[Embedded Server Guide]
+|xref:embedded-server-guide.adoc#GSESG[Embedded Server Guide]
 |Explains how to run applications in embedded {productName} and to develop applications
 in which {productName} is embedded.
 
-|link:ha-administration-guide.html#GSHAG[High Availability Administration Guide]
+|xref:ha-administration-guide.adoc#GSHAG[High Availability Administration Guide]
 |Explains how to configure {productName} to provide higher availability and
 scalability through failover and load balancing.
 
-|link:performance-tuning-guide.html#GSPTG[Performance Tuning Guide]
+|xref:performance-tuning-guide.adoc#GSPTG[Performance Tuning Guide]
 |Explains how to optimize the performance of {productName}.
 
-|link:troubleshooting-guide.html#GSTSG[Troubleshooting Guide]
+|xref:troubleshooting-guide.adoc#GSTSG[Troubleshooting Guide]
 |Describes common problems that you might encounter when using {productName} and explains how to solve them.
 
-|link:error-messages-reference.html#GSEMR[Error Message Reference]
+|xref:error-messages-reference.adoc#GSEMR[Error Message Reference]
 |Describes error messages that you might encounter when using {productName}.
 
-|link:reference-manual.html#GSRFM[Reference Manual]
+|xref:reference-manual.adoc#GSRFM[Reference Manual]
 |Provides reference information in man page format for {productName} administration commands, utility
 commands, and related concepts.
 
@@ -156,7 +151,7 @@ Queue messaging service to send, receive, and process Message Queue messages.
 |===
 
 
-[[GSUPG00021]][[giprl]]
+
 
 [[related-documentation]]
 === Related Documentation
@@ -239,8 +234,6 @@ Do not save the file.
 |===
 
 
-[[GSUPG00023]][[fquvc]]
-
 [[symbol-conventions]]
 === Symbol Conventions
 
@@ -281,8 +274,6 @@ The following table explains symbols that might be used in this book.
 |From the File menu, choose New. From the New submenu, choose Templates.
 |===
 
-
-[[GSUPG00024]][[ghpfg]]
 
 [[default-paths-and-file-names]]
 === Default Paths and File Names

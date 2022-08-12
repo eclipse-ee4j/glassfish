@@ -7,13 +7,11 @@ prev=list-components.html
 
 = list-configs
 
-[[list-configs-1]][[GSRFM00156]][[list-configs]]
+[[list-configs]]
 
 == list-configs
 
 Lists named configurations
-
-[[sthref1399]]
 
 === Synopsis
 
@@ -23,8 +21,6 @@ asadmin [asadmin-options] list-configs [--help]
 [target]
 ----
 
-[[sthref1400]]
-
 === Description
 
 The `list—configs` subcommand lists named configurations in the
@@ -33,18 +29,14 @@ filtered by cluster, instance, or named configuration.
 
 This subcommand is supported in remote mode only.
 
-[[sthref1401]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
-
-[[sthref1402]]
 
 === Operands
 
@@ -63,11 +55,9 @@ target::
     Lists the specified named configuration. Use this option to
     determine whether a named configuration exits.
 
-[[sthref1403]]
-
 === Examples
 
-[[GSRFM648]][[sthref1404]]
+[[sthref1404]]
 
 ==== Example 1   Listing All Named Configurations in a Domain
 
@@ -88,8 +78,6 @@ il2-config
 Command list-configs executed successfully.
 ----
 
-[[sthref1405]]
-
 === Exit Status
 
 0::
@@ -97,15 +85,13 @@ Command list-configs executed successfully.
 1::
   error in executing the command
 
-[[sthref1406]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:copy-config.html#copy-config-1[`copy-config`(1)],
-link:delete-config.html#delete-config-1[`delete-config`(1)]
+xref:copy-config.adoc#copy-config[`copy-config`(1)],
+xref:delete-config.adoc#delete-config[`delete-config`(1)]
 
-link:configuration.html#configuration-5asc[`configuration`(5ASC)]
+xref:configuration.adoc#configuration[`configuration`(5ASC)]
 
 

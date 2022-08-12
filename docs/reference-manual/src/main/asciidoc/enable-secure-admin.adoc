@@ -7,15 +7,13 @@ prev=enable-monitoring.html
 
 = enable-secure-admin
 
-[[enable-secure-admin-1]][[GSRFM00129]][[enable-secure-admin]]
+[[enable-secure-admin]]
 
 == enable-secure-admin
 
 Enables secure admin (if it is not already enabled), optionally changing
 the alias used for DAS-to-instance admin messages or the alias used for
 instance-to-DAS admin messages.
-
-[[sthref1128]]
 
 === Synopsis
 
@@ -25,8 +23,6 @@ asadmin [asadmin-options] enable-secure-admin [--help]
 [--adminalias=alias]
 [--instancealias=alias]
 ----
-
-[[sthref1129]]
 
 === Description
 
@@ -61,13 +57,11 @@ Alternatively, you can use the `enable-secure-admin-internal-user`
 subcommand to cause the servers to identify themselves using a secure
 admin user name and password.
 
-[[sthref1130]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -80,11 +74,9 @@ asadmin-options::
   This alias is used by the instances to identify themselves to the DAS.
   The default value is `glassfish-instance`.
 
-[[sthref1131]]
-
 === Examples
 
-[[GSRFM606]][[sthref1132]]
+[[sthref1132]]
 
 ==== Example 1   Enabling `secure admin` for a domain
 
@@ -100,8 +92,6 @@ default-config
 Command enable-secure-admin executed successfully.
 ----
 
-[[sthref1133]]
-
 === Exit Status
 
 0::
@@ -109,14 +99,12 @@ Command enable-secure-admin executed successfully.
 1::
   error in executing the subcommand
 
-[[sthref1134]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:disable-secure-admin.html#disable-secure-admin-1[`disable-secure-admin`(1)],
-link:enable-secure-admin-principal.html#enable-secure-admin-principal-1[`enable-secure-admin-principal`(1)],
-link:enable-secure-admin-internal-user.html#enable-secure-admin-internal-user-1[`enable-secure-admin-internal-user`(1)]
+xref:disable-secure-admin.adoc#disable-secure-admin[`disable-secure-admin`(1)],
+xref:enable-secure-admin-principal.adoc#enable-secure-admin-principal[`enable-secure-admin-principal`(1)],
+xref:enable-secure-admin-internal-user.adoc#enable-secure-admin-internal-user[`enable-secure-admin-internal-user`(1)]
 
 

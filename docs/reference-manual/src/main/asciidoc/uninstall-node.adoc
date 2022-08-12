@@ -7,13 +7,11 @@ prev=unfreeze-transaction-service.html
 
 = uninstall-node
 
-[[uninstall-node-1]][[GSRFM00246]][[uninstall-node]]
+[[uninstall-node]]
 
 == uninstall-node
 
 Uninstalls {productName} software from specified hosts
-
-[[sthref2206]]
 
 === Synopsis
 
@@ -27,8 +25,6 @@ asadmin [asadmin-options] uninstall-node [--help]
 host-list
 ----
 
-[[sthref2207]]
-
 === Description
 
 The `uninstall-node` subcommand uninstalls {productName} software
@@ -40,10 +36,10 @@ software is being uninstalled.
 [NOTE]
 ====
 This subcommand is equivalent to the
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
+xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 subcommand. To uninstall {productName} software on hosts that use
 the Distributed Component Object Model (DCOM) remote protocol, use the
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)]
+xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)]
 subcommand.
 ====
 
@@ -71,13 +67,11 @@ administration server (DAS).
 
 This subcommand is supported in local mode only.
 
-[[sthref2208]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -131,19 +125,15 @@ asadmin-options::
 If the `--force` option is `true`, the subcommand removes the entire
     content of the parent of the base installation directory.
 
-[[sthref2209]]
-
 === Operands
 
 host-list::
   A space-separated list of the names of the hosts from which the
   {productName} software is to be uninstalled.
 
-[[sthref2210]]
-
 === Examples
 
-[[GSRFM773]][[sthref2211]]
+[[sthref2211]]
 
 ==== Example 1   Uninstalling {productName} Software From the Default Location
 
@@ -160,7 +150,7 @@ Successfully connected to gfuser@sj04.example.com using keyfile /home/gfuser
 Command uninstall-node executed successfully.
 ----
 
-[[GSRFM774]][[sthref2212]]
+[[sthref2212]]
 
 ==== Example 2   Forcibly Uninstalling {productName} Software
 
@@ -187,8 +177,6 @@ Force removing directory /export/glassfish7/glassfish
 Command uninstall-node executed successfully.
 ----
 
-[[sthref2213]]
-
 === Exit Status
 
 0::
@@ -196,16 +184,14 @@ Command uninstall-node executed successfully.
 1::
   error in executing the command
 
-[[sthref2214]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:install-node.html#install-node-1[`install-node`(1)],
-link:install-node-dcom.html#install-node-dcom-1[`install-node-dcom`(1)],
-link:install-node-ssh.html#install-node-ssh-1[`install-node-ssh`(1)],
-link:uninstall-node-dcom.html#uninstall-node-dcom-1[`uninstall-node-dcom`(1)],
-link:uninstall-node-ssh.html#uninstall-node-ssh-1[`uninstall-node-ssh`(1)]
+xref:install-node.adoc#install-node[`install-node`(1)],
+xref:install-node-dcom.adoc#install-node-dcom[`install-node-dcom`(1)],
+xref:install-node-ssh.adoc#install-node-ssh[`install-node-ssh`(1)],
+xref:uninstall-node-dcom.adoc#uninstall-node-dcom[`uninstall-node-dcom`(1)],
+xref:uninstall-node-ssh.adoc#uninstall-node-ssh[`uninstall-node-ssh`(1)]
 
 

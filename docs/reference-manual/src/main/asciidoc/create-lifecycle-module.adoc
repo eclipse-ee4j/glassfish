@@ -7,13 +7,11 @@ prev=create-jvm-options.html
 
 = create-lifecycle-module
 
-[[create-lifecycle-module-1]][[GSRFM00043]][[create-lifecycle-module]]
+[[create-lifecycle-module]]
 
 == create-lifecycle-module
 
 Creates a lifecycle module
-
-[[sthref380]]
 
 === Synopsis
 
@@ -28,8 +26,6 @@ asadmin [asadmin-options] create-lifecycle-module [--help]
 module_name
 ----
 
-[[sthref381]]
-
 === Description
 
 The `create-lifecycle-module` subcommand creates a lifecycle module. A
@@ -37,13 +33,11 @@ lifecycle module provides a means of running a short or long duration
 Java-based task at a specific stage in the server life cycle. This
 subcommand is supported in remote mode only.
 
-[[sthref382]]
-
 === Options
 
 asadmin-options::
   Options for the `asadmin` utility. For information about these
-  options, see the link:asadmin.html#asadmin-1m[`asadmin`(1M)] help page.
+  options, see the xref:asadmin.adoc#asadmin[`asadmin`(1M)] help page.
 `--help`::
 `-?`::
   Displays the help text for the subcommand.
@@ -88,19 +82,15 @@ asadmin-options::
   This is an optional attribute containing name/value pairs used to
   configure the lifecycle module.
 
-[[sthref383]]
-
 === Operands
 
 module_name::
   This operand is a unique identifier for the deployed server lifecycle
   event listener module.
 
-[[sthref384]]
-
 === Examples
 
-[[GSRFM504]][[sthref385]]
+[[sthref385]]
 
 ==== Example 1   Creating a Lifecycle Module
 
@@ -118,8 +108,6 @@ Command create-lifecycle-module executed successfully
 The escape character `\` is used in the property option to specify that
 the equal sign (=) and colon (:) are part of the `rmi` property value.
 
-[[sthref386]]
-
 === Exit Status
 
 0::
@@ -127,15 +115,13 @@ the equal sign (=) and colon (:) are part of the `rmi` property value.
 1::
   error in executing the command
 
-[[sthref387]]
-
 === See Also
 
-link:asadmin.html#asadmin-1m[`asadmin`(1M)]
+xref:asadmin.adoc#asadmin[`asadmin`(1M)]
 
-link:delete-lifecycle-module.html#delete-lifecycle-module-1[`delete-lifecycle-module`(1)],
-link:list-lifecycle-modules.html#list-lifecycle-modules-1[`list-lifecycle-modules`(1)]
+xref:delete-lifecycle-module.adoc#delete-lifecycle-module[`delete-lifecycle-module`(1)],
+xref:list-lifecycle-modules.adoc#list-lifecycle-modules[`list-lifecycle-modules`(1)]
 
-"link:application-development-guide/lifecycle-listeners.html#GSDVG00014[Developing Lifecycle Listeners]" in {productName} Application Development Guide
+"link:application-development-guide/lifecycle-listeners.html#developing-lifecycle-listeners[Developing Lifecycle Listeners]" in {productName} Application Development Guide
 
 

@@ -20,6 +20,7 @@ package org.apache.catalina.core;
 
 import org.apache.catalina.*;
 import org.apache.catalina.valves.ValveBase;
+import org.glassfish.grizzly.utils.Charsets;
 import org.glassfish.web.valve.GlassFishValve;
 
 import jakarta.servlet.*;
@@ -233,6 +234,75 @@ final class StandardContextValve
     }
     */
 
+    /**
+     * resolves '.' and '..' elements in the path
+     * if there are too many, making a path negative, returns null
+     *
+     * @param path to be normalized
+     * @return normalized path or null
+     */
+    protected String normalize(String path) {
+        if (path == null) {
+            return null;
+        }
+
+        String rv = path;
+        // starts with a double-slash
+        if(rv.indexOf("//") == 0) {
+            rv = rv.replace("//", "/");
+        }
+        // starts with dot-slash
+        if(rv.indexOf("./") == 0) {
+            rv = rv.replaceFirst("./", "/");
+        }
+
+        // Normalize the slashes and add leading slash if necessary
+        if (rv.indexOf('\\') >= 0) {
+            rv = rv.replace('\\', '/');
+        }
+
+        // Resolve occurrences of "/../" in the normalized path
+        while (true) {
+            int idx = rv.indexOf("/../");
+            if (idx < 0) {
+                break;
+            }
+            if (idx == 0) {
+                return null;  // negative relative path
+            }
+            int index2 = rv.lastIndexOf('/', idx - 1);
+            rv = rv.substring(0, index2) + rv.substring(idx + 3);
+        }
+
+        // Resolve occurrences of "/./" example if the path looks like /app/./some/./something/./my.jsp
+        //then after processing should look like /app/some/something/my.jsp
+        rv = evaluateNormalizedPathWithSinglePoint(rv);
+
+        //if the path don't start with / then include it
+        if(!rv.startsWith("/")) {
+            rv = "/" + rv;
+        }
+
+        // Return the normalized path that we have completed
+        return rv;
+    }
+
+    /**
+     * this method helps to evaluate the element "/./" on the path
+     * @param path to be normalized
+     * @return normalized path
+     */
+    private String evaluateNormalizedPathWithSinglePoint(String path) {
+        // Resolve occurrences of "/./" in the normalized path
+        while (true) {
+            int idx = path.indexOf("/./");
+            if (idx < 0) {
+                break;
+            }
+            path = path.substring(0, idx) + path.substring(idx + 2);
+        }
+        return path;
+    }
 
     private Wrapper preInvoke(Request request, Response response) {
 
@@ -241,11 +311,12 @@ final class StandardContextValve
         // START CR 6415120
         if (request.getCheckRestrictedResources()) {
         // END CR 6415120
-            DataChunk requestPathDC = hreq.getRequestPathMB();
-            if ((requestPathDC.startsWithIgnoreCase("/META-INF/", 0))
-                    || (requestPathDC.equalsIgnoreCase("/META-INF"))
-                    || (requestPathDC.startsWithIgnoreCase("/WEB-INF/", 0))
-                    || (requestPathDC.equalsIgnoreCase("/WEB-INF"))) {
+            String requestPath = normalize(hreq.getRequestPathMB().toString(Charsets.UTF8_CHARSET));
+            if ((requestPath == null)
+                    || (requestPath.toUpperCase().startsWith("/META-INF/", 0))
+                    || (requestPath.equalsIgnoreCase("/META-INF"))
+                    || (requestPath.toUpperCase().startsWith("/WEB-INF/", 0))
+                    || (requestPath.equalsIgnoreCase("/WEB-INF"))) {
                 notFound((HttpServletResponse) response.getResponse());
                 return null;
             }

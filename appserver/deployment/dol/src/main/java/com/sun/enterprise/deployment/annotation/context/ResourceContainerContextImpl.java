@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,7 @@ package com.sun.enterprise.deployment.annotation.context;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
@@ -28,25 +30,29 @@ import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.types.*;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.deployment.types.EjbReferenceContainer;
+import com.sun.enterprise.deployment.types.HandlerChainContainer;
+import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
+import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
+import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
+
+import java.util.Set;
+
 import org.glassfish.apf.context.AnnotationContext;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
-import java.util.Set;
-
 /**
  * This provides an abstraction for handle resource references.
  *
- * @Author Shing Wai Chan
+ * @author Shing Wai Chan
  */
 public class ResourceContainerContextImpl extends AnnotationContext
-        implements ResourceContainerContext, ComponentContext,
-                   ServiceReferenceContainerContext, HandlerContext {
+    implements ResourceContainerContext, ComponentContext, ServiceReferenceContainerContext, HandlerContext {
 
-    protected Descriptor descriptor = null;
-    protected String componentClassName = null;
+    protected Descriptor descriptor;
+    protected String componentClassName;
 
     public ResourceContainerContextImpl() {
     }
@@ -60,7 +66,8 @@ public class ResourceContainerContextImpl extends AnnotationContext
      *
      * @param ejbReference the ejb reference
      */
-    public void addEjbReferenceDescriptor(EjbReference ejbReference) {
+    @Override
+    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
         getEjbReferenceContainer().addEjbReferenceDescriptor(ejbReference);
     }
 
@@ -70,43 +77,46 @@ public class ResourceContainerContextImpl extends AnnotationContext
      *
      * @param the name of the ejb-reference
      */
-    public EjbReference getEjbReference(String name) {
-        EjbReference ejbRef = null;
+    @Override
+    public EjbReferenceDescriptor getEjbReference(String name) {
         try {
-            ejbRef = getEjbReferenceContainer().getEjbReference(name);
+            return getEjbReferenceContainer().getEjbReference(name);
             // annotation has a corresponding ejb-local-ref/ejb-ref
             // in xml.  Just add annotation info and continue.
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
             // first.
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
 
-            if( app != null ) {
+            if (app != null) {
                 try {
                     // Check for java:app/java:global dependencies at app-level
-                    ejbRef = app.getEjbReferenceByName(name);
+                    EjbReferenceDescriptor ejbRef = app.getEjbReferenceByName(name);
                      // Make sure it's added to the container context.
                     addEjbReferenceDescriptor(ejbRef);
-                } catch(IllegalArgumentException ee) {}
+                } catch (IllegalArgumentException ee) {
+                }
             }
         }
-        return ejbRef;
+        return null;
     }
+
 
     protected EjbReferenceContainer getEjbReferenceContainer() {
-        return (EjbReferenceContainer)descriptor;
+        return (EjbReferenceContainer) descriptor;
     }
 
-    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor
-                                               resReference) {
-        getResourceReferenceContainer().addResourceReferenceDescriptor
-            (resReference);
+
+    @Override
+    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resReference) {
+        getResourceReferenceContainer().addResourceReferenceDescriptor(resReference);
     }
+
 
     /**
      * Looks up an resource reference with the given name.
@@ -114,11 +124,10 @@ public class ResourceContainerContextImpl extends AnnotationContext
      *
      * @param the name of the resource-reference
      */
+    @Override
     public ResourceReferenceDescriptor getResourceReference(String name) {
-        ResourceReferenceDescriptor resourceRef = null;
         try {
-            resourceRef = getResourceReferenceContainer().
-                getResourceReferenceByName(name);
+            return getResourceReferenceContainer().getResourceReferenceByName(name);
             // annotation has a corresponding resource-ref
             // in xml.  Just add annotation info and continue.
             // This logic might change depending on overriding rules
@@ -130,285 +139,279 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
-
-            if( app != null ) {
+            if (app != null) {
                 try {
                     // Check for java:app/java:global dependencies at app-level
-                    resourceRef = app.getResourceReferenceByName(name);
+                    ResourceReferenceDescriptor resourceRef = app.getResourceReferenceByName(name);
                     // Make sure it's added to the container context.
                     addResourceReferenceDescriptor(resourceRef);
-                } catch(IllegalArgumentException ee) {}
+                } catch (IllegalArgumentException ee) {
+                }
             }
         }
-        return resourceRef;
+        return null;
     }
+
 
     protected ResourceReferenceContainer getResourceReferenceContainer() {
-        return (ResourceReferenceContainer)descriptor;
+        return (ResourceReferenceContainer) descriptor;
     }
 
 
-    public void addMessageDestinationReferenceDescriptor
-        (MessageDestinationReferenceDescriptor msgDestReference) {
-        getMessageDestinationReferenceContainer(
-        ).addMessageDestinationReferenceDescriptor(msgDestReference);
+    @Override
+    public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference) {
+        getMessageDestinationReferenceContainer().addMessageDestinationReferenceDescriptor(msgDestReference);
     }
 
 
-    public MessageDestinationReferenceDescriptor getMessageDestinationReference
-        (String name) {
-        MessageDestinationReferenceDescriptor msgDestRef = null;
+    @Override
+    public MessageDestinationReferenceDescriptor getMessageDestinationReference(String name) {
         try {
-            msgDestRef = getMessageDestinationReferenceContainer().
-                getMessageDestinationReferenceByName(name);
+            return getMessageDestinationReferenceContainer().getMessageDestinationReferenceByName(name);
             // annotation has a corresponding message-destination-ref
-            // in xml.  Just add annotation info and continue.
+            // in xml. Just add annotation info and continue.
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
             // first.
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
+            return null;
         }
-        return msgDestRef;
     }
 
-    protected MessageDestinationReferenceContainer
-        getMessageDestinationReferenceContainer()
-    {
-        return (MessageDestinationReferenceContainer)descriptor;
+
+    protected MessageDestinationReferenceContainer getMessageDestinationReferenceContainer() {
+        return (MessageDestinationReferenceContainer) descriptor;
     }
 
-    public void addResourceEnvReferenceDescriptor
-        (ResourceEnvReferenceDescriptor resourceEnvReference) {
-        getResourceEnvReferenceContainer(
-        ).addResourceEnvReferenceDescriptor(resourceEnvReference);
+
+    @Override
+    public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
+        getResourceEnvReferenceContainer().addResourceEnvReferenceDescriptor(resourceEnvReference);
     }
 
-    public ResourceEnvReferenceDescriptor getResourceEnvReference
-        (String name) {
-        ResourceEnvReferenceDescriptor resourceEnvRef = null;
+
+    @Override
+    public ResourceEnvReferenceDescriptor getResourceEnvReference(String name) {
         try {
-            resourceEnvRef = getResourceEnvReferenceContainer().
-                getResourceEnvReferenceByName(name);
+            return getResourceEnvReferenceContainer().getResourceEnvReferenceByName(name);
             // annotation has a corresponding resource-env-ref
-            // in xml.  Just add annotation info and continue.
+            // in xml. Just add annotation info and continue.
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
             // first.
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
-
             Application app = getAppFromDescriptor();
-
-            if( app != null ) {
+            if (app != null) {
                 try {
                     // Check for java:app/java:global dependencies at app-level
-                    resourceEnvRef = app.getResourceEnvReferenceByName(name);
-                      // Make sure it's added to the container context.
+                    ResourceEnvReferenceDescriptor resourceEnvRef = app.getResourceEnvReferenceByName(name);
+                    // Make sure it's added to the container context.
                     addResourceEnvReferenceDescriptor(resourceEnvRef);
-                } catch(IllegalArgumentException ee) {}
+                } catch (IllegalArgumentException ee) {
+                }
             }
         }
-        return resourceEnvRef;
+        return null;
     }
 
-    protected WritableJndiNameEnvironment
-        getResourceEnvReferenceContainer()
-    {
-        return (WritableJndiNameEnvironment)descriptor;
+
+    protected WritableJndiNameEnvironment getResourceEnvReferenceContainer() {
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
+
+    @Override
     public void addEnvEntryDescriptor(EnvironmentProperty envEntry) {
-
         getEnvEntryContainer().addEnvironmentProperty(envEntry);
-
     }
 
+
+    @Override
     public EnvironmentProperty getEnvEntry(String name) {
-        EnvironmentProperty envEntry = null;
         try {
-            envEntry = getEnvEntryContainer().
-                getEnvironmentPropertyByName(name);
+            return getEnvEntryContainer().getEnvironmentPropertyByName(name);
             // annotation has a corresponding env-entry
             // in xml.  Just add annotation info and continue.
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
             // first.
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
 
-            if( app != null ) {
+            if (app != null) {
                 try {
                     // Check for java:app/java:global dependencies at app-level
-                    envEntry = app.getEnvironmentPropertyByName(name);
-                      // Make sure it's added to the container context.
+                    EnvironmentProperty envEntry = app.getEnvironmentPropertyByName(name);
+                    // Make sure it's added to the container context.
                     addEnvEntryDescriptor(envEntry);
-                } catch(IllegalArgumentException ee) {}
+                } catch (IllegalArgumentException ee) {
+                }
             }
 
         }
-        return envEntry;
+        return null;
 
     }
 
-    protected WritableJndiNameEnvironment getEnvEntryContainer()
-    {
-        return (WritableJndiNameEnvironment)descriptor;
+
+    protected WritableJndiNameEnvironment getEnvEntryContainer() {
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
-    public void addEntityManagerFactoryReferenceDescriptor
-        (EntityManagerFactoryReferenceDescriptor emfRefDesc) {
 
-        getEmfRefContainer().addEntityManagerFactoryReferenceDescriptor
-            (emfRefDesc);
+    @Override
+    public void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor emfRefDesc) {
+        getEmfRefContainer().addEntityManagerFactoryReferenceDescriptor(emfRefDesc);
 
     }
 
-    public EntityManagerFactoryReferenceDescriptor
-        getEntityManagerFactoryReference(String name) {
 
-        EntityManagerFactoryReferenceDescriptor emfRefDesc = null;
-
+    @Override
+    public EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReference(String name) {
         try {
-            emfRefDesc = getEmfRefContainer().
-                getEntityManagerFactoryReferenceByName(name);
+            return getEmfRefContainer().getEntityManagerFactoryReferenceByName(name);
             // annotation has a corresponding entry
             // in xml.  Just add annotation info and continue.
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
             // first.
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
-
-            if( app != null ) {
+            if (app != null) {
                 try {
                     // Check for java:app/java:global dependencies at app-level
-                    emfRefDesc = app.getEntityManagerFactoryReferenceByName(name);
+                    EntityManagerFactoryReferenceDescriptor emfRefDesc = app.getEntityManagerFactoryReferenceByName(name);
                     // Make sure it's added to the container context.
                     addEntityManagerFactoryReferenceDescriptor(emfRefDesc);
-                } catch(IllegalArgumentException ee) {}
+                } catch (IllegalArgumentException ee) {
+                }
             }
         }
-
-        return emfRefDesc;
-
-    }
-
-    protected WritableJndiNameEnvironment getEmfRefContainer()
-    {
-        return (WritableJndiNameEnvironment)descriptor;
+        return null;
     }
 
 
-    public void addEntityManagerReferenceDescriptor
-        (EntityManagerReferenceDescriptor emRefDesc) {
-
-        getEmRefContainer().addEntityManagerReferenceDescriptor
-            (emRefDesc);
-
+    protected WritableJndiNameEnvironment getEmfRefContainer() {
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
-    public EntityManagerReferenceDescriptor
-        getEntityManagerReference(String name) {
 
-        EntityManagerReferenceDescriptor emRefDesc = null;
+    @Override
+    public void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor emRefDesc) {
+        getEmRefContainer().addEntityManagerReferenceDescriptor(emRefDesc);
+    }
 
+
+    @Override
+    public EntityManagerReferenceDescriptor getEntityManagerReference(String name) {
         try {
-            emRefDesc = getEmRefContainer().
-                getEntityManagerReferenceByName(name);
+            return getEmRefContainer().getEntityManagerReferenceByName(name);
             // annotation has a corresponding entry
-            // in xml.  Just add annotation info and continue.
+            // in xml. Just add annotation info and continue.
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
             // first.
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
 
-            if( app != null ) {
+            if (app != null) {
                 try {
                     // Check for java:app/java:global dependencies at app-level
-                    emRefDesc = app.getEntityManagerReferenceByName(name);
+                    EntityManagerReferenceDescriptor emRefDesc = app.getEntityManagerReferenceByName(name);
                     // Make sure it's added to the container context.
                     addEntityManagerReferenceDescriptor(emRefDesc);
-                } catch(IllegalArgumentException ee) {}
+                } catch (IllegalArgumentException ee) {
+                }
             }
         }
 
-        return emRefDesc;
+        return null;
 
     }
 
-    protected WritableJndiNameEnvironment getEmRefContainer()
-    {
-        return (WritableJndiNameEnvironment)descriptor;
+
+    protected WritableJndiNameEnvironment getEmRefContainer() {
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
-   /**
+
+    /**
      * @param postConstructDesc
      */
-    public void addPostConstructDescriptor(
-            LifecycleCallbackDescriptor postConstructDesc) {
+    @Override
+    public void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
         getPostConstructContainer().addPostConstructDescriptor(postConstructDesc);
     }
 
+
     /**
      * Look up an post-construct LifecycleCallbackDescriptor with the
-     * given name.  Return null if it is not found
+     * given name. Return null if it is not found
+     *
      * @param className
      */
+    @Override
     public LifecycleCallbackDescriptor getPostConstruct(String className) {
-        LifecycleCallbackDescriptor postConstructDesc =
-            getPostConstructContainer().getPostConstructDescriptorByClass(className);
+        LifecycleCallbackDescriptor postConstructDesc = getPostConstructContainer()
+            .getPostConstructDescriptorByClass(className);
         return postConstructDesc;
     }
 
+
     protected WritableJndiNameEnvironment getPostConstructContainer() {
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
-   /**
+
+    /**
      * @param preDestroyDesc
      */
-    public void addPreDestroyDescriptor(
-            LifecycleCallbackDescriptor preDestroyDesc) {
+    @Override
+    public void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc) {
         getPreDestroyContainer().addPreDestroyDescriptor(preDestroyDesc);
     }
 
+
     /**
      * Look up an pre-destroy LifecycleCallbackDescriptor with the
-     * given name.  Return null if it is not found
+     * given name. Return null if it is not found
+     *
      * @param className
      */
+    @Override
     public LifecycleCallbackDescriptor getPreDestroy(String className) {
-        LifecycleCallbackDescriptor preDestroyDesc =
-            getPreDestroyContainer().getPreDestroyDescriptorByClass(className);
+        LifecycleCallbackDescriptor preDestroyDesc = getPreDestroyContainer().getPreDestroyDescriptorByClass(className);
         return preDestroyDesc;
     }
 
+
     protected WritableJndiNameEnvironment getDataSourceDefinitionContainer(){
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
     /**
      * Adds the descriptor to the receiver.
      * @param desc Descriptor to add.
      */
+    @Override
     public void addResourceDescriptor(ResourceDescriptor desc) {
         getDataSourceDefinitionContainer().addResourceDescriptor(desc);
     }
@@ -417,45 +420,49 @@ public class ResourceContainerContextImpl extends AnnotationContext
      * get all Descriptor descriptors based on the type
      * @return Descriptor descriptors
      */
+    @Override
     public Set<ResourceDescriptor> getResourceDescriptors(JavaEEResourceType type) {
         return getDataSourceDefinitionContainer().getResourceDescriptors(type);
     }
 
 
     protected WritableJndiNameEnvironment getMailSessionContainer() {
-        return (WritableJndiNameEnvironment) descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
     protected WritableJndiNameEnvironment getConnectionFactoryDefinitionContainer(){
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
     protected WritableJndiNameEnvironment getAdministeredObjectDefinitionContainer(){
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
     protected WritableJndiNameEnvironment getJMSConnectionFactoryDefinitionContainer(){
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
     protected WritableJndiNameEnvironment getJMSDestinationDefinitionContainer(){
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
     protected WritableJndiNameEnvironment getPreDestroyContainer() {
-        return (WritableJndiNameEnvironment)descriptor;
+        return getDescriptorAsWritableJndiNameEnvironment();
     }
 
+    @Override
     public String getComponentClassName() {
         return componentClassName;
     }
 
-    public HandlerChainContainer[]
-            getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
+
+    @Override
+    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
         // by default return null; appropriate contextx should override this
         return null;
     }
 
+    @Override
     public ServiceReferenceContainer[] getServiceRefContainers() {
         // by default we return our descriptor;
         ServiceReferenceContainer[] containers = new ServiceReferenceContainer[1];
@@ -463,22 +470,27 @@ public class ResourceContainerContextImpl extends AnnotationContext
         return containers;
     }
 
+    @Override
     public void addManagedBean(ManagedBeanDescriptor managedBeanDesc) {
-
-        BundleDescriptor bundleDesc = (BundleDescriptor)
-                ((BundleDescriptor) descriptor).getModuleDescriptor().getDescriptor();
+        BundleDescriptor bundleDesc = (BundleDescriptor) ((BundleDescriptor) descriptor).getModuleDescriptor()
+            .getDescriptor();
         bundleDesc.addManagedBean(managedBeanDesc);
     }
 
-    public Application getAppFromDescriptor() {
-        Application app = null;
-        if( descriptor instanceof BundleDescriptor ) {
-            BundleDescriptor bundle = (BundleDescriptor) descriptor;
-            app = bundle.getApplication();
-        } else if( descriptor instanceof EjbDescriptor ) {
-            app = ((EjbDescriptor)descriptor).getApplication();
-        }
 
-        return app;
+    public Application getAppFromDescriptor() {
+        if (descriptor instanceof BundleDescriptor) {
+            BundleDescriptor bundle = (BundleDescriptor) descriptor;
+            return bundle.getApplication();
+        } else if (descriptor instanceof EjbDescriptor) {
+            return ((EjbDescriptor) descriptor).getApplication();
+        } else {
+            return null;
+        }
+    }
+
+
+    private WritableJndiNameEnvironment getDescriptorAsWritableJndiNameEnvironment() {
+        return (WritableJndiNameEnvironment) this.descriptor;
     }
 }

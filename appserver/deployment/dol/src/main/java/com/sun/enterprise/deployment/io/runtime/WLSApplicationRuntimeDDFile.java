@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,19 @@
 
 package com.sun.enterprise.deployment.io.runtime;
 
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.hk2.api.PerLookup;
-
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.runtime.application.wls.WeblogicApplicationNode;
-import com.sun.enterprise.deployment.EarType;
-import org.jvnet.hk2.annotations.Service;
-import java.util.List;
+
 import java.util.Map;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class is responsible for handling the XML configuration information
@@ -38,13 +39,13 @@ import java.util.Map;
 @ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
 @Service
-public class WLSApplicationRuntimeDDFile extends
-        ConfigurationDeploymentDescriptorFile {
+public class WLSApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
 
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.WLS_APPLICATION_JAR_ENTRY;
     }
@@ -55,10 +56,11 @@ public class WLSApplicationRuntimeDDFile extends
      *
      * @param the descriptor for which we need the node
      */
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
+    @Override
+    public RootXMLNode<?> getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof Application) {
             Application application = (Application)descriptor;
-            RootXMLNode node = application.getRootNode(getDeploymentDescriptorPath());
+            RootXMLNode<?> node = application.getRootNode(getDeploymentDescriptorPath());
             if (node == null) {
                 node = new WeblogicApplicationNode(application);
                 application.addRootNode(getDeploymentDescriptorPath(), node);
@@ -77,17 +79,21 @@ public class WLSApplicationRuntimeDDFile extends
      * @param publicIDToDTDMap the map for storing public id to dtd mapping
      * @param versionUpgrades The list of upgrades from older versions
      */
-    public void registerBundle(final Map<String, Class> rootNodesMap,
-                               final Map<String, String> publicIDToDTDMap,
-                               final Map<String, List<Class>> versionUpgrades) {
-      rootNodesMap.put(WeblogicApplicationNode.registerBundle(publicIDToDTDMap, versionUpgrades), WeblogicApplicationNode.class);
+    @Override
+    public void registerBundle(
+        final Map rootNodesMap,
+        final Map publicIDToDTDMap,
+        final Map versionUpgrades) {
+        String bundle = WeblogicApplicationNode.registerBundle(publicIDToDTDMap, versionUpgrades);
+        rootNodesMap.put(bundle, WeblogicApplicationNode.class);
     }
 
-  /**
-   * Return whether this configuration file can be validated.
-   * @return whether this configuration file can be validated.
-   */
-  public boolean isValidating() {
-    return true;
-  }
+
+    /**
+     * @return whether this configuration file can be validated.
+     */
+    @Override
+    public boolean isValidating() {
+        return true;
+    }
 }

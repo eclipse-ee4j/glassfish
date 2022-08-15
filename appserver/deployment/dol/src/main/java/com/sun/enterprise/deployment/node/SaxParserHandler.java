@@ -70,49 +70,26 @@ public class SaxParserHandler extends DefaultHandler {
     private static final String TRUE_STR = "true";
     private static final String FALSE_STR = "false";
 
-    private static final class MappingStuff {
-        public final ConcurrentMap<String, Boolean> mBundleRegistrationStatus = new ConcurrentHashMap<>();
-        public final ConcurrentMap<String,String> mMapping = new ConcurrentHashMap<>();
-
-        private final ConcurrentMap<String,Class> mRootNodesMutable;
-        public final Map<String,Class>            mRootNodes;
-
-        private final CopyOnWriteArraySet<String> mElementsAllowingEmptyValuesMutable;
-        public final Collection<String>           mElementsAllowingEmptyValues;
-
-        private final CopyOnWriteArraySet<String> mElementsPreservingWhiteSpaceMutable;
-        public final Collection<String>           mElementsPreservingWhiteSpace;
-        private final Map<String, List<Class>> mVersionUpgradeClasses;
-        private final Map<String, List<VersionUpgrade>> mVersionUpgrades;
-
-        MappingStuff() {
-            mRootNodesMutable  = new ConcurrentHashMap<>();
-            mRootNodes         = Collections.unmodifiableMap( mRootNodesMutable );
-
-            mElementsAllowingEmptyValuesMutable = new CopyOnWriteArraySet<>();
-            mElementsAllowingEmptyValues = Collections.unmodifiableSet(mElementsAllowingEmptyValuesMutable);
-
-            mElementsPreservingWhiteSpaceMutable = new CopyOnWriteArraySet<>();
-            mElementsPreservingWhiteSpace = Collections.unmodifiableSet(mElementsPreservingWhiteSpaceMutable);
-            mVersionUpgradeClasses = new ConcurrentHashMap<>();
-            mVersionUpgrades = new ConcurrentHashMap<>();
-        }
-    }
-
     private static final MappingStuff _mappingStuff = new MappingStuff();
 
-    private final List<XMLNode> nodes = new ArrayList<>();
-    public XMLNode topNode = null;
-    protected String publicID = null;
-    private StringBuffer elementData = null;
-    private Map<String, String> prefixMapping = null;
+    private final List<XMLNode<?>> nodes = new ArrayList<>();
+    public XMLNode<?> topNode;
+    protected String publicID;
+    private StringBuffer elementData;
+    private Map<String, String> prefixMapping;
 
-    private boolean stopOnXMLErrors = false;
+    private boolean stopOnXMLErrors;
 
-    private boolean pushedNamespaceContext=false;
+    private boolean pushedNamespaceContext;
     private final NamespaceSupport namespaces = new NamespaceSupport();
+    private final Stack<String> elementStack = new Stack<>();
 
-    private final Stack elementStack = new Stack();
+    private String rootElement;
+
+    private List<VersionUpgrade> versionUpgradeList;
+
+    private boolean doDelete;
+    private String errorReportingString = "";
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SaxParserHandler.class);
 
@@ -125,7 +102,7 @@ public class SaxParserHandler extends DefaultHandler {
         if (versionUpgradeList != null) {
             return versionUpgradeList;
         }
-        List<Class> classList = _mappingStuff.mVersionUpgradeClasses.get(key);
+        List<Class<?>> classList = _mappingStuff.mVersionUpgradeClasses.get(key);
         if (classList == null) {
             return null;
         }
@@ -133,7 +110,7 @@ public class SaxParserHandler extends DefaultHandler {
         for (int n = 0; n < classList.size(); ++n) {
             VersionUpgrade versionUpgrade = null;
             try {
-                versionUpgrade = (VersionUpgrade) classList.get(n).newInstance();
+                versionUpgrade = (VersionUpgrade) classList.get(n).getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
             }
             if (versionUpgrade != null) {
@@ -152,13 +129,7 @@ public class SaxParserHandler extends DefaultHandler {
         return _mappingStuff.mElementsPreservingWhiteSpace;
     }
 
-    private String rootElement = null;
-
-    private List<VersionUpgrade> versionUpgradeList = null;
-
-    private boolean doDelete = false;
-
-    public static void registerBundleNode(BundleNode bn, String bundleTagName) {
+    public static void registerBundleNode(BundleNode bundleNode, String bundleTagName) {
         /*
         * There is exactly one standard node object for each descriptor type.
         * The node's registerBundle method itself adds the publicID-to-DTD
@@ -169,11 +140,11 @@ public class SaxParserHandler extends DefaultHandler {
             return;
         }
 
-        final HashMap<String, String> dtdMapping = new HashMap<>();
-        final Map<String, List<Class>> versionUpgrades = new HashMap<>();
+        final Map<String, String> dtdMapping = new HashMap<>();
+        final Map<String, List<Class<?>>> versionUpgrades = new HashMap<>();
 
-        String rootNodeKey = bn.registerBundle(dtdMapping);
-        _mappingStuff.mRootNodesMutable.putIfAbsent(rootNodeKey, bn.getClass());
+        String rootNodeKey = bundleNode.registerBundle(dtdMapping);
+        _mappingStuff.mRootNodesMutable.putIfAbsent(rootNodeKey, bundleNode.getClass());
 
         /*
         * There can be multiple runtime nodes (for example, sun-xxx and
@@ -181,7 +152,7 @@ public class SaxParserHandler extends DefaultHandler {
         * updates the publicID-to-DTD map and returns a map of tags to
         * runtime node classes.
         */
-        _mappingStuff.mRootNodesMutable.putAll(bn.registerRuntimeBundle(dtdMapping, versionUpgrades));
+        _mappingStuff.mRootNodesMutable.putAll(bundleNode.registerRuntimeBundle(dtdMapping, versionUpgrades));
 
         _mappingStuff.mVersionUpgradeClasses.putAll(versionUpgrades);
 
@@ -197,17 +168,15 @@ public class SaxParserHandler extends DefaultHandler {
             }
         }
 
-        /*
-        * This node might know of elements which should permit empty values,
-        * or elements for which we should preserve white space.  Track them.
-        */
-        Collection<String> c = bn.elementsAllowingEmptyValue();
-        if (c.size() > 0) {
+        // This node might know of elements which should permit empty values,
+        // or elements for which we should preserve white space.  Track them.
+        Collection<String> c = bundleNode.elementsAllowingEmptyValue();
+        if (!c.isEmpty()) {
             _mappingStuff.mElementsAllowingEmptyValuesMutable.addAll(c);
         }
 
-        c = bn.elementsPreservingWhiteSpace();
-        if (c.size() > 0) {
+        c = bundleNode.elementsPreservingWhiteSpace();
+        if (!c.isEmpty()) {
             _mappingStuff.mElementsPreservingWhiteSpaceMutable.addAll(c);
         }
 
@@ -293,7 +262,7 @@ public class SaxParserHandler extends DefaultHandler {
      */
      protected InputStream getDTDUrlFor(String dtdFileName) {
         String dtdLoc = DTDRegistry.DTD_LOCATION.replace('/', File.separatorChar);
-        File f = new File(dtdLoc +File.separatorChar+ dtdFileName);
+        File f = new File(dtdLoc + File.separatorChar + dtdFileName);
         try {
             return new BufferedInputStream(new FileInputStream(f));
         } catch(FileNotFoundException fnfe) {
@@ -309,11 +278,10 @@ public class SaxParserHandler extends DefaultHandler {
      */
     public static String getSchemaURLFor(String schemaSystemID) throws IOException {
         File f = getSchemaFileFor(schemaSystemID);
-        if (f != null) {
-            return f.toURI().toURL().toString();
-        } else {
+        if (f == null) {
             return null;
         }
+        return f.toURI().toURL().toString();
     }
 
     /**
@@ -326,7 +294,7 @@ public class SaxParserHandler extends DefaultHandler {
             DOLUtils.getDefaultLogger().fine("Getting Schema " + schemaSystemID);
         }
         String schemaLoc = DTDRegistry.SCHEMA_LOCATION.replace('/', File.separatorChar);
-        File f = new File(schemaLoc +File.separatorChar+ schemaSystemID);
+        File f = new File(schemaLoc + File.separatorChar + schemaSystemID);
         if (!f.exists()) {
             DOLUtils.getDefaultLogger().fine("Cannot find schema " + schemaSystemID);
             return null;
@@ -417,7 +385,7 @@ public class SaxParserHandler extends DefaultHandler {
         doDelete = false;
         String lastElement = null;
         try {
-            lastElement = (String) elementStack.pop();
+            lastElement = elementStack.pop();
         } catch (EmptyStackException ex) {
         }
         if (lastElement == null) {
@@ -456,12 +424,12 @@ public class SaxParserHandler extends DefaultHandler {
         if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
             DOLUtils.getDefaultLogger().finer("start of element " + uri + " with local name "+ localName + " and " + qName);
         }
-        XMLNode node = null;
+        XMLNode<?> node = null;
         elementData = new StringBuffer();
 
         if (nodes.isEmpty()) {
             // this must be a root element...
-            Class rootNodeClass = _mappingStuff.mRootNodes.get(localName);
+            Class<?> rootNodeClass = _mappingStuff.mRootNodes.get(localName);
             if (rootNodeClass == null) {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                     new Object[] {localName, " not supported !"});
@@ -472,7 +440,7 @@ public class SaxParserHandler extends DefaultHandler {
                 }
             } else {
                 try {
-                    node = (XMLNode) rootNodeClass.newInstance();
+                    node = (XMLNode<?>) rootNodeClass.getDeclaredConstructor().newInstance();
                     if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                         DOLUtils.getDefaultLogger().fine("Instanciating " + node);
                     }
@@ -517,20 +485,21 @@ public class SaxParserHandler extends DefaultHandler {
 
         String lastElement = null;
         try {
-          lastElement = (String)elementStack.peek();
+            lastElement = elementStack.peek();
         } catch (EmptyStackException ex) {
         }
 
-        if(DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-            DOLUtils.getDefaultLogger().finer("End of element " + uri + " local name "+ localName + " and " + qName + " value " + elementData);
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
+            DOLUtils.getDefaultLogger().finer(
+                "End of element " + uri + " local name " + localName + " and " + qName + " value " + elementData);
         }
-        if (nodes.size()==0) {
+        if (nodes.isEmpty()) {
             // no more nodes to pop
-            elementData=null;
+            elementData = null;
             return;
         }
         XMLElement element = new XMLElement(qName, namespaces);
-        XMLNode topNode = nodes.get(nodes.size()-1);
+        XMLNode<?> topNode = nodes.get(nodes.size() - 1);
         if (elementData != null && (elementData.length() != 0 || allowsEmptyValue(element.getQName()))) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
                 DOLUtils.getDefaultLogger().finer("For element " + element.getQName() + " And value " + elementData);
@@ -618,7 +587,7 @@ public class SaxParserHandler extends DefaultHandler {
         pushedNamespaceContext=false;
 
         try {
-            lastElement = (String) elementStack.pop();
+            lastElement = elementStack.pop();
         } catch (EmptyStackException ex) {
         }
         if (lastElement != null) {
@@ -654,12 +623,11 @@ public class SaxParserHandler extends DefaultHandler {
         }
     }
 
-    private String errorReportingString = "";
     /**
      * Sets the error reporting context string
      */
-    public void setErrorReportingString(String s) {
-        errorReportingString = s;
+    public void setErrorReportingString(String errorReportingString) {
+        this.errorReportingString = errorReportingString;
     }
 
     /**
@@ -687,4 +655,34 @@ public class SaxParserHandler extends DefaultHandler {
     private boolean allowsEmptyValue(String elementName) {
         return getElementsAllowingEmptyValues().contains(elementName);
     }
-}
+
+
+    private static final class MappingStuff {
+
+        public final ConcurrentMap<String, Boolean> mBundleRegistrationStatus = new ConcurrentHashMap<>();
+        public final ConcurrentMap<String, String> mMapping = new ConcurrentHashMap<>();
+
+        private final ConcurrentMap<String, Class<?>> mRootNodesMutable;
+        public final Map<String, Class<?>> mRootNodes;
+
+        private final CopyOnWriteArraySet<String> mElementsAllowingEmptyValuesMutable;
+        public final Collection<String> mElementsAllowingEmptyValues;
+
+        private final CopyOnWriteArraySet<String> mElementsPreservingWhiteSpaceMutable;
+        public final Collection<String> mElementsPreservingWhiteSpace;
+        private final Map<String, List<Class<?>>> mVersionUpgradeClasses;
+        private final Map<String, List<VersionUpgrade>> mVersionUpgrades;
+
+        MappingStuff() {
+            mRootNodesMutable = new ConcurrentHashMap<>();
+            mRootNodes = Collections.unmodifiableMap(mRootNodesMutable);
+
+            mElementsAllowingEmptyValuesMutable = new CopyOnWriteArraySet<>();
+            mElementsAllowingEmptyValues = Collections.unmodifiableSet(mElementsAllowingEmptyValuesMutable);
+
+            mElementsPreservingWhiteSpaceMutable = new CopyOnWriteArraySet<>();
+            mElementsPreservingWhiteSpace = Collections.unmodifiableSet(mElementsPreservingWhiteSpaceMutable);
+            mVersionUpgradeClasses = new ConcurrentHashMap<>();
+            mVersionUpgrades = new ConcurrentHashMap<>();
+        }
+    }}

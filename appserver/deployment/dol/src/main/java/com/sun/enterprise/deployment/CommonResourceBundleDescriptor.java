@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,18 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.JavaEEResourceType;
-
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
 
-import java.util.HashSet;
 import java.util.Set;
 
+import org.glassfish.deployment.common.JavaEEResourceType;
+
 /**
- * Created by IntelliJ IDEA.
- * User: naman
- * Date: 24/5/12
- * Time: 11:24 AM
- * To change this template use File | Settings | File Templates.
+ * @author naman
  */
-public abstract class CommonResourceBundleDescriptor  extends BundleDescriptor {
+public abstract class CommonResourceBundleDescriptor extends BundleDescriptor {
+
+    private static final long serialVersionUID = 3030097808191647490L;
 
     ResourceDescriptorRegistry resourceDescriptorRegistry = new ResourceDescriptorRegistry();
 

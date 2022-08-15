@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,11 @@
 package com.sun.enterprise.deployment.io.runtime;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.runtime.AppClientRuntimeNode;
+
+import org.glassfish.deployment.common.Descriptor;
 
 
 /**
@@ -34,20 +35,21 @@ public class AppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFil
 
     /**
      * @return the location of the DeploymentDescriptor file for a
-     * particular type of J2EE Archive
+     *         particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.S1AS_APP_CLIENT_JAR_ENTRY;
     }
 
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this J2EE module
-     *
-     * @param the descriptor for which we need the node
+     *         descriptors associated with this J2EE module
+     * @param descriptor for which we need the node
      */
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-
+    @Override
+    public AppClientRuntimeNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof ApplicationClientDescriptor) {
             return new AppClientRuntimeNode((ApplicationClientDescriptor) descriptor);
         }

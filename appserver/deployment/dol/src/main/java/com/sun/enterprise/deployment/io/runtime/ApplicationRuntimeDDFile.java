@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +18,17 @@
 package com.sun.enterprise.deployment.io.runtime;
 
 import com.sun.enterprise.deployment.Application;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.hk2.api.PerLookup;
-
+import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.runtime.application.gf.ApplicationRuntimeNode;
-import com.sun.enterprise.deployment.EarType;
-import org.jvnet.hk2.annotations.Service;
-import java.util.List;
+
 import java.util.Map;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This class is responsible for handling the XML configuration information
@@ -45,6 +45,7 @@ public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorF
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.S1AS_APPLICATION_JAR_ENTRY;
     }
@@ -53,10 +54,10 @@ public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorF
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
      *
-     * @param the descriptor for which we need the node
+     * @param descriptor for which we need the node
      */
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-
+    @Override
+    public ApplicationRuntimeNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof Application) {
             return new ApplicationRuntimeNode((Application) descriptor);
         }
@@ -72,10 +73,12 @@ public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorF
      * @param publicIDToDTDMap the map for storing public id to dtd mapping
      * @param versionUpgrades The list of upgrades from older versions
      */
-    public void registerBundle(final Map<String, Class> rootNodesMap,
-                               final Map<String, String> publicIDToDTDMap,
-                               final Map<String, List<Class>> versionUpgrades) {
-      rootNodesMap.put(ApplicationRuntimeNode.registerBundle(publicIDToDTDMap,
-                                                             versionUpgrades), ApplicationRuntimeNode.class);
+    @Override
+    public void registerBundle(
+        Map rootNodesMap,
+        Map publicIDToDTDMap,
+        Map versionUpgrades) {
+        String bundle = ApplicationRuntimeNode.registerBundle(publicIDToDTDMap, versionUpgrades);
+        rootNodesMap.put(bundle, ApplicationRuntimeNode.class);
     }
 }

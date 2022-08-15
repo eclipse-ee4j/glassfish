@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,7 @@ import com.sun.enterprise.deployment.xml.DeclaredPermissionsTagNames;
 import com.sun.enterprise.deployment.PermissionItemDescriptor;
 import com.sun.enterprise.deployment.PermissionsDescriptor;
 
-public class PermissionsNode extends AbstractBundleNode {
+public class PermissionsNode extends AbstractBundleNode<PermissionsDescriptor> {
 
     public final static String SCHEMA_ID = "permissions_9.xsd";
     public final static String SPEC_VERSION = "9";
@@ -33,12 +34,10 @@ public class PermissionsNode extends AbstractBundleNode {
     private final static List<String> systemIDs = initSystemIDs();
 
     // The XML tag associated with this Node
-    public final static XMLElement ROOT_ELEMENT = new XMLElement(
-            DeclaredPermissionsTagNames.PERMS_ROOT);
+    public final static XMLElement ROOT_ELEMENT = new XMLElement(DeclaredPermissionsTagNames.PERMS_ROOT);
 
     private final static List<String> initSystemIDs() {
-
-        List<String> systemIDs = new ArrayList<String>();
+        List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         return Collections.unmodifiableList(systemIDs);
     }
@@ -47,7 +46,9 @@ public class PermissionsNode extends AbstractBundleNode {
 
 
     public PermissionsNode() {
-        if (handlers != null) handlers.clear();
+        if (handlers != null) {
+            handlers.clear();
+        }
 
         permDescriptor = new PermissionsDescriptor();
 
@@ -80,16 +81,14 @@ public class PermissionsNode extends AbstractBundleNode {
     }
 
     @Override
-    public Map<String, Class> registerRuntimeBundle(
+    public Map<String, Class<?>> registerRuntimeBundle(
             Map<String, String> publicIDToSystemIDMapping,
-            final Map<String, List<Class>> versionUpgrades) {
-
-        return Collections.EMPTY_MAP;
+            final Map<String, List<Class<?>>> versionUpgrades) {
+        return Collections.emptyMap();
     }
 
     @Override
     public String getDocType() {
-
         return null;
     }
 
@@ -108,16 +107,15 @@ public class PermissionsNode extends AbstractBundleNode {
         return SPEC_VERSION;
     }
 
+    @Override
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
 
     @Override
     public void addDescriptor(Object descriptor) {
-
         if (descriptor instanceof PermissionItemDescriptor) {
-            final PermissionItemDescriptor pid =
-                PermissionItemDescriptor.class.cast(descriptor);
+            final PermissionItemDescriptor pid = PermissionItemDescriptor.class.cast(descriptor);
             this.getDescriptor().addPermissionItemdescriptor(pid);
         }
     }

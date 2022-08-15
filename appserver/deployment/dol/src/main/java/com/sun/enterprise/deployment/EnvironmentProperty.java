@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,21 +15,22 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.MetadataSource;
 import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.WebDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.internal.api.RelativePathResolver;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.internal.api.RelativePathResolver;
 
 /**
  * The EnvironmentProperty class hold the data about a single environment entry for J2EE components.
@@ -195,12 +197,11 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     public Class getValueType() {
         if (this.type == null) {
             return String.class;
-        } else {
-            try {
-                return Class.forName(this.type, true, Thread.currentThread().getContextClassLoader());
-            } catch (Throwable t) {
-                return null;
-            }
+        }
+        try {
+            return Class.forName(this.type, true, Thread.currentThread().getContextClassLoader());
+        } catch (Throwable t) {
+            return null;
         }
     }
 
@@ -248,10 +249,9 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     public String getType() {
         if (type == null && Descriptor.isBoundsChecking()) {
             return String.class.getName();
-        } else {
-            type = convertPrimitiveTypes(type);
-            return type;
         }
+        type = convertPrimitiveTypes(type);
+        return type;
     }
 
 
@@ -271,12 +271,12 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     public String getLookupName() {
-        return (lookupName != null) ? lookupName : "";
+        return lookupName == null ? "" : lookupName;
     }
 
 
     public boolean hasLookupName() {
-        return (lookupName != null && lookupName.length() > 0);
+        return lookupName != null && !lookupName.isEmpty();
     }
 
 
@@ -297,7 +297,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     public boolean hasAValue() {
-        return (setValueCalled || hasLookupName() || getMappedName().length() > 0);
+        return (setValueCalled || hasLookupName() || !getMappedName().isEmpty());
     }
 
 

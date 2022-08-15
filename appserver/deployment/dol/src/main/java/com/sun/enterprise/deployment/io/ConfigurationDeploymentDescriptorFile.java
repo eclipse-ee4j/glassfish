@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,16 +20,17 @@ package com.sun.enterprise.deployment.io;
 import java.util.List;
 import java.util.Map;
 
+import org.glassfish.deployment.common.Descriptor;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This class is responsible for handling the XML configuration information
- * for the J2EE Reference Implementation runtime descriptors.
+ * for the Jakarta EE Reference Implementation runtime descriptors.
  *
  * @author Jerome Dochez
  */
 @Contract
-public abstract class ConfigurationDeploymentDescriptorFile extends DeploymentDescriptorFile {
+public abstract class ConfigurationDeploymentDescriptorFile<T extends Descriptor> extends DeploymentDescriptorFile<T> {
 
     /**
      * Register the root node for this runtime deployment descriptor file
@@ -39,15 +41,21 @@ public abstract class ConfigurationDeploymentDescriptorFile extends DeploymentDe
      * @param publicIDToDTDMap the map for storing public id to dtd mapping
      * @param versionUpgrades The list of upgrades from older versions
      */
-    public void registerBundle(final Map<String, Class> rootNodesMap,
-                               final Map<String, String> publicIDToDTDMap,
-                               final Map<String, List<Class>> versionUpgrades) {}
+    public void registerBundle(
+        Map<String, Class<?>> rootNodesMap,
+        Map<String, String> publicIDToDTDMap,
+        Map<String, List<Class<?>>> versionUpgrades
+    ) {
+        // nothing by default
+    }
 
-  /**
-   * Return whether this configuration file can be validated.
-   * @return whether this configuration file can be validated.
-   */
-  public boolean isValidating() {
-    return false;
-  }
+
+    /**
+     * Return whether this configuration file can be validated.
+     *
+     * @return whether this configuration file can be validated.
+     */
+    public boolean isValidating() {
+        return false;
+    }
 }

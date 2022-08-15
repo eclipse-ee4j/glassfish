@@ -17,23 +17,39 @@
 
 package com.sun.enterprise.container.common.impl;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
-import static com.sun.enterprise.deployment.util.DOLUtils.getApplicationFromEnv;
-import static com.sun.enterprise.deployment.util.DOLUtils.getApplicationName;
-import static com.sun.enterprise.deployment.util.DOLUtils.getModuleName;
-import static com.sun.enterprise.deployment.util.DOLUtils.getTreatComponentAsModule;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
-import static org.glassfish.deployment.common.JavaEEResourceType.CFD;
-import static org.glassfish.deployment.common.JavaEEResourceType.CSDD;
-import static org.glassfish.deployment.common.JavaEEResourceType.DSD;
-import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDD;
-import static org.glassfish.deployment.common.JavaEEResourceType.JMSDD;
-import static org.glassfish.deployment.common.JavaEEResourceType.MEDD;
-import static org.glassfish.deployment.common.JavaEEResourceType.MSEDD;
-import static org.glassfish.deployment.common.JavaEEResourceType.MTFDD;
-import static org.glassfish.deployment.common.JavaEEResourceType.MSD;
+import com.sun.enterprise.container.common.spi.EjbNamingReferenceManager;
+import com.sun.enterprise.container.common.spi.WebServiceReferenceManager;
+import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.naming.spi.NamingObjectFactory;
+import com.sun.enterprise.naming.spi.NamingUtils;
+
+import jakarta.inject.Inject;
+import jakarta.transaction.TransactionManager;
+import jakarta.validation.Validation;
+import jakarta.validation.ValidationException;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -69,39 +85,23 @@ import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.container.common.spi.EjbNamingReferenceManager;
-import com.sun.enterprise.container.common.spi.WebServiceReferenceManager;
-import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
-import com.sun.enterprise.deployment.EjbReferenceDescriptor;
-import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
-import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.MailSessionDescriptor;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
-import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
-import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.naming.spi.NamingObjectFactory;
-import com.sun.enterprise.naming.spi.NamingUtils;
-
-import jakarta.inject.Inject;
-import jakarta.transaction.TransactionManager;
-import jakarta.validation.Validation;
-import jakarta.validation.ValidationException;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorContext;
-import jakarta.validation.ValidatorFactory;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
+import static com.sun.enterprise.deployment.util.DOLUtils.getApplicationFromEnv;
+import static com.sun.enterprise.deployment.util.DOLUtils.getApplicationName;
+import static com.sun.enterprise.deployment.util.DOLUtils.getModuleName;
+import static com.sun.enterprise.deployment.util.DOLUtils.getTreatComponentAsModule;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
+import static org.glassfish.deployment.common.JavaEEResourceType.CFD;
+import static org.glassfish.deployment.common.JavaEEResourceType.CSDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.DSD;
+import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.JMSDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.MEDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.MSD;
+import static org.glassfish.deployment.common.JavaEEResourceType.MSEDD;
+import static org.glassfish.deployment.common.JavaEEResourceType.MTFDD;
 
 @Service
 public class ComponentEnvManagerImpl implements ComponentEnvManager {
@@ -142,7 +142,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     @Inject
     private InvocationManager invocationManager;
 
-    private ConcurrentMap<String, RefCountJndiNameEnvironment> compId2Env = new ConcurrentHashMap<String, RefCountJndiNameEnvironment>();
+    private final ConcurrentMap<String, RefCountJndiNameEnvironment> compId2Env = new ConcurrentHashMap<>();
 
     /*
      * Keep track of number of components using the same component ID so that we can match register calls with unregister
@@ -210,7 +210,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     public String bindToComponentNamespace(JndiNameEnvironment jndiEnvironment) throws NamingException {
         String componentEnvId = getComponentEnvId(jndiEnvironment);
 
-        Collection<JNDIBinding> bindings = new ArrayList<JNDIBinding>();
+        Collection<JNDIBinding> bindings = new ArrayList<>();
 
         // Add all java:comp, java:module, and java:app(except for app clients) dependencies
         // for the specified environment
@@ -332,7 +332,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     private void addAllDescriptorBindings(JndiNameEnvironment JndiEnvironment, ScopeType scope, Collection<JNDIBinding> jndiBindings) {
-        Set<ResourceDescriptor> allDescriptors = new HashSet<ResourceDescriptor>();
+        Set<ResourceDescriptor> allDescriptors = new HashSet<>();
         Set<ResourceDescriptor> dataSourceDefinitions = JndiEnvironment.getResourceDescriptors(DSD);
         Set<ResourceDescriptor> messagingConnectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(JMSCFDD);
         Set<ResourceDescriptor> mailSessionDefinitions = JndiEnvironment.getResourceDescriptors(MSD);
@@ -596,9 +596,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
         addEnvironmentProperties(scope, env.getEnvironmentProperties().iterator(), jndiBindings);
 
-        for (Iterator itr = env.getResourceEnvReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceEnvReferenceDescriptor next = (ResourceEnvReferenceDescriptor) itr.next();
-
+        for (ResourceEnvReferenceDescriptor next : env.getResourceEnvReferenceDescriptors()) {
             if (!dependencyAppliesToScope(next, scope)) {
                 continue;
             }
@@ -608,25 +606,19 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
         addAllDescriptorBindings(env, scope, jndiBindings);
 
-        for (Iterator itr = env.getEjbReferenceDescriptors().iterator(); itr.hasNext();) {
-            EjbReferenceDescriptor next = (EjbReferenceDescriptor) itr.next();
-
+        for (EjbReferenceDescriptor next : env.getEjbReferenceDescriptors()) {
             if (!dependencyAppliesToScope(next, scope)) {
                 continue;
             }
-
             String name = descriptorToLogicalJndiName(next);
             EjbReferenceProxy proxy = new EjbReferenceProxy(next);
             jndiBindings.add(new CompEnvBinding(name, proxy));
         }
 
-        for (Iterator itr = env.getMessageDestinationReferenceDescriptors().iterator(); itr.hasNext();) {
-            MessageDestinationReferenceDescriptor next = (MessageDestinationReferenceDescriptor) itr.next();
-
+        for (MessageDestinationReferenceDescriptor next : env.getMessageDestinationReferenceDescriptors()) {
             if (!dependencyAppliesToScope(next, scope)) {
                 continue;
             }
-
             jndiBindings.add(getCompEnvBinding(next));
         }
 
@@ -643,8 +635,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             jndiBindings.add(new CompEnvBinding(name, value));
         }
 
-        for (Iterator itr = env.getServiceReferenceDescriptors().iterator(); itr.hasNext();) {
-            ServiceReferenceDescriptor next = (ServiceReferenceDescriptor) itr.next();
+        for (ServiceReferenceDescriptor serviceReferenceDescriptor : env.getServiceReferenceDescriptors()) {
+            ServiceReferenceDescriptor next = serviceReferenceDescriptor;
 
             if (!dependencyAppliesToScope(next, scope)) {
                 continue;
@@ -675,22 +667,18 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         for (EntityManagerReferenceDescriptor next : env.getEntityManagerReferenceDescriptors()) {
-
             if (!dependencyAppliesToScope(next, scope)) {
                 continue;
             }
-
             String name = descriptorToLogicalJndiName(next);
             FactoryForEntityManagerWrapper value = new FactoryForEntityManagerWrapper(next, this);
             jndiBindings.add(new CompEnvBinding(name, value));
         }
-
-        return;
     }
 
     private CompEnvBinding getCompEnvBinding(final ResourceEnvReferenceDescriptor next) {
         final String name = descriptorToLogicalJndiName(next);
-        Object value = null;
+        final Object value;
         if (next.isEJBContext()) {
             value = new EjbContextProxy(next.getRefType());
         } else if (next.isValidator()) {
@@ -729,8 +717,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     private CompEnvBinding getCompEnvBinding(MessageDestinationReferenceDescriptor messageDestinationRef) {
-        String name = descriptorToLogicalJndiName(messageDestinationRef);
-        String physicalJndiName = null;
+        final String name = descriptorToLogicalJndiName(messageDestinationRef);
+        final String physicalJndiName;
         if (messageDestinationRef.isLinkedToMessageDestination()) {
             physicalJndiName = messageDestinationRef.getMessageDestination().getJndiName();
         } else {
@@ -747,27 +735,19 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     private boolean dependencyAppliesToScope(String name, ScopeType scope) {
-        boolean appliesToScope = false;
-
         switch (scope) {
             case COMPONENT:
                 // Env names without an explicit java: prefix default to java:comp
-                appliesToScope = name.startsWith(JAVA_COMP_PREFIX) || !name.startsWith(JAVA_COLON);
-                break;
+                return name.startsWith(JAVA_COMP_PREFIX) || !name.startsWith(JAVA_COLON);
             case MODULE:
-                appliesToScope = name.startsWith(JAVA_MODULE_PREFIX);
-                break;
+                return name.startsWith(JAVA_MODULE_PREFIX);
             case APP:
-                appliesToScope = name.startsWith(JAVA_APP_PREFIX);
-                break;
+                return name.startsWith(JAVA_APP_PREFIX);
             case GLOBAL:
-                appliesToScope = name.startsWith(JAVA_GLOBAL_PREFIX);
-                break;
+                return name.startsWith(JAVA_GLOBAL_PREFIX);
             default:
-                break;
+                return false;
         }
-
-        return appliesToScope;
     }
 
     /**
@@ -825,7 +805,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     private class EjbContextProxy implements NamingObjectProxy {
 
         private volatile EjbNamingReferenceManager ejbNamingRefManager;
-        private String contextType;
+        private final String contextType;
 
         EjbContextProxy(String contextType) {
             this.contextType = contextType;
@@ -925,7 +905,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     private class WebServiceRefProxy implements NamingObjectProxy {
 
         private WebServiceReferenceManager webServiceRefManager;
-        private ServiceReferenceDescriptor serviceRef;
+        private final ServiceReferenceDescriptor serviceRef;
 
         WebServiceRefProxy(ServiceReferenceDescriptor servRef) {
             this.serviceRef = servRef;
@@ -956,7 +936,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     private class EjbReferenceProxy implements NamingObjectProxy {
 
-        private EjbReferenceDescriptor ejbRef;
+        private final EjbReferenceDescriptor ejbRef;
 
         private volatile EjbNamingReferenceManager ejbRefMgr;
         private volatile Object cachedResult;
@@ -1007,8 +987,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     private static class CompEnvBinding implements JNDIBinding {
 
-        private String name;
-        private Object value;
+        private final String name;
+        private final Object value;
 
         CompEnvBinding(String name, Object value) {
             this.name = name;

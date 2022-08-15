@@ -24,8 +24,24 @@ import com.sun.enterprise.deployment.node.SaxParserHandlerFactory;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.deployment.archive.ReadableArchive;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.logging.Level;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -36,23 +52,11 @@ import org.xml.sax.SAXParseException;
 import static com.sun.enterprise.deployment.node.SaxParserHandler.JAXP_SCHEMA_LANGUAGE;
 import static com.sun.enterprise.deployment.util.DOLUtils.INVALILD_DESCRIPTOR_SHORT;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-import java.util.logging.Level;
-
 /**
  * This abstract class defines common behaviour for classes responsible
  * for loading/saving XML deployment descriptors
+ *
+ * @param <T> Deployment {@link Descriptor} type.
  *
  * @author Jerome Dochez
  */
@@ -68,11 +72,10 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     private String validationLevel=PARSING_VALIDATION;
 
     // error reporting string, used for xml validation error
-    private String errorReportingString=null;
+    private String errorReportingString;
 
     // for i18N
-    private static LocalStringManagerImpl localStrings=
-        new LocalStringManagerImpl(DeploymentDescriptorFile.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeploymentDescriptorFile.class);
 
     private ArchiveType archiveType;
 
@@ -485,7 +488,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     }
 
     /**
-     * @param the archive type to set on this deployment descriptor file
+     * @param type the archive type to set on this deployment descriptor file
      */
     public void setArchiveType(ArchiveType type) {
         archiveType = type;

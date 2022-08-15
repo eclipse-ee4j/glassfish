@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,18 @@
 
 package org.glassfish.web.deployment.io.runtime;
 
-import java.util.List;
-import java.util.Map;
-
-import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
+
+import java.util.Map;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.web.WarType;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.node.runtime.gf.WebBundleRuntimeNode;
-
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -60,8 +58,7 @@ public class WebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      * @param descriptor the descriptor for which we need the node
      */
     @Override
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-
+    public WebBundleRuntimeNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof WebBundleDescriptorImpl) {
             return new WebBundleRuntimeNode((WebBundleDescriptorImpl) descriptor);
         }
@@ -69,12 +66,11 @@ public class WebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
     }
 
     @Override
-    public void registerBundle(final Map<String, Class> rootNodesMap,
-                               final Map<String, String> publicIDToDTDMap,
-                               final Map<String, List<Class>> versionUpgrades) {
-
-        rootNodesMap.put(WebBundleRuntimeNode.registerBundle(publicIDToDTDMap,
-                                                             versionUpgrades),
-                WebBundleRuntimeNode.class);
+    public void registerBundle(
+        final Map rootNodesMap,
+        final Map publicIDToDTDMap,
+        final Map versionUpgrades) {
+        String bundle = WebBundleRuntimeNode.registerBundle(publicIDToDTDMap, versionUpgrades);
+        rootNodesMap.put(bundle, WebBundleRuntimeNode.class);
     }
 }

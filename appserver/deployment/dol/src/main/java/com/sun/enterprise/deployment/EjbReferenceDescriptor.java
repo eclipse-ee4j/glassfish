@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,7 +27,8 @@ import com.sun.enterprise.deployment.util.DOLUtils;
  */
 public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbReference, NamedDescriptor {
 
-    static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
+    private static final long serialVersionUID = 1L;
+    private static final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
 
     // In case the reference has been resolved, the ejbDescriptor will
     // be the referenced ejb.
@@ -36,18 +38,18 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     private BundleDescriptor referringBundle;
 
     // bean type and interfaces names
-    private String refType=null;
-    private String refHomeIntf=null;
-    private String refIntf=null;
+    private String refType;
+    private String refHomeIntf;
+    private String refIntf;
 
     // local-ref or remote-ref
-    private boolean isLocal=false;
+    private boolean isLocal;
 
     /**
      * holds the ejb-link value associated to this ejb reference before the
      * ejbs were resolved
      */
-    private String ejbLink=null;
+    private String ejbLink;
 
     /**
      * Portable lookup name that resolves to this reference's target EJB.
@@ -58,7 +60,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      * resolved, so this is the safest approach to avoiding backward
      * compatibility issues.
      */
-    private String lookupName=null;
+    private String lookupName;
 
     /**
      * constructs an local or remote ejb reference to the given ejb descriptor,
@@ -108,23 +110,24 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
         if (this.ejbDescriptor != null) {
             this.ejbDescriptor.removeEjbReferencer(this); // remove previous referencer
         }
-        this.ejbDescriptor=ejbDescriptor;
-        if (ejbDescriptor!=null) {
+        this.ejbDescriptor = ejbDescriptor;
+        if (ejbDescriptor != null) {
             ejbDescriptor.addEjbReferencer(this);
             if (isLocal()) {
-                if (!ejbDescriptor.isLocalInterfacesSupported() &&
-                    !ejbDescriptor.isLocalBusinessInterfacesSupported() &&
-                    !ejbDescriptor.isLocalBean()) {
-                     throw new RuntimeException(localStrings.getLocalString(
-                     "entreprise.deployment.invalidLocalInterfaceReference",
-                     "Trying to set an ejb-local-ref on an EJB while the EJB [{0}] does not define local interfaces", new Object[] {ejbDescriptor.getName()}));
+                if (!ejbDescriptor.isLocalInterfacesSupported() && !ejbDescriptor.isLocalBusinessInterfacesSupported()
+                    && !ejbDescriptor.isLocalBean()) {
+                    throw new RuntimeException(localStrings.getLocalString(
+                        "entreprise.deployment.invalidLocalInterfaceReference",
+                        "Trying to set an ejb-local-ref on an EJB while the EJB [{0}] does not define local interfaces",
+                        new Object[] {ejbDescriptor.getName()}));
                 }
             } else {
-                if (!ejbDescriptor.isRemoteInterfacesSupported() &&
-                    !ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
-                    throw new RuntimeException(localStrings.getLocalString(
-                    "entreprise.deployment.invalidRemoteInterfaceReference",
-                    "Trying to set an ejb-ref on an EJB, while the EJB [{0}] does not define remote interfaces", new Object[] {ejbDescriptor.getName()}));
+                if (!ejbDescriptor.isRemoteInterfacesSupported()
+                    && !ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
+                    throw new RuntimeException(
+                        localStrings.getLocalString("entreprise.deployment.invalidRemoteInterfaceReference",
+                            "Trying to set an ejb-ref on an EJB, while the EJB [{0}] does not define remote interfaces",
+                            new Object[] {ejbDescriptor.getName()}));
                 }
             }
         }
@@ -141,7 +144,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     @Override
     public boolean hasJndiName() {
         String name = getJndiName();
-        return ((name != null) && !name.equals(""));
+        return name != null && !name.isEmpty();
     }
 
     /**
@@ -158,12 +161,11 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     public String getLinkName() {
         if (ejbDescriptor == null) {
             return ejbLink;
-        } else {
-            if (ejbLink != null && ejbLink.length() != 0) {
-                return ejbLink;
-            }
-            return ejbDescriptor.getName();
         }
+        if (ejbLink != null && !ejbLink.isEmpty()) {
+            return ejbLink;
+        }
+        return ejbDescriptor.getName();
     }
 
     /**
@@ -180,15 +182,13 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     @Override
     public String getJndiName() {
         String jndiName = this.getValue();
-        if( isLocal() ) {
-            // mapped-name has no meaning for the local ejb view.  ejb-link
+        if (isLocal()) {
+            // mapped-name has no meaning for the local ejb view. ejb-link
             // should be used to resolve any ambiguities about the target
             // local ejb.
             return jndiName;
-        } else {
-            return (jndiName != null && ! jndiName.equals("")) ?
-                jndiName : getMappedName();
         }
+        return jndiName != null && !jndiName.isEmpty() ? jndiName : getMappedName();
     }
 
     /**
@@ -198,13 +198,11 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     public String getValue() {
         if (ejbDescriptor == null) {
             return super.getValue();
-        } else {
-            if (isLocal()) {
-                return super.getValue();
-            } else {
-                return ejbDescriptor.getJndiName();
-            }
         }
+        if (isLocal()) {
+            return super.getValue();
+        }
+        return ejbDescriptor.getJndiName();
     }
 
     @Override
@@ -214,17 +212,18 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
 
     @Override
     public String getLookupName() {
-        return (lookupName != null)? lookupName : "";
+        return lookupName == null ? "" : lookupName;
     }
 
     @Override
     public boolean hasLookupName() {
-        return (lookupName != null && lookupName.length() > 0);
+        return lookupName != null && !lookupName.isEmpty();
     }
 
-    /** return the ejb to whoch I refer.
-    */
 
+    /**
+     * return the ejb to whoch I refer.
+     */
     @Override
     public EjbDescriptor getEjbDescriptor() {
         return ejbDescriptor;
@@ -253,25 +252,27 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
 
     @Override
     public String getType() {
-        if (ejbDescriptor==null) {
+        if (ejbDescriptor == null) {
             return refType;
-        } else {
-            return ejbDescriptor.getType();
         }
+        return ejbDescriptor.getType();
     }
 
-    /** Assigns the type of the ejb to whcoih I refer.
-    */
+
+    /**
+     * Assigns the type of the ejb to whcoih I refer.
+     */
     @Override
     public void setType(String type) {
-        refType=type;
+        refType = type;
     }
+
 
     @Override
     public String getInjectResourceType() {
-        return isEJB30ClientView() ?
-            getEjbInterface() : getEjbHomeInterface();
+        return isEJB30ClientView() ? getEjbInterface() : getEjbHomeInterface();
     }
+
 
     @Override
     public void setInjectResourceType(String resourceType) {

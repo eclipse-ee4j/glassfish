@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,29 +19,34 @@ package com.sun.enterprise.web;
 
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.web.ContextParameter;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.util.Result;
 import com.sun.enterprise.web.session.PersistenceType;
+
+import java.lang.reflect.Method;
+import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.deployment.common.ApplicationConfigInfo;
 import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.config.serverbeans.ContextParam;
 import org.glassfish.web.config.serverbeans.EnvEntry;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.runtime.SessionManager;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
-
-import java.lang.reflect.Method;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class WebApplication implements ApplicationContainer<WebBundleDescriptorImpl> {
 
@@ -50,7 +56,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
 
     private final WebContainer container;
     private final WebModuleConfig wmInfo;
-    private Set<WebModule> webModules = new HashSet<WebModule>();
+    private final Set<WebModule> webModules = new HashSet<>();
     private final org.glassfish.web.config.serverbeans.WebModuleConfig appConfigCustomizations;
 
     public WebApplication(WebContainer container, WebModuleConfig config,
@@ -79,8 +85,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
             applyApplicationConfig(appContext);
         }
 
-        List<Result<WebModule>> results = container.loadWebModule(
-            wmInfo, "null", props);
+        List<Result<WebModule>> results = container.loadWebModule(wmInfo, "null", props);
         // release DeploymentContext in memory
         wmInfo.setDeploymentContext(null);
 
@@ -112,7 +117,8 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         }
 
         if (logger.isLoggable(Level.INFO)) {
-            logger.log(Level.INFO, LogFacade.LOADING_APP, new Object[] {wmInfo.getDescriptor().getName(), wmInfo.getDescriptor().getContextRoot()});
+            logger.log(Level.INFO, LogFacade.LOADING_APP,
+                new Object[] {wmInfo.getDescriptor().getName(), wmInfo.getDescriptor().getContextRoot()});
         }
 
         return true;
@@ -257,15 +263,10 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
 
         try {
             if (appConfigCustomizations != null) {
-
-                EnvEntryCustomizer envEntryCustomizer =
-                        new EnvEntryCustomizer(
-                            descriptor.getEnvironmentEntrySet(),
-                            appConfigCustomizations.getEnvEntry());
-                ContextParamCustomizer contextParamCustomizer =
-                        new ContextParamCustomizer(
-                            descriptor.getContextParametersSet(),
-                            appConfigCustomizations.getContextParam());
+                EnvEntryCustomizer envEntryCustomizer = new EnvEntryCustomizer(descriptor.getEnvironmentEntrySet(),
+                    appConfigCustomizations.getEnvEntry());
+                ContextParamCustomizer contextParamCustomizer = new ContextParamCustomizer(
+                    descriptor.getContextParametersSet(), appConfigCustomizations.getContextParam());
 
                 envEntryCustomizer.applyCustomizations();
                 contextParamCustomizer.applyCustomizations();
@@ -302,7 +303,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         protected Set<T> descriptorItems;
         protected List<U> customizations;
 
-        private String descriptorItemName;
+        private final String descriptorItemName;
 
         private Customizer(Set<T> descriptorItems, List<U> customizations, String descriptorItemName) {
             this.descriptorItems = descriptorItems;
@@ -521,9 +522,9 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
     /**
      * Concrete implementation for the EnvEntry customizer.
      */
-    private class EnvEntryCustomizer extends Customizer<EnvironmentEntry,EnvEntry> {
+    private class EnvEntryCustomizer extends Customizer<EnvironmentProperty, EnvEntry> {
 
-        private EnvEntryCustomizer(Set<EnvironmentEntry> descriptorItems, List<EnvEntry> customizations) {
+        private EnvEntryCustomizer(Set<EnvironmentProperty> descriptorItems, List<EnvEntry> customizations) {
             super(descriptorItems, customizations, "env-entry"); // NOI18N
         }
 
@@ -533,16 +534,16 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         }
 
         @Override
-        protected void setDescriptorItemValue(EnvironmentEntry descriptorItem, EnvEntry customization) {
+        protected void setDescriptorItemValue(EnvironmentProperty descriptorItem, EnvEntry customization) {
             customization.validateValue();
             descriptorItem.setValue(customization.getEnvEntryValue());
             descriptorItem.setType(customization.getEnvEntryType());
         }
 
         @Override
-        protected EnvironmentEntry newDescriptorItem(EnvEntry customization) {
+        protected EnvironmentProperty newDescriptorItem(EnvEntry customization) {
             customization.validateValue();
-            EnvironmentEntry newItem =
+            EnvironmentProperty newItem =
                     new EnvironmentProperty(
                         customization.getEnvEntryName(),
                         customization.getEnvEntryValue(),
@@ -557,7 +558,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         }
 
         @Override
-        protected String getName(EnvironmentEntry descriptorItem) {
+        protected String getName(EnvironmentProperty descriptorItem) {
             return descriptorItem.getName();
         }
 
@@ -567,7 +568,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         }
 
         @Override
-        protected String getValue(EnvironmentEntry descriptorItem) {
+        protected String getValue(EnvironmentProperty descriptorItem) {
             return descriptorItem.getValue();
         }
 
@@ -581,27 +582,22 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
     }
 
     private void stopCoherenceWeb() {
-        if (wmInfo.getDescriptor() != null &&
-                wmInfo.getDescriptor().getSunDescriptor() != null) {
+        if (wmInfo.getDescriptor() != null && wmInfo.getDescriptor().getSunDescriptor() != null) {
             SunWebAppImpl sunWebApp = (SunWebAppImpl) wmInfo.getDescriptor().getSunDescriptor();
-            if (sunWebApp.getSessionConfig() != null &&
-                    sunWebApp.getSessionConfig().getSessionManager() != null) {
-                SessionManager sessionManager =
-                    sunWebApp.getSessionConfig().getSessionManager();
-                String persistenceType = sessionManager.getAttributeValue(
-                    SessionManager.PERSISTENCE_TYPE);
+            if (sunWebApp.getSessionConfig() != null && sunWebApp.getSessionConfig().getSessionManager() != null) {
+                SessionManager sessionManager = sunWebApp.getSessionConfig().getSessionManager();
+                String persistenceType = sessionManager.getAttributeValue(SessionManager.PERSISTENCE_TYPE);
                 if (PersistenceType.COHERENCE_WEB.getType().equals(persistenceType)) {
                     ClassLoader cloader = wmInfo.getAppClassLoader();
                     try {
-                        Class<?> cacheFactoryClass = cloader.loadClass(
-                                "com.tangosol.net.CacheFactory");
+                        Class<?> cacheFactoryClass = cloader.loadClass("com.tangosol.net.CacheFactory");
                         if (cacheFactoryClass != null) {
                             Method shutdownMethod = cacheFactoryClass.getMethod("shutdown");
                             if (shutdownMethod != null) {
                                 shutdownMethod.invoke(null);
                             }
                         }
-                    } catch(Exception ex) {
+                    } catch (Exception ex) {
                         if (logger.isLoggable(Level.WARNING)) {
                             String msg = rb.getString(LogFacade.EXCEPTION_SHUTDOWN_COHERENCE_WEB);
                             msg = MessageFormat.format(msg, wmInfo.getDescriptor().getName());

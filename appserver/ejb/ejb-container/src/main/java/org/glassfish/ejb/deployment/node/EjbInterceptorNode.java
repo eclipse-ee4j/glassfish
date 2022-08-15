@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,25 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.node.AdministeredObjectDefinitionNode;
 import com.sun.enterprise.deployment.node.ConnectionFactoryDefinitionNode;
 import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
-import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
-import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
-import com.sun.enterprise.deployment.node.MailSessionNode;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.EjbLocalReferenceNode;
 import com.sun.enterprise.deployment.node.EjbReferenceNode;
 import com.sun.enterprise.deployment.node.EntityManagerFactoryReferenceNode;
 import com.sun.enterprise.deployment.node.EntityManagerReferenceNode;
 import com.sun.enterprise.deployment.node.EnvEntryNode;
+import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
 import com.sun.enterprise.deployment.node.JndiEnvRefNode;
 import com.sun.enterprise.deployment.node.LifecycleCallbackNode;
+import com.sun.enterprise.deployment.node.MailSessionNode;
 import com.sun.enterprise.deployment.node.MessageDestinationRefNode;
 import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
 import com.sun.enterprise.deployment.node.ResourceRefNode;
@@ -44,10 +44,12 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.w3c.dom.Node;
-
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 
 public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor> {
     private EjbInterceptor descriptor;
@@ -75,7 +77,7 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
                EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode<?> serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
@@ -91,14 +93,14 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
     @Override
     protected Map getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(EjbTagNames.INTERCEPTOR_CLASS, "setInterceptorClassName");
         return table;
     }
 
     @Override
     public EjbInterceptor getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new EjbInterceptor();
             descriptor.setEjbBundleDescriptor((EjbBundleDescriptor)getParentNode().getDescriptor());
         }
@@ -107,23 +109,18 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
 
     @Override
     public void addDescriptor(Object  newDescriptor) {
-        if (newDescriptor instanceof EjbReference) {
+        if (newDescriptor instanceof EjbReferenceDescriptor) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
             }
-            getDescriptor().addEjbReferenceDescriptor(
-                        (EjbReference) newDescriptor);
-        } else if( newDescriptor instanceof
-                   MessageDestinationReferenceDescriptor ) {
-            MessageDestinationReferenceDescriptor msgDestRef =
-                (MessageDestinationReferenceDescriptor) newDescriptor;
-            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor)
-                getParentNode().getDescriptor();
+            getDescriptor().addEjbReferenceDescriptor((EjbReferenceDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof MessageDestinationReferenceDescriptor) {
+            MessageDestinationReferenceDescriptor msgDestRef = (MessageDestinationReferenceDescriptor) newDescriptor;
+            EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) getParentNode().getDescriptor();
             // EjbBundle might not be set yet on EjbInterceptor, so set it
             // explicitly here.
             msgDestRef.setReferringBundleDescriptor(ejbBundle);
-            getDescriptor().addMessageDestinationReferenceDescriptor
-                (msgDestRef);
+            getDescriptor().addMessageDestinationReferenceDescriptor(msgDestRef);
         } else {
             super.addDescriptor(newDescriptor);
         }

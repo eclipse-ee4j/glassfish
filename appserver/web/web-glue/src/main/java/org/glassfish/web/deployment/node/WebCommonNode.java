@@ -17,46 +17,7 @@
 
 package org.glassfish.web.deployment.node;
 
-import static com.sun.enterprise.deployment.xml.TagNames.ADMINISTERED_OBJECT;
-import static com.sun.enterprise.deployment.xml.TagNames.CONNECTION_FACTORY;
-import static com.sun.enterprise.deployment.xml.TagNames.DATA_SOURCE;
-import static com.sun.enterprise.deployment.xml.TagNames.JMS_CONNECTION_FACTORY;
-import static com.sun.enterprise.deployment.xml.TagNames.JMS_DESTINATION;
-import static com.sun.enterprise.deployment.xml.TagNames.MAIL_SESSION;
-import static com.sun.enterprise.deployment.xml.TagNames.MESSAGE_DESTINATION;
-import static com.sun.enterprise.deployment.xml.TagNames.POST_CONSTRUCT;
-import static com.sun.enterprise.deployment.xml.TagNames.PRE_DESTROY;
-import static org.glassfish.web.deployment.xml.WebTagNames.JSPCONFIG;
-import static org.glassfish.web.deployment.xml.WebTagNames.LOCALE_ENCODING_MAPPING;
-import static org.glassfish.web.deployment.xml.WebTagNames.TAGLIB;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
-
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
-import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
-import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
-import org.glassfish.web.deployment.descriptor.LoginConfigurationImpl;
-import org.glassfish.web.deployment.descriptor.MimeMappingDescriptor;
-import org.glassfish.web.deployment.descriptor.SecurityConstraintImpl;
-import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
-import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
-import org.glassfish.web.deployment.descriptor.SessionConfigDescriptor;
-import org.glassfish.web.deployment.descriptor.TagLibConfigurationDescriptor;
-import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
-
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
@@ -86,12 +47,56 @@ import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
 import com.sun.enterprise.deployment.node.ResourceRefNode;
 import com.sun.enterprise.deployment.node.SecurityRoleNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.web.AppListenerDescriptor;
+import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.deployment.web.MimeMapping;
+import com.sun.enterprise.deployment.web.NameValuePair;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.web.ServletFilterMapping;
 import com.sun.enterprise.deployment.web.SessionConfig;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.web.deployment.descriptor.AppListenerDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
+import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.LoginConfigurationImpl;
+import org.glassfish.web.deployment.descriptor.MimeMappingDescriptor;
+import org.glassfish.web.deployment.descriptor.SecurityConstraintImpl;
+import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
+import org.glassfish.web.deployment.descriptor.ServletFilterMappingDescriptor;
+import org.glassfish.web.deployment.descriptor.SessionConfigDescriptor;
+import org.glassfish.web.deployment.descriptor.TagLibConfigurationDescriptor;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
+
+import static com.sun.enterprise.deployment.xml.TagNames.ADMINISTERED_OBJECT;
+import static com.sun.enterprise.deployment.xml.TagNames.CONNECTION_FACTORY;
+import static com.sun.enterprise.deployment.xml.TagNames.DATA_SOURCE;
+import static com.sun.enterprise.deployment.xml.TagNames.JMS_CONNECTION_FACTORY;
+import static com.sun.enterprise.deployment.xml.TagNames.JMS_DESTINATION;
+import static com.sun.enterprise.deployment.xml.TagNames.MAIL_SESSION;
+import static com.sun.enterprise.deployment.xml.TagNames.MESSAGE_DESTINATION;
+import static com.sun.enterprise.deployment.xml.TagNames.POST_CONSTRUCT;
+import static com.sun.enterprise.deployment.xml.TagNames.PRE_DESTROY;
+import static org.glassfish.web.deployment.xml.WebTagNames.JSPCONFIG;
+import static org.glassfish.web.deployment.xml.WebTagNames.LOCALE_ENCODING_MAPPING;
+import static org.glassfish.web.deployment.xml.WebTagNames.TAGLIB;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
 
 /**
  * This node is responsible for handling the web-common xml tree
@@ -112,7 +117,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode<?> serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),
                     "addServiceReferenceDescriptor");
@@ -166,8 +171,8 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
     @Override
     public void addDescriptor(Object newDescriptor) {
         Logger logger = DOLUtils.getDefaultLogger();
-        if (newDescriptor instanceof EjbReference) {
-            descriptor.addEjbReferenceDescriptor((EjbReference) newDescriptor);
+        if (newDescriptor instanceof EjbReferenceDescriptor) {
+            descriptor.addEjbReferenceDescriptor((EjbReferenceDescriptor) newDescriptor);
         } else if (newDescriptor instanceof EnvironmentProperty) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("Adding env entry" + newDescriptor);
@@ -237,12 +242,12 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
      */
     void addServletMapping(String servletName, String urlPattern) {
         if (servletMappings == null) {
-            servletMappings = new HashMap<String, Vector<String>>();
+            servletMappings = new HashMap<>();
         }
         if (servletMappings.containsKey(servletName)) {
             servletMappings.get(servletName).add(urlPattern);
         } else {
-            Vector<String> mappings = new Vector<String>();
+            Vector<String> mappings = new Vector<>();
             mappings.add(urlPattern);
             servletMappings.put(servletName, mappings);
         }
@@ -259,24 +264,22 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         if (WebTagNames.DISTRIBUTABLE.equals(element.getQName())) {
             descriptor.setDistributable(true);
             return false;
-        } else {
-            boolean allDone = super.endElement(element);
-            if (allDone && servletMappings != null) {
-                for (Iterator<String> keys = servletMappings.keySet().iterator(); keys.hasNext();) {
-                    String servletName = keys.next();
-                    Vector<String> mappings = servletMappings.get(servletName);
-                    WebComponentDescriptor servlet = descriptor.getWebComponentByCanonicalName(servletName);
-                    if (servlet != null) {
-                        for (Iterator<String> mapping = mappings.iterator(); mapping.hasNext();) {
-                            servlet.addUrlPattern(mapping.next());
-                        }
-                    } else {
-                        throw new RuntimeException("There is no web component by the name of " + servletName + " here.");
+        }
+        boolean allDone = super.endElement(element);
+        if (allDone && servletMappings != null) {
+            for (String servletName : servletMappings.keySet()) {
+                Vector<String> mappings = servletMappings.get(servletName);
+                WebComponentDescriptor servlet = descriptor.getWebComponentByCanonicalName(servletName);
+                if (servlet != null) {
+                    for (String mapping2 : mappings) {
+                        servlet.addUrlPattern(mapping2);
                     }
+                } else {
+                    throw new RuntimeException("There is no web component by the name of " + servletName + " here.");
                 }
             }
-            return allDone;
         }
+        return allDone;
     }
 
     /**
@@ -298,39 +301,36 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
 
         // filter*
         FilterNode filterNode = new FilterNode();
-        for (Enumeration filters = webBundleDesc.getServletFilters().elements(); filters.hasMoreElements();) {
-            filterNode.writeDescriptor(jarNode, WebTagNames.FILTER, (ServletFilterDescriptor) filters.nextElement());
+        for (Object element : webBundleDesc.getServletFilters()) {
+            filterNode.writeDescriptor(jarNode, WebTagNames.FILTER, (ServletFilterDescriptor) element);
         }
 
         // filter-mapping*
         FilterMappingNode filterMappingNode = new FilterMappingNode();
-        for (Enumeration mappings = webBundleDesc.getServletFilterMappings().elements(); mappings.hasMoreElements();) {
-            filterMappingNode.writeDescriptor(jarNode, WebTagNames.FILTER_MAPPING, (ServletFilterMappingDescriptor) mappings.nextElement());
+        for (ServletFilterMapping element : webBundleDesc.getServletFilterMappings()) {
+            filterMappingNode.writeDescriptor(jarNode, WebTagNames.FILTER_MAPPING, (ServletFilterMappingDescriptor) element);
         }
 
         // listener*
-        Vector appListeners = webBundleDesc.getAppListenerDescriptors();
+        Vector<AppListenerDescriptor> appListeners = webBundleDesc.getAppListenerDescriptors();
         if (!appListeners.isEmpty()) {
             ListenerNode listenerNode = new ListenerNode();
-            for (Enumeration e = appListeners.elements(); e.hasMoreElements();) {
-                listenerNode.writeDescriptor(jarNode, WebTagNames.LISTENER, (AppListenerDescriptorImpl) e.nextElement());
+            for (AppListenerDescriptor appListener : appListeners) {
+                listenerNode.writeDescriptor(jarNode, WebTagNames.LISTENER, (AppListenerDescriptorImpl) appListener);
             }
         }
 
-        Set servlets = webBundleDesc.getWebComponentDescriptors();
+        Set<WebComponentDescriptor> servlets = webBundleDesc.getWebComponentDescriptors();
         if (!servlets.isEmpty()) {
             // servlet*
             ServletNode servletNode = new ServletNode();
-            for (Iterator e = servlets.iterator(); e.hasNext();) {
-                WebComponentDescriptor aServlet = (WebComponentDescriptor) e.next();
+            for (WebComponentDescriptor aServlet : servlets) {
                 servletNode.writeDescriptor(jarNode, aServlet);
             }
 
             // servlet-mapping*
-            for (Iterator servletsIterator = servlets.iterator(); servletsIterator.hasNext();) {
-                WebComponentDescriptor aServlet = (WebComponentDescriptor) servletsIterator.next();
-                for (Iterator patterns = aServlet.getUrlPatternsSet().iterator(); patterns.hasNext();) {
-                    String pattern = (String) patterns.next();
+            for (WebComponentDescriptor aServlet : servlets) {
+                for (String pattern : aServlet.getUrlPatternsSet()) {
                     Node mappingNode = appendChild(jarNode, WebTagNames.SERVLET_MAPPING);
                     appendTextChild(mappingNode, WebTagNames.SERVLET_NAME, aServlet.getCanonicalName());
 
@@ -348,26 +348,27 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
 
         // mime-mapping*
         MimeMappingNode mimeNode = new MimeMappingNode();
-        for (Enumeration e = webBundleDesc.getMimeMappings(); e.hasMoreElements();) {
+        for (Enumeration<MimeMapping> e = webBundleDesc.getMimeMappings(); e.hasMoreElements();) {
+            // there's no other implementation
             MimeMappingDescriptor mimeMapping = (MimeMappingDescriptor) e.nextElement();
             mimeNode.writeDescriptor(jarNode, WebTagNames.MIME_MAPPING, mimeMapping);
         }
 
         // welcome-file-list?
-        Enumeration welcomeFiles = webBundleDesc.getWelcomeFiles();
+        Enumeration<String> welcomeFiles = webBundleDesc.getWelcomeFiles();
         if (welcomeFiles.hasMoreElements()) {
             Node welcomeList = appendChild(jarNode, WebTagNames.WELCOME_FILE_LIST);
             while (welcomeFiles.hasMoreElements()) {
-                appendTextChild(welcomeList, WebTagNames.WELCOME_FILE, (String) welcomeFiles.nextElement());
+                appendTextChild(welcomeList, WebTagNames.WELCOME_FILE, welcomeFiles.nextElement());
             }
         }
 
         // error-page*
-        Enumeration errorPages = webBundleDesc.getErrorPageDescriptors();
+        Enumeration<ErrorPageDescriptor> errorPages = webBundleDesc.getErrorPageDescriptors();
         if (errorPages.hasMoreElements()) {
             ErrorPageNode errorPageNode = new ErrorPageNode();
             while (errorPages.hasMoreElements()) {
-                errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, (ErrorPageDescriptor) errorPages.nextElement());
+                errorPageNode.writeDescriptor(jarNode, WebTagNames.ERROR_PAGE, errorPages.nextElement());
             }
         }
 
@@ -379,7 +380,7 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // security-constraint*
-        Enumeration securityConstraints = webBundleDesc.getSecurityConstraints();
+        Enumeration<SecurityConstraint> securityConstraints = webBundleDesc.getSecurityConstraints();
         if (securityConstraints.hasMoreElements()) {
             SecurityConstraintNode scNode = new SecurityConstraintNode();
             while (securityConstraints.hasMoreElements()) {
@@ -396,12 +397,12 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         }
 
         // security-role*
-        Enumeration roles = webBundleDesc.getSecurityRoles();
+        Enumeration<SecurityRoleDescriptor> roles = webBundleDesc.getSecurityRoles();
         if (roles.hasMoreElements()) {
             SecurityRoleNode srNode = new SecurityRoleNode();
             while (roles.hasMoreElements()) {
-                SecurityRoleDescriptor role = (SecurityRoleDescriptor) roles.nextElement();
-                srNode.writeDescriptor(jarNode, WebTagNames.ROLE, role);
+                SecurityRoleDescriptor role = roles.nextElement();
+                srNode.writeDescriptor(jarNode, TagNames.ROLE, role);
             }
         }
 
@@ -459,17 +460,17 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         return jarNode;
     }
 
-    static void addInitParam(Node parentNode, String nodeName, Set initParams) {
+    static void addInitParam(Node parentNode, String nodeName, Set<ContextParameter> initParams) {
         if (!initParams.isEmpty()) {
             InitParamNode initParamNode = new InitParamNode();
-            for (Iterator e = initParams.iterator(); e.hasNext();) {
-                EnvironmentProperty ep = (EnvironmentProperty) e.next();
+            for (ContextParameter initParam : initParams) {
+                EnvironmentProperty ep = (EnvironmentProperty) initParam;
                 initParamNode.writeDescriptor(parentNode, nodeName, ep);
             }
         }
     }
 
-    static void addInitParam(Node parentNode, String nodeName, Enumeration initParams) {
+    static void addInitParam(Node parentNode, String nodeName, Enumeration<NameValuePair> initParams) {
         InitParamNode initParamNode = new InitParamNode();
         while (initParams.hasMoreElements()) {
             EnvironmentProperty ep = (EnvironmentProperty) initParams.nextElement();

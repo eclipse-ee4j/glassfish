@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -63,9 +64,8 @@ public class AnnotationInfo {
      * @param element the annotated element
      * @param annotation the annotation
      */
-    public AnnotationInfo(ProcessingContext context, AnnotatedElement element,
-            Annotation annotation, ElementType type) {
-
+    public AnnotationInfo(ProcessingContext context, AnnotatedElement element, Annotation annotation,
+        ElementType type) {
         this.context = context;
         this.annotatedElement = element;
         this.annotation = annotation;
@@ -101,6 +101,7 @@ public class AnnotationInfo {
         return type;
     }
 
+    @Override
     public String toString() {
         return localStrings.getLocalString("annotatedinfo.string", "annotation [{0}] on annotated element [{1}] of type [{2}]", annotation, annotatedElement, type);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,7 @@ package com.sun.enterprise.deployment.node;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -36,10 +38,9 @@ public interface BundleNode {
      * equal to the public ID of the DTD and the value the system ID.
      *
      * @param publicIDToSystemIDMapping map prepared by the caller
-     * @param versionUpgrades The list of upgrades from older versions
      * @return top-level element name for the standard descriptor
      */
-  String registerBundle(final Map<String,String> publicIDToSystemIDMapping);
+    String registerBundle(Map<String, String> publicIDToSystemIDMapping);
 
     /**
      * Registers all appropriate runtime bundle nodes for this standard node
@@ -58,16 +59,18 @@ public interface BundleNode {
      * to the latest schema
      * @return map from top-level runtime descriptor element name to the corresponding runtime node class
      */
-    Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToSystemIDMapping, final Map<String, List<Class>> versionUpgrades);
+    Map<String, Class<?>> registerRuntimeBundle(
+        Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades);
 
     /**
-     * Returns the element names related to the standard or related runtime nodes
+     * @return the element names related to the standard or related runtime nodes
      * for which the parser should allow empty values.
      */
     Collection<String> elementsAllowingEmptyValue();
 
     /**
-     * Returns the element names related to the standard or related runtime nodes
+     * @return the element names related to the standard or related runtime nodes
      * for which the parser should preserve whitespace.
      */
     Collection<String> elementsPreservingWhiteSpace();

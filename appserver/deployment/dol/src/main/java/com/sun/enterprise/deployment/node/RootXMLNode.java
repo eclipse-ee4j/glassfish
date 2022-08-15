@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,28 +31,28 @@ public interface RootXMLNode<T>  extends XMLNode<T> {
     /**
      * @return the DOCTYPE that should be written to the XML file
      */
-    public String getDocType();
+    String getDocType();
 
     /**
      * set the DOCTYPE as read in the input XML File
      * @param docType doctype for the xml
      */
-    public void setDocType(String docType);
+    void setDocType(String docType);
 
     /**
      * @return the SystemID of the XML file
      */
-    public String getSystemID();
+    String getSystemID();
 
     /**
      * @return the list of SystemID of the XML schema supported
      */
-    public List<String> getSystemIDs();
+    List<String> getSystemIDs();
 
     /**
      * @return the default spec version level this node complies to
      */
-    public String getSpecVersion();
+    String getSpecVersion();
 
 }
 

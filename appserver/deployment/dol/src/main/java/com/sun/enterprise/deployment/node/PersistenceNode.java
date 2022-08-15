@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -38,8 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class PersistenceNode extends AbstractBundleNode {
 
-    public final static String SCHEMA_NS =
-            "http://java.sun.com/xml/ns/persistence"; // NOI18N
+    public final static String SCHEMA_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
 
     public final static String SCHEMA_ID_1_0 = "persistence_1_0.xsd"; // NOI18N
 
@@ -48,8 +48,7 @@ public class PersistenceNode extends AbstractBundleNode {
     private final static List<String> systemIDs = initSystemIDs();
 
     // The XML tag associated with this Node
-    public final static XMLElement ROOT_ELEMENT = new XMLElement(
-            PersistenceTagNames.PERSISTENCE);
+    public final static XMLElement ROOT_ELEMENT = new XMLElement(PersistenceTagNames.PERSISTENCE);
 
     private PersistenceUnitsDescriptor persistenceUnitsDescriptor;
 
@@ -61,6 +60,7 @@ public class PersistenceNode extends AbstractBundleNode {
         systemIDs.add(SCHEMA_ID_1_0);
         return Collections.unmodifiableList(systemIDs);
     }
+
 
     /**
      * This is the default constructor which is also called from other
@@ -75,11 +75,10 @@ public class PersistenceNode extends AbstractBundleNode {
         if (handlers != null) {
             handlers.clear();
         }
-        registerElementHandler(
-                new XMLElement(PersistenceTagNames.PERSISTENCE_UNIT),
-                PersistenceUnitNode.class);
+        registerElementHandler(new XMLElement(PersistenceTagNames.PERSISTENCE_UNIT), PersistenceUnitNode.class);
         SaxParserHandler.registerBundleNode(this, PersistenceTagNames.PERSISTENCE);
     }
+
 
     public PersistenceNode(PersistenceUnitsDescriptor persistenceUnitsDescriptor) {
         this();
@@ -98,25 +97,32 @@ public class PersistenceNode extends AbstractBundleNode {
         getDescriptor().addPersistenceUnitDescriptor(pud);
     }
 
+
     @Override
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
         return ROOT_ELEMENT.getQName();
     }
 
+
     @Override
-    public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, final Map<String, List<Class>> versionUpgrades) {
-        return Collections.EMPTY_MAP;
+    public Map<String, Class<?>> registerRuntimeBundle(
+        Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        return Collections.emptyMap();
     }
+
 
     @Override
     public String getDocType() {
         return null;
     }
 
+
     @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
+
 
     public String getNameSpace() {
         return SCHEMA_NS;

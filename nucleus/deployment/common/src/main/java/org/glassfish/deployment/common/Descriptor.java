@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,14 @@ package org.glassfish.deployment.common;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Descriptor is the root class for all objects
@@ -29,7 +37,6 @@ import java.util.*;
  *
  * @author Danny Coward
  */
-
 public class Descriptor extends DynamicAttributesDescriptor {
 
     /**
@@ -62,7 +69,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     private Map<String, String> largeIcons = null;
     private Map<String, String> smallIcons = null;
 
-    private Map<Class<? extends Descriptor>, List<? extends Descriptor>> descriptorExtensions = new HashMap<Class<? extends Descriptor>, List<? extends Descriptor>>();
+    private final Map<Class<? extends Descriptor>, List<? extends Descriptor>> descriptorExtensions = new HashMap<>();
 
     /**
      * The default constructor. Constructs a descriptor with
@@ -78,10 +85,9 @@ public class Descriptor extends DynamicAttributesDescriptor {
      *
      */
     public <T extends Descriptor> void addDescriptorExtension(final T dde) {
-        List<T> descriptorList = (List<T>)
-            descriptorExtensions.get(dde.getClass());
+        List<T> descriptorList = (List<T>) descriptorExtensions.get(dde.getClass());
         if (descriptorList == null) {
-            descriptorList = new ArrayList<T>();
+            descriptorList = new ArrayList<>();
             descriptorExtensions.put(dde.getClass(), descriptorList);
         }
         descriptorList.add(dde);
@@ -128,14 +134,18 @@ public class Descriptor extends DynamicAttributesDescriptor {
      * @param other the source descriptor
      */
     protected Descriptor(Descriptor other) {
-        if (other.displayNames != null)
-            this.displayNames = new HashMap<String, String>(other.displayNames);
-        if (other.descriptions != null)
-            this.descriptions = new HashMap<String, String>(other.descriptions);
-        if (other.largeIcons != null)
-            this.largeIcons = new HashMap<String, String>(other.largeIcons);
-        if (other.smallIcons != null)
-            this.smallIcons = new HashMap<String, String>(other.smallIcons);
+        if (other.displayNames != null) {
+            this.displayNames = new HashMap<>(other.displayNames);
+        }
+        if (other.descriptions != null) {
+            this.descriptions = new HashMap<>(other.descriptions);
+        }
+        if (other.largeIcons != null) {
+            this.largeIcons = new HashMap<>(other.largeIcons);
+        }
+        if (other.smallIcons != null) {
+            this.smallIcons = new HashMap<>(other.smallIcons);
+        }
     }
 
     /**
@@ -200,7 +210,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
             lang = Locale.getDefault().getLanguage();
         }
         if (displayNames == null) {
-            displayNames = new HashMap<String, String>();
+            displayNames = new HashMap<>();
         }
         displayNames.put(lang, displayName);
     }
@@ -288,7 +298,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
             lang = Locale.getDefault().getLanguage();
         }
         if (descriptions == null) {
-            descriptions = new HashMap<String, String>();
+            descriptions = new HashMap<>();
         }
         descriptions.put(lang, description);
     }
@@ -299,8 +309,9 @@ public class Descriptor extends DynamicAttributesDescriptor {
      */
     public String getLocalizedDescription(String lang) {
 
-        if (descriptions == null)
+        if (descriptions == null) {
             return "";
+        }
         if (lang == null) {
             lang = Locale.getDefault().getLanguage();
         }
@@ -329,7 +340,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
             lang = Locale.getDefault().getLanguage();
         }
         if (largeIcons == null) {
-            largeIcons = new HashMap<String, String>();
+            largeIcons = new HashMap<>();
         }
         largeIcons.put(lang, uri);
     }
@@ -367,7 +378,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
             lang = Locale.getDefault().getLanguage();
         }
         if (smallIcons == null) {
-            smallIcons = new HashMap<String, String>();
+            smallIcons = new HashMap<>();
         }
         smallIcons.put(lang, uri);
     }
@@ -500,9 +511,9 @@ public class Descriptor extends DynamicAttributesDescriptor {
         String file = trialName.substring(0, p);
 
         /* get list of filenames less extension */
-        Vector<String> nameList = new Vector<String>();
-        for (Enumeration e = otherNames.elements(); e.hasMoreElements();) {
-            String name = e.nextElement().toString();
+        Vector<String> nameList = new Vector<>();
+        for (Object otherName : otherNames) {
+            String name = otherName.toString();
             if (name.endsWith(ext)) {
                 nameList.add(name.substring(0, name.length() - ext.length()));
             }
@@ -533,7 +544,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
      * @return the unique String
      */
     public static String createUniqueNameAmongstNamedDescriptors(String trialName, Set<? extends Descriptor> descriptors) {
-        Vector<String> v = new Vector<String>();
+        Vector<String> v = new Vector<>();
         for (Descriptor next : descriptors) {
             v.addElement(next.getName());
         }
@@ -543,8 +554,8 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * @return an iterator on the deployment-extension
      */
-    public Iterator getDeploymentExtensions() {
-        Vector extensions = (Vector) getExtraAttribute("deployment-extension");
+    public Iterator<Object> getDeploymentExtensions() {
+        Vector<Object> extensions = (Vector<Object>) getExtraAttribute("deployment-extension");
         if (extensions != null) {
             return extensions.iterator();
         }
@@ -559,7 +570,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     public void addPrefixMapping(String mapping, String uri) {
         Map<String, String> prefixMapping = getPrefixMapping();
         if (prefixMapping == null) {
-            prefixMapping = new java.util.HashMap<String, String>();
+            prefixMapping = new java.util.HashMap<>();
             addExtraAttribute("prefix-mapping", prefixMapping);
         }
         prefixMapping.put(mapping, uri);
@@ -576,6 +587,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * A String representation of this object.
      */
+    @Override
     public void print(StringBuffer sb) {
 
         if (displayNames != null) {
@@ -595,8 +607,9 @@ public class Descriptor extends DynamicAttributesDescriptor {
             displayLocalizedMap(sb, largeIcons);
         }
         Map<String, String> prefix = getPrefixMapping();
-        if (prefix != null)
+        if (prefix != null) {
             sb.append("\n Prefix Mapping = ").append(prefix);
+        }
         Iterator itr = getDeploymentExtensions();
         if (itr != null && itr.hasNext()) {
             do {

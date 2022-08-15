@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,14 +18,14 @@
 package org.glassfish.api.event;
 
 /**
- * Code that wish to listen to glassfish events should implement this interface and register it to the Events contract
- * implementation.
+ * Code that wish to listen to glassfish events should implement this interface and register
+ * it to the Events contract implementation.
  *
- * User: Jerome Dochez
+ * @author Jerome Dochez
  */
 public interface EventListener {
 
-    void event(Event event);
+    void event(Event<?> event);
 
     public class Event<T> {
         final long inception;

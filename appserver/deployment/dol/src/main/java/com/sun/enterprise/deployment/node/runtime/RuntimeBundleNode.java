@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,19 +19,19 @@ package com.sun.enterprise.deployment.node.runtime;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
 
-import java.util.Iterator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> extends DeploymentDescriptorNode<T>
     implements RootXMLNode<T> {
@@ -72,6 +73,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
      *
      * @param descriptor the new descriptor
      */
+    @Override
     public void addDescriptor(Object descriptor) {
         return;
     }
@@ -80,6 +82,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
+    @Override
     public T getDescriptor() {
         return descriptor;
     }
@@ -88,6 +91,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
     /**
      * @return the default spec version level this node complies to
      */
+    @Override
     public String getSpecVersion() {
         return "1.5";
     }
@@ -98,6 +102,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
      *
      * @param DOCTYPE
      */
+    @Override
     public void setDocType(String docType) {
         // I do not care about the version of the runtime descriptors
     }
@@ -115,10 +120,10 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
      * writes the message destination references runtime information
      */
     protected void writeMessageDestinationInfo(Node parent, BundleDescriptor descriptor) {
-        for (Iterator iter = descriptor.getMessageDestinations().iterator(); iter.hasNext();) {
+        for (Object element : descriptor.getMessageDestinations()) {
             MessageDestinationRuntimeNode node = new MessageDestinationRuntimeNode();
             node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION,
-                (MessageDestinationDescriptor) iter.next());
+                (MessageDestinationDescriptor) element);
         }
     }
 
@@ -149,7 +154,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
     public void recordNodeMapping(String currentElementName, String subElementName, Class subElementHandler) {
         LinkedHashMap<String, Class> subElementMappings = elementToNodeMappings.get(currentElementName);
         if (subElementMappings == null) {
-            subElementMappings = new LinkedHashMap<String, Class>();
+            subElementMappings = new LinkedHashMap<>();
             elementToNodeMappings.put(currentElementName, subElementMappings);
         }
         subElementMappings.put(subElementName, subElementHandler);
@@ -167,6 +172,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (!DOLUtils.setElementValue(element, value, getDescriptor())) {
             super.setElementValue(element, value);
@@ -180,6 +186,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
      *
      * @return the map with the element name as a key, the setter method as a value
      */
+    @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> dispatchTable = super.getDispatchTable();
         dispatchTable.put("version", "setSpecVersion");

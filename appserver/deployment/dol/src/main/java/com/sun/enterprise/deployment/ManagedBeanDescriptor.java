@@ -398,8 +398,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         List<InjectionCapable> injectables = new LinkedList<>();
 
-        for (Object element : getEnvironmentProperties()) {
-            EnvironmentProperty envEntry = (EnvironmentProperty) element;
+        for (EnvironmentProperty envEntry : getEnvironmentProperties()) {
             // Only env-entries that have been assigned a value are
             // eligible for injection.
             if (envEntry.hasAValue()) {

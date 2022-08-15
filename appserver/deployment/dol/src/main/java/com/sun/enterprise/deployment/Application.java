@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,10 @@
 
 package com.sun.enterprise.deployment;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManagerFactory;
-
 import com.sun.enterprise.deployment.node.ApplicationNode;
 import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
@@ -52,6 +31,28 @@ import com.sun.enterprise.deployment.util.ApplicationVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManagerFactory;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.Descriptor;
@@ -61,10 +62,9 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
 import org.glassfish.deployment.versioning.VersioningUtils;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Role;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Objects of this type encapsulate the data and behaviour of a J2EE
@@ -72,12 +72,13 @@ import org.glassfish.hk2.api.ServiceLocator;
  *
  * @author Danny Coward
  */
-
 public class Application extends CommonResourceBundleDescriptor
         implements RoleMappingContainer, WritableJndiNameEnvironment,
             EjbReferenceContainer, ResourceEnvReferenceContainer,
             ResourceReferenceContainer, ServiceReferenceContainer,
             MessageDestinationReferenceContainer {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * default value for the library-directory element
@@ -92,11 +93,11 @@ public class Application extends CommonResourceBundleDescriptor
     private String generatedXMLDir;
 
     // Set of modules in this application
-    private Set<ModuleDescriptor<BundleDescriptor>> modules = new OrderedSet<ModuleDescriptor<BundleDescriptor>>();
+    private final Set<ModuleDescriptor<BundleDescriptor>> modules = new OrderedSet<>();
 
     // True if unique id has been set.  Allows callers to avoid
     // applying unique ids to subcomponents multiple times.
-    private boolean uniqueIdSet = false;
+    private boolean uniqueIdSet;
 
     // IASRI 4645310
     /**
@@ -108,18 +109,18 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * represents the virtual status of this application object
      */
-    private boolean virtual = false;
+    private boolean virtual;
 
     // IASRI 4662001, 4720955
     /**
      * represents whether all ejb modules in an application will be pass by
      * value or pass by reference
      */
-    private Boolean passByReference = null;
+    private Boolean passByReference;
 
     // use a String object as lock so it can be serialized as part
     // of the Application object
-    private String cmpDescriptorsLock = "cmp descriptors lock";
+    private final String cmpDescriptorsLock = "cmp descriptors lock";
 
     // flag to indicate that the memory representation of this application
     // is not in sync with the disk representation
@@ -140,7 +141,7 @@ public class Application extends CommonResourceBundleDescriptor
 
     private String compatValue;
 
-    private boolean initializeInOrder = false;
+    private boolean initializeInOrder;
 
     // realm associated with this application
     private String realm;
@@ -157,49 +158,35 @@ public class Application extends CommonResourceBundleDescriptor
 
     // Physical entity manager factory corresponding to the unit name of
     // each application-level persistence unit.  Only available at runtime.
-    private transient Map<String, EntityManagerFactory> entityManagerFactories =
-            new HashMap<String, EntityManagerFactory>();
+    private transient Map<String, EntityManagerFactory> entityManagerFactories = new HashMap<>();
 
-    private Set<String> entityManagerFactoryUnitNames =
-            new HashSet<String>();
+    private final Set<String> entityManagerFactoryUnitNames = new HashSet<>();
 
     // the jndi environment entries
-    private Set<EnvironmentProperty> environmentProperties =
-            new HashSet<EnvironmentProperty>();
-    private Set<EjbReference> ejbReferences =
-            new HashSet<EjbReference>();
-    private Set<ResourceEnvReferenceDescriptor> resourceEnvReferences =
-            new HashSet<ResourceEnvReferenceDescriptor>();
-    private Set<MessageDestinationReferenceDescriptor> messageDestReferences =
-            new HashSet<MessageDestinationReferenceDescriptor>();
-    private Set<ResourceReferenceDescriptor> resourceReferences =
-            new HashSet<ResourceReferenceDescriptor>();
-    private Set<ServiceReferenceDescriptor> serviceReferences =
-            new HashSet<ServiceReferenceDescriptor>();
-    private Set<EntityManagerFactoryReferenceDescriptor>
-            entityManagerFactoryReferences =
-            new HashSet<EntityManagerFactoryReferenceDescriptor>();
-    private Set<EntityManagerReferenceDescriptor>
-            entityManagerReferences =
-            new HashSet<EntityManagerReferenceDescriptor>();
+    private final Set<EnvironmentProperty> environmentProperties = new HashSet<>();
+    private final Set<EjbReferenceDescriptor> ejbReferences = new HashSet<>();
+    private final Set<ResourceEnvReferenceDescriptor> resourceEnvReferences = new HashSet<>();
+    private final Set<MessageDestinationReferenceDescriptor> messageDestReferences = new HashSet<>();
+    private final Set<ResourceReferenceDescriptor> resourceReferences = new HashSet<>();
+    private final Set<ServiceReferenceDescriptor> serviceReferences = new HashSet<>();
+    private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
+    private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
     // for i18N
-    private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(Application.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Application.class);
 
     private Set<Role> appRoles;
 
     private String libraryDirectory;
 
-    private List<SecurityRoleMapping> roleMaps = new ArrayList<SecurityRoleMapping>();
-    private List<SecurityRoleAssignment> wlRoleAssignments = new ArrayList<SecurityRoleAssignment>();
+    private final List<SecurityRoleMapping> roleMaps = new ArrayList<>();
+    private final List<SecurityRoleAssignment> wlRoleAssignments = new ArrayList<>();
 
     private boolean loadedFromApplicationXml = true;
 
-    private Set<String> resourceAdapters = new HashSet<String>();
+    private final Set<String> resourceAdapters = new HashSet<>();
 
-    private Set<ApplicationParam> applicationParams =
-            new HashSet<ApplicationParam>();
+    private final Set<ApplicationParam> applicationParams = new HashSet<>();
 
     private static final ServiceLocator habitat = Globals.getDefaultHabitat();
 
@@ -219,10 +206,12 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the default version of the deployment descriptor
      *         loaded by this descriptor
      */
+    @Override
     public String getDefaultSpecVersion() {
         return ApplicationNode.SPEC_VERSION;
     }
 
+    @Override
     public boolean isEmpty() {
         return modules.isEmpty();
     }
@@ -276,32 +265,35 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Returns the generated XML directory feturn the set of ejb references this ejb declares.
      */
-    public Set<EjbReference> getEjbReferenceDescriptors() {
+    @Override
+    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         return ejbReferences;
     }
 
     /**
      * Adds a reference to another ejb to me.
      */
-
-    public void addEjbReferenceDescriptor(EjbReference ejbReference) {
+    @Override
+    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
         ejbReferences.add(ejbReference);
         ejbReference.setReferringBundleDescriptor(this);
     }
 
-    public void removeEjbReferenceDescriptor(EjbReference ejbReference) {
+    @Override
+    public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
         ejbReferences.remove(ejbReference);
     }
 
     /**
-     * Return a reference to another ejb by the same name or throw an IllegalArgumentException.
+     * @return a reference to another ejb by the same name or throw an IllegalArgumentException.
      */
-    public EjbReference getEjbReferenceByName(String name) {
-        return (EjbReferenceDescriptor) getEjbReference(name);
+    public EjbReferenceDescriptor getEjbReferenceByName(String name) {
+        return getEjbReference(name);
     }
 
-    public EjbReference getEjbReference(String name) {
-        for (EjbReference er : getEjbReferenceDescriptors()) {
+    @Override
+    public EjbReferenceDescriptor getEjbReference(String name) {
+        for (EjbReferenceDescriptor er : getEjbReferenceDescriptors()) {
             if (er.getName().equals(name)) {
                 return er;
             }
@@ -311,18 +303,22 @@ public class Application extends CommonResourceBundleDescriptor
                 "This app [{0}] has no ejb reference by the name of [{1}] ", new Object[]{getName(), name}));
     }
 
+
+    @Override
     public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
         return serviceReferences;
     }
 
-    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor
-            serviceRef) {
+
+    @Override
+    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
         serviceRef.setBundleDescriptor(this);
         serviceReferences.add(serviceRef);
     }
 
-    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor
-            serviceRef) {
+
+    @Override
+    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
         serviceReferences.remove(serviceRef);
     }
 
@@ -330,66 +326,72 @@ public class Application extends CommonResourceBundleDescriptor
      * Looks up an service reference with the given name.
      * Throws an IllegalArgumentException if it is not found.
      */
+    @Override
     public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
-        for (Iterator itr = this.getServiceReferenceDescriptors().iterator();
-             itr.hasNext();) {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor)
-                    itr.next();
+        for (ServiceReferenceDescriptor srd : this.getServiceReferenceDescriptors()) {
             if (srd.getName().equals(name)) {
                 return srd;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                "enterprise.deployment.exceptionapphasnoservicerefbyname",
+        throw new IllegalArgumentException(
+            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoservicerefbyname",
                 "This app [{0}] has no service reference by the name of [{1}]",
-                new Object[]{getRegistrationName(), name}));
+                new Object[] {getRegistrationName(), name}));
     }
 
+
+    @Override
     public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
         return messageDestReferences;
     }
 
-    public void addMessageDestinationReferenceDescriptor
-            (MessageDestinationReferenceDescriptor messageDestRef) {
+
+    @Override
+    public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor messageDestRef) {
         messageDestRef.setReferringBundleDescriptor(this);
         messageDestReferences.add(messageDestRef);
     }
 
-    public void removeMessageDestinationReferenceDescriptor
-            (MessageDestinationReferenceDescriptor msgDestRef) {
+
+    @Override
+    public void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef) {
         messageDestReferences.remove(msgDestRef);
     }
+
 
     /**
      * Looks up an message destination reference with the given name.
      * Throws an IllegalArgumentException if it is not found.
      */
-    public MessageDestinationReferenceDescriptor
-        getMessageDestinationReferenceByName(String name) {
-
+    @Override
+    public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name) {
         for (MessageDestinationReferenceDescriptor mdr : messageDestReferences) {
             if (mdr.getName().equals(name)) {
                 return mdr;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                "exceptionapphasnomsgdestrefbyname",
-
-                "This app [{0}] has no message destination reference by the name of [{1}]",
-                new Object[]{getRegistrationName(), name}));
+        throw new IllegalArgumentException(localStrings.getLocalString("exceptionapphasnomsgdestrefbyname",
+            "This app [{0}] has no message destination reference by the name of [{1}]",
+            new Object[] {getRegistrationName(), name}));
     }
+
 
     /**
      * Return the set of resource environment references this application declares.
      */
+    @Override
     public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
         return resourceEnvReferences;
     }
 
+
+    @Override
     public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
         resourceEnvReferences.add(resourceEnvReference);
     }
 
+
+    @Override
     public void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference) {
         resourceEnvReferences.remove(resourceEnvReference);
     }
@@ -397,12 +399,11 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Return a reference to another ejb by the same name or throw an IllegalArgumentException.
      */
+    @Override
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
-        for (Iterator itr = this.getResourceEnvReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceEnvReferenceDescriptor jdr = (ResourceEnvReferenceDescriptor) itr.next();
+        for (ResourceEnvReferenceDescriptor jdr : this.getResourceEnvReferenceDescriptors()) {
             if (jdr.getName().equals(name)) {
                 return jdr;
-
             }
         }
         throw new IllegalArgumentException(localStrings.getLocalString(
@@ -415,12 +416,14 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Return the set of resource references this ejb declares.
      */
+    @Override
     public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         return resourceReferences;
     }
     /**
      * Adds a resource reference to me.
      */
+    @Override
     public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
         resourceReferences.add(resourceReference);
     }
@@ -428,6 +431,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Removes the given resource reference from me.
      */
+    @Override
     public void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
         resourceReferences.remove(resourceReference);
     }
@@ -435,9 +439,10 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Return the resource object corresponding to the supplied name or throw an illegal argument exception.
      */
+    @Override
     public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
-        for (Iterator itr = this.getResourceReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceReferenceDescriptor next = (ResourceReferenceDescriptor) itr.next();
+        for (Object element : this.getResourceReferenceDescriptors()) {
+            ResourceReferenceDescriptor next = (ResourceReferenceDescriptor) element;
             if (next.getName().equals(name)) {
                 return next;
             }
@@ -452,9 +457,9 @@ public class Application extends CommonResourceBundleDescriptor
      * Returns the environment property object searching on the supplied key.
      * throws an illegal argument exception if no such environment property exists.
      */
+    @Override
     public EnvironmentProperty getEnvironmentPropertyByName(String name) {
-        for (Iterator itr = this.getEnvironmentProperties().iterator(); itr.hasNext();) {
-            EnvironmentProperty ev = (EnvironmentProperty) itr.next();
+        for (EnvironmentProperty ev : this.getEnvironmentProperties()) {
             if (ev.getName().equals(name)) {
                 return ev;
             }
@@ -468,10 +473,12 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Return a copy of the structure holding the environment properties.
      */
+    @Override
     public Set<EnvironmentProperty> getEnvironmentProperties() {
         return environmentProperties;
     }
 
+    @Override
     public void addEnvironmentProperty(EnvironmentProperty environmentProperty) {
         this.environmentProperties.add(environmentProperty);
     }
@@ -480,104 +487,114 @@ public class Application extends CommonResourceBundleDescriptor
      * Removes the given environment property from me.
      */
 
+    @Override
     public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
         this.getEnvironmentProperties().remove(environmentProperty);
 
     }
 
-    public Set<EntityManagerFactoryReferenceDescriptor>
-        getEntityManagerFactoryReferenceDescriptors() {
 
+    @Override
+    public Set<EntityManagerFactoryReferenceDescriptor> getEntityManagerFactoryReferenceDescriptors() {
         return entityManagerFactoryReferences;
     }
+
 
     /**
      * Return the entity manager factory reference descriptor corresponding to
      * the given name.
      */
-    public EntityManagerFactoryReferenceDescriptor
-        getEntityManagerFactoryReferenceByName(String name) {
-        for (EntityManagerFactoryReferenceDescriptor next :
-                getEntityManagerFactoryReferenceDescriptors()) {
+    @Override
+    public EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReferenceByName(String name) {
+        for (EntityManagerFactoryReferenceDescriptor next : getEntityManagerFactoryReferenceDescriptors()) {
             if (next.getName().equals(name)) {
                 return next;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                "enterprise.deployment.exceptionapphasnoentitymgrfactoryrefbyname",
+        throw new IllegalArgumentException(
+            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoentitymgrfactoryrefbyname",
                 "This app {0} has no entity manager factory reference by the name of {1}",
-                new Object[]{getRegistrationName(), name}));
+                new Object[] {getRegistrationName(), name}));
     }
 
-    public void addEntityManagerFactoryReferenceDescriptor
-            (EntityManagerFactoryReferenceDescriptor reference) {
+
+    @Override
+    public void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor reference) {
         reference.setReferringBundleDescriptor(this);
         this.entityManagerFactoryReferences.add(reference);
     }
 
-    public Set<EntityManagerReferenceDescriptor>
-        getEntityManagerReferenceDescriptors() {
 
+    @Override
+    public Set<EntityManagerReferenceDescriptor> getEntityManagerReferenceDescriptors() {
         return entityManagerReferences;
     }
+
 
     /**
      * Return the entity manager factory reference descriptor corresponding to
      * the given name.
      */
-    public EntityManagerReferenceDescriptor
-        getEntityManagerReferenceByName(String name) {
-        for (EntityManagerReferenceDescriptor next :
-                getEntityManagerReferenceDescriptors()) {
-
+    @Override
+    public EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name) {
+        for (EntityManagerReferenceDescriptor next : getEntityManagerReferenceDescriptors()) {
             if (next.getName().equals(name)) {
                 return next;
             }
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                "enterprise.deployment.exceptionapphasnoentitymgrrefbyname",
+        throw new IllegalArgumentException(
+            localStrings.getLocalString("enterprise.deployment.exceptionapphasnoentitymgrrefbyname",
                 "This app {0} has no entity manager reference by the name of {1}",
-
-                new Object[]{getRegistrationName(), name}));
+                new Object[] {getRegistrationName(), name}));
     }
 
-    public void addEntityManagerReferenceDescriptor
-            (EntityManagerReferenceDescriptor reference) {
+
+    @Override
+    public void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor reference) {
         reference.setReferringBundleDescriptor(this);
         this.getEntityManagerReferenceDescriptors().add(reference);
     }
 
-    public Set<LifecycleCallbackDescriptor>
-        getPostConstructDescriptors() {
+
+    @Override
+    public Set<LifecycleCallbackDescriptor> getPostConstructDescriptors() {
         throw new UnsupportedOperationException();
     }
 
-    public void addPostConstructDescriptor(LifecycleCallbackDescriptor
-        postConstructDesc) {
+
+    @Override
+    public void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
         throw new UnsupportedOperationException();
     }
 
-    public LifecycleCallbackDescriptor
-        getPostConstructDescriptorByClass(String className) {
+
+    @Override
+    public LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className) {
         throw new UnsupportedOperationException();
     }
 
+
+    @Override
     public Set<LifecycleCallbackDescriptor> getPreDestroyDescriptors() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
         return (getInjectableResourcesByClass(className, this));
     }
 
+    @Override
     public InjectionInfo getInjectionInfoByClass(Class clazz) {
         return (getInjectionInfoByClass(clazz, this));
     }
@@ -629,11 +646,10 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the registration name of this application
      */
     public String getRegistrationName() {
-        if (registrationName != null) {
-            return registrationName;
-        } else {
+        if (registrationName == null) {
             return getName();
         }
+        return registrationName;
     }
     // END OF IASRI 4648645
 
@@ -681,10 +697,12 @@ public class Application extends CommonResourceBundleDescriptor
         }
     }
 
+    @Override
     public String getCompatibility() {
         return compatValue;
     }
 
+    @Override
     public void setCompatibility(String compatValue) {
         this.compatValue = compatValue;
     }
@@ -715,19 +733,18 @@ public class Application extends CommonResourceBundleDescriptor
      * persistence-unit-refs and persistence-context-refs. The syntax is similar
      * to ejb-link and messge-destination-link. See (EJB 3 core spec: 15.10.2)
      *
-     * @param unitName:           Name of the persistence-unit
-     * @param persistenceRootUri: uri of the root of the persistence.xml
+     * @param unitName           Name of the persistence-unit
+     * @param persistenceRootUri uri of the root of the persistence.xml
      *                            (excluding META-INF) in which the persistence unit was defined.
      *                            This uri is relative to the top of the .ear.
-     * @param emf:                an entity manager factory.
+     * @param emf                an entity manager factory.
      */
     public void addEntityManagerFactory(
             String unitName,
             String persistenceRootUri,
             EntityManagerFactory emf) {
 
-        String fullyQualifiedUnitName = persistenceRootUri +
-                PERSISTENCE_UNIT_NAME_SEPARATOR + unitName;
+        String fullyQualifiedUnitName = persistenceRootUri + PERSISTENCE_UNIT_NAME_SEPARATOR + unitName;
 
         // Always allow fully qualified lookup.
         entityManagerFactories.put(fullyQualifiedUnitName, emf);
@@ -746,28 +763,24 @@ public class Application extends CommonResourceBundleDescriptor
         }
     }
 
+
     /**
      * Retrieve the physical entity manager factory associated with the
-     * unitName of an application-level persistence unit.   Returns null if
+     * unitName of an application-level persistence unit. Returns null if
      * no matching entry is found.
      */
-    public EntityManagerFactory getEntityManagerFactory
-            (String unitName, BundleDescriptor declaringModule) {
-
+    public EntityManagerFactory getEntityManagerFactory(String unitName, BundleDescriptor declaringModule) {
         String lookupString = unitName;
 
-        int separatorIndex =
-                unitName.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
+        int separatorIndex = unitName.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
 
         if (separatorIndex != -1) {
-            String unqualifiedUnitName =
-                    unitName.substring(separatorIndex + 1);
+            String unqualifiedUnitName = unitName.substring(separatorIndex + 1);
             String path = unitName.substring(0, separatorIndex);
 
             String persistenceRootUri = getTargetUri(declaringModule, path);
 
-            lookupString = persistenceRootUri +
-                    PERSISTENCE_UNIT_NAME_SEPARATOR + unqualifiedUnitName;
+            lookupString = persistenceRootUri + PERSISTENCE_UNIT_NAME_SEPARATOR + unqualifiedUnitName;
         }
 
         return entityManagerFactories.get(lookupString);
@@ -777,11 +790,9 @@ public class Application extends CommonResourceBundleDescriptor
      * Returns the set of physical entity manager factories associated with
      * persistence units in this application.
      */
+    @Override
     public Set<EntityManagerFactory> getEntityManagerFactories() {
-
-        return new HashSet<EntityManagerFactory>
-                (entityManagerFactories.values());
-
+        return new HashSet<>(entityManagerFactories.values());
     }
 
     /**
@@ -790,8 +801,9 @@ public class Application extends CommonResourceBundleDescriptor
      *
      * @return the Set of roles in the application.
      */
+    @Override
     public Set<Role> getRoles() {
-        Set<Role> roles = new HashSet<Role>();
+        Set<Role> roles = new HashSet<>();
         for (BundleDescriptor bd : getBundleDescriptors()) {
             if (bd != null) {
                 roles.addAll(bd.getRoles());
@@ -806,7 +818,7 @@ public class Application extends CommonResourceBundleDescriptor
      */
     public Set<Role> getAppRoles() {
         if (this.appRoles == null) {
-            this.appRoles = new HashSet<Role>();
+            this.appRoles = new HashSet<>();
         }
         return this.appRoles;
     }
@@ -821,6 +833,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Adds a new abstract role
      */
+    @Override
     public void addRole(Role role) {
         for (BundleDescriptor bd : getBundleDescriptors()) {
             bd.addRole(role);
@@ -830,6 +843,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * Removes the given role.
      */
+    @Override
     public void removeRole(Role role) {
         getAppRoles().remove(role);
         for (BundleDescriptor bd : getBundleDescriptors()) {
@@ -842,6 +856,7 @@ public class Application extends CommonResourceBundleDescriptor
      *
      * @param name the display name of the application.
      */
+    @Override
     public void setName(String name) {
         name = name.replace('/', '-');
         name = name.replace('\\', '-'); // for deploying from NT to solaris & vice versa. This will
@@ -935,8 +950,7 @@ public class Application extends CommonResourceBundleDescriptor
      *                          to another bundle within the application.
      * @return target BundleDescriptor or null if not found.
      */
-    public BundleDescriptor getRelativeBundle(BundleDescriptor origin,
-                                              String relativeTargetUri) {
+    public BundleDescriptor getRelativeBundle(BundleDescriptor origin, String relativeTargetUri) {
         String targetBundleUri = getTargetUri(origin, relativeTargetUri);
 
         BundleDescriptor targetBundle = null;
@@ -948,23 +962,22 @@ public class Application extends CommonResourceBundleDescriptor
         return targetBundle;
     }
 
+
     /**
      * Return the relative uri between two modules, from the perspective
      * of the first bundle.
      *
      * @return relative uri or empty string if the two bundles are the same
      */
-    public String getRelativeUri(BundleDescriptor origin,
-                                 BundleDescriptor target) {
-
+    public String getRelativeUri(BundleDescriptor origin, BundleDescriptor target) {
         String originUri = origin.getModuleDescriptor().getArchiveUri();
         String targetUri = target.getModuleDescriptor().getArchiveUri();
 
         StringTokenizer tokenizer = new StringTokenizer(originUri, "/");
         int numTokens = tokenizer.countTokens();
-        int numSeparators = (numTokens > 0) ? (numTokens - 1) : 0;
+        int numSeparators = numTokens > 0 ? numTokens - 1 : 0;
 
-        StringBuffer relativeUri = new StringBuffer();
+        StringBuilder relativeUri = new StringBuilder();
 
         // The simplest way to compute a relative uri is to add one "../"
         // for each sub-path in the origin URI, then add the target URI.
@@ -1005,10 +1018,10 @@ public class Application extends CommonResourceBundleDescriptor
      *         or null if not found.
      */
     public Collection<ModuleDescriptor<BundleDescriptor>> getModuleDescriptorsByType(ArchiveType type) {
-        if (type==null) {
+        if (type == null) {
             throw new IllegalArgumentException("type cannot be null");
         }
-        LinkedList<ModuleDescriptor<BundleDescriptor>> results = new LinkedList<ModuleDescriptor<BundleDescriptor>>();
+        LinkedList<ModuleDescriptor<BundleDescriptor>> results = new LinkedList<>();
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             if (type.equals(aModule.getModuleType())) {
                 results.add(aModule);
@@ -1116,7 +1129,7 @@ public class Application extends CommonResourceBundleDescriptor
         if (type == null) {
             return null;
         }
-        Set<T> bundleSet = new OrderedSet<T>();
+        Set<T> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor aModule : getModules()) {
             try {
                 T descriptor = type.cast(aModule.getDescriptor());
@@ -1143,7 +1156,7 @@ public class Application extends CommonResourceBundleDescriptor
         if (bundleType == null) {
             return Collections.emptySet();
         }
-        Set<BundleDescriptor> bundleSet = new OrderedSet<BundleDescriptor>();
+        Set<BundleDescriptor> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor aModule : getModules()) {
             if (aModule.getDescriptor().getModuleType()== bundleType) {
                 bundleSet.add((BundleDescriptor)aModule.getDescriptor());
@@ -1165,7 +1178,7 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the set of bundle descriptors
      */
     public Set<BundleDescriptor> getBundleDescriptors() {
-        Set<BundleDescriptor> bundleSet = new OrderedSet<BundleDescriptor>();
+        Set<BundleDescriptor> bundleSet = new OrderedSet<>();
         for (ModuleDescriptor<BundleDescriptor> aModule :  getModules()) {
             BundleDescriptor bundleDesc = aModule.getDescriptor();
             if (bundleDesc != null) {
@@ -1188,6 +1201,7 @@ public class Application extends CommonResourceBundleDescriptor
      *
      * @param bundleDescriptor the bundle descriptor to add
      */
+    @Override
     public void addBundleDescriptor(BundleDescriptor bundleDescriptor) {
         ModuleDescriptor newModule = bundleDescriptor.getModuleDescriptor();
         addModule(newModule);
@@ -1207,7 +1221,7 @@ public class Application extends CommonResourceBundleDescriptor
      * Return the Vector of ejb deployment objects.
      */
     public Vector<EjbDescriptor> getEjbDescriptors() {
-        Vector<EjbDescriptor> ejbDescriptors = new Vector<EjbDescriptor>();
+        Vector<EjbDescriptor> ejbDescriptors = new Vector<>();
         for (EjbBundleDescriptor ejbBundleDescriptor : getBundleDescriptors(EjbBundleDescriptor.class)) {
             ejbDescriptors.addAll(ejbBundleDescriptor.getEjbs());
         }
@@ -1237,6 +1251,7 @@ public class Application extends CommonResourceBundleDescriptor
         // as the additional piece of information for comparison
         Arrays.sort(descs,
                 new Comparator() {
+                    @Override
                     public int compare(Object o1, Object o2) {
                         EjbDescriptor desc1 = (EjbDescriptor) o1;
                         EjbDescriptor desc2 = (EjbDescriptor) o2;
@@ -1347,30 +1362,24 @@ public class Application extends CommonResourceBundleDescriptor
      * @return boolean pass-by-reference property for this application
      */
     public boolean getPassByReference() {
-        boolean passByReference = false;
-
         if (this.isPassByReferenceDefined()) {
-            passByReference = this.passByReference.booleanValue();
+            return this.passByReference.booleanValue();
         }
-        return passByReference;
+        return false;
     }
     // END OF IASRI 4662001, 4720955
 
     // START OF IASRI 4720955
-    /* *
+
+    /**
      * Determines if the application's pass-by-reference property has been
      * defined or undefined in sun-application.xml
      *
      * @return true - pass-by-reference is defined in sun-application.xml
      *         false - pass-by-reference is undefined in sun-application.xml
      */
-
     public boolean isPassByReferenceDefined() {
-        boolean passByReferenceDefined = false;
-        if (this.passByReference != null) {
-            passByReferenceDefined = true;
-        }
-        return passByReferenceDefined;
+        return this.passByReference != null;
     }
     // END OF IASRI 4720955
 
@@ -1413,6 +1422,7 @@ public class Application extends CommonResourceBundleDescriptor
      * Return my mapping of rolename to users and groups on a particular
      * server.
      */
+    @Override
     public SecurityRoleMapper getRoleMapper() {
         if (this.roleMapper == null) {
             if (securityRoleMapperFactory == null) {
@@ -1448,6 +1458,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * @return the class loader associated with this application
      */
+    @Override
     public ClassLoader getClassLoader() {
         return classLoader;
     }
@@ -1455,6 +1466,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * A formatted String representing my state.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("Application");
         toStringBuffer.append("\n");
@@ -1472,12 +1484,12 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
     private void printDescriptorSet(Set descSet, StringBuffer sbuf) {
-        for (Iterator itr = descSet.iterator(); itr.hasNext();) {
-            Object obj = itr.next();
-            if (obj instanceof Descriptor)
+        for (Object obj : descSet) {
+            if (obj instanceof Descriptor) {
                 ((Descriptor) obj).print(sbuf);
-            else
+            } else {
                 sbuf.append(obj);
+            }
         }
     }
 
@@ -1486,6 +1498,7 @@ public class Application extends CommonResourceBundleDescriptor
      *
      * @param aVisitor visitor to traverse the descriptors
      */
+    @Override
     public void visit(DescriptorVisitor aVisitor) {
         if (aVisitor instanceof ApplicationVisitor) {
             visit((ComponentVisitor) aVisitor);
@@ -1497,6 +1510,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * @return the module ID for this module descriptor
      */
+    @Override
     public String getModuleID() {
         if (appName != null) {
             return appName;
@@ -1507,6 +1521,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * @return true if this module is an application object
      */
+    @Override
     public boolean isApplication() {
         return true;
     }
@@ -1514,6 +1529,7 @@ public class Application extends CommonResourceBundleDescriptor
     /**
      * @return the module type for this bundle descriptor
      */
+    @Override
     public ArchiveType getModuleType() {
         return DOLUtils.earType();
     }

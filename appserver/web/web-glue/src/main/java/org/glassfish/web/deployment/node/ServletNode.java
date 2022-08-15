@@ -24,6 +24,8 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.MultipartConfig;
+import com.sun.enterprise.deployment.xml.TagNames;
+
 import org.glassfish.web.deployment.descriptor.MultipartConfigDescriptor;
 import org.glassfish.web.deployment.descriptor.WebComponentDescriptorImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
@@ -49,9 +51,9 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
     /** Creates new ServletNode */
     public ServletNode() {
         super();
-        registerElementHandler(new XMLElement(WebTagNames.ROLE_REFERENCE), SecurityRoleRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.ROLE_REFERENCE), SecurityRoleRefNode.class);
         registerElementHandler(new XMLElement(WebTagNames.INIT_PARAM), InitParamNode.class);
-        registerElementHandler(new XMLElement(WebTagNames.RUNAS_SPECIFIED_IDENTITY),
+        registerElementHandler(new XMLElement(TagNames.RUNAS_SPECIFIED_IDENTITY),
                                                              RunAsNode.class, "setRunAsIdentity");
         registerElementHandler(new XMLElement(WebTagNames.MULTIPART_CONFIG), MultipartConfigNode.class);
 
@@ -99,7 +101,9 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
                         (InitializationParameter) newDescriptor);
         } else if (newDescriptor instanceof MultipartConfig) {
             descriptor.setMultipartConfig((MultipartConfig)newDescriptor);
-        } else super.addDescriptor(newDescriptor);
+        } else {
+            super.addDescriptor(newDescriptor);
+        }
     }
 
     /**
@@ -112,7 +116,7 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
-        table.put(WebTagNames.NAME, "setName");
+        table.put(TagNames.NAME, "setName");
         table.put(WebTagNames.SERVLET_NAME, "setCanonicalName");
         return table;
     }
@@ -165,7 +169,7 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
         }
 
         // init-param*
-        WebCommonNode.addInitParam(myNode, WebTagNames.INIT_PARAM, descriptor.getInitializationParameters());
+        WebCommonNode.addInitParam(myNode, WebTagNames.INIT_PARAM, (Enumeration) descriptor.getInitializationParameters());
 
         if (descriptor.getLoadOnStartUp()!=null) {
             appendTextChild(myNode, WebTagNames.LOAD_ON_STARTUP, String.valueOf(descriptor.getLoadOnStartUp()));
@@ -180,14 +184,14 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
         RunAsIdentityDescriptor runAs = descriptor.getRunAsIdentity();
         if (runAs!=null) {
             RunAsNode runAsNode = new RunAsNode();
-            runAsNode.writeDescriptor(myNode, WebTagNames.RUNAS_SPECIFIED_IDENTITY, runAs);
+            runAsNode.writeDescriptor(myNode, TagNames.RUNAS_SPECIFIED_IDENTITY, runAs);
         }
 
         // sercurity-role-ref*
         Enumeration roleRefs = descriptor.getSecurityRoleReferences();
         SecurityRoleRefNode roleRefNode = new SecurityRoleRefNode();
         while (roleRefs.hasMoreElements()) {
-            roleRefNode.writeDescriptor(myNode, WebTagNames.ROLE_REFERENCE,
+            roleRefNode.writeDescriptor(myNode, TagNames.ROLE_REFERENCE,
                             (RoleReference) roleRefs.nextElement());
         }
 

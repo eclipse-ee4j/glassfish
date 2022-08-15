@@ -96,7 +96,7 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     RoleReference getRoleReferenceByName(String roleReferenceName);
 
-    Set getSecurityBusinessMethodDescriptors();
+    Set<MethodDescriptor> getSecurityBusinessMethodDescriptors();
 
     void addPermissionedMethod(MethodPermission mp, MethodDescriptor md);
 

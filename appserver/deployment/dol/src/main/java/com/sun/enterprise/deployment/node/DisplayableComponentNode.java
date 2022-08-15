@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package com.sun.enterprise.deployment.node;
 
+import com.sun.enterprise.deployment.xml.TagNames;
 
 import org.glassfish.deployment.common.Descriptor;
-import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Node;
 
 
@@ -46,6 +47,7 @@ public abstract class DisplayableComponentNode<T extends Descriptor> extends Dep
      * @param the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, T descriptor) {
         Node node = super.writeDescriptor(parent, descriptor);
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.types.EjbReference;
 
 /**
  * Objects implementing this interface allow their
@@ -47,14 +47,14 @@ public interface WritableJndiNameEnvironment extends JndiNameEnvironment {
      *
      * @param ejbReference the EjbReferenceDescriptor to add.
      */
-    void addEjbReferenceDescriptor(EjbReference ejbReference);
+    void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
      * Removes the specificed ejb reference from the receiver.
      *
      * @param ejbReference the EjbReferenceDescriptor to remove.
      */
-    void removeEjbReferenceDescriptor(EjbReference ejbReference);
+    void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
      * Adds the specified resource reference to the receiver.

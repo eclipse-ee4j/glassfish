@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,9 +42,9 @@ import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.core.*;
+import com.sun.enterprise.deployment.core.MetadataSource;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.ComponentPostVisitor;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -81,24 +82,25 @@ import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.security.common.Role;
-import org.glassfish.web.deployment.node.WebBundleNode;
+import org.glassfish.web.deployment.node.WebCommonNode;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.util.WebBundleTracerVisitor;
 import org.glassfish.web.deployment.util.WebBundleValidator;
 import org.glassfish.web.deployment.util.WebBundleVisitor;
 
- /**
-  * The concrete implementation of abstract super class
-  * com.sun.enterprise.deployment.WebBundleDescriptor.
-  * TODO WebBundleDescriptor could be changed from abstract class to an interface in the future,
-  * with this
-  * class as its implementation.
-  */
- public class WebBundleDescriptorImpl extends WebBundleDescriptor {
+/**
+ * The concrete implementation of abstract super class
+ * com.sun.enterprise.deployment.WebBundleDescriptor.
+ * TODO WebBundleDescriptor could be changed from abstract class to an interface in the future,
+ * with this
+ * class as its implementation.
+ */
+public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
-    private final static String DEPLOYMENT_DESCRIPTOR_DIR = "WEB-INF";
+    private static final long serialVersionUID = 1L;
+    private static final String DEPLOYMENT_DESCRIPTOR_DIR = "WEB-INF";
 
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WebBundleDescriptor.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WebBundleDescriptor.class);
 
     private Set<WebComponentDescriptor> webComponentDescriptors;
     private SessionConfig sessionConfig;
@@ -107,55 +109,53 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     private Set<ErrorPageDescriptor> errorPageDescriptors;
     private Vector<AppListenerDescriptor> appListenerDescriptors;
     private Set<ContextParameter> contextParameters;
-    private Set<EjbReference> ejbReferences;
+    private Set<EjbReferenceDescriptor> ejbReferences;
     private Set<ResourceReferenceDescriptor> resourceReferences;
     private Set<ResourceEnvReferenceDescriptor> resourceEnvRefReferences;
     private Set<MessageDestinationReferenceDescriptor> messageDestReferences;
     private Set<ServiceReferenceDescriptor> serviceReferences;
 
-    private Set<LifecycleCallbackDescriptor> postConstructDescs = new HashSet<>();
-    private Set<LifecycleCallbackDescriptor> preDestroyDescs = new HashSet<>();
+    private final Set<LifecycleCallbackDescriptor> postConstructDescs = new HashSet<>();
+    private final Set<LifecycleCallbackDescriptor> preDestroyDescs = new HashSet<>();
+    private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
+    private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
-    private Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
-
-    private Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
-
-    private boolean distributable = false;
-    private boolean denyUncoveredHttpMethods = false;
+    private boolean distributable;
+    private boolean denyUncoveredHttpMethods;
     private Set<SecurityRoleDescriptor> securityRoles;
     private Set<SecurityConstraint> securityConstraints;
     private String contextRoot;
     private String requestCharacterEncoding;
     private String responseCharacterEncoding;
     private LoginConfiguration loginConfiguration;
-    private Set<EnvironmentEntry> environmentEntries;
-    private LocaleEncodingMappingListDescriptor localeEncodingMappingListDesc = null;
-    private JspConfigDescriptorImpl jspConfigDescriptor = null;
+    private Set<EnvironmentProperty> environmentEntries;
+    private LocaleEncodingMappingListDescriptor localeEncodingMappingListDesc;
+    private JspConfigDescriptorImpl jspConfigDescriptor;
 
-    private Vector<ServletFilter> servletFilters = null;
-    private Vector<ServletFilterMapping> servletFilterMappings = null;
+    private Vector<ServletFilter> servletFilters;
+    private Vector<ServletFilterMapping> servletFilterMappings;
 
-    private AbsoluteOrderingDescriptor absOrdering = null;
+    private AbsoluteOrderingDescriptor absOrdering;
 
-    private SunWebApp sunWebApp = null;
+    private SunWebApp sunWebApp;
 
     // An entry here, may be set to indicate additional processing.
     // This entry may be set, for example, by a Deployer.
     //
-    private Map<String, String> extensionProperty = null;
+    private Map<String, String> extensionProperty;
 
-    private Map<String, String> jarName2WebFragNameMap = null;
+    private Map<String, String> jarName2WebFragNameMap;
 
     // this is for checking whether there are more than one servlets for a given url-pattern
-    private Map<String, String> urlPattern2ServletName = null;
+    private Map<String, String> urlPattern2ServletName;
 
-    private List<String> orderedLibs = new ArrayList<String>();
+    private final List<String> orderedLibs = new ArrayList<>();
 
     private boolean showArchivedRealPathEnabled = true;
 
     private int servletReloadCheckSecs = 1;
 
-    private Set<String> conflictedMimeMappingExtensions = null;
+    private Set<String> conflictedMimeMappingExtensions;
 
     /**
      * Constrct an empty web app [{0}].
@@ -171,12 +171,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * This method will merge the contents of webComponents.
      * @param webBundleDescriptor
      */
+    @Override
     public void addWebBundleDescriptor(WebBundleDescriptor webBundleDescriptor) {
         getWelcomeFilesSet().addAll(webBundleDescriptor.getWelcomeFilesSet());
         addCommonWebBundleDescriptor(webBundleDescriptor, false);
     }
 
 
+    @Override
     public void addDefaultWebBundleDescriptor(WebBundleDescriptor webBundleDescriptor) {
         if (getWelcomeFilesSet().size() == 0) {
             getWelcomeFilesSet().addAll(webBundleDescriptor.getWelcomeFilesSet());
@@ -218,7 +220,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                     // url pattern already exists in current bundle
                     // need to remove the url pattern in current bundle servlet
                     if (removeUrlPatterns == null) {
-                        removeUrlPatterns = new ArrayList<String>();
+                        removeUrlPatterns = new ArrayList<>();
                     }
                     removeUrlPatterns.add(urlPattern);
                 }
@@ -292,6 +294,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         addJndiNameEnvironment(webBundleDescriptor);
     }
 
+    @Override
     public void addJndiNameEnvironment(JndiNameEnvironment env) {
 
         // combine with conflict resolution check
@@ -309,21 +312,24 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         combineAllResourceDescriptors(env);
     }
 
+    @Override
     public boolean isEmpty() {
-        return (webComponentDescriptors == null || webComponentDescriptors.isEmpty());
+        return webComponentDescriptors == null || webComponentDescriptors.isEmpty();
     }
 
     /**
      * @return the default version of the deployment descriptor
      *         loaded by this descriptor
      */
+    @Override
     public String getDefaultSpecVersion() {
-        return WebBundleNode.SPEC_VERSION;
+        return WebCommonNode.SPEC_VERSION;
     }
 
     /**
      * Return the set of named descriptors that I have.
      */
+    @Override
     public Collection getNamedDescriptors() {
         return super.getNamedDescriptorsFrom(this);
     }
@@ -331,6 +337,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return the saet of NamedReferencePairs that I have.
      */
+    @Override
     public Vector<NamedReferencePair> getNamedReferencePairs() {
         return super.getNamedReferencePairsFrom(this);
     }
@@ -338,6 +345,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * return the name of my context root
      */
+    @Override
     public String getContextRoot() {
         if (getModuleDescriptor() != null && getModuleDescriptor().getContextRoot() != null) {
             return getModuleDescriptor().getContextRoot();
@@ -351,6 +359,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Set the name of my context root.
      */
+    @Override
     public void setContextRoot(String contextRoot) {
         if (getModuleDescriptor() != null) {
             getModuleDescriptor().setContextRoot(contextRoot);
@@ -361,6 +370,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * return the request encoding
      */
+    @Override
     public String getRequestCharacterEncoding() {
         return this.requestCharacterEncoding;
     }
@@ -368,6 +378,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Set the request encoding
      */
+    @Override
     public void setRequestCharacterEncoding(String requestCharacterEncoding) {
         this.requestCharacterEncoding = requestCharacterEncoding;
     }
@@ -375,6 +386,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * return the response encoding
      */
+    @Override
     public String getResponseCharacterEncoding() {
         return this.responseCharacterEncoding;
     }
@@ -382,6 +394,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Set the response encoding
      */
+    @Override
     public void setResponseCharacterEncoding(String responseCharacterEncoding) {
         this.responseCharacterEncoding = responseCharacterEncoding;
     }
@@ -389,9 +402,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return the Set of Web COmponent Descriptors (JSP or JavaServlets) in me.
      */
+    @Override
     public Set<WebComponentDescriptor> getWebComponentDescriptors() {
         if (webComponentDescriptors == null) {
-            webComponentDescriptors = new OrderedSet<WebComponentDescriptor>();
+            webComponentDescriptors = new OrderedSet<>();
         }
         return webComponentDescriptors;
     }
@@ -400,6 +414,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Adds a new Web Component Descriptor to me.
      * @param webComponentDescriptor
      */
+    @Override
     public void addWebComponentDescriptor(WebComponentDescriptor webComponentDescriptor) {
         String name = webComponentDescriptor.getCanonicalName();
         webComponentDescriptor.setWebBundleDescriptor(this);
@@ -427,6 +442,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      *
      * @return web component descriptor in current bundle
      */
+    @Override
     protected WebComponentDescriptor combineWebComponentDescriptor(
             WebComponentDescriptor webComponentDescriptor) {
 
@@ -474,16 +490,19 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Remove the given web component from me.
      */
 
+    @Override
     public void removeWebComponentDescriptor(WebComponentDescriptor webComponentDescriptor) {
         webComponentDescriptor.setWebBundleDescriptor(null);
         getWebComponentDescriptors().remove(webComponentDescriptor);
         resetUrlPatternToServletNameMap();
     }
 
+    @Override
     public SessionConfig getSessionConfig() {
         return sessionConfig;
     }
 
+    @Override
     public void setSessionConfig(SessionConfig sessionConfig) {
         this.sessionConfig = sessionConfig;
     }
@@ -498,25 +517,30 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * WEB SERVICES REF APIS
      */
+    @Override
     public boolean hasServiceReferenceDescriptors() {
-        if (serviceReferences == null)
+        if (serviceReferences == null) {
             return false;
-        return serviceReferences.size() != 0;
+        }
+        return !serviceReferences.isEmpty();
     }
 
+    @Override
     public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
         if (serviceReferences == null) {
-            serviceReferences = new OrderedSet<ServiceReferenceDescriptor>();
+            serviceReferences = new OrderedSet<>();
         }
         return serviceReferences;
     }
 
+    @Override
     public void addServiceReferenceDescriptor(ServiceReferenceDescriptor
             serviceRef) {
         serviceRef.setBundleDescriptor(this);
         getServiceReferenceDescriptors().add(serviceRef);
     }
 
+    @Override
     public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor
             serviceRef) {
         serviceRef.setBundleDescriptor(null);
@@ -527,6 +551,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Looks up an service reference with the given name.
      * Throws an IllegalArgumentException if it is not found.
      */
+    @Override
     public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
         ServiceReferenceDescriptor sr = _getServiceReferenceByName(name);
         if (sr != null) {
@@ -539,6 +564,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 new Object[]{getName(), name}));
     }
 
+    @Override
     protected ServiceReferenceDescriptor _getServiceReferenceByName(String name) {
         for (ServiceReferenceDescriptor srd : getServiceReferenceDescriptors()) {
             if (srd.getName().equals(name)) {
@@ -548,13 +574,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return null;
     }
 
+    @Override
     protected void combineServiceReferenceDescriptors(JndiNameEnvironment env) {
         for (Object oserviceRef: env.getServiceReferenceDescriptors()) {
             ServiceReferenceDescriptor serviceRef =
                 (ServiceReferenceDescriptor)oserviceRef;
             ServiceReferenceDescriptor sr = _getServiceReferenceByName(serviceRef.getName());
             if (sr != null) {
-                combineInjectionTargets(sr, (EnvironmentProperty)serviceRef);
+                combineInjectionTargets(sr, serviceRef);
             } else {
                 if (env instanceof WebBundleDescriptor &&
                         ((WebBundleDescriptor)env).isConflictServiceReference()) {
@@ -571,9 +598,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return the set of resource environment references this ejb declares.
      */
+    @Override
     public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
         if (resourceEnvRefReferences == null) {
-            resourceEnvRefReferences = new OrderedSet<ResourceEnvReferenceDescriptor>();
+            resourceEnvRefReferences = new OrderedSet<>();
         }
         return resourceEnvRefReferences;
     }
@@ -581,6 +609,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * adds a resource environment reference to the bundle
      */
+    @Override
     public void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvRefReference) {
         getResourceEnvReferenceDescriptors().add(resourceEnvRefReference);
     }
@@ -588,6 +617,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * removes a existing resource environment reference from the bundle
      */
+    @Override
     public void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvRefReference) {
         getResourceEnvReferenceDescriptors().remove(resourceEnvRefReference);
     }
@@ -595,6 +625,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return a resource environment reference by the same name or throw an IllegalArgumentException.
      */
+    @Override
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
         ResourceEnvReferenceDescriptor jrd = _getResourceEnvReferenceByName(name);
         if (jrd != null) {
@@ -606,6 +637,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 "This web app [{0}] has no resource environment reference by the name of [{1}]", new Object[]{getName(), name}));
     }
 
+    @Override
     protected ResourceEnvReferenceDescriptor _getResourceEnvReferenceByName(String name) {
         for (ResourceEnvReferenceDescriptor jdr : getResourceEnvReferenceDescriptors()) {
             if (jdr.getName().equals(name)) {
@@ -615,30 +647,28 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return null;
     }
 
+    @Override
     protected void combineResourceEnvReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object ojdRef: env.getResourceEnvReferenceDescriptors()) {
-            ResourceEnvReferenceDescriptor jdRef =
-                (ResourceEnvReferenceDescriptor)ojdRef;
+        for (ResourceEnvReferenceDescriptor jdRef: env.getResourceEnvReferenceDescriptors()) {
             ResourceEnvReferenceDescriptor jdr = _getResourceEnvReferenceByName(jdRef.getName());
             if (jdr != null) {
                 combineInjectionTargets(jdr, jdRef);
             } else {
-                if (env instanceof WebBundleDescriptor &&
-                        ((WebBundleDescriptor)env).isConflictResourceEnvReference()) {
+                if (env instanceof WebBundleDescriptor
+                    && ((WebBundleDescriptor) env).isConflictResourceEnvReference()) {
                     throw new IllegalArgumentException(localStrings.getLocalString(
-                            "web.deployment.exceptionconflictresourceenvref",
-                            "There are more than one resource env references defined in web fragments with the same name, but not overrided in web.xml"));
-                } else {
-                    addResourceEnvReferenceDescriptor(jdRef);
+                        "web.deployment.exceptionconflictresourceenvref",
+                        "There are more than one resource env references defined in web fragments with the same name, but not overrided in web.xml"));
                 }
-
+                addResourceEnvReferenceDescriptor(jdRef);
             }
         }
     }
 
+    @Override
     public Set<MimeMapping> getMimeMappingsSet() {
         if (mimeMappings == null) {
-            mimeMappings = new HashSet<MimeMapping>();
+            mimeMappings = new HashSet<>();
         }
         return mimeMappings;
     }
@@ -646,6 +676,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Sets the Set of Mime Mappings for this web application.
      */
+    @Override
     public void setMimeMappings(Set<MimeMapping> mimeMappings) {
         this.mimeMappings = mimeMappings;
     }
@@ -654,19 +685,21 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @returns an enumeration of my mime mappings.
      */
+    @Override
     public Enumeration<MimeMapping> getMimeMappings() {
-        return (new Vector<MimeMapping>(this.getMimeMappingsSet())).elements();
+        return Collections.enumeration(this.getMimeMappingsSet());
     }
+
 
     /**
      * @add the given mime mapping to my list if the given MimeType is not added
      * return the result MimeType of the MimeMapping in the resulting set of MimeMapping
      */
+    @Override
     public String addMimeMapping(MimeMapping mimeMapping) {
         // there should be at most one mapping per extension
         MimeMapping resultMimeMapping = null;
-        for (Iterator<MimeMapping> itr = getMimeMappingsSet().iterator(); itr.hasNext();) {
-            MimeMapping mm = itr.next();
+        for (MimeMapping mm : getMimeMappingsSet()) {
             if (mm.getExtension().equals(mimeMapping.getExtension())) {
                 resultMimeMapping = mm;
                 break;
@@ -680,12 +713,6 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return resultMimeMapping.getMimeType();
     }
 
-    /**
-     * add the given mime mapping to my list.
-     */
-    public String addMimeMapping(MimeMappingDescriptor mimeMapping) {
-        return addMimeMapping((MimeMapping) mimeMapping);
-    }
 
     protected void combineMimeMappings(Set<MimeMapping> mimeMappings) {
         if (conflictedMimeMappingExtensions != null) {
@@ -706,6 +733,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public Set<String> getConflictedMimeMappingExtensions() {
         if (conflictedMimeMappingExtensions == null) {
             conflictedMimeMappingExtensions = new HashSet<>();
@@ -713,10 +741,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return conflictedMimeMappingExtensions;
     }
 
+    @Override
     public LocaleEncodingMappingListDescriptor getLocaleEncodingMappingListDescriptor() {
         return localeEncodingMappingListDesc;
     }
 
+    @Override
     public void setLocaleEncodingMappingListDescriptor(LocaleEncodingMappingListDescriptor lemListDesc) {
         localeEncodingMappingListDesc = lemListDesc;
     }
@@ -725,13 +755,13 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         if (localeEncodingMappingListDesc == null) {
             localeEncodingMappingListDesc = new LocaleEncodingMappingListDescriptor();
         }
-
         localeEncodingMappingListDesc.addLocaleEncodingMapping(lemDesc);
     }
 
     /**
      * Removes the given mime mapping from my list.
      */
+    @Override
     public void removeMimeMapping(MimeMapping mimeMapping) {
         getMimeMappingsSet().remove(mimeMapping);
     }
@@ -739,13 +769,15 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return an enumeration of the welcome files I have..
      */
+    @Override
     public Enumeration<String> getWelcomeFiles() {
-        return (new Vector<String>(this.getWelcomeFilesSet())).elements();
+        return Collections.enumeration(this.getWelcomeFilesSet());
     }
 
+    @Override
     public Set<String> getWelcomeFilesSet() {
         if (welcomeFiles == null) {
-            welcomeFiles = new OrderedSet<String>();
+            welcomeFiles = new OrderedSet<>();
         }
         return welcomeFiles;
     }
@@ -753,6 +785,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Adds a new welcome file to my list.
      */
+    @Override
     public void addWelcomeFile(String fileUri) {
         getWelcomeFilesSet().add(fileUri);
     }
@@ -760,6 +793,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Removes a welcome file from my list.
      */
+    @Override
     public void removeWelcomeFile(String fileUri) {
         getWelcomeFilesSet().remove(fileUri);
     }
@@ -767,13 +801,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Sets the collection of my welcome files.
      */
+    @Override
     public void setWelcomeFiles(Set<String> welcomeFiles) {
         this.welcomeFiles = welcomeFiles;
     }
 
     public Set<ErrorPageDescriptor> getErrorPageDescriptorsSet() {
         if (errorPageDescriptors == null) {
-            errorPageDescriptors = new HashSet<ErrorPageDescriptor>();
+            errorPageDescriptors = new HashSet<>();
         }
         return errorPageDescriptors;
     }
@@ -782,7 +817,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Returns an enumeration of the error pages I have.
      */
     public Enumeration<ErrorPageDescriptor> getErrorPageDescriptors() {
-        return (new Vector<ErrorPageDescriptor>(getErrorPageDescriptorsSet())).elements();
+        return (new Vector<>(getErrorPageDescriptorsSet())).elements();
     }
 
     /**
@@ -820,9 +855,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return the Set of my Context Parameters.
      */
+    @Override
     public Set<ContextParameter> getContextParametersSet() {
         if (contextParameters == null) {
-            contextParameters = new OrderedSet<ContextParameter>();
+            contextParameters = new OrderedSet<>();
         }
         return contextParameters;
     }
@@ -830,13 +866,15 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return my Context Parameters in an enumeration.
      */
+    @Override
     public Enumeration<ContextParameter> getContextParameters() {
-        return (new Vector<ContextParameter>(getContextParametersSet())).elements();
+        return (new Vector<>(getContextParametersSet())).elements();
     }
 
     /**
      * Adds a new context parameter to my list.
      */
+    @Override
     public void addContextParameter(ContextParameter contextParameter) {
         getContextParametersSet().add(contextParameter);
     }
@@ -844,6 +882,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Adds a new context parameter to my list.
      */
+    @Override
     public void addContextParameter(EnvironmentProperty contextParameter) {
         addContextParameter((ContextParameter) contextParameter);
     }
@@ -851,6 +890,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Removes the given context parameter from my list.
      */
+    @Override
     public void removeContextParameter(ContextParameter contextParameter) {
         getContextParametersSet().remove(contextParameter);
     }
@@ -859,6 +899,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Return true if this web app [{0}] can be distributed across different processes.
      */
 
+    @Override
     public boolean isDistributable() {
         return distributable;
     }
@@ -866,6 +907,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Sets whether this web app [{0}] can be distributed across different processes.
      */
+    @Override
     public void setDistributable(boolean distributable) {
         this.distributable = distributable;
     }
@@ -874,17 +916,19 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Returns the enumeration of my references to Enterprise Beans.
      */
 
-    public Enumeration<EjbReference> getEjbReferences() {
-        return (new Vector<EjbReference>(this.getEjbReferenceDescriptors())).elements();
+    @Override
+    public Enumeration<EjbReferenceDescriptor> getEjbReferences() {
+        return Collections.enumeration(this.getEjbReferenceDescriptors());
     }
 
     /**
      * Returns the Set of my references to Enterprise Beans.
      */
 
-    public Set<EjbReference> getEjbReferenceDescriptors() {
+    @Override
+    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         if (ejbReferences == null) {
-            ejbReferences = new OrderedSet<EjbReference>();
+            ejbReferences = new OrderedSet<>();
         }
         return ejbReferences;
     }
@@ -893,12 +937,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * @return an Enterprise Bean with the matching name or throw.
      */
 
+    @Override
     public EjbReferenceDescriptor getEjbReferenceByName(String name) {
-        return (EjbReferenceDescriptor) getEjbReference(name);
+        return getEjbReference(name);
     }
 
-    public EjbReference getEjbReference(String name) {
-        EjbReference er = _getEjbReference(name);
+    @Override
+    public EjbReferenceDescriptor getEjbReference(String name) {
+        EjbReferenceDescriptor er = _getEjbReference(name);
         if (er != null) {
             return er;
         }
@@ -908,8 +954,9 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 "This web app [{0}] has no ejb reference by the name of [{1}] ", new Object[]{getName(), name}));
     }
 
-    protected EjbReference _getEjbReference(String name) {
-        for (EjbReference er : getEjbReferenceDescriptors()) {
+    @Override
+    protected EjbReferenceDescriptor _getEjbReference(String name) {
+        for (EjbReferenceDescriptor er : getEjbReferenceDescriptors()) {
             if (er.getName().equals(name)) {
                 return er;
             }
@@ -921,6 +968,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * @return a reource reference with the matching name or throw.
      */
 
+    @Override
     public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
         ResourceReferenceDescriptor rrd = _getResourceReferenceByName(name);
         if (rrd != null) {
@@ -932,6 +980,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 "This web app [{0}] has no resource reference by the name of [{1}]", new Object[]{getName(), name}));
     }
 
+    @Override
     protected ResourceReferenceDescriptor _getResourceReferenceByName(String name) {
         for (ResourceReference next : getResourceReferenceDescriptors()) {
             if (next.getName().equals(name)) {
@@ -946,13 +995,15 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * @returns my Set of references to resources.
      */
 
+    @Override
     public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         if (resourceReferences == null) {
-            resourceReferences = new OrderedSet<ResourceReferenceDescriptor>();
+            resourceReferences = new OrderedSet<>();
         }
         return resourceReferences;
     }
 
+    @Override
     public Set<EntityManagerFactoryReferenceDescriptor>
     getEntityManagerFactoryReferenceDescriptors() {
         return entityManagerFactoryReferences;
@@ -962,6 +1013,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Return the entity manager factory reference descriptor corresponding to
      * the given name.
      */
+    @Override
     public EntityManagerFactoryReferenceDescriptor
     getEntityManagerFactoryReferenceByName(String name) {
         EntityManagerFactoryReferenceDescriptor emfr =
@@ -976,6 +1028,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 new Object[]{getName(), name}));
     }
 
+    @Override
     protected EntityManagerFactoryReferenceDescriptor
     _getEntityManagerFactoryReferenceByName(String name) {
         for (EntityManagerFactoryReferenceDescriptor next :
@@ -988,12 +1041,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return null;
     }
 
+    @Override
     public void addEntityManagerFactoryReferenceDescriptor
             (EntityManagerFactoryReferenceDescriptor reference) {
         reference.setReferringBundleDescriptor(this);
         this.getEntityManagerFactoryReferenceDescriptors().add(reference);
     }
 
+    @Override
     protected void combineEntityManagerFactoryReferenceDescriptors(JndiNameEnvironment env) {
         for (EntityManagerFactoryReferenceDescriptor emfRef :
             env.getEntityManagerFactoryReferenceDescriptors()) {
@@ -1015,6 +1070,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public Set<EntityManagerReferenceDescriptor>
     getEntityManagerReferenceDescriptors() {
         return entityManagerReferences;
@@ -1024,6 +1080,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Return the entity manager factory reference descriptor corresponding to
      * the given name.
      */
+    @Override
     public EntityManagerReferenceDescriptor
     getEntityManagerReferenceByName(String name) {
         EntityManagerReferenceDescriptor emr =
@@ -1038,6 +1095,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 new Object[]{getName(), name}));
     }
 
+    @Override
     protected  EntityManagerReferenceDescriptor
     _getEntityManagerReferenceByName(String name) {
         for (EntityManagerReferenceDescriptor next :
@@ -1051,12 +1109,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     }
 
 
+    @Override
     public void addEntityManagerReferenceDescriptor
             (EntityManagerReferenceDescriptor reference) {
         reference.setReferringBundleDescriptor(this);
         getEntityManagerReferenceDescriptors().add(reference);
     }
 
+    @Override
     protected void combineEntityManagerReferenceDescriptors(JndiNameEnvironment env) {
         for (EntityManagerReferenceDescriptor emRef :
                 env.getEntityManagerReferenceDescriptors()) {
@@ -1084,7 +1144,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     public Collection<? extends PersistenceUnitDescriptor>
            findReferencedPUs() {
         Collection<PersistenceUnitDescriptor> pus =
-                new HashSet<PersistenceUnitDescriptor>(
+                new HashSet<>(
                         findReferencedPUsViaPURefs(this));
         pus.addAll(findReferencedPUsViaPCRefs(this));
         if (extensions.containsKey(EjbBundleDescriptor.class)) {
@@ -1098,55 +1158,39 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return my set of environment properties.
      */
-
-    public Set<EnvironmentEntry> getEnvironmentProperties() {
+    @Override
+    public Set<EnvironmentProperty> getEnvironmentProperties() {
         return getEnvironmentEntrySet();
     }
 
     /**
      * Adds a new reference to an ejb.
      */
-
-    public void addEjbReferenceDescriptor(EjbReference ejbReference) {
+    @Override
+    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
         if (getEjbReferenceDescriptors().add(ejbReference)) {
             ejbReference.setReferringBundleDescriptor(this);
         }
     }
 
-    /**
-     * Adds a new reference to an ejb.
-     */
-
-    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReferenceDescriptor) {
-        addEjbReferenceDescriptor((EjbReference) ejbReferenceDescriptor);
-    }
-
-    /**
-     * Removes a reference to an ejb.
-     */
+    @Override
     public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReferenceDescriptor) {
-        removeEjbReferenceDescriptor((EjbReference) ejbReferenceDescriptor);
-    }
-
-    public void removeEjbReferenceDescriptor(EjbReference ejbReferenceDescriptor) {
-        if(getEjbReferenceDescriptors().remove(ejbReferenceDescriptor)) {
+        if (getEjbReferenceDescriptors().remove(ejbReferenceDescriptor)) {
             ejbReferenceDescriptor.setReferringBundleDescriptor(null);
         }
     }
 
+    @Override
     protected void combineEjbReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object oejbRef: env.getEjbReferenceDescriptors()) {
-            EjbReference ejbRef = (EjbReference)oejbRef;
-            EjbReferenceDescriptor ejbRefDesc =
-                    (EjbReferenceDescriptor)_getEjbReference(ejbRef.getName());
+        for (EjbReferenceDescriptor ejbRef : env.getEjbReferenceDescriptors()) {
+            EjbReferenceDescriptor ejbRefDesc = _getEjbReference(ejbRef.getName());
             if (ejbRefDesc != null) {
-                combineInjectionTargets(ejbRefDesc, (EnvironmentProperty)ejbRef);
+                combineInjectionTargets(ejbRefDesc, ejbRef);
             } else {
-                if (env instanceof WebBundleDescriptor &&
-                        ((WebBundleDescriptor)env).isConflictEjbReference()) {
+                if (env instanceof WebBundleDescriptor && ((WebBundleDescriptor) env).isConflictEjbReference()) {
                     throw new IllegalArgumentException(localStrings.getLocalString(
-                            "web.deployment.exceptionconflictejbref",
-                            "There are more than one ejb references defined in web fragments with the same name, but not overrided in web.xml"));
+                        "web.deployment.exceptionconflictejbref",
+                        "There are more than one ejb references defined in web fragments with the same name, but not overrided in web.xml"));
                 } else {
                     addEjbReferenceDescriptor(ejbRef);
                 }
@@ -1157,13 +1201,15 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return an enumeration of references to resources that I have.
      */
+    @Override
     public Enumeration<ResourceReferenceDescriptor> getResourceReferences() {
-        return (new Vector<ResourceReferenceDescriptor>(getResourceReferenceDescriptors())).elements();
+        return (new Vector<>(getResourceReferenceDescriptors())).elements();
     }
 
     /**
      * adds a new reference to a resource.
      */
+    @Override
     public void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
         getResourceReferenceDescriptors().add(resourceReference);
     }
@@ -1171,10 +1217,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * removes a reference to a resource.
      */
+    @Override
     public void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference) {
         getResourceReferenceDescriptors().remove(resourceReference);
     }
 
+    @Override
     protected void combineResourceReferenceDescriptors(JndiNameEnvironment env) {
         for (Object oresRef : env.getResourceReferenceDescriptors()) {
             ResourceReferenceDescriptor resRef =
@@ -1195,19 +1243,22 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
         if (messageDestReferences == null) {
-            messageDestReferences = new OrderedSet<MessageDestinationReferenceDescriptor>();
+            messageDestReferences = new OrderedSet<>();
         }
         return messageDestReferences;
     }
 
+    @Override
     public void addMessageDestinationReferenceDescriptor
             (MessageDestinationReferenceDescriptor messageDestRef) {
         messageDestRef.setReferringBundleDescriptor(this);
         getMessageDestinationReferenceDescriptors().add(messageDestRef);
     }
 
+    @Override
     public void removeMessageDestinationReferenceDescriptor
             (MessageDestinationReferenceDescriptor msgDestRef) {
         getMessageDestinationReferenceDescriptors().remove(msgDestRef);
@@ -1217,6 +1268,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Looks up an message destination reference with the given name.
      * Throws an IllegalArgumentException if it is not found.
      */
+    @Override
     public MessageDestinationReferenceDescriptor
     getMessageDestinationReferenceByName(String name) {
         MessageDestinationReferenceDescriptor mdr =
@@ -1231,6 +1283,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
                 new Object[]{getName(), name}));
     }
 
+    @Override
     protected MessageDestinationReferenceDescriptor _getMessageDestinationReferenceByName(String name) {
         for (MessageDestinationReferenceDescriptor mdr :
                 getMessageDestinationReferenceDescriptors()) {
@@ -1241,6 +1294,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return null;
     }
 
+    @Override
     protected void combineMessageDestinationReferenceDescriptors(JndiNameEnvironment env) {
         for (Object omdRef : env.getMessageDestinationReferenceDescriptors()) {
             MessageDestinationReferenceDescriptor mdRef =
@@ -1262,11 +1316,13 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public Set<LifecycleCallbackDescriptor>
     getPostConstructDescriptors() {
         return postConstructDescs;
     }
 
+    @Override
     public void addPostConstructDescriptor(LifecycleCallbackDescriptor
             postConstructDesc) {
         String className = postConstructDesc.getLifecycleCallbackClass();
@@ -1283,10 +1339,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className) {
         return getPostConstructDescriptorByClass(className, this);
     }
 
+    @Override
     protected void combinePostConstructDescriptors(WebBundleDescriptor webBundleDescriptor) {
         boolean isFromXml = false;
         for (LifecycleCallbackDescriptor lccd : getPostConstructDescriptors()) {
@@ -1301,10 +1359,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public Set<LifecycleCallbackDescriptor> getPreDestroyDescriptors() {
         return preDestroyDescs;
     }
 
+    @Override
     public void addPreDestroyDescriptor(LifecycleCallbackDescriptor
             preDestroyDesc) {
         String className = preDestroyDesc.getLifecycleCallbackClass();
@@ -1321,10 +1381,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className) {
         return getPreDestroyDescriptorByClass(className, this);
     }
 
+    @Override
     protected void combinePreDestroyDescriptors(WebBundleDescriptor webBundleDescriptor) {
         boolean isFromXml = false;
         for (LifecycleCallbackDescriptor lccd : getPreDestroyDescriptors()) {
@@ -1339,10 +1401,11 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     protected List<InjectionCapable> getInjectableResourcesByClass(String className,
                                   JndiNameEnvironment jndiNameEnv) {
         List<InjectionCapable> injectables =
-                new LinkedList<InjectionCapable>();
+                new LinkedList<>();
 
         for (InjectionCapable next : getInjectableResources(jndiNameEnv)) {
             if (next.isInjectable()) {
@@ -1376,22 +1439,26 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return injectables;
     }
 
+
+    @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-        return (getInjectableResourcesByClass(className, this));
+        return getInjectableResourcesByClass(className, this);
     }
 
+
+    @Override
     public InjectionInfo getInjectionInfoByClass(Class clazz) {
-        return (getInjectionInfoByClass(clazz, this));
+        return getInjectionInfoByClass(clazz, this);
     }
 
     /**
      * Returns an Enumeration of my SecurityRole objects.
      */
+    @Override
     public Enumeration<SecurityRoleDescriptor> getSecurityRoles() {
-        Vector<SecurityRoleDescriptor> securityRoles = new Vector<SecurityRoleDescriptor>();
-        for (Iterator itr = super.getRoles().iterator(); itr.hasNext();) {
-            Role r = (Role) itr.next();
-            SecurityRoleDescriptor srd = new SecurityRoleDescriptor(r);
+        Vector<SecurityRoleDescriptor> securityRoles = new Vector<>();
+        for (Role role : super.getRoles()) {
+            SecurityRoleDescriptor srd = new SecurityRoleDescriptor(role);
             securityRoles.add(srd);
         }
         return securityRoles.elements();
@@ -1400,6 +1467,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Add a new abstrct role to me.
      */
+    @Override
     public void addSecurityRole(SecurityRole securityRole) {
         Role r = new Role(securityRole.getName());
         r.setDescription(securityRole.getDescription());
@@ -1409,6 +1477,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Add a new abstrct role to me.
      */
+    @Override
     public void addSecurityRole(SecurityRoleDescriptor securityRole) {
         addSecurityRole((SecurityRole) securityRole);
     }
@@ -1416,22 +1485,26 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return all the references by a given component (by name) to the given rolename.
      */
+    @Override
     public SecurityRoleReference getSecurityRoleReferenceByName(String compName, String roleName) {
         for (WebComponentDescriptor comp : getWebComponentDescriptors()) {
-            if (!comp.getCanonicalName().equals(compName))
+            if (!comp.getCanonicalName().equals(compName)) {
                 continue;
+            }
 
             SecurityRoleReference r = comp.getSecurityRoleReferenceByName(roleName);
-            if (r != null)
+            if (r != null) {
                 return r;
+            }
         }
 
         return null;
     }
 
+    @Override
     protected void combineSecurityConstraints(Set<SecurityConstraint> firstScSet,
             Set<SecurityConstraint> secondScSet) {
-        Set<String> allUrlPatterns = new HashSet<String>();
+        Set<String> allUrlPatterns = new HashSet<>();
         for (SecurityConstraint sc : firstScSet) {
             for (WebResourceCollection wrc : sc.getWebResourceCollections()) {
                 allUrlPatterns.addAll(wrc.getUrlPatterns());
@@ -1459,9 +1532,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public Set<SecurityConstraint> getSecurityConstraintsSet() {
         if (securityConstraints == null) {
-            securityConstraints = new HashSet<SecurityConstraint>();
+            securityConstraints = new HashSet<>();
         }
         return securityConstraints;
     }
@@ -1469,14 +1543,15 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * My list of security constraints.
      */
+    @Override
     public Enumeration<SecurityConstraint> getSecurityConstraints() {
-        return (new Vector<SecurityConstraint>(this.getSecurityConstraintsSet())).elements();
+        return (new Vector<>(this.getSecurityConstraintsSet())).elements();
     }
 
+    @Override
     public Collection<SecurityConstraint> getSecurityConstraintsForUrlPattern(String urlPattern) {
-        Collection<SecurityConstraint> constraints = new HashSet<SecurityConstraint>();
-        for (Iterator<SecurityConstraint> i = getSecurityConstraintsSet().iterator(); i.hasNext();) {
-            SecurityConstraint next = i.next();
+        Collection<SecurityConstraint> constraints = new HashSet<>();
+        for (SecurityConstraint next : getSecurityConstraintsSet()) {
             boolean include = false;
             for (WebResourceCollection nextCol: next.getWebResourceCollections()) {
                 for (String nextPattern: nextCol.getUrlPatterns()) {
@@ -1499,6 +1574,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Add a new security constraint.
      */
+    @Override
     public void addSecurityConstraint(SecurityConstraint securityConstraint) {
         getSecurityConstraintsSet().add(securityConstraint);
     }
@@ -1513,6 +1589,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Remove the given security constraint.
      */
+    @Override
     public void removeSecurityConstraint(SecurityConstraint securityConstraint) {
         getSecurityConstraintsSet().remove(securityConstraint);
     }
@@ -1531,8 +1608,9 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * @return my set of servlets
     */
 
+    @Override
     public Set<WebComponentDescriptor> getServletDescriptors() {
-        Set<WebComponentDescriptor> servletDescriptors = new HashSet<WebComponentDescriptor>();
+        Set<WebComponentDescriptor> servletDescriptors = new HashSet<>();
         for (WebComponentDescriptor next : getWebComponentDescriptors()) {
             if (next.isServlet()) {
                 servletDescriptors.add(next);
@@ -1544,8 +1622,9 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return my Set of jsps.
      */
+    @Override
     public Set<WebComponentDescriptor> getJspDescriptors() {
-        Set<WebComponentDescriptor> jspDescriptors = new HashSet<WebComponentDescriptor>();
+        Set<WebComponentDescriptor> jspDescriptors = new HashSet<>();
         for (WebComponentDescriptor next : getWebComponentDescriptors()) {
             if (!next.isServlet()) {
                 jspDescriptors.add(next);
@@ -1554,9 +1633,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return jspDescriptors;
     }
 
-    public Set<EnvironmentEntry> getEnvironmentEntrySet() {
+    @Override
+    public Set<EnvironmentProperty> getEnvironmentEntrySet() {
         if (environmentEntries == null) {
-            environmentEntries = new OrderedSet<EnvironmentEntry>();
+            environmentEntries = new OrderedSet<>();
         }
         return environmentEntries;
     }
@@ -1564,21 +1644,24 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return my set of environment properties.
      */
-    public Enumeration<EnvironmentEntry> getEnvironmentEntries() {
-        return (new Vector<EnvironmentEntry>(this.getEnvironmentEntrySet())).elements();
+    @Override
+    public Enumeration<EnvironmentProperty> getEnvironmentEntries() {
+        return Collections.enumeration(this.getEnvironmentEntrySet());
     }
 
     /**
      * Adds this given environment property to my list.
      */
-    public void addEnvironmentEntry(EnvironmentEntry environmentEntry) {
+    @Override
+    public void addEnvironmentEntry(EnvironmentProperty environmentEntry) {
         getEnvironmentEntrySet().add(environmentEntry);
     }
 
+    @Override
     protected EnvironmentProperty _getEnvironmentPropertyByName(String name) {
-        for (EnvironmentEntry ev : getEnvironmentEntrySet()) {
+        for (EnvironmentProperty ev : getEnvironmentEntrySet()) {
             if (ev.getName().equals(name)) {
-                return (EnvironmentProperty) ev;
+                return ev;
             }
         }
         return null;
@@ -1588,6 +1671,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * Returns the environment property object searching on the supplied key.
      * throws an illegal argument exception if no such environment property exists.
      */
+    @Override
     public EnvironmentProperty getEnvironmentPropertyByName(String name) {
         EnvironmentProperty envProp = _getEnvironmentPropertyByName(name);
         if (envProp != null) {
@@ -1603,6 +1687,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Removes this given environment property from my list.
      */
+    @Override
     public void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
         getEnvironmentEntrySet().remove(environmentProperty);
     }
@@ -1610,6 +1695,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Adds this given environment property to my list.
      */
+    @Override
     public void addEnvironmentProperty(EnvironmentProperty environmentProperty) {
         getEnvironmentEntrySet().add(environmentProperty);
     }
@@ -1617,17 +1703,18 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Removes this given environment property from my list.
      */
+    @Override
     public void removeEnvironmentEntry(EnvironmentEntry environmentEntry) {
         getEnvironmentEntrySet().remove(environmentEntry);
     }
 
+    @Override
     protected void combineEnvironmentEntries(JndiNameEnvironment env) {
-        for (Object oenve: env.getEnvironmentProperties()) {
-            EnvironmentEntry enve = (EnvironmentEntry)oenve;
+        for (EnvironmentProperty enve: env.getEnvironmentProperties()) {
             EnvironmentProperty envProp = _getEnvironmentPropertyByName(enve.getName());
             if (envProp != null) {
-                combineInjectionTargets(envProp, (EnvironmentProperty)enve);
-                EnvironmentProperty envP = (EnvironmentProperty)enve;
+                combineInjectionTargets(envProp, enve);
+                EnvironmentProperty envP = enve;
                 if (!envProp.hasInjectionTargetFromXml() &&
                         (!envProp.isSetValueCalled()) && envP.isSetValueCalled()) {
                     envProp.setValue(enve.getValue());
@@ -1648,6 +1735,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return the information about how I should log in.
      */
+    @Override
     public LoginConfiguration getLoginConfiguration() {
         return loginConfiguration;
     }
@@ -1655,6 +1743,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Specifies the information about how I should log in.
      */
+    @Override
     public void setLoginConfiguration(LoginConfiguration loginConfiguration) {
         this.loginConfiguration = loginConfiguration;
     }
@@ -1663,6 +1752,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         setLoginConfiguration((LoginConfiguration) loginConfiguration);
     }
 
+    @Override
     protected void combineLoginConfiguration(WebBundleDescriptor webBundleDescriptor) {
         if (getLoginConfiguration() == null) {
             if (webBundleDescriptor.isConflictLoginConfig()) {
@@ -1678,10 +1768,11 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Search for a web component that I have by name.
      */
+    @Override
     public WebComponentDescriptor getWebComponentByName(String name) {
         for (WebComponentDescriptor next : getWebComponentDescriptors()) {
             if (next.getName().equals(name)) {
-                return (WebComponentDescriptor) next;
+                return next;
             }
         }
         return null;
@@ -1690,10 +1781,11 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Search for a web component that I have by name.
      */
+    @Override
     public WebComponentDescriptor getWebComponentByCanonicalName(String name) {
         for (WebComponentDescriptor next : getWebComponentDescriptors()) {
             if (next.getCanonicalName().equals(name)) {
-                return (WebComponentDescriptor) next;
+                return next;
             }
         }
         return null;
@@ -1702,9 +1794,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return a set of web component descriptor of given impl name.
      */
+    @Override
     public WebComponentDescriptor[] getWebComponentByImplName(String name) {
         ArrayList<WebComponentDescriptor> webCompList =
-                new ArrayList<WebComponentDescriptor>();
+                new ArrayList<>();
         for (WebComponentDescriptor webComp : getWebComponentDescriptors()) {
             if (webComp.getWebComponentImplementation().equals(name)) {
                 webCompList.add(webComp);
@@ -1719,9 +1812,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return a Vector of servlet filters that I have.
      */
+    @Override
     public Vector<ServletFilter> getServletFilters() {
         if (servletFilters == null) {
-            servletFilters = new Vector<ServletFilter>();
+            servletFilters = new Vector<>();
         }
         return servletFilters;
     }
@@ -1729,6 +1823,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return a Vector of servlet filters that I have.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public Vector<ServletFilter> getServletFilterDescriptors() {
         return (Vector<ServletFilter>) getServletFilters().clone();
@@ -1737,6 +1832,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Adds a servlet filter to this web component.
      */
+    @Override
     public void addServletFilter(ServletFilter ref) {
         String name = ref.getName();
         boolean found = false;
@@ -1759,10 +1855,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Removes the given servlet filter from this web component.
      */
+    @Override
     public void removeServletFilter(ServletFilter ref) {
         removeVectorItem(getServletFilters(), ref);
     }
 
+    @Override
     protected void combineServletFilters(WebBundleDescriptor webBundleDescriptor) {
         for (ServletFilter servletFilter : webBundleDescriptor.getServletFilters()) {
             ServletFilterDescriptor servletFilterDesc = (ServletFilterDescriptor)servletFilter;
@@ -1809,9 +1907,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return a Vector of servlet filters that I have.
      */
+    @Override
     public Vector<ServletFilterMapping> getServletFilterMappings() {
         if (servletFilterMappings == null) {
-            servletFilterMappings = new Vector<ServletFilterMapping>();
+            servletFilterMappings = new Vector<>();
         }
         return servletFilterMappings;
     }
@@ -1819,6 +1918,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return a Vector of servlet filter mappings that I have.
      */
+    @Override
     @SuppressWarnings("unchecked")
     public Vector<ServletFilterMapping> getServletFilterMappingDescriptors() {
         return (Vector<ServletFilterMapping>) getServletFilterMappings().clone();
@@ -1827,6 +1927,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Adds a servlet filter mapping to this web component.
      */
+    @Override
     public void addServletFilterMapping(ServletFilterMapping ref) {
         if (!getServletFilterMappings().contains(ref)) {
             getServletFilterMappings().addElement(ref);
@@ -1843,6 +1944,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Removes the given servlet filter mapping from this web component.
      */
+    @Override
     public void removeServletFilterMapping(ServletFilterMapping ref) {
         removeVectorItem(getServletFilterMappings(), ref);
     }
@@ -1851,12 +1953,14 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * * Moves the given servlet filter mapping to a new relative location in
      * * the list
      */
+    @Override
     public void moveServletFilterMapping(ServletFilterMapping ref, int relPos) {
         moveVectorItem(getServletFilterMappings(), ref, relPos);
     }
 
+    @Override
     protected void combineServletFilterMappings(WebBundleDescriptor webBundleDescriptor) {
-        Map<String, ServletFilterMappingInfo> map = new HashMap<String, ServletFilterMappingInfo>();
+        Map<String, ServletFilterMappingInfo> map = new HashMap<>();
         for (ServletFilterMapping sfMapping : getServletFilterMappings()) {
             ServletFilterMappingInfo sfmInfo = map.get(sfMapping.getName());
             if (sfmInfo == null) {
@@ -1892,30 +1996,35 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /* ----
     */
 
+    @Override
     public Vector<AppListenerDescriptor> getAppListeners() {
         if (appListenerDescriptors == null) {
-            appListenerDescriptors = new Vector<AppListenerDescriptor>();
+            appListenerDescriptors = new Vector<>();
         }
         return appListenerDescriptors;
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public Vector<AppListenerDescriptor> getAppListenerDescriptors() {
         return (Vector<AppListenerDescriptor>) getAppListeners().clone();
     }
 
+    @Override
     public void setAppListeners(Collection<? extends AppListenerDescriptor> c) {
         getAppListeners().clear();
         getAppListeners().addAll(c);
     }
 
+    @Override
     public void addAppListenerDescriptor(AppListenerDescriptor ref) {
         if (!getAppListeners().contains(ref)) {
             getAppListeners().addElement(ref);
         }
     }
 
-     public void addAppListenerDescriptorToFirst(AppListenerDescriptor ref) {
+     @Override
+    public void addAppListenerDescriptorToFirst(AppListenerDescriptor ref) {
          if (!getAppListeners().contains(ref)) {
              getAppListeners().add(0, ref);
          }
@@ -1925,10 +2034,12 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         addAppListenerDescriptor((AppListenerDescriptor) ref);
     }
 
+    @Override
     public void removeAppListenerDescriptor(AppListenerDescriptor ref) {
         removeVectorItem(getAppListeners(), ref);
     }
 
+    @Override
     public void moveAppListenerDescriptor(AppListenerDescriptor ref,
                                           int relPos) {
         this.moveVectorItem(this.getAppListeners(), ref, relPos);
@@ -1942,6 +2053,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         this.absOrdering = absOrdering;
     }
 
+    @Override
     public boolean isDenyUncoveredHttpMethods() {
         return denyUncoveredHttpMethods;
     }
@@ -1950,18 +2062,22 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         this.denyUncoveredHttpMethods = denyUncoveredHttpMethods;
     }
 
+    @Override
     public boolean isShowArchivedRealPathEnabled() {
         return showArchivedRealPathEnabled;
     }
 
+    @Override
     public void setShowArchivedRealPathEnabled(boolean enabled) {
         showArchivedRealPathEnabled = enabled;
     }
 
+    @Override
     public int getServletReloadCheckSecs() {
         return servletReloadCheckSecs;
     }
 
+    @Override
     public void setServletReloadCheckSecs(int secs) {
         servletReloadCheckSecs = secs;
     }
@@ -1969,6 +2085,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return true if this bundle descriptor defines web service clients
      */
+    @Override
     public boolean hasWebServiceClients() {
         return !getServiceReferenceDescriptors().isEmpty();
     }
@@ -1983,6 +2100,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * remove a specific object from the given list (does not rely on 'equals')
      */
+    @Override
     protected boolean removeVectorItem(Vector<? extends Object> list, Object ref) {
         for (Iterator<? extends Object> i = list.iterator(); i.hasNext();) {
             if (ref == i.next()) {
@@ -1996,6 +2114,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Moves the given object to a new relative location in the specified list
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected void moveVectorItem(Vector list, Object ref, int rpos) {
 
@@ -2035,6 +2154,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * visitor API implementation
      */
+    @Override
     public void visit(DescriptorVisitor aVisitor) {
         if (aVisitor instanceof WebBundleVisitor ||
             aVisitor instanceof ComponentPostVisitor) {
@@ -2047,15 +2167,17 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * visitor API implementation
      */
+    @Override
     public void visit(ComponentVisitor aVisitor) {
         super.visit(aVisitor);
         aVisitor.accept(this);
     }
 
 
+    @Override
     public void putJarNameWebFragmentNamePair(String jarName, String webFragName) {
         if (jarName2WebFragNameMap == null) {
-            jarName2WebFragNameMap = new HashMap<String, String>();
+            jarName2WebFragNameMap = new HashMap<>();
         }
         jarName2WebFragNameMap.put(jarName, webFragName);
     }
@@ -2064,9 +2186,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * This method return an unmodifiable version of jarName2WebFragNameMap.
      * @return unmodifiable version of jarName2WebFragNameMap
      */
+    @Override
     public Map<String, String> getJarNameToWebFragmentNameMap() {
         if (jarName2WebFragNameMap == null) {
-            jarName2WebFragNameMap = new HashMap<String, String>();
+            jarName2WebFragNameMap = new HashMap<>();
         }
         return Collections.unmodifiableMap(jarName2WebFragNameMap);
     }
@@ -2075,9 +2198,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * This method is used by WebComponentDescriptor only.
      * The returned map is supposed to be only modified by the corresponding url patterns set.
      */
+    @Override
     public Map<String, String> getUrlPatternToServletNameMap() {
         if (urlPattern2ServletName == null) {
-            urlPattern2ServletName = new HashMap<String, String>();
+            urlPattern2ServletName = new HashMap<>();
             for (WebComponentDescriptor wc : getWebComponentDescriptors()) {
                 String name = wc.getCanonicalName();
                 for (String up : wc.getUrlPatternsSet()) {
@@ -2095,14 +2219,17 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         return urlPattern2ServletName;
     }
 
+    @Override
     public void resetUrlPatternToServletNameMap() {
         urlPattern2ServletName = null;
     }
 
+    @Override
     public List<String> getOrderedLibs() {
         return orderedLibs;
     }
 
+    @Override
     public void addOrderedLib(String libName) {
         orderedLibs.add(libName);
     }
@@ -2113,6 +2240,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * @param env1
      * @param env2
      */
+    @Override
     protected void combineInjectionTargets(EnvironmentProperty env1, EnvironmentProperty env2) {
         for (InjectionTarget injTarget: env2.getInjectionTargets()) {
             env1.addInjectionTarget(injTarget);
@@ -2125,6 +2253,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Return a formatted version as a String.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nWeb Bundle descriptor");
         toStringBuffer.append("\n");
@@ -2135,6 +2264,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         }
     }
 
+    @Override
     public void printCommon(StringBuffer toStringBuffer) {
         super.print(toStringBuffer);
         toStringBuffer.append("\n context root ").append(getContextRoot());
@@ -2151,20 +2281,25 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         toStringBuffer.append("\n appListenerDescriptors ").append(appListenerDescriptors);
         toStringBuffer.append("\n contextParameters ").append(contextParameters);
         toStringBuffer.append("\n ejbReferences ");
-        if (ejbReferences != null)
+        if (ejbReferences != null) {
             printDescriptorSet(ejbReferences, toStringBuffer);
+        }
         toStringBuffer.append("\n resourceEnvRefReferences ");
-        if (resourceEnvRefReferences != null)
+        if (resourceEnvRefReferences != null) {
             printDescriptorSet(resourceEnvRefReferences, toStringBuffer);
+        }
         toStringBuffer.append("\n messageDestReferences ");
-        if (messageDestReferences != null)
+        if (messageDestReferences != null) {
             printDescriptorSet(messageDestReferences, toStringBuffer);
+        }
         toStringBuffer.append("\n resourceReferences ");
-        if (resourceReferences != null)
+        if (resourceReferences != null) {
             printDescriptorSet(resourceReferences, toStringBuffer);
+        }
         toStringBuffer.append("\n serviceReferences ");
-        if (serviceReferences != null)
+        if (serviceReferences != null) {
             printDescriptorSet(serviceReferences, toStringBuffer);
+        }
         toStringBuffer.append("\n distributable ").append(distributable);
         toStringBuffer.append("\n denyUncoveredHttpMethods ").append(denyUncoveredHttpMethods);
         toStringBuffer.append("\n securityRoles ").append(securityRoles);
@@ -2172,28 +2307,32 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
         toStringBuffer.append("\n contextRoot ").append(contextRoot);
         toStringBuffer.append("\n loginConfiguration ").append(this.loginConfiguration);
         toStringBuffer.append("\n webComponentDescriptors ");
-        if (webComponentDescriptors != null)
+        if (webComponentDescriptors != null) {
             printDescriptorSet(webComponentDescriptors, toStringBuffer);
+        }
         toStringBuffer.append("\n environmentEntries ");
-        if (environmentEntries != null)
+        if (environmentEntries != null) {
             printDescriptorSet(environmentEntries, toStringBuffer);
+        }
     }
 
     private void printDescriptorSet(Set descSet, StringBuffer sbuf) {
-        if (descSet == null)
+        if (descSet == null) {
             return;
-        for (Iterator itr = descSet.iterator(); itr.hasNext();) {
-            Object obj = itr.next();
-            if (obj instanceof Descriptor)
+        }
+        for (Object obj : descSet) {
+            if (obj instanceof Descriptor) {
                 ((Descriptor) obj).print(sbuf);
-            else
+            } else {
                 sbuf.append(obj);
+            }
         }
     }
 
     /**
      * @return the module type for this bundle descriptor
      */
+    @Override
     public ArchiveType getModuleType() {
         return DOLUtils.warType();
     }
@@ -2201,6 +2340,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return the visitor for this bundle descriptor
      */
+    @Override
     public ComponentVisitor getBundleVisitor() {
         return new WebBundleValidator();
     }
@@ -2208,6 +2348,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * @return the tracer visitor for this descriptor
      */
+    @Override
     public DescriptorVisitor getTracerVisitor() {
         return new WebBundleTracerVisitor();
     }
@@ -2216,6 +2357,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * @return the deployment descriptor directory location inside
      *         the archive file
      */
+    @Override
     public String getDeploymentDescriptorDir() {
         return DEPLOYMENT_DESCRIPTOR_DIR;
     }
@@ -2231,6 +2373,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      *
      * @return object representation of web deployment descriptor
      */
+    @Override
     public SunWebApp getSunDescriptor() {
         if (sunWebApp == null) {
             sunWebApp = new SunWebAppImpl();
@@ -2243,6 +2386,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      *
      * @param webApp SunWebApp object representation of web deployment descriptor
      */
+    @Override
     public void setSunDescriptor(SunWebApp webApp) {
         this.sunWebApp = webApp;
     }
@@ -2251,9 +2395,10 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
      * This property can be used to indicate special processing.
      * For example, a Deployer may set this property.
      */
+    @Override
     public void setExtensionProperty(String key, String value) {
         if (null == extensionProperty) {
-            extensionProperty = new HashMap<String, String>();
+            extensionProperty = new HashMap<>();
         }
         extensionProperty.put(key, value);
     }
@@ -2261,6 +2406,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     /**
      * Determine if an extension property has been set.
      */
+    @Override
     public boolean hasExtensionProperty(String key) {
         if (null == extensionProperty ||
             extensionProperty.get(key) == null) {
@@ -2282,6 +2428,7 @@ import org.glassfish.web.deployment.util.WebBundleVisitor;
     }
 
 
+    @Override
     protected void combineResourceDescriptors(JndiNameEnvironment env, JavaEEResourceType javaEEResourceType) {
         for (ResourceDescriptor desc : env.getResourceDescriptors(javaEEResourceType)) {
             ResourceDescriptor descriptor = getResourceDescriptor(javaEEResourceType, desc.getName());

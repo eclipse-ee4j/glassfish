@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,23 +18,30 @@
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.SaxParserHandler;
+import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.glassfish.web.WarType;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 
-import java.util.*;
-
 /**
  * This node is responsible for handling the web-app xml tree
  *
  * @author  Jerome Dochez
- * @version
  */
 public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
 
@@ -60,7 +68,7 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
 
 
     private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<String>();
+        List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_24);
         systemIDs.add(SCHEMA_ID_25);
@@ -83,29 +91,30 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         return tag.getQName();
     }
 
-    @Override
-     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
-        final Map<String,Class> result = new HashMap<String,Class>();
-        for (ConfigurationDeploymentDescriptorFile wddFile :
-                DOLUtils.getConfigurationDeploymentDescriptorFiles(
-                        serviceLocator, WarType.ARCHIVE_TYPE)) {
 
+    @Override
+    public Map<String, Class<?>> registerRuntimeBundle(
+        final Map<String, String> publicIDToDTD,
+        final Map<String, List<Class<?>>> versionUpgrades) {
+
+        final Map<String, Class<?>> result = new HashMap<>();
+        for (ConfigurationDeploymentDescriptorFile wddFile : DOLUtils
+            .getConfigurationDeploymentDescriptorFiles(serviceLocator, WarType.ARCHIVE_TYPE)) {
             wddFile.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
-
         return result;
     }
 
     @Override
     public Collection<String> elementsAllowingEmptyValue() {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         result.add(WebTagNames.LOAD_ON_STARTUP);
         return result;
     }
 
     @Override
     public Collection<String> elementsPreservingWhiteSpace() {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         result.add(WebTagNames.URL_PATTERN);
         return result;
     }

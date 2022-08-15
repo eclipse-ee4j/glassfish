@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,10 +37,10 @@ public class TypeUtil {
     private static final char[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     // Map of primitive class name and its associated Class object
-    private static Hashtable primitiveClasses_;
+    private static Hashtable<String, Class<?>> primitiveClasses_;
 
     static {
-        primitiveClasses_ = new Hashtable();
+        primitiveClasses_ = new Hashtable<>();
         primitiveClasses_.put(Character.TYPE.getName(), Character.TYPE);
         primitiveClasses_.put(Boolean.TYPE.getName(), Boolean.TYPE);
         primitiveClasses_.put(Byte.TYPE.getName(), Byte.TYPE);
@@ -367,7 +368,7 @@ public class TypeUtil {
             for (int pIndex = 0; pIndex < parameterTypes.length; pIndex++) {
                 String next = paramClassNames[pIndex];
                 if (primitiveClasses_.containsKey(next)) {
-                    parameterTypes[pIndex] = (Class) primitiveClasses_.get(next);
+                    parameterTypes[pIndex] = primitiveClasses_.get(next);
                 } else {
                     parameterTypes[pIndex] = Class.forName(next, true, loader);
                 }
@@ -377,15 +378,15 @@ public class TypeUtil {
     }
 
 
-    public static Method getDeclaredMethod(Class declaringClass, ClassLoader loader, String name,
+    public static Method getDeclaredMethod(Class<?> declaringClass, ClassLoader loader, String name,
         String[] paramClassNames) throws Exception {
-        Class[] parameterTypes = null;
+        Class<?>[] parameterTypes = null;
         if (paramClassNames != null) {
             parameterTypes = new Class[paramClassNames.length];
             for (int pIndex = 0; pIndex < parameterTypes.length; pIndex++) {
                 String next = paramClassNames[pIndex];
                 if (primitiveClasses_.containsKey(next)) {
-                    parameterTypes[pIndex] = (Class) primitiveClasses_.get(next);
+                    parameterTypes[pIndex] = primitiveClasses_.get(next);
                 } else {
                     parameterTypes[pIndex] = Class.forName(next, true, loader);
                 }
@@ -408,7 +409,7 @@ public class TypeUtil {
         Type[] gpm1 = m1.getGenericParameterTypes();
         Type[] gpm2 = m2.getGenericParameterTypes();
 
-        if ((gpm1.length == gpm2.length)) {
+        if (gpm1.length == gpm2.length) {
             same = true;
             for (int i = 0; i < gpm1.length; i++) {
                 if (!gpm1[i].equals(gpm2[i])) {
@@ -508,14 +509,14 @@ public class TypeUtil {
     /**
      * Convert String array of class names into array of Classes.
      */
-    public static Class[] paramClassNamesToTypes(String[] paramClassNames, ClassLoader loader) throws Exception {
-        Class[] parameterTypes = null;
+    public static Class<?>[] paramClassNamesToTypes(String[] paramClassNames, ClassLoader loader) throws Exception {
+        Class<?>[] parameterTypes = null;
         if (paramClassNames != null) {
             parameterTypes = new Class[paramClassNames.length];
             for (int pIndex = 0; pIndex < parameterTypes.length; pIndex++) {
                 String next = paramClassNames[pIndex];
                 if (primitiveClasses_.containsKey(next)) {
-                    parameterTypes[pIndex] = (Class) primitiveClasses_.get(next);
+                    parameterTypes[pIndex] = primitiveClasses_.get(next);
                 } else {
                     parameterTypes[pIndex] = Class.forName(next, true, loader);
                 }

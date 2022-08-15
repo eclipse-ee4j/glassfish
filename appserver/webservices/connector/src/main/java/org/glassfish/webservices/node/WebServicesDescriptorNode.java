@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,35 +17,37 @@
 
 package org.glassfish.webservices.node;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.enterprise.deployment.node.AbstractBundleNode;
 import com.sun.enterprise.deployment.node.SaxParserHandler;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import java.util.Map;
-import org.jvnet.hk2.annotations.Service;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.webservices.connector.LogUtils;
+import org.jvnet.hk2.annotations.Service;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 /**
  * Root node for web services deployment descriptor
  *
  * @author  Kenneth Saks
- * @version
  */
 @Service
 public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescriptor> {
-    public final static XMLElement ROOT_ELEMENT =
-        new XMLElement(WebServicesTagNames.WEB_SERVICES);
+
+    public final static XMLElement ROOT_ELEMENT = new XMLElement(WebServicesTagNames.WEB_SERVICES);
 
     public final static String SCHEMA_ID = "jakartaee_web_services_2_0.xsd";
     public final static String SCHEMA_ID_12 = "javaee_web_services_1_2.xsd";
@@ -56,37 +59,40 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     private static final Logger logger = LogUtils.getLogger();
 
     private static List<String> initSystemIDs() {
-        List<String> sysIDs = new ArrayList<String>();
+        List<String> sysIDs = new ArrayList<>();
         sysIDs.add(SCHEMA_ID);
         sysIDs.add(SCHEMA_ID_12);
         sysIDs.add(SCHEMA_ID_13);
         sysIDs.add(SCHEMA_ID_14);
         return Collections.unmodifiableList(sysIDs);
-
     }
 
-    private BundleDescriptor bundleDescriptor;
+    private final BundleDescriptor bundleDescriptor;
 
     public WebServicesDescriptorNode(BundleDescriptor descriptor) {
         bundleDescriptor = descriptor;
-        registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE),
-                               WebServiceNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE), WebServiceNode.class);
         SaxParserHandler.registerBundleNode(this, WebServicesTagNames.WEB_SERVICES);
     }
+
 
     public WebServicesDescriptorNode() {
         this(null);
     }
+
 
     @Override
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
         return ROOT_ELEMENT.getQName();
     }
 
+
     @Override
-    public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, Map<String, List<Class>> versionUpgrades) {
-        return Collections.EMPTY_MAP;
+    public Map<String, Class<?>> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        return Collections.emptyMap();
     }
+
 
     /**
      * @return the DOCTYPE of the XML file
@@ -130,7 +136,9 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.VERSION.equals(element.getQName())) {
             bundleDescriptor.getWebServices().setSpecVersion(value);
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
     /**
@@ -141,29 +149,27 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
      */
     @Override
     public void addDescriptor(Object descriptor) {
-        WebServicesDescriptor webServicesDesc =
-            bundleDescriptor.getWebServices();
+        WebServicesDescriptor webServicesDesc = bundleDescriptor.getWebServices();
         WebService webService = (WebService) descriptor;
         webServicesDesc.addWebService(webService);
 
-        for(Iterator iter = webService.getEndpoints().iterator();
-            iter.hasNext();) {
-            WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
-            if( !next.resolveComponentLink() ) {
+        for (WebServiceEndpoint next : webService.getEndpoints()) {
+            if (!next.resolveComponentLink()) {
                 logger.log(Level.INFO, LogUtils.WS_COMP_LINK_NOT_VALID,
-                        new Object[]{next.getEndpointName(), next.getLinkName()});
+                    new Object[] {next.getEndpointName(), next.getLinkName()});
             }
         }
-
     }
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
     @Override
     public BundleDescriptor getDescriptor() {
         return bundleDescriptor;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -178,13 +184,13 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
             Node topNode = super.writeDescriptor(parent, descriptor);
             WebServicesDescriptor webServicesDesc = descriptor.getWebServices();
             WebServiceNode wsNode = new WebServiceNode();
-            for(WebService next : webServicesDesc.getWebServices()) {
-                wsNode.writeDescriptor(topNode, WebServicesTagNames.WEB_SERVICE,
-                                       next);
+            for (WebService next : webServicesDesc.getWebServices()) {
+                wsNode.writeDescriptor(topNode, WebServicesTagNames.WEB_SERVICE, next);
             }
         }
         return parent;
     }
+
 
     /**
      * @return the default spec version level this node complies to
@@ -193,6 +199,5 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-
 }
 

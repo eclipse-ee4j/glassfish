@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,22 +15,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
+/**
  * ConnectorNode.java. This class is responsible for encapsulating all information specific to the Connector DTD
  *
  * Created on February 1, 2002, 3:07 PM
  */
-
 package com.sun.enterprise.deployment.node.connector;
 
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.AbstractBundleNode;
+import com.sun.enterprise.deployment.node.DescriptorFactory;
+import com.sun.enterprise.deployment.node.SaxParserHandler;
+import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.node.XMLNode;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
-
-import java.util.*;
 
 
 /**
@@ -95,13 +105,15 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
         publicIDToDTD.put(PUBLIC_DTD_ID, SYSTEM_ID);
         publicIDToDTD.put(PUBLIC_DTD_ID_10, SYSTEM_ID_10);
         return tag.getQName();
-   }
+    }
 
     @Override
-    public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, final Map<String, List<Class>> versionUpgrades) {
-        final Map<String,Class> result = new HashMap<>();
-        result.put(com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode.registerBundle(publicIDToDTD),
-                com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode.class);
+    public Map<String, Class<?>> registerRuntimeBundle(final Map<String, String> publicIDToDTD,
+        final Map<String, List<Class<?>>> versionUpgrades) {
+        final Map<String, Class<?>> result = new HashMap<>();
+        result.put(
+            com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode.registerBundle(publicIDToDTD),
+            com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode.class);
         return result;
     }
 
@@ -175,9 +187,6 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
         } else if(TagNames.MODULE_NAME.equals(element.getQName())) {
             ConnectorDescriptor bundleDesc = getDescriptor();
             bundleDesc.getModuleDescriptor().setModuleName(value);
-/*
-            bundleDesc.setModuleNameSet(true);
-*/
         } else {
             super.setElementValue(element, value);
         }
@@ -190,7 +199,7 @@ public class ConnectorNode extends AbstractBundleNode<ConnectorDescriptor> {
     @Override
     public boolean handlesElement(XMLElement element) {
         if (ConnectorTagNames.RESOURCE_ADAPTER.equals(element.getQName())) {
-                return false;
+            return false;
         }
         return super.handlesElement(element);
     }

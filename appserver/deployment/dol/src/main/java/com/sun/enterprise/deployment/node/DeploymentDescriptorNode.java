@@ -17,8 +17,29 @@
 
 package com.sun.enterprise.deployment.node;
 
-import static com.sun.enterprise.deployment.util.DOLUtils.INVALID_DESC_MAPPING;
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
+import com.sun.enterprise.deployment.types.EjbReference;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -43,28 +64,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
-import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
-import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
-import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
-import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
-import com.sun.enterprise.deployment.MailSessionDescriptor;
-import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
-import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
-import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
-import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.xml.TagNames;
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static com.sun.enterprise.deployment.util.DOLUtils.INVALID_DESC_MAPPING;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Superclass of all Nodes implementation
@@ -95,23 +96,23 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
     // handlers is the list of XMLNodes  registered for handling sub xml tags of the current
     // XMLNode
-    protected Hashtable<String, Class> handlers = null;
+    protected Hashtable<String, Class> handlers;
 
     // list of add methods declared on the descriptor class to add sub descriptors extracted
     // by the handlers registered above. The key for the table is the xml root tag for the
     // descriptor to be added, the value is the method name to add such descriptor to the
     // current descriptor.
-    private Hashtable addMethods = null;
+    private Hashtable addMethods;
 
     // Each node is associated with a XML tag it is handling
     private XMLElement xmlTag;
 
     // Parent node in the XML Nodes implementation tree we create to map to the XML
     // tags of the XML document
-    protected XMLNode parentNode = null;
+    protected XMLNode parentNode;
 
     // The root xml node in the XML Node implementation tree
-    protected XMLNode rootNode = null;
+    protected XMLNode rootNode;
 
     // default descriptor associated with this node, some sub nodes which
     // relies on the dispatch table don't really need to know the actual
@@ -121,30 +122,32 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
 
     // for i18N
-    protected static final LocalStringManagerImpl localStrings=
-        new LocalStringManagerImpl(DeploymentDescriptorNode.class);
+    protected static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
+        DeploymentDescriptorNode.class);
 
     /** Creates new DeploymentDescriptorNode */
     public DeploymentDescriptorNode() {
         registerElementHandler(new XMLElement(TagNames.DESCRIPTION), LocalizedInfoNode.class);
     }
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
-   @Override
-@SuppressWarnings("unchecked")
-    public T getDescriptor() {
 
-        if (abstractDescriptor==null) {
-        abstractDescriptor = createDescriptor();
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public T getDescriptor() {
+        if (abstractDescriptor == null) {
+            abstractDescriptor = createDescriptor();
         }
         return (T) abstractDescriptor;
     }
 
-   protected Object createDescriptor() {
-       return DescriptorFactory.getDescriptor(getXMLPath());
-   }
+
+    protected Object createDescriptor() {
+        return DescriptorFactory.getDescriptor(getXMLPath());
+    }
+
 
     /**
      * Adds  a new DOL descriptor instance to the descriptor instance associated with
@@ -158,9 +161,8 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
                 new Object[] {descriptor , toString()});
             throw new RuntimeException("Cannot add " + descriptor + " to " + toString());
-        } else {
-            getParentNode().addDescriptor(descriptor);
         }
+        getParentNode().addDescriptor(descriptor);
     }
 
     /**
@@ -173,47 +175,47 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
         // if there is no descriptor associated with this class, the addDescriptor should implement
         // the fate of this new descriptor.
-        if (getDescriptor()==null) {
+        if (getDescriptor() == null) {
             addDescriptor(node.getDescriptor());
             return;
         }
         String xmlRootTag = node.getXMLRootTag().getQName();
-        if (addMethods != null && addMethods.containsKey(xmlRootTag)) {
-            try {
-                Method toInvoke = null;
-                if ((node.getDescriptor() instanceof ResourceDescriptor)
-                    && ((ResourceDescriptor) node.getDescriptor()).getResourceType() != null) {
-                    toInvoke = getDescriptor().getClass().getMethod((String) addMethods.get(xmlRootTag),
-                        new Class[] {ResourceDescriptor.class});
+        if (addMethods == null || !addMethods.containsKey(xmlRootTag)) {
+            addDescriptor(node.getDescriptor());
+            return;
+        }
+        try {
+            Method toInvoke = null;
+            if ((node.getDescriptor() instanceof ResourceDescriptor)
+                && ((ResourceDescriptor) node.getDescriptor()).getResourceType() != null) {
+                toInvoke = getDescriptor().getClass().getMethod((String) addMethods.get(xmlRootTag),
+                    new Class[] {ResourceDescriptor.class});
 
-                } else {
-                    toInvoke = getDescriptor().getClass().getMethod((String) addMethods.get(xmlRootTag),
-                        new Class[] {node.getDescriptor().getClass()});
-                }
-                toInvoke.invoke(getDescriptor(), new Object[] {node.getDescriptor()});
+            } else {
+                toInvoke = getDescriptor().getClass().getMethod((String) addMethods.get(xmlRootTag),
+                    new Class[] {node.getDescriptor().getClass()});
+            }
+            toInvoke.invoke(getDescriptor(), new Object[] {node.getDescriptor()});
 
-            } catch (InvocationTargetException e) {
-                Throwable t = e.getTargetException();
-                if (t instanceof IllegalArgumentException) {
-                    // We report the error but we continue loading, this will allow the verifier to
-                    // catch these errors or to register
-                    // an error handler for notification
-                    DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                        new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
-                } else {
-                    DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", t);
-                    DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                        new Object[] {t.toString(), null});
-                }
-            } catch (Throwable t) {
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            if (t instanceof IllegalArgumentException) {
+                // We report the error but we continue loading, this will allow the verifier to
+                // catch these errors or to register
+                // an error handler for notification
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
                     new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
+            } else {
+                DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", t);
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
                     new Object[] {t.toString(), null});
-                DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", t);
             }
-        } else {
-            addDescriptor(node.getDescriptor());
+        } catch (Throwable t) {
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+                new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+                new Object[] {t.toString(), null});
+            DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", t);
         }
     }
 
@@ -254,7 +256,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     protected void registerElementHandler(XMLElement element, Class handler) {
         if (handlers==null) {
-            handlers = new Hashtable<String, Class>();
+            handlers = new Hashtable<>();
         }
         handlers.put(element.getQName(), handler);
     }
@@ -268,12 +270,11 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      * extracted by the handler node to the current descriptor
      */
     public void registerElementHandler(XMLElement element, Class handler, String addMethodName) {
-
-       registerElementHandler(element, handler);
-       if (addMethods==null) {
-           addMethods = new Hashtable();
-       }
-       addMethods.put(element.getQName(), addMethodName);
+        registerElementHandler(element, handler);
+        if (addMethods == null) {
+            addMethods = new Hashtable();
+        }
+        addMethods.put(element.getQName(), addMethodName);
     }
 
     /**
@@ -299,28 +300,27 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             DOLUtils.getDefaultLogger().log(WARNING, INVALID_DESC_MAPPING,
                 new Object[] {this, "No handler registered"});
             return null;
-        } else {
-            Class c = handlers.get(element.getQName());
-            if (c == null) {
-                DOLUtils.getDefaultLogger().log(WARNING, INVALID_DESC_MAPPING,
-                    new Object[] {element.getQName(), "No handler registered"});
-                return null;
-            }
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-                DOLUtils.getDefaultLogger().finer("New Handler requested for " + c);
-            }
-            DeploymentDescriptorNode node;
-            try {
-                node = (DeploymentDescriptorNode) c.newInstance();
-                node.setParentNode(this);
-                node.setXMLRootTag(element);
-                node.getDescriptor();
-            } catch(Exception e) {
-                DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", e);
-                return null;
-            }
-            return node;
         }
+        Class<?> c = handlers.get(element.getQName());
+        if (c == null) {
+            DOLUtils.getDefaultLogger().log(WARNING, INVALID_DESC_MAPPING,
+                new Object[] {element.getQName(), "No handler registered"});
+            return null;
+        }
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
+            DOLUtils.getDefaultLogger().finer("New Handler requested for " + c);
+        }
+        DeploymentDescriptorNode node;
+        try {
+            node = (DeploymentDescriptorNode) c.getDeclaredConstructor().newInstance();
+            node.setParentNode(this);
+            node.setXMLRootTag(element);
+            node.getDescriptor();
+        } catch(Exception e) {
+            DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", e);
+            return null;
+        }
+        return node;
     }
 
     private Class getExtensionHandler(final XMLElement element) {
@@ -338,8 +338,9 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     @Override
     public void startElement(XMLElement element, Attributes attributes) {
         //DOLUtils.getDefaultLogger().finer("STARTELEMENT : " + "in " + getXMLRootTag() + "  Node, startElement " + element.getQName());
-        if (!this.getXMLRootTag().equals(element))
+        if (!this.getXMLRootTag().equals(element)) {
             return;
+        }
 
         if (attributes.getLength()>0) {
             for (int i=0;i<attributes.getLength();i++) {
@@ -347,11 +348,10 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
                     DOLUtils.getDefaultLogger().finer("With attribute " + attributes.getQName(i));
                     DOLUtils.getDefaultLogger().finer("With value " + attributes.getValue(i));
                 }
-        // we try the setAttributeValue first, if not processed then the setElement
-        if (!setAttributeValue(element, new XMLElement(attributes.getQName(i)), attributes.getValue(i))) {
-            setElementValue(new XMLElement(attributes.getQName(i)), attributes.getValue(i));
-        }
-
+                // we try the setAttributeValue first, if not processed then the setElement
+                if (!setAttributeValue(element, new XMLElement(attributes.getQName(i)), attributes.getValue(i))) {
+                    setElementValue(new XMLElement(attributes.getQName(i)), attributes.getValue(i));
+                }
             }
         }
     }
@@ -366,11 +366,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
         // we do not support id attribute for the moment
-        if (attributeName.getQName().equals(TagNames.ID)) {
-            return true;
-        }
-
-    return false;
+        return attributeName.getQName().equals(TagNames.ID);
     }
 
     /**
@@ -385,7 +381,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
         boolean allDone = element.equals(getXMLRootTag());
         if (allDone) {
             postParsing();
-            if (getParentNode()!=null && getDescriptor()!=null) {
+            if (getParentNode() != null && getDescriptor() != null) {
                 ((DeploymentDescriptorNode) getParentNode()).addNodeDescriptor(this);
             }
         }
@@ -404,12 +400,11 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     @Override
     public boolean handlesElement(XMLElement element) {
-
         // Let's iterator over all the statically registered handlers to
         // find one which is responsible for handling the XML tag.
         if (handlers != null) {
-            for (Enumeration handlersIterator = handlers.keys();handlersIterator.hasMoreElements();) {
-                String subElement  = (String) handlersIterator.nextElement();
+            for (Enumeration<String> handlersIterator = handlers.keys();handlersIterator.hasMoreElements();) {
+                String subElement = handlersIterator.nextElement();
                 if (element.getQName().equals(subElement)) {
                     // record element to node mapping for runtime nodes
                     recordNodeMapping(element.getQName(), handlers.get(subElement));
@@ -420,20 +415,18 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
         // let's now find if there is any dynamically registered handler
         // to handle this XML tag
-        Class extHandler = getExtensionHandler(element);
+        Class<?> extHandler = getExtensionHandler(element);
         if (extHandler != null) {
             // if yes, we should add this handler to the table so
             // we don't need to look it up again later and also return
             // false
-            registerElementHandler(new XMLElement(element.getQName()),
-                extHandler);
+            registerElementHandler(new XMLElement(element.getQName()), extHandler);
             // record element to node mapping for runtime nodes
             recordNodeMapping(element.getQName(), extHandler);
             return false;
         }
 
         recordNodeMapping(element.getQName(), this.getClass());
-
         return true;
     }
 
@@ -441,7 +434,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     private void recordNodeMapping(String subElementName, Class handler) {
         XMLNode rootNode = getRootNode();
         if (rootNode instanceof RuntimeBundleNode) {
-            ((RuntimeBundleNode)rootNode).recordNodeMapping(getXMLRootTag().getQName(), subElementName, handler);
+            ((RuntimeBundleNode) rootNode).recordNodeMapping(getXMLRootTag().getQName(), subElementName, handler);
         }
     }
 
@@ -497,9 +490,8 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
                 }
             }
         }
-        if (value.trim().length() != 0) {
-            DOLUtils.getDefaultLogger().log(WARNING, INVALID_DESC_MAPPING,
-                new Object[] {element.getQName(), value});
+        if (!value.isBlank()) {
+            DOLUtils.getDefaultLogger().log(WARNING, INVALID_DESC_MAPPING, new Object[] {element.getQName(), value});
         }
         return;
     }
@@ -512,7 +504,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map<String, String> table =  new HashMap<String, String>();
+        Map<String, String> table =  new HashMap<>();
         table.put(TagNames.DESCRIPTION, "setDescription");
         return table;
     }
@@ -562,11 +554,10 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     @Override
     public String getXMLPath() {
-        if (getParentNode()!=null) {
-            return getParentNode().getXMLPath() + "/" + getXMLRootTag().getQName();
-        } else {
+        if (getParentNode() == null) {
             return getXMLRootTag().getQName();
         }
+        return getParentNode().getXMLPath() + "/" + getXMLRootTag().getQName();
     }
 
     /**
@@ -724,8 +715,9 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     public static Node appendTextChild(Node parent, String elementName, String text) {
 
-        if (text == null || text.length()==0)
+        if (text == null || text.length()==0) {
             return null;
+        }
 
         Node child = appendChild(parent, elementName);
         child.appendChild(getOwnerDocument(child).createTextNode(text));
@@ -742,7 +734,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      * @result the newly create child node
      */
     public static Node appendTextChild(Node parent, String elementName, int value) {
-    return appendTextChild(parent, elementName, String.valueOf(value));
+        return appendTextChild(parent, elementName, String.valueOf(value));
     }
 
     /**
@@ -812,16 +804,16 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      * @param parentNode parent node for the DOM tree
      * @param refs the set of EjbReferenceDescriptor to write
      */
-    protected void writeEjbReferenceDescriptors(Node parentNode, Iterator refs) {
+    protected void writeEjbReferenceDescriptors(Node parentNode, Iterator<EjbReferenceDescriptor> refs) {
         if (refs == null || !refs.hasNext()) {
             return;
         }
 
         EjbReferenceNode subNode = new EjbReferenceNode();
         // ejb-ref*
-        Set localRefDescs = new HashSet();
-        for (; refs.hasNext();) {
-            EjbReference ejbRef = (EjbReference) refs.next();
+        Set<EjbReference> localRefDescs = new HashSet<>();
+        while (refs.hasNext()) {
+            EjbReference ejbRef = refs.next();
             if (ejbRef.isLocal()) {
                 localRefDescs.add(ejbRef);
             } else {
@@ -829,21 +821,21 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             }
         }
         // ejb-local-ref*
-        for (Iterator e = localRefDescs.iterator(); e.hasNext();) {
-            EjbReference ejbRef = (EjbReference) e.next();
+        for (EjbReference ejbRef : localRefDescs) {
             subNode.writeDescriptor(parentNode, TagNames.EJB_LOCAL_REFERENCE,ejbRef);
         }
     }
 
-    protected void writeServiceReferenceDescriptors(Node parentNode, Iterator refs) {
+    protected void writeServiceReferenceDescriptors(Node parentNode, Iterator<ServiceReferenceDescriptor> refs) {
         if (refs == null || !refs.hasNext()) {
             return;
         }
 
-        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode<ServiceReferenceDescriptor> serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class,
+            WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             while (refs.hasNext()) {
-                ServiceReferenceDescriptor next = (ServiceReferenceDescriptor) refs.next();
+                ServiceReferenceDescriptor next = refs.next();
                 serviceRefNode.writeDeploymentDescriptor(parentNode, next);
             }
         }
@@ -856,7 +848,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      * @param resRefs the iterator over the descriptors to write
      */
     protected  void writeResourceRefDescriptors(Node parentNode, Iterator resRefs) {
-        if (resRefs==null || !resRefs.hasNext()) {
+        if (resRefs == null || !resRefs.hasNext()) {
             return;
         }
         ResourceRefNode subNode = new ResourceRefNode();
@@ -1020,14 +1012,12 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
         /*      <xsd:element name="ejb-ref"
            type="javaee:ejb-refType"
            minOccurs="0" maxOccurs="unbounded"/>
-        */
+         */
         /*      <xsd:element name="ejb-local-ref"
            type="javaee:ejb-local-refType"
            minOccurs="0" maxOccurs="unbounded"/>
          */
-        writeEjbReferenceDescriptors(node,
-                    descriptor.getEjbReferenceDescriptors().iterator());
-
+        writeEjbReferenceDescriptors(node, descriptor.getEjbReferenceDescriptors().iterator());
 
         /*      <xsd:group ref="javaee:service-refGroup"/>
          */
@@ -1037,38 +1027,38 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
            type="javaee:resource-refType"
            minOccurs="0" maxOccurs="unbounded"/>
          */
-         writeResourceRefDescriptors(node, descriptor.getResourceReferenceDescriptors().iterator());
+        writeResourceRefDescriptors(node, descriptor.getResourceReferenceDescriptors().iterator());
 
         /*  <xsd:element name="resource-env-ref"
                    type="javaee:resource-env-refType"
                    minOccurs="0" maxOccurs="unbounded"/>
          */
-         writeResourceEnvRefDescriptors(node, descriptor.getResourceEnvReferenceDescriptors().iterator());
+        writeResourceEnvRefDescriptors(node, descriptor.getResourceEnvReferenceDescriptors().iterator());
 
         /*      <xsd:element name="message-destination-ref"
                    type="javaee:message-destination-refType"
                    minOccurs="0" maxOccurs="unbounded"/>
          */
-         writeMessageDestinationRefDescriptors(node, descriptor.getMessageDestinationReferenceDescriptors().iterator());
+        writeMessageDestinationRefDescriptors(node, descriptor.getMessageDestinationReferenceDescriptors().iterator());
 
         /*      <xsd:element name="persistence-context-ref"
            type="javaee:persistence-context-refType"
            minOccurs="0" maxOccurs="unbounded"/>
          */
-         writeEntityManagerReferenceDescriptors(node, descriptor.getEntityManagerReferenceDescriptors().iterator());
+        writeEntityManagerReferenceDescriptors(node, descriptor.getEntityManagerReferenceDescriptors().iterator());
 
         /*      <xsd:element name="persistence-unit-ref"
            type="javaee:persistence-unit-refType"
            minOccurs="0" maxOccurs="unbounded"/>
          */
-         writeEntityManagerFactoryReferenceDescriptors(node, descriptor.getEntityManagerFactoryReferenceDescriptors().iterator());
+        writeEntityManagerFactoryReferenceDescriptors(node, descriptor.getEntityManagerFactoryReferenceDescriptors().iterator());
 
         /*      <xsd:element name="post-construct"
            type="javaee:lifecycle-callbackType"
            minOccurs="0"
            maxOccurs="unbounded"/>
          */
-         writeLifeCycleCallbackDescriptors(node, TagNames.POST_CONSTRUCT, descriptor.getPostConstructDescriptors());
+        writeLifeCycleCallbackDescriptors(node, TagNames.POST_CONSTRUCT, descriptor.getPostConstructDescriptors());
 
 
         /*      <xsd:element name="pre-destroy"
@@ -1076,7 +1066,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
            minOccurs="0"
            maxOccurs="unbounded"/>
          */
-         writeLifeCycleCallbackDescriptors(node, TagNames.PRE_DESTROY, descriptor.getPreDestroyDescriptors());
+        writeLifeCycleCallbackDescriptors(node, TagNames.PRE_DESTROY, descriptor.getPreDestroyDescriptors());
     }
 
     /**
@@ -1090,9 +1080,8 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     protected void addNamespaceDeclaration(Element node, Descriptor descriptor) {
 
         // declare now all remaining namepace...
-        Map<String, String> prefixMapping = (descriptor != null ) ?
-            descriptor.getPrefixMapping() : null;
-        if (prefixMapping!=null) {
+        Map<String, String> prefixMapping = descriptor == null ? null : descriptor.getPrefixMapping();
+        if (prefixMapping != null) {
             Set<Map.Entry<String, String>> entrySet = prefixMapping.entrySet();
             Iterator<Map.Entry<String, String>> entryIt = entrySet.iterator();
             while (entryIt.hasNext()) {

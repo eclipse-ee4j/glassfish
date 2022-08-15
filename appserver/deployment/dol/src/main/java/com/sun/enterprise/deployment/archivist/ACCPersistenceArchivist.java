@@ -44,7 +44,6 @@ import org.xml.sax.SAXException;
  * PersistenceArchivist for app clients that knows how to scan for PUs in
  * the app client itself as well as in library JARs (or top-level JARs from
  * the containing EAR) that might accompany the app client.
- *
  */
 @Service
 @ExtensionsArchivistFor("jpa")
@@ -202,31 +201,6 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         for (String uriText : relativeURIs) {
             final URI scanTargetURI = archive.getURI().resolve(uriText);
             candidates.put(uriText, archiveFactory.openArchive(scanTargetURI));
-        }
-    }
-
-    private class AppClientPURootScanner extends SubArchivePURootScanner {
-
-        private final ReadableArchive clientArchive;
-
-        private AppClientPURootScanner(final ReadableArchive clientArchive) {
-            this.clientArchive = clientArchive;
-        }
-
-        @Override
-        ReadableArchive getSubArchiveToScan(ReadableArchive parentArchive) {
-            return clientArchive;
-        }
-
-        /**
-         * The superclass requires this implementation, but it is never used
-         * because we also override getSubArchiveToScan.
-         *
-         * @return
-         */
-        @Override
-        String getPathOfSubArchiveToScan() {
-            return "";
         }
     }
 }

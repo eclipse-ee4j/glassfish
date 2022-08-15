@@ -17,10 +17,15 @@
 
 package com.sun.enterprise.deployment.node;
 
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EarType;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.xml.ApplicationTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,15 +41,10 @@ import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
 
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EarType;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.xml.ApplicationTagNames;
-import com.sun.enterprise.deployment.xml.TagNames;
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
 
 /**
  * This class is responsible for loading and saving XML elements
@@ -82,7 +82,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public final static XMLElement tag = new XMLElement(ApplicationTagNames.APPLICATION);
 
     private final static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<String>();
+        List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_14);
         systemIDs.add(SCHEMA_ID_15);
@@ -110,17 +110,19 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     }
 
     @Override
-    public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
-        final Map<String,Class> result = new HashMap<String,Class>();
-        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils.getConfigurationDeploymentDescriptorFiles(serviceLocator, EarType.ARCHIVE_TYPE)) {
-          confDD.registerBundle(result, publicIDToDTD, versionUpgrades);
+    public Map<String, Class<?>> registerRuntimeBundle(final Map<String, String> publicIDToDTD,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        final Map<String, Class<?>> result = new HashMap<>();
+        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils
+            .getConfigurationDeploymentDescriptorFiles(serviceLocator, EarType.ARCHIVE_TYPE)) {
+            confDD.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
         return result;
     }
 
     @Override
     public Collection<String> elementsAllowingEmptyValue() {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         result.add(ApplicationTagNames.LIBRARY_DIRECTORY);
         return result;
     }
@@ -139,11 +141,11 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public ApplicationNode() {
         super();
         registerElementHandler(new XMLElement(ApplicationTagNames.MODULE), ModuleNode.class, "addModule");
-        registerElementHandler(new XMLElement(ApplicationTagNames.ROLE), SecurityRoleNode.class, "addAppRole");
+        registerElementHandler(new XMLElement(TagNames.ROLE), SecurityRoleNode.class, "addAppRole");
         registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode<?> serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
@@ -195,7 +197,9 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         } else if (element.getQName().equals(
             ApplicationTagNames.INITIALIZE_IN_ORDER)) {
             application.setInitializeInOrder(Boolean.valueOf(value));
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
 
@@ -208,13 +212,12 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof BundleDescriptor) {
-            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("In  " + toString() +
-                " adding descriptor " + newDescriptor);
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+                DOLUtils.getDefaultLogger().fine("In  " + toString() + " adding descriptor " + newDescriptor);
             }
-           descriptor.addBundleDescriptor((BundleDescriptor) newDescriptor);
-        } else if (newDescriptor instanceof EjbReference) {
-            descriptor.addEjbReferenceDescriptor((EjbReference) newDescriptor);
+            descriptor.addBundleDescriptor((BundleDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof EjbReferenceDescriptor) {
+            descriptor.addEjbReferenceDescriptor((EjbReferenceDescriptor) newDescriptor);
         }
     }
 
@@ -223,7 +226,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     */
     @Override
     public Application getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = Application.createApplication();
         }
         return descriptor;

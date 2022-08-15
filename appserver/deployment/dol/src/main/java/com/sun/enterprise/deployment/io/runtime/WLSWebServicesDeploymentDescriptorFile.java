@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,22 @@
 
 package com.sun.enterprise.deployment.io.runtime;
 
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.ws.WLDescriptorConstants;
 import com.sun.enterprise.deployment.node.ws.WLWebServicesDescriptorNode;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Vector;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
-
-import java.util.Vector;
-import java.io.OutputStream;
-import java.io.IOException;
 
 /**
  * This class is responsible for handling the WebLogic webservices deployment descriptor.
@@ -41,12 +42,15 @@ import java.io.IOException;
  * @author Rama Pulavarthi
  */
 public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploymentDescriptorFile {
+
     private String descriptorPath;
 
     public WLSWebServicesDeploymentDescriptorFile(RootDeploymentDescriptor desc) {
         if (desc instanceof WebServicesDescriptor) {
-            descriptorPath = (((WebServicesDescriptor)desc).getBundleDescriptor().getModuleType().equals(DOLUtils.warType())) ?
-                WLDescriptorConstants.WL_WEB_WEBSERVICES_JAR_ENTRY : WLDescriptorConstants.WL_EJB_WEBSERVICES_JAR_ENTRY;
+            descriptorPath = (((WebServicesDescriptor) desc).getBundleDescriptor().getModuleType()
+                .equals(DOLUtils.warType()))
+                    ? WLDescriptorConstants.WL_WEB_WEBSERVICES_JAR_ENTRY
+                    : WLDescriptorConstants.WL_EJB_WEBSERVICES_JAR_ENTRY;
         } else if (desc instanceof WebBundleDescriptor) {
             descriptorPath = WLDescriptorConstants.WL_WEB_WEBSERVICES_JAR_ENTRY;
         } else if (desc instanceof EjbBundleDescriptor) {
@@ -60,10 +64,9 @@ public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploym
     }
 
     public static Vector getAllDescriptorPaths() {
-        Vector allDescPaths = new Vector();
+        Vector<String> allDescPaths = new Vector<>();
         allDescPaths.add(WLDescriptorConstants.WL_WEB_WEBSERVICES_JAR_ENTRY);
         allDescPaths.add(WLDescriptorConstants.WL_EJB_WEBSERVICES_JAR_ENTRY);
-
         return allDescPaths;
     }
 
@@ -91,11 +94,14 @@ public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploym
         }
     }
 
-  /**
-   * Return whether this configuration file can be validated.
-   * @return whether this configuration file can be validated.
-   */
-  public boolean isValidating() {
-    return true;
-  }
+
+    /**
+     * Return whether this configuration file can be validated.
+     *
+     * @return whether this configuration file can be validated.
+     */
+    @Override
+    public boolean isValidating() {
+        return true;
+    }
 }

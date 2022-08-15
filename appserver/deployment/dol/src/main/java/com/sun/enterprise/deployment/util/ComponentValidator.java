@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,29 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ComponentValidator.java
- *
- * Created on August 15, 2002, 5:51 PM
- */
-
 package com.sun.enterprise.deployment.util;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import javax.security.auth.Subject;
 
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
@@ -56,12 +35,28 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.deployment.archive.ArchiveType;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
- *
  * @author  dochez
  */
 public class ComponentValidator extends DefaultDOLVisitor implements ComponentVisitor {
@@ -71,10 +66,9 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     @LogMessageInfo(message = "Could not load {0}", level="FINE")
     private static final String LOAD_ERROR = "AS-DEPLOYMENT-00014";
 
-    private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ComponentValidator.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ComponentValidator.class);
 
-    protected BundleDescriptor bundleDescriptor = null;
+    protected BundleDescriptor bundleDescriptor;
 
     protected Application application;
 
@@ -106,26 +100,22 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      */
     @Override
     protected void accept(MessageDestinationReferencer msgDestReferencer) {
-
-        // if it is linked to a logical destination
-        if( msgDestReferencer.isLinkedToMessageDestination() ) {
+        if (msgDestReferencer.isLinkedToMessageDestination()) {
+            // if it is linked to a logical destination
             return;
-        // if it is referred to a physical destination
-        } else if (msgDestReferencer.ownedByMessageDestinationRef() &&
-            msgDestReferencer.getMessageDestinationRefOwner(
-            ).getJndiName() != null) {
+        } else if (msgDestReferencer.ownedByMessageDestinationRef()
+            && msgDestReferencer.getMessageDestinationRefOwner().getJndiName() != null) {
+            // if it is referred to a physical destination
             return;
         } else {
-            MessageDestinationDescriptor msgDest =
-                msgDestReferencer.resolveLinkName();
-            if( msgDest == null ) {
-                String linkName =
-                    msgDestReferencer.getMessageDestinationLinkName();
+            MessageDestinationDescriptor msgDest = msgDestReferencer.resolveLinkName();
+            if (msgDest == null) {
+                String linkName = msgDestReferencer.getMessageDestinationLinkName();
                 DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
                     new Object[] {"message-destination", linkName});
             } else {
                 if (msgDestReferencer instanceof MessageDestinationReferenceDescriptor) {
-                    ((MessageDestinationReferenceDescriptor)msgDestReferencer).setJndiName(msgDest.getJndiName());
+                    ((MessageDestinationReferenceDescriptor) msgDestReferencer).setJndiName(msgDest.getJndiName());
                 }
             }
         }
@@ -162,12 +152,12 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
     @Override
     protected void accept(EjbReference ejbRef) {
-
         if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
             DOLUtils.getDefaultLogger().fine("Visiting Ref" + ejbRef);
         }
-    if (ejbRef.getEjbDescriptor()!=null)
+        if (ejbRef.getEjbDescriptor() != null) {
             return;
+        }
 
         // let's try to derive the ejb-ref-type first it is not defined
         if (ejbRef.getType() == null) {
@@ -237,8 +227,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                     DOLUtils.getDefaultLogger().fine("Ref " + ejbRef.getName() + " is bound to Ejb with JNDI Name " + ejbRef.getJndiName());
                 }
                 if (getEjbDescriptors() != null) {
-                    for (Iterator iter = getEjbDescriptors().iterator(); iter.hasNext(); ) {
-                        EjbDescriptor ejb = (EjbDescriptor) iter.next();
+                    for (Object element : getEjbDescriptors()) {
+                        EjbDescriptor ejb = (EjbDescriptor) element;
                         if (ejbRef.getJndiName().equals(ejb.getJndiName())) {
                             ejbRef.setEjbDescriptor(ejb);
                             return;
@@ -635,10 +625,10 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * RemoteBusiness, LocalHome, and LocalBusiness are eligible for map.
      */
     private Map<String, EjbIntfInfo> getEjbIntfMap() {
-        Map<String, EjbIntfInfo> intfInfoMap = new HashMap<String, EjbIntfInfo>();
+        Map<String, EjbIntfInfo> intfInfoMap = new HashMap<>();
 
-        for(Iterator iter = getEjbDescriptors().iterator(); iter.hasNext(); ) {
-            EjbDescriptor next = (EjbDescriptor) iter.next();
+        for (Object element : getEjbDescriptors()) {
+            EjbDescriptor next = (EjbDescriptor) element;
             if( next.isRemoteInterfacesSupported() ) {
                 addIntfInfo(intfInfoMap, next.getHomeClassName(),
                             EjbIntfType.REMOTE_HOME, next);
@@ -680,7 +670,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         EjbIntfInfo intfInfo = intfInfoMap.get(intf);
         if( intfInfo == null ) {
             EjbIntfInfo newInfo = new EjbIntfInfo();
-            newInfo.ejbs = new HashSet<EjbDescriptor>();
+            newInfo.ejbs = new HashSet<>();
             newInfo.ejbs.add(ejbDesc);
             newInfo.intfType = intfType;
             intfInfoMap.put(intf, newInfo);
@@ -702,8 +692,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
         Set portsInfo = serviceRef.getPortsInfo();
 
-        for(Iterator iter = portsInfo.iterator(); iter.hasNext();) {
-            ServiceRefPortInfo next = (ServiceRefPortInfo) iter.next();
+        for (Object element : portsInfo) {
+            ServiceRefPortInfo next = (ServiceRefPortInfo) element;
 
             if( next.hasPortComponentLinkName() &&
                 !next.isLinkedToPortComponent() ) {
@@ -898,7 +888,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                         Set<Principal> pset = fs.getPrincipals();
                         Principal prin = null;
                         if (pset.size() > 0) {
-                            prin = (Principal)pset.iterator().next();
+                            prin = pset.iterator().next();
                             DOLUtils.getDefaultLogger().log(Level.WARNING,
                             "enterprise.deployment.backend.computeRunAsPrincipal",
                             new Object[] { prin.getName() });
@@ -923,7 +913,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     private Map<String, ManagedBeanDescriptor> getManagedBeanMap() {
         BundleDescriptor thisBundle = getBundleDescriptor();
 
-        Set<ManagedBeanDescriptor> managedBeans = new HashSet<ManagedBeanDescriptor>();
+        Set<ManagedBeanDescriptor> managedBeans = new HashSet<>();
 
         // Make sure we're dealing with the top-level bundle descriptor when looking
         // for managed beans
@@ -934,7 +924,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             }
         }
 
-        Map<String, ManagedBeanDescriptor> managedBeanMap = new HashMap<String, ManagedBeanDescriptor>();
+        Map<String, ManagedBeanDescriptor> managedBeanMap = new HashMap<>();
 
         for(ManagedBeanDescriptor managedBean : managedBeans ) {
 
@@ -957,12 +947,13 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         else if (resRef.getJndiName() == null ||
                 resRef.getJndiName().length() == 0) {
             if (resRef.getType() != null) {
-                if (resRef.getType().equals("javax.sql.DataSource"))
+                if (resRef.getType().equals("javax.sql.DataSource")) {
                     resRef.setLookupName("java:comp/DefaultDataSource");
-                else if (resRef.getType().equals("jakarta.jms.ConnectionFactory"))
+                } else if (resRef.getType().equals("jakarta.jms.ConnectionFactory")) {
                     resRef.setLookupName("java:comp/DefaultJMSConnectionFactory");
-                else
+                } else {
                     resRef.setJndiName(getDefaultResourceJndiName(resRef.getName()));
+                }
             } else {
                 resRef.setJndiName(getDefaultResourceJndiName(resRef.getName()));
             }

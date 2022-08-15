@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,23 @@
 
 package org.glassfish.ejb.deployment.archivist;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-
-import java.util.List;
-import java.util.Collection;
-import java.io.IOException;
-
 import com.sun.ejb.containers.EjbContainerUtil;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ExtensionsArchivist;
 import com.sun.enterprise.deployment.archivist.ExtensionsArchivistFor;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.BundleDescriptor;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
@@ -41,13 +43,11 @@ import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.io.EjbDeploymentDescriptorFile;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Mahesh Kannan
  */
-
 @Service
 @PerLookup
 @ExtensionsArchivistFor("ejb")
@@ -75,10 +75,11 @@ public class EjbInWarArchivist extends ExtensionsArchivist {
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
      */
+    @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles(RootDeploymentDescriptor descriptor) {
         if (confDDFiles == null) {
             confDDFiles = DOLUtils.getConfigurationDeploymentDescriptorFiles(serviceLocator,
-                    EjbContainerUtil.EJB_CONTAINER_NAME);
+                EjbContainerUtil.EJB_CONTAINER_NAME);
         }
         return confDDFiles;
     }
@@ -112,9 +113,10 @@ public class EjbInWarArchivist extends ExtensionsArchivist {
      * @param out the abstract archive file to write to
      */
     @Override
-    public void writeDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, ReadableArchive in, WritableArchive out) throws IOException {
-        Collection<EjbBundleDescriptorImpl> ejbExtensions =
-            descriptor.getExtensionsDescriptors(EjbBundleDescriptorImpl.class);
+    public void writeDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, ReadableArchive in,
+        WritableArchive out) throws IOException {
+        Collection<EjbBundleDescriptorImpl> ejbExtensions = descriptor
+            .getExtensionsDescriptors(EjbBundleDescriptorImpl.class);
 
         for (EjbBundleDescriptorImpl ejbBundle : ejbExtensions) {
             super.writeDeploymentDescriptors(main, ejbBundle, in, out);

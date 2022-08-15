@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,20 +19,21 @@ package com.sun.enterprise.deployment.node.runtime.application.wls;
 
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
-import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
 import com.sun.enterprise.deployment.node.DataSourceNameVersionUpgrade;
 import com.sun.enterprise.deployment.node.StartMdbsWithApplicationVersionUpgrade;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
+import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import com.sun.enterprise.deployment.xml.TagNames;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling all WebLogic runtime information for
@@ -68,9 +70,9 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
     @Override
     protected void init() {
         super.init();
-        registerElementHandler(new XMLElement(
-                RuntimeTagNames.APPLICATION_PARAM), ApplicationParamNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.APPLICATION_PARAM), ApplicationParamNode.class);
     }
+
 
    /**
     * register this node as a root node capable of loading entire DD files
@@ -79,18 +81,16 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
     * @param versionUpgrades The list of upgrades from older versions
     * @return the doctype tag name
     */
-    public static String registerBundle(Map publicIDToDTD,
-                                        Map<String, List<Class>> versionUpgrades) {
-        // TODO: fill in all the previously supported DTD versions
-        // for backward compatibility
-        publicIDToDTD.put(PUBLIC_DTD_ID_2, SYSTEM_ID_2);
-        List<Class> list = new ArrayList<>();
-        list.add(DataSourceNameVersionUpgrade.class);
-        list.add(StartMdbsWithApplicationVersionUpgrade.class);
-        versionUpgrades.put(RuntimeTagNames.WLS_APPLICATION_RUNTIME_TAG,
-                            list);
-        return RuntimeTagNames.WLS_APPLICATION_RUNTIME_TAG;
-    }
+   public static String registerBundle(Map<String, String> publicIDToDTD, Map<String, List<Class<?>>> versionUpgrades) {
+       // TODO: fill in all the previously supported DTD versions
+       // for backward compatibility
+       publicIDToDTD.put(PUBLIC_DTD_ID_2, SYSTEM_ID_2);
+       List<Class<?>> list = new ArrayList<>();
+       list.add(DataSourceNameVersionUpgrade.class);
+       list.add(StartMdbsWithApplicationVersionUpgrade.class);
+       versionUpgrades.put(RuntimeTagNames.WLS_APPLICATION_RUNTIME_TAG, list);
+       return RuntimeTagNames.WLS_APPLICATION_RUNTIME_TAG;
+   }
 
     /**
      * @return the XML tag associated with this XMLNode

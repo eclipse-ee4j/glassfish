@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.TagNames;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -91,7 +90,6 @@ public class SaxParserHandler extends DefaultHandler {
     private boolean doDelete;
     private String errorReportingString = "";
 
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SaxParserHandler.class);
 
     protected static Map<String,String> getMapping() {
         return _mappingStuff.mMapping;
@@ -183,45 +181,45 @@ public class SaxParserHandler extends DefaultHandler {
         _mappingStuff.mBundleRegistrationStatus.put(rootNodeKey, Boolean.TRUE);
     }
 
+    @SuppressWarnings("resource")
     @Override
     public InputSource resolveEntity(String publicID, String systemID) throws SAXException {
         try {
-            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Asked to resolve  " + publicID + " system id = " + systemID);
             }
             // If public ID is there and is present in our map, use it
             if (publicID != null && getMapping().containsKey(publicID)) {
                 this.publicID = publicID;
                 return new InputSource(new BufferedInputStream(getDTDUrlFor(getMapping().get(publicID))));
-            } else {
-                // In case invalid public ID is given (or) public ID is null, use system ID to resolve
-                // unspecified schema
-                if (systemID==null || systemID.lastIndexOf('/')==systemID.length()) {
-                    return null;
-                }
-
-                String fileName = null;
-                String namespaceResolution = resolveSchemaNamespace(systemID);
-                if (namespaceResolution != null) {
-                  fileName = getSchemaURLFor(namespaceResolution);
-                } else {
-                  fileName = getSchemaURLFor(systemID.substring(systemID.lastIndexOf('/')+1));
-                }
-                // if this is not a request for a schema located in our repository, we fail the deployment
-                if (fileName == null) {
-                    throw new SAXException(localStrings.getLocalString(
-                            "invalid.schema",
-                            "Requested schema is not found in local repository, please ensure that there are no typos in the XML namespace declaration."));
-                }
-                if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                  DOLUtils.getDefaultLogger().fine("Resolved to " + fileName);
-                }
-                return new InputSource(fileName);
             }
+            // In case invalid public ID is given (or) public ID is null, use system ID to resolve
+            // unspecified schema
+            if (systemID == null || systemID.lastIndexOf('/') == systemID.length()) {
+                return null;
+            }
+
+            String namespaceResolution = resolveSchemaNamespace(systemID);
+            final String fileName;
+            if (namespaceResolution == null) {
+                fileName = getSchemaURLFor(systemID.substring(systemID.lastIndexOf('/') + 1));
+            } else {
+                fileName = getSchemaURLFor(namespaceResolution);
+            }
+            // if this is not a request for a schema located in our repository, we fail the
+            // deployment
+            if (fileName == null) {
+                throw new SAXException("Requested schema " + systemID + " is not found in local repository, please"
+                    + " ensure that there are no typos in the XML namespace declaration.");
+            }
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+                DOLUtils.getDefaultLogger().fine("Resolved to " + fileName);
+            }
+            return new InputSource(fileName);
         } catch (SAXException e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, e.getMessage(), e);
             throw e;
-        } catch(Exception ioe) {
+        } catch (Exception ioe) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new SAXException(ioe);
         }
@@ -434,9 +432,8 @@ public class SaxParserHandler extends DefaultHandler {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                     new Object[] {localName, " not supported !"});
                 if (stopOnXMLErrors) {
-                    throw new IllegalArgumentException(localStrings.getLocalString("invalid.root.element",
-                        "{0} Element [{1}] is not a valid root element",
-                        new Object[] {errorReportingString, localName}));
+                    throw new IllegalArgumentException(
+                        errorReportingString + " Element [" + localName + "] is not a valid root element");
                 }
             } else {
                 try {

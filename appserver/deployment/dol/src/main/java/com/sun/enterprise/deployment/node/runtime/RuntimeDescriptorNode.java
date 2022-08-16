@@ -77,7 +77,7 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
                 RuntimeDescriptor rd = (RuntimeDescriptor) o;
                 rd.setValue(element.getQName(), value);
             } else {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                     new Object[] {element.getQName(), value});
             }
         }

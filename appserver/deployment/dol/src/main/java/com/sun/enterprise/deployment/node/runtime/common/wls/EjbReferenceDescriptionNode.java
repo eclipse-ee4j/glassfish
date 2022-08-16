@@ -82,8 +82,7 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
                 }
             }
             if (descriptor == null) {
-                logger.log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                        new Object[]{"ejb-ref" , value });
+                logger.log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE, new Object[] {"ejb-ref", value});
             }
         } else {
             super.setElementValue(element, value);

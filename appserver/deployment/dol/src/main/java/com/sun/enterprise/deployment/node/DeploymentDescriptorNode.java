@@ -158,7 +158,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     @Override
     public void addDescriptor(Object descriptor) {
         if (getParentNode() == null) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                 new Object[] {descriptor , toString()});
             throw new RuntimeException("Cannot add " + descriptor + " to " + toString());
         }
@@ -203,17 +203,17 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
                 // We report the error but we continue loading, this will allow the verifier to
                 // catch these errors or to register
                 // an error handler for notification
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                     new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
             } else {
                 DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", t);
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                     new Object[] {t.toString(), null});
             }
         } catch (Throwable t) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                 new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                 new Object[] {t.toString(), null});
             DOLUtils.getDefaultLogger().log(WARNING, "Error occurred", t);
         }

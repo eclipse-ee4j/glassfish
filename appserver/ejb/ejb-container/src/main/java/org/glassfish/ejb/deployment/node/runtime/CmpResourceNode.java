@@ -71,9 +71,8 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
     @Override
     public void postParsing() {
         EjbBundleDescriptorImpl bd = (EjbBundleDescriptorImpl) getParentNode().getDescriptor();
-        if (bd==null) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{descriptor});
+        if (bd == null) {
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE, new Object[] {descriptor});
             return;
         }
         bd.setCMPResourceReference(descriptor);

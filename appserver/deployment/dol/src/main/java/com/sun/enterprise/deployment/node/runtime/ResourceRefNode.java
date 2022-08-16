@@ -77,7 +77,7 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (descriptor == null) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment.backend.addDescriptorFailure",
+            DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {newDescriptor, this});
             return;
         }
@@ -85,12 +85,12 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
             descriptor.setResourcePrincipal((ResourcePrincipal) newDescriptor);
         } else if (newDescriptor instanceof MailConfiguration) {
             // XXX - This special case doesn't seem to be needed since no one
-            // ever uses the value set here.  I'm not even sure this case can
+            // ever uses the value set here. I'm not even sure this case can
             // ever happen; see MailConfigurationNode.
             descriptor.setMailConfiguration((MailConfiguration) newDescriptor);
         } else {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{"In " + this + " do not know what to do with " + newDescriptor});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
+                new Object[] {"In " + this + " do not know what to do with " + newDescriptor});
         }
     }
 

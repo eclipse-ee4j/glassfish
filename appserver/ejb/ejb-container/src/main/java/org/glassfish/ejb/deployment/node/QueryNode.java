@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.MethodNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.QueryDescriptor;
@@ -32,28 +34,28 @@ import org.w3c.dom.Node;
  * This class is responsible for handling the query element
  *
  * @author  Jerome Dochez
- * @version
  */
 public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
 
     private QueryDescriptor descriptor;
 
     public QueryNode() {
-        super();
-        registerElementHandler(new XMLElement(EjbTagNames.QUERY_METHOD),
-                                                                MethodNode.class, "setQueryMethodDescriptor");
+        registerElementHandler(new XMLElement(EjbTagNames.QUERY_METHOD), MethodNode.class, "setQueryMethodDescriptor");
     }
+
 
     @Override
     public QueryDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new QueryDescriptor();
+        if (descriptor == null) {
+            descriptor = new QueryDescriptor();
+        }
         return descriptor;
     }
 
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(EjbTagNames.EJB_QL, "setQuery");
         return table;
     }
@@ -66,8 +68,8 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
             } else if (EjbTagNames.QUERY_LOCAL_TYPE_MAPPING.equals(value)) {
                 descriptor.setHasLocalReturnTypeMapping();
             } else {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                                new Object[] {((Descriptor) getParentNode().getDescriptor()).getName() , value});
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
+                    new Object[] {((Descriptor) getParentNode().getDescriptor()).getName(), value});
             }
         } else {
             super.setElementValue(element, value);
@@ -86,15 +88,11 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
                                                                          descriptor.getQueryMethodDescriptor());
 
         if (descriptor.getHasRemoteReturnTypeMapping()) {
-            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING,
-                                                    EjbTagNames.QUERY_REMOTE_TYPE_MAPPING);
-        } else {
-        if (descriptor.getHasLocalReturnTypeMapping()) {
-                appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING,
-                                                    EjbTagNames.QUERY_LOCAL_TYPE_MAPPING);
-            }
-    }
-        // ejbql element is mandatory.  If no EJB QL query has been
+            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING, EjbTagNames.QUERY_REMOTE_TYPE_MAPPING);
+        } else if (descriptor.getHasLocalReturnTypeMapping()) {
+            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING, EjbTagNames.QUERY_LOCAL_TYPE_MAPPING);
+        }
+        // ejbql element is mandatory. If no EJB QL query has been
         // specified for the method, the xml element will be empty
         String ejbqlText = descriptor.getIsEjbQl() ? descriptor.getQuery() : "";
         Node child = appendChild(queryNode, EjbTagNames.EJB_QL);

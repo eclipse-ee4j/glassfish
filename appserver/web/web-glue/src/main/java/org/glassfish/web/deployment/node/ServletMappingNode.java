@@ -103,8 +103,8 @@ public class ServletMappingNode extends DeploymentDescriptorNode {
                 ((WebCommonNode) parentNode).addServletMapping(servletName,
                 urlPattern);
             } else {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{getXMLRootTag() , "servlet-mapping"});
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
+                    new Object[] {getXMLRootTag(), "servlet-mapping"});
             }
 
         }

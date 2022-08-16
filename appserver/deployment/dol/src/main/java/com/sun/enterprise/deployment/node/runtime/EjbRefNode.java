@@ -66,8 +66,9 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
-        if (RuntimeTagNames.EJB_REFERENCE_NAME.equals(element.getQName())) {
+        if (TagNames.EJB_REFERENCE_NAME.equals(element.getQName())) {
             Object parentDesc = getParentNode().getDescriptor();
             if (parentDesc instanceof EjbReferenceContainer) {
                 try {
@@ -77,11 +78,13 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
             }
-            if (descriptor==null) {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                        new Object[]{"ejb-ref" , value });
+            if (descriptor == null) {
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
+                    new Object[] {"ejb-ref", value});
             }
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
     /**

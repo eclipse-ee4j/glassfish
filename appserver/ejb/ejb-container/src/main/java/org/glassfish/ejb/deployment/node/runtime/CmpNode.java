@@ -68,7 +68,7 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
     public void addDescriptor(Object newDescriptor) {
         getDescriptor();
         if (descriptor == null) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment.backend.addDescriptorFailure",
+            DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                 new Object[] {newDescriptor, this});
             return;
         }

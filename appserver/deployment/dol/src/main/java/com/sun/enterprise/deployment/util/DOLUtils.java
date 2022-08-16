@@ -17,10 +17,24 @@
 
 package com.sun.enterprise.deployment.util;
 
-import static com.sun.enterprise.deployment.deploy.shared.Util.toURI;
-import static java.util.Collections.emptyList;
-import static org.glassfish.deployment.common.DeploymentUtils.getManifestLibraries;
-import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibrariesAsList;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.archivist.Archivist;
+import com.sun.enterprise.deployment.archivist.ArchivistFactory;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
+import com.sun.enterprise.deployment.io.DescriptorConstants;
+import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,30 +77,15 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.archivist.Archivist;
-import com.sun.enterprise.deployment.archivist.ArchivistFactory;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
-import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.TagNames;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static com.sun.enterprise.deployment.deploy.shared.Util.toURI;
+import static java.util.Collections.emptyList;
+import static org.glassfish.deployment.common.DeploymentUtils.getManifestLibraries;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibrariesAsList;
 
 /**
  * Utility class for convenience methods
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class DOLUtils {
 
@@ -163,6 +162,13 @@ public class DOLUtils {
             cause = "Unknown",
             action = "Unknown")
     public static final String INVALID_JNDI_SCOPE = "enterprise.deployment.util.application.invalid.jndiname.scope";
+
+    @LogMessageInfo(message = "DPL8006: get/add descriptor failure : {0} TO {1}",
+        level = "SEVERE",
+        cause = "Adding or getting a descriptor failed. May be because the node / information to be added is not valid; may be because of the descriptor was not registered",
+        action = "Ensure that the node to be added is valid. Ensure that the permissions are set as expected."
+    )
+    public static final String ADD_DESCRIPTOR_FAILURE = "enterprise.deployment.backend.addDescriptorFailure";
 
     // The system property to control the precedence between GF DD
     // and WLS DD when they are both present. When this property is

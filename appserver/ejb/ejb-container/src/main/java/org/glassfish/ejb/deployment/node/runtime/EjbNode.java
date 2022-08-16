@@ -109,18 +109,18 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
                     descriptor = ((EjbBundleDescriptorImpl) parentDesc).getEjbByName(value);
                 }
             }
-            if (descriptor==null) {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{element , value});
+            if (descriptor == null) {
+                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
+                    new Object[] {element, value});
             } else {
                 if (availEnabled != null) {
                     descriptor.getIASEjbExtraDescriptors().setAttributeValue(IASEjbExtraDescriptors.AVAILABILITY_ENABLED, availEnabled);
                 }
             }
             return;
-        } else if (descriptor==null && ! RuntimeTagNames.AVAILABILITY_ENABLED.equals(element.getQName())) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                new Object[] {element.getQName() , value });
+        } else if (descriptor == null && !RuntimeTagNames.AVAILABILITY_ENABLED.equals(element.getQName())) {
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
+                new Object[] {element.getQName(), value});
         }
         // if this is the availability-enabled attribute, save the value
         // and set it later

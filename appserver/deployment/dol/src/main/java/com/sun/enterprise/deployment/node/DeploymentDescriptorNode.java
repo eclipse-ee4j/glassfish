@@ -185,24 +185,22 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
         try {
-            Method toInvoke = null;
-            if ((node.getDescriptor() instanceof ResourceDescriptor)
+            final Class<?> parameterType;
+            if (node.getDescriptor() instanceof ResourceDescriptor
                 && ((ResourceDescriptor) node.getDescriptor()).getResourceType() != null) {
-                toInvoke = getDescriptor().getClass().getMethod((String) addMethods.get(xmlRootTag),
-                    new Class[] {ResourceDescriptor.class});
-
+                parameterType = ResourceDescriptor.class;
+            } else if (node.getDescriptor() instanceof MimeMapping) {
+                parameterType = MimeMapping.class;
             } else {
-                toInvoke = getDescriptor().getClass().getMethod((String) addMethods.get(xmlRootTag),
-                    new Class[] {node.getDescriptor().getClass()});
+                parameterType = node.getDescriptor().getClass();
             }
+            Method toInvoke = getDescriptor().getClass().getMethod(addMethods.get(xmlRootTag), parameterType);
             toInvoke.invoke(getDescriptor(), new Object[] {node.getDescriptor()});
-
         } catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
             if (t instanceof IllegalArgumentException) {
                 // We report the error but we continue loading, this will allow the verifier to
-                // catch these errors or to register
-                // an error handler for notification
+                // catch these errors or to register an error handler for notification
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE,
                     new Object[] {node.getDescriptor().getClass(), getDescriptor().getClass()});
             } else {

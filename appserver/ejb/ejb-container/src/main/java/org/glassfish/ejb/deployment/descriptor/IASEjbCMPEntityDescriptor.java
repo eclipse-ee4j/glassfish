@@ -552,28 +552,6 @@ public  class IASEjbCMPEntityDescriptor extends EjbCMPEntityDescriptor {
 
 
     /**
-     * Called from EjbBundleDescriptor/EjbBundleArchivist
-     * when some classes in this bean are updated.
-     */
-    public boolean classesChanged() {
-
-        /**        No Implementation Yet
-        boolean superChanged = super.classesChanged();
-
-        boolean persChanged = pers.classesChanged();
-
-        // Send changed event only if parent didn't already do it.
-        if( !superChanged && persChanged ) {
-            changed();
-        }
-
-        return (superChanged || persChanged);
-        */
-
-        return false;
-    }
-
-    /**
      * This method sets the parser which would be used to parse the query
      * parameter declaration given in sun-ejb-jar.xml.
      * This method is called from JDOCodenerator class 's generate() method.

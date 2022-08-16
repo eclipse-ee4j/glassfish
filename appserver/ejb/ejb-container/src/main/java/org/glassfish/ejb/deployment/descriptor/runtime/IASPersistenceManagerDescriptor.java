@@ -119,13 +119,4 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
             this.pm_mapping_factory = pm_mapping_factory;
         }
     }
-
-    /**
-     * Called from EjbCMPEntityDescriptor
-     * when some classes in this object are updated.
-     */
-    public boolean classesChanged() {
-        return false;
-    }
-
 }

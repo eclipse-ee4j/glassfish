@@ -779,71 +779,49 @@ public class ConnectorsUtil {
      * GlassFish (Embedded) Uber jar will have .rar bundled in it.
      * This method will extract the .rar from the uber jar into specified directory.
      * As of now, this method is only used in EMBEDDED mode
+     *
      * @param fileName rar-directory-name
      * @param rarName resource-adapter name
      * @param destDir destination directory
      * @return status indicating whether .rar is exploded successfully or not
      */
     public static boolean extractRar(String fileName, String rarName, String destDir) {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(rarName);
-        if (is != null) {
-            FileArchive fa = new FileArchive();
-            OutputStream os = null;
-            try {
-                os = fa.putNextEntry(fileName);
-
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(rarName)) {
+            if (is == null) {
+                LOG.log(Level.INFO, "could not find RAR [ " + rarName + " ] in the archive, skipping .rar extraction");
+                return false;
+            }
+            try (FileArchive fa = new FileArchive(); OutputStream os = fa.putNextEntry(fileName)) {
                 FileUtils.copy(is, os, 0);
+                fa.closeEntry();
             } catch (IOException e) {
-                Object args[] = new Object[]{rarName, e};
-                _logger.log(Level.WARNING, "error.extracting.archive", args);
-                return false;
-            } finally {
-                try {
-                    if (os != null) {
-                        fa.closeEntry();
-                    }
-
-                } catch (IOException ioe) {
-                    if (_logger.isLoggable(Level.FINEST)) {
-                        _logger.log(Level.FINEST, "Exception while closing archive [ " + fileName + " ]", ioe);
-                    }
-                }
-
-                try {
-                    is.close();
-                } catch (IOException ioe) {
-                    if (_logger.isLoggable(Level.FINEST)) {
-                        _logger.log(Level.FINEST, "Exception while closing archive [ " + rarName + " ]", ioe);
-                    }
-                }
-            }
-
-            File file = new File(fileName);
-            if (file.exists()) {
-                try {
-                    extractJar(file, destDir);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return true;
-            } else {
-                _logger.log(Level.INFO, "could not find RAR [ " + rarName + " ] location [ " + fileName + " ] " +
-                        "after extraction");
+                LOG.log(Level.SEVERE, "error.extracting.archive", new Object[] {rarName, e});
                 return false;
             }
-        } else {
-            _logger.log(Level.INFO, "could not find RAR [ " + rarName + " ] in the archive, skipping .rar extraction");
-            return false;
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "Exception while closing archive [ " + rarName + " ]", e);
         }
+
+        File file = new File(fileName);
+        if (file.exists()) {
+            try {
+                extractJar(file, destDir);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Exception while extracting archive [ " + file + " ]", e);
+            }
+            return true;
+        }
+        LOG.log(Level.INFO,
+            "could not find RAR [ " + rarName + " ] location [ " + fileName + " ] " + "after extraction");
+        return false;
     }
 
     private static void extractJar(File jarFile, String destDir) throws IOException {
-        java.util.jar.JarFile jar = new java.util.jar.JarFile(jarFile);
-        java.util.Enumeration enum1 = jar.entries();
-        try{
+        try (JarFile jar = new JarFile(jarFile)) {
+            Enumeration<JarEntry> enum1 = jar.entries();
             while (enum1.hasMoreElements()) {
-                java.util.jar.JarEntry file = (java.util.jar.JarEntry) enum1.nextElement();
-                java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
+                JarEntry file = enum1.nextElement();
+                File f = new File(destDir, file.getName());
                 if (file.isDirectory() && f.mkdir()) {
                     continue;
                 }
@@ -861,9 +839,7 @@ public class ConnectorsUtil {
                             fos.close();
                         }
                     } catch (Exception e) {
-                        if (_logger.isLoggable(Level.FINEST)) {
-                            _logger.log(Level.FINEST, "exception while closing archive [ " + f.getName() + " ]", e);
-                        }
+                        LOG.log(Level.SEVERE, "exception while closing archive [ " + f.getName() + " ]", e);
                     }
 
                     try {
@@ -871,20 +847,12 @@ public class ConnectorsUtil {
                             is.close();
                         }
                     } catch (Exception e) {
-                        if (_logger.isLoggable(Level.FINEST)) {
-                            _logger.log(Level.FINEST, "exception while closing archive [ " + file.getName() + " ]", e);
-                        }
+                        LOG.log(Level.SEVERE, "exception while closing archive [ " + file.getName() + " ]", e);
                     }
                 }
             }
-        }finally{
-            try {
-                jar.close();
-            } catch (Exception e) {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "exception while closing archive [ " + jar.getName() + " ]", e);
-                }
-            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "exception while closing archive [ " + jarFile + " ]", e);
         }
     }
     public static PoolInfo getPoolInfo(ResourcePool resource){

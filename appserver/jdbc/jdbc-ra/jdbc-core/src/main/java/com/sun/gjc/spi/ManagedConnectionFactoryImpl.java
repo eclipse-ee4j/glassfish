@@ -57,6 +57,7 @@ import javax.sql.PooledConnection;
 
 import org.glassfish.api.jdbc.ConnectionValidation;
 import org.glassfish.api.jdbc.SQLTraceListener;
+import org.glassfish.api.jdbc.objects.TxIsolationLevel;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -108,7 +109,7 @@ public abstract class ManagedConnectionFactoryImpl
     protected LazyEnlistableConnectionManager connectionManager;
     protected boolean isLazyConnectionManager;
 
-    private JdbcObjectsFactory jdbcObjectsFactory = JdbcObjectsFactory.getInstance();
+    private final JdbcObjectsFactory jdbcObjectsFactory = JdbcObjectsFactory.getInstance();
     private int statementCacheSize;
     private String statementCacheType;
     private long statementLeakTimeout;
@@ -284,7 +285,7 @@ public abstract class ManagedConnectionFactoryImpl
     @Override
     public Set getInvalidConnections(Set connectionSet) throws ResourceException {
         Iterator iter = connectionSet.iterator();
-        Set<ManagedConnectionImpl> invalidConnections = new HashSet<ManagedConnectionImpl>();
+        Set<ManagedConnectionImpl> invalidConnections = new HashSet<>();
         while (iter.hasNext()) {
             ManagedConnectionImpl managedConnectionImpl = (ManagedConnectionImpl) iter.next();
             try {
@@ -574,8 +575,7 @@ public abstract class ManagedConnectionFactoryImpl
                         _logger.log(SEVERE, "jdbc.sql_trace_listener_cnfe", sqlTraceListener);
                     }
                     Class intf[] = listenerClass.getInterfaces();
-                    for (int i = 0; i < intf.length; i++) {
-                        Class interfaceName = intf[i];
+                    for (Class interfaceName : intf) {
                         if (interfaceName.getName().equals("org.glassfish.api.jdbc.SQLTraceListener")) {
 
                             try {
@@ -617,31 +617,15 @@ public abstract class ManagedConnectionFactoryImpl
      * the string specifying the isolation.
      */
     private int getTransactionIsolationInt(String tranIsolation) throws ResourceException {
-        if (tranIsolation.equalsIgnoreCase("read-uncommitted")) {
-            return Connection.TRANSACTION_READ_UNCOMMITTED;
+        try {
+            return TxIsolationLevel.byName(tranIsolation).getId();
+        } catch (IllegalArgumentException e) {
+            throw new ResourceException(e.getMessage(), e);
         }
-
-        if (tranIsolation.equalsIgnoreCase("read-committed")) {
-            return Connection.TRANSACTION_READ_COMMITTED;
-        }
-
-        if (tranIsolation.equalsIgnoreCase("repeatable-read")) {
-            return Connection.TRANSACTION_REPEATABLE_READ;
-        }
-
-        if (tranIsolation.equalsIgnoreCase("serializable")) {
-            return Connection.TRANSACTION_SERIALIZABLE;
-        }
-
-        throw new ResourceException(
-            "Invalid transaction isolation; the transaction " +
-            "isolation level can be empty or any of the following: " +
-            "read-uncommitted, read-committed, repeatable-read, serializable");
     }
 
     /**
-     * Common operation performed by all the child MCFs before returning a created
-     * mc
+     * Common operation performed by all the child MCFs before returning a created mc
      */
     protected void validateAndSetIsolation(ManagedConnectionImpl managedConnectionImpl) throws ResourceException {
         try {
@@ -1352,8 +1336,9 @@ public abstract class ManagedConnectionFactoryImpl
 
         boolean poolProperty = false;
         String statementWrappingString = getStatementWrapping();
-        if (statementWrappingString != null)
+        if (statementWrappingString != null) {
             poolProperty = Boolean.valueOf(statementWrappingString);
+        }
 
         if (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_ON
                 || (wrapStatement == JVM_OPTION_STATEMENT_WRAPPING_NOT_SET && poolProperty)) {

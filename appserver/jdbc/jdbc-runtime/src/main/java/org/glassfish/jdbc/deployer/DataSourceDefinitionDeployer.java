@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,20 @@
 
 package org.glassfish.jdbc.deployer;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVAX_SQL_CONNECTION_POOL_DATASOURCE;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVAX_SQL_DATASOURCE;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVAX_SQL_XA_DATASOURCE;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVA_SQL_DRIVER;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getTransactionIsolationInt;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.deployment.common.JavaEEResourceType.DSDPOOL;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_APP_SCOPE_PREFIX;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.beans.PropertyVetoException;
 import java.sql.Driver;
@@ -44,6 +47,7 @@ import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
+import org.glassfish.api.jdbc.objects.TxIsolationLevel;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -61,20 +65,17 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbInterceptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVAX_SQL_CONNECTION_POOL_DATASOURCE;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVAX_SQL_DATASOURCE;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVAX_SQL_XA_DATASOURCE;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JAVA_SQL_DRIVER;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.deployment.common.JavaEEResourceType.DSDPOOL;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_APP_SCOPE_PREFIX;
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX;
 
 /**
  * @author Jagadish Ramu
@@ -542,8 +543,8 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
 
     class MyJdbcConnectionPool extends FakeConfigBean implements JdbcConnectionPool {
 
-        private DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor;
-        private String name;
+        private final DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor;
+        private final String name;
 
         public MyJdbcConnectionPool(DataSourceDefinitionDescriptor desc, String name) {
             this.dataSourceDefinitionDescriptor = desc;
@@ -681,8 +682,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
             if (dataSourceDefinitionDescriptor.getIsolationLevel() == -1) {
                 return null;
             }
-
-            return getTransactionIsolationInt(dataSourceDefinitionDescriptor.getIsolationLevel());
+            return TxIsolationLevel.byId(dataSourceDefinitionDescriptor.getIsolationLevel()).getName();
 
         }
 
@@ -924,7 +924,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
         @Override
         public List<Property> getProperty() {
             Properties descriptorProperties = dataSourceDefinitionDescriptor.getProperties();
-            List<Property> dataSourceProperties = new ArrayList<Property>();
+            List<Property> dataSourceProperties = new ArrayList<>();
 
             for (Map.Entry<Object, Object> entry : descriptorProperties.entrySet()) {
                 String key = (String) entry.getKey();

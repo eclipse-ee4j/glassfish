@@ -55,8 +55,7 @@ import org.xml.sax.helpers.NamespaceSupport;
 /**
  * This class implements all the callbacks for the SAX Parser in JAXP 1.1
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 @Service
 @PerLookup
@@ -521,14 +520,12 @@ public class SaxParserHandler extends DefaultHandler {
                                 replacementName = versionUpgrade.getReplacementElementName();
                                 replacementValue = versionUpgrade.getReplacementElementValue();
                             } else {
-                                StringBuffer buf = new StringBuffer();
-                                String errorString = "Invalid upgrade from <";
-                                buf.append(errorString);
+                                StringBuilder buf = new StringBuilder();
+                                buf.append("Invalid upgrade from <");
                                 for (Map.Entry<String, String> entry : matchXPath.entrySet()) {
-                                    buf.append(entry.getKey() + "  " + entry.getValue() + " >");
+                                    buf.append(entry.getKey()).append("  ").append(entry.getValue()).append(" >");
                                 }
-                                errorString = buf.toString();
-                                DOLUtils.getDefaultLogger().log(Level.SEVERE, errorString);
+                                DOLUtils.getDefaultLogger().log(Level.SEVERE, buf.toString());
                                 // Since the elements are not replaced,
                                 // there should be a parsing error
                             }

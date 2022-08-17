@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,33 +21,53 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.connectors.*;
+import com.sun.enterprise.connectors.ActiveResourceAdapter;
+import com.sun.enterprise.connectors.ConnectorConnectionPool;
+import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.ConnectorRuntimeExtension;
+import com.sun.enterprise.connectors.PoolMetaData;
 import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
-import com.sun.enterprise.connectors.util.*;
+import com.sun.enterprise.connectors.util.ConnectionDefinitionUtils;
+import com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils;
+import com.sun.enterprise.connectors.util.ConnectionPoolReconfigHelper;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
+import com.sun.enterprise.connectors.util.SecurityMapUtils;
+import com.sun.enterprise.connectors.util.SetMethodAction;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ResourcePrincipal;
 import com.sun.enterprise.resource.listener.UnpooledConnectionEventListener;
 import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.TransactionSupport;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+
 import org.glassfish.connectors.config.SecurityMap;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.RelativePathResolver;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.config.types.Property;
-
-import javax.naming.NamingException;
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ConnectionRequestInfo;
-import jakarta.resource.spi.ManagedConnection;
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.resource.spi.TransactionSupport;
-import javax.security.auth.Subject;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.logging.Level;
 
 
 /**
@@ -1262,12 +1283,11 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         //Run setXXX methods on the copy of the MCF that we have
         //this is done to update the MCF to reflect changes in the
         //MCF properties for which we don't really need to recreate
-        //the pool
+        // the pool
         ConnectorRegistry registry = ConnectorRegistry.getInstance();
-        ManagedConnectionFactory mcf = registry.getManagedConnectionFactory(
-                poolInfo);
-        SetMethodAction sma = new SetMethodAction(mcf,
-                ccp.getConnectorDescriptorInfo().getMCFConfigProperties());
+        ManagedConnectionFactory mcf = registry.getManagedConnectionFactory(poolInfo);
+        SetMethodAction<ConnectorConfigProperty> sma = new SetMethodAction<>(mcf,
+            ccp.getConnectorDescriptorInfo().getMCFConfigProperties());
         try {
             sma.run();
         } catch (Exception e) {

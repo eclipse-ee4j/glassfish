@@ -41,6 +41,7 @@ import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.connectors.util.SetMethodAction;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.util.i18n.StringManager;
@@ -49,6 +50,7 @@ import org.glassfish.ejb.api.MessageBeanListener;
 import org.glassfish.ejb.api.MessageBeanProtocolManager;
 import org.glassfish.ejb.spi.MessageBeanClient;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.server.ServerEnvironmentImpl;
 
 /**
@@ -63,7 +65,7 @@ public final class ConnectorMessageBeanClient
 
     private String activationName;
 
-    private ConnectorRegistry registry_;
+    private final ConnectorRegistry registry_;
 
     private MessageBeanProtocolManager messageBeanPM_;
     private final EjbMessageBeanDescriptor descriptor_;
@@ -80,11 +82,11 @@ public final class ConnectorMessageBeanClient
 
     private static final String RA_MID="com.sun.enterprise.connectors.inbound.ramid";
 
-    private StringManager localStrings =
+    private final StringManager localStrings =
                 StringManager.getManager(ConnectorMessageBeanClient.class);
 
     //unique identify a message-driven bean
-    private String beanID_; //appName:modlueID:beanName
+    private final String beanID_; //appName:modlueID:beanName
 
     private static final Logger logger =
             LogDomains.getLogger(ConnectorMessageBeanClient.class, LogDomains.RSR_LOGGER);
@@ -123,6 +125,7 @@ public final class ConnectorMessageBeanClient
      *
      * @param messageBeanPM <code>MessageBeanProtocolManager</code> object.
      */
+    @Override
     public void setup(MessageBeanProtocolManager messageBeanPM) throws Exception {
 
         ClassLoader loader = descriptor_.getEjbBundleDescriptor().getClassLoader();
@@ -161,8 +164,7 @@ public final class ConnectorMessageBeanClient
 
         if (activationSpecClassName != null) {
             if (logger.isLoggable(Level.FINEST)) {
-                String msg = "ActivationSpecClassName = " + activationSpecClassName;
-                logger.log(Level.FINEST, msg);
+                logger.log(Level.FINEST, "ActivationSpecClassName = " + activationSpecClassName);
             }
 
             try {
@@ -214,8 +216,8 @@ public final class ConnectorMessageBeanClient
             String messageListener = descriptor_.getMessageListenerType();
             //DOL of MDB descriptor has default value as "jakarta.jms.MessageListener" which
             //will take care of the case when the message-listener-type is not specified in the DD
-            if(ConnectorConstants.JMS_MESSAGE_LISTENER.equals(messageListener)){
-                resourceAdapterMid = ConnectorRuntime.DEFAULT_JMS_ADAPTER;
+            if(ResourceConstants.JMS_MESSAGE_LISTENER.equals(messageListener)){
+                resourceAdapterMid = ConnectorConstants.DEFAULT_JMS_ADAPTER;
                 logger.fine("No ra-mid is specified, using default JMS Resource Adapter for message-listener-type " +
                         "["+descriptor_.getMessageListenerType()+"]");
             }else{
@@ -242,38 +244,37 @@ public final class ConnectorMessageBeanClient
     }
 
     private ActivationSpec getActivationSpec(ActiveInboundResourceAdapter aira, String activationSpecClassName)
-            throws Exception {
+        throws Exception {
         ClassLoader cl = aira.getClassLoader();
-        Class aClass = cl.loadClass(activationSpecClassName);
+        Class<?> aClass = cl.loadClass(activationSpecClassName);
 
         if (logger.isLoggable(Level.FINEST)) {
-            logger.log(Level.FINEST, "classloader = "
-                    + aClass.getClassLoader());
-            logger.log(Level.FINEST, "classloader parent = "
-                    + aClass.getClassLoader().getParent());
+            logger.log(Level.FINEST, "classloader = " + aClass.getClassLoader());
+            logger.log(Level.FINEST, "classloader parent = " + aClass.getClassLoader().getParent());
         }
 
-        ActivationSpec activationSpec =
-                (ActivationSpec) aClass.newInstance();
-        Set props = ConnectorsUtil.getMergedActivationConfigProperties(getDescriptor());
+        ActivationSpec activationSpec = (ActivationSpec) aClass.getDeclaredConstructor().newInstance();
+        Set<EnvironmentProperty> props = ConnectorsUtil.getMergedActivationConfigProperties(getDescriptor());
 
-        AccessController.doPrivileged(new SetMethodAction(activationSpec, props));
+        SetMethodAction<EnvironmentProperty> action = new SetMethodAction<>(activationSpec, props);
+        AccessController.doPrivileged(action);
         return activationSpec;
     }
 
     private MessageListener getMessageListener(ConnectorDescriptor desc) {
         String msgListenerType = getDescriptor().getMessageListenerType();
-        if (msgListenerType == null || "".equals(msgListenerType))
+        if (msgListenerType == null || "".equals(msgListenerType)) {
             msgListenerType = "jakarta.jms.MessageListener";
+        }
 
-        Iterator i =
-                desc.getInboundResourceAdapter().getMessageListeners().iterator();
+        Iterator<MessageListener> i = desc.getInboundResourceAdapter().getMessageListeners().iterator();
 
         MessageListener msgListener = null;
         while (i.hasNext()) {
-            msgListener = (MessageListener) i.next();
-            if (msgListenerType.equals(msgListener.getMessageListenerType()))
+            msgListener = i.next();
+            if (msgListenerType.equals(msgListener.getMessageListenerType())) {
                 break;
+            }
         }
         return msgListener;
     }
@@ -307,9 +308,9 @@ public final class ConnectorMessageBeanClient
      *
      * @throws Exception
      */
+    @Override
     public void start() throws Exception {
-        logger.logp(Level.FINEST,
-                "ConnectorMessageBeanClient", "start", "called...");
+        logger.logp(Level.FINEST, "ConnectorMessageBeanClient", "start", "called...");
         started_ = true;
         synchronized (this) {
             myState = UNBLOCKED;
@@ -317,11 +318,13 @@ public final class ConnectorMessageBeanClient
         }
     }
 
+
     /**
      * Does endpoint deactivation with the resource adapter.
      * Also remove sthe <code>MessageEndpointFactoryInfo</code>
      * from house keeping.
      */
+    @Override
     public void close() {
         logger.logp(Level.FINEST,
                 "ConnectorMessageBeanClient", "close", "called...");
@@ -359,6 +362,7 @@ public final class ConnectorMessageBeanClient
         return descriptor_;
     }
 
+
     /**
      * Creates a MessageEndpoint. This method gets blocked either until start()
      * is called or until one minute. This is the time for completion
@@ -369,22 +373,24 @@ public final class ConnectorMessageBeanClient
      *
      * @return <code>MessageEndpoint</code> object.
      * @throws <code>UnavailableException</code>
-     *          In case of any failure. This
-     *          should change.
+     * In case of any failure. This
+     * should change.
      */
-    public MessageEndpoint
-    createEndpoint(XAResource xa) throws UnavailableException {
+    @Override
+    public MessageEndpoint createEndpoint(XAResource xa) throws UnavailableException {
         // This is a temporary workaround for blocking the the create enpoint
-        // until the deployment completes.  One thread would wait for maximum a
+        // until the deployment completes. One thread would wait for maximum a
         // a minute.
         return createEndpoint(xa, WAIT_TIME);
     }
+
 
     /**
      * Checks whether the message delivery is transacted for the method.
      *
      * @return true or false.
      */
+    @Override
     public boolean isDeliveryTransacted(Method method) {
         return messageBeanPM_.isDeliveryTransacted(method);
     }
@@ -392,6 +398,7 @@ public final class ConnectorMessageBeanClient
     /**
      * @return beanID of the message bean client
      */
+    @Override
     public String toString() {
         return beanID_;
     }
@@ -399,6 +406,7 @@ public final class ConnectorMessageBeanClient
     /**
      * {@inheritDoc}
      */
+    @Override
     public MessageEndpoint createEndpoint(XAResource xaResource, long timeout) throws UnavailableException {
         synchronized (this) {
             while (myState == BLOCKED) {
@@ -442,42 +450,43 @@ public final class ConnectorMessageBeanClient
      * {@inheritDoc}
      * @Override
      */
-    public String getActivationName(){
-      if(activationName == null){
+    @Override
+    public String getActivationName() {
+        if (activationName == null) {
 
-        String appName = descriptor_.getApplication().getName();
-        String moduleID = descriptor_.getEjbBundleDescriptor().getModuleID();
-        int pound = moduleID.indexOf("#");
-        if(pound>=0){
-            // the module ID is in the format: appName#ejbName.jar
-            // remove the appName part since it is duplicated
-            moduleID = moduleID.substring(pound+1);
+            String appName = descriptor_.getApplication().getName();
+            String moduleID = descriptor_.getEjbBundleDescriptor().getModuleID();
+            int pound = moduleID.indexOf("#");
+            if (pound >= 0) {
+                // the module ID is in the format: appName#ejbName.jar
+                // remove the appName part since it is duplicated
+                moduleID = moduleID.substring(pound + 1);
+            }
+            String mdbClassName = descriptor_.getEjbClassName();
+
+            ServerEnvironmentImpl env = Globals.get(ServerEnvironmentImpl.class);
+            String instanceName = env.getInstanceName();
+
+            Domain domain = Globals.get(Domain.class);
+            String domainName = domain.getName();
+            Cluster cluster = domain.getServerNamed(instanceName).getCluster();
+
+            String clusterName = null;
+            if (cluster != null) {
+                // this application is deployed in a cluster
+                clusterName = cluster.getName();
+            }
+
+            if (clusterName != null) {
+                // this application is deployed in a cluster
+                activationName = combineString(domainName, clusterName, appName, moduleID, mdbClassName);
+
+            } else {
+                // this application is deployed in a stand-alone server instance.
+                activationName = combineString(domainName, instanceName, appName, moduleID, mdbClassName);
+            }
         }
-        String mdbClassName = descriptor_.getEjbClassName();
-
-        ServerEnvironmentImpl env = Globals.get(ServerEnvironmentImpl.class);
-        String instanceName = env.getInstanceName();
-
-        Domain domain = Globals.get(Domain.class);
-        String domainName = domain.getName();
-        Cluster cluster = domain.getServerNamed(instanceName).getCluster();
-
-        String clusterName=null;
-        if(cluster!=null){
-          // this application is deployed in a cluster
-          clusterName = cluster.getName();
-        }
-
-        if(clusterName!=null){
-            // this application is deployed in a cluster
-            activationName = combineString(domainName, clusterName, appName, moduleID, mdbClassName);
-
-        }else{
-            // this application is deployed in a stand-alone server instance.
-            activationName = combineString(domainName, instanceName, appName, moduleID, mdbClassName);
-        }
-      }
-      return activationName;
+        return activationName;
     }
 
 //    /**
@@ -648,8 +657,8 @@ public final class ConnectorMessageBeanClient
     private String combineString(String... names) {
         StringBuilder sb = new StringBuilder(128);
         sb.append(names[0]);
-        for(int i=1; i<names.length; i++){
-            sb.append("_").append(names[i]);
+        for (int i = 1; i < names.length; i++) {
+            sb.append('_').append(names[i]);
         }
         return sb.toString();
     }

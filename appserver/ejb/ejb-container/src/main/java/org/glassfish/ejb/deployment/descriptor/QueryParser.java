@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,14 +22,15 @@ import java.util.Iterator;
 /**
  * This interface is to define the functionality of a query Parser.
  */
-public interface QueryParser
-{
+public interface QueryParser {
+
     /**
      * This method returns an iterator over the parameter types of the
      * specified parameter declaration. The types are represented by their name, thus
      * the Iterator's next method returns Strings.
+     *
      * @param parameterDeclarations parameter declaration string.
      * @returns an iterator over parameter types.
      */
-    Iterator parameterTypeIterator(String parameterDeclarations);
+    Iterator<String> parameterTypeIterator(String parameterDeclarations);
 }

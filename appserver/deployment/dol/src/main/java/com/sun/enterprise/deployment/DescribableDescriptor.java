@@ -33,16 +33,19 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class DescribableDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String description;
 
     /** Creates new DescribableDescriptor */
     public DescribableDescriptor() {
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    @Override
     public String  getDescription() {
         return description;
     }

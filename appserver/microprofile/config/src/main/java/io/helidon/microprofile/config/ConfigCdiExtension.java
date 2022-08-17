@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018, 2021 Oracle and/or its affiliates.
  * Copyright (c) 2022 Contributors to Eclipse Foundation.
+ * Copyright (c) 2018, 2021 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -141,7 +141,9 @@ public class ConfigCdiExtension implements Extension {
     private <X> void harvestConfigPropertyInjectionPointsFromEnabledObserverMethod(@Observes ProcessObserverMethod<?, X> event,
                                                                                    BeanManager beanManager) {
         // Synthetic events won't have an annotated method
-        if (event instanceof ProcessSyntheticObserverMethod) return;
+        if (event instanceof ProcessSyntheticObserverMethod) {
+            return;
+        }
 
         ofNullable(event.getAnnotatedMethod())
                 .map(AnnotatedMethod::getParameters)

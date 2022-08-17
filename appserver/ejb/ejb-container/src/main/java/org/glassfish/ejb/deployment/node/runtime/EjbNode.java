@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,9 +16,6 @@
  */
 
 package org.glassfish.ejb.deployment.node.runtime;
-
-import java.util.Map;
-import java.util.logging.Level;
 
 import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
@@ -36,6 +34,10 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbMessageBeanDescriptor;
@@ -61,33 +63,25 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
 
     public EjbNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE),
-                               ResourceRefNode.class);
-        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE),
-                               EjbRefNode.class);
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE),
-                               ResourceEnvRefNode.class);
-        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE),
-                               MessageDestinationRefNode.class);
-        registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF),
-                               ServiceRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.CMP),
-                               CmpNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MDB_CONNECTION_FACTORY),
-                MDBConnectionFactoryNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.IOR_CONFIG),
-                               IORConfigurationNode.class,"addIORConfigurationDescriptor");
-        registerElementHandler(new XMLElement(RuntimeTagNames.BEAN_POOL),
-                               BeanPoolNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.BEAN_CACHE),
-                               BeanCacheNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MDB_RESOURCE_ADAPTER),
-                        MDBResourceAdapterNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), ServiceRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.CMP), CmpNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.MDB_CONNECTION_FACTORY), MDBConnectionFactoryNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.IOR_CONFIG), IORConfigurationNode.class,
+            "addIORConfigurationDescriptor");
+        registerElementHandler(new XMLElement(RuntimeTagNames.BEAN_POOL), BeanPoolNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.BEAN_CACHE), BeanCacheNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.MDB_RESOURCE_ADAPTER), MDBResourceAdapterNode.class);
         registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE_ENDPOINT),
-                               WebServiceEndpointRuntimeNode.class);
+            WebServiceEndpointRuntimeNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.FLUSH_AT_END_OF_METHOD), FlushAtEndOfMethodNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.CHECKPOINT_AT_END_OF_METHOD), CheckpointAtEndOfMethodNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.CHECKPOINT_AT_END_OF_METHOD),
+            CheckpointAtEndOfMethodNode.class);
     }
+
 
     @Override
     public EjbDescriptor getDescriptor() {
@@ -114,7 +108,8 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
                     new Object[] {element, value});
             } else {
                 if (availEnabled != null) {
-                    descriptor.getIASEjbExtraDescriptors().setAttributeValue(IASEjbExtraDescriptors.AVAILABILITY_ENABLED, availEnabled);
+                    descriptor.getIASEjbExtraDescriptors()
+                        .setAttributeValue(IASEjbExtraDescriptors.AVAILABILITY_ENABLED, availEnabled);
                 }
             }
             return;

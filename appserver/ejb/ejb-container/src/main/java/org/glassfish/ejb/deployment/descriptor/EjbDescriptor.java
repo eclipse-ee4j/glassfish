@@ -2518,7 +2518,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     /**
-     * Return a Vector of the Field objetcs of this ejb.
+     * @return a Vector of the Field objetcs of this ejb.
      */
     public Vector<Field> getFields() {
         Vector<Field> fieldsVector = new Vector<>();

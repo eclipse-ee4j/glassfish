@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,15 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.logging.Level;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.util.Locale;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.BeanMethodCalculatorImpl;
 
@@ -32,6 +35,7 @@ import org.glassfish.ejb.deployment.BeanMethodCalculatorImpl;
  */
 public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private static final String FIELD_ACCESS_METHOD_PREFIX   = "get"; // NOI18N
 
     // Enum types to be returned from getVersionNumber().
@@ -41,10 +45,10 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
 
     private int cmpVersion = UNDEFINED;
     private PersistenceDescriptor pers;
-    private String abstractSchemaName=null;
+    private String abstractSchemaName;
     private FieldDescriptor primaryKeyFieldDesc;
-    private String stateImplClassName=null;
-    private String ejbImplementationImplClassName=null;
+    private String stateImplClassName;
+    private String ejbImplementationImplClassName;
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbCMPEntityDescriptor.class);
 
@@ -60,8 +64,8 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
 
         this.setPersistenceType(CONTAINER_PERSISTENCE);
 
-        if ( other instanceof EjbCMPEntityDescriptor ) {
-            EjbCMPEntityDescriptor entity = (EjbCMPEntityDescriptor)other;
+        if (other instanceof EjbCMPEntityDescriptor) {
+            EjbCMPEntityDescriptor entity = (EjbCMPEntityDescriptor) other;
             this.pers = entity.pers;
             this.cmpVersion = entity.cmpVersion;
             this.abstractSchemaName = entity.abstractSchemaName;
@@ -83,9 +87,9 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
     }
 
     @Override
-    public Vector getFields() {
-        Vector fields = new Vector();
-        if( isEJB20() ) {
+    public Vector<Field> getFields() {
+        Vector<Field> fields = new Vector<>();
+        if (isEJB20()) {
             // All cmp "fields" are abstract, so we can't construct
             // java.lang.reflect.Field elements from them.  Use
             // getFieldDescriptors() instead.
@@ -96,33 +100,32 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
     }
 
     @Override
-    public Vector getFieldDescriptors() {
-        Vector fieldDescriptors = new Vector();
-        if( isEJB20() ) {
+    public Vector<FieldDescriptor> getFieldDescriptors() {
+        Vector<FieldDescriptor> fieldDescriptors = new Vector<>();
+        if (isEJB20()) {
             try {
                 ClassLoader cl = getEjbBundleDescriptor().getClassLoader();
                 BeanMethodCalculatorImpl bmc = new BeanMethodCalculatorImpl();
                 fieldDescriptors = bmc.getPossibleCmpCmrFields(cl, this.getEjbClassName());
-            } catch(Throwable t) {
-                String errorMsg = localStrings.getLocalString
-                    ("enterprise.deployment.errorloadingejbclass",
-                     "error loading the ejb class {0} in getFields" +
-                     " on EjbDescriptor\n {1}",
-                     new Object[] {this.getEjbClassName(), t.toString() });
-                _logger.log(Level.FINE,errorMsg);
-           }
+            } catch (Throwable t) {
+                String errorMsg = localStrings.getLocalString("enterprise.deployment.errorloadingejbclass",
+                    "error loading the ejb class {0} in getFields" + " on EjbDescriptor\n {1}",
+                    new Object[] {this.getEjbClassName(), t.toString()});
+                _logger.log(Level.FINE, errorMsg);
+            }
         } else {
             fieldDescriptors = super.getFieldDescriptors();
         }
         return fieldDescriptors;
     }
 
+
     /**
-     * Returns CMP version as an enum type.
+     * @return CMP version as an enum type.
      */
     public int getCMPVersion() {
         if (cmpVersion == UNDEFINED) {
-            if (getEjbBundleDescriptor()!=null) {
+            if (getEjbBundleDescriptor() != null) {
                 String bundleVersion = getEjbBundleDescriptor().getSpecVersion();
                 if (bundleVersion.startsWith("1.")) {
                     cmpVersion = CMP_1_1;
@@ -141,42 +144,40 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
      * Set the CMP version
      */
     public void setCMPVersion(int version) {
-        if (version==CMP_1_1 || version == CMP_2_x) {
+        if (version == CMP_1_1 || version == CMP_2_x) {
             cmpVersion = version;
         } else {
             throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.invalidcmpversion",
-                "Invalid CMP version: {0}.",
-                new Object[]{Integer.valueOf(version)})); // NOI18N
+                "Invalid CMP version: {0}.", new Object[] {Integer.valueOf(version)})); // NOI18N
         }
     }
+
 
     /**
      * return true if this is an EJB2.0 CMP Entitybean
      * DEPRECATED
      */
     public boolean isEJB20() {
-        return getCMPVersion()==CMP_2_x;
+        return getCMPVersion() == CMP_2_x;
     }
+
 
     @Override
     public void setEjbBundleDescriptor(EjbBundleDescriptorImpl bundleDescriptor) {
         super.setEjbBundleDescriptor(bundleDescriptor);
     }
 
+
     @Override
-    public Vector getPossibleTransactionAttributes() {
-        Vector txAttributes = null;
-        if( isEJB20() ) {
-            txAttributes = new Vector();
-            txAttributes.add(new ContainerTransaction
-                (ContainerTransaction.REQUIRED, ""));
-            txAttributes.add(new ContainerTransaction
-                (ContainerTransaction.REQUIRES_NEW, ""));
-            txAttributes.add(new ContainerTransaction
-                (ContainerTransaction.MANDATORY, ""));
-            if( isTimedObject() ) {
-                txAttributes.add(new ContainerTransaction
-                    (ContainerTransaction.NOT_SUPPORTED, ""));
+    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
+        Vector<ContainerTransaction> txAttributes = null;
+        if (isEJB20()) {
+            txAttributes = new Vector<>();
+            txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
+            txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRES_NEW, ""));
+            txAttributes.add(new ContainerTransaction(ContainerTransaction.MANDATORY, ""));
+            if (isTimedObject()) {
+                txAttributes.add(new ContainerTransaction(ContainerTransaction.NOT_SUPPORTED, ""));
             }
         } else {
             txAttributes = super.getPossibleTransactionAttributes();
@@ -243,8 +244,8 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
     }
 
 
-    public static Vector getPossibleCmpCmrFields(ClassLoader cl, String className) throws Exception {
-        Vector fieldDescriptors = new Vector();
+    public static Vector<FieldDescriptor> getPossibleCmpCmrFields(ClassLoader cl, String className) throws Exception {
+        Vector<FieldDescriptor> fieldDescriptors = new Vector<>();
         Class theClass = cl.loadClass(className);
 
         // Start with all *public* methods
@@ -254,8 +255,7 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
         // will contain all cmr field accessors as well, since there
         // is no good way to distinguish between the two purely based
         // on method signature.
-        for(int mIndex = 0; mIndex < methods.length; mIndex++) {
-            Method next = methods[mIndex];
+        for (Method next : methods) {
             String nextName = next.getName();
             int nextModifiers = next.getModifiers();
             if (Modifier.isAbstract(nextModifiers)) {

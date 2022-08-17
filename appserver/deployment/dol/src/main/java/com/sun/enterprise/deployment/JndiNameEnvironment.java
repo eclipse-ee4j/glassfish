@@ -18,7 +18,6 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 
 import java.util.List;
 import java.util.Set;
@@ -37,7 +36,7 @@ public interface JndiNameEnvironment {
     /**
      * Return a set of environment properties.
      *
-     * @return java.util.Set of {@link EnvironmentEntry} objects
+     * @return java.util.Set of {@link EnvironmentProperty} objects
      */
     Set<EnvironmentProperty> getEnvironmentProperties();
 

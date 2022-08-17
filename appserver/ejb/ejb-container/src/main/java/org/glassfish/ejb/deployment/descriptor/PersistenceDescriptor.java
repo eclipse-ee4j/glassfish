@@ -872,15 +872,19 @@ public final class PersistenceDescriptor extends Descriptor {
     }
 
 
+    /**
+     * Use our own method equality check. This prevents problems
+     * when a different classloader was used to load the input
+     * method. Also note that two methods with the same name and
+     * signature on *different* interfaces are considered EQUAL.
+     * This matches the spec requirement that the same finder
+     * method defined on the LocalHome and RemoteHome has only
+     * ONE query-method declaration in the deployment descriptor.
+     *
+     * @param method
+     * @param query
+     */
     public void setQueryFor(Method method, QueryDescriptor query) {
-        // Use our own method equality check. This prevents problems
-        // when a different classloader was used to load the input
-        // method.  Also note that two methods with the same name and
-        // signature on *different* interfaces are considered EQUAL.
-        // This matches the spec requirement that the same finder
-        // method defined on the LocalHome and RemoteHome has only
-        // ONE query-method declaration in the deployment descriptor.
-        //
         MethodDescriptor md = new MethodDescriptor(method, "");
         setQueryFor(md, query);
     }

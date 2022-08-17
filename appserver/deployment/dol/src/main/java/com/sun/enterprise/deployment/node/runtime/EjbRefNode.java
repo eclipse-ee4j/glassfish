@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,22 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import com.sun.enterprise.deployment.EjbSessionDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import org.w3c.dom.Node;
+import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.w3c.dom.Node;
 
 /**
  * This node class is responsible for handling runtime deployment descriptors
@@ -39,14 +43,16 @@ import java.util.logging.Level;
  */
 public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
 
-    EjbReference descriptor=null;
+    EjbReference descriptor;
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
-   public EjbReference getDescriptor() {
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
+    public EjbReference getDescriptor() {
         return descriptor;
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -54,11 +60,13 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
+
 
     /**
      * receives notiification of the value for a particular tag
@@ -91,49 +99,47 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName name for the descriptor
+     * @param ejbRef the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, EjbReference ejbRef) {
         Node ejbRefNode = appendChild(parent, nodeName);
-        appendTextChild(ejbRefNode, RuntimeTagNames.EJB_REFERENCE_NAME, ejbRef.getName());
+        appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_NAME, ejbRef.getName());
 
         String jndiName = ejbRef.getJndiName();
-
         EjbDescriptor ejbReferee = ejbRef.getEjbDescriptor();
 
         // If this is an intra-app remote ejb dependency, write out the portable jndi name
         // of the target ejb.
-        if( ejbReferee != null ) {
-            if( !ejbRef.isLocal() && ejbRef.getType().equals(EjbSessionDescriptor.TYPE) ) {
-               EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbReferee;
-               String intf = ejbRef.isEJB30ClientView() ?
-                        ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface();
-               jndiName = sessionDesc.getPortableJndiName(intf);
+        if (ejbReferee != null) {
+            if (!ejbRef.isLocal() && ejbRef.getType().equals(EjbSessionDescriptor.TYPE)) {
+                EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbReferee;
+                String intf = ejbRef.isEJB30ClientView() ? ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface();
+                jndiName = sessionDesc.getPortableJndiName(intf);
             }
         }
         appendTextChild(ejbRefNode, RuntimeTagNames.JNDI_NAME, jndiName);
-
         return ejbRefNode;
     }
+
 
     /**
      * writes all the runtime information for ejb references
      *
      * @param parent node to add the runtime xml info
-     * @param the J2EE component containing ejb references
+     * @param descriptor the J2EE component containing ejb references
      */
     public static void writeEjbReferences(Node parent, EjbReferenceContainer descriptor) {
-
         // ejb-ref*
-        Iterator ejbRefs = descriptor.getEjbReferenceDescriptors().iterator();
+        Iterator<EjbReferenceDescriptor> ejbRefs = descriptor.getEjbReferenceDescriptors().iterator();
         if (ejbRefs.hasNext()) {
             EjbRefNode refNode = new EjbRefNode();
             while (ejbRefs.hasNext()) {
-                EjbReference ejbRef = (EjbReference) ejbRefs.next();
+                EjbReference ejbRef = ejbRefs.next();
                 if (!ejbRef.isLocal()) {
-                    refNode.writeDescriptor(parent, RuntimeTagNames.EJB_REFERENCE, ejbRef );
+                    refNode.writeDescriptor(parent, TagNames.EJB_REFERENCE, ejbRef );
                 }
             }
         }

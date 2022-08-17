@@ -25,7 +25,6 @@ import java.util.Set;
  * This interface defines the behaviour of a J2EE component containaing ejb references
  *
  * @author Jerome Dochez
- * @version
  */
 public interface EjbReferenceContainer {
 
@@ -37,15 +36,15 @@ public interface EjbReferenceContainer {
     void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
-     * Looks up an ejb reference with the given name. Throws an IllegalArgumentException
-     * if it is not found.
+     * Looks up an ejb reference with the given name.
      *
      * @param the name of the ejb-reference
+     * @throws an IllegalArgumentException if it is not found.
      */
     EjbReferenceDescriptor getEjbReference(String name);
 
     /**
-     * Return the set of references to ejbs that I have.
+     * @return the set of references to ejbs that I have.
      */
     Set<EjbReferenceDescriptor> getEjbReferenceDescriptors();
 }

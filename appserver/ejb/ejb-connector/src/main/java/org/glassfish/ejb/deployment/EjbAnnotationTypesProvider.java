@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,33 @@
 
 package org.glassfish.ejb.deployment;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.internal.deployment.AnnotationTypesProvider;
-
 import jakarta.ejb.MessageDriven;
+import jakarta.ejb.Singleton;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.Stateless;
-import jakarta.ejb.Singleton;
+
 import java.lang.annotation.Annotation;
+
+import org.glassfish.internal.deployment.AnnotationTypesProvider;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Provides the annotation types for the EJB Types
  *
  * @author Jerome Dochez
  */
-@Service(name="EJB")
+@Service(name = "EJB")
 public class EjbAnnotationTypesProvider implements AnnotationTypesProvider {
-    public Class<? extends Annotation>[] getAnnotationTypes() {
-        return new Class[] {
-                MessageDriven.class, Stateful.class, Stateless.class, Singleton.class };    }
 
-    public Class getType(String typename) throws ClassNotFoundException {
+    @SuppressWarnings("unchecked")
+    @Override
+    public Class<? extends Annotation>[] getAnnotationTypes() {
+        return new Class[] {MessageDriven.class, Stateful.class, Stateless.class, Singleton.class};
+    }
+
+
+    @Override
+    public Class<?> getType(String typename) throws ClassNotFoundException {
         return getClass().getClassLoader().loadClass(typename);
     }
 }

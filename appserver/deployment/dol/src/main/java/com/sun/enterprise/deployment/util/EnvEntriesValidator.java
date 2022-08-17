@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.deployment.util;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
@@ -29,27 +24,28 @@ import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
+
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EnvEntriesValidator {
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
 
     private static final String JAVA_COLON = "java:";
-
     private static final String JAVA_COMP_ENV_STRING = "java:comp/env/";
-
     private static final String JAVA_COMP_PREFIX = "java:comp/";
-
     private static final String JAVA_MODULE_PREFIX = "java:module/";
-
     private static final String JAVA_APP_PREFIX = "java:app/";
 
-    private final Map<String, Map<String, Map>> componentNamespaces;
-
-    private final Map<String, Map<String, Map>> appNamespaces;
-
-    private final Map<AppModuleKey, Map<AppModuleKey, Map>> moduleNamespaces;
-
-    private final Map globalNameSpace;
+    private final Map<String, Map<String, Object>> componentNamespaces;
+    private final Map<String, Map<String, Object>> appNamespaces;
+    private final Map<AppModuleKey, Map<String, Object>> moduleNamespaces;
+    private final Map<String, Object> globalNameSpace;
 
     public EnvEntriesValidator() {
         componentNamespaces = new HashMap<>();
@@ -85,7 +81,7 @@ public class EnvEntriesValidator {
 
     private void validateSimpleEnvEntries(JndiNameEnvironment env, Enumeration<EnvironmentProperty> envEntries) {
         while (envEntries.hasMoreElements()) {
-            EnvironmentEntry envEntry = envEntries.nextElement();
+            EnvironmentProperty envEntry = envEntries.nextElement();
             SimpleEnvEntry simpleEnvEntry = new SimpleEnvEntry(envEntry);
             validateEnvEntry(env, simpleEnvEntry, simpleEnvEntry.getName());
         }
@@ -114,10 +110,11 @@ public class EnvEntriesValidator {
 
 
     private void validateEnvEntry(JndiNameEnvironment env, Object curEntry, String name) {
-        String logicalJndiName = getLogicalJNDIName(name, env);
-        Map namespace = getNamespace(logicalJndiName, env);
-        Object preObject = namespace.get(logicalJndiName);
-
+        final String logicalJndiName = getLogicalJNDIName(name, env);
+        final Map<String, Object> namespace = getNamespace(logicalJndiName, env);
+        final Object preObject = namespace.get(logicalJndiName);
+        LOG.log(Level.FINE, "Validating logical name: {0}, cached object: {1}, validated object: {2}",
+            new Object[] {logicalJndiName, preObject, curEntry});
         if (preObject == null) {
             namespace.put(logicalJndiName, curEntry);
         } else {
@@ -132,12 +129,11 @@ public class EnvEntriesValidator {
                 EjbReference preRef = (EjbReference) preObject;
                 EjbReference curRef = (EjbReference) curEntry;
                 if (areConflicting(preRef.getType(), curRef.getType())
-                    || areConflicting(preRef.getEjbHomeInterface(),
-                        curRef.getEjbHomeInterface())
-                    || areConflicting(preRef.getEjbInterface(),
-                        curRef.getEjbInterface())
+                    || areConflicting(preRef.getEjbHomeInterface(), curRef.getEjbHomeInterface())
+                    || areConflicting(preRef.getEjbInterface(), curRef.getEjbInterface())
                     // link name is optional. compare only when they are both not null.
-                    || ((preRef.getLinkName() != null && curRef.getLinkName() != null && !preRef.getLinkName().equals(curRef.getLinkName())))
+                    || (preRef.getLinkName() != null && curRef.getLinkName() != null
+                        && !preRef.getLinkName().equals(curRef.getLinkName()))
                     || (preRef.isLocal() != curRef.isLocal())
                     || areConflicting(preRef.getLookupName(), curRef.getLookupName())) {
                     throwConflictException(name, namespace.toString());
@@ -147,10 +143,8 @@ public class EnvEntriesValidator {
                 ResourceReferenceDescriptor preRef = (ResourceReferenceDescriptor) preObject;
                 ResourceReferenceDescriptor curRef = (ResourceReferenceDescriptor) curEntry;
                 if (areConflicting(preRef.getType(), curRef.getType())
-                    || areConflicting(preRef.getAuthorization(),
-                        curRef.getAuthorization())
-                    || areConflicting(preRef.getSharingScope(),
-                        curRef.getSharingScope())
+                    || areConflicting(preRef.getAuthorization(), curRef.getAuthorization())
+                    || areConflicting(preRef.getSharingScope(), curRef.getSharingScope())
                     || areConflicting(preRef.getMappedName(), curRef.getMappedName())
                     || areConflicting(preRef.getLookupName(), curRef.getLookupName())) {
                     throwConflictException(name, namespace.toString());
@@ -172,11 +166,13 @@ public class EnvEntriesValidator {
 
     }
 
-    private Map getNamespace(String logicalJndiName, JndiNameEnvironment env) {
-        String appName = DOLUtils.getApplicationName(env);
+    private Map<String, Object> getNamespace(String logicalJndiName, JndiNameEnvironment env) {
+        final String appName = DOLUtils.getApplicationName(env);
+        LOG.log(Level.FINE, "appName={0}", appName);
         if (logicalJndiName.startsWith(JAVA_COMP_PREFIX)) {
             String componentId = DOLUtils.getComponentEnvId(env);
-            Map<String, Map> namespace = componentNamespaces.get(componentId);
+            LOG.log(Level.FINEST, "Resolved componentId: {0}", componentId);
+            Map<String, Object> namespace = componentNamespaces.get(componentId);
             if (namespace == null) {
                 namespace = new HashMap<>();
                 componentNamespaces.put(componentId, namespace);
@@ -185,14 +181,14 @@ public class EnvEntriesValidator {
         } else if (logicalJndiName.startsWith(JAVA_MODULE_PREFIX)) {
             String moduleName = DOLUtils.getModuleName(env);
             AppModuleKey appModuleKey = new AppModuleKey(appName, moduleName);
-            Map<AppModuleKey, Map> namespace = moduleNamespaces.get(appModuleKey);
+            Map<String, Object> namespace = moduleNamespaces.get(appModuleKey);
             if (namespace == null) {
                 namespace = new HashMap<>();
                 moduleNamespaces.put(appModuleKey, namespace);
             }
             return namespace;
         } else if (logicalJndiName.startsWith(JAVA_APP_PREFIX)) {
-            Map<String, Map> namespace = appNamespaces.get(appName);
+            Map<String, Object> namespace = appNamespaces.get(appName);
             if (namespace == null) {
                 namespace = new HashMap<>();
                 appNamespaces.put(appName, namespace);
@@ -211,58 +207,10 @@ public class EnvEntriesValidator {
 
 
     private boolean areConflicting(String s1, String s2) {
-        boolean conflict = false;
-        if ((s1 != null && !s1.equals(s2)) || (s2 != null && !s2.equals(s1))) {
-            conflict = true;
-        }
-        return conflict;
+        LOG.log(Level.FINEST, "areConflicting? {0} ||| {1}", new Object[] {s1, s2});
+        return (s1 != null && !s1.equals(s2)) || (s2 != null && !s2.equals(s1));
     }
 
-    private static class AppModuleKey {
-
-        private final String app;
-
-        private final String module;
-
-        AppModuleKey(String appName, String moduleName) {
-            app = appName;
-            module = moduleName;
-        }
-
-
-        @Override
-        public boolean equals(Object o) {
-            boolean equal = false;
-            if ((o != null) && (o instanceof AppModuleKey)) {
-                AppModuleKey other = (AppModuleKey) o;
-                if (app.equals(other.app) && module.equals(other.module)) {
-                    equal = true;
-                }
-            }
-            return equal;
-        }
-
-
-        @Override
-        public int hashCode() {
-            return app.hashCode();
-        }
-
-
-        @Override
-        public String toString() {
-            return "appName = " + app + " , module = " + module;
-        }
-    }
-
-    private static class SimpleEnvEntry extends EnvironmentProperty {
-
-        private static final long serialVersionUID = 1L;
-
-        SimpleEnvEntry(EnvironmentEntry envEntry) {
-            super(envEntry.getName(), envEntry.getValue(), envEntry.getDescription(), envEntry.getType());
-        }
-    }
 
     /**
      * If no java: prefix is specified, default to component scope.
@@ -290,4 +238,47 @@ public class EnvEntriesValidator {
         return logicalJndiName;
     }
 
+    private static class AppModuleKey {
+
+        private final String app;
+        private final String module;
+
+        AppModuleKey(String appName, String moduleName) {
+            app = appName;
+            module = moduleName;
+        }
+
+
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof AppModuleKey) {
+                AppModuleKey other = (AppModuleKey) o;
+                if (app.equals(other.app) && module.equals(other.module)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(app, module);
+        }
+
+
+        @Override
+        public String toString() {
+            return "appName = " + app + " , module = " + module;
+        }
+    }
+
+    private static class SimpleEnvEntry extends EnvironmentProperty {
+
+        private static final long serialVersionUID = 1L;
+
+        SimpleEnvEntry(EnvironmentProperty envEntry) {
+            super(envEntry.getName(), envEntry.getValue(), envEntry.getDescription(), envEntry.getType());
+        }
+    }
 }

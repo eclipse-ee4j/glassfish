@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,14 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.glassfish.ejb.deployment.descriptor.IASEjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbCMPFinder;
 import org.glassfish.ejb.deployment.descriptor.runtime.PrefetchDisabledDescriptor;
@@ -57,7 +58,7 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
 
     @Override
     protected Map getDispatchTable() {
-        Map dispatchTable = super.getDispatchTable();
+        Map<String, String> dispatchTable = super.getDispatchTable();
         dispatchTable.put(RuntimeTagNames.MAPPING_PROPERTIES, "setMappingProperties");
         // deprecated element, will be ignored at reading
         dispatchTable.put(RuntimeTagNames.IS_ONE_ONE_CMP, null);
@@ -89,8 +90,8 @@ public class CmpNode extends DeploymentDescriptorNode<IASEjbCMPEntityDescriptor>
         if (!finders.isEmpty()) {
             Node findersNode = appendChild(cmpNode, RuntimeTagNames.ONE_ONE_FINDERS);
             FinderNode fn = new FinderNode();
-            for (Iterator finderIterator = finders.values().iterator();finderIterator.hasNext();) {
-                IASEjbCMPFinder aFinder = (IASEjbCMPFinder) finderIterator.next();
+            for (Object element : finders.values()) {
+                IASEjbCMPFinder aFinder = (IASEjbCMPFinder) element;
                 fn.writeDescriptor(findersNode, RuntimeTagNames.FINDER, aFinder);
             }
         }

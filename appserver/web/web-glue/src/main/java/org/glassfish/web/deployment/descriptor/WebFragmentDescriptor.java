@@ -52,6 +52,7 @@ import org.glassfish.deployment.common.JavaEEResourceType;
  */
 public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
 
+    private static final long serialVersionUID = 1L;
     private String jarName;
     private OrderingDescriptor ordering;
 

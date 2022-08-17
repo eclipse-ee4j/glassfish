@@ -116,9 +116,6 @@ public class DOLUtils {
     @LogMessageInfo(message = "Unsupported deployment descriptors element {0} value {1}.", level="WARNING")
     public static final String INVALID_DESC_MAPPING = "AS-DEPLOYMENT-00015";
 
-    @LogMessageInfo(message = "DOLUtils: converting EJB to web bundle id {0}.", level="FINER")
-    private static final String CONVERT_EJB_TO_WEB_ID = "AS-DEPLOYMENT-00017";
-
     @LogMessageInfo(message = "DOLUtils: Invalid Deployment Descriptors in {0} \nLine {1} Column {2} -- {3}.", level="SEVERE",
         cause = "Failed to find the resource specified in the deployment descriptor. May be because of wrong specification in the descriptor",
         action = "Ensure that the resource specified is present. Ensure that there is no typo in the resource specified in the descriptor"
@@ -662,14 +659,12 @@ public class DOLUtils {
     }
 
     /**
-     * receives notiification of the value for a particular tag
+     * Receives notiification of the value for a particular tag
      *
      * @param element the xml element
      * @param value it's associated value
      */
-    public static boolean setElementValue(XMLElement element,
-        String value,
-        Object o) {
+    public static boolean setElementValue(XMLElement element, String value, Object o) {
         if (SCHEMA_LOCATION_TAG.equals(element.getCompleteName())) {
             // we need to keep all the non j2ee/javaee schemaLocation tags
             StringTokenizer st = new StringTokenizer(value);
@@ -700,7 +695,7 @@ public class DOLUtils {
                 sb.append(schema);
             }
             String clientSchemaLocation = sb.toString();
-            if (clientSchemaLocation.length()!=0) {
+            if (!clientSchemaLocation.isEmpty()) {
                 if (o instanceof RootDeploymentDescriptor) {
                     ((RootDeploymentDescriptor) o).setSchemaLocation(clientSchemaLocation);
                 }
@@ -735,103 +730,78 @@ public class DOLUtils {
     }
 
     public static Application getApplicationFromEnv(JndiNameEnvironment env) {
-        Application app = null;
-
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;
-            app = ejbEnv.getApplication();
+            return ejbEnv.getApplication();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
-            app = ejbBundle.getApplication();
+            return ejbBundle.getApplication();
         } else if (env instanceof WebBundleDescriptor) {
             WebBundleDescriptor webEnv = (WebBundleDescriptor) env;
-            app = webEnv.getApplication();
+            return webEnv.getApplication();
         } else if (env instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
-            app = appEnv.getApplication();
+            return appEnv.getApplication();
         } else if (env instanceof ManagedBeanDescriptor) {
             ManagedBeanDescriptor mb = (ManagedBeanDescriptor) env;
-            app = mb.getBundle().getApplication();
+            return mb.getBundle().getApplication();
         } else if (env instanceof Application) {
-            app = ((Application) env);
+            return ((Application) env);
         } else {
             throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
         }
-
-        return app;
     }
 
     public static String getApplicationName(JndiNameEnvironment env) {
-        String appName = "";
-
-        Application app = getApplicationFromEnv(env);
+        final Application app = getApplicationFromEnv(env);
         if (app != null) {
-            appName = app.getAppName();
-        } else {
-            throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
+            return app.getAppName();
         }
-
-        return appName;
+        throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
     }
 
     public static String getModuleName(JndiNameEnvironment env) {
-
-        String moduleName = null;
-
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;
             EjbBundleDescriptor ejbBundle = ejbEnv.getEjbBundleDescriptor();
-            moduleName = ejbBundle.getModuleDescriptor().getModuleName();
+            return ejbBundle.getModuleDescriptor().getModuleName();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
-            moduleName = ejbBundle.getModuleDescriptor().getModuleName();
+            return ejbBundle.getModuleDescriptor().getModuleName();
         } else if (env instanceof WebBundleDescriptor) {
             WebBundleDescriptor webEnv = (WebBundleDescriptor) env;
-            moduleName = webEnv.getModuleName();
+            return webEnv.getModuleName();
         } else if (env instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
-            moduleName = appEnv.getModuleName();
+            return appEnv.getModuleName();
         } else if (env instanceof ManagedBeanDescriptor) {
             ManagedBeanDescriptor mb = (ManagedBeanDescriptor) env;
-            moduleName = mb.getBundle().getModuleName();
+            return mb.getBundle().getModuleName();
         } else {
             throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
         }
-
-        return moduleName;
-
     }
 
     public static boolean getTreatComponentAsModule(JndiNameEnvironment env) {
-
-        boolean treatComponentAsModule = false;
-
         if (env instanceof WebBundleDescriptor) {
-            treatComponentAsModule = true;
-        } else {
-
-            if (env instanceof EjbDescriptor) {
-
-                EjbDescriptor ejbDesc = (EjbDescriptor) env;
-                EjbBundleDescriptor ejbBundle = ejbDesc.getEjbBundleDescriptor();
-                if (ejbBundle.getModuleDescriptor().getDescriptor() instanceof WebBundleDescriptor) {
-                    treatComponentAsModule = true;
-                }
-            }
-
+            return true;
         }
-
-        return treatComponentAsModule;
+        if (env instanceof EjbDescriptor) {
+            EjbDescriptor ejbDesc = (EjbDescriptor) env;
+            EjbBundleDescriptor ejbBundle = ejbDesc.getEjbBundleDescriptor();
+            if (ejbBundle.getModuleDescriptor().getDescriptor() instanceof WebBundleDescriptor) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Generate a unique id name for each J2EE component.
      */
     public static String getComponentEnvId(JndiNameEnvironment env) {
-        String id = null;
-
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;
@@ -847,35 +817,24 @@ public class DOLUtils {
             if (d instanceof WebBundleDescriptor) {
                 // copy of code below
                 WebBundleDescriptor webEnv = (WebBundleDescriptor) d;
-                id = webEnv.getApplication().getName() + ID_SEPARATOR
-                    + webEnv.getContextRoot();
-                if (deplLogger.isLoggable(Level.FINER)) {
-                    deplLogger.log(Level.FINER, CONVERT_EJB_TO_WEB_ID, id);
-                }
-
-            } else {
-                id = ejbEnv.getApplication().getName() + ID_SEPARATOR
-                    + ejbBundle.getModuleDescriptor().getArchiveUri() + ID_SEPARATOR
-                    + ejbEnv.getName() + ID_SEPARATOR + flattedJndiName
-                    + ejbEnv.getUniqueId();
+                return webEnv.getApplication().getName() + ID_SEPARATOR + webEnv.getContextRoot();
             }
+            return ejbEnv.getApplication().getName() + ID_SEPARATOR + ejbBundle.getModuleDescriptor().getArchiveUri()
+                + ID_SEPARATOR + ejbEnv.getName() + ID_SEPARATOR + flattedJndiName + ejbEnv.getUniqueId();
         } else if (env instanceof WebBundleDescriptor) {
             WebBundleDescriptor webEnv = (WebBundleDescriptor) env;
-            id = webEnv.getApplication().getName() + ID_SEPARATOR
-                + webEnv.getContextRoot();
+            return webEnv.getApplication().getName() + ID_SEPARATOR + webEnv.getContextRoot();
         } else if (env instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
-            id = "client" + ID_SEPARATOR + appEnv.getName() + ID_SEPARATOR
-                + appEnv.getMainClassName();
+            return "client" + ID_SEPARATOR + appEnv.getName() + ID_SEPARATOR + appEnv.getMainClassName();
         } else if (env instanceof ManagedBeanDescriptor) {
-            id = ((ManagedBeanDescriptor) env).getGlobalJndiName();
+            return ((ManagedBeanDescriptor) env).getGlobalJndiName();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
-            id = "__ejbBundle__" + ID_SEPARATOR
-                + ejbBundle.getApplication().getName() + ID_SEPARATOR
+            return "__ejbBundle__" + ID_SEPARATOR + ejbBundle.getApplication().getName() + ID_SEPARATOR
                 + ejbBundle.getModuleName();
+        } else {
+            return null;
         }
-
-        return id;
     }
 }

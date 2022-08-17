@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,19 +27,22 @@ import com.sun.enterprise.connectors.util.ConnectorDDTransformUtils;
 import com.sun.enterprise.connectors.util.PrintWriterAdapter;
 import com.sun.enterprise.connectors.util.SetMethodAction;
 import com.sun.enterprise.deployment.ConnectionDefDescriptor;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.ManagedConnectionFactory;
+
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.resource.spi.ManagedConnectionFactory;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -57,15 +60,15 @@ import java.util.logging.Logger;
 @PerLookup
 public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
 
+    private static Logger _logger = LogDomains.getLogger(ActiveResourceAdapterImpl.class, LogDomains.RSR_LOGGER);
+    private final StringManager localStrings = StringManager.getManager(ActiveResourceAdapterImpl.class);
+
     protected ConnectorDescriptor desc_;
     protected String moduleName_;
     protected ClassLoader jcl_;
     protected ConnectionDefDescriptor[] connectionDefs_;
-    protected ConnectorRuntime connectorRuntime_ = null;
+    protected ConnectorRuntime connectorRuntime_;
 
-    private static Logger _logger = LogDomains.getLogger(ActiveResourceAdapterImpl.class, LogDomains.RSR_LOGGER);
-    private StringManager localStrings =
-            StringManager.getManager(ActiveResourceAdapterImpl.class);
 
     /**
      * Constructor.
@@ -77,8 +80,9 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *                   connection factory class.
      *                   values to domain.xml.
      */
-    public void init(jakarta.resource.spi.ResourceAdapter ra, ConnectorDescriptor desc,
-                                         String moduleName, ClassLoader jcl) throws ConnectorRuntimeException {
+    @Override
+    public void init(jakarta.resource.spi.ResourceAdapter ra, ConnectorDescriptor desc, String moduleName,
+        ClassLoader jcl) throws ConnectorRuntimeException {
         this.desc_ = desc;
         moduleName_ = moduleName;
         jcl_ = jcl;
@@ -86,13 +90,15 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
         connectionDefs_ = ConnectorDDTransformUtils.getConnectionDefs(desc_);
     }
 
-    public ActiveResourceAdapterImpl(){
+
+    public ActiveResourceAdapterImpl() {
     }
 
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getModuleName() {
         return moduleName_;
     }
@@ -105,6 +111,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *                                   ra.xml is invalid or the default pools and resources couldn't
      *                                   be created
      */
+    @Override
     public void setup() throws ConnectorRuntimeException {
         if (connectionDefs_ == null || connectionDefs_.length != 1) {
             _logger.log(Level.SEVERE, "rardeployment.invalid_connector_desc", moduleName_);
@@ -251,6 +258,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      * uninitializes the resource adapter. It also destroys the default pools
      * and resources
      */
+    @Override
     public void destroy() {
         if (isServer()) {
             destroyAllConnectorResources();
@@ -262,6 +270,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *
      * @return ConnectorDescriptor Representation of ra.xml.
      */
+    @Override
     public ConnectorDescriptor getDescriptor() {
         return desc_;
     }
@@ -269,6 +278,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(ConnectorDescriptor cd, String moduleName) {
 
         boolean canHandle = false;
@@ -298,6 +308,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ManagedConnectionFactory[] createManagedConnectionFactories(
             ConnectorConnectionPool ccp, ClassLoader jcl) {
         throw new UnsupportedOperationException("This operation is not supported");
@@ -314,22 +325,19 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      * @return ManagedConnectionFactory created managed connection factory
      *         instance
      */
+    @Override
     public ManagedConnectionFactory createManagedConnectionFactory(
             ConnectorConnectionPool ccp, ClassLoader jcl) {
         final String mcfClass = ccp.getConnectorDescriptorInfo().getManagedConnectionFactoryClass();
         try {
-
-            ManagedConnectionFactory mcf = null;
-            mcf = instantiateMCF(mcfClass, jcl);
-
+            ManagedConnectionFactory mcf = instantiateMCF(mcfClass, jcl);
             if (mcf instanceof ConfigurableTransactionSupport) {
-                TransactionSupport ts = ConnectionPoolObjectsUtils.getTransactionSupport(
-                                ccp.getTransactionSupport());
+                TransactionSupport ts = ConnectionPoolObjectsUtils.getTransactionSupport(ccp.getTransactionSupport());
                 ((ConfigurableTransactionSupport)mcf).setTransactionSupport(ts);
             }
 
-            SetMethodAction setMethodAction = new SetMethodAction
-                    (mcf, ccp.getConnectorDescriptorInfo().getMCFConfigProperties());
+            SetMethodAction<ConnectorConfigProperty> setMethodAction = new SetMethodAction<>(mcf,
+                ccp.getConnectorDescriptorInfo().getMCFConfigProperties());
             setMethodAction.run();
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Created MCF object : ", mcfClass);
@@ -430,13 +438,12 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      */
     protected void createDefaultConnectorConnectionPools(boolean useSunRA)
             throws ConnectorRuntimeException {
-
         for (ConnectionDefDescriptor descriptor : connectionDefs_) {
             String poolName = connectorRuntime_.getDefaultPoolName(moduleName_, descriptor.getConnectionFactoryIntf());
             PoolInfo poolInfo = new PoolInfo(poolName);
 
-            ConnectorDescriptorInfo connectorDescriptorInfo =
-                    ConnectorDDTransformUtils.getConnectorDescriptorInfo(descriptor);
+            ConnectorDescriptorInfo connectorDescriptorInfo = ConnectorDDTransformUtils
+                .getConnectorDescriptorInfo(descriptor);
             connectorDescriptorInfo.setRarName(moduleName_);
             connectorDescriptorInfo.setResourceAdapterClassName(desc_.getResourceAdapterClass());
             ConnectorConnectionPool connectorPoolObj;
@@ -444,11 +451,9 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             // if useSunRA is true, then create connectorPoolObject using settings
             // from sunRAXML
             if (useSunRA) {
-                connectorPoolObj =
-                        ConnectionPoolObjectsUtils.createSunRaConnectorPoolObject(poolInfo, desc_, moduleName_);
+                connectorPoolObj = ConnectionPoolObjectsUtils.createSunRaConnectorPoolObject(poolInfo, desc_, moduleName_);
             } else {
-                connectorPoolObj =
-                        ConnectionPoolObjectsUtils.createDefaultConnectorPoolObject(poolInfo, moduleName_);
+                connectorPoolObj = ConnectionPoolObjectsUtils.createDefaultConnectorPoolObject(poolInfo, moduleName_);
             }
 
             connectorPoolObj.setConnectorDescriptorInfo(connectorDescriptorInfo);
@@ -519,6 +524,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *
      * @return <code>ClassLoader</code> object.
      */
+    @Override
     public ClassLoader getClassLoader() {
         return jcl_;
     }
@@ -528,6 +534,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      *
      * @return <code>ResourceAdapter</code>
      */
+    @Override
     public jakarta.resource.spi.ResourceAdapter getResourceAdapter() {
         throw new UnsupportedOperationException("1.0 RA will not have ResourceAdapter bean");
     }

@@ -36,16 +36,16 @@ import org.w3c.dom.Node;
 public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> extends DeploymentDescriptorNode<T>
     implements RootXMLNode<T> {
 
-    private static Boolean restrictDTDDeclarations = null;
+    private static Boolean restrictDTDDeclarations;
 
-    protected T descriptor = null;
+    protected T descriptor;
 
     // we record the XML element to node class mapping when parsing and
     // retrieve it when writing out
     // The first level map is indexed by the parent element name, and the
     // second level of the map is indexed by the sub element name and the
     // corresponding handler node class name
-    protected HashMap<String, LinkedHashMap<String, Class>> elementToNodeMappings = new HashMap<>();
+    protected HashMap<String, LinkedHashMap<String, Class<?>>> elementToNodeMappings = new HashMap<>();
 
     public RuntimeBundleNode(T descriptor) {
         this.descriptor = descriptor;
@@ -100,7 +100,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
     /**
      * set the DOCTYPE as read in the input XML File
      *
-     * @param DOCTYPE
+     * @param docType
      */
     @Override
     public void setDocType(String docType) {
@@ -120,10 +120,9 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
      * writes the message destination references runtime information
      */
     protected void writeMessageDestinationInfo(Node parent, BundleDescriptor descriptor) {
-        for (Object element : descriptor.getMessageDestinations()) {
+        for (MessageDestinationDescriptor element : descriptor.getMessageDestinations()) {
             MessageDestinationRuntimeNode node = new MessageDestinationRuntimeNode();
-            node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION,
-                (MessageDestinationDescriptor) element);
+            node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION, element);
         }
     }
 
@@ -151,8 +150,8 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
     /**
      * record mapping of sub element to node class for the current element
      */
-    public void recordNodeMapping(String currentElementName, String subElementName, Class subElementHandler) {
-        LinkedHashMap<String, Class> subElementMappings = elementToNodeMappings.get(currentElementName);
+    public void recordNodeMapping(String currentElementName, String subElementName, Class<?> subElementHandler) {
+        LinkedHashMap<String, Class<?>> subElementMappings = elementToNodeMappings.get(currentElementName);
         if (subElementMappings == null) {
             subElementMappings = new LinkedHashMap<>();
             elementToNodeMappings.put(currentElementName, subElementMappings);
@@ -161,7 +160,7 @@ public abstract class RuntimeBundleNode<T extends RootDeploymentDescriptor> exte
     }
 
 
-    public LinkedHashMap<String, Class> getNodeMappings(String currentElementName) {
+    public LinkedHashMap<String, Class<?>> getNodeMappings(String currentElementName) {
         return elementToNodeMappings.get(currentElementName);
     }
 

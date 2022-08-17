@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +25,11 @@ import com.sun.enterprise.deployment.runtime.connector.RoleMap;
 import com.sun.enterprise.deployment.runtime.connector.SunConnector;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Node;
 
 import java.util.List;
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This node handles the sun-connector runtime deployment descriptors
@@ -37,7 +39,7 @@ import java.util.Map;
  */
 public class ConnectorNode extends RuntimeBundleNode<ConnectorDescriptor> {
 
-    protected SunConnector connector = null;
+    protected SunConnector connector;
 
     /**
      * Initialize the child handlers
@@ -110,7 +112,7 @@ public class ConnectorNode extends RuntimeBundleNode<ConnectorDescriptor> {
      * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
-    public static String registerBundle(Map publicIDToDTD) {
+    public static String registerBundle(Map<String, String> publicIDToDTD) {
         publicIDToDTD.put(DTDRegistry.SUN_CONNECTOR_100_DTD_PUBLIC_ID, DTDRegistry.SUN_CONNECTOR_100_DTD_SYSTEM_ID);
         return RuntimeTagNames.S1AS_CONNECTOR_RUNTIME_TAG;
     }

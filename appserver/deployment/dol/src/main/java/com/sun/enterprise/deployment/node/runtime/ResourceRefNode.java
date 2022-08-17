@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,6 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.MailConfiguration;
 import com.sun.enterprise.deployment.ResourcePrincipal;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
@@ -29,13 +26,17 @@ import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.w3c.dom.Node;
 
 /**
  * This node handles the runtime deployment descriptors for resource-ref tag
  *
  * @author  Jerome Dochez
- * @version
  */
 public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceDescriptor> {
 
@@ -43,18 +44,21 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
 
     public ResourceRefNode() {
         registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL),
-                               DefaultResourcePrincipalNode.class, "setResourcePrincipal");
+            DefaultResourcePrincipalNode.class, "setResourcePrincipal");
     }
+
 
     @Override
     public ResourceReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ResourceReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new ResourceReferenceDescriptor();
+        }
         return descriptor;
     }
 
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
@@ -71,7 +75,9 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
             }
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
     @Override
@@ -111,17 +117,16 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
      * writes all the runtime information for resources references
      *
      * @param parent node to add the runtime xml info
-     * @param the J2EE component containing ejb references
+     * @param descriptor the J2EE component containing ejb references
      */
     public static void writeResourceReferences(Node parent, ResourceReferenceContainer descriptor) {
         // resource-ref*
-        Iterator rrs = descriptor.getResourceReferenceDescriptors().iterator();
+        Iterator<ResourceReferenceDescriptor> rrs = descriptor.getResourceReferenceDescriptors().iterator();
         if (rrs.hasNext()) {
 
             ResourceRefNode rrNode = new ResourceRefNode();
             while (rrs.hasNext()) {
-                rrNode.writeDescriptor(parent, TagNames.RESOURCE_REFERENCE,
-                    (ResourceReferenceDescriptor) rrs.next());
+                rrNode.writeDescriptor(parent, TagNames.RESOURCE_REFERENCE, rrs.next());
             }
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.node.connector.ConnectorNode;
 import com.sun.enterprise.deployment.runtime.connector.SunConnector;
@@ -48,50 +49,31 @@ import org.glassfish.deployment.common.DescriptorVisitor;
  */
 public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
-    private String  displayName = "";
-    private String  connectorDescription = "";
-    private String  largeIcon = "";
-    private String  smallIcon = "";
-    private String  vendorName = "";
-    private String  eisType = "";
-    private String  version = "";
+    private static final long serialVersionUID = 1L;
+    private String connectorDescription = "";
+    private String vendorName = "";
+    private String eisType = "";
+    private String version = "";
     private String resourceAdapterVersion = "";
-    private LicenseDescriptor licenseDescriptor = null;
+    private LicenseDescriptor licenseDescriptor;
 
-    //connector1.0 old stuff, need clean up
-    private Set configProperties;
-    private Set authMechanisms;
-    private Set securityPermissions;
-    private String  managedConnectionFactoryImpl = "";
-    private int     transactionSupport = PoolManagerConstants.LOCAL_TRANSACTION;
-    private boolean reauthenticationSupport = false;
-    private String connectionInterface;
-    private String connectionClass;
-    private String connectionFactoryInterface;
-    private String connectionFactoryClass;
+    // connector1.0 old stuff, need clean up
+    private final Set<ConnectorConfigProperty> configProperties;
+    private Set<SecurityPermission> securityPermissions;
 
-    //connector1.5 begin
-    private String  resourceAdapterClass = "";
-    private ConnectorConfigProperty configProperty = null;
-    private OutboundResourceAdapter outboundRA = null;
-    private InboundResourceAdapter  inboundRA = null;
-    private Set adminObjects;
-
-    //FIXME "inboundResourceAdapterClass" no longer valid
-    //Use "resourceAdapterClass" instead
-    private String inboundResourceAdapterClass = "";
-
-    //FIXME remove messagelisteners
-    private Set messageListeners;
-    //connector1.5 end
+    // connector1.5 begin
+    private String resourceAdapterClass = "";
+    private OutboundResourceAdapter outboundRA;
+    private InboundResourceAdapter  inboundRA;
+    private final Set<AdminObject> adminObjects;
 
     // following are all the get and set methods for the
     // various variables listed above
-    private Set requiredWorkContexts;
+    private final Set<String> requiredWorkContexts;
 
     /*Set variables indicates that a particular attribute is set by DD processing so that
       annotation processing need not (must not) set the values from annotation */
-    private boolean specVersionSet = false;
+    private final boolean specVersionSet = false;
 
 /*
     private boolean moduleNameSet = false;
@@ -106,20 +88,15 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     private transient Map<String, Set<AnnotationInfo>> configPropertyAnnotations ;
 
     //default resource names for this resource-adpater
-    private Set<String> defaultResourceNames;
+    private final Set<String> defaultResourceNames;
 
     private transient Set<String> configPropertyProcessedClasses;
 
     public ConnectorDescriptor() {
-        this.configProperties = new OrderedSet();
-        this.authMechanisms = new OrderedSet();
-        this.securityPermissions = new OrderedSet();
-        this.adminObjects = new OrderedSet();
-        this.requiredWorkContexts = new OrderedSet();
-
-            //FIXME.  need to remove the following
-        this.messageListeners = new OrderedSet();
-
+        this.configProperties = new OrderedSet<>();
+        this.securityPermissions = new OrderedSet<>();
+        this.adminObjects = new OrderedSet<>();
+        this.requiredWorkContexts = new OrderedSet<>();
         this.connectorAnnotations = new OrderedSet<>();
         this.configPropertyAnnotations = new HashMap<>();
         this.configPropertyProcessedClasses = new HashSet<>();
@@ -127,7 +104,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
 
-    public Set getRequiredWorkContexts() {
+    public Set<String> getRequiredWorkContexts() {
         return this.requiredWorkContexts;
     }
 
@@ -318,16 +295,16 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * @return a set of service-ref from this bundle or null
      *         if none
      */
-    public Set getServiceReferenceDescriptors() {
-        return new OrderedSet();
+    public Set<?> getServiceReferenceDescriptors() {
+        return new OrderedSet<>();
     }
 
     /**
      * Set of SecurityPermission objects
      */
-    public Set getSecurityPermissions() {
+    public Set<SecurityPermission> getSecurityPermissions() {
         if (securityPermissions == null) {
-            securityPermissions = new OrderedSet();
+            securityPermissions = new OrderedSet<>();
         }
         return securityPermissions;
     }
@@ -397,7 +374,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * Set of ConnectorConfigProperty
      */
-    public Set getConfigProperties() {
+    public Set<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
@@ -442,7 +419,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * @return admin objects
      */
-    public Set getAdminObjects() {
+    public Set<AdminObject> getAdminObjects() {
         return adminObjects;
     }
 
@@ -481,7 +458,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public boolean hasAdminObjects() {
-        return adminObjects.size() > 0;
+        return !adminObjects.isEmpty();
     }
 
     public boolean getOutBoundDefined() {
@@ -620,9 +597,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         if (this.outboundRA == null) {
             return null;
         }
-        Iterator it = this.outboundRA.getConnectionDefs().iterator();
+        Iterator<ConnectionDefDescriptor> it = this.outboundRA.getConnectionDefs().iterator();
         while (it.hasNext()) {
-            ConnectionDefDescriptor desc = (ConnectionDefDescriptor) it.next();
+            ConnectionDefDescriptor desc = it.next();
 
             if (type == null) {
                 if (useDefault && this.outboundRA.getConnectionDefs().size() == 1) {
@@ -647,9 +624,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public AdminObject getAdminObject(String adminObjectInterface, String adminObjectClass) {
-        Iterator i = getAdminObjects().iterator();
+        Iterator<AdminObject> i = getAdminObjects().iterator();
         while (i.hasNext()) {
-            AdminObject ao = (AdminObject) i.next();
+            AdminObject ao = i.next();
             if (adminObjectInterface.equals(ao.getAdminObjectInterface())
                 && adminObjectClass.equals(ao.getAdminObjectClass())) {
                 return ao;
@@ -661,9 +638,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
     public List<AdminObject> getAdminObjectsByType(String type) {
         List<AdminObject> adminObjects = new ArrayList<>();
-        Iterator i = getAdminObjects().iterator();
+        Iterator<AdminObject> i = getAdminObjects().iterator();
         while (i.hasNext()) {
-            AdminObject ao = (AdminObject) i.next();
+            AdminObject ao = i.next();
             if (type.equals(ao.getAdminObjectInterface())) {
                 adminObjects.add(ao);
             }
@@ -673,9 +650,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
     public List<AdminObject> getAdminObjectsByClass(String adminObjectClass) {
         List<AdminObject> adminObjects = new ArrayList<>();
-        Iterator i = getAdminObjects().iterator();
+        Iterator<AdminObject> i = getAdminObjects().iterator();
         while (i.hasNext()) {
-            AdminObject ao = (AdminObject) i.next();
+            AdminObject ao = i.next();
             if (adminObjectClass.equals(ao.getAdminObjectClass())) {
                 adminObjects.add(ao);
             }
@@ -838,9 +815,9 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
             return null;
         }
 
-        Iterator i = this.inboundRA.getMessageListeners().iterator();
+        Iterator<MessageListener> i = this.inboundRA.getMessageListeners().iterator();
         while (i.hasNext()) {
-            MessageListener l = (MessageListener) i.next();
+            MessageListener l = i.next();
             if ((l.getMessageListenerType()).equals(type)) {
                 return l;
             }

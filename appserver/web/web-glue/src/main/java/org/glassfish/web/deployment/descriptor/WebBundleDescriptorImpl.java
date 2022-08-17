@@ -30,6 +30,7 @@ import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.NamedDescriptor;
 import com.sun.enterprise.deployment.NamedReferencePair;
 import com.sun.enterprise.deployment.OrderedSet;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
@@ -50,7 +51,6 @@ import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.deployment.web.ContextParameter;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.ResourceReference;
@@ -88,13 +88,6 @@ import org.glassfish.web.deployment.util.WebBundleTracerVisitor;
 import org.glassfish.web.deployment.util.WebBundleValidator;
 import org.glassfish.web.deployment.util.WebBundleVisitor;
 
-/**
- * The concrete implementation of abstract super class
- * com.sun.enterprise.deployment.WebBundleDescriptor.
- * TODO WebBundleDescriptor could be changed from abstract class to an interface in the future,
- * with this
- * class as its implementation.
- */
 public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
     private static final long serialVersionUID = 1L;
@@ -180,7 +173,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
     @Override
     public void addDefaultWebBundleDescriptor(WebBundleDescriptor webBundleDescriptor) {
-        if (getWelcomeFilesSet().size() == 0) {
+        if (getWelcomeFilesSet().isEmpty()) {
             getWelcomeFilesSet().addAll(webBundleDescriptor.getWelcomeFilesSet());
         }
         if (this.requestCharacterEncoding == null) {
@@ -202,8 +195,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         for (WebComponentDescriptor webComponentDesc :webBundleDescriptor.getWebComponentDescriptors())
         {
             // don't modify the original one
-            WebComponentDescriptorImpl webComponentDescriptor =
-                new WebComponentDescriptorImpl(webComponentDesc);
+            WebComponentDescriptorImpl webComponentDescriptor = new WebComponentDescriptorImpl(webComponentDesc);
             // set web bundle to null so that the urlPattern2ServletName
             // of the others will not be changed,
             // see WebComponentDescriptor.getUrlPatternsSet()
@@ -330,7 +322,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
      * Return the set of named descriptors that I have.
      */
     @Override
-    public Collection getNamedDescriptors() {
+    public Collection<NamedDescriptor> getNamedDescriptors() {
         return super.getNamedDescriptorsFrom(this);
     }
 
@@ -418,9 +410,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     public void addWebComponentDescriptor(WebComponentDescriptor webComponentDescriptor) {
         String name = webComponentDescriptor.getCanonicalName();
         webComponentDescriptor.setWebBundleDescriptor(this);
-
-        WebComponentDescriptor resultDesc =
-                combineWebComponentDescriptor(webComponentDescriptor);
+        WebComponentDescriptor resultDesc = combineWebComponentDescriptor(webComponentDescriptor);
 
         // sync up urlPattern2ServletName map
         for (String up : resultDesc.getUrlPatternsSet()) {
@@ -460,9 +450,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             }
 
             String implFile = webCompDesc.getWebComponentImplementation();
-            if (resultDesc.isConflict() &&
-                    (implFile == null || implFile.length() == 0)) {
-
+            if (resultDesc.isConflict() && (implFile == null || implFile.isEmpty())) {
                 throw new IllegalArgumentException(localStrings.getLocalString(
                         "web.deployment.exceptionconflictwebcompwithoutimpl",
                         "Two or more web fragments define the same Servlet with conflicting implementation class names that are not overridden by the web.xml"));
@@ -533,19 +521,20 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         return serviceReferences;
     }
 
+
     @Override
-    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor
-            serviceRef) {
+    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
         serviceRef.setBundleDescriptor(this);
         getServiceReferenceDescriptors().add(serviceRef);
     }
 
+
     @Override
-    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor
-            serviceRef) {
+    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef) {
         serviceRef.setBundleDescriptor(null);
         getServiceReferenceDescriptors().remove(serviceRef);
     }
+
 
     /**
      * Looks up an service reference with the given name.
@@ -576,9 +565,8 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
     @Override
     protected void combineServiceReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object oserviceRef: env.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor serviceRef =
-                (ServiceReferenceDescriptor)oserviceRef;
+        for (Object oserviceRef : env.getServiceReferenceDescriptors()) {
+            ServiceReferenceDescriptor serviceRef = (ServiceReferenceDescriptor) oserviceRef;
             ServiceReferenceDescriptor sr = _getServiceReferenceByName(serviceRef.getName());
             if (sr != null) {
                 combineInjectionTargets(sr, serviceRef);
@@ -632,10 +620,12 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             return jrd;
         }
 
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                "web.deployment.exceptionwebapphasnoresourceenvrefbyname",
-                "This web app [{0}] has no resource environment reference by the name of [{1}]", new Object[]{getName(), name}));
+        throw new IllegalArgumentException(
+            localStrings.getLocalString("web.deployment.exceptionwebapphasnoresourceenvrefbyname",
+                "This web app [{0}] has no resource environment reference by the name of [{1}]",
+                new Object[] {getName(), name}));
     }
+
 
     @Override
     protected ResourceEnvReferenceDescriptor _getResourceEnvReferenceByName(String name) {
@@ -690,9 +680,8 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         return Collections.enumeration(this.getMimeMappingsSet());
     }
 
-
     /**
-     * @add the given mime mapping to my list if the given MimeType is not added
+     * Add the given mime mapping to my list if the given MimeType is not added
      * return the result MimeType of the MimeMapping in the resulting set of MimeMapping
      */
     @Override
@@ -713,17 +702,16 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         return resultMimeMapping.getMimeType();
     }
 
-
     protected void combineMimeMappings(Set<MimeMapping> mimeMappings) {
         if (conflictedMimeMappingExtensions != null) {
             for (MimeMapping mm : getMimeMappingsSet()) {
                  conflictedMimeMappingExtensions.remove(mm.getExtension());
             }
 
-            if (conflictedMimeMappingExtensions.size() > 0) {
+            if (!conflictedMimeMappingExtensions.isEmpty()) {
                 throw new IllegalArgumentException(localStrings.getLocalString(
-                        "web.deployment.exceptionconflictMimeMapping",
-                        "There are more than one Mime mapping defined in web fragments with the same extension."));
+                    "web.deployment.exceptionconflictMimeMapping",
+                    "There are more than one Mime mapping defined in web fragments with the same extension."));
             }
         }
 
@@ -1402,8 +1390,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     }
 
     @Override
-    protected List<InjectionCapable> getInjectableResourcesByClass(String className,
-                                  JndiNameEnvironment jndiNameEnv) {
+    protected List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
         List<InjectionCapable> injectables =
                 new LinkedList<>();
 
@@ -1519,8 +1506,8 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
                 WebResourceCollection wrc = iter.next();
                 Set<String> urlPatterns = wrc.getUrlPatterns();
                 urlPatterns.removeAll(allUrlPatterns);
-                boolean isEmpty = (urlPatterns.size() == 0);
-                addSc = (addSc || (!isEmpty));
+                boolean isEmpty = urlPatterns.isEmpty();
+                addSc = addSc || !isEmpty;
                 if (isEmpty) {
                     iter.remove();
                 }
@@ -1704,27 +1691,25 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
      * Removes this given environment property from my list.
      */
     @Override
-    public void removeEnvironmentEntry(EnvironmentEntry environmentEntry) {
+    public void removeEnvironmentEntry(EnvironmentProperty environmentEntry) {
         getEnvironmentEntrySet().remove(environmentEntry);
     }
 
     @Override
     protected void combineEnvironmentEntries(JndiNameEnvironment env) {
-        for (EnvironmentProperty enve: env.getEnvironmentProperties()) {
+        for (EnvironmentProperty enve : env.getEnvironmentProperties()) {
             EnvironmentProperty envProp = _getEnvironmentPropertyByName(enve.getName());
             if (envProp != null) {
                 combineInjectionTargets(envProp, enve);
                 EnvironmentProperty envP = enve;
-                if (!envProp.hasInjectionTargetFromXml() &&
-                        (!envProp.isSetValueCalled()) && envP.isSetValueCalled()) {
+                if (!envProp.hasInjectionTargetFromXml() && (!envProp.isSetValueCalled()) && envP.isSetValueCalled()) {
                     envProp.setValue(enve.getValue());
                 }
             } else {
-                if (env instanceof WebBundleDescriptor &&
-                        ((WebBundleDescriptor)env).isConflictEnvironmentEntry()) {
+                if (env instanceof WebBundleDescriptor && ((WebBundleDescriptor) env).isConflictEnvironmentEntry()) {
                     throw new IllegalArgumentException(localStrings.getLocalString(
-                            "web.deployment.exceptionconflictenventry",
-                            "There are more than one environment entries defined in web fragments with the same name, but not overrided in web.xml"));
+                        "web.deployment.exceptionconflictenventry",
+                        "There are more than one environment entries defined in web fragments with the same name, but not overrided in web.xml"));
                 } else {
                     addEnvironmentEntry(enve);
                 }

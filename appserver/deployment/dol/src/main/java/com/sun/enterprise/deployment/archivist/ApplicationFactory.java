@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,16 @@
 
 package com.sun.enterprise.deployment.archivist;
 
+import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
-
 import com.sun.enterprise.deployment.io.ApplicationDeploymentDescriptorFile;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import com.sun.enterprise.deployment.util.ApplicationVisitor;
 import com.sun.enterprise.deployment.util.ApplicationValidator;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.config.serverbeans.DasConfig;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
-import org.xml.sax.SAXException;
+import jakarta.inject.Inject;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,6 +35,11 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXException;
 
 /**
  * Factory for application object
@@ -157,7 +157,7 @@ public class ApplicationFactory {
         if (handleRuntimeInfo) {
             // now read the runtime deployment descriptors from the original jar file
             archivist.setHandleRuntimeInfo(true);
-            archivist.readRuntimeDeploymentDescriptor(in, (BundleDescriptor)descriptor);
+            archivist.readRuntimeDeploymentDescriptor(in, descriptor);
         }
 
         // validate
@@ -185,7 +185,7 @@ public class ApplicationFactory {
         BundleDescriptor desc = archivist.readStandardDeploymentDescriptor(archive);
         Application application = null;
         if (desc instanceof Application) {
-            application = (Application)desc;
+            application = (Application) desc;
         } else {
             ModuleDescriptor newModule = archivist.createModuleDescriptor(desc);
             newModule.setArchiveUri(archive.getURI().getSchemeSpecificPart());
@@ -201,14 +201,13 @@ public class ApplicationFactory {
      * previous standard deployment descriptor reading
      * @param archive the archive for the application
      */
-    public Application openWith(Application application,
-        ReadableArchive archive, Archivist archivist)
+    public Application openWith(Application application, ReadableArchive archive, Archivist archivist)
         throws IOException, SAXException {
         archivist.openWith(application, archive);
         // validate
         if (application.isVirtual()) {
             application.setClassLoader(archivist.getClassLoader());
-            application.visit((ApplicationVisitor) new ApplicationValidator());
+            application.visit(new ApplicationValidator());
         }
         return application;
     }

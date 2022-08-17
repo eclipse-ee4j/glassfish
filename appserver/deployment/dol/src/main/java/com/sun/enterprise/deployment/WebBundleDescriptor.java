@@ -27,7 +27,6 @@ import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
 import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.deployment.web.ContextParameter;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
@@ -163,11 +162,11 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract String addMimeMapping(MimeMapping mimeMapping);
 
+    public abstract void removeMimeMapping(MimeMapping mimeMapping);
+
     public abstract LocaleEncodingMappingListDescriptor getLocaleEncodingMappingListDescriptor();
 
     public abstract void setLocaleEncodingMappingListDescriptor(LocaleEncodingMappingListDescriptor lemDesc);
-
-    public abstract void removeMimeMapping(MimeMapping mimeMapping);
 
     public abstract Enumeration<String> getWelcomeFiles();
 
@@ -353,7 +352,7 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     @Override
     public abstract void addEnvironmentProperty(EnvironmentProperty environmentProperty);
 
-    public abstract void removeEnvironmentEntry(EnvironmentEntry environmentEntry);
+    public abstract void removeEnvironmentEntry(EnvironmentProperty environmentEntry);
 
     protected abstract void combineEnvironmentEntries(JndiNameEnvironment env);
 

@@ -61,7 +61,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  */
 public class ComponentValidator extends DefaultDOLVisitor implements ComponentVisitor {
 
-    public static final Logger deplLogger = com.sun.enterprise.deployment.util.DOLUtils.deplLogger;
+    private static final Logger LOG = DOLUtils.deplLogger;
 
     @LogMessageInfo(message = "Could not load {0}", level="FINE")
     private static final String LOAD_ERROR = "AS-DEPLOYMENT-00014";
@@ -111,7 +111,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             MessageDestinationDescriptor msgDest = msgDestReferencer.resolveLinkName();
             if (msgDest == null) {
                 String linkName = msgDestReferencer.getMessageDestinationLinkName();
-                DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
+                LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
                     new Object[] {"message-destination", linkName});
             } else {
                 if (msgDestReferencer instanceof MessageDestinationReferenceDescriptor) {
@@ -152,9 +152,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
     @Override
     protected void accept(EjbReference ejbRef) {
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Visiting Ref" + ejbRef);
-        }
+        LOG.log(Level.FINE, "Visiting Ref {0}", ejbRef);
         if (ejbRef.getEjbDescriptor() != null) {
             return;
         }
@@ -191,7 +189,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                   Object args[] = { homeIntf };
                   lr.setParameters(args);
                   lr.setThrown(e);
-                  deplLogger.log(lr);
+                  LOG.log(lr);
                 }
             }
         }
@@ -223,8 +221,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             // the jndi name is not null, if this is a remote ref, proceed with resolution
             // if this is a local ref, proceed with resolution only if ejb-link is null
             if (!ejbRef.isLocal() || ejbRef.getLinkName()==null) {
-                if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                    DOLUtils.getDefaultLogger().fine("Ref " + ejbRef.getName() + " is bound to Ejb with JNDI Name " + ejbRef.getJndiName());
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Ref " + ejbRef.getName() + " is bound to Ejb with JNDI Name " + ejbRef.getJndiName());
                 }
                 if (getEjbDescriptors() != null) {
                     for (Object element : getEjbDescriptors()) {
@@ -340,7 +338,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 if( ejbRef.hasLookupName() ) {
                     return;
                 }
-                DOLUtils.getDefaultLogger().severe("Cannot resolve reference " + ejbRef);
+                LOG.severe("Cannot resolve reference " + ejbRef);
                 throw new RuntimeException("Cannot resolve reference " + ejbRef);
             } else {
                 // this is a remote interface, jndi will eventually contain the referenced
@@ -350,8 +348,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                         ejbRef.isEJB30ClientView() ?
                         ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface());
                     ejbRef.setJndiName(jndiName);
-                    if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                        DOLUtils.getDefaultLogger().fine("Applying default to ejb reference: " + ejbRef);
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Applying default to ejb reference: " + ejbRef);
                     }
                 }
 
@@ -426,7 +424,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                     // this may happen when we have no application and the ejb ref
                     // cannot be resolved to a ejb in the bundle. The ref will
                     // probably be resolved when the application is assembled.
-                    DOLUtils.getDefaultLogger().warning("Unresolved <ejb-link>: "+linkName);
+                    LOG.warning("Unresolved <ejb-link>: "+linkName);
                     return;
                 }
 
@@ -439,18 +437,18 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             // runtime but maybe the jndi name will be specified by deployer so
             // a warning should suffice
             if (ejbRef.isLocal()) {
-                DOLUtils.getDefaultLogger().severe("Unresolved <ejb-link>: "+linkName);
+                LOG.severe("Unresolved <ejb-link>: "+linkName);
                 throw new RuntimeException("Error: Unresolved <ejb-link>: "+linkName);
             } else {
                 final ArchiveType moduleType = ejbRef.getReferringBundleDescriptor().getModuleType();
                 if(moduleType != null && moduleType.equals(DOLUtils.carType())) {
                     // Because no annotation processing is done within ACC runtime, this case typically
                     // arises for remote @EJB annotations, so don't log it as warning.
-                    if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                        DOLUtils.getDefaultLogger().fine("Unresolved <ejb-link>: "+linkName);
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Unresolved <ejb-link>: "+linkName);
                     }
                 } else {
-                    DOLUtils.getDefaultLogger().warning("Unresolved <ejb-link>: "+linkName);
+                    LOG.warning("Unresolved <ejb-link>: "+linkName);
                 }
                 return;
             }
@@ -508,9 +506,9 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         }
 
         // if we are here, we must have resolved the reference
-        if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+        if(LOG.isLoggable(Level.FINE)) {
             if (getEjbDescriptor() != null){
-                DOLUtils.getDefaultLogger().fine("Done Visiting " + getEjbDescriptor().getName() + " reference " + ejbRef);
+                LOG.fine("Done Visiting " + getEjbDescriptor().getName() + " reference " + ejbRef);
             }
         }
 
@@ -530,7 +528,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                         !(intfClassName.equals(ejbReferee.getEjbClassName()))) ) {
 
 
-                    DOLUtils.getDefaultLogger().log(Level.WARNING,
+                    LOG.log(Level.WARNING,
                            "enterprise.deployment.backend.ejbRefTypeMismatch",
                            new Object[] {ejbRef.getName() , intfClassName,
                            ejbReferee.getName(), ( ejbRef.isLocal() ?
@@ -554,7 +552,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
                 if( !homeClassName.equals(targetHome) ) {
 
-                    DOLUtils.getDefaultLogger().log(Level.WARNING,
+                    LOG.log(Level.WARNING,
                        "enterprise.deployment.backend.ejbRefTypeMismatch",
                        new Object[] {ejbRef.getName() , homeClassName,
                        ejbReferee.getName(), ( ejbRef.isLocal() ?
@@ -575,7 +573,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 if( (intfClassName != null) &&
                     !intfClassName.equals(targetComponentIntf) ) {
 
-                    DOLUtils.getDefaultLogger().log(Level.WARNING,
+                    LOG.log(Level.WARNING,
                        "enterprise.deployment.backend.ejbRefTypeMismatch",
                        new Object[] {ejbRef.getName() , intfClassName,
                        ejbReferee.getName(), ( ejbRef.isLocal() ?
@@ -593,7 +591,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         if (!type.equals(ejbRef.getType())) {
             // if they don't match
             // print a warning and reset the type in ejb ref
-            DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
+            LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
             new Object[] {ejbRef.getName() , type});
 
             ejbRef.setType(ejbRef.getType());
@@ -700,7 +698,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 WebServiceEndpoint portComponentLink = next.resolveLinkName();
                 if( portComponentLink == null ) {
                     String linkName = next.getPortComponentLinkName();
-                    DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
+                    LOG.log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
                         new Object[] {"port-component" , linkName});
                 }
             }
@@ -787,8 +785,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                     // are issues with finding .classes in .wars due to the
                     // structure of the returned client .jar and the way the
                     // classloader is formed.
-                    if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                        DOLUtils.getDefaultLogger().fine
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine
                                 ("Injection class " + targetClassName + " not found for " +
                                 injectable);
                     }
@@ -867,7 +865,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         if (runAs != null &&
                 (runAs.getRoleName() == null ||
                     runAs.getRoleName().length() == 0)) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING,
+            LOG.log(Level.WARNING,
             "enterprise.deployment.backend.emptyRoleName");
             return;
         }
@@ -889,7 +887,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                         Principal prin = null;
                         if (pset.size() > 0) {
                             prin = pset.iterator().next();
-                            DOLUtils.getDefaultLogger().log(Level.WARNING,
+                            LOG.log(Level.WARNING,
                             "enterprise.deployment.backend.computeRunAsPrincipal",
                             new Object[] { prin.getName() });
                         }

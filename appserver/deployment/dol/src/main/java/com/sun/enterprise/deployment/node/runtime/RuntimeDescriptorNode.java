@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.enterprise.deployment.node.runtime;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
@@ -29,10 +29,11 @@ import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Node;
 
-import java.util.Iterator;
 import java.util.logging.Level;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Node;
 
 /**
  * Superclass for all the runtime descriptor nodes
@@ -57,6 +58,7 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
     }
 
 
+    @Override
     protected Object createDescriptor() {
         return RuntimeDescriptorFactory.getDescriptor(getXMLPath());
     }
@@ -68,6 +70,7 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (getDispatchTable().containsKey(element.getQName())) {
             super.setElementValue(element, value);
@@ -111,10 +114,9 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
 
 
     public static void writeMessageDestinationInfo(Node parent, BundleDescriptor descriptor) {
-        for (Iterator iter = descriptor.getMessageDestinations().iterator(); iter.hasNext();) {
+        for (MessageDestinationDescriptor messageDestinationDescriptor : descriptor.getMessageDestinations()) {
             MessageDestinationRuntimeNode node = new MessageDestinationRuntimeNode();
-            node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION,
-                (MessageDestinationDescriptor) iter.next());
+            node.writeDescriptor(parent, RuntimeTagNames.MESSAGE_DESTINATION, messageDestinationDescriptor);
         }
     }
 

@@ -31,7 +31,6 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.CookieConfig;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
@@ -264,14 +263,12 @@ public class TomcatDeploymentConfig {
     /**
      * Configure mime-mapping defined in the deployment descriptor.
      */
-    protected static void configureMimeMapping(WebModule webModule,
-                                               WebBundleDescriptorImpl wmd) {
-        Enumeration enumeration = wmd.getMimeMappings();
+    protected static void configureMimeMapping(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Enumeration<MimeMapping> enumeration = wmd.getMimeMappings();
         MimeMapping mimeMapping;
-        while (enumeration.hasMoreElements()){
-            mimeMapping = (MimeMapping)enumeration.nextElement();
-            webModule.addMimeMapping(mimeMapping.getExtension(),
-                                     mimeMapping.getMimeType());
+        while (enumeration.hasMoreElements()) {
+            mimeMapping = enumeration.nextElement();
+            webModule.addMimeMapping(mimeMapping.getExtension(), mimeMapping.getMimeType());
         }
     }
 
@@ -280,7 +277,7 @@ public class TomcatDeploymentConfig {
      * Configure resource-reference defined in the deployment descriptor.
      */
     protected static void configureResourceRef(WebModule webModule, WebBundleDescriptorImpl wmd) {
-        for (EnvironmentEntry envEntry : wmd.getEnvironmentProperties()) {
+        for (EnvironmentProperty envEntry : wmd.getEnvironmentProperties()) {
             webModule.addResourceEnvRef(envEntry.getName(), envEntry.getType());
         }
     }

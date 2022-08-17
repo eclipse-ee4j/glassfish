@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,13 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.glassfish.deployment.common.JavaEEResourceType;
+
+import java.util.Map;
+import java.util.Set;
+
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
@@ -35,17 +35,15 @@ import org.glassfish.ejb.deployment.descriptor.QueryDescriptor;
 import org.w3c.dom.Node;
 
 /**
- *  This class handles all information pertinent to CMP and BMP entity beans
+ * This class handles all information pertinent to CMP and BMP entity beans
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
 
     private EjbEntityDescriptor descriptor;
 
     public EjbEntityNode() {
-        super();
         registerElementHandler(new XMLElement(EjbTagNames.CMP_FIELD), CmpFieldNode.class);
         registerElementHandler(new XMLElement(EjbTagNames.QUERY), QueryNode.class);
     }
@@ -71,23 +69,23 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
         return (EjbCMPEntityDescriptor) descriptor;
     }
 
+
     @Override
-    public void addDescriptor(Object  newDescriptor) {
+    public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof FieldDescriptor) {
-           getCMPEntityDescriptor().getPersistenceDescriptor().addCMPField((FieldDescriptor) newDescriptor);
-        } else  if (newDescriptor instanceof QueryDescriptor) {
+            getCMPEntityDescriptor().getPersistenceDescriptor().addCMPField((FieldDescriptor) newDescriptor);
+        } else if (newDescriptor instanceof QueryDescriptor) {
             QueryDescriptor newQuery = (QueryDescriptor) newDescriptor;
-           getCMPEntityDescriptor().getPersistenceDescriptor().setQueryFor(
-                        newQuery.getQueryMethodDescriptor(), newQuery);
+            getCMPEntityDescriptor().getPersistenceDescriptor().setQueryFor(newQuery.getQueryMethodDescriptor(), newQuery);
         } else {
             super.addDescriptor(newDescriptor);
         }
     }
 
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(EjbTagNames.PERSISTENCE_TYPE, "setPersistenceType");
         table.put(EjbTagNames.PRIMARY_KEY_CLASS, "setPrimaryKeyClassName");
         table.put(EjbTagNames.REENTRANT, "setReentrant");
@@ -132,8 +130,8 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
             appendTextChild(ejbNode, EjbTagNames.ABSTRACT_SCHEMA_NAME, cmpDesc.getAbstractSchemaName());
             // cmp-field*
             CmpFieldNode cmpNode = new CmpFieldNode();
-            for (Iterator fields = cmpDesc.getPersistenceDescriptor().getCMPFields().iterator();fields.hasNext();) {
-                FieldDescriptor aField = (FieldDescriptor) fields.next();
+            for (Object element : cmpDesc.getPersistenceDescriptor().getCMPFields()) {
+                FieldDescriptor aField = (FieldDescriptor) element;
                 cmpNode.writeDescriptor(ejbNode, EjbTagNames.CMP_FIELD, aField);
             }
             if ( cmpDesc.getPrimaryKeyFieldDesc()!=null) {
@@ -183,12 +181,12 @@ public class EjbEntityNode  extends InterfaceBasedEjbNode<EjbEntityDescriptor> {
         // query
         if (ejbDesc instanceof EjbCMPEntityDescriptor) {
             EjbCMPEntityDescriptor cmpDesc = (EjbCMPEntityDescriptor) ejbDesc;
-            Set queriedMethods = cmpDesc.getPersistenceDescriptor().getQueriedMethods();
-            if (queriedMethods.size()>0) {
+            Set<MethodDescriptor> queriedMethods = cmpDesc.getPersistenceDescriptor().getQueriedMethods();
+            if (!queriedMethods.isEmpty()) {
                 QueryNode queryNode = new QueryNode();
-                for (Iterator e=queriedMethods.iterator();e.hasNext();) {
+                for (MethodDescriptor queriedMethod : queriedMethods) {
                     queryNode.writeDescriptor(ejbNode, EjbTagNames.QUERY,
-                        cmpDesc.getPersistenceDescriptor().getQueryFor((MethodDescriptor) e.next()));
+                        cmpDesc.getPersistenceDescriptor().getQueryFor(queriedMethod));
                 }
             }
         }

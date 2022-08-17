@@ -34,7 +34,6 @@ import org.xml.sax.Attributes;
  * Root node for jaxrpc mapping deployment descriptor
  *
  * @author Kenneth Saks
- * @version
  */
 @Service
 public class JaxrpcMappingDescriptorNode extends AbstractBundleNode {
@@ -137,11 +136,11 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode {
 
     @Override
     public void startElement(XMLElement element, Attributes attributes) {
-        if( complexMapping ) {
+        if (complexMapping) {
             // NOTE : we don't call super.startElement in this case because
             // we don't need to process any of the attributes
             return;
-        } else if( complexElements.contains(element.getQName()) ) {
+        } else if (complexElements.contains(element.getQName())) {
             complexMapping = true;
             descriptor.setIsSimpleMapping(false);
             // NOTE : we don't call super.startElement in this case because

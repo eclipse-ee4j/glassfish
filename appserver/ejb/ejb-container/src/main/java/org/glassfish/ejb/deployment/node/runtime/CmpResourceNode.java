@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,6 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.PropertiesNode;
@@ -30,6 +26,12 @@ import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.node.runtime.common.RuntimeNameValuePairNode;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.w3c.dom.Node;
 
@@ -54,13 +56,15 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
 
     @Override
     public ResourceReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ResourceReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new ResourceReferenceDescriptor();
+        }
         return descriptor;
     }
 
     @Override
     protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         table.put(RuntimeTagNames.CREATE_TABLES_AT_DEPLOY, "setCreateTablesAtDeploy");
         table.put(RuntimeTagNames.DROP_TABLES_AT_UNDEPLOY, "setDropTablesAtUndeploy");

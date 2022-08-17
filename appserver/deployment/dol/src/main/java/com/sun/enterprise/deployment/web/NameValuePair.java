@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,11 +19,16 @@ package com.sun.enterprise.deployment.web;
 
 public interface NameValuePair {
 
-    public String getName();
-    public void setName(String name);
-    public String getValue();
-    public void setValue(String value);
-    public String getDescription();
-    public void setDescription(String description);
+    String getName();
+
+    void setName(String name);
+
+    String getValue();
+
+    void setValue(String value);
+
+    String getDescription();
+
+    void setDescription(String description);
 
 }

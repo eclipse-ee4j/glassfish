@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,27 @@
 
 package org.glassfish.web.deployment.node;
 
+import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.RoleReference;
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.DisplayableComponentNode;
+import com.sun.enterprise.deployment.node.RunAsNode;
+import com.sun.enterprise.deployment.node.SecurityRoleRefNode;
+import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.MultipartConfig;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.logging.Level;
 
 import org.glassfish.web.deployment.descriptor.MultipartConfigDescriptor;
 import org.glassfish.web.deployment.descriptor.WebComponentDescriptorImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
-
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.logging.Level;
 
 /**
  * This node is responsible for handling the servlet xml sub tree
@@ -91,16 +95,14 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding security role ref " + newDescriptor);
             }
-            descriptor.addSecurityRoleReference(
-                        (RoleReference) newDescriptor);
-        } else if (newDescriptor instanceof EnvironmentEntry) {
+            descriptor.addSecurityRoleReference((RoleReference) newDescriptor);
+        } else if (newDescriptor instanceof EnvironmentProperty) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding init-param " + newDescriptor);
             }
-            descriptor.addInitializationParameter(
-                        (InitializationParameter) newDescriptor);
+            descriptor.addInitializationParameter((InitializationParameter) newDescriptor);
         } else if (newDescriptor instanceof MultipartConfig) {
-            descriptor.setMultipartConfig((MultipartConfig)newDescriptor);
+            descriptor.setMultipartConfig((MultipartConfig) newDescriptor);
         } else {
             super.addDescriptor(newDescriptor);
         }

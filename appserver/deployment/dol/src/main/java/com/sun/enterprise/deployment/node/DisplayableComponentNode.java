@@ -22,18 +22,15 @@ import com.sun.enterprise.deployment.xml.TagNames;
 import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
 
-
 /**
  * This node class is responsible for handling all the information
  * related to displayable elements like display-name or icons.
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public abstract class DisplayableComponentNode<T extends Descriptor> extends DeploymentDescriptorNode<T> {
 
     public DisplayableComponentNode() {
-        super();
         registerElementHandler(new XMLElement(TagNames.NAME), LocalizedInfoNode.class);
         registerElementHandler(new XMLElement(TagNames.ICON), IconNode.class);
         registerElementHandler(new XMLElement(TagNames.SMALL_ICON), IconNode.class);
@@ -44,13 +41,12 @@ public abstract class DisplayableComponentNode<T extends Descriptor> extends Dep
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
     public Node writeDescriptor(Node parent, T descriptor) {
         Node node = super.writeDescriptor(parent, descriptor);
-
         // description, display-name, icons...
         writeDisplayableComponentInfo(node, descriptor);
         return node;
@@ -59,8 +55,8 @@ public abstract class DisplayableComponentNode<T extends Descriptor> extends Dep
     /**
      * write the localized descriptions, display-names and icons info
      *
-     * @param the node to write the info to
-     * @param the descriptor containing the displayable information
+     * @param node the node to write the info to
+     * @param descriptor the descriptor containing the displayable information
      */
     public void writeDisplayableComponentInfo(Node node, T descriptor) {
         LocalizedNode localizedNode = new LocalizedNode();
@@ -68,6 +64,5 @@ public abstract class DisplayableComponentNode<T extends Descriptor> extends Dep
         localizedNode.writeLocalizedMap(node, TagNames.NAME, descriptor.getLocalizedDisplayNames());
         IconNode iconNode = new IconNode();
         iconNode.writeLocalizedInfo(node, descriptor);
-
     }
 }

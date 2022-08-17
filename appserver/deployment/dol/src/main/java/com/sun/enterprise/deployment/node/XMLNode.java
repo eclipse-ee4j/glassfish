@@ -22,12 +22,10 @@ import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
 /**
- * This interface defines the protocol associated with all the nodes. An
- * XML node is responsible for reading the XML file  into a object
- * representation
+ * This interface defines the protocol associated with all the nodes.
+ * An XML node is responsible for reading the XML file into a object representation
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 @Contract
 public interface XMLNode<T> {
@@ -76,17 +74,17 @@ public interface XMLNode<T> {
      * @return XMLNode implementation responsible for handling
      * the XML tag
      */
-    XMLNode getHandlerFor(XMLElement element);
+    XMLNode<?> getHandlerFor(XMLElement element);
 
     /**
      * @return the parent node for this XMLNode
      */
-    XMLNode getParentNode();
+    XMLNode<?> getParentNode();
 
     /**
      * @return the root node for this XMLNode
      */
-    XMLNode getRootNode();
+    XMLNode<?> getRootNode();
 
     /**
      * @return the XMLPath for the element name this node

@@ -131,10 +131,8 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         ClassLoader cl = dc.getClassLoader();
         DeployCommandParameters params = dc.getCommandParameters(DeployCommandParameters.class);
 
-        sourceArchive.addArchiveMetaData(DeploymentProperties.APP_PROPS,
-                        dc.getAppProps());
-        sourceArchive.addArchiveMetaData(DeploymentProperties.COMMAND_PARAMS,
-                        params);
+        sourceArchive.addArchiveMetaData(DeploymentProperties.APP_PROPS, dc.getAppProps());
+        sourceArchive.addArchiveMetaData(DeploymentProperties.COMMAND_PARAMS, params);
 
         String name = params.name();
         String archiveType = dc.getArchiveHandler().getArchiveType();
@@ -175,24 +173,19 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
             }
 
             try {
-                applicationFactory.openWith(application, sourceArchive,
-                    archivist);
-            } catch(SAXException e) {
+                applicationFactory.openWith(application, sourceArchive, archivist);
+            } catch (SAXException e) {
                 throw new IOException(e);
             }
-        }
-        else {
+        } else {
             // for case where user specified --name
             // and it's a standalone module
             try {
-                application = applicationFactory.openArchive(
-                    name, archivist, sourceArchive, true);
-
+                application = applicationFactory.openArchive(name, archivist, sourceArchive, true);
                 application.setAppName(name);
-
                 ModuleDescriptor md = application.getStandaloneBundleDescriptor().getModuleDescriptor();
                 md.setModuleName(name);
-            } catch(SAXException e) {
+            } catch (SAXException e) {
                 throw new IOException(e);
             }
         }
@@ -284,7 +277,8 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
             String archiveName = Util.getURIName(archive.getURI());
             ArchiveHandler archiveHandler = deployment.getArchiveHandler(archive);
             if (archiveHandler==null) {
-                throw new IllegalArgumentException(localStrings.getLocalString("deploy.unknownarchivetype","Archive type of {0} was not recognized", archiveName));
+                throw new IllegalArgumentException(localStrings.getLocalString("deploy.unknownarchivetype",
+                    "Archive type of {0} was not recognized", archiveName));
             }
 
             DeployCommandParameters parameters = new DeployCommandParameters(new File(archive.getURI()));
@@ -296,8 +290,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
 
             if (archive instanceof InputJarArchive) {
                 // we need to expand the archive first in this case
-                tmpFile = File.createTempFile(
-                    archiveName,"");
+                tmpFile = File.createTempFile(archiveName, "");
                 String path = tmpFile.getAbsolutePath();
                 if (!tmpFile.delete()) {
                     logger.log(Level.WARNING, "cannot.delete.temp.file", new Object[] {path});
@@ -393,15 +386,16 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         }
 
         try {
-            com.sun.enterprise.config.serverbeans.Application app_w = dc.getTransientAppMetaData(com.sun.enterprise.config.serverbeans.ServerTags.APPLICATION, com.sun.enterprise.config.serverbeans.Application.class);
+            com.sun.enterprise.config.serverbeans.Application app_w = dc.getTransientAppMetaData(
+                com.sun.enterprise.config.serverbeans.ServerTags.APPLICATION,
+                com.sun.enterprise.config.serverbeans.Application.class);
             if (app_w != null) {
                 if (application.isVirtual()) {
                     Module modConfig = app_w.createChild(Module.class);
                     app_w.getModule().add(modConfig);
                     modConfig.setName(application.getRegistrationName());
                 } else {
-                    for (ModuleDescriptor moduleDesc :
-                        application.getModules()) {
+                    for (ModuleDescriptor moduleDesc : application.getModules()) {
                         Module modConfig = app_w.createChild(Module.class);
                         app_w.getModule().add(modConfig);
                         modConfig.setName(moduleDesc.getArchiveUri());
@@ -421,7 +415,8 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
                 // through deployment option or deployment descriptor
                 // explicitly set the deployment option to false
                 params.keepstate = false;
-                String warningMsg = localStrings.getLocalString("not.support.keepstate.in.cluster", "Ignoring the keepstate setting: the keepstate option is only supported in developer profile and not cluster profile.");
+                String warningMsg = localStrings.getLocalString("not.support.keepstate.in.cluster",
+                    "Ignoring the keepstate setting: the keepstate option is only supported in developer profile and not cluster profile.");
                 ActionReport subReport = context.getActionReport().addSubActionsReport();
                 subReport.setActionExitCode(ActionReport.ExitCode.WARNING);
                 subReport.setMessage(warningMsg);
@@ -436,11 +431,9 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         } else if (DeploymentUtils.isDomainTarget(params.target)) {
             List<String> targets = context.getTransientAppMetaData(DeploymentProperties.PREVIOUS_TARGETS, List.class);
             if (targets == null) {
-                targets = domain.getAllReferencedTargetsForApplication(
-                    params.name);
+                targets = domain.getAllReferencedTargetsForApplication(params.name);
             }
-            if (targets.size() == 1 &&
-                DeploymentUtils.isDASTarget(targets.get(0))) {
+            if (targets.size() == 1 && DeploymentUtils.isDASTarget(targets.get(0))) {
                 return true;
             }
         }

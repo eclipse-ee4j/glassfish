@@ -642,6 +642,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return Collections.emptyList();
     }
 
+
     /**
      * helper method: find all PUs referenced via @PersistenceUnit or
      * <persistence-unit-ref>

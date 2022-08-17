@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,12 +29,12 @@ import java.io.Serializable;
  */
 public class MimeMappingDescriptor implements MimeMapping, Serializable {
 
+    private static final long serialVersionUID = 1L;
     private String extension;
     private String mimeType;
 
     /** copy constructor */
     public MimeMappingDescriptor(MimeMappingDescriptor other) {
-        // super(other);
         extension = other.extension;
         mimeType = other.mimeType;
     }
@@ -46,7 +47,7 @@ public class MimeMappingDescriptor implements MimeMapping, Serializable {
     }
 
 
-    /* Default constructor. */
+    /** Default constructor. */
     public MimeMappingDescriptor() {
     }
 

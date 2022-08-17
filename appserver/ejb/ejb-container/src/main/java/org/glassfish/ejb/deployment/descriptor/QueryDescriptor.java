@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,8 +62,7 @@ public final class QueryDescriptor extends Descriptor {
 
     static Logger _logger = DOLUtils.getDefaultLogger();
 
-    public QueryDescriptor()
-    {
+    public QueryDescriptor() {
         this.query = null;
         this.sql = null;
         this.returnTypeMapping = NO_RETURN_TYPE_MAPPING;

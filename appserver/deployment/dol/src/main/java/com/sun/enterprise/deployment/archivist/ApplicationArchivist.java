@@ -24,29 +24,42 @@ import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.introspection.EjbComponentAnnotationScanner;
 import com.sun.enterprise.deployment.io.ApplicationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.AnnotationDetector;
 import com.sun.enterprise.deployment.util.ApplicationValidator;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.shared.ArchivistUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Level;
+
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
 
 /**
  * This class is responsible for handling application archive files
@@ -105,7 +118,7 @@ public class ApplicationArchivist extends Archivist<Application> {
             Archivist subArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
             subArchivist.initializeContext(this);
             subArchivist.setModuleDescriptor(aModule);
-            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().info("Write " + aModule.getArchiveUri() + " with " + subArchivist);
             }
 
@@ -227,8 +240,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                     extension.getKey().readRuntimeDeploymentDescriptor(this, archive, extension.getValue());
                 }
             }
-            // validate...
-            if (classLoader!=null) {
+            if (classLoader != null) {
                 validate(null);
             }
         }
@@ -240,13 +252,11 @@ public class ApplicationArchivist extends Archivist<Application> {
      * @param archive the archive for the application
      * @param directory whether the application is packaged as a directory
      */
-    public Application createApplication(ReadableArchive archive,
-        boolean directory) throws IOException, SAXException {
-        if (hasStandardDeploymentDescriptor(archive) ) {
+    public Application createApplication(ReadableArchive archive, boolean directory) throws IOException, SAXException {
+        if (hasStandardDeploymentDescriptor(archive)) {
             return readStandardDeploymentDescriptor(archive);
-        } else {
-            return getApplicationFromIntrospection(archive, directory);
         }
+        return getApplicationFromIntrospection(archive, directory);
     }
 
     /**
@@ -257,9 +267,8 @@ public class ApplicationArchivist extends Archivist<Application> {
      * @param archive   the archive representing the application root
      * @param directory whether this is a directory deployment
      */
-    private Application getApplicationFromIntrospection(
-            ReadableArchive archive, boolean directory) {
-        String appRoot = archive.getURI().getSchemeSpecificPart(); //archive is a directory
+    private Application getApplicationFromIntrospection(ReadableArchive archive, boolean directory) {
+        String appRoot = archive.getURI().getSchemeSpecificPart(); // archive is a directory
         if (appRoot.endsWith(File.separator)) {
             appRoot = appRoot.substring(0, appRoot.length() - 1);
         }
@@ -269,8 +278,7 @@ public class ApplicationArchivist extends Archivist<Application> {
         app.setVirtual(false);
 
         //name of the file without its extension
-        String appName = appRoot.substring(
-                appRoot.lastIndexOf(File.separatorChar) + 1);
+        String appName = appRoot.substring(appRoot.lastIndexOf(File.separatorChar) + 1);
         app.setName(appName);
 
         List<ReadableArchive> unknowns = new ArrayList<>();
@@ -293,9 +301,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                 String name = subModule.getName();
                 String uri = deriveArchiveUri(appRoot, subModule, directory);
                 if ((!directory && name.endsWith(".war"))
-                        || (directory &&
-                        (name.endsWith("_war") ||
-                                name.endsWith(".war")))) {
+                    || (directory && (name.endsWith("_war") || name.endsWith(".war")))) {
                     ModuleDescriptor<BundleDescriptor> md = new ModuleDescriptor<>();
                     md.setArchiveUri(uri);
                     md.setModuleType(DOLUtils.warType());
@@ -303,11 +309,9 @@ public class ApplicationArchivist extends Archivist<Application> {
                     // we process the sub modules
                     app.addModule(md);
                 }
-                //Section EE.8.4.2.1.b
+                // Section EE.8.4.2.1.b
                 else if ((!directory && name.endsWith(".rar"))
-                        || (directory &&
-                        (name.endsWith("_rar") ||
-                                name.endsWith(".rar")))) {
+                    || (directory && (name.endsWith("_rar") || name.endsWith(".rar")))) {
                     ModuleDescriptor<BundleDescriptor> md = new ModuleDescriptor<>();
                     md.setArchiveUri(uri);
                     md.setModuleType(DOLUtils.rarType());
@@ -332,10 +336,9 @@ public class ApplicationArchivist extends Archivist<Application> {
                         }
 
                         //Section EE.8.4.2.1.d.ii
-                        Archivist ejbArchivist = archivistFactory.get().getArchivist(
-                                DOLUtils.ejbType());
+                        Archivist ejbArchivist = archivistFactory.get().getArchivist(DOLUtils.ejbType());
                         if (ejbArchivist.hasStandardDeploymentDescriptor(subArchive)
-                                || ejbArchivist.hasRuntimeDeploymentDescriptor(subArchive)) {
+                            || ejbArchivist.hasRuntimeDeploymentDescriptor(subArchive)) {
 
                             ModuleDescriptor<BundleDescriptor> md = new ModuleDescriptor<>();
                             md.setArchiveUri(uri);
@@ -369,8 +372,7 @@ public class ApplicationArchivist extends Archivist<Application> {
         }
 
         if (unknowns.size() > 0) {
-            AnnotationDetector detector =
-                    new AnnotationDetector(new EjbComponentAnnotationScanner());
+            AnnotationDetector detector = new AnnotationDetector(new EjbComponentAnnotationScanner());
             for (ReadableArchive unknown : unknowns) {
                 File jarFile = new File(unknown.getURI().getSchemeSpecificPart());
                 try {
@@ -680,10 +682,10 @@ public class ApplicationArchivist extends Archivist<Application> {
     @Override
     public void validate(ClassLoader aClassLoader) {
         ClassLoader cl = aClassLoader;
-        if (cl==null) {
+        if (cl == null) {
             cl = classLoader;
         }
-        if (cl==null) {
+        if (cl == null) {
             return;
         }
         descriptor.setClassLoader(cl);

@@ -45,6 +45,7 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
 import com.sun.logging.LogDomains;
 import org.glassfish.internal.data.ApplicationInfo;
@@ -78,14 +79,16 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void loadXAResourcesAndItsConnections(List xaresList, List connList) {
-        Vector<XAResource> xaResources = new Vector<XAResource>();
+        Vector<XAResource> xaResources = new Vector<>();
         recoverInboundTransactions(xaResources);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void closeConnections(List connList) {
         // do nothing
     }
@@ -102,7 +105,7 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
                 return;
             }
             // List of CMT enabled MDB descriptors on the application server instance.
-            List<EjbDescriptor> xaEnabledMDBList = new ArrayList<EjbDescriptor>();
+            List<EjbDescriptor> xaEnabledMDBList = new ArrayList<>();
 
             //Done so as to initialize connectors-runtime before loading inbound active RA. need a better way ?
             ConnectorRuntime cr = connectorRuntimeProvider.get();
@@ -158,44 +161,40 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
                     isSystemJmsRA = true;
                 }
 
-                jakarta.resource.spi.ResourceAdapter resourceAdapter = activeInboundRA
-                        .getResourceAdapter();
+                jakarta.resource.spi.ResourceAdapter resourceAdapter = activeInboundRA.getResourceAdapter();
                 // activationSpecList represents the ActivationSpec[] that would be
                 // sent to the getXAResources() method.
-                ArrayList<ActivationSpec> activationSpecList = new ArrayList<ActivationSpec>();
+                ArrayList<ActivationSpec> activationSpecList = new ArrayList<>();
 
                 try {
-                    for (int i = 0; i < respectiveDesc.size(); i++) {
+                    for (EjbDescriptor element : respectiveDesc) {
                         try {
                             // Get a MessageBeanDescriptor from respectiveDesc ArrayList
-                            EjbMessageBeanDescriptor descriptor =
-                                    (EjbMessageBeanDescriptor) respectiveDesc.get(i);
+                            EjbMessageBeanDescriptor descriptor = (EjbMessageBeanDescriptor) element;
                             // A descriptor using 1.3 System JMS RA style properties needs
                             // to be updated J2EE 1.4 style props.
                             if (isSystemJmsRA) {
-                                //XXX: Find out the pool descriptor corres to MDB and update
-                                //MDBRuntimeInfo with that.
+                                // XXX: Find out the pool descriptor corres to MDB and update
+                                // MDBRuntimeInfo with that.
                                 activeInboundRA.updateMDBRuntimeInfo(descriptor, null);
                             }
 
                             // Get the ActivationConfig Properties from the MDB Descriptor
-                            Set activationConfigProps =
-                                    RARUtils.getMergedActivationConfigProperties(descriptor);
+                            Set<EnvironmentProperty> activationConfigProps = RARUtils
+                                .getMergedActivationConfigProperties(descriptor);
                             // get message listener type
                             String msgListenerType = descriptor.getMessageListenerType();
 
                             // start resource adapter and get ActivationSpec class for
                             // the given message listener type from the ConnectorRuntime
 
-                            ActivationSpec aspec = (ActivationSpec) (Class.forName(
-                                    cr.getActivationSpecClass(raMid,
-                                            msgListenerType), false,
-                                    resourceAdapter.getClass().getClassLoader()).newInstance());
+                            Class<?> clazz = Class.forName(cr.getActivationSpecClass(raMid, msgListenerType), false,
+                                resourceAdapter.getClass().getClassLoader());
+                            ActivationSpec aspec = (ActivationSpec) clazz.getDeclaredConstructor().newInstance();
                             aspec.setResourceAdapter(resourceAdapter);
 
                             // Populate ActivationSpec class with ActivationConfig properties
-                            SetMethodAction sma =
-                                    new SetMethodAction(aspec, activationConfigProps);
+                            SetMethodAction<EnvironmentProperty> sma = new SetMethodAction<>(aspec, activationConfigProps);
                             sma.run();
                             activationSpecList.add(aspec);
                         } catch (Exception e) {
@@ -213,8 +212,8 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
 
                     // Add the resources to the xaresList which is used by the RecoveryManager
                     if(xar != null){
-                        for (int p = 0; p < xar.length; p++) {
-                            xaresList.add(xar[p]);
+                        for (XAResource element : xar) {
+                            xaresList.add(element);
                         }
                     }
                     // Catch UnsupportedOperationException if a RA does not support XA
@@ -232,27 +231,26 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
 
     }
 
-    private Vector getEjbDescriptors(Application application, ApplicationRegistry appsRegistry) {
-        Vector ejbDescriptors = new Vector();
-
-        if(ResourcesUtil.createInstance().isEnabled(application)){
+    private Vector<EjbDescriptor> getEjbDescriptors(Application application, ApplicationRegistry appsRegistry) {
+        Vector<EjbDescriptor> ejbDescriptors = new Vector<>();
+        if (ResourcesUtil.createInstance().isEnabled(application)) {
             ApplicationInfo appInfo = appsRegistry.get(application.getName());
-            if(appInfo != null){
-                com.sun.enterprise.deployment.Application app =
-                        appInfo.getMetaData(com.sun.enterprise.deployment.Application.class);
-                Set<BundleDescriptor> descriptors = app.getBundleDescriptors();
-                for (BundleDescriptor descriptor : descriptors) {
-                    if (descriptor instanceof EjbBundleDescriptor) {
-                        EjbBundleDescriptor ejbBundleDescriptor = (EjbBundleDescriptor) descriptor;
-                        Set<? extends EjbDescriptor> ejbDescriptorsSet = ejbBundleDescriptor.getEjbs();
-                        for (EjbDescriptor ejbDescriptor : ejbDescriptorsSet) {
-                            ejbDescriptors.add(ejbDescriptor);
-                        }
-                    }
-                }
-            }else{
+            if (appInfo == null) {
                 //application is enabled, but still not found in app-registry
                 _logger.log(Level.WARNING, "application.not.started.skipping.recovery", application.getName());
+                return ejbDescriptors;
+            }
+            com.sun.enterprise.deployment.Application app = appInfo
+                .getMetaData(com.sun.enterprise.deployment.Application.class);
+            Set<BundleDescriptor> descriptors = app.getBundleDescriptors();
+            for (BundleDescriptor descriptor : descriptors) {
+                if (descriptor instanceof EjbBundleDescriptor) {
+                    EjbBundleDescriptor ejbBundleDescriptor = (EjbBundleDescriptor) descriptor;
+                    Set<? extends EjbDescriptor> ejbDescriptorsSet = ejbBundleDescriptor.getEjbs();
+                    for (EjbDescriptor ejbDescriptor : ejbDescriptorsSet) {
+                        ejbDescriptors.add(ejbDescriptor);
+                    }
+                }
             }
         }
         return ejbDescriptors;
@@ -260,10 +258,10 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
 
     private Map<String, List<EjbDescriptor>> createRAEjbMapping(List<EjbDescriptor> ejbDescriptors) {
 
-        Map<String, List<EjbDescriptor>> map = new HashMap<String, List<EjbDescriptor>>();
+        Map<String, List<EjbDescriptor>> map = new HashMap<>();
 
         for (EjbDescriptor ejbDescriptor : ejbDescriptors) {
-            List<EjbDescriptor> ejbmdbd = new ArrayList<EjbDescriptor>();
+            List<EjbDescriptor> ejbmdbd = new ArrayList<>();
             String ramid =
                     ((EjbMessageBeanDescriptor) ejbDescriptor).getResourceAdapterMid();
             if ((ramid == null) || (ramid.equalsIgnoreCase(""))) {
@@ -290,8 +288,9 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
         ConnectorRuntime cr = connectorRuntimeProvider.get();
         ConnectorRegistry creg = ConnectorRegistry.getInstance();
 
-        if (creg.isRegistered(rarModuleName))
+        if (creg.isRegistered(rarModuleName)) {
             return;
+        }
 
         if (ConnectorAdminServiceUtils.isEmbeddedConnectorModule(rarModuleName)) {
             cr.createActiveResourceAdapterForEmbeddedRar(rarModuleName);

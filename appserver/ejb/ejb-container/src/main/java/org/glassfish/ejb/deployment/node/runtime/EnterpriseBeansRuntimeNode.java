@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Iterator;
-
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
@@ -28,6 +27,7 @@ import com.sun.enterprise.deployment.node.runtime.common.RuntimeNameValuePairNod
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.w3c.dom.Node;
@@ -35,8 +35,7 @@ import org.w3c.dom.Node;
 /**
  * This node handles runtime deployment descriptors for ejb bundle
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
 
@@ -80,7 +79,7 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param bundleDescriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, EjbBundleDescriptorImpl bundleDescriptor) {
@@ -92,8 +91,7 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
 
         // ejb*
         EjbNode ejbNode = new EjbNode();
-        for (Iterator ejbIterator = bundleDescriptor.getEjbs().iterator();ejbIterator.hasNext();) {
-            EjbDescriptor ejbDescriptor = (EjbDescriptor) ejbIterator.next();
+        for (EjbDescriptor ejbDescriptor : bundleDescriptor.getEjbs()) {
             ejbNode.writeDescriptor(ejbs, RuntimeTagNames.EJB, ejbDescriptor);
         }
 
@@ -115,7 +113,7 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
         WebServiceRuntimeNode webServiceNode = new WebServiceRuntimeNode();
         webServiceNode.writeWebServiceRuntimeInfo(ejbs, bundleDescriptor);
 
-        for(NameValuePairDescriptor p : bundleDescriptor.getEnterpriseBeansProperties()) {
+        for (NameValuePairDescriptor p : bundleDescriptor.getEnterpriseBeansProperties()) {
             RuntimeNameValuePairNode nameValNode = new RuntimeNameValuePairNode();
             nameValNode.writeDescriptor(ejbs, RuntimeTagNames.PROPERTY, p);
         }

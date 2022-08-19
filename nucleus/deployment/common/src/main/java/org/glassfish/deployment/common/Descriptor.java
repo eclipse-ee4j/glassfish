@@ -17,9 +17,6 @@
 
 package org.glassfish.deployment.common;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,14 +36,7 @@ import java.util.Vector;
  */
 public class Descriptor extends DynamicAttributesDescriptor {
 
-    /**
-     * Notification String for a general descriptor change.
-     */
-    public static final String DESCRIPTOR_CHANGED = "Descriptor change";
-    public static final String NAME_CHANGED = "NameChanged";
-    public static final String DESCRIPTION_CHANGED = "DescriptionChanged";
-    public static final String LARGE_ICON_CHANGED = "LargeIconChanged";
-    public static final String SMALL_ICON_CHANGED = "SmallIconChanged";
+    private static final long serialVersionUID = 1L;
 
     /**
      * static flag to indicate descriptors should bounds check.
@@ -56,20 +46,21 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * My display name indexed by language
      */
-    private Map<String, String> displayNames = null;
+    private Map<String, String> displayNames;
 
     /**
      * My descriptions indexed by language
      */
-    private Map<String, String> descriptions = null;
+    private Map<String, String> descriptions;
 
     /**
      * icons map indexed by language
      */
-    private Map<String, String> largeIcons = null;
-    private Map<String, String> smallIcons = null;
+    private Map<String, String> largeIcons;
+    private Map<String, String> smallIcons;
 
     private final Map<Class<? extends Descriptor>, List<? extends Descriptor>> descriptorExtensions = new HashMap<>();
+
 
     /**
      * The default constructor. Constructs a descriptor with
@@ -161,21 +152,30 @@ public class Descriptor extends DynamicAttributesDescriptor {
         setLocalizedDescription(null, description);
     }
 
+
     /**
      * Sets a global flag to enable or disable boudsn checking
      * of deployment information
      *
+     * @deprecated Changes global state, synchronization doesn't prevent concurrent change, because
+     *             setters are not synchronized.
      * @param b true for bounds checking on, false else.
      */
+    @Deprecated(since = "7.0.0", forRemoval = true)
     public static synchronized void setBoundsChecking(boolean b) {
         boundsChecking = b;
     }
 
+
     /**
      * Answers whether the object model is bounds checking.
      *
+     * @deprecated Changes global state, synchronization doesn't prevent concurrent change, because
+     *             setters are not synchronized. Even worse, usages often rely on a change made by
+     *             SetMethodAction (side effect).
      * @return true for boudsn checking, false else.
      */
+    @Deprecated(since = "7.0.0", forRemoval = true)
     public static synchronized boolean isBoundsChecking() {
         return boundsChecking;
     }
@@ -554,8 +554,8 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * @return an iterator on the deployment-extension
      */
-    public Iterator<Object> getDeploymentExtensions() {
-        Vector<Object> extensions = (Vector<Object>) getExtraAttribute("deployment-extension");
+    public Iterator<Descriptor> getDeploymentExtensions() {
+        Vector<Descriptor> extensions = (Vector<Descriptor>) getExtraAttribute("deployment-extension");
         if (extensions != null) {
             return extensions.iterator();
         }
@@ -579,7 +579,6 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * @return the map of prefix to namepace uri
      */
-    @SuppressWarnings("unchecked")
     public Map<String, String> getPrefixMapping() {
         return (Map<String, String>) getExtraAttribute("prefix-mapping");
     }
@@ -610,11 +609,11 @@ public class Descriptor extends DynamicAttributesDescriptor {
         if (prefix != null) {
             sb.append("\n Prefix Mapping = ").append(prefix);
         }
-        Iterator itr = getDeploymentExtensions();
+        Iterator<Descriptor> itr = getDeploymentExtensions();
         if (itr != null && itr.hasNext()) {
             do {
                 sb.append("\n Deployment Extension : ");
-                ((Descriptor) (itr.next())).print(sb);
+                itr.next().print(sb);
             } while (itr.hasNext());
         }
         sb.append("\n");
@@ -643,29 +642,5 @@ public class Descriptor extends DynamicAttributesDescriptor {
      */
     public void visit(DescriptorVisitor aVisitor) {
         aVisitor.accept(this);
-    }
-
-    //start IASRI 4713550
-    public String docType = null;
-
-    public String getDocType() {
-        return docType;
-    }
-
-    public void fillDocType(InputStream in) {
-        try {
-            BufferedReader inr = new BufferedReader(new InputStreamReader(in));
-            String s = inr.readLine();
-            while (s != null) {
-                if (s.indexOf("DOCTYPE") > -1) {
-                    docType = s;
-                    in.close();
-                    return;
-                }
-                s = inr.readLine();
-            }
-        } catch (Exception e) {
-            // ignore
-        }
     }
 }

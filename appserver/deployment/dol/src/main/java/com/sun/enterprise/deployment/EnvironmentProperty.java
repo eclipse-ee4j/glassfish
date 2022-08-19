@@ -338,7 +338,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
                 return obj;
             }
         }
-        if (string == null || ("".equals(string) && !type.equals(String.class))) {
+        if (string == null || (string.isEmpty() && !type.equals(String.class))) {
             return null;
         }
         try {

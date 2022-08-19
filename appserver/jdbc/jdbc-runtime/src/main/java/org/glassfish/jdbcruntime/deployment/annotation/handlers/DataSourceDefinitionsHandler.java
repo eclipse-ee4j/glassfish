@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,14 @@
 
 package org.glassfish.jdbcruntime.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.annotation.sql.DataSourceDefinition;
+import jakarta.annotation.sql.DataSourceDefinitions;
+
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,14 +34,6 @@ import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
-import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.annotation.sql.DataSourceDefinition;
-import jakarta.annotation.sql.DataSourceDefinitions;
 
 /**
  * @author Jagadish Ramu
@@ -52,24 +53,17 @@ public class DataSourceDefinitionsHandler extends AbstractResourceHandler {
         DataSourceDefinitions defns = (DataSourceDefinitions) ainfo.getAnnotation();
 
         DataSourceDefinition values[] = defns.value();
-        Set duplicates = new HashSet();
+        Set<String> duplicates = new HashSet<>();
         if (values != null && values.length > 0) {
             for (DataSourceDefinition defn : values) {
                 String defnName = DataSourceDefinitionDescriptor.getJavaName(defn.name());
-
                 if (duplicates.contains(defnName)) {
                     String localString = localStrings.getLocalString(
                             "enterprise.deployment.annotation.handlers.datasourcedefinitionsduplicates",
                             "@DataSourceDefinitions cannot have multiple definitions with same name : ''{0}''", defnName);
                     throw new IllegalStateException(localString);
-                    /*
-                     * //TODO V3 should we throw exception or return failure result ? return
-                     * getFailureResult(ainfo, "@DataSourceDefinitions cannot have multiple" +
-                     * " definitions with same name [ "+defnName+" ]", true );
-                     */
-                } else {
-                    duplicates.add(defnName);
                 }
+                duplicates.add(defnName);
                 DataSourceDefinitionHandler handler = new DataSourceDefinitionHandler();
                 handler.processAnnotation(defn, ainfo, rcContexts);
             }
@@ -78,18 +72,7 @@ public class DataSourceDefinitionsHandler extends AbstractResourceHandler {
         return getDefaultProcessedResult();
     }
 
-    /*
-     * private HandlerProcessingResultImpl getFailureResult(AnnotationInfo element,
-     * String message, boolean doLog) { HandlerProcessingResultImpl result = new
-     * HandlerProcessingResultImpl(); result.addResult(getAnnotationType(),
-     * ResultType.FAILED); if (doLog) { Class c = (Class)
-     * element.getAnnotatedElement(); String className = c.getName(); String
-     * localString = localStrings.getLocalString(
-     * "enterprise.deployment.annotation.handlers.datasourcedefinitionsfailure",
-     * "failed to handle annotation [ {0} ] on class [ {1} ] due to the following exception : "
-     * , element.getAnnotation(), className); logger.log(Level.WARNING, localString,
-     * message); } return result; }
-     */
+
     @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();

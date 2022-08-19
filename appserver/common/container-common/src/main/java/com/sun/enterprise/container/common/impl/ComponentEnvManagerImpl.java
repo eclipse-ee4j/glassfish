@@ -181,8 +181,9 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             refCountJndiEnvironment = compId2Env.get(componentId);
             if (_logger.isLoggable(Level.FINEST)) {
                 _logger.finest(
-                    "ComponentEnvManagerImpl: " + "getJndiNameEnvironment " + componentId + " is "
-                        + (refCountJndiEnvironment == null ? "NULL" : refCountJndiEnvironment.env.getClass().toString()));
+                    "ComponentEnvManagerImpl: getJndiNameEnvironment " + componentId + " is "
+                        + (refCountJndiEnvironment == null ? "NULL"
+                            : refCountJndiEnvironment.env.getClass().toString()));
             }
         }
 
@@ -197,8 +198,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             if (inv.componentId != null) {
                 desc = getJndiNameEnvironment(inv.componentId);
                 if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.finest(
-                            "ComponentEnvManagerImpl: " + "getCurrentJndiNameEnvironment " + inv.componentId + " is " + desc.getClass());
+                    _logger.finest("ComponentEnvManagerImpl: getCurrentJndiNameEnvironment " + inv.componentId + " is "
+                        + desc.getClass());
                 }
             }
         }
@@ -285,7 +286,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
         if (componentEnvId != null) {
             if (_logger.isLoggable(Level.FINEST)) {
-                _logger.finest("ComponentEnvManagerImpl: " + "register " + componentEnvId + " is " + jndiEnvironment.getClass());
+                _logger.finest("ComponentEnvManagerImpl: register " + componentEnvId + " is " + jndiEnvironment.getClass());
             }
             register(componentEnvId, jndiEnvironment);
         }

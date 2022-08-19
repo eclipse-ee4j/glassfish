@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,22 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.deployment.common.JavaEEResourceType;
-
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
 
 import java.util.Set;
 
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.JavaEEResourceType;
+
 /**
- * This class is used to defined common descriptor elements which is shared by classes which implements BundleDescriptor.
- * User: naman mehta
- * Date: 22/5/12
- * Time: 3:58 PM
- * To change this template use File | Settings | File Templates.
+ * This class is used to defined common descriptor elements which is shared by classes which
+ * implements BundleDescriptor.
+ *
+ * @author naman mehta
  */
 public abstract class CommonResourceDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     ResourceDescriptorRegistry resourceDescriptorRegistry = new ResourceDescriptorRegistry();
 
     protected CommonResourceDescriptor() {
@@ -61,7 +62,7 @@ public abstract class CommonResourceDescriptor extends Descriptor {
         return resourceDescriptorRegistry.getAllResourcesDescriptors();
     }
 
-    public Set<ResourceDescriptor> getAllResourcesDescriptors(Class givenClazz) {
+    public Set<ResourceDescriptor> getAllResourcesDescriptors(Class<?> givenClazz) {
         return resourceDescriptorRegistry.getAllResourcesDescriptors(givenClazz);
     }
 

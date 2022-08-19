@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,23 +16,6 @@
  */
 
 package org.glassfish.jdbcruntime.deployment.annotation.handlers;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-
-import org.glassfish.apf.AnnotationHandlerFor;
-import org.glassfish.apf.AnnotationInfo;
-import org.glassfish.apf.AnnotationProcessorException;
-import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.deployment.common.JavaEEResourceType;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
@@ -54,6 +37,23 @@ import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.Interceptors;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.deployment.common.JavaEEResourceType;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Jagadish Ramu
@@ -195,7 +195,7 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
     @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         Class<? extends Annotation>[] annotations = getEjbAndWebAnnotationTypes();
-        List<Class<? extends Annotation>> annotationsList = new ArrayList<Class<? extends Annotation>>();
+        List<Class<? extends Annotation>> annotationsList = new ArrayList<>();
         for (Class<? extends Annotation> annotation : annotations) {
             annotationsList.add(annotation);
         }
@@ -219,7 +219,7 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
                 }
 
                 if (desc.getDescription() == null) {
-                    if (defn.description() != null && !defn.description().equals("")) {
+                    if (defn.description() != null && !defn.description().isEmpty()) {
                         desc.setDescription(defn.description());
                     }
                 }
@@ -249,7 +249,7 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
 
                 // try only when URL is not set
                 if (desc.getDatabaseName() == null && desc.getUrl() == null) {
-                    if (defn.databaseName() != null && !defn.databaseName().equals("")) {
+                    if (defn.databaseName() != null && !defn.databaseName().isEmpty()) {
                         desc.setDatabaseName(defn.databaseName());
                     }
                 }
@@ -257,20 +257,20 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
                 // try only when URL or standard properties are not set
                 if (desc.getUrl() == null
                         && !(desc.getPortNumber() != -1 && desc.getServerName() != null && (desc.getDatabaseName() != null))) {
-                    if (defn.url() != null && !defn.url().equals("")) {
+                    if (defn.url() != null && !defn.url().isEmpty()) {
                         desc.setUrl(defn.url());
                     }
 
                 }
 
                 if (desc.getUser() == null) {
-                    if (defn.user() != null && !defn.user().equals("")) {
+                    if (defn.user() != null && !defn.user().isEmpty()) {
                         desc.setUser(defn.user());
                     }
                 }
 
                 if (desc.getPassword() == null) {
-                    if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().equals("") */) {
+                    if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().isEmpty() */) {
                         desc.setPassword(defn.password());
                     }
                 }
@@ -356,7 +356,7 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
         desc.setName(defn.name());
         desc.setClassName(defn.className());
 
-        if (defn.description() != null && !defn.description().equals("")) {
+        if (defn.description() != null && !defn.description().isEmpty()) {
             desc.setDescription(defn.description());
         }
 
@@ -368,23 +368,23 @@ public class DataSourceDefinitionHandler extends AbstractResourceHandler {
             desc.setPortNumber(defn.portNumber());
         }
 
-        if (defn.databaseName() != null && !defn.databaseName().equals("")) {
+        if (defn.databaseName() != null && !defn.databaseName().isEmpty()) {
             desc.setDatabaseName(defn.databaseName());
         }
 
         if ((desc.getPortNumber() != -1 && desc.getDatabaseName() != null && desc.getServerName() != null)) {
             // standard properties are set, ignore URL
         } else {
-            if (defn.url() != null && !defn.url().equals("")) {
+            if (defn.url() != null && !defn.url().isEmpty()) {
                 desc.setUrl(defn.url());
             }
         }
 
-        if (defn.user() != null && !defn.user().equals("")) {
+        if (defn.user() != null && !defn.user().isEmpty()) {
             desc.setUser(defn.user());
         }
 
-        if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().equals("") */) {
+        if (defn.password() != null /* ALLOW EMPTY PASSWORDS && !defn.password().isEmpty() */) {
             desc.setPassword(defn.password());
         }
 

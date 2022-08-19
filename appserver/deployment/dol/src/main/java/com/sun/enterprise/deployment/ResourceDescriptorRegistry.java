@@ -17,6 +17,17 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.glassfish.deployment.common.JavaEEResourceType;
+
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.Arrays.asList;
 import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
@@ -29,17 +40,6 @@ import static org.glassfish.deployment.common.JavaEEResourceType.MEDD;
 import static org.glassfish.deployment.common.JavaEEResourceType.MSD;
 import static org.glassfish.deployment.common.JavaEEResourceType.MSEDD;
 import static org.glassfish.deployment.common.JavaEEResourceType.MTFDD;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.glassfish.deployment.common.JavaEEResourceType;
-
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This class maintains registry for all resources and used by all Descriptor and BundleDescriptor classes.
@@ -73,7 +73,7 @@ public class ResourceDescriptorRegistry implements Serializable {
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ResourceDescriptorRegistry.class);
 
-    private Map<JavaEEResourceType, Set<ResourceDescriptor>> resourceDescriptors = new HashMap<>();
+    private final Map<JavaEEResourceType, Set<ResourceDescriptor>> resourceDescriptors = new HashMap<>();
 
     /**
      * This method returns all descriptors associated with the app.

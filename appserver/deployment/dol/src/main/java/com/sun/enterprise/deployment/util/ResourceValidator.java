@@ -21,7 +21,26 @@ import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.AbstractConnectorResourceDescriptor;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
+import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
+import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
@@ -163,9 +182,11 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         String javaGlobalName = getJavaGlobalJndiNamePrefix(ejb);
 
         boolean disableNonPortableJndiName = false;
-        // TODO: Need to get the value of system-property server.ejb-container.property.disable-nonportable-jndi-names
+        // TODO: Need to get the value of system-property
+        // server.ejb-container.property.disable-nonportable-jndi-names
         Boolean disableInDD = ejb.getEjbBundleDescriptor().getDisableNonportableJndiNames();
-        if(disableInDD != null) {  // explicitly set in glassfish-ejb-jar.xml
+        if (disableInDD != null) {
+            // explicitly set in glassfish-ejb-jar.xml
             disableNonPortableJndiName = disableInDD;
         }
 
@@ -173,9 +194,8 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         if (!disableNonPortableJndiName) {
             glassfishSpecificJndiName = ejb.getJndiName();
         }
-        if ((glassfishSpecificJndiName != null)
-                && (glassfishSpecificJndiName.equals("")
-                || glassfishSpecificJndiName.equals(javaGlobalName))) {
+        if (glassfishSpecificJndiName != null
+            && (glassfishSpecificJndiName.isEmpty() || glassfishSpecificJndiName.equals(javaGlobalName))) {
             glassfishSpecificJndiName = null;
         }
 
@@ -245,17 +265,14 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
     private String getJavaGlobalJndiNamePrefix(EjbDescriptor ejbDescriptor) {
 
         String appName = null;
-
         Application app = ejbDescriptor.getApplication();
-        if ( ! app.isVirtual() ) {
+        if (!app.isVirtual()) {
             appName = ejbDescriptor.getApplication().getAppName();
         }
 
         EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
         String modName = ejbBundle.getModuleDescriptor().getModuleName();
-
         String ejbName = ejbDescriptor.getName();
-
         StringBuilder javaGlobalPrefix = new StringBuilder("java:global/");
 
         if (appName != null) {
@@ -267,17 +284,15 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         javaGlobalPrefix.append("/");
         javaGlobalPrefix.append(ejbName);
 
-
         return javaGlobalPrefix.toString();
     }
 
+
     private String getRemoteEjbJndiName(EjbReferenceDescriptor refDesc) {
-
-        String intf = refDesc.isEJB30ClientView() ?
-                refDesc.getEjbInterface() : refDesc.getHomeClassName();
-
+        String intf = refDesc.isEJB30ClientView() ? refDesc.getEjbInterface() : refDesc.getHomeClassName();
         return getRemoteEjbJndiName(refDesc.isEJB30ClientView(), intf, refDesc.getJndiName());
     }
+
 
     private String getRemoteEjbJndiName(boolean businessView, String interfaceName, String jndiName) {
         String returnValue = jndiName;
@@ -285,9 +300,9 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         String portableFullyQualifiedPortion = "!" + interfaceName;
         String glassfishFullyQualifiedPortion = "#" + interfaceName;
 
-        if(businessView) {
-            if(!jndiName.startsWith("corbaname:") ) {
-                if(jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
+        if (businessView) {
+            if (!jndiName.startsWith("corbaname:")) {
+                if (jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
                     returnValue = checkFullyQualifiedJndiName(jndiName, portableFullyQualifiedPortion);
                 } else {
                     returnValue = checkFullyQualifiedJndiName(jndiName, glassfishFullyQualifiedPortion);
@@ -295,7 +310,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             }
         } else {
             // Only in the portable global case, convert to a fully-qualified name
-            if( jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
+            if (jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
                 returnValue = checkFullyQualifiedJndiName(jndiName, portableFullyQualifiedPortion);
             }
         }
@@ -303,21 +318,24 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         return returnValue;
     }
 
+
     private static String checkFullyQualifiedJndiName(String origJndiName, String fullyQualifiedPortion) {
         String returnValue = origJndiName;
-        if( !origJndiName.endsWith(fullyQualifiedPortion) ) {
+        if (!origJndiName.endsWith(fullyQualifiedPortion)) {
             returnValue = origJndiName + fullyQualifiedPortion;
         }
         return returnValue;
     }
 
+
     private void parseManagedBeans(AppResources appResources) {
         for (BundleDescriptor bd : application.getBundleDescriptors()) {
             for (ManagedBeanDescriptor managedBean : bd.getManagedBeans()) {
-                appResources.storeInNamespace(managedBean.getGlobalJndiName(), (JndiNameEnvironment)bd);
+                appResources.storeInNamespace(managedBean.getGlobalJndiName(), (JndiNameEnvironment) bd);
             }
         }
     }
+
 
     private void parseResources(BundleDescriptor bd, AppResources appResources) {
         if (!(bd instanceof JndiNameEnvironment)) {
@@ -366,10 +384,11 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             }
         }
 
-        for (ManagedBeanDescriptor mbd: bd.getManagedBeans()) {
+        for (ManagedBeanDescriptor mbd : bd.getManagedBeans()) {
             parseResources(mbd, env, appResources);
         }
     }
+
 
     /**
      * Store resources in ResourceRefDescriptor.
@@ -438,16 +457,18 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
      */
     private void parseResources(EnvironmentProperty envProp, JndiNameEnvironment env, AppResources appResources) {
         String name = getLogicalJNDIName(envProp.getName(), env);
-        String jndiName = "";
+        String jndiName;
         if (envProp.hasLookupName()) {
             jndiName = envProp.getLookupName();
-        } else if (envProp.getMappedName().length() > 0) {
+        } else if (!envProp.getMappedName().isEmpty()) {
             jndiName = envProp.getMappedName();
+        } else {
+            jndiName = "";
         }
 
         AppResource envPropResource = new AppResource(name, jndiName, envProp.getType(), env, true);
         // If lookup/mapped name is not present, then we do not need to validate.
-        if (jndiName.length() == 0) {
+        if (jndiName.isEmpty()) {
             envPropResource.noValidation();
         }
 
@@ -457,13 +478,14 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         appResources.storeInNamespace(name, env);
     }
 
-     /**
+
+    /**
      * Logic from EjbNamingReferenceManagerImpl.java - Here EJB references get resolved
      */
     private void parseResources(EjbReferenceDescriptor ejbRef, JndiNameEnvironment env, AppResources appResources) {
         String name = getLogicalJNDIName(ejbRef.getName(), env);
         // we only need to worry about those references which are not linked yet
-        if(ejbRef.getEjbDescriptor() != null) {
+        if (ejbRef.getEjbDescriptor() != null) {
             appResources.storeInNamespace(name, env);
             return;
         }
@@ -517,7 +539,9 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         appResources.store(new AppResource(name, jndiName, ejbRef.getType(), env, validationRequired));
     }
 
-    private void parseResources(ServiceReferenceDescriptor serviceRef, JndiNameEnvironment env, AppResources appResources) {
+
+    private void parseResources(ServiceReferenceDescriptor serviceRef, JndiNameEnvironment env,
+        AppResources appResources) {
         String name = getLogicalJNDIName(serviceRef.getName(), env);
         if (serviceRef.hasLookupName()) {
             appResources.store(new AppResource(name, serviceRef.getLookupName(), serviceRef.getType(), env, true));
@@ -525,6 +549,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             appResources.storeInNamespace(name, env);
         }
     }
+
 
     /**
      * Store the resource definitions in our namespace.
@@ -538,13 +563,14 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             }
             // No need to type check as CFD and AODD extend from AbstractConnectorResourceDescriptor
             AbstractConnectorResourceDescriptor acrd = (AbstractConnectorResourceDescriptor) resourceDescriptor;
-            appResources.store(new AppResource(resourceDescriptor.getName(), acrd.getResourceAdapter(), type.toString(), env, true));
-        }
-        else {
+            appResources.store(
+                new AppResource(resourceDescriptor.getName(), acrd.getResourceAdapter(), type.toString(), env, true));
+        } else {
             // nothing to validate here. store the definitions in our namespace.
             storeInNamespace(resourceDescriptor.getName(), env, appResources);
         }
     }
+
 
     /**
      * Record the Data Source specified in PUD.
@@ -553,39 +579,41 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         String jtaDataSourceName = pu.getJtaDataSource();
         String nonJtaDataSourceName = pu.getNonJtaDataSource();
 
-        if (jtaDataSourceName != null && jtaDataSourceName.length() > 0) {
+        if (jtaDataSourceName != null && !jtaDataSourceName.isEmpty()) {
             appResources.store(new AppResource(pu.getName(), jtaDataSourceName, "javax.sql.DataSource", env, true));
         }
-        if (nonJtaDataSourceName != null && nonJtaDataSourceName.length() > 0) {
+        if (nonJtaDataSourceName != null && !nonJtaDataSourceName.isEmpty()) {
             appResources.store(new AppResource(pu.getName(), nonJtaDataSourceName, "javax.sql.DataSource", env, true));
         }
     }
 
+
     private void parseResources(ManagedBeanDescriptor managedBean, JndiNameEnvironment env, AppResources appResources) {
-        for (Object next : managedBean.getResourceReferenceDescriptors()) {
-            parseResources((ResourceReferenceDescriptor) next, env, appResources);
+        for (ResourceReferenceDescriptor next : managedBean.getResourceReferenceDescriptors()) {
+            parseResources(next, env, appResources);
         }
 
-        for (Object next : managedBean.getResourceEnvReferenceDescriptors()) {
-            parseResources((ResourceEnvReferenceDescriptor) next, env, appResources);
+        for (ResourceEnvReferenceDescriptor next : managedBean.getResourceEnvReferenceDescriptors()) {
+            parseResources(next, env, appResources);
         }
 
-        for (Object next : managedBean.getMessageDestinationReferenceDescriptors()) {
-            parseResources((MessageDestinationReferenceDescriptor) next, env, appResources);
+        for (MessageDestinationReferenceDescriptor next : managedBean.getMessageDestinationReferenceDescriptors()) {
+            parseResources(next, env, appResources);
         }
 
-        for (Object next : managedBean.getEjbReferenceDescriptors()) {
-            parseResources((EjbReferenceDescriptor) next, env, appResources);
+        for (EjbReferenceDescriptor next : managedBean.getEjbReferenceDescriptors()) {
+            parseResources(next, env, appResources);
         }
 
-        for (Object next : managedBean.getEnvironmentProperties()) {
-            parseResources((EnvironmentProperty) next, env, appResources);
+        for (EnvironmentProperty next : managedBean.getEnvironmentProperties()) {
+            parseResources(next, env, appResources);
         }
 
-        for (Object next : env.getAllResourcesDescriptors()) {
-            parseResources((ResourceDescriptor) next, env, appResources);
+        for (ResourceDescriptor next : env.getAllResourcesDescriptors()) {
+            parseResources(next, env, appResources);
         }
     }
+
 
     private void parseResources(EjbDescriptor ejb, AppResources appResources) {
         for (ResourceReferenceDescriptor next : ejb.getResourceReferenceDescriptors()) {
@@ -613,10 +641,12 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         }
     }
 
+
     private void storeInNamespace(String name, JndiNameEnvironment env, AppResources appResources) {
         String logicalJNDIName = getLogicalJNDIName(name, env);
         appResources.storeInNamespace(logicalJNDIName, env);
     }
+
 
     /**
      * @param rawName to be converted
@@ -631,6 +661,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         return logicalJndiName;
     }
 
+
     /**
      * Convert name from java:comp/xxx to java:module/xxx.
      */
@@ -639,16 +670,19 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         return ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + tail;
     }
 
+
     /**
      * Attach default prefix - java:comp/env/.
      */
     private String rawNameToLogicalJndiName(String rawName) {
-        return (rawName.startsWith(ResourceConstants.JAVA_SCOPE_PREFIX)) ?
-                rawName : ResourceConstants.JAVA_COMP_ENV_SCOPE_PREFIX + rawName;
+        return rawName.startsWith(ResourceConstants.JAVA_SCOPE_PREFIX) ? rawName
+            : ResourceConstants.JAVA_COMP_ENV_SCOPE_PREFIX + rawName;
     }
 
+
     /**
-     * Convert JNDI names beginning with java:module and java:app to their corresponding java:global names.
+     * Convert JNDI names beginning with java:module and java:app to their corresponding java:global
+     * names.
      *
      * @return the converted name with java:global JNDI prefix.
      */
@@ -664,7 +698,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             return null;
         }
 
-        if( bd != null ) {
+        if (bd != null) {
             String appName = null;
             if (!application.isVirtual()) {
                 appName = application.getAppName();
@@ -680,8 +714,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 // Replace java:app/ with the fully-qualified global portion
                 int javaAppLength = ResourceConstants.JAVA_APP_SCOPE_PREFIX.length();
                 javaGlobalName.append(jndiName.substring(javaAppLength));
-            }
-            else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
+            } else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
                 if (appName != null) {
                     javaGlobalName.append(appName);
                     javaGlobalName.append("/");
@@ -693,14 +726,14 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 // Replace java:module/ with the fully-qualified global portion
                 int javaModuleLength = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX.length();
                 javaGlobalName.append(jndiName.substring(javaModuleLength));
-            }
-            else {
+            } else {
                 return "";
             }
             return javaGlobalName.toString();
         }
         return "";
     }
+
 
     /**
      * Start of validation logic.
@@ -718,15 +751,16 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         }
         // Validate the ra-names of app scoped resources
         // RA-name and the type of this resource are stored
-        List<Map.Entry<String, String>> raNames = (List<Map.Entry<String, String>>)
-                dc.getTransientAppMetadata().get(ResourceConstants.APP_SCOPED_RESOURCES_RA_NAMES);
+        List<Map.Entry<String, String>> raNames = (List<Map.Entry<String, String>>) dc.getTransientAppMetadata()
+            .get(ResourceConstants.APP_SCOPED_RESOURCES_RA_NAMES);
         if (raNames == null) {
             return;
         }
-        for (Map.Entry<String, String> entry: raNames) {
+        for (Map.Entry<String, String> entry : raNames) {
             validateRAName(entry.getKey(), entry.getValue());
         }
     }
+
 
     /**
      * Validate the resource adapter names of @CFD, @AODD.
@@ -735,22 +769,19 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         validateRAName(resource.getJndiName(), resource.getType());
     }
 
+
     /**
      * Strategy to validate the resource adapter name:
-     *
      * 1) In case of stand-alone RA, look in the domain.xml and for default system RA's
      * 2) In case of embedded RA, compare it with names of RAR descriptors
-     *
      * In case of null ra name, we fail the deployment.
      */
     private void validateRAName(String raname, String type) {
         // No ra-name specified
-        if (raname == null || raname.length() == 0) {
-            deplLogger.log(Level.SEVERE, RESOURCE_REF_INVALID_RA,
-                    new Object[] {null, type});
+        if (raname == null || raname.isEmpty()) {
+            deplLogger.log(Level.SEVERE, RESOURCE_REF_INVALID_RA, new Object[] {null, type});
             throw new DeploymentException(localStrings.getLocalString("enterprise.deployment.util.ra.validation",
-                    "Resource Adapter not present: RA Name: {0}, Type: {1}.",
-                    null, type));
+                "Resource Adapter not present: RA Name: {0}, Type: {1}.", null, type));
         }
         int poundIndex = raname.indexOf("#");
 
@@ -767,52 +798,52 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             if(isEmbedded(raname)) {
                 return;
             }
-        }
-        // Embedded RA
-        // In case the app name does not match, we fail the deployment
-        else if (raname.substring(0, poundIndex).equals(application.getAppName())) {
+        } else if (raname.substring(0, poundIndex).equals(application.getAppName())) {
+            // Embedded RA
+            // In case the app name does not match, we fail the deployment
             raname = raname.substring(poundIndex + 1);
-            if(isEmbedded(raname)) {
+            if (isEmbedded(raname)) {
                 return;
             }
         }
-        deplLogger.log(Level.SEVERE, RESOURCE_REF_INVALID_RA,
-                new Object[] {raname, type});
+        deplLogger.log(Level.SEVERE, RESOURCE_REF_INVALID_RA, new Object[] {raname, type});
         throw new DeploymentException(localStrings.getLocalString(
                 "enterprise.deployment.util.ra.validation",
                 "Resource Adapter not present: RA Name: {0}, Type: {1}.",
                 raname, type));
     }
 
+
     private boolean isEmbedded(String raname) {
         String ranameWithRAR = raname + ".rar";
         // check for rar named this
         for (BundleDescriptor bd : application.getBundleDescriptors(ConnectorDescriptor.class)) {
-            if(raname.equals(bd.getModuleName()) || ranameWithRAR.equals(bd.getModuleName())) {
+            if (raname.equals(bd.getModuleName()) || ranameWithRAR.equals(bd.getModuleName())) {
                 return true;
             }
         }
         return false;
     }
 
+
     /**
      * Strategy for validating a given jndi name
      * 1) Check in domain.xml
-     * 2) Check in the resources defined within the app. These have not been binded to the namespace yet.
+     * 2) Check in the resources defined within the app. These have not been binded to the namespace
+     * yet.
      * 3) Check for resources defined by an earlier application.
-     *
      * In case a null jndi name is passed, we fail the deployment.
      *
      * @param resource to be validated.
      */
     private void validateJNDIRefs(AppResource resource, JNDINamespace namespace) {
         // In case lookup is not present, check if another resource with the same name exists
-        if(!resource.hasLookup() && !namespace.find(resource.getName(), resource.getEnv())) {
+        if (!resource.hasLookup() && !namespace.find(resource.getName(), resource.getEnv())) {
             deplLogger.log(Level.SEVERE, RESOURCE_REF_JNDI_LOOKUP_FAILED,
-                    new Object[] {resource.getName(), null, resource.getType()});
+                new Object[] {resource.getName(), null, resource.getType()});
             throw new DeploymentException(localStrings.getLocalString("enterprise.deployment.util.resource.validation",
-                    "JNDI lookup failed for the resource: Name: {0}, Lookup: {1}, Type: {2}",
-                    resource.getName(), null, resource.getType()));
+                "JNDI lookup failed for the resource: Name: {0}, Lookup: {1}, Type: {2}", resource.getName(), null,
+                resource.getType()));
         }
 
         String jndiName = resource.getJndiName();
@@ -823,7 +854,8 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         }
 
         // Managed Bean & EJB portable JNDI names
-        if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX) || jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
+        if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)
+            || jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
             String newName = convertModuleOrAppJNDIName(jndiName, resource.getEnv());
             if (namespace.find(newName, env)) {
                 return;
@@ -860,6 +892,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         }
     }
 
+
     /**
      * Validate the given resource in the corresponding target using domain.xml server beans.
      * For resources defined outside the application.
@@ -880,6 +913,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         Cluster cluster = domain.getClusterNamed(target);
         return cluster != null && cluster.isResourceRefExists(jndiName);
     }
+
 
     /**
      * Default resources provided by GF.
@@ -939,7 +973,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         }
 
         private boolean hasLookup() {
-            return lookup != null && lookup.length() > 0;
+            return lookup != null && !lookup.isEmpty();
         }
 
         private void noValidation() {
@@ -1031,6 +1065,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             }
         }
 
+
         /**
          * Store the jndi name in the correct scope. Will be stored only if jndi name is javaURL.
          */
@@ -1042,36 +1077,32 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                     jndiNames = new ArrayList<>();
                     jndiNames.add(jndiName);
                     componentNamespaces.put(componentId, jndiNames);
-                }
-                else {
+                } else {
                     jndiNames.add(jndiName);
                 }
-            }
-            else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
+            } else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
                 String moduleName = getActualModuleName(DOLUtils.getModuleName(env));
                 List<String> jndiNames = moduleNamespaces.get(moduleName);
                 if (jndiNames == null) {
                     jndiNames = new ArrayList<>();
                     jndiNames.add(jndiName);
                     moduleNamespaces.put(moduleName, jndiNames);
-                }
-                else {
+                } else {
                     jndiNames.add(jndiName);
                 }
-            }
-            else if (jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
+            } else if (jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
                 appNamespace.add(jndiName);
-            }
-            else if (jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
+            } else if (jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
                 globalNameSpace.add(jndiName);
-            }
-            else {
+            } else {
                 nonPortableJndiNames.add(jndiName);
             }
         }
 
+
         /**
          * Find the jndi name in our namespace.
+         *
          * @return True if the jndi name is found in the namespace. False otherwise.
          */
         public boolean find(String jndiName, JndiNameEnvironment env) {
@@ -1083,13 +1114,11 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 String componentId = DOLUtils.getComponentEnvId(env);
                 List<?> jndiNames = componentNamespaces.get(componentId);
                 return jndiNames != null && jndiNames.contains(jndiName);
-            }
-            else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
+            } else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
                 String moduleName = getActualModuleName(DOLUtils.getModuleName(env));
                 List<?> jndiNames = moduleNamespaces.get(moduleName);
                 return jndiNames != null && jndiNames.contains(jndiName);
-            }
-            else if (jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
+            } else if (jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
                 return appNamespace.contains(jndiName);
             } else if (jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
                 return globalNameSpace.contains(jndiName);
@@ -1098,11 +1127,12 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             }
         }
 
+
         /**
          * Remove suffix from the module name.
          */
         private String getActualModuleName(String moduleName) {
-            if(moduleName != null){
+            if (moduleName != null) {
                 if (moduleName.endsWith(".jar") || moduleName.endsWith(".war") || moduleName.endsWith(".rar")) {
                     moduleName = moduleName.substring(0, moduleName.length() - 4);
                 }

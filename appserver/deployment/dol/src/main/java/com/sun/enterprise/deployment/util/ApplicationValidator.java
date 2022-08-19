@@ -162,11 +162,8 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
                     next.validate();
                 }
             }
-
-            super.accept(descriptor);
-        } else {
-            super.accept(descriptor);
         }
+        super.accept(descriptor);
     }
 
     /**

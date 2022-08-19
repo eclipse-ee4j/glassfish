@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,16 +15,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import java.sql.Connection;
 import java.util.Properties;
 import java.util.logging.Level;
-import java.sql.Connection;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.*;
+import static org.glassfish.deployment.common.JavaEEResourceType.DSD;
 
 /**
  * @author Jagadish Ramu
@@ -39,28 +42,28 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     private String url;
     private String user;
     private String password;
-    private long loginTimeout =0 ;
+    private long loginTimeout;
     private boolean transactional = true;
     private int isolationLevel = -1;
     private int initialPoolSize =-1;
     private int maxPoolSize = -1;
     private int minPoolSize =-1;
-    private long maxIdleTime=-1 ; //seconds / milliseconds ?
+    private long maxIdleTime = -1;
     private int maxStatements =-1;
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
-    private boolean transactionSet = false;
-    private boolean loginTimeoutSet = false;
-    private boolean serverNameSet = false;
+    private boolean transactionSet;
+    private boolean loginTimeoutSet;
+    private boolean serverNameSet;
 
 
 
-    private boolean deployed = false;
+    private boolean deployed;
 
     private static final String JAVA_URL = "java:";
     private static final String JAVA_COMP_URL = "java:comp/";
 
-    //represents the valid values for isolation-level in Deployment Descriptors
+    // represents the valid values for isolation-level in Deployment Descriptors
     private static final String TRANSACTION_NONE = "TRANSACTION_NONE";
     private static final String TRANSACTION_READ_UNCOMMITTED = "TRANSACTION_READ_UNCOMMITTED";
     private static final String TRANSACTION_READ_COMMITTED = "TRANSACTION_READ_COMMITTED";
@@ -79,10 +82,12 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
         return deployed;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -94,6 +99,7 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     public String getUrl(){
         return url;
     }
+    @Override
     public String getDescription() {
         return description;
     }
@@ -106,6 +112,7 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
         return transactionSet;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
@@ -164,12 +171,12 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     }
 
     public void setLoginTimeout(String loginTimeout) {
-        try{
+        try {
             this.loginTimeout = Long.parseLong(loginTimeout);
             setLoginTimeoutSet(true);
-        }catch(NumberFormatException nfe){
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "invalid loginTimeout value [ " + loginTimeout+ " ]," +
-                    " required long");
+        } catch (NumberFormatException nfe) {
+            DOLUtils.getDefaultLogger().log(Level.WARNING,
+                "invalid loginTimeout value [ " + loginTimeout + " ]," + " required long");
         }
     }
 
@@ -200,19 +207,21 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
 
     //DD specified Enumeration values are String
     //Annotation uses integer values and hence this mapping is needed
-    public String getIsolationLevelString(){
+    public String getIsolationLevelString() {
         String isolationLevelString = null;
-        if(isolationLevel == Connection.TRANSACTION_READ_COMMITTED){
+        if (isolationLevel == Connection.TRANSACTION_READ_COMMITTED) {
             isolationLevelString = TRANSACTION_READ_COMMITTED;
-        }else if (isolationLevel == Connection.TRANSACTION_READ_UNCOMMITTED){
+        } else if (isolationLevel == Connection.TRANSACTION_READ_UNCOMMITTED) {
             isolationLevelString = TRANSACTION_READ_UNCOMMITTED;
-        }else if (isolationLevel == Connection.TRANSACTION_REPEATABLE_READ){
+        } else if (isolationLevel == Connection.TRANSACTION_REPEATABLE_READ) {
             isolationLevelString = TRANSACTION_REPEATABLE_READ;
-        }else if (isolationLevel == Connection.TRANSACTION_SERIALIZABLE){
+        } else if (isolationLevel == Connection.TRANSACTION_SERIALIZABLE) {
             isolationLevelString = TRANSACTION_SERIALIZABLE;
         }
         return isolationLevelString;
     }
+
+
     public int getIsolationLevel() {
         return isolationLevel;
     }
@@ -322,6 +331,8 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
         return properties;
     }
 
+
+    @Override
     public boolean equals(Object object) {
         if (object instanceof DataSourceDefinitionDescriptor) {
             DataSourceDefinitionDescriptor reference = (DataSourceDefinitionDescriptor) object;
@@ -330,15 +341,18 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
         return false;
     }
 
+
+    @Override
     public int hashCode() {
         int result = 17;
-        result = 37*result + getName().hashCode();
+        result = 37 * result + getName().hashCode();
         return result;
     }
 
+
     public static String getJavaName(String thisName) {
-        if(!thisName.contains(JAVA_URL)){
-                thisName = JAVA_COMP_URL + thisName;
+        if (!thisName.contains(JAVA_URL)) {
+            thisName = JAVA_COMP_URL + thisName;
         }
         return thisName;
     }

@@ -103,9 +103,9 @@ public enum TxIsolationLevel {
      */
     public static TxIsolationLevel byId(int id) throws IllegalArgumentException {
         return Stream.of(TxIsolationLevel.values()).filter(v -> v.getId() == id).findAny()
-            .orElseThrow(() -> new IllegalArgumentException("Invalid transaction isolation id; the transaction "
-                + "isolation level can be any of the following: " + Stream.of(TxIsolationLevel.values())
-                    .map(t -> Integer.toString(t.getId())).collect(Collectors.joining(", "))));
+            .orElseThrow(() -> new IllegalArgumentException("Invalid transaction isolation level id=" + id
+                + "; possible values: " + Stream.of(TxIsolationLevel.values()).map(t -> Integer.toString(t.getId()))
+                    .collect(Collectors.joining(", "))));
     }
 
 
@@ -115,10 +115,10 @@ public enum TxIsolationLevel {
      * @throws IllegalArgumentException if the name is not valid.
      */
     public static TxIsolationLevel byName(String name) throws IllegalArgumentException {
-        return Stream.of(TxIsolationLevel.values()).filter(v -> v.getName() == name).findAny()
-            .orElseThrow(() -> new IllegalArgumentException("Invalid transaction isolation; the transaction"
-                + " isolation level can be empty or any of the following: " + Stream.of(TxIsolationLevel.values())
-                    .map(TxIsolationLevel::getName).collect(Collectors.joining(", "))));
+        return Stream.of(TxIsolationLevel.values()).filter(v -> v.getName().equals(name)).findAny()
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Invalid transaction isolation level '" + name + "'; possible values: " + Stream
+                    .of(TxIsolationLevel.values()).map(TxIsolationLevel::getName).collect(Collectors.joining(", "))));
     }
 
 

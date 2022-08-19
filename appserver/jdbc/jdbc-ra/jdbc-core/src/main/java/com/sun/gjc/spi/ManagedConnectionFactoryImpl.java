@@ -17,16 +17,26 @@
 
 package com.sun.gjc.spi;
 
-import static com.sun.gjc.common.DataSourceSpec.CONNECTIONVALIDATIONREQUIRED;
-import static com.sun.gjc.common.DataSourceSpec.GUARANTEEISOLATIONLEVEL;
-import static com.sun.gjc.common.DataSourceSpec.TRANSACTIONISOLATION;
-import static com.sun.gjc.common.DataSourceSpec.VALIDATIONCLASSNAME;
-import static com.sun.gjc.common.DataSourceSpec.VALIDATIONMETHOD;
-import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
-import static com.sun.gjc.util.SecurityUtils.isPasswordCredentialEqual;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
+import com.sun.appserv.connectors.internal.spi.MCFLifecycleListener;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.common.DataSourceObjectBuilder;
+import com.sun.gjc.common.DataSourceSpec;
+import com.sun.gjc.monitoring.JdbcStatsProvider;
+import com.sun.gjc.util.SQLTraceDelegator;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionManager;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.LazyEnlistableConnectionManager;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ResourceAdapterAssociation;
+import jakarta.resource.spi.ResourceAllocationException;
+import jakarta.resource.spi.ValidatingManagedConnectionFactory;
+import jakarta.resource.spi.security.PasswordCredential;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -62,26 +72,16 @@ import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.appserv.connectors.internal.spi.MCFLifecycleListener;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.common.DataSourceObjectBuilder;
-import com.sun.gjc.common.DataSourceSpec;
-import com.sun.gjc.monitoring.JdbcStatsProvider;
-import com.sun.gjc.util.SQLTraceDelegator;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ConfigProperty;
-import jakarta.resource.spi.ConnectionManager;
-import jakarta.resource.spi.ConnectionRequestInfo;
-import jakarta.resource.spi.LazyEnlistableConnectionManager;
-import jakarta.resource.spi.ManagedConnection;
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.resource.spi.ResourceAdapter;
-import jakarta.resource.spi.ResourceAdapterAssociation;
-import jakarta.resource.spi.ResourceAllocationException;
-import jakarta.resource.spi.ValidatingManagedConnectionFactory;
-import jakarta.resource.spi.security.PasswordCredential;
+import static com.sun.gjc.common.DataSourceSpec.CONNECTIONVALIDATIONREQUIRED;
+import static com.sun.gjc.common.DataSourceSpec.GUARANTEEISOLATIONLEVEL;
+import static com.sun.gjc.common.DataSourceSpec.TRANSACTIONISOLATION;
+import static com.sun.gjc.common.DataSourceSpec.VALIDATIONCLASSNAME;
+import static com.sun.gjc.common.DataSourceSpec.VALIDATIONMETHOD;
+import static com.sun.gjc.util.SecurityUtils.getPasswordCredential;
+import static com.sun.gjc.util.SecurityUtils.isPasswordCredentialEqual;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 
 /**
  * <code>ManagedConnectionFactory</code> implementation for Generic JDBC
@@ -489,14 +489,13 @@ public abstract class ManagedConnectionFactoryImpl
         }
 
         String tranIsolation = spec.getDetail(TRANSACTIONISOLATION);
-        if (tranIsolation != null && !tranIsolation.equals("")) {
+        if (tranIsolation != null && !tranIsolation.isEmpty()) {
             int tranIsolationInt = getTransactionIsolationInt(tranIsolation);
             try {
                 connection.setTransactionIsolation(tranIsolationInt);
                 managedConnectionImpl.setLastTransactionIsolationLevel(tranIsolationInt);
             } catch (SQLException sqle) {
-                _logger.log(SEVERE, "jdbc.exc_tx_iso", sqle);
-                throw new ResourceException("The transaction isolation could " + "not be set: " + sqle.getMessage());
+                throw new ResourceException("The transaction isolation could not be set!", sqle);
             }
         }
     }
@@ -521,12 +520,10 @@ public abstract class ManagedConnectionFactoryImpl
         }
 
         String transactionIsolation = spec.getDetail(TRANSACTIONISOLATION);
-        if (transactionIsolation != null && !transactionIsolation.equals("")) {
+        if (transactionIsolation != null && !transactionIsolation.isEmpty()) {
             String guaranteeIsolationLevel = spec.getDetail(GUARANTEEISOLATIONLEVEL);
-
-            if (guaranteeIsolationLevel != null && !guaranteeIsolationLevel.equals("")) {
-                boolean guarantee = Boolean.valueOf(guaranteeIsolationLevel.toLowerCase(Locale.getDefault()));
-
+            if (guaranteeIsolationLevel != null && !guaranteeIsolationLevel.isEmpty()) {
+                boolean guarantee = Boolean.valueOf(guaranteeIsolationLevel);
                 if (guarantee) {
                     int tranIsolationInt = getTransactionIsolationInt(transactionIsolation);
                     try {
@@ -534,8 +531,7 @@ public abstract class ManagedConnectionFactoryImpl
                             connection.setTransactionIsolation(tranIsolationInt);
                         }
                     } catch (SQLException sqle) {
-                        _logger.log(SEVERE, "jdbc.exc_tx_iso", sqle);
-                        throw new ResourceException("The isolation level could not be set: " + sqle.getMessage());
+                        throw new ResourceException("The isolation level could not be set!", sqle);
                     }
                 } else {
                     try {
@@ -543,8 +539,7 @@ public abstract class ManagedConnectionFactoryImpl
                             connection.setTransactionIsolation(tranIsol);
                         }
                     } catch (SQLException sqle) {
-                        _logger.log(SEVERE, "jdbc.exc_tx_iso", sqle);
-                        throw new ResourceException("The isolation level could not be set: " + sqle.getMessage());
+                        throw new ResourceException("The isolation level could not be set!", sqle);
                     }
                 }
             }

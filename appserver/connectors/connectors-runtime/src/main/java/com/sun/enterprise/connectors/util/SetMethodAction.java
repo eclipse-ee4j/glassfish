@@ -66,7 +66,7 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
             final EnvironmentProperty prop = it.next();
             final String resolvedValue = prop.getResolvedValue();
             if (resolvedValue == null || resolvedValue.isBlank()) {
-                return null;
+                continue;
             }
 
             final String propName = prop.getName();
@@ -76,8 +76,9 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
                 // log WARNING, deployment can continue.
                 logger.log(Level.WARNING, "rardeployment.no_setter_method",
                     new Object[] {prop.getName(), bean.getClass().getName()});
-                return null;
+                continue;
             }
+
             try {
                 if (logger.isLoggable(Level.FINER)) {
                     logger.log(Level.FINER,

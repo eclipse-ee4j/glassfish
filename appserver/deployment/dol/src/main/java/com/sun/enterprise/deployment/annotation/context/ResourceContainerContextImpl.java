@@ -99,6 +99,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
                     EjbReferenceDescriptor ejbRef = app.getEjbReferenceByName(name);
                      // Make sure it's added to the container context.
                     addEjbReferenceDescriptor(ejbRef);
+                    return ejbRef;
                 } catch (IllegalArgumentException ee) {
                 }
             }
@@ -145,6 +146,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
                     ResourceReferenceDescriptor resourceRef = app.getResourceReferenceByName(name);
                     // Make sure it's added to the container context.
                     addResourceReferenceDescriptor(resourceRef);
+                    return resourceRef;
                 } catch (IllegalArgumentException ee) {
                 }
             }
@@ -213,6 +215,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
                     ResourceEnvReferenceDescriptor resourceEnvRef = app.getResourceEnvReferenceByName(name);
                     // Make sure it's added to the container context.
                     addResourceEnvReferenceDescriptor(resourceEnvRef);
+                    return resourceEnvRef;
                 } catch (IllegalArgumentException ee) {
                 }
             }
@@ -254,6 +257,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
                     EnvironmentProperty envEntry = app.getEnvironmentPropertyByName(name);
                     // Make sure it's added to the container context.
                     addEnvEntryDescriptor(envEntry);
+                    return envEntry;
                 } catch (IllegalArgumentException ee) {
                 }
             }
@@ -297,6 +301,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
                     EntityManagerFactoryReferenceDescriptor emfRefDesc = app.getEntityManagerFactoryReferenceByName(name);
                     // Make sure it's added to the container context.
                     addEntityManagerFactoryReferenceDescriptor(emfRefDesc);
+                    return emfRefDesc;
                 } catch (IllegalArgumentException ee) {
                 }
             }
@@ -338,6 +343,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
                     EntityManagerReferenceDescriptor emRefDesc = app.getEntityManagerReferenceByName(name);
                     // Make sure it's added to the container context.
                     addEntityManagerReferenceDescriptor(emRefDesc);
+                    return emRefDesc;
                 } catch (IllegalArgumentException ee) {
                 }
             }

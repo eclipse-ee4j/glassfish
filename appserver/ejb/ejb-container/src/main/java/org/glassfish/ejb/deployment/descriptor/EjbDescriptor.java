@@ -1975,8 +1975,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         if (env != null) {
             return env.getEnvironmentPropertyByName(name);
         }
-        for (Object element : this.getEnvironmentProperties()) {
-            EnvironmentProperty ev = (EnvironmentProperty) element;
+        for (EnvironmentProperty ev : this.getEnvironmentProperties()) {
             if (ev.getName().equals(name)) {
                 return ev;
             }
@@ -2020,7 +2019,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     @Override
     public final void removeEnvironmentProperty(EnvironmentProperty environmentProperty) {
         if (env == null) {
-            this.getEnvironmentProperties().remove(environmentProperty);
+            getEnvironmentProperties().remove(environmentProperty);
         } else {
             env.removeEnvironmentProperty(environmentProperty);
         }
@@ -2330,9 +2329,9 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     /**
-     * Returns the full set of transactional business method descriptors I have.
+     * @return the full set of transactional business method descriptors I have.
      */
-    public Set getTxBusinessMethodDescriptors() {
+    public Set<MethodDescriptor> getTxBusinessMethodDescriptors() {
         Set<MethodDescriptor> txBusMethods = getBusinessMethodDescriptors();
         if (isTimedObject()) {
             if (timedObjectMethod != null) {
@@ -2343,6 +2342,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return txBusMethods;
     }
 
+
     /**
      * Returns the full set of security business method descriptors I have.
      */
@@ -2351,8 +2351,9 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return getBusinessMethodDescriptors();
     }
 
+
     /**
-     * Returns the set of local/remote/no-interface view business method descriptors I have.
+     * @return the set of local/remote/no-interface view business method descriptors I have.
      */
     public Set<MethodDescriptor> getClientBusinessMethodDescriptors() {
         return getLocalRemoteBusinessMethodDescriptors();
@@ -2423,7 +2424,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return methods;
     }
 
-    protected void addAllInterfaceMethodsIn(Collection<MethodDescriptor> methodDescriptors, Class c, String methodIntf) {
+    protected void addAllInterfaceMethodsIn(Collection<MethodDescriptor> methodDescriptors, Class<?> c, String methodIntf) {
         Method[] methods = c.getMethods();
         for (Method method : methods) {
             if (method.getDeclaringClass() != java.lang.Object.class) {
@@ -2472,7 +2473,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     /**
-     * Return the set of method objects representing no-interface view
+     * @return the set of method objects representing no-interface view
      */
     public Set<Method> getOptionalLocalBusinessMethods() {
         Set<Method> methods = new HashSet<>();
@@ -2496,7 +2497,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     public abstract String getContainerFactoryQualifier();
 
     /**
-     * Return the set of method objects on my home and remote interfaces.
+     * @return the set of method objects on my home and remote interfaces.
      */
 
     public Vector<Method> getMethods() {
@@ -2504,7 +2505,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     /**
-     * Return the ejb method objects, i.e. the methods on the home and remote interfaces.
+     * @return the ejb method objects, i.e. the methods on the home and remote interfaces.
      */
     public Vector<Method> getMethods(ClassLoader classLoader) {
         try {
@@ -2643,13 +2644,9 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         }
     }
 
-    private void printDescriptorSet(Set descSet, StringBuffer sbuf) {
-        for (Object obj : descSet) {
-            if (obj instanceof Descriptor) {
-                ((Descriptor) obj).print(sbuf);
-            } else {
-                sbuf.append(obj);
-            }
+    private void printDescriptorSet(Set<? extends Descriptor> descSet, StringBuffer sbuf) {
+        for (Descriptor obj : descSet) {
+            obj.print(sbuf);
         }
     }
 

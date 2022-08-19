@@ -192,8 +192,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
         super.addBundleDescriptor(wbd);
 
         WebBundleDescriptorImpl webBundleDescriptor = (WebBundleDescriptorImpl) wbd;
-        for (WebComponentDescriptor webComponentDesc :webBundleDescriptor.getWebComponentDescriptors())
-        {
+        for (WebComponentDescriptor webComponentDesc : webBundleDescriptor.getWebComponentDescriptors()) {
             // don't modify the original one
             WebComponentDescriptorImpl webComponentDescriptor = new WebComponentDescriptorImpl(webComponentDesc);
             // set web bundle to null so that the urlPattern2ServletName
@@ -565,17 +564,16 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
 
     @Override
     protected void combineServiceReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object oserviceRef : env.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor serviceRef = (ServiceReferenceDescriptor) oserviceRef;
+        for (ServiceReferenceDescriptor serviceRef : env.getServiceReferenceDescriptors()) {
             ServiceReferenceDescriptor sr = _getServiceReferenceByName(serviceRef.getName());
             if (sr != null) {
                 combineInjectionTargets(sr, serviceRef);
             } else {
-                if (env instanceof WebBundleDescriptor &&
-                        ((WebBundleDescriptor)env).isConflictServiceReference()) {
+                if (env instanceof WebBundleDescriptor && ((WebBundleDescriptor) env).isConflictServiceReference()) {
                     throw new IllegalArgumentException(localStrings.getLocalString(
-                            "web.deployment.exceptionconflictserviceref",
-                            "There are more than one service references defined in web fragments with the same name, but not overrided in web.xml"));
+                        "web.deployment.exceptionconflictserviceref",
+                        "There are more than one service references defined in web fragments"
+                        + " with the same name, but not overrided in web.xml"));
                 } else {
                     addServiceReferenceDescriptor(serviceRef);
                 }

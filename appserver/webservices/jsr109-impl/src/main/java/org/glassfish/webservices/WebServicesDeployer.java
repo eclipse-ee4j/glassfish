@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +38,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.text.MessageFormat;
@@ -358,34 +359,6 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
 
     }
 
-    /**
-     * Copies file from source to destination
-     *
-     * @param src
-     * @param dest
-     * @throws IOException
-     */
-    private static void copyFile(File src, File dest) throws IOException {
-        if (!dest.exists()) {
-            mkDirs(dest.getParentFile());
-            mkFile(dest);
-        }
-
-        FileChannel srcChannel = null;
-        FileChannel destChannel = null;
-        try {
-            srcChannel = new FileInputStream(src).getChannel();
-            destChannel = new FileOutputStream(dest).getChannel();
-            destChannel.transferFrom(srcChannel, 0, srcChannel.size());
-        } finally {
-            if (srcChannel != null) {
-                srcChannel.close();
-            }
-            if (destChannel != null) {
-                destChannel.close();
-            }
-        }
-    }
 
     public void downloadFile(URL httpUrl, File toFile) throws Exception {
         InputStream is = null;
@@ -701,11 +674,6 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
         return MessageFormat.format(key, (Object[]) values);
     }
 
-    public static void moveFile(String sourceFile, String destFile) throws IOException {
-        FileUtils.copy(sourceFile, destFile);
-        FileUtils.deleteFile(new File(sourceFile));
-    }
-
     @Override
     public void unload(WebServicesApplication container, DeploymentContext context) {
         final WebServiceDeploymentNotifier notifier = getDeploymentNotifier();
@@ -794,10 +762,11 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
 
             // Collect the names of all entries in or below the
             // dedicated wsdl directory.
-            FileArchive archive = new FileArchive();
-            archive.open(sourceDir.toURI());
-
-            Enumeration entries = archive.entries(bundle.getWsdlDir());
+            Enumeration<String> entries;
+            try (FileArchive archive = new FileArchive()) {
+                archive.open(sourceDir.toURI());
+                entries = archive.entries(bundle.getWsdlDir());
+            }
 
             while (entries.hasMoreElements()) {
                 String name = (String) entries.nextElement();
@@ -815,7 +784,10 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
     }
 
     private void publishFile(File file, File publishLocation) throws IOException {
-        copyFile(file, publishLocation);
+        if (!publishLocation.exists()) {
+            mkDirs(publishLocation.getParentFile());
+        }
+        Files.copy(file.toPath(), publishLocation.toPath());
     }
 
     private void deletePublishedFiles(Set<String> publishedFiles) {
@@ -869,12 +841,6 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
     private static void mkDirs(File f) {
         if (!f.mkdirs() && logger.isLoggable(FINE)) {
             logger.log(FINE, DIR_EXISTS, f);
-        }
-    }
-
-    private static void mkFile(File f) throws IOException {
-        if (!f.createNewFile() && logger.isLoggable(FINE)) {
-            logger.log(FINE, FILE_EXISTS, f);
         }
     }
 }

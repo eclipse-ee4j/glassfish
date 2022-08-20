@@ -17,13 +17,47 @@
 package com.sun.enterprise.deployment.runtime;
 
 import org.glassfish.deployment.common.Descriptor;
-import com.sun.enterprise.deployment.DescriptorConstants;
 
-/** iAS specific DD Element (see the ias-ejb-jar_2_0.dtd for this element)
+
+/**
+ * iAS specific DD Element (see the ias-ejb-jar_2_0.dtd for this element)
+ *
  * @author Ludo
  * @since JDK 1.4
  */
-public class BeanPoolDescriptor extends Descriptor implements DescriptorConstants {
+public class BeanPoolDescriptor extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Bean Pool - maximum size, a pool of slsb can grow to.
+     */
+    private static final int MAX_POOL_SIZE_DEFAULT = -1;
+
+    /**
+     * Bean Pool - maximum time a caller will have to wait when pool
+     * has reached maximum configured size and an instance is not
+     * available to process the incoming request.
+     */
+    private static final int MAX_WAIT_TIME_DEFAULT = -1;
+
+    /**
+     * Bean Pool - size of slsb pool grows in increments specified by
+     * resize-quantity, within the configured upper limit max-pool-size.
+     */
+    private static final int POOL_RESIZE_QTY_DEFAULT = -1;
+
+    /**
+     * Bean Pool - minimum number of slsb instances maintained in a pool.
+     */
+    private static final int STEADY_POOL_SIZE_DEFAULT = -1;
+
+    /**
+     * Bean Pool - idle bean instance in a pool becomes a candidate for
+     * passivation (sfsb/eb) or deletion (slsb), when this timeout expires.
+     */
+    private static final int POOL_IDLE_TIMEOUT_DEFAULT = -1;
+
 
     private int maxPoolSize = MAX_POOL_SIZE_DEFAULT;
     private int poolIdleTimeoutInSeconds = POOL_IDLE_TIMEOUT_DEFAULT;

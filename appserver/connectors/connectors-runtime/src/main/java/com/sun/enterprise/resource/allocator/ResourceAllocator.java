@@ -41,7 +41,6 @@ public interface ResourceAllocator {
 
     public boolean matchConnection(ResourceHandle h);
 
-    public boolean supportsReauthentication();
 
     public boolean isTransactional();
 

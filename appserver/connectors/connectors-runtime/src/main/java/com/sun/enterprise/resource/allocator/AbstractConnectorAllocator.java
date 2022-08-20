@@ -128,9 +128,6 @@ public abstract class AbstractConnectorAllocator
         throw new UnsupportedOperationException();
     }
 
-    public boolean supportsReauthentication() {
-        return this.desc.supportsReauthentication();
-    }
 
     public boolean isTransactional() {
         return true;

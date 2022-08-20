@@ -64,30 +64,24 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     // connector1.5 begin
     private String resourceAdapterClass = "";
     private OutboundResourceAdapter outboundRA;
-    private InboundResourceAdapter  inboundRA;
+    private InboundResourceAdapter inboundRA;
     private final Set<AdminObject> adminObjects;
+
+    private SunConnector sunConnector;
 
     // following are all the get and set methods for the
     // various variables listed above
     private final Set<String> requiredWorkContexts;
 
-    /*Set variables indicates that a particular attribute is set by DD processing so that
-      annotation processing need not (must not) set the values from annotation */
-    private final boolean specVersionSet = false;
-
-/*
-    private boolean moduleNameSet = false;
-*/
-
     // book keeping annotations that cannot be processed up-front. These will be processed
     // during validation phase of the descriptor
     private transient Set<AnnotationInfo> connectorAnnotations;
 
-    private boolean validConnectorAnnotationProcessed ;
+    private boolean validConnectorAnnotationProcessed;
 
-    private transient Map<String, Set<AnnotationInfo>> configPropertyAnnotations ;
+    private transient Map<String, Set<AnnotationInfo>> configPropertyAnnotations;
 
-    //default resource names for this resource-adpater
+    // default resource names for this resource-adpater
     private final Set<String> defaultResourceNames;
 
     private transient Set<String> configPropertyProcessedClasses;
@@ -125,180 +119,6 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         return ConnectorNode.SPEC_VERSION;
     }
 
-    ////////////////////////////////////////////////////////////////////
-    // The following are access methods for connector1.0's
-    // resourceadapter element.
-    // We no longer support them.
-    ////////////////////////////////////////////////////////////////////
-
-    //QQ. FIXME.  After verifier stops using this interface,
-    //this REALLY needs to be removed. (for 1.0 cases only)
-
-    // The methods for connection and connection factories have now shifted
-    //to OutboundResourceAdapter to maintain backward compatibility
-    //Sheetal. These methods should be removed from here once we start
-    //using new DOL
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getConnectionFactoryInterface() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setConnectionFactoryInterface(String connectionFactoryInterface) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getConnectionFactoryImpl() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setConnectionFactoryImpl(String connectionFactoryImpl) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getConnectionInterface() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setConnectionInterface(String connectionInterface) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getConnectionImpl() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setConnectionImpl(String connectionImpl) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getManagedConnectionFactoryImpl() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setManagedConnectionFactoryImpl(String managedConnectionFactoryImpl) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean supportsReauthentication() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getReauthenticationSupport() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setReauthenticationSupport(boolean reauthenticationSupport) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setReauthenticationSupport(String reauthSupport) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public String getTransSupport() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public int getTransactionSupport() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setTransactionSupport(int transactionSupport) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public void setTransactionSupport(String support) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public Set getAuthMechanisms() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @return a set of service-ref from this bundle or null
-     *         if none
-     */
-    public Set<?> getServiceReferenceDescriptors() {
-        return new OrderedSet<>();
-    }
-
     /**
      * Set of SecurityPermission objects
      */
@@ -307,38 +127,6 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
             securityPermissions = new OrderedSet<>();
         }
         return securityPermissions;
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean addAuthMechanism(AuthMechanism mech) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean removeAuthMechanism(AuthMechanism mech) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean addAuthMechanism(int mech) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean removeAuthMechanism(int mech) {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -437,21 +225,6 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         }
     }
 
-  /*
-    private boolean hasAdminObject(String intfClass, String implClass, Set adminObjects) {
-        boolean found = false;
-        Iterator adminObjectsIterator = adminObjects.iterator();
-        while(adminObjectsIterator.hasNext()){
-            AdminObject ao = (AdminObject)adminObjectsIterator.next();
-            if(ao.getAdminObjectClass().equals(implClass) &&
-                    ao.getAdminObjectInterface().equals(intfClass)){
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
-  */
 
     public void removeAdminObject(AdminObject admin) {
         adminObjects.remove(admin);
@@ -528,25 +301,23 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      */
     public String getVersion() {
         return version;
-        // throw new UnsupportedOperationException();
     }
 
     /**
      * set value for version
      */
     public void setVersion(String version) {
-        //TODO V3 validate version ?
         this.version = version;
-        //TODO V3 need to have "set" variable ?
-//        versionSet = true;
-        //throw new UnsupportedOperationException();
     }
 
-    /** get value for resourceadapter version (1.5 schema
-    */
+
+    /**
+     * get value for resourceadapter version (1.5 schema
+     */
     public String getResourceAdapterVersion() {
         return resourceAdapterVersion;
     }
+
 
     /** set value for resourceadater version (1.5 schema)
     */
@@ -604,9 +375,8 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
             if (type == null) {
                 if (useDefault && this.outboundRA.getConnectionDefs().size() == 1) {
                     return desc;
-                } else {
-                    return null;
                 }
+                return null;
             }
 
             if (desc.getConnectionFactoryIntf().equals(type)) {
@@ -825,14 +595,6 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         return null;
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean isMessageListenerSupported(String type) {
-        throw new UnsupportedOperationException();
-    }
-
 
     @Override
     public boolean isEmpty() {
@@ -845,8 +607,6 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * Member Variable: sunConnector
      * Methods: setSunDescriptor, getSunDescriptor
      ***********************************************************************************************/
-
-    private SunConnector sunConnector = null;
 
     /**
      * This returns the extra ejb sun specific info not in the RI DID.
@@ -866,23 +626,6 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         this.sunConnector = connector;
     }
 
-    /*******************************************************************************************
-     * END
-     * Deployment Consolidation to Suppport Multiple Deployment API Clients
-     *******************************************************************************************/
-    public boolean isSpecVersionSet() {
-        return specVersionSet;
-    }
-
-/*
-    public boolean isModuleNameSet(){
-        return moduleNameSet;
-    }
-
-    public void setModuleNameSet(boolean value){
-        moduleNameSet = value;
-    }
-*/
 
     public void addConnectorAnnotation(AnnotationInfo c){
         connectorAnnotations.add(c);

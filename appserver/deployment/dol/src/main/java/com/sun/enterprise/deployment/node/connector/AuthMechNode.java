@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,26 +19,26 @@ package com.sun.enterprise.deployment.node.connector;
 
 import com.sun.enterprise.deployment.AuthMechanism;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Map;
 
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Node;
+
 /**
  * This node is responsible for handling the Connector DTD related auth-mechanism XML tag
  *
- * @author  Sheetal Vartak
- * @version
+ * @author Sheetal Vartak
  */
-public class AuthMechNode extends DeploymentDescriptorNode {
+public class AuthMechNode extends DeploymentDescriptorNode<AuthMechanism> {
 
-    private AuthMechanism auth = null;
+    private AuthMechanism auth;
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -46,8 +47,8 @@ public class AuthMechNode extends DeploymentDescriptorNode {
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ConnectorTagNames.CREDENTIAL_INTF, "setCredentialInterface");
         table.put(ConnectorTagNames.AUTH_MECH_TYPE, "setAuthMechVal");
         return table;
@@ -58,7 +59,7 @@ public class AuthMechNode extends DeploymentDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public AuthMechanism getDescriptor() {
         if (auth == null) {
             auth = (AuthMechanism) DescriptorFactory.getDescriptor(getXMLPath());
         }
@@ -70,7 +71,7 @@ public class AuthMechNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
@@ -79,18 +80,10 @@ public class AuthMechNode extends DeploymentDescriptorNode {
                 getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
 
-        Iterator authMechs = null;
-
-        if (descriptor instanceof ConnectorDescriptor) {
-            authMechs = ((ConnectorDescriptor) descriptor).getAuthMechanisms().iterator();
-        } else if (descriptor instanceof OutboundResourceAdapter) {
-            authMechs = ((OutboundResourceAdapter) descriptor).getAuthMechanisms().iterator();
-        }
-
-        // auth mechanism info
-        if (authMechs != null) {
+        if (descriptor instanceof OutboundResourceAdapter) {
+            Iterator<AuthMechanism> authMechs = ((OutboundResourceAdapter) descriptor).getAuthMechanisms().iterator();
             for (; authMechs.hasNext();) {
-                AuthMechanism auth = (AuthMechanism) authMechs.next();
+                AuthMechanism auth = authMechs.next();
                 Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
                 appendTextChild(authNode, TagNames.DESCRIPTION, auth.getDescription());
                 appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, auth.getAuthMechType());

@@ -92,7 +92,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
     private boolean keepState;
 
-    protected HashMap<String, RootXMLNode<?>> rootNodes = new HashMap<>();
+    private final HashMap<String, RootXMLNode<?>> rootNodes = new HashMap<>();
 
     /**
      * Construct a new BundleDescriptor

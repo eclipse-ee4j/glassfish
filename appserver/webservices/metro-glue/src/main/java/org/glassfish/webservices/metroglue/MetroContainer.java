@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,6 @@
 
 package org.glassfish.webservices.metroglue;
 
-import java.io.File;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.text.MessageFormat;
-
 import com.sun.enterprise.config.serverbeans.AvailabilityService;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.SecurityService;
@@ -34,10 +27,21 @@ import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
 import com.sun.enterprise.transaction.spi.RecoveryEventListener;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.grizzly.config.dom.NetworkListener;
 import com.sun.xml.ws.api.ha.HighAvailabilityProvider;
 import com.sun.xml.ws.tx.dev.WSATRuntimeConfig;
 import com.sun.xml.wss.impl.config.SecurityConfigProvider;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
+
+import java.io.File;
+import java.text.MessageFormat;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
@@ -47,23 +51,17 @@ import org.glassfish.api.deployment.Deployer;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.server.ServerEnvironmentImpl;
-
 import org.glassfish.webservices.WebServiceDeploymentListener;
 import org.glassfish.webservices.WebServicesDeployer;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
 import org.jvnet.hk2.annotations.Optional;
-
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import jakarta.inject.Singleton;
 import org.jvnet.hk2.config.types.Property;
 
 /**
@@ -113,10 +111,10 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
         }
 
         Property prop = secService.getProperty("MAX_NONCE_AGE");
-        long mnAge ;
-        if(prop != null){
-           mnAge = Long.parseLong(prop.getValue());
-           SecurityConfigProvider.INSTANCE.init(mnAge);
+        long mnAge;
+        if (prop != null) {
+            mnAge = Long.parseLong(prop.getValue());
+            SecurityConfigProvider.INSTANCE.init(mnAge);
         }
     }
 
@@ -321,14 +319,12 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
             }
 
             final String[] networkListenerNames = networkListeners.split(",");
-
             for (String listenerName : networkListenerNames) {
                 if (listenerName == null || listenerName.isEmpty()) {
                     continue;
                 }
 
                 NetworkListener listener = config.getNetworkConfig().getNetworkListener(listenerName.trim());
-
                 if (secure == Boolean.valueOf(listener.findHttpProtocol().getSecurityEnabled())) {
                     return listener.getPort();
                 }

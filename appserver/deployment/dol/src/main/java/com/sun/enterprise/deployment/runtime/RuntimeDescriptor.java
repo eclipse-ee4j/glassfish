@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,12 +17,13 @@
 
 package com.sun.enterprise.deployment.runtime;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This base class defines common behaviour and data for all runtime
@@ -32,12 +33,13 @@ import java.util.List;
  */
 public abstract class RuntimeDescriptor extends Descriptor {
 
-    protected PropertyChangeSupport propListeners;
+    private static final long serialVersionUID = 1L;
+    private final PropertyChangeSupport propListeners;
 
     /** Creates a new instance of RuntimeDescriptor */
     public RuntimeDescriptor(RuntimeDescriptor other) {
         super(other);
-        propListeners = new PropertyChangeSupport(this); // not copied
+        propListeners = new PropertyChangeSupport(this);
     }
 
 
@@ -105,7 +107,7 @@ public abstract class RuntimeDescriptor extends Descriptor {
     /**
      * @return a property value
      */
-    public Object getValue(String name) {
+    public <T> T getValue(String name) {
         return getExtraAttribute(name);
     }
 
@@ -114,20 +116,20 @@ public abstract class RuntimeDescriptor extends Descriptor {
      * indexed property support
      */
     protected void setValue(String name, int index, Object value) {
-        List list = getIndexedProperty(name);
+        List<Object> list = getIndexedProperty(name);
         list.set(index, value);
         setValue(name, list);
     }
 
 
     protected Object getValue(String name, int index) {
-        List list = getIndexedProperty(name);
+        List<?> list = getIndexedProperty(name);
         return list.get(index);
     }
 
 
     protected int addValue(String name, Object value) {
-        List list = getIndexedProperty(name);
+        List<Object> list = getIndexedProperty(name);
         list.add(value);
         setValue(name, list);
         return list.indexOf(value);
@@ -135,7 +137,7 @@ public abstract class RuntimeDescriptor extends Descriptor {
 
 
     protected int removeValue(String name, Object value) {
-        List list = getIndexedProperty(name);
+        List<?> list = getIndexedProperty(name);
         int index = list.indexOf(value);
         list.remove(index);
         return index;
@@ -143,40 +145,34 @@ public abstract class RuntimeDescriptor extends Descriptor {
 
 
     protected void removeValue(String name, int index) {
-        List list = getIndexedProperty(name);
+        List<?> list = getIndexedProperty(name);
         list.remove(index);
     }
 
 
     protected Object[] getValues(String name) {
-        List list = (List) getValue(name);
-        if (list != null && list.size() > 0) {
-            Class c = list.get(0).getClass();
-            Object array = java.lang.reflect.Array.newInstance(c, list.size());
-            return list.toArray((Object[]) array);
-        } else {
+        List<?> list = getValue(name);
+        if (list == null || list.isEmpty()) {
             return null;
         }
+        Class<?> c = list.get(0).getClass();
+        Object array = Array.newInstance(c, list.size());
+        return list.toArray((Object[]) array);
     }
 
 
     protected int size(String name) {
-        List list = (List) getValue(name);
-        if (list != null) {
-            return list.size();
-        } else {
-            return 0;
-        }
+        List<?> list = getValue(name);
+        return list == null ? 0 : list.size();
     }
 
 
-    private List getIndexedProperty(String name) {
-        Object o = getValue(name);
+    private List<Object> getIndexedProperty(String name) {
+        List<Object> o = getValue(name);
         if (o == null) {
-            return new ArrayList();
-        } else {
-            return (List) o;
+            return new ArrayList<>();
         }
+        return o;
     }
 
 
@@ -208,7 +204,7 @@ public abstract class RuntimeDescriptor extends Descriptor {
 
 
     public String getAttributeValue(String attributeName) {
-        return (String) getValue(attributeName);
+        return getValue(attributeName);
     }
 
 
@@ -219,6 +215,6 @@ public abstract class RuntimeDescriptor extends Descriptor {
 
 
     public String getAttributeValue(String elementName, int index, String attributeName) {
-        return (String) getValue(elementName + "-" + index + "-" + attributeName);
+        return getValue(elementName + "-" + index + "-" + attributeName);
     }
 }

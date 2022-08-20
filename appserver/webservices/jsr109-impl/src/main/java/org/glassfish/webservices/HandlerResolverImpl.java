@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,50 +17,52 @@
 
 package org.glassfish.webservices;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Iterator;
+import com.sun.xml.ws.api.BindingID;
 
 import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.handler.HandlerResolver;
 import jakarta.xml.ws.handler.PortInfo;
-import com.sun.xml.ws.api.BindingID;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This implements the HandlerResolver interface introduced in JAXWS
  */
 public class HandlerResolverImpl implements HandlerResolver {
 
-    private Map<PortInfo, List<Handler>> chainMap;
+    private final Map<PortInfo, List<Handler>> chainMap;
 
     public HandlerResolverImpl() {
-        chainMap = new HashMap<PortInfo, List<Handler>>();
+        chainMap = new HashMap<>();
     }
 
+    @Override
     public List<Handler> getHandlerChain(PortInfo info) {
         Iterator<PortInfo> piSet = chainMap.keySet().iterator();
         List<Handler> chain = null;
-        while(piSet.hasNext()) {
+        while (piSet.hasNext()) {
             PortInfo next = piSet.next();
-            PortInfoImpl tmp =
-                new PortInfoImpl(BindingID.parse(info.getBindingID()),
-                info.getPortName(), info.getServiceName());
-            if(tmp.equals(next)) {
+            PortInfoImpl tmp = new PortInfoImpl(BindingID.parse(info.getBindingID()), info.getPortName(),
+                info.getServiceName());
+            if (tmp.equals(next)) {
                 chain = chainMap.get(next);
                 break;
             }
         }
         if (chain == null) {
-            chain = new ArrayList<Handler>();
+            chain = new ArrayList<>();
         }
         return chain;
     }
 
+
     public void setHandlerChain(PortInfo info, List<Handler> chain) {
         List<Handler> currentList = chainMap.get(info);
-        if(currentList==null) {
+        if (currentList == null) {
             chainMap.put(info, chain);
         } else {
             currentList.addAll(chain);

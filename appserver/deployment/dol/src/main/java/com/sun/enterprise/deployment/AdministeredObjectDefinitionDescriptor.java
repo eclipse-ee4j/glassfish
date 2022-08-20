@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,11 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.*;
+import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**
  * @author Dapeng Hu
  */
-
 public class AdministeredObjectDefinitionDescriptor extends AbstractConnectorResourceDescriptor {
 
     private static final long serialVersionUID = -892751088457716458L;
@@ -34,37 +34,41 @@ public class AdministeredObjectDefinitionDescriptor extends AbstractConnectorRes
 
     public AdministeredObjectDefinitionDescriptor() {
         super();
-        setResourceType(AODD);
+        setResourceType(JavaEEResourceType.AODD);
     }
+
 
     public String getInterfaceName() {
         return interfaceName;
     }
 
+
     public void setInterfaceName(String interfaceName) {
         this.interfaceName = interfaceName;
     }
+
 
     public String getClassName() {
         return className;
     }
 
+
     public void setClassName(String className) {
         this.className = className;
     }
 
-    public void addAdministeredObjectPropertyDescriptor(ResourcePropertyDescriptor propertyDescriptor){
+
+    public void addAdministeredObjectPropertyDescriptor(ResourcePropertyDescriptor propertyDescriptor) {
         getProperties().put(propertyDescriptor.getName(), propertyDescriptor.getValue());
     }
 
+
     public boolean isConflict(AdministeredObjectDefinitionDescriptor other) {
-        return (getName().equals(other.getName())) &&
-            !(
-                DOLUtils.equals(getInterfaceName(), other.getInterfaceName()) &&
-                DOLUtils.equals(getClassName(), other.getClassName()) &&
-                DOLUtils.equals(getResourceAdapter(), other.getResourceAdapter()) &&
-                getProperties().equals(other.getProperties())
-            );
+        return getName().equals(other.getName())
+            && !(DOLUtils.equals(getInterfaceName(), other.getInterfaceName())
+            && DOLUtils.equals(getClassName(), other.getClassName())
+            && DOLUtils.equals(getResourceAdapter(), other.getResourceAdapter())
+            && getProperties().equals(other.getProperties()));
     }
 
 }

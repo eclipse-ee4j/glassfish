@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,29 +21,32 @@ import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.repository.ResourceProperty;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.resources.api.*;
-import org.glassfish.resources.config.CustomResource;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
+
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+
+import org.glassfish.resourcebase.resources.api.ResourceConflictException;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.resources.api.JavaEEResource;
+import org.glassfish.resources.api.ResourcePropertyImpl;
+import org.glassfish.resources.config.CustomResource;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * Handles custom resource events in the server instance.
@@ -67,30 +71,23 @@ import java.util.logging.Logger;
 @Singleton
 public class CustomResourceDeployer implements ResourceDeployer {
 
-
     @Inject
     private BindableResourcesHelper bindableResourcesHelper;
-
-    /**
-     * Stringmanager for this deployer
-     */
-    private static final StringManager localStrings =
-            StringManager.getManager(CustomResourceDeployer.class);
 
     @Inject
     private ResourceNamingService cns;
     /**
      * logger for this deployer
      */
-    private static Logger _logger = LogDomains.getLogger(CustomResourceDeployer.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(CustomResourceDeployer.class, LogDomains.RSR_LOGGER);
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource, String applicationName, String moduleName)
-            throws Exception {
-        CustomResource customResource =
-                (CustomResource) resource;
+        throws Exception {
+        CustomResource customResource = (CustomResource) resource;
         ResourceInfo resourceInfo = new ResourceInfo(customResource.getJndiName(), applicationName, moduleName);
         deployResource(resource, resourceInfo);
     }
@@ -98,53 +95,49 @@ public class CustomResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource) throws Exception {
-        CustomResource customResource =
-                (CustomResource) resource;
+        CustomResource customResource = (CustomResource) resource;
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(customResource);
         deployResource(customResource, resourceInfo);
     }
 
-    private void deployResource(Object resource, ResourceInfo resourceInfo) {
 
-        CustomResource customRes =
-                (CustomResource) resource;
+    private void deployResource(Object resource, ResourceInfo resourceInfo) {
+        CustomResource customRes = (CustomResource) resource;
 
         // converts the config data to j2ee resource
         JavaEEResource j2eeResource = toCustomJavaEEResource(customRes, resourceInfo);
 
         // installs the resource
         installCustomResource((org.glassfish.resources.beans.CustomResource) j2eeResource, resourceInfo);
-
-
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        CustomResource customResource =
-                (CustomResource) resource;
+        CustomResource customResource = (CustomResource) resource;
         ResourceInfo resourceInfo = new ResourceInfo(customResource.getJndiName(), applicationName, moduleName);
         deleteResource(customResource, resourceInfo);
     }
 
+
     /**
      * {@inheritDoc}
      */
-    public synchronized void undeployResource(Object resource)
-            throws Exception {
-
-        CustomResource customResource =
-                (CustomResource) resource;
+    @Override
+    public synchronized void undeployResource(Object resource) throws Exception {
+        CustomResource customResource = (CustomResource) resource;
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(customResource);
         deleteResource(customResource, resourceInfo);
     }
 
-    private void deleteResource(CustomResource customResource,
-                                ResourceInfo resourceInfo) throws NamingException {
+
+    private void deleteResource(CustomResource customResource, ResourceInfo resourceInfo) throws NamingException {
         // converts the config data to j2ee resource
-        //JavaEEResource j2eeResource = toCustomJavaEEResource(customRes, resourceInfo);
+        // JavaEEResource j2eeResource = toCustomJavaEEResource(customRes, resourceInfo);
         // removes the resource from jndi naming
         cns.unpublishObject(resourceInfo, resourceInfo.getName());
 
@@ -153,20 +146,17 @@ public class CustomResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(Object resource) {
         return resource instanceof CustomResource;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
@@ -174,6 +164,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void redeployResource(Object resource)
             throws Exception {
 
@@ -184,6 +175,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void enableResource(Object resource) throws Exception {
         deployResource(resource);
     }
@@ -191,6 +183,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void disableResource(Object resource) throws Exception {
         undeployResource(resource);
     }
@@ -206,28 +199,21 @@ public class CustomResourceDeployer implements ResourceDeployer {
     public void installCustomResource(org.glassfish.resources.beans.CustomResource customRes, ResourceInfo resourceInfo) {
 
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "installCustomResource by jndi-name : " + resourceInfo);
-            }
+            LOG.log(Level.FINE, "installCustomResource by jndi-name : {0}", resourceInfo);
 
             // bind a Reference to the object factory
             Reference ref = new Reference(customRes.getResType(), customRes.getFactoryClass(), null);
 
             // add resource properties as StringRefAddrs
-            for (Iterator props = customRes.getProperties().iterator();
-                 props.hasNext(); ) {
-
-                ResourceProperty prop = (ResourceProperty) props.next();
-
-                ref.add(new StringRefAddr(prop.getName(),
-                        (String) prop.getValue()));
+            for (ResourceProperty prop : customRes.getProperties()) {
+                ref.add(new StringRefAddr(prop.getName(), prop.getValue()));
             }
 
             // publish the reference
             cns.publishObject(resourceInfo, ref, true);
         } catch (Exception ex) {
-            _logger.log(Level.SEVERE, "customrsrc.create_ref_error", resourceInfo);
-            _logger.log(Level.SEVERE, "customrsrc.create_ref_error_excp", ex);
+            LOG.log(Level.SEVERE, "customrsrc.create_ref_error", resourceInfo);
+            LOG.log(Level.SEVERE, "customrsrc.create_ref_error_excp", ex);
         }
     }
 
@@ -241,12 +227,9 @@ public class CustomResourceDeployer implements ResourceDeployer {
      * @param rbean custom-resource config bean
      * @return new instance of j2ee custom resource
      */
-    public static JavaEEResource toCustomJavaEEResource(
-            CustomResource rbean, ResourceInfo resourceInfo) {
-
-
-        org.glassfish.resources.beans.CustomResource jr =
-                new org.glassfish.resources.beans.CustomResource(resourceInfo);
+    public static JavaEEResource toCustomJavaEEResource(CustomResource rbean, ResourceInfo resourceInfo) {
+        org.glassfish.resources.beans.CustomResource jr
+            = new org.glassfish.resources.beans.CustomResource(resourceInfo);
 
         //jr.setDescription(rbean.getDescription()); // FIXME: getting error
 
@@ -263,8 +246,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
         List<Property> properties = rbean.getProperty();
         if (properties != null) {
             for (Property property : properties) {
-                ResourceProperty rp =
-                        new ResourcePropertyImpl(property.getName(), property.getValue());
+                ResourceProperty rp = new ResourcePropertyImpl(property.getName(), property.getValue());
                 jr.addProperty(rp);
             }
         }
@@ -274,6 +256,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
         if (handles(resource)) {
             if (!postApplicationDeployment) {
@@ -283,12 +266,13 @@ public class CustomResourceDeployer implements ResourceDeployer {
         return false;
     }
 
+
     /**
      * {@inheritDoc}
      */
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
-                                          Resources allResources)
-            throws ResourceConflictException {
-        //do nothing.
+    @Override
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
+        throws ResourceConflictException {
+        // do nothing.
     }
 }

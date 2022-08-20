@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,12 +28,11 @@ import java.util.Map;
 /**
  * An object representing an component environment reference
  * to an EntityManager
- *
-*/
-public class EntityManagerReferenceDescriptor extends
-    EnvironmentProperty implements EntityManagerReference {
+ */
+public class EntityManagerReferenceDescriptor extends EnvironmentProperty implements EntityManagerReference {
 
-    private String unitName = null;
+    private static final long serialVersionUID = 1L;
+    private String unitName;
     private PersistenceContextType contextType = PersistenceContextType.TRANSACTION;
     private SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZED;
     private BundleDescriptor referringBundle;

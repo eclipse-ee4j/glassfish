@@ -45,17 +45,8 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 public final class EjbMessageBeanDescriptor extends EjbDescriptor
     implements MessageDestinationReferencer, com.sun.enterprise.deployment.EjbMessageBeanDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbMessageBeanDescriptor.class);
-
-    private String messageListenerType = "jakarta.jms.MessageListener";
-
-    // These are the method objects from the
-    // *message-bean implementation class* that implement the
-    // Message Listener interface methods or ejbTimeout method.
-    private transient Collection beanClassTxMethods = null;
-
-    // *Optional* type of destination from which message bean consumes.
-    private String destinationType = null;
 
     // The following properties are used for processing of EJB 2.0
     // JMS-specific deployment descriptor elements.
@@ -69,14 +60,24 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
     private static final String MESSAGE_SELECTOR_PROPERTY = "messageSelector";
 
-    private String durableSubscriptionName = null;
+    private String messageListenerType = "jakarta.jms.MessageListener";
 
-    private String connectionFactoryName = null;
-    private String resourceAdapterMid = null;
+    // These are the method objects from the
+    // *message-bean implementation class* that implement the
+    // Message Listener interface methods or ejbTimeout method.
+    private transient Collection<MethodDescriptor> beanClassTxMethods;
+
+    // *Optional* type of destination from which message bean consumes.
+    private String destinationType;
+
+    private String durableSubscriptionName;
+
+    private String connectionFactoryName;
+    private String resourceAdapterMid;
 
     // Holds *optional* information about the destination to which
     // we are linked.
-    private MessageDestinationReferencerImpl msgDestReferencer;
+    private final MessageDestinationReferencerImpl msgDestReferencer;
 
     // activationConfig represents name/value pairs that are
     // set by the assembler of an MDB application; those properties
@@ -127,7 +128,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
     @Override
     public void setContainerTransactionFor(MethodDescriptor methodDescriptor, ContainerTransaction containerTransaction) {
-        Vector allowedTxAttributes = getPossibleTransactionAttributes();
+        Vector<ContainerTransaction> allowedTxAttributes = getPossibleTransactionAttributes();
         if (allowedTxAttributes.contains(containerTransaction)) {
             super.setContainerTransactionFor(methodDescriptor, containerTransaction);
         } else {
@@ -221,8 +222,8 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
 
 
     @Override
-    public Vector getPossibleTransactionAttributes() {
-        Vector txAttributes = new Vector();
+    public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
+        Vector<ContainerTransaction> txAttributes = new Vector<>();
         txAttributes.add(new ContainerTransaction(ContainerTransaction.REQUIRED, ""));
         txAttributes.add(new ContainerTransaction(ContainerTransaction.NOT_SUPPORTED, ""));
         if (isTimedObject()) {
@@ -232,7 +233,7 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
     }
 
     public boolean hasMessageDestinationLinkName() {
-        return (msgDestReferencer.getMessageDestinationLinkName() != null);
+        return msgDestReferencer.getMessageDestinationLinkName() != null;
     }
 
     //
@@ -571,7 +572,6 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
      */
     @Override
     public Vector getMethods(ClassLoader classLoader) {
-        // @@@
         return new Vector();
     }
 
@@ -580,13 +580,13 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
      * may have a assigned security attribute.
      */
     @Override
-    protected Collection getTransactionMethods(ClassLoader classLoader) {
-        Vector txMethods = new Vector();
+    protected Collection<MethodDescriptor> getTransactionMethods(ClassLoader classLoader) {
+        Vector<MethodDescriptor> txMethods = new Vector<>();
 
         if (beanClassTxMethods == null) {
             try {
-                beanClassTxMethods = new HashSet();
-                Class ejbClass = classLoader.loadClass(this.getEjbClassName());
+                beanClassTxMethods = new HashSet<>();
+                Class<?> ejbClass = classLoader.loadClass(this.getEjbClassName());
                 Method interfaceMessageListenerMethods[] = getMessageListenerInterfaceMethods(classLoader);
                 for (Method next : interfaceMessageListenerMethods) {
                     // Convert method objects from MessageListener interface
@@ -620,17 +620,16 @@ public final class EjbMessageBeanDescriptor extends EjbDescriptor
      */
     @Override
     public void setTransactionType(String transactionType) {
-        boolean isValidType = (BEAN_TRANSACTION_TYPE.equals(transactionType)
-            || CONTAINER_TRANSACTION_TYPE.equals(transactionType));
+        boolean isValidType = BEAN_TRANSACTION_TYPE.equals(transactionType)
+            || CONTAINER_TRANSACTION_TYPE.equals(transactionType);
 
         if (!isValidType && Descriptor.isBoundsChecking()) {
             throw new IllegalArgumentException(
                 localStrings.getLocalString("enterprise.deployment.exceptionmsgbeantxtypenotlegaltype",
                     "{0} is not a legal transaction type for a message-driven bean", new Object[] {transactionType}));
-        } else {
-            super.transactionType = transactionType;
-            super.setMethodContainerTransactions(new Hashtable());
         }
+        super.transactionType = transactionType;
+        super.setMethodContainerTransactions(new Hashtable<>());
     }
 
     public void setActivationConfigDescriptor(ActivationConfigDescriptor desc) {

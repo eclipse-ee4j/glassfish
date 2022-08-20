@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,11 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import com.sun.enterprise.deployment.core.MetadataSource;
 
 import java.lang.reflect.Method;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Deployment object representing the lifecycle-callback.
@@ -29,19 +30,18 @@ import java.lang.reflect.Method;
  */
 public class LifecycleCallbackDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String lifecycleCallbackClass;
     private String lifecycleCallbackMethod;
     private String defaultLifecycleCallbackClass;
     private MetadataSource metadataSource = MetadataSource.XML;
 
     public enum CallbackType {
-
         AROUND_CONSTRUCT,
         POST_CONSTRUCT,
         PRE_DESTROY,
         PRE_PASSIVATE,
         POST_ACTIVATE
-
     }
 
     public void setLifecycleCallbackClass(String clazz) {
@@ -73,42 +73,43 @@ public class LifecycleCallbackDescriptor extends Descriptor {
         return lifecycleCallbackMethod;
     }
 
+
     /**
      * Given a classloader, find the Method object corresponding to this
      * lifecycle callback.
      *
      * @throw Exception if no method found
      */
-    public Method getLifecycleCallbackMethodObject(ClassLoader loader)
-        throws Exception {
-
+    public Method getLifecycleCallbackMethodObject(ClassLoader loader) throws Exception {
         Method method = null;
 
-        if( getLifecycleCallbackClass() == null ) {
+        if (getLifecycleCallbackClass() == null) {
             throw new IllegalArgumentException("no lifecycle class defined");
         }
 
-        // according to the ejb interceptors spec the around invoke and life cycle methods can be on the super class.
-        Class clazz = loader.loadClass(getLifecycleCallbackClass());
+        // according to the ejb interceptors spec the around invoke and life cycle methods can be on
+        // the super class.
+        Class<?> clazz = loader.loadClass(getLifecycleCallbackClass());
 
-        while ( method == null && ! clazz.equals( Object.class ) ) {
-            for(Method next : clazz.getDeclaredMethods()) {
-                if( next.getName().equals(lifecycleCallbackMethod) ) {
+        while (method == null && !clazz.equals(Object.class)) {
+            for (Method next : clazz.getDeclaredMethods()) {
+                if (next.getName().equals(lifecycleCallbackMethod)) {
                     method = next;
                     break;
                 }
             }
-            if ( method == null ) {
+            if (method == null) {
                 clazz = clazz.getSuperclass();
             }
         }
 
-        if( method == null ) {
+        if (method == null) {
             throw new NoSuchMethodException("no method matching " + lifecycleCallbackMethod);
         }
 
         return method;
     }
+
 
     public MetadataSource getMetadataSource() {
         return metadataSource;

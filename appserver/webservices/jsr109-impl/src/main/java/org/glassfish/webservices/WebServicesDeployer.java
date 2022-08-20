@@ -17,19 +17,26 @@
 
 package org.glassfish.webservices;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static org.glassfish.webservices.LogUtils.DIR_EXISTS;
-import static org.glassfish.webservices.LogUtils.ERROR_OCCURED;
-import static org.glassfish.webservices.LogUtils.ERROR_RESOLVING_CATALOG;
-import static org.glassfish.webservices.LogUtils.EXCEPTION_THROWN;
-import static org.glassfish.webservices.LogUtils.FAILED_LOADING_DD;
-import static org.glassfish.webservices.LogUtils.FILE_EXISTS;
-import static org.glassfish.webservices.LogUtils.PARSING_ERROR;
-import static org.glassfish.webservices.LogUtils.WSDL_PARSING_ERROR;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.archivist.Archivist;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.web.AppListenerDescriptor;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.xml.ws.util.xml.XmlUtil;
+
+import jakarta.inject.Inject;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +48,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -76,24 +82,16 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.WebService;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.archivist.Archivist;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.web.AppListenerDescriptor;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.tools.ws.util.xml.XmlUtil;
-
-import jakarta.inject.Inject;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.webservices.LogUtils.DIR_EXISTS;
+import static org.glassfish.webservices.LogUtils.ERROR_OCCURED;
+import static org.glassfish.webservices.LogUtils.ERROR_RESOLVING_CATALOG;
+import static org.glassfish.webservices.LogUtils.EXCEPTION_THROWN;
+import static org.glassfish.webservices.LogUtils.FAILED_LOADING_DD;
+import static org.glassfish.webservices.LogUtils.PARSING_ERROR;
+import static org.glassfish.webservices.LogUtils.WSDL_PARSING_ERROR;
 
 /**
  * Webservices module deployer. This is loaded from WebservicesContainer
@@ -103,15 +101,12 @@ import jakarta.inject.Inject;
  */
 @Service
 public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, WebServicesApplication> {
-    public static final WebServiceDeploymentNotifier deploymentNotifier = new WebServiceDeploymentNotifierImpl();
 
-    public static WebServiceDeploymentNotifier getDeploymentNotifier() {
-        return deploymentNotifier;
-    }
+    public static final WebServiceDeploymentNotifier deploymentNotifier = new WebServiceDeploymentNotifierImpl();
 
     private static final Logger logger = LogUtils.getLogger();
 
-    private ResourceBundle rb = logger.getResourceBundle();
+    private final ResourceBundle rb = logger.getResourceBundle();
 
     @Inject
     private RequestDispatcher dispatcher;
@@ -243,9 +238,9 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
      */
     @Override
     public Object loadMetaData(Class type, DeploymentContext dc) {
-        // Moved the doWebServicesDeployment back to prepare after discussing with
-        // Jerome
+        // Moved the doWebServicesDeployment back to prepare after discussing with Jerome
         // see this bug https://glassfish.dev.java.net/issues/show_bug.cgi?id=8080
+        // FIXME: 2022 the link is broken and I have no idea why is it here. See ApplicationLifecycle.
         return true;
     }
 
@@ -276,10 +271,10 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
         downloadFile(httpUrl, toFile);
 
         // Get a list of wsdl and schema relative imports in this wsdl
-        HashSet<Import> wsdlRelativeImports = new HashSet<Import>();
-        HashSet<Import> schemaRelativeImports = new HashSet<Import>();
-        HashSet<Import> wsdlIncludes = new HashSet<Import>();
-        HashSet<Import> schemaIncludes = new HashSet<Import>();
+        HashSet<Import> wsdlRelativeImports = new HashSet<>();
+        HashSet<Import> schemaRelativeImports = new HashSet<>();
+        HashSet<Import> wsdlIncludes = new HashSet<>();
+        HashSet<Import> schemaIncludes = new HashSet<>();
         parseRelativeImports(httpUrl, wsdlRelativeImports, wsdlIncludes, schemaRelativeImports, schemaIncludes);
         wsdlRelativeImports.addAll(wsdlIncludes);
         schemaRelativeImports.addAll(schemaIncludes);
@@ -328,7 +323,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
 
             URL retVal = null;
             // Get an entity resolver
-            org.xml.sax.EntityResolver resolver = XmlUtil.createEntityResolver(catalogFile.toURL());
+            org.xml.sax.EntityResolver resolver = XmlUtil.createEntityResolver(catalogFile.toURI().toURL());
             org.xml.sax.InputSource source = resolver.resolveEntity(null, wsdlFile);
             if (source != null) {
                 String mappedEntry = source.getSystemId();
@@ -503,7 +498,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
      * @throws Exception
      */
     private void doWebServicesDeployment(Application app, DeploymentContext dc) throws Exception {
-        Collection<WebService> webServices = new HashSet<WebService>();
+        Collection<WebService> webServices = new HashSet<>();
 
         // when there are multiple sub modules in ear, we only want to handle the ones local to this deployment context
 
@@ -550,7 +545,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             if (!next.hasFilePublishing()) {
                 for (WebServiceEndpoint wsep : next.getEndpoints()) {
                     URL finalWsdlURL = wsep.composeFinalWsdlUrl(wsUtil.getWebServerInfoForDAS().getWebServerRootURL(wsep.isSecure()));
-                    Set<ServiceReferenceDescriptor> serviceRefs = new HashSet<ServiceReferenceDescriptor>();
+                    Set<ServiceReferenceDescriptor> serviceRefs = new HashSet<>();
                     if (webBundleDesc != null) {
                         serviceRefs = webBundleDesc.getServiceReferenceDescriptors();
                     } else {
@@ -614,9 +609,6 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
          */
 
         Collection<WebServiceEndpoint> endpoints = webBunDesc.getWebServices().getEndpoints();
-        ClassLoader cl = webBunDesc.getClassLoader();
-        WsUtil wsutil = new WsUtil();
-
         for (WebServiceEndpoint nextEndpoint : endpoints) {
             WebComponentDescriptor webComp = nextEndpoint.getWebComponentImpl();
 
@@ -670,9 +662,6 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
         webBunDesc.addAppListenerDescriptor(new AppListenerDescriptorImpl(WSServletContextListener.class.getName()));
     }
 
-    private String format(String key, String... values) {
-        return MessageFormat.format(key, (Object[]) values);
-    }
 
     @Override
     public void unload(WebServicesApplication container, DeploymentContext context) {
@@ -729,7 +718,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
      */
     private Set<String> populateWsdlFilesForPublish(DeploymentContext dc, Set<WebService> webservices) throws IOException {
 
-        Set<String> publishedFiles = new HashSet<String>();
+        Set<String> publishedFiles = new HashSet<>();
         for (WebService webService : webservices) {
             if (!webService.hasFilePublishing()) {
                 continue;
@@ -746,7 +735,6 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             }
 
             File sourceDir = dc.getScratchDir("xml");
-
             File parent;
             try {
                 URI clientPublishURI = webService.getClientPublishUrl().toURI();
@@ -769,7 +757,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
             }
 
             while (entries.hasMoreElements()) {
-                String name = (String) entries.nextElement();
+                String name = entries.nextElement();
                 String wsdlName = stripWsdlDir(name, bundle);
                 File clientwsdl = new File(parent, wsdlName);
                 File fulluriFile = new File(sourceDir, name);
@@ -804,13 +792,10 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
     /**
      * This is to be used for file publishing only. In case of wsdlImports and wsdlIncludes we need to copy the nested wsdls
      * from applications folder to the generated/xml folder
-     *
      */
     private void copyExtraFilesToGeneratedFolder(DeploymentContext context) throws IOException {
-        Archivist archivist = habitat.getService(Archivist.class);
-
+        Archivist<?> archivist = habitat.getService(Archivist.class);
         ReadableArchive archive = archiveFactory.openArchive(context.getSourceDir());
-
         WritableArchive archive2 = archiveFactory.createArchive(context.getScratchDir("xml"));
 
         // copy the additional webservice elements etc
@@ -830,12 +815,17 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
      * Return a set of all com.sun.enterprise.deployment.WebService descriptors in the application.
      */
     private Set<WebService> getWebServiceDescriptors(Application app) {
-        Set<WebService> webServiceDescriptors = new HashSet<WebService>();
+        Set<WebService> webServiceDescriptors = new HashSet<>();
         for (BundleDescriptor next : app.getBundleDescriptors()) {
             WebServicesDescriptor webServicesDesc = next.getWebServices();
             webServiceDescriptors.addAll(webServicesDesc.getWebServices());
         }
         return webServiceDescriptors;
+    }
+
+
+    public static WebServiceDeploymentNotifier getDeploymentNotifier() {
+        return deploymentNotifier;
     }
 
     private static void mkDirs(File f) {

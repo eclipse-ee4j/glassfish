@@ -29,19 +29,18 @@ package org.glassfish.api.deployment;
  */
 public class MetaData {
 
-    final static Class[] empty = new Class[0];
+    private static final Class<?>[] empty = new Class[0];
 
     private final boolean invalidatesCL;
-    private final Class[] requires;
-    private final Class[] provides;
+    private final Class<?>[] requires;
+    private final Class<?>[] provides;
 
     /**
      * Constructor for the Deployer's metadata
      *
      * @param invalidatesClassLoader If true, invalidates the class loader used during the deployment's prepare phase
-     *
      */
-    public MetaData(boolean invalidatesClassLoader, Class[] provides, Class[] requires) {
+    public MetaData(boolean invalidatesClassLoader, Class<?>[] provides, Class<?>[] requires) {
         this.invalidatesCL = invalidatesClassLoader;
         this.provides = provides;
         this.requires = requires;
@@ -62,7 +61,7 @@ public class MetaData {
      *
      * @return list of metadata type;
      */
-    public Class[] provides() {
+    public Class<?>[] provides() {
         if (provides == null) {
             return empty;
         }
@@ -74,7 +73,7 @@ public class MetaData {
      *
      * @return list of metadata required type;
      */
-    public Class[] requires() {
+    public Class<?>[] requires() {
         if (requires == null) {
             return empty;
         }

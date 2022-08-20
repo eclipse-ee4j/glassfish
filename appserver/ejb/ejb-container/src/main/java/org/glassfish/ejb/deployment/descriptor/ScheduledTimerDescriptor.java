@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,162 +17,159 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.util.Date;
-
 import com.sun.enterprise.deployment.DescribableDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 
+import java.util.Date;
 
 /**
  * This class holds the metadata for a calendar-based timer.
  */
 public class ScheduledTimerDescriptor extends DescribableDescriptor {
 
+    private static final long serialVersionUID = 1L;
+    private String second = "0";
+    private String minute = "0";
+    private String hour = "0";
+
+    private String dayOfMonth = "*";
+    private String month = "*";
+    private String dayOfWeek = "*";
+    private String year = "*";
+
+    private String timezoneID;
+
+    private Date start;
+
+    private Date end;
+
+    private MethodDescriptor timeoutMethod;
+
+    private boolean persistent = true;
+
+    private String info;
+
     public void setSecond(String s) {
-        second_ = s;
+        second = s;
     }
 
     public String getSecond() {
-        return second_;
+        return second;
     }
 
     public void setMinute(String m) {
-        minute_ = m;
+        minute = m;
     }
 
     public String getMinute() {
-        return minute_;
+        return minute;
     }
 
     public void setHour(String h) {
-        hour_ = h;
+        hour = h;
     }
 
     public String getHour() {
-        return hour_;
+        return hour;
     }
 
     public void setDayOfMonth(String d) {
-        dayOfMonth_ = d;
+        dayOfMonth = d;
     }
 
     public String getDayOfMonth() {
-        return dayOfMonth_;
+        return dayOfMonth;
     }
 
     public void setMonth(String m) {
-        month_ = m;
+        month = m;
     }
 
     public String getMonth() {
-        return month_;
+        return month;
     }
 
     public void setDayOfWeek(String d) {
-        dayOfWeek_ = d;
+        dayOfWeek = d;
     }
 
     public String getDayOfWeek() {
-        return dayOfWeek_;
+        return dayOfWeek;
     }
 
     public void setYear(String y) {
-        year_ = y;
+        year = y;
     }
 
     public String getYear() {
-        return year_;
+        return year;
     }
 
     public void setTimezone(String timezoneID) {
-        timezoneID_ = timezoneID;
+        timezoneID = timezoneID;
     }
 
     public String getTimezone() {
-        return timezoneID_;
+        return timezoneID;
     }
 
     public void setStart(Date s) {
-        start_ = (s == null) ? null : new Date(s.getTime());
+        start = s == null ? null : new Date(s.getTime());
     }
 
     public Date getStart() {
-        return (start_ == null) ? null : new Date(start_.getTime());
+        return start == null ? null : new Date(start.getTime());
     }
 
     public void setEnd(Date e) {
-        end_ = (e == null) ? null : new Date(e.getTime());
+        end = e == null ? null : new Date(e.getTime());
     }
 
     public Date getEnd() {
-        return (end_ == null) ? null : new Date(end_.getTime());
+        return end == null ? null : new Date(end.getTime());
     }
 
     public void setPersistent(boolean flag) {
-        persistent_ = flag;
+        persistent = flag;
     }
 
     public boolean getPersistent() {
-        return persistent_;
+        return persistent;
     }
 
     public void setInfo(String i) {
-        info_ = i;
+        info = i;
     }
 
     public String getInfo() {
-        return info_;
+        return info;
     }
 
 
     public void setTimeoutMethod(MethodDescriptor m) {
-        timeoutMethod_ = m;
+        timeoutMethod = m;
     }
 
 
     public MethodDescriptor getTimeoutMethod() {
-        return timeoutMethod_;
+        return timeoutMethod;
     }
 
+    @Override
     public String toString() {
-        return "ScheduledTimerDescriptor [second=" + second_
-                + ";minute=" + minute_
-                + ";hour=" + hour_
-                + ";dayOfMonth=" + dayOfMonth_
-                + ";month=" + month_
-                + ";dayOfWeek=" + dayOfWeek_
-                + ";year=" + year_
-                + ";timezoneID=" + timezoneID_
-                + ";start=" + start_
-                + ";end=" + end_
-                + ";" + timeoutMethod_ //MethodDescriptor prints it's name
-                + ";persistent=" + persistent_
-                + ";info=" + info_
+        return "ScheduledTimerDescriptor [second=" + second
+                + ";minute=" + minute
+                + ";hour=" + hour
+                + ";dayOfMonth=" + dayOfMonth
+                + ";month=" + month
+                + ";dayOfWeek=" + dayOfWeek
+                + ";year=" + year
+                + ";timezoneID=" + timezoneID
+                + ";start=" + start
+                + ";end=" + end
+                + ";" + timeoutMethod // MethodDescriptor prints it's name
+                + ";persistent=" + persistent
+                + ";info=" + info
                 + "]";
     }
-
-
-    private String second_ = "0";
-    private String minute_ = "0";
-    private String hour_ = "0";
-
-    private String dayOfMonth_ = "*";
-    private String month_ = "*";
-    private String dayOfWeek_ = "*";
-    private String year_ = "*";
-
-    private String timezoneID_ = null;
-
-    private Date start_ = null;
-
-    private Date end_ = null;
-
-    private MethodDescriptor timeoutMethod_;
-
-    private boolean persistent_ = true;
-
-    private String info_ = null;
-
-
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+
+import org.glassfish.deployment.common.Descriptor;
 
 
 /**
@@ -30,8 +31,9 @@ import java.util.HashMap;
  * @author Kenneth Saks
  * @author Jerome Dochez
  */
-
 public class WebService extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
 
     private String wsdlFileUri;
 
@@ -74,7 +76,7 @@ public class WebService extends Descriptor {
     /** type JAX-WS or JAX-RPC */
     private String type;
 
-    private Boolean isJaxWSBased = null;
+    private Boolean isJaxWSBased;
 
     /**
      * Default constructor.
@@ -112,7 +114,7 @@ public class WebService extends Descriptor {
         webServicesDesc = other.webServicesDesc; // copy as-is
         type = other.type;
         if (other.endpoints != null) {
-            endpoints = new HashMap<String, WebServiceEndpoint>();
+            endpoints = new HashMap<>();
             for (WebServiceEndpoint wsep : other.endpoints.values()) {
                 wsep.setWebService(this);
                 endpoints.put(wsep.getEndpointName(), wsep);
@@ -124,7 +126,7 @@ public class WebService extends Descriptor {
 
     public WebService(String name) {
         setName(name);
-        endpoints = new HashMap();
+        endpoints = new HashMap<>();
     }
 
     public void setWebServicesDescriptor(WebServicesDescriptor webServices) {
@@ -140,7 +142,7 @@ public class WebService extends Descriptor {
     }
 
     public boolean hasWsdlFile() {
-        return (wsdlFileUri != null);
+        return wsdlFileUri != null;
     }
 
     public void setWsdlFileUri(String uri) {
@@ -160,23 +162,22 @@ public class WebService extends Descriptor {
     }
 
     public String getGeneratedWsdlFilePath() {
-        if (hasWsdlFile()) {
-            String xmlDir = getBundleDescriptor().getApplication().getGeneratedXMLDirectory();
-            if(!getBundleDescriptor().getModuleDescriptor().isStandalone()) {
-                String uri = getBundleDescriptor().getModuleDescriptor().getArchiveUri();
-                xmlDir = xmlDir + File.separator + uri.replaceAll("\\.", "_");
-            }
-            if(xmlDir == null) {
-                return null;
-            }
-            return  xmlDir + File.separator + wsdlFileUri;
-        } else {
+        if (!hasWsdlFile()) {
             return getWsdlFileUrl().getPath();
         }
+        String xmlDir = getBundleDescriptor().getApplication().getGeneratedXMLDirectory();
+        if (!getBundleDescriptor().getModuleDescriptor().isStandalone()) {
+            String uri = getBundleDescriptor().getModuleDescriptor().getArchiveUri();
+            xmlDir = xmlDir + File.separator + uri.replaceAll("\\.", "_");
+        }
+        if (xmlDir == null) {
+            return null;
+        }
+        return xmlDir + File.separator + wsdlFileUri;
     }
 
     public boolean hasMappingFile() {
-        return (mappingFileUri != null);
+        return mappingFileUri != null;
     }
 
     public void setMappingFileUri(String uri) {
@@ -201,8 +202,7 @@ public class WebService extends Descriptor {
     }
 
     public void removeEndpointByName(String endpointName) {
-        WebServiceEndpoint endpoint = (WebServiceEndpoint)
-                endpoints.remove(endpointName);
+        WebServiceEndpoint endpoint = endpoints.remove(endpointName);
         endpoint.setWebService(null);
     }
 
@@ -216,12 +216,12 @@ public class WebService extends Descriptor {
     }
 
     public Collection<WebServiceEndpoint> getEndpoints() {
-        HashMap shallowCopy = new HashMap(endpoints);
+        HashMap<String, WebServiceEndpoint> shallowCopy = new HashMap<>(endpoints);
         return shallowCopy.values();
     }
 
     public boolean hasClientPublishUrl() {
-        return (publishUrl != null);
+        return publishUrl != null;
     }
 
     public void setClientPublishUrl(URL url) {
@@ -233,13 +233,14 @@ public class WebService extends Descriptor {
     }
 
     public boolean hasUrlPublishing() {
-        return (!hasFilePublishing());
+        return !hasFilePublishing();
     }
 
+
     public boolean hasFilePublishing() {
-        return (hasClientPublishUrl() &&
-                publishUrl.getProtocol().equals("file"));
+        return hasClientPublishUrl() && publishUrl.getProtocol().equals("file");
     }
+
 
     /**
      * Select one of this webservice's endpoints to use for converting
@@ -249,8 +250,8 @@ public class WebService extends Descriptor {
         WebServiceEndpoint pick = null;
 
         // First secure endpoint takes precedence.
-        for(WebServiceEndpoint wse : endpoints.values()) {
-            if( wse.isSecure() ) {
+        for (WebServiceEndpoint wse : endpoints.values()) {
+            if (wse.isSecure()) {
                 pick = wse;
                 break;
             }
@@ -262,6 +263,7 @@ public class WebService extends Descriptor {
     /**
      * Returns a formatted String of the attributes of this object.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         super.print(toStringBuffer);
         toStringBuffer.append( "\n wsdl file : ").append( wsdlFileUri);

@@ -26,6 +26,7 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+import jakarta.mail.Session;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
+import javax.naming.Reference;
 
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
@@ -215,13 +217,9 @@ public class MailResourceDeployer extends GlobalResourceDeployer implements Reso
      * @param mailResource mail resource
      */
     public void installMailResource(org.glassfish.resources.mail.beans.MailResource mailResource, ResourceInfo resourceInfo) {
-
         try {
-
             MailConfiguration config = new MailConfiguration(mailResource);
-
-            javax.naming.Reference ref = new javax.naming.Reference(jakarta.mail.Session.class.getName(),
-                    MailNamingObjectFactory.class.getName(), null);
+            Reference ref = new Reference(Session.class.getName(), MailNamingObjectFactory.class.getName(), null);
             SerializableObjectRefAddr serializableRefAddr = new SerializableObjectRefAddr("jndiName", config);
             ref.add(serializableRefAddr);
 
@@ -245,8 +243,8 @@ public class MailResourceDeployer extends GlobalResourceDeployer implements Reso
     public static org.glassfish.resources.api.JavaEEResource toMailJavaEEResource(
             MailResource mailResourceConfig, ResourceInfo resourceInfo) {
 
-        org.glassfish.resources.mail.beans.MailResource mailResource =
-                new org.glassfish.resources.mail.beans.MailResource(resourceInfo);
+        org.glassfish.resources.mail.beans.MailResource mailResource
+                = new org.glassfish.resources.mail.beans.MailResource(resourceInfo);
 
         //jr.setDescription(rbean.getDescription()); // FIXME: getting error
         mailResource.setEnabled(Boolean.valueOf(mailResourceConfig.getEnabled()));
@@ -262,7 +260,6 @@ public class MailResourceDeployer extends GlobalResourceDeployer implements Reso
         // sets the properties
         List<Property> properties = mailResourceConfig.getProperty();
         if (properties != null) {
-
             for (Property property : properties) {
                 ResourceProperty rp = new org.glassfish.resources.api.ResourcePropertyImpl(property.getName(), property.getValue());
                 mailResource.addProperty(rp);

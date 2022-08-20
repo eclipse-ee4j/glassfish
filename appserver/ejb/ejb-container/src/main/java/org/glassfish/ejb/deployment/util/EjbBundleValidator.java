@@ -83,7 +83,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
     private static final String REDUNDANT_PASSIVATION_CALLBACK_METADATA = "AS-EJB-00048";
 
     @Override
-    public void accept (BundleDescriptor descriptor) {
+    public void accept(BundleDescriptor descriptor) {
         this.bundleDescriptor = descriptor;
         this.application = descriptor.getApplication();
         if (descriptor instanceof EjbBundleDescriptorImpl) {
@@ -108,7 +108,7 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
             // Visit all injectables first.  In some cases, basic type
             // information has to be derived from target inject method or
             // inject field.
-            for(InjectionCapable injectable : ejbBundle.getInjectableResources(ejbBundle)) {
+            for (InjectionCapable injectable : ejbBundle.getInjectableResources(ejbBundle)) {
                 accept(injectable);
             }
         }

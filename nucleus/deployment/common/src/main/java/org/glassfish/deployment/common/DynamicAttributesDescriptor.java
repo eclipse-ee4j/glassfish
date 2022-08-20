@@ -67,11 +67,11 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
      * @param name the attribute name
      * @return the attribute value of null of non existent
      */
-    public Object getExtraAttribute(String name) {
+    public <T> T getExtraAttribute(String name) {
         if (dynamicAttributes == null) {
             return null;
         }
-        return dynamicAttributes.get(name);
+        return (T) dynamicAttributes.get(name);
     }
 
     /**

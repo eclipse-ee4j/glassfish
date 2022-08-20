@@ -72,7 +72,6 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EnvironmentProperty.class);
 
     protected String mappedName;
-
     protected String lookupName;
 
     /**

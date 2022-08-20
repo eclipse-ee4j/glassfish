@@ -26,9 +26,7 @@ import org.glassfish.deployment.common.Descriptor;
 public class CommonResourceValidator {
 
     private Descriptor descriptor;
-
     private String jndiName;
-
     private Vector<String> scope;
 
 

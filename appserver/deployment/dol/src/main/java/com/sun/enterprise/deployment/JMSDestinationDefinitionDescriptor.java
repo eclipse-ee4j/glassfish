@@ -19,7 +19,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.JMSDD;
+import org.glassfish.deployment.common.JavaEEResourceType;
 
 public class JMSDestinationDefinitionDescriptor extends AbstractConnectorResourceDescriptor {
 
@@ -31,8 +31,7 @@ public class JMSDestinationDefinitionDescriptor extends AbstractConnectorResourc
     private String destinationName;
 
     public JMSDestinationDefinitionDescriptor() {
-        super();
-        super.setResourceType(JMSDD);
+        super.setResourceType(JavaEEResourceType.JMSDD);
     }
 
     public String getInterfaceName() {

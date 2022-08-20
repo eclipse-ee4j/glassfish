@@ -15,7 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
@@ -26,13 +25,14 @@ import java.sql.Connection;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.DSD;
+import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**
  * @author Jagadish Ramu
  */
 public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private String name ;
     private String description;
     private String className ;
@@ -56,8 +56,6 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     private boolean loginTimeoutSet;
     private boolean serverNameSet;
 
-
-
     private boolean deployed;
 
     private static final String JAVA_URL = "java:";
@@ -71,7 +69,7 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     private static final String TRANSACTION_SERIALIZABLE = "TRANSACTION_SERIALIZABLE";
 
     public DataSourceDefinitionDescriptor(){
-        super.setResourceType(DSD);
+        super.setResourceType(JavaEEResourceType.DSD);
     }
 
     public void setDeployed(boolean deployed){

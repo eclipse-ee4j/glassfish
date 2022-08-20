@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,41 +17,45 @@
 
 package org.glassfish.javaee.core.deployment;
 
-import org.glassfish.api.deployment.*;
-import org.glassfish.api.container.Container;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.internal.api.JAXRPCCodeGenFacade;
-import org.glassfish.loader.util.ASClassLoaderUtil;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.util.ApplicationVisitor;
-import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.deployment.common.DeploymentProperties;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import org.jvnet.hk2.annotations.Optional;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
-import java.util.List;
-import java.net.URL;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.inject.Provider;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.container.Container;
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.Deployer;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.MetaData;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentException;
+import org.glassfish.deployment.common.DeploymentProperties;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.JAXRPCCodeGenFacade;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.jvnet.hk2.annotations.Optional;
+
 /**
  * Convenient superclass for JavaEE Deployer implementations.
- *
  */
-public abstract class   JavaEEDeployer<T extends Container, U extends ApplicationContainer>
-        implements Deployer<T, U> {
+public abstract class JavaEEDeployer<T extends Container, U extends ApplicationContainer> implements Deployer<T, U> {
+
+    private static final String APPLICATION_TYPE = "Application-Type";
 
     @Inject
     protected ServerEnvironment env;
@@ -61,18 +66,21 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
     @Inject
     protected ServiceLocator habitat;
 
-    @Inject @Named("application_undeploy") @Optional
-    protected ApplicationVisitor undeploymentVisitor=null;
+    @Inject
+    @Named("application_undeploy")
+    @Optional
+    protected ApplicationVisitor undeploymentVisitor;
 
-    @Inject Provider<JAXRPCCodeGenFacade> jaxrpcCodeGenFacadeProvider;
+    @Inject
+    Provider<JAXRPCCodeGenFacade> jaxrpcCodeGenFacadeProvider;
 
-    private static final String APPLICATION_TYPE = "Application-Type";
 
     /**
      * Returns the meta data assocated with this Deployer
      *
      * @return the meta data for this Deployer
      */
+    @Override
     public MetaData getMetaData() {
         return new MetaData(false, null, null);
     }
@@ -88,8 +96,7 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
     protected String getModuleClassPath(DeploymentContext ctx) {
         // get the base module classpath
         // this includes the system classpath and deploy time lib libraries
-        StringBuilder classpath = new StringBuilder
-            (ASClassLoaderUtil.getModuleClassPath(habitat, ctx));
+        StringBuilder classpath = new StringBuilder(ASClassLoaderUtil.getModuleClassPath(habitat, ctx));
 
         try {
             // add the module dir
@@ -103,16 +110,12 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
             // add the ear lib libraries if it's ear
             Application app = ctx.getModuleMetaData(Application.class);
             if (!app.isVirtual()) {
-                ReadableArchive parentArchive =
-                    ctx.getSource().getParentArchive();
+                ReadableArchive parentArchive = ctx.getSource().getParentArchive();
 
-                String compatProp = ctx.getAppProps().getProperty(
-                    DeploymentProperties.COMPATIBILITY);
+                String compatProp = ctx.getAppProps().getProperty(DeploymentProperties.COMPATIBILITY);
 
-                List<URL> earLibURLs =
-                    ASClassLoaderUtil.getAppLibDirLibrariesAsList(new File(
-                        parentArchive.getURI()), app.getLibraryDirectory(),
-                        compatProp);
+                List<URL> earLibURLs = ASClassLoaderUtil.getAppLibDirLibrariesAsList(new File(parentArchive.getURI()),
+                    app.getLibraryDirectory(), compatProp);
 
                 for (URL url : earLibURLs) {
                     classpath.append(url.toURI().getPath());
@@ -126,7 +129,7 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
         return classpath.toString();
     }
 
-    /*
+    /**
      * Gets the common instance classpath, which is composed of the
      * pathnames of domain_root/lib/classes and
      * domain_root/lib/[*.jar|*.zip] (in this
@@ -146,9 +149,9 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
         // Append domain_root/lib/[*.jar|*.zip]
         String[] files = libDir.list();
         if (files != null) {
-            for (int i=0; i<files.length; i++) {
-                if (files[i].endsWith(".jar") || files[i].endsWith(".zip")) {
-                    sb.append(libDirPath + File.separator + files[i]);
+            for (String file : files) {
+                if (file.endsWith(".jar") || file.endsWith(".zip")) {
+                    sb.append(libDirPath + File.separator + file);
                     sb.append(File.pathSeparator);
                 }
             }
@@ -162,6 +165,7 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
      * @param type type of metadata that this deployer has declared providing.
      * @param dc deployment context
      */
+    @Override
     public <V> V loadMetaData(Class<V> type, DeploymentContext dc) {
         return null;
     }
@@ -177,25 +181,24 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
      * @return true if the prepare phase was successful
      *
      */
+    @Override
     public boolean prepare(DeploymentContext dc) {
         try {
-            ((ExtendedDeploymentContext)dc).prepareScratchDirs();
+            ((ExtendedDeploymentContext) dc).prepareScratchDirs();
 
-
-             //In jaxrpc it was required to run
-             //Wscompile to generate the artifacts for clients too.
-             //service-ref element can be in client in web.xml,  application-client.xml, sun-ejb-jar.xml
-             //Fix for issue 16015
+            // In jaxrpc it was required to run
+            // Wscompile to generate the artifacts for clients too.
+            // service-ref element can be in client in web.xml, application-client.xml,
+            // sun-ejb-jar.xml
             BundleDescriptor bundleDesc = dc.getModuleMetaData(BundleDescriptor.class);
-            if (bundleDesc.hasWebServiceClients())     {
+            if (bundleDesc.hasWebServiceClients()) {
                 JAXRPCCodeGenFacade jaxrpcCodeGenFacade = jaxrpcCodeGenFacadeProvider.get();
                 if (jaxrpcCodeGenFacade != null) {
-                    jaxrpcCodeGenFacade.run(habitat,dc,getModuleClassPath(dc), true) ;
+                    jaxrpcCodeGenFacade.run(habitat, dc, getModuleClassPath(dc), true);
                 }
             }
-            if (! dc.getCommandParameters(OpsParams.class).origin.isArtifactsPresent()) {
-                         // only generate artifacts when there is no artifacts present
-
+            if (!dc.getCommandParameters(OpsParams.class).origin.isArtifactsPresent()) {
+                // only generate artifacts when there is no artifacts present
                 generateArtifacts(dc);
             }
             return true;
@@ -213,6 +216,7 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
      * @param context of the deployment
      * @return an ApplicationContainer instance identifying the running application
      */
+    @Override
     public U load(T container, DeploymentContext context) {
         // reset classloader on DOL object before loading so we have a
         // valid classloader set on DOL
@@ -234,35 +238,40 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
      *
      * @param context deployment context
      */
+    @Override
     public void clean(DeploymentContext context) {
-        if (undeploymentVisitor!=null) {
-
+        if (undeploymentVisitor != null) {
             String appName = context.getCommandParameters(OpsParams.class).name();
             Application app = getApplicationFromApplicationInfo(appName);
             if (app != null) {
                 context.addModuleMetaData(app);
-                   undeploymentVisitor.accept(app);
+                undeploymentVisitor.accept(app);
             }
         }
     }
 
-    // get the object type from the application manifest file if
-    // it is present. Application can be user application or system
-    // appliction.
+
+    /**
+     * Get the object type from the application manifest file if
+     * it is present. Application can be user application or system
+     * application.
+     */
     protected String getObjectType(DeploymentContext context) {
-        try{
+        try {
             Manifest manifest = context.getSource().getManifest();
-            if(manifest==null)  return null;
+            if (manifest == null) {
+                return null;
+            }
             Attributes attrs = manifest.getMainAttributes();
             return attrs.getValue(APPLICATION_TYPE);
-        }catch(IOException e){
+        } catch (IOException e) {
             // by default resource-type will be assigned "user".
             return null;
         }
     }
 
-    protected Application getApplicationFromApplicationInfo(
-        String appName) {
+
+    protected Application getApplicationFromApplicationInfo(String appName) {
         ApplicationInfo appInfo = appRegistry.get(appName);
         if (appInfo == null) {
             return null;

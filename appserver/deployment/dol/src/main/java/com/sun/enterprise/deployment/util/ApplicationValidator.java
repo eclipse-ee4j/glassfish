@@ -282,12 +282,6 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
 
     @Override
-    protected BundleDescriptor getBundleDescriptor() {
-        return bundleDescriptor;
-    }
-
-
-    @Override
     public DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor) {
         if (subDescriptor instanceof BundleDescriptor) {
             return ((BundleDescriptor) subDescriptor).getBundleVisitor();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,18 @@
 
 package com.sun.enterprise.deployment;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**
  */
 public class LocaleEncodingMappingDescriptor extends Descriptor {
 
-    private String locale = "en";
-    private String encoding = "UTF-8";
+    private static final long serialVersionUID = 1L;
+    private String locale = Locale.ENGLISH.getLanguage();
+    private String encoding = StandardCharsets.UTF_8.name();
 
     /**
      * standard constructor
@@ -69,7 +74,7 @@ public class LocaleEncodingMappingDescriptor extends Descriptor {
     }
 
     /**
-     * @return a string describing the values I hold
+     * Prints a string describing the values I hold
      */
     @Override
     public void print(StringBuffer toStringBuffer) {

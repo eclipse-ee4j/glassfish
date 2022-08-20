@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,15 +20,17 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
+
 import java.util.Properties;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.*;
+import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**
  * Represents the data from a @MailSessionDefinition annotation.
  */
 public class MailSessionDescriptor extends ResourceDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private String name;
     private String storeProtocol;
     private String transportProtocol;
@@ -35,18 +38,19 @@ public class MailSessionDescriptor extends ResourceDescriptor {
     private String password;
     private String host;
     private String from;
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     private static final String JAVA_URL = "java:";
     private static final String JAVA_COMP_URL = "java:comp/";
 
-    private boolean deployed = false;
+    private boolean deployed;
 
     public MailSessionDescriptor(){
-        super.setResourceType(MSD);
+        super.setResourceType(JavaEEResourceType.MSD);
     }
 
 
+    @Override
     public String getName() {
         return name;
     }
@@ -58,6 +62,7 @@ public class MailSessionDescriptor extends ResourceDescriptor {
         return thisName;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -134,6 +139,7 @@ public class MailSessionDescriptor extends ResourceDescriptor {
         return deployed;
     }
 
+    @Override
     public boolean equals(Object object) {
         if (object instanceof MailSessionDescriptor) {
             MailSessionDescriptor reference = (MailSessionDescriptor) object;
@@ -142,33 +148,32 @@ public class MailSessionDescriptor extends ResourceDescriptor {
         return false;
     }
 
+    @Override
     public int hashCode() {
-        int result = 17;
-        result = 37 * result + getName().hashCode();
-        return result;
+        return getName().hashCode();
     }
 
     public static String getJavaName(String thisName) {
-        if (!thisName.startsWith(JAVA_URL)) {
-            thisName = JAVA_COMP_URL + thisName;
+        if (thisName.startsWith(JAVA_URL)) {
+            return thisName;
         }
-        return thisName;
+        return JAVA_COMP_URL + thisName;
     }
 
     public boolean isConflict(MailSessionDescriptor other) {
-            return (getName().equals(other.getName())) &&
-                !(
-                    DOLUtils.equals(getUser(), other.getUser()) &&
-                    DOLUtils.equals(getPassword(), other.getPassword()) &&
-                    DOLUtils.equals(getFrom(), other.getFrom()) &&
-                    DOLUtils.equals(getHost(), other.getHost()) &&
-                    DOLUtils.equals(getPassword(), other.getPassword()) &&
-                    DOLUtils.equals(getStoreProtocol(),
-                                                other.getStoreProtocol()) &&
-                    DOLUtils.equals(getTransportProtocol(),
-                                                other.getTransportProtocol()) &&
-                    DOLUtils.equals(getDescription(), other.getDescription()) &&
-                    properties.equals(other.properties)
-                );
-        }
+        return getName().equals(other.getName()) &&
+            !(
+                DOLUtils.equals(getUser(), other.getUser()) &&
+                DOLUtils.equals(getPassword(), other.getPassword()) &&
+                DOLUtils.equals(getFrom(), other.getFrom()) &&
+                DOLUtils.equals(getHost(), other.getHost()) &&
+                DOLUtils.equals(getPassword(), other.getPassword()) &&
+                DOLUtils.equals(getStoreProtocol(),
+                    other.getStoreProtocol()) &&
+                DOLUtils.equals(getTransportProtocol(),
+                    other.getTransportProtocol()) &&
+                DOLUtils.equals(getDescription(), other.getDescription()) &&
+                properties.equals(other.properties)
+            );
+    }
 }

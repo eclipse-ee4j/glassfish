@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,9 +22,10 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for loading web services
@@ -33,15 +35,13 @@ import java.util.Map;
  */
 public class WebServiceNode extends DisplayableComponentNode {
 
-    private final static XMLElement tag =
-        new XMLElement(WebServicesTagNames.WEB_SERVICE);
+    private final static XMLElement tag = new XMLElement(WebServicesTagNames.WEB_SERVICE);
 
     public WebServiceNode() {
         super();
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.PORT_COMPONENT),
-             WebServiceEndpointNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.PORT_COMPONENT), WebServiceEndpointNode.class);
     }
+
 
     /**
      * initilizer method after instance creation
@@ -49,10 +49,13 @@ public class WebServiceNode extends DisplayableComponentNode {
     protected void init() {
     }
 
+
     @Override
     protected WebService createDescriptor() {
         return new WebService();
     }
+
+
     /**
      * all sub-implementation of this class can use a dispatch table
      * to map xml element to method name on the descriptor class for
@@ -60,18 +63,20 @@ public class WebServiceNode extends DisplayableComponentNode {
      *
      * @return map with the element name as a key, the setter method as a value
      */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
-                  "setName");
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME, "setName");
         table.put(WebServicesTagNames.WSDL_FILE, "setWsdlFileUri");
         table.put(WebServicesTagNames.JAXRPC_MAPPING_FILE, "setMappingFileUri");
         return table;
     }
 
+
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return tag;
     }
@@ -82,11 +87,13 @@ public class WebServiceNode extends DisplayableComponentNode {
      *
      * @param descriptor the new descriptor
      */
+    @Override
     public void addDescriptor(Object descriptor) {
         WebServiceEndpoint endpoint = (WebServiceEndpoint) descriptor;
         WebService webService = (WebService) getDescriptor();
         webService.addEndpoint(endpoint);
     }
+
 
     /**
      * write the method descriptor class to a query-method DOM tree and
@@ -97,25 +104,18 @@ public class WebServiceNode extends DisplayableComponentNode {
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                WebService descriptor) {
-        Node topNode =
-            super.writeDescriptor(parent, nodeName, descriptor);
+    public Node writeDescriptor(Node parent, String nodeName, WebService descriptor) {
+        Node topNode = super.writeDescriptor(parent, nodeName, descriptor);
 
         writeDisplayableComponentInfo(topNode, descriptor);
 
-        appendTextChild(topNode,
-                        WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
-                        descriptor.getName());
-        appendTextChild(topNode, WebServicesTagNames.WSDL_FILE,
-                        descriptor.getWsdlFileUri());
-        appendTextChild(topNode, WebServicesTagNames.JAXRPC_MAPPING_FILE,
-                        descriptor.getMappingFileUri());
+        appendTextChild(topNode, WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME, descriptor.getName());
+        appendTextChild(topNode, WebServicesTagNames.WSDL_FILE, descriptor.getWsdlFileUri());
+        appendTextChild(topNode, WebServicesTagNames.JAXRPC_MAPPING_FILE, descriptor.getMappingFileUri());
 
         WebServiceEndpointNode endpointNode = new WebServiceEndpointNode();
-        for(WebServiceEndpoint next : descriptor.getEndpoints()) {
-            endpointNode.writeDescriptor
-                (topNode, WebServicesTagNames.PORT_COMPONENT, next);
+        for (WebServiceEndpoint next : descriptor.getEndpoints()) {
+            endpointNode.writeDescriptor(topNode, WebServicesTagNames.PORT_COMPONENT, next);
         }
 
         return topNode;

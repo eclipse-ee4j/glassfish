@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,12 @@
 
 package com.sun.enterprise.resource.allocator;
 
-import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
 
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+
 import java.util.Set;
 
 /**
@@ -27,34 +30,27 @@ import java.util.Set;
  */
 public interface ResourceAllocator {
 
-    public ResourceHandle createResource()
-            throws PoolingException;
+    ResourceHandle createResource() throws PoolingException;
 
-    public void fillInResourceObjects(ResourceHandle resource)
-            throws PoolingException;
+    void fillInResourceObjects(ResourceHandle resource) throws PoolingException;
 
-    public void closeUserConnection(ResourceHandle resource)
-            throws PoolingException;
+    void closeUserConnection(ResourceHandle resource) throws PoolingException;
 
-    public void destroyResource(ResourceHandle resource)
-            throws PoolingException;
+    void destroyResource(ResourceHandle resource) throws PoolingException;
 
-    public boolean matchConnection(ResourceHandle h);
+    boolean matchConnection(ResourceHandle h);
 
+    boolean isTransactional();
 
-    public boolean isTransactional();
+    void cleanup(ResourceHandle resource) throws PoolingException;
 
-    public void cleanup(ResourceHandle resource) throws PoolingException;
+    boolean shareableWithinComponent();
 
-    public boolean shareableWithinComponent();
+    Object getSharedConnection(ResourceHandle h) throws PoolingException;
 
-    public Object getSharedConnection(ResourceHandle h)
-            throws PoolingException;
+    Set<ManagedConnection> getInvalidConnections(Set<ManagedConnection> connectionSet) throws ResourceException;
 
-    public Set getInvalidConnections(Set connectionSet)
-            throws ResourceException;
+    boolean isConnectionValid(ResourceHandle resource);
 
-    public boolean isConnectionValid(ResourceHandle resource);
-
-    public boolean hasValidatingMCF();
+    boolean hasValidatingMCF();
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,8 +46,8 @@ public class InjectionInfo {
     public InjectionInfo() {
     }
 
-    public InjectionInfo(String cName, String postmName, String premName,
-            List<InjectionCapable> resources) {
+
+    public InjectionInfo(String cName, String postmName, String premName, List<InjectionCapable> resources) {
         className = cName;
         postConstructMethodName = postmName;
         preDestroyMethodName = premName;
@@ -55,7 +56,7 @@ public class InjectionInfo {
 
     public List<InjectionCapable> getInjectionResources() {
         if (injectionResources == null) {
-            injectionResources = new LinkedList<InjectionCapable>();
+            injectionResources = new LinkedList<>();
         }
         return injectionResources;
     }

@@ -284,7 +284,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     }
 
     /**
-      * Gets the home classname of the referee EJB.
+      * @return the home classname of the referee EJB.
       */
     public String getHomeClassName() {
         return refHomeIntf;
@@ -293,7 +293,6 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     /**
      * Sets the home classname of the bean to whcioh I refer.
      */
-
     public void setHomeClassName(String homeClassName) {
         refHomeIntf = homeClassName;
     }
@@ -363,22 +362,22 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     public void print(StringBuffer toStringBuffer) {
         String localVsRemote = isLocal() ? "Local" : "Remote";
         toStringBuffer.append(localVsRemote + " ejb-ref ");
-        toStringBuffer.append("name="+getName());
+        toStringBuffer.append("name=" + getName());
 
-        if( isEJB30ClientView() ) {
-            toStringBuffer.append("," + localVsRemote + " 3.x interface ="+getEjbInterface());
+        if (isEJB30ClientView()) {
+            toStringBuffer.append("," + localVsRemote + " 3.x interface =" + getEjbInterface());
         } else {
-            toStringBuffer.append("," + localVsRemote + " 2.x home ="+getEjbHomeInterface());
-            toStringBuffer.append("," + localVsRemote + " 2.x component interface="+getEjbInterface());
+            toStringBuffer.append("," + localVsRemote + " 2.x home =" + getEjbHomeInterface());
+            toStringBuffer.append("," + localVsRemote + " 2.x component interface=" + getEjbInterface());
         }
 
-        if( ejbDescriptor != null ) {
-            toStringBuffer.append(" resolved to intra-app EJB "+ejbDescriptor.getName() +
-            " in module " + ejbDescriptor.getEjbBundleDescriptor().getModuleName());
+        if (ejbDescriptor != null) {
+            toStringBuffer.append(" resolved to intra-app EJB " + ejbDescriptor.getName() + " in module "
+                + ejbDescriptor.getEjbBundleDescriptor().getModuleName());
         }
 
-        toStringBuffer.append(",ejb-link="+getLinkName());
-        toStringBuffer.append(",lookup="+getLookupName());
+        toStringBuffer.append(",ejb-link=" + getLinkName());
+        toStringBuffer.append(",lookup=" + getLookupName());
         toStringBuffer.append(",mappedName="+getMappedName());
         toStringBuffer.append(",jndi-name=" + getValue());
 

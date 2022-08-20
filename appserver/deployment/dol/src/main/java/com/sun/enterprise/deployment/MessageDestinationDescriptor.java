@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,21 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+
 /**
- * This class represents information about a web service
- * endpoint.
+ * This class represents information about a web service endpoint.
  *
  * @author Kenneth Saks
  */
-
-import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
-import org.glassfish.deployment.common.Descriptor;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 public class MessageDestinationDescriptor extends Descriptor implements NamedDescriptor{
+
+    private static final long serialVersionUID = 1L;
 
     private String msgDestName;
 
@@ -41,7 +42,7 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
     private String lookupName;
 
     // Set of MessageDestinationReferencer descriptors pointing to me.
-    private Set referencers = new HashSet();
+    private final Set<MessageDestinationReferencer> referencers = new HashSet<>();
 
     // bundle in which I am defined
     private BundleDescriptor bundleDescriptor;
@@ -55,21 +56,25 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
     }
 
     public boolean hasName() {
-        return (msgDestName != null);
+        return msgDestName != null;
     }
 
+    @Override
     public void setName(String name) {
         msgDestName = name;
     }
 
+    @Override
     public String getName() {
         return msgDestName;
     }
 
+    @Override
     public void setDisplayName(String displayName) {
         setLocalizedDisplayName(null, displayName);
     }
 
+    @Override
     public String getDisplayName() {
         return getLocalizedDisplayName(null);
     }
@@ -91,27 +96,28 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
     }
 
     public void setBundleDescriptor(BundleDescriptor bundleDesc) {
-        if( bundleDesc == null ) {
-            for(Iterator iter = referencers.iterator(); iter.hasNext();) {
-                MessageDestinationReferencer next =
-                    (MessageDestinationReferencer) iter.next();
-                next.setMessageDestination(null);
+        if (bundleDesc == null) {
+            for (MessageDestinationReferencer referencer : referencers) {
+                referencer.setMessageDestination(null);
             }
             referencers.clear();
         }
         bundleDescriptor = bundleDesc;
     }
 
+    @Override
     public String getJndiName() {
-        if (jndiName != null  && ! jndiName.equals("")) {
+        if (jndiName != null && !jndiName.isEmpty()) {
             return jndiName;
         }
-        if (mappedName != null && ! mappedName.equals("")) {
+        if (mappedName != null && !mappedName.isEmpty()) {
             return mappedName;
         }
         return lookupName;
     }
 
+
+    @Override
     public void setJndiName(String physicalDestinationName) {
         jndiName = physicalDestinationName;
     }
@@ -129,7 +135,7 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
     }
 
     public String getLookupName() {
-        return (lookupName != null)? lookupName : "";
+        return lookupName == null ? "" : lookupName;
     }
 
 }

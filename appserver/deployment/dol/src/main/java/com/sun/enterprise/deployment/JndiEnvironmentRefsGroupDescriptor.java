@@ -41,18 +41,18 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
         JndiEnvironmentRefsGroupDescriptor.class);
 
-    protected Map<CallbackType, Set<LifecycleCallbackDescriptor>> callbackDescriptors = new HashMap<>();
+    private final Map<CallbackType, Set<LifecycleCallbackDescriptor>> callbackDescriptors = new HashMap<>();
 
-    protected BundleDescriptor bundleDescriptor;
+    private BundleDescriptor bundleDescriptor;
 
-    protected Set<EnvironmentProperty> environmentProperties;
-    protected Set<EjbReferenceDescriptor> ejbReferences;
-    protected Set<ResourceEnvReferenceDescriptor> resourceEnvReferences;
-    protected Set<MessageDestinationReferenceDescriptor> messageDestReferences;
-    protected Set<ResourceReferenceDescriptor> resourceReferences;
-    protected Set<ServiceReferenceDescriptor> serviceReferences;
-    protected Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences;
-    protected Set<EntityManagerReferenceDescriptor> entityManagerReferences;
+    private Set<EnvironmentProperty> environmentProperties;
+    private Set<EjbReferenceDescriptor> ejbReferences;
+    private Set<ResourceEnvReferenceDescriptor> resourceEnvReferences;
+    private Set<MessageDestinationReferenceDescriptor> messageDestReferences;
+    private Set<ResourceReferenceDescriptor> resourceReferences;
+    private Set<ServiceReferenceDescriptor> serviceReferences;
+    private Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences;
+    private Set<EntityManagerReferenceDescriptor> entityManagerReferences;
 
     public void setBundleDescriptor(BundleDescriptor desc) {
         bundleDescriptor = desc;
@@ -67,7 +67,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
         Set<LifecycleCallbackDescriptor> llcDescs = getCallbackDescriptors(type);
         boolean found = false;
         for (LifecycleCallbackDescriptor llcD : llcDescs) {
-            if ((llcDesc.getLifecycleCallbackClass() != null)
+            if (llcDesc.getLifecycleCallbackClass() != null
                 && llcDesc.getLifecycleCallbackClass().equals(llcD.getLifecycleCallbackClass())) {
                 found = true;
             }
@@ -273,8 +273,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
     @Override
     public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
-        for (Object element : this.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor) element;
+        for (ServiceReferenceDescriptor srd : this.getServiceReferenceDescriptors()) {
             if (srd.getName().equals(name)) {
                 return srd;
             }
@@ -287,8 +286,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public void removeServiceReferenceDescriptor(
-        ServiceReferenceDescriptor serviceReference) {
+    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference) {
         this.getServiceReferenceDescriptors().remove(serviceReference);
     }
 
@@ -312,8 +310,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
     @Override
     public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
-        for (Object element : this.getResourceReferenceDescriptors()) {
-            ResourceReferenceDescriptor next = (ResourceReferenceDescriptor) element;
+        for (ResourceReferenceDescriptor next : this.getResourceReferenceDescriptors()) {
             if (next.getName().equals(name)) {
                 return next;
             }
@@ -350,10 +347,9 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
     @Override
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
-        for (Object element : this.getResourceEnvReferenceDescriptors()) {
-            ResourceEnvReferenceDescriptor jdr = (ResourceEnvReferenceDescriptor) element;
-            if (jdr.getName().equals(name)) {
-                return jdr;
+        for (ResourceEnvReferenceDescriptor element : this.getResourceEnvReferenceDescriptors()) {
+            if (element.getName().equals(name)) {
+                return element;
             }
         }
         throw new IllegalArgumentException(localStrings.getLocalString(
@@ -442,7 +438,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public InjectionInfo getInjectionInfoByClass(Class clazz) {
+    public InjectionInfo getInjectionInfoByClass(Class<?> clazz) {
         throw new UnsupportedOperationException();
     }
 }

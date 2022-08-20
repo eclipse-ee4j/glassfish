@@ -30,7 +30,7 @@ public abstract class CommonResourceBundleDescriptor extends BundleDescriptor {
 
     private static final long serialVersionUID = 3030097808191647490L;
 
-    ResourceDescriptorRegistry resourceDescriptorRegistry = new ResourceDescriptorRegistry();
+    private final ResourceDescriptorRegistry resourceDescriptorRegistry = new ResourceDescriptorRegistry();
 
     public CommonResourceBundleDescriptor() {
         super();

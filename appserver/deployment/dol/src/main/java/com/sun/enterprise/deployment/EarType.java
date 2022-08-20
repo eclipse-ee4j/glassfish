@@ -26,6 +26,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author sanjeeb.sahoo@oracle.com
  */
 @Service(name = EarType.ARCHIVE_TYPE)
+// don't change to imports, it is easy to make a mistake and replace it with ejb's Singleton
 @jakarta.inject.Singleton
 public class EarType extends ArchiveType {
 

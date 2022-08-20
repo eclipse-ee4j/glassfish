@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +20,13 @@ package com.sun.enterprise.container.common.spi.util;
 
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 
-import java.util.*;
-
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  */
@@ -32,17 +37,17 @@ public class InterceptorInfo {
     private List postConstructInterceptors = new LinkedList();
     private List preDestroyInterceptors = new LinkedList();
 
-    private Map<Method, List> aroundInvokeChains = new HashMap<Method, List>();
+    private Map<Method, List<InterceptorDescriptor>> aroundInvokeChains = new HashMap<>();
 
-    private Set<String> interceptorClassNames = new HashSet<String>();
+    private Set<String> interceptorClassNames = new HashSet<>();
 
     // True if a system interceptor needs to be added dynamically
     private boolean supportRuntimeDelegate;
 
     private Object targetObjectInstance;
-    private Class targetClass;
+    private Class<?> targetClass;
 
-    private boolean hasTargetClassAroundInvoke = false;
+    private boolean hasTargetClassAroundInvoke;
 
     public void setTargetObjectInstance(Object instance) {
         targetObjectInstance = instance;
@@ -52,11 +57,11 @@ public class InterceptorInfo {
         return targetObjectInstance;
     }
 
-    public void setTargetClass(Class targetClass) {
+    public void setTargetClass(Class<?> targetClass) {
         this.targetClass = targetClass;
     }
 
-    public Class getTargetClass() {
+    public Class<?> getTargetClass() {
         return this.targetClass;
     }
 
@@ -85,15 +90,15 @@ public class InterceptorInfo {
     }
 
     public void setInterceptorClassNames(Set<String> names) {
-        interceptorClassNames = new HashSet<String>(names);
+        interceptorClassNames = new HashSet<>(names);
     }
 
     public Set<String> getInterceptorClassNames() {
         return interceptorClassNames;
     }
 
-    public void setAroundInvokeInterceptorChains(Map<Method, List> chains) {
-        aroundInvokeChains = new HashMap<Method, List>(chains);
+    public void setAroundInvokeInterceptorChains(Map<Method, List<InterceptorDescriptor>> chains) {
+        aroundInvokeChains = new HashMap<>(chains);
     }
 
 
@@ -106,8 +111,7 @@ public class InterceptorInfo {
     }
 
 
-    public List getAroundInvokeInterceptors(Method m) {
-
+    public List<InterceptorDescriptor> getAroundInvokeInterceptors(Method m) {
         return aroundInvokeChains.get(m);
     }
 

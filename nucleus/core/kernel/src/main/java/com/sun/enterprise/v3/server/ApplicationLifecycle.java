@@ -61,6 +61,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -886,26 +887,26 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         // Now load metadata from deployers.
         for (Deployer deployer : orderedDeployers) {
-            if (LOG.isLoggable(FINE)) {
-                LOG.fine("Ordered Deployer " + deployer.getClass());
-            }
+            LOG.log(Level.FINE, "Ordered Deployer {0}", deployer);
 
             final MetaData metadata = deployer.getMetaData();
             try {
-                if (metadata != null) {
-                    if (metadata.provides() == null || metadata.provides().length == 0) {
+                if (metadata == null) {
+                    deployer.loadMetaData(null, context);
+                } else {
+                    Class<?>[] provides = metadata.provides();
+                    if (provides == null || provides.length == 0) {
                         deployer.loadMetaData(null, context);
                     } else {
-                        for (Class<?> provide : metadata.provides()) {
-                            if (context.getModuleMetaData(provide) == null) {
+                        for (Class<?> provide : provides) {
+                            Object contextMetaData = context.getModuleMetaData(provide);
+                            if (contextMetaData == null) {
                                 context.addModuleMetaData(deployer.loadMetaData(provide, context));
                             } else {
                                 deployer.loadMetaData(null, context);
                             }
                         }
                     }
-                } else {
-                    deployer.loadMetaData(null, context);
                 }
             } catch (Exception e) {
                 report.failure(LOG, "Exception while invoking " + deployer.getClass() + " prepare method", e);

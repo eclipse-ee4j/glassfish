@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,20 @@
 
 package org.glassfish.extras.grizzly;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.api.deployment.Deployer;
-import org.glassfish.api.deployment.MetaData;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.container.RequestDispatcher;
-import org.glassfish.extras.grizzly.GrizzlyModuleDescriptor.GrizzlyProperty;
-
-import java.util.Map;
-import java.util.LinkedList;
-import java.util.logging.Level;
-
 import jakarta.inject.Inject;
 
-import com.sun.logging.LogDomains;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.glassfish.api.container.RequestDispatcher;
+import org.glassfish.api.deployment.Deployer;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.MetaData;
+import org.glassfish.extras.grizzly.GrizzlyModuleDescriptor.GrizzlyProperty;
 import org.glassfish.grizzly.http.server.HttpHandler;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Jerome Dochez
@@ -42,29 +41,34 @@ public class GrizzlyDeployer implements Deployer<GrizzlyContainer, GrizzlyApp> {
     @Inject
     RequestDispatcher dispatcher;
 
+    @Override
     public MetaData getMetaData() {
         return new MetaData(false, new Class[] { GrizzlyModuleDescriptor.class}, null);
     }
 
+    @Override
     public <V> V loadMetaData(Class<V> type, DeploymentContext context) {
         return type.cast(new GrizzlyModuleDescriptor(context.getSource(), context.getLogger()));
     }
 
+    @Override
     public boolean prepare(DeploymentContext context) {
         return true;
     }
 
     /**
-     * Deploy a {@link Adapter} pr {@link GrizzlyAdapter}.
+     * Deploy a {@link GrizzlyApp.Adapter}.
+     *
      * @param container
      * @param context
-     * @return
+     * @return GrizzlyApp
      */
+    @Override
     public GrizzlyApp load(GrizzlyContainer container, DeploymentContext context) {
 
         GrizzlyModuleDescriptor configs = context.getModuleMetaData(GrizzlyModuleDescriptor.class);
 
-        LinkedList<GrizzlyApp.Adapter> modules = new LinkedList<GrizzlyApp.Adapter>();
+        LinkedList<GrizzlyApp.Adapter> modules = new LinkedList<>();
 
 
         Map<String,ArrayList<GrizzlyProperty>>
@@ -72,11 +76,10 @@ public class GrizzlyDeployer implements Deployer<GrizzlyContainer, GrizzlyApp> {
         for (Map.Entry<String, String> config : configs.getAdapters().entrySet()) {
             HttpHandler httpHandler;
             try {
-                Class adapterClass = context.getClassLoader().loadClass(config.getValue());
-                httpHandler = HttpHandler.class.cast(adapterClass.newInstance());
-                ArrayList<GrizzlyProperty> list =
-                        properties.get(config.getValue());
-                for (GrizzlyProperty p: list){
+                Class<?> adapterClass = context.getClassLoader().loadClass(config.getValue());
+                httpHandler = HttpHandler.class.cast(adapterClass.getDeclaredConstructor().newInstance());
+                ArrayList<GrizzlyProperty> list = properties.get(config.getValue());
+                for (GrizzlyProperty p : list) {
                     IntrospectionUtils.setProperty(httpHandler, p.name, p.value);
                 }
                 httpHandler.start();
@@ -90,9 +93,11 @@ public class GrizzlyDeployer implements Deployer<GrizzlyContainer, GrizzlyApp> {
 
     }
 
+    @Override
     public void unload(GrizzlyApp appContainer, DeploymentContext context) {
     }
 
+    @Override
     public void clean(DeploymentContext context) {
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,6 @@ import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -28,47 +28,49 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * Shared implementation for deployment descriptor entities that can refer
- * to a message destination.  Each MessageDestinationReferencer has an
- * owner.  The owner can either be a MessageDestinationReference
+ * to a message destination. Each MessageDestinationReferencer has an
+ * owner. The owner can either be a MessageDestinationReference
  * or a MessageDrivenBean.
  *
  * @author Kenneth Saks
- *
-*/
-public class MessageDestinationReferencerImpl implements
-    MessageDestinationReferencer, Serializable {
+ */
+public class MessageDestinationReferencerImpl implements MessageDestinationReferencer, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     // holds the name of the message destination link.
-    private String messageDestinationLinkName=null;
+    private String messageDestinationLinkName;
 
     // In case the reference has been resolved, this points to the
     // referenced message destination.
-    private MessageDestinationDescriptor messageDestination=null;
+    private MessageDestinationDescriptor messageDestination;
 
-    private MessageDestinationReferenceDescriptor ownerMsgDestRef = null;
-    private EjbMessageBeanDescriptor ownerMsgBean = null;
+    private MessageDestinationReferenceDescriptor ownerMsgDestRef;
+    private EjbMessageBeanDescriptor ownerMsgBean;
 
     public MessageDestinationReferencerImpl(MessageDestinationReferencerImpl other) {
-        //super(other);
         messageDestinationLinkName = other.messageDestinationLinkName; // immutable String
         messageDestination = other.messageDestination; // copy as-is
         ownerMsgDestRef = other.ownerMsgDestRef; // copy as-is
         ownerMsgBean = other.ownerMsgBean; // copy as-is
     }
 
+
     public MessageDestinationReferencerImpl(Descriptor desc) {
-        if( desc instanceof MessageDestinationReferenceDescriptor ) {
+        if (desc instanceof MessageDestinationReferenceDescriptor) {
             ownerMsgDestRef = (MessageDestinationReferenceDescriptor) desc;
-        } else if( desc instanceof EjbMessageBeanDescriptor ) {
+        } else if (desc instanceof EjbMessageBeanDescriptor) {
             ownerMsgBean = (EjbMessageBeanDescriptor) desc;
         } else {
             throw new IllegalArgumentException("Invalid desc = " + desc);
         }
     }
 
+
     /**
      * True if the owner is a message destination reference.
      */
+    @Override
     public boolean ownedByMessageDestinationRef() {
         return (ownerMsgDestRef != null);
     }
@@ -76,6 +78,7 @@ public class MessageDestinationReferencerImpl implements
     /**
      * Get the descriptor for the message destination reference owner.
      */
+    @Override
     public MessageDestinationReferenceDescriptor getMessageDestinationRefOwner() {
         return ownerMsgDestRef;
     }
@@ -83,14 +86,16 @@ public class MessageDestinationReferencerImpl implements
     /**
      * True if the owner is a message-driven bean.
      */
+    @Override
     public boolean ownedByMessageBean() {
-        return (ownerMsgBean != null);
+        return ownerMsgBean != null;
     }
 
 
     /**
      * Get the descriptor for the message-driven bean owner.
      */
+    @Override
     public EjbMessageBeanDescriptor getMessageBeanOwner() {
         return ownerMsgBean;
     }
@@ -99,15 +104,18 @@ public class MessageDestinationReferencerImpl implements
      * True if this reference has been resolved to a valid MessageDestination
      * object.
      */
+    @Override
     public boolean isLinkedToMessageDestination() {
-        return (messageDestination != null);
+        return messageDestination != null;
     }
 
+
     private BundleDescriptor getBundleDescriptor() {
-        return ownedByMessageDestinationRef() ?
-            ownerMsgDestRef.getReferringBundleDescriptor() :
-            ownerMsgBean.getEjbBundleDescriptor();
+        return ownedByMessageDestinationRef()
+            ? ownerMsgDestRef.getReferringBundleDescriptor()
+            : ownerMsgBean.getEjbBundleDescriptor();
     }
+
 
     /**
      * @return the link name of the message destination to which I refer
@@ -115,6 +123,7 @@ public class MessageDestinationReferencerImpl implements
      * name of the target message destination, since the message destination
      * could be defined in a different module.
      */
+    @Override
     public String getMessageDestinationLinkName() {
         return messageDestinationLinkName;
     }
@@ -125,6 +134,7 @@ public class MessageDestinationReferencerImpl implements
      * alternate version of setMessageDestinationLinkName or resolveLink
      * if link resolution is required.
      */
+    @Override
     public void setMessageDestinationLinkName(String linkName) {
         setMessageDestinationLinkName(linkName, false);
     }
@@ -138,14 +148,13 @@ public class MessageDestinationReferencerImpl implements
      * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
+    @Override
     public MessageDestinationDescriptor setMessageDestinationLinkName(String linkName, boolean resolve) {
         messageDestinationLinkName = linkName;
-        MessageDestinationDescriptor msgDest = null;
-
         if (resolve) {
-            msgDest = resolveLinkName();
+            return resolveLinkName();
         }
-        return msgDest;
+        return null;
     }
 
     /**
@@ -155,18 +164,19 @@ public class MessageDestinationReferencerImpl implements
      * @return MessageDestination to which link was resolved, or null if
      * link name resolution failed.
      */
+    @Override
     public MessageDestinationDescriptor resolveLinkName() {
         MessageDestinationDescriptor msgDest = null;
 
         String linkName = messageDestinationLinkName;
 
-        if( (linkName != null) && (linkName.length() > 0) ) {
+        if (linkName != null && !linkName.isEmpty()) {
             int hashIndex = linkName.indexOf('#');
 
             BundleDescriptor bundleDescriptor = getBundleDescriptor();
             Application app = bundleDescriptor.getApplication();
             if (app == null && bundleDescriptor instanceof Application) {
-                app = (Application)bundleDescriptor;
+                app = (Application) bundleDescriptor;
             }
             BundleDescriptor targetBundle = null;
             String msgDestName = linkName;
@@ -187,10 +197,11 @@ public class MessageDestinationReferencerImpl implements
                     // reference have names that are unique within all the
                     // message destinations in the .ear.  There is no
                     // required search ordering.
-                    if (!bundleDescriptor.hasMessageDestinationByName(msgDestName)) {
-                        Set modules = app.getBundleDescriptors();
-                        for (Iterator iter = modules.iterator(); iter.hasNext();) {
-                            BundleDescriptor next = (BundleDescriptor) iter.next();
+                    if (bundleDescriptor.hasMessageDestinationByName(msgDestName)) {
+                        targetBundle = bundleDescriptor;
+                    } else {
+                        Set<BundleDescriptor> modules = app.getBundleDescriptors();
+                        for (BundleDescriptor next : modules) {
                             if (next.hasMessageDestinationByName(msgDestName)) {
                                 targetBundle = next;
                                 break;
@@ -200,19 +211,17 @@ public class MessageDestinationReferencerImpl implements
                         // also look in extension bundle descriptors
                         // for ejb in war case
                         if (targetBundle == null) {
-                            Collection<RootDeploymentDescriptor> extensionBundles = bundleDescriptor.getExtensionsDescriptors();
-                            for(Iterator<RootDeploymentDescriptor> itr = extensionBundles.iterator(); itr.hasNext();) {
-                                RootDeploymentDescriptor next = itr.next();
+                            Collection<RootDeploymentDescriptor> extensionBundles = bundleDescriptor
+                                .getExtensionsDescriptors();
+                            for (RootDeploymentDescriptor next : extensionBundles) {
                                 if (next instanceof BundleDescriptor) {
-                                    if (((BundleDescriptor)next).hasMessageDestinationByName(msgDestName) ) {
-                                        targetBundle = (BundleDescriptor)next;
+                                    if (((BundleDescriptor) next).hasMessageDestinationByName(msgDestName)) {
+                                        targetBundle = (BundleDescriptor) next;
                                         break;
                                     }
                                 }
                             }
                         }
-                    } else {
-                        targetBundle = bundleDescriptor;
                     }
                 }
             }
@@ -230,16 +239,20 @@ public class MessageDestinationReferencerImpl implements
         return msgDest;
     }
 
+
     /**
      * @return the message destination to which I refer. Can be NULL.
-    */
+     */
+    @Override
     public MessageDestinationDescriptor getMessageDestination() {
         return messageDestination;
     }
 
+
     /**
      * @param newMsgDest the message destination to which I refer.
      */
+    @Override
     public void setMessageDestination(MessageDestinationDescriptor newMsgDest) {
         if (messageDestination != null) {
             messageDestination.removeReferencer(this);

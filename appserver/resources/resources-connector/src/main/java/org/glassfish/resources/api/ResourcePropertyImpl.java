@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,49 +21,61 @@ import com.sun.enterprise.repository.ResourceProperty;
 
 import java.io.Serializable;
 
-public class ResourcePropertyImpl implements ResourceProperty,
-    Serializable {
+public class ResourcePropertyImpl implements ResourceProperty, Serializable {
 
-    private String name_;
-    private Object value_;
+    private static final long serialVersionUID = 1L;
+    private final String name;
+    private String value;
 
     public ResourcePropertyImpl(String name) {
-        name_  = name;
-        value_ = null;
+        this.name = name;
+        this.value = null;
     }
 
-    public ResourcePropertyImpl(String name, Object value) {
-        name_  = name;
-        value_ = value;
+
+    public ResourcePropertyImpl(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
 
+
+    @Override
     public String getName() {
-        return name_;
+        return name;
     }
 
-    public Object getValue() {
-        return value_;
+
+    @Override
+    public String getValue() {
+        return value;
     }
 
-    public void setValue(Object value) {
-        value_ = value;
+
+    @Override
+    public void setValue(String value) {
+        this.value = value;
     }
 
+
+    @Override
     public int hashCode() {
-        return name_.hashCode();
+        return name.hashCode();
     }
 
+
+    @Override
     public boolean equals(Object other) {
         boolean equal = false;
-        if( other instanceof ResourceProperty ) {
+        if (other instanceof ResourceProperty) {
             ResourceProperty otherProp = (ResourceProperty) other;
-            equal = this.name_.equals(otherProp.getName());
+            equal = this.name.equals(otherProp.getName());
         }
         return equal;
     }
 
+
+    @Override
     public String toString() {
-        return "ResourceProperty : < " + getName() + " , " + getValue() +
-            " >";
+        return "ResourceProperty : < " + getName() + " , " + getValue() + " >";
     }
 }

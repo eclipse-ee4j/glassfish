@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,19 @@ package org.glassfish.webservices.deployment;
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
-import org.glassfish.external.probe.provider.annotations.ProbeParam;
-import org.glassfish.gmbal.*;
-import org.glassfish.webservices.WebServiceDeploymentNotifier;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+
+import org.glassfish.external.probe.provider.annotations.ProbeParam;
+import org.glassfish.gmbal.AMXMetadata;
+import org.glassfish.gmbal.Description;
+import org.glassfish.gmbal.ManagedObject;
+import org.glassfish.gmbal.ManagedOperation;
+import org.glassfish.webservices.WebServiceDeploymentNotifier;
 
 
 /**
@@ -38,7 +47,7 @@ import java.util.*;
 @Description("Deployed Web Services")
 public class WebServicesDeploymentMBean {
     // appName --> Application
-    private final Map<String, Application> applications = new HashMap<String, Application>();
+    private final Map<String, Application> applications = new HashMap<>();
 
     private static class Application {
         final String appName;
@@ -46,19 +55,20 @@ public class WebServicesDeploymentMBean {
 
         Application(String appName) {
             this.appName = appName;
-            modules = new HashMap<String, Module>();
+            modules = new HashMap<>();
         }
+
 
         // moduleName --> <endpointName --> DeployedEndpointData>
         Map<String, Map<String, DeployedEndpointData>> getDeployedEndpointData() {
-            Map<String, Map<String, DeployedEndpointData>> tempEndpoints =
-                    new HashMap<String, Map<String, DeployedEndpointData>>();
-            for(Map.Entry<String, Module> e : modules.entrySet()) {
+            Map<String, Map<String, DeployedEndpointData>> tempEndpoints = new HashMap<>();
+            for (Map.Entry<String, Module> e : modules.entrySet()) {
                 tempEndpoints.put(e.getKey(), e.getValue().getDeployedEndpointData());
 
             }
             return tempEndpoints;
         }
+
 
         // moduleName --> <endpointName --> DeployedEndpointData>
         Map<String, Map<String, DeployedEndpointData>> getDeployedEndpointData(String moduleName) {
@@ -66,11 +76,11 @@ public class WebServicesDeploymentMBean {
             if (module == null) {
                 return Collections.emptyMap();
             }
-            Map<String, Map<String, DeployedEndpointData>> tempEndpoints =
-                    new HashMap<String, Map<String, DeployedEndpointData>>();
+            Map<String, Map<String, DeployedEndpointData>> tempEndpoints = new HashMap<>();
             tempEndpoints.put(moduleName, module.getDeployedEndpointData());
             return tempEndpoints;
         }
+
 
         // moduleName --> <endpointName --> DeployedEndpointData>
         Map<String, Map<String, DeployedEndpointData>> getDeployedEndpointData(String moduleName, String endpointName) {
@@ -78,11 +88,11 @@ public class WebServicesDeploymentMBean {
             if (module == null) {
                 return Collections.emptyMap();
             }
-            Map<String, Map<String, DeployedEndpointData>> tempEndpoints =
-                    new HashMap<String, Map<String, DeployedEndpointData>>();
+            Map<String, Map<String, DeployedEndpointData>> tempEndpoints = new HashMap<>();
             tempEndpoints.put(moduleName, module.getDeployedEndpointData(endpointName));
             return tempEndpoints;
         }
+
 
         void addEndpoint(String moduleName, String endpointName, DeployedEndpointData endpointData) {
             Module module = modules.get(moduleName);
@@ -92,6 +102,7 @@ public class WebServicesDeploymentMBean {
             }
             module.addEndpoint(endpointName, endpointData);
         }
+
 
         void removeEndpoint(String moduleName, String endpointName) {
             Module module = modules.get(moduleName);
@@ -103,19 +114,23 @@ public class WebServicesDeploymentMBean {
             }
         }
 
+
         boolean isEmpty() {
             return modules.isEmpty();
         }
 
+
         @Override
         public boolean equals(Object obj) {
             if (obj instanceof Application) {
-                Application other = (Application)obj;
-                if (appName.equals(other.appName))
+                Application other = (Application) obj;
+                if (appName.equals(other.appName)) {
                     return true;
+                }
             }
             return false;
         }
+
 
         @Override
         public int hashCode() {
@@ -136,12 +151,12 @@ public class WebServicesDeploymentMBean {
         Module(String appName, String moduleName) {
             this.appName = appName;
             this.moduleName = moduleName;
-            endpoints = new HashMap<String, Endpoint>();
+            endpoints = new HashMap<>();
         }
 
         // endpointName --> DeployedEndpointData
         Map<String, DeployedEndpointData> getDeployedEndpointData() {
-            Map<String, DeployedEndpointData> tempEndpoints = new HashMap<String, DeployedEndpointData>();
+            Map<String, DeployedEndpointData> tempEndpoints = new HashMap<>();
             for(Map.Entry<String, Endpoint> e : endpoints.entrySet()) {
                 tempEndpoints.put(e.getKey(), e.getValue().getDeployedEndpointData());
 
@@ -155,7 +170,7 @@ public class WebServicesDeploymentMBean {
             if (endpoint == null) {
                 return Collections.emptyMap();
             }
-            Map<String, DeployedEndpointData> tempEndpoints = new HashMap<String, DeployedEndpointData>();
+            Map<String, DeployedEndpointData> tempEndpoints = new HashMap<>();
             tempEndpoints.put(endpointName, endpoint.getDeployedEndpointData());
             return tempEndpoints;
         }
@@ -180,20 +195,21 @@ public class WebServicesDeploymentMBean {
         public boolean equals(Object obj) {
             if (obj instanceof Module) {
                 Module other = (Module)obj;
-                if (appName.equals(other.appName) && moduleName.equals(other.moduleName))
+                if (appName.equals(other.appName) && moduleName.equals(other.moduleName)) {
                     return true;
+                }
             }
             return false;
         }
 
         @Override
         public int hashCode() {
-            return appName.hashCode()+moduleName.hashCode();
+            return Objects.hash(appName, moduleName);
         }
 
         @Override
         public String toString() {
-            return appName+"#"+moduleName;
+            return appName + "#" + moduleName;
         }
     }
 
@@ -218,20 +234,23 @@ public class WebServicesDeploymentMBean {
         public boolean equals(Object obj) {
             if (obj instanceof Endpoint) {
                 Endpoint other = (Endpoint)obj;
-                if (appName.equals(other.appName) && moduleName.equals(other.moduleName) && endpointName.equals(other.endpointName))
+                if (appName.equals(other.appName) && moduleName.equals(other.moduleName) && endpointName.equals(other.endpointName)) {
                     return true;
+                }
             }
             return false;
         }
 
+
         @Override
         public int hashCode() {
-            return appName.hashCode()+moduleName.hashCode()+endpointName.hashCode();
+            return Objects.hash(appName, moduleName, endpointName);
         }
+
 
         @Override
         public String toString() {
-            return appName+"#"+moduleName+"#"+endpointName;
+            return appName + "#" + moduleName + "#" + endpointName;
         }
     }
 
@@ -271,14 +290,16 @@ public class WebServicesDeploymentMBean {
         }
     }
 
+
     public synchronized void deploy(WebServicesDescriptor wsDesc, WebServiceDeploymentNotifier notifier) {
-        for(WebService svc : wsDesc.getWebServices()) {
-            for(WebServiceEndpoint endpoint : svc.getEndpoints()) {
+        for (WebService svc : wsDesc.getWebServices()) {
+            for (WebServiceEndpoint endpoint : svc.getEndpoints()) {
                 deploy(endpoint);
                 notifier.notifyDeployed(endpoint);
             }
         }
     }
+
 
     public synchronized void undeploy(String appName) {
         applications.remove(appName);
@@ -289,9 +310,8 @@ public class WebServicesDeploymentMBean {
         if (applications.isEmpty()) {
             return Collections.emptyMap();
         }
-        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints =
-                new HashMap<String, Map<String, Map<String, DeployedEndpointData>>>();
-        for(Map.Entry<String, Application> e : applications.entrySet()) {
+        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints = new HashMap<>();
+        for (Entry<String, Application> e : applications.entrySet()) {
             endpoints.put(e.getKey(), e.getValue().getDeployedEndpointData());
         }
         return endpoints;
@@ -305,31 +325,31 @@ public class WebServicesDeploymentMBean {
         if (app == null) {
             return Collections.emptyMap();
         }
-        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints =
-                new HashMap<String, Map<String, Map<String, DeployedEndpointData>>>();
+        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints = new HashMap<>();
         endpoints.put(appName, app.getDeployedEndpointData());
         return endpoints;
     }
 
     // Returns a snapshot of all the endpoints in an application's module
-    public synchronized Map<String, Map<String, Map<String, DeployedEndpointData>>> getEndpoints(String appName, String moduleName) {
+    public synchronized Map<String, Map<String, Map<String, DeployedEndpointData>>> getEndpoints(String appName,
+        String moduleName) {
         Application app = applications.get(appName);
         if (app == null) {
             return Collections.emptyMap();
         }
-        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints =
-                new HashMap<String, Map<String, Map<String, DeployedEndpointData>>>();
+        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints = new HashMap<>();
         endpoints.put(appName, app.getDeployedEndpointData(moduleName));
         return endpoints;
     }
 
-    public synchronized Map<String, Map<String, Map<String, DeployedEndpointData>>> getEndpoint(String appName, String moduleName, String endpointName) {
+
+    public synchronized Map<String, Map<String, Map<String, DeployedEndpointData>>> getEndpoint(String appName,
+        String moduleName, String endpointName) {
         Application app = applications.get(appName);
         if (app == null) {
             return Collections.emptyMap();
         }
-        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints =
-                new HashMap<String, Map<String, Map<String, DeployedEndpointData>>>();
+        Map<String, Map<String, Map<String, DeployedEndpointData>>> endpoints = new HashMap<>();
         endpoints.put(appName, app.getDeployedEndpointData(moduleName, endpointName));
         return endpoints;
     }

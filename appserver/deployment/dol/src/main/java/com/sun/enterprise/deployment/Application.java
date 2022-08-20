@@ -118,10 +118,6 @@ public class Application extends CommonResourceBundleDescriptor
      */
     private Boolean passByReference;
 
-    // use a String object as lock so it can be serialized as part
-    // of the Application object
-    private final String cmpDescriptorsLock = "cmp descriptors lock";
-
     // flag to indicate that the memory representation of this application
     // is not in sync with the disk representation
     private boolean isDirty;
@@ -880,11 +876,10 @@ public class Application extends CommonResourceBundleDescriptor
      * @return String value of the library directory setting
      */
     public String getLibraryDirectory() {
-        if (libraryDirectory != null) {
-            return (libraryDirectory.length() == 0) ? null : libraryDirectory;
-        } else {
+        if (libraryDirectory == null) {
             return LIBRARY_DIRECTORY_DEFAULT_VALUE;
         }
+        return libraryDirectory.isEmpty() ? null : libraryDirectory;
     }
 
     public String getLibraryDirectoryRawValue() {

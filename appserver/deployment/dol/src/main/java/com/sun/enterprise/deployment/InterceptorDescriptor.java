@@ -55,13 +55,13 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
 
-    public Class getInterceptorClass() {
+    public Class<?> getInterceptorClass() {
         return interceptorClass;
     }
 
     // Should ONLY be used for system-level interceptors whose class
     // is loaded by something other than the application class-loader
-    public void setInterceptorClass(Class c) {
+    public void setInterceptorClass(Class<?> c) {
         interceptorClass = c;
         setInterceptorClassName(c.getName());
     }
@@ -99,7 +99,6 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
      */
     public List<LifecycleCallbackDescriptor> getOrderedAroundTimeoutDescriptors(ClassLoader loader) throws Exception {
         return orderDescriptors(getAroundTimeoutDescriptors(), loader);
-
     }
 
 

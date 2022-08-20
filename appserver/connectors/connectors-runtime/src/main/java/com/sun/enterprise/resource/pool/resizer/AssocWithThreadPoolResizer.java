@@ -25,6 +25,8 @@ import com.sun.enterprise.resource.pool.datastructure.DataStructure;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -57,7 +59,7 @@ public class AssocWithThreadPoolResizer extends Resizer {
                     (ds.getResourcesSize() - pool.getSteadyPoolSize())) ? scaleDownQuantity : 0;
 
             debug("Scaling down pool by quantity : " + scaleDownQuantity);
-            Set<ResourceHandle> resourcesToRemove = new HashSet<ResourceHandle>();
+            Set<ResourceHandle> resourcesToRemove = new HashSet<>();
             try {
                 for (ResourceHandle h : ds.getAllResources()) {
                     if (scaleDownQuantity > 0) {
@@ -97,8 +99,8 @@ public class AssocWithThreadPoolResizer extends Resizer {
         int idleConnKeptInSteadyCounter = 0;
         ResourceState state;
 
-        Set<ResourceHandle> resourcesToValidate = new HashSet<ResourceHandle>();
-        Set<ResourceHandle> resourcesToRemove = new HashSet<ResourceHandle>();
+        Set<ResourceHandle> resourcesToValidate = new HashSet<>();
+        Set<ResourceHandle> resourcesToRemove = new HashSet<>();
         try {
             //iterate through all the resources to find idle-time lapsed ones.
             for (ResourceHandle h : ds.getAllResources()) {
@@ -181,13 +183,11 @@ public class AssocWithThreadPoolResizer extends Resizer {
             try {
                 for (ResourceHandle handle : freeConnectionsToValidate) {
                     if (handle != null) {
-                        Set connectionsToTest = new HashSet();
-                        connectionsToTest.add(handle.getResource());
-                        Set invalidConnections = handler.getInvalidConnections(connectionsToTest);
-                        if (invalidConnections != null && invalidConnections.size() > 0) {
+                        Set<ManagedConnection> connectionsToTest = new HashSet<>();
+                        connectionsToTest.add((ManagedConnection) handle.getResource());
+                        Set<ManagedConnection> invalidConnections = handler.getInvalidConnections(connectionsToTest);
+                        if (invalidConnections != null && !invalidConnections.isEmpty()) {
                             invalidConnectionsCount = validateAndRemoveResource(handle, invalidConnections);
-                        } else {
-                            //valid resource
                         }
                     }
                 }

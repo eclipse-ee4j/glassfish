@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,11 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * Information about the web services defined in a single module.
@@ -31,22 +31,25 @@ import java.util.Iterator;
  */
 public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
+    private static final long serialVersionUID = 1L;
+
     // Module in which these web services are defined.
     private BundleDescriptor bundleDesc;
 
-    private Collection<WebService> webServices;
+    private final Collection<WebService> webServices;
 
     /**
      * Default constructor.
      */
     public WebServicesDescriptor() {
-        webServices = new HashSet<WebService>();
+        webServices = new HashSet<>();
     }
 
     /**
      * @return the default version of the deployment descriptor
      * loaded by this descriptor
      */
+    @Override
     public String getDefaultSpecVersion() {
         return "1.3";//TODO fix this WebServicesDescriptorNode.SPEC_VERSION;
     }
@@ -63,6 +66,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
         return !(webServices.isEmpty());
     }
 
+    @Override
     public boolean isEmpty() {
         return webServices.isEmpty();
     }
@@ -89,7 +93,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
     }
 
     public Collection<WebService> getWebServices() {
-        return new HashSet<WebService>(webServices);
+        return new HashSet<>(webServices);
     }
 
     /**
@@ -97,8 +101,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
      * @return WebServiceEndpoint or null if not found
      */
     public WebServiceEndpoint getEndpointByName(String endpointName) {
-        for (Iterator iter = getEndpoints().iterator(); iter.hasNext();) {
-            WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
+        for (WebServiceEndpoint next : getEndpoints()) {
             if (next.getEndpointName().equals(endpointName)) {
                 return next;
             }
@@ -106,12 +109,14 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
         return null;
     }
 
+
     public boolean hasEndpointsImplementedBy(EjbDescriptor ejb) {
-        return !(getEndpointsImplementedBy(ejb).isEmpty());
+        return !getEndpointsImplementedBy(ejb).isEmpty();
     }
 
+
     public Collection<WebServiceEndpoint> getEndpointsImplementedBy(EjbDescriptor ejb) {
-        Collection<WebServiceEndpoint> endpoints = new HashSet();
+        Collection<WebServiceEndpoint> endpoints = new HashSet<>();
         if (ejb instanceof EjbSessionDescriptor) {
             for (WebServiceEndpoint next : getEndpoints()) {
                 if (next.implementedByEjbComponent(ejb)) {
@@ -122,12 +127,14 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
         return endpoints;
     }
 
+
     public boolean hasEndpointsImplementedBy(WebComponentDescriptor desc) {
-        return !(getEndpointsImplementedBy(desc).isEmpty());
+        return !getEndpointsImplementedBy(desc).isEmpty();
     }
 
+
     public Collection<WebServiceEndpoint> getEndpointsImplementedBy(WebComponentDescriptor desc) {
-        Collection<WebServiceEndpoint> endpoints = new HashSet();
+        Collection<WebServiceEndpoint> endpoints = new HashSet<>();
         for (WebServiceEndpoint next : getEndpoints()) {
             if (next.implementedByWebComponent(desc)) {
                 endpoints.add(next);
@@ -136,14 +143,17 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
         return endpoints;
     }
 
+
     public Collection<WebServiceEndpoint> getEndpoints() {
-        Collection allEndpoints = new HashSet();
+        Collection<WebServiceEndpoint> allEndpoints = new HashSet<>();
         for (WebService webService : webServices) {
             allEndpoints.addAll(webService.getEndpoints());
         }
         return allEndpoints;
     }
 
+
+    @Override
     public ArchiveType getModuleType() {
         if (bundleDesc != null) {
             return bundleDesc.getModuleType();
@@ -155,14 +165,17 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
     // Dummy RootDeploymentDescriptor implementations for methods that
     // do not apply to WebServicesDescriptor.
     //
+    @Override
     public String getModuleID() {
         return "";
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return null;
     }
 
+    @Override
     public boolean isApplication() {
         return false;
     }
@@ -170,13 +183,13 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
     /**
      * Returns a formatted String of the attributes of this object.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         super.print(toStringBuffer);
         if (hasWebServices()) {
-            for (Iterator itr = getWebServices().iterator();itr.hasNext();) {
-                WebService aWebService = (WebService) itr.next();
+            for (WebService ws : getWebServices()) {
                 toStringBuffer.append("\n Web Service : ");
-                aWebService.print(toStringBuffer);
+                ws.print(toStringBuffer);
             }
         }
     }

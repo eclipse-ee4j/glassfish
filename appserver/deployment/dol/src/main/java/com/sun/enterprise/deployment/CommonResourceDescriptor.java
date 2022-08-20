@@ -33,7 +33,7 @@ import org.glassfish.deployment.common.JavaEEResourceType;
 public abstract class CommonResourceDescriptor extends Descriptor {
 
     private static final long serialVersionUID = 1L;
-    ResourceDescriptorRegistry resourceDescriptorRegistry = new ResourceDescriptorRegistry();
+    private final ResourceDescriptorRegistry resourceDescriptorRegistry = new ResourceDescriptorRegistry();
 
     protected CommonResourceDescriptor() {
     }

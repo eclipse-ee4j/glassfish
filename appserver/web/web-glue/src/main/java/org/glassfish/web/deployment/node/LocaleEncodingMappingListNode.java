@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,31 +21,31 @@ import com.sun.enterprise.deployment.LocaleEncodingMappingDescriptor;
 import com.sun.enterprise.deployment.LocaleEncodingMappingListDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Enumeration;
+
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
 
 /**
  */
 public class LocaleEncodingMappingListNode extends DeploymentDescriptorNode {
+
+    protected LocaleEncodingMappingListDescriptor descriptor;
+
     public LocaleEncodingMappingListNode() {
         super();
-        registerElementHandler(
-            new XMLElement(WebTagNames.LOCALE_ENCODING_MAPPING),
-            LocaleEncodingMappingNode.class,
-            "addLocaleEncodingMapping"
-        );
+        registerElementHandler(new XMLElement(WebTagNames.LOCALE_ENCODING_MAPPING), LocaleEncodingMappingNode.class,
+            "addLocaleEncodingMapping");
     }
 
-    protected LocaleEncodingMappingListDescriptor descriptor = null;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
     public LocaleEncodingMappingListDescriptor getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new LocaleEncodingMappingListDescriptor();
         }
         return descriptor;
@@ -54,18 +55,17 @@ public class LocaleEncodingMappingListNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName node name for the root element of this xml fragment
+     * @param descriptor descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, LocaleEncodingMappingListDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         LocaleEncodingMappingNode lNode = new LocaleEncodingMappingNode();
-        for (Enumeration en = descriptor.getLocaleEncodingMappings(); en.hasMoreElements();) {
-            lNode.writeDescriptor(
-                myNode, WebTagNames.LOCALE_ENCODING_MAPPING, (LocaleEncodingMappingDescriptor) en.nextElement());
+        for (Enumeration<LocaleEncodingMappingDescriptor> en = descriptor.getLocaleEncodingMappings(); en
+            .hasMoreElements();) {
+            lNode.writeDescriptor(myNode, WebTagNames.LOCALE_ENCODING_MAPPING, en.nextElement());
         }
-
         return myNode;
     }
 }

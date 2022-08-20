@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,24 +23,25 @@ import com.sun.enterprise.repository.ResourceProperty;
 
 import java.io.Serializable;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 /**
  * This class represents the configuration information of the JavaMail
  * Session object within Java EE.
  */
 public class MailConfiguration implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+
     private static final String PROP_NAME_PREFIX_LEGACY = "mail-";
     private static final char PROP_NAME_DELIM_LEGACY = '-';
 
     private static final String MAIL_STORE_PROTOCOL = "mail.store.protocol";
-    private static final String MAIL_TRANSPORT_PROTOCOL =
-                                                    "mail.transport.protocol";
+    private static final String MAIL_TRANSPORT_PROTOCOL = "mail.transport.protocol";
     private static final String MAIL_HOST = "mail.host";
     private static final String MAIL_USER = "mail.user";
     private static final String MAIL_FROM = "mail.from";
@@ -47,8 +49,6 @@ public class MailConfiguration implements Serializable {
 
     private static final String MAIL_PREFIX = "mail.";
     private static final String MAIL_SUFFIX_CLASS = ".class";
-    private static final String MAIL_SUFFIX_HOST = ".host";
-    private static final String MAIL_SUFFIX_USER = ".user";
     private static final char MAIL_DELIM = '.';
 
     /**
@@ -56,26 +56,22 @@ public class MailConfiguration implements Serializable {
      */
     private String description = "";
     private String jndiName = "";
-    private boolean enabled = false;
-    private String storeProtocol = null;
-    private String storeProtocolClass = null;
-    private String transportProtocol = null;
-    private String transportProtocolClass = null;
-    private String mailHost = null;
-    private String username = null;
-    private String mailFrom = null;
-    private boolean debug = false;
+    private boolean enabled;
+    private String storeProtocol;
+    private String storeProtocolClass;
+    private String transportProtocol;
+    private String transportProtocolClass;
+    private String mailHost;
+    private String username;
+    private String mailFrom;
+    private boolean debug;
 
-    private Properties mailProperties = new Properties();
+    private final Properties mailProperties = new Properties();
 
-    static Logger _logger = DOLUtils.getDefaultLogger();
 
     /**
      * Construct a specification of mail configuration with the given username,
      * Mail From Address and mail hostname.
-     * @param the username.
-     * @param the from address.
-     * @param the mail hostname.
      */
     public MailConfiguration(String username, String mailFrom, String mailHost) {
         // called from MailConfigurationNode, which is never used
@@ -96,7 +92,7 @@ public class MailConfiguration implements Serializable {
         try {
             loadMailResources(mailRes);
         } catch (Exception ce) {
-            _logger.log(Level.INFO,"enterprise.deployment_mail_cfgexcp",ce);
+            LOG.log(Level.INFO,"enterprise.deployment_mail_cfgexcp",ce);
         }
     }
 
@@ -106,8 +102,7 @@ public class MailConfiguration implements Serializable {
      */
     private void loadMailResources(MailResourceIntf mailResource) throws Exception {
         if (mailResource == null) {
-            _logger.log(Level.FINE,
-                "MailConfiguration: no MailResource object. mailResource=null");
+            LOG.log(Level.FINE, "MailConfiguration: no MailResource object. mailResource is null");
             return;
         }
 
@@ -123,49 +118,41 @@ public class MailConfiguration implements Serializable {
         username = mailResource.getUsername();
         mailFrom = mailResource.getMailFrom();
         debug = mailResource.isDebug();
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("storeProtocol " + storeProtocol);
-            _logger.fine("storeProtocolClass " + storeProtocolClass);
-            _logger.fine("transportProtocol " + transportProtocol);
-            _logger.fine("transportProtocolClass " + transportProtocolClass);
-            _logger.fine("mailHost " + mailHost);
-            _logger.fine("username " + username);
-            _logger.fine("mailFrom " + mailFrom);
-            _logger.fine("debug " + debug);
-        }
 
         // JavaMail doesn't default this one properly
-        if (transportProtocol == null)
+        if (transportProtocol == null) {
             transportProtocol = "smtp";
+        }
 
         // Save to Property list
         put(MAIL_HOST, mailHost);
         put(MAIL_USER, username);
         put(MAIL_STORE_PROTOCOL, storeProtocol);
         put(MAIL_TRANSPORT_PROTOCOL, transportProtocol);
-        if (storeProtocol != null)
-            put(MAIL_PREFIX + storeProtocol + MAIL_SUFFIX_CLASS,
-                                                        storeProtocolClass);
-        if (transportProtocol != null)
-            put(MAIL_PREFIX + transportProtocol + MAIL_SUFFIX_CLASS,
-                                                        transportProtocolClass);
+        if (storeProtocol != null) {
+            put(MAIL_PREFIX + storeProtocol + MAIL_SUFFIX_CLASS, storeProtocolClass);
+        }
+        if (transportProtocol != null) {
+            put(MAIL_PREFIX + transportProtocol + MAIL_SUFFIX_CLASS, transportProtocolClass);
+        }
         put(MAIL_FROM, mailFrom);
         put(MAIL_DEBUG, (debug ? "true" : "false"));
 
         // Get the properties and save to Property list
-        Set properties = mailResource.getProperties();
+        Set<ResourceProperty> properties = mailResource.getProperties();
 
-        for (Iterator it = properties.iterator(); it.hasNext();) {
-            ResourceProperty property = (ResourceProperty)it.next();
+        for (ResourceProperty property : properties) {
             String name = property.getName();
-            String value = (String)property.getValue();
+            String value = property.getValue();
 
-            if (name.startsWith(PROP_NAME_PREFIX_LEGACY))
+            if (name.startsWith(PROP_NAME_PREFIX_LEGACY)) {
                 name = name.replace(PROP_NAME_DELIM_LEGACY, MAIL_DELIM);
+            }
 
             put(name, value);
-            if (_logger.isLoggable(Level.FINE))
-                _logger.fine("mail property: " + name + " = " + value);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("mail property: " + name + " = " + value);
+            }
         }
     }
 
@@ -173,8 +160,9 @@ public class MailConfiguration implements Serializable {
      * Set a mail property, if the value isn't null or empty.
      */
     private void put(String name, String value) {
-        if (value != null && value.length() > 0)
+        if (value != null && !value.isEmpty()) {
             mailProperties.put(name, value);
+        }
     }
 
     // XXX - none of the following mail-specific accessor methods
@@ -288,32 +276,30 @@ public class MailConfiguration implements Serializable {
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("MailConfiguration: [");
         toStringBuffer.append("description=").append(description);
-        toStringBuffer.append( ", jndiName=").append(jndiName);
-        toStringBuffer.append( ", enabled=").append(enabled);
+        toStringBuffer.append(", jndiName=").append(jndiName);
+        toStringBuffer.append(", enabled=").append(enabled);
 
-        toStringBuffer.append( ", storeProtocol=").append(storeProtocol);
-        toStringBuffer.append( ", transportProtocol=").
-                                                append(transportProtocol);
-        toStringBuffer.append( ", storeProtocolClass=").
-                                                append(storeProtocolClass);
-        toStringBuffer.append( ", transportProtocolClass=").
-                                                append(transportProtocolClass);
-        toStringBuffer.append( ", mailHost=").append(mailHost);
-        toStringBuffer.append( ", username=").append(username);
-        toStringBuffer.append( ", mailFrom=").append(mailFrom);
-        toStringBuffer.append( ", debug=").append(debug);
+        toStringBuffer.append(", storeProtocol=").append(storeProtocol);
+        toStringBuffer.append(", transportProtocol=").append(transportProtocol);
+        toStringBuffer.append(", storeProtocolClass=").append(storeProtocolClass);
+        toStringBuffer.append(", transportProtocolClass=").append(transportProtocolClass);
+        toStringBuffer.append(", mailHost=").append(mailHost);
+        toStringBuffer.append(", username=").append(username);
+        toStringBuffer.append(", mailFrom=").append(mailFrom);
+        toStringBuffer.append(", debug=").append(debug);
         toStringBuffer.append( ", mailProperties: [");
 
-        Enumeration e = mailProperties.propertyNames();
+        Enumeration<?> e = mailProperties.propertyNames();
         String name;
         String value;
         boolean isFirst = true;
 
         while (e.hasMoreElements()) {
-            name = (String)e.nextElement();
+            name = (String) e.nextElement();
             value = mailProperties.getProperty(name);
-            if (!isFirst)
+            if (!isFirst) {
                 toStringBuffer.append( ", ");
+            }
             toStringBuffer.append(name).append("=").append(value);
             isFirst = false;
         }

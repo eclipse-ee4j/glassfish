@@ -141,7 +141,7 @@ public class OutboundResourceAdapter extends Descriptor {
     /**
      * Set of AuthMechanism objects
      */
-    public Set getAuthMechanisms() {
+    public Set<AuthMechanism> getAuthMechanisms() {
         if (authMechanisms == null) {
             authMechanisms = new OrderedSet<>();
         }

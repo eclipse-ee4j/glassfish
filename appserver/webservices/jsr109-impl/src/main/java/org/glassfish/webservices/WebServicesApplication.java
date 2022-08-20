@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,27 @@
 
 package org.glassfish.webservices;
 
-import java.net.URL;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.container.EndpointRegistrationException;
+import org.glassfish.api.container.RequestDispatcher;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.deployment.ApplicationContext;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
-
-
-import org.glassfish.api.container.RequestDispatcher;
-import org.glassfish.api.container.EndpointRegistrationException;
-
-import org.glassfish.web.deployment.util.WebServerInfo;
-
-import java.util.Set;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.sun.enterprise.deployment.*;
 import org.glassfish.grizzly.servlet.ServletHandler;
+import org.glassfish.web.deployment.util.WebServerInfo;
 
 /**
  * This class implements the ApplicationContainer and will be used
@@ -47,22 +47,21 @@ import org.glassfish.grizzly.servlet.ServletHandler;
  *
  * @author Bhakti Mehta
  */
-
-public class WebServicesApplication implements ApplicationContainer {
+public class WebServicesApplication implements ApplicationContainer<Object> {
 
     private ArrayList<EjbEndpoint> ejbendpoints;
 
-    private ServletHandler httpHandler;
+    private final ServletHandler httpHandler;
 
     private final RequestDispatcher dispatcher;
 
-    private DeploymentContext deploymentCtx;
+    private final DeploymentContext deploymentCtx;
 
     private static final Logger logger = LogUtils.getLogger();
 
     private ClassLoader cl;
     private Application app;
-    private Set<String> publishedFiles;
+    private final Set<String> publishedFiles;
 
     public WebServicesApplication(DeploymentContext context,  RequestDispatcher dispatcherString, Set<String> publishedFiles){
         this.deploymentCtx = context;
@@ -72,51 +71,51 @@ public class WebServicesApplication implements ApplicationContainer {
         this.publishedFiles = publishedFiles;
     }
 
+    @Override
     public Object getDescriptor() {
         return null;
     }
 
+    @Override
     public boolean start(ApplicationContext startupContext) throws Exception {
 
         cl = startupContext.getClassLoader();
 
         try {
-           app = deploymentCtx.getModuleMetaData(Application.class);
+            app = deploymentCtx.getModuleMetaData(Application.class);
 
-            DeployCommandParameters commandParams = ((DeploymentContext)startupContext).getCommandParameters(DeployCommandParameters.class);
+            DeployCommandParameters commandParams = ((DeploymentContext) startupContext)
+                .getCommandParameters(DeployCommandParameters.class);
             String virtualServers = commandParams.virtualservers;
             Iterator<EjbEndpoint> iter = ejbendpoints.iterator();
             EjbEndpoint ejbendpoint = null;
-            while(iter.hasNext()) {
+            while (iter.hasNext()) {
                 ejbendpoint = iter.next();
                 String contextRoot = ejbendpoint.contextRoot;
                 WebServerInfo wsi = new WsUtil().getWebServerInfoForDAS();
                 URL rootURL = wsi.getWebServerRootURL(ejbendpoint.isSecure);
                 dispatcher.registerEndpoint(contextRoot, httpHandler, this, virtualServers);
-                //Fix for issue 13107490 and 17648
-                if (wsi.getHttpVS() != null && wsi.getHttpVS().getPort()!=0) {
+                // Fix for issue 13107490 and 17648
+                if (wsi.getHttpVS() != null && wsi.getHttpVS().getPort() != 0) {
                     logger.log(Level.INFO, LogUtils.EJB_ENDPOINT_REGISTRATION,
-                            new Object[] {app.getAppName(), rootURL + contextRoot});
+                        new Object[] {app.getAppName(), rootURL + contextRoot});
                 }
             }
 
         } catch (EndpointRegistrationException e) {
-            logger.log(Level.SEVERE,  LogUtils.ENDPOINT_REGISTRATION_ERROR, e.toString());
+            logger.log(Level.SEVERE, LogUtils.ENDPOINT_REGISTRATION_ERROR, e.toString());
         }
         return true;
     }
 
 
     private ArrayList<EjbEndpoint> getEjbEndpoints() {
-        ejbendpoints = new ArrayList<EjbEndpoint>();
-
+        ejbendpoints = new ArrayList<>();
         Application app = deploymentCtx.getModuleMetaData(Application.class);
-
         Set<BundleDescriptor> bundles = app.getBundleDescriptors();
         for(BundleDescriptor bundle : bundles) {
             collectEjbEndpoints(bundle);
         }
-
         return ejbendpoints;
     }
 
@@ -124,7 +123,7 @@ public class WebServicesApplication implements ApplicationContainer {
         WebServicesDescriptor wsDesc = bundleDesc.getWebServices();
         for (WebService ws : wsDesc.getWebServices()) {
             for (WebServiceEndpoint endpoint : ws.getEndpoints()) {
-                //Only add for ejb based endpoints
+                // Only add for ejb based endpoints
                 if (endpoint.implementedByEjbComponent()) {
                     ejbendpoints.add(new EjbEndpoint(endpoint.getEndpointAddressUri(), endpoint.isSecure()));
                 }
@@ -132,6 +131,7 @@ public class WebServicesApplication implements ApplicationContainer {
         }
     }
 
+    @Override
     public boolean stop(ApplicationContext stopContext) {
         try {
             Iterator<EjbEndpoint> iter = ejbendpoints.iterator();
@@ -149,14 +149,17 @@ public class WebServicesApplication implements ApplicationContainer {
         return true;
     }
 
+    @Override
     public boolean suspend() {
         return false;
     }
 
+    @Override
     public boolean resume() throws Exception {
         return false;
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return cl;
     }
@@ -168,7 +171,7 @@ public class WebServicesApplication implements ApplicationContainer {
     static class EjbEndpoint {
         private final String contextRoot;
 
-        private boolean isSecure;
+        private final boolean isSecure;
 
         EjbEndpoint(String contextRoot,boolean secure){
             this.contextRoot = contextRoot;

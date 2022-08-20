@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,18 @@
 
 package com.sun.enterprise.deployment;
 
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
 
 import org.glassfish.deployment.common.Descriptor;
 
 
 public class LocaleEncodingMappingListDescriptor extends Descriptor {
 
-    private Set<LocaleEncodingMappingDescriptor> list = null;
+    private static final long serialVersionUID = 1L;
+    private Set<LocaleEncodingMappingDescriptor> list;
 
     /**
      * standard constructor
@@ -40,14 +42,13 @@ public class LocaleEncodingMappingListDescriptor extends Descriptor {
      */
     public LocaleEncodingMappingListDescriptor(LocaleEncodingMappingListDescriptor other) {
         super(other);
-        if (other.list != null) {
-            list = new HashSet();
-            for (Object element : other.list) {
-                LocaleEncodingMappingDescriptor lemd = (LocaleEncodingMappingDescriptor) element;
-                list.add(new LocaleEncodingMappingDescriptor(lemd));
-            }
-        } else {
+        if (other.list == null) {
             list = null;
+            return;
+        }
+        list = new HashSet<>();
+        for (LocaleEncodingMappingDescriptor lemd : other.list) {
+            list.add(new LocaleEncodingMappingDescriptor(lemd));
         }
     }
 
@@ -60,8 +61,8 @@ public class LocaleEncodingMappingListDescriptor extends Descriptor {
     }
 
 
-    public Enumeration getLocaleEncodingMappings() {
-        return (new Vector(this.getLocaleEncodingMappingSet())).elements();
+    public Enumeration<LocaleEncodingMappingDescriptor> getLocaleEncodingMappings() {
+        return Collections.enumeration(this.getLocaleEncodingMappingSet());
     }
 
 

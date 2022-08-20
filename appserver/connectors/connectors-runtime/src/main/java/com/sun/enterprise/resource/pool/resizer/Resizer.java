@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,6 +67,7 @@ public class
         this.preferValidateOverRecreate = preferValidateOverRecreate;
     }
 
+    @Override
     public void run() {
         debug("Resizer for pool " + poolInfo);
         try {
@@ -159,8 +161,8 @@ public class
 
         //iterate through all thre active resources to find idle-time lapsed ones.
         ResourceHandle h;
-        Set<ResourceHandle> activeResources = new HashSet<ResourceHandle>();
-        Set<String> resourcesToValidate = new HashSet<String>();
+        Set<ResourceHandle> activeResources = new HashSet<>();
+        Set<String> resourcesToValidate = new HashSet<>();
         try {
             while ((h = ds.getResource()) != null ) {
                 state = h.getResourceState();
@@ -230,27 +232,27 @@ public class
                     "of size : " + freeConnectionsToValidate.size());
             int invalidConnectionsCount = 0;
             ResourceHandle handle;
-            Set<ResourceHandle> validResources = new HashSet<ResourceHandle>();
+            Set<ResourceHandle> validResources = new HashSet<>();
             try {
                 while ((handle = ds.getResource()) != null ) {
                     //validate if the connection is one in the freeConnectionsToValidate
                     if (freeConnectionsToValidate.contains(handle.toString())) {
-                        Set connectionsToTest = new HashSet();
-                        connectionsToTest.add(handle.getResource());
-                        Set invalidConnections = handler.getInvalidConnections(connectionsToTest);
-                        if (invalidConnections != null && invalidConnections.size() > 0) {
+                        Set<ManagedConnection> connectionsToTest = new HashSet<>();
+                        connectionsToTest.add((ManagedConnection) handle.getResource());
+                        Set<ManagedConnection> invalidConnections = handler.getInvalidConnections(connectionsToTest);
+                        if (invalidConnections != null && !invalidConnections.isEmpty()) {
                             invalidConnectionsCount = validateAndRemoveResource(handle, invalidConnections);
                         } else {
-                            //valid resource, return to pool
+                            // valid resource, return to pool
                             validResources.add(handle);
                         }
                     } else {
-                        //valid resource, return to pool
+                        // valid resource, return to pool
                         validResources.add(handle);
                     }
                 }
             } finally {
-                for(ResourceHandle resourceHandle : validResources){
+                for (ResourceHandle resourceHandle : validResources) {
                     ds.returnResource(resourceHandle);
                 }
                 validResources.clear();
@@ -269,15 +271,15 @@ public class
 
 
     protected static void debug(String debugStatement) {
-        if (_logger.isLoggable(Level.FINE))
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, debugStatement);
+        }
     }
 
-    protected int validateAndRemoveResource(ResourceHandle handle, Set invalidConnections) {
+    protected int validateAndRemoveResource(ResourceHandle handle, Set<ManagedConnection> invalidConnections) {
         int invalidConnectionsCount = 0;
-        for (Object o : invalidConnections) {
-            ManagedConnection invalidConnection = (ManagedConnection) o;
-            if (invalidConnection.equals(handle.getResource())) {
+        for (ManagedConnection invalid : invalidConnections) {
+            if (invalid.equals(handle.getResource())) {
                 ds.removeResource(handle);
                 handler.invalidConnectionDetected(handle);
                 invalidConnectionsCount++;
@@ -286,8 +288,8 @@ public class
         return invalidConnectionsCount;
     }
 
-    protected boolean isResourceEligibleForRemoval(ResourceHandle h,
-            int validConnectionsCounter) {
+
+    protected boolean isResourceEligibleForRemoval(ResourceHandle h, int validConnectionsCounter) {
         boolean isResourceEligibleForRemoval = false;
 
         ResourceState state = h.getResourceState();

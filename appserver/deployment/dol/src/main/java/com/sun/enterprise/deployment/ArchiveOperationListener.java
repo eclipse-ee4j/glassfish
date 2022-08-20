@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +23,9 @@ import java.util.Vector;
 public interface ArchiveOperationListener {
 
     /* called when Archivist has added the specified (entry,file) pairs */
-    public void addArchiveEntries(Object source, Hashtable entries);
+    void addArchiveEntries(Object source, Hashtable entries);
 
     /* called when Archivist has remove the specified entries */
-    public void removeArchiveEntries(Object source, Vector entries);
+    void removeArchiveEntries(Object source, Vector entries);
 
 }

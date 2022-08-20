@@ -66,12 +66,12 @@ public class MethodPermissionDescriptor extends DescribableDescriptor {
         buffer.append("\nFor the following Permissions ");
         for (MethodPermission mp : mps) {
             mp.print(buffer);
-            buffer.append("\n");
+            buffer.append('\n');
         }
         buffer.append("\nFor the following ").append(methods.size()).append(" methods\n");
         for (MethodDescriptor md : methods) {
             md.print(buffer);
-            buffer.append("\n");
+            buffer.append('\n');
         }
     }
 }

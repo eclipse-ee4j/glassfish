@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,22 +30,24 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
  */
 public class MailResource extends JavaEEResourceBase implements MailResourceIntf {
 
-    private String resType_;
-    private String factoryClass_;
+    private static final long serialVersionUID = 1L;
+    private String resType;
+    private String factoryClass;
 
-    private String storeProtocol_;
-    private String storeProtocolClass_;
-    private String transportProtocol_;
-    private String transportProtocolClass_;
-    private String mailHost_;
-    private String username_;
-    private String mailFrom_;
-    private boolean debug_;
+    private String storeProtocol;
+    private String storeProtocolClass;
+    private String transportProtocol;
+    private String transportProtocolClass;
+    private String mailHost;
+    private String username;
+    private String mailFrom;
+    private boolean debug;
 
     public MailResource(ResourceInfo resourceInfo) {
         super(resourceInfo);
     }
 
+    @Override
     protected JavaEEResource doClone(ResourceInfo resourceInfo) {
         MailResource clone = new MailResource(resourceInfo);
         clone.setResType(getResType());
@@ -53,94 +56,107 @@ public class MailResource extends JavaEEResourceBase implements MailResourceIntf
     }
 
     //unused implementation ie., com.sun.enterprise.deployment.MailConfiguration uses this, but is unused in-turn.
+    @Override
     public String getName() {
         return getResourceInfo().getName();
     }
 
+    @Override
     public int getType() {
         return JavaEEResource.MAIL_RESOURCE;
     }
 
+    @Override
     public String getResType() {
-        return resType_;
+        return resType;
     }
 
     public void setResType(String resType) {
-        resType_ = resType;
+        this.resType = resType;
     }
 
+    @Override
     public String getFactoryClass() {
-        return factoryClass_;
+        return factoryClass;
     }
 
     public void setFactoryClass(String factoryClass) {
-        factoryClass_ = factoryClass;
+        this.factoryClass = factoryClass;
     }
 
+    @Override
     public String getStoreProtocol() {
-        return storeProtocol_;
+        return storeProtocol;
     }
 
     public void setStoreProtocol(String storeProtocol) {
-        storeProtocol_ = storeProtocol;
+        this.storeProtocol = storeProtocol;
     }
 
+    @Override
     public String getStoreProtocolClass() {
-        return storeProtocolClass_;
+        return storeProtocolClass;
     }
 
     public void setStoreProtocolClass(String storeProtocolClass) {
-        storeProtocolClass_ = storeProtocolClass;
+        this.storeProtocolClass = storeProtocolClass;
     }
 
+    @Override
     public String getTransportProtocol() {
-        return transportProtocol_;
+        return transportProtocol;
     }
 
     public void setTransportProtocol(String transportProtocol) {
-        transportProtocol_ = transportProtocol;
+        this.transportProtocol = transportProtocol;
     }
 
+    @Override
     public String getTransportProtocolClass() {
-        return transportProtocolClass_;
+        return transportProtocolClass;
     }
 
     public void setTransportProtocolClass(String transportProtocolClass) {
-        transportProtocolClass_ = transportProtocolClass;
+        this.transportProtocolClass = transportProtocolClass;
     }
 
+    @Override
     public String getMailHost() {
-        return mailHost_;
+        return mailHost;
     }
 
     public void setMailHost(String mailHost) {
-        mailHost_ = mailHost;
+        this.mailHost = mailHost;
     }
 
+    @Override
     public String getUsername() {
-        return username_;
+        return username;
     }
 
     public void setUsername(String username) {
-        username_ = username;
+        this.username = username;
     }
 
+    @Override
     public String getMailFrom() {
-        return mailFrom_;
+        return mailFrom;
     }
 
     public void setMailFrom(String mailFrom) {
-        mailFrom_ = mailFrom;
+        this.mailFrom = mailFrom;
     }
 
+    @Override
     public boolean isDebug() {
-        return debug_;
+        return debug;
     }
 
     public void setDebug(boolean debug) {
-        debug_ = debug;
+        this.debug = debug;
     }
 
+    @Override
     public String toString() {
         return "< Mail Resource : " + getResourceInfo() + " , " + getResType() + "... >";
     }

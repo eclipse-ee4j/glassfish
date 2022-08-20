@@ -17,39 +17,6 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Vector;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.deployment.common.DescriptorVisitor;
-import org.glassfish.deployment.common.JavaEEResourceType;
-import org.glassfish.ejb.deployment.BeanMethodCalculatorImpl;
-import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbExtraDescriptors;
-import org.glassfish.ejb.deployment.util.EjbVisitor;
-import org.glassfish.ejb.deployment.util.InterceptorBindingTranslator;
-import org.glassfish.ejb.deployment.util.InterceptorBindingTranslator.TranslationResults;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.Role;
-
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.CommonResourceDescriptor;
@@ -65,7 +32,6 @@ import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.MethodPermission;
@@ -77,11 +43,45 @@ import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.DescriptorVisitor;
+import org.glassfish.deployment.common.JavaEEResourceType;
+import org.glassfish.ejb.deployment.BeanMethodCalculatorImpl;
+import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbExtraDescriptors;
+import org.glassfish.ejb.deployment.util.EjbVisitor;
+import org.glassfish.ejb.deployment.util.InterceptorBindingTranslator;
+import org.glassfish.ejb.deployment.util.InterceptorBindingTranslator.TranslationResults;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.security.common.Role;
+
+import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
 
 /**
  * This abstract class encapsulates the meta-information describing Entity, Session and MessageDriven EJBs.
@@ -89,8 +89,11 @@ import jakarta.inject.Inject;
  * @author Danny Coward
  * @author Sanjeev Krishnan
  */
-
 public abstract class EjbDescriptor extends CommonResourceDescriptor implements com.sun.enterprise.deployment.EjbDescriptor {
+
+    // Used in <transaction-scope> element in XML
+    public static final String LOCAL_TRANSACTION_SCOPE = "Local";
+    public static final String DISTRIBUTED_TRANSACTION_SCOPE = "Distributed";
 
     private static final long serialVersionUID = 1L;
     private String homeClassName;
@@ -112,12 +115,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     // Is set to true if this bean exposes a no-interface view
     private boolean localBean;
 
-    // Used in <transaction-scope> element in XML
-    final public static String LOCAL_TRANSACTION_SCOPE = "Local";
-    final public static String DISTRIBUTED_TRANSACTION_SCOPE = "Distributed";
-
     protected String transactionType;
-    protected boolean usesDefaultTransaction;
+    private boolean usesDefaultTransaction;
     private Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions;
     private Map<MethodPermission, Set<MethodDescriptor>> permissionedMethodsByPermission;
     private HashMap<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD;
@@ -157,10 +156,10 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     private final Set<EjbReferenceDescriptor> ejbReferencersPointingToMe = new HashSet<>();
 
     // For EJB2.0
-    protected Boolean usesCallerIdentity;
-    protected String securityIdentityDescription;
-    protected boolean isDistributedTxScope = true;
-    protected RunAsIdentityDescriptor runAsIdentity;
+    private Boolean usesCallerIdentity;
+    private String securityIdentityDescription;
+    private boolean isDistributedTxScope = true;
+    private RunAsIdentityDescriptor runAsIdentity;
 
     // sets of method descriptor that can be of style 1 or style 2
     // we initialize it so we force at least on method conversion
@@ -206,17 +205,10 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
 
     static Logger _logger = DOLUtils.getDefaultLogger();
 
-    private final IASEjbExtraDescriptors iASEjbExtraDescriptors = new IASEjbExtraDescriptors(); // Ludo 12/10/2001 extra DTD info only for iAS
+    // Ludo 12/10/2001 extra DTD info only for iAS
+    private final IASEjbExtraDescriptors iASEjbExtraDescriptors = new IASEjbExtraDescriptors();
 
     private final ServiceLocator sl = Globals.getDefaultHabitat();
-
-    /**
-     * returns the extra iAS specific info (not in the RI DID) in the iAS DTD. no setter. You have to modify some fields of
-     * the returned object to change it. TODO: check if we need to clone it in the Copy Constructor...
-     */
-    public IASEjbExtraDescriptors getIASEjbExtraDescriptors() {
-        return iASEjbExtraDescriptors;
-    }
 
     /**
      * Default constructor.
@@ -240,6 +232,16 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
 
     @Override
     public abstract String getEjbTypeForDisplay();
+
+
+    /**
+     * @return the extra iAS specific info (not in the RI DID) in the iAS DTD. no setter.
+     *         You have to modify some fields of the returned object to change it.
+     */
+    public IASEjbExtraDescriptors getIASEjbExtraDescriptors() {
+        return iASEjbExtraDescriptors;
+    }
+
 
     public void addEjbDescriptor(EjbDescriptor other) {
         setEjbBundleDescriptor(other.bundleDescriptor);
@@ -566,9 +568,10 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
      */
     public abstract void setTransactionType(String transactionType);
 
+
     /**
-     * Returns the set of transaction attributes that can be assigned to methods of this ejb when in CMT mode. Elements are
-     * of type ContainerTransaction
+     * @return the set of transaction attributes that can be assigned to methods of this ejb when in
+     *         CMT mode. Elements are of type ContainerTransaction
      */
     public Vector<ContainerTransaction> getPossibleTransactionAttributes() {
         Vector<ContainerTransaction> txAttributes = new Vector<>();
@@ -849,10 +852,13 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return new LinkedList<>(interceptorChain);
     }
 
+
     /**
-     * Return the ordered list of interceptor info for AroundInvoke behavior of a particular business method. This list
-     * *does* include the info on any bean class interceptor. If present, this would always be the last element in the list
-     * because of the precedence defined by the spec.
+     * @return the ordered list of interceptor info for AroundInvoke behavior of a particular
+     *         business method.
+     *         This list *does* include the info on any bean class interceptor.
+     *         If present, this would always be the last element in the list because of the
+     *         precedence defined by the spec.
      */
     public List<EjbInterceptor> getAroundInvokeInterceptors(MethodDescriptor businessMethod) {
 
@@ -879,13 +885,15 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         return aroundInvokeInterceptors;
     }
 
+
     /**
-     * Return the ordered list of interceptor info for AroundTimeout behavior of a particular business method. This list
-     * *does* include the info on any bean class interceptor. If present, this would always be the last element in the list
-     * because of the precedence defined by the spec.
+     * @return the ordered list of interceptor info for AroundTimeout behavior of a particular
+     *         business method.
+     *         This list *does* include the info on any bean class interceptor.
+     *         If present, this would always be the last element in the list because of the
+     *         precedence defined by the spec.
      */
     public List<EjbInterceptor> getAroundTimeoutInterceptors(MethodDescriptor businessMethod) {
-
         LinkedList<EjbInterceptor> aroundTimeoutInterceptors = new LinkedList<>();
 
         List<EjbInterceptor> classOrMethodInterceptors = getClassOrMethodInterceptors(businessMethod);
@@ -1109,7 +1117,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     /**
-     * Get the description field of security-identity
+     * @return the description field of security-identity
      */
     public String getSecurityIdentityDescription() {
         if (securityIdentityDescription == null) {
@@ -1158,7 +1166,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     /**
-     * Return a copy of the mapping held internally of method descriptors to container transaction objects.
+     * @return a copy of the mapping held internally of method descriptors to container transaction objects.
      */
     public Hashtable<MethodDescriptor, ContainerTransaction> getMethodContainerTransactions() {
         if (this.methodContainerTransactions == null) {

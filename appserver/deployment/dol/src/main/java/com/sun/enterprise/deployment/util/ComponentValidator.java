@@ -72,31 +72,17 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
     protected Application application;
 
-    /**
-     * @return the Application object if any
-     */
-    protected Application getApplication() {
-        return application;
-    }
-
-    /**
-     * @return the bundleDescriptor we are visiting
-     */
-    protected BundleDescriptor getBundleDescriptor() {
-        return bundleDescriptor;
-    }
 
     @Override
     public void accept(BundleDescriptor bundleDescriptor) {
         this.bundleDescriptor = bundleDescriptor;
-
         super.accept(bundleDescriptor);
     }
 
     /**
      * Visits a message destination referencer for the last J2EE
      * component visited
-     * @param the message destination referencer
+     * @param msgDestReferencer the message destination referencer
      */
     @Override
     protected void accept(MessageDestinationReferencer msgDestReferencer) {
@@ -120,6 +106,21 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             }
         }
     }
+
+    /**
+     * @return the Application object if any
+     */
+    protected Application getApplication() {
+        return application;
+    }
+
+    /**
+     * @return the bundleDescriptor we are visiting
+     */
+    protected BundleDescriptor getBundleDescriptor() {
+        return bundleDescriptor;
+    }
+
 
     /**
      * @param intfName

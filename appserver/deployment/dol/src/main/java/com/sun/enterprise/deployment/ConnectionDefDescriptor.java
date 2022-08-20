@@ -34,20 +34,15 @@ import java.util.Set;
 public class ConnectionDefDescriptor extends Descriptor {
 
     private static final long serialVersionUID = 1L;
+    private final Set<ConnectorConfigProperty> configProperties = new OrderedSet<>();
     private String managedConnectionFactoryImpl = "";
-    private final Set<ConnectorConfigProperty> configProperties;
     private String connectionIntf = "";
     private String connectionImpl = "";
     private String connectionfactoryImpl = "";
     private String connectionfactoryIntf = "";
 
-    public ConnectionDefDescriptor() {
-        configProperties = new OrderedSet<>();
-    }
-
-
     /**
-     * Gets the value of ManagedconnectionFactoryImpl
+     * @return the value of ManagedconnectionFactoryImpl
      */
     public String getManagedConnectionFactoryImpl() {
         return managedConnectionFactoryImpl;

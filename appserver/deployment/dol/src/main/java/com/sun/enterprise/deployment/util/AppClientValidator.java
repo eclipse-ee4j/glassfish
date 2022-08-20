@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,20 +24,19 @@ import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 
 /**
  * This class validates an application client descriptor
- *
  */
 public class AppClientValidator extends ApplicationValidator implements AppClientVisitor {
 
     @Override
-    public void accept (BundleDescriptor descriptor) {
+    public void accept(BundleDescriptor descriptor) {
         if (descriptor instanceof ApplicationClientDescriptor) {
-            ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor)descriptor;
+            ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor) descriptor;
             accept(appClientDesc);
 
-            // Visit all injectables first.  In some cases, basic type
+            // Visit all injectables first. In some cases, basic type
             // information has to be derived from target inject method or
             // inject field.
-            for(InjectionCapable injectable : appClientDesc.getInjectableResources(appClientDesc)) {
+            for (InjectionCapable injectable : appClientDesc.getInjectableResources(appClientDesc)) {
                 accept(injectable);
             }
 
@@ -44,22 +44,19 @@ public class AppClientValidator extends ApplicationValidator implements AppClien
         }
     }
 
+
     @Override
     public void accept(ApplicationClientDescriptor appclientdescriptor) {
         bundleDescriptor = appclientdescriptor;
         application = appclientdescriptor.getApplication();
 
         // set the default lifecycle callback class
-        for (LifecycleCallbackDescriptor next :
-            appclientdescriptor.getPreDestroyDescriptors()) {
-            next.setDefaultLifecycleCallbackClass(
-                appclientdescriptor.getMainClassName());
+        for (LifecycleCallbackDescriptor next : appclientdescriptor.getPreDestroyDescriptors()) {
+            next.setDefaultLifecycleCallbackClass(appclientdescriptor.getMainClassName());
         }
 
-        for (LifecycleCallbackDescriptor next :
-            appclientdescriptor.getPostConstructDescriptors()) {
-            next.setDefaultLifecycleCallbackClass(
-                appclientdescriptor.getMainClassName());
+        for (LifecycleCallbackDescriptor next : appclientdescriptor.getPostConstructDescriptors()) {
+            next.setDefaultLifecycleCallbackClass(appclientdescriptor.getMainClassName());
         }
     }
 }

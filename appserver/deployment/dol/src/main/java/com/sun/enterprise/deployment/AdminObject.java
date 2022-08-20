@@ -67,7 +67,7 @@ public class AdminObject extends Descriptor {
 
 
     /**
-     * Set of EnvironmentProperty
+     * @return Set of EnvironmentProperty
      */
     public Set<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;

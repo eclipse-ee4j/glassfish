@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -91,13 +92,6 @@ public interface JavaEEResource {
      * @return ResourceProperty or null if not found.
      */
     ResourceProperty getProperty(String propertyName);
-
-    /**
-     * Create a new resource with the given name
-     * that has the same attribute and property
-     * settings as the invoked object.
-     */
-    JavaEEResource makeClone(ResourceInfo resourceInfo);
 
     // START OF IASRI #4626188
     void setEnabled(boolean value);

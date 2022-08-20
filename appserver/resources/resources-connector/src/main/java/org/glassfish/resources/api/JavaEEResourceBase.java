@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
@@ -103,19 +102,6 @@ public abstract class JavaEEResourceBase implements JavaEEResource, Serializable
         return properties.get(propertyName);
     }
 
-    @Override
-    public JavaEEResource makeClone(ResourceInfo resourceInfo) {
-        JavaEEResource clone = doClone(resourceInfo);
-        Collection<ResourceProperty> props = properties.values();
-        for (ResourceProperty next : props) {
-            ResourceProperty propClone = new ResourcePropertyImpl(next.getName());
-            propClone.setValue(next.getValue());
-            clone.addProperty(propClone);
-        }
-        clone.setEnabled(isEnabled());
-        clone.setDescription(getDescription());
-        return clone;
-    }
 
     protected abstract JavaEEResource doClone(ResourceInfo resourceInfo);
 }

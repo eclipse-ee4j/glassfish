@@ -2229,7 +2229,6 @@ class MethodBuilder
     /**
      * Build the clone method for the class.
      */
-    //@olsen: subst: makeClone -> makeJDOClone
     ClassMethod makeJDOClone(final ClassAction ca,
                              final String methodName) {
         //@olsen: added variable

@@ -106,9 +106,9 @@ public abstract class JavaEEResourceBase implements JavaEEResource, Serializable
     @Override
     public JavaEEResource makeClone(ResourceInfo resourceInfo) {
         JavaEEResource clone = doClone(resourceInfo);
-        Set<Entry<String, ResourceProperty>> entrySet = properties.entrySet();
-        for (Entry<String, ResourceProperty> next : entrySet) {
-            ResourceProperty propClone = new ResourcePropertyImpl(next.getKey());
+        Collection<ResourceProperty> props = properties.values();
+        for (ResourceProperty next : props) {
+            ResourceProperty propClone = new ResourcePropertyImpl(next.getName());
             propClone.setValue(next.getValue());
             clone.addProperty(propClone);
         }

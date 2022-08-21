@@ -82,6 +82,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.text.MessageFormat.format;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
@@ -775,7 +776,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
         if (!publishLocation.exists()) {
             mkDirs(publishLocation.getParentFile());
         }
-        Files.copy(file.toPath(), publishLocation.toPath());
+        Files.copy(file.toPath(), publishLocation.toPath(), REPLACE_EXISTING);
     }
 
     private void deletePublishedFiles(Set<String> publishedFiles) {

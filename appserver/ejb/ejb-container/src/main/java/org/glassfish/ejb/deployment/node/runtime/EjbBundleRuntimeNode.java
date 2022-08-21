@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,6 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.List;
-import java.util.Map;
-
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
@@ -27,6 +25,10 @@ import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.List;
+import java.util.Map;
+
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.node.EjbBundleNode;
@@ -37,21 +39,18 @@ import org.w3c.dom.Node;
 /**
  * This node handles runtime deployment descriptors for ejb bundle
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class EjbBundleRuntimeNode extends
-        RuntimeBundleNode<EjbBundleDescriptorImpl> {
+public class EjbBundleRuntimeNode extends RuntimeBundleNode<EjbBundleDescriptorImpl> {
 
     public EjbBundleRuntimeNode(EjbBundleDescriptorImpl descriptor) {
         super(descriptor);
-        //trigger registration in standard node, if it hasn't happened
+        // trigger registration in standard node, if it hasn't happened
         serviceLocator.getService(EjbBundleNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING),
-                SecurityRoleMappingNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.EJBS),
-                EnterpriseBeansRuntimeNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING), SecurityRoleMappingNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.EJBS), EnterpriseBeansRuntimeNode.class);
     }
+
 
     public EjbBundleRuntimeNode() {
         this(null);
@@ -80,25 +79,28 @@ public class EjbBundleRuntimeNode extends
         return new XMLElement(RuntimeTagNames.S1AS_EJB_RUNTIME_TAG);
     }
 
-   /**
-    * register this node as a root node capable of loading entire DD files
-    *
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
-    * @return the doctype tag name
-    */
-   public static String registerBundle(Map publicIDToDTD) {
-       publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_200_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_200_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_201_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_201_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_210_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_210_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_211_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_211_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_300_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_300_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_310_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_310_DTD_SYSTEM_ID);
 
-       if (!restrictDTDDeclarations()) {
-           publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_210beta_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_210beta_DTD_SYSTEM_ID);
-       }
-       return RuntimeTagNames.S1AS_EJB_RUNTIME_TAG;
-   }
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map<String, String> publicIDToDTD) {
+        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_200_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_200_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_201_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_201_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_210_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_210_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_211_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_211_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_300_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_300_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_310_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_310_DTD_SYSTEM_ID);
+
+        if (!restrictDTDDeclarations()) {
+            publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_210beta_DTD_PUBLIC_ID,
+                DTDRegistry.SUN_EJBJAR_210beta_DTD_SYSTEM_ID);
+        }
+        return RuntimeTagNames.S1AS_EJB_RUNTIME_TAG;
+    }
+
 
     @Override
     public EjbBundleDescriptorImpl getDescriptor() {
@@ -122,27 +124,26 @@ public class EjbBundleRuntimeNode extends
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof SecurityRoleMapping) {
-            SecurityRoleMapping roleMap = (SecurityRoleMapping)newDescriptor;
+            SecurityRoleMapping roleMap = (SecurityRoleMapping) newDescriptor;
             descriptor.addSecurityRoleMapping(roleMap);
             Application app = descriptor.getApplication();
-            if (app!=null) {
+            if (app != null) {
                 Role role = new Role(roleMap.getRoleName());
                 SecurityRoleMapper rm = app.getRoleMapper();
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = roleMap.getPrincipalNames();
-                    for (int i = 0; i < principals.size(); i++) {
-                        rm.assignRole(principals.get(i).getPrincipal(),
-                            role, descriptor);
+                    for (PrincipalNameDescriptor principal : principals) {
+                        rm.assignRole(principal.getPrincipal(), role, descriptor);
                     }
                     List<String> groups = roleMap.getGroupNames();
-                    for (int i = 0; i < groups.size(); i++) {
-                        rm.assignRole(new Group(groups.get(i)),
-                            role, descriptor);
+                    for (String group : groups) {
+                        rm.assignRole(new Group(group), role, descriptor);
                     }
                 }
             }
         }
     }
+
 
     @Override
     public Node writeDescriptor(Node parent, EjbBundleDescriptorImpl bundleDescriptor) {
@@ -150,9 +151,9 @@ public class EjbBundleRuntimeNode extends
 
         // security-role-mapping*
         List<SecurityRoleMapping> roleMappings = bundleDescriptor.getSecurityRoleMappings();
-        for (int i = 0; i < roleMappings.size(); i++) {
+        for (SecurityRoleMapping roleMapping : roleMappings) {
             SecurityRoleMappingNode srmn = new SecurityRoleMappingNode();
-            srmn.writeDescriptor(ejbs, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMappings.get(i));
+            srmn.writeDescriptor(ejbs, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMapping);
         }
 
         // entreprise-beans

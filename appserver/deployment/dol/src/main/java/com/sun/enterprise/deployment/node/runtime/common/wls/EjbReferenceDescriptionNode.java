@@ -20,7 +20,6 @@ package com.sun.enterprise.deployment.node.runtime.common.wls;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
@@ -39,11 +38,11 @@ import org.w3c.dom.Node;
  *
  * @author  Shing Wai Chan
  */
-public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbReference> {
-    private EjbReference descriptor;
+public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbReferenceDescriptor> {
+    private EjbReferenceDescriptor descriptor;
 
     @Override
-    public EjbReference getDescriptor() {
+    public EjbReferenceDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -98,7 +97,7 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, EjbReference descriptor) {
+    public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor descriptor) {
         Node ejbRef = appendChild(parent, nodeName);
         appendTextChild(ejbRef, TagNames.EJB_REFERENCE_NAME, descriptor.getName());
         appendTextChild(ejbRef, RuntimeTagNames.JNDI_NAME, descriptor.getJndiName());

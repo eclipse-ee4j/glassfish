@@ -41,7 +41,7 @@ import org.w3c.dom.Node;
  * @author  Jerome Dochez
  * @version
  */
-public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
+public class RuntimeDescriptorNode<T extends Descriptor> extends DeploymentDescriptorNode<T> {
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -59,7 +59,7 @@ public class RuntimeDescriptorNode<T> extends DeploymentDescriptorNode<T> {
 
 
     @Override
-    protected Object createDescriptor() {
+    protected T createDescriptor() {
         return RuntimeDescriptorFactory.getDescriptor(getXMLPath());
     }
 

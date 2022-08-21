@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,39 +17,45 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.runtime.connector.MapElement;
 import com.sun.enterprise.deployment.runtime.connector.Principal;
 import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.deployment.runtime.connector.RoleMap;
+import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.deployment.common.Descriptor;
+
 /**
- * This class is responsible for instantiating  runtime Descriptor classes
+ * This class is responsible for instantiating runtime Descriptor classes
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class RuntimeDescriptorFactory {
 
-    static Map descriptorClasses;
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+    private static Map<String, Class<?>> descriptorClasses;
 
-    /** This is a factory object no need for DescriptorFactory instance */
-    protected RuntimeDescriptorFactory() {
+    static {
+        initMapping();
+    }
+
+    private RuntimeDescriptorFactory() {
+        // This is a factory object no need for DescriptorFactory instance
     }
 
 
     private static void initMapping() {
-        descriptorClasses = new HashMap();
+        descriptorClasses = new ConcurrentHashMap<>();
 
         // weblogic DD
         register(new XMLElement(RuntimeTagNames.RESOURCE_DESCRIPTION), ResourceReferenceDescriptor.class);
@@ -64,61 +71,61 @@ public class RuntimeDescriptorFactory {
 
     }
 
+
     /**
      * register a new descriptor class handling a particular XPATH in the DTD.
      *
-     * @param xmlPath absolute or relative XPath
+     * @param xmlElement XML element name
      * @param clazz the descriptor class to use
      */
-    public static void register(XMLElement  xmlPath, Class clazz) {
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Register " + clazz + " to handle " + xmlPath.getQName());
+    public static void register(final XMLElement xmlElement, final Class<?> clazz) {
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Register {0} to handle {1}", new Object[] {clazz, xmlElement.getQName()});
         }
-        descriptorClasses.put(xmlPath.getQName(), clazz);
+        descriptorClasses.put(xmlElement.getQName(), clazz);
     }
 
+
     /**
+     * @param xmlPath
+     * @param <T> expected {@link Descriptor} class
      * @return the descriptor tag for a particular XPath
      */
-    public static Class getDescriptorClass(String xmlPath) {
-        String s = xmlPath;
+    public static <T extends Descriptor> Class<T> getDescriptorClass(final String xmlPath) {
+        String xpathPart = xmlPath;
         do {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-                DOLUtils.getDefaultLogger().finer("looking for " + xmlPath + " in " + descriptorClasses);
+            LOG.log(Level.FINER, "getDescriptorClass for {0}", xpathPart);
+            @SuppressWarnings("unchecked")
+            Class<T> clazz = (Class<T>) descriptorClasses.get(xpathPart);
+            if (clazz != null) {
+                return clazz;
             }
-            if (descriptorClasses.containsKey(xmlPath)) {
-                return (Class) descriptorClasses.get(xmlPath);
-            }
-            if (xmlPath.indexOf('/') != -1) {
-                xmlPath = xmlPath.substring(xmlPath.indexOf('/') + 1);
+            if (xpathPart.indexOf('/') == -1) {
+                xpathPart = null;
             } else {
-                xmlPath = null;
+                xpathPart = xpathPart.substring(xpathPart.indexOf('/') + 1);
             }
-        } while (xmlPath != null);
+        } while (xpathPart != null);
 
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("No descriptor registered for " + s);
-        }
+        LOG.log(Level.FINE, "No descriptor registered for {0}", xmlPath);
         return null;
     }
+
 
     /**
-     * @return a new instance of a registered descriptor class for the
-     * supplied XPath
+     * @param xmlPath
+     * @param <T>
+     * @return a new instance of a registered descriptor class for the supplied XPath
      */
-    public static Object  getDescriptor(String xmlPath) {
+    public static <T extends Descriptor> T getDescriptor(String xmlPath) {
         try {
-            Class c = getDescriptorClass(xmlPath);
+            Class<T> c = getDescriptorClass(xmlPath);
             if (c != null) {
-                return c.newInstance();
+                return c.getDeclaredConstructor().newInstance();
             }
         } catch (Throwable t) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred", t);
+            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred, I'm returning null descriptor.", t);
         }
         return null;
-    }
-
-    static {
-        initMapping();
     }
 }

@@ -28,6 +28,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
+import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.w3c.dom.Node;
@@ -37,7 +38,7 @@ import org.w3c.dom.Node;
  *
  * @author Jerome Dochez
  */
-public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
+public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode<Descriptor> {
 
     public EnterpriseBeansRuntimeNode() {
         // we do not care about our standard DDS handles
@@ -47,22 +48,25 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
         registerElementHandler(new XMLElement(RuntimeTagNames.CMP_RESOURCE), CmpResourceNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
         registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE), WebServiceRuntimeNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), RuntimeNameValuePairNode.class, "addEnterpriseBeansProperty");
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), RuntimeNameValuePairNode.class,
+            "addEnterpriseBeansProperty");
     }
 
+
     @Override
-    public Object getDescriptor() {
-        return getParentNode().getDescriptor();
+    public Descriptor getDescriptor() {
+        return (Descriptor) getParentNode().getDescriptor();
     }
+
 
     @Override
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.EJBS);
     }
 
+
     @Override
     public void setElementValue(XMLElement element, String value) {
-
         if (RuntimeTagNames.NAME.equals(element.getQName())) {
             DOLUtils.getDefaultLogger().finer("Ignoring runtime bundle name " + value);
             return;
@@ -75,18 +79,19 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
         super.setElementValue(element, value);
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
+     * @param nodeName node name to be written to the parent node
      * @param bundleDescriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, EjbBundleDescriptorImpl bundleDescriptor) {
-
         Node ejbs = super.writeDescriptor(parent, nodeName, bundleDescriptor);
 
-        // NOTE : unique-id is no longer written out to sun-ejb-jar.xml.  It is persisted via
+        // NOTE : unique-id is no longer written out to sun-ejb-jar.xml. It is persisted via
         // domain.xml deployment context properties instead.
 
         // ejb*
@@ -101,7 +106,7 @@ public class EnterpriseBeansRuntimeNode extends RuntimeDescriptorNode {
 
         // cmpresource?
         ResourceReferenceDescriptor rrd = bundleDescriptor.getCMPResourceReference();
-        if ( rrd != null ) {
+        if (rrd != null) {
             CmpResourceNode crn = new CmpResourceNode();
             crn.writeDescriptor(ejbs, RuntimeTagNames.CMP_RESOURCE, rrd);
         }

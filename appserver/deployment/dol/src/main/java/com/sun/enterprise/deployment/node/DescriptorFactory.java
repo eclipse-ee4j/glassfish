@@ -44,6 +44,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.glassfish.deployment.common.Descriptor;
+
 /**
  * This class is responsible for instantiating  Descriptor classes
  *
@@ -141,14 +143,13 @@ public class DescriptorFactory {
 
 
     /**
-     * @return a new instance of a registered descriptor class for the
-     *         supplied XPath
+     * @return a new instance of a registered descriptor class for the supplied XPath
      */
-    public static Object getDescriptor(String xmlPath) {
+    public static <T extends Descriptor> T getDescriptor(String xmlPath) {
         try {
             Class<?> c = getDescriptorClass(xmlPath);
             if (c != null) {
-                return c.getDeclaredConstructor().newInstance();
+                return (T) c.getDeclaredConstructor().newInstance();
             }
         } catch (Throwable t) {
             DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", t);

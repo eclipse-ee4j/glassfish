@@ -92,35 +92,40 @@ import static java.util.logging.Level.WARNING;
  */
 public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
-    protected ServiceLocator serviceLocator = Globals.getDefaultHabitat();
+    protected final ServiceLocator serviceLocator = Globals.getDefaultHabitat();
 
     private static final String QNAME_SEPARATOR = ":";
 
-    // handlers is the list of XMLNodes  registered for handling sub xml tags of the current
-    // XMLNode
+    /***
+     * The handlers is the map of XMLNodes registered for handling sub xml tags of the current
+     * XMLNode
+     */
     protected Hashtable<String, Class<?>> handlers;
 
-    // list of add methods declared on the descriptor class to add sub descriptors extracted
-    // by the handlers registered above. The key for the table is the xml root tag for the
-    // descriptor to be added, the value is the method name to add such descriptor to the
-    // current descriptor.
+    /**
+     * Map of add methods declared on the descriptor class to add sub descriptors extracted
+     * by the handlers registered above. The key for the table is the xml root tag for the
+     * descriptor to be added, the value is the method name to add such descriptor to the
+     * current descriptor.
+     */
     private Hashtable<String, String> addMethods;
 
-    // Each node is associated with a XML tag it is handling
+    /** Each node is associated with a XML tag it is handling */
     private XMLElement xmlTag;
 
-    // Parent node in the XML Nodes implementation tree we create to map to the XML
-    // tags of the XML document
-    protected XMLNode<?> parentNode;
+    /**
+     * Parent node in the XML Nodes implementation tree we create to map to the XML
+     * tags of the XML document
+     */
+    private XMLNode<?> parentNode;
 
-    // The root xml node in the XML Node implementation tree
-    protected XMLNode<?> rootNode;
-
-    // default descriptor associated with this node, some sub nodes which
-    // relies on the dispatch table don't really need to know the actual
-    // type of the descriptor they deal with since they are populated through
-    // reflection method calls
-    protected Object abstractDescriptor;
+    /**
+     * Default descriptor associated with this node, some sub nodes which
+     * relies on the dispatch table don't really need to know the actual
+     * type of the descriptor they deal with since they are populated through
+     * reflection method calls
+     */
+    protected T abstractDescriptor;
 
 
     // for i18N
@@ -137,17 +142,16 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    @SuppressWarnings("unchecked")
     public T getDescriptor() {
         if (abstractDescriptor == null) {
             abstractDescriptor = createDescriptor();
         }
-        return (T) abstractDescriptor;
+        return abstractDescriptor;
     }
 
 
-    protected Object createDescriptor() {
-        return DescriptorFactory.getDescriptor(getXMLPath());
+    protected T createDescriptor() {
+        return (T) DescriptorFactory.getDescriptor(getXMLPath());
     }
 
 
@@ -428,7 +432,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     }
 
     // record element to node mapping
-    private void recordNodeMapping(String subElementName, Class handler) {
+    private void recordNodeMapping(String subElementName, Class<?> handler) {
         XMLNode<?> rootNode = getRootNode();
         if (rootNode instanceof RuntimeBundleNode) {
             ((RuntimeBundleNode) rootNode).recordNodeMapping(getXMLRootTag().getQName(), subElementName, handler);

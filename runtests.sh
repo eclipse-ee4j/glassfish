@@ -51,8 +51,8 @@ cdi_all, ql_gf_full_profile_all, \n
 \n
 web_jsp, deployment_all, \n
 ejb_group_1. ejb_group_2, ejb_group_3, ejb_group_embedded, \n
-cdi_all, ql_gf_full_profile_all, ql_gf_nucleus_all, \
-ql_gf_web_profile_all, nucleus_admin_all, jdbc_all, batch_all, persistence_all, \
+cdi_all, ql_gf_full_profile_all, ql_gf_nucleus_all, \n
+ql_gf_web_profile_all, nucleus_admin_all, jdbc_all, batch_all, persistence_all, webservice_all, \n
 connector_group_1, connector_group_2, connector_group_3, connector_group_4";
 
 echo "If you need to use a different JAVA_HOME than is used by your system, export it or edit this script.";

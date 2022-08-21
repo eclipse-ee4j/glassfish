@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,28 @@
 
 package com.sun.jdo.api.persistence.enhancer.impl;
 
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Enumeration;
-
-import com.sun.jdo.api.persistence.enhancer.classfile.*;
-
-import com.sun.jdo.api.persistence.enhancer.util.Support;
-import com.sun.jdo.api.persistence.enhancer.util.InternalError;
-import com.sun.jdo.api.persistence.enhancer.util.ClassFileSource;
-
-//@olsen: added import
+import com.sun.jdo.api.persistence.enhancer.classfile.AttributeVector;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
+import com.sun.jdo.api.persistence.enhancer.classfile.ClassMethod;
+import com.sun.jdo.api.persistence.enhancer.classfile.CodeAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstClass;
+import com.sun.jdo.api.persistence.enhancer.classfile.ConstantPool;
+import com.sun.jdo.api.persistence.enhancer.classfile.Descriptor;
+import com.sun.jdo.api.persistence.enhancer.classfile.ExceptionTable;
+import com.sun.jdo.api.persistence.enhancer.classfile.ExceptionsAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.Insn;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnInterfaceInvoke;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnTableSwitch;
+import com.sun.jdo.api.persistence.enhancer.classfile.InsnTarget;
+import com.sun.jdo.api.persistence.enhancer.classfile.LineNumberTableAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.SyntheticAttribute;
+import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
+import com.sun.jdo.api.persistence.enhancer.util.InternalError;
+import com.sun.jdo.api.persistence.enhancer.util.Support;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 //@olsen: cosmetics
@@ -1381,12 +1391,14 @@ class MethodBuilder
             //System.out.println();
 
             // ignore non-persistent fields
-            if (!act.isPersistent())
+            if (!act.isPersistent()) {
                 continue;
+            }
 
             // ignore primary key fields
-            if (act.isPrimaryKey())
+            if (act.isPrimaryKey()) {
                 continue;
+            }
 
             //@olsen: disconnect mutable SCOs before clear
             if (act.isMutableSCO()) {
@@ -1777,7 +1789,9 @@ class MethodBuilder
                              + " declared, persistent fields of class '"//NOI18N
                              + className + "' = {");//NOI18N
             for (int i = 0; i < nofFields; i++)
+             {
                 System.out.print(" " + fieldNames[i]);//NOI18N
+            }
             System.out.println(" }");//NOI18N
         }
 
@@ -1795,8 +1809,9 @@ class MethodBuilder
             insn = insn.append(Insn.create(opc_iload_1));
             final int lowOp = 0;
             final InsnTarget[] targetsOp = new InsnTarget[nofFields];
-            for (int i = 0; i < nofFields; i++)
+            for (int i = 0; i < nofFields; i++) {
                 targetsOp[i] = new InsnTarget();
+            }
             insn = insn.append(
                 new InsnTableSwitch(lowOp, defaultOp, targetsOp));
 
@@ -2015,7 +2030,9 @@ class MethodBuilder
                              + " declared, persistent fields of class '"//NOI18N
                              + className + "' = {");//NOI18N
             for (int i = 0; i < nofFields; i++)
+             {
                 System.out.print(" " + fieldNames[i]);//NOI18N
+            }
             System.out.println(" }");//NOI18N
         }
 
@@ -2033,8 +2050,9 @@ class MethodBuilder
             insn = insn.append(Insn.create(opc_iload_1));
             final int lowOp = 0;
             final InsnTarget[] targetsOp = new InsnTarget[nofFields];
-            for (int i = 0; i < nofFields; i++)
+            for (int i = 0; i < nofFields; i++) {
                 targetsOp[i] = new InsnTarget();
+            }
             insn = insn.append(
                 new InsnTableSwitch(lowOp, defaultOp, targetsOp));
 

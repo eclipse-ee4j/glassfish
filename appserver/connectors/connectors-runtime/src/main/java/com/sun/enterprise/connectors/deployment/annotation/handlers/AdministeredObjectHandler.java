@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,30 @@
 
 package com.sun.enterprise.connectors.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
-import com.sun.enterprise.deployment.annotation.handlers.*;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.AdminObject;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.spi.AdministeredObject;
 import jakarta.resource.spi.ResourceAdapterAssociation;
+
+import java.io.Externalizable;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.ArrayList;
 import java.util.logging.Level;
-import java.io.Externalizable;
-import java.io.Serializable;
 
-import org.glassfish.apf.*;
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 import org.jvnet.hk2.annotations.Service;
 
@@ -44,9 +51,10 @@ import org.jvnet.hk2.annotations.Service;
 @AnnotationHandlerFor(AdministeredObject.class)
 public class AdministeredObjectHandler extends AbstractHandler {
 
-    protected final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(AdministeredObjectHandler.class);
+    protected final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
+        AdministeredObjectHandler.class);
 
+    @Override
     public HandlerProcessingResult processAnnotation(AnnotationInfo element) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = element.getProcessingContext().getHandler();
         AdministeredObject adminObject = (AdministeredObject) element.getAnnotation();
@@ -55,20 +63,20 @@ public class AdministeredObjectHandler extends AbstractHandler {
             RarBundleContext rarContext = (RarBundleContext) aeHandler;
             ConnectorDescriptor desc = rarContext.getDescriptor();
 
-            Class c = (Class) element.getAnnotatedElement();
+            Class<?> c = (Class<?>) element.getAnnotatedElement();
             String adminObjectClassName = c.getName();
 
-            Class[] adminObjectInterfaceClasses = adminObject.adminObjectInterfaces();
+            Class<?>[] adminObjectInterfaceClasses = adminObject.adminObjectInterfaces();
             //When "adminObjectInterfaces()" is specified, add one admin-object entry per interface
             if (adminObjectInterfaceClasses != null && adminObjectInterfaceClasses.length > 0) {
-                for (Class adminObjectInterface : adminObjectInterfaceClasses) {
+                for (Class<?> adminObjectInterface : adminObjectInterfaceClasses) {
                     processAdminObjectInterface(adminObjectClassName, adminObjectInterface.getName(), desc);
                 }
             } else {
-                List<Class> interfacesList = deriveAdminObjectInterfacesFromHierarchy(c);
+                List<Class<?>> interfacesList = deriveAdminObjectInterfacesFromHierarchy(c);
 
                 if (interfacesList.size() == 1) {
-                    Class intf = interfacesList.get(0);
+                    Class<?> intf = interfacesList.get(0);
                     String intfName = intf.getName();
                     processAdminObjectInterface(adminObjectClassName, intfName, desc);
                 } else {
@@ -83,26 +91,25 @@ public class AdministeredObjectHandler extends AbstractHandler {
         return getDefaultProcessedResult();
     }
 
-    public static List<Class> deriveAdminObjectInterfacesFromHierarchy(Class c) {
-        Class interfaces[] = c.getInterfaces();
-
-        List<Class> interfacesList = new ArrayList<Class>(Arrays.asList(interfaces));
+    public static List<Class<?>> deriveAdminObjectInterfacesFromHierarchy(Class<?> c) {
+        Class<?>[] interfaces = c.getInterfaces();
+        List<Class<?>> interfacesList = new ArrayList<>(Arrays.asList(interfaces));
         interfacesList.remove(Serializable.class);
         interfacesList.remove(Externalizable.class);
         interfacesList.remove(ResourceAdapterAssociation.class);
         return interfacesList;
     }
 
+
     private void processAdminObjectInterface(String adminObjectClassName, String adminObjectInterfaceName,
-                                             ConnectorDescriptor desc) {
-        Set ddAdminObjects = desc.getAdminObjects();
+        ConnectorDescriptor desc) {
+        Set<AdminObject> ddAdminObjects = desc.getAdminObjects();
         //merge DD and annotation values of admin-objects
         //merge involves simple union
         boolean ignore = false;
-        for (Object o : ddAdminObjects) {
-            AdminObject ddAdminObject = (AdminObject) o;
-            if (ddAdminObject.getAdminObjectInterface().equals(adminObjectInterfaceName) &&
-                    ddAdminObject.getAdminObjectClass().equals(adminObjectClassName)) {
+        for (AdminObject ddAdminObject : ddAdminObjects) {
+            if (ddAdminObject.getAdminObjectInterface().equals(adminObjectInterfaceName)
+                && ddAdminObject.getAdminObjectClass().equals(adminObjectClassName)) {
                 ignore = true;
                 break;
             }
@@ -110,14 +117,15 @@ public class AdministeredObjectHandler extends AbstractHandler {
         if (!ignore) {
             AdminObject ao = new AdminObject(adminObjectInterfaceName, adminObjectClassName);
             desc.addAdminObject(ao);
-        }else{
-            if(logger.isLoggable(Level.FINEST)){
-                logger.log(Level.FINEST,"Ignoring administered object annotation " +
-                        "[ "+adminObjectInterfaceName+"," + adminObjectClassName + "] as it is already defined ");
+        } else {
+            if (logger.isLoggable(Level.FINEST)) {
+                logger.log(Level.FINEST, "Ignoring administered object annotation " + "[ " + adminObjectInterfaceName
+                    + "," + adminObjectClassName + "] as it is already defined ");
             }
         }
     }
 
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return null;
     }
@@ -125,6 +133,7 @@ public class AdministeredObjectHandler extends AbstractHandler {
     /**
      * @return a default processed result
      */
+    @Override
     protected HandlerProcessingResult getDefaultProcessedResult() {
         return HandlerProcessingResultImpl.getDefaultResult(
                 getAnnotationType(), ResultType.PROCESSED);
@@ -134,7 +143,7 @@ public class AdministeredObjectHandler extends AbstractHandler {
         HandlerProcessingResultImpl result = new HandlerProcessingResultImpl();
         result.addResult(getAnnotationType(), ResultType.FAILED);
         if (doLog) {
-            Class c = (Class) element.getAnnotatedElement();
+            Class<?> c = (Class<?>) element.getAnnotatedElement();
             String className = c.getName();
             Object args[] = new Object[]{
                 element.getAnnotation(),

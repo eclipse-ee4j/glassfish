@@ -22,15 +22,15 @@ import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-import org.glassfish.deployment.common.Descriptor;
-import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling the Connector DTD related config-property XML tag
@@ -38,9 +38,9 @@ import java.util.Map;
  * @author  Sheetal Vartak
  * @version
  */
-public class ConfigPropertyNode extends DeploymentDescriptorNode {
+public class ConfigPropertyNode extends DeploymentDescriptorNode<ConnectorConfigProperty> {
 
-    private ConnectorConfigProperty config = null;
+    private ConnectorConfigProperty config;
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -49,8 +49,8 @@ public class ConfigPropertyNode extends DeploymentDescriptorNode {
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ConnectorTagNames.CONFIG_PROPERTY_NAME, "setName");
         table.put(ConnectorTagNames.CONFIG_PROPERTY_VALUE, "setValue");
         table.put(ConnectorTagNames.CONFIG_PROPERTY_TYPE, "setType");
@@ -65,7 +65,7 @@ public class ConfigPropertyNode extends DeploymentDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public ConnectorConfigProperty getDescriptor() {
         if (config == null) {
             config = (ConnectorConfigProperty) DescriptorFactory.getDescriptor(getXMLPath());
         }
@@ -88,7 +88,7 @@ public class ConfigPropertyNode extends DeploymentDescriptorNode {
             throw new IllegalArgumentException(
                 getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
-        Iterator configProps = null;
+        final Iterator<ConnectorConfigProperty> configProps;
         if (descriptor instanceof ConnectorDescriptor) {
             configProps = ((ConnectorDescriptor) descriptor).getConfigProperties().iterator();
         } else if (descriptor instanceof ConnectionDefDescriptor) {
@@ -99,23 +99,22 @@ public class ConfigPropertyNode extends DeploymentDescriptorNode {
             configProps = ((OutboundResourceAdapter) descriptor).getConfigProperties().iterator();
         } else if (descriptor instanceof MessageListener) {
             configProps = ((MessageListener) descriptor).getConfigProperties().iterator();
+        } else {
+            return parent;
         }
         // config property info
-        if (configProps != null) {
-            for (; configProps.hasNext();) {
-                ConnectorConfigProperty config = (ConnectorConfigProperty) configProps.next();
-                Node configNode = appendChild(parent, ConnectorTagNames.CONFIG_PROPERTY);
-                writeLocalizedDescriptions(configNode, config);
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, config.getName());
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_TYPE, config.getType());
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_VALUE, config.getValue());
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_IGNORE,
-                    String.valueOf(config.isIgnore()));
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_SUPPORTS_DYNAMIC_UPDATES,
-                    String.valueOf(config.isSupportsDynamicUpdates()));
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_CONFIDENTIAL,
-                    String.valueOf(config.isConfidential()));
-            }
+        while (configProps.hasNext()) {
+            ConnectorConfigProperty cfg = configProps.next();
+            Node configNode = appendChild(parent, ConnectorTagNames.CONFIG_PROPERTY);
+            writeLocalizedDescriptions(configNode, cfg);
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_TYPE, cfg.getType());
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_VALUE, cfg.getValue());
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_IGNORE, String.valueOf(cfg.isIgnore()));
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_SUPPORTS_DYNAMIC_UPDATES,
+                String.valueOf(cfg.isSupportsDynamicUpdates()));
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_CONFIDENTIAL,
+                String.valueOf(cfg.isConfidential()));
         }
         return parent;
     }

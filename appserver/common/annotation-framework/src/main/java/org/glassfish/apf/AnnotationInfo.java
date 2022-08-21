@@ -17,11 +17,11 @@
 
 package org.glassfish.apf;
 
-import java.lang.reflect.AnnotatedElement;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
-
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import java.lang.reflect.AnnotatedElement;
 
 /**
  * Instances encapsulate all information necessary for an AnnotationHandler
@@ -35,10 +35,10 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
  * (Type, Method...).
  * </p>
  *
- * @see java.lang.annotation.Annotation, java.lang.reflect.AnnotatedElement
+ * @see java.lang.annotation.Annotation
+ * @see java.lang.reflect.AnnotatedElement
  *
  * @author Jerome Dochez
- *
  */
 public class AnnotationInfo {
 

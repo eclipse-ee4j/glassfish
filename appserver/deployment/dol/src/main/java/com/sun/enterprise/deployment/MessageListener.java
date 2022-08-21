@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * connector1.5
@@ -28,15 +29,16 @@ import java.util.Set;
  */
 public class MessageListener extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String msgListenerType;
     private String activationSpecClass;
-    private Set configProperties;
-    private Set requiredConfigProperties;
+    private final Set<ConnectorConfigProperty> configProperties;
+    private final Set<EnvironmentProperty> requiredConfigProperties;
 
     // default constructor
     public MessageListener() {
-        this.configProperties = new OrderedSet();
-        this.requiredConfigProperties = new OrderedSet();
+        this.configProperties = new OrderedSet<>();
+        this.requiredConfigProperties = new OrderedSet<>();
     }
 
 
@@ -77,9 +79,9 @@ public class MessageListener extends Descriptor {
 
 
     /**
-     * Set of ConnectorConfigProperty
+     * @return Set of ConnectorConfigProperty
      */
-    public Set getConfigProperties() {
+    public Set<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 
@@ -101,23 +103,9 @@ public class MessageListener extends Descriptor {
 
 
     /**
-     * Set of EnvironmentProperty
+     * @return Set of EnvironmentProperty
      */
-    public Set getRequiredConfigProperties() {
+    public Set<EnvironmentProperty> getRequiredConfigProperties() {
         return requiredConfigProperties;
-    }
-
-
-    // return the msg listener name
-    // FIXME. No longer valid. Use messagelistener-type instead of name
-    public String getMessageListenerName() {
-        throw new UnsupportedOperationException();
-    }
-
-
-    // set the msg listener name
-    // FIXME. No longer valid. Use messagelistener-type instead of name
-    public void setMessageListenerName(String msgListenerName) {
-        throw new UnsupportedOperationException();
     }
 }

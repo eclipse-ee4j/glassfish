@@ -33,9 +33,9 @@ import java.util.Map;
  * @author  Sheetal Vartak
  * @version
  */
-public class RequiredConfigNode extends DeploymentDescriptorNode {
+public class RequiredConfigNode extends DeploymentDescriptorNode<EnvironmentProperty> {
 
-    private EnvironmentProperty config = null;
+    private EnvironmentProperty config;
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -44,8 +44,8 @@ public class RequiredConfigNode extends DeploymentDescriptorNode {
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ConnectorTagNames.CONFIG_PROPERTY_NAME, "setName");
         return table;
     }
@@ -55,7 +55,7 @@ public class RequiredConfigNode extends DeploymentDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public EnvironmentProperty getDescriptor() {
         if (config == null) {
             config = (EnvironmentProperty) DescriptorFactory.getDescriptor(getXMLPath());
         }
@@ -67,7 +67,7 @@ public class RequiredConfigNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
@@ -75,16 +75,16 @@ public class RequiredConfigNode extends DeploymentDescriptorNode {
             throw new IllegalArgumentException(
                 getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
-        Iterator configProps = null;
-        configProps = ((MessageListener) descriptor).getRequiredConfigProperties().iterator();
+        Iterator<EnvironmentProperty> configProps = ((MessageListener) descriptor).getRequiredConfigProperties()
+            .iterator();
 
         // config property info
         if (configProps != null) {
-            for (; configProps.hasNext();) {
-                EnvironmentProperty config = (EnvironmentProperty) configProps.next();
+            while (configProps.hasNext()) {
+                EnvironmentProperty cfg = configProps.next();
                 Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
-                writeLocalizedDescriptions(configNode, config);
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, config.getName());
+                writeLocalizedDescriptions(configNode, cfg);
+                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());
             }
         }
         return parent;

@@ -33,6 +33,7 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
 
     private static final long serialVersionUID = 1L;
+    private static final String JPA_1_0 = "1.0";
 
     /** the parent descriptor that contains this descriptor */
     private RootDeploymentDescriptor parent;
@@ -47,9 +48,8 @@ public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
      */
     private String puRoot;
 
-    List<PersistenceUnitDescriptor> persistenceUnitDescriptors = new ArrayList<>();
+    private final List<PersistenceUnitDescriptor> persistenceUnitDescriptors = new ArrayList<>();
 
-    private static final String JPA_1_0 = "1.0";
 
     public RootDeploymentDescriptor getParent() {
         return parent;

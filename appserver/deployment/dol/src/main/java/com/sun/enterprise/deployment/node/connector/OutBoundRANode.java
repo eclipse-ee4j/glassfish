@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * OutBoundRANode.java
- *
- * Created on February 1, 2002, 3:07 PM
  */
 
 package com.sun.enterprise.deployment.node.connector;
@@ -44,13 +39,11 @@ import org.xml.sax.Attributes;
  * This node signifies the outbound-resourceadapter tag in Connector DTD
  *
  * @author Sheetal Vartak
- * @version
  */
-public class OutBoundRANode extends DeploymentDescriptorNode {
+public class OutBoundRANode extends DeploymentDescriptorNode<OutboundResourceAdapter> {
 
-    OutboundResourceAdapter descriptor = null;
-
-    public final static XMLElement tag = new XMLElement(ConnectorTagNames.OUTBOUND_RESOURCE_ADAPTER);
+    public static final XMLElement tag = new XMLElement(ConnectorTagNames.OUTBOUND_RESOURCE_ADAPTER);
+    private OutboundResourceAdapter descriptor;
 
     // default constructor...for normal operation in case of 1.5 DTD
     public OutBoundRANode() {
@@ -73,7 +66,7 @@ public class OutBoundRANode extends DeploymentDescriptorNode {
      */
     public void createConDefDescriptorFor10() {
         ConnectionDefDescriptor conDef = new ConnectionDefDescriptor();
-        ((OutboundResourceAdapter) getDescriptor()).addConnectionDefDescriptor(conDef);
+        getDescriptor().addConnectionDefDescriptor(conDef);
     }
 
 
@@ -92,7 +85,7 @@ public class OutBoundRANode extends DeploymentDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public OutboundResourceAdapter getDescriptor() {
         if (descriptor == null) {
             // the descriptor associated with the OutBoundRANode is a OutboundResourceAdapter
             // This descriptor is available with the parent node of the OutBoundRANode
@@ -136,9 +129,9 @@ public class OutBoundRANode extends DeploymentDescriptorNode {
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
 
         table.put(ConnectorTagNames.TRANSACTION_SUPPORT, "setTransactionSupport");
         table.put(ConnectorTagNames.REAUTHENTICATION_SUPPORT, "setReauthenticationSupport");
@@ -168,7 +161,6 @@ public class OutBoundRANode extends DeploymentDescriptorNode {
      */
     public Node writeDescriptor(Node connectorNode, Descriptor descriptor) {
         // outbound RA info
-
         Node raNode = appendChild(connectorNode, ConnectorTagNames.OUTBOUND_RESOURCE_ADAPTER);
         append(raNode, ((ConnectorDescriptor) descriptor).getOutboundResourceAdapter());
         return connectorNode;

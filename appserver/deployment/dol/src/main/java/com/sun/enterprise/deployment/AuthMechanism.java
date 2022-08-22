@@ -18,6 +18,10 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
+
+import jakarta.resource.spi.security.GenericCredential;
+import jakarta.resource.spi.security.PasswordCredential;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -29,6 +33,9 @@ import org.glassfish.deployment.common.Descriptor;
 public class AuthMechanism extends Descriptor {
 
     private static final long serialVersionUID = 1L;
+    public static final int BASIC_PASSWORD = 0;
+    public static final int KERBV5 = 1;
+
     private int authMechVal;
     private String credInterface;
 
@@ -36,6 +43,23 @@ public class AuthMechanism extends Descriptor {
      * Default constructor.
      */
     public AuthMechanism() {
+    }
+
+
+    /**
+     * Initializes the data members.
+     *
+     * @param authMechVal authentication mechanism type.
+     */
+    @SuppressWarnings("deprecation")
+    public AuthMechanism(int authMechVal) {
+        super.setDescription("");
+        this.authMechVal = authMechVal;
+        if (authMechVal == AuthMechanism.BASIC_PASSWORD) {
+            this.credInterface = PasswordCredential.class.getName();
+        } else {
+            this.credInterface = GenericCredential.class.getName();
+        }
     }
 
 
@@ -101,7 +125,7 @@ public class AuthMechanism extends Descriptor {
      * @return authMechVal the authentication mechanism type
      */
     public String getAuthMechType() {
-        if (authMechVal == PoolManagerConstants.BASIC_PASSWORD) {
+        if (authMechVal == BASIC_PASSWORD) {
             return ConnectorTagNames.DD_BASIC_PASSWORD;
         }
         return ConnectorTagNames.DD_KERBEROS;
@@ -110,9 +134,9 @@ public class AuthMechanism extends Descriptor {
 
     public static int getAuthMechInt(String value) {
         if (ConnectorTagNames.DD_BASIC_PASSWORD.equals(value.trim())) {
-            return PoolManagerConstants.BASIC_PASSWORD;
+            return BASIC_PASSWORD;
         } else if (ConnectorTagNames.DD_KERBEROS.equals(value.trim())) {
-            return PoolManagerConstants.KERBV5;
+            return KERBV5;
         } else {
             throw new IllegalArgumentException("Invalid auth-mech-type");
         }
@@ -138,9 +162,9 @@ public class AuthMechanism extends Descriptor {
      */
     public void setAuthMechVal(String value) {
         if (ConnectorTagNames.DD_BASIC_PASSWORD.equals(value.trim())) {
-            authMechVal = PoolManagerConstants.BASIC_PASSWORD;
+            authMechVal = BASIC_PASSWORD;
         } else if (ConnectorTagNames.DD_KERBEROS.equals(value.trim())) {
-            authMechVal = PoolManagerConstants.KERBV5;
+            authMechVal = KERBV5;
         } else {
             throw new IllegalArgumentException("Invalid auth-mech-type");
         }

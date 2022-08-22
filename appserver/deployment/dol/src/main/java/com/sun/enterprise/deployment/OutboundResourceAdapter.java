@@ -17,18 +17,22 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-
 import jakarta.resource.spi.AuthenticationMechanism;
+import jakarta.resource.spi.TransactionSupport.TransactionSupportLevel;
 import jakarta.resource.spi.security.GenericCredential;
 import jakarta.resource.spi.security.PasswordCredential;
 
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.ietf.jgss.GSSCredential;
+
+import static com.sun.enterprise.deployment.xml.ConnectorTagNames.DD_LOCAL_TRANSACTION;
+import static com.sun.enterprise.deployment.xml.ConnectorTagNames.DD_NO_TRANSACTION;
+import static com.sun.enterprise.deployment.xml.ConnectorTagNames.DD_XA_TRANSACTION;
+import static jakarta.resource.spi.TransactionSupport.TransactionSupportLevel.LocalTransaction;
+import static jakarta.resource.spi.TransactionSupport.TransactionSupportLevel.NoTransaction;
+import static jakarta.resource.spi.TransactionSupport.TransactionSupportLevel.XATransaction;
 
 /**
  * Deployment Information for connector outbound-resourceadapter
@@ -39,7 +43,8 @@ import org.ietf.jgss.GSSCredential;
 public class OutboundResourceAdapter extends Descriptor {
 
     private static final long serialVersionUID = 1L;
-    private int transactionSupport = PoolManagerConstants.LOCAL_TRANSACTION;
+
+    private TransactionSupportLevel transactionSupport = LocalTransaction;
     private Set<AuthMechanism> authMechanisms;
     private boolean reauthenticationSupport;
     private final Set<ConnectionDefDescriptor> connectionDefs;
@@ -89,55 +94,31 @@ public class OutboundResourceAdapter extends Descriptor {
 
     /**
      * @return NO_TRANSACTION, LOCAL_TRANSACTION, XA_TRANSACTION
-     *         as defined in PoolManagerConstants interface
      */
     public String getTransSupport() {
-        if (transactionSupport == PoolManagerConstants.NO_TRANSACTION) {
-            return ConnectorTagNames.DD_NO_TRANSACTION;
-        } else if (transactionSupport == PoolManagerConstants.LOCAL_TRANSACTION) {
-            return ConnectorTagNames.DD_LOCAL_TRANSACTION;
+        if (transactionSupport == NoTransaction) {
+            return DD_NO_TRANSACTION;
+        } else if (transactionSupport == LocalTransaction) {
+            return DD_LOCAL_TRANSACTION;
         } else {
-            return ConnectorTagNames.DD_XA_TRANSACTION;
+            return DD_XA_TRANSACTION;
         }
     }
 
 
-    public int getTransactionSupport() {
-        return transactionSupport;
-    }
-
-
     /**
      * Set value of transactionSupport to NO_TRANSACTION,
-     * LOCAL_TRANSACTION, XA_TRANSACTION as defined in
-     * PoolManagerConstants interface
-     */
-    public void setTransactionSupport(int transactionSupport) {
-        this.transactionSupport = transactionSupport;
-        this.transactionSupportSet = true;
-    }
-
-
-    /**
-     * Set value of transactionSupport to NO_TRANSACTION,
-     * LOCAL_TRANSACTION, XA_TRANSACTION as defined in
-     * PoolManagerConstants interface
+     * LOCAL_TRANSACTION, XA_TRANSACTION as defined in {@link TransactionSupportLevel}
      */
     public void setTransactionSupport(String support) {
-        // TODO V3 : should throw exception when the "support" is none of XA/NO/Local ?
-        try {
-            if (ConnectorTagNames.DD_XA_TRANSACTION.equals(support)) {
-                this.transactionSupport = PoolManagerConstants.XA_TRANSACTION;
-            } else if (ConnectorTagNames.DD_LOCAL_TRANSACTION.equals(support)) {
-                this.transactionSupport = PoolManagerConstants.LOCAL_TRANSACTION;
-            } else {
-                this.transactionSupport = PoolManagerConstants.NO_TRANSACTION;
-            }
-
-            this.transactionSupportSet = true;
-        } catch (NumberFormatException nfe) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred", nfe);
+        if (DD_XA_TRANSACTION.equals(support)) {
+            this.transactionSupport = XATransaction;
+        } else if (DD_LOCAL_TRANSACTION.equals(support)) {
+            this.transactionSupport = LocalTransaction;
+        } else {
+            this.transactionSupport = NoTransaction;
         }
+        this.transactionSupportSet = true;
     }
 
 
@@ -154,8 +135,8 @@ public class OutboundResourceAdapter extends Descriptor {
 
     /**
      * Add a AuthMechanism object to the set return value :
-     * false = found
-     * true = not found
+     *
+     * @return false if found, true if not found
      */
     public boolean addAuthMechanism(AuthMechanism mech) {
         for (AuthMechanism next : authMechanisms) {
@@ -169,8 +150,8 @@ public class OutboundResourceAdapter extends Descriptor {
 
     /**
      * Remove a AuthMechanism object to the set
-     * return value : false = found
-     * true = not found
+     *
+     * @return false if found, true if not found
      */
     public boolean removeAuthMechanism(AuthMechanism mech) {
         for (AuthMechanism next : authMechanisms) {
@@ -184,9 +165,8 @@ public class OutboundResourceAdapter extends Descriptor {
 
     /**
      * Add a AuthMechanism object with given auth mech value to the set
-     * return value:
-     * false = found
-     * true = not found
+     *
+     * @return false if found, true if not found
      */
     public boolean addAuthMechanism(int mech) {
         for (AuthMechanism next : authMechanisms) {
@@ -194,21 +174,15 @@ public class OutboundResourceAdapter extends Descriptor {
                 return false;
             }
         }
-        String credInf = null;
-        if (mech == PoolManagerConstants.BASIC_PASSWORD) {
-            credInf = PoolManagerConstants.PASSWORD_CREDENTIAL;
-        } else {
-            credInf = PoolManagerConstants.GENERIC_CREDENTIAL;
-        }
-        AuthMechanism auth = new AuthMechanism("", mech, credInf);
+        AuthMechanism auth = new AuthMechanism(mech);
         return this.authMechanisms.add(auth);
     }
 
 
     /**
      * Remove a AuthMechanism object with given auth mech value from the set
-     *       return value : false = found
-     *                      true = not found
+     *
+     * @return false if found, true if not found
      */
     public boolean removeAuthMechanism(int mech) {
         for (AuthMechanism next : authMechanisms) {
@@ -247,7 +221,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * returns the set of connection definitions
+     * @return the set of connection definitions
      */
     public Set<ConnectionDefDescriptor> getConnectionDefs() {
         return connectionDefs;
@@ -268,7 +242,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Gets the value of ManagedconnectionFactoryImpl
+     * @return the value of ManagedconnectionFactoryImpl
      */
     public String getManagedConnectionFactoryImpl() {
         return getConnectionDef().getManagedConnectionFactoryImpl();
@@ -284,7 +258,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Set of EnvironmentProperty
+     * @return Set of ConnectorConfigProperty
      */
     public Set<ConnectorConfigProperty> getConfigProperties() {
         return getConnectionDef().getConfigProperties();
@@ -308,7 +282,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Get connection factory impl
+     * @return connection factory impl
      */
     public String getConnectionFactoryImpl() {
         return getConnectionDef().getConnectionFactoryImpl();
@@ -324,7 +298,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Get connection factory intf
+     * @return connection factory intf
      */
     public String getConnectionFactoryIntf() {
         return getConnectionDef().getConnectionFactoryIntf();
@@ -340,7 +314,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Get connection intf
+     * @return connection intf
      */
     public String getConnectionIntf() {
         return getConnectionDef().getConnectionIntf();
@@ -356,7 +330,7 @@ public class OutboundResourceAdapter extends Descriptor {
 
 
     /**
-     * Get connection impl
+     * @return connection impl
      */
     public String getConnectionImpl() {
         return getConnectionDef().getConnectionImpl();

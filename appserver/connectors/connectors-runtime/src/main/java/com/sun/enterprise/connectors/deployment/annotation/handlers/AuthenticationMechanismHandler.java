@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,26 @@
 
 package com.sun.enterprise.connectors.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
+import com.sun.enterprise.deployment.AuthMechanism;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
-import com.sun.enterprise.deployment.AuthMechanism;
-import com.sun.enterprise.deployment.PoolManagerConstants;
+import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.spi.AuthenticationMechanism;
 import jakarta.resource.spi.Connector;
+
 import java.lang.annotation.Annotation;
 import java.util.logging.Level;
-import org.glassfish.apf.*;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
 import org.jvnet.hk2.annotations.Service;
 
@@ -44,6 +51,7 @@ public class AuthenticationMechanismHandler extends AbstractHandler {
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(AuthenticationMechanismHandler.class);
 
+    @Override
     public HandlerProcessingResult processAnnotation(AnnotationInfo element) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = element.getProcessingContext().getHandler();
         AuthenticationMechanism authMechanism = (AuthenticationMechanism) element.getAnnotation();
@@ -61,17 +69,17 @@ public class AuthenticationMechanismHandler extends AbstractHandler {
                 String[] description = authMechanism.description();
                 int authMechanismValue = getAuthMechVal(authMechanism.authMechanism());
                 AuthenticationMechanism.CredentialInterface ci = authMechanism.credentialInterface();
-                String credentialInterface = ora.getCredentialInterfaceName(ci);
-                //XXX: Siva: For now use the first description
+                String credentialInterface = OutboundResourceAdapter.getCredentialInterfaceName(ci);
+                // XXX: Siva: For now use the first description
                 String firstDesc = "";
-                if(description.length > 0) {
+                if (description.length > 0) {
                     firstDesc = description[0];
                 }
                 AuthMechanism auth = new AuthMechanism(firstDesc, authMechanismValue, credentialInterface);
                 ora.addAuthMechanism(auth);
             } else {
-                getFailureResult(element, "Not a @Connector annotation : @AuthenticationMechanism must " +
-                        "be specified along with @Connector annotation", true);
+                getFailureResult(element, "Not a @Connector annotation : @AuthenticationMechanism must "
+                    + "be specified along with @Connector annotation", true);
             }
         } else {
             getFailureResult(element, "Not a rar bundle context", true);
@@ -79,33 +87,40 @@ public class AuthenticationMechanismHandler extends AbstractHandler {
         return getDefaultProcessedResult();
     }
 
+
     private boolean hasConnectorAnnotation(AnnotationInfo element) {
-        Class c = (Class) element.getAnnotatedElement();
+        Class<?> c = (Class<?>) element.getAnnotatedElement();
         return c.getAnnotation(Connector.class) != null;
     }
 
+
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getConnectorAnnotationTypes();
     }
 
+
     /**
      * @return a default processed result
      */
+    @Override
     protected HandlerProcessingResult getDefaultProcessedResult() {
-        return HandlerProcessingResultImpl.getDefaultResult(
-                getAnnotationType(), ResultType.PROCESSED);
+        return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
     }
+
 
     /**
      * Set the authentication mechanism value.
      */
     public int getAuthMechVal(String value) {
         int authMechVal;
-        if ((value.trim()).equals(ConnectorTagNames.DD_BASIC_PASSWORD))
-            authMechVal = PoolManagerConstants.BASIC_PASSWORD;
-        else if ((value.trim()).equals(ConnectorTagNames.DD_KERBEROS))
-            authMechVal = PoolManagerConstants.KERBV5;
-        else throw new IllegalArgumentException("Invalid auth-mech-type");// put this in localStrings...
+        if (value.trim().equals(ConnectorTagNames.DD_BASIC_PASSWORD)) {
+            authMechVal = AuthMechanism.BASIC_PASSWORD;
+        } else if (value.trim().equals(ConnectorTagNames.DD_KERBEROS)) {
+            authMechVal = AuthMechanism.KERBV5;
+        } else {
+            throw new IllegalArgumentException("Invalid auth-mech-type");// put this in localStrings...
+        }
         return authMechVal;
     }
 

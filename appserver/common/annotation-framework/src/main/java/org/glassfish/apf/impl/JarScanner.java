@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,15 @@
 package org.glassfish.apf.impl;
 
 import java.io.File;
-import java.io.IOException;
-import java.security.PrivilegedAction;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.jar.JarFile;
+import java.security.PrivilegedAction;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 import org.glassfish.apf.Scanner;
 
 /**
@@ -34,13 +34,14 @@ import org.glassfish.apf.Scanner;
  *
  * @author Jerome Dochez
  */
-public class JarScanner extends JavaEEScanner implements Scanner<Object> {
+public class JarScanner extends JavaEEScanner implements Scanner {
 
     File jarFile;
-    Set<JarEntry> entries = new HashSet<JarEntry>();
-    ClassLoader classLoader = null;
+    Set<JarEntry> entries = new HashSet<>();
+    ClassLoader classLoader;
 
 
+    @Override
     public  void process(File jarFile, Object bundleDesc, ClassLoader loader) throws java.io.IOException {
         this.jarFile = jarFile;
         JarFile jf = new JarFile(jarFile);
@@ -59,11 +60,14 @@ public class JarScanner extends JavaEEScanner implements Scanner<Object> {
         initTypes(jarFile);
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         if (classLoader==null) {
             final URL[] urls = new URL[1];
             try {
-                if (jarFile == null) throw new IllegalStateException("jarFile must first be set with the process method.");
+                if (jarFile == null) {
+                    throw new IllegalStateException("jarFile must first be set with the process method.");
+                }
                 urls[0] = jarFile.getAbsoluteFile().toURL();
                 classLoader = new PrivilegedAction<URLClassLoader>() {
                   @Override
@@ -78,10 +82,9 @@ public class JarScanner extends JavaEEScanner implements Scanner<Object> {
         return classLoader;
     }
 
-    public Set<Class> getElements() {
-
-
-        Set<Class> elements = new HashSet<Class>();
+    @Override
+    public Set<Class<?>> getElements() {
+        Set<Class<?>> elements = new HashSet<>();
         if (getClassLoader()==null) {
             AnnotationUtils.getLogger().severe("Class loader null");
             return elements;
@@ -100,7 +103,4 @@ public class JarScanner extends JavaEEScanner implements Scanner<Object> {
         }
         return elements;
     }
-
-
-
 }

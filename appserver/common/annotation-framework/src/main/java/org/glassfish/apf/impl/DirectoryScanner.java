@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,18 +20,13 @@ package org.glassfish.apf.impl;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.security.PrivilegedAction;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.PrivilegedAction;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.glassfish.apf.Scanner;
-import org.glassfish.hk2.classmodel.reflect.Parser;
-import org.glassfish.hk2.classmodel.reflect.ParsingContext;
-import org.glassfish.hk2.classmodel.reflect.Types;
 
 /**
  * Implementation of the Scanner interface for a directory
@@ -40,9 +36,10 @@ import org.glassfish.hk2.classmodel.reflect.Types;
 public class DirectoryScanner extends JavaEEScanner implements Scanner {
 
     File directory;
-    Set<String> entries = new HashSet<String>();
+    Set<String> entries = new HashSet<>();
     ClassLoader classLoader = null;
 
+    @Override
     public void process(File directory, Object bundleDesc, ClassLoader classLoader)
             throws IOException {
         AnnotationUtils.getLogger().finer("dir is " + directory);
@@ -60,6 +57,7 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
     private void init(File top, File directory) throws java.io.IOException {
 
         File[] dirFiles = directory.listFiles(new FileFilter() {
+                @Override
                 public boolean accept(File pathname) {
                     return pathname.getAbsolutePath().endsWith(".class");
                 }
@@ -71,6 +69,7 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
         }
 
         File[] subDirs = directory.listFiles(new FileFilter() {
+                @Override
                 public boolean accept(File pathname) {
                     return pathname.isDirectory();
                 }
@@ -86,11 +85,14 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
         return entries;
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         if (classLoader==null) {
             final URL[] urls = new URL[1];
             try {
-                if (directory == null) throw new IllegalStateException("directory must first be set by calling the process method.");
+                if (directory == null) {
+                    throw new IllegalStateException("directory must first be set by calling the process method.");
+                }
                 urls[0] = directory.getAbsoluteFile().toURL();
                 classLoader = new PrivilegedAction<URLClassLoader>() {
                   @Override
@@ -105,10 +107,11 @@ public class DirectoryScanner extends JavaEEScanner implements Scanner {
         return classLoader;
     }
 
+    @Override
     public Set<Class> getElements() {
 
 
-        Set<Class> elements = new HashSet<Class>();
+        Set<Class> elements = new HashSet<>();
         if (getClassLoader()==null) {
             AnnotationUtils.getLogger().severe("Class loader null");
             return elements;

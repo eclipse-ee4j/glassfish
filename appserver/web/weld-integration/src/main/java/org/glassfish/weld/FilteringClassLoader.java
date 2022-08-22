@@ -86,18 +86,23 @@ class FilteringClassLoader extends ClassLoader {
     }
 
 
+    /**
+     * Resolves compatibility based on extension's manifest file.
+     * <p>
+     * If the extension's module doesn't declare any usable attribute to resolve compatibility,
+     * we expect the extension is compatible.
+     */
     private boolean isCompatible(final URL extensionUrl) {
         final URL manifestURL = toManifestURL(extensionUrl);
-        try (InputStream stream = manifestURL.openStream()) {
-            final Manifest manifest = new Manifest(stream);
-            final Version requiredMinVersion = getRequiredMinimalJavaVersion(manifest.getMainAttributes());
-            if (requiredMinVersion == null) {
-                return true;
-            }
-            return requiredMinVersion.compareTo(Runtime.version()) < 0;
-        } catch (final IOException e) {
-            throw new IllegalStateException("Could not open manifest for " + extensionUrl, e);
+        final Manifest manifest = loadManifest(manifestURL);
+        if (manifest == null) {
+            return true;
         }
+        final Version requiredMinVersion = getRequiredMinimalJavaVersion(manifest.getMainAttributes());
+        if (requiredMinVersion == null) {
+            return true;
+        }
+        return requiredMinVersion.compareTo(Runtime.version()) < 0;
     }
 
 
@@ -105,7 +110,22 @@ class FilteringClassLoader extends ClassLoader {
         try {
             return new URL(extensionUrl.toExternalForm().replaceFirst(PATH_WELD_EXTENTSION, PATH_MANIFEST));
         } catch (final MalformedURLException e) {
+            // ISE: because it should be always possible to use the constructor here.
             throw new IllegalStateException("Unprocessable URL: " + extensionUrl, e);
+        }
+    }
+
+
+    /**
+     * @param manifestURL
+     * @return {@link Manifest} or null if there's no such file or cannot be read.
+     */
+    private Manifest loadManifest(final URL manifestURL) {
+        try (InputStream stream = manifestURL.openStream()) {
+            return new Manifest(stream);
+        } catch (final IOException e) {
+            LOG.log(Level.WARNING, "Could not read manifest at " + manifestURL, e);
+            return null;
         }
     }
 

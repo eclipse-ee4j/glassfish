@@ -39,25 +39,27 @@
  */
 package org.apache.catalina.core;
 
-import junit.framework.TestCase;
 import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
+import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
 import org.glassfish.grizzly.http.util.DataChunk;
 import org.glassfish.web.valve.GlassFishValve;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.runner.RunWith;
+
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import static org.easymock.EasyMock.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class StandardContextValveTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class StandardContextValveTest {
 
     @Mock
     private HttpRequest httpRequest;
@@ -68,7 +70,7 @@ public class StandardContextValveTest extends TestCase {
     @Mock
     private HttpServletResponse httpServletResponse;
 
-    @InjectMocks
+    @TestSubject
     private StandardContextValve standardContextValve = new StandardContextValve();
 
     @Test
@@ -78,17 +80,23 @@ public class StandardContextValveTest extends TestCase {
         DataChunk dataChunkURL2 = DataChunk.newInstance();
         dataChunkURL2.setString("META-INF/MANIFEST.MF");
 
-        when(httpRequest.getCheckRestrictedResources()).thenReturn(true);
-        when(httpRequest.getRequestPathMB()).thenReturn(dataChunkURL1).thenReturn(dataChunkURL2);
-        when(httpResponse.getResponse()).thenReturn(httpServletResponse);
+        expect(httpRequest.getCheckRestrictedResources()).andReturn(true);
+        expect(httpRequest.getRequestPathMB()).andReturn(dataChunkURL1).andReturn(dataChunkURL2);
+        expect(httpResponse.getResponse()).andReturn(httpServletResponse);
+        EasyMock.replay(httpRequest);
+        EasyMock.replay(httpResponse);
 
         int pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
-
-        verifyThatResourceIsNotFound(pipelineResult, 1, httpRequest, httpResponse, httpServletResponse);
+        assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
+        assertEquals(pipelineResult, HttpServletResponse.SC_NOT_FOUND);
+        EasyMock.verify(httpRequest);
+        EasyMock.verify(httpResponse);
 
         pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
-
-        verifyThatResourceIsNotFound(pipelineResult, 2, httpRequest, httpResponse, httpServletResponse);
+        assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
+        assertEquals(pipelineResult, HttpServletResponse.SC_NOT_FOUND);
+        EasyMock.verify(httpRequest);
+        EasyMock.verify(httpResponse);
     }
 
     @Test
@@ -108,14 +116,5 @@ public class StandardContextValveTest extends TestCase {
         result = standardContextValve.normalize(path3);
 
         assertEquals("/my.jsp", result);
-    }
-
-    protected void verifyThatResourceIsNotFound(int pipelineResult, int times, HttpRequest httpRequest, HttpResponse httpResponse,
-                                                HttpServletResponse httpServletResponse) throws IOException {
-        assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
-        verify(httpRequest, times(times)).getCheckRestrictedResources();
-        verify(httpRequest, times(times)).getRequestPathMB();
-        verify(httpResponse, times(times)).getResponse();
-        verify(httpServletResponse, times(times)).sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

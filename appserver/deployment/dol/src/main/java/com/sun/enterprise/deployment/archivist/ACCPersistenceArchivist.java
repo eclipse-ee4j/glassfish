@@ -60,12 +60,12 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         return (moduleType != null && moduleType.equals(DOLUtils.carType())) && (env.getProcessType() == ProcessType.ACC) ;
     }
 
+
     @Override
-    public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "ACCPersistencerArchivist", "readPersistenceDeploymentDescriptors",
-                "archive = {0}", archive.getURI());
-        }
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
+        throws IOException, SAXException {
+        deplLogger.logp(Level.FINE, "ACCPersistencerArchivist", "readPersistenceDeploymentDescriptors", "archive = {0}",
+            archive.getURI());
 
         // The descriptor had better be an ApplicationClientDescriptor!
         if ( ! (descriptor instanceof ApplicationClientDescriptor)) {
@@ -113,8 +113,8 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         return relativePathToGroupFacade == null;
     }
 
-    private URI clientURI(final ReadableArchive archive,
-            final ApplicationClientDescriptor acDesc) throws IOException {
+
+    private URI clientURI(final ReadableArchive archive, final ApplicationClientDescriptor acDesc) throws IOException {
         if (archive instanceof MultiReadableArchive) {
             /*
              * Getting the manifest from a MultiReadableArchive returns the
@@ -132,8 +132,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
              * the download directory.
              */
             final URI absURIToClient = ((MultiReadableArchive) archive).getURI(1);
-            final String relativeURIPathToAnchorDir =
-                    facadeMainAttrs.getValue(AppClientArchivist.GLASSFISH_ANCHOR_DIR);
+            final String relativeURIPathToAnchorDir = facadeMainAttrs.getValue(AppClientArchivist.GLASSFISH_ANCHOR_DIR);
             final URI absURIToAnchorDir = archive.getURI().resolve(relativeURIPathToAnchorDir);
             return absURIToAnchorDir.relativize(absURIToClient);
         }
@@ -146,7 +145,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
          * For a non-deployed app (this case), the descriptor for a stand-alone
          * app client has a null application value.
          */
-        return (ac.getApplication() == null || ac.isStandalone());
+        return ac.getApplication() == null || ac.isStandalone();
     }
 
     private boolean isDeployed(final Attributes mainAttrs) throws IOException {
@@ -186,9 +185,6 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
                 acDescr.getApplication(),
                 true,
                 candidates);
-
-
-
     }
 
 

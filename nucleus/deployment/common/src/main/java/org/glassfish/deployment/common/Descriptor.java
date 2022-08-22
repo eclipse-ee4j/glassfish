@@ -185,6 +185,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
      *
      * @param name the new name of the descriptor.
      */
+    @Deprecated(since = "JEE1.4", forRemoval = true)
     public void setName(String name) {
         setLocalizedDisplayName(null, name);
     }
@@ -194,6 +195,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
      *
      * @return the name of this descriptor
      */
+    @Deprecated(since = "JEE1.4", forRemoval = true)
     public String getName() {
         return getLocalizedDisplayName(null);
     }

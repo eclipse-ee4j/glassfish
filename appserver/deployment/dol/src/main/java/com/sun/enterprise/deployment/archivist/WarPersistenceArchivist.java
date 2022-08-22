@@ -43,13 +43,10 @@ public class WarPersistenceArchivist extends PersistenceArchivist {
     }
 
     @Override
-    public Object open(Archivist main, ReadableArchive warArchive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive warArchive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
         final String CLASSES_DIR = "WEB-INF/classes/";
-
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "WarPersistenceArchivist", "readPersistenceDeploymentDescriptors",
-                "archive = {0}", warArchive.getURI());
-        }
+        deplLogger.logp(Level.FINE, "WarPersistenceArchivist", "readPersistenceDeploymentDescriptors", "archive = {0}",
+            warArchive.getURI());
         Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<>();
         try {
             SubArchivePURootScanner warLibScanner = new SubArchivePURootScanner() {

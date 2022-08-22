@@ -38,7 +38,6 @@ import jakarta.persistence.EntityManagerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -55,7 +54,6 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -591,8 +589,8 @@ public class Application extends CommonResourceBundleDescriptor
     }
 
     @Override
-    public InjectionInfo getInjectionInfoByClass(Class clazz) {
-        return (getInjectionInfoByClass(clazz, this));
+    public InjectionInfo getInjectionInfoByClass(Class<?> clazz) {
+        return getInjectionInfoByClass(clazz, this);
     }
 
     public void setGeneratedXMLDirectory(String xmlDir) {
@@ -867,6 +865,7 @@ public class Application extends CommonResourceBundleDescriptor
         libraryDirectory = value;
     }
 
+
     /**
      * Returns an "intelligent" value for the library directory setting, meaning
      * the current value if it has been set to a non-null, non-empty value;
@@ -882,9 +881,11 @@ public class Application extends CommonResourceBundleDescriptor
         return libraryDirectory.isEmpty() ? null : libraryDirectory;
     }
 
+
     public String getLibraryDirectoryRawValue() {
         return libraryDirectory;
     }
+
 
     public void removeModule(ModuleDescriptor<BundleDescriptor> descriptor) {
         if (modules.contains(descriptor)) {
@@ -895,12 +896,14 @@ public class Application extends CommonResourceBundleDescriptor
         }
     }
 
+
     public void addModule(ModuleDescriptor<BundleDescriptor> descriptor) {
         modules.add(descriptor);
         if (descriptor.getDescriptor() != null) {
             descriptor.getDescriptor().setApplication(this);
         }
     }
+
 
     /**
      * Obtain a full set of module descriptors
@@ -911,50 +914,40 @@ public class Application extends CommonResourceBundleDescriptor
         return modules;
     }
 
+
     /**
      * Get the uri of a target based on a source module and a
      * a relative uri from the perspective of that source module.
      *
-     * @param origin            bundle descriptor within this application
+     * @param origin bundle descriptor within this application
      * @param relativeTargetUri relative uri from the given bundle descriptor
      * @return target uri
      */
-    public String getTargetUri(BundleDescriptor origin,
-                               String relativeTargetUri) {
-        String targetUri = null;
-
+    public String getTargetUri(BundleDescriptor origin, String relativeTargetUri) {
         try {
             String archiveUri = origin.getModuleDescriptor().getArchiveUri();
             URI originUri = new URI(archiveUri);
             URI resolvedUri = originUri.resolve(relativeTargetUri);
-            targetUri = resolvedUri.getPath();
+            return resolvedUri.getPath();
         } catch (URISyntaxException use) {
-            _logger.log(Level.FINE, "origin " + origin + " has invalid syntax",
-                    use);
+            _logger.log(Level.FINE, "origin " + origin + " has invalid syntax", use);
+            return null;
         }
-
-        return targetUri;
     }
+
 
     /**
      * Get a target bundle descriptor based on an input bundle descriptor and
      * a relative uri from the perspective of the input bundle descriptor.
      *
-     * @param origin            bundle descriptor within this application
+     * @param origin bundle descriptor within this application
      * @param relativeTargetUri relative uri from the given bundle descriptor
-     *                          to another bundle within the application.
+     *            to another bundle within the application.
      * @return target BundleDescriptor or null if not found.
      */
     public BundleDescriptor getRelativeBundle(BundleDescriptor origin, String relativeTargetUri) {
         String targetBundleUri = getTargetUri(origin, relativeTargetUri);
-
-        BundleDescriptor targetBundle = null;
-
-        if (targetBundleUri != null) {
-            targetBundle = getModuleByUri(targetBundleUri);
-        }
-
-        return targetBundle;
+        return targetBundleUri == null ? null : getModuleByUri(targetBundleUri);
     }
 
 
@@ -985,9 +978,9 @@ public class Application extends CommonResourceBundleDescriptor
         }
 
         relativeUri.append(targetUri);
-
         return relativeUri.toString();
     }
+
 
     /**
      * Lookup module by uri.
@@ -1025,6 +1018,7 @@ public class Application extends CommonResourceBundleDescriptor
         return results;
     }
 
+
     /**
      * Lookup module by uri.
      *
@@ -1040,11 +1034,11 @@ public class Application extends CommonResourceBundleDescriptor
         return null;
     }
 
+
     /**
      * @param type the module type
      * @param uri  the module path in the application archive
-     * @return a bundle descriptor in this application identified by
-     *         its type and uri
+     * @return a bundle descriptor in this application identified by its type and uri
      */
     public <T extends BundleDescriptor> T getModuleByTypeAndUri(Class<T> type, String uri) {
         for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
@@ -1060,6 +1054,7 @@ public class Application extends CommonResourceBundleDescriptor
         return null;
     }
 
+
     /**
      * Obtain the EJB in this application of the given display name. If the EJB is not
      * present, throw an IllegalArgumentException.
@@ -1074,9 +1069,9 @@ public class Application extends CommonResourceBundleDescriptor
             }
         }
         throw new IllegalArgumentException(localStrings.getLocalString(
-                "enterprise.deployment.exceptionapphasnobeannamed",
-                "This application has no beans of name {0}", ejbName));
+            "enterprise.deployment.exceptionapphasnobeannamed", "This application has no beans of name {0}", ejbName));
     }
+
 
     /**
      * Return whether the application contains the given ejb by name..
@@ -1100,17 +1095,16 @@ public class Application extends CommonResourceBundleDescriptor
      * @return the wrapped standalone bundle descriptor
      */
     public BundleDescriptor getStandaloneBundleDescriptor() {
-        if (isVirtual()) {
-            if (getModules().size()>1) {
-                // this is an error, the application is virtual,
-                // which mean a wrapper for a standalone module and
-                // it seems I have more than one module in my list...
-                throw new IllegalStateException("Virtual application contains more than one module");
-            }
-            return getModules().iterator().next().getDescriptor();
-        } else {
+        if (!isVirtual()) {
             return null;
         }
+        if (getModules().size() > 1) {
+            // this is an error, the application is virtual,
+            // which mean a wrapper for a standalone module and
+            // it seems I have more than one module in my list...
+            throw new IllegalStateException("Virtual application contains more than one module");
+        }
+        return getModules().iterator().next().getDescriptor();
     }
 
 
@@ -1125,7 +1119,7 @@ public class Application extends CommonResourceBundleDescriptor
             return null;
         }
         Set<T> bundleSet = new OrderedSet<>();
-        for (ModuleDescriptor aModule : getModules()) {
+        for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
             try {
                 T descriptor = type.cast(aModule.getDescriptor());
                 bundleSet.add(descriptor);
@@ -1152,20 +1146,21 @@ public class Application extends CommonResourceBundleDescriptor
             return Collections.emptySet();
         }
         Set<BundleDescriptor> bundleSet = new OrderedSet<>();
-        for (ModuleDescriptor aModule : getModules()) {
-            if (aModule.getDescriptor().getModuleType()== bundleType) {
-                bundleSet.add((BundleDescriptor)aModule.getDescriptor());
+        for (ModuleDescriptor<BundleDescriptor> aModule : getModules()) {
+            if (aModule.getDescriptor().getModuleType() == bundleType) {
+                bundleSet.add(aModule.getDescriptor());
             }
             for (RootDeploymentDescriptor rd : aModule.getDescriptor().getExtensionsDescriptors()) {
                 if (rd instanceof BundleDescriptor) {
-                     if (((BundleDescriptor)rd).getModuleType()== bundleType){
-                         bundleSet.add((BundleDescriptor)rd);
-                     }
+                    if (((BundleDescriptor) rd).getModuleType() == bundleType) {
+                        bundleSet.add((BundleDescriptor) rd);
+                    }
                 }
             }
         }
         return bundleSet;
     }
+
 
     /**
      * Obtain a set of all bundle descriptors, regardless of type
@@ -1191,6 +1186,7 @@ public class Application extends CommonResourceBundleDescriptor
         return bundleSet;
     }
 
+
     /**
      * Add a bundle descriptor to this application.
      *
@@ -1201,6 +1197,7 @@ public class Application extends CommonResourceBundleDescriptor
         ModuleDescriptor newModule = bundleDescriptor.getModuleDescriptor();
         addModule(newModule);
     }
+
 
     /**
      * Remove a web bundle descriptor from this application.
@@ -1224,8 +1221,6 @@ public class Application extends CommonResourceBundleDescriptor
         return ejbDescriptors;
     }
 
-    // START OF IASRI 4718761 - pass-by-ref need to compare DD from previous
-    // deployment when reusing the old bits
 
     /**
      * Returns all the ejb descriptor in this application in ordered form.
@@ -1234,36 +1229,12 @@ public class Application extends CommonResourceBundleDescriptor
      * @return all ejb descriptors in ordered form
      */
     public EjbDescriptor[] getSortedEjbDescriptors() {
-        Vector ejbDesc = getEjbDescriptors();
-        EjbDescriptor[] descs = (EjbDescriptor[]) ejbDesc.toArray(
-                new EjbDescriptor[ejbDesc.size()]);
-
-        // The sorting algorithm used by this api is a modified mergesort.
-        // This algorithm offers guaranteed n*log(n) performance, and
-        // can approach linear performance on nearly sorted lists.
-
-        // since ejb name is only unique within a module, add the module uri
-        // as the additional piece of information for comparison
-        Arrays.sort(descs,
-                new Comparator() {
-                    @Override
-                    public int compare(Object o1, Object o2) {
-                        EjbDescriptor desc1 = (EjbDescriptor) o1;
-                        EjbDescriptor desc2 = (EjbDescriptor) o2;
-                        String moduleUri1 = desc1.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri();
-                        String moduleUri2 = desc2.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri();
-                        return (moduleUri1 + desc1.getName()).compareTo(
-                                moduleUri2 + desc2.getName());
-                    }
-                }
-        );
-
-        return descs;
+        Comparator<EjbDescriptor> urlComparator = Comparator
+            .comparing(desc -> desc.getEjbBundleDescriptor().getModuleDescriptor().getArchiveUri());
+        Comparator<EjbDescriptor> nameComparator = urlComparator.thenComparing(EjbDescriptor::getName);
+        return getEjbDescriptors().stream().sorted(nameComparator).toArray(EjbDescriptor[]::new);
     }
 
-    // END OF IASRI 4718761
-
-    // START OF IASRI 4645310
 
     /**
      * Sets the virtual status of this application.
@@ -1362,9 +1333,7 @@ public class Application extends CommonResourceBundleDescriptor
         }
         return false;
     }
-    // END OF IASRI 4662001, 4720955
 
-    // START OF IASRI 4720955
 
     /**
      * Determines if the application's pass-by-reference property has been
@@ -1376,26 +1345,17 @@ public class Application extends CommonResourceBundleDescriptor
     public boolean isPassByReferenceDefined() {
         return this.passByReference != null;
     }
-    // END OF IASRI 4720955
+
 
     /**
      * Add all the deployment information about the given application to me.
      */
     public void addApplication(Application application) {
-        for (ModuleDescriptor md : application.getModules()) {
+        for (ModuleDescriptor<BundleDescriptor> md : application.getModules()) {
             addModule(md);
         }
     }
 
-    /**
-     * Return all my subcomponents that have a file format (EJB, WAR and
-     * AppCLient JAR).
-     */
-    public Set getArchivableDescriptors() {
-        Set archivableDescriptors = new OrderedSet();
-        archivableDescriptors.addAll(getBundleDescriptors());
-        return archivableDescriptors;
-    }
 
     /**
      * Sets the mapping of rolename to users and groups on a particular server.
@@ -1405,6 +1365,7 @@ public class Application extends CommonResourceBundleDescriptor
         this.roleMapper = roleMapper;
     }
 
+
     /**
      * Return true if I have information to do with deployment on a
      * particular operational environment.
@@ -1412,6 +1373,7 @@ public class Application extends CommonResourceBundleDescriptor
     public boolean hasRuntimeInformation() {
         return true;
     }
+
 
     /**
      * Return my mapping of rolename to users and groups on a particular
@@ -1429,12 +1391,14 @@ public class Application extends CommonResourceBundleDescriptor
         return this.roleMapper;
     }
 
+
     /**
      * Sets the realm for this application
      */
     public void setRealm(String realm) {
         this.realm = realm;
     }
+
 
     /**
      * @return the realm for this application
@@ -1443,12 +1407,14 @@ public class Application extends CommonResourceBundleDescriptor
         return realm;
     }
 
+
     /**
      * A flag to indicate that my data has changed since the last save.
      */
     public boolean isDirty() {
         return this.isDirty;
     }
+
 
     /**
      * @return the class loader associated with this application
@@ -1457,6 +1423,7 @@ public class Application extends CommonResourceBundleDescriptor
     public ClassLoader getClassLoader() {
         return classLoader;
     }
+
 
     /**
      * A formatted String representing my state.
@@ -1478,15 +1445,13 @@ public class Application extends CommonResourceBundleDescriptor
         toStringBuffer.append("\n Realm ").append(realm);
     }
 
-    private void printDescriptorSet(Set descSet, StringBuffer sbuf) {
-        for (Object obj : descSet) {
-            if (obj instanceof Descriptor) {
-                ((Descriptor) obj).print(sbuf);
-            } else {
-                sbuf.append(obj);
-            }
+
+    private void printDescriptorSet(Set<BundleDescriptor> descSet, StringBuffer sbuf) {
+        for (BundleDescriptor obj : descSet) {
+            obj.print(sbuf);
         }
     }
+
 
     /**
      * visit the descriptor and all sub descriptors with a DOL visitor implementation
@@ -1502,6 +1467,7 @@ public class Application extends CommonResourceBundleDescriptor
         }
     }
 
+
     /**
      * @return the module ID for this module descriptor
      */
@@ -1513,6 +1479,7 @@ public class Application extends CommonResourceBundleDescriptor
         return moduleID;
     }
 
+
     /**
      * @return true if this module is an application object
      */
@@ -1520,6 +1487,7 @@ public class Application extends CommonResourceBundleDescriptor
     public boolean isApplication() {
         return true;
     }
+
 
     /**
      * @return the module type for this bundle descriptor
@@ -1529,21 +1497,26 @@ public class Application extends CommonResourceBundleDescriptor
         return DOLUtils.earType();
     }
 
+
     public void addSecurityRoleMapping(SecurityRoleMapping roleMapping) {
         roleMaps.add(roleMapping);
     }
+
 
     public List<SecurityRoleMapping> getSecurityRoleMappings() {
         return roleMaps;
     }
 
+
     public List<SecurityRoleAssignment> getWlRoleAssignments() {
         return wlRoleAssignments;
     }
 
+
     public void addWLRoleAssignments(SecurityRoleAssignment wlRoleAssignment) {
         wlRoleAssignments.add(wlRoleAssignment);
     }
+
 
     /**
      * This method records how this Application object is constructed.  We
@@ -1564,34 +1537,26 @@ public class Application extends CommonResourceBundleDescriptor
         return loadedFromApplicationXml;
     }
 
-/*
-    // getter and setter of in-memory object of sun-configuration.xml
-    public void setResourceList(List<Resource> rList) {
-        resourceList = rList;
-    }
 
-    public List<org.glassfish.resources.api.Resource> getResourceList() {
-        return resourceList;
-    }
-*/
-
-    //resource-adapters referred by application via :
-    //resource-ref, resource-env-ref, ra-mid
     /**
      * add a resource-adapter to referred resource-adapters list
+     *
      * @param raName resource-adapter name
      */
-    public void addResourceAdapter(String raName){
+    public void addResourceAdapter(String raName) {
         resourceAdapters.add(raName);
     }
 
+
     /**
      * get the list of resource-adapters referred by the application
+     *
      * @return resource-adapters list
      */
-    public Set<String> getResourceAdapters(){
+    public Set<String> getResourceAdapters() {
         return resourceAdapters;
     }
+
 
     /**
      * @return the Set of application paramaters.
@@ -1600,12 +1565,14 @@ public class Application extends CommonResourceBundleDescriptor
         return applicationParams;
     }
 
-   /**
+
+    /**
      * Adds a new context parameter to my list.
      */
     public void addApplicationParam(ApplicationParam appParam) {
         applicationParams.add(appParam);
     }
+
 
     @Override
     public boolean getKeepState() {
@@ -1620,16 +1587,20 @@ public class Application extends CommonResourceBundleDescriptor
         return super.getKeepState();
     }
 
+
     /**
      * Returns the resolved keepstate value.
+     *
      * @return keepStateResolved
      */
     public boolean getKeepStateResolved() {
         return keepStateResolved;
     }
 
+
     /**
      * Sets the resolved keepstate value.
+     *
      * @param keepStateResolved
      */
     public void setKeepStateResolved(String keepStateResolved) {

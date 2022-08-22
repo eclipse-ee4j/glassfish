@@ -95,8 +95,7 @@ import static com.sun.enterprise.deployment.io.DescriptorConstants.WEB_WEBSERVIC
 @Contract
 public abstract class Archivist<T extends BundleDescriptor> {
 
-    protected static final Logger logger =
-            DOLUtils.getDefaultLogger();
+    protected static final Logger logger = DOLUtils.getDefaultLogger();
 
     public static final String MANIFEST_VERSION_VALUE = "1.0";
 
@@ -126,8 +125,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     private ConfigurationDeploymentDescriptorFile confDD;
 
     // resources...
-    private static final LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(Archivist.class);
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Archivist.class);
 
     // class loader to use when validating the DOL
     protected ClassLoader classLoader = null;
@@ -158,14 +156,12 @@ public abstract class Archivist<T extends BundleDescriptor> {
     protected static final String WEB_FRAGMENT_EXTENSION = ".jar";
     protected static final String EJB_EXTENSION = ".jar";
     protected static final String CONNECTOR_EXTENSION = ".rar";
-    //Used to detect the uploaded files which always end in ".tmp"
+    // Used to detect the uploaded files which always end in ".tmp"
     protected static final String UPLOAD_EXTENSION = ".tmp";
 
-    private static final String PROCESS_ANNOTATION_FOR_OLD_DD =
-            "process.annotation.for.old.dd";
+    private static final String PROCESS_ANNOTATION_FOR_OLD_DD = "process.annotation.for.old.dd";
 
-    private static final boolean processAnnotationForOldDD =
-            Boolean.getBoolean(PROCESS_ANNOTATION_FOR_OLD_DD);
+    private static final boolean processAnnotationForOldDD = Boolean.getBoolean(PROCESS_ANNOTATION_FOR_OLD_DD);
 
     protected T descriptor;
 
@@ -236,8 +232,10 @@ public abstract class Archivist<T extends BundleDescriptor> {
         return descriptor;
     }
 
+
     /**
-     * Open a new archive file, read the deployment descriptors and annotations      *  and set the constructed DOL descriptor instance
+     * Open a new archive file, read the deployment descriptors and annotations
+     * and set the constructed DOL descriptor instance
      *
      * @param archive the archive file path
      * @return the deployment descriptor for this archive
@@ -532,55 +530,48 @@ public abstract class Archivist<T extends BundleDescriptor> {
         }
     }
 
+
     /**
-     * Returns the scanner for this archivist, usually it is the scanner regitered
+     * @return the scanner for this archivist, usually it is the scanner regitered
      * with the same module type as this archivist, but subclasses can return a
      * different version
-     *
      */
-    public ModuleScanner getScanner() {
-
-        Scanner scanner = null;
+    public ModuleScanner<?> getScanner() {
         try {
-            scanner = habitat.getService(Scanner.class, getModuleType().toString());
-            if (scanner==null || !(scanner instanceof ModuleScanner)) {
-                logger.log(Level.SEVERE, "Cannot find module scanner for " + this.getManifest());
+            ModuleScanner<?> scanner = (ModuleScanner<?>) habitat.getService(Scanner.class, getModuleType().toString());
+            if (scanner != null) {
+                return scanner;
             }
+            logger.log(Level.SEVERE, "Cannot find scanner for " + this.getModuleType());
         } catch (MultiException e) {
-            // XXX To do
             logger.log(Level.SEVERE, "Cannot find scanner for " + this.getModuleType(), e);
         }
-        return (ModuleScanner)scanner;
+        return null;
     }
+
 
     /**
      * Process annotations in a bundle descriptor, the annoation processing
      * is dependent on the type of descriptor being passed.
      */
-    public ProcessingResult processAnnotations(T bundleDesc,
-                                               ReadableArchive archive)
-            throws AnnotationProcessorException, IOException {
-
+    public ProcessingResult processAnnotations(T bundleDesc, ReadableArchive archive)
+        throws AnnotationProcessorException, IOException {
         return processAnnotations(bundleDesc, getScanner(), archive);
 
     }
 
+
     /**
      * Process annotations in a bundle descriptor, the annoation processing
      * is dependent on the type of descriptor being passed.
      */
-    protected ProcessingResult processAnnotations(RootDeploymentDescriptor bundleDesc,
-                                               ModuleScanner scanner,
-                                               ReadableArchive archive)
-            throws AnnotationProcessorException, IOException {
-
+    protected ProcessingResult processAnnotations(RootDeploymentDescriptor bundleDesc, ModuleScanner scanner,
+        ReadableArchive archive) throws AnnotationProcessorException, IOException {
         if (scanner == null) {
             return null;
         }
 
-        AnnotatedElementHandler aeHandler =
-                AnnotatedElementHandlerFactory.createAnnotatedElementHandler(
-                        bundleDesc);
+        AnnotatedElementHandler aeHandler = AnnotatedElementHandlerFactory.createAnnotatedElementHandler(bundleDesc);
 
         if (aeHandler == null) {
             return null;
@@ -596,7 +587,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
         scanner.process(archive, bundleDesc, classLoader, parser);
 
         if (!scanner.getElements().isEmpty()) {
-            if (((BundleDescriptor)bundleDesc).isDDWithNoAnnotationAllowed()) {
+            if (((BundleDescriptor) bundleDesc).isDDWithNoAnnotationAllowed()) {
                 // if we come into this block, it means an old version
                 // of deployment descriptor has annotation which is not correct
                 // throw exception in this case

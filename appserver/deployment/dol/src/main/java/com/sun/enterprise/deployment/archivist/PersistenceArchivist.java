@@ -17,28 +17,28 @@
 
 package com.sun.enterprise.deployment.archivist;
 
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.PersistenceDeploymentDescriptorFile;
-import org.glassfish.api.deployment.archive.ArchiveType;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.WritableArchive;
-import org.xml.sax.SAXException;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.PersistenceDeploymentDescriptorFile;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import java.util.Map;
-import java.util.List;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.logging.annotation.LogMessageInfo;
+import org.xml.sax.SAXException;
 
 public abstract class PersistenceArchivist extends ExtensionsArchivist {
     protected static final String JAR_EXT = ".jar";
@@ -79,7 +79,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
     public abstract boolean supportsModuleType(ArchiveType moduleType);
 
     @Override
-    public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
             throws IOException, SAXException {
         String puRoot = getPuRoot(archive);
         readPersistenceDeploymentDescriptor(main, archive, puRoot, descriptor);
@@ -131,7 +131,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
 
 
     @Override
-    public <T extends RootDeploymentDescriptor> T getDefaultDescriptor() {
+    public RootDeploymentDescriptor getDefaultDescriptor() {
         return null;
     }
 
@@ -142,17 +142,20 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
      * @see com.sun.enterprise.deployment.archivist.EarPersistenceArchivist.SubArchivePURootScanner
      * @return Map of puroot path to probable puroot archive.
      */
-    protected static Map<String, ReadableArchive> getProbablePersistenceRoots(ReadableArchive parentArchive, SubArchivePURootScanner subArchivePURootScanner) {
+    protected static Map<String, ReadableArchive> getProbablePersistenceRoots(
+        ReadableArchive parentArchive,
+        SubArchivePURootScanner subArchivePURootScanner) {
         Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<>();
-        ReadableArchive  archiveToScan = subArchivePURootScanner.getSubArchiveToScan(parentArchive);
-        if(archiveToScan != null) { // The subarchive exists
+        ReadableArchive archiveToScan = subArchivePURootScanner.getSubArchiveToScan(parentArchive);
+        if (archiveToScan != null) { // The subarchive exists
             Enumeration<String> entries = archiveToScan.entries();
             String puRootPrefix = subArchivePURootScanner.getPurRootPrefix();
-            while(entries.hasMoreElements()) {
+            while (entries.hasMoreElements()) {
                 String entry = entries.nextElement();
-                if(subArchivePURootScanner.isProbablePuRootJar(entry)) {
-                    ReadableArchive puRootArchive = getSubArchive(archiveToScan, entry, false /* expect entry to be present */);
-                    if(puRootArchive != null) {
+                if (subArchivePURootScanner.isProbablePuRootJar(entry)) {
+                    ReadableArchive puRootArchive = getSubArchive(archiveToScan, entry,
+                        false /* expect entry to be present */);
+                    if (puRootArchive != null) {
                         String puRoot = puRootPrefix + entry;
                         probablePersitenceArchives.put(puRoot, puRootArchive);
                     }
@@ -163,17 +166,20 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
         return probablePersitenceArchives;
     }
 
-    private static ReadableArchive getSubArchive(ReadableArchive parentArchive, String path, boolean expectAbscenceOfSubArchive) {
+
+    private static ReadableArchive getSubArchive(ReadableArchive parentArchive, String path,
+        boolean expectAbscenceOfSubArchive) {
         try {
             return parentArchive.getSubArchive(path);
         } catch (IOException ioe) {
-            // if there is any problem in opening the subarchive, and the subarchive is expected to be present, log the exception
-            if(!expectAbscenceOfSubArchive) {
-              LogRecord lr = new LogRecord(Level.SEVERE, EXCEPTION_CAUGHT);
-              Object args[] = { ioe.getMessage(), path };
-              lr.setParameters(args);
-              lr.setThrown(ioe);
-              deplLogger.log(lr);
+            // if there is any problem in opening the subarchive, and the subarchive is expected to
+            // be present, log the exception
+            if (!expectAbscenceOfSubArchive) {
+                LogRecord lr = new LogRecord(Level.SEVERE, EXCEPTION_CAUGHT);
+                Object args[] = {ioe.getMessage(), path};
+                lr.setParameters(args);
+                lr.setThrown(ioe);
+                deplLogger.log(lr);
             }
         }
         return null;
@@ -192,13 +198,17 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
 
         ReadableArchive getSubArchiveToScan(ReadableArchive parentArchive) {
             String pathOfSubArchiveToScan = getPathOfSubArchiveToScan();
-            return (pathOfSubArchiveToScan == null || pathOfSubArchiveToScan.isEmpty()) ? parentArchive :
-                    getSubArchive(parentArchive, pathOfSubArchiveToScan, true /*It is possible that lib does not exist for a given ear */);
+            return pathOfSubArchiveToScan == null || pathOfSubArchiveToScan.isEmpty()
+                ? parentArchive
+                : getSubArchive(parentArchive, pathOfSubArchiveToScan,
+                    true /* It is possible that lib does not exist for a given ear */);
         }
 
         String getPurRootPrefix() {
             String pathOfSubArchiveToScan = getPathOfSubArchiveToScan();
-            return (pathOfSubArchiveToScan == null || pathOfSubArchiveToScan.isEmpty()) ? pathOfSubArchiveToScan : pathOfSubArchiveToScan + SEPERATOR_CHAR;
+            return pathOfSubArchiveToScan == null || pathOfSubArchiveToScan.isEmpty()
+                ? pathOfSubArchiveToScan
+                : pathOfSubArchiveToScan + SEPERATOR_CHAR;
         }
 
         boolean isProbablePuRootJar(String jarName) {

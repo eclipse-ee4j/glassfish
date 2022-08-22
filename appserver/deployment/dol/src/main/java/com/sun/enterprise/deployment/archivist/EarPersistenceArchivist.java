@@ -17,19 +17,20 @@
 
 package com.sun.enterprise.deployment.archivist;
 
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.Archive;
-import org.xml.sax.SAXException;
-import org.jvnet.hk2.annotations.Service;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.glassfish.api.deployment.archive.Archive;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXException;
 
 @Service
 @ExtensionsArchivistFor("jpa")
@@ -46,7 +47,7 @@ public class EarPersistenceArchivist extends PersistenceArchivist {
      * Spec defined pu roots are - (1)Non component jars in root of ear (2)jars in lib of ear
      */
     @Override
-    public Object open(Archivist main, ReadableArchive earArchive, final RootDeploymentDescriptor descriptor)
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive earArchive, final RootDeploymentDescriptor descriptor)
         throws IOException, SAXException {
         if (deplLogger.isLoggable(Level.FINE)) {
             deplLogger.logp(Level.FINE, "EarArchivist", "readPersistenceDeploymentDescriptors", "archive = {0}",

@@ -19,8 +19,10 @@ package org.glassfish.web.deployment.io;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
-import org.glassfish.web.deployment.node.WebFragmentNode;
+
+import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
+import org.glassfish.web.deployment.node.WebFragmentNode;
 
 /**
  * This class is responsible for handling WebFragment DeploymentDescriptor files
@@ -45,7 +47,7 @@ public class WebFragmentDeploymentDescriptorFile extends DeploymentDescriptorFil
      * @param descriptor descriptor for which we need the node
      */
     @Override
-    public RootXMLNode<WebFragmentDescriptor> getRootXMLNode(WebFragmentDescriptor descriptor) {
+    public RootXMLNode<WebFragmentDescriptor> getRootXMLNode(Descriptor descriptor) {
         return new WebFragmentNode();
     }
 

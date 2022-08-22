@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,15 +24,15 @@ import org.glassfish.security.common.Role;
  * Represents a method permission. A method permission can be associated to
  * a role, be unchecked or excluded.
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class MethodPermission extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private static MethodPermission unchecked;
     private static MethodPermission excluded;
-    private boolean isUnchecked = false;
-    private boolean isExcluded = false;
+    private boolean isUnchecked;
+    private boolean isExcluded;
     private Role role;
 
     /**
@@ -43,30 +44,33 @@ public class MethodPermission extends Descriptor {
         this.role = role;
     }
 
+
     // We don't want uninitialized method permissins
     private MethodPermission() {
     }
 
+
     /**
      * @return an unchecked method permission. Methods associated with such a
-     * method permission can be invoked by anyone
+     *         method permission can be invoked by anyone
      */
     public static synchronized MethodPermission getUncheckedMethodPermission() {
-        if (unchecked==null) {
+        if (unchecked == null) {
             unchecked = new MethodPermission();
             unchecked.isUnchecked=true;
         }
         return unchecked;
     }
 
+
     /**
      * @return an ecluded method permission. Methods associated with such a
-     * method permission cannot be invoked by anyone.
+     *         method permission cannot be invoked by anyone.
      */
     public static synchronized MethodPermission getExcludedMethodPermission() {
-        if (excluded==null) {
+        if (excluded == null) {
             excluded = new MethodPermission();
-            excluded.isExcluded=true;
+            excluded.isExcluded = true;
         }
         return excluded;
     }
@@ -103,11 +107,10 @@ public class MethodPermission extends Descriptor {
     // For Map storage
     @Override
     public int hashCode() {
-        if (role!=null) {
-            return role.hashCode();
-        } else {
+        if (role == null) {
             return super.hashCode();
         }
+        return role.hashCode();
     }
 
     // for Map storage
@@ -119,7 +122,7 @@ public class MethodPermission extends Descriptor {
             if (isRoleBased()) {
                 ret = role.equals(o.getRole());
             } else {
-                ret = (isExcluded == o.isExcluded()) && (isUnchecked == o.isUnchecked());
+                ret = isExcluded == o.isExcluded() && isUnchecked == o.isUnchecked();
             }
         }
         return ret;

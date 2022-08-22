@@ -92,7 +92,7 @@ public class EmbeddedWebArchivist extends WebArchivist {
 
     static private URL defaultWebXmlLocation = null;
 
-    protected void setDefaultWebXml(URL defaultWebXml) {
+    static void setDefaultWebXml(URL defaultWebXml) {
         defaultWebXmlLocation = defaultWebXml;
     }
 

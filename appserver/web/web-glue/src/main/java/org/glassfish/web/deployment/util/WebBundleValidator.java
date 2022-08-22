@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,24 @@
 
 package org.glassfish.web.deployment.util;
 
-import com.sun.enterprise.deployment.web.MultipartConfig;
-import com.sun.enterprise.deployment.web.ServletFilter;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.WebService;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.util.ApplicationValidator;
+import com.sun.enterprise.deployment.web.MultipartConfig;
+import com.sun.enterprise.deployment.web.ServletFilter;
+
 import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
 import org.glassfish.web.deployment.descriptor.SessionConfigDescriptor;
 
-import java.util.Iterator;
-import java.util.Set;
-
 /**
  * This class validates the part of the web bundle descriptor
- *
  */
 public class WebBundleValidator extends ApplicationValidator implements WebBundleVisitor {
 
+    @Override
     public void accept (BundleDescriptor descriptor) {
         if (descriptor instanceof WebBundleDescriptor) {
             WebBundleDescriptor webBundle = (WebBundleDescriptor)descriptor;
@@ -49,20 +47,18 @@ public class WebBundleValidator extends ApplicationValidator implements WebBundl
                 accept(injectable);
             }
 
-            for (Iterator<WebComponentDescriptor> i = webBundle.getWebComponentDescriptors().iterator(); i.hasNext();) {
-                WebComponentDescriptor aWebComp = i.next();
+            for (WebComponentDescriptor aWebComp : webBundle.getWebComponentDescriptors()) {
                 accept(aWebComp);
             }
 
-            for (Iterator<WebService> itr = webBundle.getWebServices().getWebServices().iterator(); itr.hasNext();) {
-                WebService aWebService = itr.next();
+            for (WebService aWebService : webBundle.getWebServices().getWebServices()) {
                 accept(aWebService);
             }
 
             super.accept(descriptor);
 
-            for (Iterator<ServletFilter> itr = webBundle.getServletFilterDescriptors().iterator(); itr.hasNext();) {
-                ServletFilterDescriptor servletFilterDescriptor = (ServletFilterDescriptor) itr.next();
+            for (ServletFilter servletFilter : webBundle.getServletFilterDescriptors()) {
+                ServletFilterDescriptor servletFilterDescriptor = (ServletFilterDescriptor) servletFilter;
                 accept(servletFilterDescriptor);
             }
         }
@@ -73,6 +69,7 @@ public class WebBundleValidator extends ApplicationValidator implements WebBundl
      *
      * @param descriptor the web bundle descriptor
      */
+    @Override
     public void accept(WebBundleDescriptor descriptor) {
         bundleDescriptor = descriptor;
         application = descriptor.getApplication();

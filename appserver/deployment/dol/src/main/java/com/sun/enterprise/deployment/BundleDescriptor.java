@@ -943,11 +943,14 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return fullAttribute;
     }
 
+
     /**
-     * @ return true for following cases:
-     *   1. When it's been tagged as "full" when processing annotations.
-     *   2. When DD has a version which doesn't allowed annotations.
-     *   return false otherwise.
+     * @return true for any of following cases:
+     *         <ol>
+     *         <li>When it's been tagged as "full" when processing annotations.
+     *         <li>When DD has a version which doesn't allow annotations.
+     *         </ol>
+     *         returns false otherwise.
      */
     public boolean isFullFlag() {
         // if it's been tagged as full,
@@ -960,11 +963,13 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
 
     /**
-     * @ return true for following cases:
-     *   a. ejb module and schema version earlier than 3.0;
-     *   b. web module and schema version earlier than 2.5;
-     *   c. appclient module and schema version earlier than 5.0.
-     *   d. connector module and schema version earlier than 1.6
+     * @return true for any of following cases:
+     * <ol>
+     * <li>ejb module and schema version earlier than 3.0;
+     * <li>web module and schema version earlier than 2.5;
+     * <li>appclient module and schema version earlier than 5.0.
+     * <li>connector module and schema version earlier than 1.6
+     * </ol>
      */
     public boolean isDDWithNoAnnotationAllowed() {
         ArchiveType mType = getModuleType();

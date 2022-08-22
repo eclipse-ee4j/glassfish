@@ -191,8 +191,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
             URL defaultWebXml = getDefaultWebXML();
             if (defaultWebXml!=null)  {
                 fis = defaultWebXml.openStream();
-                WebDeploymentDescriptorFile wddf =
-                    new WebDeploymentDescriptorFile();
+                WebDeploymentDescriptorFile wddf = new WebDeploymentDescriptorFile();
                 wddf.setXMLValidation(false);
                 defaultWebBundleDesc.addWebBundleDescriptor(wddf.read(fis));
             }
@@ -219,12 +218,11 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      *      and <tt>web.xml</tt> in the applications need to have everything.
      */
     protected URL getDefaultWebXML() throws IOException {
-        File file = new File(env.getConfigDirPath(),DEFAULT_WEB_XML);
+        File file = new File(env.getConfigDirPath(), DEFAULT_WEB_XML);
         if (file.exists()) {
             return file.toURI().toURL();
-        } else {
-            return null;
         }
+        return null;
     }
 
 

@@ -21,7 +21,6 @@ import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
 import com.sun.enterprise.deployment.xml.PersistenceTagNames;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +36,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 @Service
-public class PersistenceNode extends AbstractBundleNode {
+public class PersistenceNode extends AbstractBundleNode<PersistenceUnitsDescriptor> {
 
     public final static String SCHEMA_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
 
@@ -45,7 +44,7 @@ public class PersistenceNode extends AbstractBundleNode {
 
     public final static String SCHEMA_ID = "persistence_2_0.xsd"; // NOI18N
 
-    private final static List<String> systemIDs = initSystemIDs();
+    private final static List<String> systemIDs = List.of(SCHEMA_ID, SCHEMA_ID_1_0);
 
     // The XML tag associated with this Node
     public final static XMLElement ROOT_ELEMENT = new XMLElement(PersistenceTagNames.PERSISTENCE);
@@ -53,13 +52,6 @@ public class PersistenceNode extends AbstractBundleNode {
     private PersistenceUnitsDescriptor persistenceUnitsDescriptor;
 
     private static final String SPEC_VERSION = "2.0";
-
-    private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<>();
-        systemIDs.add(SCHEMA_ID);
-        systemIDs.add(SCHEMA_ID_1_0);
-        return Collections.unmodifiableList(systemIDs);
-    }
 
 
     /**

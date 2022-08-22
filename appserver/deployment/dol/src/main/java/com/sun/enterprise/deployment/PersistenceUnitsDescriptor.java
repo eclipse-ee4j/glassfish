@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,13 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * This descriptor represents contents for one persistence.xml file.
@@ -30,6 +31,8 @@ import java.util.List;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
+
+    private static final long serialVersionUID = 1L;
 
     /** the parent descriptor that contains this descriptor */
     private RootDeploymentDescriptor parent;
@@ -44,13 +47,9 @@ public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
      */
     private String puRoot;
 
-    List<PersistenceUnitDescriptor> persistenceUnitDescriptors =
-            new ArrayList<PersistenceUnitDescriptor>();
+    List<PersistenceUnitDescriptor> persistenceUnitDescriptors = new ArrayList<>();
 
     private static final String JPA_1_0 = "1.0";
-
-    public PersistenceUnitsDescriptor() {
-    }
 
     public RootDeploymentDescriptor getParent() {
         return parent;
@@ -68,22 +67,27 @@ public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
         this.puRoot = puRoot;
     }
 
+    @Override
     public String getDefaultSpecVersion() {
         return JPA_1_0;
     }
 
+    @Override
     public String getModuleID() {
         throw new RuntimeException();
     }
 
+    @Override
     public ArchiveType getModuleType() {
         throw new RuntimeException();
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return parent.getClassLoader();
     }
 
+    @Override
     public boolean isApplication() {
         return false;
     }
@@ -116,21 +120,19 @@ public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
      */
     public String getAbsolutePuRoot() {
         RootDeploymentDescriptor rootDD = getParent();
-        if(rootDD.isApplication()){
+        if (rootDD.isApplication()) {
             return getPuRoot();
-        } else {
-            ModuleDescriptor module = BundleDescriptor.class.cast(rootDD).
-                    getModuleDescriptor();
-            if(module.isStandalone()) {
-                return getPuRoot();
-            } else {
-                final String moduleLocation = module.getArchiveUri();
-                return moduleLocation + '/' + getPuRoot(); // see we always '/'
-            }
         }
+        ModuleDescriptor<?> module = BundleDescriptor.class.cast(rootDD).getModuleDescriptor();
+        if (module.isStandalone()) {
+            return getPuRoot();
+        }
+        final String moduleLocation = module.getArchiveUri();
+        return moduleLocation + '/' + getPuRoot();
     }
 
 
+    @Override
     public boolean isEmpty() {
         return persistenceUnitDescriptors.isEmpty();
     }

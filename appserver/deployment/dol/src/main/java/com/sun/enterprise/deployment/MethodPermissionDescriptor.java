@@ -23,29 +23,33 @@ import java.util.Vector;
 /**
  * This class defines a method permission information in the assembly descriptor
  *
- * @author  Jerome Dochez
+ * @author Jerome Dochez
  */
 public class MethodPermissionDescriptor extends DescribableDescriptor {
 
     private static final long serialVersionUID = 1L;
-    Vector<MethodDescriptor> methods = new Vector<>();
-    Vector<MethodPermission> mps = new Vector<>();
+    private final Vector<MethodDescriptor> methods = new Vector<>();
+    private final Vector<MethodPermission> mps = new Vector<>();
 
     /** Creates new MethodPermissionDescriptor */
     public MethodPermissionDescriptor() {
     }
 
+
     public void addMethod(MethodDescriptor aMethod) {
         methods.add(aMethod);
     }
+
 
     public void addMethods(Collection<MethodDescriptor> methods) {
         this.methods.addAll(methods);
     }
 
+
     public void addMethodPermission(MethodPermission mp) {
         mps.add(mp);
     }
+
 
     public MethodDescriptor[] getMethods() {
         MethodDescriptor[] array = new MethodDescriptor[methods.size()];
@@ -53,16 +57,20 @@ public class MethodPermissionDescriptor extends DescribableDescriptor {
         return array;
     }
 
+
     public MethodPermission[] getMethodPermissions() {
         MethodPermission[] array = new MethodPermission[mps.size()];
         mps.copyInto(array);
         return array;
     }
 
+
     @Override
     public void print(StringBuffer toStringBuffer) {
         StringBuffer buffer = toStringBuffer;
-        buffer.append("Method Permission " + (getDescription()==null?"":getDescription()) );
+        if (getDescription() != null) {
+            buffer.append("Method Permission ").append(getDescription());
+        }
         buffer.append("\nFor the following Permissions ");
         for (MethodPermission mp : mps) {
             mp.print(buffer);

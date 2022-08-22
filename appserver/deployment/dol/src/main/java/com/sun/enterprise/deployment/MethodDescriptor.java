@@ -19,7 +19,6 @@ package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.TypeUtil;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -68,16 +67,15 @@ public final class MethodDescriptor extends Descriptor {
 
     private String[] parameterClassNames;
     private String[] javaParameterClassNames;
-    private String className = ""; // cache this
+    private String className = "";
     private String ejbClassSymbol;
     private String ejbName;
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MethodDescriptor.class);
 
-    final static Logger _logger = DOLUtils.getDefaultLogger();
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
 
-    private final int JAVA_FORMAT = 1;
-    private final int XML_FORMAT = -1;
-    private final int XML_JAVA_FORMAT = 0;
+    private static final int JAVA_FORMAT = 1;
+    private static final int XML_FORMAT = -1;
+    private static final int XML_JAVA_FORMAT = 0;
     private boolean isExact;
 
     /**
@@ -96,14 +94,15 @@ public final class MethodDescriptor extends Descriptor {
         this.setEjbClassSymbol(ejbClassSymbol);
     }
 
-    // converts an XML style parameter class name to java style and vice versa
+    /** converts an XML style parameter class name to java style and vice versa */
     private void convertToAppropriateFormat(String[] parameterClassNames) {
         int format = isJavaFormat(parameterClassNames);
-        // not java format so fix the java string
         if (format == JAVA_FORMAT) {
+            // not java format so fix the java string
             this.javaParameterClassNames = parameterClassNames;
             this.parameterClassNames = fixParamClassNames(parameterClassNames);
-        } else if (format == XML_FORMAT) { // fix the non java string
+        } else if (format == XML_FORMAT) {
+            // fix the non java string
             this.javaParameterClassNames = xmlFormat2JavaClassNames(parameterClassNames);
             this.parameterClassNames = parameterClassNames;
         } else if (format == XML_JAVA_FORMAT) {
@@ -151,9 +150,9 @@ public final class MethodDescriptor extends Descriptor {
         parameterClassNames = new String[0];
     }
 
-    // XXX JD fix this
+
     public void addParameterClass(String parameter) {
-        if (parameterClassNames==null) {
+        if (parameterClassNames == null) {
             parameterClassNames = new String[1];
         } else {
             String[] newParameterClassNames = new String[parameterClassNames.length + 1];
@@ -162,13 +161,15 @@ public final class MethodDescriptor extends Descriptor {
             }
             parameterClassNames = newParameterClassNames;
         }
-        parameterClassNames[parameterClassNames.length-1]=parameter;
-        javaParameterClassNames = xmlFormat2JavaClassNames (parameterClassNames);
+        parameterClassNames[parameterClassNames.length - 1] = parameter;
+        javaParameterClassNames = xmlFormat2JavaClassNames(parameterClassNames);
     }
+
 
     public void setEjbName(String ejbName) {
         this.ejbName = ejbName;
     }
+
 
     public String getEjbName() {
         return ejbName;
@@ -189,17 +190,16 @@ public final class MethodDescriptor extends Descriptor {
         return isExactName && hasMethodIntf && hasParamsListed;
     }
 
+
     /**
-     * <p>
      * @return the style level of this method descriptors. According to the J2EE spec, methods
-     * can be described byt using style 1, style 2 or style 3 xml tags.
-     * </p>
+     *         can be described byt using style 1, style 2 or style 3 xml tags.
      */
     public int getStyle() {
-        if ( (getName().equals(ALL_METHODS)) ) {
+        if (getName().equals(ALL_METHODS)) {
             return 1;
         }
-        if (getParameterClassNames()==null) {
+        if (getParameterClassNames() == null) {
             return 2;
         }
         return 3;
@@ -211,7 +211,7 @@ public final class MethodDescriptor extends Descriptor {
             ClassLoader classloader = ejbDescriptor.getEjbBundleDescriptor().getClassLoader();
             String[] javaParamClassNames = getJavaParameterClassNames();
 
-            if (ejbClassSymbol == null || ejbClassSymbol.equals("") || ejbClassSymbol.equals(EJB_BEAN)
+            if (ejbClassSymbol == null || ejbClassSymbol.isEmpty() || ejbClassSymbol.equals(EJB_BEAN)
                 || ejbClassSymbol.equals(TIMER_METHOD) || ejbClassSymbol.equals(LIFECYCLE_CALLBACK)
                 || ejbClassSymbol.equals(MESSAGE_ENDPOINT_METHOD)) {
                 try {
@@ -270,7 +270,7 @@ public final class MethodDescriptor extends Descriptor {
                     } catch (NoSuchMethodException nsme) {
                     }
                 }
-                if ((method == null) && ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
+                if (method == null && ejbDescriptor.isRemoteBusinessInterfacesSupported()) {
 
                     for (String intf : ejbDescriptor.getRemoteBusinessClassNames()) {
                         try {
@@ -293,14 +293,14 @@ public final class MethodDescriptor extends Descriptor {
                     }
                 }
 
-                if ((method == null) && ejbDescriptor.isLocalInterfacesSupported()) {
+                if (method == null && ejbDescriptor.isLocalInterfacesSupported()) {
                     try {
                         Class<?> cl = classloader.loadClass(ejbDescriptor.getLocalClassName());
                         method = TypeUtil.getMethod(cl, classloader, getName(), javaParamClassNames);
                     } catch (NoSuchMethodException nsme) {
                     }
                 }
-                if ((method == null) && ejbDescriptor.isLocalBusinessInterfacesSupported()) {
+                if (method == null && ejbDescriptor.isLocalBusinessInterfacesSupported()) {
 
                     for (String intf : ejbDescriptor.getLocalBusinessClassNames()) {
                         try {
@@ -322,7 +322,7 @@ public final class MethodDescriptor extends Descriptor {
                 }
             }
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
+            LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
                 e.getMessage(), ejbDescriptor
             });
         }
@@ -335,7 +335,7 @@ public final class MethodDescriptor extends Descriptor {
             return TypeUtil.getMethod(declaringClass, declaringClass.getClassLoader(), getName(),
                 getJavaParameterClassNames());
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
+            LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
                 declaringClass
             });
             return null;
@@ -348,9 +348,7 @@ public final class MethodDescriptor extends Descriptor {
             return TypeUtil.getDeclaredMethod(declaringClass, declaringClass.getClassLoader(), getName(),
                 getJavaParameterClassNames());
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
-                declaringClass
-            });
+            LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", declaringClass);
             return null;
         }
     }
@@ -362,7 +360,7 @@ public final class MethodDescriptor extends Descriptor {
             Class<?>[] parameterTypes = TypeUtil.paramClassNamesToTypes(getJavaParameterClassNames(), classloader);
             return getDeclaredMethod(ejbDescriptor, parameterTypes);
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
+            LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
                 e, ejbDescriptor
             });
         }
@@ -389,9 +387,7 @@ public final class MethodDescriptor extends Descriptor {
             }
 
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
-                ejbDescriptor
-            });
+            LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", ejbDescriptor);
         }
 
         return null;
@@ -402,12 +398,11 @@ public final class MethodDescriptor extends Descriptor {
      * Performs a conversion from the style1 style2 and style3 (no interface symbol) to
      * method descriptors of style3 with an interface symbol.
      */
-    public Vector<MethodDescriptor> doStyleConversion(
-        EjbDescriptor ejbDescriptor,
-        Collection<MethodDescriptor> allMethods) {
+    public Vector<MethodDescriptor> doStyleConversion(EjbDescriptor ejbDescriptor, Collection<MethodDescriptor> allMethods) {
         // must be exact methods
         Vector<MethodDescriptor> v = new Vector<>();
-        if (getStyle() == 1) { // STYLE 1
+        if (getStyle() == 1) {
+            // STYLE 1
             for (MethodDescriptor method : allMethods) {
                 MethodDescriptor next = method;
                 // when ejb-name is present
@@ -425,14 +420,15 @@ public final class MethodDescriptor extends Descriptor {
                 }
 
             }
-        } else if (this.getParameterClassNames() == null) { // STYLE 2
+        } else if (this.getParameterClassNames() == null) {
+            // STYLE 2
             v.addAll(this.getMethodDescriptorsOfName(this.getName(), allMethods));
-        } else { // STYLE 3, but maybe not exact
-            if (getEjbClassSymbol() == null) {
-                v.addAll(getMethodDescriptorsOfNameAndParameters(getName(), getParameterClassNames(), allMethods));
-            } else {
-                v.addElement(this); // this must be exact
-            }
+        } else if (getEjbClassSymbol() == null) {
+            // STYLE 3, but maybe not exact
+            v.addAll(getMethodDescriptorsOfNameAndParameters(getName(), getParameterClassNames(), allMethods));
+        } else {
+            // this must be exact
+            v.addElement(this);
         }
         return v;
     }
@@ -451,16 +447,15 @@ public final class MethodDescriptor extends Descriptor {
     }
 
 
-    private Set<MethodDescriptor> getMethodDescriptorsOfName(String name,
-        Collection<MethodDescriptor> methodDescriptors) {
+    private Set<MethodDescriptor> getMethodDescriptorsOfName(String name, Collection<MethodDescriptor> descriptors) {
         Set<MethodDescriptor> set = new HashSet<>();
-        for (MethodDescriptor next : methodDescriptors) {
-            next.setEjbName(getEjbName());
-            if (name.equals(next.getName())) {
+        for (MethodDescriptor descriptor : descriptors) {
+            descriptor.setEjbName(getEjbName());
+            if (name.equals(descriptor.getName())) {
                 if (getEjbClassSymbol() == null) {
-                    set.add(next);
-                } else if (getEjbClassSymbol().equals(next.getEjbClassSymbol())) {
-                    set.add(next);
+                    set.add(descriptor);
+                } else if (getEjbClassSymbol().equals(descriptor.getEjbClassSymbol())) {
+                    set.add(descriptor);
                 }
             }
         }
@@ -468,7 +463,7 @@ public final class MethodDescriptor extends Descriptor {
     }
 
 
-    /** Returns the ejb class sybol for this method descriptor. */
+    /** @return the ejb class sybol for this method descriptor. */
     public String getEjbClassSymbol() {
         return this.ejbClassSymbol;
     }
@@ -486,7 +481,7 @@ public final class MethodDescriptor extends Descriptor {
 
 
     public String getPrettyParameterString() {
-        StringBuilder prettyParameterString = new StringBuilder("(");
+        StringBuilder prettyParameterString = new StringBuilder().append('(');
         if (this.parameterClassNames != null) {
             for (int i = 0; i < this.parameterClassNames.length; i++) {
                 int j = i + 1;
@@ -497,7 +492,7 @@ public final class MethodDescriptor extends Descriptor {
                 }
             }
         }
-        prettyParameterString.append(")");
+        prettyParameterString.append(')');
         return prettyParameterString.toString();
     }
 
@@ -530,7 +525,7 @@ public final class MethodDescriptor extends Descriptor {
         return false;
     }
 
-    /** Equlity iff the parameter names match and the name matches.*/
+    /** Equality iff the parameter names match and the name matches.*/
     @Override
     public boolean equals(Object other) {
         if (other instanceof MethodDescriptor) {
@@ -558,7 +553,7 @@ public final class MethodDescriptor extends Descriptor {
     }
 
 
-    /** Indicates if a method descriptor implies the other one */
+    /** @return true indicates that the method descriptor implies the other one */
     public boolean implies(Object other) {
         if (other != null && other instanceof MethodDescriptor) {
             MethodDescriptor otherMethodDescriptor = (MethodDescriptor) other;
@@ -578,24 +573,32 @@ public final class MethodDescriptor extends Descriptor {
         return this.getPrettyParameterString().hashCode() + this.getName().hashCode();
     }
 
+
     /** My pretty format. */
     @Override
     public void print(StringBuffer toStringBuffer) {
-        toStringBuffer.append("Method Descriptor").append((ejbName==null?"":" for ejb " + ejbName)).append(
-                " name: ").append(this.getName()).append(" params: ").append(this.getPrettyParameterString()).append(
-                " intf: ").append(this.ejbClassSymbol);
+        toStringBuffer.append("Method Descriptor");
+        if (ejbName != null) {
+            toStringBuffer.append(" for ejb ").append(ejbName);
+        }
+        toStringBuffer.append(" name: ").append(getName()).append(" params: ").append(getPrettyParameterString())
+            .append(" intf: ").append(this.ejbClassSymbol);
     }
 
+
     public String prettyPrint() {
-        return "Name : " + this.getName() + " Params: " +  this.getPrettyParameterString() + " Intf: " +  this.ejbClassSymbol;
+        return "Name : " + this.getName()
+            + " Params: " + this.getPrettyParameterString()
+            + " Intf: " + this.ejbClassSymbol;
     }
 
 
     public String[] getParameterClassNamesFor(Method method, Class[] paramTypes) {
         String[] classNames = new String[paramTypes.length];
         for (int i = 0; i < paramTypes.length; i++) {
-            Class compType = paramTypes[i].getComponentType();
-            if (compType == null) { // not an array
+            Class<?> compType = paramTypes[i].getComponentType();
+            if (compType == null) {
+                // not an array
                 classNames[i] = paramTypes[i].getName();
             } else {
                 // name of array types should be like int[][][]
@@ -625,9 +628,11 @@ public final class MethodDescriptor extends Descriptor {
                 // not an array thus cannot determine format
                 ret = XML_JAVA_FORMAT;
                 continue;
-            } else if (index == 0) {// begins with [ thus java format
+            } else if (index == 0) {
+                // begins with [ thus java format
                 return JAVA_FORMAT;
-            } else { // not java format thus of form int[][]
+            } else {
+                // not java format thus of form int[][]
                 return XML_FORMAT;
             }
         }
@@ -635,7 +640,7 @@ public final class MethodDescriptor extends Descriptor {
     }
 
 
-    private String[] getJavaFormatClassNamesFor(Class[] paramTypes) {
+    private String[] getJavaFormatClassNamesFor(Class<?>[] paramTypes) {
         String[] classNames = new String[paramTypes.length];
         for (int i = 0; i < paramTypes.length; i++) {
             classNames[i] = paramTypes[i].getName();
@@ -671,10 +676,11 @@ public final class MethodDescriptor extends Descriptor {
     }
 
 
-    // Convert arrays from form int[][][] to [[[L form.
+    /** Convert arrays from form int[][][] to [[[L form. */
     public static String xmlFormat2JavaClassNames(String param) {
         int indexOfArray = param.indexOf('[');
-        if (indexOfArray == -1) {// not an array
+        if (indexOfArray == -1) {
+            // not an array
             return param;
         }
         String buf = param.substring(0, indexOfArray);
@@ -683,15 +689,16 @@ public final class MethodDescriptor extends Descriptor {
         dimension = dimension / 2;
         StringBuilder fs = new StringBuilder();
         for (int i = 0; i < dimension; i++) {
-            fs.append("[");
+            fs.append('[');
         }
         String javaPrimitiveType = (String) getJavaPrimitiveTypes().get(buf);
         if (javaPrimitiveType != null) {
             fs.append(javaPrimitiveType);
-        } else { // default it is a class or a interface
-            fs.append("L");
+        } else {
+            // default it is a class or a interface
+            fs.append('L');
             fs.append(buf);
-            fs.append(";");
+            fs.append(';');
         }
         return fs.toString();
     }
@@ -722,7 +729,8 @@ public final class MethodDescriptor extends Descriptor {
 
     // Convert arrays from [[[I form to int[][][] form.
     public static String fixParamClassName(String param) {
-        if (param.charAt(0) == '[') { // an array
+        if (param.charAt(0) == '[') {
+            // an array
             int dimensions = param.lastIndexOf('[') + 1;
             char code = param.charAt(dimensions);
             final String newparam;

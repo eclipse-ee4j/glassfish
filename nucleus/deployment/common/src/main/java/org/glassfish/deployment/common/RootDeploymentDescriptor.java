@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,9 +39,10 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  */
 public abstract class RootDeploymentDescriptor extends Descriptor {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    private static final long serialVersionUID = 1L;
+    private static final Logger LOG = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
-    @LogMessageInfo(message = "invalidSpecVersion:  {0}", level="WARNING")
+    @LogMessageInfo(message = "invalidSpecVersion:  {0}", level = "WARNING")
     private static final String INVALID_SPEC_VERSION = "NCLS-DEPLOYMENT-00046";
 
     /**
@@ -57,26 +59,23 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      * optional index string to disambiguate when serveral extensions are
      * part of the same module
      */
-    private String index=null;
+    private String index;
 
     /**
      * class loader associated to this module to load classes
      * contained in the archive file
      */
-    protected transient ClassLoader classLoader = null;
+    protected transient ClassLoader classLoader;
 
     /**
      * Extensions for this module descriptor, keyed by type, indexed using the instance's index
      */
-    protected Map<Class<? extends RootDeploymentDescriptor>, List<RootDeploymentDescriptor>> extensions =
-            new HashMap<Class<? extends RootDeploymentDescriptor>, List<RootDeploymentDescriptor>>();
+    protected Map<Class<? extends RootDeploymentDescriptor>, List<RootDeploymentDescriptor>> extensions = new HashMap<>();
 
-        /**
+    /**
      * contains the information for this module (like it's module name)
      */
     protected ModuleDescriptor moduleDescriptor;
-
-    private final static List<?> emptyList = Collections.emptyList();
 
     /**
      * Construct a new RootDeploymentDescriptor
@@ -129,14 +128,13 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
         try {
             Double.parseDouble(specVersion);
         } catch (NumberFormatException nfe) {
-            deplLogger.log(Level.WARNING,
-                           INVALID_SPEC_VERSION,
-                           new Object[] {specVersion, getDefaultSpecVersion()});
+            LOG.log(Level.WARNING, INVALID_SPEC_VERSION, new Object[] {specVersion, getDefaultSpecVersion()});
             specVersion = getDefaultSpecVersion();
         }
 
         return specVersion;
     }
+
 
     /**
      * Sets the specification version of the deployment descriptor
@@ -173,6 +171,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     /**
      * sets the display name for this bundle
      */
+    @Override
     public void setDisplayName(String name) {
         super.setName(name);
     }
@@ -180,85 +179,87 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     /**
      * @return the display name
      */
+    @Override
     public String getDisplayName() {
         return super.getName();
     }
 
-    /**
-     * as of J2EE1.4, get/setName are deprecated,
-     * people should use the set/getDisplayName or
-     * the set/getModuleID.
-     */
+
+    @Override
     public void setName(String name) {
         setModuleID(name);
     }
 
-    /**
-     * as of J2EE1.4, get/setName are deprecated,
-     * people should use the set/getDisplayName or
-     * the set/getModuleID.
-     * note : backward compatibility
-     */
+
+    @Override
     public String getName() {
-        if (getModuleID()!=null) {
-            return getModuleID();
-        } else {
+        if (getModuleID() == null) {
             return getDisplayName();
         }
+        return getModuleID();
     }
+
 
     public void setSchemaLocation(String schemaLocation) {
         addExtraAttribute("schema-location", schemaLocation);
     }
 
+
     public String getSchemaLocation() {
         return (String) getExtraAttribute("schema-location");
     }
 
-   /**
+
+    /**
      * @return the module descriptor for this bundle
      */
     public ModuleDescriptor getModuleDescriptor() {
-        if (moduleDescriptor==null) {
-            moduleDescriptor = new ModuleDescriptor();
+        if (moduleDescriptor == null) {
+            moduleDescriptor = new ModuleDescriptor<>();
             moduleDescriptor.setModuleType(getModuleType());
             moduleDescriptor.setDescriptor(this);
         }
         return moduleDescriptor;
     }
 
+
     /**
      * Sets the module descriptor for this bundle
+     *
      * @param descriptor for the module
      */
     public void setModuleDescriptor(ModuleDescriptor descriptor) {
         moduleDescriptor = descriptor;
         for (List<RootDeploymentDescriptor> extByType : this.extensions.values()) {
-            if (extByType!=null) {
+            if (extByType != null) {
                 for (RootDeploymentDescriptor ext : extByType) {
                     ext.setModuleDescriptor(descriptor);
                 }
             }
-
         }
     }
+
 
     /**
      * @return true if this module is an application object
      */
     public abstract boolean isApplication();
 
+
     /**
      * print a meaningful string for this object
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         super.print(toStringBuffer);
         toStringBuffer.append("\n Module Type = ").append(getModuleType());
         toStringBuffer.append("\n Module spec version = ").append(getSpecVersion());
-        if (moduleID!=null)
+        if (moduleID != null) {
             toStringBuffer.append("\n Module ID = ").append(moduleID);
-        if (getSchemaLocation()!=null)
+        }
+        if (getSchemaLocation() != null) {
             toStringBuffer.append("\n Client SchemaLocation = ").append(getSchemaLocation());
+        }
     }
 
     /**
@@ -266,7 +267,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      * @return an unmodifiable collection of extensions or empty collection if none.
      */
     public Collection<RootDeploymentDescriptor> getExtensionsDescriptors() {
-        ArrayList<RootDeploymentDescriptor> flattened = new ArrayList<RootDeploymentDescriptor>();
+        ArrayList<RootDeploymentDescriptor> flattened = new ArrayList<>();
         for (List<? extends RootDeploymentDescriptor> extensionsByType : extensions.values()) {
             flattened.addAll(extensionsByType);
         }
@@ -284,20 +285,23 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
                 return Collections.unmodifiableCollection((Collection<T>) entry.getValue());
             }
         }
-        return (Collection<T>) emptyList;
+        return Collections.emptyList();
     }
+
 
     /**
      * This method returns one extension of the passed type in the scope with the right index
+     *
      * @param type requested extension type
      * @param index is the instance index
      * @return an unmodifiable collection of extensions or empty collection if none.
      */
-    public <T extends RootDeploymentDescriptor>  T getExtensionsDescriptors(Class<? extends RootDeploymentDescriptor> type, String index) {
+    public <T extends RootDeploymentDescriptor> T getExtensionsDescriptors(
+        Class<? extends RootDeploymentDescriptor> type, String index) {
         for (T extension : (Collection<T>) getExtensionsDescriptors(type)) {
-            String extensionIndex = ((RootDeploymentDescriptor)extension).index;
-            if (index==null) {
-                if (extensionIndex==null) {
+            String extensionIndex = ((RootDeploymentDescriptor) extension).index;
+            if (index == null) {
+                if (extensionIndex == null) {
                     return extension;
                 }
             } else {
@@ -309,17 +313,18 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
         return null;
     }
 
-    public synchronized <T extends RootDeploymentDescriptor> void addExtensionDescriptor(Class<? extends RootDeploymentDescriptor> type, T instance, String index) {
+
+    public synchronized <T extends RootDeploymentDescriptor> void addExtensionDescriptor(
+        Class<? extends RootDeploymentDescriptor> type, T instance, String index) {
         List<RootDeploymentDescriptor> values;
         if (extensions.containsKey(type)) {
             values = extensions.get(type);
         } else {
-            values = new ArrayList<RootDeploymentDescriptor>();
+            values = new ArrayList<>();
             extensions.put(type, values);
         }
-        ((RootDeploymentDescriptor)instance).index = index;
+        ((RootDeploymentDescriptor) instance).index = index;
         values.add(instance);
-
     }
 
     /**
@@ -341,9 +346,8 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     public RootDeploymentDescriptor getMainDescriptor() {
         if (isExtensionDescriptor()) {
             return getModuleDescriptor().getDescriptor();
-        } else {
-            return this;
         }
+        return this;
     }
 }
 

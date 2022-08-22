@@ -19,7 +19,6 @@ package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.security.integration.PermissionCreator;
 
-import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
@@ -29,45 +28,34 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 public class PermissionsDescriptor extends RootDeploymentDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private RootDeploymentDescriptor parent;
-
     private PermissionCollection declaredPerms;
 
-
-    public PermissionsDescriptor() {
-
-    }
-
-    public RootDeploymentDescriptor getParent() {
-        return parent;
-    }
-
-    public void setParent(RootDeploymentDescriptor parent) {
-        this.parent = parent;
-    }
-
-
+    /** @return canonical name of the class and hash code */
     @Override
     public String getModuleID() {
-        throw new RuntimeException();
+        return this.getClass().getCanonicalName() + '@' + hashCode();
     }
+
 
     @Override
     public String getDefaultSpecVersion() {
-
         return "7";
     }
 
+
     @Override
     public boolean isEmpty() {
-        return declaredPerms != null &&
-                declaredPerms.elements().hasMoreElements();
+        return declaredPerms != null && declaredPerms.elements().hasMoreElements();
     }
+
 
     @Override
     public ArchiveType getModuleType() {
         throw new RuntimeException();
     }
+
 
     @Override
     public ClassLoader getClassLoader() {
@@ -76,6 +64,7 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
         }
         return parent.getClassLoader();
     }
+
 
     @Override
     public boolean isApplication() {
@@ -88,11 +77,13 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
         addPermission(permItem);
     }
 
+
     public PermissionCollection getDeclaredPermissions() {
         return declaredPerms;
     }
 
-    private void addPermission(PermissionItemDescriptor permItem)  {
+
+    private void addPermission(PermissionItemDescriptor permItem) {
         if (permItem == null) {
             return;
         }
@@ -109,17 +100,8 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
                 }
                 this.declaredPerms.add(pm);
             }
-        } catch (ClassNotFoundException e) {
-            throw new SecurityException(e);
-        } catch (NoSuchMethodException e) {
-            throw new SecurityException(e);
-        } catch (InstantiationException e) {
-            throw new SecurityException(e);
-        } catch (IllegalAccessException e) {
-            throw new SecurityException(e);
-        } catch (InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             throw new SecurityException(e);
         }
     }
-
 }

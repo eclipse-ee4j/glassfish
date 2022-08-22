@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,8 +23,7 @@ import com.sun.enterprise.deployment.util.ComponentVisitor;
 /**
  * This interface defines the visitor APIs for the web application descriptor
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public interface WebBundleVisitor extends ComponentVisitor {
 
@@ -32,5 +32,5 @@ public interface WebBundleVisitor extends ComponentVisitor {
      *
      * @param the web bundle descriptor
      */
-    public void accept(WebBundleDescriptor descriptor);
+    void accept(WebBundleDescriptor descriptor);
 }

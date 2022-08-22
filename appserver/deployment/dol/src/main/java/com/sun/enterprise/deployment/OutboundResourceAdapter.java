@@ -23,7 +23,6 @@ import jakarta.resource.spi.AuthenticationMechanism;
 import jakarta.resource.spi.security.GenericCredential;
 import jakarta.resource.spi.security.PasswordCredential;
 
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,16 +54,19 @@ public class OutboundResourceAdapter extends Descriptor {
         this.connectionDefs = new OrderedSet<>();
     }
 
+
     /**
-     * Gets the value of supportsReauthentication
+     * @return the value of supportsReauthentication
      */
     public boolean supportsReauthentication() {
         return reauthenticationSupport;
     }
 
+
     public String getReauthenticationSupport() {
         return String.valueOf(reauthenticationSupport);
     }
+
 
     /**
      * Sets the value of supportsReauthentication
@@ -74,19 +76,20 @@ public class OutboundResourceAdapter extends Descriptor {
         this.reauthenticationSupport = reauthenticationSupport;
     }
 
+
     /**
      * sets the value of supportsReauthentication
      * DOL rearchitecture
      */
     public void setReauthenticationSupport(String reauthSupport) {
-        this.reauthenticationSupport = (Boolean.valueOf(reauthSupport)).booleanValue();
+        this.reauthenticationSupport = Boolean.parseBoolean(reauthSupport);
         this.reauthenticationSupportSet = true;
     }
 
 
     /**
-     * Returns NO_TRANSACTION, LOCAL_TRANSACTION, XA_TRANSACTION
-     * as defined in PoolManagerConstants interface
+     * @return NO_TRANSACTION, LOCAL_TRANSACTION, XA_TRANSACTION
+     *         as defined in PoolManagerConstants interface
      */
     public String getTransSupport() {
         if (transactionSupport == PoolManagerConstants.NO_TRANSACTION) {
@@ -155,14 +158,12 @@ public class OutboundResourceAdapter extends Descriptor {
      * true = not found
      */
     public boolean addAuthMechanism(AuthMechanism mech) {
-        boolean flag = false;
         for (AuthMechanism next : authMechanisms) {
             if (next.getAuthMechVal() == mech.getAuthMechVal()) {
-                return flag;
+                return false;
             }
         }
-        flag = this.authMechanisms.add(mech);
-        return (flag);
+        return this.authMechanisms.add(mech);
     }
 
 
@@ -172,14 +173,12 @@ public class OutboundResourceAdapter extends Descriptor {
      * true = not found
      */
     public boolean removeAuthMechanism(AuthMechanism mech) {
-        boolean flag = false;
         for (AuthMechanism next : authMechanisms) {
             if (next.equals(mech)) {
-                flag = this.authMechanisms.remove(mech);
-                return (flag);
+                return this.authMechanisms.remove(mech);
             }
         }
-        return (flag);
+        return false;
     }
 
 
@@ -190,10 +189,9 @@ public class OutboundResourceAdapter extends Descriptor {
      * true = not found
      */
     public boolean addAuthMechanism(int mech) {
-        boolean flag = false;
         for (AuthMechanism next : authMechanisms) {
             if (next.getAuthMechVal() == mech) {
-                return (flag);
+                return false;
             }
         }
         String credInf = null;
@@ -203,8 +201,7 @@ public class OutboundResourceAdapter extends Descriptor {
             credInf = PoolManagerConstants.GENERIC_CREDENTIAL;
         }
         AuthMechanism auth = new AuthMechanism("", mech, credInf);
-        flag = this.authMechanisms.add(auth);
-        return (flag);
+        return this.authMechanisms.add(auth);
     }
 
 
@@ -214,14 +211,12 @@ public class OutboundResourceAdapter extends Descriptor {
      *                      true = not found
      */
     public boolean removeAuthMechanism(int mech) {
-        boolean flag = false;
         for (AuthMechanism next : authMechanisms) {
             if (next.getAuthMechVal() == mech) {
-                flag = this.authMechanisms.remove(next);
-                return (flag);
+                return this.authMechanisms.remove(next);
             }
         }
-        return (flag);
+        return false;
     }
 
 
@@ -258,112 +253,17 @@ public class OutboundResourceAdapter extends Descriptor {
         return connectionDefs;
     }
 
-    ///////////////////////////////////////////////////////////////////////
-    /**
-     * For 1.0 DTD, the OutboundRA descriptor needs to take care of adding
-     * connection factories and connection interfaces/impls
-     * The following methods create a ConnectionFactoryDescriptor/ConnectionDescriptor instance
-     * using the info available in the 1.0 DTD.
-     * BACKWARD COMPATIBILITY REQUIREMENT
-     */
-
-    /*    public void createNewConnectionDescriptor() {
-     ConnectionDescriptor conDesc = new ConnectionDescriptor();
-     this.addConnection(conDesc);
-    }
-
-    public void createNewConnectionFactoryDescriptor() {
-    ConnectionFactoryDescriptor conDesc = new ConnectionFactoryDescriptor();
-     this.addConnectionFactory(conDesc);
-    }
-
-    public String getConnectionInterface()
-    {
-    Iterator cons = getConnections().iterator();
-    if (cons.hasNext()) {
-        return ((ConnectionDescriptor)cons.next()).getConnectionInterface();
-    }
-        else return null;
-    }
-
-    public String getConnectionClass()
-    {
-    Iterator cons = getConnections().iterator();
-    if (cons.hasNext()) {
-        return ((ConnectionDescriptor)cons.next()).getConnectionClass();
-    }
-        else return null;
-    }
-
-    public void setConnectionInterface(String intf)
-    {
-    Iterator cons = getConnections().iterator();
-    if (cons.hasNext()) {
-        ((ConnectionDescriptor)cons.next()).setConnectionInterface(intf);
-    }
-    else throw new RuntimeException("There is no connection-interface specified for this 1.0 DTD");
-    }
-
-    public void setConnectionClass(String cl)
-    {
-    Iterator cons = getConnections().iterator();
-    if (cons.hasNext()) {
-        ((ConnectionDescriptor)cons.next()).setConnectionClass(cl);
-    }
-    else throw new RuntimeException("There is no connection-class specified for this 1.0 DTD");
-    }
-
-    public String getConnectionFactoryInterface()
-    {
-    Iterator cons = getConnectionFactories().iterator();
-    if (cons.hasNext()) {
-        return ((ConnectionFactoryDescriptor)cons.next()).getConnectionFactoryInterface();
-    }
-        else return null;
-    }
-
-    public String getConnectionFactoryClass()
-    {
-    Iterator cons = getConnectionFactories().iterator();
-    if (cons.hasNext()) {
-        return ((ConnectionFactoryDescriptor)cons.next()).getConnectionFactoryClass();
-    }
-        else return null;
-    }
-
-    public void setConnectionFactoryInterface(String intf)
-    {
-    Iterator cons = getConnectionFactories().iterator();
-    if (cons.hasNext()) {
-        ((ConnectionFactoryDescriptor)cons.next()).setConnectionFactoryInterface(intf);
-    }
-    else throw new RuntimeException("There is no connectionfactory-interface specified for this 1.0 DTD");
-    }
-
-    public void setConnectionFactoryClass(String cl)
-    {
-    Iterator cons = getConnectionFactories().iterator();
-    if (cons.hasNext()) {
-        ((ConnectionFactoryDescriptor)cons.next()).setConnectionFactoryClass(cl);
-    }
-    else throw new RuntimeException("There is no connectionfactory-class specified for this 1.0 DTD");
-    }*/
-
-    ///////////////////////////
-
 
     /**
      * For being able to read 1.0 and write 1.5
      */
-
     public void setConnectionDef(ConnectionDefDescriptor conDef) {
         this.connectionDefs.add(conDef);
     }
 
 
     public ConnectionDefDescriptor getConnectionDef() {
-        Iterator<ConnectionDefDescriptor> iter = connectionDefs.iterator();
-        return iter.next();
+        return connectionDefs.iterator().next();
     }
 
 
@@ -481,6 +381,7 @@ public class OutboundResourceAdapter extends Descriptor {
     }
 
 
+    @SuppressWarnings("deprecation")
     public static String getCredentialInterfaceName(AuthenticationMechanism.CredentialInterface ci) {
         if (ci.equals(AuthenticationMechanism.CredentialInterface.GenericCredential)) {
             return GenericCredential.class.getName();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,40 @@
 
 package org.glassfish.web.embed.impl;
 
-import java.beans.PropertyVetoException;
-import java.io.File;
-
-import java.util.*;
-import java.util.logging.*;
-
+import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.web.ContextFacade;
 import com.sun.enterprise.web.EmbeddedWebContainer;
 import com.sun.enterprise.web.VirtualServerFacade;
 import com.sun.enterprise.web.WebConnector;
-import com.sun.enterprise.config.serverbeans.HttpService;
-import org.glassfish.grizzly.config.dom.Ssl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.Engine;
+import org.apache.catalina.core.StandardHost;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.container.Sniffer;
+import org.glassfish.embeddable.GlassFishException;
+import org.glassfish.embeddable.web.ConfigException;
+import org.glassfish.embeddable.web.Context;
+import org.glassfish.embeddable.web.HttpListener;
+import org.glassfish.embeddable.web.HttpsListener;
+import org.glassfish.embeddable.web.VirtualServer;
+import org.glassfish.embeddable.web.WebContainer;
+import org.glassfish.embeddable.web.WebListener;
+import org.glassfish.embeddable.web.config.SslConfig;
+import org.glassfish.embeddable.web.config.SslType;
+import org.glassfish.embeddable.web.config.WebContainerConfig;
 import org.glassfish.grizzly.config.dom.FileCache;
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
@@ -35,6 +58,7 @@ import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Protocols;
+import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.grizzly.config.dom.ThreadPool;
 import org.glassfish.grizzly.config.dom.Transport;
 import org.glassfish.grizzly.config.dom.Transports;
@@ -42,33 +66,17 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
-
-import org.glassfish.api.container.Sniffer;
-import org.glassfish.embeddable.web.config.SslConfig;
-import org.glassfish.embeddable.web.config.SslType;
+import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.embedded.Port;
 import org.glassfish.internal.embedded.Ports;
-import org.glassfish.embeddable.GlassFishException;
-import org.glassfish.embeddable.web.ConfigException;
-import org.glassfish.embeddable.web.Context;
-import org.glassfish.embeddable.web.WebContainer;
-import org.glassfish.embeddable.web.HttpListener;
-import org.glassfish.embeddable.web.HttpsListener;
-import org.glassfish.embeddable.web.VirtualServer;
-import org.glassfish.embeddable.web.WebListener;
-import org.glassfish.embeddable.web.config.WebContainerConfig;
-import org.glassfish.internal.api.ServerContext;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigCode;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
-
-import org.apache.catalina.Container;
-import org.apache.catalina.Engine;
-import org.apache.catalina.core.StandardHost;
-import org.glassfish.api.admin.ServerEnvironment;
 
 
 /**
@@ -94,8 +102,7 @@ public class WebContainerImpl implements WebContainer {
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private HttpService httpService;
 
-    private static Logger log =
-            Logger.getLogger(WebContainerImpl.class.getName());
+    private static Logger log = Logger.getLogger(WebContainerImpl.class.getName());
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private NetworkConfig networkConfig;
@@ -117,7 +124,7 @@ public class WebContainerImpl implements WebContainer {
 
     private String listenerName = "embedded-listener";
 
-    private List<WebListener> listeners = new ArrayList<WebListener>();
+    private final List<WebListener> listeners = new ArrayList<>();
 
     private String securityEnabled = "false";
 
@@ -204,6 +211,7 @@ public class WebContainerImpl implements WebContainer {
         try {
 
             ConfigSupport.apply(new SingleConfigCode<Protocols>() {
+                @Override
                 public Object run(Protocols param) throws TransactionFailure {
                     final Protocol protocol = param.createChild(Protocol.class);
                     protocol.setName(listenerName);
@@ -218,6 +226,7 @@ public class WebContainerImpl implements WebContainer {
             }, networkConfig.getProtocols());
 
             ConfigSupport.apply(new ConfigCode() {
+                @Override
                 public Object run(ConfigBeanProxy... params) throws TransactionFailure {
                     NetworkListeners nls = (NetworkListeners) params[0];
                     Transports transports = (Transports) params[1];
@@ -246,6 +255,7 @@ public class WebContainerImpl implements WebContainer {
                 NetworkListener networkListener = networkConfig.getNetworkListener(listenerName);
                 Protocol httpProtocol = networkListener.findHttpProtocol();
                 ConfigSupport.apply(new SingleConfigCode<Protocol>() {
+                    @Override
                     public Object run(Protocol param) throws TransactionFailure {
                         Ssl newSsl = param.createChild(Ssl.class);
                         populateSslElement(newSsl, listener);
@@ -259,6 +269,7 @@ public class WebContainerImpl implements WebContainer {
             com.sun.enterprise.config.serverbeans.VirtualServer vs =
                     httpService.getVirtualServerByName(config.getVirtualServerId());
             ConfigSupport.apply(new SingleConfigCode<com.sun.enterprise.config.serverbeans.VirtualServer>() {
+                @Override
                 public Object run(com.sun.enterprise.config.serverbeans.VirtualServer avs)
                         throws PropertyVetoException {
                     avs.addNetworkListener(listenerName);
@@ -405,6 +416,7 @@ public class WebContainerImpl implements WebContainer {
                         httpService.getVirtualServerByName(
                         listenerToBeRemoved.findHttpProtocol().getHttp().getDefaultVirtualServer());
                 ConfigSupport.apply(new ConfigCode() {
+                    @Override
                     public Object run(ConfigBeanProxy... params) throws PropertyVetoException {
                         final NetworkListeners listeners = (NetworkListeners) params[0];
                         final com.sun.enterprise.config.serverbeans.VirtualServer server =
@@ -416,6 +428,7 @@ public class WebContainerImpl implements WebContainer {
                 }, networkListeners, virtualServer);
 
                 ConfigSupport.apply(new ConfigCode() {
+                    @Override
                     public Object run(ConfigBeanProxy... params) throws PropertyVetoException {
                         final Protocols protocols = (Protocols) params[0];
                         final Protocol protocol = (Protocol) params[1];
@@ -436,6 +449,7 @@ public class WebContainerImpl implements WebContainer {
     // --------------------------------------------------------- Public Methods
 
 
+    @Override
     public void setConfiguration(WebContainerConfig config) {
 
         if (!initialized) {
@@ -459,6 +473,7 @@ public class WebContainerImpl implements WebContainer {
             if (vsBean != null) {
 
                 ConfigSupport.apply(new SingleConfigCode<com.sun.enterprise.config.serverbeans.VirtualServer>() {
+                    @Override
                     public Object run(com.sun.enterprise.config.serverbeans.VirtualServer avs)
                             throws PropertyVetoException, TransactionFailure {
                         avs.setId(webConfig.getVirtualServerId());
@@ -482,8 +497,7 @@ public class WebContainerImpl implements WebContainer {
 
             }
 
-            EmbeddedWebArchivist archivist = habitat.<EmbeddedWebArchivist>getService(EmbeddedWebArchivist.class);
-            archivist.setDefaultWebXml(config.getDefaultWebXml());
+            EmbeddedWebArchivist.setDefaultWebXml(config.getDefaultWebXml());
 
             embedded.setDirectoryListing(config.getListings());
 
@@ -522,7 +536,7 @@ public class WebContainerImpl implements WebContainer {
      */
     public List<Sniffer> getSniffers() {
 
-        List<Sniffer> sniffers = new ArrayList<Sniffer>();
+        List<Sniffer> sniffers = new ArrayList<>();
         sniffers.add(habitat.<Sniffer>getService(Sniffer.class, "web"));
         sniffers.add(habitat.<Sniffer>getService(Sniffer.class, "weld"));
         Sniffer security = habitat.getService(Sniffer.class, "Security");
@@ -550,6 +564,7 @@ public class WebContainerImpl implements WebContainer {
      *
      * @see VirtualServer#addContext
      */
+    @Override
     public Context createContext(File docRoot) {
 
         return createContext(docRoot, null);
@@ -577,6 +592,7 @@ public class WebContainerImpl implements WebContainer {
      *
      * @see VirtualServer#addContext
      */
+    @Override
     public Context createContext(File docRoot, ClassLoader classLoader) {
 
         if (docRoot == null) {
@@ -614,6 +630,7 @@ public class WebContainerImpl implements WebContainer {
      *
      * @return the new <tt>Context</tt>
      */
+    @Override
     public Context createContext(File docRoot, String contextRoot,
             ClassLoader classLoader) {
 
@@ -645,6 +662,7 @@ public class WebContainerImpl implements WebContainer {
      * @throws GlassFishException if the given <tt>context</tt> fails
      * to be started
      */
+    @Override
     public void addContext(Context context, String contextRoot)
             throws ConfigException, GlassFishException {
 
@@ -677,6 +695,7 @@ public class WebContainerImpl implements WebContainer {
      * @throws GlassFishException if an error occurs during the stopping
      * or removal of the given <tt>context</tt>
      */
+    @Override
     public void removeContext(Context context)
             throws ConfigException, GlassFishException {
 
@@ -730,6 +749,7 @@ public class WebContainerImpl implements WebContainer {
      * of this class
      * </ul>
      */
+    @Override
     public <T extends WebListener> T createWebListener(String id, Class<T> c)
             throws InstantiationException, IllegalAccessException {
 
@@ -765,6 +785,7 @@ public class WebContainerImpl implements WebContainer {
      * @throws GlassFishException if the given <tt>webListener</tt> fails
      * to be started
      */
+    @Override
     public void addWebListener(WebListener webListener)
             throws ConfigException, GlassFishException {
 
@@ -785,6 +806,7 @@ public class WebContainerImpl implements WebContainer {
      * <tt>null</tt> if no <tt>WebListener</tt> with that id has been
      * registered with this <tt>WebContainer</tt>
      */
+    @Override
     public WebListener getWebListener(String id) {
 
         if (!initialized) {
@@ -820,6 +842,7 @@ public class WebContainerImpl implements WebContainer {
      * @return the (possibly empty) collection of <tt>WebListener</tt>
      * instances registered with this <tt>WebContainer</tt>
      */
+    @Override
     public Collection<WebListener> getWebListeners() {
 
         return listeners;
@@ -836,6 +859,7 @@ public class WebContainerImpl implements WebContainer {
      * @throws GlassFishException if an error occurs during the stopping
      * or removal of the given <tt>webListener</tt>
      */
+    @Override
     public void removeWebListener(WebListener webListener)
         throws GlassFishException {
 
@@ -865,6 +889,7 @@ public class WebContainerImpl implements WebContainer {
      *
      * @return the new <tt>VirtualServer</tt> instance
      */
+    @Override
     public VirtualServer createVirtualServer(String id,
         File docRoot, WebListener...  webListeners) {
 
@@ -881,6 +906,7 @@ public class WebContainerImpl implements WebContainer {
      *
      * @return the new <tt>VirtualServer</tt> instance
      */
+    @Override
     public VirtualServer createVirtualServer(String id, File docRoot) {
 
         return new VirtualServerFacade(id, docRoot, (WebListener[]) null);
@@ -902,6 +928,7 @@ public class WebContainerImpl implements WebContainer {
      * @throws GlassFishException if the given <tt>virtualServer</tt> fails
      * to be started
      */
+    @Override
     public void addVirtualServer(VirtualServer virtualServer)
         throws ConfigException, GlassFishException {
 
@@ -922,7 +949,7 @@ public class WebContainerImpl implements WebContainer {
 
         Collection<WebListener> webListeners = virtualServer.getWebListeners();
 
-        List<String> names = new ArrayList<String>();
+        List<String> names = new ArrayList<>();
         if ((webListeners != null) && (!webListeners.isEmpty())) {
             for (WebListener listener : webListeners) {
                 names.add(listener.getId());
@@ -960,6 +987,7 @@ public class WebContainerImpl implements WebContainer {
 
         try {
             ConfigSupport.apply(new SingleConfigCode<HttpService>() {
+                @Override
                 public Object run(HttpService param) throws PropertyVetoException, TransactionFailure {
                     com.sun.enterprise.config.serverbeans.VirtualServer newVirtualServer =
                             param.createChild(com.sun.enterprise.config.serverbeans.VirtualServer.class);
@@ -1016,6 +1044,7 @@ public class WebContainerImpl implements WebContainer {
      * <tt>null</tt> if no <tt>VirtualServer</tt> with that id has been
      * registered with this <tt>WebContainer</tt>
      */
+    @Override
     public VirtualServer getVirtualServer(String id) {
 
         if (!initialized) {
@@ -1033,13 +1062,14 @@ public class WebContainerImpl implements WebContainer {
      * @return the (possibly empty) collection of <tt>VirtualServer</tt>
      * instances registered with this <tt>WebContainer</tt>
      */
+    @Override
     public Collection<VirtualServer> getVirtualServers(){
 
         if (!initialized) {
             init();
         }
 
-        List<VirtualServer> virtualServers = new ArrayList<VirtualServer>();
+        List<VirtualServer> virtualServers = new ArrayList<>();
         for (Container child : engine.findChildren()) {
             if (child instanceof VirtualServer) {
                 virtualServers.add((VirtualServer)child);
@@ -1060,6 +1090,7 @@ public class WebContainerImpl implements WebContainer {
      * @throws GlassFishException if an error occurs during the stopping
      * or removal of the given <tt>virtualServer</tt>
      */
+    @Override
     public void removeVirtualServer(VirtualServer virtualServer)
             throws GlassFishException {
 
@@ -1079,6 +1110,7 @@ public class WebContainerImpl implements WebContainer {
      *
      * @param level
      */
+    @Override
     public void setLogLevel(Level level) {
         log.setLevel(level);
     }

@@ -148,9 +148,12 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
         }
     }
     /**
-     * @return a meaningfull string about ourself
-     * No Descriptor class which inherits this class should override this method.  Rather print() method which is defined in this class
-     * should be overridden to describe itself. Refer to the comments on print() method for more details.
+     * Provides a meaningfull string about ourself.
+     * <p>
+     * No Descriptor class which inherits this class should override this method.
+     * Rather print() method which is defined in this class should be overridden to describe itself.
+     * Refer to the comments on print() method for more details.
+     * <p>
      * This method is optimized for persformance reasons.
      */
     @Override
@@ -159,6 +162,7 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
         this.print(toStringBuf);
         return toStringBuf.toString();
     }
+
 
     /**
      * notify our observers we have changed

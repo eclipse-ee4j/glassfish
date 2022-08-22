@@ -41,7 +41,6 @@ public class OrderedSet<T> extends Vector<T> implements Set<T> {
      * Construct an ordered set from the given collection.
      */
     public OrderedSet(Collection<T> c) {
-        this();
         this.addAll(c);
     }
 

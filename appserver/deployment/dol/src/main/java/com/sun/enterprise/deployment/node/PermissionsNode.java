@@ -17,47 +17,33 @@
 
 package com.sun.enterprise.deployment.node;
 
-import java.util.ArrayList;
+import com.sun.enterprise.deployment.PermissionItemDescriptor;
+import com.sun.enterprise.deployment.PermissionsDescriptor;
+import com.sun.enterprise.deployment.xml.DeclaredPermissionsTagNames;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.enterprise.deployment.xml.DeclaredPermissionsTagNames;
-import com.sun.enterprise.deployment.PermissionItemDescriptor;
-import com.sun.enterprise.deployment.PermissionsDescriptor;
-
 public class PermissionsNode extends AbstractBundleNode<PermissionsDescriptor> {
 
-    public final static String SCHEMA_ID = "permissions_9.xsd";
-    public final static String SPEC_VERSION = "9";
-
-    private final static List<String> systemIDs = initSystemIDs();
+    private static final String SCHEMA_ID = "permissions_9.xsd";
+    private static final String SPEC_VERSION = "9";
+    private static final List<String> systemIDs = List.of(SCHEMA_ID);
 
     // The XML tag associated with this Node
     public final static XMLElement ROOT_ELEMENT = new XMLElement(DeclaredPermissionsTagNames.PERMS_ROOT);
 
-    private final static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<>();
-        systemIDs.add(SCHEMA_ID);
-        return Collections.unmodifiableList(systemIDs);
-    }
-
     private PermissionsDescriptor permDescriptor;
-
 
     public PermissionsNode() {
         if (handlers != null) {
+            // FIXME: make it a parameter of parent
             handlers.clear();
         }
-
         permDescriptor = new PermissionsDescriptor();
-
-        registerElementHandler(
-                new XMLElement(DeclaredPermissionsTagNames.PERM_ITEM),
-                PermissionItemNode.class);
-
-        SaxParserHandler.registerBundleNode(this,
-                DeclaredPermissionsTagNames.PERMS_ROOT);
+        registerElementHandler(new XMLElement(DeclaredPermissionsTagNames.PERM_ITEM), PermissionItemNode.class);
+        SaxParserHandler.registerBundleNode(this, DeclaredPermissionsTagNames.PERMS_ROOT);
     }
 
 
@@ -73,44 +59,48 @@ public class PermissionsNode extends AbstractBundleNode<PermissionsDescriptor> {
     }
 
 
-
     @Override
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
-
         return ROOT_ELEMENT.getQName();
     }
 
+
     @Override
-    public Map<String, Class<?>> registerRuntimeBundle(
-            Map<String, String> publicIDToSystemIDMapping,
-            final Map<String, List<Class<?>>> versionUpgrades) {
+    public Map<String, Class<?>> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades) {
         return Collections.emptyMap();
     }
+
 
     @Override
     public String getDocType() {
         return null;
     }
 
+
     @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
+
 
     @Override
     public List getSystemIDs() {
         return systemIDs;
     }
 
+
     @Override
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
 
+
     @Override
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
+
 
     @Override
     public void addDescriptor(Object descriptor) {

@@ -17,31 +17,12 @@
 
 package org.glassfish.weld;
 
-import static com.sun.enterprise.util.Utility.isAnyEmpty;
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static java.lang.System.getSecurityManager;
-import static java.security.AccessController.doPrivileged;
-import static java.util.Collections.emptyList;
-import static java.util.logging.Level.FINE;
-import static java.util.stream.Collectors.toList;
-import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
-import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
-import static org.glassfish.cdi.CDILoggerInfo.GET_BEAN_DEPLOYMENT_ARCHIVES;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA;
-import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA;
-import static org.glassfish.deployment.common.InstalledLibrariesResolver.getInstalledLibraries;
-import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
-import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
-import static org.glassfish.weld.connector.WeldUtils.META_INF_BEANS_XML;
-import static org.glassfish.weld.connector.WeldUtils.SEPARATOR_CHAR;
-import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
-import static org.jboss.weld.bootstrap.spi.BeanDiscoveryMode.NONE;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deployment.EjbDescriptor;
+
+import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
+import jakarta.enterprise.inject.build.compatible.spi.SkipIfPortableExtensionPresent;
+import jakarta.enterprise.inject.spi.Extension;
 
 import java.io.IOException;
 import java.net.URI;
@@ -78,17 +59,38 @@ import org.jboss.weld.bootstrap.spi.Metadata;
 import org.jboss.weld.bootstrap.spi.helpers.MetadataImpl;
 import org.jboss.weld.lite.extension.translator.LiteExtensionTranslator;
 
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deployment.EjbDescriptor;
+import static com.sun.enterprise.util.Utility.isAnyEmpty;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static java.lang.System.getSecurityManager;
+import static java.security.AccessController.doPrivileged;
+import static java.util.Collections.emptyList;
+import static java.util.logging.Level.FINE;
+import static java.util.stream.Collectors.toList;
+import static org.glassfish.cdi.CDILoggerInfo.CREATING_DEPLOYMENT_ARCHIVE;
+import static org.glassfish.cdi.CDILoggerInfo.EXCEPTION_SCANNING_JARS;
+import static org.glassfish.cdi.CDILoggerInfo.GET_BEAN_DEPLOYMENT_ARCHIVES;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA;
+import static org.glassfish.cdi.CDILoggerInfo.LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA;
+import static org.glassfish.deployment.common.InstalledLibrariesResolver.getInstalledLibraries;
+import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
+import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
+import static org.glassfish.weld.connector.WeldUtils.META_INF_BEANS_XML;
+import static org.glassfish.weld.connector.WeldUtils.SEPARATOR_CHAR;
+import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
+import static org.jboss.weld.bootstrap.spi.BeanDiscoveryMode.NONE;
 
-import jakarta.enterprise.inject.build.compatible.spi.BuildCompatibleExtension;
-import jakarta.enterprise.inject.build.compatible.spi.SkipIfPortableExtensionPresent;
-import jakarta.enterprise.inject.spi.Extension;
-
-/*
+/**
  * Represents a deployment of a CDI (Weld) application.
  */
 public class DeploymentImpl implements CDI11Deployment {
+
+    private static final Logger LOG = CDILoggerInfo.getLogger();
 
     // Keep track of our BDAs for this deployment
     private List<RootBeanDeploymentArchive> rarRootBdas;
@@ -101,9 +103,8 @@ public class DeploymentImpl implements CDI11Deployment {
 
     // A convenience Map to get a BeanDeploymentArchive for a given BeanDeploymentArchive ID
     private final Map<String, BeanDeploymentArchive> idToBeanDeploymentArchive = new HashMap<>();
-    private SimpleServiceRegistry simpleServiceRegistry = null;
+    private SimpleServiceRegistry simpleServiceRegistry;
 
-    private final Logger logger = CDILoggerInfo.getLogger();
 
     // Holds BeanDeploymentArchives created for extensions
     private final Map<ClassLoader, BeanDeploymentArchive> extensionBDAMap = new HashMap<>();
@@ -120,8 +121,8 @@ public class DeploymentImpl implements CDI11Deployment {
      * <code>ReadableArchive</code>.
      */
     public DeploymentImpl(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext context, ArchiveFactory archiveFactory) {
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, CREATING_DEPLOYMENT_ARCHIVE, new Object[] { archive.getName() });
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, CREATING_DEPLOYMENT_ARCHIVE, new Object[] { archive.getName() });
         }
 
         this.archiveFactory = archiveFactory;
@@ -141,23 +142,23 @@ public class DeploymentImpl implements CDI11Deployment {
 
     @Override
     public BeanDeploymentArchive loadBeanDeploymentArchive(Class<?> beanClass) {
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE, new Object[] { beanClass });
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE, new Object[] { beanClass });
         }
 
         // Check if we have already created a bean archive for this bean class, and if so return it.
 
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING, new Object[] { beanClass, beanDeploymentArchive.getId() });
+            if (LOG.isLoggable(FINE)) {
+                LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING, new Object[] { beanClass, beanDeploymentArchive.getId() });
             }
 
             if (((BeanDeploymentArchiveImpl) beanDeploymentArchive).getModuleBeanClasses().contains(beanClass.getName())) {
 
                 // Don't stuff this Bean Class into the BeanDeploymentArchive's beanClasses,
                 // as Weld automatically add theses classes to the BeanDeploymentArchive's bean Classes
-                if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING, new Object[] { beanClass.getName(), beanDeploymentArchive });
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING, new Object[] { beanClass.getName(), beanDeploymentArchive });
                 }
 
                 return beanDeploymentArchive;
@@ -169,8 +170,8 @@ public class DeploymentImpl implements CDI11Deployment {
             if (!beanDeploymentArchive.getBeanDeploymentArchives().isEmpty()) {
                 for (BeanDeploymentArchive subBeanDeploymentArchive : beanDeploymentArchive.getBeanDeploymentArchives()) {
                     Collection<String> moduleBeanClassNames = ((BeanDeploymentArchiveImpl) subBeanDeploymentArchive).getModuleBeanClasses();
-                    if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA,
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CHECKING_SUBBDA,
                                 new Object[] { beanClass, subBeanDeploymentArchive.getId() });
                     }
 
@@ -178,8 +179,8 @@ public class DeploymentImpl implements CDI11Deployment {
 
                         // Don't stuff this Bean Class into the BeanDeploymentArchive's beanClasses,
                         // as Weld automatically add theses classes to the BeanDeploymentArchive's bean Classes
-                        if (logger.isLoggable(FINE)) {
-                            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING,
+                        if (LOG.isLoggable(FINE)) {
+                            LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_TO_EXISTING,
                                     new Object[] { beanClass.getName(), subBeanDeploymentArchive });
                         }
 
@@ -196,8 +197,8 @@ public class DeploymentImpl implements CDI11Deployment {
 
         // If the beanDeploymentArchive was not found for the Class, create one and add it
 
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA, new Object[] { beanClass });
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_CREATE_NEW_BDA, new Object[] { beanClass });
         }
 
         BeanDeploymentArchive newBeanDeploymentArchive =
@@ -218,16 +219,16 @@ public class DeploymentImpl implements CDI11Deployment {
 
         // Add the new BeanDeploymentArchive to all root BeanDeploymentArchives of this deployment.
 
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
         }
 
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
             beanDeploymentArchive.getBeanDeploymentArchives().add(newBeanDeploymentArchive);
         }
 
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,
                     new Object[] { beanClass, newBeanDeploymentArchive });
         }
 
@@ -275,9 +276,10 @@ public class DeploymentImpl implements CDI11Deployment {
 
         for (BeanDeploymentArchive beanDeploymentArchive : getBeanDeploymentArchives()) {
             if (!(beanDeploymentArchive instanceof RootBeanDeploymentArchive)) {
-                extensions =
-                    context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
-                           .loadExtensions(((BeanDeploymentArchiveImpl) beanDeploymentArchive).getModuleClassLoaderForBDA());
+                ClassLoader classLoader = new FilteringClassLoader(((BeanDeploymentArchiveImpl) beanDeploymentArchive)
+                    .getModuleClassLoaderForBDA());
+                extensions = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
+                    .loadExtensions(classLoader);
 
                 if (extensions != null) {
                     for (Metadata<Extension> beanDeploymentArchiveExtension : extensions) {
@@ -289,10 +291,11 @@ public class DeploymentImpl implements CDI11Deployment {
 
         return extensionsList;
     }
+
     @Override
     public List<BeanDeploymentArchive> getBeanDeploymentArchives() {
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, GET_BEAN_DEPLOYMENT_ARCHIVES, new Object[] { beanDeploymentArchives });
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, GET_BEAN_DEPLOYMENT_ARCHIVES, new Object[] { beanDeploymentArchives });
         }
 
         if (!beanDeploymentArchives.isEmpty()) {
@@ -637,7 +640,7 @@ public class DeploymentImpl implements CDI11Deployment {
                                 jarInLib.close();
                             }
                         } catch (IOException e) {
-                            logger.log(FINE, EXCEPTION_SCANNING_JARS, new Object[] { e });
+                            LOG.log(FINE, EXCEPTION_SCANNING_JARS, new Object[] { e });
                         }
                     }
                 }
@@ -797,5 +800,4 @@ public class DeploymentImpl implements CDI11Deployment {
             createLibJarBda(libBeanDeploymentArchive);
         }
     }
-
 }

@@ -19,6 +19,7 @@ package org.glassfish.weld;
 
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.cdi.CDILoggerInfo.ADD_BEAN_CLASS;
@@ -81,15 +82,23 @@ import org.jboss.weld.ejb.spi.EjbDescriptor;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.InjectionTarget;
 
-/*
+/**
  * The means by which Weld Beans are discovered on the classpath.
  */
 public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
-    private final Logger logger = CDILoggerInfo.getLogger();
+    private static final Logger LOG = CDILoggerInfo.getLogger();
 
-    private ReadableArchive archive;
+    // Workaround: WELD-781
+    private final ClassLoader moduleClassLoaderForBDA;
+
     private String id;
+    private String friendlyId = "";
+
+    private Collection<String> cdiAnnotatedClassNames;
+
+    private boolean deploymentComplete;
+
     private final List<String> moduleClassNames; // Names of classes in the module
     private final List<String> beanClassNames; // Names of bean classes in the module
     private final List<Class<?>> moduleClasses; // Classes in the module
@@ -106,14 +115,6 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     private final Map<AnnotatedType<?>, InjectionTarget<?>> itMap = new HashMap<>();
 
-    // Workaround: WELD-781
-    private ClassLoader moduleClassLoaderForBDA;
-
-    private String friendlyId = "";
-
-    private Collection<String> cdiAnnotatedClassNames;
-
-    private boolean deploymentComplete;
 
     /**
      * Produce a <code>BeanDeploymentArchive</code> form information contained in the provided <code>ReadableArchive</code>.
@@ -142,20 +143,16 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         this.beanDeploymentArchives = new ArrayList<>();
         this.context = ctx;
 
-        // FIXME: cleanup. populate methods use the archive field.
         try {
-            this.archive = archive;
-            populate(ejbs);
+            populate(archive, ejbs);
             populateEJBsForThisBDA(ejbs);
         } finally {
             try {
-                this.archive.close();
+                archive.close();
             } catch (Exception e) {
             }
-            this.archive = null;
         }
-        // This assigns moduleClassLoaderForBDA
-        getClassLoader();
+        this.moduleClassLoaderForBDA = getClassLoader();
     }
 
     private void populateEJBsForThisBDA(Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs) {
@@ -191,7 +188,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         populateEJBsForThisBDA(ejbs);
 
         // This assigns moduleClassLoaderForBDA
-        getClassLoader();
+        this.moduleClassLoaderForBDA = getClassLoader();
     }
 
     @Override
@@ -203,8 +200,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     public Collection<String> getBeanClasses() {
         // This method is called during BeanDeployment.deployBeans, so this would
         // be the right time to place the module classloader for the BDA as the TCL
-        if (logger.isLoggable(FINER)) {
-            logger.log(FINER, SETTING_CONTEXT_CLASS_LOADER, new Object[] { this.id, this.moduleClassLoaderForBDA });
+        if (LOG.isLoggable(FINER)) {
+            LOG.log(FINER, SETTING_CONTEXT_CLASS_LOADER, new Object[] { this.id, this.moduleClassLoaderForBDA });
         }
 
         if (!isDeploymentComplete()) {
@@ -232,8 +229,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         boolean added = false;
         for (String moduleClassName : moduleClassNames) {
             if (moduleClassName.equals(beanClassName)) {
-                if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, ADD_BEAN_CLASS, new Object[] { moduleClassName, beanClassNames });
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, ADD_BEAN_CLASS, new Object[] { moduleClassName, beanClassNames });
                 }
 
                 beanClassNames.add(moduleClassName);
@@ -246,8 +243,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             }
         }
         if (!added) {
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, ADD_BEAN_CLASS_ERROR, new Object[] { beanClassName });
+            if (LOG.isLoggable(FINE)) {
+                LOG.log(FINE, ADD_BEAN_CLASS_ERROR, new Object[] { beanClassName });
             }
         }
     }
@@ -353,7 +350,10 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         return bdaType;
     }
 
-    private void populate(Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs) {
+
+    private void populate(
+        final ReadableArchive archive,
+        final Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs) {
         try {
             boolean webinfbda = false;
             boolean hasBeansXml = false;
@@ -379,8 +379,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                     // to force the implicit behavior
                     hasBeansXml = !bdMode.equals(BeanDiscoveryMode.ANNOTATED);
 
-                    if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, PROCESSING_BEANS_XML,
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.log(FINE, PROCESSING_BEANS_XML,
                                 new Object[] { archive.getURI(), WEB_INF_BEANS_XML, WEB_INF_CLASSES_META_INF_BEANS_XML });
                     }
                 } else {
@@ -399,8 +399,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                     URI webinfclasses = new File(context.getSourceDir().getAbsolutePath(), WEB_INF_CLASSES).toURI();
                     if (isImplicitBeanArchive(context, webinfclasses)) {
                         webinfbda = true;
-                        if (logger.isLoggable(FINE)) {
-                            logger.log(FINE, PROCESSING_CDI_ENABLED_ARCHIVE, new Object[] { archive.getURI() });
+                        if (LOG.isLoggable(FINE)) {
+                            LOG.log(FINE, PROCESSING_CDI_ENABLED_ARCHIVE, new Object[] { archive.getURI() });
                         }
                     }
                 }
@@ -426,8 +426,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                             }
                             moduleClassNames.add(className);
                         } catch (Throwable t) {
-                            if (logger.isLoggable(WARNING)) {
-                                logger.log(WARNING, ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
+                            if (LOG.isLoggable(WARNING)) {
+                                LOG.log(WARNING, ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
                             }
                         }
                     } else if (entry.endsWith(BEANS_XML_FILENAME)) {
@@ -443,8 +443,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             //  beans.xml in the jar archive
 
             if (archive.exists(WEB_INF_LIB)) {
-                if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, PROCESSING_WEB_INF_LIB, new Object[] { archive.getURI() });
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, PROCESSING_WEB_INF_LIB, new Object[] { archive.getURI() });
                 }
                 bdaType = BDAType.WAR;
                 Enumeration<String> entries = archive.entries(WEB_INF_LIB);
@@ -461,7 +461,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                                 BeansXml beansXML = parseBeansXML(weblibJarArchive, META_INF_BEANS_XML);
                                 BeanDiscoveryMode bdMode = beansXML.getBeanDiscoveryMode();
                                 if (!bdMode.equals(BeanDiscoveryMode.NONE)) {
-                                    logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, entry);
+                                    LOG.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, entry);
                                     if (!bdMode.equals(BeanDiscoveryMode.ANNOTATED)
                                         || isImplicitBeanArchive(context, weblibJarArchive)) {
                                         closeArchive = false;
@@ -470,11 +470,11 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                                 }
                                 // Check for classes annotated with qualified annotations
                             } else if (WeldUtils.isImplicitBeanArchive(context, weblibJarArchive)) {
-                                logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, entry);
+                                LOG.log(FINE, CDILoggerInfo.WEB_INF_LIB_CONSIDERING_BEAN_ARCHIVE, entry);
                                 closeArchive = false;
                                 weblibJarsThatAreBeanArchives.add(weblibJarArchive);
                             } else {
-                                logger.log(FINE, CDILoggerInfo.WEB_INF_LIB_SKIPPING_BEAN_ARCHIVE, archive.getName());
+                                LOG.log(FINE, CDILoggerInfo.WEB_INF_LIB_SKIPPING_BEAN_ARCHIVE, archive.getName());
                             }
                         } finally {
                             if (closeArchive) {
@@ -511,8 +511,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                 BeanDiscoveryMode bdMode = beansXML.getBeanDiscoveryMode();
                 if (!bdMode.equals(BeanDiscoveryMode.NONE)) {
 
-                    if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, PROCESSING_BDA_JAR, new Object[] { archive.getURI() });
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.log(FINE, PROCESSING_BDA_JAR, new Object[] { archive.getURI() });
                     }
                     bdaType = BDAType.JAR;
                     collectJarInfo(archive, true, !bdMode.equals(BeanDiscoveryMode.ANNOTATED));
@@ -520,8 +520,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                     addBeansXMLURL(archive, META_INF_BEANS_XML);
                 }
             } else if (isImplicitBeanArchive(context, archive)) {
-                if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, PROCESSING_BECAUSE_SCOPE_ANNOTATION, new Object[] { archive.getURI() });
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, PROCESSING_BECAUSE_SCOPE_ANNOTATION, new Object[] { archive.getURI() });
                 }
                 bdaType = BDAType.JAR;
                 collectJarInfo(archive, true, false);
@@ -536,7 +536,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             // DeploymentImpl.loadBeanDeploymentArchive(Class<?> beanClass)
 
         } catch (IOException | ClassNotFoundException cne) {
-            logger.log(SEVERE, cne.getLocalizedMessage(), cne);
+            LOG.log(SEVERE, cne.getLocalizedMessage(), cne);
         }
     }
 
@@ -548,8 +548,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             //loop through the list once more
             for (BeanDeploymentArchiveImpl otherBDA : webLibBDAs) {
                 if (!firstBDA.getId().equals(otherBDA.getId())) {
-                    if (logger.isLoggable(FINE)) {
-                        logger.log(FINE, CDILoggerInfo.ENSURE_WEB_LIB_JAR_VISIBILITY_ASSOCIATION,
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.log(FINE, CDILoggerInfo.ENSURE_WEB_LIB_JAR_VISIBILITY_ASSOCIATION,
                                 new Object[] { firstBDA.getFriendlyId(), otherBDA.getFriendlyId() });
                     }
                     firstBDA.getBeanDeploymentArchives().add(otherBDA);
@@ -559,8 +559,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
             //update modified BDA
             if (modified) {
                 int idx = this.beanDeploymentArchives.indexOf(firstBDA);
-                if (logger.isLoggable(FINE)) {
-                    logger.log(FINE, CDILoggerInfo.ENSURE_WEB_LIB_JAR_VISIBILITY_ASSOCIATION_UPDATING,
+                if (LOG.isLoggable(FINE)) {
+                    LOG.log(FINE, CDILoggerInfo.ENSURE_WEB_LIB_JAR_VISIBILITY_ASSOCIATION_UPDATING,
                             new Object[] { firstBDA.getFriendlyId() });
                 }
                 if (idx >= 0) {
@@ -573,8 +573,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         for (int i = 0; i < webLibBDAs.size(); i++) {
             BeanDeploymentArchiveImpl subBDA = webLibBDAs.get(i);
             subBDA.getBeanDeploymentArchives().add(this);
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, CDILoggerInfo.ENSURE_WEB_LIB_JAR_VISIBILITY_ASSOCIATION_INCLUDING,
+            if (LOG.isLoggable(FINE)) {
+                LOG.log(FINE, CDILoggerInfo.ENSURE_WEB_LIB_JAR_VISIBILITY_ASSOCIATION_INCLUDING,
                         new Object[] { subBDA.getId(), this.getId() });
             }
             int idx = this.beanDeploymentArchives.indexOf(subBDA);
@@ -586,8 +586,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     private void collectJarInfo(ReadableArchive archive, boolean isBeanArchive, boolean hasBeansXml)
             throws IOException, ClassNotFoundException {
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, CDILoggerInfo.COLLECTING_JAR_INFO, new Object[] { archive.getURI() });
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, CDILoggerInfo.COLLECTING_JAR_INFO, new Object[] { archive.getURI() });
         }
         Enumeration<String> entries = archive.entries();
         while (entries.hasMoreElements()) {
@@ -611,8 +611,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                 // Add the class as a module class
                 moduleClassNames.add(className);
             } catch (Throwable t) {
-                if (logger.isLoggable(WARNING)) {
-                    logger.log(WARNING, ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
+                if (LOG.isLoggable(WARNING)) {
+                    LOG.log(WARNING, ERROR_LOADING_BEAN_CLASS, new Object[] { className, t.toString() });
                 }
             }
         } else if (entry.endsWith("/beans.xml")) {
@@ -626,8 +626,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                     beansXmlURLs.add(beansXmlUrl);
                 }
             } catch (IOException e) {
-                if (logger.isLoggable(Level.SEVERE)) {
-                    logger.log(Level.SEVERE, CDILoggerInfo.SEVERE_ERROR_READING_ARCHIVE, new Object[] { e.getMessage() });
+                if (LOG.isLoggable(Level.SEVERE)) {
+                    LOG.log(Level.SEVERE, CDILoggerInfo.SEVERE_ERROR_READING_ARCHIVE, new Object[] { e.getMessage() });
                 }
             }
         }
@@ -638,8 +638,8 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     }
 
     private void collectRarInfo(ReadableArchive archive) throws IOException, ClassNotFoundException {
-        if (logger.isLoggable(FINE)) {
-            logger.log(FINE, CDILoggerInfo.COLLECTING_RAR_INFO, new Object[] { archive.getURI() });
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, CDILoggerInfo.COLLECTING_RAR_INFO, new Object[] { archive.getURI() });
         }
         Enumeration<String> entries = archive.entries();
         while (entries.hasMoreElements()) {
@@ -665,24 +665,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     }
 
     private ClassLoader getClassLoader() {
-        ClassLoader cl;
         if (this.context.getClassLoader() != null) {
-            cl = this.context.getClassLoader();
+           return this.context.getClassLoader();
         } else if (Thread.currentThread().getContextClassLoader() != null) {
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, "Using TCL");
-            }
-            cl = Thread.currentThread().getContextClassLoader();
+            LOG.log(FINEST, "Using TCL");
+            return Thread.currentThread().getContextClassLoader();
         } else {
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, CDILoggerInfo.TCL_NULL);
-            }
-            cl = BeanDeploymentArchiveImpl.class.getClassLoader();
+            LOG.log(FINEST, CDILoggerInfo.TCL_NULL);
+            return BeanDeploymentArchiveImpl.class.getClassLoader();
         }
-
-        //cache the moduleClassLoader for this BDA
-        this.moduleClassLoaderForBDA = cl;
-        return cl;
     }
 
     public InjectionTarget<?> getInjectionTarget(AnnotatedType<?> annotatedType) {

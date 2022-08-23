@@ -141,7 +141,7 @@ public class CDILoggerInfo {
     @LogMessageInfo(message = "Error reading archive : {0}", level = "SEVERE", cause = "MalformedURLException reading entry from the archive.", action = "Verify the archive is not corrupt.")
     public static final String SEVERE_ERROR_READING_ARCHIVE = CDI_LOGMSG_PREFIX + "-00033";
 
-    @LogMessageInfo(message = "TCL is null. Using DeploymentImpl's classloader", level = "FINE")
+    @LogMessageInfo(message = "TCL is null. Using BeanDeploymentArchiveImpl's classloader", level = "FINE")
     public static final String TCL_NULL = CDI_LOGMSG_PREFIX + "-00034";
 
     @LogMessageInfo(message = "Could not create WeldELContextListener instance. {0}", level = "WARNING")

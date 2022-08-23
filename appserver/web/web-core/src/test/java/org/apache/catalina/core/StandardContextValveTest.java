@@ -42,7 +42,6 @@ package org.apache.catalina.core;
 import org.apache.catalina.HttpRequest;
 import org.apache.catalina.HttpResponse;
 import org.easymock.EasyMock;
-import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
 import org.glassfish.grizzly.http.util.DataChunk;
@@ -53,13 +52,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 
 import static org.easymock.EasyMock.*;
 
-@RunWith(EasyMockRunner.class)
 public class StandardContextValveTest {
 
     @Mock

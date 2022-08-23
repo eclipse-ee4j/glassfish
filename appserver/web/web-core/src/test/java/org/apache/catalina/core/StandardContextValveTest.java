@@ -39,77 +39,66 @@
  */
 package org.apache.catalina.core;
 
-import org.apache.catalina.HttpRequest;
-import org.apache.catalina.HttpResponse;
-import org.easymock.EasyMock;
-import org.easymock.Mock;
-import org.easymock.TestSubject;
-import org.glassfish.grizzly.http.util.DataChunk;
-import org.glassfish.web.valve.GlassFishValve;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
+import org.apache.catalina.HttpRequest;
+import org.apache.catalina.HttpResponse;
+import org.easymock.Capture;
+import org.glassfish.grizzly.http.util.DataChunk;
+import org.glassfish.web.valve.GlassFishValve;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.captureInt;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.newCapture;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StandardContextValveTest {
 
-    @Mock
     private HttpRequest httpRequest;
-
-    @Mock
     private HttpResponse httpResponse;
-
-    @Mock
     private HttpServletResponse httpServletResponse;
+    private final StandardContextValve standardContextValve = new StandardContextValve();
 
-    @TestSubject
-    private StandardContextValve standardContextValve = new StandardContextValve();
 
-    @DisplayName("Test access to WEB-INF directory")
-    @Test
-    public void preventAccessToWebInfDirectoryWithEmptyContextRootTest() throws IOException, ServletException {
+    @ParameterizedTest
+    @ValueSource(strings = {"WEB-INF/web.xml", "META-INF/MANIFEST.MF"})
+    public void preventAccessToInternalDirectoryWithEmptyContextRootTest(String resource) throws Exception {
+        httpRequest = createNiceMock(HttpRequest.class);
+        httpResponse = createNiceMock(HttpResponse.class);
+        httpServletResponse = createStrictMock(HttpServletResponse.class);
+
         DataChunk dataChunkURL = DataChunk.newInstance();
-        dataChunkURL.setString("WEB-INF/web.xml");
+        dataChunkURL.setString(resource);
 
         expect(httpRequest.getCheckRestrictedResources()).andReturn(true);
         expect(httpRequest.getRequestPathMB()).andReturn(dataChunkURL);
         expect(httpResponse.getResponse()).andReturn(httpServletResponse);
-        EasyMock.replay(httpRequest);
-        EasyMock.replay(httpResponse);
+
+        Capture<Integer> capturedError = newCapture();
+        httpServletResponse.sendError(captureInt(capturedError));
+        expectLastCall().andVoid();
+
+        replay(httpRequest, httpResponse, httpServletResponse);
 
         int pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
+        verify(httpRequest, httpResponse, httpServletResponse);
+
         assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
-        assertEquals(HttpServletResponse.SC_NOT_FOUND, httpServletResponse.getStatus());
-        EasyMock.verify(httpRequest);
-        EasyMock.verify(httpResponse);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, capturedError.getValue());
     }
 
-    @DisplayName("Test access to META-INF directory")
-    @Test
-    public void preventAccessToMetaInfDirectoryWithEmptyContextRootTest() throws IOException, ServletException {
-        DataChunk dataChunkURL = DataChunk.newInstance();
-        dataChunkURL.setString("META-INF/MANIFEST.MF");
 
-        expect(httpRequest.getCheckRestrictedResources()).andReturn(true);
-        expect(httpRequest.getRequestPathMB()).andReturn(dataChunkURL);
-        expect(httpResponse.getResponse()).andReturn(httpServletResponse);
-        EasyMock.replay(httpRequest);
-        EasyMock.replay(httpResponse);
-
-        int pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
-        assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
-        assertEquals(HttpServletResponse.SC_NOT_FOUND, httpServletResponse.getStatus());
-        EasyMock.verify(httpRequest);
-        EasyMock.verify(httpResponse);
-    }
-
-    @DisplayName("Test URLs after normalization")
+    /**
+     * Tests URLs after normalization
+     */
     @Test
     public void normalizeURLTest() {
         String path1 = "/app/../some/../something/../my.jsp";

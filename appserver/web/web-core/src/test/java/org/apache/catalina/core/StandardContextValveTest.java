@@ -47,8 +47,9 @@ import org.easymock.Mock;
 import org.easymock.TestSubject;
 import org.glassfish.grizzly.http.util.DataChunk;
 import org.glassfish.web.valve.GlassFishValve;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
@@ -73,32 +74,45 @@ public class StandardContextValveTest {
     @TestSubject
     private StandardContextValve standardContextValve = new StandardContextValve();
 
+    @DisplayName("Test access to WEB-INF directory")
     @Test
-    public void preventAccessToRestrictedDirectoryWithEmptyContextRootTest() throws IOException, ServletException {
-        DataChunk dataChunkURL1 = DataChunk.newInstance();
-        dataChunkURL1.setString("WEB-INF/web.xml");
-        DataChunk dataChunkURL2 = DataChunk.newInstance();
-        dataChunkURL2.setString("META-INF/MANIFEST.MF");
+    public void preventAccessToWebInfDirectoryWithEmptyContextRootTest() throws IOException, ServletException {
+        DataChunk dataChunkURL = DataChunk.newInstance();
+        dataChunkURL.setString("WEB-INF/web.xml");
 
         expect(httpRequest.getCheckRestrictedResources()).andReturn(true);
-        expect(httpRequest.getRequestPathMB()).andReturn(dataChunkURL1).andReturn(dataChunkURL2);
+        expect(httpRequest.getRequestPathMB()).andReturn(dataChunkURL);
         expect(httpResponse.getResponse()).andReturn(httpServletResponse);
         EasyMock.replay(httpRequest);
         EasyMock.replay(httpResponse);
 
         int pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
         assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
-        assertEquals(pipelineResult, HttpServletResponse.SC_NOT_FOUND);
-        EasyMock.verify(httpRequest);
-        EasyMock.verify(httpResponse);
-
-        pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
-        assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
-        assertEquals(pipelineResult, HttpServletResponse.SC_NOT_FOUND);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, httpServletResponse.getStatus());
         EasyMock.verify(httpRequest);
         EasyMock.verify(httpResponse);
     }
 
+    @DisplayName("Test access to META-INF directory")
+    @Test
+    public void preventAccessToMetaInfDirectoryWithEmptyContextRootTest() throws IOException, ServletException {
+        DataChunk dataChunkURL = DataChunk.newInstance();
+        dataChunkURL.setString("META-INF/MANIFEST.MF");
+
+        expect(httpRequest.getCheckRestrictedResources()).andReturn(true);
+        expect(httpRequest.getRequestPathMB()).andReturn(dataChunkURL);
+        expect(httpResponse.getResponse()).andReturn(httpServletResponse);
+        EasyMock.replay(httpRequest);
+        EasyMock.replay(httpResponse);
+
+        int pipelineResult = standardContextValve.invoke(httpRequest, httpResponse);
+        assertEquals(GlassFishValve.END_PIPELINE, pipelineResult);
+        assertEquals(HttpServletResponse.SC_NOT_FOUND, httpServletResponse.getStatus());
+        EasyMock.verify(httpRequest);
+        EasyMock.verify(httpResponse);
+    }
+
+    @DisplayName("Test URLs after normalization")
     @Test
     public void normalizeURLTest() {
         String path1 = "/app/../some/../something/../my.jsp";
@@ -106,15 +120,12 @@ public class StandardContextValveTest {
         String path3 = "./my.jsp";
 
         String result = standardContextValve.normalize(path1);
-
         assertEquals("/my.jsp", result);
 
         result = standardContextValve.normalize(path2);
-
         assertEquals("/app/some/something/my.jsp", result);
 
         result = standardContextValve.normalize(path3);
-
         assertEquals("/my.jsp", result);
     }
 }

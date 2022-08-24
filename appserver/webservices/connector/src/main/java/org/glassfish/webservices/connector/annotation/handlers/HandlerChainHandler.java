@@ -121,7 +121,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 declaringClass = (Class) annElem;
             } else {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.invalidtype",
                         "annotation not allowed on this element."),  annInfo);
             }
@@ -155,7 +155,7 @@ public class HandlerChainHandler extends AbstractHandler {
                             endpointIntf = declaringClass.getClassLoader().loadClass(webService.endpointInterface());
                         } catch(java.lang.ClassNotFoundException cfne) {
                             throw new AnnotationProcessorException(
-                                    localStrings.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
+                                    I18N.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
                                         "class {0} referenced from annotation symbol cannot be loaded",
                                         new Object[] { webService.endpointInterface() }), annInfo);
                         }
@@ -186,7 +186,7 @@ public class HandlerChainHandler extends AbstractHandler {
         if (!clientSideHandlerChain && (containers==null || containers.length==0)) {
             // could not find my web service...
             throw new AnnotationProcessorException(
-                    localStrings.getLocalString(
+                    I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.componentnotfound",
                         "component referenced from annotation symbol cannot be found"),
                     annInfo);
@@ -223,7 +223,7 @@ public class HandlerChainHandler extends AbstractHandler {
             }
             if (handlerFileStream==null) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.handlerfilenotfound",
                             "handler file {0} not found",
                             new Object[] { handlerFile }),
@@ -240,7 +240,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 document = builder.parse(handlerFileStream);
             } catch (SAXParseException spe) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.parserexception",
                             "{0} XML Parsing error : line  {1} ; Error = {2}",
                             new Object[] { handlerFile, spe.getLineNumber(), spe.getMessage()}));

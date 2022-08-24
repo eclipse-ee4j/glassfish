@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +23,9 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.AppClientContext;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
-import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
+import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
+
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
@@ -34,24 +35,24 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
  * @author Shing Wai Chan
  */
 public class AnnotatedElementHandlerFactory {
+
     private AnnotatedElementHandlerFactory() {
     }
 
-    public static AnnotatedElementHandler createAnnotatedElementHandler(
-            RootDeploymentDescriptor bundleDesc) {
+
+    public static AnnotatedElementHandler createAnnotatedElementHandler(RootDeploymentDescriptor bundleDesc) {
         AnnotatedElementHandler aeHandler = null;
         if (bundleDesc instanceof EjbBundleDescriptor) {
-            EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor)bundleDesc;
+            EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) bundleDesc;
             aeHandler = new EjbBundleContext(ejbBundleDesc);
         } else if (bundleDesc instanceof ApplicationClientDescriptor) {
-            ApplicationClientDescriptor appClientDesc =
-                    (ApplicationClientDescriptor)bundleDesc;
+            ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor) bundleDesc;
             aeHandler = new AppClientContext(appClientDesc);
         } else if (bundleDesc instanceof WebBundleDescriptor) {
-            WebBundleDescriptor webBundleDesc = (WebBundleDescriptor)bundleDesc;
+            WebBundleDescriptor webBundleDesc = (WebBundleDescriptor) bundleDesc;
             aeHandler = new WebBundleContext(webBundleDesc);
-        } else if(bundleDesc instanceof ConnectorDescriptor){
-            ConnectorDescriptor connectorDesc = (ConnectorDescriptor)bundleDesc;
+        } else if (bundleDesc instanceof ConnectorDescriptor) {
+            ConnectorDescriptor connectorDesc = (ConnectorDescriptor) bundleDesc;
             aeHandler = new RarBundleContext(connectorDesc);
         }
         return aeHandler;

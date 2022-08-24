@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,16 +21,18 @@ import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.core.MetadataSource;
 
-import org.glassfish.apf.*;
-import org.jvnet.hk2.annotations.Service;
-
 import jakarta.annotation.PreDestroy;
-import java.lang.annotation.Annotation;
+
 import java.lang.reflect.Method;
+
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This handler is responsible for handling jakarta.annotation.PreDestroy
- *
  */
 @Service
 @AnnotationHandlerFor(PreDestroy.class)
@@ -38,18 +41,17 @@ public class PreDestroyHandler extends AbstractResourceHandler {
     public PreDestroyHandler() {
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
 
-        Method annMethod = (Method)ainfo.getAnnotatedElement();
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
+        throws AnnotationProcessorException {
+        Method annMethod = (Method) ainfo.getAnnotatedElement();
         validateAnnotatedLifecycleMethod(annMethod);
         String pdMethodName = annMethod.getName();
         String pdClassName = annMethod.getDeclaringClass().getName();
 
         for (ResourceContainerContext rcContext : rcContexts) {
-            LifecycleCallbackDescriptor preDestroyDesc =
-                   new LifecycleCallbackDescriptor();
+            LifecycleCallbackDescriptor preDestroyDesc = new LifecycleCallbackDescriptor();
             preDestroyDesc.setLifecycleCallbackClass(pdClassName);
             preDestroyDesc.setLifecycleCallbackMethod(pdMethodName);
             preDestroyDesc.setMetadataSource(MetadataSource.ANNOTATION);

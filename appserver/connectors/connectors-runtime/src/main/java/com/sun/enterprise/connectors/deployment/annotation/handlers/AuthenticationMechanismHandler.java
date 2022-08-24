@@ -119,7 +119,7 @@ public class AuthenticationMechanismHandler extends AbstractHandler {
         } else if (value.trim().equals(ConnectorTagNames.DD_KERBEROS)) {
             authMechVal = AuthMechanism.KERBV5;
         } else {
-            throw new IllegalArgumentException("Invalid auth-mech-type");// put this in localStrings...
+            throw new IllegalArgumentException("Invalid auth-mech-type");
         }
         return authMechVal;
     }

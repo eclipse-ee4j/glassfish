@@ -66,13 +66,16 @@ public class EjbContext extends ResourceContainerContextImpl {
         descriptor = (Descriptor) currentEjb;
     }
 
+
     public void setEndpoint(WebServiceEndpoint endpoint) {
         this.endpoint = endpoint;
     }
 
+
     public WebServiceEndpoint getEndpoint() {
         return endpoint;
     }
+
 
     @Override
     public void endElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
@@ -86,40 +89,40 @@ public class EjbContext extends ResourceContainerContextImpl {
         }
     }
 
-    public Class getDeclaringClass(MethodDescriptor md) {
+
+    public Class<?> getDeclaringClass(MethodDescriptor md) {
         Method method = md.getMethod(getDescriptor());
-        Class declaringClass = null;
         for (Method m : methods) {
             if (TypeUtil.sameMethodSignature(m, method)) {
-                declaringClass = m.getDeclaringClass();
+                return m.getDeclaringClass();
             }
         }
-        return declaringClass;
+        return null;
     }
+
 
     public Method[] getComponentDefinitionMethods() {
         return methods;
     }
 
+
     public boolean isInherited() {
         return inherited;
     }
 
-    public void addPostProcessInfo(AnnotationInfo ainfo, PostProcessor postProcessor) {
+
+    public void addPostProcessInfo(AnnotationInfo ainfo, PostProcessor<EjbContext> postProcessor) {
         PostProcessInfo ppInfo = new PostProcessInfo();
         ppInfo.ainfo = ainfo;
         ppInfo.postProcessor = postProcessor;
         postProcessInfos.add(ppInfo);
     }
 
-    private static class PostProcessInfo {
-        public AnnotationInfo ainfo;
-        public PostProcessor postProcessor;
-    }
 
     public ServiceReferenceContainer[] getServiceRefContainers(String implName) {
         return getDescriptor().getEjbBundleDescriptor().getEjbByClassName(implName);
     }
+
 
     @Override
     public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
@@ -129,10 +132,16 @@ public class EjbContext extends ResourceContainerContextImpl {
             for (EjbDescriptor ejb : ejbs) {
                 result.addAll(getDescriptor().getEjbBundleDescriptor().getWebServices().getEndpointsImplementedBy(ejb));
             }
-            return (result.toArray(new HandlerChainContainer[result.size()]));
+            return result.toArray(new HandlerChainContainer[result.size()]);
         }
         List<ServiceReferenceDescriptor> result = new ArrayList<>();
         result.addAll(getDescriptor().getEjbBundleDescriptor().getEjbServiceReferenceDescriptors());
-        return (result.toArray(new HandlerChainContainer[result.size()]));
+        return result.toArray(new HandlerChainContainer[result.size()]);
+    }
+
+    private static class PostProcessInfo {
+
+        public AnnotationInfo ainfo;
+        public PostProcessor<EjbContext> postProcessor;
     }
 }

@@ -109,7 +109,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Wrong parameters for pool creation ");
             }
-            String i18nMsg = localStrings.getString("ccp_adm.wrong_params_for_create");
+            String i18nMsg = I18N.getString("ccp_adm.wrong_params_for_create");
             throw new ConnectorRuntimeException(i18nMsg);
         }
         ConnectorDescriptorInfo cdi = new ConnectorDescriptorInfo();
@@ -117,7 +117,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         ConnectorDescriptor connectorDescriptor = _registry.getDescriptor(rarName);
 
         if (connectorDescriptor == null) {
-            String i18nMsg = localStrings.getString("ccp_adm.no_conn_pool_obj", rarName);
+            String i18nMsg = I18N.getString("ccp_adm.no_conn_pool_obj", rarName);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
             _logger.log(Level.SEVERE, "rardeployment.connector_descriptor_notfound_registry", rarName);
             _logger.log(Level.SEVERE, "", cre);
@@ -238,7 +238,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Wrong parameters for pool creation ");
             }
-            String i18nMsg = localStrings.getString("ccp_adm.wrong_params_for_create");
+            String i18nMsg = I18N.getString("ccp_adm.wrong_params_for_create");
             throw new ConnectorRuntimeException(i18nMsg);
         }
         String moduleName =
@@ -251,7 +251,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                 _registry.getDescriptor(moduleName);
 
         if (connectorDescriptor == null) {
-            String i18nMsg = localStrings.getString("ccp_adm.null_connector_desc", moduleName);
+            String i18nMsg = I18N.getString("ccp_adm.null_connector_desc", moduleName);
             ConnectorRuntimeException cre = new
                     ConnectorRuntimeException(i18nMsg);
             _logger.log(Level.SEVERE, "rardeployment.null_mcf_in_registry", moduleName);
@@ -566,7 +566,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                     logFine("getUnpooledConnection:: " +
                             "done obtainManagedConnectionFactory again");
                 } catch (ConnectorRuntimeException creAgain) {
-                    String l10nMsg = localStrings.getString(
+                    String l10nMsg = I18N.getString(
                             "pingpool.cannot_obtain_mcf", poolName);
                     _logger.log(Level.WARNING, "jdbc.pool_not_reachable",
                             l10nMsg);
@@ -577,7 +577,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             } else {
                 _logger.log(Level.WARNING, "jdbc.pool_not_reachable",
                         cre.getMessage());
-                String l10nMsg = localStrings.getString(
+                String l10nMsg = I18N.getString(
                         "pingpool.cannot_obtain_mcf", poolName);
                 ResourceException e = new ResourceException(l10nMsg);
                 e.initCause(cre);
@@ -1452,7 +1452,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             connectorDescriptor = _runtime.getConnectorDescriptor(rarName);
         }
         if (connectorDescriptor == null) {
-            String i18nMsg = localStrings.getString(
+            String i18nMsg = I18N.getString(
                     "ccp_adm.no_conn_pool_obj", rarName);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(
                     i18nMsg);

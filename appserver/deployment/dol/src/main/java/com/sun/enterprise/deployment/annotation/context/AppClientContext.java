@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * This provides a context for Application Client.
  *
- * @Author Shing Wai Chan
+ * @author Shing Wai Chan
  */
 public class AppClientContext extends ResourceContainerContextImpl {
 

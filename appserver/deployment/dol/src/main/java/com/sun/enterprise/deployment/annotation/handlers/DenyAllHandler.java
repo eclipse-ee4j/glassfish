@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,13 +20,15 @@ package com.sun.enterprise.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.MethodPermission;
-import org.glassfish.apf.AnnotationHandlerFor;
-import org.jvnet.hk2.annotations.Service;
 
-import java.lang.annotation.Annotation;
 import jakarta.annotation.security.DenyAll;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+
+import java.lang.annotation.Annotation;
+
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This handler is responsible for handling the jakarta.annotation.security.DenyAll.
@@ -39,26 +42,26 @@ public class DenyAllHandler extends AbstractAuthAnnotationHandler {
     public DenyAllHandler() {
     }
 
-    @Override
-    protected void processEjbMethodSecurity(Annotation authAnnotation,
-            MethodDescriptor md, EjbDescriptor ejbDesc) {
 
-        ejbDesc.addPermissionedMethod(
-                MethodPermission.getExcludedMethodPermission(), md);
+    @Override
+    protected void processEjbMethodSecurity(Annotation authAnnotation, MethodDescriptor md, EjbDescriptor ejbDesc) {
+        ejbDesc.addPermissionedMethod(MethodPermission.getExcludedMethodPermission(), md);
     }
+
 
     /**
      * @return an array of annotation types this annotation handler would
-     * require to be processed (if present) before it processes it's own
-     * annotation type.
+     *         require to be processed (if present) before it processes it's own
+     *         annotation type.
      */
     @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAnnotationTypes();
     }
 
+
     @Override
     protected Class<? extends Annotation>[] relatedAnnotationTypes() {
-        return new Class[] { PermitAll.class, RolesAllowed.class };
+        return new Class[] {PermitAll.class, RolesAllowed.class};
     }
 }

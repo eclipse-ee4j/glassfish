@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +18,11 @@
 package com.sun.enterprise.deployment.annotation.context;
 
 import com.sun.enterprise.deployment.WebComponentDescriptor;
-import org.glassfish.apf.context.AnnotationContext;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
+
+import org.glassfish.apf.context.AnnotationContext;
 
 /**
  * This provides a context for a collection of web components with the same
@@ -28,21 +30,21 @@ import java.lang.reflect.AnnotatedElement;
  *
  * @author Shing Wai Chan
  */
-public class WebComponentsContext extends AnnotationContext
-            implements ComponentContext {
+public class WebComponentsContext extends AnnotationContext implements ComponentContext {
 
-    private WebComponentContext[] webCompContexts;
+    private final WebComponentContext[] webCompContexts;
     private String componentClassName;
 
     public WebComponentsContext(WebComponentDescriptor[] webComps) {
         webCompContexts = new WebComponentContext[webComps.length];
-        for (int i = 0; i < webComps.length ; i++) {
+        for (int i = 0; i < webComps.length; i++) {
             webCompContexts[i] = new WebComponentContext(webComps[i]);
         }
         if (webComps[0].isServlet()) {
             componentClassName = webComps[0].getWebComponentImplementation();
         }
     }
+
 
     /**
      * Create a new instance of WebComponentContext.
@@ -53,6 +55,7 @@ public class WebComponentsContext extends AnnotationContext
         this.componentClassName = webCompContexts[0].getComponentClassName();
     }
 
+
     /**
      * Note that, for performance, we don't make a safe copy of array here.
      */
@@ -60,14 +63,17 @@ public class WebComponentsContext extends AnnotationContext
         return webCompContexts;
     }
 
-    public void endElement(ElementType type, AnnotatedElement element) {
 
+    @Override
+    public void endElement(ElementType type, AnnotatedElement element) {
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();
         }
     }
 
+
+    @Override
     public String getComponentClassName() {
         return componentClassName;
     }

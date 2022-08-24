@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,30 +18,30 @@
 package com.sun.enterprise.deployment.annotation.context;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
-import org.glassfish.apf.context.AnnotationContext;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 
+import org.glassfish.apf.context.AnnotationContext;
 
 /**
  * This provides a context for a collection of Ejbs with the ejb class name.
  *
- * @Author Shing Wai Chan
+ * @author Shing Wai Chan
  */
-public class EjbsContext extends AnnotationContext
-        implements ComponentContext {
+public class EjbsContext extends AnnotationContext implements ComponentContext {
 
-    private EjbContext[] ejbContexts;
-    private String componentClassName;
+    private final EjbContext[] ejbContexts;
+    private final String componentClassName;
 
     public EjbsContext(EjbDescriptor[] ejbDescs, Class ejbClass) {
         ejbContexts = new EjbContext[ejbDescs.length];
-        for (int i = 0; i < ejbDescs.length ; i++) {
+        for (int i = 0; i < ejbDescs.length; i++) {
             ejbContexts[i] = new EjbContext(ejbDescs[i], ejbClass);
         }
         this.componentClassName = ejbClass.getName();
     }
+
 
     /**
      * Create a new instance of EjbContext.
@@ -51,6 +52,7 @@ public class EjbsContext extends AnnotationContext
         this.componentClassName = ejbContexts[0].getComponentClassName();
     }
 
+
     /**
      * Note that, for performance, we don't make a safe copy of array here.
      */
@@ -58,16 +60,18 @@ public class EjbsContext extends AnnotationContext
         return ejbContexts;
     }
 
-    public void endElement(ElementType type, AnnotatedElement element) {
 
+    @Override
+    public void endElement(ElementType type, AnnotatedElement element) {
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();
         }
     }
 
+
+    @Override
     public String getComponentClassName() {
         return componentClassName;
     }
-
 }

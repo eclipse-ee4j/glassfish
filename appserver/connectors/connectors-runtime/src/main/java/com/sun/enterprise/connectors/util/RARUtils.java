@@ -65,7 +65,7 @@ public class RARUtils {
     public static Map getRABeanProperties (String pathToDeployableUnit) throws ConnectorRuntimeException {
         File f = new File(pathToDeployableUnit);
         if (!f.exists()){
-            String i18nMsg = localStrings.getString(
+            String i18nMsg = I18N.getString(
                 "rar_archive_not_found", pathToDeployableUnit);
             throw new ConnectorRuntimeException( i18nMsg );
         }

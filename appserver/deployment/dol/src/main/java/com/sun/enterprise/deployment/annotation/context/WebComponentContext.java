@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +18,9 @@
 package com.sun.enterprise.deployment.annotation.context;
 
 import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.web.SecurityConstraint;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * This provides a context for a of web component.
@@ -31,7 +28,8 @@ import java.util.Set;
  * @author Shing Wai Chan
  */
 public class WebComponentContext extends ResourceContainerContextImpl {
-    private WebComponentDescriptor webComp = null;
+
+    private WebComponentDescriptor webComp;
 
     public WebComponentContext(WebComponentDescriptor wComp) {
         setDescriptor(wComp);
@@ -40,17 +38,20 @@ public class WebComponentContext extends ResourceContainerContextImpl {
         }
     }
 
+
     public WebComponentDescriptor getDescriptor() {
         return webComp;
     }
+
 
     public void setDescriptor(WebComponentDescriptor webComp) {
         this.webComp = webComp;
         descriptor = webComp.getWebBundleDescriptor();
     }
 
-    public void endElement(ElementType type, AnnotatedElement element) {
 
+    @Override
+    public void endElement(ElementType type, AnnotatedElement element) {
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();

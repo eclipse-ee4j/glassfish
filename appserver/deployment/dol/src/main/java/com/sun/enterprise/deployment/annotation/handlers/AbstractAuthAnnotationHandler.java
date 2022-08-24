@@ -48,12 +48,6 @@ import org.glassfish.apf.HandlerProcessingResult;
  * This is an abstract class encapsulate generic behaviour of auth annotations,
  * such as @DenyAll, @PermitAll and @RolesAllowed.
  *
- * Concrete subclass handlers need to implement the following:
- *     public Class&lt;? extends Annotation&gt; getAnnotationType();
- *     protected void processEjbMethodSecurity(Annotaton authAnnotation,
- *          MethodDescriptor md, EjbDescriptor ejbDesc);
- *     protected Classlt;? extends Annotaion&gt;[] relatedAnnotationClasses();
- *
  * @author Shing Wai Chan
  */
 abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHandler
@@ -62,12 +56,12 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
     /**
      * This method processes the EJB Security for the given Annotation.
      */
-    protected abstract void processEjbMethodSecurity(Annotation authAnnotation, MethodDescriptor md,
-        EjbDescriptor ejbDesc);
+    protected abstract void processEjbMethodSecurity(Annotation authAnnotation, MethodDescriptor md, EjbDescriptor ejbDesc);
 
 
     /**
      * Process Annotation with given EjbContexts.
+     *
      * @param ainfo
      * @param ejbContexts
      * @return HandlerProcessingResult
@@ -86,7 +80,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
             if (ElementType.TYPE.equals(ainfo.getElementType())) {
                 // postpone the processing at the end
                 ejbContext.addPostProcessInfo(ainfo, this);
-            } else { // METHOD
+            } else {
                 Method annMethod = (Method) ainfo.getAnnotatedElement();
                 for (MethodDescriptor md : ejbDesc.getSecurityBusinessMethodDescriptors()) {
                     // override by xml
@@ -161,10 +155,15 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         }
     }
 
+
+    /**
+     * @return true
+     */
     @Override
     protected boolean supportTypeInheritance() {
         return true;
     }
+
 
     /**
      * This method returns a list of related annotation types.
@@ -174,10 +173,10 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         return new Class[0];
     }
 
-    //---------- helper methods ---------
 
     /**
      * Returns MethodDescriptors representing All for a given EjbDescriptor.
+     *
      * @param ejbDesc
      * @return resulting MethodDescriptor
      */
@@ -208,13 +207,15 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         return methodAlls;
     }
 
+
     /**
      * @param methodDesc
      * @param ejbDesc
      * @return whether the given methodDesc has permission defined in ejbDesc
      */
     private boolean hasMethodPermissionsFromDD(MethodDescriptor methodDesc, EjbDescriptor ejbDesc) {
-        Map<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD = ejbDesc.getMethodPermissionsFromDD();
+        Map<MethodPermission, ArrayList<MethodDescriptor>> methodPermissionsFromDD = ejbDesc
+            .getMethodPermissionsFromDD();
         if (methodPermissionsFromDD != null) {
             Set<MethodDescriptor> allMethods = ejbDesc.getMethodDescriptors();
             for (List<MethodDescriptor> mdObjs : methodPermissionsFromDD.values()) {
@@ -230,6 +231,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         return false;
     }
 
+
     /**
      * This method checks whether annotations are compatible.
      * One cannot have two or more of the @DenyAll, @PermitAll, @RoleAllowed.
@@ -237,9 +239,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
      * @param ainfo
      * @return validity
      */
-    private boolean validateAccessControlAnnotations(AnnotationInfo ainfo)
-            throws AnnotationProcessorException {
-
+    private boolean validateAccessControlAnnotations(AnnotationInfo ainfo) throws AnnotationProcessorException {
         boolean validity = true;
         AnnotatedElement ae = ainfo.getAnnotatedElement();
 
@@ -256,7 +256,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
 
         if (count > 1) {
             log(Level.SEVERE, ainfo,
-                localStrings.getLocalString(
+                I18N.getLocalString(
                 "enterprise.deployment.annotation.handlers.morethanoneauthannotation",
                 "One cannot have more than one of @RolesAllowed, @PermitAll, @DenyAll in the same AnnotatedElement."));
             validity = false;

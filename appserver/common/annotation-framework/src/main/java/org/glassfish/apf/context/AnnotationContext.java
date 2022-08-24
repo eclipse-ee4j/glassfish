@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,8 @@
 
 package org.glassfish.apf.context;
 
-import java.util.Stack;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.AnnotatedElement;
 
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -32,27 +32,30 @@ import org.glassfish.apf.ProcessingContext;
  */
 public class AnnotationContext implements AnnotatedElementHandler {
 
-    ProcessingContext processingContext;
+    private ProcessingContext processingContext;
 
     /** Creates a new instance of AnnotationContext */
     public AnnotationContext() {
     }
 
+
     public void setProcessingContext(ProcessingContext processingContext) {
         this.processingContext = processingContext;
     }
+
 
     public ProcessingContext getProcessingContext() {
         return processingContext;
     }
 
-    public void startElement(ElementType type, AnnotatedElement element)
-        throws AnnotationProcessorException {
+
+    @Override
+    public void startElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
     }
 
-    public void endElement(ElementType type, AnnotatedElement element)
-        throws AnnotationProcessorException {
-    }
 
+    @Override
+    public void endElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
+    }
 
 }

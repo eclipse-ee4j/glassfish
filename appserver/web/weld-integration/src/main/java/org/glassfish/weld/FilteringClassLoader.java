@@ -102,7 +102,7 @@ class FilteringClassLoader extends ClassLoader {
         if (requiredMinVersion == null) {
             return true;
         }
-        return requiredMinVersion.compareTo(Runtime.version()) < 0;
+        return requiredMinVersion.compareTo(Runtime.version()) <= 0;
     }
 
 

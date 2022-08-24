@@ -58,8 +58,6 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  */
 public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<T> {
 
-    private static final int DEFAULT_ENTRY_BUFFER_SIZE = 8192;
-
     private static final Logger LOG = DOLUtils.getDefaultLogger();
 
     @LogMessageInfo(
@@ -106,7 +104,7 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
     private static ExecutorService executorService;
 
     @Inject
-    DefaultAnnotationScanner defaultScanner;
+    private DefaultAnnotationScanner defaultScanner;
 
     protected File archiveFile;
     protected ClassLoader classLoader;

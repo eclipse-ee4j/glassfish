@@ -21,8 +21,7 @@ import com.sun.enterprise.deployment.types.MessageDestinationReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 /**
- * An object representing the use of a message destination in a
- * J2EE component.
+ * An object representing the use of a message destination in a J2EE component.
  *
  * @author Kenneth Saks
  */
@@ -30,12 +29,6 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty i
 
     private static final long serialVersionUID = 1L;
     private static final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
-
-    // Usage types
-    // FIXME: No usages, no validation. Implement it or remove these constants.
-    public static final String CONSUMES = "Consumes";
-    public static final String PRODUCES = "Produces";
-    public static final String CONSUMES_PRODUCES = "ConsumesProduces";
 
     private BundleDescriptor referringBundle;
     private String usage;

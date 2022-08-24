@@ -37,7 +37,7 @@ import org.jvnet.hk2.annotations.Service;
 
 
 import javax.xml.namespace.QName;
-import java.util.Iterator;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,7 +99,7 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
     }
 
     private ServiceReferenceDescriptor getServiceReferenceDescriptor() {
-        return (ServiceReferenceDescriptor) getDescriptor();
+        return getDescriptor();
     }
 
     /**
@@ -143,67 +143,44 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
         }
     }
 
+    @Override
     public Node writeDeploymentDescriptor( Node parent,ServiceReferenceDescriptor descriptor) {
-
-        Node serviceRefNode =
-                super.writeDescriptor(parent, WebServicesTagNames.SERVICE_REF, descriptor);
+        Node serviceRefNode = super.writeDescriptor(parent, WebServicesTagNames.SERVICE_REF, descriptor);
         writeDisplayableComponentInfo(serviceRefNode, descriptor);
-        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_NAME,
-                descriptor.getName());
-        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_INTERFACE,
-                descriptor.getServiceInterface());
-        appendTextChild(serviceRefNode, TagNames.LOOKUP_NAME,
-                descriptor.getLookupName());
-        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_TYPE,
-                descriptor.getInjectionTargetType());
-        appendTextChild(serviceRefNode, WebServicesTagNames.WSDL_FILE,
-                descriptor.getWsdlFileUri());
-        appendTextChild(serviceRefNode, WebServicesTagNames.JAXRPC_MAPPING_FILE,
-                descriptor.getMappingFileUri());
+        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_NAME, descriptor.getName());
+        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_INTERFACE, descriptor.getServiceInterface());
+        appendTextChild(serviceRefNode, TagNames.LOOKUP_NAME, descriptor.getLookupName());
+        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_TYPE, descriptor.getInjectionTargetType());
+        appendTextChild(serviceRefNode, WebServicesTagNames.WSDL_FILE, descriptor.getWsdlFileUri());
+        appendTextChild(serviceRefNode, WebServicesTagNames.JAXRPC_MAPPING_FILE, descriptor.getMappingFileUri());
 
-        if( descriptor.hasServiceName() ) {
+        if (descriptor.hasServiceName()) {
             QName serviceName = descriptor.getServiceName();
-            appendQNameChild(WebServicesTagNames.SERVICE_QNAME, serviceRefNode,
-                    serviceName.getNamespaceURI(),
-                    serviceName.getLocalPart(),
-                    descriptor.getServiceNameNamespacePrefix());
+            appendQNameChild(WebServicesTagNames.SERVICE_QNAME, serviceRefNode, serviceName.getNamespaceURI(),
+                serviceName.getLocalPart(), descriptor.getServiceNameNamespacePrefix());
         }
 
-
-        for(Iterator iter = descriptor.getPortsInfo().iterator();
-            iter.hasNext();) {
-            ServiceRefPortInfo next = (ServiceRefPortInfo) iter.next();
-            String sei = next.getServiceEndpointInterface();
-            Node portComponentRefNode = appendChild(
-                    serviceRefNode, WebServicesTagNames.PORT_COMPONENT_REF);
-            appendTextChild(portComponentRefNode,
-                    WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE,
-                    sei);
-            appendTextChild(portComponentRefNode,
-                    WebServicesTagNames.ENABLE_MTOM,
-                    next.getMtomEnabled());
+        for (ServiceRefPortInfo element : descriptor.getPortsInfo()) {
+            String sei = element.getServiceEndpointInterface();
+            Node portComponentRefNode = appendChild(serviceRefNode, WebServicesTagNames.PORT_COMPONENT_REF);
+            appendTextChild(portComponentRefNode, WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE, sei);
+            appendTextChild(portComponentRefNode, WebServicesTagNames.ENABLE_MTOM, element.getMtomEnabled());
             if (descriptor.getAddressing() != null) {
                 AddressingNode adNode = new AddressingNode();
-                adNode.writeDescriptor(portComponentRefNode,
-                        WebServicesTagNames.ADDRESSING,
-                        descriptor.getAddressing());
+                adNode.writeDescriptor(portComponentRefNode, WebServicesTagNames.ADDRESSING,
+                    descriptor.getAddressing());
             }
-            appendTextChild(portComponentRefNode,
-                    WebServicesTagNames.PORT_COMPONENT_LINK,
-                    next.getPortComponentLinkName());
+            appendTextChild(portComponentRefNode, WebServicesTagNames.PORT_COMPONENT_LINK,
+                element.getPortComponentLinkName());
         }
 
         WebServiceHandlerNode handlerNode = new WebServiceHandlerNode();
-        handlerNode.writeWebServiceHandlers(serviceRefNode,
-                descriptor.getHandlers());
+        handlerNode.writeWebServiceHandlers(serviceRefNode, descriptor.getHandlers());
 
-        WebServiceHandlerChainNode handlerChainNode =
-                new WebServiceHandlerChainNode();
-        handlerChainNode.writeWebServiceHandlerChains(serviceRefNode,
-                descriptor.getHandlerChain());
+        WebServiceHandlerChainNode handlerChainNode = new WebServiceHandlerChainNode();
+        handlerChainNode.writeWebServiceHandlerChains(serviceRefNode, descriptor.getHandlerChain());
 
-        appendTextChild(serviceRefNode, WebServicesTagNames.MAPPED_NAME,
-                descriptor.getMappedName());
+        appendTextChild(serviceRefNode, WebServicesTagNames.MAPPED_NAME, descriptor.getMappedName());
 
         if (descriptor.isInjectable()) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
@@ -212,16 +189,17 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
             }
         }
 
-
         return serviceRefNode;
 
     }
 
+    @Override
     public ServiceReferenceDescriptor getDescriptor(){
         return (ServiceReferenceDescriptor) super.getDescriptor();
 
     }
 
+    @Override
     public String getTagName() {
         return WebServicesTagNames.SERVICE_REF;
     }

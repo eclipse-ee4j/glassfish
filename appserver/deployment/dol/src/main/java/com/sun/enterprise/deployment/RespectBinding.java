@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,9 +23,10 @@ import org.glassfish.deployment.common.Descriptor;
  * This class describes respect-binding element from webservices.xml .
  *
  * @author Bhakti Mehta
- *
  */
 public class RespectBinding extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
     private boolean enabled;
 
     /**
@@ -32,29 +34,33 @@ public class RespectBinding extends Descriptor {
      */
     public RespectBinding(RespectBinding other) {
         super(other);
-        enabled = other.enabled;
-
+        this.enabled = other.enabled;
     }
 
-    public RespectBinding(boolean enabled){
+
+    public RespectBinding(boolean enabled) {
         this.enabled = enabled;
-
     }
+
+
+    public RespectBinding() {
+    }
+
 
     public boolean isEnabled() {
         return enabled;
     }
 
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public RespectBinding() {
-    }
 
     /**
-     * @return a string describing the values I hold
+     * Prints a string describing the values I hold
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nRespectBinding enabled = ").append(enabled);
 

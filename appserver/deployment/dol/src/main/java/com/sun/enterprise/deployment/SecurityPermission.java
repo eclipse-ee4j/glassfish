@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -26,6 +26,7 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class SecurityPermission extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String permissionSpec;
 
     public SecurityPermission() {
@@ -39,7 +40,7 @@ public class SecurityPermission extends Descriptor {
 
 
     /**
-     * get permission
+     * @return permission
      */
     public String getPermission() {
         return (permissionSpec);

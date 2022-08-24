@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@ import org.glassfish.deployment.common.Descriptor;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -31,6 +31,8 @@ import java.util.Set;
  * @author Kenneth Saks
  */
 public class ServiceRefPortInfo extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
 
     private String serviceEndpointInterface;
 
@@ -49,19 +51,19 @@ public class ServiceRefPortInfo extends Descriptor {
     private QName wsdlPort;
 
     // Set of name/value pairs corresponding to JAXRPC Stub properties.
-    private Set stubProperties;
+    private final Set<NameValuePairDescriptor> stubProperties;
 
     // Set of name/value pairs corresponding to JAXRPC Call properties.
-    private Set callProperties;
+    private final Set<NameValuePairDescriptor> callProperties;
 
     // Target endpoint address of linked port component.  This is derived
     // and set at runtime.  There is no element for it in sun-j2ee-ri.xml
     private String targetEndpointAddress;
 
     // message-security-binding
-    private MessageSecurityBindingDescriptor messageSecBindingDesc = null;
+    private MessageSecurityBindingDescriptor messageSecBindingDesc;
 
-    private String mtomEnabled = null;
+    private String mtomEnabled;
 
     public ServiceRefPortInfo(ServiceRefPortInfo other) {
         super(other);
@@ -73,60 +75,69 @@ public class ServiceRefPortInfo extends Descriptor {
         wsdlPort = other.wsdlPort; // copy as-is
         mtomEnabled = other.mtomEnabled;
 
-        stubProperties = new HashSet();
-        for (Iterator i = other.stubProperties.iterator(); i.hasNext();) {
-            stubProperties.add(new NameValuePairDescriptor((NameValuePairDescriptor) i.next()));
+        stubProperties = new HashSet<>();
+        for (Object element : other.stubProperties) {
+            stubProperties.add(new NameValuePairDescriptor((NameValuePairDescriptor) element));
         }
 
-        callProperties = new HashSet(); // NameValuePairDescriptor
-        for (Iterator i = other.callProperties.iterator(); i.hasNext();) {
-            callProperties.add(new NameValuePairDescriptor((NameValuePairDescriptor) i.next()));
+        callProperties = new HashSet<>(); // NameValuePairDescriptor
+        for (NameValuePairDescriptor element : other.callProperties) {
+            callProperties.add(new NameValuePairDescriptor(element));
         }
-
         targetEndpointAddress = other.targetEndpointAddress;
     }
 
+
     public ServiceRefPortInfo() {
-        stubProperties = new HashSet();
-        callProperties = new HashSet();
+        stubProperties = new HashSet<>();
+        callProperties = new HashSet<>();
         containerManaged = false;
     }
+
 
     public void setServiceReference(ServiceReferenceDescriptor desc) {
         serviceRef = desc;
     }
 
+
     public ServiceReferenceDescriptor getServiceReference() {
         return serviceRef;
     }
 
+
     public boolean hasServiceEndpointInterface() {
-        return (serviceEndpointInterface != null);
+        return serviceEndpointInterface != null;
     }
+
 
     public void setServiceEndpointInterface(String sei) {
         serviceEndpointInterface = sei;
     }
 
+
     public String getServiceEndpointInterface() {
         return serviceEndpointInterface;
     }
+
 
     public void setIsContainerManaged(boolean flag) {
         containerManaged = flag;
     }
 
+
     public boolean isContainerManaged() {
         return containerManaged;
     }
+
 
     public boolean isClientManaged() {
         return !containerManaged;
     }
 
+
     /**
      * Sets the name of the port component to which I refer.
-     * NOTE : Does *NOT* attempt to resolve link name.  Use
+     * NOTE : Does *NOT* attempt to resolve link name. Use
      * overloaded version or resolveLink if link resolution
      * is required.
      */
@@ -134,92 +145,98 @@ public class ServiceRefPortInfo extends Descriptor {
         setPortComponentLinkName(linkName, false);
     }
 
+
     public WebServiceEndpoint setPortComponentLinkName(String linkName, boolean resolve) {
         portComponentLinkName = linkName;
         return resolve ? resolveLinkName() : null;
     }
 
+
     public boolean hasPortComponentLinkName() {
         return (portComponentLinkName != null);
     }
+
 
     public String getPortComponentLinkName() {
         return portComponentLinkName;
     }
 
-    public void setMessageSecurityBinding(
-        MessageSecurityBindingDescriptor messageSecBindingDesc) {
+
+    public void setMessageSecurityBinding(MessageSecurityBindingDescriptor messageSecBindingDesc) {
         this.messageSecBindingDesc = messageSecBindingDesc;
     }
+
 
     public MessageSecurityBindingDescriptor getMessageSecurityBinding() {
         return messageSecBindingDesc;
     }
 
+
     /**
-     *@return true only if there is a port component link AND it has been
-     * resolved to a valid port component within the application.
+     * @return true only if there is a port component link AND it has been
+     *         resolved to a valid port component within the application.
      */
     public boolean isLinkedToPortComponent() {
-        return (portComponentLinkName != null ) && (portComponentLink != null);
+        return portComponentLinkName != null && portComponentLink != null;
     }
+
 
     /**
-     * Try to resolve the current link name value to a WebServiceEndpoint
-     * object.
+     * Try to resolve the current link name value to a WebServiceEndpoint object.
      *
-     * @return WebServiceEndpoint to which link was resolved, or null if
-     * link name resolution failed.
+     * @return {@link WebServiceEndpoint} to which link was resolved, or null if link name
+     *         resolution failed.
      */
     public WebServiceEndpoint resolveLinkName() {
+        final String linkName = portComponentLinkName;
+        if (linkName == null || linkName.isEmpty()) {
+            return null;
+        }
+        final int hashIndex = linkName.indexOf('#');
+        final boolean relativeLink = hashIndex == -1;
 
-        WebServiceEndpoint port = null;
-        String linkName = portComponentLinkName;
+        final BundleDescriptor bundleDescriptor = getBundleDescriptor();
+        final Application app = bundleDescriptor.getApplication();
 
-        if ((linkName != null) && (linkName.length() > 0)) {
-            int hashIndex = linkName.indexOf('#');
-            boolean absoluteLink = (hashIndex != -1);
-
-            BundleDescriptor bundleDescriptor = getBundleDescriptor();
-            Application app = bundleDescriptor.getApplication();
-            BundleDescriptor targetBundle = bundleDescriptor;
-            String portName = linkName;
-
-            if ((app != null) && absoluteLink) {
-                // Resolve <module>#<port-component-name> style link
-                String relativeModuleUri = linkName.substring(0, hashIndex);
-                portName = linkName.substring(hashIndex + 1);
-                targetBundle = app.getRelativeBundle(bundleDescriptor, relativeModuleUri);
-            }
-
-            // targetBundle will only be null here if module lookup for
-            // absolute link failed.
-            if (targetBundle != null) {
-                LinkedList bundles = new LinkedList();
-                bundles.addFirst(targetBundle);
-                if ((app != null) && !absoluteLink) {
-                    bundles.addAll(app.getBundleDescriptors());
-                }
-                for (Iterator iter = bundles.iterator(); iter.hasNext();) {
-                    BundleDescriptor next = (BundleDescriptor) iter.next();
-                    port = next.getWebServiceEndpointByName(portName);
-                    if (port != null) {
-                        setPortComponentLink(port);
-                        break;
-                    }
-                }
-            }
+        final String portName;
+        final BundleDescriptor targetBundle;
+        if (app == null || relativeLink) {
+            targetBundle = bundleDescriptor;
+            portName = linkName;
+        } else {
+            // Resolve <module>#<port-component-name> style link
+            final String relativeModuleUri = linkName.substring(0, hashIndex);
+            portName = linkName.substring(hashIndex + 1);
+            targetBundle = app.getRelativeBundle(bundleDescriptor, relativeModuleUri);
         }
 
-        return port;
+        // targetBundle will only be null here if module lookup for absolute link failed.
+        if (targetBundle == null) {
+            return null;
+        }
+        final LinkedList<BundleDescriptor> bundles = new LinkedList<>();
+        bundles.addFirst(targetBundle);
+        if (app != null && relativeLink) {
+            bundles.addAll(app.getBundleDescriptors());
+        }
+        for (final BundleDescriptor bundle : bundles) {
+            final WebServiceEndpoint port = bundle.getWebServiceEndpointByName(portName);
+            if (port != null) {
+                setPortComponentLink(port);
+                return port;
+            }
+        }
+        return null;
     }
+
 
     public WebServiceEndpoint getPortComponentLink() {
         return portComponentLink;
     }
 
+
     /**
-     * @param portComponenet the port component to which I refer
+     * @param newPort the port component to which I refer
      */
     public void setPortComponentLink(WebServiceEndpoint newPort) {
         if (newPort != null) {
@@ -238,58 +255,59 @@ public class ServiceRefPortInfo extends Descriptor {
         portComponentLink = newPort;
     }
 
+
     private BundleDescriptor getBundleDescriptor() {
         return serviceRef.getBundleDescriptor();
     }
 
-    //
-    // Runtime info
-    //
 
     public boolean hasWsdlPort() {
-        return (wsdlPort != null);
+        return wsdlPort != null;
     }
+
 
     public void setWsdlPort(QName port) {
         wsdlPort = port;
     }
 
+
     public QName getWsdlPort() {
         return wsdlPort;
     }
 
-    // Set of NameValuePairDescriptor objects for each stub property.
-    public Set getStubProperties() {
+
+    /**
+     * @return set of {@link NameValuePairDescriptor} objects for each stub property.
+     */
+    public Set<NameValuePairDescriptor> getStubProperties() {
         return stubProperties;
     }
 
+
     public boolean hasStubProperty(String name) {
-        return (getStubPropertyValue(name) != null);
+        return getStubPropertyValue(name) != null;
     }
+
 
     public String getStubPropertyValue(String name) {
-        String value = null;
-        for (Iterator iter = stubProperties.iterator(); iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
-            if (next.getName().equals(name)) {
-                value = next.getValue();
-                break;
+        for (NameValuePairDescriptor element : stubProperties) {
+            if (element.getName().equals(name)) {
+                return element.getValue();
             }
         }
-        return value;
+        return null;
     }
 
+
     public NameValuePairDescriptor getStubPropertyByName(String name) {
-        NameValuePairDescriptor prop = null;
-        for (Iterator iter = stubProperties.iterator(); iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
-            if (next.getName().equals(name)) {
-                prop = next;
-                break;
+        for (NameValuePairDescriptor element : stubProperties) {
+            if (element.getName().equals(name)) {
+                return element;
             }
         }
-        return prop;
+        return null;
     }
+
 
     /**
      * Add stub property, using property name as a key. This will
@@ -298,14 +316,15 @@ public class ServiceRefPortInfo extends Descriptor {
      */
     public void addStubProperty(NameValuePairDescriptor property) {
         NameValuePairDescriptor prop = getStubPropertyByName(property.getName());
-        if (prop != null) {
-            prop.setValue(property.getValue());
-        } else {
+        if (prop == null) {
             stubProperties.add(property);
+        } else {
+            prop.setValue(property.getValue());
         }
     }
 
-     /**
+
+    /**
      * Remove stub property, using property name as a key. This will
      * remove the property value of an existing stub property with
      * the matching name.
@@ -316,6 +335,7 @@ public class ServiceRefPortInfo extends Descriptor {
             stubProperties.remove(property);
         }
     }
+
 
     /**
      * Add stub property, using property name as a key. This will
@@ -329,25 +349,26 @@ public class ServiceRefPortInfo extends Descriptor {
         addStubProperty(nvPair);
     }
 
-    public Set getCallProperties() {
+
+    public Set<NameValuePairDescriptor> getCallProperties() {
         return callProperties;
     }
 
+
     public boolean hasCallProperty(String name) {
-        return (getCallPropertyByName(name) != null);
+        return getCallPropertyByName(name) != null;
     }
 
+
     public NameValuePairDescriptor getCallPropertyByName(String name) {
-        NameValuePairDescriptor prop = null;
-        for (Iterator iter = callProperties.iterator(); iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
+        for (NameValuePairDescriptor next : callProperties) {
             if (next.getName().equals(name)) {
-                prop = next;
-                break;
+                return next;
             }
         }
-        return prop;
+        return null;
     }
+
 
     /**
      * Add call property, using property name as a key. This will
@@ -356,10 +377,10 @@ public class ServiceRefPortInfo extends Descriptor {
      */
     public void addCallProperty(NameValuePairDescriptor property) {
         NameValuePairDescriptor prop = getCallPropertyByName(property.getName());
-        if (prop != null) {
-            prop.setValue(property.getValue());
-        } else {
+        if (prop == null) {
             callProperties.add(property);
+        } else {
+            prop.setValue(property.getValue());
         }
     }
 
@@ -376,21 +397,26 @@ public class ServiceRefPortInfo extends Descriptor {
         }
     }
 
+
     public boolean hasTargetEndpointAddress() {
-        return (targetEndpointAddress != null);
+        return targetEndpointAddress != null;
     }
+
 
     public void setTargetEndpointAddress(String address) {
         targetEndpointAddress = address;
     }
 
+
     public String getTargetEndpointAddress() {
         return targetEndpointAddress;
     }
 
+
     public void setMtomEnabled(String value) {
         mtomEnabled = value;
     }
+
 
     public String getMtomEnabled() {
         return mtomEnabled;

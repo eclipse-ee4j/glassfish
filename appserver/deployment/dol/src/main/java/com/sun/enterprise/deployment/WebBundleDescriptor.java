@@ -24,7 +24,6 @@ import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
-import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
@@ -43,14 +42,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.event.EventTypes;
-import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**
- * I am an object that represents all the deployment information about
- * a web app [{0}]lication.
+ * I am an object that represents all the deployment information about a web application.
  *
  * @author Danny Coward
  */
@@ -83,12 +79,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract void addJndiNameEnvironment(JndiNameEnvironment env);
 
-    @Override
-    public abstract boolean isEmpty();
-
-    @Override
-    public abstract String getDefaultSpecVersion();
-
     public abstract Collection getNamedDescriptors();
 
     public abstract Vector<NamedReferencePair> getNamedReferencePairs();
@@ -120,33 +110,9 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract boolean hasServiceReferenceDescriptors();
 
-    @Override
-    public abstract Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors();
-
-    @Override
-    public abstract void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef);
-
-    @Override
-    public abstract void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceRef);
-
-    @Override
-    public abstract ServiceReferenceDescriptor getServiceReferenceByName(String name);
-
     protected abstract ServiceReferenceDescriptor _getServiceReferenceByName(String name);
 
     protected abstract void combineServiceReferenceDescriptors(JndiNameEnvironment env);
-
-    @Override
-    public abstract Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors();
-
-    @Override
-    public abstract void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvRefReference);
-
-    @Override
-    public abstract void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvRefReference);
-
-    @Override
-    public abstract ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name);
 
     protected abstract ResourceEnvReferenceDescriptor _getResourceEnvReferenceByName(String name);
 
@@ -194,120 +160,33 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract Enumeration<EjbReferenceDescriptor> getEjbReferences();
 
-    @Override
-    public abstract Set<EjbReferenceDescriptor> getEjbReferenceDescriptors();
-
     public abstract EjbReferenceDescriptor getEjbReferenceByName(String name);
-
-    @Override
-    public abstract EjbReferenceDescriptor getEjbReference(String name);
 
     protected abstract EjbReference _getEjbReference(String name);
 
-    @Override
-    public abstract ResourceReferenceDescriptor getResourceReferenceByName(String name);
-
     protected abstract ResourceReferenceDescriptor _getResourceReferenceByName(String name);
-
-    @Override
-    public abstract Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors();
-
-    @Override
-    public abstract Set<EntityManagerFactoryReferenceDescriptor> getEntityManagerFactoryReferenceDescriptors();
-
-    @Override
-    public abstract EntityManagerFactoryReferenceDescriptor getEntityManagerFactoryReferenceByName(String name);
 
     protected abstract EntityManagerFactoryReferenceDescriptor _getEntityManagerFactoryReferenceByName(String name);
 
-    @Override
-    public abstract void addEntityManagerFactoryReferenceDescriptor(EntityManagerFactoryReferenceDescriptor reference);
-
     protected abstract void combineEntityManagerFactoryReferenceDescriptors(JndiNameEnvironment env);
-
-    @Override
-    public abstract Set<EntityManagerReferenceDescriptor> getEntityManagerReferenceDescriptors();
-
-    @Override
-    public abstract EntityManagerReferenceDescriptor getEntityManagerReferenceByName(String name);
 
     protected abstract EntityManagerReferenceDescriptor _getEntityManagerReferenceByName(String name);
 
-    @Override
-    public abstract void addEntityManagerReferenceDescriptor(EntityManagerReferenceDescriptor reference) ;
-
     protected abstract void combineEntityManagerReferenceDescriptors(JndiNameEnvironment env);
-
-    @Override
-    public abstract Collection<? extends PersistenceUnitDescriptor> findReferencedPUs();
-
-    @Override
-    public abstract Set<EnvironmentProperty> getEnvironmentProperties();
-
-    @Override
-    public abstract void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReferenceDescriptor);
-
-    @Override
-    public abstract void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReferenceDescriptor);
 
     protected abstract void combineEjbReferenceDescriptors(JndiNameEnvironment env);
 
     public abstract Enumeration<ResourceReferenceDescriptor> getResourceReferences();
 
-    @Override
-    public abstract void addResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference);
-
-    @Override
-    public abstract void removeResourceReferenceDescriptor(ResourceReferenceDescriptor resourceReference);
-
     protected abstract void combineResourceReferenceDescriptors(JndiNameEnvironment env);
-
-    @Override
-    public abstract Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors();
-
-    @Override
-    public abstract void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor messageDestRef) ;
-
-    @Override
-    public abstract void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef);
-
-    @Override
-    public abstract MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
 
     protected abstract MessageDestinationReferenceDescriptor _getMessageDestinationReferenceByName(String name);
 
     protected abstract void combineMessageDestinationReferenceDescriptors(JndiNameEnvironment env);
 
-    @Override
-    public abstract Set<LifecycleCallbackDescriptor> getPostConstructDescriptors();
-
-    @Override
-    public abstract void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc);
-
-    @Override
-    public abstract LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className);
-
     protected abstract void combinePostConstructDescriptors(WebBundleDescriptor webBundleDescriptor);
 
-    @Override
-    public abstract Set<LifecycleCallbackDescriptor> getPreDestroyDescriptors();
-
-    @Override
-    public abstract void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc);
-
-    @Override
-    public abstract LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className);
-
     protected abstract void combinePreDestroyDescriptors(WebBundleDescriptor webBundleDescriptor);
-
-    @Override
-    protected abstract List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv);
-
-    @Override
-    public abstract List<InjectionCapable> getInjectableResourcesByClass(String className);
-
-    @Override
-    public abstract InjectionInfo getInjectionInfoByClass(Class clazz);
 
     public abstract Enumeration<SecurityRoleDescriptor> getSecurityRoles();
 
@@ -342,15 +221,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     public abstract void addEnvironmentEntry(EnvironmentProperty environmentEntry);
 
     protected abstract EnvironmentProperty _getEnvironmentPropertyByName(String name);
-
-    @Override
-    public abstract EnvironmentProperty getEnvironmentPropertyByName(String name);
-
-    @Override
-    public abstract void removeEnvironmentProperty(EnvironmentProperty environmentProperty);
-
-    @Override
-    public abstract void addEnvironmentProperty(EnvironmentProperty environmentProperty);
 
     public abstract void removeEnvironmentEntry(EnvironmentProperty environmentEntry);
 
@@ -412,9 +282,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract void setServletReloadCheckSecs(int secs);
 
-    @Override
-    public abstract boolean hasWebServiceClients();
-
     protected abstract boolean removeVectorItem(Vector<? extends Object> list, Object ref);
 
     protected abstract void moveVectorItem(Vector list, Object ref, int rpos);
@@ -435,18 +302,6 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
 
     public abstract void printCommon(StringBuffer toStringBuffer);
 
-    @Override
-    public abstract ArchiveType getModuleType();
-
-    @Override
-    public abstract ComponentVisitor getBundleVisitor();
-
-    @Override
-    public abstract DescriptorVisitor getTracerVisitor();
-
-    @Override
-    public abstract String getDeploymentDescriptorDir() ;
-
     public abstract SunWebApp getSunDescriptor();
 
     public abstract void setSunDescriptor(SunWebApp webApp);
@@ -454,6 +309,8 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     public abstract void setExtensionProperty(String key, String value);
 
     public abstract boolean hasExtensionProperty(String key);
+
+    public abstract Set<String> getConflictedMimeMappingExtensions();
 
     public boolean isConflictLoginConfig() {
         return conflictLoginConfig;
@@ -514,7 +371,5 @@ public abstract class WebBundleDescriptor extends CommonResourceBundleDescriptor
     public boolean isConflictEntityManagerFactoryReference() {
         return conflictEntityManagerFactoryReference;
     }
-
-    public abstract Set<String> getConflictedMimeMappingExtensions();
 }
 

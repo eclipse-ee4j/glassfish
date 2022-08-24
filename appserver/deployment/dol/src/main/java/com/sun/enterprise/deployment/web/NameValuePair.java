@@ -17,10 +17,19 @@
 
 package com.sun.enterprise.deployment.web;
 
+import java.util.Set;
+
 public interface NameValuePair {
 
+    /**
+     * @return name of the property
+     */
     String getName();
 
+    /**
+     * @param name name of the property. Should be unique in the context as it will be usually used
+     *            as a key in a {@link Set}
+     */
     void setName(String name);
 
     String getValue();

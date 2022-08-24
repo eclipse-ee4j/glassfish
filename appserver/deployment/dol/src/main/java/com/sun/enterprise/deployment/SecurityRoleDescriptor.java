@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,6 +38,7 @@ public class SecurityRoleDescriptor extends Descriptor implements SecurityRole {
         super(name, description);
     }
 
+
     /**
      * Construct a SecurityRoleDescriptor from the given role object.
      */
@@ -44,23 +46,27 @@ public class SecurityRoleDescriptor extends Descriptor implements SecurityRole {
         super(role.getName(), role.getDescription());
     }
 
+
     /**
      * Default constructor.
      */
     public SecurityRoleDescriptor() {
     }
 
+
     /**
      * Equality on rolename.
      */
     @Override
     public boolean equals(Object other) {
-        if (other instanceof SecurityRoleDescriptor && this.getName().equals(((SecurityRoleDescriptor) other).getName())) {
+        if (other instanceof SecurityRoleDescriptor
+            && this.getName().equals(((SecurityRoleDescriptor) other).getName())) {
             return true;
         }
 
         return false;
     }
+
 
     /**
      * My hashcode.
@@ -69,6 +75,7 @@ public class SecurityRoleDescriptor extends Descriptor implements SecurityRole {
     public int hashCode() {
         return getName().hashCode();
     }
+
 
     /**
      * Formatted string representing my state.

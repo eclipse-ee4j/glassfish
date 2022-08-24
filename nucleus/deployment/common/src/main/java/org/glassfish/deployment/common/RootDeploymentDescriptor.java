@@ -105,13 +105,13 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     public abstract String getModuleID();
 
     /**
-     * @return the default version of the deployment descriptor
-     * loaded by this descriptor
+     * @return the default version of the deployment descriptor loaded by this descriptor
      */
     public abstract String getDefaultSpecVersion();
 
     /**
-     * Return true if this root deployment descriptor does not describe anything
+     * Returns true if this root deployment descriptor does not describe anything
+     *
      * @return true if this root descriptor is empty
      */
     public abstract boolean isEmpty();

@@ -63,7 +63,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
     }
 
     public boolean hasWebServices() {
-        return !(webServices.isEmpty());
+        return !webServices.isEmpty();
     }
 
     @Override

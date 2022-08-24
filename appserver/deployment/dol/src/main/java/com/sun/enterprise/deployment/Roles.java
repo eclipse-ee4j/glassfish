@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,21 +25,25 @@ import java.util.Set;
  * @author Danny Coward
  */
 public interface Roles {
-    /**
-     * Get the current set of roles defined.
-     * @return the set of roles.
-     */
-    public Set getRoles();
 
     /**
-     * Add the specified  role to the set of roles.
-     * @param the role to be added.
+     * Get the current set of roles defined.
+     *
+     * @return the set of roles.
      */
-    public void addRole(Role role);
+    Set<Role> getRoles();
+
+    /**
+     * Add the specified role to the set of roles.
+     *
+     * @param role the role to be added.
+     */
+    void addRole(Role role);
 
     /**
      * Remove the specified role from the set of roles.
-     * @param the role to be removed.
+     *
+     * @param role the role to be removed.
      */
-    public void removeRole(Role role);
+    void removeRole(Role role);
 }

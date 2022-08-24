@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package com.sun.enterprise.deployment;
 
+import java.util.Objects;
+
 import org.glassfish.security.common.PrincipalImpl;
 
 /**
@@ -24,50 +27,41 @@ import org.glassfish.security.common.PrincipalImpl;
  *
  * @author Tony Ng
  */
-public class ResourcePrincipal extends  PrincipalImpl {
-    private String password;
+public class ResourcePrincipal extends PrincipalImpl {
 
-    static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
+    private static final long serialVersionUID = 1L;
+
+    private final String password;
 
     public ResourcePrincipal(String name, String password) {
         super(name);
         this.password = password;
     }
 
+
     public String getPassword() {
         return password;
     }
 
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
         if (o instanceof ResourcePrincipal) {
             ResourcePrincipal other = (ResourcePrincipal) o;
-            return ((isEqual(getName(), other.getName())) &&
-                    (isEqual(this.password, other.password)));
+            return Objects.equals(getName(), other.getName()) && Objects.equals(this.password, other.password);
         }
         return false;
     }
 
+
+    @Override
     public int hashCode() {
-        int result = NULL_HASH_CODE;
-        String name = getName();
-        if (name != null) {
-            result += name.hashCode();
-        }
-        if (password != null) {
-            result += password.hashCode();
-        }
-        return result;
+        return Objects.hash(getName(), password);
     }
-
-    private boolean isEqual(Object a, Object b) {
-        if (a == null) {
-            return (b == null);
-        } else {
-            return (a.equals(b));
-        }
-    }
-
 }

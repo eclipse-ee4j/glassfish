@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,34 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.web.ContextParameter;
 
 /**
  * I am an object representing a dependency on a resource environment.
+ *
  * @author Kenneth Saks
  */
-
-import com.sun.enterprise.deployment.web.ContextParameter;
-
 public interface ResourceEnvReference extends ContextParameter {
 
-    /* Gets the logical name of the destination reference */
-    public String getName();
-    public void setName(String refName);
+    /**
+     * @return the logical name of the destination reference
+     */
+    @Override
+    String getName();
 
-    /* Gets the type(jakarta.jms.Queue, jakarta.jms.Topic) of the destination */
-    public String getType();
-    public void setType(String refType);
+    /**
+     * @param refName the logical name of the des+tination reference
+     */
+    @Override
+    void setName(String refName);
 
+    /**
+     * @return the type(jakarta.jms.Queue, jakarta.jms.Topic) of the destination
+     */
+    String getType();
+
+    /**
+     * @param refType the type(jakarta.jms.Queue, jakarta.jms.Topic) of the destination
+     */
+    void setType(String refType);
 }

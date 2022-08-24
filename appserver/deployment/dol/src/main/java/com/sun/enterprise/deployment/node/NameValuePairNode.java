@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,8 +38,8 @@ public class NameValuePairNode extends DeploymentDescriptorNode {
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.NAME_VALUE_PAIR_NAME, "setName");
         table.put(TagNames.NAME_VALUE_PAIR_VALUE, "setValue");
         return table;

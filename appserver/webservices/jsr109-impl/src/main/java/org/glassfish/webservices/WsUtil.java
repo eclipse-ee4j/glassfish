@@ -133,7 +133,14 @@ public class WsUtil {
     public static final String SCHEMA_IMPORT_LOCATION_PARAM_NAME = "schemaImportLocationParam";
     public static final String SCHEMA_INCLUDE_LOCATION_PARAM_NAME = "schemaIncludeLocationParam";
 
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WsUtil.class);
+    private static final String SOAP11_TOKEN = "##SOAP11_HTTP";
+    private static final String SOAP12_TOKEN = "##SOAP12_HTTP";
+    private static final String SOAP11_MTOM_TOKEN = "##SOAP11_HTTP_MTOM";
+    private static final String SOAP12_MTOM_TOKEN = "##SOAP12_HTTP_MTOM";
+    private static final String XML_TOKEN = "##XML_HTTP";
+
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(WsUtil.class);
+    private static final Logger LOG = LogUtils.getLogger();
 
 
     private final Config config;
@@ -143,9 +150,6 @@ public class WsUtil {
         config = WebServiceContractImpl.getInstance().getConfig();
     }
 
-    private static final String SECURITY_POLICY_NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy";
-
-    private static final Logger logger = LogUtils.getLogger();
 
     /**
      * Serve up the FINAL wsdl associated with this web service.
@@ -155,12 +159,12 @@ public class WsUtil {
     public boolean handleGet(HttpServletRequest request, HttpServletResponse response, WebServiceEndpoint endpoint) throws IOException {
         MimeHeaders headers = getHeaders(request);
         if (hasSomeTextXmlContent(headers)) {
-            String message = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.GET_RECEIVED),
+            String message = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.GET_RECEIVED),
                 endpoint.getEndpointName(), endpoint.getEndpointAddressUri());
 
             writeInvalidMethodType(response, message);
 
-            logger.info(message);
+            LOG.info(message);
 
             return false;
         }
@@ -200,8 +204,8 @@ public class WsUtil {
                     try {
                         wsdlUrl = wsdlFile.toURI().toURL();
                     } catch (MalformedURLException mue) {
-                        String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
-                        logger.log(Level.INFO, msg, mue);
+                        String msg = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
+                        LOG.log(Level.INFO, msg, mue);
                     }
 
                 }
@@ -252,13 +256,13 @@ public class WsUtil {
                     copyIsToOs(is, response.getOutputStream());
                 }
                 success = true;
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, LogUtils.SERVING_FINAL_WSDL, new Object[] {wsdlUrl,
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, LogUtils.SERVING_FINAL_WSDL, new Object[] {wsdlUrl,
                         request.getRequestURL() + (queryString == null ? "" : ("?" + queryString))});
                 }
             } catch (Exception e) {
-                String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
-                logger.log(Level.INFO, msg, e);
+                String msg = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
+                LOG.log(Level.INFO, msg, e);
             } finally {
                 if (is != null) {
                     try {
@@ -270,9 +274,9 @@ public class WsUtil {
         }
 
         if (!success) {
-            String message = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.INVALID_WSDL_REQUEST),
+            String message = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.INVALID_WSDL_REQUEST),
                     request.getRequestURL() + (queryString != null ? ("?" + queryString) : ""), webService.getName());
-            logger.info(message);
+            LOG.info(message);
 
             writeInvalidMethodType(response, message);
         }
@@ -335,7 +339,7 @@ public class WsUtil {
         try {
             factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         } catch (ParserConfigurationException pce) {
-            logger.log(Level.FINE, LogUtils.PARSER_UNSUPPORTED_FEATURE,
+            LOG.log(Level.FINE, LogUtils.PARSER_UNSUPPORTED_FEATURE,
                     new Object[] { factory.getClass().getName(), "http://apache.org/xml/features/disallow-doctype-decl" });
         }
         InputStream is = null;
@@ -349,15 +353,15 @@ public class WsUtil {
             procesWsdlIncludes(document, wsdlIncludes);
         } catch (SAXParseException spe) {
             // Error generated by the parser
-            logger.log(Level.SEVERE, LogUtils.PARSING_ERROR, new Object[] { spe.getLineNumber(), spe.getSystemId() });
+            LOG.log(Level.SEVERE, LogUtils.PARSING_ERROR, new Object[] { spe.getLineNumber(), spe.getSystemId() });
             // Use the contained exception, if any
             Exception x = spe;
             if (spe.getException() != null) {
                 x = spe.getException();
             }
-            logger.log(Level.SEVERE, LogUtils.ERROR_OCCURED, x);
+            LOG.log(Level.SEVERE, LogUtils.ERROR_OCCURED, x);
         } catch (Exception sxe) {
-            logger.log(Level.SEVERE, LogUtils.WSDL_PARSING_ERROR, sxe);
+            LOG.log(Level.SEVERE, LogUtils.WSDL_PARSING_ERROR, sxe);
         } finally {
             try {
                 if (is != null) {
@@ -544,7 +548,7 @@ public class WsUtil {
             transformer.setParameter(ENDPOINT_ADDRESS_PARAM_NAME + endpointNum, actualAddress.toExternalForm());
 
             String endpointType = next.implementedByEjbComponent() ? "EJB" : "Servlet";
-            logger.log(Level.INFO, LogUtils.ENDPOINT_REGISTRATION, new Object[] { "[" + endpointType + "] " + next.getEndpointName(), actualAddress });
+            LOG.log(Level.INFO, LogUtils.ENDPOINT_REGISTRATION, new Object[] { "[" + endpointType + "] " + next.getEndpointName(), actualAddress });
 
             endpointNum++;
         }
@@ -621,7 +625,7 @@ public class WsUtil {
                 }
             });
         } catch (PrivilegedActionException pae) {
-            logger.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
+            LOG.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
             Exception e = new Exception();
             e.initCause(pae.getCause());
             throw e;
@@ -753,8 +757,8 @@ public class WsUtil {
         writer.close();
         byte[] stylesheet = bos.toByteArray();
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(new String(stylesheet));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine(new String(stylesheet));
         }
 
         Source stylesheetSource = new StreamSource(new ByteArrayInputStream(stylesheet));
@@ -785,7 +789,7 @@ public class WsUtil {
                 PrintWriter writer = new PrintWriter(resp.getOutputStream());
                 writer.println("<error>" + faultString + "</error>");
             } catch (IOException ioe) {
-                logger.log(Level.WARNING, LogUtils.CANNOT_WRITE_HTTPXML, ioe.getMessage());
+                LOG.log(Level.WARNING, LogUtils.CANNOT_WRITE_HTTPXML, ioe.getMessage());
             }
         } else {
             String protocol;
@@ -801,7 +805,7 @@ public class WsUtil {
                 try {
                     fault.writeTo(resp.getOutputStream());
                 } catch (Exception ex) {
-                    logger.log(Level.WARNING, LogUtils.CANNOT_WRITE_SOAPFAULT, ex);
+                    LOG.log(Level.WARNING, LogUtils.CANNOT_WRITE_SOAPFAULT, ex);
                 }
             }
         }
@@ -827,7 +831,7 @@ public class WsUtil {
             fault.setFaultCode(faultCode);
             return message;
         } catch (SOAPException e) {
-            logger.log(Level.WARNING, LogUtils.CANNOT_CREATE_SOAPFAULT, faultString);
+            LOG.log(Level.WARNING, LogUtils.CANNOT_CREATE_SOAPFAULT, faultString);
         }
         return null;
     }
@@ -955,16 +959,19 @@ public class WsUtil {
         return wsi;
     }
 
+
     /**
      * @return the default Logger implementation for this package
      */
     public static Logger getDefaultLogger() {
-        return logger;
+        return LOG;
     }
 
+
     public static LocalStringManagerImpl getDefaultStringManager() {
-        return localStrings;
+        return I18N;
     }
+
 
     public void validateEjbEndpoint(WebServiceEndpoint ejbEndpoint) {
         EjbDescriptor ejbDescriptor = ejbEndpoint.getEjbComponentImpl();
@@ -1210,8 +1217,8 @@ public class WsUtil {
             invokeServiceMethod(jakarta.annotation.PreDestroy.class, impl, impl.getDeclaredConstructor().newInstance());
         } catch (Throwable ex) {
             String msg = MessageFormat.format(
-                logger.getResourceBundle().getString(LogUtils.CLASS_NOT_FOUND_IN_PREDESTROY), ep.getServletImplClass());
-            logger.log(Level.SEVERE, msg, ex);
+                LOG.getResourceBundle().getString(LogUtils.CLASS_NOT_FOUND_IN_PREDESTROY), ep.getServletImplClass());
+            LOG.log(Level.SEVERE, msg, ex);
         }
 
         // Call @PreDestroy in the handlers if any
@@ -1226,9 +1233,9 @@ public class WsUtil {
                         handlerClass.getDeclaredConstructor().newInstance());
                 } catch (Throwable ex) {
                     String msg = MessageFormat.format(
-                        logger.getResourceBundle().getString(LogUtils.HANDLER_NOT_FOUND_IN_PREDESTROY),
+                        LOG.getResourceBundle().getString(LogUtils.HANDLER_NOT_FOUND_IN_PREDESTROY),
                         thisHandler.getHandlerClass());
-                    logger.log(Level.SEVERE, msg, ex);
+                    LOG.log(Level.SEVERE, msg, ex);
                 }
             }
         }
@@ -1256,7 +1263,7 @@ public class WsUtil {
                     });
                 } catch (Throwable e) {
                     // Should we log or throw an exception
-                    logger.log(Level.SEVERE, LogUtils.FAILURE_CALLING_POST_PRE, e);
+                    LOG.log(Level.SEVERE, LogUtils.FAILURE_CALLING_POST_PRE, e);
                 }
                 break;
             }
@@ -1295,23 +1302,23 @@ public class WsUtil {
         if (hc.getProtocolBindings() != null && bindingId != null) {
             String givenBindings = hc.getProtocolBindings();
             if ((bindingId.equals(HTTPBinding.HTTP_BINDING))
-                    && ((givenBindings.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (givenBindings.indexOf(WebServiceEndpoint.XML_TOKEN) != -1))) {
+                    && ((givenBindings.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (givenBindings.indexOf(XML_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP11HTTP_BINDING))
-                    && ((givenBindings.indexOf(SOAPBinding.SOAP11HTTP_BINDING) != -1) || (givenBindings.indexOf(WebServiceEndpoint.SOAP11_TOKEN) != -1))) {
+                    && ((givenBindings.indexOf(SOAPBinding.SOAP11HTTP_BINDING) != -1) || (givenBindings.indexOf(SOAP11_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP12HTTP_BINDING))
-                    && ((givenBindings.indexOf(SOAPBinding.SOAP12HTTP_BINDING) != -1) || (givenBindings.indexOf(WebServiceEndpoint.SOAP12_TOKEN) != -1))) {
+                    && ((givenBindings.indexOf(SOAPBinding.SOAP12HTTP_BINDING) != -1) || (givenBindings.indexOf(SOAP12_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP11HTTP_MTOM_BINDING)) && ((givenBindings.indexOf(SOAPBinding.SOAP11HTTP_MTOM_BINDING) != -1)
-                    || (givenBindings.indexOf(WebServiceEndpoint.SOAP11_MTOM_TOKEN) != -1))) {
+                    || (givenBindings.indexOf(SOAP11_MTOM_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP12HTTP_MTOM_BINDING)) && ((givenBindings.indexOf(SOAPBinding.SOAP12HTTP_MTOM_BINDING) != -1)
-                    || (givenBindings.indexOf(WebServiceEndpoint.SOAP12_MTOM_TOKEN) != -1))) {
+                    || (givenBindings.indexOf(SOAP12_MTOM_TOKEN) != -1))) {
                 return true;
             }
         }
@@ -1329,8 +1336,8 @@ public class WsUtil {
             try {
                 handlerClass = Class.forName(h.getHandlerClass(), true, loader);
             } catch (Throwable t) {
-                String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.HANDLER_UNABLE_TO_ADD), h.getHandlerClass());
-                logger.log(Level.SEVERE, msg, t);
+                String msg = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.HANDLER_UNABLE_TO_ADD), h.getHandlerClass());
+                LOG.log(Level.SEVERE, msg, t);
 
                 continue;
             }
@@ -1342,7 +1349,7 @@ public class WsUtil {
                 // PostConstruct is invoked by createManagedObject as well
                 handler = (Handler<?>) injManager.createManagedObject(handlerClass);
             } catch (InjectionException e) {
-                logger.log(Level.SEVERE, LogUtils.HANDLER_INJECTION_FAILED, new Object[] { h.getHandlerClass(), e.getMessage() });
+                LOG.log(Level.SEVERE, LogUtils.HANDLER_INJECTION_FAILED, new Object[] { h.getHandlerClass(), e.getMessage() });
                 continue;
             }
 
@@ -1417,23 +1424,23 @@ public class WsUtil {
                 } else {
                     // protocols specified; handlers are for only these protocols
                     String specifiedProtocols = hc.getProtocolBindings();
-                    if ((specifiedProtocols.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (specifiedProtocols.indexOf(WebServiceEndpoint.XML_TOKEN) != -1)) {
+                    if ((specifiedProtocols.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (specifiedProtocols.indexOf(XML_TOKEN) != -1)) {
                         protocols.add(HTTPBinding.HTTP_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP11HTTP_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP11_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP11_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP11HTTP_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP12HTTP_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP12_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP12_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP12HTTP_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP11HTTP_MTOM_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP11_MTOM_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP11_MTOM_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP11HTTP_MTOM_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP12HTTP_MTOM_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP12_MTOM_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP12_MTOM_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP12HTTP_MTOM_BINDING);
                     }
                 }

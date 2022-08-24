@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.deployment.node;
 
+import org.glassfish.deployment.common.Descriptor;
 import org.jvnet.hk2.annotations.Contract;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
@@ -25,10 +26,12 @@ import org.xml.sax.Attributes;
  * This interface defines the protocol associated with all the nodes.
  * An XML node is responsible for reading the XML file into a object representation
  *
+ * @param <T> XML {@link Descriptor} type.
+ *
  * @author Jerome Dochez
  */
 @Contract
-public interface XMLNode<T> {
+public interface XMLNode<T/* extends Descriptor*/> { // FIXME: az budu vedet, kde co je
 
     /**
      * notification of the start of an XML element tag in the processed

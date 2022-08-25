@@ -725,7 +725,6 @@
                             <pattern>connectors/descriptors/src/main/resources/glassfish/lib/schemas/</pattern>
                             <pattern>admingui/war/src/main/webapp/3rd-party-license</pattern>
                             <pattern>packager/legal/</pattern>
-                            <pattern>common/annotation-framework/src/main/java/org/glassfish/apf/skip-annotation-class-list</pattern>
                             <pattern>admingui/common/src/main/resources/applications/appEdit/</pattern>
                             <pattern>.layout</pattern>
                             <pattern>admingui/war/src/main/webapp/j_security_check</pattern>

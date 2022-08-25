@@ -28,8 +28,9 @@ import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,9 +53,10 @@ public class LoggingRestITest {
                 reader.transferTo(buffer);
                 JSONObject json = new JSONObject(buffer.toString());
                 JSONArray array = json.getJSONArray("InstanceLogFileNames");
+                // Depends on the order of tests, there may be rolled file too.
                 assertAll(
-                    () -> assertThat("InstanceLogFileNames", array.length(), equalTo(1)),
-                    () -> assertThat(array.get(0), equalTo("server.log"))
+                    () -> assertThat("InstanceLogFileNames", array.length(), greaterThanOrEqualTo(1)),
+                    () -> assertThat(array.get(0).toString(), startsWith("server.log"))
                 );
             }
         } finally {

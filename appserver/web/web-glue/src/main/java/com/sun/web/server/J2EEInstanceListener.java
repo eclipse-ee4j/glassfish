@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,17 +17,32 @@
 
 package com.sun.web.server;
 
+import static com.sun.enterprise.security.integration.SecurityConstants.WEB_PRINCIPAL_CLASS;
+import static com.sun.enterprise.util.Utility.isOneOf;
+import static java.security.Policy.getPolicy;
+import static java.text.MessageFormat.format;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_DESTROY_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_FILTER_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_INIT_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.AFTER_SERVICE_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_FILTER_EVENT;
+import static org.apache.catalina.InstanceEvent.EventType.BEFORE_SERVICE_EVENT;
+import static org.glassfish.web.LogFacade.EXCEPTION_DURING_HANDLE_EVENT;
+import static org.glassfish.web.LogFacade.NO_SERVER_CONTEXT;
+import static org.glassfish.web.LogFacade.SECURITY_CONTEXT_FAILED;
+import static org.glassfish.web.LogFacade.SECURITY_CONTEXT_OBTAINED;
+
 import java.security.AccessControlException;
 import java.security.AccessController;
-import java.security.Policy;
 import java.security.Principal;
 import java.security.PrivilegedAction;
-import java.security.ProtectionDomain;
-import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//END OF IASRI 4660742
+
+import javax.security.auth.AuthPermission;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.InstanceEvent;
@@ -48,7 +63,6 @@ import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
 import com.sun.enterprise.security.integration.AppServSecurityContext;
 import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.security.integration.SecurityConstants;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.web.WebComponentInvocation;
 import com.sun.enterprise.web.WebModule;
@@ -61,39 +75,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * This class implements the Tomcat InstanceListener interface and
- * handles the INIT,DESTROY and SERVICE, FILTER events.
+ * This class implements the Tomcat InstanceListener interface and handles the INIT,DESTROY and SERVICE, FILTER events.
+ *
  * @author Vivek Nagar
  * @author Tony Ng
  */
 public final class J2EEInstanceListener implements InstanceListener {
 
     private static final Logger _logger = LogFacade.getLogger();
-
     private static final ResourceBundle _rb = _logger.getResourceBundle();
 
-    private InvocationManager im;
-    private JavaEETransactionManager tm;
-    private InjectionManager injectionMgr;
-    private boolean initialized = false;
+    private static AuthPermission doAsPrivilegedPerm = new AuthPermission("doAsPrivileged");
 
+    private InvocationManager invocationManager;
+    private JavaEETransactionManager eeTransactionManager;
+    private InjectionManager injectionManager;
     private AppServSecurityContext securityContext;
+
+    private boolean initialized;
 
     public J2EEInstanceListener() {
     }
 
+    @Override
     public void instanceEvent(InstanceEvent event) {
         Context context = (Context) event.getWrapper().getParent();
         if (!(context instanceof WebModule)) {
             return;
         }
-        WebModule wm = (WebModule)context;
-        init(wm);
+
+        WebModule webModule = (WebModule) context;
+        init(webModule);
 
         InstanceEvent.EventType eventType = event.getType();
-        if(_logger.isLoggable(Level.FINEST)) {
-            _logger.log(Level.FINEST, LogFacade.INSTANCE_EVENT, eventType);
-        }
+        _logger.log(Level.FINEST, LogFacade.INSTANCE_EVENT, eventType);
+
         if (eventType.isBefore) {
             handleBeforeEvent(event, eventType);
         } else {
@@ -101,32 +117,30 @@ public final class J2EEInstanceListener implements InstanceListener {
         }
     }
 
-    private synchronized void init(WebModule wm) {
+    private synchronized void init(WebModule webModule) {
         if (initialized) {
             return;
         }
-        ServerContext serverContext = wm.getServerContext();
-        if (serverContext == null) {
-            String msg = _rb.getString(LogFacade.NO_SERVER_CONTEXT);
-            msg = MessageFormat.format(msg, wm.getName());
-            throw new IllegalStateException(msg);
-        }
-        ServiceLocator services = serverContext.getDefaultServices();
-        im = services.getService(InvocationManager.class);
-        tm = getJavaEETransactionManager(services);
-        injectionMgr = services.getService(InjectionManager.class);
-        initialized = true;
 
-        securityContext = serverContext.getDefaultServices().getService(AppServSecurityContext.class);
-        if (securityContext != null) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, LogFacade.SECURITY_CONTEXT_OBTAINED, securityContext);
-            }
-        } else {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, LogFacade.SECURITY_CONTEXT_FAILED);
-            }
+        ServerContext serverContext = webModule.getServerContext();
+        if (serverContext == null) {
+            throw new IllegalStateException(format(_rb.getString(NO_SERVER_CONTEXT), webModule.getName()));
         }
+
+        ServiceLocator services = serverContext.getDefaultServices();
+
+        invocationManager = services.getService(InvocationManager.class);
+        eeTransactionManager = getJavaEETransactionManager(services);
+        injectionManager = services.getService(InjectionManager.class);
+        securityContext = services.getService(AppServSecurityContext.class);
+
+        if (securityContext != null) {
+            _logger.log(FINE, SECURITY_CONTEXT_OBTAINED, securityContext);
+        } else {
+            _logger.log(FINE, SECURITY_CONTEXT_FAILED);
+        }
+
+        initialized = true;
     }
 
     private void handleBeforeEvent(InstanceEvent event, InstanceEvent.EventType eventType) {
@@ -134,263 +148,219 @@ public final class J2EEInstanceListener implements InstanceListener {
         if (!(context instanceof WebModule)) {
             return;
         }
-        WebModule wm = (WebModule)context;
+
+        WebModule webModule = (WebModule) context;
 
         Object instance;
-        if (eventType == InstanceEvent.EventType.BEFORE_FILTER_EVENT) {
+        if (eventType == BEFORE_FILTER_EVENT) {
             instance = event.getFilter();
         } else {
             instance = event.getServlet();
         }
 
-        // set security context
-        // BEGIN IAfSRI 4688449
-        //try {
-        Realm ra = context.getRealm();
-        /** IASRI 4713234
-        if (ra != null) {
-            HttpServletRequest request =
-                (HttpServletRequest) event.getRequest();
-            if (request != null && request.getUserPrincipal() != null) {
-                WebPrincipal prin =
-                    (WebPrincipal) request.getUserPrincipal();
-                // ra.authenticate(prin);
-
-                // It is inefficient to call authenticate just to set
-                // sec.ctx.  Instead, WebPrincipal modified to keep the
-                // previously created secctx, and set it here directly.
-
-                SecurityContext.setCurrent(prin.getSecurityContext());
-            }
-        }
-        **/
-        // START OF IASRI 4713234
-        if (ra != null) {
+        Realm realm = context.getRealm();
+        if (realm != null) {
 
             ServletRequest request = event.getRequest();
-            if (request != null && request instanceof HttpServletRequest) {
+            if (request instanceof HttpServletRequest) {
 
-                HttpServletRequest hreq = (HttpServletRequest)request;
-                HttpServletRequest base = hreq;
+                HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+                HttpServletRequest baseHttpServletRequest = httpServletRequest;
 
-                Principal prin = hreq.getUserPrincipal();
-                Principal basePrincipal = prin;
+                Principal principal = httpServletRequest.getUserPrincipal();
+                Principal basePrincipal = principal;
 
                 boolean wrapped = false;
 
-                while (prin != null) {
-
-                    if (base instanceof ServletRequestWrapper) {
+                while (principal != null) {
+                    if (baseHttpServletRequest instanceof ServletRequestWrapper) {
                         // unwarp any wrappers to find the base object
-                        ServletRequest sr =
-                            ((ServletRequestWrapper) base).getRequest();
+                        ServletRequest servletRequest = ((ServletRequestWrapper) baseHttpServletRequest).getRequest();
 
-                        if (sr instanceof HttpServletRequest) {
-
-                            base = (HttpServletRequest) sr;
+                        if (servletRequest instanceof HttpServletRequest) {
+                            baseHttpServletRequest = (HttpServletRequest) servletRequest;
                             wrapped = true;
                             continue;
                         }
                     }
 
                     if (wrapped) {
-                        basePrincipal = base.getUserPrincipal();
+                        basePrincipal = baseHttpServletRequest.getUserPrincipal();
                     }
 
-                    else if (base instanceof RequestFacade) {
-                        // try to avoid the getUnWrappedCoyoteRequest call
-                        // when we can identify see we have the texact class.
-                        if (base.getClass() != RequestFacade.class) {
-                            basePrincipal = ((RequestFacade)base).
-                                getUnwrappedCoyoteRequest().getUserPrincipal();
+                    else if (baseHttpServletRequest instanceof RequestFacade) {
+                        // Try to avoid the getUnWrappedCoyoteRequest call
+                        // when we can identify see we have the exact class.
+                        if (baseHttpServletRequest.getClass() != RequestFacade.class) {
+                            basePrincipal = ((RequestFacade) baseHttpServletRequest).getUnwrappedCoyoteRequest().getUserPrincipal();
                         }
                     } else {
-                        basePrincipal = base.getUserPrincipal();
+                        basePrincipal = baseHttpServletRequest.getUserPrincipal();
                     }
 
                     break;
                 }
 
-                if (prin != null && prin == basePrincipal
-                    && prin.getClass().getName().equals(SecurityConstants.WEB_PRINCIPAL_CLASS)) {
-                    securityContext.setSecurityContextWithPrincipal(prin);
-                } else if (prin != basePrincipal) {
+                if (principal != null && principal == basePrincipal && principal.getClass().getName().equals(WEB_PRINCIPAL_CLASS)) {
+                    securityContext.setSecurityContextWithPrincipal(principal);
+                } else if (principal != basePrincipal) {
 
-                    // the wrapper has overridden getUserPrincipal
+                    // The wrapper has overridden getUserPrincipal
                     // reject the request if the wrapper does not have
                     // the necessary permission.
 
-                    checkObjectForDoAsPermission(hreq);
-                    securityContext.setSecurityContextWithPrincipal(prin);
-
+                    checkObjectForDoAsPermission(httpServletRequest);
+                    securityContext.setSecurityContextWithPrincipal(principal);
                 }
 
             }
         }
-        // END OF IASRI 4713234
-        // END IASRI 4688449
 
-        ComponentInvocation inv;
+        ComponentInvocation componentInvocation;
         if (eventType == InstanceEvent.EventType.BEFORE_INIT_EVENT) {
-          // The servletName is not avaiable from servlet instance before servlet init.
-          // We have to pass the servletName to ComponentInvocation so it can be retrieved
-          // in RealmAdapter.getServletName().
-          inv = new WebComponentInvocation(wm, instance, event.getWrapper().getName());
+            // The servletName is not avilable from servlet instance before servlet init.
+            // We have to pass the servletName to ComponentInvocation so it can be retrieved
+            // in RealmAdapter.getServletName().
+            componentInvocation = new WebComponentInvocation(webModule, instance, event.getWrapper().getName());
         } else {
-          inv = new WebComponentInvocation(wm, instance);
+            componentInvocation = new WebComponentInvocation(webModule, instance);
         }
 
         try {
-            im.preInvoke(inv);
-            if (eventType == InstanceEvent.EventType.BEFORE_SERVICE_EVENT) {
+            invocationManager.preInvoke(componentInvocation);
+            if (eventType == BEFORE_SERVICE_EVENT) {
                 // Emit monitoring probe event
-                wm.beforeServiceEvent(event.getWrapper().getName());
-                // enlist resources with TM for service method
-                if (tm != null) {
-                    tm.enlistComponentResources();
+                webModule.beforeServiceEvent(event.getWrapper().getName());
+
+                // Enlist resources with the transaction manager for service method
+                if (eeTransactionManager != null) {
+                    eeTransactionManager.enlistComponentResources();
                 }
             }
         } catch (Exception ex) {
-            im.postInvoke(inv); // See CR 6920895
-            String msg = _rb.getString(LogFacade.EXCEPTION_DURING_HANDLE_EVENT);
-            msg = MessageFormat.format(msg, new Object[] { eventType, wm });
-            throw new RuntimeException(msg, ex);
+            invocationManager.postInvoke(componentInvocation); // See CR 6920895
+
+            throw new RuntimeException(
+                format(_rb.getString(EXCEPTION_DURING_HANDLE_EVENT), new Object[] { eventType, webModule }),
+                ex);
         }
     }
 
 
-    private static javax.security.auth.AuthPermission doAsPrivilegedPerm =
-        new javax.security.auth.AuthPermission("doAsPrivileged");
 
-
-    private static void checkObjectForDoAsPermission(final Object o)
-            throws AccessControlException{
-
+    private static void checkObjectForDoAsPermission(final Object o) throws AccessControlException {
         if (System.getSecurityManager() != null) {
             AccessController.doPrivileged(new PrivilegedAction<Void>() {
+                @Override
                 public Void run() {
-                    ProtectionDomain pD = o.getClass().getProtectionDomain();
-                    Policy p = Policy.getPolicy();
-                    if (!p.implies(pD,doAsPrivilegedPerm)) {
-                        throw new AccessControlException
-                        ("permission required to override getUserPrincipal",
-                            doAsPrivilegedPerm);
+                    if (!getPolicy().implies(o.getClass().getProtectionDomain(), doAsPrivilegedPerm)) {
+                        throw new AccessControlException("permission required to override getUserPrincipal", doAsPrivilegedPerm);
                     }
+
                     return null;
                 }
             });
         }
     }
 
-    private void handleAfterEvent(InstanceEvent event,
-                InstanceEvent.EventType eventType) {
-
+    private void handleAfterEvent(InstanceEvent event, InstanceEvent.EventType eventType) {
         Wrapper wrapper = event.getWrapper();
         Context context = (Context) wrapper.getParent();
         if (!(context instanceof WebModule)) {
             return;
         }
-        WebModule wm = (WebModule)context;
+
+        WebModule webModule = (WebModule) context;
 
         Object instance;
-        if (eventType == InstanceEvent.EventType.AFTER_FILTER_EVENT) {
+        if (eventType == AFTER_FILTER_EVENT) {
             instance = event.getFilter();
         } else {
             instance = event.getServlet();
         }
+
         if (instance == null) {
             return;
         }
 
         // Emit monitoring probe event
         if (instance instanceof Servlet) {
-            if (eventType == InstanceEvent.EventType.AFTER_INIT_EVENT) {
-                wm.servletInitializedEvent(wrapper.getName());
-            } else if (eventType == InstanceEvent.EventType.AFTER_DESTROY_EVENT) {
-                wm.servletDestroyedEvent(wrapper.getName());
+            if (eventType == AFTER_INIT_EVENT) {
+                webModule.servletInitializedEvent(wrapper.getName());
+            } else if (eventType == AFTER_DESTROY_EVENT) {
+                webModule.servletDestroyedEvent(wrapper.getName());
             }
         }
 
         // Must call InjectionManager#destroyManagedObject WITHIN
         // EE invocation context
         try {
-            if (eventType == InstanceEvent.EventType.AFTER_DESTROY_EVENT &&
-                    !DefaultServlet.class.equals(instance.getClass()) &&
-                    !JspServlet.class.equals(instance.getClass())) {
-                injectionMgr.destroyManagedObject(instance, false);
+            if (eventType == AFTER_DESTROY_EVENT && !DefaultServlet.class.equals(instance.getClass()) && !JspServlet.class.equals(instance.getClass())) {
+                injectionManager.destroyManagedObject(instance, false);
             }
         } catch (InjectionException ie) {
-            String msg = _rb.getString(LogFacade.EXCEPTION_DURING_HANDLE_EVENT);
-            msg = MessageFormat.format(msg, new Object[] { eventType, wm });
-            _logger.log(Level.SEVERE, msg, ie);
+            _logger.log(Level.SEVERE, format(_rb.getString(EXCEPTION_DURING_HANDLE_EVENT), new Object[] { eventType, webModule }), ie);
         }
 
-        ComponentInvocation inv = new WebComponentInvocation(wm, instance);
+        ComponentInvocation componentInvocation = new WebComponentInvocation(webModule, instance);
+
         try {
-            im.postInvoke(inv);
+            invocationManager.postInvoke(componentInvocation);
         } catch (Exception ex) {
-            String msg = _rb.getString(LogFacade.EXCEPTION_DURING_HANDLE_EVENT);
-            msg = MessageFormat.format(msg, new Object[] { eventType, wm });
-            throw new RuntimeException(msg, ex);
+            throw new RuntimeException(format(_rb.getString(EXCEPTION_DURING_HANDLE_EVENT), new Object[] { eventType, webModule }), ex);
         } finally {
-            if (eventType == InstanceEvent.EventType.AFTER_DESTROY_EVENT) {
-                if (tm != null) {
-                    tm.componentDestroyed(instance, inv);
+            if (eventType == AFTER_DESTROY_EVENT) {
+                if (eeTransactionManager != null) {
+                    eeTransactionManager.componentDestroyed(instance, componentInvocation);
                 }
-            } else if (eventType == InstanceEvent.EventType.AFTER_FILTER_EVENT ||
-                    eventType == InstanceEvent.EventType.AFTER_SERVICE_EVENT) {
+            } else if (isOneOf(eventType, AFTER_FILTER_EVENT, AFTER_SERVICE_EVENT)) {
                 // Emit monitoring probe event
-                if (eventType == InstanceEvent.EventType.AFTER_SERVICE_EVENT) {
+                if (eventType == AFTER_SERVICE_EVENT) {
                     ServletResponse response = event.getResponse();
                     int status = -1;
-                    if (response != null && response instanceof HttpServletResponse) {
+                    if (response instanceof HttpServletResponse) {
                         status = ((HttpServletResponse) response).getStatus();
                     }
-                    wm.afterServiceEvent(wrapper.getName(), status);
+                    webModule.afterServiceEvent(wrapper.getName(), status);
                 }
 
-                // check it's top level invocation
-                // BEGIN IASRI# 4646060
-                if (im.getCurrentInvocation() == null) {
-                // END IASRI# 4646060
+                // Check it's top level invocation
+                if (invocationManager.getCurrentInvocation() == null) {
                     try {
-                        // clear security context
-                        Realm ra = context.getRealm();
-                        if (ra != null && (ra instanceof RealmInitializer)) {
-                            //cleanup not only securitycontext but also PolicyContext
-                            ((RealmInitializer)ra).logout();
+                        // Clear security context
+                        Realm realm = context.getRealm();
+                        if (realm instanceof RealmInitializer) {
+                            // Cleanup not only securitycontext but also PolicyContext
+                            ((RealmInitializer) realm).logout();
                         }
                     } catch (Exception ex) {
-                        String msg = _rb.getString(LogFacade.EXCEPTION_DURING_HANDLE_EVENT);
-                        msg = MessageFormat.format(msg, new Object[] { eventType, wm });
-                        _logger.log(Level.SEVERE, msg,  ex);
+                        _logger.log(SEVERE, format(_rb.getString(EXCEPTION_DURING_HANDLE_EVENT), new Object[] { eventType, webModule }), ex);
                     }
 
-                    if (tm != null) {
+                    if (eeTransactionManager != null) {
                         try {
-                            if (tm.getTransaction() != null) {
-                                tm.rollback();
+                            if (eeTransactionManager.getTransaction() != null) {
+                                eeTransactionManager.rollback();
                             }
-                            tm.cleanTxnTimeout();
-                        } catch (Exception ex) {}
+                            eeTransactionManager.cleanTxnTimeout();
+                        } catch (Exception ex) {
+                        }
                     }
                 }
 
-                if (tm != null) {
-                    tm.componentDestroyed(instance, inv);
+                if (eeTransactionManager != null) {
+                    eeTransactionManager.componentDestroyed(instance, componentInvocation);
                 }
             }
         }
     }
 
     private JavaEETransactionManager getJavaEETransactionManager(ServiceLocator services) {
-        JavaEETransactionManager tm = null;
-        ServiceHandle<JavaEETransactionManager> inhabitant = services.getServiceHandle(JavaEETransactionManager.class);
-        if (inhabitant != null && inhabitant.isActive()) {
-            tm = inhabitant.getService();
+        ServiceHandle<JavaEETransactionManager> serviceHandle = services.getServiceHandle(JavaEETransactionManager.class);
+        if (serviceHandle != null && serviceHandle.isActive()) {
+            return serviceHandle.getService();
         }
 
-        return tm;
+        return null;
     }
 }
-

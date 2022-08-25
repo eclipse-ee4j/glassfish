@@ -101,7 +101,7 @@
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
         <soteria.version>3.0.0</soteria.version>
         <exousia.version>2.1.0</exousia.version>
-        <nimbus.version>9.23</nimbus.version>
+        <nimbus.version>9.24.2</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -157,7 +157,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.1</microprofile.config-api.version>
-        <helidon-config.version>3.0.0</helidon-config.version>
+        <helidon-config.version>3.0.1</helidon-config.version>
 
         <!-- Admin console components -->
 

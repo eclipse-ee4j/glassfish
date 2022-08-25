@@ -17,11 +17,10 @@
 
 package org.glassfish.apf;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
+import java.text.MessageFormat;
 
 /**
  * Instances encapsulate all information necessary for an AnnotationHandler
@@ -42,19 +41,17 @@ import java.lang.reflect.AnnotatedElement;
  */
 public class AnnotationInfo {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AnnotationInfo.class);
-
     // the annotated element
-    final private AnnotatedElement annotatedElement;
+    private final AnnotatedElement annotatedElement;
 
     // the annotation
-    final private Annotation annotation;
+    private final Annotation annotation;
 
     // the processing context
-    final private ProcessingContext context;
+    private final ProcessingContext context;
 
     // the element type
-    final private ElementType type;
+    private final ElementType type;
 
     /**
      * Creates a new instance of AnnotationInfo with all the information
@@ -64,13 +61,13 @@ public class AnnotationInfo {
      * @param element the annotated element
      * @param annotation the annotation
      */
-    public AnnotationInfo(ProcessingContext context, AnnotatedElement element, Annotation annotation,
-        ElementType type) {
+    public AnnotationInfo(ProcessingContext context, AnnotatedElement element, Annotation annotation, ElementType type) {
         this.context = context;
         this.annotatedElement = element;
         this.annotation = annotation;
         this.type = type;
     }
+
 
     /**
      * @return the annotated element instance
@@ -79,13 +76,14 @@ public class AnnotationInfo {
         return annotatedElement;
     }
 
+
     /**
      * @return the annotation instance
      */
     public Annotation getAnnotation() {
-
         return annotation;
     }
+
 
     /**
      * @return the processing context
@@ -94,6 +92,7 @@ public class AnnotationInfo {
         return context;
     }
 
+
     /**
      * @return the annotated element ElementType
      */
@@ -101,8 +100,10 @@ public class AnnotationInfo {
         return type;
     }
 
+
     @Override
     public String toString() {
-        return localStrings.getLocalString("annotatedinfo.string", "annotation [{0}] on annotated element [{1}] of type [{2}]", annotation, annotatedElement, type);
+        return MessageFormat.format("Annotation [{0}] on annotated element [{1}] of type [{2}]", annotation,
+            annotatedElement, type);
     }
 }

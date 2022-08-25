@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,13 @@
 
 package org.glassfish.apf.impl;
 
-import org.glassfish.apf.ErrorHandler;
+import java.text.MessageFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.glassfish.apf.ErrorHandler;
 
 /**
  * Default implementation of the ErrorHandler
@@ -30,7 +32,7 @@ import java.util.logging.Level;
  */
 public class DefaultErrorHandler implements ErrorHandler {
 
-    Logger logger;
+    private final Logger logger;
 
     /**
      * Creates a new ErrorHandler with the default logger
@@ -39,72 +41,61 @@ public class DefaultErrorHandler implements ErrorHandler {
         logger = AnnotationUtils.getLogger();
     }
 
-    /**
-     * Creates a new ErrorHandler with the provided looger;
-     */
-    public DefaultErrorHandler(Logger logger){
-        this.logger = logger;
-    }
 
     /**
      * Receive notication of a fine error message
+     *
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing
+     * @throws AnnotationProcessorException exception to stop the annotation processing
      */
-    public void fine(AnnotationProcessorException ape) throws
-            AnnotationProcessorException {
-
-        if (logger.isLoggable(Level.FINE)){
-            AnnotationInfo info = ape.getLocator();
-            if (info==null){
+    @Override
+    public void fine(AnnotationProcessorException ape) throws AnnotationProcessorException {
+        if (logger.isLoggable(Level.FINE)) {
+            AnnotationInfo info = ape.getAnnotationInfo();
+            if (info == null) {
                 logger.fine(ape.getMessage());
-            } else{
-                logger.fine(AnnotationUtils.getLocalString(
-                    "enterprise.deployment.annotation.error",
-                    "{2}\n symbol: {0}\n location: {1}\n\n",
-                    new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
+            } else {
+                logger.fine(MessageFormat.format("{2}\n symbol: {0}\n location: {1}\n\n",
+                    new Object[] {info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
             }
         }
-
     }
+
 
     /**
      * Receive notification of a warning
+     *
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing
+     * @throws AnnotationProcessorException exception to stop the annotation processing
      */
-    public void warning(AnnotationProcessorException ape) throws
-            AnnotationProcessorException {
-
-        if (logger.isLoggable(Level.WARNING)){
-            AnnotationInfo info = ape.getLocator();
-            if (info==null){
+    @Override
+    public void warning(AnnotationProcessorException ape) throws AnnotationProcessorException {
+        if (logger.isLoggable(Level.WARNING)) {
+            AnnotationInfo info = ape.getAnnotationInfo();
+            if (info == null) {
                 logger.warning(ape.getMessage());
-            } else{
-                logger.warning(AnnotationUtils.getLocalString(
-                    "enterprise.deployment.annotation.error",
-                    "{2}\n symbol: {0}\n location: {1}\n\n",
-                    new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
+            } else {
+                logger.warning(MessageFormat.format("{2}\n symbol: {0}\n location: {1}\n\n",
+                    new Object[] {info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
             }
         }
     }
 
+
     /**
      * Receive notification of an error
+     *
      * @param ape The error information
-     * @throws amy exception to stop the annotation processing
+     * @throws AnnotationProcessorException exception to stop the annotation processing
      */
-    public void error(AnnotationProcessorException ape) throws
-            AnnotationProcessorException {
-
-        AnnotationInfo info = ape.getLocator();
-        if (info==null){
+    @Override
+    public void error(AnnotationProcessorException ape) throws AnnotationProcessorException {
+        AnnotationInfo info = ape.getAnnotationInfo();
+        if (info == null) {
             logger.severe(ape.getMessage());
-        } else{
-            logger.severe(AnnotationUtils.getLocalString(
-                "enterprise.deployment.annotation.error",
-                "{2}\n symbol: {0} location: {1}\n\n",
-                new Object[] { info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
+        } else {
+            logger.severe(MessageFormat.format("{2}\n symbol: {0} location: {1}\n\n",
+                new Object[] {info.getElementType(), info.getAnnotatedElement(), ape.getMessage()}));
         }
     }
 }

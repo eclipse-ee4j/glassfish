@@ -49,7 +49,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXNotRecognizedException;
 import org.xml.sax.SAXParseException;
 
-import static com.sun.enterprise.deployment.node.SaxParserHandler.JAXP_SCHEMA_LANGUAGE;
 import static com.sun.enterprise.deployment.util.DOLUtils.INVALILD_DESCRIPTOR_SHORT;
 
 /**
@@ -62,8 +61,10 @@ import static com.sun.enterprise.deployment.util.DOLUtils.INVALILD_DESCRIPTOR_SH
  */
 public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
-    public final static String FULL_VALIDATION = "full";
-    public final static String PARSING_VALIDATION = "parsing";
+    private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+
+    private static final String FULL_VALIDATION = "full";
+    private static final String PARSING_VALIDATION = "parsing";
 
     // should we validate the XML ?
     private boolean xmlValidation = true;

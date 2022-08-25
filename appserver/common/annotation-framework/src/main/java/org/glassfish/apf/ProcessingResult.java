@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 package org.glassfish.apf;
 
-import java.util.Map;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Map;
 
 /**
  * This interface encapsulates all AnnotatedElements processing result by
@@ -34,11 +35,11 @@ public interface ProcessingResult {
      * @return a Map indexed by all AnnotatedElements processed and each
      * AnnotatedElement HandlerProcessingResult as values.
      */
-    public Map<AnnotatedElement,HandlerProcessingResult> getResults();
+    Map<AnnotatedElement,HandlerProcessingResult> getResults();
 
     /**
      * @return the overall processing result, which is usually the most
      * severe ResultType for all the annotated elements processing
      */
-    public ResultType getOverallResult();
+    ResultType getOverallResult();
 }

@@ -39,6 +39,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,7 +82,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Inject
     private ServerEnvironment env;
 
-    private WebBundleDescriptorImpl defaultWebXmlBundleDescriptor = null;
+    private WebBundleDescriptorImpl defaultWebXmlBundleDescriptor;
 
     /**
      * @return the  module type handled by this archivist
@@ -99,13 +100,11 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      * for a particular Archivst type
      */
     public void setDescriptor(Application descriptor) {
-        java.util.Set webBundles = descriptor.getBundleDescriptors(WebBundleDescriptorImpl.class);
-        if (webBundles.size()>0) {
-            this.descriptor = (WebBundleDescriptorImpl) webBundles.iterator().next();
-            if (this.descriptor.getModuleDescriptor().isStandalone()) {
-                return;
-            } else {
-                this.descriptor=null;
+        Set<WebBundleDescriptorImpl> webBundles = descriptor.getBundleDescriptors(WebBundleDescriptorImpl.class);
+        if (!webBundles.isEmpty()) {
+            this.descriptor = webBundles.iterator().next();
+            if (!this.descriptor.getModuleDescriptor().isStandalone()) {
+                this.descriptor = null;
             }
         }
     }
@@ -317,14 +316,13 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
                 // all web fragment metadata-complete
                 // should be overridden and be true also
                 if (descriptor.isFullAttribute()) {
-                  wfDesc.setFullAttribute(
-                      String.valueOf(descriptor.isFullAttribute()));
+                    wfDesc.setFullAttribute(String.valueOf(descriptor.isFullAttribute()));
                 }
                 super.readAnnotations(archive, wfDesc, localExtensions);
             }
 
             // scan manifest classpath
-            ModuleScanner scanner = getScanner();
+            ModuleScanner<?> scanner = getScanner();
             if (scanner instanceof WarScanner) {
                 ((WarScanner)scanner).setScanOtherLibraries(true);
                 readAnnotations(archive, descriptor, localExtensions, scanner);
@@ -360,7 +358,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
 
             for (Object lib2 : libs) {
                 String lib = (String)lib2;
-                Archivist wfArchivist = new WebFragmentArchivist(this, habitat);
+                Archivist<?> wfArchivist = new WebFragmentArchivist(this, habitat);
                 wfArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
                 wfArchivist.setRuntimeXMLValidationLevel(
                         this.getRuntimeXMLValidationLevel());

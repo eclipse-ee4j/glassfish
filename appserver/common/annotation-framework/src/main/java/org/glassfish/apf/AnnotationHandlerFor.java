@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,21 @@
 
 package org.glassfish.apf;
 
-import org.glassfish.hk2.api.Metadata;
-import org.jvnet.hk2.annotations.Service;
+import jakarta.inject.Qualifier;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import jakarta.inject.Qualifier;
+import org.glassfish.hk2.api.Metadata;
+import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * The {@link Annotation} handled by this handler.
+ * <p>
  * Normally goes with {@link Service} annotation, and this annotation must be placed
  * on a class that implements {@link AnnotationHandler}.
  *
@@ -38,6 +41,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target(ElementType.TYPE)
 @Qualifier
 public @interface AnnotationHandlerFor {
+
+    /**
+     * @return the {@link Annotation} handled by this handler.
+     */
     @Metadata(AnnotationHandler.ANNOTATION_HANDLER_METADATA)
     Class<? extends Annotation> value();
 }

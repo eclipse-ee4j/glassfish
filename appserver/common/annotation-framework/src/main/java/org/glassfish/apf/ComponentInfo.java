@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,41 +15,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ComponentInfo.java
- *
- * Created on November 1, 2005, 5:23 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package org.glassfish.apf;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
- * This class encapsulates information about a component (usually a Java EE
- * component).
- * @author Jerome Dochez
+ * This class encapsulates information about a component (usually a Jakarta EE component).
+ * @author Jerome Dochez 2005
  */
 public interface ComponentInfo {
 
-    /*
+    /**
      * @return the list of constructors
      */
-    public Constructor[] getConstructors();
+    Constructor<?>[] getConstructors();
 
-    /*
+    /**
      * @return the list of public methods
      */
-    public Method[] getMethods();
+    Method[] getMethods();
 
-    /*
+    /**
      * @return the list of public fields
      */
-    public Field[] getFields();
+    Field[] getFields();
 
 }

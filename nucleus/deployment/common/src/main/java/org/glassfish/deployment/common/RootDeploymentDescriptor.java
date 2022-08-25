@@ -75,7 +75,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     /**
      * contains the information for this module (like it's module name)
      */
-    protected ModuleDescriptor moduleDescriptor;
+    protected ModuleDescriptor<RootDeploymentDescriptor> moduleDescriptor;
 
     /**
      * Construct a new RootDeploymentDescriptor
@@ -213,13 +213,13 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     /**
      * @return the module descriptor for this bundle
      */
-    public ModuleDescriptor getModuleDescriptor() {
+    public <T extends RootDeploymentDescriptor> ModuleDescriptor<T> getModuleDescriptor() {
         if (moduleDescriptor == null) {
             moduleDescriptor = new ModuleDescriptor<>();
             moduleDescriptor.setModuleType(getModuleType());
             moduleDescriptor.setDescriptor(this);
         }
-        return moduleDescriptor;
+        return (ModuleDescriptor<T>) moduleDescriptor;
     }
 
 
@@ -228,7 +228,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      *
      * @param descriptor for the module
      */
-    public void setModuleDescriptor(ModuleDescriptor descriptor) {
+    public void setModuleDescriptor(ModuleDescriptor<RootDeploymentDescriptor> descriptor) {
         moduleDescriptor = descriptor;
         for (List<RootDeploymentDescriptor> extByType : this.extensions.values()) {
             if (extByType != null) {

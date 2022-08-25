@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 package org.glassfish.apf;
 
-import java.util.Map;
 import java.lang.annotation.Annotation;
+import java.util.Map;
 
 /**
  * This interface defines the result of an annotation processing
@@ -41,7 +42,7 @@ public interface HandlerProcessingResult {
      * processing for each processed annotation types.
      * @return the map of processed annoation types and result.
      */
-    public Map<Class<? extends Annotation>,ResultType> processedAnnotations();
+    Map<Class<? extends Annotation>,ResultType> processedAnnotations();
 
     /**
      * @return the overall result for this handler processing. Since handlers
@@ -49,5 +50,5 @@ public interface HandlerProcessingResult {
      * the most severe error the haandler encountered while processing the
      * annotations.
      */
-     public ResultType getOverallResult();
+     ResultType getOverallResult();
 }

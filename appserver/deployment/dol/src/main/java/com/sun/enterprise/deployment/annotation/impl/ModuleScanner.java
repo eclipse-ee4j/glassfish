@@ -37,9 +37,9 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.zip.ZipException;
 
-import org.glassfish.apf.Scanner;
 import org.glassfish.apf.impl.JavaEEScanner;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;
 import org.glassfish.hk2.classmodel.reflect.AnnotationType;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
@@ -56,7 +56,8 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  *
  * @author Shing Wai Chan
  */
-public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<T> {
+// FIXME: broken hierarchy, inheritance
+public abstract class ModuleScanner<T extends Descriptor> extends JavaEEScanner<T> {
 
     private static final Logger LOG = DOLUtils.getDefaultLogger();
 
@@ -67,10 +68,10 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
         level = "SEVERE")
     private static final String ANNOTATION_SCANNING_EXCEPTION = "AS-DEPLOYMENT-00005";
 
-    @LogMessageInfo(message = "Adding {0} since {1} is annotated with {2}.", level = "INFO")
+    @LogMessageInfo(message = "Adding {0} since {1} is annotated with {2}.", level = "CONFIG")
     private static final String ANNOTATION_ADDED = "AS-DEPLOYMENT-00006";
 
-    @LogMessageInfo(message = "Adding {0} since it is implementing {1}.", level = "INFO")
+    @LogMessageInfo(message = "Adding {0} since it is implementing {1}.", level = "CONFIG")
     private static final String INTERFACE_ADDED = "AS-DEPLOYMENT-00007";
 
     @LogMessageInfo(
@@ -115,15 +116,51 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
 
     private boolean needScanAnnotation;
 
-    public void process(ReadableArchive archiveFile, T bundleDesc, ClassLoader classLoader, Parser parser)
+    /**
+     * This scanner will scan the archiveFile for annotation processing.
+     * @param archiveFile the archive to process
+     * @param descriptor existing bundle descriptor to add to
+     * @param classLoader classloader to load archive classes with.
+     */
+    public void process(ReadableArchive archiveFile, T descriptor, ClassLoader classLoader, Parser parser)
         throws IOException {
         File file = new File(archiveFile.getURI());
         setParser(parser);
-        process(file, bundleDesc, classLoader);
-        completeProcess(bundleDesc, archiveFile);
-        calculateResults(bundleDesc);
+        if (LOG.isLoggable(Level.CONFIG)) {
+            LOG.log(Level.CONFIG, "Processing file={0}, descriptor={1}, classLoader={2}",
+                new Object[] {archiveFile, descriptor, classLoader});
+        }
+        process(file, descriptor, classLoader);
+        completeProcess(descriptor, archiveFile);
+        calculateResults(descriptor);
     }
 
+
+
+    protected void setParser(Parser parser) {
+        if (parser == null) {
+            // if the passed in parser is null, it means no annotation scanning
+            // has been done yet, we need to construct a new parser
+            // and do the annotation scanning here
+            ParsingContext pc = new ParsingContext.Builder().executorService(getExecutorService()).build();
+            parser = new Parser(pc);
+            needScanAnnotation = true;
+        }
+        classParser = parser;
+    }
+
+
+    /**
+     * Scan the archive file and gather a list of classes
+     * that should be processed for anntoations
+     *
+     * @param archiveFile the archive file for scanning
+     * @param descriptor the bundle descriptor associated with this archive
+     * @param classLoader the classloader used to scan the annotation
+     * @throws IOException if the file cannot be read.
+     */
+    @Override
+    protected abstract void process(File archiveFile, T descriptor, ClassLoader classLoader) throws IOException;
 
     /**
      * Performs all additional work after the "process" method has finished.
@@ -132,16 +169,16 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
      * it from its overriding process method. All post-processing logic needs to be
      * collected in this one place.
      *
-     * @param bundleDescr
+     * @param descriptor
      * @param archive
      * @throws IOException
      */
-    protected void completeProcess(T bundleDescr, ReadableArchive archive) throws IOException {
-        addLibraryJars(bundleDescr, archive);
+    protected void completeProcess(T descriptor, ReadableArchive archive) throws IOException {
+        addLibraryJars(descriptor, archive);
     }
 
 
-    protected void calculateResults(T bundleDesc) {
+    protected void calculateResults(T descriptor) {
         try {
             classParser.awaitTermination();
         } catch (InterruptedException e) {
@@ -150,8 +187,8 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
         }
         ParsingContext context = classParser.getContext();
         final boolean isFullAttribute;
-        if (bundleDesc instanceof BundleDescriptor) {
-            isFullAttribute = ((BundleDescriptor) bundleDesc).isFullAttribute();
+        if (descriptor instanceof BundleDescriptor) {
+            isFullAttribute = ((BundleDescriptor) descriptor).isFullAttribute();
         } else {
             isFullAttribute = false;
         }
@@ -172,8 +209,8 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
                     // otherwise, use the annotated type directly.
                     Type t = (ae instanceof Member ? ((Member) ae).getDeclaringType() : (Type) ae);
                     if (t.wasDefinedIn(scannedURI)) {
-                        if (LOG.isLoggable(Level.FINE)) {
-                            LOG.log(Level.FINE, ANNOTATION_ADDED, new Object[] {t.getName(), ae.getName(), at.getName()});
+                        if (LOG.isLoggable(Level.CONFIG)) {
+                            LOG.log(Level.CONFIG, ANNOTATION_ADDED, new Object[] {t.getName(), ae.getName(), at.getName()});
                         }
                         entries.add(t.getName());
                     }
@@ -183,8 +220,8 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
                 // or is it an interface ?
                 InterfaceModel im = (InterfaceModel) type;
                 for (ClassModel cm : im.allImplementations()) {
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.log(Level.FINE, INTERFACE_ADDED, new Object[] {cm.getName(), im.getName()});
+                    if (LOG.isLoggable(Level.CONFIG)) {
+                        LOG.log(Level.CONFIG, INTERFACE_ADDED, new Object[] {cm.getName(), im.getName()});
                     }
                     entries.add(cm.getName());
                 }
@@ -329,18 +366,5 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
             return t;
         });
         return executorService;
-    }
-
-
-    protected void setParser(Parser parser) {
-        if (parser == null) {
-            // if the passed in parser is null, it means no annotation scanning
-            // has been done yet, we need to construct a new parser
-            // and do the annotation scanning here
-            ParsingContext pc = new ParsingContext.Builder().logger(LOG).executorService(getExecutorService()).build();
-            parser = new Parser(pc);
-            needScanAnnotation = true;
-        }
-        classParser = parser;
     }
 }

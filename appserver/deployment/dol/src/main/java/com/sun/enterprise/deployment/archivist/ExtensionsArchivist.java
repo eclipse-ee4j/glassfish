@@ -33,6 +33,7 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Contract;
 import org.xml.sax.SAXException;
@@ -123,7 +124,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
      */
     public void addExtension(RootDeploymentDescriptor root, RootDeploymentDescriptor extension) {
         root.addExtensionDescriptor(extension.getClass(), extension, null);
-        extension.setModuleDescriptor(root.getModuleDescriptor());
+        extension.setModuleDescriptor((ModuleDescriptor<RootDeploymentDescriptor>) root.getModuleDescriptor());
     }
 
 

@@ -21,6 +21,7 @@ import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.MultiReadableArchive;
+import com.sun.enterprise.deployment.util.DOLUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -32,6 +33,7 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.apf.impl.AnnotationUtils;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -60,14 +62,15 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 public class AppClientScanner extends ModuleScanner<ApplicationClientDescriptor> {
 
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+
     @Inject
     @Named("EJB")
     @Optional
     protected AnnotationTypesProvider ejbProvider;
 
     @Override
-    public void process(ReadableArchive archive, ApplicationClientDescriptor bundleDesc, ClassLoader classLoader,
-        Parser parser) throws IOException {
+    public void process(ReadableArchive archive, ApplicationClientDescriptor bundleDesc, ClassLoader classLoader, Parser parser) throws IOException {
         setParser(parser);
         doProcess(archive, bundleDesc, classLoader);
         completeProcess(bundleDesc, archive);
@@ -76,7 +79,7 @@ public class AppClientScanner extends ModuleScanner<ApplicationClientDescriptor>
 
 
     @Override
-    public void process(File archiveFile, ApplicationClientDescriptor bundleDesc, ClassLoader classLoader)
+    protected void process(File archiveFile, ApplicationClientDescriptor bundleDesc, ClassLoader classLoader)
         throws IOException {
         /*
          * This variant should not be invoked, but we need to have it here to
@@ -96,24 +99,24 @@ public class AppClientScanner extends ModuleScanner<ApplicationClientDescriptor>
      * The archiveFile and libJarFiles correspond to classpath.
      *
      * @param archiveFile
-     * @param desc
+     * @param descriptor
      * @param classLoader
      */
-    private void doProcess(ReadableArchive archive, ApplicationClientDescriptor desc, ClassLoader classLoader)
+    private void doProcess(ReadableArchive archive, ApplicationClientDescriptor descriptor, ClassLoader classLoader)
         throws IOException {
-        if (AnnotationUtils.getLogger().isLoggable(Level.FINE)) {
-            AnnotationUtils.getLogger().fine("archiveFile is " + archive.getURI().toASCIIString());
-            AnnotationUtils.getLogger().fine("classLoader is " + classLoader);
+        if (LOG.isLoggable(Level.CONFIG)) {
+            LOG.log(Level.CONFIG, "Processing file={0}, descriptor={1}, classLoader={2}",
+                new Object[] {archiveFile, descriptor, classLoader});
         }
 
         // always add main class
-        String mainClassName = desc.getMainClassName();
+        String mainClassName = descriptor.getMainClassName();
         addScanClassName(mainClassName);
 
         // add callback handle if it exist in appclient-client.xml
-        String callbackHandler = desc.getCallbackHandler();
+        String callbackHandler = descriptor.getCallbackHandler();
         if (callbackHandler != null && !callbackHandler.trim().equals("")) {
-            addScanClassName(desc.getCallbackHandler());
+            addScanClassName(descriptor.getCallbackHandler());
         }
 
         if (archive instanceof FileArchive) {

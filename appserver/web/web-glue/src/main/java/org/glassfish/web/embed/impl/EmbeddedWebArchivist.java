@@ -31,28 +31,29 @@ import java.util.logging.Logger;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.ProcessingResult;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.internal.embedded.ScatteredArchive;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.archivist.WebArchivist;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Jerome Dochez
  */
-@Service @PerLookup
+@Service
+@PerLookup
 public class EmbeddedWebArchivist extends WebArchivist {
 
     private static final Logger LOG = LogFacade.getLogger();
     private static URL defaultWebXmlLocation;
+    private final EmbeddedWebScanner embeddedScanner = new EmbeddedWebScanner();
 
     static void setDefaultWebXml(URL defaultWebXml) {
         defaultWebXmlLocation = defaultWebXml;
     }
 
-    private final ModuleScanner<Object> scanner = new EmbeddedWebScanner();
 
     @Override
     protected URL getDefaultWebXML() throws IOException {
@@ -67,22 +68,25 @@ public class EmbeddedWebArchivist extends WebArchivist {
 
 
     @Override
-    protected ProcessingResult processAnnotations(RootDeploymentDescriptor bundleDesc, ModuleScanner scanner,
-        ReadableArchive archive) throws AnnotationProcessorException, IOException {
+    protected ProcessingResult processAnnotations(WebBundleDescriptorImpl bundleDesc,
+        ModuleScanner<WebBundleDescriptorImpl> scanner, ReadableArchive archive)
+        throws AnnotationProcessorException, IOException {
         // in embedded mode, I ignore all scanners and parse all possible classes.
         if (archive instanceof ScatteredArchive) {
-            return super.processAnnotations(bundleDesc, this.scanner, archive);
+            return super.processAnnotations(bundleDesc, this.embeddedScanner, archive);
         }
         return super.processAnnotations(bundleDesc, scanner, archive);
     }
 
-    private static class EmbeddedWebScanner extends ModuleScanner<Object> {
+    private static class EmbeddedWebScanner extends ModuleScanner<WebBundleDescriptorImpl> {
 
-        final Set<Class<?>> elements = new HashSet<>();
+        private final Set<Class<?>> elements = new HashSet<>();
+        private ClassLoader classLoader;
 
         @Override
-        public void process(ReadableArchive archiveFile, Object bundleDesc, ClassLoader classLoader, Parser parser)
+        public void process(ReadableArchive archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader, Parser parser)
             throws IOException {
+            this.classLoader = classLoader;
             // in embedded mode, we don't scan archive, we just process all classes.
             Enumeration<String> fileEntries = archiveFile.entries();
             while (fileEntries.hasMoreElements()) {
@@ -99,6 +103,11 @@ public class EmbeddedWebArchivist extends WebArchivist {
         }
 
 
+        @Override
+        protected void process(File archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader) throws IOException {
+        }
+
+
         private String toClassName(String entryName) {
             String name = entryName.substring("WEB-INF/classes/".length(), entryName.length() - ".class".length());
             return name.replaceAll("/", ".");
@@ -107,13 +116,14 @@ public class EmbeddedWebArchivist extends WebArchivist {
 
 
         @Override
-        public void process(File archiveFile, Object bundleDesc, ClassLoader classLoader) throws IOException {
+        public Set<Class<?>> getElements() {
+            return elements;
         }
 
 
         @Override
-        public Set<Class<?>> getElements() {
-            return elements;
+        public ClassLoader getClassLoader() {
+            return classLoader;
         }
     }
 }

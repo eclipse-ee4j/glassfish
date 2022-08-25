@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,23 +22,18 @@ import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
 import com.sun.enterprise.deployment.web.AppListenerDescriptor;
 import com.sun.enterprise.deployment.web.ServletFilter;
-import org.glassfish.apf.impl.AnnotationUtils;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.classmodel.reflect.Parser;
-import org.glassfish.hk2.classmodel.reflect.ParsingContext;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.web.deployment.descriptor.*;
+
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -48,9 +44,11 @@ import java.util.logging.Level;
 @Service(name="war")
 @PerLookup
 public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
-    protected boolean scanOtherLibraries = false;
 
-    @Inject protected ClassLoaderHierarchy clh;
+    private boolean scanOtherLibraries;
+
+    @Inject
+    private ClassLoaderHierarchy clHierarchy;
 
     public void setScanOtherLibraries(boolean scanOtherLibraries) {
         this.scanOtherLibraries = scanOtherLibraries;
@@ -60,47 +58,24 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
         return scanOtherLibraries;
     }
 
+
     @Override
-    public void process(File archiveFile, WebBundleDescriptor webBundleDesc,
-            ClassLoader classLoader) throws IOException {
-        throw new UnsupportedOperationException("Not supported.");
+    protected void process(File archiveFile, WebBundleDescriptor webBundleDesc, ClassLoader classLoader)
+        throws IOException {
+        this.archiveFile = archiveFile;
+        this.classLoader = classLoader;
     }
 
-    /**
-     * This scanner will scan the archiveFile for annotation processing.
-     * @param readableArchive the archive to process
-     * @param webBundleDesc existing bundle descriptor to add to
-     * @param classLoader classloader to load archive classes with.
-     */
+
     @Override
-    public void process(ReadableArchive readableArchive, WebBundleDescriptor webBundleDesc,
-            ClassLoader classLoader, Parser parser) throws IOException {
-
-        this.archiveFile =  new File(readableArchive.getURI());
-        this.classLoader = classLoader;
-        setParser(parser);
-
-        if (AnnotationUtils.getLogger().isLoggable(Level.FINE)) {
-            AnnotationUtils.getLogger().fine("archiveFile is " + archiveFile);
-            AnnotationUtils.getLogger().fine("webBundle is " + webBundleDesc);
-            AnnotationUtils.getLogger().fine("classLoader is " + classLoader);
-        }
-
-        if (!archiveFile.isDirectory()) {
-            // on client side
-            return;
-        }
-
+    protected final void completeProcess(WebBundleDescriptor descriptor, ReadableArchive archive) throws IOException {
         if (isScanOtherLibraries()) {
-            addLibraryJars(webBundleDesc, readableArchive);
-            calculateResults(webBundleDesc);
+            addLibraryJars(descriptor, archive);
             return;
         }
-
         File webinf = new File(archiveFile, "WEB-INF");
-
-        if (webBundleDesc instanceof WebFragmentDescriptor) {
-            WebFragmentDescriptor webFragmentDesc = (WebFragmentDescriptor)webBundleDesc;
+        if (descriptor instanceof WebFragmentDescriptor) {
+            WebFragmentDescriptor webFragmentDesc = (WebFragmentDescriptor) descriptor;
             File lib = new File(webinf, "lib");
             if (lib.exists()) {
                 File jarFile = new File(lib, webFragmentDesc.getJarName());
@@ -119,45 +94,37 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
                 addScanDirectory(classes);
             }
         }
-        scanXmlDefinedClassesIfNecessary(webBundleDesc);
-        calculateResults(webBundleDesc);
+        scanXmlDefinedClassesIfNecessary(descriptor);
     }
+
 
     // This is not mandated by the spec. It is for WSIT.
     // We will also scan any servlets/filters/listeners classes specified
     // in web.xml additionally if those classes are not resided in the wars.
-    private void scanXmlDefinedClassesIfNecessary(
-            WebBundleDescriptor webBundleDesc)
-            throws IOException {
+    private void scanXmlDefinedClassesIfNecessary(WebBundleDescriptor webBundleDesc) throws IOException {
+        ClassLoader commonCL = clHierarchy.getCommonClassLoader();
 
-        ClassLoader commonCL = clh.getCommonClassLoader();
-
-        for (Iterator webComponents =
-            webBundleDesc.getWebComponentDescriptors().iterator();
-            webComponents.hasNext();) {
-            WebComponentDescriptor webCompDesc =
-                (WebComponentDescriptor)webComponents.next();
-            if (webCompDesc.isServlet()) {
-                String servletName = webCompDesc.getWebComponentImplementation();
+        for (WebComponentDescriptor element : webBundleDesc.getWebComponentDescriptors()) {
+            if (element.isServlet()) {
+                String servletName = element.getWebComponentImplementation();
                 if (isScan(servletName, commonCL)) {
                     addScanClassName(servletName);
                 }
             }
         }
 
-        Vector servletFilters = webBundleDesc.getServletFilters();
+        Vector<ServletFilter> servletFilters = webBundleDesc.getServletFilters();
         for (int i = 0; i < servletFilters.size(); i++) {
-            ServletFilter filter = (ServletFilter)servletFilters.elementAt(i);
+            ServletFilter filter = servletFilters.elementAt(i);
             String filterName = filter.getClassName();
             if (isScan(filterName, commonCL)) {
                 addScanClassName(filter.getClassName());
             }
         }
 
-        Vector listeners = webBundleDesc.getAppListenerDescriptors();
+        Vector<AppListenerDescriptor> listeners = webBundleDesc.getAppListenerDescriptors();
         for (int j = 0; j < listeners.size(); j++) {
-            AppListenerDescriptor listenerDesc =
-                (AppListenerDescriptor) listeners.elementAt(j);
+            AppListenerDescriptor listenerDesc = listeners.elementAt(j);
             String listenerName = listenerDesc.getListener();
             if (isScan(listenerName, commonCL)) {
                 addScanClassName(listenerDesc.getListener());
@@ -165,11 +132,11 @@ public class WarScanner extends ModuleScanner<WebBundleDescriptor> {
         }
     }
 
+
     private boolean isScan(String className, ClassLoader commonCL) throws IOException {
         boolean result = false;
-        //XXX TBD ignore delegate in sun-web.xml in this moment
+        // TODO ignore delegate in sun-web.xml in this moment
         String resourceName = "/" + className.replace(".", "/") + ".class";
-        return (commonCL.getResource(resourceName) != null);
+        return commonCL.getResource(resourceName) != null;
     }
 }
-

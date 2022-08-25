@@ -41,6 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
@@ -61,17 +62,12 @@ import org.xml.sax.helpers.NamespaceSupport;
 @PerLookup
 public class SaxParserHandler extends DefaultHandler {
 
-    public static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
-    public static final String JAXP_SCHEMA_SOURCE = "http://java.sun.com/xml/jaxp/properties/schemaSource";
-    public static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-
-    private static final String TRUE_STR = "true";
-    private static final String FALSE_STR = "false";
-
-    private static final MappingStuff _mappingStuff = new MappingStuff();
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+    private static final MappingStuff mappingStuff = new MappingStuff();
 
     private final List<XMLNode<?>> nodes = new ArrayList<>();
-    public XMLNode<?> topNode;
+    private XMLNode<?> topNode;
+    // FIXME: Used as a local variable
     protected String publicID;
     private StringBuffer elementData;
     private Map<String, String> prefixMapping;
@@ -91,15 +87,15 @@ public class SaxParserHandler extends DefaultHandler {
 
 
     protected static Map<String,String> getMapping() {
-        return _mappingStuff.mMapping;
+        return mappingStuff.mMapping;
     }
 
     protected static List<VersionUpgrade> getVersionUpgrades(String key) {
-        List<VersionUpgrade> versionUpgradeList = _mappingStuff.mVersionUpgrades.get(key);
+        List<VersionUpgrade> versionUpgradeList = mappingStuff.mVersionUpgrades.get(key);
         if (versionUpgradeList != null) {
             return versionUpgradeList;
         }
-        List<Class<?>> classList = _mappingStuff.mVersionUpgradeClasses.get(key);
+        List<Class<?>> classList = mappingStuff.mVersionUpgradeClasses.get(key);
         if (classList == null) {
             return null;
         }
@@ -114,16 +110,16 @@ public class SaxParserHandler extends DefaultHandler {
                 versionUpgradeList.add(versionUpgrade);
             }
         }
-        _mappingStuff.mVersionUpgrades.put(key, versionUpgradeList);
+        mappingStuff.mVersionUpgrades.put(key, versionUpgradeList);
         return versionUpgradeList;
     }
 
     protected static Collection<String> getElementsAllowingEmptyValues() {
-        return _mappingStuff.mElementsAllowingEmptyValues;
+        return mappingStuff.mElementsAllowingEmptyValues;
     }
 
     protected static Collection<String> getElementsPreservingWhiteSpace() {
-        return _mappingStuff.mElementsPreservingWhiteSpace;
+        return mappingStuff.mElementsPreservingWhiteSpace;
     }
 
     public static void registerBundleNode(BundleNode bundleNode, String bundleTagName) {
@@ -133,7 +129,7 @@ public class SaxParserHandler extends DefaultHandler {
         * entry to the mapping.  This method needs to add the tag-to-node class
         * entry to the rootNodes map.
         */
-        if (_mappingStuff.mBundleRegistrationStatus.containsKey(bundleTagName)) {
+        if (mappingStuff.mBundleRegistrationStatus.containsKey(bundleTagName)) {
             return;
         }
 
@@ -141,7 +137,7 @@ public class SaxParserHandler extends DefaultHandler {
         final Map<String, List<Class<?>>> versionUpgrades = new HashMap<>();
 
         String rootNodeKey = bundleNode.registerBundle(dtdMapping);
-        _mappingStuff.mRootNodesMutable.putIfAbsent(rootNodeKey, bundleNode.getClass());
+        mappingStuff.mRootNodesMutable.putIfAbsent(rootNodeKey, bundleNode.getClass());
 
         /*
         * There can be multiple runtime nodes (for example, sun-xxx and
@@ -149,9 +145,9 @@ public class SaxParserHandler extends DefaultHandler {
         * updates the publicID-to-DTD map and returns a map of tags to
         * runtime node classes.
         */
-        _mappingStuff.mRootNodesMutable.putAll(bundleNode.registerRuntimeBundle(dtdMapping, versionUpgrades));
+        mappingStuff.mRootNodesMutable.putAll(bundleNode.registerRuntimeBundle(dtdMapping, versionUpgrades));
 
-        _mappingStuff.mVersionUpgradeClasses.putAll(versionUpgrades);
+        mappingStuff.mVersionUpgradeClasses.putAll(versionUpgrades);
 
         // let's remove the URL from the DTD so we use local copies...
         for (Map.Entry<String, String> entry : dtdMapping.entrySet()) {
@@ -159,9 +155,9 @@ public class SaxParserHandler extends DefaultHandler {
             final String dtd = entry.getValue();
             String systemIDResolution = resolvePublicID(publicID, dtd);
             if (systemIDResolution == null) {
-                _mappingStuff.mMapping.put(publicID, dtd.substring(dtd.lastIndexOf('/') + 1));
+                mappingStuff.mMapping.put(publicID, dtd.substring(dtd.lastIndexOf('/') + 1));
             } else {
-                _mappingStuff.mMapping.put(publicID, systemIDResolution);
+                mappingStuff.mMapping.put(publicID, systemIDResolution);
             }
         }
 
@@ -169,24 +165,23 @@ public class SaxParserHandler extends DefaultHandler {
         // or elements for which we should preserve white space.  Track them.
         Collection<String> c = bundleNode.elementsAllowingEmptyValue();
         if (!c.isEmpty()) {
-            _mappingStuff.mElementsAllowingEmptyValuesMutable.addAll(c);
+            mappingStuff.mElementsAllowingEmptyValuesMutable.addAll(c);
         }
 
         c = bundleNode.elementsPreservingWhiteSpace();
         if (!c.isEmpty()) {
-            _mappingStuff.mElementsPreservingWhiteSpaceMutable.addAll(c);
+            mappingStuff.mElementsPreservingWhiteSpaceMutable.addAll(c);
         }
 
-        _mappingStuff.mBundleRegistrationStatus.put(rootNodeKey, Boolean.TRUE);
+        mappingStuff.mBundleRegistrationStatus.put(rootNodeKey, Boolean.TRUE);
     }
 
+    // It creates the InputSource
     @SuppressWarnings("resource")
     @Override
     public InputSource resolveEntity(String publicID, String systemID) throws SAXException {
         try {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Asked to resolve  " + publicID + " system id = " + systemID);
-            }
+            LOG.log(Level.FINEST, "resolveEntity, publicID={0}, systemID={1}", new Object[] {publicID, systemID});
             // If public ID is there and is present in our map, use it
             if (publicID != null && getMapping().containsKey(publicID)) {
                 this.publicID = publicID;
@@ -211,15 +206,14 @@ public class SaxParserHandler extends DefaultHandler {
                 throw new SAXException("Requested schema " + systemID + " is not found in local repository, please"
                     + " ensure that there are no typos in the XML namespace declaration.");
             }
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Resolved to " + fileName);
-            }
+            LOG.log(Level.FINE, "Resolved publicID={0} and systemID={1} to {2}",
+                new Object[] {publicID, systemID, fileName});
             return new InputSource(fileName);
         } catch (SAXException e) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, e.getMessage(), e);
+            LOG.log(Level.SEVERE, e.getMessage(), e);
             throw e;
         } catch (Exception ioe) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, ioe.getMessage(), ioe);
+            LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new SAXException(ioe);
         }
     }
@@ -235,7 +229,7 @@ public class SaxParserHandler extends DefaultHandler {
 
     @Override
     public void error(SAXParseException spe) throws SAXParseException {
-        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_LONG,
+        LOG.log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_LONG,
             new Object[] {errorReportingString, String.valueOf(spe.getLineNumber()),
                 String.valueOf(spe.getColumnNumber()), spe.getLocalizedMessage()});
         if (stopOnXMLErrors) {
@@ -246,7 +240,7 @@ public class SaxParserHandler extends DefaultHandler {
 
     @Override
     public void fatalError(SAXParseException spe) throws SAXParseException {
-        DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_LONG,
+        LOG.log(Level.SEVERE, DOLUtils.INVALILD_DESCRIPTOR_LONG,
             new Object[] {errorReportingString, String.valueOf(spe.getLineNumber()),
                 String.valueOf(spe.getColumnNumber()), spe.getLocalizedMessage()});
         if (stopOnXMLErrors) {
@@ -263,7 +257,7 @@ public class SaxParserHandler extends DefaultHandler {
         try {
             return new BufferedInputStream(new FileInputStream(f));
         } catch(FileNotFoundException fnfe) {
-            DOLUtils.getDefaultLogger().fine("Cannot find DTD " + dtdFileName);
+            LOG.fine("Cannot find DTD " + dtdFileName);
             return null;
         }
      }
@@ -287,13 +281,13 @@ public class SaxParserHandler extends DefaultHandler {
      * @param schemaSystemID the system id for the schema
      */
     public static File getSchemaFileFor(String schemaSystemID) throws IOException {
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Getting Schema " + schemaSystemID);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Getting Schema " + schemaSystemID);
         }
         String schemaLoc = DTDRegistry.SCHEMA_LOCATION.replace('/', File.separatorChar);
         File f = new File(schemaLoc + File.separatorChar + schemaSystemID);
         if (!f.exists()) {
-            DOLUtils.getDefaultLogger().fine("Cannot find schema " + schemaSystemID);
+            LOG.fine("Cannot find schema " + schemaSystemID);
             return null;
         }
         return f;
@@ -341,8 +335,8 @@ public class SaxParserHandler extends DefaultHandler {
                          java.lang.String publicId,
                          java.lang.String systemId)
                          throws SAXException {
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Received notation " + name + " :=: " + publicId + " :=: " + systemId);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("Received notation " + name + " :=: " + publicId + " :=: " + systemId);
         }
     }
 
@@ -418,17 +412,17 @@ public class SaxParserHandler extends DefaultHandler {
             }
         }
 
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-            DOLUtils.getDefaultLogger().finer("start of element " + uri + " with local name "+ localName + " and " + qName);
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("start of element " + uri + " with local name "+ localName + " and " + qName);
         }
         XMLNode<?> node = null;
         elementData = new StringBuffer();
 
         if (nodes.isEmpty()) {
             // this must be a root element...
-            Class<?> rootNodeClass = _mappingStuff.mRootNodes.get(localName);
+            Class<?> rootNodeClass = mappingStuff.mRootNodes.get(localName);
             if (rootNodeClass == null) {
-                DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
+                LOG.log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                     new Object[] {localName, " not supported !"});
                 if (stopOnXMLErrors) {
                     throw new IllegalArgumentException(
@@ -437,8 +431,8 @@ public class SaxParserHandler extends DefaultHandler {
             } else {
                 try {
                     node = (XMLNode<?>) rootNodeClass.getDeclaredConstructor().newInstance();
-                    if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                        DOLUtils.getDefaultLogger().fine("Instanciating " + node);
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.fine("Instanciating " + node);
                     }
                     if (node instanceof RootXMLNode) {
                         if (publicID != null) {
@@ -450,7 +444,7 @@ public class SaxParserHandler extends DefaultHandler {
                     topNode = node;
                     node.getDescriptor();
                 } catch (Exception e) {
-                    DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
+                    LOG.log(Level.WARNING, "Error occurred", e);
                     return;
                 }
             }
@@ -462,12 +456,12 @@ public class SaxParserHandler extends DefaultHandler {
             if (node.handlesElement(element)) {
                 node.startElement(element, attributes);
             } else {
-                if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                    DOLUtils.getDefaultLogger().fine("Asking for new handler for " + element + " to " + node);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Asking for new handler for " + element + " to " + node);
                 }
                 XMLNode newNode = node.getHandlerFor(element);
-                if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                    DOLUtils.getDefaultLogger().fine("Got " + newNode);
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.fine("Got " + newNode);
                 }
                 nodes.add(newNode);
                 addPrefixMapping(newNode);
@@ -485,8 +479,8 @@ public class SaxParserHandler extends DefaultHandler {
         } catch (EmptyStackException ex) {
         }
 
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-            DOLUtils.getDefaultLogger().finer(
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer(
                 "End of element " + uri + " local name " + localName + " and " + qName + " value " + elementData);
         }
         if (nodes.isEmpty()) {
@@ -497,8 +491,8 @@ public class SaxParserHandler extends DefaultHandler {
         XMLElement element = new XMLElement(qName, namespaces);
         XMLNode<?> topNode = nodes.get(nodes.size() - 1);
         if (elementData != null && (elementData.length() != 0 || allowsEmptyValue(element.getQName()))) {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-                DOLUtils.getDefaultLogger().finer("For element " + element.getQName() + " And value " + elementData);
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("For element " + element.getQName() + " And value " + elementData);
             }
             boolean doReplace = false;
             String replacementName = null;
@@ -525,7 +519,7 @@ public class SaxParserHandler extends DefaultHandler {
                                 for (Map.Entry<String, String> entry : matchXPath.entrySet()) {
                                     buf.append(entry.getKey()).append("  ").append(entry.getValue()).append(" >");
                                 }
-                                DOLUtils.getDefaultLogger().log(Level.SEVERE, buf.toString());
+                                LOG.log(Level.SEVERE, buf.toString());
                                 // Since the elements are not replaced,
                                 // there should be a parsing error
                             }
@@ -560,9 +554,9 @@ public class SaxParserHandler extends DefaultHandler {
             } else {
                 // Allow any case for true/false & convert to lower case
                 String val = elementData.toString().trim();
-                if (TRUE_STR.equalsIgnoreCase(val)) {
+                if ("true".equalsIgnoreCase(val)) {
                     topNode.setElementValue(element, val.toLowerCase(Locale.US));
-                } else if (FALSE_STR.equalsIgnoreCase(val)) {
+                } else if ("false".equalsIgnoreCase(val)) {
                     topNode.setElementValue(element, val.toLowerCase(Locale.US));
                 } else {
                     topNode.setElementValue(element, val);
@@ -571,8 +565,8 @@ public class SaxParserHandler extends DefaultHandler {
             elementData = null;
         }
         if (topNode.endElement(element)) {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Removing top node " + topNode);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("Removing top node " + topNode);
             }
             nodes.remove(nodes.size()-1);
         }

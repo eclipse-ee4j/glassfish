@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,10 +25,8 @@ import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.ModuleDescriptor;
-
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLClassLoader;
@@ -35,7 +34,10 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
@@ -51,13 +53,13 @@ public class UndeployedLaunchable implements Launchable {
 
     private final String callerSuppliedMainClassName;
 
-    private ApplicationClientDescriptor acDesc = null;
+    private ApplicationClientDescriptor acDesc;
 
-    private AppClientArchivist archivist = null;
+    private AppClientArchivist archivist;
 
     private final ReadableArchive clientRA;
 
-    private ClassLoader classLoader = null;
+    private ClassLoader classLoader;
 
     static UndeployedLaunchable newUndeployedLaunchable(
             final ServiceLocator habitat,
@@ -155,10 +157,12 @@ public class UndeployedLaunchable implements Launchable {
         }
     }
 
+    @Override
     public URI getURI() {
         return clientRA.getURI();
     }
 
+    @Override
     public String getAnchorDir() {
         return null;
     }
@@ -189,6 +193,7 @@ public class UndeployedLaunchable implements Launchable {
         this.archivist = completeInit(archivist);
     }
 
+    @Override
     public Class getMainClass() throws ClassNotFoundException {
         try {
             String mainClassName = mainClassNameToLaunch();
@@ -218,6 +223,7 @@ public class UndeployedLaunchable implements Launchable {
         return mf.getMainAttributes().getValue(Attributes.Name.MAIN_CLASS);
     }
 
+    @Override
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         this.classLoader = loader;
         if (acDesc == null) {
@@ -233,7 +239,8 @@ public class UndeployedLaunchable implements Launchable {
             _archivist.setAnnotationProcessingRequested(true);
             acDesc = _archivist.open(clientRA);
 
-            Application.createVirtualApplication(null, acDesc.getModuleDescriptor());
+            ModuleDescriptor<BundleDescriptor> moduleDescriptor = acDesc.getModuleDescriptor();
+            Application.createVirtualApplication(null, moduleDescriptor);
             acDesc.getApplication().setAppName(getDefaultApplicationName(clientRA));
         }
         return acDesc;
@@ -251,10 +258,11 @@ public class UndeployedLaunchable implements Launchable {
         return appName;
     }
 
+
     private AppClientArchivist completeInit(final AppClientArchivist arch) {
-            arch.setDescriptor(acDesc);
-            arch.setAnnotationProcessingRequested(true);
-            return arch;
+        arch.setDescriptor(acDesc);
+        arch.setAnnotationProcessingRequested(true);
+        return arch;
     }
 
     private AppClientArchivist getArchivist(final ClassLoader classLoader) throws IOException {
@@ -267,6 +275,7 @@ public class UndeployedLaunchable implements Launchable {
         return archivist;
     }
 
+    @Override
     public void validateDescriptor() {
         try {
             getArchivist(classLoader).validate(classLoader);

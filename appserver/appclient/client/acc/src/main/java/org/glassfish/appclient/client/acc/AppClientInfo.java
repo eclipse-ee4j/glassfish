@@ -55,19 +55,11 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public abstract class AppClientInfo {
 
-    public static final String USER_CODE_IS_SIGNED_PROPERTYNAME = "com.sun.aas.user.code.signed";
-
-    private static final String SIGNED_USER_CODE_PERMISSION_TEMPLATE_NAME = "jwsclientSigned.policy";
-
-    private static final String UNSIGNED_USER_CODE_PERMISSION_TEMPLATE_NAME = "jwsclientUnsigned.policy";
-
-    private static final String CODE_BASE_PLACEHOLDER_NAME = "com.sun.aas.jws.client.codeBase";
-
     /** access to the localizable strings */
-    private static final LocalStringManager localStrings = new LocalStringManagerImpl(AppClientInfo.class);
+    private static final LocalStringManager I18N = new LocalStringManagerImpl(AppClientInfo.class);
 
     // for debug purpose
-    protected static final boolean _keepExplodedDir = Boolean.getBoolean("appclient.keep.exploded.dir");
+    private static final boolean KEEP_EXPLODED_DIR = Boolean.getBoolean("appclient.keep.exploded.dir");
 
     /** logger */
     protected Logger _logger;
@@ -131,13 +123,12 @@ public abstract class AppClientInfo {
 
     }
     protected boolean deleteAppClientDir() {
-        return !_keepExplodedDir;
+        return !KEEP_EXPLODED_DIR;
     }
 
-    protected String getLocalString(final String key, final String defaultMessage,
-            final Object... args) {
-        String result = localStrings.getLocalString(this.getClass(),
-                key, defaultMessage, args);
+
+    protected String getLocalString(final String key, final String defaultMessage, final Object... args) {
+        String result = I18N.getLocalString(this.getClass(), key, defaultMessage, args);
         return result;
     }
 

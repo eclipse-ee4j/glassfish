@@ -17,8 +17,6 @@
 
 package org.glassfish.apf;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
 import org.glassfish.hk2.classmodel.reflect.Types;
@@ -28,22 +26,10 @@ import org.jvnet.hk2.annotations.Contract;
  * This interface is responsible for scanning the binary location
  * provided and provide each binary file through a pull interfaces
  *
- * @param <T>
- *
  * @author Jerome Dochez
  */
 @Contract
-public interface Scanner<T> {
-
-    /**
-     * Scan the archive file and gather a list of classes
-     * that should be processed for anntoations
-     *
-     * @param archiveFile the archive file for scanning
-     * @param bundleDesc the bundle descriptor associated with this archive
-     * @param classLoader the classloader used to scan the annotation
-     */
-    void process(File archiveFile, T bundleDesc, ClassLoader classLoader) throws IOException;
+public interface Scanner {
 
     /**
      * Returns a ClassLoader capable of loading classes from the
@@ -68,8 +54,9 @@ public interface Scanner<T> {
      * from it's implementation class.
      *
      * @param componentImpl class of the component.
+     * @return {@link ComponentInfo}
      */
-    ComponentInfo getComponentInfo(Class componentImpl);
+    ComponentInfo getComponentInfo(Class<?> componentImpl);
 
     /**
      * Return the types information for this module

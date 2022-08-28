@@ -26,10 +26,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 import org.glassfish.apf.ComponentInfo;
-import org.glassfish.apf.factory.Factory;
 
 
 /**
@@ -39,11 +38,19 @@ import org.glassfish.apf.factory.Factory;
  */
 public class ComponentDefinition implements ComponentInfo {
 
+    private static final Set<String> EXCLUDED_FROM_ANNOTATION_PROCESSING = Set.of(
+        "jakarta.servlet.GenericServlet",
+        "jakarta.servlet.http.HttpServlet",
+        "org.glassfish.wasp.servlet.JspServlet",
+        "org.apache.catalina.servlets.DefaultServlet"
+    );
+
     private final Class<?> clazz;
     private final List<Constructor<?>> constructors = new ArrayList<>();
     private final List<Class<?>> classes = new ArrayList<>();
     private final List<Field> fields = new ArrayList<>();
     private final Map<MethodKey, Method> methodMap = new HashMap<>();
+
 
     public ComponentDefinition(Class<?> clazz) {
         this.clazz = clazz;
@@ -56,32 +63,32 @@ public class ComponentDefinition implements ComponentInfo {
 
     @Override
     public Field[] getFields() {
-        return fields.toArray(new Field[fields.size()]);
+        return fields.toArray(Field[]::new);
     }
 
 
     @Override
     public Method[] getMethods() {
-        return methodMap.values().toArray(new Method[methodMap.size()]);
+        return methodMap.values().toArray(Method[]::new);
     }
 
 
     @Override
     public Constructor<?>[] getConstructors() {
-        return constructors.toArray(new Constructor[constructors.size()]);
+        return constructors.toArray(Constructor[]::new);
     }
 
 
     private void constructClassList() {
         // check whether this class is in the skip list
-        if (!Factory.isSkipAnnotationProcessing(clazz)) {
+        if (!isExcludedFromAnnotationProcessing(clazz)) {
             classes.add(clazz);
         }
         Class<?> parent = clazz;
         while ((parent = parent.getSuperclass()) != null) {
             // always check whether this class is in the class list
             // for skipping annotation processing
-            if (!Factory.isSkipAnnotationProcessing(parent)) {
+            if (!isExcludedFromAnnotationProcessing(parent)) {
                 classes.add(0, parent);
             }
         }
@@ -121,7 +128,30 @@ public class ComponentDefinition implements ComponentInfo {
         }
     }
 
+
+    /**
+     * Check whether a certain class can skip annotation processing
+     *
+     * @return true if the class should not be processed
+     */
+    private boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
+        if (clazz.getPackage() == null) {
+            return false;
+        }
+        if (clazz.getPackage().getName().startsWith("java.lang")) {
+            return true;
+        }
+        return EXCLUDED_FROM_ANNOTATION_PROCESSING.contains(clazz.getCanonicalName());
+    }
+
+    /**
+     * MethodKey represents a method for the annotation's point of view.
+     * <p>
+     * The class doesn't matter in the {@link #hashCode()}, but it does matter
+     * in {@link #equals(Object)} to resolve the visibility of the method.
+     */
     private static class MethodKey {
+
         private final Method m;
         private final Package classPackage;
         private final String className;
@@ -129,7 +159,6 @@ public class ComponentDefinition implements ComponentInfo {
 
         private MethodKey(Method m) {
             this.m = m;
-            // store className and classPackage as getters are native
             this.className = m.getDeclaringClass().getName();
             this.classPackage = m.getDeclaringClass().getPackage();
             this.hashCode = m.getName().hashCode();
@@ -153,25 +182,27 @@ public class ComponentDefinition implements ComponentInfo {
             if (!(o instanceof MethodKey)) {
                 return false;
             }
-
             MethodKey mk2 = (MethodKey) o;
             Method m2 = mk2.m;
             if (m.getName().equals(m2.getName()) && Arrays.equals(m.getParameterTypes(), m2.getParameterTypes())) {
-                int modifiers = m.getModifiers();
-                int modifiers2 = m2.getModifiers();
-                boolean isPackageProtected2 = !Modifier.isPublic(modifiers2) && !Modifier.isProtected(modifiers2)
-                    && !Modifier.isPrivate(modifiers2);
-                boolean isSamePackage = (classPackage == null && mk2.classPackage == null) || (classPackage != null
-                    && mk2.classPackage != null && classPackage.getName().equals(mk2.classPackage.getName()));
-                if (Modifier.isPrivate(modifiers)) {
+                boolean isSamePackage = hasSamePackage(mk2);
+                if (Modifier.isPrivate(m.getModifiers())) {
                     // need exact match
-                    return Modifier.isPrivate(modifiers2) && isSamePackage && className.equals(mk2.className);
+                    return Modifier.isPrivate(m2.getModifiers()) && isSamePackage && className.equals(mk2.className);
                 }
-                return Modifier.isPublic(modifiers2) || Modifier.isProtected(modifiers2)
-                    || isPackageProtected2 && isSamePackage;
+                return isSamePackage && !Modifier.isPrivate(m2.getModifiers());
             }
-
             return false;
+        }
+
+
+        private boolean hasSamePackage(MethodKey mk2) {
+            // Note: Package doesn't define equals
+            if (classPackage == mk2.classPackage) {
+                return true;
+            }
+            return classPackage != null && mk2.classPackage != null
+                && classPackage.getName().equals(mk2.classPackage.getName());
         }
     }
 }

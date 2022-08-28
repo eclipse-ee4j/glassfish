@@ -17,8 +17,6 @@
 
 package org.glassfish.apf.factory;
 
-import java.util.Set;
-
 import org.glassfish.apf.impl.AnnotationProcessorImpl;
 
 /**
@@ -27,13 +25,6 @@ import org.glassfish.apf.impl.AnnotationProcessorImpl;
  * @author Jerome Dochez
  */
 public abstract class Factory {
-
-    private static final Set<String> skipAnnotationClassList = Set.of(
-        "jakarta.servlet.GenericServlet",
-        "jakarta.servlet.http.HttpServlet",
-        "org.glassfish.wasp.servlet.JspServlet",
-        "org.apache.catalina.servlets.DefaultServlet"
-    );
 
     /** we do no Create new instances of Factory */
     protected Factory() {
@@ -47,21 +38,5 @@ public abstract class Factory {
      */
     public static AnnotationProcessorImpl getDefaultAnnotationProcessor() {
         return new AnnotationProcessorImpl();
-    }
-
-
-    /**
-     * Check whether a certain class can skip annotation processing
-     *
-     * @return true if the class should not be processed
-     */
-    public static boolean isSkipAnnotationProcessing(Class<?> clazz) {
-        if (clazz.getPackage() == null) {
-            return false;
-        }
-        if (clazz.getPackage().getName().startsWith("java.lang")) {
-            return true;
-        }
-        return skipAnnotationClassList.contains(clazz.getCanonicalName());
     }
 }

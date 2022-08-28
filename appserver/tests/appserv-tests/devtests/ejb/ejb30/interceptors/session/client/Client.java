@@ -18,6 +18,8 @@ package com.sun.s1asdev.ejb.ejb30.interceptors.session.client;
 
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
+
 import javax.naming.*;
 import jakarta.ejb.EJB;
 import com.sun.s1asdev.ejb.ejb30.interceptors.session.*;
@@ -195,12 +197,12 @@ public class Client {
     private void doTest9() {
         boolean checkSetParamsStatus = true;
         Map<String, Boolean> map = sful.checkSetParams();
-        for (String testName : map.keySet()) {
-            System.out.println("Test[" + testName + "]: " + map.get(testName));
-            checkSetParamsStatus = checkSetParamsStatus && map.get(testName);
+        System.err.println("checkParams, received map: " + map);
+        for (Entry<String, Boolean> test : map.entrySet()) {
+            System.out.println("Test[" + test.getKey() + "]: " + test.getValue());
+            checkSetParamsStatus = checkSetParamsStatus && test.getValue();
         }
-        stat.addStatus("local test9" ,
-                (checkSetParamsStatus == true) ? stat.PASS : stat.FAIL);
+        stat.addStatus("local test9", checkSetParamsStatus == true ? stat.PASS : stat.FAIL);
     }
 
     private void doTest10() {

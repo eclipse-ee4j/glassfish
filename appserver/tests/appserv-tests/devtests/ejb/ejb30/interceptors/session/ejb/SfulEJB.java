@@ -138,6 +138,7 @@ public class SfulEJB implements Sful
             } catch (MyBadException ejbEx) {
                 status = true;
             } catch (EJBException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("setBar", status);
 
@@ -147,6 +148,7 @@ public class SfulEJB implements Sful
             } catch (MyBadException illEx) {
                 status = true;
             } catch (EJBException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("emptyArgs", status);
 
@@ -156,6 +158,7 @@ public class SfulEJB implements Sful
             } catch (MyBadException illEx) {
                 status = true;
             } catch (EJBException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("objectArgs", status);
 
@@ -168,6 +171,7 @@ public class SfulEJB implements Sful
             } catch (WrongResultException wrEx) {
                 wrEx.printStackTrace();
             } catch (EJBException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("addIntInt", status);
 
@@ -177,6 +181,7 @@ public class SfulEJB implements Sful
             } catch (MyBadException illEx) {
                 status = true;
             } catch (EJBException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("setInt", status);
 
@@ -184,8 +189,8 @@ public class SfulEJB implements Sful
                 status = false;
                 sless.setLong(2323l);
                 status = true;
-            } catch (MyBadException illEx) {
-            } catch (EJBException ejbEx) {
+            } catch (EJBException | MyBadException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("setLong", status);
 
@@ -193,8 +198,8 @@ public class SfulEJB implements Sful
                 status = false;
                 sless.addLongLong(123l, 234l);
                 status = true;
-            } catch (MyBadException illEx) {
-            } catch (EJBException ejbEx) {
+            } catch (EJBException | MyBadException ejbEx) {
+                ejbEx.printStackTrace();
             }
             map.put("setLongLong", status);
 

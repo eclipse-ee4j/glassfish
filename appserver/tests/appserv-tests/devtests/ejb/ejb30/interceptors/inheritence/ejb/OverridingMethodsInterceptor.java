@@ -23,8 +23,7 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.annotation.PostConstruct;
 
-public class OverridingMethodsInterceptor
-        extends BaseLevel2Interceptor {
+public class OverridingMethodsInterceptor extends BaseLevel2Interceptor {
 
     protected static final String OVERRIDING_INTERCEPTOR_NAME = "OverridingInterceptor";
 
@@ -33,36 +32,39 @@ public class OverridingMethodsInterceptor
 
 
     @PostConstruct
-    protected void overridablePostConstructMethod(InvocationContext ctx)
-            throws RuntimeException {
+    protected void overridablePostConstructMethod(InvocationContext ctx) throws RuntimeException {
         postConstructList.add(OVERRIDING_INTERCEPTOR_NAME);
         pcCount++;
         try {
             ctx.proceed();
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             throw e;
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
 
     @AroundInvoke
-    protected Object overridableAroundInvokeMethod(InvocationContext ctx)
-            throws Throwable
-    {
+    protected Object overridableAroundInvokeMethod(InvocationContext ctx) throws Throwable {
         aroundInvokeList.add(OVERRIDING_INTERCEPTOR_NAME);
         aiCount++;
         return ctx.proceed();
     }
 
     protected boolean isAICountOK() {
+        System.out.println("isAICountOK\n  baseLevel2AICount=0?[" + baseLevel2AICount + "=0],"
+            + " aiCount=baseAICount?[" + aiCount + "=" + baseAICount + "],"
+            + " aroundInvokeList=base,overriding?[" + aroundInvokeList + "]");
                 return (0 == baseLevel2AICount)
                         && (aiCount == baseAICount)
                         && checkForCorrectSequence(aroundInvokeList);
         }
 
         protected boolean isPostConstructCallCounOK() {
+            System.out.println("isPostConstructCallCounOK\n  baseLevel2PCCount=0?[" + baseLevel2PCCount + "=0],"
+                + " pcCount=basePCCount?[" + pcCount + "=" + basePCCount + "],"
+                + " postConstructList=base,overriding?[" + postConstructList + "]");
                 return (pcCount == basePCCount)
                         && (baseLevel2PCCount == 0)
                         && checkForCorrectSequence(postConstructList);
@@ -71,16 +73,9 @@ public class OverridingMethodsInterceptor
     private boolean checkForCorrectSequence(List<String> list) {
         boolean result = list.size() == 2;
         if (result) {
-            BASE_INTERCEPTOR_NAME.equals(list.get(0));
-            OVERRIDING_INTERCEPTOR_NAME.equals(list.get(1));
+            return BASE_INTERCEPTOR_NAME.equals(list.get(0)) && OVERRIDING_INTERCEPTOR_NAME.equals(list.get(1));
         }
-        for(String str : list) {
-            System.out.println("**OVERRIDING_INTERCEPTOR_TEST**: " + str);
-        }
-        System.out.println("**OVERRIDING_INTERCEPTOR_TEST**: " + result);
-
-
-        return result;
+        return false;
     }
 
 

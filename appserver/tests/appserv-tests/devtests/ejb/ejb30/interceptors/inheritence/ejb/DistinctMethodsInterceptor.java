@@ -52,12 +52,18 @@ public class DistinctMethodsInterceptor extends BaseLevel2Interceptor {
     }
 
     protected boolean isAICountOK() {
+        System.out.println("isAICountOK\n  distinctAICount=baseAICount?[" + distinctAICount + "=" + baseAICount + "],"
+            + " distinctAICount=baseLevel2AICount?[" + distinctAICount + "=" + baseLevel2AICount + "],"
+            + " aroundInvokeList=base,level2,distinct?[" + aroundInvokeList + "]");
         return (distinctAICount == baseAICount)
                 && (distinctAICount == baseLevel2AICount)
                         && checkForCorrectSequence(aroundInvokeList);
         }
 
     protected boolean isPostConstructCallCounOK() {
+        System.out.println("isPostConstructCallCounOK\n  distinctPCCount=basePCCount?[" + distinctPCCount + "=" + basePCCount + "],"
+            + " distinctPCCount=baseLevel2PCCount?[" + distinctPCCount + "=" + baseLevel2PCCount + "],"
+            + " postConstructList=base,level2,distinct?[" + postConstructList + "]");
         return (distinctPCCount == basePCCount)
                 && (distinctPCCount == baseLevel2PCCount)
                         && checkForCorrectSequence(postConstructList);
@@ -66,17 +72,10 @@ public class DistinctMethodsInterceptor extends BaseLevel2Interceptor {
     private boolean checkForCorrectSequence(List<String> list) {
         boolean result = list.size() == 3;
         if (result) {
-            BASE_INTERCEPTOR_NAME.equals(list.get(0));
-            LEVEL2_INTERCEPTOR_NAME.equals(list.get(1));
-            DISTINCT_INTERCEPTOR_NAME.equals(list.get(2));
+            return BASE_INTERCEPTOR_NAME.equals(list.get(0)) && LEVEL2_INTERCEPTOR_NAME.equals(list.get(1))
+                && DISTINCT_INTERCEPTOR_NAME.equals(list.get(2));
         }
-
-        for(String str : list) {
-            System.out.println("**DISTINCT_INTERCEPTOR_TEST**: " + str);
-        }
-        System.out.println("**DISTINCT_INTERCEPTOR_TEST**: " + result);
-
-        return result;
+        return false;
     }
 
     String getName() {

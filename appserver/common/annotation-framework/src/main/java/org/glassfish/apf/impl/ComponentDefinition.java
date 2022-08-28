@@ -132,7 +132,7 @@ public class ComponentDefinition implements ComponentInfo {
             // store className and classPackage as getters are native
             this.className = m.getDeclaringClass().getName();
             this.classPackage = m.getDeclaringClass().getPackage();
-            this.hashCode = Objects.hash(m.getName(), className);
+            this.hashCode = m.getName().hashCode();
         }
 
 

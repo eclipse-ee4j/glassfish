@@ -26,10 +26,26 @@ package org.glassfish.security.common;
 public class Role extends PrincipalImpl {
 
     private String description;
-
-    /** Creates a new Role with a given name */
-    public Role(String name) {
+    /**
+     * Creates a new Role with a given name
+     *
+     * @param name cannot be null
+     */
+    public Role(final String name) {
         super(name);
+        this.description = null;
+    }
+
+
+    /**
+     * Creates a new Role with a given name
+     *
+     * @param name cannot be null
+     * @param description can be null
+     */
+    public Role(final String name, final String description) {
+        super(name);
+        this.description = description;
     }
 
 

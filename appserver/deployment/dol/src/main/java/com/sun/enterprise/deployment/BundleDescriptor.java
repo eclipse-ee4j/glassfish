@@ -355,8 +355,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * @param descriptor SecurityRoleDescriptor that describes the username and description of the role
      */
     public void addRole(SecurityRoleDescriptor descriptor) {
-        Role role = new Role(descriptor.getName());
-        role.setDescription(descriptor.getDescription());
+        Role role = new Role(descriptor.getName(), descriptor.getDescription());
         this.addRole(role);
     }
 

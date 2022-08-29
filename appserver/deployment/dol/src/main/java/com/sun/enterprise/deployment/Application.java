@@ -817,9 +817,10 @@ public class Application extends CommonResourceBundleDescriptor
         return this.appRoles;
     }
 
+
+    // used by reflection, see ApplicationNode
     public void addAppRole(SecurityRoleDescriptor descriptor) {
-        Role role = new Role(descriptor.getName());
-        role.setDescription(descriptor.getDescription());
+        Role role = new Role(descriptor.getName(), descriptor.getDescription());
         getAppRoles().add(role);
     }
 

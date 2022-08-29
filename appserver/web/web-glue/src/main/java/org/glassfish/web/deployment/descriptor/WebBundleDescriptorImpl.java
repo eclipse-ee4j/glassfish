@@ -1454,8 +1454,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
      */
     @Override
     public void addSecurityRole(SecurityRole securityRole) {
-        Role r = new Role(securityRole.getName());
-        r.setDescription(securityRole.getDescription());
+        Role r = new Role(securityRole.getName(), securityRole.getDescription());
         super.addRole(r);
     }
 
@@ -1487,8 +1486,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
     }
 
     @Override
-    protected void combineSecurityConstraints(Set<SecurityConstraint> firstScSet,
-            Set<SecurityConstraint> secondScSet) {
+    protected void combineSecurityConstraints(Set<SecurityConstraint> firstScSet, Set<SecurityConstraint> secondScSet) {
         Set<String> allUrlPatterns = new HashSet<>();
         for (SecurityConstraint sc : firstScSet) {
             for (WebResourceCollection wrc : sc.getWebResourceCollections()) {

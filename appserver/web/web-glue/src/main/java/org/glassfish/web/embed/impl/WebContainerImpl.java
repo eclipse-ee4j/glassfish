@@ -497,7 +497,7 @@ public class WebContainerImpl implements WebContainer {
 
             }
 
-            EmbeddedWebArchivist.setDefaultWebXml(config.getDefaultWebXml());
+            ScatteredWebArchivist.setDefaultWebXml(config.getDefaultWebXml());
 
             embedded.setDirectoryListing(config.getListings());
 

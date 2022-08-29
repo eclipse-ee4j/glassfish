@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +16,9 @@
 
 package org.glassfish.web.embed.impl;
 
+import com.sun.enterprise.deployment.ScatteredWarType;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
+import com.sun.enterprise.deployment.archivist.ArchivistFor;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,26 +29,29 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.apf.AnnotationProcessorException;
-import org.glassfish.apf.ProcessingResult;
+import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.classmodel.reflect.Parser;
-import org.glassfish.internal.embedded.ScatteredArchive;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.archivist.WebArchivist;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.jvnet.hk2.annotations.Service;
 
+
 /**
  * @author Jerome Dochez
+ * @author David Matejcek
  */
 @Service
 @PerLookup
-public class EmbeddedWebArchivist extends WebArchivist {
+@ArchivistFor(ScatteredWarType.ARCHIVE_TYPE)
+public class ScatteredWebArchivist extends WebArchivist {
 
     private static final Logger LOG = LogFacade.getLogger();
     private static URL defaultWebXmlLocation;
+
     private final EmbeddedWebScanner embeddedScanner = new EmbeddedWebScanner();
 
     static void setDefaultWebXml(URL defaultWebXml) {
@@ -56,7 +60,7 @@ public class EmbeddedWebArchivist extends WebArchivist {
 
 
     @Override
-    protected URL getDefaultWebXML() throws IOException {
+    public URL getDefaultWebXML() throws IOException {
         if (defaultWebXmlLocation != null) {
             return defaultWebXmlLocation;
         }
@@ -68,14 +72,19 @@ public class EmbeddedWebArchivist extends WebArchivist {
 
 
     @Override
-    protected ProcessingResult processAnnotations(WebBundleDescriptorImpl bundleDesc,
-        ModuleScanner<WebBundleDescriptorImpl> scanner, ReadableArchive archive)
-        throws AnnotationProcessorException, IOException {
-        // in embedded mode, I ignore all scanners and parse all possible classes.
-        if (archive instanceof ScatteredArchive) {
-            return super.processAnnotations(bundleDesc, this.embeddedScanner, archive);
-        }
-        return super.processAnnotations(bundleDesc, scanner, archive);
+    public ArchiveType getModuleType() {
+        return Globals.getDefaultHabitat().getService(ArchiveType.class, ScatteredWarType.ARCHIVE_TYPE);
+    }
+
+
+    /**
+     * @return the scanner for this archivist, usually it is the scanner regitered
+     *         with the same module type as this archivist, but subclasses can return
+     *         a different version
+     */
+    @Override
+    public EmbeddedWebScanner getScanner() {
+        return this.embeddedScanner;
     }
 
     private static class EmbeddedWebScanner extends ModuleScanner<WebBundleDescriptorImpl> {
@@ -84,8 +93,8 @@ public class EmbeddedWebArchivist extends WebArchivist {
         private ClassLoader classLoader;
 
         @Override
-        public void process(ReadableArchive archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader, Parser parser)
-            throws IOException {
+        public void process(ReadableArchive archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader,
+            Parser parser) throws IOException {
             this.classLoader = classLoader;
             // in embedded mode, we don't scan archive, we just process all classes.
             Enumeration<String> fileEntries = archiveFile.entries();
@@ -99,19 +108,18 @@ public class EmbeddedWebArchivist extends WebArchivist {
                     }
                 }
             }
-
         }
 
 
         @Override
-        protected void process(File archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader) throws IOException {
+        protected void process(File archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader)
+            throws IOException {
         }
 
 
         private String toClassName(String entryName) {
             String name = entryName.substring("WEB-INF/classes/".length(), entryName.length() - ".class".length());
             return name.replaceAll("/", ".");
-
         }
 
 

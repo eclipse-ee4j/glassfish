@@ -774,7 +774,6 @@ public abstract class Archivist<T extends BundleDescriptor> {
             // we should continue
         }
         WritableArchive out = null;
-        BufferedOutputStream bos = null;
         try {
             File outputFile=null;
             if (oldArchive != null && oldArchive.exists() &&

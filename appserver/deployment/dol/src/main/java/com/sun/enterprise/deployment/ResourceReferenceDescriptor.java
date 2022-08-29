@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -512,7 +513,6 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
             }
         }
         if (rType != null) {
-            Class typeClass = null;
             // is it loadable ?
             try {
                 // Bug fix 4850684: for resource-refs that are user-defined classes,
@@ -522,8 +522,8 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty
                 // for e.g connector module with res-ref that points to the
                 // ConnectionFactory class of a resource adapter
 
-                typeClass = Class.forName(rType, true,
-                          Thread.currentThread().getContextClassLoader());
+                Class.forName(rType, true,
+                      Thread.currentThread().getContextClassLoader());
 
             } catch (Throwable t) {
                 if (Descriptor.isBoundsChecking()) {

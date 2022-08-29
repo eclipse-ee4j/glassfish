@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -118,7 +118,6 @@ public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDe
      */
     public static void validateResourcesForStaleReference(String appName, List<Module> staleRars, Resources resources)
             throws ResourceConflictException {
-        boolean found = false;
         for (Resource resource : resources.getResources()) {
             //connector type of resource may be : connector-resource, ccp, aor, wsm, rac
             if (ConnectorsUtil.isRARResource(resource)) {

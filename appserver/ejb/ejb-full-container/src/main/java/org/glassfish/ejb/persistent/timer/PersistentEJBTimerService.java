@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -620,8 +621,6 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
     @Override
     protected void _destroyTimers(long id, boolean all) {
-        Set<TimerPrimaryKey> timerIds = null;
-
         int count = ((all)? timerLocal_.countTimersByApplication(id) :
                 timerLocal_.countTimersByContainer(id));
 

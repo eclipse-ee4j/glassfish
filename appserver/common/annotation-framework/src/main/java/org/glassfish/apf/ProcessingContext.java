@@ -17,6 +17,7 @@
 
 package org.glassfish.apf;
 
+import org.glassfish.apf.context.AnnotationContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 
 /**
@@ -66,7 +67,7 @@ public interface ProcessingContext {
      *
      * @param handler the new events handler.
      */
-    void pushHandler(AnnotatedElementHandler handler);
+    void pushHandler(AnnotationContext handler);
 
     /**
      * Return the current handler (if any) receving all the annotated elements
@@ -82,16 +83,6 @@ public interface ProcessingContext {
      * @return the removed handler
      */
     AnnotatedElementHandler popHandler();
-
-    /**
-     * Return the top handler casted to the requested handler type
-     *
-     * @param handlerType requested handler type
-     * @param <H> desired {@link AnnotatedElementHandler} type.
-     * @return the top handler
-     * @throws ClassCastException if the top handler cannot be casted to the requested handler type.
-     */
-    <H extends AnnotatedElementHandler> H getHandler(Class<H> handlerType) throws ClassCastException;
 
     /**
      * Sets the ErrorHandler instance for all errors/warnings that may be raised

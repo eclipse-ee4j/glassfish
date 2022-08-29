@@ -68,10 +68,9 @@ class ProcessingContextImpl implements ProcessingContext {
 
 
     @Override
-    public void pushHandler(AnnotatedElementHandler handler) {
-        if (handler instanceof AnnotationContext) {
-            ((AnnotationContext) handler).setProcessingContext(this);
-        }
+    public void pushHandler(AnnotationContext handler) {
+        LOG.log(Level.FINEST, "pushHandler: {0}", handler);
+        handler.setProcessingContext(this);
         handlers.push(handler);
     }
 
@@ -93,20 +92,6 @@ class ProcessingContextImpl implements ProcessingContext {
         }
 
         return handlers.pop();
-    }
-
-
-    /**
-     * @return the previously set ClientContext casted to the requestd
-     *         type if possible or throw an exception otherwise.
-     */
-    @Override
-    public <U extends AnnotatedElementHandler> U getHandler(Class<U> contextType) throws ClassCastException {
-        if (handlers.isEmpty()) {
-            return null;
-        }
-        LOG.log(Level.FINER, "Top handler is {0}", handlers.peek());
-        return contextType.cast(handlers.peek());
     }
 
 

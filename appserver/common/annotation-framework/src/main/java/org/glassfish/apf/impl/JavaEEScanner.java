@@ -22,9 +22,6 @@ import java.io.IOException;
 
 import org.glassfish.apf.ComponentInfo;
 import org.glassfish.apf.Scanner;
-import org.glassfish.hk2.classmodel.reflect.Parser;
-import org.glassfish.hk2.classmodel.reflect.ParsingContext;
-import org.glassfish.hk2.classmodel.reflect.Types;
 
 /**
  * Super class for all JavaEE scanners
@@ -32,8 +29,6 @@ import org.glassfish.hk2.classmodel.reflect.Types;
  * @author Jerome Dochez
  */
 public abstract class JavaEEScanner<T> implements Scanner {
-
-    private Types types;
 
     /**
      * Scan the archive file and gather a list of classes
@@ -47,27 +42,7 @@ public abstract class JavaEEScanner<T> implements Scanner {
 
 
     @Override
-    public Types getTypes() {
-        return types;
-    }
-
-
-    @Override
     public ComponentInfo getComponentInfo(Class<?> componentImpl) {
         return new ComponentDefinition(componentImpl);
     }
-
-
-    protected void initTypes(File file) throws IOException {
-        ParsingContext context = new ParsingContext.Builder().build();
-        Parser cp = new Parser(context);
-        cp.parse(file, null);
-        try {
-            cp.awaitTermination();
-        } catch (InterruptedException e) {
-            throw new IOException(e);
-        }
-        types = cp.getContext().getTypes();
-    }
-
 }

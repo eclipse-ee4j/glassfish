@@ -19,7 +19,6 @@ package org.glassfish.apf;
 
 import java.util.Set;
 
-import org.glassfish.hk2.classmodel.reflect.Types;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -57,12 +56,5 @@ public interface Scanner {
      * @return {@link ComponentInfo}
      */
     ComponentInfo getComponentInfo(Class<?> componentImpl);
-
-    /**
-     * Return the types information for this module
-     *
-     * @return types the archive resulting types
-     */
-    Types getTypes();
 
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,8 @@ import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.node.EjbBundleNode;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
+
 /**
  * This class is responsible for handling EJB DeploymentDescriptor files
  *
@@ -37,9 +40,11 @@ public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile {
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
-        return DOLUtils.warType().equals(getArchiveType()) ?
-                DescriptorConstants.EJB_IN_WAR_ENTRY : DescriptorConstants.EJB_JAR_ENTRY;
+        return warType().equals(getArchiveType()) || DOLUtils.scatteredWarType().equals(getArchiveType())
+            ? DescriptorConstants.EJB_IN_WAR_ENTRY
+            : DescriptorConstants.EJB_JAR_ENTRY;
     }
 
     /**

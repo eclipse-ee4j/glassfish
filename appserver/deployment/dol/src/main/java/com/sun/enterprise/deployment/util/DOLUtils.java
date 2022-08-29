@@ -26,6 +26,7 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.ScatteredWarType;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
@@ -301,6 +302,10 @@ public class DOLUtils {
 
     public static ArchiveType rarType() {
         return getModuleType("rar");
+    }
+
+    public static ArchiveType scatteredWarType() {
+        return getModuleType(ScatteredWarType.ARCHIVE_TYPE);
     }
 
     /**
@@ -710,7 +715,7 @@ public class DOLUtils {
         return false;
     }
 
-    /*
+    /**
      * Returns a list of the proprietary schema namespaces
      */
     public static List<String> getProprietarySchemaNamespaces() {
@@ -720,7 +725,7 @@ public class DOLUtils {
         return ns;
     }
 
-    /*
+    /**
      * Returns a list of the proprietary dtd system IDs
      */
     public static List<String> getProprietaryDTDStart() {

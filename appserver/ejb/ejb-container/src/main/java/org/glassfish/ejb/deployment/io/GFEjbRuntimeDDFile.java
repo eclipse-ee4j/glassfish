@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,12 +24,13 @@ import org.glassfish.hk2.api.PerLookup;
 
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 import com.sun.ejb.containers.EjbContainerUtil;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 /**
  * This class is responsible for handling the XML configuration information
@@ -42,9 +44,11 @@ public class GFEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      * @return the location of the DeploymentDescriptor file for a
      *         particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
-        return DOLUtils.warType().equals(getArchiveType()) ?
-                DescriptorConstants.GF_EJB_IN_WAR_ENTRY : DescriptorConstants.GF_EJB_JAR_ENTRY;
+        return warType().equals(getArchiveType()) || scatteredWarType().equals(getArchiveType())
+            ? DescriptorConstants.GF_EJB_IN_WAR_ENTRY
+            : DescriptorConstants.GF_EJB_JAR_ENTRY;
     }
 
     /**

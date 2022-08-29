@@ -72,7 +72,8 @@ public class WebServicesArchivist extends ExtensionsArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return (DOLUtils.warType().equals(moduleType) || DOLUtils.ejbType().equals(moduleType));
+        return DOLUtils.warType().equals(moduleType) || DOLUtils.ejbType().equals(moduleType)
+            || DOLUtils.scatteredWarType().equals(moduleType);
     }
 
     @Override

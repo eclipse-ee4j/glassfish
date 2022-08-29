@@ -57,7 +57,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return (moduleType != null && moduleType.equals(DOLUtils.carType())) && (env.getProcessType() == ProcessType.ACC) ;
+        return DOLUtils.carType().equals(moduleType) && env.getProcessType() == ProcessType.ACC ;
     }
 
 

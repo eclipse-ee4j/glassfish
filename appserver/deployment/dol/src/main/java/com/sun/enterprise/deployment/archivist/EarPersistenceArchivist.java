@@ -38,7 +38,7 @@ public class EarPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return moduleType!=null && moduleType.equals(DOLUtils.earType());
+        return DOLUtils.earType().equals(moduleType);
     }
 
 

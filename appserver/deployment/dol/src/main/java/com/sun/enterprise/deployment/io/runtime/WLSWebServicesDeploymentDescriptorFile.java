@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.ws.WLDescriptorConstants;
 import com.sun.enterprise.deployment.node.ws.WLWebServicesDescriptorNode;
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,6 +32,9 @@ import java.util.Vector;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
+
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 
 /**
  * This class is responsible for handling the WebLogic webservices deployment descriptor.
@@ -47,8 +49,9 @@ public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploym
 
     public WLSWebServicesDeploymentDescriptorFile(RootDeploymentDescriptor desc) {
         if (desc instanceof WebServicesDescriptor) {
-            descriptorPath = (((WebServicesDescriptor) desc).getBundleDescriptor().getModuleType()
-                .equals(DOLUtils.warType()))
+            BundleDescriptor descriptor = ((WebServicesDescriptor) desc).getBundleDescriptor();
+            descriptorPath = warType().equals(descriptor.getModuleType())
+                || scatteredWarType().equals(descriptor.getModuleType())
                     ? WLDescriptorConstants.WL_WEB_WEBSERVICES_JAR_ENTRY
                     : WLDescriptorConstants.WL_EJB_WEBSERVICES_JAR_ENTRY;
         } else if (desc instanceof WebBundleDescriptor) {
@@ -63,7 +66,7 @@ public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploym
         return descriptorPath;
     }
 
-    public static Vector getAllDescriptorPaths() {
+    public static Vector<String> getAllDescriptorPaths() {
         Vector<String> allDescPaths = new Vector<>();
         allDescPaths.add(WLDescriptorConstants.WL_WEB_WEBSERVICES_JAR_ENTRY);
         allDescPaths.add(WLDescriptorConstants.WL_EJB_WEBSERVICES_JAR_ENTRY);

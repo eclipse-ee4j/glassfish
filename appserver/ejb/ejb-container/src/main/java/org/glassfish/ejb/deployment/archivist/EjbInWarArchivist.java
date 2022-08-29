@@ -45,6 +45,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
+
 /**
  * @author Mahesh Kannan
  */
@@ -97,7 +100,7 @@ public class EjbInWarArchivist extends ExtensionsArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return moduleType != null && moduleType.equals(DOLUtils.warType());
+        return warType().equals(moduleType) || scatteredWarType().equals(moduleType);
     }
 
     @Override

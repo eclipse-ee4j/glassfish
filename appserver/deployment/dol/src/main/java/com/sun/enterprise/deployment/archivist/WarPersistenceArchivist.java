@@ -18,7 +18,6 @@
 package com.sun.enterprise.deployment.archivist;
 
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,14 +32,18 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
+
 @Service
 @ExtensionsArchivistFor("jpa")
 public class WarPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return moduleType != null && moduleType.equals(DOLUtils.warType());
+        return warType().equals(moduleType) || scatteredWarType().equals(moduleType);
     }
+
 
     @Override
     public RootDeploymentDescriptor open(Archivist main, ReadableArchive warArchive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {

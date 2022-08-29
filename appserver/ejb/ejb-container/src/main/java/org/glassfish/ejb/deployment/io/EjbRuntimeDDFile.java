@@ -21,15 +21,15 @@ import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.node.runtime.EjbBundleRuntimeNode;
 import org.glassfish.hk2.api.PerLookup;
-
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 
 /**
  * This class is responsible for handling the XML configuration information
@@ -46,9 +46,11 @@ public class EjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      * @return the location of the DeploymentDescriptor file for a
      *         particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
-        return DOLUtils.warType().equals(getArchiveType()) ?
-                DescriptorConstants.S1AS_EJB_IN_WAR_ENTRY : DescriptorConstants.S1AS_EJB_JAR_ENTRY;
+        return warType().equals(getArchiveType()) || scatteredWarType().equals(getArchiveType())
+            ? DescriptorConstants.S1AS_EJB_IN_WAR_ENTRY
+            : DescriptorConstants.S1AS_EJB_JAR_ENTRY;
     }
 
     /**

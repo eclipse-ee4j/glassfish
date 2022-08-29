@@ -57,7 +57,6 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationProcessor;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.ErrorHandler;
@@ -65,6 +64,7 @@ import org.glassfish.apf.ProcessingContext;
 import org.glassfish.apf.ProcessingResult;
 import org.glassfish.apf.ResultType;
 import org.glassfish.apf.Scanner;
+import org.glassfish.apf.context.AnnotationContext;
 import org.glassfish.apf.impl.DefaultErrorHandler;
 import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ArchiveType;
@@ -564,8 +564,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
             return null;
         }
 
-        AnnotatedElementHandler aeHandler = AnnotatedElementHandlerFactory.createAnnotatedElementHandler(bundleDesc);
-        if (aeHandler == null) {
+        AnnotationContext annotationContext = AnnotatedElementHandlerFactory.createAnnotatedElementHandler(bundleDesc);
+        if (annotationContext == null) {
             return null;
         }
 
@@ -603,7 +603,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
             ctx.setErrorHandler(annotationErrorHandler);
         }
         ctx.setProcessingInput(scanner);
-        ctx.pushHandler(aeHandler);
+        ctx.pushHandler(annotationContext);
 
         // Make sure there is a classloader available on the descriptor during annotation
         // processing.
@@ -671,7 +671,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      *
      * @param archive the archive
      * @param descriptor the initialized deployment descriptor
-     * @link getRuntimeDeploymentDescriptorPath
+     * @see #getRuntimeDeploymentDescriptorPath(ReadableArchive)
      */
     public void readRuntimeDeploymentDescriptor(ReadableArchive archive, T descriptor)
         throws IOException, SAXException {
@@ -688,7 +688,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param archive the archive
      * @param descriptor the initialized deployment descriptor
      * @param warnIfMultipleDDs whether to log warnings if both the GlassFish and the legacy Sun descriptors are present
-     * @link getRuntimeDeploymentDescriptorPath
+     * @see #getRuntimeDeploymentDescriptorPath(ReadableArchive)
      */
     public void readRuntimeDeploymentDescriptor(ReadableArchive archive, T descriptor, final boolean warnIfMultipleDDs)
         throws IOException, SAXException {
@@ -701,10 +701,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
         DOLUtils.readRuntimeDeploymentDescriptor(getSortedConfigurationDDFiles(archive), archive, descriptor, this, warnIfMultipleDDs);
     }
 
-    /*
-     * write the J2EE module represented by this instance to a new
-     * J2EE archive file
-     *
+    /**
+     * write the Jakarta EE module represented by this instance to a new Jakarta EE archive file
      */
     public void write() throws IOException {
         write(path);
@@ -939,12 +937,11 @@ public abstract class Archivist<T extends BundleDescriptor> {
      *         for a particular type of J2EE Archive
      */
     public String getRuntimeDeploymentDescriptorPath(ReadableArchive archive) throws IOException {
-        DeploymentDescriptorFile ddFile = getConfigurationDDFile(archive);
-        if (ddFile != null) {
-            return ddFile.getDeploymentDescriptorPath();
-        } else {
+        DeploymentDescriptorFile<?> ddFile = getConfigurationDDFile(archive);
+        if (ddFile == null) {
             return null;
         }
+        return ddFile.getDeploymentDescriptorPath();
     }
 
     /**

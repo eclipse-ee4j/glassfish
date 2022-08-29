@@ -48,7 +48,6 @@ import org.glassfish.hk2.classmodel.reflect.Member;
 import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
 import org.glassfish.hk2.classmodel.reflect.Type;
-import org.glassfish.hk2.classmodel.reflect.Types;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
@@ -148,19 +147,6 @@ public abstract class ModuleScanner<T extends Descriptor> extends JavaEEScanner<
         }
         classParser = parser;
     }
-
-
-    /**
-     * Scan the archive file and gather a list of classes
-     * that should be processed for anntoations
-     *
-     * @param archiveFile the archive file for scanning
-     * @param descriptor the bundle descriptor associated with this archive
-     * @param classLoader the classloader used to scan the annotation
-     * @throws IOException if the file cannot be read.
-     */
-    @Override
-    protected abstract void process(File archiveFile, T descriptor, ClassLoader classLoader) throws IOException;
 
     /**
      * Performs all additional work after the "process" method has finished.
@@ -343,12 +329,6 @@ public abstract class ModuleScanner<T extends Descriptor> extends JavaEEScanner<
             // adding library jars to the scan list
             LOG.log(Level.WARNING, LIBRARY_JAR_ERROR, ex.getMessage());
         }
-    }
-
-
-    @Override
-    public Types getTypes() {
-        return classParser.getContext().getTypes();
     }
 
 

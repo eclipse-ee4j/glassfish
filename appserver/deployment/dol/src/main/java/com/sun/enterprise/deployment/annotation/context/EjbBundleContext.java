@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.context.AnnotationContext;
 
 /**
  * This ClientContext implementation holds a top level reference
@@ -65,7 +66,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
             ejbDescs = this.getDescriptor().getEjbByClassName(ejbClassName);
         }
 
-        AnnotatedElementHandler aeHandler = null;
+        AnnotationContext aeHandler = null;
         if (ejbDescs != null && ejbDescs.length > 1) {
             aeHandler = new EjbsContext(ejbDescs, ejbClass);
         } else if (ejbDescs != null && ejbDescs.length == 1) {

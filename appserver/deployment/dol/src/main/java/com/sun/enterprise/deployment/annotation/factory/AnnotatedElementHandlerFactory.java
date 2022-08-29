@@ -26,7 +26,7 @@ import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.context.RarBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 
-import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.context.AnnotationContext;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
@@ -40,21 +40,21 @@ public class AnnotatedElementHandlerFactory {
     }
 
 
-    public static AnnotatedElementHandler createAnnotatedElementHandler(RootDeploymentDescriptor bundleDesc) {
-        AnnotatedElementHandler aeHandler = null;
+    public static AnnotationContext createAnnotatedElementHandler(RootDeploymentDescriptor bundleDesc) {
         if (bundleDesc instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundleDesc = (EjbBundleDescriptor) bundleDesc;
-            aeHandler = new EjbBundleContext(ejbBundleDesc);
+            return new EjbBundleContext(ejbBundleDesc);
         } else if (bundleDesc instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor) bundleDesc;
-            aeHandler = new AppClientContext(appClientDesc);
+            return new AppClientContext(appClientDesc);
         } else if (bundleDesc instanceof WebBundleDescriptor) {
             WebBundleDescriptor webBundleDesc = (WebBundleDescriptor) bundleDesc;
-            aeHandler = new WebBundleContext(webBundleDesc);
+            return new WebBundleContext(webBundleDesc);
         } else if (bundleDesc instanceof ConnectorDescriptor) {
             ConnectorDescriptor connectorDesc = (ConnectorDescriptor) bundleDesc;
-            aeHandler = new RarBundleContext(connectorDesc);
+            return new RarBundleContext(connectorDesc);
+        } else {
+            return null;
         }
-        return aeHandler;
     }
 }

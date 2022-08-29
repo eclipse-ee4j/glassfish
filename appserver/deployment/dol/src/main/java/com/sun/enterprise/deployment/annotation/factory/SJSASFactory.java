@@ -40,8 +40,7 @@ import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This factory is responsible for initializing a ready to use
- * AnnotationProcessor.
+ * This factory is responsible for initializing a ready to use AnnotationProcessor.
  *
  * @author Shing Wai Chan
  */
@@ -164,5 +163,10 @@ public class SJSASFactory extends Factory {
             return getHandler().getTypeDependencies();
         }
 
+
+        @Override
+        public String toString() {
+            return "LazyAnnotationHandler[\n" + descriptor + "\n  " + handler + "\n]";
+        }
     }
 }

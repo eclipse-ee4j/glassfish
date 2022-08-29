@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.context.AnnotationContext;
 
 /**
  * This ClientContext implementation holds a top level reference
@@ -63,7 +64,7 @@ public class WebBundleContext extends ResourceContainerContextImpl {
             webComps = getDescriptor().getWebComponentByImplName(implClassName);
         }
 
-        AnnotatedElementHandler aeHandler = null;
+        AnnotationContext aeHandler = null;
         if (webComps != null && webComps.length > 1) {
             aeHandler = new WebComponentsContext(webComps);
         } else if (webComps != null && webComps.length == 1) {

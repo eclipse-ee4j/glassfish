@@ -57,9 +57,6 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
     private static final long serialVersionUID = -4455830942007736853L;
     private static final Logger LOG = LogDomains.getLogger(RoleMapper.class, LogDomains.SECURITY_LOGGER, false);
 
-    private static final String DEFAULT_ROLE_NAME = "ANYONE";
-    private Role defaultRole = null;
-    private String defaultRoleName = null;
     private String appName;
     private final Map<String, Subject> roleToSubject = new HashMap<>();
 
@@ -96,29 +93,8 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
         this.appName = appName;
         secService = Globals.getDefaultHabitat().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         defaultP2RMappingClassName = getDefaultP2RMappingClassName();
-        postConstruct();
     }
 
-    private synchronized void initDefaultRole() {
-        //        if (!SecurityServicesUtil.getInstance().isServer()) {
-        //            //do nothing if this is not an EJB or Web Container
-        //            return;
-        //        }
-        if (defaultRole == null) {
-            defaultRoleName = DEFAULT_ROLE_NAME;
-            try {
-                assert secService != null;
-                defaultRoleName = secService.getAnonymousRole();
-            } catch (Exception e) {
-                LOG.log(Level.WARNING, "SEC5022: Error reading anonymous role.", e);
-            }
-
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Default role is: " + defaultRoleName);
-            }
-            defaultRole = new Role(defaultRoleName);
-        }
-    }
 
     /**
      * @return The application/module name for this RoleMapper
@@ -637,9 +613,4 @@ public class RoleMapper implements Serializable, SecurityRoleMapper {
             }
         }
     }
-
-    private void postConstruct() {
-        //       initDefaultRole();
-    }
-
 }

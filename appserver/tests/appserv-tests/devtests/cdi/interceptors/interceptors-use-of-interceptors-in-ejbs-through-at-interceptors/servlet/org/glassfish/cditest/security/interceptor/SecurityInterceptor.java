@@ -62,8 +62,8 @@ public class SecurityInterceptor implements Serializable
         Principal p = ejbCtx.getCallerPrincipal();
         Method interfaceMethod = ctx.getMethod();
 
-        LOG.log(Level.INFO, "EJB Method called [Full]:\"{0}\" by Principal:{1}", new Object[]{getFullEJBClassName(interfaceMethod), p.toString()});
-        LOG.log(Level.INFO, "EJB Method called [Methodonly]:{0} by Principal:{1}", new Object[]{interfaceMethod.getName(), p.toString()});
+        LOG.log(Level.INFO, "EJB Method called [Full]:\"{0}\" by Principal:{1}", new Object[]{getFullEJBClassName(interfaceMethod), p});
+        LOG.log(Level.INFO, "EJB Method called [Methodonly]:{0} by Principal:{1}", new Object[]{interfaceMethod.getName(), p});
 
         SecurityInterceptor.aroundInvokeCalled = true;
         return ctx.proceed();

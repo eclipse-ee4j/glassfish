@@ -38,7 +38,7 @@ public class Client extends HttpServlet {
             throws jakarta.servlet.ServletException {
         try {
             Principal p = req.getUserPrincipal();
-            String principal = (p==null)? "NULL": p.toString();
+            String principal = (p==null)? "NULL": p.getName();
             System.out.println("****Servlet: principal = " + principal);
 
             Hello port = service.getHelloEJBPort();

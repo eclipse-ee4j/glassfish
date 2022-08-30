@@ -37,12 +37,12 @@ public class TestServlet extends HttpServlet {
     public void doFoo(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
-        out.println("doFoo with " + req.getUserPrincipal());
+        out.println("doFoo with " + req.getUserPrincipal().getName());
     }
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         PrintWriter out = resp.getWriter();
-        out.println("doGet with " + req.getUserPrincipal());
+        out.println("doGet with " + req.getUserPrincipal().getName());
     }
 }

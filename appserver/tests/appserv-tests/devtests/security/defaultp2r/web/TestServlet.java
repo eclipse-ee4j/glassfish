@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
         throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-        out.println("doFoo with " + req.getUserPrincipal());
+        out.println("doFoo with " + req.getUserPrincipal().getName());
         out.close();
     }
 
@@ -48,7 +48,7 @@ public class TestServlet extends HttpServlet {
         throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-        out.println("doGet with " + req.getUserPrincipal());
+        out.println("doGet with " + req.getUserPrincipal().getName());
         out.close();
     }
 }

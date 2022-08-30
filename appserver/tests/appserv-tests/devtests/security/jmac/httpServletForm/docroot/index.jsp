@@ -20,7 +20,7 @@ Hello World from 196 HttpServletForm AuthModule Test!
 <hr>
 <%
     try {
-        out.println("Hello, " + request.getUserPrincipal() +
+        out.println("Hello, " + request.getUserPrincipal().getName() +
             " from " + request.getAttribute("MY_NAME"));
         out.println("PC = " + request.getAttribute("PC"));
     } catch(Throwable t) {

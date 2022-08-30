@@ -20,7 +20,7 @@ Hello World from 196 HttpServletChallenge AuthModule Test!
 <hr>
 <%
     try {
-        out.println("Hello, " + request.getUserPrincipal() +
+        out.println("Hello, " + request.getUserPrincipal().getName() +
             " from " + request.getAttribute("MY_NAME") +
             " with authType " + request.getAuthType());
     } catch(Exception ex) {

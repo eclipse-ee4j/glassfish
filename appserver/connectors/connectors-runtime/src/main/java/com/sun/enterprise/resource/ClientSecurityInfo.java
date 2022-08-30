@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.resource;
 
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
 import jakarta.resource.spi.ConnectionRequestInfo;
 
@@ -29,12 +29,12 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 public class ClientSecurityInfo {
 
     // union: either store Principal or ConnectionRequestInfo
-    private ResourcePrincipal prin;
+    private ResourcePrincipalDescriptor prin;
     private ConnectionRequestInfo info;
 
     static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
 
-    public ClientSecurityInfo(ResourcePrincipal prin) {
+    public ClientSecurityInfo(ResourcePrincipalDescriptor prin) {
         if (prin == null) {
             throw new NullPointerException("Principal is null");
         }
@@ -49,7 +49,7 @@ public class ClientSecurityInfo {
     }
 
 
-    public ResourcePrincipal getPrincipal() {
+    public ResourcePrincipalDescriptor getPrincipal() {
         return prin;
     }
 

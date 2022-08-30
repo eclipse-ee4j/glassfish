@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,38 +17,10 @@
 
 package com.sun.enterprise.security.web.integration;
 
-import static com.sun.enterprise.security.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
-import static com.sun.enterprise.security.ee.PermissionCacheFactory.createPermissionCache;
-import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
-import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
-import static java.util.stream.Collectors.toSet;
-import static org.glassfish.api.web.Constants.ADMIN_VS;
-
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.Permission;
-import java.security.Principal;
-import java.security.cert.Certificate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
-import java.util.logging.Logger;
-
-import org.glassfish.exousia.AuthorizationService;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
-
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
@@ -68,6 +41,35 @@ import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.Permission;
+import java.security.Principal;
+import java.security.cert.Certificate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.logging.Logger;
+
+import org.glassfish.exousia.AuthorizationService;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserNameAndPassword;
+
+import static com.sun.enterprise.security.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
+import static com.sun.enterprise.security.ee.PermissionCacheFactory.createPermissionCache;
+import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
+import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.stream.Collectors.toSet;
+import static org.glassfish.api.web.Constants.ADMIN_VS;
 
 /**
  * The class implements the JSR 115 - JavaTM Authorization Contract for Containers. This class is a companion class of
@@ -94,13 +96,13 @@ public class WebSecurityManager {
 
     // The context ID associated with this instance. This is the name
     // of the application
-    private String contextId;
+    private final String contextId;
     private String codebase;
 
     protected CodeSource codesource;
 
     // protection domain cache
-    private Map protectionDomainCache = Collections.synchronizedMap(new WeakHashMap());
+    private final Map protectionDomainCache = Collections.synchronizedMap(new WeakHashMap());
 
     private static final WebResourcePermission allResources = new WebResourcePermission("/*", (String) null);
 
@@ -120,14 +122,14 @@ public class WebSecurityManager {
 
     private static Set<Principal> defaultPrincipalSet = SecurityContext.getDefaultSecurityContext().getPrincipalSet();
 
-    private WebSecurityManagerFactory webSecurityManagerFactory;
-    private ServerContext serverContext;
+    private final WebSecurityManagerFactory webSecurityManagerFactory;
+    private final ServerContext serverContext;
 
     // WebBundledescriptor
-    private WebBundleDescriptor webBundleDescriptor;
+    private final WebBundleDescriptor webBundleDescriptor;
 
     // ProbeProvider
-    private WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
+    private final WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
     private boolean register = true;
 
     AuthorizationService authorizationService;
@@ -400,7 +402,6 @@ public class WebSecurityManager {
         if (uncheckedPermissionCache == null) {
             if (register) {
                 uncheckedPermissionCache = createPermissionCache(contextId, codesource, protoPerms, null);
-
                 allResourcesCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allResources);
                 allConnectionsCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allConnections);
             }
@@ -411,41 +412,45 @@ public class WebSecurityManager {
 
     private void handleAdminVirtualServer() {
         LoginConfiguration loginConfiguration = webBundleDescriptor.getLoginConfiguration();
-        if (loginConfiguration != null) {
-            String realmName = loginConfiguration.getRealmName();
+        if (loginConfiguration == null) {
+            return;
+        }
 
-            SunWebApp sunDescriptor = webBundleDescriptor.getSunDescriptor();
-            if (sunDescriptor != null) {
-
-                SecurityRoleMapping[] sunRoleMappings = sunDescriptor.getSecurityRoleMapping();
-                if (sunRoleMappings != null) {
-                    for (SecurityRoleMapping roleMapping : sunRoleMappings) {
-                        for (String principal : roleMapping.getPrincipalName()) {
-                            webSecurityManagerFactory.putAdminPrincipal(principal, realmName, new PrincipalImpl(principal));
-                        }
-                        for (String group : roleMapping.getGroupNames()) {
-                            webSecurityManagerFactory.putAdminGroup(group, realmName, new Group(group));
-                        }
-                    }
+        String realmName = loginConfiguration.getRealmName();
+        SunWebApp sunDescriptor = webBundleDescriptor.getSunDescriptor();
+        if (sunDescriptor == null) {
+            return;
+        }
+        SecurityRoleMapping[] sunRoleMappings = sunDescriptor.getSecurityRoleMapping();
+        if (sunRoleMappings != null) {
+            for (SecurityRoleMapping roleMapping : sunRoleMappings) {
+                for (PrincipalNameDescriptor principal : roleMapping.getPrincipalNames()) {
+                    // we keep just a name here
+                    webSecurityManagerFactory.putAdminPrincipal(realmName,
+                        new UserNameAndPassword(principal.getName()));
                 }
+                for (String group : roleMapping.getGroupNames()) {
+                    webSecurityManagerFactory.putAdminGroup(group, realmName, new Group(group));
+                }
+            }
+        }
 
-                SecurityRoleAssignment[] sunRoleAssignments = sunDescriptor.getSecurityRoleAssignments();
-                if (sunRoleAssignments != null) {
-                    for (SecurityRoleAssignment roleAssignment : sunRoleAssignments) {
-                        List<String> principals = roleAssignment.getPrincipalNames();
-                        if (roleAssignment.isExternallyDefined()) {
-                            webSecurityManagerFactory.putAdminGroup(roleAssignment.getRoleName(), realmName, new Group(roleAssignment.getRoleName()));
-                            continue;
-                        }
-                        for (String principal : principals) {
-                            webSecurityManagerFactory.putAdminPrincipal(principal, realmName, new PrincipalImpl(principal));
-                        }
-
-                    }
+        SecurityRoleAssignment[] sunRoleAssignments = sunDescriptor.getSecurityRoleAssignments();
+        if (sunRoleAssignments != null) {
+            for (SecurityRoleAssignment roleAssignment : sunRoleAssignments) {
+                List<String> principals = roleAssignment.getPrincipalNames();
+                if (roleAssignment.isExternallyDefined()) {
+                    webSecurityManagerFactory.putAdminGroup(roleAssignment.getRoleName(), realmName,
+                        new Group(roleAssignment.getRoleName()));
+                    continue;
+                }
+                for (String principal : principals) {
+                    webSecurityManagerFactory.putAdminPrincipal(realmName, new UserNameAndPassword(principal));
                 }
             }
         }
     }
+
 
     private void recordWebInvocation(final HttpServletRequest httpsr, final String type, final boolean isGranted) {
         AuditManager auditManager = SecurityServicesUtil.getInstance().getAuditManager();

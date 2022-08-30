@@ -30,6 +30,7 @@ import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.node.runtime.ServiceRefNode;
 import com.sun.enterprise.deployment.node.runtime.common.SecurityRoleMappingNode;
+import com.sun.enterprise.deployment.runtime.common.GroupNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -54,8 +55,7 @@ import org.w3c.dom.Node;
  * unique sun-ri.xml file. In J2EE 1.4, each sub archivist is responsible
  * for saving its runtime-info at his level.
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
 
@@ -213,7 +213,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = roleMap.getPrincipalNames();
                     for (PrincipalNameDescriptor principal : principals) {
-                        rm.assignRole(principal.getPrincipal(), role, descriptor);
+                        rm.assignRole(principal.toPrincipal(), role, descriptor);
                     }
                     List<String> groups = roleMap.getGroupNames();
                     for (String group : groups) {

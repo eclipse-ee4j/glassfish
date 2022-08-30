@@ -73,7 +73,6 @@ public class Descriptor extends DynamicAttributesDescriptor {
      * Add a child descriptor to the parent descriptor as an extension.
      *
      * @param dde the child descriptor
-     *
      */
     public <T extends Descriptor> void addDescriptorExtension(final T dde) {
         List<T> descriptorList = (List<T>) descriptorExtensions.get(dde.getClass());
@@ -84,17 +83,17 @@ public class Descriptor extends DynamicAttributesDescriptor {
         descriptorList.add(dde);
     }
 
+
     /**
      * Get all child descriptor extensions for a given type.
      *
      * @param c the child descriptor type
      * @return the list of descriptor extension for a given type
-     *
      */
-    public <T extends Descriptor> List<T> getDescriptorExtensions (
-        final Class<T> c) {
+    public <T extends Descriptor> List<T> getDescriptorExtensions(final Class<T> c) {
         return (List<T>) descriptorExtensions.get(c);
     }
+
 
     /**
      * Get child descriptor extension for a given type.
@@ -115,9 +114,8 @@ public class Descriptor extends DynamicAttributesDescriptor {
         List<T> descriptorList = (List<T>) descriptorExtensions.get(c);
         if (descriptorList == null || descriptorList.isEmpty()) {
             return null;
-        } else {
-            return descriptorList.get(0);
         }
+        return descriptorList.get(0);
     }
 
     /**
@@ -242,7 +240,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
         // between machines with different locales, if I have
         // at least one value, and no language was specified,
         // let's return it.
-        if (originalLanguage == null && displayNames.size() > 0) {
+        if (originalLanguage == null && !displayNames.isEmpty()) {
             return displayNames.values().iterator().next();
         }
         // all other cases return empty strings
@@ -252,7 +250,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * @return the localized display name indexed by language
      */
-    public Map<? extends String, ? extends String> getLocalizedDisplayNames() {
+    public Map<String, String> getLocalizedDisplayNames() {
         return displayNames;
     }
 
@@ -327,7 +325,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     /**
      * @return a Map of localized description, where lang is the key
      */
-    public Map<? extends String, ? extends String> getLocalizedDescriptions() {
+    public Map<String, String> getLocalizedDescriptions() {
         return descriptions;
     }
 
@@ -365,7 +363,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
      * @return a map of localized large icons uris indexed
      *         by language
      */
-    public Map getLocalizedLargeIconUris() {
+    public Map<String, String> getLocalizedLargeIconUris() {
         return largeIcons;
     }
 
@@ -403,7 +401,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
      *
      * @return the map of small icons indexed by language
      */
-    public Map<? extends String, ? extends String> getLocalizedSmallIconUris() {
+    public Map<String, String> getLocalizedSmallIconUris() {
         return smallIcons;
     }
 

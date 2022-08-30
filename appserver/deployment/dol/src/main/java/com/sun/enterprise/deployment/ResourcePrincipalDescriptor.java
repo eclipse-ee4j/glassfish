@@ -17,9 +17,13 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
+
+import jakarta.resource.spi.security.PasswordCredential;
+
 import java.util.Objects;
 
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 /**
  * This class encapsulates the Resource Principal information needed
@@ -27,20 +31,30 @@ import org.glassfish.security.common.PrincipalImpl;
  *
  * @author Tony Ng
  */
-public class ResourcePrincipal extends PrincipalImpl {
+public class ResourcePrincipalDescriptor extends PrincipalNameDescriptor {
 
     private static final long serialVersionUID = 1L;
 
     private final String password;
 
-    public ResourcePrincipal(String name, String password) {
+    public static ResourcePrincipalDescriptor from(UserNameAndPassword principal) {
+        return new ResourcePrincipalDescriptor(principal.getName(), principal.getStringPassword());
+    }
+
+
+    public ResourcePrincipalDescriptor(String name, String password) {
         super(name);
         this.password = password;
     }
 
 
-    public String getPassword() {
+    public final String getPassword() {
         return password;
+    }
+
+
+    public final boolean hasPassword() {
+        return password != null;
     }
 
 
@@ -52,8 +66,8 @@ public class ResourcePrincipal extends PrincipalImpl {
         if (o == null) {
             return false;
         }
-        if (o instanceof ResourcePrincipal) {
-            ResourcePrincipal other = (ResourcePrincipal) o;
+        if (o instanceof ResourcePrincipalDescriptor) {
+            ResourcePrincipalDescriptor other = (ResourcePrincipalDescriptor) o;
             return Objects.equals(getName(), other.getName()) && Objects.equals(this.password, other.password);
         }
         return false;
@@ -63,5 +77,21 @@ public class ResourcePrincipal extends PrincipalImpl {
     @Override
     public int hashCode() {
         return Objects.hash(getName(), password);
+    }
+
+
+    public UserNameAndPassword toPrincipalNameAndPassword() {
+        return new UserNameAndPassword(getName(), password);
+    }
+
+
+    /**
+     * @return null if the password is not set
+     */
+    public PasswordCredential toPasswordCredential() {
+        if (password == null) {
+            return null;
+        }
+        return new PasswordCredential(getName(), password.toCharArray());
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,63 +17,61 @@
 
 package com.sun.enterprise.connectors.authentication;
 
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * @author Kanwar Oberoi
  */
 public class RuntimeSecurityMap {
 
-    private HashMap userMap;
-
-    private HashMap groupMap;
+    private final HashMap<String, ResourcePrincipalDescriptor> userMap;
+    private final HashMap<String, ResourcePrincipalDescriptor> groupMap;
 
     public RuntimeSecurityMap() {
-        this.userMap = new HashMap();
-        this.groupMap = new HashMap();
+        this.userMap = new HashMap<>();
+        this.groupMap = new HashMap<>();
     }
 
-    public RuntimeSecurityMap(HashMap userMap, HashMap groupMap) {
-        this.userMap = (HashMap) userMap.clone();
-        this.groupMap = (HashMap) groupMap.clone();
+
+    @SuppressWarnings("unchecked")
+    public RuntimeSecurityMap(HashMap<String, ResourcePrincipalDescriptor> userMap, HashMap<String, ResourcePrincipalDescriptor> groupMap) {
+        this.userMap = (HashMap<String, ResourcePrincipalDescriptor>) userMap.clone();
+        this.groupMap = (HashMap<String, ResourcePrincipalDescriptor>) groupMap.clone();
     }
 
+
+    @Override
     public boolean equals(Object map) {
         if (map instanceof RuntimeSecurityMap) {
             RuntimeSecurityMap rsm = (RuntimeSecurityMap) map;
-            if (!(rsm.userMap.equals(this.userMap)))
-                return false;
-            else if (!(rsm.groupMap.equals(this.groupMap)))
-                return false;
-            else
-                return true;
+            return Objects.equals(userMap, rsm.userMap) && Objects.equals(groupMap, rsm.groupMap);
         }
         return false;
     }
 
-    public int hashCode(){
-        return this.userMap.hashCode() + this.groupMap.hashCode();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.userMap, this.groupMap);
     }
 
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        // implement
-        return sb.toString();
-    }
 
     public boolean isEmpty() {
-        if ((this.userMap.size() == 0) && (this.groupMap.size() == 0))
-            return true;
-        else
-            return false;
+        return this.userMap.isEmpty() && this.groupMap.isEmpty();
     }
 
-    public HashMap getUserMap() {
-        return (HashMap) ((this.userMap).clone());
+
+    @SuppressWarnings("unchecked")
+    public HashMap<String, ResourcePrincipalDescriptor> getUserMap() {
+        return (HashMap<String, ResourcePrincipalDescriptor>) this.userMap.clone();
     }
 
-    public HashMap getGroupMap() {
-        return (HashMap) ((this.groupMap).clone());
-    }
 
+    @SuppressWarnings("unchecked")
+    public HashMap<String, ResourcePrincipalDescriptor> getGroupMap() {
+        return (HashMap<String, ResourcePrincipalDescriptor>) this.groupMap.clone();
+    }
 }

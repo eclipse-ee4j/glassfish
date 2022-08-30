@@ -18,7 +18,7 @@
 package com.sun.enterprise.deployment.node.runtime;
 
 import com.sun.enterprise.deployment.MailConfiguration;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
@@ -87,8 +87,8 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
                 new Object[] {newDescriptor, this});
             return;
         }
-        if (newDescriptor instanceof ResourcePrincipal) {
-            descriptor.setResourcePrincipal((ResourcePrincipal) newDescriptor);
+        if (newDescriptor instanceof ResourcePrincipalDescriptor) {
+            descriptor.setResourcePrincipal((ResourcePrincipalDescriptor) newDescriptor);
         } else if (newDescriptor instanceof MailConfiguration) {
             // XXX - This special case doesn't seem to be needed since no one
             // ever uses the value set here. I'm not even sure this case can
@@ -100,7 +100,6 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
         }
     }
 
-    @Override
     public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor rrDescriptor) {
         Node rrNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(rrNode, TagNames.RESOURCE_REFERENCE_NAME, rrDescriptor.getName());
@@ -108,7 +107,7 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
         if (rrDescriptor.getResourcePrincipal() != null) {
             DefaultResourcePrincipalNode drpNode = new DefaultResourcePrincipalNode();
             drpNode.writeDescriptor(rrNode, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL,
-                                    rrDescriptor.getResourcePrincipal());
+                rrDescriptor.getResourcePrincipal());
         }
         return rrNode;
     }

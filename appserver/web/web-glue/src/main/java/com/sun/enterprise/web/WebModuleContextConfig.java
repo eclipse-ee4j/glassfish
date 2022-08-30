@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,7 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.web.ContextParameter;
@@ -156,28 +157,24 @@ public class WebModuleContextConfig extends ContextConfig {
 
         ContextResource[] resources = context.findResources();
         ResourceReferenceDescriptor resourceReference;
-        Set<ResourceReferenceDescriptor> rrs =
-                webBundleDescriptor.getResourceReferenceDescriptors();
-        ResourcePrincipal rp;
+        Set<ResourceReferenceDescriptor> rrs = webBundleDescriptor.getResourceReferenceDescriptors();
+        ResourcePrincipalDescriptor rp;
 
-        for (int i=0; i<resources.length; i++) {
-            resourceReference = new ResourceReferenceDescriptor(
-                    resources[i].getName(), resources[i].getDescription(),
-                    resources[i].getType());
-            resourceReference.setJndiName(resources[i].getName());
+        for (ContextResource element : resources) {
+            resourceReference = new ResourceReferenceDescriptor(element.getName(), element.getDescription(),
+                element.getType());
+            resourceReference.setJndiName(element.getName());
             for (ResourceReferenceDescriptor rr : rrs) {
-                if (resources[i].getName().equals(rr.getName())) {
+                if (element.getName().equals(rr.getName())) {
                     resourceReference.setJndiName(rr.getJndiName());
                     rp = rr.getResourcePrincipal();
-                    if (rp!=null) {
-                        resourceReference.setResourcePrincipal(
-                                new ResourcePrincipal(rp.getName(), rp.getPassword()));
+                    if (rp != null) {
+                        resourceReference.setResourcePrincipal(new ResourcePrincipalDescriptor(rp.getName(), rp.getPassword()));
                     }
                 }
             }
-            resourceReference.setAuthorization(resources[i].getAuth());
-            webBundleDescriptor
-                    .addResourceReferenceDescriptor(resourceReference);
+            resourceReference.setAuthorization(element.getAuth());
+            webBundleDescriptor.addResourceReferenceDescriptor(resourceReference);
             resRefs.add(resourceReference);
         }
     }

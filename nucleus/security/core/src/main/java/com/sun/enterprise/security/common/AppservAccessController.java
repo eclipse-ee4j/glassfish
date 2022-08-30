@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,29 +28,28 @@ import java.security.PrivilegedExceptionAction;
  * @author Shing Wai Chan
  */
 public final class AppservAccessController {
-    private static boolean isSecMgrOff = (System.getSecurityManager() == null);
+    private static final boolean SECURITY_MGR_DISABLED = System.getSecurityManager() == null;
 
     private AppservAccessController() {
     }
 
-    public static Object doPrivileged(PrivilegedAction action) {
-        if (isSecMgrOff) {
+
+    public static <T> T doPrivileged(PrivilegedAction<T> action) {
+        if (SECURITY_MGR_DISABLED) {
             return action.run();
-        } else {
-            return AccessController.doPrivileged(action);
         }
+        return AccessController.doPrivileged(action);
     }
 
-    public static Object doPrivileged(PrivilegedExceptionAction action) throws PrivilegedActionException {
 
-        if (isSecMgrOff) {
+    public static <T> T doPrivileged(PrivilegedExceptionAction<T> action) throws PrivilegedActionException {
+        if (SECURITY_MGR_DISABLED) {
             try {
                 return action.run();
             } catch (Exception e) {
                 throw new PrivilegedActionException(e);
             }
-        } else {
-            return AccessController.doPrivileged(action);
         }
+        return AccessController.doPrivileged(action);
     }
 }

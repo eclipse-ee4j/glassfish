@@ -17,30 +17,44 @@
 
 package com.sun.web.security;
 
-import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
-import static com.sun.enterprise.security.auth.digest.impl.DigestParameterGenerator.HTTP_DIGEST;
-import static com.sun.enterprise.security.web.integration.WebSecurityManager.getContextID;
-import static com.sun.enterprise.util.Utility.isAnyNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.logging.LogDomains.WEB_LOGGER;
-import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
-import static java.util.Arrays.asList;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.ContainerEvent.AFTER_AUTHENTICATION;
-import static org.apache.catalina.ContainerEvent.AFTER_LOGOUT;
-import static org.apache.catalina.ContainerEvent.AFTER_POST_AUTHENTICATION;
-import static org.apache.catalina.ContainerEvent.BEFORE_AUTHENTICATION;
-import static org.apache.catalina.ContainerEvent.BEFORE_LOGOUT;
-import static org.apache.catalina.ContainerEvent.BEFORE_POST_AUTHENTICATION;
-import static org.apache.catalina.Globals.WRAPPED_REQUEST;
-import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
+import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.security.AppCNonceCacheMap;
+import com.sun.enterprise.security.CNonceCacheFactory;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Key;
+import com.sun.enterprise.security.auth.digest.impl.DigestParameterGenerator;
+import com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl;
+import com.sun.enterprise.security.auth.digest.impl.NestedDigestAlgoParamImpl;
+import com.sun.enterprise.security.auth.login.DigestCredentials;
+import com.sun.enterprise.security.auth.login.LoginContextDriver;
+import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
+import com.sun.enterprise.security.integration.RealmInitializer;
+import com.sun.enterprise.security.jmac.config.HttpServletConstants;
+import com.sun.enterprise.security.jmac.config.HttpServletHelper;
+import com.sun.enterprise.security.web.integration.WebPrincipal;
+import com.sun.enterprise.security.web.integration.WebSecurityManager;
+import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
+import com.sun.enterprise.util.net.NetUtils;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+import jakarta.security.auth.message.AuthException;
+import jakarta.security.auth.message.AuthStatus;
+import jakarta.security.auth.message.MessageInfo;
+import jakarta.security.auth.message.config.ServerAuthContext;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -48,10 +62,6 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
-/*V3:Comment
-import com.sun.enterprise.webservice.monitoring.WebServiceEngineImpl;
-import com.sun.enterprise.webservice.monitoring.AuthenticationListener;
- */
 import java.security.AccessController;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.Principal;
@@ -97,45 +107,30 @@ import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.NonceInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-//import org.glassfish.deployment.common.SecurityRoleMapper;
-import com.sun.enterprise.deployment.web.LoginConfiguration;
-import com.sun.enterprise.security.AppCNonceCacheMap;
-import com.sun.enterprise.security.CNonceCacheFactory;
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.Key;
-import com.sun.enterprise.security.auth.digest.impl.DigestParameterGenerator;
-import com.sun.enterprise.security.auth.digest.impl.HttpAlgorithmParameterImpl;
-import com.sun.enterprise.security.auth.digest.impl.NestedDigestAlgoParamImpl;
-import com.sun.enterprise.security.auth.login.DigestCredentials;
-import com.sun.enterprise.security.auth.login.LoginContextDriver;
-import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.integration.RealmInitializer;
-import com.sun.enterprise.security.jmac.config.HttpServletConstants;
-import com.sun.enterprise.security.jmac.config.HttpServletHelper;
-import com.sun.enterprise.security.web.integration.WebPrincipal;
-import com.sun.enterprise.security.web.integration.WebSecurityManager;
-import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
-import com.sun.enterprise.util.net.NetUtils;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
-import jakarta.security.auth.message.AuthException;
-import jakarta.security.auth.message.AuthStatus;
-import jakarta.security.auth.message.MessageInfo;
-import jakarta.security.auth.message.config.ServerAuthContext;
-import jakarta.security.jacc.PolicyContext;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.auth.digest.impl.DigestParameterGenerator.HTTP_DIGEST;
+import static com.sun.enterprise.security.web.integration.WebSecurityManager.getContextID;
+import static com.sun.enterprise.util.Utility.isAnyNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.logging.LogDomains.WEB_LOGGER;
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static jakarta.servlet.http.HttpServletResponse.SC_FORBIDDEN;
+import static jakarta.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static jakarta.servlet.http.HttpServletResponse.SC_SERVICE_UNAVAILABLE;
+import static java.util.Arrays.asList;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.ContainerEvent.AFTER_AUTHENTICATION;
+import static org.apache.catalina.ContainerEvent.AFTER_LOGOUT;
+import static org.apache.catalina.ContainerEvent.AFTER_POST_AUTHENTICATION;
+import static org.apache.catalina.ContainerEvent.BEFORE_AUTHENTICATION;
+import static org.apache.catalina.ContainerEvent.BEFORE_LOGOUT;
+import static org.apache.catalina.ContainerEvent.BEFORE_POST_AUTHENTICATION;
+import static org.apache.catalina.Globals.WRAPPED_REQUEST;
+import static org.apache.catalina.Globals.WRAPPED_RESPONSE;
 
 /**
  * This is the realm adapter used to authenticate users and authorize access to web resources. The authenticate method
@@ -1362,21 +1357,20 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                 SecurityContext ctx = new SecurityContext(subject);
                 SecurityContext.setCurrent(ctx);
                 // XXX assuming no null principal here
-                Principal p = ctx.getCallerPrincipal();
-                WebPrincipal wp = new WebPrincipal(p, ctx);
+                Principal principal = ctx.getCallerPrincipal();
+                WebPrincipal webPrincipal = new WebPrincipal(principal, ctx);
                 try {
                     String authType = (String) messageInfo.getMap().get(HttpServletConstants.AUTH_TYPE);
-
                     if (authType == null && config != null && config.getAuthMethod() != null) {
                         authType = config.getAuthMethod();
                     }
 
                     if (shouldRegister(messageInfo.getMap())) {
-                        AuthenticatorProxy proxy = new AuthenticatorProxy(authenticator, wp, authType);
+                        AuthenticatorProxy proxy = new AuthenticatorProxy(authenticator, webPrincipal, authType);
                         proxy.authenticate(request, response, config);
                     } else {
-                        request.setAuthType((authType == null) ? PROXY_AUTH_TYPE : authType);
-                        request.setUserPrincipal(wp);
+                        request.setAuthType(authType == null ? PROXY_AUTH_TYPE : authType);
+                        request.setUserPrincipal(webPrincipal);
                     }
                 } catch (LifecycleException le) {
                     _logger.log(SEVERE, "[Web-Security] unable to register session", le);
@@ -1458,9 +1452,9 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     // by authentication module.
     static class AuthenticatorProxy extends AuthenticatorBase {
 
-        private AuthenticatorBase authBase;
-        private Principal principal;
-        private String authType;
+        private final AuthenticatorBase authBase;
+        private final Principal principal;
+        private final String authType;
 
         @Override
         public boolean getCache() {
@@ -1503,7 +1497,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
 
         private Object request = null;
         private Object response = null;
-        private Map map = new HashMap();
+        private final Map map = new HashMap();
 
         HttpMessageInfo() {
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,13 +21,11 @@ import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 19/11/12
- * Time: 2:42 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman
  */
 public class ResourceDescriptor extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
 
     private MetadataSource metadataSource = MetadataSource.XML;
 
@@ -35,32 +34,38 @@ public class ResourceDescriptor extends Descriptor {
     private JavaEEResourceType resourceType;
 
     public ResourceDescriptor() {
-
     }
+
 
     public ResourceDescriptor(ResourceDescriptor resourceDescriptor) {
         super(resourceDescriptor);
     }
 
+
     public String getResourceId() {
         return resourceId;
     }
+
 
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
 
+
     public JavaEEResourceType getResourceType() {
         return resourceType;
     }
+
 
     public void setResourceType(JavaEEResourceType resourceType) {
         this.resourceType = resourceType;
     }
 
+
     public MetadataSource getMetadataSource() {
         return metadataSource;
     }
+
 
     public void setMetadataSource(MetadataSource metadataSource) {
         this.metadataSource = metadataSource;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,16 @@
 
 package com.sun.enterprise.security.common;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.UsernamePasswordStore;
+import com.sun.enterprise.security.integration.AppServSecurityContext;
+
 import java.security.Principal;
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
 
-import org.glassfish.security.common.PrincipalImpl;
-//V3:Comment import com.sun.enterprise.ServerConfiguration;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.UsernamePasswordStore;
-import com.sun.enterprise.security.integration.AppServSecurityContext;
+import org.glassfish.security.common.UserNameAndPassword;
 
 /**
  * This class represents the security context on the client side. For usage of the IIOP_CLIENT_PER_THREAD_FLAG flag, see
@@ -57,7 +57,7 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      */
     public ClientSecurityContext(String userName, Subject s) {
 
-        this.initiator = new PrincipalImpl(userName);
+        this.initiator = new UserNameAndPassword(userName);
         this.subject = s;
     }
 

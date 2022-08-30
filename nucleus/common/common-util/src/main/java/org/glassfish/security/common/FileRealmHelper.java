@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package org.glassfish.security.common;
 
 import com.sun.enterprise.util.Utility;
 import com.sun.enterprise.util.i18n.StringManager;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,9 +81,9 @@ public final class FileRealmHelper
     private static final int SALT_SIZE=8;
 
     // Contains cache of keyfile data
-    private final HashMap<String,User> userTable = new HashMap<String, User>();  // user=>FileRealmUser
-    private final HashMap<String,Integer> groupSizeMap = new HashMap<String, Integer>(); // maps of groups with value cardinality of group
-    private File keyfile;
+    private final HashMap<String,User> userTable = new HashMap<>();  // user=>FileRealmUser
+    private final HashMap<String,Integer> groupSizeMap = new HashMap<>(); // maps of groups with value cardinality of group
+    private final File keyfile;
 
     private static final String SSHA_TAG = "{SSHA}";
     private static final String algoSHA = "SHA";
@@ -165,7 +167,7 @@ public final class FileRealmHelper
      */
     public String[] getGroupNames(String username)
     {
-        User ud = (User)userTable.get(username);
+        User ud = userTable.get(username);
         if (ud == null) {
             return null;
         }
@@ -382,8 +384,8 @@ public final class FileRealmHelper
             return;             // empty list is ok
         }
 
-        for (int i=0; i<groupList.length; i++) {
-            validateGroupName(groupList[i]);
+        for (String element : groupList) {
+            validateGroupName(element);
         }
 
     }
@@ -432,7 +434,7 @@ public final class FileRealmHelper
             throw new IllegalArgumentException(msg);
         }
 
-        User oldUser = (User)userTable.get(name);
+        User oldUser = userTable.get(name);
         userTable.remove(name);
         reduceGroups(oldUser.getGroups());
     }
@@ -555,9 +557,9 @@ public final class FileRealmHelper
      */
     private void addGroupNames(String[] groupList) {
         if (groupList != null) {
-            for (int i=0; i < groupList.length; i++) {
-                Integer groupSize = groupSizeMap.get(groupList[i]);
-                groupSizeMap.put(groupList[i],Integer.valueOf((groupSize != null) ?
+            for (String element : groupList) {
+                Integer groupSize = groupSizeMap.get(element);
+                groupSizeMap.put(element,Integer.valueOf((groupSize != null) ?
                     (groupSize.intValue() + 1): 1));
             }
         }
@@ -569,14 +571,14 @@ public final class FileRealmHelper
      */
     private void reduceGroups(String[] groupList) {
         if (groupList != null) {
-            for (int i=0; i < groupList.length; i++) {
-                Integer groupSize = groupSizeMap.get(groupList[i]);
+            for (String element : groupList) {
+                Integer groupSize = groupSizeMap.get(element);
                 if (groupSize != null) {
                     int gpSize = groupSize.intValue() - 1;
                     if (gpSize > 0) {
-                        groupSizeMap.put(groupList[i], Integer.valueOf(gpSize));
+                        groupSizeMap.put(element, Integer.valueOf(gpSize));
                     } else {
-                        groupSizeMap.remove(groupList[i]);
+                        groupSizeMap.remove(element);
                     }
                 }
             }
@@ -654,7 +656,7 @@ public final class FileRealmHelper
                 if (grp > 0) {
                     sb.append(GROUP_SEP);
                 }
-                sb.append((String)groups[grp]);
+                sb.append(groups[grp]);
             }
         }
         sb.append("\n");
@@ -717,7 +719,7 @@ public final class FileRealmHelper
             ud.setAlgo(algo);
         }
 
-        List<String> membership = new ArrayList<String>();
+        List<String> membership = new ArrayList<>();
 
         if (groupList != null) {
             StringTokenizer gst = new StringTokenizer(groupList,
@@ -800,8 +802,10 @@ public final class FileRealmHelper
     /**
      * Represents a FileRealm user.
      */
-    public static class User extends PrincipalImpl
-    {
+    public static class User implements UserPrincipal {
+
+        private static final long serialVersionUID = 1L;
+        private final String name;
         private String[] groups;
         private String realm;
         private byte[] salt;
@@ -810,12 +814,11 @@ public final class FileRealmHelper
 
         /**
          * Constructor.
-         *
          */
-        public User(String name)
-        {
-            super(name);
+        public User(String name) {
+            this.name = name;
         }
+
 
         /**
          * Constructor.
@@ -825,18 +828,93 @@ public final class FileRealmHelper
          * @param realm Realm.
          * @param salt SSHA salt.
          * @param hash SSHA password hash.
-         *
          */
-        public User(String name, String[] groups, String realm,
-                             byte[] salt, byte[] hash, String algo)
-        {
-            super(name);
+        public User(String name, String[] groups, String realm, byte[] salt, byte[] hash, String algo) {
+            this.name = name;
             this.groups = groups;
             this.realm = realm;
             this.hash = hash;
             this.salt = salt;
             this.algo = algo;
         }
+
+
+        /**
+         * Gets the name of the Principal as a java.lang.String
+         *
+         * @return the name of the principal.
+         */
+        @Override
+        public String getName() {
+            return name;
+        }
+
+
+        /**
+         * Returns salt value.
+         */
+        public byte[] getSalt() {
+            return salt;
+        }
+
+
+        /**
+         * Set salt value.
+         */
+        public void setSalt(byte[] salt) {
+            this.salt = salt;
+        }
+
+
+        /**
+         * Get hash value.
+         */
+        public byte[] getHash() {
+            return hash;
+        }
+
+
+        /**
+         * Set hash value.
+         */
+        public void setHash(byte[] hash) {
+            this.hash = hash;
+        }
+
+
+        /**
+         * Return the names of the groups this user belongs to.
+         *
+         * @return String[] List of group memberships.
+         */
+        public String[] getGroups() {
+            return groups;
+        }
+
+
+        /**
+         * Set group membership.
+         */
+        public void setGroups(String[] grp) {
+            this.groups = grp;
+        }
+
+
+        /**
+         * @return the algo
+         */
+        public String getAlgo() {
+            return algo;
+        }
+
+
+        /**
+         * @param algo the algo to set
+         */
+        public void setAlgo(String algo) {
+            this.algo = algo;
+        }
+
 
         @Override
         public boolean equals(Object obj) {
@@ -865,85 +943,25 @@ public final class FileRealmHelper
             return super.equals(obj);
         }
 
+
         @Override
         public int hashCode() {
             int hc = 5;
             hc = 17 * hc + Arrays.deepHashCode(this.groups);
-            hc = 17 * hc + (this.realm != null ? this.realm.hashCode() : 0);
+            hc = 17 * hc + (this.realm == null ? 0 : this.realm.hashCode());
             hc = 17 * hc + Arrays.hashCode(this.salt);
             hc = 17 * hc + Arrays.hashCode(this.hash);
-            hc = 17 * hc + (this.algo != null ? this.algo.hashCode() : 0);
+            hc = 17 * hc + (this.algo == null ? 0 : this.algo.hashCode());
             hc = 17 * super.hashCode();
             return hc;
         }
 
         /**
-         * Returns salt value.
-         *
+         * @return same as {@link #getName()}
          */
-        public byte[] getSalt()
-        {
-            return salt;
-        }
-
-        /**
-         * Set salt value.
-         *
-         */
-        public void setSalt(byte[] salt)
-        {
-            this.salt = salt;
-        }
-
-        /**
-         * Get hash value.
-         *
-         */
-        public byte[] getHash()
-        {
-            return hash;
-        }
-
-        /**
-         * Set hash value.
-         *
-         */
-        public void setHash(byte[] hash)
-        {
-            this.hash = hash;
-        }
-
-        /**
-         * Return the names of the groups this user belongs to.
-         *
-         * @return String[] List of group memberships.
-         *
-         */
-        public String[] getGroups()
-        {
-            return groups;
-        }
-
-        /**
-         * Set group membership.
-         */
-        public void setGroups(String[] grp)
-        {
-            this.groups = grp;
-        }
-
-        /**
-         * @return the algo
-         */
-        public String getAlgo() {
-            return algo;
-        }
-
-        /**
-         * @param algo the algo to set
-         */
-        public void setAlgo(String algo) {
-            this.algo = algo;
+        @Override
+        public String toString() {
+            return getName();
         }
     }
 }

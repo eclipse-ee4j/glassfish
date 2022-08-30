@@ -62,7 +62,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
 
     private String type;
 
-    private ResourcePrincipal resourcePrincipal;
+    private ResourcePrincipalDescriptor resourcePrincipalDescriptor;
 
     // FIXME MailConfiguration is saved and returned, but no one ever seems
     // to use the value that's saved. Should probably just remove this.
@@ -327,18 +327,18 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
      *
      * @return the principal.
      */
-    public ResourcePrincipal getResourcePrincipal() {
-        return this.resourcePrincipal;
+    public ResourcePrincipalDescriptor getResourcePrincipal() {
+        return this.resourcePrincipalDescriptor;
     }
 
 
     /**
      * Sets the identity used to authorize this resource.
      *
-     * @param resourcePrincipal the principal.
+     * @param resourcePrincipalDescriptor the principal.
      */
-    public void setResourcePrincipal(ResourcePrincipal resourcePrincipal) {
-        this.resourcePrincipal = resourcePrincipal;
+    public void setResourcePrincipal(ResourcePrincipalDescriptor resourcePrincipalDescriptor) {
+        this.resourcePrincipalDescriptor = resourcePrincipalDescriptor;
     }
 
 

@@ -26,7 +26,7 @@ import org.glassfish.api.admin.*;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.hk2.api.ServiceLocator;
 import javax.security.auth.Subject;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import org.glassfish.security.common.UserNameAndPassword;
 
 
 public class SimpleBMPBean implements EntityBean {
@@ -141,7 +141,7 @@ public class SimpleBMPBean implements EntityBean {
 
     private static ActionReport runCommand(String commandName, ParameterMap parameters) {
         Subject subject = new Subject();
-        ResourcePrincipal rp =  new ResourcePrincipal("asadmin", "");
+        UserNameAndPassword rp =  new UserNameAndPassword("asadmin", "");
         subject.getPrincipals().add(rp);
 
         ServiceLocator serviceLocator = Globals.getDefaultHabitat();

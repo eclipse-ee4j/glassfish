@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,15 @@
 
 package com.sun.enterprise.security.auth.realm.certificate;
 
+import com.sun.enterprise.security.BaseRealm;
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.security.auth.realm.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+
 import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -29,14 +39,6 @@ import javax.security.auth.x500.X500Principal;
 
 import org.glassfish.security.common.Group;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting certificate authentication.
@@ -69,7 +71,7 @@ import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 public final class CertificateRealm extends IASRealm {
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "certificate";
-    private Vector<String> defaultGroups = new Vector<String>();
+    private final Vector<String> defaultGroups = new Vector<>();
 
     // Optional link to a realm to verify group (possibly user, later)
     // public static final String PARAM_USEREALM = "use-realm";
@@ -99,9 +101,9 @@ public final class CertificateRealm extends IASRealm {
             }
         }
 
-        String jaasCtx = props.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
         if (jaasCtx != null) {
-            this.setProperty(IASRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+            this.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
         }
 
         /* future enhacement; allow using subset of DN as name field;
@@ -156,7 +158,7 @@ public final class CertificateRealm extends IASRealm {
      *
      */
     @Override
-    public Enumeration getGroupNames(String username) throws NoSuchUserException, InvalidOperationException {
+    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException, InvalidOperationException {
         // This is called during web container role check, not during
         // EJB container role cheks... fix RI for consistency.
 

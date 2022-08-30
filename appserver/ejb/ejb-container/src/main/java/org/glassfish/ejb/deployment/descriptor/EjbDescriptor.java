@@ -1489,7 +1489,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         if (needToConvertMethodPermissions()) {
             convertMethodPermissions();
         }
-        return getPermissionedMethodsByPermission().get(MethodPermission.getUncheckedMethodPermission());
+        Map<MethodPermission, Set<MethodDescriptor>> all = getPermissionedMethodsByPermission();
+        return all.get(MethodPermission.getPermitAllMethodPermission());
     }
 
     /**
@@ -1499,7 +1500,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         if (needToConvertMethodPermissions()) {
             convertMethodPermissions();
         }
-        return getPermissionedMethodsByPermission().get(MethodPermission.getExcludedMethodPermission());
+        Map<MethodPermission, Set<MethodDescriptor>> all = getPermissionedMethodsByPermission();
+        return all.get(MethodPermission.getDenyAllMethodPermission());
     }
 
     /**
@@ -1536,12 +1538,12 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         }
 
         // All remaining methods should now be defined as unchecked...
-        MethodPermission mp = MethodPermission.getUncheckedMethodPermission();
+        MethodPermission permitAll = MethodPermission.getPermitAllMethodPermission();
         Iterator<MethodDescriptor> iterator = unpermissionedMethods.iterator();
         while (iterator.hasNext()) {
             MethodDescriptor md = iterator.next();
             if (getMethodPermissions(md).isEmpty()) {
-                addMethodPermissionForMethod(mp, md);
+                addMethodPermissionForMethod(permitAll, md);
             }
         }
 

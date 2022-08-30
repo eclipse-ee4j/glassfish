@@ -40,21 +40,13 @@ import org.jvnet.hk2.annotations.Service;
 @AnnotationHandlerFor(PermitAll.class)
 public class PermitAllHandler extends AbstractAuthAnnotationHandler {
 
-    public PermitAllHandler() {
-    }
-
 
     @Override
     protected void processEjbMethodSecurity(Annotation authAnnoation, MethodDescriptor md, EjbDescriptor ejbDesc) {
-        ejbDesc.addPermissionedMethod(MethodPermission.getUncheckedMethodPermission(), md);
+        ejbDesc.addPermissionedMethod(MethodPermission.getPermitAllMethodPermission(), md);
     }
 
 
-    /**
-     * @return an array of annotation types this annotation handler would
-     *         require to be processed (if present) before it processes it's own
-     *         annotation type.
-     */
     @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAnnotationTypes();

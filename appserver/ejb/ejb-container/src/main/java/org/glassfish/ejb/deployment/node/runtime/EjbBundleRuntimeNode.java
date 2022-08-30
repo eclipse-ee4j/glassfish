@@ -133,7 +133,7 @@ public class EjbBundleRuntimeNode extends RuntimeBundleNode<EjbBundleDescriptorI
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = roleMap.getPrincipalNames();
                     for (PrincipalNameDescriptor principal : principals) {
-                        rm.assignRole(principal.getPrincipal(), role, descriptor);
+                        rm.assignRole(principal.toPrincipal(), role, descriptor);
                     }
                     List<String> groups = roleMap.getGroupNames();
                     for (String group : groups) {

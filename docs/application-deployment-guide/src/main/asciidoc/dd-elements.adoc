@@ -7856,7 +7856,7 @@ Table C-112 `principal-name` Attributes
 [width="100%",cols="13%,36%,51%",options="header",]
 |===
 |Attribute |Default |Description
-|`class-name` |`com.sun.enterprise.deployment.PrincipalImpl` |(optional)
+|`class-name` |`com.sun.enterprise.deployment.UserNameAndPassword` |(optional)
 Specifies the custom principal implementation class corresponding to the
 named principal.
 |===

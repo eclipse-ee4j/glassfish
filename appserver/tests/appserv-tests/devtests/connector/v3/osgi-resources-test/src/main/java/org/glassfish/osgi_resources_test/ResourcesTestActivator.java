@@ -37,10 +37,10 @@ import javax.security.auth.Subject;
 
 public class ResourcesTestActivator implements BundleActivator {
 
-    private static class PrincipalImpl implements Principal {
+    private static class UserNameAndPassword implements Principal {
         private final String name;
 
-        private PrincipalImpl(final String name) {
+        private UserNameAndPassword(final String name) {
             this.name = name;
         }
 
@@ -62,8 +62,8 @@ public class ResourcesTestActivator implements BundleActivator {
     public void start(BundleContext bundleContext) throws Exception {
         this.bundleContext = bundleContext;
         s = new Subject();
-        s.getPrincipals().add(new PrincipalImpl("asadmin"));
-        s.getPrincipals().add(new PrincipalImpl("_InternalSystemAdministrator_"));
+        s.getPrincipals().add(new UserNameAndPassword("asadmin"));
+        s.getPrincipals().add(new UserNameAndPassword("_InternalSystemAdministrator_"));
 
         acquireTestJdbcResource();
         test();

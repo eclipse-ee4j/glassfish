@@ -1,6 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,19 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security;
+package org.glassfish.security.common;
 
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.UserPrincipal;
-import org.jvnet.hk2.annotations.Contract;
+import java.io.Serializable;
+import java.security.Principal;
+
 
 /**
- * Factory for Group and Principal instances.
+ * Principal representing user, usually with some additional attributes used for the authentication
+ * and authorization.
+ *
+ * @author David Matejcek
  */
-@Contract
-public interface PrincipalGroupFactory {
+public interface UserPrincipal extends Serializable, Principal {
 
-    UserPrincipal getPrincipalInstance(String name, String realm);
-
-    Group getGroupInstance(String name, String realm);
 }

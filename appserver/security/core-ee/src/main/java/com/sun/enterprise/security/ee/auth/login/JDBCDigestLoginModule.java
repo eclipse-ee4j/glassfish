@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,23 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.sun.enterprise.security.auth.realm.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
+import java.util.Enumeration;
+import java.util.logging.Level;
+
 /**
- *
  * @author K.Venugopal@sun.com
  */
 public class JDBCDigestLoginModule extends DigestLoginModule {
 
-    public JDBCDigestLoginModule() {
-    }
-
     @Override
-    protected Enumeration getGroups(String username) {
+    protected Enumeration<String> getGroups(String username) {
         try {
             return this.getRealm().getGroupNames(username);
         } catch (InvalidOperationException | NoSuchUserException ex) {
-            Logger.getLogger("global").log(Level.SEVERE, null, ex);
+            _logger.log(Level.SEVERE, null, ex);
         }
         return null;
     }

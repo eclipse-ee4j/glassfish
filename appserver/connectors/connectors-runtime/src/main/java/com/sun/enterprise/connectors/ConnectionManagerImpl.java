@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@ import com.sun.enterprise.connectors.authentication.AuthenticationService;
 import com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.resource.ClientSecurityInfo;
 import com.sun.enterprise.resource.ResourceSpec;
@@ -40,6 +40,7 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 import jakarta.resource.ResourceException;
@@ -73,7 +74,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
     private transient BindableResource resourceConfiguration;
 
-    protected ResourcePrincipal defaultPrin = null;
+    protected ResourcePrincipalDescriptor defaultPrin;
 
     public ConnectionManagerImpl(PoolInfo poolInfo, ResourceInfo resourceInfo) {
         this.poolInfo = poolInfo;
@@ -84,6 +85,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         this.jndiName = jndiName;
     }
 
+    @Override
     public String getJndiName() {
         return jndiName;
     }
@@ -117,6 +119,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
      * If one were to create a resource with a jndiName ending with __nontx
      * the same functionality might be achieved.
      */
+    @Override
     public Object allocateNonTxConnection(ManagedConnectionFactory mcf,
                                           ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         String localJndiName = jndiName;
@@ -138,6 +141,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         return allocateConnection(mcf, cxRequestInfo, localJndiName);
     }
 
+    @Override
     public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo)
             throws ResourceException {
         return this.allocateConnection(mcf, cxRequestInfo, jndiName);
@@ -160,18 +164,17 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         if (ref != null) {
             String shareableStr = ref.getSharingScope();
 
-            if (shareableStr.equals(ref.RESOURCE_UNSHAREABLE)) {
+            if (shareableStr.equals(ResourceReferenceDescriptor.RESOURCE_UNSHAREABLE)) {
                 resourceShareable = false;
             }
         }
 
         //TODO V3 refactor all the 3 cases viz, no res-ref, app-auth, cont-auth.
         if (ref == null) {
-            if(getLogger().isLoggable(Level.FINE)) {
+            if (getLogger().isLoggable(Level.FINE)) {
                 getLogger().log(Level.FINE, "poolmgr.no_resource_reference", jndiNameToUse);
             }
-            return internalGetConnection(mcf, defaultPrin, cxRequestInfo,
-                    resourceShareable, jndiNameToUse, conn, true);
+            return internalGetConnection(mcf, defaultPrin, cxRequestInfo, resourceShareable, jndiNameToUse, conn, true);
         }
         String auth = ref.getAuthorization();
 
@@ -182,47 +185,40 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 throw new ResourceException(msg);
             }
             ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
-            return internalGetConnection(mcf, null, cxRequestInfo,
-                    resourceShareable, jndiNameToUse, conn, false);
-        } else {
-            ResourcePrincipal prin = null;
-            Set principalSet = null;
-            Principal callerPrincipal = null;
-            SecurityContext securityContext = null;
-            ConnectorRuntime connectorRuntime = ConnectorRuntime.getRuntime();
-            //TODO V3 is SecurityContext.getCurrent() the right way ? Does it need to be injected ?
-            if (connectorRuntime.isServer() &&
-                    (securityContext = SecurityContext.getCurrent()) != null &&
-                    (callerPrincipal = securityContext.getCallerPrincipal()) != null &&
-                    (principalSet = securityContext.getPrincipalSet()) != null) {
-                AuthenticationService authService =
-                        connectorRuntime.getAuthenticationService(rarName, poolInfo);
-                if (authService != null) {
-                    prin = (ResourcePrincipal) authService.mapPrincipal(
-                            callerPrincipal, principalSet);
-                }
-            }
-
-            if (prin == null) {
-                prin = ref.getResourcePrincipal();
-                if (prin == null) {
-                    if (getLogger().isLoggable(Level.FINE)) {
-                        getLogger().log(Level.FINE, "default-resource-principal not"
-                                + " specified for " + jndiNameToUse + ". Defaulting to"
-                                + " user/password specified in the pool");
-                    }
-                    prin = defaultPrin;
-                } else if (!prin.equals(defaultPrin)) {
-                    ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
-                }
-            }
-            return internalGetConnection(mcf, prin, cxRequestInfo,
-                    resourceShareable, jndiNameToUse, conn, false);
+            return internalGetConnection(mcf, null, cxRequestInfo, resourceShareable, jndiNameToUse, conn, false);
         }
+        ResourcePrincipalDescriptor prin = null;
+        Set<Principal> principalSet = null;
+        Principal callerPrincipal = null;
+        SecurityContext securityContext = null;
+        ConnectorRuntime connectorRuntime = ConnectorRuntime.getRuntime();
+        // TODO V3 is SecurityContext.getCurrent() the right way ? Does it need to be injected ?
+        if (connectorRuntime.isServer() && (securityContext = SecurityContext.getCurrent()) != null
+            && (callerPrincipal = securityContext.getCallerPrincipal()) != null
+            && (principalSet = securityContext.getPrincipalSet()) != null) {
+            AuthenticationService authService = connectorRuntime.getAuthenticationService(rarName, poolInfo);
+            if (authService != null) {
+                prin = authService.mapPrincipal(callerPrincipal, principalSet);
+            }
+        }
+
+        if (prin == null) {
+            prin = ref.getResourcePrincipal();
+            if (prin == null) {
+                if (getLogger().isLoggable(Level.FINE)) {
+                    getLogger().log(Level.FINE, "default-resource-principal not specified for " + jndiNameToUse
+                        + ". Defaulting to user/password specified in the pool");
+                }
+                prin = defaultPrin;
+            } else if (!prin.equals(defaultPrin)) {
+                ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
+            }
+        }
+        return internalGetConnection(mcf, prin, cxRequestInfo, resourceShareable, jndiNameToUse, conn, false);
     }
 
     protected Object internalGetConnection(ManagedConnectionFactory mcf,
-                                           final ResourcePrincipal prin, ConnectionRequestInfo cxRequestInfo,
+                                           final ResourcePrincipalDescriptor prin, ConnectionRequestInfo cxRequestInfo,
                                            boolean shareable, String jndiNameToUse, Object conn, boolean isUnknownAuth)
             throws ResourceException {
         try {
@@ -322,7 +318,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 alloc = new LocalTxConnectorAllocator(poolmgr, mcf, spec, subject, cxRequestInfo, info, desc, shareable);
                 break;
             case ConnectorConstants.XA_TRANSACTION_INT:
-                if (rarName.equals(ConnectorRuntime.DEFAULT_JMS_ADAPTER)) {
+                if (rarName.equals(ConnectorConstants.DEFAULT_JMS_ADAPTER)) {
                     shareable = false;
                 }
                 spec.markAsXA();
@@ -393,7 +389,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             }
 
             if ((runtime.isServer() || runtime.isEmbedded()) &&
-                    (!resourceInfo.getName().contains(ConnectorConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX) &&
+                    (!resourceInfo.getName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX) &&
                             (!isDefaultResource) && (!isSunRAResource))) {
                 // performance optimization so that resource configuration is not retrieved from
                 // resources config bean each time.

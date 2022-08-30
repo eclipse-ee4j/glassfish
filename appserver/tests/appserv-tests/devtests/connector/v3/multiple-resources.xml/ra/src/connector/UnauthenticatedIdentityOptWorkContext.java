@@ -16,7 +16,7 @@
 
 package connector;
 
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.Callback;
@@ -58,11 +58,11 @@ public class UnauthenticatedIdentityOptWorkContext extends SecurityContext {
             if (principal) {
                 CallerPrincipalCallback cpc = null;
                 if(principalName != null){
-                    cpc = new CallerPrincipalCallback(execSubject, new PrincipalImpl(principalName));
+                    cpc = new CallerPrincipalCallback(execSubject, new UserNameAndPassword(principalName));
                     callbacks.add(cpc);
                     debug("setting caller principal callback with principal : " + principalName);
                 }else{
-                    execSubject.getPrincipals().add(new PrincipalImpl(principalName));
+                    execSubject.getPrincipals().add(new UserNameAndPassword(principalName));
                     debug("setting principal for execSubject : " + principalName);
                 }
             } else {
@@ -95,7 +95,7 @@ public class UnauthenticatedIdentityOptWorkContext extends SecurityContext {
         //if (translationRequired) {
             if (subject == null) {
                 subject = new Subject();
-                subject.getPrincipals().add(new PrincipalImpl(principalName));
+                subject.getPrincipals().add(new UserNameAndPassword(principalName));
                 debug("setting translation required for principal : " + principalName);
             }
             return subject;

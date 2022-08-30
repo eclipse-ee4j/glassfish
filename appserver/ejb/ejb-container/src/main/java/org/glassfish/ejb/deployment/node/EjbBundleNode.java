@@ -304,7 +304,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
                 EjbDescriptor ejbDesc = entry.getKey();
                 Vector<MethodDescriptor> excludedMethods = entry.getValue();
                 MethodPermissionDescriptor mpd = new MethodPermissionDescriptor();
-                mpd.addMethodPermission(MethodPermission.getExcludedMethodPermission());
+                mpd.addMethodPermission(MethodPermission.getDenyAllMethodPermission());
                 mpd.addMethods(excludedMethods);
                 mpNode.writeDescriptorInNode(excludeListNode, mpd, ejbDesc);
             }

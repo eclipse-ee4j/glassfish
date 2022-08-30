@@ -23,7 +23,7 @@ import com.sun.appserv.connectors.spi.TransactionSupport;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.deployment.runtime.connector.SunConnector;
 import com.sun.enterprise.util.i18n.StringManager;
@@ -274,17 +274,16 @@ public final class ConnectionPoolObjectsUtils {
     }
 
 
-    public static Subject createSubject(ManagedConnectionFactory mcf, final ResourcePrincipal prin) {
+    public static Subject createSubject(ManagedConnectionFactory mcf, final ResourcePrincipalDescriptor principalDescriptor) {
         final Subject tempSubject = new Subject();
-        if (prin == null) {
+        if (principalDescriptor == null) {
             return tempSubject;
         }
-        String password = prin.getPassword();
-        if (password != null) {
-            final PasswordCredential pc = new PasswordCredential(prin.getName(), password.toCharArray());
+        final PasswordCredential pc = principalDescriptor.toPasswordCredential();
+        if (pc != null) {
             pc.setManagedConnectionFactory(mcf);
             PrivilegedAction<Void> action = () -> {
-                tempSubject.getPrincipals().add(prin);
+                tempSubject.getPrincipals().add(principalDescriptor.toPrincipalNameAndPassword());
                 tempSubject.getPrivateCredentials().add(pc);
                 return null;
             };

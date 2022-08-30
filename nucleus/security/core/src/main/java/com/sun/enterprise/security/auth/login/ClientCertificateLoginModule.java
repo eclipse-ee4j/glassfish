@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,12 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
+import com.sun.enterprise.security.integration.AppClientSSL;
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
@@ -32,101 +39,80 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.PrincipalImpl;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-import com.sun.enterprise.security.integration.AppClientSSL;
-//V3:Commented import com.sun.enterprise.config.clientbeans.Ssl;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.glassfish.security.common.UserPrincipal;
 
 /**
  * <p>
  * This LoginModule authenticates users with X509 certificates.
- *
  * <p>
- * If testUser successfully authenticates itself, a <code>PrincipalImpl</code> with the testUser's username is added to the
- * Subject.
- *
+ * If testUser successfully authenticates itself, a <code>UserPrincipal</code> with the user's
+ * username is added to the Subject.
  * <p>
- * This LoginModule recognizes the debug option. If set to true in the login Configuration, debug messages will be output to the
- * output stream, System.out.
+ * This LoginModule recognizes the debug option. If set to true in the login Configuration, debug
+ * messages will be output to the output stream, System.out.
  *
  * @author Harpreet Singh (harpreet.singh@sun.com)
  */
-
 public class ClientCertificateLoginModule implements LoginModule {
 
-    private static Logger _logger = null;
-    static {
-        _logger = SecurityLoggerInfo.getLogger();
-    }
+    private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ClientCertificateLoginModule.class);
 
-    private static KeyStore ks = null;
+    private static KeyStore ks;
 
     // initial state
     private Subject subject;
     private CallbackHandler callbackHandler;
-    private Map sharedState;
-    private Map options;
 
     // configurable option
-    private boolean debug = false; // default
+    private boolean debug;
 
     // the authentication status
-    private boolean succeeded = false;
-    private boolean commitSucceeded = false;
+    private boolean succeeded;
+    private boolean commitSucceeded;
 
     private String alias;
     private X509Certificate certificate;
 
-    // testUser's PrincipalImpl
-    private PrincipalImpl userPrincipal;
+    private UserPrincipal userPrincipal;
 
     private AppClientSSL ssl;
     private SSLUtils sslUtils;
 
+    public static void setKeyStore(KeyStore keyStore) {
+        ks = keyStore;
+    }
+
+
     /**
      * Initialize this <code>LoginModule</code>.
      *
-     * <p>
-     *
      * @param subject the <code>Subject</code> to be authenticated.
-     * <p>
-     *
-     * @param callbackHandler a <code>CallbackHandler</code> for communicating with the end user (prompting for usernames and
-     * passwords, for example).
-     * <p>
-     *
+     * @param callbackHandler a <code>CallbackHandler</code> for communicating with the end user
+     *            (prompting for usernames and passwords, for example).
      * @param sharedState shared <code>LoginModule</code> state.
-     * <p>
-     *
-     * @param options options specified in the login <code>Configuration</code> for this particular <code>LoginModule</code>.
+     * @param options options specified in the login <code>Configuration</code> for this particular
+     *            <code>LoginModule</code>.
      */
     @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
 
         this.subject = subject;
         this.callbackHandler = callbackHandler;
-        this.sharedState = sharedState;
-        this.options = options;
 
         // initialize any configured options
         debug = "true".equalsIgnoreCase((String) options.get("debug"));
         sslUtils = Globals.getDefaultHabitat().getService(SSLUtils.class);
     }
 
+
     /**
      * Authenticate the user by prompting for a username and password.
      *
-     * <p>
-     *
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.
-     *
-     * @exception LoginException if this <code>LoginModule</code> is unable to perform the authentication.
+     * @throws LoginException if this <code>LoginModule</code> is unable to perform the authentication.
      */
     @Override
     public boolean login() throws LoginException {
@@ -139,9 +125,9 @@ public class ClientCertificateLoginModule implements LoginModule {
         try {
             String[] as = new String[ks.size()];
             String[] aliasString = new String[ks.size()];
-            Enumeration aliases = ks.aliases();
+            Enumeration<String> aliases = ks.aliases();
             for (int i = 0; i < ks.size(); i++) {
-                aliasString[i] = (String) aliases.nextElement();
+                aliasString[i] = aliases.nextElement();
                 as[i] = ((X509Certificate) ks.getCertificate(aliasString[i])).getSubjectX500Principal().getName();
             }
 
@@ -162,8 +148,8 @@ public class ClientCertificateLoginModule implements LoginModule {
             if (debug) {
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, "\t\t[ClientCertificateLoginModule] " + "user entered certificate: ");
-                    for (int i = 0; i < idx.length; i++) {
-                        _logger.log(Level.FINE, aliasString[idx[i]]);
+                    for (int element : idx) {
+                        _logger.log(Level.FINE, aliasString[element]);
                     }
                 }
             }
@@ -177,7 +163,7 @@ public class ClientCertificateLoginModule implements LoginModule {
             // the authenticate should always return a true.
             if (debug) {
                 if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "\t\t[ClientCertificateLoginModule] " + "authentication succeeded");
+                    _logger.log(Level.FINE, "\t\t[ClientCertificateLoginModule] authentication succeeded");
                 }
             }
             succeeded = true;
@@ -192,74 +178,64 @@ public class ClientCertificateLoginModule implements LoginModule {
         }
     }
 
+
     /**
      * <p>
-     * This method is called if the LoginContext's overall authentication succeeded (the relevant REQUIRED, REQUISITE, SUFFICIENT and
-     * OPTIONAL LoginModules succeeded).
-     *
+     * This method is called if the LoginContext's overall authentication succeeded (the relevant
+     * REQUIRED, REQUISITE, SUFFICIENT and OPTIONAL LoginModules succeeded).
      * <p>
-     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private state saved by the
-     * <code>login</code> method), then this method associates a <code>PrincipalImpl</code> with the <code>Subject</code> located in
-     * the <code>LoginModule</code>. If this LoginModule's own authentication attempted failed, then this method removes any state
-     * that was originally saved.
+     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private
+     * state saved by the <code>login</code> method), then this method associates a
+     * <code>UserPrincipal</code> with the <code>Subject</code> located in the
+     * <code>LoginModule</code>. If this LoginModule's own authentication attempted failed, then
+     * this method removes any state that was originally saved.
      *
-     * <p>
-     *
-     * @exception LoginException if the commit fails.
-     *
+     * @throws LoginException if the commit fails.
      * @return true if this LoginModule's own login and commit attempts succeeded, or false otherwise.
      */
     @Override
     public boolean commit() throws LoginException {
         if (succeeded == false) {
             return false;
-        } else {
-            // add a Principal (authenticated identity)
-            // to the Subject
-
-            // assume the user we authenticated is the PrincipalImpl
-            userPrincipal = new PrincipalImpl(alias);
-            if (!subject.getPrincipals().contains(userPrincipal)) {
-                subject.getPrincipals().add(userPrincipal);
-            }
-
-            if (debug) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "\t\t[ClientCertificateLoginModule] " + "added PrincipalImpl to Subject");
-                }
-            }
-
-            ssl = new AppClientSSL();
-            ssl.setCertNickname(this.alias);
-            sslUtils.setAppclientSsl(ssl);
-
-            String realm = LoginContextDriver.CERT_REALMNAME;
-            X509Certificate[] certChain = new X509Certificate[1];
-            certChain[0] = certificate;
-            X509CertificateCredential pc = new X509CertificateCredential(certChain, alias, realm);
-            if (!subject.getPrivateCredentials().contains(pc)) {
-                subject.getPrivateCredentials().add(pc);
-            }
-
-            commitSucceeded = true;
-            return true;
         }
+        userPrincipal = new UserNameAndPassword(alias);
+        if (!subject.getPrincipals().contains(userPrincipal)) {
+            subject.getPrincipals().add(userPrincipal);
+        }
+
+        if (debug) {
+            _logger.log(Level.FINE, "\t\t[ClientCertificateLoginModule] added UserPrincipal to Subject");
+        }
+
+        ssl = new AppClientSSL();
+        ssl.setCertNickname(this.alias);
+        sslUtils.setAppclientSsl(ssl);
+
+        String realm = LoginContextDriver.CERT_REALMNAME;
+        X509Certificate[] certChain = new X509Certificate[1];
+        certChain[0] = certificate;
+        X509CertificateCredential pc = new X509CertificateCredential(certChain, alias, realm);
+        if (!subject.getPrivateCredentials().contains(pc)) {
+            subject.getPrivateCredentials().add(pc);
+        }
+
+        commitSucceeded = true;
+        return true;
     }
+
 
     /**
      * <p>
-     * This method is called if the LoginContext's overall authentication failed. (the relevant REQUIRED, REQUISITE, SUFFICIENT and
-     * OPTIONAL LoginModules did not succeed).
-     *
+     * This method is called if the LoginContext's overall authentication failed. (the relevant
+     * REQUIRED, REQUISITE, SUFFICIENT and OPTIONAL LoginModules did not succeed).
      * <p>
-     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private state saved by the
-     * <code>login</code> and <code>commit</code> methods), then this method cleans up any state that was originally saved.
+     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private
+     * state saved by the <code>login</code> and <code>commit</code> methods), then this method
+     * cleans up any state that was originally saved.
      *
-     * <p>
-     *
-     * @exception LoginException if the abort fails.
-     *
-     * @return false if this LoginModule's own login and/or commit attempts failed, and true otherwise.
+     * @throws LoginException if the abort fails.
+     * @return false if this LoginModule's own login and/or commit attempts failed, and true
+     *         otherwise.
      */
     @Override
     public boolean abort() throws LoginException {
@@ -278,16 +254,15 @@ public class ClientCertificateLoginModule implements LoginModule {
         return true;
     }
 
+
     /**
      * Logout the user.
-     *
      * <p>
-     * This method removes the <code>PrincipalImpl</code> that was added by the <code>commit</code> method.
-     *
+     * This method removes the <code>UserPrincipal</code> that was added by the <code>commit</code>
+     * method.
      * <p>
      *
-     * @exception LoginException if the logout fails.
-     *
+     * @throws LoginException if the logout fails.
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.
      */
     @Override
@@ -301,9 +276,5 @@ public class ClientCertificateLoginModule implements LoginModule {
         alias = null;
         userPrincipal = null;
         return true;
-    }
-
-    public static void setKeyStore(KeyStore keyStore) {
-        ks = keyStore;
     }
 }

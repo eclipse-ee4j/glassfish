@@ -30,6 +30,8 @@ import javax.security.auth.x500.X500Principal;
 
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.glassfish.security.common.UserPrincipal;
 
 import com.sun.enterprise.common.iiop.security.AnonCredential;
 import com.sun.enterprise.common.iiop.security.GSSUPName;
@@ -224,19 +226,17 @@ public class LoginContextDriver {
     public static void loginPrincipal(String username, String realmName) throws LoginException {
 
         // no realm provided, assuming default
-        if (realmName == null || realmName.length() == 0) {
+        if (realmName == null || realmName.isEmpty()) {
             realmName = Realm.getDefaultRealm();
         }
 
         final Subject s = new Subject();
-
-        final org.glassfish.security.common.PrincipalImpl p = new org.glassfish.security.common.PrincipalImpl(username);
-
+        final UserPrincipal p = new UserNameAndPassword(username);
         final GSSUPName name = new GSSUPName(username, realmName);
 
-        AppservAccessController.doPrivileged(new PrivilegedAction() {
+        AppservAccessController.doPrivileged(new PrivilegedAction<Void>() {
             @Override
-            public java.lang.Object run() {
+            public Void run() {
                 s.getPrincipals().add(p);
                 s.getPublicCredentials().add(name);
                 return null;
@@ -245,10 +245,10 @@ public class LoginContextDriver {
 
         try {
             Realm realm = Realm.getInstance(realmName);
-            Enumeration en = realm.getGroupNames(username);
+            Enumeration<String> en = realm.getGroupNames(username);
             Set<Principal> principalSet = s.getPrincipals();
             while (en.hasMoreElements()) {
-                principalSet.add(new Group((String) en.nextElement()));
+                principalSet.add(new Group(en.nextElement()));
             }
 
         } catch (InvalidOperationException ex) {
@@ -305,10 +305,11 @@ public class LoginContextDriver {
         try {
             jaasCtx = Realm.getInstance(realm).getJAASContext();
         } catch (Exception ex) {
-            if (ex instanceof LoginException)
+            if (ex instanceof LoginException) {
                 throw (LoginException) ex;
-            else
+            } else {
                 throw (LoginException) new LoginException(ex.toString()).initCause(ex);
+            }
         }
 
         assert user != null;
@@ -333,10 +334,11 @@ public class LoginContextDriver {
             if (getAuditManager() != null && getAuditManager().isAuditOn()) {
                 getAuditManager().authentication(user, realm, false);
             }
-            if (e instanceof LoginException)
+            if (e instanceof LoginException) {
                 throw (LoginException) e;
-            else
+            } else {
                 throw (LoginException) new LoginException("Login failed: " + e.getMessage()).initCause(e);
+            }
         }
         if (getAuditManager() != null && getAuditManager().isAuditOn()) {
             getAuditManager().authentication(user, realm, true);
@@ -387,10 +389,11 @@ public class LoginContextDriver {
         try {
             jaasCtx = Realm.getInstance(realmName).getJAASContext();
         } catch (Exception ex) {
-            if (ex instanceof LoginException)
+            if (ex instanceof LoginException) {
                 throw (LoginException) ex;
-            else
+            } else {
                 throw (LoginException) new LoginException(ex.toString()).initCause(ex);
+            }
         }
 
         if (_logger.isLoggable(Level.FINE)) {
@@ -410,10 +413,11 @@ public class LoginContextDriver {
                 getAuditManager().authentication(username, realmName, false);
             }
 
-            if (e instanceof LoginException)
+            if (e instanceof LoginException) {
                 throw (LoginException) e;
-            else
+            } else {
                 throw (LoginException) new LoginException("Login failed: " + e.getMessage()).initCause(e);
+            }
         }
         if (getAuditManager().isAuditOn()) {
             getAuditManager().authentication(username, realmName, true);
@@ -679,10 +683,11 @@ public class LoginContextDriver {
             });
         } catch (Exception e) {
             // should never come here
-            if (e instanceof LoginException)
+            if (e instanceof LoginException) {
                 throw (LoginException) e;
-            else
+            } else {
                 throw (LoginException) new LoginException("Failed to retrieve public credential: " + e.getMessage()).initCause(e);
+            }
         }
 
         return obj;
@@ -727,10 +732,11 @@ public class LoginContextDriver {
             });
         } catch (Exception e) {
             // should never come here
-            if (e instanceof LoginException)
+            if (e instanceof LoginException) {
                 throw (LoginException) e;
-            else
+            } else {
                 throw (LoginException) new LoginException("Failed to retrieve private credential: " + e.getMessage()).initCause(e);
+            }
         }
 
         return obj;

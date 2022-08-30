@@ -36,7 +36,6 @@ import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.deployment.ConnectionDefDescriptor;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.ResourcePrincipal;
 import com.sun.enterprise.resource.deployer.ConnectorResourceDeployer;
 import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
 import com.sun.enterprise.v3.server.ApplicationLoaderService;
@@ -50,7 +49,6 @@ import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.security.PasswordCredential;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -68,6 +66,7 @@ import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
@@ -219,10 +218,9 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                 if (pool != null
                     && ConnectorConstants.XA_TRANSACTION_TX_SUPPORT_STRING.equals(getTransactionSupport(pool))) {
                     connPools.add(pool);
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("ConnectorsRecoveryResourceHandler loadXAResourcesAndItsConnections :: "
-                                + "adding : " + connResource.getPoolName());
-                    }
+                    LOG.log(Level.FINE,
+                        "ConnectorsRecoveryResourceHandler loadXAResourcesAndItsConnections :: adding : {0}",
+                        connResource.getPoolName());
                 }
             }
         }
@@ -236,8 +234,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
 
             try {
                 String[] dbUserPassword = getdbUserPasswordOfConnectorConnectionPool(connPool);
-                String dbUser = dbUserPassword[0];
-                String dbPassword = dbUserPassword[1];
                 Subject subject = new Subject();
 
                 // If username or password of the connector connection pool
@@ -245,32 +241,30 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                 // empty String username or password as the case may be,
                 // because some databases allow null[as in empty string]
                 // username [pointbase interprets this as "root"]/password.
-                if (dbPassword == null) {
+                final String dbPassword;
+                if (dbUserPassword[1] == null) {
                     dbPassword = "";
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.log(Level.FINEST, "datasource.xadatasource_nullpassword_error", poolInfo);
-                    }
+                    LOG.log(Level.FINEST, "datasource.xadatasource_nullpassword_error", poolInfo);
+                } else {
+                    dbPassword = dbUserPassword[1];
                 }
-
-                if (dbUser == null) {
+                final String dbUser;
+                if (dbUserPassword[0] == null) {
                     dbUser = "";
-                    if (LOG.isLoggable(Level.FINEST)) {
-                        LOG.log(Level.FINEST, "datasource.xadatasource_nulluser_error", poolInfo);
-                    }
+                    LOG.log(Level.FINEST, "datasource.xadatasource_nulluser_error", poolInfo);
+                } else {
+                    dbUser = dbUserPassword[0];
                 }
+                final UserNameAndPassword principal = new UserNameAndPassword(dbUser, dbPassword);
                 String rarName = connPool.getResourceAdapterName();
-                // TODO V3 JMS-RA ??
                 if (ConnectorAdminServiceUtils.isJMSRA(rarName)) {
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.log(Level.FINE, "Performing recovery for JMS RA, poolName  " + poolInfo);
-                    }
+                    LOG.log(Level.FINE, "Performing recovery for JMS RA, poolName {0}", poolInfo);
                     ManagedConnectionFactory[] mcfs = crt.obtainManagedConnectionFactories(poolInfo);
-                    LOG.log(Level.INFO, "JMS resource recovery has created CFs = " + mcfs.length);
+                    LOG.log(Level.INFO, "JMS resource recovery has created CFs = {0}", mcfs.length);
                     for (ManagedConnectionFactory mcf : mcfs) {
-                        PasswordCredential pc = new PasswordCredential(dbUser, dbPassword.toCharArray());
+                        PasswordCredential pc = new PasswordCredential(principal.getName(), principal.getPassword());
                         pc.setManagedConnectionFactory(mcf);
-                        Principal prin = new ResourcePrincipal(dbUser, dbPassword);
-                        subject.getPrincipals().add(prin);
+                        subject.getPrincipals().add(principal);
                         subject.getPrivateCredentials().add(pc);
                         ManagedConnection mc = mcf.createManagedConnection(subject, null);
                         connList.add(mc);
@@ -288,8 +282,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                     ManagedConnectionFactory mcf = crt.obtainManagedConnectionFactory(poolInfo);
                     PasswordCredential pc = new PasswordCredential(dbUser, dbPassword.toCharArray());
                     pc.setManagedConnectionFactory(mcf);
-                    Principal prin = new ResourcePrincipal(dbUser, dbPassword);
-                    subject.getPrincipals().add(prin);
+                    subject.getPrincipals().add(principal);
                     subject.getPrivateCredentials().add(pc);
                     ManagedConnection mc = mcf.createManagedConnection(subject, null);
                     connList.add(mc);
@@ -375,7 +368,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
             boolean foundUserPassword = false;
             for (Property elementProperty : properties) {
                 String prop = elementProperty.getName().toUpperCase(locale);
-
                 if ("USERNAME".equals(prop) || "USER".equals(prop)) {
                     userPassword[0] = elementProperty.getValue();
                     foundUserPassword = true;
@@ -404,7 +396,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                 userPassword[1] = envProp.getValue();
             }
         }
-
         if (userPassword[0] != null && !userPassword[0].isBlank()) {
             return userPassword;
         }

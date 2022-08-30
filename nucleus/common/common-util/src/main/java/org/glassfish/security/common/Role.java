@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,32 @@
 
 package org.glassfish.security.common;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.Objects;
+
 /**
- * In EJBs, ACL checking is done using the Roles. Roles are an abstraction
- * of an application specific Logical Principals. These Principals do not
- * have any properties of Principals within a Security Domain (or Realm).
+ * In EJBs, ACL checking is done using the Roles.
+ * <p>
+ * Roles are an abstraction of an application specific Logical Principals.
+ * These Principals do not have any properties of Principals within a Security Domain (or Realm).
  * They merely serve as abstraction to application specific entities.
+ *
  * @author Harish Prabandham
  */
-public class Role extends PrincipalImpl {
+public class Role implements Principal, Serializable {
 
-    private String description;
+    private static final long serialVersionUID = 1L;
+    private final String name;
+    private final String description;
+
     /**
      * Creates a new Role with a given name
      *
      * @param name cannot be null
      */
     public Role(final String name) {
-        super(name);
+        this.name = Objects.requireNonNull(name);
         this.description = null;
     }
 
@@ -44,32 +54,50 @@ public class Role extends PrincipalImpl {
      * @param description can be null
      */
     public Role(final String name, final String description) {
-        super(name);
+        this.name = Objects.requireNonNull(name);
         this.description = description;
     }
 
 
-    public boolean equals(Object other) {
-        boolean ret = false;
-        if(other instanceof Role) {
-            ret =  getName().equals(((Role)other).getName());
-        }
-
-        return ret;
+    /**
+     * @return role name
+     */
+    @Override
+    public String getName() {
+        return this.name;
     }
+
+
+    /**
+     * @return description of the role. Can be null.
+     */
+    public String getDescription() {
+        return this.description;
+    }
+
+
+    /**
+     * @return true if the object is an instance of {@link Role} with the same name.
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (other instanceof Role) {
+            return getName().equals(((Role) other).getName());
+        }
+        return false;
+    }
+
+
+    @Override
     public int hashCode() {
         return getName().hashCode();
     }
 
-    public String getDescription() {
-        if (this.description == null) {
-            this.description = "";
-        }
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    /**
+     * @return same as {@link #getName()}
+     */
+    @Override
+    public String toString() {
+        return getName();
     }
 }
-

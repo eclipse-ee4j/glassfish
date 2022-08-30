@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,14 @@
 
 package com.sun.enterprise.security.ee.auth.login;
 
+import com.sun.enterprise.security.PrincipalGroupFactory;
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.ee.auth.realm.DigestRealm;
+import com.sun.logging.LogDomains;
+
+import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,14 +39,7 @@ import javax.security.auth.spi.LoginModule;
 
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
-
-import com.sun.enterprise.security.PrincipalGroupFactory;
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.ee.auth.realm.DigestRealm;
-import com.sun.logging.LogDomains;
+import org.glassfish.security.common.UserPrincipal;
 
 /**
  *
@@ -45,15 +47,16 @@ import com.sun.logging.LogDomains;
  */
 public abstract class DigestLoginModule implements LoginModule {
 
-    private Subject subject = null;
-    private CallbackHandler handler = null;
-    private Map<String, ?> sharedState = null;
-    private Map<String, ?> options = null;
     protected static final Logger _logger = LogDomains.getLogger(DigestLoginModule.class, LogDomains.SECURITY_LOGGER);
-    protected boolean _succeeded = false;
-    protected boolean _commitSucceeded = false;
-    protected PrincipalImpl _userPrincipal;
-    private DigestCredentials digestCredentials = null;
+
+    private Subject subject;
+    private CallbackHandler handler;
+    private Map<String, ?> sharedState;
+    private Map<String, ?> options;
+    protected boolean _succeeded;
+    protected boolean _commitSucceeded;
+    protected UserPrincipal _userPrincipal;
+    private DigestCredentials digestCredentials;
     private Realm _realm;
 
     public DigestLoginModule() {
@@ -119,13 +122,13 @@ public abstract class DigestLoginModule implements LoginModule {
 
         PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
         _userPrincipal = factory.getPrincipalInstance(digestCredentials.getUserName(), digestCredentials.getRealmName());
-        java.util.Set principalSet = this.subject.getPrincipals();
+        Set<Principal> principalSet = this.subject.getPrincipals();
         if (!principalSet.contains(_userPrincipal)) {
             principalSet.add(_userPrincipal);
         }
-        java.util.Enumeration groupsList = getGroups(digestCredentials.getUserName());
+        Enumeration<String> groupsList = getGroups(digestCredentials.getUserName());
         while (groupsList.hasMoreElements()) {
-            java.lang.String value = (java.lang.String) groupsList.nextElement();
+            java.lang.String value = groupsList.nextElement();
             Group g = factory.getGroupInstance(value, digestCredentials.getRealmName());
             if (!principalSet.contains(g)) {
                 principalSet.add(g);
@@ -139,9 +142,7 @@ public abstract class DigestLoginModule implements LoginModule {
 
     @Override
     public final boolean abort() throws LoginException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JAAS authentication aborted.");
-        }
+        _logger.log(Level.FINE, "JAAS authentication aborted.");
 
         if (_succeeded == false) {
             return false;
@@ -174,6 +175,6 @@ public abstract class DigestLoginModule implements LoginModule {
         return _realm;
     }
 
-    protected abstract Enumeration getGroups(String username);
+    protected abstract Enumeration<String> getGroups(String username);
 
 }

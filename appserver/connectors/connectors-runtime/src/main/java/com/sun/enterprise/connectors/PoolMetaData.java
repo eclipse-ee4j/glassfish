@@ -17,7 +17,7 @@
 package com.sun.enterprise.connectors;
 
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import jakarta.resource.spi.ManagedConnectionFactory;
@@ -43,7 +43,7 @@ public class PoolMetaData {
     private ManagedConnectionFactory mcf = null;
     private PoolInfo poolInfo = null;
     private Subject subj = null;
-    private ResourcePrincipal prin_;
+    private ResourcePrincipalDescriptor prin_;
     private int txSupport_;
     private boolean isPM_ = false;
     private boolean isNonTx_ = false;
@@ -53,7 +53,7 @@ public class PoolMetaData {
     private boolean isAuthCredentialsDefinedInPool_ = true;
 
     public PoolMetaData(PoolInfo poolInfo, ManagedConnectionFactory mcf,
-                        Subject s, int txSupport, ResourcePrincipal prin,
+                        Subject s, int txSupport, ResourcePrincipalDescriptor prin,
                         boolean isPM, boolean isNonTx, boolean lazyEnlistable,
                         RuntimeSecurityMap runtimeSecurityMap, boolean lazyAssoc) {
         this.poolInfo = poolInfo;
@@ -80,7 +80,7 @@ public class PoolMetaData {
         return txSupport_;
     }
 
-    public ResourcePrincipal getResourcePrincipal() {
+    public ResourcePrincipalDescriptor getResourcePrincipal() {
         return prin_;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,9 +15,13 @@
  */
 package org.glassfish.ejb.security.application;
 
-import static java.util.Collections.list;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.SEVERE;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.deployment.MethodPermission;
+import com.sun.enterprise.deployment.RoleReference;
+import com.sun.logging.LogDomains;
+
+import jakarta.security.jacc.EJBMethodPermission;
+import jakarta.security.jacc.PolicyContextException;
 
 import java.lang.reflect.Method;
 import java.security.Permission;
@@ -26,19 +30,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.exousia.mapping.SecurityRoleRef;
 import org.glassfish.exousia.permissions.JakartaPermissions;
 
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.MethodPermission;
-import com.sun.enterprise.deployment.RoleReference;
-import com.sun.logging.LogDomains;
-
-import jakarta.security.jacc.EJBMethodPermission;
-import jakarta.security.jacc.PolicyContextException;
+import static java.util.Collections.list;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
 
 public class GlassFishToExousiaConverter {
 
@@ -61,7 +63,7 @@ public class GlassFishToExousiaConverter {
      * EJBMethodPermission to be added to the returned JakartaPermissions instance.
      *
      * @param ejbDescriptor the ejb descriptor for this EJB.
-     * @param pcid, the policy context identifier.
+     * @param contextId the policy context identifier.
      */
     public static JakartaPermissions convertEJBMethodPermissions(EjbDescriptor ejbDescriptor, String contextId) throws PolicyContextException {
         JakartaPermissions jakartaPermissions = new JakartaPermissions();
@@ -112,7 +114,7 @@ public class GlassFishToExousiaConverter {
                 continue;
             }
 
-            if (methodInterface == null || methodInterface.equals("")) {
+            if (methodInterface == null || methodInterface.isEmpty()) {
                 _logger.log(SEVERE, "method_descriptor_not_defined",
                     new Object[] { ejbName, methodDescriptor.getName(), methodDescriptor.getParameterClassNames() });
 
@@ -121,13 +123,14 @@ public class GlassFishToExousiaConverter {
 
             EJBMethodPermission ejbMethodPermission = new EJBMethodPermission(ejbName, methodInterface, methodName);
 
-            for (MethodPermission methodPermission : ejbDescriptor.getMethodPermissionsFor(methodDescriptor)) {
+            Set<MethodPermission> methodPermissions = ejbDescriptor.getMethodPermissionsFor(methodDescriptor);
+            _logger.log(Level.FINEST, "Descriptor: {0}, permissions: {1}",
+                new Object[] {methodDescriptor, methodPermissions});
+            for (MethodPermission methodPermission : methodPermissions) {
                 if (methodPermission.isExcluded()) {
                     jakartaPermissions.getExcluded().add(ejbMethodPermission);
-
                 } else if (methodPermission.isUnchecked()) {
                     jakartaPermissions.getUnchecked().add(ejbMethodPermission);
-
                 } else if (methodPermission.isRoleBased()) {
                     jakartaPermissions.getPerRole()
                                       .computeIfAbsent(methodPermission.getRole().getName(), e -> new Permissions())
@@ -142,7 +145,7 @@ public class GlassFishToExousiaConverter {
     /**
      * Get the security role refs from the EjbDescriptor.
      *
-     * @param EjbDescriptor the EjbDescriptor.
+     * @param ejbDescriptor the EjbDescriptor.
      * @return the security role refs.
      */
     public static Map<String, List<SecurityRoleRef>> getSecurityRoleRefsFromBundle(EjbDescriptor ejbDescriptor) {

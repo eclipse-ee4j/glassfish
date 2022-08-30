@@ -76,7 +76,7 @@ import javax.security.auth.x500.X500Principal;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.MasterPassword;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import static com.sun.logging.LogDomains.SECURITY_LOGGER;
 
@@ -218,7 +218,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         final Principal callerPrincipal = sc != null ? sc.getCallerPrincipal() : null;
         final Principal defaultPrincipal = SecurityContext.getDefaultCallerPrincipal();
 
-        return (Boolean) AppservAccessController.doPrivileged(new PrivilegedAction() {
+        return AppservAccessController.doPrivileged(new PrivilegedAction<Boolean>() {
 
             /**
              * this method uses 4 (numbered) criteria to determine if the argument WebPrincipal can be reused
@@ -351,7 +351,7 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                 if (isCertRealm) {
                     principal = new X500Principal(cpCallback.getName());
                 } else {
-                    principal = new PrincipalImpl(cpCallback.getName());
+                    principal = new UserNameAndPassword(cpCallback.getName());
                 }
             } else {
                 // Jakarta Authentication unauthenticated caller principal
@@ -369,11 +369,11 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
 
         final Principal fprin = principal;
         final DistinguishedPrincipalCredential fdpc = new DistinguishedPrincipalCredential(principal);
-        AppservAccessController.doPrivileged(new PrivilegedAction() {
+        AppservAccessController.doPrivileged(new PrivilegedAction<Subject>() {
             @Override
-            public java.lang.Object run() {
+            public Subject run() {
                 fs.getPrincipals().add(fprin);
-                Iterator iter = fs.getPublicCredentials().iterator();
+                Iterator<Object> iter = fs.getPublicCredentials().iterator();
                 while (iter.hasNext()) {
                     Object obj = iter.next();
                     if (obj instanceof DistinguishedPrincipalCredential) {
@@ -390,9 +390,9 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
         final Subject fs = gpCallback.getSubject();
         final String[] groups = gpCallback.getGroups();
         if (groups != null && groups.length > 0) {
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
+            AppservAccessController.doPrivileged(new PrivilegedAction<Subject>() {
                 @Override
-                public java.lang.Object run() {
+                public Subject run() {
                     for (String group : groups) {
                         fs.getPrincipals().add(new Group(group));
                     }
@@ -400,9 +400,9 @@ abstract class BaseContainerCallbackHandler implements CallbackHandler, Callback
                 }
             });
         } else if (groups == null) {
-            AppservAccessController.doPrivileged(new PrivilegedAction() {
+            AppservAccessController.doPrivileged(new PrivilegedAction<Subject>() {
                 @Override
-                public java.lang.Object run() {
+                public Subject run() {
                     Set<Principal> principalSet = fs.getPrincipals();
                     principalSet.removeAll(fs.getPrincipals(Group.class));
                     return fs;

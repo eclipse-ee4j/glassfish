@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,19 @@
 
 package com.sun.enterprise.security.ee.auth.realm;
 
-import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
-import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Key;
+import com.sun.enterprise.security.auth.digest.api.Password;
+import com.sun.enterprise.security.auth.digest.impl.DigestProcessor;
+import com.sun.enterprise.security.auth.realm.IASRealm;
 
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.Key;
-import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.security.auth.digest.impl.DigestProcessor;
-import com.sun.enterprise.security.auth.realm.IASRealm;
+import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.auth.digest.api.Constants.RESPONSE;
 
 /**
  * Base class for all realms wanting to support Digest based authentication.
@@ -53,10 +54,10 @@ public abstract class DigestRealmBase extends IASRealm implements DigestRealm {
 
     private static class DigestValidatorImpl extends DigestProcessor {
 
-        private DigestAlgorithmParameter data = null;
-        private DigestAlgorithmParameter clientResponse = null;
-        private DigestAlgorithmParameter key = null;
-        private String algorithm = "MD5";
+        private DigestAlgorithmParameter data;
+        private DigestAlgorithmParameter clientResponse;
+        private DigestAlgorithmParameter key;
+        private final String algorithm = "MD5";
 
         DigestValidatorImpl() {
 

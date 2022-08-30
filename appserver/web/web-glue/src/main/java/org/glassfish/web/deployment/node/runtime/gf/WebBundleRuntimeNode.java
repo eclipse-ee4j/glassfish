@@ -189,8 +189,9 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         return descriptor.getSunDescriptor();
     }
 
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with
+     * Adds a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param newDescriptor the new descriptor
@@ -221,7 +222,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = srm.getPrincipalNames();
                     for (PrincipalNameDescriptor principal : principals) {
-                        rm.assignRole(principal.getPrincipal(), role, descriptor);
+                        rm.assignRole(principal.toPrincipal(), role, descriptor);
                     }
                     List<String> groups = srm.getGroupNames();
                     for (String group : groups) {
@@ -335,7 +336,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         appendTextChild(web, RuntimeTagNames.CONTEXT_ROOT, bundleDescriptor.getContextRoot());
         // security-role-mapping
         SecurityRoleMapping[] roleMappings = sunWebApp.getSecurityRoleMapping();
-        if (roleMappings!=null && roleMappings.length>0) {
+        if (roleMappings != null && roleMappings.length > 0) {
             SecurityRoleMappingNode srmn = new SecurityRoleMappingNode();
             for (SecurityRoleMapping roleMapping : roleMappings) {
                 srmn.writeDescriptor(web, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMapping);

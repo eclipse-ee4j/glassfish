@@ -39,21 +39,13 @@ import org.jvnet.hk2.annotations.Service;
 @AnnotationHandlerFor(DenyAll.class)
 public class DenyAllHandler extends AbstractAuthAnnotationHandler {
 
-    public DenyAllHandler() {
-    }
-
 
     @Override
     protected void processEjbMethodSecurity(Annotation authAnnotation, MethodDescriptor md, EjbDescriptor ejbDesc) {
-        ejbDesc.addPermissionedMethod(MethodPermission.getExcludedMethodPermission(), md);
+        ejbDesc.addPermissionedMethod(MethodPermission.getDenyAllMethodPermission(), md);
     }
 
 
-    /**
-     * @return an array of annotation types this annotation handler would
-     *         require to be processed (if present) before it processes it's own
-     *         annotation type.
-     */
     @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAnnotationTypes();

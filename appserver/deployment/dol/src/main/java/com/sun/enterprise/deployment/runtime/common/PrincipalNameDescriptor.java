@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,67 +17,80 @@
 
 package com.sun.enterprise.deployment.runtime.common;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.lang.reflect.Constructor;
 import java.security.Principal;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.security.common.UserNameAndPassword;
 
 /**
  * This is an in memory representation of the principal-name with its name of
  * the implementation class.
+ *
  * @author deployment dev team
  */
 public class PrincipalNameDescriptor extends Descriptor {
 
-    private static final String defaultClassName =
-                "org.glassfish.security.common.PrincipalImpl";
-    private String principalName = null;
-    private String className = null;
-    private transient ClassLoader cLoader = null;
+    private static final long serialVersionUID = 1L;
+    private String principalName;
+    private String className;
+    private transient ClassLoader cLoader;
 
-    public PrincipalNameDescriptor() {}
 
+    public PrincipalNameDescriptor(String name) {
+        this.principalName = name;
+    }
+
+
+    @Override
     public String getName() {
         return principalName;
     }
 
+
+    /**
+     * @return never null.
+     */
     public String getClassName() {
         if (className == null) {
-            return defaultClassName;
+            return UserNameAndPassword.class.getName();
         }
         return className;
     }
 
+
+    @Override
     public void setName(String name) {
         principalName = name;
     }
+
 
     public void setClassName(String name) {
         className = name;
     }
 
+
     public void setClassLoader(ClassLoader c) {
         cLoader = c;
     }
 
-    public Principal getPrincipal() {
+
+    public final Principal toPrincipal() {
         try {
             if (cLoader == null) {
                 cLoader = Thread.currentThread().getContextClassLoader();
             }
-            Class clazz = Class.forName(getClassName(), true, cLoader);
-            Constructor constructor =
-                            clazz.getConstructor(new Class[]{String.class});
-            Object o = constructor.newInstance(new Object[]{principalName});
-            return (Principal) o;
-        } catch(Exception ex) {
-            RuntimeException e = new RuntimeException();
-            e.initCause(ex);
-            throw e;
+            Class<?> clazz = Class.forName(getClassName(), true, cLoader);
+            Constructor<?> constructor = clazz.getConstructor(String.class);
+            return (Principal) constructor.newInstance(principalName);
+        } catch (Exception ex) {
+            throw new RuntimeException("Invalid principal settings: " + this, ex);
         }
     }
 
+
+    @Override
     public String toString() {
-        return "principal-name " + principalName + "; className " + getClassName();
+        return "principal-name: " + principalName + "; className: " + getClassName();
     }
 }

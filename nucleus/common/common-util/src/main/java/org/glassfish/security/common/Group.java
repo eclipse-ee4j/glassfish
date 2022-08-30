@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,64 @@
 
 package org.glassfish.security.common;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.Objects;
+
 /**
  * This class implements the EJB concept of a Group. A Group is
  * a privilege attribute that several Principals share. Or, in
  * in other words, several Principals belong to a same group.
  *
  * @author Harish Prabandham
+ * @author David Matejcek
  */
-public class Group extends PrincipalImpl {
-    /** Creates a new Group attribute */
-    public Group(String name) {
-        super(name);
+public class Group implements Principal, Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private final String name;
+
+    /**
+     * Creates a new Group attribute
+     *
+     * @param name
+     */
+    public Group(final String name) {
+        this.name = Objects.requireNonNull(name);
     }
 
-    public boolean equals(Object other) {
-        if(other instanceof Group) {
-            return getName().equals(((Group)other).getName());
-        } else {
-            return false;
-        }
+
+    /**
+     * @return group name
+     */
+    @Override
+    public String getName() {
+        return this.name;
     }
+
+
+    /**
+     * @return true if the object is an instance of {@link Group} with the same name.
+     */
+    @Override
+    public boolean equals(final Object other) {
+        if (other instanceof Group) {
+            return getName().equals(((Group) other).getName());
+        }
+        return false;
+    }
+
+
+    @Override
     public int hashCode() {
         return getName().hashCode();
+    }
+
+    /**
+     * @return same as {@link #getName()}
+     */
+    @Override
+    public String toString() {
+        return getName();
     }
 }

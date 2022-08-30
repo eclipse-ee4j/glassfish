@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,47 +17,54 @@
 
 package org.glassfish.ejb.deployment.descriptor.runtime;
 
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import org.glassfish.deployment.common.Descriptor;
 
-
-/** iAS specific DD Element (see the ias-ejb-jar_2_0.dtd for this element)
+/**
+ * iAS specific DD Element (see the ias-ejb-jar_2_0.dtd for this element)
+ *
  * @author Ludo
  * @since JDK 1.4
  */
 public class MdbConnectionFactoryDescriptor extends Descriptor {
 
-
-
+    private static final long serialVersionUID = 1L;
     private String jndiName;
-    private ResourcePrincipal defaultResourcePrincipal;
+    private ResourcePrincipalDescriptor defaultResourcePrincipal;
 
-    public MdbConnectionFactoryDescriptor() {
-
-    }
-
-    /** Getter for property defaultResourcePrincipal.
+    /**
+     * Getter for property defaultResourcePrincipal.
+     *
      * @return Value of property defaultResourcePrincipal.
      */
-    public ResourcePrincipal getDefaultResourcePrincipal() {
+    public ResourcePrincipalDescriptor getDefaultResourcePrincipal() {
         return defaultResourcePrincipal;
     }
 
-    /** Setter for property defaultResourcePrincipal.
+
+    /**
+     * Setter for property defaultResourcePrincipal.
+     *
      * @param defaultResourcePrincipal New value of property defaultResourcePrincipal.
      */
-    public void setDefaultResourcePrincipal(ResourcePrincipal defaultResourcePrincipal) {
+    public void setDefaultResourcePrincipal(ResourcePrincipalDescriptor defaultResourcePrincipal) {
         this.defaultResourcePrincipal = defaultResourcePrincipal;
     }
 
-    /** Getter for property jndiName.
+
+    /**
+     * Getter for property jndiName.
+     *
      * @return Value of property jndiName.
      */
     public java.lang.String getJndiName() {
         return jndiName;
     }
 
-    /** Setter for property jndiName.
+
+    /**
+     * Setter for property jndiName.
+     *
      * @param jndiName New value of property jndiName.
      */
     public void setJndiName(java.lang.String jndiName) {
@@ -64,4 +72,3 @@ public class MdbConnectionFactoryDescriptor extends Descriptor {
     }
 
 }
-

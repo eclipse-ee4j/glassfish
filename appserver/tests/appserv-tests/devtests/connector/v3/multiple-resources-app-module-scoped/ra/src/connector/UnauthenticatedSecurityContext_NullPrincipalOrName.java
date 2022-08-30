@@ -16,7 +16,7 @@
 
 package connector;
 
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import jakarta.resource.spi.work.SecurityContext;
 import javax.security.auth.callback.CallbackHandler;
@@ -47,7 +47,7 @@ public class UnauthenticatedSecurityContext_NullPrincipalOrName extends Security
 
             CallerPrincipalCallback cpc;
             if (nullPrincipal) {
-                PrincipalImpl p = null;
+                UserNameAndPassword p = null;
                 cpc = new CallerPrincipalCallback(new Subject(), p);
             } else {
                 String name = null;

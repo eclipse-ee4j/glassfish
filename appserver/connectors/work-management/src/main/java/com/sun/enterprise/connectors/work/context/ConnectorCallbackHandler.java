@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,25 +17,30 @@
 
 package com.sun.enterprise.connectors.work.context;
 
-import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.connectors.work.LogFacade;
+import com.sun.enterprise.security.SecurityContext;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
-
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.callback.UnsupportedCallbackException;
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
 import jakarta.security.auth.message.callback.GroupPrincipalCallback;
 import jakarta.security.auth.message.callback.PasswordValidationCallback;
-import javax.security.auth.Subject;
+
 import java.io.IOException;
-import java.util.*;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.security.Principal;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserNameAndPassword;
 
 /**
  * Connector callback handler to intercept the callbacks provided by the work instance
@@ -48,32 +54,10 @@ public class ConnectorCallbackHandler implements CallbackHandler {
 
     private static final Logger logger = LogFacade.getLogger();
 
-    private static final List<String> supportedCallbacks = new ArrayList<String>();
-
+    private static final List<String> supportedCallbacks = new ArrayList<>();
     static {
         supportedCallbacks.add(GroupPrincipalCallback.class.getName());
         supportedCallbacks.add(CallerPrincipalCallback.class.getName());
-    }
-
-    private CallbackHandler handler;
-    private boolean needMapping;
-    private Map securityMap;
-    private Subject executionSubject;
-
-    public ConnectorCallbackHandler(Subject executionSubject, CallbackHandler handler, Map securityMap) {
-        this.handler = handler;
-        if (securityMap != null && securityMap.size() > 0) {
-            needMapping = true;
-            if(logger.isLoggable(Level.FINEST)){
-                logger.finest("translation required for security info ");
-            }
-        } else {
-            if(logger.isLoggable(Level.FINEST)){
-                logger.finest("no translation required for security info ");
-            }
-        }
-        this.executionSubject = executionSubject;
-        this.securityMap = securityMap;
     }
 
     @LogMessageInfo(
@@ -85,11 +69,30 @@ public class ConnectorCallbackHandler implements CallbackHandler {
             publish = true)
     private static final String RAR_UNSUPPORT_CALLBACK = "AS-RAR-05012";
 
+    private final CallbackHandler handler;
+    private boolean needMapping;
+    // Warning: Mixes groups and users
+    private final Map<Principal, Principal> securityMap;
+    private final Subject executionSubject;
+
+    public ConnectorCallbackHandler(Subject executionSubject, CallbackHandler handler, Map<Principal, Principal> securityMap) {
+        this.handler = handler;
+        if (securityMap != null && !securityMap.isEmpty()) {
+            needMapping = true;
+            logger.finest("translation required for security info ");
+        } else {
+            logger.finest("no translation required for security info ");
+        }
+        this.executionSubject = executionSubject;
+        this.securityMap = securityMap;
+    }
+
+    @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 
         Callback[] mappedCallbacks = callbacks;
         if (callbacks != null) {
-            List<Callback> asCallbacks = new ArrayList<Callback>();
+            List<Callback> asCallbacks = new ArrayList<>();
 
             boolean hasCallerPrincipalCallback = hasCallerPrincipalCallback(callbacks);
 
@@ -201,10 +204,8 @@ public class ConnectorCallbackHandler implements CallbackHandler {
     }
 
     private Callback handleGroupPrincipalCallbackWithMapping(GroupPrincipalCallback gpc) {
-
         String[] groups = gpc.getGroups();
-        List<String> asGroupNames = new ArrayList<String>();
-
+        List<String> asGroupNames = new ArrayList<>();
         for (String groupName : groups) {
             Group mappedGroup = (Group) securityMap.get(new Group(groupName));
             if (mappedGroup != null) {
@@ -214,53 +215,34 @@ public class ConnectorCallbackHandler implements CallbackHandler {
                 asGroupNames.add(mappedGroup.getName());
             }
         }
-
         String[] asGroupsString = new String[asGroupNames.size()];
         for (int i = 0; i < asGroupNames.size(); i++) {
             asGroupsString[i] = asGroupNames.get(i);
         }
         return new GroupPrincipalCallback(gpc.getSubject(), asGroupsString);
-
-        //SecurityContext.setCurrent(new SecurityContext(gpc.getSubject()));
     }
 
     public Callback handleCallerPrincipalCallbackWithMapping(CallerPrincipalCallback cpc) {
-
-        CallerPrincipalCallback asCPC;
-
         Principal eisPrincipal = cpc.getPrincipal();
         String eisName = cpc.getName();
-
         Principal asPrincipal = getMappedPrincipal(eisPrincipal, eisName);
-
-        asCPC = new CallerPrincipalCallback(cpc.getSubject(), asPrincipal);
-
-        return asCPC;
-/*
-        Set<Principal> principals = cpc.getSubject().getPrincipals();
-        for (Principal p : principals) {
-            Principal mappedPrincipal = (Principal) securityMap.get(p);
-            if (mappedPrincipal != null) {
-                DistinguishedPrincipalCredential dpc = new DistinguishedPrincipalCredential(mappedPrincipal);
-                cpc.getSubject().getPublicCredentials().add(dpc);
-            }
-        }
-        SecurityContext.setCurrent(new SecurityContext(cpc.getSubject()));
-*/
+        return new CallerPrincipalCallback(cpc.getSubject(), asPrincipal);
     }
 
     private Principal getMappedPrincipal(Principal eisPrincipal, String eisName) {
-        Principal asPrincipal = null;
+        final Principal asPrincipal;
         if (eisPrincipal != null) {
-            asPrincipal = (PrincipalImpl) securityMap.get(eisPrincipal);
+            asPrincipal = securityMap.get(eisPrincipal);
             if(logger.isLoggable(Level.FINEST)){
                 logger.finest("got mapped principal as [" + asPrincipal + "] for eis-group [" + eisPrincipal.getName() + "]");
             }
         } else if (eisName != null) {
-            asPrincipal = ((PrincipalImpl) securityMap.get(new PrincipalImpl(eisName)));
+            asPrincipal = securityMap.get(new UserNameAndPassword(eisName));
             if(logger.isLoggable(Level.FINEST)){
                 logger.finest("got mapped principal as [" + asPrincipal + "] for eis-group [" + eisName + "]");
             }
+        } else {
+            asPrincipal = null;
         }
         return asPrincipal;
     }

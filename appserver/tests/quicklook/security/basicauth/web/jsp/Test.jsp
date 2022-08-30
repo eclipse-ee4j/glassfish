@@ -37,7 +37,7 @@
         Principal userp = request.getUserPrincipal();
         String method = request.getAuthType();
         if (userp != null) {
-                user = userp.toString();
+                user = userp.getName();
         }
 
 %>

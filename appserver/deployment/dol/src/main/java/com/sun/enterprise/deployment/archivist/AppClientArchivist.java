@@ -67,7 +67,7 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
     public static final Attributes.Name GLASSFISH_ANCHOR_DIR =
             new Attributes.Name("GlassFish-Anchor");
 
-    private String mainClassNameToRun = null;
+    private String mainClassNameToRun;
 
     /**
      * Creates new ApplicationClientArchvisit
@@ -95,14 +95,13 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
 
         // this is acceptable if the application actually represents
         // a standalone module
-        java.util.Set appClientBundles = application.getBundleDescriptors(ApplicationClientDescriptor.class);
-        if (appClientBundles.size() > 0) {
-            this.descriptor = (ApplicationClientDescriptor) appClientBundles.iterator().next();
+        Set<ApplicationClientDescriptor> appClientBundles = application.getBundleDescriptors(ApplicationClientDescriptor.class);
+        if (!appClientBundles.isEmpty()) {
+            this.descriptor = appClientBundles.iterator().next();
             if (this.descriptor.getModuleDescriptor().isStandalone()) {
                 return;
-            } else {
-                this.descriptor = null;
             }
+            this.descriptor = null;
         }
         DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.descriptorFailure", new Object[]{this});
         throw new RuntimeException("Error setting descriptor " + descriptor + " in " + this);

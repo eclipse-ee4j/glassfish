@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -57,7 +58,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return DOLUtils.carType().equals(moduleType) && env.getProcessType() == ProcessType.ACC ;
+        return Objects.equals(moduleType, DOLUtils.carType()) && env.getProcessType() == ProcessType.ACC;
     }
 
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package org.glassfish.api.admin;
 
-import org.jvnet.hk2.annotations.Service;
-
 import jakarta.inject.Singleton;
+
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Process environment allow access to information related to the execution or process. This is a bit tricky to rely
@@ -31,11 +32,31 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ProcessEnvironment {
 
+    private final ProcessType type;
+
     /**
      * Default initialization is unkown process environment
      */
     public ProcessEnvironment() {
         type = ProcessType.Other;
+    }
+
+    /**
+     * Creates a process environemnt for the inten
+     *
+     * @param type of the execution environemnt
+     */
+    public ProcessEnvironment(ProcessType type) {
+        this.type = type;
+    }
+
+    /**
+     * Determine and return the modes in which the code is behaving, like application server or application client modes.
+     *
+     * @return the process type
+     */
+    public ProcessType getProcessType() {
+        return type;
     }
 
     /**
@@ -57,25 +78,4 @@ public class ProcessEnvironment {
             return this == Embedded;
         }
     }
-
-    /**
-     * Determine and return the modes in which the code is behaving, like application server or application client modes.
-     *
-     * @return the process type
-     */
-    public ProcessType getProcessType() {
-        return type;
-    }
-
-    /**
-     * Creates a process environemnt for the inten
-     *
-     * @param type of the execution environemnt
-     */
-    public ProcessEnvironment(ProcessType type) {
-        this.type = type;
-    }
-
-    final private ProcessType type;
-
 }

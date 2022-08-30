@@ -21,6 +21,8 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 
 import jakarta.inject.Inject;
 
+import java.util.Objects;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -40,8 +42,8 @@ public class ServerSidePersistenceArchivist extends PersistenceArchivist {
     public boolean supportsModuleType(ArchiveType moduleType) {
         // Reads persitence.xml for ejb jars
         // Or App client modules if running inside server
-        return DOLUtils.ejbType().equals(moduleType)
-            || (DOLUtils.carType().equals(moduleType) && env.getProcessType().isServer());
+        return Objects.equals(DOLUtils.ejbType(), moduleType)
+            || (env.getProcessType().isServer() && Objects.equals(DOLUtils.carType(), moduleType));
     }
 
     @Override

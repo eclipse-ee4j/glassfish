@@ -323,13 +323,10 @@ public class DOLUtils {
         if (moduleType == null) {
             return null;
         }
-        final ServiceLocator services = Globals.getDefaultHabitat();
-        ArchiveType result = null;
-        // This method is called without HK2 being setup when dol unit tests are run, so protect against NPE.
-        if(services != null) {
-            result = services.getService(ArchiveType.class, moduleType);
-        }
-        return result;
+        final ServiceLocator services = Globals.getStaticBaseServiceLocator();
+        // This method is called without HK2 being setup when dol unit tests are run,
+        // so protect against NPE.
+        return services == null ? null : services.getService(ArchiveType.class, moduleType);
     }
 
     // returns true if GF DD should have higher precedence over
@@ -622,6 +619,9 @@ public class DOLUtils {
         return sniffers;
     }
 
+    /**
+     * @return Sniffer/Container type for moduleType or null
+     */
     private static String getTypeFromModuleType(ArchiveType moduleType) {
         if (moduleType.equals(DOLUtils.warType())) {
             return "web";

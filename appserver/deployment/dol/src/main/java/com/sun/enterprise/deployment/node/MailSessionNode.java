@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,25 +24,31 @@ import org.w3c.dom.Node;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: naman mehta
- * Date: 16/4/12
- * Time: 5:11 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman mehta
  */
 public class MailSessionNode extends DeploymentDescriptorNode<MailSessionDescriptor> {
 
-    public final static XMLElement tag = new XMLElement(TagNames.MAIL_SESSION);
-    private MailSessionDescriptor descriptor = null;
+    private MailSessionDescriptor descriptor;
 
     public MailSessionNode() {
         registerElementHandler(new XMLElement(TagNames.RESOURCE_PROPERTY), ResourcePropertyNode.class,
-                "addMailSessionPropertyDescriptor");
+            "addMailSessionPropertyDescriptor");
     }
 
-    protected Map getDispatchTable() {
+
+    @Override
+    public MailSessionDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new MailSessionDescriptor();
+        }
+        return descriptor;
+    }
+
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
 
         table.put(TagNames.MAIL_SESSION_NAME, "setName");
         table.put(TagNames.MAIL_SESSION_STORE_PROTOCOL, "setStoreProtocol");
@@ -55,8 +62,8 @@ public class MailSessionNode extends DeploymentDescriptorNode<MailSessionDescrip
     }
 
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, MailSessionDescriptor mailSessionDesc) {
-
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, TagNames.MAIL_SESSION_NAME, mailSessionDesc.getName());
         appendTextChild(node, TagNames.MAIL_SESSION_STORE_PROTOCOL, mailSessionDesc.getStoreProtocol());
@@ -66,16 +73,6 @@ public class MailSessionNode extends DeploymentDescriptorNode<MailSessionDescrip
         appendTextChild(node, TagNames.MAIL_SESSION_PASSWORD, mailSessionDesc.getPassword());
         appendTextChild(node, TagNames.MAIL_SESSION_FROM, mailSessionDesc.getFrom());
 
-        ResourcePropertyNode propertyNode = new ResourcePropertyNode();
-        propertyNode.writeDescriptor(node, mailSessionDesc);
-
-        return node;
-    }
-
-    public MailSessionDescriptor getDescriptor() {
-        if (descriptor == null) {
-            descriptor = new MailSessionDescriptor();
-        }
-        return descriptor;
+        return ResourcePropertyNode.write(node, mailSessionDesc);
     }
 }

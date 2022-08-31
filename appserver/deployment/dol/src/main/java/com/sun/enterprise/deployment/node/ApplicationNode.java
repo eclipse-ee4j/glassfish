@@ -103,7 +103,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
      * @return the doctype tag name
      */
     @Override
-    public String registerBundle(Map publicIDToDTD) {
+    public String registerBundle(Map<String, String> publicIDToDTD) {
         publicIDToDTD.put(PUBLIC_DTD_ID, SYSTEM_ID);
         publicIDToDTD.put(PUBLIC_DTD_ID_12, SYSTEM_ID_12);
         return tag.getQName();
@@ -113,7 +113,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public Map<String, Class<?>> registerRuntimeBundle(final Map<String, String> publicIDToDTD,
         Map<String, List<Class<?>>> versionUpgrades) {
         final Map<String, Class<?>> result = new HashMap<>();
-        for (ConfigurationDeploymentDescriptorFile confDD : DOLUtils
+        for (ConfigurationDeploymentDescriptorFile<?> confDD : DOLUtils
             .getConfigurationDeploymentDescriptorFiles(serviceLocator, EarType.ARCHIVE_TYPE)) {
             confDD.registerBundle(result, publicIDToDTD, versionUpgrades);
         }

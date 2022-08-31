@@ -57,10 +57,14 @@ public class ResourcePropertyNode extends DeploymentDescriptorNode<ResourcePrope
         return table;
     }
 
-    public Node writeDescriptor(Node node, Descriptor desc) {
 
-        Properties properties = null;
-
+    /**
+     * @param node
+     * @param desc
+     * @return node parameter
+     */
+    public static Node write(Node node, Descriptor desc) {
+        final Properties properties;
         if (desc instanceof MailSessionDescriptor) {
             properties = ((MailSessionDescriptor) desc).getProperties();
         } else if (desc instanceof ConnectionFactoryDefinitionDescriptor) {
@@ -71,6 +75,8 @@ public class ResourcePropertyNode extends DeploymentDescriptorNode<ResourcePrope
             properties = ((JMSConnectionFactoryDefinitionDescriptor) desc).getProperties();
         } else if (desc instanceof JMSDestinationDefinitionDescriptor) {
             properties = ((JMSDestinationDefinitionDescriptor) desc).getProperties();
+        } else {
+            properties = null;
         }
 
         if (properties != null) {

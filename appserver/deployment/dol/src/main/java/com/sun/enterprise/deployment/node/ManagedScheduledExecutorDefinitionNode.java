@@ -15,42 +15,40 @@
  */
 package com.sun.enterprise.deployment.node;
 
-import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
-
 import java.util.Map;
 
 import org.omnifaces.concurrent.deployment.ManagedScheduledExecutorDefinitionDescriptor;
 import org.omnifaces.concurrent.node.ManagedScheduledExecutorDefinitionNodeDelegate;
 import org.w3c.dom.Node;
 
-public class ManagedScheduledExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedScheduledExecutorDefinitionDescriptor> {
+import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
-    public final static XMLElement tag = new XMLElement(ManagedScheduledExecutorDefinitionNodeDelegate.getQname());
+public class ManagedScheduledExecutorDefinitionNode
+    extends DeploymentDescriptorNode<ManagedScheduledExecutorDefinitionDescriptor> {
 
-    ManagedScheduledExecutorDefinitionNodeDelegate delegate = new ManagedScheduledExecutorDefinitionNodeDelegate();
+    private final ManagedScheduledExecutorDefinitionNodeDelegate delegate = new ManagedScheduledExecutorDefinitionNodeDelegate();
 
     public ManagedScheduledExecutorDefinitionNode() {
-        registerElementHandler(
-                new XMLElement(RESOURCE_PROPERTY),
-                ResourcePropertyNode.class,
-                delegate.getHandlerAdMethodName());
+        registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
+            delegate.getHandlerAdMethodName());
     }
+
+
+    @Override
+    public ManagedScheduledExecutorDefinitionDescriptor getDescriptor() {
+        return delegate.getDescriptor();
+    }
+
 
     @Override
     protected Map<String, String> getDispatchTable() {
         return delegate.getDispatchTable(super.getDispatchTable());
     }
 
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName, ManagedScheduledExecutorDefinitionDescriptor managedScheduledExecutorDefinitionDescriptor) {
-        Node node = delegate.getDescriptor(parent, nodeName, managedScheduledExecutorDefinitionDescriptor);
-        new ResourcePropertyNode().writeDescriptor(node, managedScheduledExecutorDefinitionDescriptor);
-
-        return node;
-    }
 
     @Override
-    public ManagedScheduledExecutorDefinitionDescriptor getDescriptor() {
-        return delegate.getDescriptor();
+    public Node writeDescriptor(Node parent, String nodeName, ManagedScheduledExecutorDefinitionDescriptor descriptor) {
+        Node node = delegate.getDescriptor(parent, nodeName, descriptor);
+        return ResourcePropertyNode.write(node, descriptor);
     }
 }

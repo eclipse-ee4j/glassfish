@@ -61,7 +61,7 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
     static final String JAVA_MODULE_NAME = "java:module/ModuleName";
     static final String JAVA_APP_SERVICE_LOCATOR = "java:app/hk2/ServiceLocator";
 
-    private static final Logger LOG = LogDomains.getLogger(JavaModuleNamingProxy.class, LogDomains.JNDI_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(JavaModuleNamingProxy.class, LogDomains.JNDI_LOGGER, false);
 
     @Inject
     private ServiceLocator habitat;

@@ -28,13 +28,14 @@ The Zip distributions can be found on following paths:
 
 ### Execution
 
-:warning: Because GF7 is now in intensive development and depends on external snapshot dependencies, you have to build these dependencies first: `mvn clean install -f ./snapshots/pom.xml`
-
 * `mvn clean install` - Full build including automatic QA and maven managed tests. Typical time: 5 minutes.
 * `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests, QA and integration tests excluded. Typical time: 3 minutes.
 * `mvn clean install -Pfastest` - Building all distribution artifacts, excluded all QA and testing. Typical time: 1.5 minutes.
 
 You can use also some maven optimizations, ie. using `-T4C` to allow parallel build.
+
+If you want to see more logs you can use the `-Dtest.logLevel=FINEST` option set to an appropriate log level.
+Note that this applies just for tests which are executed by Maven and which use the **GlassFish Java Util Logging Extension (GJULE)**.
 
 ### Special Profiles
 
@@ -63,7 +64,9 @@ They are quite old and have high technical debt, but at this moment they still p
 
 ### Old Additional Tests
 
-:warning: if the script fails, sometimes it doesn't stop the domain and you have to do that manually.
+:warning: If the script fails, sometimes it doesn't stop the domain and you have to do that manually.
+
+:warning: Some of the scripts do inplace filtering or generate other sources which remain and later affect next executions. You have to remove those changes manually.
 
 * `./runtests.sh batch_all` - Usual time: 1 minute
 * `./runtests.sh cdi_all` - Usual time: 6 minutes

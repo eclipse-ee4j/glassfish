@@ -24,6 +24,7 @@ import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.runtime.application.gf.GFApplicationRuntimeNode;
 
+import java.util.List;
 import java.util.Map;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -37,7 +38,7 @@ import org.jvnet.hk2.annotations.Service;
 @ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
 @Service
-public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<Application> {
 
     /**
      * @return the location of the DeploymentDescriptor file for a
@@ -53,7 +54,7 @@ public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescripto
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
      *
-     * @param the descriptor for which we need the node
+     * @param descriptor the descriptor for which we need the node
      */
     @Override
     public GFApplicationRuntimeNode getRootXMLNode(Descriptor descriptor) {
@@ -74,9 +75,11 @@ public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescripto
      * @param versionUpgrades The list of upgrades from older versions
      */
     @Override
-    public void registerBundle(final Map rootNodesMap,
-                               final Map publicIDToDTDMap,
-                               final Map versionUpgrades) {
+    public void registerBundle(
+        Map<String, Class<?>> rootNodesMap,
+        Map<String, String> publicIDToDTDMap,
+        Map<String, List<Class<?>>> versionUpgrades
+    ) {
         String bundle = GFApplicationRuntimeNode.registerBundle(publicIDToDTDMap);
         rootNodesMap.put(bundle, GFApplicationRuntimeNode.class);
     }

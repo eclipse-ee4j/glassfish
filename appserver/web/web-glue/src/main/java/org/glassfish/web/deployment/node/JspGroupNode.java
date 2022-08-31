@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,23 +21,24 @@ import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.LocalizedInfoNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.descriptor.JspGroupDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 
-import java.util.Map;
-
 /**
  * This node is responsible for handling jsp-group xml tag
- * @version
  */
 public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> {
     private JspGroupDescriptor descriptor;
 
     public JspGroupNode() {
         super();
-        registerElementHandler(new XMLElement(WebTagNames.NAME), LocalizedInfoNode.class);
+        registerElementHandler(new XMLElement(TagNames.NAME), LocalizedInfoNode.class);
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table to map
@@ -44,7 +46,7 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
      * method name on the descriptor class for setting the element value.
      *
      * @return the map with the element name as a key, the setter method as a
-     * value
+     *         value
      */
     @Override
     protected Map<String, String> getDispatchTable() {
@@ -57,16 +59,14 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
         table.put(WebTagNames.INCLUDE_PRELUDE, "addIncludePrelude");
         table.put(WebTagNames.INCLUDE_CODA, "addIncludeCoda");
         table.put(WebTagNames.IS_XML, "setIsXml");
-        table.put(WebTagNames.DEFERRED_SYNTAX_ALLOWED_AS_LITERAL,
-            "setDeferredSyntaxAllowedAsLiteral");
-        table.put(WebTagNames.TRIM_DIRECTIVE_WHITESPACES,
-            "setTrimDirectiveWhitespaces");
+        table.put(WebTagNames.DEFERRED_SYNTAX_ALLOWED_AS_LITERAL, "setDeferredSyntaxAllowedAsLiteral");
+        table.put(WebTagNames.TRIM_DIRECTIVE_WHITESPACES, "setTrimDirectiveWhitespaces");
         table.put(WebTagNames.DEFAULT_CONTENT_TYPE, "setDefaultContentType");
         table.put(WebTagNames.BUFFER, "setBuffer");
-        table.put(WebTagNames.ERROR_ON_UNDECLARED_NAMESPACE,
-            "setErrorOnUndeclaredNamespace");
+        table.put(WebTagNames.ERROR_ON_UNDECLARED_NAMESPACE, "setErrorOnUndeclaredNamespace");
         return table;
     }
+
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -78,6 +78,7 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
         }
         return descriptor;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -99,19 +100,15 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
         for (String urlPattern : descriptor.getUrlPatterns()) {
             appendTextChild(myNode, WebTagNames.URL_PATTERN, urlPattern);
         }
-        appendTextChild(myNode, WebTagNames.EL_IGNORED,
-            descriptor.getElIgnored());
-        appendTextChild(myNode, WebTagNames.PAGE_ENCODING,
-            descriptor.getPageEncoding());
-        appendTextChild(myNode, WebTagNames.SCRIPTING_INVALID,
-            descriptor.getScriptingInvalid());
+        appendTextChild(myNode, WebTagNames.EL_IGNORED, descriptor.getElIgnored());
+        appendTextChild(myNode, WebTagNames.PAGE_ENCODING, descriptor.getPageEncoding());
+        appendTextChild(myNode, WebTagNames.SCRIPTING_INVALID, descriptor.getScriptingInvalid());
 
         appendTextChild(myNode, WebTagNames.IS_XML, descriptor.getIsXml());
 
         // include-prelude*
         for (String includePrelude : descriptor.getIncludePreludes()) {
-            appendTextChild(myNode, WebTagNames.INCLUDE_PRELUDE,
-                includePrelude);
+            appendTextChild(myNode, WebTagNames.INCLUDE_PRELUDE, includePrelude);
         }
         // include-coda*
         for (String includeCoda : descriptor.getIncludeCodas()) {
@@ -119,13 +116,10 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
         }
         appendTextChild(myNode, WebTagNames.DEFERRED_SYNTAX_ALLOWED_AS_LITERAL,
             descriptor.getDeferredSyntaxAllowedAsLiteral());
-        appendTextChild(myNode, WebTagNames.TRIM_DIRECTIVE_WHITESPACES,
-            descriptor.getTrimDirectiveWhitespaces());
-        appendTextChild(myNode, WebTagNames.DEFAULT_CONTENT_TYPE,
-            descriptor.getDefaultContentType());
+        appendTextChild(myNode, WebTagNames.TRIM_DIRECTIVE_WHITESPACES, descriptor.getTrimDirectiveWhitespaces());
+        appendTextChild(myNode, WebTagNames.DEFAULT_CONTENT_TYPE, descriptor.getDefaultContentType());
         appendTextChild(myNode, WebTagNames.BUFFER, descriptor.getBuffer());
-        appendTextChild(myNode, WebTagNames.ERROR_ON_UNDECLARED_NAMESPACE,
-            descriptor.getErrorOnUndeclaredNamespace());
+        appendTextChild(myNode, WebTagNames.ERROR_ON_UNDECLARED_NAMESPACE, descriptor.getErrorOnUndeclaredNamespace());
 
         return myNode;
     }

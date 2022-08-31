@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
  * @author Rama Pulavarthi
  */
 @Service
-public class WLWebServicesDescriptorNode extends AbstractBundleNode {
+public class WLWebServicesDescriptorNode extends AbstractBundleNode<WebServicesDescriptor> {
 
     private final static XMLElement ROOT_ELEMENT = new XMLElement(WLWebServicesTagNames.WEB_SERVICES);
 
@@ -124,14 +124,6 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
         return ROOT_ELEMENT;
     }
 
-    /*
-    see setAttributeValue below
-    public void setElementValue(XMLElement element, String value) {
-        if (TagNames.VERSION.equals(element.getQName())) {
-            bundleDescriptor.getWebServices().setSpecVersion(value);
-        } else super.setElementValue(element, value);
-    }
-    */
 
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
@@ -148,12 +140,11 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     }
 
     @Override
-    public XMLNode getHandlerFor(XMLElement element) {
+    public XMLNode<?> getHandlerFor(XMLElement element) {
         if (WLWebServicesTagNames.WEBSERVICE_SECURITY.equals(element.getQName())) {
             throw new UnsupportedConfigurationException(element + " configuration in weblogic-webservices.xml is not supported.");
-        } else {
-            return super.getHandlerFor(element);
         }
+        return super.getHandlerFor(element);
 
     }
 
@@ -166,6 +157,7 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
 
     }
 
+
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
@@ -174,29 +166,24 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
         return parentDescriptor;
     }
 
+
     @Override
-    public Node writeDescriptor(Node parent, RootDeploymentDescriptor descriptor) {
-        Node bundleNode;
+    public Node writeDescriptor(Node parent, WebServicesDescriptor descriptor) {
+        final Node bundleNode;
         if (getDocType() == null) {
             // we are using schemas for this DDs
             bundleNode = appendChildNS(parent, getXMLRootTag().getQName(), WLDescriptorConstants.WL_WEBSERVICES_XML_NS);
-
             addBundleNodeAttributes((Element) bundleNode, descriptor);
         } else {
             bundleNode = appendChild(parent, getXMLRootTag().getQName());
         }
 
-        //TODO is this needed?
-        // appendTextChild(bundleNode, TagNames.MODULE_NAME, descriptor.getModuleDescriptor().getModuleName());
-
         // description, display-name, icons...
         writeDisplayableComponentInfo(bundleNode, descriptor);
 
-        if (descriptor instanceof WebServicesDescriptor) {
-            WLWebServiceNode wsNode = new WLWebServiceNode();
-            for(WebService next : ((WebServicesDescriptor)descriptor).getWebServices()) {
-                wsNode.writeDescriptor(bundleNode, WebServicesTagNames.WEB_SERVICE,next);
-            }
+        WLWebServiceNode wsNode = new WLWebServiceNode();
+        for (WebService next : descriptor.getWebServices()) {
+            wsNode.writeDescriptor(bundleNode, WebServicesTagNames.WEB_SERVICE, next);
         }
         return bundleNode;
     }

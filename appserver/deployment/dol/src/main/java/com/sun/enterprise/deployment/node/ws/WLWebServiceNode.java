@@ -38,7 +38,7 @@ import org.w3c.dom.Node;
  *
  * @author Rama Pulavarthi
  */
-public class WLWebServiceNode extends DisplayableComponentNode {
+public class WLWebServiceNode extends DisplayableComponentNode<WebService> {
 
     private static final XMLElement tag = new XMLElement(WLWebServicesTagNames.WEB_SERVICE);
     private WebService descriptor;
@@ -46,7 +46,6 @@ public class WLWebServiceNode extends DisplayableComponentNode {
 
     public WLWebServiceNode() {
         registerElementHandler(new XMLElement(WLWebServicesTagNames.PORT_COMPONENT), WLWebServiceEndpointNode.class);
-
     }
 
 
@@ -60,7 +59,6 @@ public class WLWebServiceNode extends DisplayableComponentNode {
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
-        //table.put(WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,"setName");
         table.put(WLWebServicesTagNames.WEBSERVICE_TYPE, "setType");
         return table;
     }
@@ -110,7 +108,7 @@ public class WLWebServiceNode extends DisplayableComponentNode {
     }
 
     @Override
-    public Object getDescriptor() {
+    public WebService getDescriptor() {
         return descriptor;
     }
 
@@ -132,7 +130,7 @@ public class WLWebServiceNode extends DisplayableComponentNode {
     @Override
     public void addDescriptor(Object descriptor) {
         WebServiceEndpoint endpoint = (WebServiceEndpoint) descriptor;
-        WebService webService = (WebService) getDescriptor();
+        WebService webService = getDescriptor();
         webService.addEndpoint(endpoint);
     }
 

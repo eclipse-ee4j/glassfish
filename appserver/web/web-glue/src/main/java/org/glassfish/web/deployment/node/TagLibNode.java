@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,12 @@
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.descriptor.TagLibConfigurationDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
-
-import java.util.Map;
 
 /**
  * This node is responsible for handling tag-lib xml tag
@@ -30,18 +32,19 @@ import java.util.Map;
  */
 public class TagLibNode  extends DeploymentDescriptorNode<TagLibConfigurationDescriptor> {
 
-    protected TagLibConfigurationDescriptor descriptor = null;
+    private TagLibConfigurationDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
     public TagLibConfigurationDescriptor getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new TagLibConfigurationDescriptor();
         }
         return descriptor;
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -56,6 +59,7 @@ public class TagLibNode  extends DeploymentDescriptorNode<TagLibConfigurationDes
         table.put(WebTagNames.TAGLIB_LOCATION, "setTagLibLocation");
         return table;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it

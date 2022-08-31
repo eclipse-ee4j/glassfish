@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,14 +19,14 @@ package com.sun.enterprise.deployment.node.runtime;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling runtime descriptor
@@ -34,14 +35,15 @@ import java.util.Map;
  * @author  Kenneth Saks
  * @version
  */
-public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
+public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode<MessageDestinationDescriptor> {
 
     private MessageDestinationDescriptor descriptor;
 
     /**
     * @return the descriptor instance to associate with this XMLNode
     */
-    public Object getDescriptor() {
+    @Override
+    public MessageDestinationDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -51,8 +53,9 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
@@ -63,15 +66,14 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (RuntimeTagNames.MESSAGE_DESTINATION_NAME.equals(element.getQName())) {
             // this is a hack but not much choice
             Object parentDesc = getParentNode().getDescriptor();
-
             if (parentDesc instanceof BundleDescriptor) {
                 try {
-                    descriptor = ((BundleDescriptor) parentDesc).
-                        getMessageDestinationByName(value);
+                    descriptor = ((BundleDescriptor) parentDesc).getMessageDestinationByName(value);
                 } catch (IllegalArgumentException iae) {
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
@@ -80,27 +82,27 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode {
             if (descriptor != null) {
                 descriptor.setJndiName(value);
             }
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName node name for the descriptor
+     * @param msgDest the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, MessageDestinationDescriptor msgDest) {
-        String jndiName  = msgDest.getJndiName();
+        String jndiName = msgDest.getJndiName();
         Node msgDestNode = null;
-        if( (jndiName != null) && (jndiName.length() > 0) ) {
+        if (jndiName != null && !jndiName.isEmpty()) {
             msgDestNode = super.writeDescriptor(parent, nodeName, msgDest);
-            appendTextChild(msgDestNode,
-                            RuntimeTagNames.MESSAGE_DESTINATION_NAME,
-                            msgDest.getName());
-            appendTextChild(msgDestNode, RuntimeTagNames.JNDI_NAME,
-                            msgDest.getJndiName());
+            appendTextChild(msgDestNode, RuntimeTagNames.MESSAGE_DESTINATION_NAME, msgDest.getName());
+            appendTextChild(msgDestNode, RuntimeTagNames.JNDI_NAME, msgDest.getJndiName());
         }
         return msgDestNode;
     }

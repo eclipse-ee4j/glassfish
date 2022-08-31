@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,34 +15,28 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * ServiceReferenceNode.java
- *
- * Created on March 21, 2002, 2:38 PM
- */
-
 package org.glassfish.webservices.node;
 
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
-import com.sun.enterprise.deployment.node.JndiEnvRefNode;
 import com.sun.enterprise.deployment.node.InjectionTargetNode;
+import com.sun.enterprise.deployment.node.JndiEnvRefNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.annotations.Service;
-
-
-import javax.xml.namespace.QName;
 
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.xml.namespace.QName;
+
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.webservices.connector.LogUtils;
+import org.jvnet.hk2.annotations.Service;
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for loading web services
@@ -52,31 +47,26 @@ import org.glassfish.webservices.connector.LogUtils;
 
 @Service(name="service-ref")
 @PerLookup
-public class ServiceReferenceNode extends DisplayableComponentNode implements JndiEnvRefNode<ServiceReferenceDescriptor> {
+public class ServiceReferenceNode extends DisplayableComponentNode<ServiceReferenceDescriptor>
+    implements JndiEnvRefNode<ServiceReferenceDescriptor> {
 
     private static final Logger logger = LogUtils.getLogger();
 
-    private ServiceRefPortInfo  portInfo = null;
+    private ServiceRefPortInfo  portInfo;
 
     /** Creates a new instance of ServiceReferenceNode */
     public ServiceReferenceNode() {
         super();
-        registerElementHandler
-                (new XMLElement(WebServicesTagNames.HANDLER),
-                        WebServiceHandlerNode.class, "addHandler");
-        registerElementHandler
-                (new XMLElement(WebServicesTagNames.HANDLER_CHAIN),
-                        WebServiceHandlerChainNode.class, "addHandlerChain");
-        registerElementHandler
-                (new XMLElement(WebServicesTagNames.ADDRESSING),
-                        AddressingNode.class, "setAddressing");
-        registerElementHandler
-                (new XMLElement(WebServicesTagNames.RESPECT_BINDING),
-                        RespectBindingNode.class, "setRespectBinding");
-        registerElementHandler
-                (new XMLElement(TagNames.INJECTION_TARGET),
-                        InjectionTargetNode.class, "addInjectionTarget");
+        registerElementHandler(new XMLElement(WebServicesTagNames.HANDLER), WebServiceHandlerNode.class, "addHandler");
+        registerElementHandler(new XMLElement(WebServicesTagNames.HANDLER_CHAIN), WebServiceHandlerChainNode.class,
+            "addHandlerChain");
+        registerElementHandler(new XMLElement(WebServicesTagNames.ADDRESSING), AddressingNode.class, "setAddressing");
+        registerElementHandler(new XMLElement(WebServicesTagNames.RESPECT_BINDING), RespectBindingNode.class,
+            "setRespectBinding");
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), InjectionTargetNode.class,
+            "addInjectionTarget");
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table
@@ -86,8 +76,8 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
      * @return map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(WebServicesTagNames.SERVICE_REF_NAME, "setName");
         table.put(WebServicesTagNames.SERVICE_INTERFACE, "setServiceInterface");
         table.put(WebServicesTagNames.WSDL_FILE, "setWsdlFileUri");
@@ -98,9 +88,6 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
         return table;
     }
 
-    private ServiceReferenceDescriptor getServiceReferenceDescriptor() {
-        return getDescriptor();
-    }
 
     /**
      * receives notiification of the value for a particular tag
@@ -112,29 +99,27 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
     public void setElementValue(XMLElement element, String value) {
         String qname = element.getQName();
         if (WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE.equals(qname)) {
-            portInfo = getServiceReferenceDescriptor().getPortInfoBySEI(value);
-            if( portInfo == null  ) {
-                portInfo = getServiceReferenceDescriptor().
-                    addContainerManagedPort(value);
+            portInfo = getDescriptor().getPortInfoBySEI(value);
+            if (portInfo == null) {
+                portInfo = getDescriptor().addContainerManagedPort(value);
             }
-        } else if( WebServicesTagNames.SERVICE_QNAME.equals(qname) ) {
+        } else if (WebServicesTagNames.SERVICE_QNAME.equals(qname)) {
             String prefix = getPrefixFromQName(value);
             String localPart = getLocalPartFromQName(value);
             String namespaceUri = resolvePrefix(element, prefix);
-            if( namespaceUri == null) {
+            if (namespaceUri == null) {
                 logger.log(Level.SEVERE, LogUtils.INVALID_DESC_MAPPING_FAILURE,
-                    new Object[] { prefix , getServiceReferenceDescriptor().getName()});
+                    new Object[] {prefix, getDescriptor().getName()});
             } else {
                 QName serviceName = new QName(namespaceUri, localPart);
-                getServiceReferenceDescriptor().setServiceName
-                    (serviceName, prefix);
+                getDescriptor().setServiceName(serviceName, prefix);
             }
-        } else if(WebServicesTagNames.ENABLE_MTOM.equals(qname)) {
+        } else if (WebServicesTagNames.ENABLE_MTOM.equals(qname)) {
             portInfo.setMtomEnabled(value);
-        //} //TODO implement this   else if(WebServicesTagNames.ADDRESSING.equals(qname)) {
-          //  portInfo.setAddressing(value);
-        } else if( WebServicesTagNames.PORT_COMPONENT_LINK.equals(qname) ) {
-            // set link name.  link resolution will be performed during
+            // } //TODO implement this else if(WebServicesTagNames.ADDRESSING.equals(qname)) {
+            // portInfo.setAddressing(value);
+        } else if (WebServicesTagNames.PORT_COMPONENT_LINK.equals(qname)) {
+            // set link name. link resolution will be performed during
             // validation stage.
             portInfo.setPortComponentLinkName(value);
             portInfo = null;
@@ -143,8 +128,9 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
         }
     }
 
+
     @Override
-    public Node writeDeploymentDescriptor( Node parent,ServiceReferenceDescriptor descriptor) {
+    public Node writeDeploymentDescriptor(Node parent, ServiceReferenceDescriptor descriptor) {
         Node serviceRefNode = super.writeDescriptor(parent, WebServicesTagNames.SERVICE_REF, descriptor);
         writeDisplayableComponentInfo(serviceRefNode, descriptor);
         appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_NAME, descriptor.getName());
@@ -195,7 +181,7 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
 
     @Override
     public ServiceReferenceDescriptor getDescriptor(){
-        return (ServiceReferenceDescriptor) super.getDescriptor();
+        return super.getDescriptor();
 
     }
 
@@ -203,9 +189,4 @@ public class ServiceReferenceNode extends DisplayableComponentNode implements Jn
     public String getTagName() {
         return WebServicesTagNames.SERVICE_REF;
     }
-
-
-
-
-
 }

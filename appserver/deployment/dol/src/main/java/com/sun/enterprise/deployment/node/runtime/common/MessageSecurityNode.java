@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,40 +23,39 @@ import com.sun.enterprise.deployment.runtime.common.MessageDescriptor;
 import com.sun.enterprise.deployment.runtime.common.MessageSecurityDescriptor;
 import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
+
+import org.w3c.dom.Node;
 
 /**
  * This node handles message-security element
  *
  */
-public class MessageSecurityNode extends DeploymentDescriptorNode {
+public class MessageSecurityNode extends DeploymentDescriptorNode<MessageSecurityDescriptor> {
 
-    MessageSecurityDescriptor descriptor = null;
+    MessageSecurityDescriptor descriptor;
 
     public MessageSecurityNode() {
-        registerElementHandler(new XMLElement(
-            WebServicesTagNames.MESSAGE), MessageNode.class,
-            "addMessageDescriptor");
-        registerElementHandler(new XMLElement(
-            WebServicesTagNames.REQUEST_PROTECTION), ProtectionNode.class,
+        registerElementHandler(new XMLElement(WebServicesTagNames.MESSAGE), MessageNode.class, "addMessageDescriptor");
+        registerElementHandler(new XMLElement(WebServicesTagNames.REQUEST_PROTECTION), ProtectionNode.class,
             "setRequestProtectionDescriptor");
-        registerElementHandler(new XMLElement(
-            WebServicesTagNames.RESPONSE_PROTECTION), ProtectionNode.class,
+        registerElementHandler(new XMLElement(WebServicesTagNames.RESPONSE_PROTECTION), ProtectionNode.class,
             "setResponseProtectionDescriptor");
     }
 
+
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
-    public Object getDescriptor() {
-       if (descriptor == null) {
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
+    public MessageSecurityDescriptor getDescriptor() {
+        if (descriptor == null) {
             descriptor = new MessageSecurityDescriptor();
         }
         return descriptor;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -65,41 +65,32 @@ public class MessageSecurityNode extends DeploymentDescriptorNode {
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName,
-        MessageSecurityDescriptor messageSecurityDesc) {
-        Node messageSecurityNode = super.writeDescriptor(parent, nodeName,
-           messageSecurityDesc);
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, MessageSecurityDescriptor messageSecurityDesc) {
+        Node messageSecurityNode = super.writeDescriptor(parent, nodeName, messageSecurityDesc);
 
-        ArrayList messageDescs =
-            messageSecurityDesc.getMessageDescriptors();
+        List<MessageDescriptor> messageDescs = messageSecurityDesc.getMessageDescriptors();
         if (!messageDescs.isEmpty()) {
             MessageNode messageNode = new MessageNode();
-            for (Iterator messageIterator = messageDescs.iterator();
-                messageIterator.hasNext();) {
-                MessageDescriptor messageDesc =
-                    (MessageDescriptor) messageIterator.next();
-                messageNode.writeDescriptor(messageSecurityNode,
-                    WebServicesTagNames.MESSAGE, messageDesc);
+            for (MessageDescriptor messageDesc : messageDescs) {
+                messageNode.writeDescriptor(messageSecurityNode, WebServicesTagNames.MESSAGE, messageDesc);
             }
         }
 
         // request-protection
-        ProtectionDescriptor requestProtectionDesc =
-            messageSecurityDesc.getRequestProtectionDescriptor();
+        ProtectionDescriptor requestProtectionDesc = messageSecurityDesc.getRequestProtectionDescriptor();
         if (requestProtectionDesc != null) {
             ProtectionNode requestProtectionNode = new ProtectionNode();
-            requestProtectionNode.writeDescriptor(messageSecurityNode,
-                WebServicesTagNames.REQUEST_PROTECTION, requestProtectionDesc);
+            requestProtectionNode.writeDescriptor(messageSecurityNode, WebServicesTagNames.REQUEST_PROTECTION,
+                requestProtectionDesc);
         }
 
         // response-protection
-        ProtectionDescriptor responseProtectionDesc =
-            messageSecurityDesc.getResponseProtectionDescriptor();
+        ProtectionDescriptor responseProtectionDesc = messageSecurityDesc.getResponseProtectionDescriptor();
         if (responseProtectionDesc != null) {
             ProtectionNode responseProtectionNode = new ProtectionNode();
-            responseProtectionNode.writeDescriptor(messageSecurityNode,
-                WebServicesTagNames.RESPONSE_PROTECTION,
-                    responseProtectionDesc);
+            responseProtectionNode.writeDescriptor(messageSecurityNode, WebServicesTagNames.RESPONSE_PROTECTION,
+                responseProtectionDesc);
         }
 
         return messageSecurityNode;

@@ -28,6 +28,7 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
+import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.xml.WebTagNames;
 
@@ -37,7 +38,7 @@ import org.glassfish.web.deployment.xml.WebTagNames;
  * @author  Jerome Dochez
  * @version
  */
-public class ServletMappingNode extends DeploymentDescriptorNode {
+public class ServletMappingNode extends DeploymentDescriptorNode<Descriptor> {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
@@ -48,7 +49,7 @@ public class ServletMappingNode extends DeploymentDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public Descriptor getDescriptor() {
         return null;
     }
 
@@ -97,7 +98,7 @@ public class ServletMappingNode extends DeploymentDescriptorNode {
 
             urlPattern = value;
 
-            XMLNode parentNode = getParentNode();
+            XMLNode<?> parentNode = getParentNode();
             if (parentNode instanceof WebCommonNode) {
                 ((WebCommonNode) parentNode).addServletMapping(servletName, urlPattern);
             } else {

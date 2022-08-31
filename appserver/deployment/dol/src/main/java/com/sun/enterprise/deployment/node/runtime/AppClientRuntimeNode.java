@@ -76,7 +76,7 @@ public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDes
      * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
-    public static String registerBundle(Map publicIDToDTD) {
+    public static String registerBundle(Map<String, String> publicIDToDTD) {
         publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_130_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_130_DTD_SYSTEM_ID);
         publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_140_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_140_DTD_SYSTEM_ID);
         publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_141_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_141_DTD_SYSTEM_ID);

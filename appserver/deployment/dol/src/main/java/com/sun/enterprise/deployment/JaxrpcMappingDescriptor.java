@@ -24,7 +24,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * Holds namespace-to-package mapping information from a
@@ -32,7 +33,7 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Kenneth Saks
  */
-public class JaxrpcMappingDescriptor extends Descriptor {
+public class JaxrpcMappingDescriptor extends RootDeploymentDescriptor {
 
     private static final long serialVersionUID = 1L;
     private final Map<String, String> packageToNamespaceUriMap = new HashMap<>();
@@ -40,7 +41,39 @@ public class JaxrpcMappingDescriptor extends Descriptor {
 
     private boolean simpleMapping = true;
 
-    public JaxrpcMappingDescriptor() {
+    @Override
+    public String getModuleID() {
+        return "";
+    }
+
+
+    @Override
+    public String getDefaultSpecVersion() {
+        return "1.0";
+    }
+
+
+    @Override
+    public boolean isEmpty() {
+        return namespaceUriToPackageMap.isEmpty();
+    }
+
+
+    @Override
+    public ArchiveType getModuleType() {
+        return null;
+    }
+
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return null;
+    }
+
+
+    @Override
+    public boolean isApplication() {
+        return false;
     }
 
 
@@ -48,18 +81,20 @@ public class JaxrpcMappingDescriptor extends Descriptor {
         simpleMapping = flag;
     }
 
+
     /**
-     * @return true if only mapping info only contains package->namespace
-     * mapping.
+     * @return true if only mapping info only contains package->namespace mapping.
      */
     public boolean isSimpleMapping() {
         return simpleMapping;
     }
 
+
     public void addMapping(String javaPackage, String namespaceUri) {
         packageToNamespaceUriMap.put(javaPackage, namespaceUri);
         namespaceUriToPackageMap.put(namespaceUri, javaPackage);
     }
+
 
     /**
      * @return Collection of Mapping elements
@@ -94,5 +129,4 @@ public class JaxrpcMappingDescriptor extends Descriptor {
             return javaPackage;
         }
     }
-
 }

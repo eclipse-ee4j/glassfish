@@ -125,8 +125,7 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     }
 
     /**
-     * Sets the @see BundleDescriptor descriptor for this
-     * module
+     * Sets the @see BundleDescriptor descriptor for this module
      * @param descriptor the module descriptor
      */
     public void setDescriptor(T descriptor) {
@@ -230,35 +229,31 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append(type + " ModuleDescriptor: [  " + path + " ] , altDD = " + altDD);
-        if (contextRoot!=null) {
+        if (contextRoot != null) {
             toStringBuffer.append(" , ContextRoot = " + contextRoot);
         }
     }
 
 
     /**
-     * Implementation of the serializable interface since ModuleType is not
-     * serializable
+     * Implementation of the serializable interface since ModuleType is not serializable
      */
-    private void writeObject(java.io.ObjectOutputStream out)
-     throws IOException {
-
-         // just write this intance fields...
-         out.writeObject(path);
-         out.writeObject(altDD);
-         out.writeObject(contextRoot);
-         out.writeObject(descriptor);
-         out.writeBoolean(standalone);
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        // just write this intance fields...
+        out.writeObject(path);
+        out.writeObject(altDD);
+        out.writeObject(contextRoot);
+        out.writeObject(descriptor);
+        out.writeBoolean(standalone);
     }
 
-    private void readObject(java.io.ObjectInputStream in)
-     throws IOException, ClassNotFoundException {
 
-         // just read this intance fields...
-         path = (String) in.readObject();
-         altDD = (String) in.readObject();
-         contextRoot = (String) in.readObject();
-         descriptor = (T) in.readObject();
-         standalone = in.readBoolean();
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        // just read this intance fields...
+        path = (String) in.readObject();
+        altDD = (String) in.readObject();
+        contextRoot = (String) in.readObject();
+        descriptor = (T) in.readObject();
+        standalone = in.readBoolean();
     }
 }

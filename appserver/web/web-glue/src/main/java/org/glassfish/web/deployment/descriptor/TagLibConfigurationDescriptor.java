@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,11 @@
 
 package org.glassfish.web.deployment.descriptor;
 
-import java.io.Serializable;
 import jakarta.servlet.descriptor.TaglibDescriptor;
+
+import java.io.Serializable;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This descriptor represent the information about a tag library used in a
@@ -25,8 +29,9 @@ import jakarta.servlet.descriptor.TaglibDescriptor;
  *
  * @author Danny Coward
  */
-public class TagLibConfigurationDescriptor implements Serializable, TaglibDescriptor {
+public class TagLibConfigurationDescriptor extends Descriptor implements Serializable, TaglibDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private String uri;
     private String location;
 
@@ -36,26 +41,32 @@ public class TagLibConfigurationDescriptor implements Serializable, TaglibDescri
     public TagLibConfigurationDescriptor() {
     }
 
+
     /**
      * Construct a tag library configuration with the given location and URI.
-     * @param the URI.
-     * @param the location.
+     *
+     * @param uri the URI.
+     * @param location the location.
      */
     public TagLibConfigurationDescriptor(String uri, String location) {
         this.uri = uri;
         this.location = location;
     }
 
+
     /**
      * Sets the URI of this tag lib.
-     * @param the URI of the tag library.
+     *
+     * @param uri the URI of the tag library.
      */
     public void setTagLibURI(String uri) {
         this.uri = uri;
     }
 
+
     /**
      * Return the URI of this tag lib.
+     *
      * @return the URI of the tag library.
      */
     public String getTagLibURI() {
@@ -65,20 +76,26 @@ public class TagLibConfigurationDescriptor implements Serializable, TaglibDescri
         return this.uri;
     }
 
+
+    @Override
     public String getTaglibURI() {
         return getTagLibURI();
     }
 
+
     /**
      * Describe the location of the tag library file.
-     * @param the location of the tag library.
+     *
+     * @param location the location of the tag library.
      */
     public void setTagLibLocation(String location) {
         this.location = location;
     }
 
+
     /**
      * Describes the location of the tag library file.
+     *
      * @return the location of the tag library.
      */
     public String getTagLibLocation() {
@@ -88,15 +105,18 @@ public class TagLibConfigurationDescriptor implements Serializable, TaglibDescri
         return this.location;
     }
 
+
+    @Override
     public String getTaglibLocation() {
         return getTagLibLocation();
     }
 
+
     /**
      * Return a formatted String representing my state.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("TGLIB: ").append(uri).append(", ").append(location);
     }
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,42 +17,48 @@
 
 package org.glassfish.ejb.deployment.descriptor.runtime;
 
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.MethodDescriptor;
+
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.MethodDescriptor;
 import org.glassfish.deployment.common.Descriptor;
 
 public class FlushAtEndOfMethodDescriptor extends Descriptor {
 
-    private ArrayList methodDescs = new ArrayList();
-    private ArrayList convertedMethodDescs = new ArrayList();
-    private EjbDescriptor ejbDescriptor = null;
+    private static final long serialVersionUID = 1L;
+    private final List<MethodDescriptor> methodDescs = new ArrayList<>();
+    private final List<MethodDescriptor> convertedMethodDescs = new ArrayList<>();
+    private EjbDescriptor ejbDescriptor;
 
     /** Default constructor. */
     public FlushAtEndOfMethodDescriptor() {
     }
 
-     /**
-      * Getter for method
-      * @return Value of MethodDescriptor list
-      */
-    public ArrayList getMethodDescriptors() {
+
+    /**
+     * Getter for method
+     *
+     * @return Value of MethodDescriptor list
+     */
+    public List<MethodDescriptor> getMethodDescriptors() {
         return methodDescs;
     }
 
-     /**
-      * Getter for converted method
-      * @return Value of style converted MethodDescriptor list
-      */
-    public ArrayList getConvertedMethodDescs() {
-       if (convertedMethodDescs.isEmpty()) {
-           convertStyleFlushedMethods();
-       }
-       return convertedMethodDescs;
+
+    /**
+     * Getter for converted method
+     *
+     * @return Value of style converted MethodDescriptor list
+     */
+    public List<MethodDescriptor> getConvertedMethodDescs() {
+        if (convertedMethodDescs.isEmpty()) {
+            convertStyleFlushedMethods();
+        }
+        return convertedMethodDescs;
     }
 
 
@@ -63,41 +70,43 @@ public class FlushAtEndOfMethodDescriptor extends Descriptor {
         return ejbDescriptor;
     }
 
+
     /**
      * Setter for ejbDescriptors
-     * @param ejbDescriptors New value of ejbDescriptor.
+     *
+     * @param ejbDescriptor New value of ejbDescriptor.
      */
-    public void setEjbDescriptor(
-        EjbDescriptor ejbDescriptor) {
+    public void setEjbDescriptor(EjbDescriptor ejbDescriptor) {
         this.ejbDescriptor = ejbDescriptor;
     }
 
 
     /**
      * Setter for method
-     * @param MethodDescriptor New value of MethodDescriptor to add.
+     *
+     * @param methodDesc New value of MethodDescriptor to add.
      */
     public void addMethodDescriptor(MethodDescriptor methodDesc) {
         methodDescs.add(methodDesc);
     }
 
-    private void convertStyleFlushedMethods() {
-        Set allMethods = ejbDescriptor.getMethodDescriptors();
-        for (Iterator mdItr = methodDescs.iterator(); mdItr.hasNext();) {
-            MethodDescriptor methodDesc = (MethodDescriptor) mdItr.next();
 
+    public boolean isFlushEnabledFor(MethodDescriptor methodDesc) {
+        return getConvertedMethodDescs().contains(methodDesc);
+    }
+
+
+    private void convertStyleFlushedMethods() {
+        Set<MethodDescriptor> allMethods = ejbDescriptor.getMethodDescriptors();
+        for (MethodDescriptor methodDesc : methodDescs) {
             // the ejb-name element defined in the method element will
             // be always ignored and overriden by the one defined in
             // ejb element
             methodDesc.setEjbName(ejbDescriptor.getName());
 
             // Convert to style 3 method descriptors
-            Vector mds = methodDesc.doStyleConversion(ejbDescriptor, allMethods);
+            Vector<MethodDescriptor> mds = methodDesc.doStyleConversion(ejbDescriptor, allMethods);
             convertedMethodDescs.addAll(mds);
         }
-    }
-
-    public boolean isFlushEnabledFor(MethodDescriptor methodDesc) {
-        return getConvertedMethodDescs().contains(methodDesc);
     }
 }

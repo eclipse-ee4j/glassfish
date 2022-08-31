@@ -24,6 +24,7 @@ import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.runtime.application.gf.ApplicationRuntimeNode;
 
+import java.util.List;
 import java.util.Map;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -39,7 +40,7 @@ import org.jvnet.hk2.annotations.Service;
 @ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
 @Service
-public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<Application> {
 
     /**
      * @return the location of the DeploymentDescriptor file for a
@@ -75,9 +76,10 @@ public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorF
      */
     @Override
     public void registerBundle(
-        Map rootNodesMap,
-        Map publicIDToDTDMap,
-        Map versionUpgrades) {
+        Map<String, Class<?>> rootNodesMap,
+        Map<String, String> publicIDToDTDMap,
+        Map<String, List<Class<?>>> versionUpgrades
+    ) {
         String bundle = ApplicationRuntimeNode.registerBundle(publicIDToDTDMap, versionUpgrades);
         rootNodesMap.put(bundle, ApplicationRuntimeNode.class);
     }

@@ -40,7 +40,6 @@ import com.sun.enterprise.deployment.node.MessageDestinationRefNode;
 import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
 import com.sun.enterprise.deployment.node.ResourceRefNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
@@ -91,7 +90,7 @@ public class EjbInterceptorNode extends DeploymentDescriptorNode<EjbInterceptor>
     }
 
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
         table.put(EjbTagNames.INTERCEPTOR_CLASS, "setInterceptorClassName");

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,18 @@
 
 package org.glassfish.web.deployment.descriptor;
 
+import org.glassfish.deployment.common.Descriptor;
+
 /**
  * Objects exhiniting this interface represent an error page and the exception type or
  * error code that will cause the redirect from the web container.
  *
  * @author Danny Coward
  */
-public class ErrorPageDescriptor implements java.io.Serializable{
-    private int errorCode = -1;  // none
+public class ErrorPageDescriptor extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
+    private int errorCode = -1; // none
     private String exceptionType;
     private String location;
 
@@ -48,7 +53,7 @@ public class ErrorPageDescriptor implements java.io.Serializable{
     }
 
 
-    /** Return the error code. -1 if none. */
+    /** @return the error code. -1 if none. */
     public int getErrorCode() {
         return this.errorCode;
     }
@@ -69,9 +74,8 @@ public class ErrorPageDescriptor implements java.io.Serializable{
         if ("".equals(this.getExceptionType())) {
             if (getErrorCode() == -1) {
                 return null;
-            } else {
-                return String.valueOf(this.getErrorCode());
             }
+            return String.valueOf(this.getErrorCode());
         }
         return this.getExceptionType();
     }
@@ -80,8 +84,8 @@ public class ErrorPageDescriptor implements java.io.Serializable{
     /** Sets the error code if the argument is parsable as an int, or the exception type else. */
     public void setErrorSignifierAsString(String errorSignifier) {
         try {
-            int errorCode = Integer.parseInt(errorSignifier);
-            this.setErrorCode(errorCode);
+            int errCode = Integer.parseInt(errorSignifier);
+            this.setErrorCode(errCode);
             this.setExceptionType(null);
             return;
         } catch (NumberFormatException nfe) {
@@ -91,7 +95,7 @@ public class ErrorPageDescriptor implements java.io.Serializable{
     }
 
 
-    /** Return the exception type or the empty string if none. */
+    /** @return the exception type or the empty string if none. */
     public String getExceptionType() {
         if (this.exceptionType == null) {
             this.exceptionType = "";
@@ -106,7 +110,7 @@ public class ErrorPageDescriptor implements java.io.Serializable{
     }
 
 
-    /** Return the page to map to */
+    /** @return the page to map to */
     public String getLocation() {
         if (this.location == null) {
             this.location = "";
@@ -122,6 +126,7 @@ public class ErrorPageDescriptor implements java.io.Serializable{
 
 
     /** Appends a formatted version of my state as a String. */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("ErrorPage ").append(this.getErrorCode())
             .append(" ").append(this.getExceptionType()).append(" ").append(this.getLocation());

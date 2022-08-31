@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,55 +15,39 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * RelationshipRoleSourceNode.java
- *
- * Created on February 1, 2002, 3:36 PM
- */
-
 package com.sun.enterprise.deployment.node;
 
 import java.util.Map;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * ConfigurableNode able to treat dispatch element values to descriptors based
  * on initialized values
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class ConfigurableNode extends DeploymentDescriptorNode {
+public class ConfigurableNode extends DeploymentDescriptorNode<Descriptor> {
 
-    private Map dispatchTable;
-    private Object descriptor;
+    private final Map<String, String> dispatchTable;
+    private final Descriptor descriptor;
 
-    public ConfigurableNode(Object instance, Map dispatchTable) {
-        super();
-        this.dispatchTable = dispatchTable;
-        this.descriptor = instance;
-    }
 
-    public ConfigurableNode(Object descriptor, Map dispatchTable, XMLElement element) {
-        super();
+    public ConfigurableNode(Descriptor descriptor, Map<String, String> dispatchTable, XMLElement element) {
         this.dispatchTable = dispatchTable;
         this.descriptor = descriptor;
-    super.setXMLRootTag(element);
+        super.setXMLRootTag(element);
     }
 
-    /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
-    public Object getDescriptor() {
+
+    @Override
+    public Descriptor getDescriptor() {
         return descriptor;
     }
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    protected Map getDispatchTable() {
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
         return dispatchTable;
     }
 }

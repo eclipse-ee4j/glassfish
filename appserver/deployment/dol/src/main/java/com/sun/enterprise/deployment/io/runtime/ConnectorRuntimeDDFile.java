@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,11 @@
 package com.sun.enterprise.deployment.io.runtime;
 
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class is responsible for handling the XML configuration information
@@ -29,24 +30,16 @@ import com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode;
  *
  * @author Jerome Dochez
  */
-public class ConnectorRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+public class ConnectorRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<ConnectorDescriptor> {
 
-    /**
-     * @return the location of the DeploymentDescriptor file for a
-     * particular type of J2EE Archive
-     */
+    @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.S1AS_RAR_JAR_ENTRY;
     }
 
-    /**
-     * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this J2EE module
-     *
-     * @param the descriptor for which we need the node
-     */
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
 
+    @Override
+    public ConnectorNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof ConnectorDescriptor) {
             return new ConnectorNode((ConnectorDescriptor) descriptor);
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,49 +20,60 @@ package com.sun.enterprise.deployment.runtime.common;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MessageSecurityDescriptor extends RuntimeDescriptor {
+
+    private static final long serialVersionUID = 1L;
     public static final String MESSAGE = "Message";
     public static final String REQUEST_PROTECTION = "RequestProtection";
     public static final String RESPONSE_PROTECTION = "ResponseProtection";
 
-    private ArrayList messageDescs = new ArrayList();
-    private ProtectionDescriptor requestProtectionDesc = null;
-    private ProtectionDescriptor responseProtectionDesc = null;
+    private final ArrayList<MessageDescriptor> messageDescs = new ArrayList<>();
+    private ProtectionDescriptor requestProtectionDesc;
+    private ProtectionDescriptor responseProtectionDesc;
 
-    public MessageSecurityDescriptor() {}
+    public MessageSecurityDescriptor() {
+    }
+
 
     public void addMessageDescriptor(MessageDescriptor messageDesc) {
-       messageDescs.add(messageDesc);
+        messageDescs.add(messageDesc);
     }
 
-    public ArrayList getMessageDescriptors() {
+
+    public List<MessageDescriptor> getMessageDescriptors() {
         return messageDescs;
     }
+
 
     public ProtectionDescriptor getRequestProtectionDescriptor() {
         return requestProtectionDesc;
     }
 
+
     public void setRequestProtectionDescriptor(ProtectionDescriptor proDesc) {
         requestProtectionDesc = proDesc;
     }
+
 
     public ProtectionDescriptor getResponseProtectionDescriptor() {
         return responseProtectionDesc;
     }
 
+
     public void setResponseProtectionDescriptor(ProtectionDescriptor proDesc) {
         responseProtectionDesc = proDesc;
     }
 
+
     // return all the methods defined in the message elements inside this
     // message-security element
-    public ArrayList getAllMessageMethods() {
-        //FIXME
+    public ArrayList<?> getAllMessageMethods() {
+        // FIXME
         // need to convert operation to message
         // need to union all the methods
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
 }

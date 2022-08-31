@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,58 +22,53 @@ import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.NameValuePairNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.node.runtime.ServiceRefPortInfoRuntimeNode;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
-import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling runtime info for service references from weblogic DD
  *
  * @author Rama Pulavarthi
  */
-public class WLServiceRefNode extends DeploymentDescriptorNode {
+public class WLServiceRefNode extends DeploymentDescriptorNode<ServiceReferenceDescriptor> {
 
     private ServiceReferenceDescriptor descriptor;
 
     public WLServiceRefNode() {
         super();
-        registerElementHandler
-                (new XMLElement(WLWebServicesTagNames.SERVICE_REFERENCE_PORT_INFO),
-                        WLServiceRefPortInfoRuntimeNode.class);
-        registerElementHandler
-                (new XMLElement(WebServicesTagNames.CALL_PROPERTY),
-                        NameValuePairNode.class, "addCallProperty");
+        registerElementHandler(new XMLElement(WLWebServicesTagNames.SERVICE_REFERENCE_PORT_INFO),
+            WLServiceRefPortInfoRuntimeNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.CALL_PROPERTY), NameValuePairNode.class,
+            "addCallProperty");
     }
+
 
     @Override
     public void addDescriptor(Object desc) {
         if (desc instanceof ServiceRefPortInfo) {
             ServiceRefPortInfo newPortInfo = (ServiceRefPortInfo) desc;
-            ServiceReferenceDescriptor serviceRef =
-                    (ServiceReferenceDescriptor) getDescriptor();
+            ServiceReferenceDescriptor serviceRef = getDescriptor();
             serviceRef.addRuntimePortInfo(newPortInfo);
         }
     }
+
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public ServiceReferenceDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -90,10 +86,9 @@ public class WLServiceRefNode extends DeploymentDescriptorNode {
         if (WebServicesTagNames.SERVICE_REF_NAME.equals(name)) {
             Object parentDesc = getParentNode().getDescriptor();
             if (parentDesc instanceof JndiNameEnvironment) {
-                descriptor = ((JndiNameEnvironment) parentDesc).
-                        getServiceReferenceByName(value);
+                descriptor = ((JndiNameEnvironment) parentDesc).getServiceReferenceByName(value);
             } else if (parentDesc instanceof WebBundleDescriptor) {
-                WebBundleDescriptor desc = (WebBundleDescriptor)parentDesc;
+                WebBundleDescriptor desc = (WebBundleDescriptor) parentDesc;
                 descriptor = desc.getServiceReferenceByName(value);
             }
         } else if (WLWebServicesTagNames.SERVICE_REFERENCE_WSDL_URL.equals(name)) {
@@ -101,8 +96,7 @@ public class WLServiceRefNode extends DeploymentDescriptorNode {
                 URL url = new URL(value);
                 descriptor.setWsdlOverride(url);
             } catch (MalformedURLException mue) {
-                DOLUtils.getDefaultLogger().log(Level.INFO,
-                        "Warning : Invalid wsdl override url=" + value, mue);
+                DOLUtils.getDefaultLogger().log(Level.INFO, "Warning : Invalid wsdl override url=" + value, mue);
             }
         } else {
             super.setElementValue(element, value);

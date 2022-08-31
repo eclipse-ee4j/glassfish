@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,6 @@ import com.sun.ejb.containers.EjbContainerUtil;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
@@ -31,6 +31,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
 import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 
+
 /**
  * This class is responsible for handling the XML configuration information
  * for the SunOne AppServer Ejb Container
@@ -40,7 +41,7 @@ import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 @ConfigurationDeploymentDescriptorFileFor(EjbContainerUtil.EJB_CONTAINER_NAME)
 @Service
 @PerLookup
-public class EjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+public class EjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<EjbBundleDescriptorImpl>  {
 
     /**
      * @return the location of the DeploymentDescriptor file for a
@@ -58,7 +59,8 @@ public class EjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      * @return a RootXMLNode responsible for handling the deployment
      *         descriptors associated with this J2EE module
      */
-    public RootXMLNode<EjbBundleDescriptorImpl> getRootXMLNode(Descriptor descriptor) {
+    @Override
+    public EjbBundleRuntimeNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof EjbBundleDescriptorImpl) {
             return new EjbBundleRuntimeNode((EjbBundleDescriptorImpl) descriptor);
         }

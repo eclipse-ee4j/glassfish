@@ -102,15 +102,15 @@ import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_T
  * This node is responsible for handling the web-common xml tree
  *
  * @author Shing Wai Chan
- * @version
  */
 public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends AbstractBundleNode<T> {
-    public final static String SPEC_VERSION = "6.0";
+
+    public static final String SPEC_VERSION = "6.0";
 
     protected T descriptor;
     private Map<String, Vector<String>> servletMappings;
 
-    /** Creates new WebBundleNode */
+    /** Creates new WebCommonNode */
     protected WebCommonNode() {
         super();
 

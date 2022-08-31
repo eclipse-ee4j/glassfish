@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,15 +15,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * LocalizedNode.java
- *
- * Created on August 16, 2002, 4:01 PM
- */
-
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
@@ -30,6 +27,7 @@ import org.xml.sax.Attributes;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -38,18 +36,27 @@ import java.util.Set;
  *
  * @author Jerome Dochez
  */
-public class LocalizedNode extends DeploymentDescriptorNode {
+public class LocalizedNode extends DeploymentDescriptorNode<Descriptor> {
 
-    protected String lang = null;
-    protected String localizedValue = null;
+    private String lang;
+    private String localizedValue;
 
-    /**
-     * @return the descriptor for this node
-     */
     @Override
-    public Object getDescriptor() {
-        return getParentNode().getDescriptor();
+    public Descriptor getDescriptor() {
+        // return getParentNode().getDescriptor();
+        return null;
     }
+
+
+    protected String getLang() {
+        return lang;
+    }
+
+
+    protected String getLocalizedValue() {
+        return localizedValue;
+    }
+
 
     /**
      * notification of element start with attributes.
@@ -65,6 +72,7 @@ public class LocalizedNode extends DeploymentDescriptorNode {
         }
     }
 
+
     /**
      * receives notification of the value for a particular tag
      *
@@ -74,32 +82,31 @@ public class LocalizedNode extends DeploymentDescriptorNode {
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (element.equals(getXMLRootTag())) {
-            localizedValue=value;
+            localizedValue = value;
         } else {
             super.setElementValue(element, value);
         }
     }
 
+
     /**
      * writes all the localized map element usign the tagname with
      * the lang attribute to a DOM node
      */
-    public void writeLocalizedMap(Node parentNode, String tagName, Map localizedMap) {
-        if (localizedMap != null) {
-            Set<Map.Entry> entrySet = localizedMap.entrySet();
-            Iterator<Map.Entry> entryIt = entrySet.iterator();
-            while (entryIt.hasNext()) {
-                Map.Entry entry = entryIt.next();
-                String lang = (String) entry.getKey();
-                Element aLocalizedNode = (Element) appendTextChild(parentNode, tagName, (String) entry.getValue());
-                if (aLocalizedNode != null && Locale.getDefault().getLanguage().equals(lang)) {
-                    aLocalizedNode.setAttributeNS(
-                        TagNames.XML_NAMESPACE,
-                        TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG,
-                        lang);
-                }
+    public void writeLocalizedMap(Node parentNode, String tagName, Map<String, String> localizedMap) {
+        if (localizedMap == null) {
+            return;
+        }
+        Set<Entry<String, String>> entrySet = localizedMap.entrySet();
+        Iterator<Entry<String, String>> entryIt = entrySet.iterator();
+        while (entryIt.hasNext()) {
+            Entry<String, String> entry = entryIt.next();
+            String entryLang = entry.getKey();
+            Element aLocalizedNode = (Element) appendTextChild(parentNode, tagName, entry.getValue());
+            if (aLocalizedNode != null && Locale.getDefault().getLanguage().equals(entryLang)) {
+                String qualifiedName = TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG;
+                aLocalizedNode.setAttributeNS(TagNames.XML_NAMESPACE, qualifiedName, entryLang);
             }
         }
     }
-
 }

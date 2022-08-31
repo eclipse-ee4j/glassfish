@@ -19,7 +19,6 @@ package org.glassfish.ejb.deployment.io;
 
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -34,7 +33,7 @@ import static com.sun.enterprise.deployment.util.DOLUtils.warType;
  * @author Jerome Dochez
  */
 
-public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile {
+public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile<EjbBundleDescriptorImpl> {
 
     /**
      * @return the location of the DeploymentDescriptor file for a
@@ -53,7 +52,8 @@ public class EjbDeploymentDescriptorFile extends DeploymentDescriptorFile {
      *
      * @param descriptor the descriptor for which we need the node
      */
-    public RootXMLNode<EjbBundleDescriptorImpl> getRootXMLNode(Descriptor descriptor) {
+    @Override
+    public EjbBundleNode getRootXMLNode(Descriptor descriptor) {
         return new EjbBundleNode();
     }
 }

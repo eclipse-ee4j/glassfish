@@ -19,14 +19,15 @@ package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This descriptor holds the security configuration of an EJB IOR.
  */
-public class EjbIORConfigurationDescriptor implements Serializable {
+public class EjbIORConfigurationDescriptor extends Descriptor {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = DOLUtils.getDefaultLogger();
 
@@ -89,7 +90,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
 
     /**
      * Set the value of the integrity element to the specified value.
-     * @param the value (one of supported, required, none).
+     * @param val the value (one of supported, required, none).
      */
     public void setIntegrity(String val) {
         if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
@@ -134,7 +135,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      */
     public void setEstablishTrustInTarget(String val) {
         if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED)) {
-            throw new RuntimeException("Incorrect value for " + "establishTrustInTarget:" + val);
+            throw new RuntimeException("Incorrect value for establishTrustInTarget:" + val);
         }
 
         establishTrustInTarget = val;
@@ -156,7 +157,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      */
     public void setEstablishTrustInClient(String val) {
         if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
-            throw new RuntimeException("Incorrect value for " + "establishTrustInClient:" + val);
+            throw new RuntimeException("Incorrect value for establishTrustInClient: " + val);
         }
         establishTrustInClient = val;
     }
@@ -177,7 +178,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      */
     public void setAuthenticationMethod(String val) {
         if (!val.equalsIgnoreCase(USERNAME_PASSWORD) && !val.equalsIgnoreCase(NONE)) {
-            throw new RuntimeException("Incorrect value for " + "authentication method:" + val);
+            throw new RuntimeException("Incorrect value for authentication method: " + val);
         }
         authenticationMethod = val;
     }
@@ -213,7 +214,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
      */
     public void setCallerPropagation(String val) {
         if (!val.equalsIgnoreCase(NONE) && !val.equalsIgnoreCase(SUPPORTED) && !val.equalsIgnoreCase(REQUIRED)) {
-            throw new RuntimeException("Incorrect value for callerPropagation:" + val);
+            throw new RuntimeException("Incorrect value for callerPropagation: " + val);
         }
         callerPropagation = val;
     }
@@ -249,6 +250,7 @@ public class EjbIORConfigurationDescriptor implements Serializable {
     /**
     * Returns a formatted String of the attributes of this object.
     */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\n integrity ").append(integrity);
         toStringBuffer.append( "\n confidentiality " ).append( confidentiality);

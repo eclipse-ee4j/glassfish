@@ -46,12 +46,7 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
         return descriptor;
     }
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
+
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
@@ -59,12 +54,7 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
         return table;
     }
 
-    /**
-     * receives notiification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.EJB_REFERENCE_NAME.equals(element.getQName())) {
@@ -88,14 +78,7 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
         }
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param nodeName node name
-     * @param descriptor the descriptor to write
-     * @return the DOM tree top node
-     */
+
     @Override
     public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor descriptor) {
         Node ejbRef = appendChild(parent, nodeName);
@@ -104,25 +87,11 @@ public class EjbReferenceDescriptionNode extends RuntimeDescriptorNode<EjbRefere
         return ejbRef;
     }
 
-    /**
-     * write all occurrences of the descriptor corresponding to the current
-     * node from the parent descriptor to an JAXP DOM node and return it
-     *
-     * This API will be invoked by the parent node when the parent node
-     * writes out a mix of statically and dynamically registered sub nodes.
-     *
-     * This method should be overriden by the sub classes if it
-     * needs to be called by the parent node.
-     *
-     * @param parent node in the DOM tree
-     * @param nodeName the name of the node
-     * @param parentDesc parent descriptor of the descriptor to be written
-     * @return the JAXP DOM node
-     */
+
     @Override
     public Node writeDescriptors(Node parent, String nodeName, Descriptor parentDesc) {
         if (parentDesc instanceof EjbReferenceContainer) {
-            EjbReferenceContainer ejbReferenceContainer = (EjbReferenceContainer)parentDesc;
+            EjbReferenceContainer ejbReferenceContainer = (EjbReferenceContainer) parentDesc;
             // ejb-reference-description*
             Set<EjbReferenceDescriptor> ejbReferences = ejbReferenceContainer.getEjbReferenceDescriptors();
             for (EjbReferenceDescriptor ejbReference : ejbReferences) {

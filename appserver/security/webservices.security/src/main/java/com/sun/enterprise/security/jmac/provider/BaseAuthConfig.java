@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@ import java.lang.reflect.Method;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 import jakarta.xml.soap.MimeHeaders;
@@ -41,6 +41,8 @@ import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
 import com.sun.enterprise.security.webservices.LogUtils;
 
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -142,7 +144,7 @@ public class BaseAuthConfig {
                 break;
             }
 
-            ArrayList mDs = msd.getMessageDescriptors();
+            List<MessageDescriptor> mDs = msd.getMessageDescriptors();
 
             for (int j=0; mDs != null && j < mDs.size(); j++) {
 
@@ -218,9 +220,9 @@ public class BaseAuthConfig {
         return new AuthPolicy(sourceAuthType,recipientAuth,beforeContent);
     }
 
-    private static boolean
-    isMatchingMSD(MethodDescriptor targetMD, MessageSecurityDescriptor mSD) {
-        ArrayList messageDescriptors = mSD.getMessageDescriptors();
+
+    private static boolean isMatchingMSD(MethodDescriptor targetMD, MessageSecurityDescriptor mSD) {
+        List<MessageDescriptor> messageDescriptors = mSD.getMessageDescriptors();
         if (messageDescriptors.isEmpty()) {
             // If this happens the dd is invalid.
             // Unfortunately the deployment system does not catch such problems.
@@ -396,7 +398,7 @@ public class BaseAuthConfig {
                     MessageSecurityDescriptor mSD = (MessageSecurityDescriptor)
                         messageSecurityDescriptors_.get(i);
 
-                    ArrayList mDs = mSD.getMessageDescriptors();
+                    List<MessageDescriptor> mDs = mSD.getMessageDescriptors();
 
                     for (int j=0; mDs != null && j < mDs.size(); j++) {
 

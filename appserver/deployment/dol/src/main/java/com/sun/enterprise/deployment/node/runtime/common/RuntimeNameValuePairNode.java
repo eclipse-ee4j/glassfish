@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,29 +15,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * RuntimeNameValuePairNode.java
- *
- * Created on March 13, 2003, 1:26 PM
- */
-
 package com.sun.enterprise.deployment.node.runtime.common;
 
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.node.NameValuePairNode;
 
 /**
- *
- * @author  Jerome Dochez
+ * @author Jerome Dochez
  */
-public class RuntimeNameValuePairNode extends NameValuePairNode{
+public class RuntimeNameValuePairNode extends NameValuePairNode {
 
-    NameValuePairDescriptor descriptor = null;
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
-    public Object getDescriptor() {
-        if (descriptor==null) {
+    private NameValuePairDescriptor descriptor;
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
+    public NameValuePairDescriptor getDescriptor() {
+        if (descriptor == null) {
             descriptor = new NameValuePairDescriptor();
         }
         return descriptor;

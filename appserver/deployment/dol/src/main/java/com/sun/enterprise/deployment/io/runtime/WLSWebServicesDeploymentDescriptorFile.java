@@ -22,7 +22,6 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.ws.WLDescriptorConstants;
 import com.sun.enterprise.deployment.node.ws.WLWebServicesDescriptorNode;
 
@@ -43,6 +42,7 @@ import static com.sun.enterprise.deployment.util.DOLUtils.warType;
  *
  * @author Rama Pulavarthi
  */
+// FIXME: Seems broken, conflicting generics/
 public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploymentDescriptorFile {
 
     private String descriptorPath;
@@ -74,7 +74,7 @@ public class WLSWebServicesDeploymentDescriptorFile extends ConfigurationDeploym
     }
 
     @Override
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
+    public WLWebServicesDescriptorNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof WebServicesDescriptor) {
             return new WLWebServicesDescriptorNode((WebServicesDescriptor) descriptor);
         }

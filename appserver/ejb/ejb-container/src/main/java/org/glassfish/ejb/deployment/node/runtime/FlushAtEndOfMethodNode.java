@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,15 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.MethodNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.List;
+
 import org.glassfish.ejb.deployment.descriptor.runtime.FlushAtEndOfMethodDescriptor;
 import org.w3c.dom.Node;
 
@@ -65,11 +66,10 @@ public class FlushAtEndOfMethodNode extends DeploymentDescriptorNode<FlushAtEndO
     @Override
     public Node writeDescriptor(Node parent, String nodeName, FlushAtEndOfMethodDescriptor flushMethodDescriptor) {
         Node flushMethodNode = super.writeDescriptor(parent, nodeName, flushMethodDescriptor);
-        ArrayList methodDescs = flushMethodDescriptor.getConvertedMethodDescs();
+        List<MethodDescriptor> methodDescs = flushMethodDescriptor.getConvertedMethodDescs();
         if (!methodDescs.isEmpty()) {
             MethodNode methodNode = new MethodNode();
-            for (Iterator methodIterator = methodDescs.iterator(); methodIterator.hasNext();) {
-                MethodDescriptor methodDesc = (MethodDescriptor) methodIterator.next();
+            for (MethodDescriptor methodDesc : methodDescs) {
                 // do not write out ejb-name element for the method
                 methodNode.writeDescriptor(flushMethodNode, RuntimeTagNames.METHOD, methodDesc, null);
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,32 +18,33 @@
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+
+import java.util.Map;
+
 import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 
-import java.util.Map;
-
 /**
  * This node handles the error-page xml tag
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class ErrorPageNode extends DeploymentDescriptorNode<ErrorPageDescriptor> {
 
-    protected ErrorPageDescriptor descriptor = null;
+    private ErrorPageDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
     public ErrorPageDescriptor getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new ErrorPageDescriptor();
         }
         return descriptor;
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -59,6 +61,7 @@ public class ErrorPageNode extends DeploymentDescriptorNode<ErrorPageDescriptor>
         return table;
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -71,13 +74,13 @@ public class ErrorPageNode extends DeploymentDescriptorNode<ErrorPageDescriptor>
     public Node writeDescriptor(Node parent, String nodeName, ErrorPageDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         String exceptionType = descriptor.getExceptionType();
-        if (exceptionType!=null && exceptionType.length()!=0) {
-            appendTextChild(myNode, WebTagNames.EXCEPTION_TYPE, exceptionType);
-        } else {
+        if (exceptionType == null || exceptionType.isEmpty()) {
             String errorSignifier = descriptor.getErrorSignifierAsString();
             if (errorSignifier != null) {
                 appendTextChild(myNode, WebTagNames.ERROR_CODE, errorSignifier);
             }
+        } else {
+            appendTextChild(myNode, WebTagNames.EXCEPTION_TYPE, exceptionType);
         }
         appendTextChild(myNode, WebTagNames.LOCATION, descriptor.getLocation());
         return myNode;

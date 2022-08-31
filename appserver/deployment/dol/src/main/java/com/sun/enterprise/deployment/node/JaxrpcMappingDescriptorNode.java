@@ -36,11 +36,11 @@ import org.xml.sax.Attributes;
  * @author Kenneth Saks
  */
 @Service
-public class JaxrpcMappingDescriptorNode extends AbstractBundleNode {
+public class JaxrpcMappingDescriptorNode extends AbstractBundleNode<JaxrpcMappingDescriptor> {
 
-    public final static XMLElement ROOT_ELEMENT = new XMLElement(WebServicesTagNames.JAXRPC_MAPPING_FILE_ROOT);
+    private static final XMLElement ROOT_ELEMENT = new XMLElement(WebServicesTagNames.JAXRPC_MAPPING_FILE_ROOT);
 
-    public final static String SCHEMA_ID = "j2ee_jaxrpc_mapping_1_1.xsd";
+    private static final String SCHEMA_ID = "j2ee_jaxrpc_mapping_1_1.xsd";
     private final static List<String> systemIDs = initSystemIDs();
 
     private static final Set<String> complexElements = initComplexElements();
@@ -130,7 +130,7 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode {
     * @return the descriptor instance to associate with this XMLNode
     */
     @Override
-    public Object getDescriptor() {
+    public JaxrpcMappingDescriptor getDescriptor() {
         return descriptor;
     }
 

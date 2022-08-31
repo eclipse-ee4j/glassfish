@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,10 +24,12 @@ import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling the Connector DTD related message-listener XML tag
@@ -36,11 +39,10 @@ import java.util.Map;
  */
 public class MessageListenerNode extends DeploymentDescriptorNode {
 
-    private MessageListener msgListener = null;
+    private MessageListener msgListener;
 
     public MessageListenerNode() {
         registerElementHandler(new XMLElement(ConnectorTagNames.ACTIVATION_SPEC), ActivationSpecNode.class);
-
     }
 
 
@@ -52,8 +54,8 @@ public class MessageListenerNode extends DeploymentDescriptorNode {
      */
 
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ConnectorTagNames.MSG_LISTENER_TYPE, "setMessageListenerType");
         return table;
     }
@@ -63,7 +65,7 @@ public class MessageListenerNode extends DeploymentDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public MessageListener getDescriptor() {
         if (msgListener == null) {
             msgListener = (MessageListener) DescriptorFactory.getDescriptor(getXMLPath());
         }

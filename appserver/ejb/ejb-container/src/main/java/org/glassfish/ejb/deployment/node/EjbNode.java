@@ -165,19 +165,20 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
     /**
      * write the common descriptor info to a DOM tree and return it
      *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param ejbNode parent node for the DOM tree
+     * @param descriptor the descriptor to write
      */
     protected void writeCommonHeaderEjbDescriptor(Node ejbNode, EjbDescriptor descriptor) {
         appendTextChild(ejbNode, TagNames.EJB_NAME, descriptor.getName());
         appendTextChild(ejbNode, TagNames.MAPPED_NAME, descriptor.getMappedName());
     }
 
+
     /**
      * write the security identity information about an EJB
      *
      * @param parent node for the DOM tree
-     * @param the EJB descriptor the security information to be retrieved
+     * @param descriptor the EJB descriptor the security information to be retrieved
      */
     protected void writeSecurityIdentityDescriptor(Node parent, EjbDescriptor descriptor) {
         if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity() == null) {

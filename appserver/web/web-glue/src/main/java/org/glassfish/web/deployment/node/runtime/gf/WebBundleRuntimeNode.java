@@ -38,7 +38,6 @@ import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.runtime.web.IdempotentUrlPattern;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
@@ -152,6 +151,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         return DTDRegistry.SUN_WEBAPP_300_DTD_SYSTEM_ID;
     }
 
+
     /**
      * @return NULL for all runtime nodes.
      */
@@ -160,31 +160,34 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         return null;
     }
 
-   /**
-    * register this node as a root node capable of loading entire DD files
-    *
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
-    * @param versionUpgrades The list of upgrades from older versions
-    * to the latest schema
-    * @return the doctype tag name
-    */
-   public static String registerBundle(Map<String, String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_230_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_230_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_231_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_231_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_240_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_241_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_241_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_250_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_250_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_300_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_300_DTD_SYSTEM_ID);
-       if (!restrictDTDDeclarations()) {
-           publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240beta_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_240beta_DTD_SYSTEM_ID);
-       }
 
-       return RuntimeTagNames.S1AS_WEB_RUNTIME_TAG;
-   }
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @param versionUpgrades The list of upgrades from older versions
+     *            to the latest schema
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map<String, String> publicIDToDTD, Map<String, List<Class<?>>> versionUpgrades) {
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_230_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_230_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_231_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_231_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_240_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_241_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_241_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_250_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_250_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_300_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_300_DTD_SYSTEM_ID);
+        if (!restrictDTDDeclarations()) {
+            publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240beta_DTD_PUBLIC_ID,
+                DTDRegistry.SUN_WEBAPP_240beta_DTD_SYSTEM_ID);
+        }
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+        return RuntimeTagNames.S1AS_WEB_RUNTIME_TAG;
+    }
+
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
     public Object getSunDescriptor() {
         return descriptor.getSunDescriptor();
     }
@@ -345,8 +348,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
 
         // servlet
         Set<WebComponentDescriptor> servlets = bundleDescriptor.getServletDescriptors();
-        org.glassfish.web.deployment.node.runtime.gf.ServletNode servletNode =
-            new org.glassfish.web.deployment.node.runtime.gf.ServletNode();
+        org.glassfish.web.deployment.node.runtime.gf.ServletNode servletNode = new org.glassfish.web.deployment.node.runtime.gf.ServletNode();
         for (WebComponentDescriptor servlet : servlets) {
             servletNode.writeDescriptor(web, RuntimeTagNames.SERVLET, servlet);
         }
@@ -361,7 +363,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         }
 
         // session-config?
-        if (sunWebApp.getSessionConfig()!=null) {
+        if (sunWebApp.getSessionConfig() != null) {
             SessionConfigNode scn = new SessionConfigNode();
             scn.writeDescriptor(web, RuntimeTagNames.SESSION_CONFIG, sunWebApp.getSessionConfig());
         }
@@ -370,7 +372,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         Set<EjbReferenceDescriptor> ejbRefs = bundleDescriptor.getEjbReferenceDescriptors();
         if (!ejbRefs.isEmpty()) {
             EjbRefNode node = new EjbRefNode();
-            for (EjbReference ejbRef : ejbRefs) {
+            for (EjbReferenceDescriptor ejbRef : ejbRefs) {
                 node.writeDescriptor(web, RuntimeTagNames.EJB_REF, ejbRef);
             }
         }
@@ -396,10 +398,9 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         // service-ref*
         if (bundleDescriptor.hasServiceReferenceDescriptors()) {
             ServiceRefNode serviceNode = new ServiceRefNode();
-            for (Object element : bundleDescriptor.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor next = (ServiceReferenceDescriptor) element;
-            serviceNode.writeDescriptor(web, WebServicesTagNames.SERVICE_REF, next);
-         }
+            for (ServiceReferenceDescriptor element : bundleDescriptor.getServiceReferenceDescriptors()) {
+                serviceNode.writeDescriptor(web, WebServicesTagNames.SERVICE_REF, element);
+            }
         }
 
         // message-destination-ref*

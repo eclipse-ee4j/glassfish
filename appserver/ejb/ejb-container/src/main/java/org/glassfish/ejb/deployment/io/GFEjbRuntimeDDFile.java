@@ -17,20 +17,19 @@
 
 package org.glassfish.ejb.deployment.io;
 
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
-import org.glassfish.ejb.deployment.node.runtime.GFEjbBundleRuntimeNode;
-import org.glassfish.hk2.api.PerLookup;
-
-import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
-import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 import com.sun.ejb.containers.EjbContainerUtil;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.ejb.deployment.node.runtime.GFEjbBundleRuntimeNode;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
 
 /**
  * This class is responsible for handling the XML configuration information
@@ -39,11 +38,8 @@ import com.sun.enterprise.deployment.node.RootXMLNode;
 @ConfigurationDeploymentDescriptorFileFor(EjbContainerUtil.EJB_CONTAINER_NAME)
 @Service
 @PerLookup
-public class GFEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
-    /**
-     * @return the location of the DeploymentDescriptor file for a
-     *         particular type of J2EE Archive
-     */
+public class GFEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<EjbBundleDescriptorImpl> {
+
     @Override
     public String getDeploymentDescriptorPath() {
         return warType().equals(getArchiveType()) || scatteredWarType().equals(getArchiveType())
@@ -51,12 +47,9 @@ public class GFEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
             : DescriptorConstants.GF_EJB_JAR_ENTRY;
     }
 
-    /**
-     * @param descriptor the descriptor for which we need the node
-     * @return a RootXMLNode responsible for handling the deployment
-     *         descriptors associated with this J2EE module
-     */
-    public RootXMLNode<EjbBundleDescriptorImpl> getRootXMLNode(Descriptor descriptor) {
+
+    @Override
+    public GFEjbBundleRuntimeNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof EjbBundleDescriptorImpl) {
             return new GFEjbBundleRuntimeNode((EjbBundleDescriptorImpl) descriptor);
         }

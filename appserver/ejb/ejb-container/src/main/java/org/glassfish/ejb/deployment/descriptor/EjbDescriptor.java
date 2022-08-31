@@ -1069,14 +1069,13 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                     }
                 }
             } catch (Throwable t) {
-                _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] { this.getEjbClassName() });
-                throw new RuntimeException(t);
+                throw new RuntimeException(getEjbClassName(), t);
             }
         }
         if (callbackInterceptors == null) {
             // non-CDI or no @Inject constructor - use no-arg constructor
             callbackInterceptors = getClassOrMethodInterceptors(
-                    new MethodDescriptor(shortClassName, null, new String[0], EJB_BEAN));
+                new MethodDescriptor(shortClassName, null, new String[0], EJB_BEAN));
         }
 
         return callbackInterceptors;
@@ -1211,13 +1210,12 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         }
     }
 
-    Set getAllMethodDescriptors() {
+    Set<MethodDescriptor> getAllMethodDescriptors() {
         Set<MethodDescriptor> allMethodDescriptors = new HashSet<>();
         for (Enumeration<MethodDescriptor> e = getMethodContainerTransactions().keys(); e.hasMoreElements();) {
             allMethodDescriptors.add(e.nextElement());
         }
-        for (Object element : this.getPermissionedMethodsByPermission().keySet()) {
-            MethodPermission nextPermission = (MethodPermission) element;
+        for (MethodPermission nextPermission : this.getPermissionedMethodsByPermission().keySet()) {
             Set<MethodDescriptor> permissionedMethods = this.getPermissionedMethodsByPermission().get(nextPermission);
             for (MethodDescriptor permissionedMethod : permissionedMethods) {
                 allMethodDescriptors.add(permissionedMethod);
@@ -1323,7 +1321,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
             convertMethodPermissions();
         }
         Set<Role> allPermissionedRoles = new HashSet<>();
-        for (MethodPermission pm : this.getPermissionedMethodsByPermission().keySet()) {
+        for (MethodPermission pm : getPermissionedMethodsByPermission().keySet()) {
             if (pm.isRoleBased()) {
                 allPermissionedRoles.add(pm.getRole());
             }
@@ -1350,7 +1348,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     @Override
     public void addPermissionedMethod(MethodPermission mp, MethodDescriptor md) {
         if (getEjbBundleDescriptor() == null) {
-            throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.exceptioncannotaddrolesdescriptor",
+            throw new IllegalArgumentException(
+                localStrings.getLocalString("enterprise.deployment.exceptioncannotaddrolesdescriptor",
                     "Cannot add roles when the descriptor is not part of a bundle"));
         }
         if (mp.isRoleBased()) {
@@ -1358,7 +1357,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                 // Check for the any authenticated user role '**' as this role
                 // will be implicitly defined when not listed as a security-role
                 if (!"**".equals(mp.getRole().getName())) {
-                    throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.exceptioncannotaddrolesbundle",
+                    throw new IllegalArgumentException(
+                        localStrings.getLocalString("enterprise.deployment.exceptioncannotaddrolesbundle",
                             "Cannot add roles when the bundle does not have them"));
                 }
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +19,8 @@ package com.sun.enterprise.deployment.node.runtime;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 import java.util.Map;
 
@@ -40,6 +41,7 @@ public class GFAppClientRuntimeNode extends AppClientRuntimeNode {
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.GF_APPCLIENT_RUNTIME_TAG);
     }
@@ -47,6 +49,7 @@ public class GFAppClientRuntimeNode extends AppClientRuntimeNode {
     /**
      * @return the DOCTYPE that should be written to the XML file
      */
+    @Override
     public String getDocType() {
         return DTDRegistry.GF_APPCLIENT_602_DTD_PUBLIC_ID;
     }
@@ -54,18 +57,20 @@ public class GFAppClientRuntimeNode extends AppClientRuntimeNode {
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return DTDRegistry.GF_APPCLIENT_602_DTD_SYSTEM_ID;
     }
 
-   /**
-    * register this node as a root node capable of loading entire DD files
-    *
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
-    * @return the doctype tag name
-    */
-   public static String registerBundle(Map publicIDToDTD) {
-       publicIDToDTD.put(DTDRegistry.GF_APPCLIENT_602_DTD_PUBLIC_ID, DTDRegistry.GF_APPCLIENT_602_DTD_SYSTEM_ID);
-       return RuntimeTagNames.GF_APPCLIENT_RUNTIME_TAG;
-   }
+
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map<String, String> publicIDToDTD) {
+        publicIDToDTD.put(DTDRegistry.GF_APPCLIENT_602_DTD_PUBLIC_ID, DTDRegistry.GF_APPCLIENT_602_DTD_SYSTEM_ID);
+        return RuntimeTagNames.GF_APPCLIENT_RUNTIME_TAG;
+    }
 }

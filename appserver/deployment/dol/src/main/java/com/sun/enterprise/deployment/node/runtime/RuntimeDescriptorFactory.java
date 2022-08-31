@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
@@ -24,7 +25,6 @@ import com.sun.enterprise.deployment.runtime.connector.MapElement;
 import com.sun.enterprise.deployment.runtime.connector.Principal;
 import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.deployment.runtime.connector.RoleMap;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
@@ -60,7 +60,7 @@ public class RuntimeDescriptorFactory {
         // weblogic DD
         register(new XMLElement(RuntimeTagNames.RESOURCE_DESCRIPTION), ResourceReferenceDescriptor.class);
         register(new XMLElement(RuntimeTagNames.RESOURCE_ENV_DESCRIPTION), ResourceEnvReferenceDescriptor.class);
-        register(new XMLElement(RuntimeTagNames.EJB_REFERENCE_DESCRIPTION), EjbReference.class);
+        register(new XMLElement(RuntimeTagNames.EJB_REFERENCE_DESCRIPTION), EjbReferenceDescriptor.class);
 
         // connector related
         register(new XMLElement(RuntimeTagNames.PRINCIPAL), Principal.class);

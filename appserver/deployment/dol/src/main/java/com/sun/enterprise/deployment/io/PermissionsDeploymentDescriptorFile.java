@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,21 @@
 
 package com.sun.enterprise.deployment.io;
 
+import com.sun.enterprise.deployment.PermissionsDescriptor;
+import com.sun.enterprise.deployment.node.PermissionsNode;
+
 import org.glassfish.deployment.common.Descriptor;
 
-import com.sun.enterprise.deployment.node.PermissionsNode;
-import com.sun.enterprise.deployment.node.RootXMLNode;
-
-public class PermissionsDeploymentDescriptorFile extends
-        DeploymentDescriptorFile {
+public class PermissionsDeploymentDescriptorFile extends DeploymentDescriptorFile<PermissionsDescriptor> {
 
     @Override
     public String getDeploymentDescriptorPath() {
-
         return "META-INF/permissions.xml";
     }
 
-    @Override
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
 
+    @Override
+    public PermissionsNode getRootXMLNode(Descriptor descriptor) {
         return new PermissionsNode();
 
     }

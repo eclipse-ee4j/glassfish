@@ -22,9 +22,10 @@ import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
+import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
 import com.sun.enterprise.deployment.node.runtime.application.wls.WeblogicApplicationNode;
 
+import java.util.List;
 import java.util.Map;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -39,28 +40,20 @@ import org.jvnet.hk2.annotations.Service;
 @ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
 @Service
-public class WLSApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+public class WLSApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<Application> {
 
-    /**
-     * @return the location of the DeploymentDescriptor file for a
-     * particular type of J2EE Archive
-     */
     @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.WLS_APPLICATION_JAR_ENTRY;
     }
 
-    /**
-     * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this J2EE module
-     *
-     * @param the descriptor for which we need the node
-     */
+
     @Override
-    public RootXMLNode<?> getRootXMLNode(Descriptor descriptor) {
+    public RuntimeBundleNode<Application> getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof Application) {
-            Application application = (Application)descriptor;
-            RootXMLNode<?> node = application.getRootNode(getDeploymentDescriptorPath());
+            Application application = (Application) descriptor;
+            RuntimeBundleNode<Application> node = (RuntimeBundleNode<Application>) application
+                .getRootNode(getDeploymentDescriptorPath());
             if (node == null) {
                 node = new WeblogicApplicationNode(application);
                 application.addRootNode(getDeploymentDescriptorPath(), node);
@@ -76,15 +69,16 @@ public class WLSApplicationRuntimeDDFile extends ConfigurationDeploymentDescript
      * dtd validation.
      *
      * @param rootNodesMap the map for storing all the root nodes
-     * @param publicIDToDTDMap the map for storing public id to dtd mapping
+     * @param publicIDToDTD the map for storing public id to dtd mapping
      * @param versionUpgrades The list of upgrades from older versions
      */
     @Override
     public void registerBundle(
-        final Map rootNodesMap,
-        final Map publicIDToDTDMap,
-        final Map versionUpgrades) {
-        String bundle = WeblogicApplicationNode.registerBundle(publicIDToDTDMap, versionUpgrades);
+        Map<String, Class<?>> rootNodesMap,
+        Map<String, String> publicIDToDTD,
+        Map<String, List<Class<?>>> versionUpgrades
+    ) {
+        String bundle = WeblogicApplicationNode.registerBundle(publicIDToDTD, versionUpgrades);
         rootNodesMap.put(bundle, WeblogicApplicationNode.class);
     }
 

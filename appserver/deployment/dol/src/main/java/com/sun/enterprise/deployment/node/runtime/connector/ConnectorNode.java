@@ -34,12 +34,11 @@ import org.w3c.dom.Node;
 /**
  * This node handles the sun-connector runtime deployment descriptors
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class ConnectorNode extends RuntimeBundleNode<ConnectorDescriptor> {
 
-    protected SunConnector connector;
+    private SunConnector connector;
 
     /**
      * Initialize the child handlers

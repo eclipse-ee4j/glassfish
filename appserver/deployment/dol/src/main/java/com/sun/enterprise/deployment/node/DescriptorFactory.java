@@ -43,6 +43,7 @@ import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
 
@@ -53,7 +54,8 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class DescriptorFactory {
 
-    static Map<String, Class<?>> descriptorClasses;
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+    private static Map<String, Class<? extends Descriptor>> descriptorClasses;
 
     static {
         initMapping();
@@ -102,58 +104,57 @@ public class DescriptorFactory {
 
 
     /**
-     * register a new descriptor class handling a particular XPATH in the DTD.
+     * Register a new descriptor class handling a particular XPATH in the DTD.
      *
-     * @param xmlPath absolute or relative XPath
+     * @param xmlElement XML element
      * @param clazz the descriptor class to use
      */
-    public static void register(XMLElement xmlPath, Class<?> clazz) {
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-            DOLUtils.getDefaultLogger().fine("Register " + clazz + " to handle " + xmlPath.getQName());
-        }
-        descriptorClasses.put(xmlPath.getQName(), clazz);
-    }
-
-    /**
-     * @return the descriptor tag for a particular XPath
-     */
-    public static Class<?> getDescriptorClass(String xmlPath) {
-        String originalXmlPath = xmlPath;
-        do {
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINER)) {
-                DOLUtils.getDefaultLogger().finer("looking for " + xmlPath);
-            }
-            final Class<?> clazz = descriptorClasses.get(xmlPath);
-            if (clazz != null) {
-                return clazz;
-            }
-            if (xmlPath.indexOf('/') == -1) {
-                xmlPath = null;
-            } else {
-                xmlPath = xmlPath.substring(xmlPath.indexOf('/') + 1);
-            }
-        } while (xmlPath != null);
-
-        if (DOLUtils.getDefaultLogger().isLoggable(Level.SEVERE)) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
-                new Object[] {"No descriptor registered for " + originalXmlPath});
-        }
-        return null;
+    public static void register(XMLElement xmlElement, Class<? extends Descriptor> clazz) {
+        LOG.log(Level.CONFIG, "Registering {0} to handle xml path {1}", new Object[] {clazz, xmlElement});
+        descriptorClasses.put(xmlElement.getQName(), clazz);
     }
 
 
     /**
+     * @param xmlPath
+     * @param <T> expected descriptor type
      * @return a new instance of a registered descriptor class for the supplied XPath
      */
     public static <T extends Descriptor> T getDescriptor(String xmlPath) {
         try {
-            Class<?> c = getDescriptorClass(xmlPath);
-            if (c != null) {
-                return (T) c.getDeclaredConstructor().newInstance();
+            Class<T> c = getDescriptorClass(xmlPath);
+            if (c == null) {
+                return null;
             }
-        } catch (Throwable t) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", t);
+            return c.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not create a descriptor instance for " + xmlPath, e);
         }
-        return null;
+    }
+
+
+    /**
+     * @param xmlPath
+     * @param <T> expected {@link Descriptor} class
+     * @return the descriptor tag for a particular XPath
+     */
+    private static <T extends Descriptor> Class<T> getDescriptorClass(final String xmlPath) {
+        String xpathPart = xmlPath;
+        do {
+            LOG.log(Level.FINEST, "Looking descriptor class for {0}", xpathPart);
+            // unchecked - clazz x xmlPath must be unique.
+            @SuppressWarnings("unchecked")
+            final Class<T> clazz = (Class<T>) descriptorClasses.get(xpathPart);
+            if (clazz != null) {
+                return clazz;
+            }
+            if (xpathPart.indexOf('/') == -1) {
+                xpathPart = null;
+            } else {
+                xpathPart = xpathPart.substring(xpathPart.indexOf('/') + 1);
+            }
+        } while (xpathPart != null);
+
+        throw new IllegalStateException("No descriptor registered for " + xmlPath);
     }
 }

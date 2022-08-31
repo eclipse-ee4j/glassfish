@@ -73,7 +73,7 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
         } else if (TagNames.LOOKUP_NAME.equals(element.getQName())) {
             if (setValueCalled) {
                 throw new IllegalArgumentException(
-                    localStrings.getLocalString("enterprise.deployment.node.invalidenventry",
+                    I18N_NODE.getLocalString("enterprise.deployment.node.invalidenventry",
                         "Cannot specify both the env-entry-value and lookup-name elements for env-entry element {0}",
                         new Object[] {envProp.getName()}));
             }

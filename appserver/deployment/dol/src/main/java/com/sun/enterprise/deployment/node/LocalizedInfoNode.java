@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -12,12 +13,6 @@
  * https://www.gnu.org/software/classpath/license.html.
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
- */
-
-/*
- * DescriptionNode.java
- *
- * Created on August 16, 2002, 2:46 PM
  */
 
 package com.sun.enterprise.deployment.node;
@@ -36,7 +31,7 @@ public class LocalizedInfoNode extends LocalizedNode {
      * we do not create descriptors in this node
      */
     @Override
-    public Object getDescriptor() {
+    public Descriptor getDescriptor() {
         return null;
     }
 
@@ -50,9 +45,9 @@ public class LocalizedInfoNode extends LocalizedNode {
         if (o instanceof Descriptor) {
             Descriptor descriptor = (Descriptor) o;
             if (getXMLRootTag().getQName().equals(TagNames.DESCRIPTION)) {
-                descriptor.setLocalizedDescription(lang, localizedValue);
+                descriptor.setLocalizedDescription(getLang(), getLocalizedValue());
             } else if (getXMLRootTag().getQName().equals(TagNames.NAME)) {
-                descriptor.setLocalizedDisplayName(lang, localizedValue);
+                descriptor.setLocalizedDisplayName(getLang(), getLocalizedValue());
             }
         }
     }

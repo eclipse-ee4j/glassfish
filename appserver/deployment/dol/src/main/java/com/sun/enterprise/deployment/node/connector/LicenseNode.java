@@ -20,39 +20,26 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.LicenseDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 
 /**
  * This node is responsible for handling license subtree.
  */
-public class LicenseNode extends DeploymentDescriptorNode {
+public class LicenseNode extends DeploymentDescriptorNode<ConnectorDescriptor> {
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to
-     * map xml element to method name on the descriptor class for
-     * setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method
-     *         as a value
-     */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ConnectorTagNames.LICENSE_REQUIRED, "setLicenseRequired");
         return table;
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
+    @Override
     public Node writeDescriptor(Node parent, ConnectorDescriptor descriptor) {
         LicenseDescriptor licenseDesc = descriptor.getLicenseDescriptor();
         if (licenseDesc != null) {

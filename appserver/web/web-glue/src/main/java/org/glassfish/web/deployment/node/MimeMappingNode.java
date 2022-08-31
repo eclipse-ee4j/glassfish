@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
  */
 public class MimeMappingNode extends DeploymentDescriptorNode<MimeMappingDescriptor> {
 
-    protected MimeMappingDescriptor descriptor;
+    private MimeMappingDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

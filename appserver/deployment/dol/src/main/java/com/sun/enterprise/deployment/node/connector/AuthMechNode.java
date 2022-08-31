@@ -61,7 +61,7 @@ public class AuthMechNode extends DeploymentDescriptorNode<AuthMechanism> {
     @Override
     public AuthMechanism getDescriptor() {
         if (auth == null) {
-            auth = (AuthMechanism) DescriptorFactory.getDescriptor(getXMLPath());
+            auth = DescriptorFactory.getDescriptor(getXMLPath());
         }
         return auth;
     }

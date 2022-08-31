@@ -22,7 +22,6 @@ import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
@@ -41,15 +40,15 @@ import org.w3c.dom.Node;
  * @author Jerome Dochez
  * @version
  */
-public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
+public class EjbRefNode extends DeploymentDescriptorNode<EjbReferenceDescriptor> {
 
-    EjbReference descriptor;
+    private EjbReferenceDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public EjbReference getDescriptor() {
+    public EjbReferenceDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -103,8 +102,7 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
      * @param ejbRef the descriptor to write
      * @return the DOM tree top node
      */
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName, EjbReference ejbRef) {
+    public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor ejbRef) {
         Node ejbRefNode = appendChild(parent, nodeName);
         appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_NAME, ejbRef.getName());
 
@@ -137,9 +135,9 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
         if (ejbRefs.hasNext()) {
             EjbRefNode refNode = new EjbRefNode();
             while (ejbRefs.hasNext()) {
-                EjbReference ejbRef = ejbRefs.next();
+                EjbReferenceDescriptor ejbRef = ejbRefs.next();
                 if (!ejbRef.isLocal()) {
-                    refNode.writeDescriptor(parent, TagNames.EJB_REFERENCE, ejbRef );
+                    refNode.writeDescriptor(parent, TagNames.EJB_REFERENCE, ejbRef);
                 }
             }
         }

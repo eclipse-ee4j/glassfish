@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * IconNode.java
- *
- * Created on August 19, 2002, 9:55 AM
- */
-
 package com.sun.enterprise.deployment.node;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -30,6 +25,7 @@ import org.w3c.dom.Node;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -38,15 +34,17 @@ import java.util.Set;
  */
 public class IconNode extends LocalizedNode {
 
-    private String smallIcon = null;
-    private String largeIcon = null;
+    private String smallIcon;
+    private String largeIcon;
 
     /**
      * @return the descriptor for this node
      */
-    public Object getDescriptor() {
+    @Override
+    public Descriptor getDescriptor() {
         return null;
     }
+
 
     /**
      * receives notification of the value for a particular tag
@@ -54,30 +52,33 @@ public class IconNode extends LocalizedNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (element.getQName().equals(TagNames.SMALL_ICON)) {
             smallIcon = value;
-        } else
-        if (element.getQName().equals(TagNames.LARGE_ICON)) {
+        } else if (element.getQName().equals(TagNames.LARGE_ICON)) {
             largeIcon = value;
         }
     }
 
+
     /**
      * notification of the end of XML parsing for this node
      */
+    @Override
     public void postParsing() {
         Object o = getParentNode().getDescriptor();
-        if (o!=null && o instanceof Descriptor) {
+        if (o != null && o instanceof Descriptor) {
             Descriptor descriptor = (Descriptor) o;
-            if (largeIcon!=null) {
-                descriptor.setLocalizedLargeIconUri(lang, largeIcon);
+            if (largeIcon != null) {
+                descriptor.setLocalizedLargeIconUri(getLang(), largeIcon);
             }
-            if (smallIcon!=null) {
-                descriptor.setLocalizedSmallIconUri(lang, smallIcon);
+            if (smallIcon != null) {
+                descriptor.setLocalizedSmallIconUri(getLang(), smallIcon);
             }
         }
     }
+
 
     /**
      * writes all localized icon information
@@ -86,33 +87,33 @@ public class IconNode extends LocalizedNode {
      * @param descriptor containing the icon information
      */
     public void writeLocalizedInfo(Node parentNode, Descriptor descriptor) {
-        Map largeIcons = descriptor.getLocalizedLargeIconUris();
-        Map smallIcons = descriptor.getLocalizedSmallIconUris();
-        if (largeIcons==null && smallIcons==null) {
+        Map<String, String> largeIcons = descriptor.getLocalizedLargeIconUris();
+        Map<String, String> smallIcons = descriptor.getLocalizedSmallIconUris();
+        if (largeIcons == null && smallIcons == null) {
             return;
         }
-        if (smallIcons!=null) {
-            Set<Map.Entry> entrySet = smallIcons.entrySet();
-            Iterator<Map.Entry> entryIt = entrySet.iterator();
+        if (smallIcons != null) {
+            Set<Entry<String, String>> entrySet = smallIcons.entrySet();
+            Iterator<Entry<String, String>> entryIt = entrySet.iterator();
             while (entryIt.hasNext()) {
-                Map.Entry entry = entryIt.next();
-                String lang = (String)entry.getKey();
-                String smallIconUri = (String)entry.getValue();
+                Entry<String, String> entry = entryIt.next();
+                String lang = entry.getKey();
+                String smallIconUri = entry.getValue();
                 String largeIconUri = null;
-                if (largeIcons!=null) {
-                    largeIconUri = (String) largeIcons.get(lang);
+                if (largeIcons != null) {
+                    largeIconUri = largeIcons.get(lang);
                 }
                 addIconInfo(parentNode, lang, smallIconUri, largeIconUri);
             }
         }
-        if (largeIcons!=null) {
-            Set<Map.Entry> entrySet = largeIcons.entrySet();
-            Iterator<Map.Entry> entryIt = entrySet.iterator();
+        if (largeIcons != null) {
+            Set<Entry<String, String>> entrySet = largeIcons.entrySet();
+            Iterator<Entry<String, String>> entryIt = entrySet.iterator();
             while (entryIt.hasNext()) {
-                Map.Entry entry = entryIt.next();
-                String lang = (String)entry.getKey();
-                String largeIconUri = (String)entry.getValue();
-                if (smallIcons!=null && smallIcons.get(lang)!=null) {
+                Entry<String, String> entry = entryIt.next();
+                String lang = entry.getKey();
+                String largeIconUri = entry.getValue();
+                if (smallIcons != null && smallIcons.get(lang) != null) {
                     // we already wrote this icon info in the previous loop
                     continue;
                 }
@@ -122,15 +123,15 @@ public class IconNode extends LocalizedNode {
 
     }
 
+
     /**
      * writes xml tag and fragment for a particular icon information
      */
     private void addIconInfo(Node node, String lang, String smallIconUri, String largeIconUri) {
-
-        Element iconNode =appendChild(node, TagNames.ICON);
+        Element iconNode = appendChild(node, TagNames.ICON);
         if (Locale.ENGLISH.getLanguage().equals(lang)) {
-        iconNode.setAttributeNS(TagNames.XML_NAMESPACE, TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG, lang);
-    }
+            iconNode.setAttributeNS(TagNames.XML_NAMESPACE, TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG, lang);
+        }
         appendTextChild(iconNode, TagNames.SMALL_ICON, smallIconUri);
         appendTextChild(iconNode, TagNames.LARGE_ICON, largeIconUri);
     }

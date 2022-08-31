@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,56 +24,52 @@ import org.w3c.dom.Node;
 import java.util.Map;
 
 /**
- * This class handles all information related to the message-destination
- * xml tag
+ * This class handles all information related to the message-destination xml tag
  *
- * @author  Kenneth Saks
- * @version
+ * @author Kenneth Saks
  */
-public class MessageDestinationNode extends DisplayableComponentNode  {
+public class MessageDestinationNode extends DisplayableComponentNode<MessageDestinationDescriptor> {
 
     @Override
-    protected Object createDescriptor() {
+    protected MessageDestinationDescriptor createDescriptor() {
         return new MessageDestinationDescriptor();
     }
 
+
     /**
-     * all sub-implementation of this class can use a dispatch table to
+     * All sub-implementation of this class can use a dispatch table to
      * map xml element to method name on the descriptor class for setting
      * the element value.
      *
      * @return map with the element name as a key, the setter method as a value
      */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.MESSAGE_DESTINATION_NAME, "setName");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
         return table;
     }
 
+
     /**
-     * write the descriptor class to a DOM tree and return it
+     * Write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
      * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                MessageDestinationDescriptor desc) {
-
-
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, MessageDestinationDescriptor desc) {
         Node msgDestNode = super.writeDescriptor(parent, nodeName, desc);
 
         writeDisplayableComponentInfo(msgDestNode, desc);
 
-        appendTextChild(msgDestNode, TagNames.MESSAGE_DESTINATION_NAME,
-                        desc.getName());
-        appendTextChild(msgDestNode, TagNames.MAPPED_NAME,
-                        desc.getMappedName());
-        appendTextChild(msgDestNode, TagNames.LOOKUP_NAME,
-                        desc.getLookupName());
+        appendTextChild(msgDestNode, TagNames.MESSAGE_DESTINATION_NAME, desc.getName());
+        appendTextChild(msgDestNode, TagNames.MAPPED_NAME, desc.getMappedName());
+        appendTextChild(msgDestNode, TagNames.LOOKUP_NAME, desc.getLookupName());
 
         return msgDestNode;
     }

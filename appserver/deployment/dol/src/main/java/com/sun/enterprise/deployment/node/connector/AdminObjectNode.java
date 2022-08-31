@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,26 +20,25 @@ package com.sun.enterprise.deployment.node.connector;
 import com.sun.enterprise.deployment.AdminObject;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 import org.glassfish.deployment.common.Descriptor;
-import org.w3c.dom.Node;
 
 import java.util.Iterator;
 import java.util.Map;
 
+import org.w3c.dom.Node;
+
 /**
  * This node is responsible for handling the Connector DTD related auth-mechanism XML tag
  *
- * @author  Sheetal Vartak
- * @version
+ * @author Sheetal Vartak
  */
-public class AdminObjectNode extends DeploymentDescriptorNode {
+public class AdminObjectNode extends DeploymentDescriptorNode<AdminObject> {
 
-    private AdminObject adminObject = null;
+    private AdminObject adminObject;
 
     public AdminObjectNode() {
         register();
@@ -57,8 +57,9 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ConnectorTagNames.ADMIN_OBJECT_INTERFACE, "setAdminObjectInterface");
         table.put(ConnectorTagNames.ADMIN_OBJECT_CLASS, "setAdminObjectClass");
         return table;
@@ -70,6 +71,7 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
      *
      * @param descriptor the new descriptor
      */
+    @Override
     public void addDescriptor(Object descriptor) {
         if (descriptor instanceof ConnectorConfigProperty) {
             adminObject.addConfigProperty((ConnectorConfigProperty)descriptor);
@@ -79,9 +81,10 @@ public class AdminObjectNode extends DeploymentDescriptorNode {
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
-    public Object getDescriptor() {
+    @Override
+    public AdminObject getDescriptor() {
         if (adminObject == null) {
-            adminObject = (AdminObject) DescriptorFactory.getDescriptor(getXMLPath());
+            adminObject = DescriptorFactory.getDescriptor(getXMLPath());
         }
         return adminObject;
     }

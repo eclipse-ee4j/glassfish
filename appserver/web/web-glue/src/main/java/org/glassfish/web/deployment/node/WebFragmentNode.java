@@ -33,18 +33,17 @@ import org.w3c.dom.Node;
 /**
  * This node is responsible for handling the web-fragment xml tree
  *
- * @author  Shing Wai Chan
- * @version
+ * @author Shing Wai Chan
  */
 @Service
 public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
 
-   public final static XMLElement tag = new XMLElement(WebTagNames.WEB_FRAGMENT);
+    private static final XMLElement TAG = new XMLElement(WebTagNames.WEB_FRAGMENT);
 
     /**
      * The system ID of my documents.
      */
-    public final static String SCHEMA_ID = "web-fragment_3_0.xsd";
+    private static final String SCHEMA_ID = "web-fragment_3_0.xsd";
     private final static List<String> systemIDs = initSystemIDs();
 
     private static List<String> initSystemIDs() {
@@ -61,7 +60,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
      */
     @Override
     public String registerBundle(Map<String, String> publicIDToDTD) {
-        return tag.getQName();
+        return TAG.getQName();
     }
 
 
@@ -71,7 +70,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
         return Collections.emptyMap();
     }
 
-    /** Creates new WebBundleNode */
+    /** Creates new WebFragmentNode */
     public WebFragmentNode()  {
         super();
         registerElementHandler(new XMLElement(WebTagNames.ORDERING), OrderingNode.class, "setOrderingDescriptor");
@@ -97,7 +96,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
      */
     @Override
     protected XMLElement getXMLRootTag() {
-        return tag;
+        return TAG;
     }
 
     /**
@@ -130,7 +129,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     @Override
     public WebFragmentDescriptor getDescriptor() {
         // no default bundle for web-fragment
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new WebFragmentDescriptor();
         }
         return descriptor;

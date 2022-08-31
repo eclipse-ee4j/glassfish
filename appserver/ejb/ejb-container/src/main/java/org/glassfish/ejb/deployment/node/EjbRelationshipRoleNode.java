@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,6 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.node.ConfigurableNode;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
@@ -26,6 +24,10 @@ import com.sun.enterprise.deployment.node.LocalizedInfoNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.XMLNode;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.RelationRoleDescriptor;
@@ -42,26 +44,27 @@ public class EjbRelationshipRoleNode extends DeploymentDescriptorNode<RelationRo
     private RelationRoleDescriptor descriptor;
 
     public EjbRelationshipRoleNode() {
-       super();
-       registerElementHandler(new XMLElement(TagNames.DESCRIPTION), LocalizedInfoNode.class);
+        registerElementHandler(new XMLElement(TagNames.DESCRIPTION), LocalizedInfoNode.class);
     }
 
+
     @Override
-    public  XMLNode getHandlerFor(XMLElement element) {
+    public  XMLNode<?> getHandlerFor(XMLElement element) {
         if (EjbTagNames.RELATIONSHIP_ROLE_SOURCE.equals(element.getQName())) {
-            Map dispatchTable = new HashMap();
-            dispatchTable.put(EjbTagNames.DESCRIPTION, "setRoleSourceDescription");
+            Map<String, String> dispatchTable = new HashMap<>();
+            dispatchTable.put(TagNames.DESCRIPTION, "setRoleSourceDescription");
             ConfigurableNode newNode = new ConfigurableNode(getDescriptor(), dispatchTable, element);
             return newNode;
-        } if (EjbTagNames.CMR_FIELD.equals(element.getQName())) {
-            Map dispatchTable = new HashMap();
-            dispatchTable.put(EjbTagNames.DESCRIPTION, "setCMRFieldDescription");
-            ConfigurableNode newNode = new ConfigurableNode(getDescriptor(), dispatchTable, element);
-            return newNode;
-        } else {
-            return super.getHandlerFor(element);
         }
+        if (EjbTagNames.CMR_FIELD.equals(element.getQName())) {
+            Map<String, String> dispatchTable = new HashMap<>();
+            dispatchTable.put(TagNames.DESCRIPTION, "setCMRFieldDescription");
+            ConfigurableNode newNode = new ConfigurableNode(getDescriptor(), dispatchTable, element);
+            return newNode;
+        }
+        return super.getHandlerFor(element);
     }
+
 
     @Override
     public boolean handlesElement(XMLElement element) {
@@ -74,69 +77,85 @@ public class EjbRelationshipRoleNode extends DeploymentDescriptorNode<RelationRo
         return super.handlesElement(element);
     }
 
+
     @Override
     public RelationRoleDescriptor getDescriptor() {
-        if (descriptor==null) descriptor = new RelationRoleDescriptor();
+        if (descriptor == null) {
+            descriptor = new RelationRoleDescriptor();
+        }
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(EjbTagNames.EJB_RELATIONSHIP_ROLE_NAME, "setName");
         table.put(EjbTagNames.CMR_FIELD_NAME, "setCMRField");
         table.put(EjbTagNames.CMR_FIELD_TYPE, "setCMRFieldType");
         return table;
     }
 
+
     @Override
     public boolean endElement(XMLElement element) {
         if (EjbTagNames.CASCADE_DELETE.equals(element.getQName())) {
-                descriptor.setCascadeDelete(true);
+            descriptor.setCascadeDelete(true);
         }
         return super.endElement(element);
     }
 
+
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (EjbTagNames.MULTIPLICITY.equals(element.getQName())) {
-            if ( value.equals("Many") )
+            if (value.equals("Many")) {
                 descriptor.setIsMany(true);
-            else if ( value.equals("One") )
+            } else if (value.equals("One")) {
                 descriptor.setIsMany(false);
-            else if ( value.equals("many") ) // for backward compat with 1.3 FCS
+            } else if (value.equals("many")) {
+                // for backward compat with 1.3 FCS
                 descriptor.setIsMany(true);
-            else if ( value.equals("one") ) // for backward compat with 1.3 FCS
+            } else if (value.equals("one")) {
+                // for backward compat with 1.3 FCS
                 descriptor.setIsMany(false);
-            else
-                throw new IllegalArgumentException("Error in value of multiplicity element in EJB deployment descriptor XML: the value must be One or Many");
+            } else {
+                // for backward compat with 1.3 FCS
+                throw new IllegalArgumentException(
+                    "Error in value of multiplicity element in EJB deployment descriptor XML: the value must be One or Many");
+            }
         } else if (TagNames.EJB_NAME.equals(element.getQName())) {
             // let's get our bunlde descriptor...
-                EjbBundleDescriptor bundleDesc = getEjbBundleDescriptor();
-                EjbCMPEntityDescriptor desc = (EjbCMPEntityDescriptor)bundleDesc.getEjbByName(value);
-                if (desc!=null){
-                    descriptor.setPersistenceDescriptor(desc.getPersistenceDescriptor());
-                } else {
-                    throw new IllegalArgumentException("Cannot find ejb " + value + " in bundle for relationship " + descriptor.getName());
-                }
-        } else super.setElementValue(element, value);
+            EjbBundleDescriptor bundleDesc = getEjbBundleDescriptor();
+            EjbCMPEntityDescriptor desc = (EjbCMPEntityDescriptor) bundleDesc.getEjbByName(value);
+            if (desc != null) {
+                descriptor.setPersistenceDescriptor(desc.getPersistenceDescriptor());
+            } else {
+                throw new IllegalArgumentException(
+                    "Cannot find ejb " + value + " in bundle for relationship " + descriptor.getName());
+            }
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
+
     private EjbBundleDescriptor getEjbBundleDescriptor() {
-        XMLNode parent = getParentNode();
+        XMLNode<?> parent = getParentNode();
         Object parentDesc = parent.getDescriptor();
-        while (parent!=null && !(parentDesc instanceof EjbBundleDescriptor)) {
+        while (parent != null && !(parentDesc instanceof EjbBundleDescriptor)) {
             parent = parent.getParentNode();
-            if (parent !=null)
+            if (parent != null) {
                 parentDesc = parent.getDescriptor();
+            }
         }
-        if (parent!=null) {
-            return (EjbBundleDescriptor) parentDesc;
-        }  else {
+        if (parent == null) {
             throw new IllegalArgumentException("Cannot find bundle descriptor");
         }
+        return (EjbBundleDescriptor) parentDesc;
     }
+
 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, RelationRoleDescriptor descriptor) {
@@ -144,8 +163,7 @@ public class EjbRelationshipRoleNode extends DeploymentDescriptorNode<RelationRo
         LocalizedInfoNode localizedNode = new LocalizedInfoNode();
         localizedNode.writeLocalizedMap(roleNode, TagNames.DESCRIPTION, descriptor.getLocalizedDescriptions());
         if (descriptor.getRelationRoleName() != null) {
-            appendTextChild(roleNode, EjbTagNames.EJB_RELATIONSHIP_ROLE_NAME,
-                descriptor.getRelationRoleName());
+            appendTextChild(roleNode, EjbTagNames.EJB_RELATIONSHIP_ROLE_NAME, descriptor.getRelationRoleName());
         }
 
         // multiplicity

@@ -31,7 +31,7 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Jerome Dochez
  */
-public class AppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+public class AppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<ApplicationClientDescriptor> {
 
     /**
      * @return the location of the DeploymentDescriptor file for a

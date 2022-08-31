@@ -39,10 +39,6 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
         registerElementHandler(new XMLElement(RuntimeTagNames.JNLP_DOC), JnlpDocNode.class);
     }
 
-//    public JavaWebStartAccessNode(XMLElement element) {
-//        register();
-//        setXMLRootTag(element);
-//    }
 
    /**
     * @return the descriptor instance to associate with this XMLNode
@@ -51,7 +47,7 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
     public JavaWebStartAccessDescriptor getDescriptor() {
         if (descriptor == null) {
             descriptor = new JavaWebStartAccessDescriptor();
-            XMLNode parentNode = getParentNode();
+            XMLNode<?> parentNode = getParentNode();
             if (parentNode != null && (parentNode instanceof AppClientRuntimeNode)) {
                 Object parentDescriptor = parentNode.getDescriptor();
                 if (parentDescriptor != null && (parentDescriptor instanceof ApplicationClientDescriptor)) {
@@ -64,6 +60,7 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
         return descriptor;
     }
 
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
      * method name on the descriptor class for setting the element value.
@@ -71,8 +68,8 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table =  super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.CONTEXT_ROOT, "setContextRoot");
         table.put(RuntimeTagNames.ELIGIBLE, "setEligible");
         table.put(RuntimeTagNames.VENDOR, "setVendor");
@@ -80,12 +77,13 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
         return table;
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName node name for the descriptor
+     * @param descr the descriptor to write
      * @return the DOM tree top node
      */
     @Override
@@ -97,6 +95,7 @@ public class JavaWebStartAccessNode extends DeploymentDescriptorNode<JavaWebStar
         appendTextChild(accessNode, RuntimeTagNames.JNLP_DOC, descr.getJnlpDocument());
         return accessNode;
     }
+
 
     public static void writeJavaWebStartInfo(Node parent, JavaWebStartAccessDescriptor descr) {
         if (descr != null) {

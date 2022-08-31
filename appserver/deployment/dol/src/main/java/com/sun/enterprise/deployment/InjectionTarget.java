@@ -20,10 +20,11 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.core.MetadataSource;
 import com.sun.enterprise.deployment.util.TypeUtil;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class holds information about an injection target like the class name
@@ -31,7 +32,7 @@ import java.util.Objects;
  *
  * @author Jerome Dochez
  */
-public class InjectionTarget implements Serializable {
+public class InjectionTarget extends Descriptor {
 
     private static final long serialVersionUID = 1L;
     private String className;
@@ -59,6 +60,7 @@ public class InjectionTarget implements Serializable {
     }
 
 
+    // Used by reflection!
     public void setClassName(String className) {
         this.className = className;
     }
@@ -76,6 +78,7 @@ public class InjectionTarget implements Serializable {
         return targetName;
     }
 
+    // Used by reflection!
     public void setTargetName(String targetName) {
         this.targetName = targetName;
     }

@@ -19,7 +19,7 @@ package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.MimeMapping;
 
-import java.io.Serializable;
+import org.glassfish.deployment.common.Descriptor;
 
 /***
  * I represent a mapping between a mime type and a file extension for specifiying how
@@ -27,7 +27,7 @@ import java.io.Serializable;
  *
  * @author Danny Coward
  */
-public class MimeMappingDescriptor implements MimeMapping, Serializable {
+public class MimeMappingDescriptor extends Descriptor implements MimeMapping {
 
     private static final long serialVersionUID = 1L;
     private String extension;
@@ -87,6 +87,7 @@ public class MimeMappingDescriptor implements MimeMapping, Serializable {
 
 
     /** My pretty format. */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("MimeMapping: ").append(this.getExtension()).append("@").append(this.getMimeType());
     }

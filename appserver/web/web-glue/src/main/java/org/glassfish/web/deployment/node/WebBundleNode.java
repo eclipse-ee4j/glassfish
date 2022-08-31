@@ -45,25 +45,25 @@ import org.w3c.dom.Node;
  */
 public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
 
-    public final static XMLElement tag = new XMLElement(WebTagNames.WEB_BUNDLE);
+    private static final XMLElement tag = new XMLElement(WebTagNames.WEB_BUNDLE);
 
     /**
      * The public ID for my documents.
      */
-    public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN";
-    public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
+    private static final String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN";
+    private static final String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
     /**
      * The system ID of my documents.
      */
-    public final static String SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_3.dtd";
-    public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/web-app_2_2.dtd";
+    private static final String SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_3.dtd";
+    private static final String SYSTEM_ID_12 = "http://java.sun.com/dtd/web-app_2_2.dtd";
 
-    public final static String SCHEMA_ID_24 = "web-app_2_4.xsd";
-    public final static String SCHEMA_ID_25 = "web-app_2_5.xsd";
-    public final static String SCHEMA_ID_30 = "web-app_3_0.xsd";
-    public final static String SCHEMA_ID_31 = "web-app_3_1.xsd";
-    public final static String SCHEMA_ID_40 = "web-app_4_0.xsd";
-    public final static String SCHEMA_ID = "web-app_5_0.xsd";
+    private static final String SCHEMA_ID_24 = "web-app_2_4.xsd";
+    private static final String SCHEMA_ID_25 = "web-app_2_5.xsd";
+    private static final String SCHEMA_ID_30 = "web-app_3_0.xsd";
+    private static final String SCHEMA_ID_31 = "web-app_3_1.xsd";
+    private static final String SCHEMA_ID_40 = "web-app_4_0.xsd";
+    private static final String SCHEMA_ID = "web-app_5_0.xsd";
     private final static List<String> systemIDs = initSystemIDs();
 
 
@@ -98,7 +98,7 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         final Map<String, List<Class<?>>> versionUpgrades) {
 
         final Map<String, Class<?>> result = new HashMap<>();
-        for (ConfigurationDeploymentDescriptorFile wddFile : DOLUtils
+        for (ConfigurationDeploymentDescriptorFile<?> wddFile : DOLUtils
             .getConfigurationDeploymentDescriptorFiles(serviceLocator, WarType.ARCHIVE_TYPE)) {
             wddFile.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
@@ -153,27 +153,28 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         if (WebTagNames.DENY_UNCOVERED_HTTP_METHODS.equals(element.getQName())) {
             descriptor.setDenyUncoveredHttpMethods(true);
             return false;
-        } else {
-            return super.endElement(element);
         }
+        return super.endElement(element);
     }
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
     @Override
     public WebBundleDescriptorImpl getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new WebBundleDescriptorImpl();
         }
         return descriptor;
     }
 
-   /**
+
+    /**
      * @return the XML tag associated with this XMLNode
      */
-   @Override
-   protected XMLElement getXMLRootTag() {
+    @Override
+    protected XMLElement getXMLRootTag() {
         return tag;
     }
 
@@ -201,17 +202,9 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         return systemIDs;
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
-    @Override
-    public Node writeDescriptor(Node parent,
-        WebBundleDescriptorImpl webBundleDesc) {
 
+    @Override
+    public Node writeDescriptor(Node parent, WebBundleDescriptorImpl webBundleDesc) {
         Node jarNode = super.writeDescriptor(parent, webBundleDesc);
         if (webBundleDesc.isDenyUncoveredHttpMethods()) {
             appendChild(jarNode, WebTagNames.DENY_UNCOVERED_HTTP_METHODS);
@@ -219,9 +212,8 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         if (webBundleDesc.getAbsoluteOrderingDescriptor() != null) {
             AbsoluteOrderingNode absOrderingNode = new AbsoluteOrderingNode();
             absOrderingNode.writeDescriptor(jarNode, WebTagNames.ABSOLUTE_ORDERING,
-                    webBundleDesc.getAbsoluteOrderingDescriptor());
+                webBundleDesc.getAbsoluteOrderingDescriptor());
         }
         return jarNode;
     }
-
 }

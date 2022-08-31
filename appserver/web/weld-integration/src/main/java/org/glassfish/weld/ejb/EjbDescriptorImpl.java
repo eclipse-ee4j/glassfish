@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,6 @@
 
 package org.glassfish.weld.ejb;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.jboss.weld.ejb.spi.BusinessInterfaceDescriptor;
-import org.jboss.weld.module.ejb.SessionBeanInterceptor;
-
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
@@ -33,11 +26,17 @@ import com.sun.enterprise.deployment.MethodDescriptor;
 
 import jakarta.interceptor.InvocationContext;
 
-/**
- */
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.jboss.weld.ejb.spi.BusinessInterfaceDescriptor;
+import org.jboss.weld.module.ejb.SessionBeanInterceptor;
+
 public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescriptor<T> {
 
-    private EjbDescriptor ejbDesc;
+    private final EjbDescriptor ejbDesc;
 
     public EjbDescriptorImpl(EjbDescriptor ejbDescriptor) {
         ejbDesc = ejbDescriptor;
@@ -63,20 +62,14 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
         return ejbDesc;
     }
 
-    @Override
     @SuppressWarnings("unchecked")
+    @Override
     public Class<T> getBeanClass() {
-        @SuppressWarnings("rawtypes")
-        Class beanClassType = null;
         try {
-
-            beanClassType = ejbDesc.getEjbBundleDescriptor().getClassLoader().loadClass(ejbDesc.getEjbClassName());
-
+            return (Class<T>) ejbDesc.getEjbBundleDescriptor().getClassLoader().loadClass(ejbDesc.getEjbClassName());
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException(e);
         }
-
-        return beanClassType;
     }
 
     /**
@@ -147,12 +140,11 @@ public class EjbDescriptorImpl<T> implements org.jboss.weld.ejb.spi.EjbDescripto
                 for (MethodDescriptor mDesc : sessionDesc.getRemoveMethodDescriptors()) {
                     Method m = mDesc.getMethod(ejbDesc);
                     if (m == null) {
-                        throw new IllegalStateException("Can't resolve remove method " + mDesc + " For EJB " + sessionDesc.getName());
+                        throw new IllegalStateException("Can't resolve remove method " + mDesc + " for EJB " + sessionDesc.getName());
                     }
                     removeMethods.add(m);
 
                 }
-
             }
         }
 

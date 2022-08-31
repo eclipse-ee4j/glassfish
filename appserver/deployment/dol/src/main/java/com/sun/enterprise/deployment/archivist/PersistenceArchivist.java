@@ -33,7 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -73,10 +72,6 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles(RootDeploymentDescriptor descriptor) {
         return Collections.emptyList();
     }
-
-    @Override
-    // Need to be overridden in derived class to define module type it supports
-    public abstract boolean supportsModuleType(ArchiveType moduleType);
 
     @Override
     public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)

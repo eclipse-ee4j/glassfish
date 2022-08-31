@@ -49,6 +49,9 @@ import org.xml.sax.SAXException;
 @Service
 public class ApplicationFactory {
 
+    protected static final Logger logger = DOLUtils.getDefaultLogger();
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Archivist.class);
+
     @Inject
     ArchiveFactory archiveFactory;
 
@@ -58,11 +61,6 @@ public class ApplicationFactory {
     @Inject
     DasConfig dasConfig;
 
-    protected static final Logger logger =
-            DOLUtils.getDefaultLogger();
-
-    // resources...
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Archivist.class);
 
     /**
      * Open a jar file and return an application object for the modules contained
@@ -72,9 +70,7 @@ public class ApplicationFactory {
      * @param jarFile the archive file
      * @return the application object
      */
-    public Application openArchive(URI jarFile, String archiveType)
-            throws IOException, SAXException {
-
+    public Application openArchive(URI jarFile, String archiveType) throws IOException, SAXException {
         return openArchive(jarFile, archiveType, false);
     }
 
@@ -89,8 +85,7 @@ public class ApplicationFactory {
      * @return the application object
      */
     public Application openArchive(Archivist archivist, URI jarFile, boolean handleRuntimeInfo)
-            throws IOException, SAXException {
-
+        throws IOException, SAXException {
         // never read the runtime deployment descriptor before the
         // module type is found and the application object created
 
@@ -110,12 +105,11 @@ public class ApplicationFactory {
      * @param handleRuntimeInfo true to read configuration deployment descriptors
      * @return the application object
      */
-
     public Application openArchive(Archivist archivist, ReadableArchive in, boolean handleRuntimeInfo)
-            throws IOException, SAXException {
-
+        throws IOException, SAXException {
         return openArchive(in.getURI().getSchemeSpecificPart(), archivist, in, handleRuntimeInfo);
     }
+
 
     /**
      * Open a jar file and return an application object for the modules contained
@@ -148,7 +142,7 @@ public class ApplicationFactory {
                         new Object[]{in.getURI()}));
                 return null;
             }
-            ModuleDescriptor newModule = archivist.createModuleDescriptor(descriptor);
+            ModuleDescriptor<BundleDescriptor> newModule = archivist.createModuleDescriptor(descriptor);
             newModule.setArchiveUri(in.getURI().getSchemeSpecificPart());
             application = Application.createVirtualApplication(appName,newModule);
         }
@@ -161,22 +155,22 @@ public class ApplicationFactory {
         }
 
         // validate
-         application.setClassLoader(archivist.getClassLoader());
-         application.visit(new ApplicationValidator());
-
+        application.setClassLoader(archivist.getClassLoader());
+        application.visit(new ApplicationValidator());
 
         return application;
-
     }
+
 
     /**
      * This method creates an Application object from reading the
      * standard deployment descriptor.
+     *
      * @param archive the archive for the application
      */
-    public Application createApplicationFromStandardDD(
-        ReadableArchive archive, String archiveType) throws IOException, SAXException {
-        Archivist archivist = archivistFactory.getArchivist(archiveType, null);
+    public Application createApplicationFromStandardDD(ReadableArchive archive, String archiveType)
+        throws IOException, SAXException {
+        Archivist<BundleDescriptor> archivist = (Archivist<BundleDescriptor>) archivistFactory.getArchivist(archiveType, null);
         String xmlValidationLevel = dasConfig.getDeployXmlValidation();
         archivist.setXMLValidationLevel(xmlValidationLevel);
         if (xmlValidationLevel.equals("none")) {
@@ -187,7 +181,7 @@ public class ApplicationFactory {
         if (desc instanceof Application) {
             application = (Application) desc;
         } else {
-            ModuleDescriptor newModule = archivist.createModuleDescriptor(desc);
+            ModuleDescriptor<BundleDescriptor> newModule = archivist.createModuleDescriptor(desc);
             newModule.setArchiveUri(archive.getURI().getSchemeSpecificPart());
             String moduleName = newModule.getModuleName();
             application = Application.createVirtualApplication(moduleName, newModule);
@@ -225,7 +219,7 @@ public class ApplicationFactory {
      */
     public Application openArchive(URI jarFile, String archiveType, boolean handleRuntimeInfo)
             throws IOException, SAXException {
-        Archivist archivist = archivistFactory.getArchivist(archiveType);
+        Archivist<? extends BundleDescriptor> archivist = archivistFactory.getArchivist(archiveType);
         return openArchive(archivist, jarFile, handleRuntimeInfo);
     }
 
@@ -241,28 +235,20 @@ public class ApplicationFactory {
                     "{0} does not exist", new Object[]{jarFile}));
         }
 
-        /*
-        *Add finally clause containing explicit close of jar file.
-        */
-        JarFile jar = null;
-        try {
-            jar = new JarFile(jarFile);
+        try (JarFile jar = new JarFile(jarFile)) {
             ApplicationDeploymentDescriptorFile node = new ApplicationDeploymentDescriptorFile();
             node.setXMLValidation(false);
             ZipEntry deploymentEntry = jar.getEntry(node.getDeploymentDescriptorPath());
-            if (deploymentEntry != null) {
-                try {
-                    Application application = (Application) node.read(jar.getInputStream(deploymentEntry));
-                    return application.getDisplayName();
-                } catch (Exception pe) {
-                    logger.log(Level.WARNING, "Error occurred", pe);
-                }
+            if (deploymentEntry == null) {
+                return null;
             }
-        } finally {
-            if (jar != null) {
-                jar.close();
+            try {
+                Application application = (Application) node.read(jar.getInputStream(deploymentEntry));
+                return application.getDisplayName();
+            } catch (Exception pe) {
+                logger.log(Level.WARNING, "Error occurred", pe);
+                return null;
             }
         }
-        return null;
-     }
+    }
 }

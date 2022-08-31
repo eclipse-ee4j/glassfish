@@ -25,6 +25,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -272,8 +273,8 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
     private void process(ProcessingContext ctx, AnnotationInfo element, HandlerProcessingResultImpl result)
         throws AnnotationProcessorException {
         Annotation annotation = element.getAnnotation();
-        LOG.log(Level.FINER, "Annotation : {0} delegate = {1}",
-            new Object[] {annotation.annotationType().getName(), delegate});
+        LOG.log(Level.FINER, "Processing annotation: {0} delegate = {1}",
+            new Object[] {element, delegate});
         result.addResult(annotation.annotationType(), ResultType.UNPROCESSED);
 
         // we ignore all java.* annotations
@@ -284,11 +285,10 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
 
         List<AnnotationHandler> annotationHandlers = handlers.get(annotation.annotationType().getName());
         if (annotationHandlers == null) {
-            if (delegate != null) {
-                delegate.process(ctx, element, result);
+            if (delegate == null) {
+                LOG.log(Level.FINER, "No handler defined for {0}", annotation);
             } else {
-                ctx.getErrorHandler()
-                    .fine(new AnnotationProcessorException("No handler defined for " + annotation.annotationType()));
+                delegate.process(ctx, element, result);
             }
             return;
         }
@@ -299,6 +299,9 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
             // (if present on the annotated element) before itself.
             // do this check and process those annotations first.
             Class<? extends Annotation>[] dependencies = handler.getTypeDependencies();
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.log(Level.FINEST, "Dependencies of handler " + handler + ", " + Arrays.toString(dependencies));
+            }
             if (dependencies != null) {
                 AnnotatedElement ae = element.getAnnotatedElement();
                 for (Class<? extends Annotation> annotationType : dependencies) {
@@ -314,8 +317,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
                 }
             }
 
-            // at this point, all annotation that I declared depending on
-            // are processed
+            // at this point, all annotation that I declared depending on are processed
             HandlerProcessingResult processingResult = null;
             try {
                 processingResult = handler.processAnnotation(element);
@@ -401,7 +403,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
      */
     @Override
     public AnnotatedElement getLastAnnotatedElement(ElementType type) {
-        for (int i=annotatedElements.size();i!=0;i--) {
+        for (int i = annotatedElements.size(); i != 0; i--) {
             StackElement e = annotatedElements.get(i - 1);
             if (e.getElementType().equals(type)) {
                 return e.getAnnotatedElement();

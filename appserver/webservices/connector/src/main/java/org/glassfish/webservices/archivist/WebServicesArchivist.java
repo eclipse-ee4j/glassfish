@@ -34,7 +34,6 @@ import java.util.List;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.webservices.io.WebServicesDeploymentDescriptorFile;
@@ -78,8 +77,7 @@ public class WebServicesArchivist extends ExtensionsArchivist {
 
     @Override
     public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        BundleDescriptor bundleDescriptor =
-            BundleDescriptor.class.cast(super.open(main, archive, descriptor));
+        BundleDescriptor bundleDescriptor = BundleDescriptor.class.cast(super.open(main, archive, descriptor));
 
         if (bundleDescriptor != null) {
             return bundleDescriptor.getWebServices();

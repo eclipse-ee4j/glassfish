@@ -24,9 +24,24 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.web.ContextParameter;
-import org.apache.catalina.*;
+
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+
+import org.apache.catalina.Authenticator;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Pipeline;
+import org.apache.catalina.Realm;
 import org.apache.catalina.authenticator.DigestAuthenticator;
 import org.apache.catalina.core.ContainerBase;
 import org.apache.catalina.deploy.ApplicationParameter;
@@ -35,16 +50,10 @@ import org.apache.catalina.deploy.ContextResource;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.startup.ContextConfig;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.web.LogFacade;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.valve.GlassFishValve;
-
-import javax.naming.NamingException;
-import java.text.MessageFormat;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Startup event listener for a <b>Context</b> that configures the properties
@@ -79,30 +88,25 @@ public class WebModuleContextConfig extends ContextConfig {
 
     protected ServiceLocator services;
 
-
     /**
      * The DOL object representing the web.xml content.
-    */
+     */
     private WebBundleDescriptorImpl webBundleDescriptor;
-
 
     /**
      * Resource references from outside the .war
      */
-    private Collection<ResourceReferenceDescriptor> resRefs =
-                new HashSet<ResourceReferenceDescriptor>();
+    private final Collection<ResourceReferenceDescriptor> resRefs = new HashSet<>();
 
     /**
      * Environment properties from outside the .war
      */
-    private Collection<EnvironmentProperty> envProps =
-            new HashSet<EnvironmentProperty>();
-
+    private final Collection<EnvironmentProperty> envProps = new HashSet<>();
 
     /**
      * Customized <code>ContextConfig</code> which use the DOL for deployment.
      */
-    public WebModuleContextConfig(ServiceLocator services){
+    public WebModuleContextConfig(ServiceLocator services) {
         synchronized (this) {
             this.services = services;
         }
@@ -112,7 +116,7 @@ public class WebModuleContextConfig extends ContextConfig {
     /**
      * Set the DOL object associated with this class.
      */
-    public void setDescriptor(WebBundleDescriptorImpl wbd){
+    public void setDescriptor(WebBundleDescriptorImpl wbd) {
         webBundleDescriptor = wbd;
     }
 
@@ -124,18 +128,14 @@ public class WebModuleContextConfig extends ContextConfig {
     }
 
 
-    protected synchronized void configureResource()
-            throws LifecycleException {
-
-        List<ApplicationParameter> appParams =
-            context.findApplicationParameters();
+    protected synchronized void configureResource() throws LifecycleException {
+        List<ApplicationParameter> appParams = context.findApplicationParameters();
         ContextParameter contextParam;
         synchronized (appParams) {
             Iterator<ApplicationParameter> i = appParams.iterator();
             while (i.hasNext()) {
                 ApplicationParameter appParam = i.next();
-                contextParam = new EnvironmentProperty(
-                    appParam.getName(), appParam.getValue(),
+                contextParam = new EnvironmentProperty(appParam.getName(), appParam.getValue(),
                     appParam.getDescription());
                 webBundleDescriptor.addContextParameter(contextParam);
             }
@@ -144,12 +144,10 @@ public class WebModuleContextConfig extends ContextConfig {
         ContextEnvironment[] envs = context.findEnvironments();
         EnvironmentProperty envEntry;
 
-        for (int i=0; i<envs.length; i++) {
-            envEntry = new EnvironmentProperty(
-                    envs[i].getName(), envs[i].getValue(),
-                    envs[i].getDescription(), envs[i].getType());
-            if (envs[i].getValue()!=null) {
-                envEntry.setValue(envs[i].getValue());
+        for (ContextEnvironment env : envs) {
+            envEntry = new EnvironmentProperty(env.getName(), env.getValue(), env.getDescription(), env.getType());
+            if (env.getValue() != null) {
+                envEntry.setValue(env.getValue());
             }
             webBundleDescriptor.addEnvironmentProperty(envEntry);
             envProps.add(envEntry);
@@ -189,16 +187,16 @@ public class WebModuleContextConfig extends ContextConfig {
 
         context.setConfigured(false);
 
-        ComponentEnvManager namingMgr = services.getService(
-            com.sun.enterprise.container.common.spi.util.ComponentEnvManager.class);
+        ComponentEnvManager namingMgr = services
+            .getService(com.sun.enterprise.container.common.spi.util.ComponentEnvManager.class);
         if (namingMgr != null) {
             try {
-                boolean webBundleContainsEjbs =
-                    (webBundleDescriptor.getExtensionsDescriptors(EjbBundleDescriptor.class).size() > 0);
+                boolean webBundleContainsEjbs
+                    = !webBundleDescriptor.getExtensionsDescriptors(EjbBundleDescriptor.class).isEmpty();
 
                 // If .war contains EJBs, .war-defined dependencies have already been bound by
                 // EjbDeployer, so just add the dependencies from outside the .war
-                if( webBundleContainsEjbs ) {
+                if (webBundleContainsEjbs) {
                     namingMgr.addToComponentNamespace(webBundleDescriptor, envProps, resRefs);
                 } else {
                     namingMgr.bindToComponentNamespace(webBundleDescriptor);
@@ -212,20 +210,19 @@ public class WebModuleContextConfig extends ContextConfig {
         }
 
         try {
-            TomcatDeploymentConfig.configureWebModule(
-                (WebModule)context, webBundleDescriptor);
+            TomcatDeploymentConfig.configureWebModule((WebModule) context, webBundleDescriptor);
             authenticatorConfig();
             managerConfig();
 
             context.setConfigured(true);
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             // clean up naming in case of errors
             unbindFromComponentNamespace(namingMgr);
 
             if (t instanceof RuntimeException) {
-                throw (RuntimeException)t;
+                throw (RuntimeException) t;
             } else if (t instanceof LifecycleException) {
-                throw (LifecycleException)t;
+                throw (LifecycleException) t;
             } else {
                 throw new LifecycleException(t);
             }
@@ -254,12 +251,14 @@ public class WebModuleContextConfig extends ContextConfig {
             Pipeline pipeline = ((ContainerBase) context).getPipeline();
             if (pipeline != null) {
                 GlassFishValve basic = pipeline.getBasic();
-                if ((basic != null) && (basic instanceof Authenticator))
+                if ((basic != null) && (basic instanceof Authenticator)) {
                     return;
+                }
                 GlassFishValve valves[] = pipeline.getValves();
-                for (int i = 0; i < valves.length; i++) {
-                    if (valves[i] instanceof Authenticator)
+                for (GlassFishValve element : valves) {
+                    if (element instanceof Authenticator) {
                         return;
+                    }
                 }
             }
         } else {
@@ -328,11 +327,10 @@ public class WebModuleContextConfig extends ContextConfig {
 
             // Instantiate and install an Authenticator of the requested class
             try {
-                Class authenticatorClass = Class.forName(authenticatorName);
-                authenticator = (GlassFishValve)
-                    authenticatorClass.newInstance();
+                Class<?> authenticatorClass = Class.forName(authenticatorName);
+                authenticator = (GlassFishValve) authenticatorClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                    String msg = rb.getString(LogFacade.AUTHENTICATOR_INSTANTIATE_ERROR);
+                String msg = rb.getString(LogFacade.AUTHENTICATOR_INSTANTIATE_ERROR);
                 throw new LifecycleException(
                     MessageFormat.format(msg, authenticatorName),
                     e);
@@ -359,7 +357,7 @@ public class WebModuleContextConfig extends ContextConfig {
                 digestAlgorithm = securityService.getPropertyValue(DEFAULT_DIGEST_ALGORITHM);
             }
             if (digestAlgorithm != null) {
-                ((DigestAuthenticator)authenticator).setAlgorithm(digestAlgorithm);
+                DigestAuthenticator.setAlgorithm(digestAlgorithm);
             }
         }
     }
@@ -372,7 +370,7 @@ public class WebModuleContextConfig extends ContextConfig {
      */
     @Override
     protected void defaultConfig() {
-        ;
+
     }
 
 

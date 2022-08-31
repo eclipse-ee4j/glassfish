@@ -34,7 +34,6 @@ import com.sun.enterprise.util.shared.ArchivistUtils;
 
 import jakarta.inject.Inject;
 
-import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -177,7 +176,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     @Inject
     ArchiveFactory archiveFactory;
 
-    protected List<ExtensionsArchivist> extensionsArchivists;
+    protected List<ExtensionsArchivist<?>> extensionsArchivists;
 
     /**
      * Creates new Archivist
@@ -206,11 +205,11 @@ public abstract class Archivist<T extends BundleDescriptor> {
      *
      * @param descriptor for this archivist instnace
      */
-    public void setExtensionArchivists(List<ExtensionsArchivist> archivists) {
-        extensionsArchivists = archivists;
+    public void setExtensionArchivists(List<ExtensionsArchivist<?>> list) {
+        extensionsArchivists = list;
     }
 
-    public List<ExtensionsArchivist> getExtensionArchivists() {
+    public List<ExtensionsArchivist<?>> getExtensionArchivists() {
         return extensionsArchivists;
     }
 
@@ -393,7 +392,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
         T descriptor = readStandardDeploymentDescriptor(descriptorArchive);
         descriptor.setApplication(app);
 
-        ModuleDescriptor newModule = createModuleDescriptor(descriptor);
+        ModuleDescriptor<BundleDescriptor> newModule = createModuleDescriptor(descriptor);
         newModule.setArchiveUri(contentArchive.getURI().getSchemeSpecificPart());
         return readRestDeploymentDescriptors(descriptor, descriptorArchive, contentArchive, app);
     }
@@ -1093,8 +1092,8 @@ public abstract class Archivist<T extends BundleDescriptor> {
      *
      * @return the new module descriptor
      */
-    public ModuleDescriptor<?> createModuleDescriptor(T descriptor) {
-        ModuleDescriptor<?> newModule = descriptor.getModuleDescriptor();
+    public ModuleDescriptor<BundleDescriptor> createModuleDescriptor(T descriptor) {
+        ModuleDescriptor<BundleDescriptor> newModule = descriptor.getModuleDescriptor();
         setDescriptor(descriptor);
         return newModule;
     }

@@ -17,6 +17,18 @@
 
 package com.sun.enterprise.deployment.archivist;
 
+import com.sun.enterprise.deployment.BundleDescriptor;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.hk2.api.ActiveDescriptor;
@@ -25,16 +37,6 @@ import org.glassfish.hk2.api.IndexedFilter;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
-
-import jakarta.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * This factory class is responsible for creating Archivists
@@ -51,8 +53,8 @@ public class ArchivistFactory {
     @Inject
     private ServiceLocator habitat;
 
-    public Archivist getArchivist(String archiveType, ClassLoader cl) {
-        Archivist result = getArchivist(archiveType);
+    public Archivist<? extends BundleDescriptor> getArchivist(String archiveType, ClassLoader cl) {
+        Archivist<? extends BundleDescriptor> result = getArchivist(archiveType);
         if (result != null) {
             result.setClassLoader(cl);
         }
@@ -60,8 +62,8 @@ public class ArchivistFactory {
     }
 
 
-    public Archivist<?> getArchivist(String archiveType) {
-        ActiveDescriptor<Archivist<?>> best = (ActiveDescriptor<Archivist<?>>) habitat
+    public Archivist<? extends BundleDescriptor> getArchivist(String archiveType) {
+        ActiveDescriptor<Archivist<BundleDescriptor>> best = (ActiveDescriptor<Archivist<BundleDescriptor>>) habitat
             .getBestDescriptor(new ArchivistFilter(archiveType, ARCHIVE_TYPE, Archivist.class));
         if (best == null) {
             return null;
@@ -71,17 +73,17 @@ public class ArchivistFactory {
     }
 
 
-    public Archivist<?> getArchivist(ArchiveType moduleType) {
+    public Archivist<? extends BundleDescriptor> getArchivist(ArchiveType moduleType) {
         return getArchivist(String.valueOf(moduleType));
     }
 
 
-    public List<ExtensionsArchivist> getExtensionsArchivists(Collection<Sniffer> sniffers, ArchiveType moduleType) {
+    public List<ExtensionsArchivist<?>> getExtensionsArchivists(Collection<Sniffer> sniffers, ArchiveType moduleType) {
         Set<String> containerTypes = new HashSet<>();
         for (Sniffer sniffer : sniffers) {
             containerTypes.add(sniffer.getModuleType());
         }
-        List<ExtensionsArchivist> archivists = new ArrayList<>();
+        List<ExtensionsArchivist<?>> archivists = new ArrayList<>();
         for (String containerType : containerTypes) {
             List<ActiveDescriptor<?>> descriptors = habitat
                 .getDescriptors(new ArchivistFilter(containerType, EXTENSION_ARCHIVE_TYPE, ExtensionsArchivist.class));

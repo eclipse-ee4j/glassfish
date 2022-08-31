@@ -33,7 +33,6 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Contract;
 import org.xml.sax.SAXException;
@@ -124,7 +123,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
      */
     public void addExtension(RootDeploymentDescriptor root, RootDeploymentDescriptor extension) {
         root.addExtensionDescriptor(extension.getClass(), extension, null);
-        extension.setModuleDescriptor((ModuleDescriptor<RootDeploymentDescriptor>) root.getModuleDescriptor());
+        extension.setModuleDescriptor(root.getModuleDescriptor());
     }
 
 
@@ -136,7 +135,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
      * @param descriptor the main deployment descriptor
      * @return the extension descriptor object
      */
-    public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
+    public RootDeploymentDescriptor open(Archivist<?> main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
         throws IOException, SAXException {
         getStandardDDFile(descriptor).setArchiveType(main.getModuleType());
         if (archive.getURI() != null) {
@@ -144,9 +143,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
         }
         try (InputStream is = archive.getEntry(standardDD.getDeploymentDescriptorPath())) {
             if (is == null) {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "Deployment descriptor: " + standardDD.getDeploymentDescriptorPath(),
-                        " does not exist in archive: " + archive.getURI().getSchemeSpecificPart());
+                if (LOG.isLoggable(Level.CONFIG)) {
+                    LOG.log(Level.CONFIG, "Deployment descriptor: " + standardDD.getDeploymentDescriptorPath()
+                        + " does not exist in archive: " + archive.getURI());
                 }
                 return null;
             }
@@ -156,6 +155,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
         }
     }
 
+
     /**
      * Read the runtime deployment descriptors of the extension
      *
@@ -164,10 +164,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
      * @param descriptor the extension deployment descriptor
      * @return the extension descriptor object with additional runtime information
      */
-     public RootDeploymentDescriptor readRuntimeDeploymentDescriptor(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
-            throws IOException, SAXException {
-
-        ConfigurationDeploymentDescriptorFile ddFile = getConfigurationDDFile(main, descriptor, archive);
+    public RootDeploymentDescriptor readRuntimeDeploymentDescriptor(Archivist main, ReadableArchive archive,
+        RootDeploymentDescriptor descriptor) throws IOException, SAXException {
+        ConfigurationDeploymentDescriptorFile<?> ddFile = getConfigurationDDFile(main, descriptor, archive);
 
         // if this extension archivist has no runtime DD, just return the
         // original descriptor
@@ -175,10 +174,12 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
             return descriptor;
         }
 
-        DOLUtils.readRuntimeDeploymentDescriptor(getSortedConfigurationDDFiles(descriptor, archive, main.getModuleType()), archive, descriptor, main,true);
+        DOLUtils.readRuntimeDeploymentDescriptor(
+            getSortedConfigurationDDFiles(descriptor, archive, main.getModuleType()), archive, descriptor, main, true);
 
         return descriptor;
     }
+
 
     /**
      * writes the deployment descriptors (standard and runtime)
@@ -187,8 +188,8 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
      * @param in the input archive
      * @param out the abstract archive file to write to
      */
-    public void writeDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, ReadableArchive in, WritableArchive out) throws IOException {
-
+    public void writeDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, ReadableArchive in,
+        WritableArchive out) throws IOException {
         // Standard DDs
         writeStandardDeploymentDescriptors(main, descriptor, out);
 
@@ -225,10 +226,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
         if (confDDFilesToWrite.isEmpty()) {
             confDDFilesToWrite = getConfigurationDDFiles(descriptor);
         }
-        for (ConfigurationDeploymentDescriptorFile ddFile : confDDFilesToWrite) {
+        for (ConfigurationDeploymentDescriptorFile<BundleDescriptor> ddFile : confDDFilesToWrite) {
             ddFile.setArchiveType(main.getModuleType());
-            OutputStream os = out.putNextEntry(
-                ddFile.getDeploymentDescriptorPath());
+            OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath());
             ddFile.write(descriptor, os);
             out.closeEntry();
         }

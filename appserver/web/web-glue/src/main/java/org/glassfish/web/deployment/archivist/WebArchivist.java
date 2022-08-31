@@ -67,10 +67,10 @@ import org.xml.sax.SAXException;
  * This module is responsible for reading and write web applications
  * archive files (war).
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-@Service @PerLookup
+@Service
+@PerLookup
 @ArchivistFor(WarType.ARCHIVE_TYPE)
 public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
 
@@ -247,15 +247,16 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Override
     public void validate(ClassLoader aClassLoader) {
         ClassLoader cl = aClassLoader;
-        if (cl==null) {
+        if (cl == null) {
             cl = classLoader;
         }
-        if (cl==null) {
+        if (cl == null) {
             return;
         }
         descriptor.setClassLoader(cl);
         descriptor.visit(new WebBundleValidator());
     }
+
 
     /**
      * In the case of web archive, the super handles() method should be able
@@ -278,9 +279,8 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      */
     @Override
     public Vector<String> getLibraries(Archive archive) {
-
         Enumeration<String> entries = archive.entries();
-        if (entries==null) {
+        if (entries == null) {
             return null;
         }
 
@@ -356,12 +356,10 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         Vector<String> libs = getLibraries(archive);
         if (libs != null && !libs.isEmpty()) {
 
-            for (Object lib2 : libs) {
-                String lib = (String)lib2;
+            for (String lib : libs) {
                 Archivist<?> wfArchivist = new WebFragmentArchivist(this, habitat);
                 wfArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
-                wfArchivist.setRuntimeXMLValidationLevel(
-                        this.getRuntimeXMLValidationLevel());
+                wfArchivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
                 wfArchivist.setAnnotationProcessingRequested(false);
 
                 WebFragmentDescriptor wfDesc = null;

@@ -268,7 +268,6 @@ public class UndeployedLaunchable implements Launchable {
     private AppClientArchivist getArchivist(final ClassLoader classLoader) throws IOException {
         if (archivist == null) {
             ArchivistFactory af = Util.getArchivistFactory();
-
             archivist = completeInit((AppClientArchivist) af.getArchivist("car"));
         }
         archivist.setClassLoader(classLoader);

@@ -542,7 +542,7 @@ public class ApplicationArchivist extends Archivist<Application> {
             newArchivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
             newArchivist.setAnnotationProcessingRequested(annotationProcessingRequested);
 
-            BundleDescriptor descriptor = null;
+            BundleDescriptor bundleDescriptor = null;
             try (ReadableArchive embeddedArchive = appArchive.getSubArchive(aModule.getArchiveUri())) {
                 if (embeddedArchive == null) {
                     throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.nosuchmodule",
@@ -553,19 +553,19 @@ public class ApplicationArchivist extends Archivist<Application> {
                 DOLUtils.setExtensionArchivistForSubArchivist(habitat, embeddedArchive, aModule, app, newArchivist);
                 if (aModule.getAlternateDescriptor() == null) {
                     // open the subarchive to get the deployment descriptor...
-                    descriptor = newArchivist.open(embeddedArchive, app);
+                    bundleDescriptor = newArchivist.open(embeddedArchive, app);
                 } else {
                     // the module use alternate deployement descriptor, ignore the
                     // DDs in the archive.
                     try (InputStream is = appArchive.getEntry(aModule.getAlternateDescriptor())) {
-                        DeploymentDescriptorFile ddFile = newArchivist.getStandardDDFile();
+                        DeploymentDescriptorFile<?> ddFile = newArchivist.getStandardDDFile();
                         ddFile.setXMLValidation(newArchivist.getXMLValidation());
                         ddFile.setXMLValidationLevel(newArchivist.getXMLValidationLevel());
                         if (appArchive.getURI() != null) {
                             ddFile.setErrorReportingString(appArchive.getURI().getSchemeSpecificPart());
                         }
-                        descriptor = (BundleDescriptor) ddFile.read(is);
-                        descriptor.setApplication(app);
+                        bundleDescriptor = (BundleDescriptor) ddFile.read(is);
+                        bundleDescriptor.setApplication(app);
                     }
 
                     // TODO : JD need to be revisited for EAR files with Alternative descriptors,
@@ -574,19 +574,19 @@ public class ApplicationArchivist extends Archivist<Application> {
                     List<ExtensionsArchivist> extensionsArchivists = newArchivist.getExtensionArchivists();
                     if (extensionsArchivists != null) {
                         for (ExtensionsArchivist extension : extensionsArchivists) {
-                            Object rdd = extension.open(newArchivist, embeddedArchive, descriptor);
+                            Object rdd = extension.open(newArchivist, embeddedArchive, bundleDescriptor);
                             if (rdd instanceof RootDeploymentDescriptor) {
                                 extensions.put(extension, (RootDeploymentDescriptor) rdd);
                             }
                         }
                     }
-                    newArchivist.postStandardDDsRead(descriptor, embeddedArchive, extensions);
-                    newArchivist.readAnnotations(embeddedArchive, descriptor, extensions);
-                    newArchivist.postAnnotationProcess(descriptor, embeddedArchive);
-                    newArchivist.postOpen(descriptor, embeddedArchive);
+                    newArchivist.postStandardDDsRead(bundleDescriptor, embeddedArchive, extensions);
+                    newArchivist.readAnnotations(embeddedArchive, bundleDescriptor, extensions);
+                    newArchivist.postAnnotationProcess(bundleDescriptor, embeddedArchive);
+                    newArchivist.postOpen(bundleDescriptor, embeddedArchive);
                     // now reads the runtime deployment descriptor...
                     if (isHandlingRuntimeInfo()) {
-                        DOLUtils.readAlternativeRuntimeDescriptor(appArchive, embeddedArchive, newArchivist, descriptor,
+                        DOLUtils.readAlternativeRuntimeDescriptor(appArchive, embeddedArchive, newArchivist, bundleDescriptor,
                             aModule.getAlternateDescriptor());
                         // read extensions runtime deployment descriptors if any
                         for (Map.Entry<ExtensionsArchivist, RootDeploymentDescriptor> extension : extensions.entrySet()) {
@@ -600,20 +600,20 @@ public class ApplicationArchivist extends Archivist<Application> {
                     }
                 } // else
             }
-            if (descriptor == null) {
+            if (bundleDescriptor == null) {
                 // display a message only if we had a handle on the sub archive
                 return false;
             }
-            descriptor.getModuleDescriptor().setArchiveUri(aModule.getArchiveUri());
-            aModule.setModuleName(descriptor.getModuleDescriptor().getModuleName());
-            aModule.setDescriptor(descriptor);
-            descriptor.setApplication(app);
+            bundleDescriptor.getModuleDescriptor().setArchiveUri(aModule.getArchiveUri());
+            aModule.setModuleName(bundleDescriptor.getModuleDescriptor().getModuleName());
+            aModule.setDescriptor(bundleDescriptor);
+            bundleDescriptor.setApplication(app);
             aModule.setManifest(newArchivist.getManifest());
             // for optional application.xml case, set the
             // context root as module name for web modules
             if (!appArchive.exists("META-INF/application.xml")) {
                 if (aModule.getModuleType().equals(DOLUtils.warType())) {
-                    WebBundleDescriptor wbd = (WebBundleDescriptor) descriptor;
+                    WebBundleDescriptor wbd = (WebBundleDescriptor) bundleDescriptor;
                     if (wbd.getContextRoot() != null && !wbd.getContextRoot().isEmpty()) {
                         aModule.setContextRoot(wbd.getContextRoot());
                     } else {

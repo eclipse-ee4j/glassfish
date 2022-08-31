@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,16 +20,18 @@ package org.glassfish.appclient.common;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.archivist.ExtensionsArchivist;
+
+import jakarta.inject.Inject;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.IterableProvider;
+import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Optional;
-
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PerLookup;
 import org.xml.sax.SAXException;
 
 /**
@@ -52,17 +55,21 @@ import org.xml.sax.SAXException;
 @PerLookup
 public class ACCAppClientArchivist extends AppClientArchivist implements PostConstruct {
 
-    @Inject @Optional
-    IterableProvider<ExtensionsArchivist> allExtensionArchivists;
+    @Inject
+    @Optional
+    private IterableProvider<ExtensionsArchivist<?>> allExtensionArchivists;
 
     @Override
-    public void readRuntimeDeploymentDescriptor(ReadableArchive archive, ApplicationClientDescriptor descriptor) throws IOException, SAXException {
+    public void readRuntimeDeploymentDescriptor(ReadableArchive archive, ApplicationClientDescriptor descriptor)
+        throws IOException, SAXException {
         super.readRuntimeDeploymentDescriptor(archive, descriptor, false);
     }
 
+
+    @Override
     public void postConstruct() {
-        extensionsArchivists = new ArrayList<ExtensionsArchivist>();
-        for (ExtensionsArchivist extensionArchivist : allExtensionArchivists) {
+        extensionsArchivists = new ArrayList<>();
+        for (ExtensionsArchivist<?> extensionArchivist : allExtensionArchivists) {
             if (extensionArchivist.supportsModuleType(getModuleType())) {
                 extensionsArchivists.add(extensionArchivist);
             }

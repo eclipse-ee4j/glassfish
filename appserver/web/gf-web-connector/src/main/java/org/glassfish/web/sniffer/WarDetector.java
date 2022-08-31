@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,48 +17,52 @@
 
 package org.glassfish.web.sniffer;
 
+import com.sun.enterprise.deployment.deploy.shared.Util;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
-import com.sun.enterprise.deployment.deploy.shared.Util;
-import org.glassfish.web.WarType;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.ServiceLocator;
-import jakarta.inject.Singleton;
-
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.Enumeration;
+import org.glassfish.web.WarType;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Detects war type archives.
+ * <p>
  * It's rank can be set using system property {@link #WAR_DETECTOR_RANK_PROP}.
  * Default rank is {@link #DEFAULT_WAR_DETECTOR_RANK}.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-@Service(name = WarDetector.ARCHIVE_TYPE)
+@Service(name = WarType.ARCHIVE_TYPE)
 @Singleton
 public class WarDetector implements ArchiveDetector {
-    public static final String WAR_DETECTOR_RANK_PROP = "glassfish.war.detector.rank";
-    public static final int DEFAULT_WAR_DETECTOR_RANK = 200;
-    public static final String ARCHIVE_TYPE = WarType.ARCHIVE_TYPE;
+    private static final Logger logger = Logger.getLogger(WarDetector.class.getName());
 
-    @Inject WebSniffer sniffer;
-    @Inject ServiceLocator services;
-    @Inject WarType archiveType;
-    private ArchiveHandler archiveHandler;
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    private static final String WAR_DETECTOR_RANK_PROP = "glassfish.war.detector.rank";
+    private static final int DEFAULT_WAR_DETECTOR_RANK = 200;
 
     private static final String WEB_INF = "WEB-INF";
     private static final String JSP_SUFFIX = ".jsp";
     private static final String WAR_EXTENSION = ".war";
 
-    //for avatar
+    @Inject
+    private WebSniffer sniffer;
+    @Inject
+    private ServiceLocator services;
+    @Inject
+    private WarType archiveType;
+    private ArchiveHandler archiveHandler;
+
+    // for avatar
     private static final String AVATAR = "avatar";
 
     @Override
@@ -100,7 +105,7 @@ public class WarDetector implements ArchiveDetector {
             if (archiveHandler == null) {
                 try {
                     sniffer.setup(null, logger);
-                    archiveHandler = services.getService(ArchiveHandler.class, ARCHIVE_TYPE);
+                    archiveHandler = services.getService(ArchiveHandler.class, WarType.ARCHIVE_TYPE);
                 } catch (IOException e) {
                     throw new RuntimeException(e); // TODO(Sahoo): Proper Exception Handling
                 }

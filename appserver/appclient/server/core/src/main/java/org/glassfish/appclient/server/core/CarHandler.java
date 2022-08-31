@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,41 +19,47 @@ package org.glassfish.appclient.server.core;
 
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.loader.ASURLClassLoader;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ArchiveDetector;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.appclient.server.connector.CarDetector;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.net.URL;
 
-import static javax.xml.stream.XMLStreamConstants.*;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveDetector;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
+import org.jvnet.hk2.annotations.Service;
+
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = CarDetector.ARCHIVE_TYPE)
+@Service(name = CarType.ARCHIVE_TYPE)
 public class CarHandler extends AbstractArchiveHandler {
 
-    @Inject @Named(CarDetector.ARCHIVE_TYPE)
+    @Inject
+    @Named(CarType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
-    private static final Logger _logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
+    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     @Override
@@ -67,9 +74,9 @@ public class CarHandler extends AbstractArchiveHandler {
             GFCarXMLParser gfXMLParser = new GFCarXMLParser();
             versionIdentifier = gfXMLParser.extractVersionIdentifierValue(archive);
         } catch (IOException e) {
-            _logger.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage());
         } catch (XMLStreamException e) {
-            _logger.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage());
         }
         return versionIdentifier;
 
@@ -114,7 +121,7 @@ public class CarHandler extends AbstractArchiveHandler {
     }
 
     private static class GFCarXMLParser {
-        private XMLStreamReader parser = null;
+        private XMLStreamReader parser;
 
         protected String extractVersionIdentifierValue(ReadableArchive archive) throws XMLStreamException, IOException {
 
@@ -180,8 +187,5 @@ public class CarHandler extends AbstractArchiveHandler {
                 }
             }
         }
-
     }
-
-
 }

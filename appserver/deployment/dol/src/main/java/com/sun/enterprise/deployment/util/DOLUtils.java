@@ -52,6 +52,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -292,6 +293,11 @@ public class DOLUtils {
         return getModuleType("ejb");
     }
 
+
+    /**
+     * @return Can return null when not executed on the server!!!
+     * @see ProcessEnvironment#getProcessType()
+     */
     public static ArchiveType carType() {
         return getModuleType("car");
     }

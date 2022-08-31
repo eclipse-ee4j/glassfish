@@ -23,7 +23,6 @@ import com.sun.enterprise.config.serverbeans.VirtualServer;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
 import com.sun.enterprise.security.perms.PermsArchiveDelegate;
 import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.StringUtils;
 
 import jakarta.inject.Inject;
@@ -59,9 +58,9 @@ import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.glassfish.web.WarType;
 import org.glassfish.web.loader.LogFacade;
 import org.glassfish.web.loader.WebappClassLoader;
-import org.glassfish.web.sniffer.WarDetector;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
@@ -74,7 +73,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
  *
  * @author Jerome Dochez, Sanjeeb Sahoo, Shing Wai Chan
  */
-@Service(name = WarDetector.ARCHIVE_TYPE)
+@Service(name = WarType.ARCHIVE_TYPE)
 public class WarHandler extends AbstractArchiveHandler {
 
     private static final String GLASSFISH_WEB_XML = "WEB-INF/glassfish-web.xml";
@@ -82,17 +81,16 @@ public class WarHandler extends AbstractArchiveHandler {
     private static final String WEBLOGIC_XML = "WEB-INF/weblogic.xml";
     private static final String WAR_CONTEXT_XML = "META-INF/context.xml";
     private static final String DEFAULT_CONTEXT_XML = "config/context.xml";
-    private static final Logger logger = LogFacade.getLogger();
-    private static final ResourceBundle rb = logger.getResourceBundle();
-    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WarHandler.class);
 
+    private static final Logger LOG = LogFacade.getLogger();
+    private static final ResourceBundle I18N = LOG.getResourceBundle();
 
     // the following two system properties need to be in sync with DOLUtils
     private static final boolean gfDDOverWLSDD = Boolean.valueOf(System.getProperty("gfdd.over.wlsdd"));
     private static final boolean ignoreWLSDD = Boolean.valueOf(System.getProperty("ignore.wlsdd"));
 
     @Inject
-    @Named(WarDetector.ARCHIVE_TYPE)
+    @Named(WarType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
     @Inject
@@ -104,7 +102,7 @@ public class WarHandler extends AbstractArchiveHandler {
 
     @Override
     public String getArchiveType() {
-        return WarDetector.ARCHIVE_TYPE;
+        return WarType.ARCHIVE_TYPE;
     }
 
 
@@ -114,9 +112,9 @@ public class WarHandler extends AbstractArchiveHandler {
             WebXmlParser webXmlParser = getWebXmlParser(archive);
             return webXmlParser.getVersionIdentifier();
         } catch (XMLStreamException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage());
         } catch (IOException e) {
-            logger.log(Level.SEVERE, e.getMessage());
+            LOG.log(Level.SEVERE, e.getMessage());
         }
         return null;
     }
@@ -128,12 +126,8 @@ public class WarHandler extends AbstractArchiveHandler {
 
     @Override
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
-        WebappClassLoader cloader = AccessController.doPrivileged(new PrivilegedAction<WebappClassLoader>() {
-            @Override
-            public WebappClassLoader run() {
-                return new WebappClassLoader(parent);
-            }
-        });
+        PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(parent);
+        WebappClassLoader cloader = AccessController.doPrivileged(action);
         try {
             WebDirContext r = new WebDirContext();
             File base = new File(context.getSource().getURI());
@@ -167,9 +161,9 @@ public class WarHandler extends AbstractArchiveHandler {
             }
 
         } catch(XMLStreamException xse) {
-            logger.log(Level.SEVERE, xse.getMessage(), xse);
+            LOG.log(Level.SEVERE, xse.getMessage(), xse);
         } catch(IOException ioe) {
-            logger.log(Level.SEVERE, ioe.getMessage(), ioe);
+            LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
         }
         cloader.start();
         return cloader;
@@ -204,8 +198,8 @@ public class WarHandler extends AbstractArchiveHandler {
     protected void configureLoaderAttributes(WebappClassLoader cloader, WebXmlParser webXmlParser, File base) {
         final boolean delegate = webXmlParser.isDelegate();
         cloader.setDelegate(delegate);
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine("WebModule[" + base + "]: Setting delegate to " + delegate);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine("WebModule[" + base + "]: Setting delegate to " + delegate);
         }
 
         final String extraClassPath = webXmlParser.getExtraClassPath();
@@ -218,8 +212,8 @@ public class WarHandler extends AbstractArchiveHandler {
         String[] pathElements = extraClassPath.split(";|((?<!\\\\):)");
         for (String path : pathElements) {
             path = path.replace("\\:", ":");
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("WarHandler[" + base + "]: Adding " + path + " to the classpath");
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.fine("WarHandler[" + base + "]: Adding " + path + " to the classpath");
             }
 
             try {
@@ -236,10 +230,10 @@ public class WarHandler extends AbstractArchiveHandler {
                     URL url = file.toURI().toURL();
                     cloader.addRepository(url.toString());
                 } catch (MalformedURLException mue2) {
-                    String msg = rb.getString(LogFacade.CLASSPATH_ERROR);
+                    String msg = I18N.getString(LogFacade.CLASSPATH_ERROR);
                     Object[] params = { path };
                     msg = MessageFormat.format(msg, params);
-                    logger.log(Level.SEVERE, msg, mue2);
+                    LOG.log(Level.SEVERE, msg, mue2);
                 }
             }
         }
@@ -339,8 +333,8 @@ public class WarHandler extends AbstractArchiveHandler {
             if (value != null) {
                 cloader.setClearReferencesStatic(value);
             }
-        } else if (logger.isLoggable(Level.WARNING)) {
-            logger.log(Level.WARNING, LogFacade.INCONSISTENT_CLEAR_REFERENCE_STATIC);
+        } else if (LOG.isLoggable(Level.WARNING)) {
+            LOG.log(Level.WARNING, LogFacade.INCONSISTENT_CLEAR_REFERENCE_STATIC);
         }
     }
 
@@ -365,7 +359,7 @@ public class WarHandler extends AbstractArchiveHandler {
                 }
             }
         } catch (Exception e) {
-            logger.log(Level.WARNING, e.getMessage(), e);
+            LOG.log(Level.WARNING, e.getMessage(), e);
         }
         return uris;
     }
@@ -406,7 +400,7 @@ public class WarHandler extends AbstractArchiveHandler {
                 if (event == START_ELEMENT) {
                     String localName = parser.getLocalName();
                     if (!name.equals(localName)) {
-                        String msg = rb.getString(LogFacade.UNEXPECTED_XML_ELEMENT);
+                        String msg = I18N.getString(LogFacade.UNEXPECTED_XML_ELEMENT);
                         msg = MessageFormat.format(msg, new Object[] {name, localName});
                         throw new XMLStreamException(msg);
                     }
@@ -420,7 +414,7 @@ public class WarHandler extends AbstractArchiveHandler {
             while (true) {
                 int event = parser.next();
                 if (event == END_DOCUMENT) {
-                    throw new XMLStreamException(rb.getString(LogFacade.UNEXPECTED_END_DOCUMENT));
+                    throw new XMLStreamException(I18N.getString(LogFacade.UNEXPECTED_END_DOCUMENT));
                 } else if (event == END_ELEMENT && name.equals(parser.getLocalName())) {
                     return;
                 }
@@ -442,9 +436,8 @@ public class WarHandler extends AbstractArchiveHandler {
                 try (InputStream is = archive.getEntry(getXmlFileName())) {
                     init(is);
                 } catch (Throwable t) {
-                    String msg = localStrings.getLocalString("web.deployment.exception_parsing_webxml",
-                        "Error in parsing {0} for archive [{1}]: {2}", getXmlFileName(), archive.getURI(),
-                        t.getMessage());
+                    String msg = MessageFormat.format("Error in parsing {0} for archive [{1}]: {2}", getXmlFileName(),
+                        archive.getURI(), t.getMessage());
                     throw new RuntimeException(msg);
                 }
             }
@@ -528,8 +521,8 @@ public class WarHandler extends AbstractArchiveHandler {
                                 if (parser.getAttributeValue(i) != null) {
                                     // Log warning if dynamic-reload-interval is specified
                                     // in sun-web.xml since it is not supported
-                                    if (logger.isLoggable(Level.WARNING)) {
-                                        logger.log(Level.WARNING, LogFacade.DYNAMIC_RELOAD_INTERVAL);
+                                    if (LOG.isLoggable(Level.WARNING)) {
+                                        LOG.log(Level.WARNING, LogFacade.DYNAMIC_RELOAD_INTERVAL);
                                     }
                                 }
                             }
@@ -549,15 +542,15 @@ public class WarHandler extends AbstractArchiveHandler {
                         }
 
                         if (propName == null || value == null) {
-                            throw new IllegalArgumentException(rb.getString(LogFacade.NULL_WEB_PROPERTY));
+                            throw new IllegalArgumentException(I18N.getString(LogFacade.NULL_WEB_PROPERTY));
                         }
 
                         if ("ignoreHiddenJarFiles".equals(propName)) {
                             ignoreHiddenJarFiles = Boolean.valueOf(value);
                         } else {
                             Object[] params = {propName, value};
-                            if (logger.isLoggable(Level.WARNING)) {
-                                logger.log(Level.WARNING, LogFacade.INVALID_PROPERTY, params);
+                            if (LOG.isLoggable(Level.WARNING)) {
+                                LOG.log(Level.WARNING, LogFacade.INVALID_PROPERTY, params);
                             }
                         }
                     } else if ("property".equals(name)) {
@@ -574,7 +567,7 @@ public class WarHandler extends AbstractArchiveHandler {
                         }
 
                         if (propName == null || value == null) {
-                            throw new IllegalArgumentException(rb.getString(LogFacade.NULL_WEB_PROPERTY));
+                            throw new IllegalArgumentException(I18N.getString(LogFacade.NULL_WEB_PROPERTY));
                         }
 
                         if ("useMyFaces".equalsIgnoreCase(propName)) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,19 +20,17 @@ package com.sun.enterprise.connectors.module;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.connector.module.RarDetector;
+import com.sun.enterprise.connectors.connector.module.RarType;
 import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
 import com.sun.enterprise.security.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
 import com.sun.logging.LogDomains;
-import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.archive.ArchiveDetector;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.jvnet.hk2.annotations.Service;
 
-import java.io.IOException;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.AccessController;
@@ -40,15 +39,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.archive.ArchiveDetector;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.loader.util.ASClassLoaderUtil;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Archive handler for resource-adapters
  *
  * @author Jagadish Ramu
  */
-@Service(name= RarDetector.ARCHIVE_TYPE)
+@Service(name= RarType.ARCHIVE_TYPE)
 public class RarHandler extends AbstractArchiveHandler {
     // This class should be moved to connector runtime along with ConnectorClassLoaderUtil.
     // We should also consider merging connectors-connector with connectors-internal-api
@@ -57,21 +59,23 @@ public class RarHandler extends AbstractArchiveHandler {
     private ConnectorsClassLoaderUtil loader;
 
     @Inject
-    @Named(RarDetector.ARCHIVE_TYPE)
+    @Named(RarType.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
-    private Logger _logger = LogDomains.getLogger(RarHandler.class, LogDomains.RSR_LOGGER);
+    private final Logger _logger = LogDomains.getLogger(RarHandler.class, LogDomains.RSR_LOGGER);
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getArchiveType() {
-        return RarDetector.ARCHIVE_TYPE;
+        return RarType.ARCHIVE_TYPE;
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(ReadableArchive archive) throws IOException {
         return detector.handles(archive);
     }
@@ -79,6 +83,7 @@ public class RarHandler extends AbstractArchiveHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ClassLoader getClassLoader(ClassLoader parent, DeploymentContext context) {
         try {
             String moduleDir = context.getSource().getURI().getPath();
@@ -113,8 +118,7 @@ public class RarHandler extends AbstractArchiveHandler {
                 final ClassLoader cl = carCL;
 
                 AccessController.doPrivileged(
-                        new PermsArchiveDelegate.SetPermissionsAction(
-                                SMGlobalPolicyUtil.CommponentType.rar, dc, cl));
+                    new PermsArchiveDelegate.SetPermissionsAction(SMGlobalPolicyUtil.CommponentType.rar, dc, cl));
             } catch (PrivilegedActionException e) {
                 throw new SecurityException(e.getException());
             }

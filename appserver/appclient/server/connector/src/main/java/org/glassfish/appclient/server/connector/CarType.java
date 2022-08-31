@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,14 +29,9 @@ import org.jvnet.hk2.annotations.Service;
 @Service(name = CarType.ARCHIVE_TYPE)
 @jakarta.inject.Singleton
 public class CarType extends ArchiveType {
-    /**
-     *
-     */
+
     public static final String ARCHIVE_TYPE = "car";
 
-    /**
-     *
-     */
     public static final String ARCHIVE_EXTENSION = ".car";
 
     public CarType() {

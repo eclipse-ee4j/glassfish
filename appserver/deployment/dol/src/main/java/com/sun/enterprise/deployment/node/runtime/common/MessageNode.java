@@ -38,18 +38,17 @@ import org.w3c.dom.Node;
  */
 public class MessageNode extends DeploymentDescriptorNode<MessageDescriptor> {
 
-    private MessageDescriptor descriptor;
     private static final String ALL_METHODS = "*";
+    private MessageDescriptor descriptor;
 
     public MessageNode() {
-        registerElementHandler(new XMLElement(
-            RuntimeTagNames.JAVA_METHOD), MethodNode.class,
-            "setMethodDescriptor");
+        registerElementHandler(new XMLElement(RuntimeTagNames.JAVA_METHOD), MethodNode.class, "setMethodDescriptor");
     }
 
+
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+     * @return the descriptor instance to associate with this XMLNode
+     */
     @Override
     public MessageDescriptor getDescriptor() {
         if (descriptor == null) {
@@ -76,14 +75,6 @@ public class MessageNode extends DeploymentDescriptorNode<MessageDescriptor> {
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param node name for
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
     @Override
     public Node writeDescriptor(Node parent, String nodeName, MessageDescriptor messageDesc) {
         Node messageNode = super.writeDescriptor(parent, nodeName, messageDesc);
@@ -100,8 +91,7 @@ public class MessageNode extends DeploymentDescriptorNode<MessageDescriptor> {
         MethodDescriptor methodDesc = messageDesc.getMethodDescriptor();
         if (methodDesc != null) {
             MethodNode methodNode = new MethodNode();
-            methodNode.writeJavaMethodDescriptor(messageNode,
-                RuntimeTagNames.JAVA_METHOD, methodDesc);
+            methodNode.writeJavaMethodDescriptor(messageNode, RuntimeTagNames.JAVA_METHOD, methodDesc);
         }
 
         // operation-name
@@ -116,7 +106,6 @@ public class MessageNode extends DeploymentDescriptorNode<MessageDescriptor> {
 
         // get the endpoint or portinfo descriptor
         Object parentDesc = parentNode.getDescriptor();
-
         if (parentDesc instanceof ServiceRefPortInfo) {
             descriptor.setServiceRefPortInfo((ServiceRefPortInfo) parentDesc);
         } else if (parentDesc instanceof WebServiceEndpoint) {

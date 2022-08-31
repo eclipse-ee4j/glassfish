@@ -179,15 +179,10 @@ public class EjbSessionNode extends InterfaceBasedEjbNode<EjbSessionDescriptor> 
         }
 
         MethodNode methodNode = new MethodNode();
-
         if (ejbDesc.isTimedObject()) {
             if (ejbDesc.getEjbTimeoutMethod() != null) {
-
-                methodNode.writeJavaMethodDescriptor
-                        (ejbNode, EjbTagNames.TIMEOUT_METHOD,
-                                ejbDesc.getEjbTimeoutMethod());
+                methodNode.writeJavaMethodDescriptor(ejbNode, TIMEOUT_METHOD, ejbDesc.getEjbTimeoutMethod());
             }
-
             for (ScheduledTimerDescriptor timerDesc : ejbDesc.getScheduledTimerDescriptors()) {
                 ScheduledTimerNode timerNode = new ScheduledTimerNode();
                 timerNode.writeDescriptor(ejbNode, TIMER, timerDesc);
@@ -251,22 +246,18 @@ public class EjbSessionNode extends InterfaceBasedEjbNode<EjbSessionDescriptor> 
 
         MethodDescriptor afterBeginMethod = ejbDesc.getAfterBeginMethod();
         if (afterBeginMethod != null) {
-            methodNode.writeJavaMethodDescriptor(ejbNode, EjbTagNames.AFTER_BEGIN_METHOD,
-                    afterBeginMethod);
+            methodNode.writeJavaMethodDescriptor(ejbNode, AFTER_BEGIN_METHOD, afterBeginMethod);
         }
 
         MethodDescriptor beforeCompletionMethod = ejbDesc.getBeforeCompletionMethod();
         if (beforeCompletionMethod != null) {
-            methodNode.writeJavaMethodDescriptor(ejbNode, EjbTagNames.BEFORE_COMPLETION_METHOD,
-                    beforeCompletionMethod);
+            methodNode.writeJavaMethodDescriptor(ejbNode, BEFORE_COMPLETION_METHOD, beforeCompletionMethod);
         }
 
         MethodDescriptor afterCompletionMethod = ejbDesc.getAfterCompletionMethod();
         if (afterCompletionMethod != null) {
-            methodNode.writeJavaMethodDescriptor(ejbNode, EjbTagNames.AFTER_COMPLETION_METHOD,
-                    afterCompletionMethod);
+            methodNode.writeJavaMethodDescriptor(ejbNode, AFTER_COMPLETION_METHOD, afterCompletionMethod);
         }
-
 
         //around-invoke-method
         writeAroundInvokeDescriptors(ejbNode, ejbDesc.getAroundInvokeDescriptors().iterator());

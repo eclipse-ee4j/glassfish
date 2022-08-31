@@ -36,8 +36,7 @@ import org.w3c.dom.Node;
 /**
  * This class handles message-driven related xml information
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
 
@@ -96,7 +95,6 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
         appendTextChild(ejbNode, EjbTagNames.MESSAGING_TYPE, ejbDesc.getMessageListenerType());
 
         MethodNode methodNode = new MethodNode();
-
         if (ejbDesc.isTimedObject()) {
             if (ejbDesc.getEjbTimeoutMethod() != null) {
                 methodNode.writeJavaMethodDescriptor(ejbNode, EjbTagNames.TIMEOUT_METHOD, ejbDesc.getEjbTimeoutMethod());

@@ -18,8 +18,6 @@
 package com.sun.enterprise.deployment.node.connector;
 
 import com.sun.enterprise.deployment.AuthMechanism;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.OutboundResourceAdapter;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
@@ -27,8 +25,8 @@ import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
 
 /**
@@ -40,24 +38,19 @@ public class AuthMechNode extends DeploymentDescriptorNode<AuthMechanism> {
 
     private AuthMechanism auth;
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    @Override
-    protected Map<String, String> getDispatchTable() {
-        Map<String, String> table = super.getDispatchTable();
-        table.put(ConnectorTagNames.CREDENTIAL_INTF, "setCredentialInterface");
-        table.put(ConnectorTagNames.AUTH_MECH_TYPE, "setAuthMechVal");
-        return table;
+    public static Node writeAuthMechanisms(Node parent, Set<AuthMechanism> authMechanisms) {
+        Iterator<AuthMechanism> authMechs = authMechanisms.iterator();
+        while (authMechs.hasNext()) {
+            AuthMechanism authMechanism = authMechs.next();
+            Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
+            appendTextChild(authNode, TagNames.DESCRIPTION, authMechanism.getDescription());
+            appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, authMechanism.getAuthMechType());
+            appendTextChild(authNode, ConnectorTagNames.CREDENTIAL_INTF, authMechanism.getCredentialInterface());
+        }
+        return parent;
     }
 
 
-    /**
-     * @return the descriptor instance to associate with this XMLNode
-     */
     @Override
     public AuthMechanism getDescriptor() {
         if (auth == null) {
@@ -67,29 +60,11 @@ public class AuthMechNode extends DeploymentDescriptorNode<AuthMechanism> {
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param descriptor the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, Descriptor descriptor) {
-        if (!(descriptor instanceof OutboundResourceAdapter) && !(descriptor instanceof ConnectorDescriptor)) {
-            throw new IllegalArgumentException(
-                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
-        }
-
-        if (descriptor instanceof OutboundResourceAdapter) {
-            Iterator<AuthMechanism> authMechs = ((OutboundResourceAdapter) descriptor).getAuthMechanisms().iterator();
-            for (; authMechs.hasNext();) {
-                AuthMechanism auth = authMechs.next();
-                Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
-                appendTextChild(authNode, TagNames.DESCRIPTION, auth.getDescription());
-                appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, auth.getAuthMechType());
-                appendTextChild(authNode, ConnectorTagNames.CREDENTIAL_INTF, auth.getCredentialInterface());
-            }
-        }
-        return parent;
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(ConnectorTagNames.CREDENTIAL_INTF, "setCredentialInterface");
+        table.put(ConnectorTagNames.AUTH_MECH_TYPE, "setAuthMechVal");
+        return table;
     }
 }

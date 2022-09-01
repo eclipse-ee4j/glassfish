@@ -37,27 +37,21 @@ public class ActivationSpecNode extends DeploymentDescriptorNode<MessageListener
 
     private MessageListener msgListener;
 
+    public static Node writeMessageListener(Node parent, MessageListener msgListener) {
+        Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
+        appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
+        RequiredConfigNode.write(actSpecNode, msgListener);
+        ConfigPropertyNode.write(actSpecNode, msgListener);
+        return parent;
+    }
+
+
     public ActivationSpecNode() {
         registerElementHandler(new XMLElement(ConnectorTagNames.REQUIRED_CONFIG_PROP), RequiredConfigNode.class);
         registerElementHandler(new XMLElement(ConnectorTagNames.CONFIG_PROPERTY), ConfigPropertyNode.class);
     }
 
-   /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    @Override
-    protected Map<String, String> getDispatchTable() {
-        Map<String, String> table = super.getDispatchTable();
-        table.put(ConnectorTagNames.ACTIVATION_SPEC_CLASS, "setActivationSpecClass");
-        return table;
-    }
 
-    /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
     @Override
     public MessageListener getDescriptor() {
         if (msgListener == null) {
@@ -66,12 +60,7 @@ public class ActivationSpecNode extends DeploymentDescriptorNode<MessageListener
         return msgListener;
     }
 
-    /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with
-     * this XMLNode
-     *
-     * @param descriptor the new descriptor
-     */
+
     @Override
     public void addDescriptor(Object descriptor) {
         if (descriptor instanceof ConnectorConfigProperty) {
@@ -83,11 +72,9 @@ public class ActivationSpecNode extends DeploymentDescriptorNode<MessageListener
 
 
     @Override
-    public Node writeDescriptor(Node parent, MessageListener msgListener) {
-        Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
-        appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
-        RequiredConfigNode.write(actSpecNode, msgListener);
-        ConfigPropertyNode.write(actSpecNode, msgListener);
-        return parent;
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(ConnectorTagNames.ACTIVATION_SPEC_CLASS, "setActivationSpecClass");
+        return table;
     }
 }

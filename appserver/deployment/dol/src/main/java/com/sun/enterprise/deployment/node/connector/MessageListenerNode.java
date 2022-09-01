@@ -17,15 +17,12 @@
 
 package com.sun.enterprise.deployment.node.connector;
 
-import org.glassfish.deployment.common.Descriptor;
-import com.sun.enterprise.deployment.InboundResourceAdapter;
 import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,35 +32,29 @@ import org.w3c.dom.Node;
  * This node is responsible for handling the Connector DTD related message-listener XML tag
  *
  * @author Sheetal Vartak
- * @version
  */
-public class MessageListenerNode extends DeploymentDescriptorNode {
+public class MessageListenerNode extends DeploymentDescriptorNode<MessageListener> {
 
     private MessageListener msgListener;
+
+    public static Node writeMessageListeners(Node parent, Set<MessageListener> msgListeners) {
+        if (msgListeners.isEmpty()) {
+            throw new RuntimeException("There must be at least one messagelistener for this inbound resource adapter");
+        }
+        for (MessageListener listener : msgListeners) {
+            Node msgListenerNode = appendChild(parent, ConnectorTagNames.MSG_LISTENER);
+            appendTextChild(msgListenerNode, ConnectorTagNames.MSG_LISTENER_TYPE, listener.getMessageListenerType());
+            ActivationSpecNode.writeMessageListener(msgListenerNode, listener);
+        }
+        return parent;
+    }
+
 
     public MessageListenerNode() {
         registerElementHandler(new XMLElement(ConnectorTagNames.ACTIVATION_SPEC), ActivationSpecNode.class);
     }
 
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-
-    @Override
-    protected Map<String, String> getDispatchTable() {
-        Map<String, String> table = super.getDispatchTable();
-        table.put(ConnectorTagNames.MSG_LISTENER_TYPE, "setMessageListenerType");
-        return table;
-    }
-
-
-    /**
-     * @return the descriptor instance to associate with this XMLNode
-     */
     @Override
     public MessageListener getDescriptor() {
         if (msgListener == null) {
@@ -73,32 +64,10 @@ public class MessageListenerNode extends DeploymentDescriptorNode {
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, Descriptor descriptor) {
-        if (!(descriptor instanceof InboundResourceAdapter)) {
-            throw new IllegalArgumentException(
-                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
-        }
-        Iterator msgListeners = ((InboundResourceAdapter) descriptor).getMessageListeners().iterator();
-        if (!msgListeners.hasNext()) {
-            throw new RuntimeException("There must be at least one messagelistener for this inbound resource adapter");
-        }
-        // message listeners
-        for (; msgListeners.hasNext();) {
-            MessageListener msgListener = (MessageListener) msgListeners.next();
-            Node msgListenerNode = appendChild(parent, ConnectorTagNames.MSG_LISTENER);
-            appendTextChild(msgListenerNode, ConnectorTagNames.MSG_LISTENER_TYPE, msgListener.getMessageListenerType());
-
-            // activation spec node
-            ActivationSpecNode actSpecNode = new ActivationSpecNode();
-            msgListenerNode = actSpecNode.writeDescriptor(msgListenerNode, msgListener);
-        }
-        return parent;
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(ConnectorTagNames.MSG_LISTENER_TYPE, "setMessageListenerType");
+        return table;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,65 +18,64 @@
 package com.sun.enterprise.deployment.node.connector;
 
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.InboundResourceAdapter;
 import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-import org.w3c.dom.Node;
-import org.xml.sax.Attributes;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
+import org.xml.sax.Attributes;
 
 
 /**
  * This node is responsible for handling the Connector DTD related inbound-resourceadapter XML tag
  *
- * @author  Sheetal Vartak
- * @version
+ * @author Sheetal Vartak
  */
-public class InBoundRANode extends DeploymentDescriptorNode {
+public class InBoundRANode extends DeploymentDescriptorNode<InboundResourceAdapter> {
 
-    private InboundResourceAdapter descriptor = null;
+    private InboundResourceAdapter descriptor;
 
-    // default constructor
+    public static Node writeInboundResourceAdapter(Node connectorNode, InboundResourceAdapter descriptor) {
+        Node inBoundNode = appendChild(connectorNode, ConnectorTagNames.INBOUND_RESOURCE_ADAPTER);
+        Node msgAdapter = appendChild(inBoundNode, ConnectorTagNames.MSG_ADAPTER);
+        MessageListenerNode.writeMessageListeners(msgAdapter, descriptor.getMessageListeners());
+        return connectorNode;
+    }
+
+
+    /**
+     * Default constructor
+     */
     public InBoundRANode() {
         registerElementHandler(new XMLElement(ConnectorTagNames.MSG_LISTENER), MessageListenerNode.class);
     }
 
 
     /**
-     * SAX Parser API implementation, we don't really care for now.
+     * Doesn't do anything.
      */
     @Override
     public void startElement(XMLElement element, Attributes attributes) {
     }
 
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        return table;
+    protected Map<String, String> getDispatchTable() {
+        return super.getDispatchTable();
     }
 
 
-    /**
-     * @return the descriptor instance to associate with this XMLNode
-     */
     @Override
-    public Object getDescriptor() {
+    public InboundResourceAdapter getDescriptor() {
         if (descriptor == null) {
             // the descriptor associated with the InBoundRANode is a InboundResourceAdapter
             // This descriptor is available with the parent node of the InBoundRANode
-            descriptor = (InboundResourceAdapter) DescriptorFactory.getDescriptor(getXMLPath());
+            descriptor = DescriptorFactory.getDescriptor(getXMLPath());
             ((ConnectorDescriptor) (getParentNode().getDescriptor())).setInboundResourceAdapter(descriptor);
 
         }
@@ -83,42 +83,10 @@ public class InBoundRANode extends DeploymentDescriptorNode {
     }
 
 
-    /**
-     * Adds a new DOL descriptor instance to the descriptor instance associated with
-     * this XMLNode
-     *
-     * @param descriptor the new descriptor
-     */
     @Override
     public void addDescriptor(Object obj) {
         if (obj instanceof MessageListener) {
             descriptor.addMessageListener((MessageListener) obj);
         }
     }
-
-
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node connectorNode, Descriptor descriptor) {
-        Node inBoundNode = appendChild(connectorNode, ConnectorTagNames.INBOUND_RESOURCE_ADAPTER);
-        appendInBoundNode(inBoundNode, ((ConnectorDescriptor) descriptor).getInboundResourceAdapter());
-        return connectorNode;
-    }
-
-
-    /**
-     * method to add the child nodes of INBOUND_RESOURCE_ADAPTER
-     */
-    private void appendInBoundNode(Node inBoundNode, InboundResourceAdapter conDesc) {
-        Node msgAdapter = appendChild(inBoundNode, ConnectorTagNames.MSG_ADAPTER);
-
-        MessageListenerNode msgListener = new MessageListenerNode();
-        msgListener.writeDescriptor(msgAdapter, conDesc);
-    }
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,6 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
@@ -26,31 +24,56 @@ import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Iterator;
+import java.util.Map;
+
 import org.w3c.dom.Node;
 
 /**
- * This node is responsible for handling runtime descriptor
- * resource-env-ref tag
+ * This node is responsible for handling runtime descriptor resource-env-ref tag
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvReferenceDescriptor> {
 
     private ResourceEnvReferenceDescriptor descriptor;
 
+
+    /**
+     * writes all the runtime information for resource environment references
+     *
+     * @param parent node to add the runtime xml info
+     * @param descriptor the J2EE component containing ejb references
+     */
+    public static void writeResoureEnvReferences(Node parent, ResourceEnvReferenceContainer descriptor) {
+        // resource-env-ref*
+        Iterator<ResourceEnvReferenceDescriptor> resRefs = descriptor.getResourceEnvReferenceDescriptors().iterator();
+        if (resRefs.hasNext()) {
+            ResourceEnvRefNode resourceEnvRefNode = new ResourceEnvRefNode();
+            while (resRefs.hasNext()) {
+                resourceEnvRefNode.write(parent, TagNames.RESOURCE_ENV_REFERENCE, resRefs.next());
+            }
+        }
+    }
+
+
     @Override
     public ResourceEnvReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ResourceEnvReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new ResourceEnvReferenceDescriptor();
+        }
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
+
 
     @Override
     public void setElementValue(XMLElement element, String value) {
@@ -63,33 +86,16 @@ public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvRefe
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
             }
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName, ResourceEnvReferenceDescriptor ejbRef) {
+
+    private Node write(Node parent, String nodeName, ResourceEnvReferenceDescriptor ejbRef) {
         Node resRefNode = super.writeDescriptor(parent, nodeName, ejbRef);
         appendTextChild(resRefNode, TagNames.RESOURCE_ENV_REFERENCE_NAME, ejbRef.getName());
         appendTextChild(resRefNode, RuntimeTagNames.JNDI_NAME, ejbRef.getJndiName());
         return resRefNode;
     }
-
-    /**
-     * writes all the runtime information for resource environment references
-     *
-     * @param parent node to add the runtime xml info
-     * @param the J2EE component containing ejb references
-     */
-    public static void writeResoureEnvReferences(Node parent, ResourceEnvReferenceContainer descriptor) {
-        // resource-env-ref*
-        Iterator resRefs = descriptor.getResourceEnvReferenceDescriptors().iterator();
-        if (resRefs.hasNext()) {
-            ResourceEnvRefNode resourceEnvRefNode = new ResourceEnvRefNode();
-            while (resRefs.hasNext()) {
-                resourceEnvRefNode.writeDescriptor(parent, TagNames.RESOURCE_ENV_REFERENCE,
-                    (ResourceEnvReferenceDescriptor) resRefs.next());
-            }
-        }
-    }
-
 }

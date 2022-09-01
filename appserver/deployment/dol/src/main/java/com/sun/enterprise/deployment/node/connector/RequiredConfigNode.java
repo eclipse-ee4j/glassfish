@@ -37,23 +37,17 @@ public class RequiredConfigNode extends DeploymentDescriptorNode<EnvironmentProp
 
     private EnvironmentProperty config;
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    @Override
-    protected Map<String, String> getDispatchTable() {
-        Map<String, String> table = super.getDispatchTable();
-        table.put(ConnectorTagNames.CONFIG_PROPERTY_NAME, "setName");
-        return table;
+    public static Node write(Node parent, MessageListener descriptor) {
+        Set<EnvironmentProperty> configProps = descriptor.getRequiredConfigProperties();
+        for (EnvironmentProperty cfg : configProps) {
+            Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
+            writeLocalizedDescriptions(configNode, cfg);
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());
+        }
+        return parent;
     }
 
 
-    /**
-     * @return the descriptor instance to associate with this XMLNode
-     */
     @Override
     public EnvironmentProperty getDescriptor() {
         if (config == null) {
@@ -63,20 +57,10 @@ public class RequiredConfigNode extends DeploymentDescriptorNode<EnvironmentProp
     }
 
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param descriptor the descriptor to write
-     * @return the DOM tree top node
-     */
-    public static Node write(Node parent, MessageListener descriptor) {
-        Set<EnvironmentProperty> configProps = descriptor.getRequiredConfigProperties();
-        for (EnvironmentProperty cfg : configProps) {
-            Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
-            writeLocalizedDescriptions(configNode, cfg);
-            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());
-        }
-        return parent;
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(ConnectorTagNames.CONFIG_PROPERTY_NAME, "setName");
+        return table;
     }
 }

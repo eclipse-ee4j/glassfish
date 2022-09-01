@@ -686,6 +686,27 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      *
      * @param parent for the new child element
      * @param elementName is the new element tag name
+     * @param content object to be printed via {@link String#toString()} to the text content of
+     *            the new element
+     * @return the newly create child node
+     */
+    public static Node appendTextChild(Node parent, String elementName, Object content) {
+        if (content == null) {
+            return null;
+        }
+        Node child = appendChild(parent, elementName);
+        child.appendChild(getOwnerDocument(child).createTextNode(content.toString()));
+        return child;
+    }
+
+
+    /**
+     * <p>
+     * Append a new text child
+     * </p>
+     *
+     * @param parent for the new child element
+     * @param elementName is the new element tag name
      * @param text the text for the new element
      * @return the newly create child node
      */
@@ -770,7 +791,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
         EnvEntryNode subNode = new EnvEntryNode();
-        for (; envEntries.hasNext();) {
+        while (envEntries.hasNext()) {
             EnvironmentProperty envProp = (EnvironmentProperty) envEntries.next();
             subNode.writeDescriptor(parentNode, TagNames.ENVIRONMENT_PROPERTY, envProp);
         }
@@ -831,7 +852,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
         ResourceRefNode subNode = new ResourceRefNode();
-        for (; resRefs.hasNext();) {
+        while (resRefs.hasNext()) {
             ResourceReferenceDescriptor aResRef = (ResourceReferenceDescriptor) resRefs.next();
             subNode.writeDescriptor(parentNode, TagNames.RESOURCE_REFERENCE, aResRef);
         }
@@ -843,13 +864,13 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      * @param parentNode parent node for the DOM tree
      * @param resRefs the iterator over the descriptors to write
      */
-    protected  void writeResourceEnvRefDescriptors(Node parentNode, Iterator resRefs) {
+    protected  void writeResourceEnvRefDescriptors(Node parentNode, Iterator<ResourceEnvReferenceDescriptor> resRefs) {
         if (resRefs == null || !resRefs.hasNext()) {
             return;
         }
         ResourceEnvRefNode subNode = new ResourceEnvRefNode();
-        for (; resRefs.hasNext();) {
-            ResourceEnvReferenceDescriptor aResRef = (ResourceEnvReferenceDescriptor) resRefs.next();
+        while (resRefs.hasNext()) {
+            ResourceEnvReferenceDescriptor aResRef = resRefs.next();
             subNode.writeDescriptor(parentNode, TagNames.RESOURCE_ENV_REFERENCE, aResRef);
         }
     }
@@ -866,7 +887,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
         MessageDestinationRefNode subNode = new MessageDestinationRefNode();
-        for (; msgDestRefs.hasNext();) {
+        while (msgDestRefs.hasNext()) {
             MessageDestinationReferenceDescriptor next = (MessageDestinationReferenceDescriptor) msgDestRefs.next();
             subNode.writeDescriptor(parentNode, TagNames.MESSAGE_DESTINATION_REFERENCE, next);
         }
@@ -883,7 +904,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
         EntityManagerReferenceNode subNode = new EntityManagerReferenceNode();
-        for (;entityMgrRefs.hasNext();) {
+        while (entityMgrRefs.hasNext()) {
             EntityManagerReferenceDescriptor aEntityMgrRef = (EntityManagerReferenceDescriptor)entityMgrRefs.next();
             subNode.writeDescriptor(parentNode, TagNames.PERSISTENCE_CONTEXT_REF, aEntityMgrRef);
         }
@@ -902,7 +923,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             return;
         }
         EntityManagerFactoryReferenceNode subNode = new EntityManagerFactoryReferenceNode();
-        for (; entityMgrFactoryRefs.hasNext();) {
+        while (entityMgrFactoryRefs.hasNext()) {
             EntityManagerFactoryReferenceDescriptor aEntityMgrFactoryRef = entityMgrFactoryRefs.next();
             subNode.writeDescriptor(parentNode, TagNames.PERSISTENCE_UNIT_REF, aEntityMgrFactoryRef);
         }
@@ -944,7 +965,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
         JMSConnectionFactoryDefinitionNode jmsConnectionFactoryDefinitionNode = new JMSConnectionFactoryDefinitionNode();
         JMSDestinationDefinitionNode jmsDestinationDefinitionNode = new JMSDestinationDefinitionNode();
 
-        for (; descriptorIterator.hasNext();) {
+        while (descriptorIterator.hasNext()) {
             ResourceDescriptor descriptor = descriptorIterator.next();
 
             if (descriptor.getResourceType().equals(JavaEEResourceType.DSD)) {

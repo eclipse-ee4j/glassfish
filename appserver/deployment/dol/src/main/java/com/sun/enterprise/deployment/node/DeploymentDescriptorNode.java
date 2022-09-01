@@ -972,7 +972,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
     /**
      * writes iocalized descriptions (if any) to the DOM node
      */
-    protected void writeLocalizedDescriptions(Node node, Descriptor desc) {
+    protected static void writeLocalizedDescriptions(Node node, Descriptor desc) {
         LocalizedInfoNode localizedNode = new LocalizedInfoNode();
         localizedNode.writeLocalizedMap(node, TagNames.DESCRIPTION, desc.getLocalizedDescriptions());
     }

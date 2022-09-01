@@ -110,9 +110,7 @@ public final class RANode extends DeploymentDescriptorNode {
 
         appendTextChild(raNode, ConnectorTagNames.RESOURCE_ADAPTER_CLASS, conDesc.getResourceAdapterClass());
 
-        // config-property
-        ConfigPropertyNode config = new ConfigPropertyNode();
-        raNode = config.writeDescriptor(raNode, conDesc);
+        ConfigPropertyNode.write(raNode, connDescriptor);
 
         if (conDesc.getOutBoundDefined() == true) {
             // outbound RA info

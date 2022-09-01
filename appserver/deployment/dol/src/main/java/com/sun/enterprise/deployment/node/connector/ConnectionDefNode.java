@@ -154,8 +154,7 @@ public class ConnectionDefNode extends DeploymentDescriptorNode {
             appendTextChild(conNode, ConnectorTagNames.MANAGED_CONNECTION_FACTORY,
                 con.getManagedConnectionFactoryImpl());
 
-            ConfigPropertyNode config = new ConfigPropertyNode();
-            conNode = config.writeDescriptor(conNode, con);
+            ConfigPropertyNode.write(conNode, con);
 
             appendTextChild(conNode, ConnectorTagNames.CONNECTION_FACTORY_INTF, con.getConnectionFactoryIntf());
             appendTextChild(conNode, ConnectorTagNames.CONNECTION_FACTORY_IMPL, con.getConnectionFactoryImpl());

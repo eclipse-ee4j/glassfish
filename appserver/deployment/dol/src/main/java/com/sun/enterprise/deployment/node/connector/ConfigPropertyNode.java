@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,17 +27,15 @@ import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
 
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
-import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling the Connector DTD related config-property XML tag
  *
- * @author  Sheetal Vartak
- * @version
+ * @author Sheetal Vartak
  */
 public class ConfigPropertyNode extends DeploymentDescriptorNode<ConnectorConfigProperty> {
 
@@ -67,44 +66,34 @@ public class ConfigPropertyNode extends DeploymentDescriptorNode<ConnectorConfig
     @Override
     public ConnectorConfigProperty getDescriptor() {
         if (config == null) {
-            config = (ConnectorConfigProperty) DescriptorFactory.getDescriptor(getXMLPath());
+            config = DescriptorFactory.getDescriptor(getXMLPath());
         }
         return config;
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, Descriptor descriptor) {
-        if (!(descriptor instanceof ConnectorDescriptor)
-            && !(descriptor instanceof AdminObject)
-            && !(descriptor instanceof ConnectionDefDescriptor)
-            && !(descriptor instanceof OutboundResourceAdapter)
-            && !(descriptor instanceof MessageListener)) {
-            throw new IllegalArgumentException(
-                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
-        }
-        final Iterator<ConnectorConfigProperty> configProps;
-        if (descriptor instanceof ConnectorDescriptor) {
-            configProps = ((ConnectorDescriptor) descriptor).getConfigProperties().iterator();
-        } else if (descriptor instanceof ConnectionDefDescriptor) {
-            configProps = ((ConnectionDefDescriptor) descriptor).getConfigProperties().iterator();
-        } else if (descriptor instanceof AdminObject) {
-            configProps = ((AdminObject) descriptor).getConfigProperties().iterator();
-        } else if (descriptor instanceof OutboundResourceAdapter) {
-            configProps = ((OutboundResourceAdapter) descriptor).getConfigProperties().iterator();
-        } else if (descriptor instanceof MessageListener) {
-            configProps = ((MessageListener) descriptor).getConfigProperties().iterator();
-        } else {
-            return parent;
-        }
-        // config property info
-        while (configProps.hasNext()) {
-            ConnectorConfigProperty cfg = configProps.next();
+
+    public static Node write(Node parent, AdminObject descriptor) {
+        return write(parent, descriptor.getConfigProperties());
+    }
+
+
+    public static Node write(Node parent, ConnectionDefDescriptor descriptor) {
+        return write(parent, descriptor.getConfigProperties());
+    }
+
+
+    public static Node write(Node parent, ConnectorDescriptor descriptor) {
+        return write(parent, descriptor.getConfigProperties());
+    }
+
+
+    public static Node write(Node parent, MessageListener descriptor) {
+        return write(parent, descriptor.getConfigProperties());
+    }
+
+
+    private static Node write(Node parent, final Set<ConnectorConfigProperty> configProps) {
+        for (ConnectorConfigProperty cfg : configProps) {
             Node configNode = appendChild(parent, ConnectorTagNames.CONFIG_PROPERTY);
             writeLocalizedDescriptions(configNode, cfg);
             appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());

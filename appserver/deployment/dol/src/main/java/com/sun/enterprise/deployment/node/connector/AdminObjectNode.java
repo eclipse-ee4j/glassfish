@@ -108,8 +108,7 @@ public class AdminObjectNode extends DeploymentDescriptorNode<AdminObject> {
             appendTextChild(adminObjectNode, ConnectorTagNames.ADMIN_OBJECT_INTERFACE, adminObject.getAdminObjectInterface());
             appendTextChild(adminObjectNode, ConnectorTagNames.ADMIN_OBJECT_CLASS, adminObject.getAdminObjectClass());
 
-            ConfigPropertyNode config = new ConfigPropertyNode();
-            adminObjectNode = config.writeDescriptor(adminObjectNode, adminObject);
+            ConfigPropertyNode.write(adminObjectNode, element);
         }
 
         return parent;

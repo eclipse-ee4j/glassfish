@@ -86,11 +86,7 @@ public class ActivationSpecNode extends DeploymentDescriptorNode<MessageListener
     public Node writeDescriptor(Node parent, MessageListener msgListener) {
         Node actSpecNode = appendChild(parent, ConnectorTagNames.ACTIVATION_SPEC);
         appendTextChild(actSpecNode, ConnectorTagNames.ACTIVATION_SPEC_CLASS, msgListener.getActivationSpecClass());
-
-        // required-config-property
-        RequiredConfigNode reqNode = new RequiredConfigNode();
-        actSpecNode = reqNode.writeDescriptor(actSpecNode, msgListener);
-
+        RequiredConfigNode.write(actSpecNode, msgListener);
         ConfigPropertyNode.write(actSpecNode, msgListener);
         return parent;
     }

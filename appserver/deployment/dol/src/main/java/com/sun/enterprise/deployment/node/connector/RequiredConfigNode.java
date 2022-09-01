@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,21 @@
 
 package com.sun.enterprise.deployment.node.connector;
 
-import org.glassfish.deployment.common.Descriptor;
-import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.DescriptorFactory;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-import org.w3c.dom.Node;
 
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling the Connector DTD related required-config-property XML tag
  *
- * @author  Sheetal Vartak
- * @version
+ * @author Sheetal Vartak
  */
 public class RequiredConfigNode extends DeploymentDescriptorNode<EnvironmentProperty> {
 
@@ -70,22 +70,12 @@ public class RequiredConfigNode extends DeploymentDescriptorNode<EnvironmentProp
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, Descriptor descriptor) {
-        if (!(descriptor instanceof MessageListener)) {
-            throw new IllegalArgumentException(
-                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
-        }
-        Iterator<EnvironmentProperty> configProps = ((MessageListener) descriptor).getRequiredConfigProperties()
-            .iterator();
-
-        // config property info
-        if (configProps != null) {
-            while (configProps.hasNext()) {
-                EnvironmentProperty cfg = configProps.next();
-                Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
-                writeLocalizedDescriptions(configNode, cfg);
-                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());
-            }
+    public static Node write(Node parent, MessageListener descriptor) {
+        Set<EnvironmentProperty> configProps = descriptor.getRequiredConfigProperties();
+        for (EnvironmentProperty cfg : configProps) {
+            Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
+            writeLocalizedDescriptions(configNode, cfg);
+            appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, cfg.getName());
         }
         return parent;
     }

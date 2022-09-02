@@ -1667,6 +1667,7 @@
             <groupId>org.glassfish.main</groupId>
             <artifactId>glassfish-jul-extension</artifactId>
             <version>${project.version}</version>
+            <type>glassfish-jar</type>
             <optional>true</optional>
         </dependency>
     </dependencies>
@@ -1705,7 +1706,7 @@
                             <excludeTransitive>true</excludeTransitive>
                             <includeScope>compile</includeScope>
                             <includeScope>runtime</includeScope>
-                            <includeTypes>jar</includeTypes>
+                            <includeTypes>jar,glassfish-jar</includeTypes>
                             <includes>**/*.class</includes>
                         </configuration>
                     </execution>

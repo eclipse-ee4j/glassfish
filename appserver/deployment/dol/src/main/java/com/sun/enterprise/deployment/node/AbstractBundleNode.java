@@ -43,8 +43,8 @@ import org.w3c.dom.Node;
 public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
         extends DisplayableComponentNode<T> implements BundleNode, RootXMLNode<T> {
 
-    public static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-    public static final String W3C_XML_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
+    private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+    protected static final String W3C_XML_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
     protected static final String SCHEMA_LOCATION_TAG = "xsi:schemaLocation";
 
     private String docType;
@@ -132,7 +132,6 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * corresponding to this bundle node type.
      *
      * @param descriptor descriptor data structure for the current node
-     * @return
      */
     protected String topLevelTagValue(T descriptor) {
         return descriptor.getModuleDescriptor().getModuleName();

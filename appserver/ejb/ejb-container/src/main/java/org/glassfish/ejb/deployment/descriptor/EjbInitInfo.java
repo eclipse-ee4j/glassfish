@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.io.Serializable;
-
 import com.sun.enterprise.deployment.MethodDescriptor;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Contains information about a stateful session bean init method.
  */
+public class EjbInitInfo extends Descriptor {
 
-public class EjbInitInfo implements Serializable
-{
+    private static final long serialVersionUID = 1L;
     private MethodDescriptor beanMethod;
     private MethodDescriptor createMethod;
 
@@ -33,24 +34,27 @@ public class EjbInitInfo implements Serializable
         return beanMethod;
     }
 
+
     public void setBeanMethod(MethodDescriptor method) {
         beanMethod = method;
     }
+
 
     public MethodDescriptor getCreateMethod() {
         return createMethod;
     }
 
+
     public void setCreateMethod(MethodDescriptor method) {
         createMethod = method;
     }
 
+
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("bean method = " + beanMethod + "\t");
-        sb.append("create method = " + createMethod + "\t");
+        StringBuilder sb = new StringBuilder();
+        sb.append("bean method = ").append(beanMethod).append('\t');
+        sb.append("create method = ").append(createMethod);
         return sb.toString();
     }
 }
-

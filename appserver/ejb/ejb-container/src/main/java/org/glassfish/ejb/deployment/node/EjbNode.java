@@ -184,9 +184,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity() == null) {
             return;
         }
-
-        SecurityIdentityNode node = new SecurityIdentityNode();
-        node.writeDescriptor(parent, SECURITY_IDENTITY, descriptor);
+        SecurityIdentityNode.writeSecureIdentity(parent, SECURITY_IDENTITY, descriptor);
     }
 
     /**

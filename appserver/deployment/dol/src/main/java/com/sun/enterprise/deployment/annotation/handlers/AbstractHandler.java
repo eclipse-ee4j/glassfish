@@ -106,10 +106,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
             log(Level.FINE, ainfo, I18N.getLocalString("enterprise.deployment.annotation.handlers.invalidaehandler",
                 "Invalid annotation symbol found for this type of class."));
         }
-        if (logger.isLoggable(Level.FINER)) {
-            logger.finer("Invalid AnnotatedElementHandler: " + aeHandler);
-        }
-
+        logger.log(Level.FINER, "Invalid AnnotatedElementHandler: {0}", aeHandler);
         return getDefaultProcessedResult();
     }
 

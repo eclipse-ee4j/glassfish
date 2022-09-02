@@ -146,8 +146,9 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
     }
 
 
-    // validate methods that are annotated with @PostConstruct and @PreDestroy
-    // to conform the spec
+    /**
+     * Validate methods that are annotated with @PostConstruct and @PreDestroy to conform the spec
+     */
     protected void validateAnnotatedLifecycleMethod(Method method) {
         Class<?>[] parameterTypes = method.getParameterTypes();
         if (parameterTypes.length > 1) {

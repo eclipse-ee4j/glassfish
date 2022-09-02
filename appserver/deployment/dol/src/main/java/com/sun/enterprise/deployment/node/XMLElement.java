@@ -22,7 +22,7 @@ import org.xml.sax.helpers.NamespaceSupport;
 /**
  * This class represents a XML element in an XML file
  *
- * @author  Jerome Dochez
+ * @author Jerome Dochez
  */
 public class XMLElement extends java.lang.Object {
 

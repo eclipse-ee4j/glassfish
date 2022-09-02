@@ -26,9 +26,14 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.QueryDescriptor;
 import org.w3c.dom.Node;
+
+import static org.glassfish.ejb.deployment.EjbTagNames.EJB_QL;
+import static org.glassfish.ejb.deployment.EjbTagNames.QUERY_LOCAL_TYPE_MAPPING;
+import static org.glassfish.ejb.deployment.EjbTagNames.QUERY_METHOD;
+import static org.glassfish.ejb.deployment.EjbTagNames.QUERY_REMOTE_TYPE_MAPPING;
+import static org.glassfish.ejb.deployment.EjbTagNames.QUERY_RESULT_TYPE_MAPPING;
 
 /**
  * This class is responsible for handling the query element
@@ -40,7 +45,7 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
     private QueryDescriptor descriptor;
 
     public QueryNode() {
-        registerElementHandler(new XMLElement(EjbTagNames.QUERY_METHOD), MethodNode.class, "setQueryMethodDescriptor");
+        registerElementHandler(new XMLElement(QUERY_METHOD), MethodNode.class, "setQueryMethodDescriptor");
     }
 
 
@@ -52,20 +57,22 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
         return descriptor;
     }
 
+
     @Override
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
-        table.put(EjbTagNames.EJB_QL, "setQuery");
+        table.put(EJB_QL, "setQuery");
         return table;
     }
 
+
     @Override
     public void setElementValue(XMLElement element, String value) {
-        if (EjbTagNames.QUERY_RESULT_TYPE_MAPPING.equals(element.getQName())) {
-            if (EjbTagNames.QUERY_REMOTE_TYPE_MAPPING.equals(value)) {
+        if (QUERY_RESULT_TYPE_MAPPING.equals(element.getQName())) {
+            if (QUERY_REMOTE_TYPE_MAPPING.equals(value)) {
                 descriptor.setHasRemoteReturnTypeMapping();
-            } else if (EjbTagNames.QUERY_LOCAL_TYPE_MAPPING.equals(value)) {
+            } else if (QUERY_LOCAL_TYPE_MAPPING.equals(value)) {
                 descriptor.setHasLocalReturnTypeMapping();
             } else {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
@@ -76,6 +83,7 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
         }
     }
 
+
     @Override
     public Node writeDescriptor(Node parent, String nodeName, QueryDescriptor descriptor) {
         Node queryNode = super.writeDescriptor(parent, nodeName, descriptor);
@@ -84,18 +92,17 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
 
         // query-method
         MethodNode methodNode = new MethodNode();
-        methodNode.writeQueryMethodDescriptor(queryNode, EjbTagNames.QUERY_METHOD,
-                                                                         descriptor.getQueryMethodDescriptor());
+        methodNode.writeQueryMethodDescriptor(queryNode, QUERY_METHOD, descriptor.getQueryMethodDescriptor());
 
         if (descriptor.getHasRemoteReturnTypeMapping()) {
-            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING, EjbTagNames.QUERY_REMOTE_TYPE_MAPPING);
+            appendTextChild(queryNode, QUERY_RESULT_TYPE_MAPPING, QUERY_REMOTE_TYPE_MAPPING);
         } else if (descriptor.getHasLocalReturnTypeMapping()) {
-            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING, EjbTagNames.QUERY_LOCAL_TYPE_MAPPING);
+            appendTextChild(queryNode, QUERY_RESULT_TYPE_MAPPING, QUERY_LOCAL_TYPE_MAPPING);
         }
         // ejbql element is mandatory. If no EJB QL query has been
         // specified for the method, the xml element will be empty
         String ejbqlText = descriptor.getIsEjbQl() ? descriptor.getQuery() : "";
-        Node child = appendChild(queryNode, EjbTagNames.EJB_QL);
+        Node child = appendChild(queryNode, EJB_QL);
         child.appendChild(getOwnerDocument(child).createTextNode(ejbqlText));
 
         return queryNode;

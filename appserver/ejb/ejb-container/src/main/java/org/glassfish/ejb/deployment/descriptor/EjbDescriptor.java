@@ -67,6 +67,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -203,7 +204,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbDescriptor.class);
 
-    static Logger _logger = DOLUtils.getDefaultLogger();
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
 
     // Ludo 12/10/2001 extra DTD info only for iAS
     private final IASEjbExtraDescriptors iASEjbExtraDescriptors = new IASEjbExtraDescriptors();
@@ -1180,17 +1181,17 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
      */
     public void setContainerTransactionFor(MethodDescriptor methodDescriptor, ContainerTransaction containerTransaction) {
         ContainerTransaction oldValue = this.getContainerTransactionFor(methodDescriptor);
-        if (oldValue == null || (!(oldValue.equals(containerTransaction)))) {
-            String transactionType = this.getTransactionType();
-            if (transactionType == null) {
+        if (oldValue == null || !oldValue.equals(containerTransaction)) {
+            String txType = this.getTransactionType();
+            if (txType == null) {
                 setTransactionType(CONTAINER_TRANSACTION_TYPE);
-            } else if (BEAN_TRANSACTION_TYPE.equals(transactionType)) {
+            } else if (BEAN_TRANSACTION_TYPE.equals(txType)) {
                 throw new IllegalArgumentException(
                         localStrings.getLocalString("enterprise.deployment.exceptiontxattrbtnotspecifiedinbeanwithtxtype",
                                 "Method level transaction attributes may not be specified on a bean with transaction type {0}",
                                 new Object[] { com.sun.enterprise.deployment.EjbDescriptor.BEAN_TRANSACTION_TYPE }));
             }
-            // _logger.log(Level.FINE,"put " + methodDescriptor + " " + containerTransaction);
+            // LOG.log(Level.FINE,"put " + methodDescriptor + " " + containerTransaction);
             getMethodContainerTransactions().put(methodDescriptor, containerTransaction);
         }
     }
@@ -1258,12 +1259,12 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     private void convertMethodContainerTransactions() {
         // container transactions first
         // Hashtable transactions = this.getMethodContainerTransactions();
-        // _logger.log(Level.FINE,"Pre conversion = " + transactions);
+        // LOG.log(Level.FINE,"Pre conversion = " + transactions);
         Hashtable<MethodDescriptor, ContainerTransaction> convertedTransactions = new Hashtable<>();
         convertMethodContainerTransactionsOfStyle(1, convertedTransactions);
         convertMethodContainerTransactionsOfStyle(2, convertedTransactions);
         convertMethodContainerTransactionsOfStyle(3, convertedTransactions);
-        // _logger.log(Level.FINE,"Post conversion = " + convertedTransactions);
+        // LOG.log(Level.FINE,"Post conversion = " + convertedTransactions);
         this.methodContainerTransactions = convertedTransactions;
     }
 
@@ -1347,6 +1348,8 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
      */
     @Override
     public void addPermissionedMethod(MethodPermission mp, MethodDescriptor md) {
+        LOG.log(Level.FINEST, "addPermissionedMethod {0}: {1}", new Object[] {mp, md});
+
         if (getEjbBundleDescriptor() == null) {
             throw new IllegalArgumentException(
                 localStrings.getLocalString("enterprise.deployment.exceptioncannotaddrolesdescriptor",
@@ -1385,7 +1388,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         // Use Array List as opposed to HashMap or Table because MethodDescriptor
         // Equality once did not take into account differences in
         // method interface, and will process sequentially.
-
+        LOG.log(Level.FINEST, "saveMethodPermissionFromDD {0}: {1}", new Object[] {methodPermission, methodDescriptor});
         methodPermissionsFromDD.computeIfAbsent(methodPermission, e -> new ArrayList<>()).add(methodDescriptor);
     }
 
@@ -1485,22 +1488,24 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     /**
      * @return a Set of method descriptors for all the methods associated with an unchecked method permission
      */
-    public Set<MethodDescriptor> getUncheckedMethodDescriptors() {
+    public Set<MethodDescriptor> getPermitAllMethodDescriptors() {
         if (needToConvertMethodPermissions()) {
             convertMethodPermissions();
         }
         Map<MethodPermission, Set<MethodDescriptor>> all = getPermissionedMethodsByPermission();
+        LOG.log(Level.INFO, "getPermitAllMethodDescriptors, all: \n{0}", all);
         return all.get(MethodPermission.getPermitAllMethodPermission());
     }
 
     /**
      * @return a Set of method descriptors for all the methoda assoicated with an excluded method permission
      */
-    public Set<MethodDescriptor> getExcludedMethodDescriptors() {
+    public Set<MethodDescriptor> getDenyAllMethodPermission() {
         if (needToConvertMethodPermissions()) {
             convertMethodPermissions();
         }
         Map<MethodPermission, Set<MethodDescriptor>> all = getPermissionedMethodsByPermission();
+        LOG.log(Level.INFO, "getDenyAllMethodPermission, all: \n{0}", all);
         return all.get(MethodPermission.getDenyAllMethodPermission());
     }
 
@@ -1625,7 +1630,6 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
         if (needToConvertMethodPermissions()) {
             convertMethodPermissions();
         }
-
         return getMethodPermissions(methodDescriptor);
     }
 
@@ -1694,16 +1698,12 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     @Override
     public final void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc) {
         String className = postConstructDesc.getLifecycleCallbackClass();
-        boolean found = false;
-        for (LifecycleCallbackDescriptor next : getPostConstructDescriptors()) {
+        for (LifecycleCallbackDescriptor next : postConstructDescs) {
             if (next.getLifecycleCallbackClass().equals(className)) {
-                found = true;
-                break;
+                return;
             }
         }
-        if (!found) {
-            getPostConstructDescriptors().add(postConstructDesc);
-        }
+        postConstructDescs.add(postConstructDesc);
     }
 
     @Override
@@ -1719,16 +1719,12 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     @Override
     public final void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc) {
         String className = preDestroyDesc.getLifecycleCallbackClass();
-        boolean found = false;
-        for (LifecycleCallbackDescriptor next : getPreDestroyDescriptors()) {
+        for (LifecycleCallbackDescriptor next : preDestroyDescs) {
             if (next.getLifecycleCallbackClass().equals(className)) {
-                found = true;
-                break;
+                return;
             }
         }
-        if (!found) {
-            getPreDestroyDescriptors().add(preDestroyDesc);
-        }
+        preDestroyDescs.add(preDestroyDesc);
     }
 
     @Override
@@ -1751,7 +1747,6 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
             for (InjectionTarget next : serviceRef.getInjectionTargets()) {
                 existing.addInjectionTarget(next);
             }
-
         } catch (IllegalArgumentException e) {
             if (env != null) {
                 env.addServiceReferenceDescriptor(serviceRef);
@@ -2223,7 +2218,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     void removeRole(Role role) {
-        this.getPermissionedMethodsByPermission().remove(new MethodPermission(role));
+        getPermissionedMethodsByPermission().remove(new MethodPermission(role));
         Set<RoleReference> refs = new HashSet<>(this.getRoleReferences());
         for (RoleReference roleReference : refs) {
             if (roleReference.getRole().equals(role)) {
@@ -2245,7 +2240,6 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     /**
      * Adds a role reference.
      */
-
     @Override
     public void addRoleReference(RoleReference roleReference) {
         this.getRoleReferences().add(roleReference);
@@ -2330,10 +2324,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                 addAllInterfaceMethodsIn(methods, classLoader.loadClass(getLocalHomeClassName()), MethodDescriptor.EJB_LOCALHOME);
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
-                    new Object[] { "(EjbDescriptor.getMethods())" });
-
-            throw new RuntimeException(t);
+            throw new RuntimeException(getEjbClassName(), t);
         }
         return methods;
     }
@@ -2403,10 +2394,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                 addAllInterfaceMethodsIn(methods, classLoader.loadClass(getEjbClassName()), MethodDescriptor.EJB_LOCAL);
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
-                    new Object[] { "(EjbDescriptor.getBusinessMethodDescriptors())" });
-
-            throw new RuntimeException(t);
+            throw new RuntimeException(getEjbClassName(), t);
         }
 
         return methods;
@@ -2425,10 +2413,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                         MethodDescriptor.EJB_WEB_SERVICE);
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
-                    new Object[] { "(EjbDescriptor.getBusinessMethodDescriptors())" });
-
-            throw new RuntimeException(t);
+            throw new RuntimeException(getEjbClassName(), t);
         }
 
         return methods;
@@ -2476,9 +2461,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
             BeanMethodCalculatorImpl bmc = new BeanMethodCalculatorImpl();
             return bmc.getTransactionalMethodsFor(this, classLoader);
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
-                    new Object[] { "(EjbDescriptor.getMethods())" });
-            throw new RuntimeException(t);
+            throw new RuntimeException(getEjbClassName(), t);
         }
     }
 
@@ -2496,9 +2479,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
                 }
             }
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
-                    new Object[] { "(EjbDescriptor.getMethods())" });
-            throw new RuntimeException(t);
+            throw new RuntimeException(getEjbClassName(), t);
         }
 
         return methods;
@@ -2509,7 +2490,6 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     /**
      * @return the set of method objects on my home and remote interfaces.
      */
-
     public Vector<Method> getMethods() {
         return getMethods(getEjbBundleDescriptor().getClassLoader());
     }
@@ -2522,9 +2502,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
             BeanMethodCalculatorImpl bmc = new BeanMethodCalculatorImpl();
             return bmc.getMethodsFor(this, classLoader);
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure",
-                    new Object[] { "(EjbDescriptor.getMethods())" });
-            throw new RuntimeException(t);
+            throw new RuntimeException(getEjbClassName(), t);
         }
     }
 
@@ -2538,7 +2516,9 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
             ClassLoader cl = getEjbBundleDescriptor().getClassLoader();
             ejb = cl.loadClass(this.getEjbClassName());
         } catch (Throwable t) {
-            _logger.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] { this.getEjbClassName() });
+            LogRecord log = new LogRecord(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure");
+            log.setParameters(new Object[] { this.getEjbClassName() });
+            LOG.log(log);
             return fieldsVector;
         }
         Field[] fields = ejb.getFields();

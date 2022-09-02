@@ -49,8 +49,8 @@ public class ModuleNode extends DeploymentDescriptorNode<ModuleDescriptor<?>> {
 
     @Override
     public void setElementValue(XMLElement element, String value) {
-        ModuleDescriptor descriptor = (ModuleDescriptor) getDescriptor();
-         if (element.getQName().equals(ApplicationTagNames.WEB_URI)) {
+        ModuleDescriptor<?> descriptor = getDescriptor();
+        if (element.getQName().equals(ApplicationTagNames.WEB_URI)) {
             descriptor.setModuleType(DOLUtils.warType());
             descriptor.setArchiveUri(value);
         } else if (element.getQName().equals(ApplicationTagNames.EJB)) {

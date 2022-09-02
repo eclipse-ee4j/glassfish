@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,63 +17,82 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
-
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.MethodNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Vector;
+
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.ContainerTransaction;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.w3c.dom.Node;
+
 /**
  * This node is responsible for handling the container-transaction XML node
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class ContainerTransactionNode extends DeploymentDescriptorNode {
+public class ContainerTransactionNode extends DeploymentDescriptorNode<ContainerTransaction> {
 
     private String trans_attribute;
     private String description;
-    private Vector methods = new Vector();
+    private final Vector<MethodDescriptor> methods = new Vector<>();
+
+    public static Node writeContainerTransactions(Node parent, String nodeName, String methodName,
+        Map<MethodDescriptor, ContainerTransaction> methodToTransactions) {
+        MethodNode mn = new MethodNode();
+        for (Entry<MethodDescriptor, ContainerTransaction> entry : methodToTransactions.entrySet()) {
+            MethodDescriptor md = entry.getKey();
+            Node ctNode = appendChild(parent, nodeName);
+            ContainerTransaction ct = entry.getValue();
+            appendTextChild(ctNode, TagNames.DESCRIPTION, ct.getDescription());
+            mn.writeDescriptor(ctNode, EjbTagNames.METHOD, md, methodName);
+            appendTextChild(ctNode, EjbTagNames.TRANSACTION_ATTRIBUTE, ct.getTransactionAttribute());
+        }
+        return null;
+    }
+
 
     public ContainerTransactionNode() {
-       registerElementHandler(new XMLElement(EjbTagNames.METHOD), MethodNode.class);
+        registerElementHandler(new XMLElement(EjbTagNames.METHOD), MethodNode.class);
     }
+
 
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof MethodDescriptor) {
-            methods.add(newDescriptor);
+            methods.add((MethodDescriptor) newDescriptor);
         }
     }
 
+
     @Override
-    public Object getDescriptor() {
-        return null;
+    public ContainerTransaction getDescriptor() {
+        return new ContainerTransaction(trans_attribute, description);
     }
+
 
     @Override
     public boolean endElement(XMLElement element) {
         boolean doneWithNode = super.endElement(element);
 
         if (doneWithNode) {
-            ContainerTransaction ct =  new ContainerTransaction(trans_attribute, description);
-            for (Iterator methodsIterator = methods.iterator();methodsIterator.hasNext();) {
-                MethodDescriptor md = (MethodDescriptor) methodsIterator.next();
+            ContainerTransaction ct = new ContainerTransaction(trans_attribute, description);
+            for (MethodDescriptor method : methods) {
                 EjbBundleDescriptorImpl bundle = (EjbBundleDescriptorImpl) getParentNode().getDescriptor();
-                EjbDescriptor ejb = bundle.getEjbByName(md.getEjbName(), true);
-                ejb.getMethodContainerTransactions().put(md, ct);
+                EjbDescriptor ejb = bundle.getEjbByName(method.getEjbName(), true);
+                ejb.getMethodContainerTransactions().put(method, ct);
             }
         }
         return doneWithNode;
     }
+
 
     @Override
     public void setElementValue(XMLElement element, String value) {
@@ -82,29 +102,5 @@ public class ContainerTransactionNode extends DeploymentDescriptorNode {
         if (EjbTagNames.TRANSACTION_ATTRIBUTE.equals(element.getQName())) {
             trans_attribute = value;
         }
-    }
-
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node in the DOM tree
-     * @param nodeName name for the root element of this xml fragment
-     * @param ejb the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, String nodeName, EjbDescriptor ejb) {
-
-        Map methodToTransactions = ejb.getMethodContainerTransactions();
-        MethodNode mn = new MethodNode();
-        for (Object o : methodToTransactions.entrySet()) {
-            Map.Entry entry = (Map.Entry) o;
-            MethodDescriptor md = (MethodDescriptor) entry.getKey();
-            Node ctNode = super.writeDescriptor(parent, nodeName, ejb);
-            ContainerTransaction ct = (ContainerTransaction) entry.getValue();
-            appendTextChild(ctNode, EjbTagNames.DESCRIPTION, ct.getDescription());
-            mn.writeDescriptor(ctNode, EjbTagNames.METHOD, md, ejb.getName());
-            appendTextChild(ctNode, EjbTagNames.TRANSACTION_ATTRIBUTE, ct.getTransactionAttribute());
-        }
-        return null;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.ejb.deployment.descriptor;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -25,7 +27,8 @@ import org.glassfish.deployment.common.Descriptor;
  * @author Danny Coward
  */
 public final class ContainerTransaction extends Descriptor {
-    private String transactionAttribute;
+    private static final long serialVersionUID = 1L;
+
     /** Transactions are not supported. */
     public static final String NOT_SUPPORTED = "NotSupported";
     /** Transactions need support. */
@@ -39,6 +42,8 @@ public final class ContainerTransaction extends Descriptor {
     /** Never supply a transaction. */
     public static final String NEVER = "Never";
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ContainerTransaction.class);
+
+    private String transactionAttribute;
 
     /**
      * Copy constructor.
@@ -102,9 +107,7 @@ public final class ContainerTransaction extends Descriptor {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result = 37 * result + getTransactionAttribute().hashCode();
-        return result;
+        return getTransactionAttribute().hashCode();
     }
 
     /**

@@ -58,28 +58,29 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
    /**
     * The public ID.
     */
-    public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN";
-    public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN";
+    private static final String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN";
+    private static final String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN";
     /**
      * The system ID.
      */
-    public final static String SYSTEM_ID = "http://java.sun.com/dtd/application_1_3.dtd";
-    public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/application_1_2.dtd";
+    private static final String SYSTEM_ID = "http://java.sun.com/dtd/application_1_3.dtd";
+    private static final String SYSTEM_ID_12 = "http://java.sun.com/dtd/application_1_2.dtd";
 
-    public final static String SCHEMA_ID_14 = "application_1_4.xsd";
+    private static final String SCHEMA_ID_14 = "application_1_4.xsd";
 
-    public final static String SCHEMA_ID_15 = "application_5.xsd";
-    public final static String SCHEMA_ID_16 = "application_6.xsd";
-    public final static String SCHEMA_ID_17 = "application_7.xsd";
-    public final static String SCHEMA_ID_18 = "application_8.xsd";
-    public final static String SCHEMA_ID_19 = "application_9.xsd";
-    public final static String SCHEMA_ID = "application_10.xsd";
-    public final static String SPEC_VERSION = "10";
+    private static final String SCHEMA_ID_15 = "application_5.xsd";
+    private static final String SCHEMA_ID_16 = "application_6.xsd";
+    private static final String SCHEMA_ID_17 = "application_7.xsd";
+    private static final String SCHEMA_ID_18 = "application_8.xsd";
+    private static final String SCHEMA_ID_19 = "application_9.xsd";
+    private static final String SCHEMA_ID = "application_10.xsd";
 
-    private final static List<String> systemIDs = initSystemIDs();
+    public static final String SPEC_VERSION = "10";
+
+    private static final List<String> systemIDs = initSystemIDs();
 
     // The XML tag associated with this Node
-    public final static XMLElement tag = new XMLElement(ApplicationTagNames.APPLICATION);
+    private static final XMLElement tag = new XMLElement(ApplicationTagNames.APPLICATION);
 
     private final static List<String> initSystemIDs() {
         List<String> systemIDs = new ArrayList<>();

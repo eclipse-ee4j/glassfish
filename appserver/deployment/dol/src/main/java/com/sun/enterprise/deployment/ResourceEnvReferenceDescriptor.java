@@ -26,7 +26,6 @@ import java.util.Objects;
  *
  * @author Kenneth Saks
  */
-
 public class ResourceEnvReferenceDescriptor extends EnvironmentProperty
     implements NamedDescriptor, ResourceEnvReference {
 

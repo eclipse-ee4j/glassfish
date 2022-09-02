@@ -49,12 +49,10 @@ public class LifecycleCallbackDescriptor extends Descriptor {
     }
 
     public String getLifecycleCallbackClass() {
-        if (lifecycleCallbackClass == null ||
-            lifecycleCallbackClass.trim().equals("")) {
+        if (lifecycleCallbackClass == null || lifecycleCallbackClass.isBlank()) {
             return defaultLifecycleCallbackClass;
-        } else {
-            return lifecycleCallbackClass;
         }
+        return lifecycleCallbackClass;
     }
 
     public void setDefaultLifecycleCallbackClass(String clazz) {

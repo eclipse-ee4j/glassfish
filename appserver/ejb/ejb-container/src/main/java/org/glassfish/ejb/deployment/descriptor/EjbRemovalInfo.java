@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,46 +17,51 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.io.Serializable;
-
 import com.sun.enterprise.deployment.MethodDescriptor;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Contains information about a stateful session bean remove method.
  */
+public class EjbRemovalInfo extends Descriptor {
 
-public class EjbRemovalInfo implements Serializable
-{
+    private static final long serialVersionUID = 1L;
     private MethodDescriptor removeMethod;
-    private boolean retainIfException = false;
-    private boolean retainIfExceptionSet = false;
+    private boolean retainIfException;
+    private boolean retainIfExceptionSet;
 
     public MethodDescriptor getRemoveMethod() {
         return removeMethod;
     }
 
+
     public void setRemoveMethod(MethodDescriptor method) {
         removeMethod = method;
     }
 
+
     public boolean getRetainIfException() {
         return retainIfException;
     }
+
 
     public void setRetainIfException(boolean flag) {
         retainIfException = flag;
         retainIfExceptionSet = true;
     }
 
+
     public boolean isRetainIfExceptionSet() {
         return retainIfExceptionSet;
     }
 
+
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("remove method = " + removeMethod + "\t");
-        sb.append("retainIfException = " + retainIfException);
+        StringBuilder sb = new StringBuilder();
+        sb.append("remove method = ").append(removeMethod).append("\t");
+        sb.append("retainIfException = ").append(retainIfException);
         return sb.toString();
     }
 }

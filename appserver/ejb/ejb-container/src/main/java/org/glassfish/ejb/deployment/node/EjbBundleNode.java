@@ -62,20 +62,24 @@ import org.w3c.dom.Node;
 @Service
 public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
-    public final static XMLElement tag = new XMLElement(EjbTagNames.EJB_BUNDLE_TAG);
-    public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
-    public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
+    private static final XMLElement tag = new XMLElement(EjbTagNames.EJB_BUNDLE_TAG);
+    private static final String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
+    private static final String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
 
     /** The system ID of an ejb-jar document.*/
-    public final static String SYSTEM_ID = "http://java.sun.com/dtd/ejb-jar_2_0.dtd";
-    public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/ejb-jar_1_1.dtd";
-    public final static String SCHEMA_ID_21 = "ejb-jar_2_1.xsd";
-    public final static String SCHEMA_ID_30 = "ejb-jar_3_0.xsd";
-    public final static String SCHEMA_ID_31 = "ejb-jar_3_1.xsd";
-    public final static String SCHEMA_ID_32 = "ejb-jar_3_2.xsd";
-    public final static String SCHEMA_ID = "ejb-jar_4_0.xsd";
-    public final static String SPEC_VERSION = "4.0";
+    private static final String SYSTEM_ID = "http://java.sun.com/dtd/ejb-jar_2_0.dtd";
+    private static final String SYSTEM_ID_12 = "http://java.sun.com/dtd/ejb-jar_1_1.dtd";
+    private static final String SCHEMA_ID_21 = "ejb-jar_2_1.xsd";
+    private static final String SCHEMA_ID_30 = "ejb-jar_3_0.xsd";
+    private static final String SCHEMA_ID_31 = "ejb-jar_3_1.xsd";
+    private static final String SCHEMA_ID_32 = "ejb-jar_3_2.xsd";
+    private static final String SCHEMA_ID = "ejb-jar_4_0.xsd";
+    public static final String SPEC_VERSION = "4.0";
     private final static List<String> systemIDs = initSystemIDs();
+
+
+    // Descriptor class we are using
+    private EjbBundleDescriptorImpl descriptor;
 
     /**
      * register this node as a root node capable of loading entire DD files
@@ -93,7 +97,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
     @Override
     public Map<String, Class<?>> registerRuntimeBundle(
         final Map<String, String> publicIDToDTD,
-        Map<String, List<Class<?>>> versionUpgrades) {
+        final Map<String, List<Class<?>>> versionUpgrades) {
         final Map<String, Class<?>> result = new HashMap<>();
         result.put(EjbBundleRuntimeNode.registerBundle(publicIDToDTD), EjbBundleRuntimeNode.class);
         result.put(GFEjbBundleRuntimeNode.registerBundle(publicIDToDTD), GFEjbBundleRuntimeNode.class);
@@ -101,7 +105,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
     }
 
     private static List<String> initSystemIDs() {
-        ArrayList<String> systemIDs = new ArrayList<>(3);
+        ArrayList<String> systemIDs = new ArrayList<>(5);
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_32);
         systemIDs.add(SCHEMA_ID_31);
@@ -110,11 +114,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         return Collections.unmodifiableList(systemIDs);
     }
 
-    // Descriptor class we are using
-    private EjbBundleDescriptorImpl descriptor;
-
     public EjbBundleNode() {
-        super();
         // register sub XMLNodes
         registerElementHandler(new XMLElement(EjbTagNames.SESSION), EjbSessionNode.class);
         registerElementHandler(new XMLElement(EjbTagNames.ENTITY), EjbEntityNode.class);
@@ -225,7 +225,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
         // relationships*
         if (ejbDesc.hasRelationships()) {
-            (new RelationshipsNode()).writeDescriptor(jarNode, EjbTagNames.RELATIONSHIPS, ejbDesc);
+            RelationshipsNode.writeRelationships(jarNode, EjbTagNames.RELATIONSHIPS, ejbDesc);
         }
 
         // assembly-descriptor
@@ -235,15 +235,18 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         return jarNode;
     }
 
+
     @Override
     public String getDocType() {
         return null;
     }
 
+
     @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
+
 
     @Override
     public List<String> getSystemIDs() {
@@ -251,8 +254,14 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
     }
 
 
+    @Override
+    public String getSpecVersion() {
+        return SPEC_VERSION;
+    }
+
+
     /**
-     * write assembly-descriptor related xml information to the DOM tree
+     * Write assembly-descriptor related xml information to the DOM tree
      */
     private void writeAssemblyDescriptor(Node parentNode, EjbBundleDescriptorImpl bundleDescriptor) {
         Node assemblyNode = parentNode.getOwnerDocument().createElement(EjbTagNames.ASSEMBLY_DESCRIPTOR);
@@ -281,9 +290,9 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         }
 
         // container-transaction*
-        ContainerTransactionNode ctNode = new ContainerTransactionNode();
         for (EjbDescriptor ejbDesc : bundleDescriptor.getEjbs()) {
-            ctNode.writeDescriptor(assemblyNode, EjbTagNames.CONTAINER_TRANSACTION, ejbDesc);
+            ContainerTransactionNode.writeContainerTransactions(assemblyNode, EjbTagNames.CONTAINER_TRANSACTION,
+                ejbDesc.getName(), ejbDesc.getMethodContainerTransactions());
         }
 
         // interceptor-binding*
@@ -344,10 +353,4 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
             }
         }
     }
-
-    @Override
-    public String getSpecVersion() {
-        return SPEC_VERSION;
-    }
-
 }

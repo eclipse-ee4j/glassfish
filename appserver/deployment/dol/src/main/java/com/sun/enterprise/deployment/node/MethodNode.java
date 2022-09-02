@@ -89,11 +89,11 @@ public class MethodNode extends DeploymentDescriptorNode<MethodDescriptor> {
 
 
     /**
-     * write the method descriptor class to a query-method DOM tree and return it
+     * Write the method descriptor class to a query-method DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName node name for the root element of this xml fragment
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeQueryMethodDescriptor(Node parent, String nodeName, MethodDescriptor descriptor) {

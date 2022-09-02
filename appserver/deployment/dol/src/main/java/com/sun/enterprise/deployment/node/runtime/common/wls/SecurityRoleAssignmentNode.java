@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,21 +23,17 @@ import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.runtime.common.wls.SecurityRoleAssignment;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
+import java.util.List;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
-
-import java.util.List;
 
 /**
  * This node handles all the role mapping information for weblogic-application.xml
  *
- * @author  Sudarsan Sridhar
- * @version
+ * @author Sudarsan Sridhar
  */
-public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
-
-    public SecurityRoleAssignmentNode() {
-    }
+public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode<SecurityRoleAssignment> {
 
     @Override
     protected SecurityRoleAssignment createDescriptor() {
@@ -44,14 +41,9 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
     }
 
 
-    /**
-     * receives notification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+    @Override
     public void setElementValue(XMLElement element, String value) {
-        SecurityRoleAssignment sra = (SecurityRoleAssignment) getDescriptor();
+        SecurityRoleAssignment sra = getDescriptor();
         if (RuntimeTagNames.ROLE_NAME.equals(element.getQName())) {
             sra.setRoleName(value);
         } else if (RuntimeTagNames.PRINCIPAL_NAME.equals(element.getQName())) {
@@ -63,60 +55,39 @@ public class SecurityRoleAssignmentNode extends RuntimeDescriptorNode {
         }
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param node name
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
+
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, SecurityRoleAssignment descriptor) {
         Node roleMapping = appendChild(parent, nodeName);
 
-        //role-name
+        // role-name
         appendTextChild(roleMapping, RuntimeTagNames.ROLE_NAME, descriptor.getRoleName());
 
-        //externally-defined
-        if (descriptor.isExternallyDefined()){
+        // externally-defined
+        if (descriptor.isExternallyDefined()) {
             appendChild(roleMapping, RuntimeTagNames.EXTERNALLY_DEFINED);
         }
 
-        //principal-name+
+        // principal-name+
         List<String> principals = descriptor.getPrincipalNames();
-        for (int i = 0; i < principals.size(); i++) {
-            appendTextChild(roleMapping, RuntimeTagNames.PRINCIPAL_NAME, principals.get(i));
+        for (String principal : principals) {
+            appendTextChild(roleMapping, RuntimeTagNames.PRINCIPAL_NAME, principal);
         }
         return roleMapping;
     }
 
-    /**
-     * write all occurrences of the descriptor corresponding to the current
-     * node from the parent descriptor to an JAXP DOM node and return it
-     *
-     * This API will be invoked by the parent node when the parent node
-     * writes out a mix of statically and dynamically registered sub nodes.
-     *
-     * This method should be overriden by the sub classes if it
-     * needs to be called by the parent node.
-     *
-     * @param parent node in the DOM tree
-     * @param nodeName the name of the node
-     * @param parentDesc parent descriptor of the descriptor to be written
-     * @return the JAXP DOM node
-     */
+
     @Override
     public Node writeDescriptors(Node parent, String nodeName, Descriptor parentDesc) {
         if (parentDesc instanceof WebBundleDescriptor) {
-            WebBundleDescriptor webBundleDescriptor = (WebBundleDescriptor)parentDesc;
+            WebBundleDescriptor webBundleDescriptor = (WebBundleDescriptor) parentDesc;
             // security-role-assignment*
-            SecurityRoleAssignment[]securityRoleAssignments =
-                webBundleDescriptor.getSunDescriptor().getSecurityRoleAssignments();
+            SecurityRoleAssignment[] securityRoleAssignments = webBundleDescriptor.getSunDescriptor()
+                .getSecurityRoleAssignments();
             for (SecurityRoleAssignment securityRoleAssignment : securityRoleAssignments) {
                 writeDescriptor(parent, nodeName, securityRoleAssignment);
             }
         }
         return parent;
     }
-
 }

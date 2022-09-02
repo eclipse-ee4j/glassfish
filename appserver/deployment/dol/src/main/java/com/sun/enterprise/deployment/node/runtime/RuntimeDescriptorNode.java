@@ -38,8 +38,7 @@ import org.w3c.dom.Node;
 /**
  * Superclass for all the runtime descriptor nodes
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class RuntimeDescriptorNode<T extends Descriptor> extends DeploymentDescriptorNode<T> {
 
@@ -54,7 +53,7 @@ public class RuntimeDescriptorNode<T extends Descriptor> extends DeploymentDescr
                 return (T) getParentNode().getDescriptor();
             }
         }
-        return (T) abstractDescriptor;
+        return abstractDescriptor;
     }
 
 

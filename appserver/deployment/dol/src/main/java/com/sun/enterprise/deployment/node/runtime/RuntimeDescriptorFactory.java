@@ -43,7 +43,7 @@ import org.glassfish.deployment.common.Descriptor;
 public class RuntimeDescriptorFactory {
 
     private static final Logger LOG = DOLUtils.getDefaultLogger();
-    private static Map<String, Class<?>> descriptorClasses;
+    private static Map<String, Class<? extends Descriptor>> descriptorClasses;
 
     static {
         initMapping();
@@ -73,16 +73,32 @@ public class RuntimeDescriptorFactory {
 
 
     /**
-     * register a new descriptor class handling a particular XPATH in the DTD.
+     * Register a new descriptor class handling a particular XPATH in the DTD.
      *
-     * @param xmlElement XML element name
+     * @param xmlElement XML element
      * @param clazz the descriptor class to use
      */
-    public static void register(final XMLElement xmlElement, final Class<?> clazz) {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Register {0} to handle {1}", new Object[] {clazz, xmlElement.getQName()});
-        }
+    public static void register(final XMLElement xmlElement, final Class<? extends Descriptor> clazz) {
+        LOG.log(Level.CONFIG, "Registering {0} to handle xml path {1}", new Object[] {clazz, xmlElement});
         descriptorClasses.put(xmlElement.getQName(), clazz);
+    }
+
+
+    /**
+     * @param xmlPath
+     * @param <T> expected descriptor type
+     * @return a new instance of a registered descriptor class for the supplied XPath
+     */
+    public static <T extends Descriptor> T getDescriptor(String xmlPath) {
+        try {
+            Class<T> c = getDescriptorClass(xmlPath);
+            if (c == null) {
+                return null;
+            }
+            return c.getDeclaredConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not create a descriptor instance for " + xmlPath, e);
+        }
     }
 
 
@@ -94,7 +110,8 @@ public class RuntimeDescriptorFactory {
     public static <T extends Descriptor> Class<T> getDescriptorClass(final String xmlPath) {
         String xpathPart = xmlPath;
         do {
-            LOG.log(Level.FINER, "getDescriptorClass for {0}", xpathPart);
+            LOG.log(Level.FINEST, "Looking descriptor class for {0}", xpathPart);
+            // unchecked - clazz x xmlPath must be unique.
             @SuppressWarnings("unchecked")
             Class<T> clazz = (Class<T>) descriptorClasses.get(xpathPart);
             if (clazz != null) {
@@ -107,25 +124,6 @@ public class RuntimeDescriptorFactory {
             }
         } while (xpathPart != null);
 
-        LOG.log(Level.FINE, "No descriptor registered for {0}", xmlPath);
-        return null;
-    }
-
-
-    /**
-     * @param xmlPath
-     * @param <T>
-     * @return a new instance of a registered descriptor class for the supplied XPath
-     */
-    public static <T extends Descriptor> T getDescriptor(String xmlPath) {
-        try {
-            Class<T> c = getDescriptorClass(xmlPath);
-            if (c != null) {
-                return c.getDeclaredConstructor().newInstance();
-            }
-        } catch (Throwable t) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred, I'm returning null descriptor.", t);
-        }
-        return null;
+        throw new IllegalStateException("No descriptor registered for " + xmlPath);
     }
 }

@@ -148,7 +148,7 @@ public class InstalledLibrariesResolver {
         String extensionList = null;
         try {
             if (manifest == null) {
-                return null;
+                return libraries;
             }
             extensionList = manifest.getMainAttributes().getValue(Attributes.Name.EXTENSION_LIST);
             if (deplLogger.isLoggable(FINE)) {

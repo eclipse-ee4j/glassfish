@@ -161,8 +161,8 @@ public class MainClassLaunchable implements Launchable {
     }
 
 
-    private AppClientArchivist getArchivist(final ReadableArchive clientRA,
-            final ClassLoader classLoader) throws IOException {
+    private AppClientArchivist getArchivist(final ReadableArchive clientRA, final ClassLoader classLoader)
+        throws IOException {
         if (archivist == null) {
             ArchivistFactory af = Util.getArchivistFactory();
             /*
@@ -170,16 +170,12 @@ public class MainClassLaunchable implements Launchable {
              * having to set the URI to some fake URI that the archivist
              * factory would understand.
              */
-            archivist = completeInit((AppClientArchivist)
-                    af.getArchivist(DOLUtils.carType()));
+            archivist = af.getArchivist(DOLUtils.carType());
+            archivist.setAnnotationProcessingRequested(true);
         }
         return archivist;
     }
 
-    private AppClientArchivist completeInit(final AppClientArchivist arch) {
-            arch.setAnnotationProcessingRequested(true);
-            return arch;
-    }
 
     @Override
     public void validateDescriptor() {

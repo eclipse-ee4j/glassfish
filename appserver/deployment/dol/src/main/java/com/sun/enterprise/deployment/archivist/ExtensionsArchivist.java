@@ -110,7 +110,7 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
     /**
      * @return null
      */
-    public ModuleScanner<?> getScanner() {
+    public <T extends RootDeploymentDescriptor> ModuleScanner<T> getScanner() {
         return null;
     }
 

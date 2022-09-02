@@ -134,15 +134,15 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
         return confDDFiles;
     }
 
+
     /**
      * @return a default BundleDescriptor for this archivist
      */
     @Override
     public ApplicationClientDescriptor getDefaultBundleDescriptor() {
-        ApplicationClientDescriptor appClientDesc =
-                new ApplicationClientDescriptor();
-        return appClientDesc;
+        return new ApplicationClientDescriptor();
     }
+
 
     /**
      * validates the DOL Objects associated with this archivist, usually
@@ -171,7 +171,7 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
      */
     @Override
     protected void postStandardDDsRead(ApplicationClientDescriptor descriptor, ReadableArchive archive,
-                Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions)
+                Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions)
                 throws IOException {
         super.postStandardDDsRead(descriptor, archive, extensions);
         // look for MAIN_CLASS

@@ -345,7 +345,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * @param extensions map of extension archivists
      */
     protected void postStandardDDsRead(T descriptor, ReadableArchive archive,
-        Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions) throws IOException {
+        Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
     }
 
 
@@ -400,9 +400,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
 
     private T readRestDeploymentDescriptors(T descriptor, ReadableArchive descriptorArchive,
         ReadableArchive contentArchive, Application app) throws IOException, SAXException {
-        Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions = new HashMap<>();
+        Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions = new HashMap<>();
         if (extensionsArchivists != null) {
-            for (ExtensionsArchivist extension : extensionsArchivists) {
+            for (ExtensionsArchivist<?> extension : extensionsArchivists) {
                 Object o = extension.open(this, descriptorArchive, descriptor);
                 if (o instanceof RootDeploymentDescriptor) {
                     if (o != descriptor) {
@@ -426,7 +426,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
         readRuntimeDeploymentDescriptor(descriptorArchive, descriptor);
 
         // read extensions runtime deployment descriptors if any
-        for (Map.Entry<ExtensionsArchivist, RootDeploymentDescriptor> extension : extensions.entrySet()) {
+        for (Map.Entry<ExtensionsArchivist<?>, RootDeploymentDescriptor> extension : extensions.entrySet()) {
             // after standard DD and annotations are processed, we should
             // an extension descriptor now
             if (extension.getValue() != null) {
@@ -444,13 +444,13 @@ public abstract class Archivist<T extends BundleDescriptor> {
      * Read all Jakarta EE annotations
      */
     protected void readAnnotations(ReadableArchive archive, T descriptor,
-        Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions) throws IOException {
+        Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions) throws IOException {
         readAnnotations(archive, descriptor, extensions, null);
     }
 
 
     protected void readAnnotations(ReadableArchive archive, T descriptor,
-        Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions, ModuleScanner scanner) throws IOException {
+        Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions, ModuleScanner scanner) throws IOException {
         try {
             boolean processAnnotationForMainDescriptor = isProcessAnnotation(descriptor);
             ProcessingResult result = null;
@@ -463,7 +463,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
             }
 
             // process extensions annotations if any
-            for (Map.Entry<ExtensionsArchivist, RootDeploymentDescriptor> extension : extensions.entrySet()) {
+            for (Map.Entry<ExtensionsArchivist<?>, RootDeploymentDescriptor> extension : extensions.entrySet()) {
                 try {
                     if (extension.getValue() == null) {
                         // extension descriptor is not present

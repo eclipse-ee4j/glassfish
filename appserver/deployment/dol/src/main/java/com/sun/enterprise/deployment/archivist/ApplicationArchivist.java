@@ -21,6 +21,7 @@ import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EarType;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.introspection.EjbComponentAnnotationScanner;
 import com.sun.enterprise.deployment.io.ApplicationDeploymentDescriptorFile;
@@ -60,6 +61,8 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
+
+import static com.sun.enterprise.deployment.util.DOLUtils.ejbType;
 
 /**
  * This class is responsible for handling application archive files
@@ -108,18 +111,18 @@ public class ApplicationArchivist extends Archivist<Application> {
         }
 
         // any files already written to the output should never be rewritten
-        for (Enumeration alreadyWritten = out.entries(); alreadyWritten.hasMoreElements();) {
-            String elementName = (String) alreadyWritten.nextElement();
+        for (Enumeration<String> alreadyWritten = out.entries(); alreadyWritten.hasMoreElements();) {
+            String elementName = alreadyWritten.nextElement();
             filesToSkip.add(elementName);
         }
 
         // write this application .ear file contents...
-        for (ModuleDescriptor aModule : descriptor.getModules()) {
-            Archivist subArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
+        for (ModuleDescriptor<BundleDescriptor> aModule : descriptor.getModules()) {
+            Archivist<BundleDescriptor> subArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
             subArchivist.initializeContext(this);
             subArchivist.setModuleDescriptor(aModule);
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().info("Write " + aModule.getArchiveUri() + " with " + subArchivist);
+                DOLUtils.getDefaultLogger().fine("Write " + aModule.getArchiveUri() + " with " + subArchivist);
             }
 
             // Create a new jar file inside the application .ear
@@ -336,13 +339,13 @@ public class ApplicationArchivist extends Archivist<Application> {
                         }
 
                         //Section EE.8.4.2.1.d.ii
-                        Archivist ejbArchivist = archivistFactory.get().getArchivist(DOLUtils.ejbType());
+                        Archivist<EjbBundleDescriptor> ejbArchivist = archivistFactory.get().getArchivist(ejbType());
                         if (ejbArchivist.hasStandardDeploymentDescriptor(subArchive)
                             || ejbArchivist.hasRuntimeDeploymentDescriptor(subArchive)) {
 
                             ModuleDescriptor<BundleDescriptor> md = new ModuleDescriptor<>();
                             md.setArchiveUri(uri);
-                            md.setModuleType(DOLUtils.ejbType());
+                            md.setModuleType(ejbType());
                             app.addModule(md);
                             continue;
                         }
@@ -381,7 +384,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                         //Section EE.8.4.2.1.d.ii, alas EJB
                         ModuleDescriptor<BundleDescriptor> md = new ModuleDescriptor<>();
                         md.setArchiveUri(uri);
-                        md.setModuleType(DOLUtils.ejbType());
+                        md.setModuleType(ejbType());
                         app.addModule(md);
                     }
                     /*
@@ -522,27 +525,23 @@ public class ApplicationArchivist extends Archivist<Application> {
      * @param appArchive containing the sub modules files.
      * @return true if everything went fine
      */
-    public boolean readModulesDescriptors(Application app, ReadableArchive appArchive)
+    public <T extends BundleDescriptor> boolean readModulesDescriptors(Application app, ReadableArchive appArchive)
         throws IOException, SAXException {
-        List<ModuleDescriptor> nonexistentModules = new ArrayList<>();
-
-        List<ModuleDescriptor> sortedModules = sortModules(app);
-
-        for (ModuleDescriptor aModule : sortedModules) {
+        List<ModuleDescriptor<BundleDescriptor>> nonexistentModules = new ArrayList<>();
+        List<ModuleDescriptor<BundleDescriptor>> sortedModules = sortModules(app);
+        for (ModuleDescriptor<BundleDescriptor> aModule : sortedModules) {
             if (aModule.getArchiveUri().contains(" ")) {
                 throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.unsupporturi",
                     "Unsupported module URI {0}, it contains space(s)", new Object[] {aModule.getArchiveUri()}));
             }
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Opening sub-module " + aModule);
-            }
-            Archivist newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
+            DOLUtils.getDefaultLogger().log(Level.FINE, "Opening sub-module {0}", aModule);
+            Archivist<T> newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
             newArchivist.initializeContext(this);
             newArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
             newArchivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
             newArchivist.setAnnotationProcessingRequested(annotationProcessingRequested);
 
-            BundleDescriptor bundleDescriptor = null;
+            T bundleDescriptor = null;
             try (ReadableArchive embeddedArchive = appArchive.getSubArchive(aModule.getArchiveUri())) {
                 if (embeddedArchive == null) {
                     throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.nosuchmodule",
@@ -564,20 +563,18 @@ public class ApplicationArchivist extends Archivist<Application> {
                         if (appArchive.getURI() != null) {
                             ddFile.setErrorReportingString(appArchive.getURI().getSchemeSpecificPart());
                         }
-                        bundleDescriptor = (BundleDescriptor) ddFile.read(is);
+                        bundleDescriptor = (T) ddFile.read(is);
                         bundleDescriptor.setApplication(app);
                     }
 
                     // TODO : JD need to be revisited for EAR files with Alternative descriptors,
                     // what does it mean for sub components.
-                    Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions = new HashMap<>();
-                    List<ExtensionsArchivist> extensionsArchivists = newArchivist.getExtensionArchivists();
+                    Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions = new HashMap<>();
+                    List<ExtensionsArchivist<?>> extensionsArchivists = newArchivist.getExtensionArchivists();
                     if (extensionsArchivists != null) {
-                        for (ExtensionsArchivist extension : extensionsArchivists) {
-                            Object rdd = extension.open(newArchivist, embeddedArchive, bundleDescriptor);
-                            if (rdd instanceof RootDeploymentDescriptor) {
-                                extensions.put(extension, (RootDeploymentDescriptor) rdd);
-                            }
+                        for (ExtensionsArchivist<?> extension : extensionsArchivists) {
+                            RootDeploymentDescriptor rdd = extension.open(newArchivist, embeddedArchive, bundleDescriptor);
+                            extensions.put(extension, rdd);
                         }
                     }
                     newArchivist.postStandardDDsRead(bundleDescriptor, embeddedArchive, extensions);
@@ -589,7 +586,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                         DOLUtils.readAlternativeRuntimeDescriptor(appArchive, embeddedArchive, newArchivist, bundleDescriptor,
                             aModule.getAlternateDescriptor());
                         // read extensions runtime deployment descriptors if any
-                        for (Map.Entry<ExtensionsArchivist, RootDeploymentDescriptor> extension : extensions.entrySet()) {
+                        for (Map.Entry<ExtensionsArchivist<?>, RootDeploymentDescriptor> extension : extensions.entrySet()) {
                             // after standard DD and annotations are processed
                             // we should have an extension descriptor now
                             if (extension.getValue() != null) {
@@ -624,16 +621,16 @@ public class ApplicationArchivist extends Archivist<Application> {
         }
         // now remove all the non-existent modules from app so these modules
         // don't get processed further
-        for (ModuleDescriptor nonexistentModule : nonexistentModules) {
+        for (ModuleDescriptor<BundleDescriptor> nonexistentModule : nonexistentModules) {
             app.removeModule(nonexistentModule);
         }
         return true;
     }
 
-    private List<ModuleDescriptor> sortModules(Application app) {
-        List<ModuleDescriptor> sortedModules = new ArrayList<>();
+    private List<ModuleDescriptor<BundleDescriptor>> sortModules(Application app) {
+        List<ModuleDescriptor<BundleDescriptor>> sortedModules = new ArrayList<>();
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.rarType()));
-        sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.ejbType()));
+        sortedModules.addAll(app.getModuleDescriptorsByType(ejbType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.warType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.carType()));
         return sortedModules;
@@ -655,17 +652,17 @@ public class ApplicationArchivist extends Archivist<Application> {
 
         if (descriptor != null) {
             // each modules first...
-            for (ModuleDescriptor md : descriptor.getModules()) {
-                Archivist archivist = archivistFactory.get().getArchivist(md.getModuleType());
+            for (ModuleDescriptor<BundleDescriptor> md : descriptor.getModules()) {
+                Archivist<BundleDescriptor> archivist = archivistFactory.get().getArchivist(md.getModuleType());
                 archivist.initializeContext(this);
                 archivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
                 archivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
                 try (ReadableArchive subArchive = archive.getSubArchive(md.getArchiveUri())) {
                     if (md.getAlternateDescriptor() == null) {
-                        archivist.readRuntimeDeploymentDescriptor(subArchive, (BundleDescriptor) md.getDescriptor());
+                        archivist.readRuntimeDeploymentDescriptor(subArchive, md.getDescriptor());
                     } else {
                         DOLUtils.readAlternativeRuntimeDescriptor(archive, subArchive, archivist,
-                            (BundleDescriptor) md.getDescriptor(), md.getAlternateDescriptor());
+                            md.getDescriptor(), md.getAlternateDescriptor());
                     }
                 }
             }
@@ -734,10 +731,10 @@ public class ApplicationArchivist extends Archivist<Application> {
         }
 
         boolean returnValue = true;
-        for (ModuleDescriptor md : descriptor.getModules()) {
+        for (ModuleDescriptor<BundleDescriptor> md : descriptor.getModules()) {
             try (ReadableArchive sub = archive.getSubArchive(md.getArchiveUri())) {
                 if (sub != null) {
-                    Archivist subArchivist = archivistFactory.get().getArchivist(md.getModuleType());
+                    Archivist<?> subArchivist = archivistFactory.get().getArchivist(md.getModuleType());
                     if (!subArchivist.performOptionalPkgDependenciesCheck(sub)) {
                         returnValue = false;
                     }
@@ -782,11 +779,11 @@ public class ApplicationArchivist extends Archivist<Application> {
     public void copyInto(Application a, ReadableArchive source, WritableArchive target, boolean overwriteManifest)
         throws IOException {
         Set<String> entriesToSkip = new HashSet<>();
-        for (ModuleDescriptor aModule : a.getModules()) {
+        for (ModuleDescriptor<?> aModule : a.getModules()) {
             entriesToSkip.add(aModule.getArchiveUri());
             try (ReadableArchive subSource = source.getSubArchive(aModule.getArchiveUri())) {
                 WritableArchive subTarget = target.createSubArchive(aModule.getArchiveUri());
-                Archivist newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
+                Archivist<?> newArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
                 try (ReadableArchive subArchive = archiveFactory.openArchive(subTarget.getURI())) {
                     subSource.setParentArchive(subArchive);
                     newArchivist.copyInto(subSource, subTarget, overwriteManifest);

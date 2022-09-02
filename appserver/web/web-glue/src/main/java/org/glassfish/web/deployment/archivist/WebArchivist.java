@@ -165,7 +165,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Override
     protected void postStandardDDsRead(WebBundleDescriptorImpl descriptor,
                 ReadableArchive archive,
-                Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions)
+                Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions)
                 throws IOException {
         for (RootDeploymentDescriptor rd : extensions.values()) {
             if (rd instanceof EjbBundleDescriptor) {
@@ -309,8 +309,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         // process annotations in web-fragment
         // extension annotation processing will be done in top level
         if (isProcessAnnotation(descriptor)) {
-            Map<ExtensionsArchivist, RootDeploymentDescriptor> localExtensions =
-                    new HashMap<>();
+            Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> localExtensions = new HashMap<>();
             for (WebFragmentDescriptor wfDesc : wfList) {
                 // if web.xml specifies metadata-complete=true,
                 // all web fragment metadata-complete

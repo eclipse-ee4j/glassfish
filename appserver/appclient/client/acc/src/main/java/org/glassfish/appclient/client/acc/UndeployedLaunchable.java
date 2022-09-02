@@ -75,7 +75,7 @@ public class UndeployedLaunchable implements Launchable {
          * will often allow an app client or an EAR archive to be detected
          * automatically.
          */
-        Archivist archivist = af.getArchivist("car", classLoader);
+        Archivist<?> archivist = af.getArchivist("car", classLoader);
         if (archivist == null) {
             throw new UserError(localStrings.get("appclient.invalidArchive",
                     ra.getURI().toASCIIString()));
@@ -268,7 +268,7 @@ public class UndeployedLaunchable implements Launchable {
     private AppClientArchivist getArchivist(final ClassLoader classLoader) throws IOException {
         if (archivist == null) {
             ArchivistFactory af = Util.getArchivistFactory();
-            archivist = completeInit((AppClientArchivist) af.getArchivist("car"));
+            archivist = completeInit(af.getArchivist("car"));
         }
         archivist.setClassLoader(classLoader);
         return archivist;

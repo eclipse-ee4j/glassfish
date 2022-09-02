@@ -457,9 +457,7 @@ public class SaxParserHandler extends DefaultHandler {
                     LOG.fine("Asking for new handler for " + element + " to " + node);
                 }
                 XMLNode<?> newNode = node.getHandlerFor(element);
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Got " + newNode);
-                }
+                LOG.log(Level.FINE, "Got new node: {0}", newNode);
                 nodes.add(newNode);
                 addPrefixMapping(newNode);
                 newNode.startElement(element, attributes);

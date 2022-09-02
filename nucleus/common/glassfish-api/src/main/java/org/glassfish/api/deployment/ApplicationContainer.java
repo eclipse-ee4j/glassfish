@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,17 +20,18 @@ package org.glassfish.api.deployment;
 /**
  * Interface to an application container. mainly used to start and stop the application.
  *
+ * @param <D> BundleDescriptor.
+ *
  * @author Jerome Dochez
  */
-
-public interface ApplicationContainer<T> {
+public interface ApplicationContainer<D> {
 
     /**
      * Returns the deployment descriptor associated with this application
      *
      * @return deployment descriptor if they exist or null if not
      */
-    T getDescriptor();
+    D getDescriptor();
 
     /**
      * Starts an application container. ContractProvider starting should not throw an exception but rather should use their

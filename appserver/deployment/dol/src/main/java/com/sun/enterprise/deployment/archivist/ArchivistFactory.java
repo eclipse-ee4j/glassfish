@@ -53,8 +53,8 @@ public class ArchivistFactory {
     @Inject
     private ServiceLocator habitat;
 
-    public Archivist<? extends BundleDescriptor> getArchivist(String archiveType, ClassLoader cl) {
-        Archivist<? extends BundleDescriptor> result = getArchivist(archiveType);
+    public <A extends Archivist<D>, D extends BundleDescriptor> A getArchivist(String archiveType, ClassLoader cl) {
+        A result = getArchivist(archiveType);
         if (result != null) {
             result.setClassLoader(cl);
         }
@@ -62,19 +62,18 @@ public class ArchivistFactory {
     }
 
 
-    public Archivist<? extends BundleDescriptor> getArchivist(String archiveType) {
-        ActiveDescriptor<Archivist<BundleDescriptor>> best = (ActiveDescriptor<Archivist<BundleDescriptor>>) habitat
+    public <A extends Archivist<D>, D extends BundleDescriptor> A getArchivist(String archiveType) {
+        ActiveDescriptor<A> best = (ActiveDescriptor<A>) habitat
             .getBestDescriptor(new ArchivistFilter(archiveType, ARCHIVE_TYPE, Archivist.class));
         if (best == null) {
             return null;
         }
-
         return habitat.getServiceHandle(best).getService();
     }
 
 
-    public Archivist<? extends BundleDescriptor> getArchivist(ArchiveType moduleType) {
-        return getArchivist(String.valueOf(moduleType));
+    public <A extends Archivist<D>, D extends BundleDescriptor> A getArchivist(ArchiveType moduleType) {
+        return (A) getArchivist(String.valueOf(moduleType));
     }
 
 

@@ -375,17 +375,15 @@ public final class MethodDescriptor extends Descriptor {
             Class<?> nextClass = classloader.loadClass(ejbDescriptor.getEjbClassName());
             String mname = getName();
 
-            while ((nextClass != Object.class) && (nextClass != null)) {
+            while (nextClass != Object.class && nextClass != null) {
                 // Do not use TypeUtil not to spend time converting parameter
                 // types for each call.
                 try {
                     return nextClass.getDeclaredMethod(mname, javaParamClassNames);
-
                 } catch (NoSuchMethodException nsme) {
                     nextClass = nextClass.getSuperclass();
                 }
             }
-
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", ejbDescriptor);
         }
@@ -403,8 +401,7 @@ public final class MethodDescriptor extends Descriptor {
         Vector<MethodDescriptor> v = new Vector<>();
         if (getStyle() == 1) {
             // STYLE 1
-            for (MethodDescriptor method : allMethods) {
-                MethodDescriptor next = method;
+            for (MethodDescriptor next : allMethods) {
                 // when ejb-name is present
                 // since it is an optional element in some case
                 if (this.getEjbName() != null && !this.getEjbName().isEmpty()) {

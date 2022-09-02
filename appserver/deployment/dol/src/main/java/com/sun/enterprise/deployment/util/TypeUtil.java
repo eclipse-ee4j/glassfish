@@ -147,22 +147,6 @@ public class TypeUtil {
 
 
     /**
-     * Work around a performance bug in String.hashCode() for strings longer
-     * than sixteen characters, by calculating a (slower) hash on all the
-     * characters in the string. Not needed starting in the JDK 1.2 release.
-     */
-    public static int hashCode(String s) {
-        int length = s.length();
-        int h = 1;
-
-        for (int i = 0; i < length; i++) {
-            h = (h * 37) + s.charAt(i);
-        }
-        return h;
-    }
-
-
-    /**
      * Word-wrap a string into an array of strings. Space is the only
      * separator character recognized.
      */
@@ -319,24 +303,6 @@ public class TypeUtil {
 
 
     /**
-     * Test if a class is a subclass of another.
-     *
-     * @deprecated Use <em>sup.isAssignableFrom(sub)</em>
-     */
-    @Deprecated
-    public static boolean isSubclassOf(Class sub, Class sup) {
-        if (sub == sup) {
-            return true;
-        }
-        Class superclass = sub.getSuperclass();
-        while (superclass != null && superclass != sup) {
-            superclass = superclass.getSuperclass();
-        }
-        return (superclass != null);
-    }
-
-
-    /**
      * Get all super-interfaces of a class, excluding the
      * given base interface.
      * Returns a set of strings containing class names.
@@ -443,13 +409,10 @@ public class TypeUtil {
      * 1) declaring class 2) exceptions
      */
     public static boolean sameMethodSignature(Method m1, Method m2) {
-        boolean same = false;
-
         if (m1.getName().equals(m2.getName())) {
-            same = sameParamTypes(m1, m2) && sameReturnTypes(m1, m2);
+            return sameParamTypes(m1, m2) && sameReturnTypes(m1, m2);
         }
-
-        return same;
+        return false;
     }
 
 

@@ -35,7 +35,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.apf.impl.AnnotationUtils;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;

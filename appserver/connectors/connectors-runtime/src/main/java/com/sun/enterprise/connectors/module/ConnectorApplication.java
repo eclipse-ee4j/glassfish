@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package com.sun.enterprise.connectors.module;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.connectors.ConnectorRuntime;
@@ -25,20 +24,23 @@ import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.deployment.*;
-import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.Events;
-import org.glassfish.connectors.config.AdminObjectResource;
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.resources.listener.ApplicationScopedResourcesManager;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.deployment.ApplicationContainer;
+import org.glassfish.api.deployment.ApplicationContext;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.deployment.UndeployCommandParameters;
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.Events;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.listener.ResourceManager;
+import org.glassfish.resources.listener.ApplicationScopedResourcesManager;
 
 /**
  * Represents a connector application, one per resource-adapter.
@@ -47,26 +49,24 @@ import java.util.logging.Logger;
  *
  * @author Jagadish Ramu
  */
-public class ConnectorApplication implements ApplicationContainer, EventListener {
-    private static Logger _logger = LogDomains.getLogger(ConnectorApplication.class, LogDomains.RSR_LOGGER);
+public class ConnectorApplication implements ApplicationContainer<ConnectorDescriptor>, EventListener {
+    private static final Logger LOG = LogDomains.getLogger(ConnectorApplication.class, LogDomains.RSR_LOGGER);
     private String moduleName = "";
     //indicates the "application" (ear) name if its embedded rar
-    private String applicationName = null;
-    private org.glassfish.resourcebase.resources.listener.ResourceManager resourceManager;
-    private ApplicationScopedResourcesManager asrManager;
-    private ClassLoader loader;
-    private ConnectorRuntime runtime;
-    private Events event;
-    private ConnectorDescriptor descriptor;
+    private final String applicationName;
+    private final ResourceManager resourceManager;
+    private final ClassLoader loader;
+    private final ConnectorRuntime runtime;
+    private final Events event;
+    private final ConnectorDescriptor descriptor;
     private static StringManager localStrings = StringManager.getManager(ConnectorRuntime.class);
-    private ResourcesUtil resourcesUtil;
+    private final ResourcesUtil resourcesUtil;
 
-    public ConnectorApplication(String moduleName, String appName, org.glassfish.resourcebase.resources.listener.ResourceManager resourceManager,
-                                ApplicationScopedResourcesManager asrManager, ClassLoader loader,
-                                ConnectorRuntime runtime, Events event, ConnectorDescriptor descriptor) {
+    public ConnectorApplication(String moduleName, String appName, ResourceManager resourceManager,
+        ApplicationScopedResourcesManager asrManager, ClassLoader loader, ConnectorRuntime runtime, Events event,
+        ConnectorDescriptor descriptor) {
         this.setModuleName(moduleName);
         this.resourceManager = resourceManager;
-        this.asrManager = asrManager;
         this.loader = loader;
         this.runtime = runtime;
         this.applicationName = appName;
@@ -80,7 +80,8 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      *
      * @return deployment descriptor if they exist or null if not
      */
-    public Object getDescriptor() {
+    @Override
+    public ConnectorDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -94,6 +95,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      * @param startupContext the start up context
      * @return true if the container startup was successful.
      */
+    @Override
     public boolean start(ApplicationContext startupContext) {
         boolean started = false;
 
@@ -104,7 +106,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
 
         event.register(this);
 
-        logFine("Resource Adapter [ " + getModuleName() + " ] started");
+        LOG.log(Level.INFO, "Resource Adapter [ {0} ] started", getModuleName());
         return started;
     }
 
@@ -150,22 +152,18 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      * undeploy all resources/pools pertaining to this resource adapter
      */
     public boolean undeployGlobalResources(boolean failIfResourcesExist) {
-        boolean status;
         //TODO ASR : should we undeploy app-scoped connector resources also ?
         //TODO ASR : should we stop deployment by checking app-scoped connector resources also ?
         Collection<Resource> resources =
                 resourcesUtil.filterConnectorResources(resourceManager.getAllResources(), moduleName, true);
-        if (failIfResourcesExist && resources.size() > 0) {
+        if (failIfResourcesExist && !resources.isEmpty()) {
             String message = "one or more resources of resource-adapter [ " + moduleName + " ] exist, " +
                     "use '--cascade=true' to delete them during undeploy";
-            _logger.log(Level.WARNING, "resources.of.rar.exist", moduleName);
-            status = false;
+            LOG.log(Level.WARNING, "resources.of.rar.exist", moduleName);
             throw new RuntimeException(message);
-        } else {
-            resourceManager.undeployResources(resources);
-            status = true;
         }
-        return status;
+        resourceManager.undeployResources(resources);
+        return true;
     }
 
     /**
@@ -174,6 +172,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      * @param stopContext
      * @return true if stopping was successful.
      */
+    @Override
     public boolean stop(ApplicationContext stopContext) {
         boolean stopped = false;
 
@@ -196,7 +195,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
         } else {
             runtime.unregisterConnectorApplication(getModuleName());
             stopped = true;
-            logFine("Resource Adapter [ " + getModuleName() + " ] stopped");
+            LOG.log(Level.INFO, "Resource Adapter [ {0} ] stopped", getModuleName());
             event.unregister(this);
         }
         return stopped;
@@ -207,6 +206,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      *
      * @return true if suspending was successful, false otherwise.
      */
+    @Override
     public boolean suspend() {
         // Not (yet) supported
         return false;
@@ -217,6 +217,7 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      *
      * @return true if resumption was successful, false otherwise.
      */
+    @Override
     public boolean resume() {
         // Not (yet) supported
         return false;
@@ -227,15 +228,11 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      *
      * @return ClassLoader for this app
      */
+    @Override
     public ClassLoader getClassLoader() {
         return loader;
     }
 
-    public void logFine(String message) {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, message);
-        }
-    }
 
     /**
      * returns the module name
@@ -265,28 +262,26 @@ public class ConnectorApplication implements ApplicationContainer, EventListener
      * and --cascade is not set.
      * @param event Event
      */
+    @Override
     public void event(Event event) {
         if (Deployment.UNDEPLOYMENT_VALIDATION.equals(event.type())) {
-            //this is an application undeploy event
+            // this is an application undeploy event
             DeploymentContext dc = (DeploymentContext) event.hook();
             UndeployCommandParameters dcp = dc.getCommandParameters(UndeployCommandParameters.class);
-            if (dcp.name.equals(moduleName) ||
-                    //Consider the application with embedded RAR being undeployed
-                    (dcp.name.equals(applicationName) &&
-                    moduleName.contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER) &&
-                    moduleName.startsWith(dcp.name))) {
+            // Consider the application with embedded RAR being undeployed
+            if (dcp.name.equals(moduleName) || (dcp.name.equals(applicationName)
+                && moduleName.contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)
+                && moduleName.startsWith(dcp.name))) {
 
-                if (dcp.origin != OpsParams.Origin.deploy) {
-                    if (dcp.origin == OpsParams.Origin.undeploy) {
-                        if (!(dcp._ignoreCascade || dcp.cascade)) {
-                            if (resourcesUtil.filterConnectorResources(resourceManager.getAllResources(), moduleName, true).size() > 0) {
-                                String message = localStrings.getString("con.deployer.resources.exist", moduleName);
-                                _logger.log(Level.WARNING, "resources.of.rar.exist", moduleName);
+                if (dcp.origin != OpsParams.Origin.deploy && dcp.origin == OpsParams.Origin.undeploy) {
+                    if (!dcp._ignoreCascade && !dcp.cascade) {
+                        if (!resourcesUtil.filterConnectorResources(resourceManager.getAllResources(), moduleName, true).isEmpty()) {
+                            String message = localStrings.getString("con.deployer.resources.exist", moduleName);
+                            LOG.log(Level.WARNING, "resources.of.rar.exist", moduleName);
 
-                                ActionReport report = dc.getActionReport();
-                                report.setMessage(message);
-                                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                            }
+                            ActionReport report = dc.getActionReport();
+                            report.setMessage(message);
+                            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                         }
                     }
                 }

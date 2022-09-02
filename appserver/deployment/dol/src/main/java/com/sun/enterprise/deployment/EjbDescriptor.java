@@ -125,7 +125,7 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     void addMethodLevelChain(List<EjbInterceptor> chain, Method m, boolean aroundInvoke);
 
-    Set getMethodPermissionsFor(MethodDescriptor methodDescriptor);
+    Set<MethodPermission> getMethodPermissionsFor(MethodDescriptor methodDescriptor);
 
     Set<Role> getPermissionedRoles();
 

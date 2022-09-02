@@ -152,9 +152,8 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
                     throw new IllegalArgumentException(
                         localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedpropertytype",
                             "{0} is not an allowed property value type", new Object[] {type}));
-                } else {
-                    return;
                 }
+                return;
             }
             boolean allowedType = false;
             for (Class<?> allowedType2 : allowedTypes) {
@@ -324,9 +323,10 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      */
     @Override
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
+        toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
         printInjectableResourceInfo(toStringBuffer);
-        toStringBuffer.append("@").append(this.getType()).append("@").append(this.getValue()).append("@").append("@").append(super.getDescription());
+        toStringBuffer.append("@").append(this.getType()).append("@").append(this.getValue()).append("@").append("@");
+        toStringBuffer.append(super.getDescription());
     }
 
 
@@ -358,29 +358,27 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
             } else if (Long.class.equals(type)) {
                 return Long.valueOf(string);
             } else if (Character.class.equals(type)) {
-                if (string.length() != 1) {
-                    throw new IllegalArgumentException();
-                } else {
+                if (string.length() == 1) {
                     return Character.valueOf(string.charAt(0));
                 }
+                throw new IllegalArgumentException();
             } else if (Class.class.equals(type)) {
                 return Class.forName(string, true, Thread.currentThread().getContextClassLoader());
             } else if (type != null && type.isEnum()) {
                 return Enum.valueOf(type, string);
             }
         } catch (Throwable t) {
-            throw new IllegalArgumentException(localStrings.getLocalString(
-                                           "enterprise.deployment.exceptioncouldnotcreateinstancetype",
-                                           "Could not create instance of {0} from {1}\n reason: {2}" + t, new Object[] {type, string, t}));
+            throw new IllegalArgumentException(
+                localStrings.getLocalString("enterprise.deployment.exceptioncouldnotcreateinstancetype",
+                    "Could not create instance of {0} from {1}\n reason: {2}" + t, new Object[] {type, string, t}));
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                                           "enterprise.deployment.exceptionillegaltypeenvproperty",
-                                           "Illegal type for environment properties: {0}", new Object[] {type}));
+        throw new IllegalArgumentException(
+            localStrings.getLocalString("enterprise.deployment.exceptionillegaltypeenvproperty",
+                "Illegal type for environment properties: {0}", new Object[] {type}));
     }
 
 
-    private Object getValueObjectUsingAllowedTypes(String string)
-                                  throws IllegalArgumentException {
+    private Object getValueObjectUsingAllowedTypes(String string) throws IllegalArgumentException {
         if (this.type.equals(int.class.getName())) {
             return Integer.valueOf(string);
         } else if (this.type.equals(long.class.getName())) {
@@ -415,8 +413,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     }
 
     protected boolean isConflictResourceGroup(EnvironmentProperty other) {
-        return !(getLookupName().equals(other.getLookupName()) &&
-                getMappedName().equals(other.getMappedName()));
+        return !getLookupName().equals(other.getLookupName()) || !getMappedName().equals(other.getMappedName());
     }
 
     //
@@ -427,40 +424,33 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
         if (injectionTargets==null) {
             injectionTargets = new HashSet<>();
         }
-        boolean found = false;
         for (InjectionTarget injTarget : injectionTargets) {
             if (injTarget.equals(target)) {
-                found = true;
-                break;
+                return;
             }
         }
-        if (!found) {
-            injectionTargets.add(target);
-        }
+        injectionTargets.add(target);
     }
 
     @Override
     public Set<InjectionTarget> getInjectionTargets() {
-        return (injectionTargets != null) ? injectionTargets : new HashSet<>();
+        return injectionTargets == null ? new HashSet<>() : injectionTargets;
     }
 
     @Override
     public boolean isInjectable() {
-        return (injectionTargets!=null && injectionTargets.size()>0);
-        //return (getInjectTargetName() != null);
+        return injectionTargets != null && !injectionTargets.isEmpty();
     }
 
     public boolean hasInjectionTargetFromXml() {
-        boolean fromXml = false;
         if (injectionTargets != null) {
             for (InjectionTarget injTarget: injectionTargets) {
-                fromXml = (MetadataSource.XML == injTarget.getMetadataSource());
-                if (fromXml) {
-                    break;
+                if (MetadataSource.XML == injTarget.getMetadataSource()) {
+                    return true;
                 }
             }
         }
-        return fromXml;
+        return false;
     }
 
     @Override

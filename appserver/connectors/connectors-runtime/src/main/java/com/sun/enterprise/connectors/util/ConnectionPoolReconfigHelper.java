@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,30 +28,27 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public final class ConnectionPoolReconfigHelper {
 
-    private static final Logger _logger = LogDomains.getLogger(ConnectionPoolReconfigHelper.class, LogDomains.RSR_LOGGER);
-
+    private static final Logger _logger = LogDomains.getLogger(ConnectionPoolReconfigHelper.class,
+        LogDomains.RSR_LOGGER);
 
     public enum ReconfigAction {
-        RECREATE_POOL, UPDATE_MCF_AND_ATTRIBUTES, NO_OP
+        RECREATE_POOL,
+        UPDATE_MCF_AND_ATTRIBUTES,
+        NO_OP
     }
 
-    public static ReconfigAction compare(ConnectorConnectionPool oldPool,
-                                         ConnectorConnectionPool newPool, Set excludedProps)
-            throws ConnectorRuntimeException {
-
-        if (isEqualConnectorConnectionPool(oldPool, newPool, excludedProps)
-                == ReconfigAction.NO_OP) {
-
+    public static ReconfigAction compare(ConnectorConnectionPool oldPool, ConnectorConnectionPool newPool,
+        Set excludedProps) throws ConnectorRuntimeException {
+        if (isEqualConnectorConnectionPool(oldPool, newPool, excludedProps) == ReconfigAction.NO_OP) {
             return ReconfigAction.UPDATE_MCF_AND_ATTRIBUTES;
         }
-
         return ReconfigAction.RECREATE_POOL;
     }
 
-    /*
+
+    /**
      * Compare the Original ConnectorConnectionPool with the passed one
      * If MCF properties are changed, indicate that pool recreation is
      * required
@@ -61,8 +58,9 @@ public final class ConnectionPoolReconfigHelper {
      * If the new pool and old pool have identical MCF properties returns
      * true
      */
-    private static ReconfigAction isEqualConnectorConnectionPool(ConnectorConnectionPool
-            oldCcp, ConnectorConnectionPool newCcp, Set excludedProps) {
+    private static ReconfigAction isEqualConnectorConnectionPool(ConnectorConnectionPool oldCcp,
+        ConnectorConnectionPool newCcp, Set excludedProps) {
+
         //for all the following properties, we need to recreate pool if they
         //have changed
         if(newCcp.isPoolingOn() != oldCcp.isPoolingOn()) {
@@ -148,11 +146,9 @@ public final class ConnectionPoolReconfigHelper {
         }
 
         ConnectorSecurityMap[] newSecurityMaps = newCcp.getSecurityMaps();
-        RuntimeSecurityMap newRuntimeSecurityMap =
-                SecurityMapUtils.processSecurityMaps(newSecurityMaps);
+        RuntimeSecurityMap newRuntimeSecurityMap = SecurityMapUtils.processSecurityMaps(newSecurityMaps);
         ConnectorSecurityMap[] oldSecurityMaps = oldCcp.getSecurityMaps();
-        RuntimeSecurityMap oldRuntimeSecurityMap =
-                SecurityMapUtils.processSecurityMaps(oldSecurityMaps);
+        RuntimeSecurityMap oldRuntimeSecurityMap = SecurityMapUtils.processSecurityMaps(oldSecurityMaps);
         if (!(oldRuntimeSecurityMap.equals(newRuntimeSecurityMap))) {
             logFine("isEqualConnectorConnectionPool: CCP.getSecurityMaps:: " +
                     "New set of Security Maps is not equal to the existing" +

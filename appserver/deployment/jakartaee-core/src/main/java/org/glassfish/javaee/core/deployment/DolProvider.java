@@ -23,6 +23,7 @@ import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
 import com.sun.enterprise.deployment.archivist.ApplicationFactory;
 import com.sun.enterprise.deployment.archivist.Archivist;
@@ -136,7 +137,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
 
         String name = params.name();
         String archiveType = dc.getArchiveHandler().getArchiveType();
-        Archivist archivist = archivistFactory.getArchivist(archiveType, cl);
+        Archivist<? extends BundleDescriptor> archivist = archivistFactory.getArchivist(archiveType, cl);
         if (archivist == null) {
             // if no JavaEE medata was found in the archive, we return
             // an empty Application object
@@ -146,11 +147,11 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         String xmlValidationLevel = dasConfig.getDeployXmlValidation();
         archivist.setXMLValidationLevel(xmlValidationLevel);
         if (xmlValidationLevel.equals("none")) {
-          archivist.setXMLValidation(false);
+            archivist.setXMLValidation(false);
         }
         archivist.setRuntimeXMLValidationLevel(xmlValidationLevel);
         if (xmlValidationLevel.equals("none")) {
-          archivist.setRuntimeXMLValidation(false);
+            archivist.setRuntimeXMLValidation(false);
         }
         Collection<Sniffer> sniffers = dc.getTransientAppMetaData(DeploymentProperties.SNIFFERS, Collection.class);
         archivist.setExtensionArchivists(archivistFactory.getExtensionsArchivists(sniffers, archivist.getModuleType()));
@@ -160,15 +161,16 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
         handleDeploymentPlan(deploymentPlan, archivist, sourceArchive, holder);
 
         long start = System.currentTimeMillis();
-        Application application=null;
-        if (holder!=null) {
+        Application application = null;
+        if (holder != null) {
             application = holder.app;
 
             application.setAppName(name);
             application.setClassLoader(cl);
 
             if (application.isVirtual()) {
-                ModuleDescriptor md = application.getStandaloneBundleDescriptor().getModuleDescriptor();
+                ModuleDescriptor<RootDeploymentDescriptor> md = application.getStandaloneBundleDescriptor()
+                    .getModuleDescriptor();
                 md.setModuleName(name);
             }
 
@@ -183,7 +185,8 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
             try {
                 application = applicationFactory.openArchive(name, archivist, sourceArchive, true);
                 application.setAppName(name);
-                ModuleDescriptor md = application.getStandaloneBundleDescriptor().getModuleDescriptor();
+                ModuleDescriptor<RootDeploymentDescriptor> md = application.getStandaloneBundleDescriptor()
+                    .getModuleDescriptor();
                 md.setModuleName(name);
             } catch (SAXException e) {
                 throw new IOException(e);
@@ -229,8 +232,7 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
      * return the name for the given application
      */
     @Override
-    public String getNameFor(ReadableArchive archive,
-                             DeploymentContext context) {
+    public String getNameFor(ReadableArchive archive, DeploymentContext context) {
         if (context == null) {
             return null;
         }

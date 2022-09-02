@@ -62,7 +62,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -158,48 +160,46 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
     private static final Logger LOG = KernelLoggerInfo.getLogger();
 
     @Inject
-    protected SnifferManagerImpl snifferManager;
+    private SnifferManagerImpl snifferManager;
 
     @Inject
-    ServiceLocator serviceLocator;
+    private ServiceLocator serviceLocator;
 
     @Inject
-    ArchiveFactory archiveFactory;
+    private ArchiveFactory archiveFactory;
 
     @Inject
-    ContainerRegistry containerRegistry;
+    private ContainerRegistry containerRegistry;
 
     @Inject
-    public ApplicationRegistry appRegistry;
+    private ApplicationRegistry appRegistry;
 
     @Inject
-    protected Applications applications;
+    private Applications applications;
 
     @Inject
     @Named(DEFAULT_INSTANCE_NAME)
-    Server server;
+    private Server server;
 
     @Inject
-    protected Domain domain;
+    private Domain domain;
 
     @Inject
-    ServerEnvironmentImpl env;
+    private ServerEnvironmentImpl env;
 
     @Inject
     @Optional
-    VirtualizationEnv virtEnv;
+    private VirtualizationEnv virtEnv;
 
     @Inject
-    Events events;
+    private Events events;
 
-    @Inject
-    ConfigSupport configSupport;
 
-    protected DeploymentLifecycleProbeProvider deploymentLifecycleProbeProvider;
+    private DeploymentLifecycleProbeProvider deploymentLifecycleProbeProvider;
     private ExecutorService executorService;
     private Collection<ApplicationLifecycleInterceptor> alcInterceptors = emptyList();
 
-    protected Deployer getDeployer(EngineInfo engineInfo) {
+    protected Deployer<?, ?> getDeployer(EngineInfo engineInfo) {
         return engineInfo.getDeployer();
     }
 
@@ -387,9 +387,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             // the deployment fail, the main reason
             // is that some container do not support to be restarted.
             if (sniffers != null && LOG.isLoggable(FINE)) {
-                for (Sniffer sniffer : sniffers) {
-                    LOG.fine("Before Sorting" + sniffer.getModuleType());
-                }
+                LOG.log(Level.FINE, "Before Sorting: "
+                    + sniffers.stream().map(Sniffer::getModuleType).collect(Collectors.joining(", ")));
             }
 
             sniffers = getSniffers(handler, sniffers, context);
@@ -417,14 +416,15 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 }
 
                 if (LOG.isLoggable(FINE)) {
-                    for (EngineInfo info : sortedEngineInfos) {
-                        LOG.fine("After Sorting " + info.getSniffer().getModuleType());
-                    }
+                    LOG.log(Level.FINE, "After Sorting: " + sortedEngineInfos.stream()
+                        .map(i -> i.getSniffer().getModuleType()).collect(Collectors.joining(", ")));
                 }
 
                 if (sortedEngineInfos == null || sortedEngineInfos.isEmpty()) {
-                    report.failure(LOG, localStrings.getLocalString("unknowncontainertype",
-                            "There is no installed container capable of handling this application {0}", context.getSource().getName()));
+                    report.failure(LOG,
+                        localStrings.getLocalString("unknowncontainertype",
+                            "There is no installed container capable of handling this application {0}",
+                            context.getSource().getName()));
                     tracker.actOn(LOG);
                     return null;
                 }
@@ -593,7 +593,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                     List<ReadableArchive> externalLibraries = getExternalLibraries(context);
 
                     for (ReadableArchive externalLibrary : externalLibraries) {
-                         parser.parse(new ReadableArchiveScannerAdapter(parser, externalLibrary), null);
+                        parser.parse(new ReadableArchiveScannerAdapter(parser, externalLibrary), null);
                     }
 
                     parser.awaitTermination();
@@ -731,11 +731,11 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         return sniffers;
     }
 
+
     // set up containers and prepare the sorted ModuleInfos
     @Override
-    public List<EngineInfo<?, ?>> setupContainerInfos(final ArchiveHandler handler, Collection<? extends Sniffer> sniffers,
-            DeploymentContext context) throws Exception {
-
+    public List<EngineInfo<?, ?>> setupContainerInfos(final ArchiveHandler handler,
+        Collection<? extends Sniffer> sniffers, DeploymentContext context) throws Exception {
         final ActionReport report = context.getActionReport();
 
         DeploymentTracing tracing = context.getModuleMetaData(DeploymentTracing.class);
@@ -796,7 +796,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 throw new Exception(msg);
             }
 
-            Deployer deployer = getDeployer(engineInfo);
+            Deployer<?, ?> deployer = getDeployer(engineInfo);
             if (deployer == null) {
                 if (!startContainers(Collections.singleton(engineInfo), LOG, context)) {
                     final String msg = "Aborting, Failed to start container " + containerName;
@@ -823,8 +823,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         List<EngineInfo<?, ?>> sortedEngineInfos = new ArrayList<>();
 
-        Map<Class, ApplicationMetaDataProvider> typeByProvider = new HashMap<>();
-        for (ApplicationMetaDataProvider provider : serviceLocator.getAllServices(ApplicationMetaDataProvider.class)) {
+        Map<Class<?>, ApplicationMetaDataProvider<?>> typeByProvider = new HashMap<>();
+        for (ApplicationMetaDataProvider<?> provider : serviceLocator.getAllServices(ApplicationMetaDataProvider.class)) {
             if (provider.getMetaData() != null) {
                 for (Class<?> provided : provider.getMetaData().provides()) {
                     typeByProvider.put(provided, provider);
@@ -833,7 +833,7 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         }
 
         // Check if everything is provided.
-        for (ApplicationMetaDataProvider provider : serviceLocator.getAllServices(ApplicationMetaDataProvider.class)) {
+        for (ApplicationMetaDataProvider<?> provider : serviceLocator.getAllServices(ApplicationMetaDataProvider.class)) {
             if (provider.getMetaData() != null) {
                 for (Class<?> dependency : provider.getMetaData().requires()) {
                     if (!typeByProvider.containsKey(dependency)) {
@@ -877,16 +877,14 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         }
 
         // ok everything is satisfied, just a matter of running things in order
-        List<Deployer> orderedDeployers = new ArrayList<>();
-        for (Deployer deployer : containerInfosByDeployers.keySet()) {
-            if (LOG.isLoggable(FINE)) {
-                LOG.fine("Keyed Deployer " + deployer.getClass());
-            }
-            loadDeployer(orderedDeployers, deployer, typeByDeployer, (Map) typeByProvider, context);
+        List<Deployer<?, ?>> orderedDeployers = new ArrayList<>();
+        for (Deployer<?, ?> deployer : containerInfosByDeployers.keySet()) {
+            LOG.log(Level.FINE, "Keyed Deployer {0}", deployer.getClass());
+            loadDeployer(orderedDeployers, deployer, typeByDeployer, typeByProvider, context);
         }
 
         // Now load metadata from deployers.
-        for (Deployer deployer : orderedDeployers) {
+        for (Deployer<?, ?> deployer : orderedDeployers) {
             LOG.log(Level.FINE, "Ordered Deployer {0}", deployer);
 
             final MetaData metadata = deployer.getMetaData();
@@ -919,9 +917,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         return sortedEngineInfos;
     }
 
-    private void loadDeployer(List<Deployer> results, Deployer<?, ?> deployer, Map<Class<?>, Deployer<?, ?>> typeByDeployer,
-            Map<Class<?>, ApplicationMetaDataProvider> typeByProvider, DeploymentContext dc) throws IOException {
 
+    private void loadDeployer(List<Deployer<?, ?>> results, Deployer<?, ?> deployer,
+        Map<Class<?>, Deployer<?, ?>> typeByDeployer, Map<Class<?>, ApplicationMetaDataProvider<?>> typeByProvider,
+        DeploymentContext dc) throws IOException {
         if (results.contains(deployer)) {
             return;
         }
@@ -934,14 +933,14 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 if (typeByDeployer.containsKey(required)) {
                     loadDeployer(results, typeByDeployer.get(required), typeByDeployer, typeByProvider, dc);
                 } else {
-                    ApplicationMetaDataProvider provider = typeByProvider.get(required);
+                    ApplicationMetaDataProvider<?> provider = typeByProvider.get(required);
                     if (provider == null) {
                         LOG.log(SEVERE, inconsistentLifecycleState, required);
                     } else {
-                        LinkedList<ApplicationMetaDataProvider> providers = new LinkedList<>();
+                        LinkedList<ApplicationMetaDataProvider<?>> providers = new LinkedList<>();
 
                         addRecursively(providers, typeByProvider, provider);
-                        for (ApplicationMetaDataProvider p : providers) {
+                        for (ApplicationMetaDataProvider<?> p : providers) {
                             dc.addModuleMetaData(p.load(dc));
                         }
                     }
@@ -950,7 +949,9 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         }
     }
 
-    private void addRecursively(LinkedList<ApplicationMetaDataProvider> results, Map<Class<?>, ApplicationMetaDataProvider> providers, ApplicationMetaDataProvider provider) {
+
+    private void addRecursively(LinkedList<ApplicationMetaDataProvider<?>> results,
+        Map<Class<?>, ApplicationMetaDataProvider<?>> providers, ApplicationMetaDataProvider<?> provider) {
         results.addFirst(provider);
 
         for (Class<?> type : provider.getMetaData().requires()) {
@@ -960,8 +961,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         }
     }
 
+
     @Override
-    public ModuleInfo prepareModule(List<EngineInfo<?, ?>> sortedEngineInfos, String moduleName, DeploymentContext context, ProgressTracker tracker) throws Exception {
+    public ModuleInfo prepareModule(List<EngineInfo<?, ?>> sortedEngineInfos, String moduleName,
+        DeploymentContext context, ProgressTracker tracker) throws Exception {
         ActionReport report = context.getActionReport();
         List<EngineRef> addedEngines = new ArrayList<>();
 
@@ -1053,33 +1056,33 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         return containersInfo;
     }
 
-    @SuppressWarnings("unchecked")
     protected boolean startContainers(Collection<EngineInfo<?, ?>> containersInfo, Logger logger, DeploymentContext context) {
-
         ActionReport report = context.getActionReport();
         for (EngineInfo<?, ?> engineInfo : containersInfo) {
             Container container;
             try {
                 container = engineInfo.getContainer();
             } catch (Exception e) {
-                logger.log(SEVERE, KernelLoggerInfo.cantStartContainer, new Object[] { engineInfo.getSniffer().getModuleType(), e });
+                LogRecord log = new LogRecord(SEVERE, KernelLoggerInfo.cantStartContainer);
+                log.setParameters(new Object[] {engineInfo.getSniffer().getModuleType()});
+                log.setThrown(e);
+                LOG.log(log);
                 return false;
             }
 
-            Class<? extends Deployer<?, ?>> deployerClass = (Class<? extends Deployer<?, ?>>) container.getDeployer();
-            @SuppressWarnings("rawtypes")
-            Deployer deployer;
+            Class<?> deployerClass = container.getDeployer();
+            Deployer<?, ?> deployer;
             try {
-                deployer = serviceLocator.getService(deployerClass);
-                engineInfo.setDeployer(deployer);
+                deployer = (Deployer<?, ?>) serviceLocator.getService(deployerClass);
+                engineInfo.setDeployer((Deployer) deployer);
             } catch (MultiException e) {
                 report.failure(logger, "Cannot instantiate or inject " + deployerClass, e);
                 engineInfo.stop(logger);
                 return false;
             } catch (ClassCastException e) {
                 engineInfo.stop(logger);
-                report.failure(logger,
-                        deployerClass + " does not implement " + " the org.jvnet.glassfish.api.deployment.Deployer interface", e);
+                report.failure(logger, deployerClass + " does not implement "
+                    + " the org.jvnet.glassfish.api.deployment.Deployer interface", e);
                 return false;
             }
         }
@@ -1139,12 +1142,12 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         ApplicationInfo info = appRegistry.get(appName);
         if (info == null) {
             report.failure(context.getLogger(), "Application " + appName + " not registered", null);
-            events.send(new Event(Deployment.UNDEPLOYMENT_FAILURE, context));
+            events.send(new Event<>(Deployment.UNDEPLOYMENT_FAILURE, context));
             return;
 
         }
 
-        events.send(new Event(Deployment.UNDEPLOYMENT_START, info));
+        events.send(new Event<>(Deployment.UNDEPLOYMENT_START, info));
 
         // for DAS target, the undeploy should unload the application
         // as well
@@ -1153,10 +1156,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
         }
 
         if (report.getActionExitCode().equals(ActionReport.ExitCode.SUCCESS)) {
-            events.send(new Event(Deployment.UNDEPLOYMENT_SUCCESS, context));
+            events.send(new Event<>(Deployment.UNDEPLOYMENT_SUCCESS, context));
             deploymentLifecycleProbeProvider.applicationUndeployedEvent(appName, getApplicationType(info));
         } else {
-            events.send(new Event(Deployment.UNDEPLOYMENT_FAILURE, context));
+            events.send(new Event<>(Deployment.UNDEPLOYMENT_FAILURE, context));
         }
 
         appRegistry.remove(appName);
@@ -1218,7 +1221,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 if (!DeploymentUtils.isDomainTarget(deployParams.target)) {
                     targets.add(deployParams.target);
                 } else {
-                    List<String> previousTargets = context.getTransientAppMetaData(DeploymentProperties.PREVIOUS_TARGETS, List.class);
+                    List<String> previousTargets = context
+                        .getTransientAppMetaData(DeploymentProperties.PREVIOUS_TARGETS, List.class);
                     if (previousTargets == null) {
                         previousTargets = domain.getAllReferencedTargetsForApplication(deployParams.name);
                     }
@@ -1227,10 +1231,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
                 String origVS = deployParams.virtualservers;
                 Boolean origEnabled = deployParams.enabled;
-                Properties previousVirtualServers = context.getTransientAppMetaData(DeploymentProperties.PREVIOUS_VIRTUAL_SERVERS,
-                        Properties.class);
-                Properties previousEnabledAttributes = context.getTransientAppMetaData(DeploymentProperties.PREVIOUS_ENABLED_ATTRIBUTES,
-                        Properties.class);
+                Properties previousVirtualServers = context
+                    .getTransientAppMetaData(DeploymentProperties.PREVIOUS_VIRTUAL_SERVERS, Properties.class);
+                Properties previousEnabledAttributes = context
+                    .getTransientAppMetaData(DeploymentProperties.PREVIOUS_ENABLED_ATTRIBUTES, Properties.class);
                 for (String target : targets) {
                     // first reset the virtualservers, enabled attribute
                     deployParams.virtualservers = origVS;
@@ -1291,8 +1295,8 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
             try {
                 t.commit();
             } catch (RetryableException e) {
-                System.out.println("Retryable...");
-                // TODO : do something meaninful here
+                LOG.log(Level.INFO, "Rollbacking the transaction. Retryable...");
+                LOG.log(Level.FINEST, "Rollbacking the transaction.", e);
                 t.rollback();
             } catch (TransactionFailure e) {
                 t.rollback();

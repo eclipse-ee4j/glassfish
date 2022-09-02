@@ -74,7 +74,7 @@ public class ContainerTransactionNode extends DeploymentDescriptorNode<Container
 
     @Override
     public ContainerTransaction getDescriptor() {
-        return new ContainerTransaction(trans_attribute, description);
+        return null;
     }
 
 

@@ -54,7 +54,7 @@ public class RelationshipsNode extends DeploymentDescriptorNode<RelationshipDesc
 
     @Override
     public RelationshipDescriptor getDescriptor() {
-        return (RelationshipDescriptor) getParentNode().getDescriptor();
+        return null;
     }
 
 

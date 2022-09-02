@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,21 +27,30 @@ public class AuthException extends jakarta.security.auth.message.AuthException {
     private static final long serialVersionUID = -1156951780670243758L;
 
     /**
-     * Constructs a AuthException with no detail message. A detail message is a String that describes this particular
-     * exception.
+     * Constructs a AuthException with no detail message.
      */
     public AuthException() {
     }
 
+
     /**
-     * Constructs a AuthException with the specified detail message. A detail message is a String that describes this
-     * particular exception.
+     * Constructs a AuthException with a message
      *
-     * <p>
-     *
-     * @param msg the detail message.
+     * @param message the detail message.
+     * @param cause
      */
-    public AuthException(String msg) {
-        super(msg);
+    public AuthException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+
+    /**
+     * Constructs a AuthException with the specified detail message.
+     * A detail message is a String that describes this particular exception.
+     *
+     * @param message the detail message.
+     */
+    public AuthException(String message) {
+        super(message);
     }
 }

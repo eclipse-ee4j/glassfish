@@ -57,7 +57,6 @@ public class RolesAllowedHandler extends AbstractAuthAnnotationHandler {
         RolesAllowed rolesAllowedAn = (RolesAllowed) authAnnotation;
         for (String roleName : rolesAllowedAn.value()) {
             Role role = new Role(roleName);
-            // add role if not exists
             ejbDesc.getEjbBundleDescriptor().addRole(role);
             ejbDesc.addPermissionedMethod(new MethodPermission(role), md);
         }

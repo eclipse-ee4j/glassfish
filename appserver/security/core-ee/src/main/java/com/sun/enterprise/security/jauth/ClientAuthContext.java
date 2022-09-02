@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,10 @@
  */
 
 package com.sun.enterprise.security.jauth;
+
+import java.util.Map;
+
+import javax.security.auth.Subject;
 
 /**
  * This ClientAuthContext class manages AuthModules that may be used to secure requests made as a client. A caller
@@ -51,7 +56,7 @@ package com.sun.enterprise.security.jauth;
  * @see AuthConfig
  * @see SOAPAuthParam
  */
-public interface ClientAuthContext {
+public interface ClientAuthContext extends AuthContext {
 
     /**
      * Secure a request message.
@@ -74,7 +79,7 @@ public interface ClientAuthContext {
      *
      * @exception AuthException if the operation failed.
      */
-    void secureRequest(AuthParam param, javax.security.auth.Subject subject, java.util.Map sharedState) throws AuthException;
+    void secureRequest(AuthParam param, Subject subject, Map sharedState) throws AuthException;
 
     /**
      * Validate received response.
@@ -95,21 +100,6 @@ public interface ClientAuthContext {
      *
      * @exception AuthException if the operation failed.
      */
-    void validateResponse(AuthParam param, javax.security.auth.Subject subject, java.util.Map sharedState) throws AuthException;
+    void validateResponse(AuthParam param, Subject subject, Map sharedState) throws AuthException;
 
-    /**
-     * Dispose of the Subject (remove Principals or credentials from the Subject object that were stored during
-     * <code>validateResponse</code>).
-     *
-     * <p>
-     * This method invokes configured modules to dispose the Subject.
-     *
-     * @param subject the subject to be disposed.
-     *
-     * @param sharedState a Map for modules to save state across a sequence of calls from <code>secureRequest</code> to
-     * <code>validateResponse</code> to <code>disposeSubject</code>.
-     *
-     * @exception AuthException if the operation failed.
-     */
-    void disposeSubject(javax.security.auth.Subject subject, java.util.Map sharedState) throws AuthException;
 }

@@ -23,6 +23,7 @@ import com.sun.enterprise.deployment.MethodPermission;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.TypeUtil;
 
 import jakarta.annotation.security.DenyAll;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -52,6 +54,7 @@ import org.glassfish.apf.HandlerProcessingResult;
  */
 abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHandler
     implements PostProcessor<EjbContext> {
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
 
     /**
      * This method processes the EJB Security for the given Annotation.
@@ -139,18 +142,18 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         EjbDescriptor ejbDesc = ejbContext.getDescriptor();
         Annotation authAnnotation = ainfo.getAnnotation();
 
-        if (!ejbContext.isInherited()
-            && (ejbDesc.getMethodPermissionsFromDD() == null || ejbDesc.getMethodPermissionsFromDD().isEmpty())) {
-            for (MethodDescriptor md : getMethodAllDescriptors(ejbDesc)) {
-                processEjbMethodSecurity(authAnnotation, md, ejbDesc);
-            }
-        } else {
+        if (ejbContext.isInherited()
+            || (ejbDesc.getMethodPermissionsFromDD() != null && !ejbDesc.getMethodPermissionsFromDD().isEmpty())) {
             Class<?> classAn = (Class<?>) ainfo.getAnnotatedElement();
             for (MethodDescriptor md : ejbDesc.getSecurityBusinessMethodDescriptors()) {
                 // override by existing info
                 if (classAn.equals(ejbContext.getDeclaringClass(md)) && !hasMethodPermissionsFromDD(md, ejbDesc)) {
                     processEjbMethodSecurity(authAnnotation, md, ejbDesc);
                 }
+            }
+        } else {
+            for (MethodDescriptor md : getMethodAllDescriptors(ejbDesc)) {
+                processEjbMethodSecurity(authAnnotation, md, ejbDesc);
             }
         }
     }
@@ -221,13 +224,16 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
             for (List<MethodDescriptor> mdObjs : methodPermissionsFromDD.values()) {
                 for (MethodDescriptor md : mdObjs) {
                     for (MethodDescriptor style3Md : md.doStyleConversion(ejbDesc, allMethods)) {
+                        LOG.log(Level.FINEST, "Comparing style3Md: {0} and methodDesc: {1}", new Object[] {style3Md, methodDesc});
                         if (methodDesc.equals(style3Md)) {
+                            LOG.info("Returning true.");
                             return true;
                         }
                     }
                 }
             }
         }
+        LOG.info("Returning false.");
         return false;
     }
 

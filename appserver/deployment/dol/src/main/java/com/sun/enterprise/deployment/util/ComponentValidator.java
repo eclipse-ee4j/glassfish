@@ -442,7 +442,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 throw new RuntimeException("Error: Unresolved <ejb-link>: "+linkName);
             } else {
                 final ArchiveType moduleType = ejbRef.getReferringBundleDescriptor().getModuleType();
-                if(moduleType != null && moduleType.equals(DOLUtils.carType())) {
+                if (moduleType != null && moduleType.equals(DOLUtils.carType())) {
                     // Because no annotation processing is done within ACC runtime, this case typically
                     // arises for remote @EJB annotations, so don't log it as warning.
                     if (LOG.isLoggable(Level.FINE)) {
@@ -879,7 +879,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             String principalName = null;
             String roleName = runAs.getRoleName();
 
-            final Subject fs = (Subject)application.getRoleMapper().getRoleToSubjectMapping().get(roleName);
+            final Subject fs = application.getRoleMapper().getRoleToSubjectMapping().get(roleName);
             if (fs != null) {
                 principalName = (String)AccessController.doPrivileged(new PrivilegedAction() {
                     @Override

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,8 @@
  */
 
 package com.sun.enterprise.security;
+
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 
 import java.security.Principal;
 import java.security.cert.X509Certificate;
@@ -33,18 +36,16 @@ import javax.security.auth.spi.LoginModule;
 import javax.security.auth.x500.X500Principal;
 
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.Group;
-
-import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 
 /**
  * Abstract base class for certificate-based login modules.
  *
  * <P>
  * Subclasses need to implement the authenticateUser() method and later call commitUserAuthentication().
- *
  */
 public abstract class BaseCertificateLoginModule implements LoginModule {
+
+    private static final Logger LOG = SecurityLoggerInfo.getLogger();
 
     private Subject subject;
     /**
@@ -58,14 +59,13 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     /**
      * System Logger.
      */
-    protected static final Logger _logger = SecurityLoggerInfo.getLogger();
     private CallbackHandler callbackHandler;
-    private boolean success = false;
-    private String[] groups = null;
-    private boolean commitsuccess = false;
-    private X509Certificate[] certs = null;
+    private boolean success;
+    private String[] groups;
+    private boolean commitsuccess;
+    private X509Certificate[] certs;
     private X500Principal x500Principal;
-    private String appName = null;
+    private String appName;
 
     @Override
     public final void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
@@ -73,9 +73,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         this._sharedState = sharedState;
         this._options = options;
         this.callbackHandler = callbackHandler;
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Login module initialized: {0}", this.getClass().toString());
-        }
+        LOG.log(Level.FINE, "Login module initialized: {0}", getClass());
     }
 
     @Override
@@ -85,9 +83,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
 
         // Delegate the actual authentication to subclass.
         authenticateUser();
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JAAS login complete.");
-        }
+        LOG.log(Level.FINE, "JAAS login complete.");
         return true;
     }
 
@@ -99,25 +95,22 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         Set<Principal> principalSet = subject.getPrincipals();
         for (int i = 0; i < groups.length; i++) {
             if (groups[i] != null) {
-                Group g = Globals.getDefaultHabitat().<PrincipalGroupFactory>getService(PrincipalGroupFactory.class)
+                Principal group = Globals.getDefaultHabitat()
+                    .<PrincipalGroupFactory> getService(PrincipalGroupFactory.class)
                     .getGroupInstance(groups[i], CertificateRealm.AUTH_TYPE);
-                principalSet.add(g);
+                principalSet.add(group);
             }
             groups[i] = null;
         }
         groups = null;
         commitsuccess = true;
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JAAS authentication committed.");
-        }
+        LOG.log(Level.FINE, "JAAS authentication committed.");
         return true;
     }
 
     @Override
     final public boolean abort() throws LoginException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JAAS authentication aborted.");
-        }
+        LOG.log(Level.FINE, "JAAS authentication aborted.");
 
         if (!success) {
             return false;
@@ -146,9 +139,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
 
     @Override
     final public boolean logout() throws LoginException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JAAS logout for: {0}", subject.toString());
-        }
+        LOG.log(Level.FINE, "JAAS logout for: {0}", subject);
 
         subject.getPrincipals().clear();
         subject.getPublicCredentials().clear();
@@ -174,19 +165,21 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
 
     private void extractCredentials() throws LoginException {
         // Certificates are available as a List object in the Public Credentials.
+        @SuppressWarnings("rawtypes")
         Set<List> creds = subject.getPublicCredentials(List.class);
         Iterator<List> itr = creds.iterator();
         if (!itr.hasNext()) {
             success = false;
             throw new LoginException("No Certificate Credential found.");
         }
-        List certCred = itr.next();
+        @SuppressWarnings("unchecked")
+        List<X509Certificate> certCred = itr.next();
         if (certCred == null || certCred.isEmpty()) {
             success = false;
             throw new LoginException("No Certificate(s) found.");
         }
         try {
-            certs = (X509Certificate[]) certCred.toArray(new X509Certificate[certCred.size()]);
+            certs = certCred.toArray(new X509Certificate[certCred.size()]);
         } catch (Exception ex) {
             throw (LoginException) new LoginException("No Certificate(s) found.").initCause(ex);
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,7 +24,10 @@ import com.sun.enterprise.security.jauth.AuthException;
 import com.sun.enterprise.security.jauth.AuthPolicy;
 import com.sun.enterprise.security.jauth.ClientAuthContext;
 
+import jakarta.xml.ws.handler.soap.SOAPMessageContext;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.security.auth.callback.CallbackHandler;
 
@@ -39,8 +43,9 @@ public class ClientAuthConfig extends BaseAuthConfig {
         super(defaultContext);
     }
 
-    private ClientAuthConfig (ArrayList descriptors, ArrayList authContexts) {
-        super(descriptors,authContexts);
+
+    private ClientAuthConfig(ArrayList<MessageSecurityDescriptor> descriptors, List<ClientAuthContext> authContexts) {
+        super(descriptors, authContexts);
     }
 
 
@@ -51,7 +56,7 @@ public class ClientAuthConfig extends BaseAuthConfig {
 
         ClientAuthConfig rvalue = null;
         String provider = null;
-        ArrayList descriptors = null;
+        ArrayList<MessageSecurityDescriptor> descriptors = null;
         ClientAuthContext defaultContext = null;
         if (binding != null) {
             String layer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
@@ -60,22 +65,18 @@ public class ClientAuthConfig extends BaseAuthConfig {
                 descriptors = binding.getMessageSecurityDescriptors();
             }
         }
-        if (descriptors == null || descriptors.size() == 0) {
+        if (descriptors == null || descriptors.isEmpty()) {
             defaultContext = getAuthContext(authLayer,provider,null,null,cbh);
             if (defaultContext != null) {
                 rvalue = new ClientAuthConfig(defaultContext);
             }
         } else {
             boolean hasPolicy = false;
-            ArrayList authContexts = new ArrayList();
-            for (int i = 0; i < descriptors.size(); i++) {
-                MessageSecurityDescriptor msd =
-                    (MessageSecurityDescriptor) descriptors.get(i);
-                AuthPolicy requestPolicy =
-                    getAuthPolicy(msd.getRequestProtectionDescriptor());
-                AuthPolicy responsePolicy =
-                    getAuthPolicy(msd.getResponseProtectionDescriptor());
-                if (requestPolicy.authRequired()||responsePolicy.authRequired()) {
+            ArrayList<ClientAuthContext> authContexts = new ArrayList<>();
+            for (MessageSecurityDescriptor msd : descriptors) {
+                AuthPolicy requestPolicy = getAuthPolicy(msd.getRequestProtectionDescriptor());
+                AuthPolicy responsePolicy = getAuthPolicy(msd.getResponseProtectionDescriptor());
+                if (requestPolicy.authRequired() || responsePolicy.authRequired()) {
                     authContexts.add(getAuthContext(authLayer, provider, requestPolicy, responsePolicy, cbh));
                     hasPolicy = true;
                 } else {
@@ -83,7 +84,7 @@ public class ClientAuthConfig extends BaseAuthConfig {
                 }
             }
             if (hasPolicy) {
-                rvalue = new ClientAuthConfig(descriptors,authContexts);
+                rvalue = new ClientAuthConfig(descriptors, authContexts);
             }
         }
         return rvalue;
@@ -102,7 +103,7 @@ public class ClientAuthConfig extends BaseAuthConfig {
     }
 
 
-    public ClientAuthContext getAuthContext(jakarta.xml.ws.handler.soap.SOAPMessageContext context) {
+    public ClientAuthContext getAuthContext(SOAPMessageContext context) {
         return (ClientAuthContext) getContext(context);
     }
 

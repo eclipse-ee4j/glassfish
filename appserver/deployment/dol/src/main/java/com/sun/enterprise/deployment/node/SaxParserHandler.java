@@ -130,6 +130,7 @@ public class SaxParserHandler extends DefaultHandler {
         * entry to the rootNodes map.
         */
         if (mappingStuff.mBundleRegistrationStatus.containsKey(bundleTagName)) {
+            LOG.log(Level.FINEST, "Mapping already contains entry for tag {0}, returning.", bundleTagName);
             return;
         }
 
@@ -160,6 +161,8 @@ public class SaxParserHandler extends DefaultHandler {
                 mappingStuff.mMapping.put(publicID, systemIDResolution);
             }
         }
+        LOG.log(Level.FINER, "Final mapping keys for root node key {0}:\n {1}",
+            new Object[] {rootNodeKey, mappingStuff.mMapping.keySet()});
 
         // This node might know of elements which should permit empty values,
         // or elements for which we should preserve white space.  Track them.
@@ -210,10 +213,8 @@ public class SaxParserHandler extends DefaultHandler {
                 new Object[] {publicID, systemID, fileName});
             return new InputSource(fileName);
         } catch (SAXException e) {
-            LOG.log(Level.SEVERE, e.getMessage(), e);
             throw e;
         } catch (Exception ioe) {
-            LOG.log(Level.SEVERE, ioe.getMessage(), ioe);
             throw new SAXException(ioe);
         }
     }
@@ -281,16 +282,14 @@ public class SaxParserHandler extends DefaultHandler {
      * @param schemaSystemID the system id for the schema
      */
     public static File getSchemaFileFor(String schemaSystemID) throws IOException {
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("Getting Schema " + schemaSystemID);
-        }
+        LOG.log(Level.FINE, "Getting Schema {0}", schemaSystemID);
         String schemaLoc = DTDRegistry.SCHEMA_LOCATION.replace('/', File.separatorChar);
         File f = new File(schemaLoc + File.separatorChar + schemaSystemID);
-        if (!f.exists()) {
-            LOG.fine("Cannot find schema " + schemaSystemID);
-            return null;
+        if (f.exists()) {
+            return f;
         }
-        return f;
+        LOG.log(Level.INFO, "Cannot find the schema file {0}", f);
+        return null;
     }
 
 
@@ -431,9 +430,7 @@ public class SaxParserHandler extends DefaultHandler {
             } else {
                 try {
                     node = (XMLNode<?>) rootNodeClass.getDeclaredConstructor().newInstance();
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("Instanciating " + node);
-                    }
+                    LOG.log(Level.FINE, "Instantiating {0}", node);
                     if (node instanceof RootXMLNode) {
                         if (publicID != null) {
                             ((RootXMLNode) node).setDocType(publicID);
@@ -449,7 +446,7 @@ public class SaxParserHandler extends DefaultHandler {
                 }
             }
         } else {
-            node = nodes.get(nodes.size()-1);
+            node = nodes.get(nodes.size() - 1);
         }
         if (node != null) {
             XMLElement element = new XMLElement(qName, namespaces);
@@ -459,7 +456,7 @@ public class SaxParserHandler extends DefaultHandler {
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Asking for new handler for " + element + " to " + node);
                 }
-                XMLNode newNode = node.getHandlerFor(element);
+                XMLNode<?> newNode = node.getHandlerFor(element);
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Got " + newNode);
                 }

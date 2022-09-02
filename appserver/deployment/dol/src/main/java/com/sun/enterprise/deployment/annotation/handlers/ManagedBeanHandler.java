@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationHandlerFor;
@@ -51,7 +52,6 @@ import org.jvnet.hk2.annotations.Service;
 
 @Service
 @AnnotationHandlerFor(ManagedBean.class)
-@SuppressWarnings("deprecation")
 public class ManagedBeanHandler extends AbstractHandler {
 
     public ManagedBeanHandler() {
@@ -92,10 +92,7 @@ public class ManagedBeanHandler extends AbstractHandler {
         // annotation processing reflectively to avoid dependency on jakarta.interceptor from
         // DOL module.
 
-        // TODO refactor jakarta.interceptor annotation handlers to support both ejb and non-ejb
-        // related interceptors
-
-        Annotation interceptorsAnn = getClassAnnotation(managedBeanClass, "jakarta.interceptor.Interceptors");
+        Annotation interceptorsAnn = getClassAnnotation(managedBeanClass, Interceptors.class.getName());
         if (interceptorsAnn != null) {
             try {
                 Method m = interceptorsAnn.annotationType().getDeclaredMethod("value");
@@ -194,8 +191,7 @@ public class ManagedBeanHandler extends AbstractHandler {
         } else {
             // If the method or constructor excludes
             // class-level interceptors, explicitly set method-level to an empty list.
-            boolean excludeClassInterceptors = (getMethodAnnotation(o,
-                "jakarta.interceptor.ExcludeClassInterceptors") != null);
+            boolean excludeClassInterceptors = getMethodAnnotation(o, ExcludeClassInterceptors.class.getName()) != null;
             if (excludeClassInterceptors) {
                 MethodDescriptor mDesc = getMethodDescriptor(o, managedBeanClass);
                 if (mDesc != null) {
@@ -297,6 +293,8 @@ public class ManagedBeanHandler extends AbstractHandler {
 
 
     private boolean methodOverridden(final Method m, final Class<?> declaringSuperClass, final Class<?> leafClass) {
+        logger.log(Level.FINEST, "Checking if {0} of {1} overrides same method in {2}",
+            new Object[] {m.getName(), leafClass, declaringSuperClass});
         if (Modifier.isPrivate(m.getModifiers())) {
             return false;
         }
@@ -304,6 +302,8 @@ public class ManagedBeanHandler extends AbstractHandler {
         while (nextClass != declaringSuperClass && nextClass != Object.class) {
             for (final Method nextMethod : nextClass.getDeclaredMethods()) {
                 if (!Modifier.isPrivate(nextMethod.getModifiers()) && TypeUtil.sameMethodSignature(m, nextMethod)) {
+                    logger.log(Level.FINEST, "Method {0} of {1} overrides same method in {2}",
+                        new Object[] {m.getName(), leafClass, nextClass});
                     return true;
                 }
             }

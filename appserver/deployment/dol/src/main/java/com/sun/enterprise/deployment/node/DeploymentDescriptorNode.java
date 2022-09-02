@@ -92,7 +92,7 @@ import static java.util.logging.Level.WARNING;
  * @param <T> Deployment {@link Descriptor} type.
  * @author Jerome Dochez
  */
-public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
+public abstract class DeploymentDescriptorNode<T extends Descriptor> implements XMLNode<T>  {
 
     private static final Logger LOG = DOLUtils.getDefaultLogger();
     protected static final LocalStringManagerImpl I18N_NODE = new LocalStringManagerImpl(DeploymentDescriptorNode.class);
@@ -151,7 +151,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
 
 
     protected T createDescriptor() {
-        return (T) DescriptorFactory.getDescriptor(getXMLPath());
+        return DescriptorFactory.getDescriptor(getXMLPath());
     }
 
 
@@ -325,9 +325,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
         return extNode.getClass();
     }
 
-    /**
-     * SAX Parser API implementation, we don't really care for now.
-     */
+
     @Override
     public void startElement(XMLElement element, Attributes attributes) {
         if (!this.getXMLRootTag().equals(element)) {
@@ -346,6 +344,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
             }
         }
     }
+
 
     /**
      * parsed an attribute of an element
@@ -637,7 +636,7 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
                         // write all occurences of this sub node under
                         // the parent node
                         try {
-                            DeploymentDescriptorNode subNode = (DeploymentDescriptorNode) handlerClass
+                            DeploymentDescriptorNode<?> subNode = (DeploymentDescriptorNode<?>) handlerClass
                                 .getDeclaredConstructor().newInstance();
                             subNode.setParentNode(this);
                             subNode.writeDescriptors(node, subElementName, descriptor);
@@ -1098,11 +1097,8 @@ public abstract class DeploymentDescriptorNode<T> implements XMLNode<T>  {
      */
     @Override
     public void addPrefixMapping(String prefix, String uri) {
-        Object o = getDescriptor();
-        if (o instanceof Descriptor) {
-            Descriptor descriptor = (Descriptor) o;
-            descriptor.addPrefixMapping(prefix, uri);
-        }
+        Descriptor descriptor = getDescriptor();
+        descriptor.addPrefixMapping(prefix, uri);
     }
 
     /**

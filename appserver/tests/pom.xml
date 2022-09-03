@@ -120,6 +120,7 @@
             <modules>
                 <module>admin</module>
                 <module>appserv-tests</module>
+                <module>jakartaee</module>
             </modules>
         </profile>
         <profile>
@@ -138,6 +139,7 @@
             <modules>
                 <module>admin</module>
                 <module>appserv-tests</module>
+                <module>jakartaee</module>
                 <module>tck</module>
             </modules>
         </profile>

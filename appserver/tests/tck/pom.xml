@@ -34,7 +34,10 @@
 
     <modules>
         <module>embedded_ejb_smoke</module>
+
         <module>tck-download</module>
+        <module>tck-runner</module>
+
         <module>expression_language</module>
         <module>rest</module>
         <module>faces</module>

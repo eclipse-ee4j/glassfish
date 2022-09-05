@@ -1,4 +1,9 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <!--
+  This file is used to avoid any interference with user's local configuration.
+  It is possible because all required dependencies should be already downloaded
+  by the tck-download maven submodules.
+  -->
 </settings>

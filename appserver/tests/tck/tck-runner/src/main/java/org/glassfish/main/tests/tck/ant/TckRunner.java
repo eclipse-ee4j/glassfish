@@ -17,21 +17,29 @@
 package org.glassfish.main.tests.tck.ant;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenFormatStage;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
+import org.glassfish.main.tests.tck.ant.io.ZipResolver;
+import org.glassfish.main.tests.tck.ant.junit.generated.Error;
+import org.glassfish.main.tests.tck.ant.junit.generated.Failure;
+import org.glassfish.main.tests.tck.ant.junit.generated.Testcase;
+import org.glassfish.main.tests.tck.ant.junit.generated.Testsuite;
+import org.glassfish.main.tests.tck.ant.xml.JUnitResultsParser;
+
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
  * @author David Matejcek
  */
 public class TckRunner {
+    private static final Logger LOG = System.getLogger(TckRunner.class.getName());
 
     private final TckConfiguration cfg;
     private File glassfishZip;
@@ -42,63 +50,80 @@ public class TckRunner {
 
 
     public void prepareWorkspace() {
-        MavenResolverSystem resolver = Maven.configureResolver().withMavenCentralRepo(false).workOffline()
-            .fromClassloaderResource("settings.xml");
-        MavenFormatStage tckZip = resolver
-            .resolve("org.glassfish.main.tests.tck:jakarta-ant-based-tck:zip:" + cfg.getTckVersion())
-            .withoutTransitivity();
-        try (ZipInputStream zis = new ZipInputStream(tckZip.asSingleInputStream())) {
-            try {
-                byte[] buffer = new byte[1024];
-                while (true) {
-                    ZipEntry zipEntry = zis.getNextEntry();
-                    if (zipEntry == null) {
-                        break;
-                    }
-                    File newFile = newFile(cfg.getTargetDir(), zipEntry);
-                    if (zipEntry.isDirectory()) {
-                        if (!newFile.isDirectory() && !newFile.mkdirs()) {
-                            throw new IOException("Failed to create directory " + newFile);
-                        }
-                    } else {
-                        // fix for Windows-created archives
-                        File parent = newFile.getParentFile();
-                        if (!parent.isDirectory() && !parent.mkdirs()) {
-                            throw new IOException("Failed to create directory " + parent);
-                        }
-                        try (FileOutputStream fos = new FileOutputStream(newFile)) {
-                            int len;
-                            while ((len = zis.read(buffer)) > 0) {
-                                fos.write(buffer, 0, len);
-                            }
-                        }
-                    }
-                }
-            } finally {
-                zis.closeEntry();
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException("Could not open the file.", e);
-        }
+        LOG.log(Level.INFO, "Preparing workspace at {0}", cfg.getTargetDir());
+        ZipResolver zipResolver = new ZipResolver(cfg.getTargetDir());
+        zipResolver.unzipDependency("org.glassfish.main.tests.tck", "jakarta-ant-based-tck", cfg.getTckVersion());
         cfg.getJakartaeetckCommand().toFile().setExecutable(true);
 
-        this.glassfishZip = resolver
-            .resolve("org.glassfish.main.distributions:glassfish:zip:" + cfg.getGlassFishVersion())
-            .withoutTransitivity().asSingleFile();
+        glassfishZip = zipResolver.getZipFile("org.glassfish.main.distributions", "glassfish", cfg.getGlassFishVersion());
     }
 
 
     public void start(Path modulePath) throws IOException, InterruptedException {
-        ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c",
-            this.cfg.getJakartaeetckCommand().toAbsolutePath() + " " + modulePath).inheritIO()
-                .directory(cfg.getTargetDir());
-        configureEnvironment(builder.environment());
-        Process process = builder.start();
+        LOG.log(Level.INFO, "Starting tests of module {0} ...", modulePath);
+        Process process = startBash(this.cfg.getJakartaeetckCommand().toAbsolutePath() + " " + modulePath);
         if (process.waitFor() != 0) {
             throw new IllegalStateException("TCK execution ended with exit code " + process.exitValue());
         }
+        final File testReport = toTestReportFile(modulePath);
+        JUnitResultsParser resultsParser = new JUnitResultsParser();
+        Testsuite testsuite = resultsParser.parse(testReport);
+        if (testsuite.getErrors() > 0 || testsuite.getFailures() > 0) {
+            throw new IllegalStateException(toReport(testsuite));
+        }
     }
 
+
+    /**
+     * Fixes Jakarta EE issue with stopping what it started - after some types of errors the script
+     * doesn't stop GlassFish and Derby instances.
+     */
+    public void stopServers() throws InterruptedException, IOException {
+        Path riPath = cfg.getTargetDir().toPath().resolve("ri");
+        Path viPath = cfg.getTargetDir().toPath().resolve("vi");
+
+        // We don't care about the result here
+        startBash(viPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-database").waitFor(1, MINUTES);
+        startBash(viPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
+        startBash(riPath.resolve(Path.of("glassfish7", "bin", "asadmin")) + " stop-domain").waitFor(1, MINUTES);
+
+        Path derbyDir = viPath.resolve(Path.of("glassfish7", "javadb"));
+        startBash(cfg.getJdkDirectory().toPath().resolve(Path.of("bin", "java"))
+            + " -Dderby.system.home=" + derbyDir.resolve("databases")
+            + " -classpath " + derbyDir.resolve(Path.of("lib", "derbynet.jar"))
+            + ":" + derbyDir.resolve(Path.of("lib", "derby.jar"))
+            + ":" + derbyDir.resolve(Path.of("lib", "derbyshared.jar"))
+            + ":" + derbyDir.resolve(Path.of("lib", "derbytools.jar"))
+            + " org.apache.derby.drda.NetworkServerControl -h localhost -p 1527 shutdown")
+        .waitFor(1, MINUTES);
+    }
+
+
+    /**
+     * Results are already gzipped and we need to run another module, so we remove generated files
+     * from previous executions.
+     */
+    public void deleteWorkspace() throws IOException {
+        deleteDirectory(cfg.getTargetDir().toPath().resolve("ri"));
+        deleteDirectory(cfg.getTargetDir().toPath().resolve("vi"));
+        deleteDirectory(new File("/tmp/DerbyDB").toPath());
+        deleteDirectory(new File(cfg.getTargetDir(), "jakartaeetck-work").toPath());
+    }
+
+
+    private void deleteDirectory(final Path directory) throws IOException {
+        if (!directory.toFile().exists()) {
+            return;
+        }
+        LOG.log(Level.INFO, "Deleting directory: {0}", directory);
+        Files.walk(directory).sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+    }
+
+    private Process startBash(final String command) throws IOException {
+        ProcessBuilder bash = new ProcessBuilder("/bin/bash", "-c", command).inheritIO().directory(cfg.getTargetDir());
+        configureEnvironment(bash.environment());
+        return bash.start();
+    }
 
     private void configureEnvironment(Map<String, String> env) {
         env.put("LC_ALL", "en_US.UTF-8");
@@ -107,7 +132,7 @@ public class TckRunner {
         env.put("JDK17_HOME", cfg.getJdkDirectory().getAbsolutePath());
         env.put("JDK", "JDK17");
         env.put("SMTP_PORT", "25");
-        env.put("HARNESS_DEBUG", "true"); // TODO: configurable ... logging.
+        env.put("HARNESS_DEBUG", "false"); // TODO: configurable ... logging.
         env.put("AS_DEBUG", "false"); // TODO: configurable - logging.communicationWithServer.enabled=false
 
         env.put("PATH", cfg.getJdkDirectory().getAbsolutePath() + "/bin:" + cfg.getAntDirectory().getAbsolutePath()
@@ -120,16 +145,44 @@ public class TckRunner {
         env.put("GF_HOME_VI", cfg.getTargetDir().getAbsolutePath() + "/vi/glassfish7");
         env.put("DATABASE", "JavaDB");
         env.put("CLIENT_LOGGING_CFG", cfg.getTargetDir().getAbsolutePath() + "/test-classes/client-logging.properties");
+
+        LOG.log(Level.DEBUG, "Configured environment: \n{0}", env);
     }
 
 
-    private static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
-        File destFile = new File(destinationDir, zipEntry.getName());
-        String destDirPath = destinationDir.getCanonicalPath();
-        String destFilePath = destFile.getCanonicalPath();
-        if (!destFilePath.startsWith(destDirPath + File.separator)) {
-            throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+    private File toTestReportFile(Path modulePath) {
+        StringBuilder name = new StringBuilder(64);
+        for (Path path : modulePath) {
+            if (name.length() > 0) {
+                name.append('_');
+            }
+            name.append(path);
         }
-        return destFile;
+        name.append("-junit-report.xml");
+        return new File(cfg.getTargetDir().toPath().resolve(Path.of("results", "junitreports")).toFile(),
+            name.toString());
+    }
+
+
+    private String toReport(Testsuite suite) {
+        StringBuilder report = new StringBuilder();
+        report.append("Test suite ").append(suite.getName());
+        report.append(" failed with ").append(suite.getFailures()).append(" failures and ");
+        report.append(suite.getErrors()).append(" errors.");
+        List<Testcase> tests = suite.getTestcase();
+        if (suite.getFailures() > 0) {
+            Testcase test = tests.stream().filter(tc -> !tc.getFailure().isEmpty()).findFirst().get();
+            Failure failure = test.getFailure().get(0);
+            report.append("\nThe first failure is in class ").append(test.getClassname());
+            report.append(" with this message: \n").append(failure.getMessage());
+        }
+        if (suite.getErrors() > 0) {
+            Testcase test = tests.stream().filter(tc -> !tc.getError().isEmpty()).findFirst().get();
+            Error error = test.getError().get(0);
+            report.append("\nThe first error is in class ").append(test.getClassname());
+            report.append(" with this message: \n").append(error.getMessage());
+        }
+        report.append("\nSee logs for more.");
+        return report.toString();
     }
 }

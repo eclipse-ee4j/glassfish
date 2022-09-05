@@ -58,6 +58,14 @@
             <version>2.0.0</version>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-osgi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -66,7 +74,7 @@
     </dependencies>
 
     <build>
-         <testResources>
+        <testResources>
             <testResource>
                 <directory>src/test/resources</directory>
                 <includes>
@@ -74,6 +82,32 @@
                 </includes>
                 <filtering>true</filtering>
             </testResource>
-         </testResources>
+        </testResources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <addGeneratedAnnotation>true</addGeneratedAnnotation>
+                            <clearOutputDir>true</clearOutputDir>
+                            <locale>en</locale>
+                            <sources>
+                                <source>src/main/resources/junit-results.xsd</source>
+                            </sources>
+                            <packageName>org.glassfish.main.tests.tck.ant.junit.generated</packageName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
     </build>
 </project>

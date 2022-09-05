@@ -18,7 +18,9 @@ package org.glassfish.main.tests.tck.ant;
 
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -34,6 +36,17 @@ public class TckRunnerTest {
         tck = new TckRunner(cfg);
         tck.prepareWorkspace();
     }
+
+    @BeforeEach
+    public void resetWorkspace() throws Exception {
+        tck.deleteWorkspace();
+    }
+
+    @AfterEach
+    public void stopServers() throws Exception {
+        tck.stopServers();
+    }
+
 
     @Test
     public void testAppClient() throws Exception {

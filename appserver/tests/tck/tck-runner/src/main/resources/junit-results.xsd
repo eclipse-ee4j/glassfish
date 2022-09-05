@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<!--
+Note that this XSD file reflects just TCK results and should not be used to parse generic JUnit reports.
+-->
+<xsd:schema
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:junit="urn:org:junit:results"
+  targetNamespace="urn:org:junit:results"
+>
+
+    <xsd:element name="testsuite">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="junit:properties" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="junit:testcase" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attribute name="id" type="xsd:int" use="required" />
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="hostname" type="xsd:string" use="required" />
+            <xsd:attribute name="tests" type="xsd:int" use="required" />
+            <xsd:attribute name="failures" type="xsd:int" use="required" />
+            <xsd:attribute name="errors" type="xsd:int" use="required" />
+            <xsd:attribute name="disabled" type="xsd:int" use="required" />
+            <xsd:attribute name="skipped" type="xsd:int" use="required" />
+            <xsd:attribute name="time" type="xsd:int" use="required" />
+            <xsd:attribute name="timestamp" type="xsd:dateTime" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="properties">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="junit:property" maxOccurs="unbounded" />
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="property">
+        <xsd:complexType>
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="value" type="xsd:string" use="required" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="testcase">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="junit:skipped" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="junit:error" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="junit:failure" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="junit:system-out" minOccurs="0" maxOccurs="unbounded" />
+                <xsd:element ref="junit:system-err" minOccurs="0" maxOccurs="unbounded" />
+            </xsd:sequence>
+            <xsd:attribute name="name" type="xsd:string" use="required" />
+            <xsd:attribute name="classname" type="junit:javaClassName" use="required" />
+            <xsd:attribute name="time" type="xsd:int" use="required" />
+            <!-- Value is Passed or it is completely missing -->
+            <xsd:attribute name="status" type="xsd:string" use="optional" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="skipped" type="xsd:string" />
+
+    <xsd:element name="error">
+        <xsd:complexType mixed="true">
+            <xsd:attribute name="type" type="xsd:string" use="optional" />
+            <xsd:attribute name="message" type="xsd:string" use="optional" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="failure">
+        <xsd:complexType mixed="true">
+            <xsd:attribute name="message" type="xsd:string" use="optional" />
+            <xsd:attribute name="type" type="xsd:string" use="optional" />
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element name="system-out" type="xsd:string" />
+    <xsd:element name="system-err" type="xsd:string" />
+
+    <xsd:simpleType name="javaClassName">
+        <xsd:restriction base="xsd:string" />
+    </xsd:simpleType>
+</xsd:schema>

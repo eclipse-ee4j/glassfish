@@ -84,11 +84,7 @@ public class TckConfiguration {
 
 
     public File getJdkDirectory() {
-        File jdk = new File(cfg.getProperty("jdk.directory"));
-        if ("jre".equals(jdk.getName())) {
-            return jdk.getParentFile();
-        }
-        return jdk;
+        return new File(cfg.getProperty("jdk.directory"));
     }
 
 

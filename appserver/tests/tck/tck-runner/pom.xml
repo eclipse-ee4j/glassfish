@@ -31,6 +31,13 @@
 
     <name>TCK: TCK Runner for Ant-based Test Suites</name>
 
+    <properties>
+        <ant.home>${env.ANT_HOME}</ant.home>
+        <jdk.home>${env.JAVA_HOME}</jdk.home>
+        <glassfish.version>${project.version}</glassfish.version>
+        <tck.version>${project.version}</tck.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
@@ -76,6 +83,11 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.17.3</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -88,7 +100,6 @@
                 <filtering>true</filtering>
             </testResource>
         </testResources>
-
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -113,6 +124,5 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
 </project>

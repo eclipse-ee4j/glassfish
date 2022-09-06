@@ -32,23 +32,41 @@ import org.glassfish.main.tests.tck.ant.junit.generated.Failure;
 import org.glassfish.main.tests.tck.ant.junit.generated.Testcase;
 import org.glassfish.main.tests.tck.ant.junit.generated.Testsuite;
 import org.glassfish.main.tests.tck.ant.xml.JUnitResultsParser;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.utility.DockerImageName;
 
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 /**
+ * TCK Runner prepares or resets the workspace, runs the test and stops all servers after
+ * the test.
+ *
  * @author David Matejcek
  */
 public class TckRunner {
+
     private static final Logger LOG = System.getLogger(TckRunner.class.getName());
+    private static final int MAIL_SMTP_PORT = 3025;
+    private static final int MAIL_IMAP_PORT = 3143;
 
     private final TckConfiguration cfg;
+    private GenericContainer<?> mailServer;
     private File glassfishZip;
 
+    /**
+     * Just creates this instance.
+     *
+     * @param cfg
+     */
     public TckRunner(final TckConfiguration cfg) {
         this.cfg = cfg;
     }
 
 
+    /**
+     * Unpacks the TCK and resolves glassFish zip  as maven dependencies.
+     */
     public void prepareWorkspace() {
         LOG.log(Level.INFO, "Preparing workspace at {0}", cfg.getTargetDir());
         ZipResolver zipResolver = new ZipResolver(cfg.getTargetDir());
@@ -59,6 +77,34 @@ public class TckRunner {
     }
 
 
+    /**
+     * Starts the TestContainer's docker container providing a mail server for tests.
+     * The server can be stopped with other servers by the {@link #stopServers()} method.
+     */
+    // stopped in #stopServers
+    @SuppressWarnings("resource")
+    public void startMailServer() {
+        mailServer = new GenericContainer<>(DockerImageName.parse("greenmail/standalone:1.6.10"))
+        .waitingFor(Wait.forLogMessage(".*Starting GreenMail standalone.*", 1))
+        .withEnv("GREENMAIL_OPTS", "-Dgreenmail.setup.test.all -Dgreenmail.hostname=0.0.0.0 -Dgreenmail.auth.disabled")
+        .withExposedPorts(MAIL_SMTP_PORT, 3110, MAIL_IMAP_PORT, 3465, 3993, 3995, 8080);
+
+        mailServer.start();
+    }
+
+
+    /**
+     * Starts tests. Expects that the workspace was initialized by the {@link #prepareWorkspace()}
+     * method or reset by {@link #deleteGeneratedWorkspaceDirs()}, all servers managed by the TCK
+     * are stopped, mail server was started if it is required by the test by the
+     * {@link #startMailServer()} method.
+     * <p>
+     * Call of this method may take minutes to hours, so be patient.
+     * <p>
+     * You should stop all servers by the {@link #stopServers()} method after the test.
+     *
+     * @param modulePath path to selected tests
+     */
     public void start(Path modulePath) throws IOException, InterruptedException {
         LOG.log(Level.INFO, "Starting tests of module {0} ...", modulePath);
         Process process = startBash(this.cfg.getJakartaeetckCommand().toAbsolutePath() + " " + modulePath);
@@ -77,8 +123,16 @@ public class TckRunner {
     /**
      * Fixes Jakarta EE issue with stopping what it started - after some types of errors the script
      * doesn't stop GlassFish and Derby instances.
+     * <p>
+     * Also stops the mailserver if it was started by the {@link #startMailServer()} method.
      */
     public void stopServers() throws InterruptedException, IOException {
+        if (mailServer != null) {
+            mailServer.stop();
+            mailServer.close();
+            mailServer = null;
+        }
+
         Path riPath = cfg.getTargetDir().toPath().resolve("ri");
         Path viPath = cfg.getTargetDir().toPath().resolve("vi");
 
@@ -103,7 +157,7 @@ public class TckRunner {
      * Results are already gzipped and we need to run another module, so we remove generated files
      * from previous executions.
      */
-    public void deleteWorkspace() throws IOException {
+    public void deleteGeneratedWorkspaceDirs() throws IOException {
         deleteDirectory(cfg.getTargetDir().toPath().resolve("ri"));
         deleteDirectory(cfg.getTargetDir().toPath().resolve("vi"));
         deleteDirectory(new File("/tmp/DerbyDB").toPath());
@@ -131,9 +185,12 @@ public class TckRunner {
         env.put("JAVA_HOME", cfg.getJdkDirectory().getAbsolutePath());
         env.put("JDK17_HOME", cfg.getJdkDirectory().getAbsolutePath());
         env.put("JDK", "JDK17");
-        env.put("SMTP_PORT", "25");
-        env.put("HARNESS_DEBUG", "false"); // TODO: configurable ... logging.
-        env.put("AS_DEBUG", "false"); // TODO: configurable - logging.communicationWithServer.enabled=false
+        if (mailServer != null) {
+            env.put("SMTP_PORT", String.valueOf(mailServer.getMappedPort(MAIL_SMTP_PORT)));
+            env.put("IMAP_PORT", String.valueOf(mailServer.getMappedPort(MAIL_IMAP_PORT)));
+        }
+        env.put("HARNESS_DEBUG", String.valueOf(cfg.isHarnessLoggingEnabled()));
+        env.put("AS_DEBUG", String.valueOf(cfg.isAsadminLoggingEnabled()));
 
         env.put("PATH", cfg.getJdkDirectory().getAbsolutePath() + "/bin:" + cfg.getAntDirectory().getAbsolutePath()
             + "/bin/:/usr/bin");
@@ -143,8 +200,10 @@ public class TckRunner {
         env.put("GF_VI_BUNDLE_ZIP", this.glassfishZip.getAbsolutePath());
         env.put("GF_HOME_RI", cfg.getTargetDir().getAbsolutePath() + "/ri/glassfish7");
         env.put("GF_HOME_VI", cfg.getTargetDir().getAbsolutePath() + "/vi/glassfish7");
+        env.put("GF_LOGGING_CFG_RI", cfg.getServerLoggingProperties().getAbsolutePath());
+        env.put("GF_LOGGING_CFG_VI", cfg.getServerLoggingProperties().getAbsolutePath());
         env.put("DATABASE", "JavaDB");
-        env.put("CLIENT_LOGGING_CFG", cfg.getTargetDir().getAbsolutePath() + "/test-classes/client-logging.properties");
+        env.put("CLIENT_LOGGING_CFG", cfg.getClientLoggingProperties().getAbsolutePath());
 
         LOG.log(Level.DEBUG, "Configured environment: \n{0}", env);
     }

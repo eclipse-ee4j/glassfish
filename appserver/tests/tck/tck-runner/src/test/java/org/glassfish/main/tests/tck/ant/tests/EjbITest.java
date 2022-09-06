@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -56,7 +58,7 @@ public class EjbITest {
     }
 
     /**
-     * Usual time: 7 minutes
+     * 50 tests, usual time: 7 minutes
      */
     @Test
     public void ejb30LiteEjbContext() throws Exception {
@@ -64,26 +66,33 @@ public class EjbITest {
     }
 
     /**
-     * Usual time: 7 minutes
+     * 60 tests, usual time: 7 minutes
      */
     @Test
     public void ejb30LiteEnvEntry() throws Exception {
         tck.start(Path.of("ejb30", "lite", "enventry"));
     }
 
-
+    /**
+     * 30 tests, usual time is 9 minutes
+     */
     @Test
     public void ejb30LiteLookup() throws Exception {
         tck.start(Path.of("ejb30", "lite", "lookup"));
     }
 
-
+    /**
+     * 54 tests, usual time is 9 minutes
+     */
     @Test
     public void ejb30LiteNaming() throws Exception {
         tck.start(Path.of("ejb30", "lite", "naming"));
     }
 
 
+    /**
+     * 60 tests, usual time is 10 minutes.
+     */
     @Test
     public void ejb30LiteNointerface() throws Exception {
         tck.start(Path.of("ejb30", "lite", "nointerface"));
@@ -125,13 +134,18 @@ public class EjbITest {
         tck.start(Path.of("ejb30", "lite", "view"));
     }
 
-
+    /**
+     * 30 tests, usual time is 9 minutes.
+     */
     @Test
     public void ejb30LiteXmlOverride() throws Exception {
         tck.start(Path.of("ejb30", "lite", "xmloverride"));
     }
 
 
+    /**
+     *  51 tests, usual time 11 minutes.
+     */
     @Test
     public void ejb30Assembly() throws Exception {
         tck.start(Path.of("ejb30", "assembly"));

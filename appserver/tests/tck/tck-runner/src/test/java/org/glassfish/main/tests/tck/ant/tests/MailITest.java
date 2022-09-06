@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,19 +29,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author David Matejcek
  */
 @ExtendWith(TckTestExtension.class)
-public class JSONITest {
+public class MailITest {
 
     @Inject
     private TckRunner tck;
 
+    /**
+     * 112 tests, usual time: 12 minutes.
+     */
     @Test
-    public void jsonb() throws Exception {
-        tck.start(Path.of("jsonb"));
-    }
-
-
-    @Test
-    public void jsonp() throws Exception {
-        tck.start(Path.of("jsonp"));
+    public void javamail() throws Exception {
+        tck.startMailServer();
+        tck.start(Path.of("javamail"));
     }
 }

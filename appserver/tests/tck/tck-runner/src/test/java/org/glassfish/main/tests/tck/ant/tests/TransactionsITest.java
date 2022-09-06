@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,43 +29,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author David Matejcek
  */
 @ExtendWith(TckTestExtension.class)
-public class PersistenceITest {
+public class TransactionsITest {
 
     @Inject
     private TckRunner tck;
 
+    /**
+     * Usual time: ? minutes
+     */
     @Test
-    public void appManaged() throws Exception {
-        tck.start(Path.of("jpa_appmanaged"));
+    public void jta() throws Exception {
+        tck.start(Path.of("jta"));
     }
 
 
+    /**
+     * Usual time: ? minutes
+     */
     @Test
-    public void appManagedNoTx() throws Exception {
-        tck.start(Path.of("jpa_appmanagedNoTx"));
-    }
-
-
-    @Test
-    public void pmServlet() throws Exception {
-        tck.start(Path.of("jpa_pmservlet"));
-    }
-
-
-    @Test
-    public void puServlet() throws Exception {
-        tck.start(Path.of("jpa_puservlet"));
-    }
-
-
-    @Test
-    public void stateful3() throws Exception {
-        tck.start(Path.of("jpa_stateful3"));
-    }
-
-
-    @Test
-    public void stateless3() throws Exception {
-        tck.start(Path.of("jpa_stateless3"));
+    public void xa() throws Exception {
+        tck.start(Path.of("xa"));
     }
 }

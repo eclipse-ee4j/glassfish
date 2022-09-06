@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.junit;
 
 import jakarta.inject.Inject;
 
 import java.lang.reflect.Field;
 
+import org.glassfish.main.tests.tck.ant.TckConfiguration;
+import org.glassfish.main.tests.tck.ant.TckRunner;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -60,7 +62,7 @@ public class TckTestExtension implements BeforeEachCallback, AfterEachCallback, 
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        tck.deleteWorkspace();
+        tck.deleteGeneratedWorkspaceDirs();
     }
 
 

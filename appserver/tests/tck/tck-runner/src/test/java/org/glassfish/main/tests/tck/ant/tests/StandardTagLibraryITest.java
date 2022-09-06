@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,16 +29,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author David Matejcek
  */
 @ExtendWith(TckTestExtension.class)
-public class ApplicationClientITest {
+public class StandardTagLibraryITest {
 
     @Inject
     private TckRunner tck;
 
     /**
-     * Usual time: 6 minutes
+     * Usual time: ? minutes
      */
     @Test
-    public void appclient() throws Exception {
-        tck.start(Path.of("appclient"));
+    public void jstl() throws Exception {
+        tck.start(Path.of("jstl"));
     }
 }

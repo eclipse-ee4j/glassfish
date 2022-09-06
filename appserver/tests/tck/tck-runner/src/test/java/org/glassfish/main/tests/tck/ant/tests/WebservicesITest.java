@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,16 +29,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author David Matejcek
  */
 @ExtendWith(TckTestExtension.class)
-public class AuthorizationITest {
+public class WebservicesITest {
 
     @Inject
     private TckRunner tck;
 
     /**
-     * 40 tests, usual time: 10 minutes.
+     * Usual time: 90 minutes
      */
     @Test
-    public void jacc() throws Exception {
-        tck.start(Path.of("jacc"));
+    public void webservices12() throws Exception {
+        tck.start(Path.of("webservices12"));
+    }
+
+
+    /**
+     * Usual time: 20 minutes
+     */
+    @Test
+    public void webservices13() throws Exception {
+        tck.start(Path.of("webservices13"));
     }
 }

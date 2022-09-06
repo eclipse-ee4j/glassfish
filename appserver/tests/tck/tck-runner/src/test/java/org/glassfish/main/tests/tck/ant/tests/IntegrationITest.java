@@ -14,13 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.Disabled;
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -28,18 +29,33 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author David Matejcek
  */
 @ExtendWith(TckTestExtension.class)
-@Disabled("Requires mail server!")
-// FIXME: TC
-public class MailITest {
+public class IntegrationITest {
 
     @Inject
     private TckRunner tck;
 
     /**
-     * Usual time: 20 minutes.
+     * 18 tests, usual time: 7 minutes
      */
     @Test
-    public void javamail() throws Exception {
-        tck.start(Path.of("javamail"));
+    public void integration() throws Exception {
+        tck.start(Path.of("integration"));
+    }
+
+    /**
+     * 12 tests, usual time: 8 minutes
+     */
+    @Test
+    public void samples() throws Exception {
+        tck.startMailServer();
+        tck.start(Path.of("samples"));
+    }
+
+    /**
+     * 4 tests, usual time: 12 minutes
+     */
+    @Test
+    public void signaturetest() throws Exception {
+        tck.start(Path.of("signaturetest", "javaee"));
     }
 }

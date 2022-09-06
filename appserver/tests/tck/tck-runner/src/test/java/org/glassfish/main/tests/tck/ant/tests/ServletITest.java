@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.main.tests.tck.ant;
+package org.glassfish.main.tests.tck.ant.tests;
 
 import jakarta.inject.Inject;
 
 import java.nio.file.Path;
 
+import org.glassfish.main.tests.tck.ant.TckRunner;
+import org.glassfish.main.tests.tck.ant.junit.TckTestExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -27,13 +29,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author David Matejcek
  */
 @ExtendWith(TckTestExtension.class)
-public class ConnectorITest {
+public class ServletITest {
 
     @Inject
     private TckRunner tck;
 
+    /**
+     * Usual time: ? minutes
+     */
     @Test
-    public void connector() throws Exception {
-        tck.start(Path.of("connector"));
+    public void servlet() throws Exception {
+        tck.start(Path.of("servlet"));
     }
 }

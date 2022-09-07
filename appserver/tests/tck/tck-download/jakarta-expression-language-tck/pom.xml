@@ -29,10 +29,10 @@
 
     <artifactId>jakarta-expression-language-tck</artifactId>
     <packaging>pom</packaging>
-    <name>TCK: Install Jakarta expression-language TCK</name>
+    <name>TCK: Install Jakarta Expression Language TCK</name>
 
     <properties>
-    	<tck.test.expression-language.file>jakarta-expression-language-tck-5.0.0.zip</tck.test.expression-language.file>
+        <tck.test.expression-language.file>jakarta-expression-language-tck-5.0.0.zip</tck.test.expression-language.file>
         <tck.test.expression-language.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.expression-language.file}</tck.test.expression-language.url>
     </properties>
 

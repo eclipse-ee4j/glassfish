@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,34 +19,36 @@ package org.glassfish.resources.mail.naming;
 
 import com.sun.enterprise.deployment.MailConfiguration;
 import com.sun.logging.LogDomains;
-import org.glassfish.resources.mail.MailLogOutputStream;
-import org.glassfish.resources.mail.MailSessionAuthenticator;
+
+import java.io.PrintStream;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
-import java.io.PrintStream;
-import java.util.Properties;
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
+import org.glassfish.resources.mail.MailLogOutputStream;
+import org.glassfish.resources.mail.MailSessionAuthenticator;
 
 
 public class MailNamingObjectFactory implements ObjectFactory {
 
-    private static Logger _logger = LogDomains.getLogger(MailNamingObjectFactory.class, LogDomains.JNDI_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(MailNamingObjectFactory.class, LogDomains.JNDI_LOGGER, false);
 
     public MailNamingObjectFactory() {
     }
 
 
+    @Override
     public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
-            throws Exception {
+        throws Exception {
         Reference ref = (Reference) obj;
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,"MailNamingObjectFactory: " + ref +
-                " Name:" + name);
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "MailNamingObjectFactory: " + ref + " Name:" + name);
         }
         MailConfiguration config = (MailConfiguration) ref.get(0).getContent();
 
@@ -53,7 +56,7 @@ public class MailNamingObjectFactory implements ObjectFactory {
         // but we need to get a new instance on every lookup.
         Properties props = config.getMailProperties();
         jakarta.mail.Session s = jakarta.mail.Session.getInstance(props, new MailSessionAuthenticator(props));
-        if("smtps".equals(props.getProperty("mail.transport.protocol"))) {
+        if ("smtps".equals(props.getProperty("mail.transport.protocol"))) {
             s.setProtocolForAddress("rfc822", "smtps");
         }
         s.setDebugOut(new PrintStream(new MailLogOutputStream()));

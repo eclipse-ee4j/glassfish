@@ -70,9 +70,12 @@ public class TckRunner {
     public void prepareWorkspace() {
         LOG.log(Level.INFO, "Preparing workspace at {0}", cfg.getTargetDir());
         ZipResolver zipResolver = new ZipResolver(cfg.getTargetDir());
-        zipResolver.unzipDependency("org.glassfish.main.tests.tck", "jakarta-ant-based-tck", cfg.getTckVersion());
-        cfg.getJakartaeetckCommand().toFile().setExecutable(true);
-
+        if (cfg.getJakartaeeDir().exists()) {
+            LOG.log(Level.INFO, "Jakarta EE was already installed, unzipping to {0} skipped.", cfg.getJakartaeeDir());
+        } else {
+            zipResolver.unzipDependency("org.glassfish.main.tests.tck", "jakarta-ant-based-tck", cfg.getTckVersion());
+            cfg.getJakartaeetckCommand().toFile().setExecutable(true);
+        }
         glassfishZip = zipResolver.getZipFile("org.glassfish.main.distributions", "glassfish", cfg.getGlassFishVersion());
     }
 
@@ -132,7 +135,7 @@ public class TckRunner {
             mailServer.close();
             mailServer = null;
         }
-
+        // FIXME: The rest of the method can be removed after merging https://github.com/eclipse-ee4j/jakartaee-tck/pull/1118
         Path riPath = cfg.getTargetDir().toPath().resolve("ri");
         Path viPath = cfg.getTargetDir().toPath().resolve("vi");
 

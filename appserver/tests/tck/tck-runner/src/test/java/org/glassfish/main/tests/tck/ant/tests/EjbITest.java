@@ -39,19 +39,25 @@ public class EjbITest {
         tck.start(Path.of("ejb"));
     }
 
-
+    /**
+     * 365 tests, usual time is 25 minutes.
+     */
     @Test
     public void ejb30LiteAppException() throws Exception {
         tck.start(Path.of("ejb30", "lite", "appexception"));
     }
 
-
+    /**
+     * 300 tests, usual time 20 minutes.
+     */
     @Test
     public void ejb30LiteAsync() throws Exception {
         tck.start(Path.of("ejb30", "lite", "async"));
     }
 
-
+    /**
+     * 105 tests, usual time: 14 minutes.
+     */
     @Test
     public void ejb30LiteBasic() throws Exception {
         tck.start(Path.of("ejb30", "lite", "basic"));

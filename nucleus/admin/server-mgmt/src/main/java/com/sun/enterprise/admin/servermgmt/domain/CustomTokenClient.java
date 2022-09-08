@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,6 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainException;
 import com.sun.enterprise.config.modularity.CustomizationTokensProviderFactory;
@@ -34,6 +27,14 @@ import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 /**
  * Client class to retrieve customize tokens.
@@ -48,7 +49,7 @@ public class CustomTokenClient {
     public static final String CUSTOM_TOKEN_PLACE_HOLDER = "TOKENS_HERE";
     public static final String DEFAULT_TOKEN_PLACE_HOLDER = "DEFAULT_TOKENS_HERE";
 
-    private DomainConfig _domainConfig;
+    private final DomainConfig _domainConfig;
 
     public CustomTokenClient(DomainConfig domainConfig) {
         _domainConfig = domainConfig;
@@ -62,7 +63,7 @@ public class CustomTokenClient {
      */
     public Map<String, String> getSubstitutableTokens() throws DomainException {
         CustomizationTokensProvider provider = CustomizationTokensProviderFactory.createCustomizationTokensProvider();
-        Map<String, String> generatedTokens = new HashMap<String, String>();
+        Map<String, String> generatedTokens = new HashMap<>();
         String lineSeparator = System.getProperty("line.separator");
         int noOfTokens = 0;
         try {
@@ -71,11 +72,11 @@ public class CustomTokenClient {
                 StringBuffer generatedSysTags = new StringBuffer();
 
                 // Check presence of token place-holder
-                Set<Integer> usedPorts = new HashSet<Integer>();
+                Set<Integer> usedPorts = new HashSet<>();
                 Properties domainProps = _domainConfig.getDomainProperties();
                 String portBase = (String) _domainConfig.get(DomainConfig.K_PORTBASE);
 
-                Map<String, String> filePaths = new HashMap<String, String>(3, 1);
+                Map<String, String> filePaths = new HashMap<>(3, 1);
                 filePaths.put(SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
                         System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
                 filePaths.put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
@@ -111,6 +112,9 @@ public class CustomTokenClient {
                             }
                             // Find next available unused port by incrementing the port value by 1
                             while (!NetUtils.isPortFree(port) && !usedPorts.contains(port)) {
+                                if (port > NetUtils.MAX_PORT) {
+                                    throw new DomainException("No free port available or it is prohibited.");
+                                }
                                 port++;
                             }
                         }

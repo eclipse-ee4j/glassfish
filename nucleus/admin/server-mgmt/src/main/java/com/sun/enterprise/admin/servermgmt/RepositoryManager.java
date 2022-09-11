@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,29 +15,16 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * RepositoryManager.java
- *
- * Created on August 19, 2003, 2:29 PM
- */
 package com.sun.enterprise.admin.servermgmt;
 
+import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
+import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
+import com.sun.enterprise.admin.util.LineTokenReplacer;
 import com.sun.enterprise.admin.util.TokenValue;
 import com.sun.enterprise.admin.util.TokenValueSet;
-import com.sun.enterprise.admin.util.LineTokenReplacer;
-import com.sun.enterprise.util.*;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
-import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.enterprise.security.store.PasswordAdapter;
-
-//import com.sun.enterprise.admin.common.Status;
-//import com.sun.enterprise.util.system.GFSystem;
-import java.io.*;
-
-import java.util.*;
-import com.sun.enterprise.util.zip.ZipFile;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.ProcessExecutor;
 
 //import javax.management.remote.JMXAuthenticator;
 //import com.sun.enterprise.admin.server.core.jmx.auth.ASJMXAuthenticator;
@@ -49,12 +37,26 @@ import com.sun.enterprise.util.zip.ZipFile;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
 //import com.sun.enterprise.util.ExecException;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.util.zip.ZipFile;
+
+//import com.sun.enterprise.admin.common.Status;
+//import com.sun.enterprise.util.system.GFSystem;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * The RepositoryManager serves as a common base class for the following PEDomainsManager, PEInstancesManager,
- * AgentManager (the SE Node Agent). Its purpose is to abstract out any shared functionality related to lifecycle
- * management of domains, instances and node agents. This includes creation, deletion, listing, and starting and
- * stopping.
+ * The RepositoryManager serves as a common base class for the following PEDomainsManager,
+ * PEInstancesManager, AgentManager (the SE Node Agent).
+ * It's purpose is to abstract out any shared functionality related to lifecycle management of
+ * domains, instances and node agents.
+ * This includes creation, deletion, listing, and starting and stopping.
  *
  * @author kebbs
  */
@@ -64,25 +66,25 @@ public class RepositoryManager extends MasterPasswordFileManager {
      * node-agent, or server instance.
      */
     protected static class RepositoryManagerMessages {
-        private StringManager _strMgr;
-        private String _badNameMessage;
-        private String _repositoryNameMessage;
-        private String _repositoryRootMessage;
-        private String _existsMessage;
-        private String _noExistsMessage;
-        private String _repositoryNotValidMessage;
-        private String _cannotDeleteMessage;
-        private String _invalidPathMessage;
-        private String _listRepositoryElementMessage;
-        private String _cannotDeleteInstance_invalidState;
-        private String _instanceStartupExceptionMessage;
-        private String _cannotStartInstance_invalidStateMessage;
-        private String _startInstanceTimeOutMessage;
-        private String _portConflictMessage;
-        private String _startupFailedMessage;
-        private String _cannotStopInstance_invalidStateMessage;
-        private String _cannotStopInstanceMessage;
-        private String _timeoutStartingMessage;
+        private final StringManager _strMgr;
+        private final String _badNameMessage;
+        private final String _repositoryNameMessage;
+        private final String _repositoryRootMessage;
+        private final String _existsMessage;
+        private final String _noExistsMessage;
+        private final String _repositoryNotValidMessage;
+        private final String _cannotDeleteMessage;
+        private final String _invalidPathMessage;
+        private final String _listRepositoryElementMessage;
+        private final String _cannotDeleteInstance_invalidState;
+        private final String _instanceStartupExceptionMessage;
+        private final String _cannotStartInstance_invalidStateMessage;
+        private final String _startInstanceTimeOutMessage;
+        private final String _portConflictMessage;
+        private final String _startupFailedMessage;
+        private final String _cannotStopInstance_invalidStateMessage;
+        private final String _cannotStopInstanceMessage;
+        private final String _timeoutStartingMessage;
         private String _cannotDeleteJmsProviderInstance;
 
         public RepositoryManagerMessages(StringManager strMgr, String badNameMessage, String repositoryNameMessage,
@@ -323,7 +325,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         try {
             chmod("-R 755", domainDir);
         } catch (Exception e) {
-            throw new RepositoryException(_strMgr.getString("setPermissionError"), e);
+            throw new RepositoryException("Error setting permissions.", e);
         }
     }
 
@@ -615,7 +617,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
         final File mqVarHome = layout.getImqVarHome();
         try {
             FileUtils.mkdirsMaybe(mqVarHome);
-            final List<String> cmdInput = new ArrayList<String>();
+            final List<String> cmdInput = new ArrayList<>();
             cmdInput.add(broker.getAbsolutePath());
             cmdInput.add("-init");
             cmdInput.add("-varhome");

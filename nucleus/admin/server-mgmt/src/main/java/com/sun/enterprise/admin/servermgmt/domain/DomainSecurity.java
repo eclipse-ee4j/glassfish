@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,18 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
+import com.sun.enterprise.admin.servermgmt.DomainConfig;
+import com.sun.enterprise.admin.servermgmt.MasterPasswordFileManager;
+import com.sun.enterprise.admin.servermgmt.RepositoryException;
+import com.sun.enterprise.security.store.PasswordAdapter;
+
 import java.io.File;
 import java.io.IOException;
 
 import org.glassfish.security.common.FileRealmHelper;
 
-import com.sun.enterprise.admin.servermgmt.DomainConfig;
-import com.sun.enterprise.admin.servermgmt.MasterPasswordFileManager;
-import com.sun.enterprise.admin.servermgmt.RepositoryException;
-import com.sun.enterprise.admin.util.AdminConstants;
-import com.sun.enterprise.security.store.PasswordAdapter;
-import com.sun.enterprise.util.i18n.StringManager;
-
 public class DomainSecurity extends MasterPasswordFileManager {
 
-    private static final StringManager _strMgr = StringManager.getManager(DomainSecurity.class);
 
     /**
      * Modifies the contents of given keyfile with administrator's user-name and password. Uses the FileRealm classes that
@@ -60,7 +58,7 @@ public class DomainSecurity extends MasterPasswordFileManager {
             PasswordAdapter p = new PasswordAdapter(pwFile.getAbsolutePath(), password.toCharArray());
             p.writeStore();
         } catch (Exception ex) {
-            throw new RepositoryException(_strMgr.getString("passwordAliasKeystoreNotCreated", pwFile), ex);
+            throw new RepositoryException("Could not create password alias keystore " + pwFile, ex);
         }
     }
 

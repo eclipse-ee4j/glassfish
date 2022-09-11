@@ -24,7 +24,6 @@ import com.sun.enterprise.config.modularity.customization.ConfigCustomizationTok
 import com.sun.enterprise.config.modularity.customization.CustomizationTokensProvider;
 import com.sun.enterprise.config.modularity.customization.FileTypeDetails;
 import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.net.NetUtils;
 
@@ -36,12 +35,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import static java.text.MessageFormat.format;
+
 /**
  * Client class to retrieve customize tokens.
  */
 public class CustomTokenClient {
 
-    private static final LocalStringsImpl _strings = new LocalStringsImpl(DomainBuilder.class);
     /** Place holder for the PORT BASE value in domain.xml */
     public static final String PORTBASE_PLACE_HOLDER = "PORT_BASE";
 
@@ -64,7 +64,7 @@ public class CustomTokenClient {
     public Map<String, String> getSubstitutableTokens() throws DomainException {
         CustomizationTokensProvider provider = CustomizationTokensProviderFactory.createCustomizationTokensProvider();
         Map<String, String> generatedTokens = new HashMap<>();
-        String lineSeparator = System.getProperty("line.separator");
+        String lineSeparator = System.lineSeparator();
         int noOfTokens = 0;
         try {
             List<ConfigCustomizationToken> customTokens = provider.getPresentConfigCustomizationTokens();
@@ -78,17 +78,19 @@ public class CustomTokenClient {
 
                 Map<String, String> filePaths = new HashMap<>(3, 1);
                 filePaths.put(SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
-                        System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
+                    System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
                 filePaths.put(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY,
-                        System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
-                filePaths.put(SystemPropertyConstants.JAVA_ROOT_PROPERTY, System.getProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY));
+                    System.getProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
+                filePaths.put(SystemPropertyConstants.JAVA_ROOT_PROPERTY,
+                    System.getProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY));
                 noOfTokens = customTokens.size();
                 for (ConfigCustomizationToken token : customTokens) {
                     String name = token.getName();
                     // Check for valid custom token parameters.
                     if (isNullOrEmpty(name) || isNullOrEmpty(token.getValue()) || isNullOrEmpty(token.getDescription())) {
-                        throw new IllegalArgumentException(
-                                _strings.get("invalidTokenParameters", name, token.getValue(), token.getDescription()));
+                        throw new IllegalArgumentException(format(
+                            "Invalid token, Empty/null values are not allowed for token name/value/description: {0}/{1}/{2}",
+                            name, token.getValue(), token.getDescription()));
                     }
                     switch (token.getCustomizationType()) {
                     case PORT:
@@ -96,7 +98,7 @@ public class CustomTokenClient {
                         if (domainProps.containsKey(name)) {
                             port = Integer.valueOf(domainProps.getProperty(token.getName()));
                             if (!NetUtils.isPortFree(port)) {
-                                throw new DomainException(_strings.get("unavailablePort", port));
+                                throw new DomainException(format("Given port {0} is not free.", port));
                             }
                         } else {
                             if (portBase != null && token.getTokenTypeDetails() instanceof PortTypeDetails) {
@@ -135,12 +137,13 @@ public class CustomTokenClient {
                             switch (details.getExistCondition()) {
                             case MUST_EXIST:
                                 if (!file.exists()) {
-                                    throw new DomainException(_strings.get("missingFile", file.getAbsolutePath()));
+                                    throw new DomainException(format("Missing file : {0}", file));
                                 }
                                 break;
                             case MUST_NOT_EXIST:
                                 if (file.exists()) {
-                                    throw new DomainException(_strings.get("filePresenceNotDesired", file.getAbsolutePath()));
+                                    throw new DomainException(format(
+                                        "File {0} must not exist for the domain creation process to succeed", file));
                                 }
                                 break;
                             case NO_OP:

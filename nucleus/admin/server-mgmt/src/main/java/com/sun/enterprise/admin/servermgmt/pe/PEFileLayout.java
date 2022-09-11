@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +31,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 
 import com.sun.enterprise.security.store.PasswordAdapter;
 import java.util.Map;
+
+import static java.text.MessageFormat.format;
 
 public class PEFileLayout {
     private static final StringManager _strMgr = StringManager.getManager(PEFileLayout.class);
@@ -66,10 +69,10 @@ public class PEFileLayout {
         if (!dir.exists()) {
             try {
                 if (!dir.mkdirs()) {
-                    throw new RepositoryException(_strMgr.getString("directoryCreationError", dir));
+                    throw new RepositoryException(format("Could not create directory {0}.", dir));
                 }
             } catch (Exception e) {
-                throw new RepositoryException(_strMgr.getString("directoryCreationError", dir), e);
+                throw new RepositoryException(format("Could not create directory {0}.", dir), e);
             }
         }
     }
@@ -444,10 +447,11 @@ public class PEFileLayout {
         // check to see if the user has specified a template file to be used for
         // domain creation. Assumed that the user specified template file
         // exists in the INSTALL_ROOT/lib/install/templates if path is not absolute.
-        if (new File(templateName).isAbsolute())
+        if (new File(templateName).isAbsolute()) {
             return new File(templateName);
-        else
+        } else {
             return new File(getTemplatesDir(), templateName);
+        }
     }
 
     public static final String IMQBROKERD_UNIX = "imqbrokerd";
@@ -531,7 +535,7 @@ public class PEFileLayout {
     public static final String ACC_XML_TEMPLATE = "glassfish-acc.xml";
 
     public Map<File, File> getAppClientContainerTemplateAndXml() {
-        final Map<File, File> result = new HashMap<File, File>();
+        final Map<File, File> result = new HashMap<>();
         result.put(new File(getTemplatesDir(), ACC_XML_TEMPLATE), new File(getConfigRoot(), ACC_XML));
         return result;
     }

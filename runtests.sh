@@ -34,7 +34,7 @@ install_glassfish() {
 
 install_jacoco() {
   mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.2.0:copy \
-  -Dartifact=org.jacoco:org.jacoco.agent:0.8.7:jar:runtime \
+  -Dartifact=org.jacoco:org.jacoco.agent:0.8.8:jar:runtime \
   -Dmdep.stripVersion=true \
   -Dmdep.stripClassifier=true \
   -DoutputDirectory=${WORKSPACE}/bundles
@@ -70,7 +70,9 @@ if [ -z "${JAVA_HOME}" ]; then
 fi
 export PATH="${JAVA_HOME}/bin:${PATH}"
 
-export MVN_REPOSITORY="${HOME}/.m2/repository"
+if [ -z "${MVN_REPOSITORY}" ]; then
+  export MVN_REPOSITORY="${HOME}/.m2/repository"
+fi
 export M2_HOME="${M2_HOME=$(realpath $(dirname $(realpath $(which mvn)))/..)}"
 export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
 

@@ -6,4 +6,6 @@
   It is possible because all required dependencies should be already downloaded
   by the tck-download maven submodules.
   -->
+  <interactiveMode>false</interactiveMode>
+  <localRepository>${maven.repo.local}</localRepository>
 </settings>

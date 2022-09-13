@@ -133,6 +133,14 @@ public class TckConfiguration {
 
 
     /**
+     * @return configured maven settings.xml file.
+     */
+    public File getSettingsXml() {
+        return new File(cfg.getProperty("settingsXmlFile"));
+    }
+
+
+    /**
      * @return version of the GlassFish zip artifact.
      */
     public String getGlassFishVersion() {
@@ -169,5 +177,14 @@ public class TckConfiguration {
      */
     public boolean isAsadminLoggingEnabled() {
         return Boolean.parseBoolean(cfg.getProperty("log.asadmin"));
+    }
+
+
+    /**
+     * Prints internal properties to string.
+     */
+    @Override
+    public String toString() {
+        return this.cfg.toString();
     }
 }

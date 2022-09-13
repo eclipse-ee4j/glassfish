@@ -61,6 +61,7 @@ public class TckRunner {
      */
     public TckRunner(final TckConfiguration cfg) {
         this.cfg = cfg;
+        LOG.log(Level.INFO, "TckRunner configuration: \n{0}", cfg);
     }
 
 
@@ -69,12 +70,17 @@ public class TckRunner {
      */
     public void prepareWorkspace() {
         LOG.log(Level.INFO, "Preparing workspace at {0}", cfg.getTargetDir());
-        ZipResolver zipResolver = new ZipResolver(cfg.getTargetDir());
+        ZipResolver zipResolver = new ZipResolver(cfg.getTargetDir(), cfg.getSettingsXml());
         if (cfg.getJakartaeeDir().exists()) {
             LOG.log(Level.INFO, "Jakarta EE was already installed, unzipping to {0} skipped.", cfg.getJakartaeeDir());
         } else {
             zipResolver.unzipDependency("org.glassfish.main.tests.tck", "jakarta-ant-based-tck", cfg.getTckVersion());
-            cfg.getJakartaeetckCommand().toFile().setExecutable(true);
+            File command = cfg.getJakartaeetckCommand().toFile();
+            if (command.exists()) {
+                command.setExecutable(true);
+            } else {
+                throw new IllegalStateException("The TCK runnable doesn't exist: " + command);
+            }
         }
         glassfishZip = zipResolver.getZipFile("org.glassfish.main.distributions", "glassfish", cfg.getGlassFishVersion());
     }

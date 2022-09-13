@@ -35,6 +35,7 @@
         <ant.home>${env.ANT_HOME}</ant.home>
         <jdk.home>${env.JAVA_HOME}</jdk.home>
         <glassfish.version>${project.version}</glassfish.version>
+        <maven.repo.local>${user.home}/.m2/repository</maven.repo.local>
         <tck.version>${project.version}</tck.version>
     </properties>
 
@@ -42,7 +43,7 @@
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>jakarta-ant-based-tck</artifactId>
-            <version>${project.version}</version>
+            <version>${tck.version}</version>
             <type>zip</type>
             <scope>runtime</scope>
         </dependency>
@@ -96,6 +97,7 @@
                 <directory>src/test/resources</directory>
                 <includes>
                     <include>**/*.properties</include>
+                    <include>**/*.xml</include>
                 </includes>
                 <filtering>true</filtering>
             </testResource>

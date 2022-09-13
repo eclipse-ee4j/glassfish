@@ -19,6 +19,8 @@ package org.glassfish.main.tests.tck.ant.io;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -35,6 +37,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenResolverSystem;
  * @author David Matejcek
  */
 public class ZipResolver {
+    private static final Logger LOG = System.getLogger(ZipResolver.class.getName());
 
     private final MavenResolverSystem resolver;
     private final File targetDirectory;
@@ -43,10 +46,11 @@ public class ZipResolver {
      * Initializes the resolver.
      *
      * @param targetDirectory - this directory will be used for the output.
+     * @param settingsXml - Maven configuration
      */
-    public ZipResolver(final File targetDirectory) {
-        this.resolver = Maven.configureResolver().withMavenCentralRepo(false).workOffline()
-            .fromClassloaderResource("settings.xml");
+    public ZipResolver(final File targetDirectory, final File settingsXml) {
+        LOG.log(Level.DEBUG, "ZipResolver(targetDirectory={0}, settingsXml={1})", targetDirectory, settingsXml);
+        this.resolver = Maven.configureResolver().withMavenCentralRepo(false).workOffline().fromFile(settingsXml);
         this.targetDirectory = targetDirectory;
     }
 
@@ -55,6 +59,7 @@ public class ZipResolver {
      * @return the artifact ZIP file in user's default local Maven repository.
      */
     public File getZipFile(String groupId, String artifactId, String version) {
+        LOG.log(Level.INFO, "getZipFile(groupId={0}, artifactId={1}, version={2})", groupId, artifactId, version);
         return resolve(groupId, artifactId, version).asSingleFile();
     }
 
@@ -63,6 +68,7 @@ public class ZipResolver {
      * Resolves the ZIP dependency and unzips it to the target directory given in constructor.
      */
     public void unzipDependency(String groupId, String artifactId, String version) {
+        LOG.log(Level.INFO, "unzipDependency(groupId={0}, artifactId={1}, version={2})", groupId, artifactId, version);
         MavenFormatStage tckZip = resolve(groupId, artifactId, version);
         try (ZipInputStream zis = new ZipInputStream(tckZip.asSingleInputStream())) {
             try {

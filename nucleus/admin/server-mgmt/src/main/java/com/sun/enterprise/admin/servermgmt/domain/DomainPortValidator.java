@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,22 +21,22 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.text.MessageFormat.format;
+
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainException;
 import com.sun.enterprise.admin.servermgmt.SLogger;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.net.NetUtils;
 
 public class DomainPortValidator {
 
     /* These properties are public interfaces, handle with care */
     private static final Logger _logger = SLogger.getLogger();
-    private static final LocalStringsImpl _strings = new LocalStringsImpl(DomainPortValidator.class);
 
     public static final int PORT_MAX_VAL = 65535;
 
-    private DomainConfig _domainConfig;
-    private Properties _defaultProps;
+    private final DomainConfig _domainConfig;
+    private final Properties _defaultProps;
 
     DomainPortValidator(DomainConfig domainConfig, Properties defaultProps) {
         _domainConfig = domainConfig;
@@ -173,7 +174,7 @@ public class DomainPortValidator {
         try {
             return Integer.parseInt(port);
         } catch (Exception e) {
-            throw new DomainException(_strings.get("InvalidPortNumber", port));
+            throw new DomainException(format("Port {0} should be a numeric value.", port));
         }
     }
 
@@ -184,7 +185,7 @@ public class DomainPortValidator {
         for (Integer port : ports) {
             final int p = port.intValue();
             if (p < 1024) {
-                _logger.warning(_strings.get("PortPrivilege"));
+                _logger.warning("On Unix platforms, port numbers below 1024 may require special privileges.");
                 // display this message only once.
                 // so break once this message is displayed.
                 break;

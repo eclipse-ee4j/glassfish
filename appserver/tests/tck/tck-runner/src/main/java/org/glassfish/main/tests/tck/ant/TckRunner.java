@@ -195,6 +195,7 @@ public class TckRunner {
         env.put("JDK17_HOME", cfg.getJdkDirectory().getAbsolutePath());
         env.put("JDK", "JDK17");
         if (mailServer != null) {
+            env.put("MAIL_HOST", mailServer.getHost());
             env.put("SMTP_PORT", String.valueOf(mailServer.getMappedPort(MAIL_SMTP_PORT)));
             env.put("IMAP_PORT", String.valueOf(mailServer.getMappedPort(MAIL_IMAP_PORT)));
         }

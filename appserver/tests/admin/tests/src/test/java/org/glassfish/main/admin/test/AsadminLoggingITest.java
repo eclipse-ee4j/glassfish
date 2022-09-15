@@ -35,20 +35,16 @@ import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
 import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getDomain1Directory;
-import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.getterMatches;
 import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.hasLineCount;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -119,8 +115,8 @@ public class AsadminLoggingITest {
             .collect(Collectors.toMap(pair -> pair[0], pair -> pair[1]));
         assertAll(
             () -> assertThat(map.get("handlers"),
-                equalTo("<org.glassfish.main.jul.handler.GlassFishLogHandler,"
-                + "org.glassfish.main.jul.handler.SimpleLogHandler,"
+                equalTo("<org.glassfish.main.jul.handler.SimpleLogHandler,"
+                + "org.glassfish.main.jul.handler.GlassFishLogHandler,"
                 + "org.glassfish.main.jul.handler.SyslogHandler>")),
             () -> assertThat(map.get("org.glassfish.main.jul.handler.GlassFishLogHandler.file"),
                 equalTo("<${com.sun.aas.instanceRoot}/logs/server.log>"))

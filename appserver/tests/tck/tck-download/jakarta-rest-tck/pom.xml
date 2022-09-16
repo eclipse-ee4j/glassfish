@@ -16,11 +16,9 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
         <artifactId>tck-download</artifactId>
@@ -29,11 +27,13 @@
 
     <artifactId>jakarta-rest-tck</artifactId>
     <packaging>pom</packaging>
+
     <name>TCK: Install Jakarta REST TCK</name>
 
     <properties>
-        <tck.test.rest.file>jakarta-restful-ws-tck-3.1.0.zip</tck.test.rest.file>
-        <tck.test.rest.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/eftl/${tck.test.rest.file}</tck.test.rest.url>
+        <tck.rest.rest.version>3.1.1</tck.rest.rest.version>
+        <tck.test.rest.file>restful-ws-tck-${tck.rest.rest.version}</tck.test.rest.file>
+        <tck.test.rest.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee10/staged/epl/${tck.test.rest.file}.zip</tck.test.rest.url>
     </properties>
 
     <build>
@@ -52,7 +52,7 @@
                 </executions>
                 <configuration>
                     <url>${tck.test.rest.url}</url>
-                    <unpack>false</unpack>
+                    <unpack>true</unpack>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
             </plugin>
@@ -66,11 +66,13 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.build.directory}/${tck.test.rest.file}</file>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>${project.artifactId}</artifactId>
-                            <version>${project.version}</version>
-                            <packaging>zip</packaging>
+                            <file>${project.build.directory}/${tck.test.rest.file}.jar</file>
+                            <sources>${project.build.directory}/${tck.test.rest.file}-sources.jar</sources>
+                            <groupId>jakarta.ws.rs</groupId>
+                            <artifactId>jakarta-restful-ws-tck</artifactId>
+                            <version>${tck.rest.rest.version}</version>
+                            <packaging>jar</packaging>
+                            <createChecksum>true</createChecksum>
                             <generatePom>true</generatePom>
                         </configuration>
                     </execution>
@@ -78,5 +80,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

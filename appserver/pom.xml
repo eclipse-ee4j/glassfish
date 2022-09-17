@@ -101,7 +101,7 @@
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
         <soteria.version>3.0.0</soteria.version>
         <exousia.version>2.1.0</exousia.version>
-        <nimbus.version>9.24.2</nimbus.version>
+        <nimbus.version>9.25</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->

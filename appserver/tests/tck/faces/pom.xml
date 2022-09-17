@@ -35,6 +35,7 @@
         <glassfish.version>${project.version}</glassfish.version>
         <tck.root>${project.build.directory}</tck.root>
         <maven.executable>${env._}</maven.executable>
+        <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
     </properties>
 
     <dependencies>
@@ -87,13 +88,15 @@
                 <configuration>
                     <executable>${maven.executable}</executable>
                     <arguments>
-                        <argument>clean</argument>
-                        <argument>install</argument>
-                        <argument>-f</argument>
-                        <argument>${tck.root}/faces-tck-4.0.1/tck/pom.xml</argument>
-                        <argument>-Dglassfish.version=${glassfish.version}</argument>
                         <argument>-B</argument>
                         <argument>-e</argument>
+                        <argument>-s</argument>
+                        <argument>${maven.settings.xml}</argument>
+                        <argument>-f</argument>
+                        <argument>${tck.root}/faces-tck-4.0.1/tck/pom.xml</argument>
+                        <argument>clean</argument>
+                        <argument>install</argument>
+                        <argument>-Dglassfish.version=${glassfish.version}</argument>
                     </arguments>
                     <environmentVariables>
                         <LC_ALL>C</LC_ALL>

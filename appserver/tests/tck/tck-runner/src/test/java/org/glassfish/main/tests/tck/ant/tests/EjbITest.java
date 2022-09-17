@@ -111,6 +111,9 @@ public class EjbITest {
     }
 
 
+    /**
+     * 230 tests, usual time 45 minutes.
+     */
     @Test
     public void ejb30LiteSingleton() throws Exception {
         tck.start(Path.of("ejb30", "lite", "singleton"));

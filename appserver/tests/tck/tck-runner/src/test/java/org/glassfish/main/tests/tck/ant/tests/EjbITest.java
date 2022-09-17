@@ -36,6 +36,7 @@ public class EjbITest {
 
     @Test
     public void ejb() throws Exception {
+        tck.startMailServer();
         tck.start(Path.of("ejb"));
     }
 

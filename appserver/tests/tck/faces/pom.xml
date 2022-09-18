@@ -34,7 +34,7 @@
     <properties>
         <glassfish.version>${project.version}</glassfish.version>
         <tck.root>${project.build.directory}</tck.root>
-        <maven.executable>${env._}</maven.executable>
+        <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
     </properties>
 

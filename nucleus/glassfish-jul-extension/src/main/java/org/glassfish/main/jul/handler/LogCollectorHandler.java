@@ -44,7 +44,7 @@ public class LogCollectorHandler extends Handler {
      * @param loggerToFollow this handler will be added to this logger.
      */
     public LogCollectorHandler(final Logger loggerToFollow) {
-        this.buffer = new LogRecordBuffer(100, 5);
+        buffer = new LogRecordBuffer(100, 5);
         logger = loggerToFollow;
         logger.addHandler(this);
     }

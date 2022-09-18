@@ -39,6 +39,7 @@ public class ServletITest {
      */
     @Test
     public void servlet() throws Exception {
+        tck.startMailServer();
         tck.start(Path.of("servlet"));
     }
 }

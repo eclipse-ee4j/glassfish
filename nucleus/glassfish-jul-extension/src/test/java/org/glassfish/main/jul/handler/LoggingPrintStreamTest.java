@@ -167,7 +167,8 @@ public class LoggingPrintStreamTest {
         assertSame(stream, stream.format("That %s", Level.ALL));
         assertSame(stream, stream.format(Locale.GERMAN, "Number: %f.", 8.7f));
 
-        Thread.yield();
+        // The internal buffer is managed by a thread, so we need to be sure it processed all records.
+        stream.close();
         List<String> list = handler.getAll(LogRecord::getMessage);
         assertAll(
             () -> assertThat(list,

@@ -36,6 +36,7 @@ public class EjbITest {
 
     @Test
     public void ejb() throws Exception {
+        tck.startMailServer();
         tck.start(Path.of("ejb"));
     }
 
@@ -111,6 +112,9 @@ public class EjbITest {
     }
 
 
+    /**
+     * 230 tests, usual time 45 minutes.
+     */
     @Test
     public void ejb30LiteSingleton() throws Exception {
         tck.start(Path.of("ejb30", "lite", "singleton"));

@@ -38,7 +38,7 @@ public class WebsocketITest {
      * Usual time: ? minutes
      */
     @Test
-    public void jstl() throws Exception {
-        tck.start(Path.of("jstl"));
+    public void websocket() throws Exception {
+        tck.start(Path.of("websocket"));
     }
 }

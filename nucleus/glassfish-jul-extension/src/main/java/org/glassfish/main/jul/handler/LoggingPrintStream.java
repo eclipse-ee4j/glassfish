@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -47,9 +46,7 @@ import java.util.logging.Logger;
  */
 public class LoggingPrintStream extends PrintStream {
 
-    private final LogManager logManager = LogManager.getLogManager();
     private final ThreadLocal<StackTrace> perThreadStackTraces = new ThreadLocal<>();
-    private final Logger logger;
 
     public static LoggingPrintStream create(final Logger logger, final Level level, final int bufferCapacity,
         final Charset charset) {
@@ -60,7 +57,6 @@ public class LoggingPrintStream extends PrintStream {
     private LoggingPrintStream(final Logger logger, final Level level, final int bufferCapacity,
         final Charset charset) {
         super(null, false, charset);
-        this.logger = logger;
         this.out = new LoggingOutputStream(logger, level, bufferCapacity, charset);
     }
 
@@ -72,10 +68,6 @@ public class LoggingPrintStream extends PrintStream {
 
     @Override
     public void println(Object object) {
-        if (!checkLocks()) {
-            return;
-        }
-
         if (object instanceof Throwable) {
             getOutputStream().addRecord((Throwable) object);
             StackTrace stackTrace = new StackTrace((Throwable) object);
@@ -84,7 +76,6 @@ public class LoggingPrintStream extends PrintStream {
             // No special processing if it is not an exception.
             println(String.valueOf(object));
         }
-
     }
 
 
@@ -102,7 +93,7 @@ public class LoggingPrintStream extends PrintStream {
 
     @Override
     public PrintStream format(String format, Object... args) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(format.length());
         try (Formatter formatter = new Formatter(sb, Locale.getDefault())) {
             formatter.format(format, args);
         }
@@ -113,7 +104,7 @@ public class LoggingPrintStream extends PrintStream {
 
     @Override
     public PrintStream format(Locale locale, String format, Object... args) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(format.length());
         try (Formatter formatter = new Formatter(sb, locale)) {
             formatter.format(format, args);
         }
@@ -123,144 +114,13 @@ public class LoggingPrintStream extends PrintStream {
 
 
     @Override
-    public void print(String x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(Object x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(boolean x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(double x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(char x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(int x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(long x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(float x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void print(char[] x) {
-        if (checkLocks()) {
-            super.print(x);
-        }
-    }
-
-
-    @Override
-    public void println(boolean x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-
-    @Override
-    public void println(char x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-    @Override
-    public void println(int x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-
-    @Override
-    public void println(long x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-
-    @Override
-    public void println(float x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-
-    @Override
-    public void println(double x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-
-    @Override
-    public void println(char[] x) {
-        if (checkLocks()) {
-            super.println(x);
-        }
-    }
-
-
-    @Override
     public void println() {
-        // ignored as it would produce an emptz record.
+        // ignored as it would produce an empty record.
     }
 
 
     @Override
     public void println(String str) {
-        if (!checkLocks()) {
-            return;
-        }
-
         final StackTrace recentStacktrace = perThreadStackTraces.get();
         if (recentStacktrace == null) {
             super.println(str);
@@ -301,43 +161,8 @@ public class LoggingPrintStream extends PrintStream {
 
 
     @Override
-    public void write(int b) {
-        if (checkLocks()) {
-            super.write(b);
-        }
-    }
-
-
-    @Override
     public String toString() {
         return super.toString() + " using " + this.out.toString();
-    }
-
-
-    /**
-     * LoggingPrintStream class is to support the java System.err and System.out
-     * redirection to server.log file.
-     * <p>
-     * When Java IO is redirected and System.out.println(...) is invoked by a thread with
-     * LogManager or Logger(SYSTEMERR_LOGGER,SYSTEOUT_LOGGER) locked, all kind of dead
-     * locks among threads will happen.
-     * <p>
-     * These dead locks are easily reproduced when jvm system properties
-     * "-Djava.security.manager" and "-Djava.security.debug=access,failure" are defined.
-     * These dead locks are basically because each thread has its own sequence of
-     * acquiring lock objects(LogManager,Logger,FileHandler and SysLogHandler, the buffer
-     * inside LoggingPrintStream).
-     * <p>
-     * There is no obvious way to define the lock hierarchy and control the lock sequence;
-     * Trylock is not a strightforward solution either.Beside they both create heavy
-     * dependence on the detail implementation of JDK and Appserver.
-     * <p>
-     * This method(checkLocks) is to find which locks current thread has and
-     * LoggingPrintStream object will decide whether to continue to do printing or
-     * give ip up to avoid the dead lock.
-     */
-    private boolean checkLocks() {
-        return !Thread.holdsLock(logger) && !Thread.holdsLock(logManager);
     }
 
 

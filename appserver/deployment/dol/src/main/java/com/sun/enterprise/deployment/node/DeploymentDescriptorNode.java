@@ -1098,7 +1098,10 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
     @Override
     public void addPrefixMapping(String prefix, String uri) {
         Descriptor descriptor = getDescriptor();
-        descriptor.addPrefixMapping(prefix, uri);
+        // FIXME: two LocalizedNode children return null!!!
+        if (descriptor != null) {
+            descriptor.addPrefixMapping(prefix, uri);
+        }
     }
 
     /**

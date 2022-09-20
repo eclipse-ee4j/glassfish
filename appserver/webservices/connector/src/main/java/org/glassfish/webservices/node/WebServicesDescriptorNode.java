@@ -69,15 +69,15 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
 
     private final BundleDescriptor bundleDescriptor;
 
+    public WebServicesDescriptorNode() {
+        this(null);
+    }
+
+
     public WebServicesDescriptorNode(BundleDescriptor descriptor) {
         bundleDescriptor = descriptor;
         registerElementHandler(new XMLElement(WebServicesTagNames.WEB_SERVICE), WebServiceNode.class);
         SaxParserHandler.registerBundleNode(this, WebServicesTagNames.WEB_SERVICES);
-    }
-
-
-    public WebServicesDescriptorNode() {
-        this(null);
     }
 
 
@@ -102,6 +102,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
         return null;
     }
 
+
     /**
      * @return the SystemID of the XML file
      */
@@ -109,6 +110,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     public String getSystemID() {
         return SCHEMA_ID;
     }
+
 
     /**
      * @return the list of SystemID of the XML schema supported
@@ -118,6 +120,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
         return systemIDs;
     }
 
+
     /**
      * @return the XML tag associated with this XMLNode
      */
@@ -125,6 +128,7 @@ public class WebServicesDescriptorNode extends AbstractBundleNode<BundleDescript
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
+
 
     /**
      * receives notiification of the value for a particular tag

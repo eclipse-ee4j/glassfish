@@ -22,7 +22,6 @@ import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -94,9 +93,7 @@ public class IconNode extends LocalizedNode {
         }
         if (smallIcons != null) {
             Set<Entry<String, String>> entrySet = smallIcons.entrySet();
-            Iterator<Entry<String, String>> entryIt = entrySet.iterator();
-            while (entryIt.hasNext()) {
-                Entry<String, String> entry = entryIt.next();
+            for (Entry<String, String> entry : entrySet) {
                 String lang = entry.getKey();
                 String smallIconUri = entry.getValue();
                 String largeIconUri = null;
@@ -108,9 +105,7 @@ public class IconNode extends LocalizedNode {
         }
         if (largeIcons != null) {
             Set<Entry<String, String>> entrySet = largeIcons.entrySet();
-            Iterator<Entry<String, String>> entryIt = entrySet.iterator();
-            while (entryIt.hasNext()) {
-                Entry<String, String> entry = entryIt.next();
+            for (Entry<String, String> entry : entrySet) {
                 String lang = entry.getKey();
                 String largeIconUri = entry.getValue();
                 if (smallIcons != null && smallIcons.get(lang) != null) {

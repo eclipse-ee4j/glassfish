@@ -30,8 +30,6 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +37,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
-import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -53,6 +50,22 @@ import org.glassfish.security.common.Role;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
 
+import static org.glassfish.ejb.deployment.EjbTagNames.APPLICATION_EXCEPTION;
+import static org.glassfish.ejb.deployment.EjbTagNames.ASSEMBLY_DESCRIPTOR;
+import static org.glassfish.ejb.deployment.EjbTagNames.CONTAINER_TRANSACTION;
+import static org.glassfish.ejb.deployment.EjbTagNames.EJBS;
+import static org.glassfish.ejb.deployment.EjbTagNames.EJB_BUNDLE_TAG;
+import static org.glassfish.ejb.deployment.EjbTagNames.EJB_CLIENT_JAR;
+import static org.glassfish.ejb.deployment.EjbTagNames.ENTITY;
+import static org.glassfish.ejb.deployment.EjbTagNames.EXCLUDE_LIST;
+import static org.glassfish.ejb.deployment.EjbTagNames.INTERCEPTOR;
+import static org.glassfish.ejb.deployment.EjbTagNames.INTERCEPTORS;
+import static org.glassfish.ejb.deployment.EjbTagNames.INTERCEPTOR_BINDING;
+import static org.glassfish.ejb.deployment.EjbTagNames.MESSAGE_DRIVEN;
+import static org.glassfish.ejb.deployment.EjbTagNames.METHOD_PERMISSION;
+import static org.glassfish.ejb.deployment.EjbTagNames.RELATIONSHIPS;
+import static org.glassfish.ejb.deployment.EjbTagNames.SESSION;
+
 /**
  * This class handles ejb bundle xml files
  *
@@ -62,7 +75,7 @@ import org.w3c.dom.Node;
 @Service
 public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
-    private static final XMLElement tag = new XMLElement(EjbTagNames.EJB_BUNDLE_TAG);
+    private static final XMLElement tag = new XMLElement(EJB_BUNDLE_TAG);
     private static final String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
     private static final String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
 
@@ -75,8 +88,8 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
     private static final String SCHEMA_ID_32 = "ejb-jar_3_2.xsd";
     private static final String SCHEMA_ID = "ejb-jar_4_0.xsd";
     public static final String SPEC_VERSION = "4.0";
-    private final static List<String> systemIDs = initSystemIDs();
-
+    private static final List<String> SYSTEM_IDS = List.of(
+        SCHEMA_ID, SCHEMA_ID_32, SCHEMA_ID_31, SCHEMA_ID_30, SCHEMA_ID_21);
 
     // Descriptor class we are using
     private EjbBundleDescriptorImpl descriptor;
@@ -104,36 +117,27 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         return result;
     }
 
-    private static List<String> initSystemIDs() {
-        ArrayList<String> systemIDs = new ArrayList<>(5);
-        systemIDs.add(SCHEMA_ID);
-        systemIDs.add(SCHEMA_ID_32);
-        systemIDs.add(SCHEMA_ID_31);
-        systemIDs.add(SCHEMA_ID_30);
-        systemIDs.add(SCHEMA_ID_21);
-        return Collections.unmodifiableList(systemIDs);
-    }
 
     public EjbBundleNode() {
         // register sub XMLNodes
-        registerElementHandler(new XMLElement(EjbTagNames.SESSION), EjbSessionNode.class);
-        registerElementHandler(new XMLElement(EjbTagNames.ENTITY), EjbEntityNode.class);
-        registerElementHandler(new XMLElement(EjbTagNames.MESSAGE_DRIVEN), MessageDrivenBeanNode.class);
-        registerElementHandler(new XMLElement(EjbTagNames.METHOD_PERMISSION), MethodPermissionNode.class);
+        registerElementHandler(new XMLElement(SESSION), EjbSessionNode.class);
+        registerElementHandler(new XMLElement(ENTITY), EjbEntityNode.class);
+        registerElementHandler(new XMLElement(MESSAGE_DRIVEN), MessageDrivenBeanNode.class);
+        registerElementHandler(new XMLElement(METHOD_PERMISSION), MethodPermissionNode.class);
         registerElementHandler(new XMLElement(TagNames.ROLE), SecurityRoleNode.class, "addRole");
-        registerElementHandler(new XMLElement(EjbTagNames.CONTAINER_TRANSACTION), ContainerTransactionNode.class);
-        registerElementHandler(new XMLElement(EjbTagNames.EXCLUDE_LIST), ExcludeListNode.class);
-        registerElementHandler(new XMLElement(EjbTagNames.RELATIONSHIPS), RelationshipsNode.class);
+        registerElementHandler(new XMLElement(CONTAINER_TRANSACTION), ContainerTransactionNode.class);
+        registerElementHandler(new XMLElement(EXCLUDE_LIST), ExcludeListNode.class);
+        registerElementHandler(new XMLElement(RELATIONSHIPS), RelationshipsNode.class);
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION), MessageDestinationNode.class,
             "addMessageDestination");
-        registerElementHandler(new XMLElement(EjbTagNames.APPLICATION_EXCEPTION), EjbApplicationExceptionNode.class,
+        registerElementHandler(new XMLElement(APPLICATION_EXCEPTION), EjbApplicationExceptionNode.class,
             "addApplicationException");
-        registerElementHandler(new XMLElement(EjbTagNames.INTERCEPTOR), EjbInterceptorNode.class, "addInterceptor");
+        registerElementHandler(new XMLElement(INTERCEPTOR), EjbInterceptorNode.class, "addInterceptor");
 
-        registerElementHandler(new XMLElement(EjbTagNames.INTERCEPTOR_BINDING), InterceptorBindingNode.class,
+        registerElementHandler(new XMLElement(INTERCEPTOR_BINDING), InterceptorBindingNode.class,
             "appendInterceptorBinding");
 
-        SaxParserHandler.registerBundleNode(this, EjbTagNames.EJB_BUNDLE_TAG);
+        SaxParserHandler.registerBundleNode(this, EJB_BUNDLE_TAG);
     }
 
 
@@ -183,55 +187,58 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         return descriptor;
     }
 
+
     @Override
     protected XMLElement getXMLRootTag() {
         return tag;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
-        table.put(EjbTagNames.EJB_CLIENT_JAR, "setEjbClientJarUri");
+        table.put(EJB_CLIENT_JAR, "setEjbClientJarUri");
         return table;
     }
+
 
     @Override
     public Node writeDescriptor(Node parent, EjbBundleDescriptorImpl ejbDesc) {
         Node jarNode = super.writeDescriptor(parent, ejbDesc);
-        Node entrepriseBeansNode = appendChild(jarNode, EjbTagNames.EJBS);
+        Node entrepriseBeansNode = appendChild(jarNode, EJBS);
         for (EjbDescriptor ejb : ejbDesc.getEjbs()) {
             if (com.sun.enterprise.deployment.EjbSessionDescriptor.TYPE.equals(ejb.getType())) {
                 EjbSessionNode subNode = new EjbSessionNode();
-                subNode.writeDescriptor(entrepriseBeansNode, EjbTagNames.SESSION, (EjbSessionDescriptor) ejb);
+                subNode.writeDescriptor(entrepriseBeansNode, SESSION, (EjbSessionDescriptor) ejb);
             } else if (EjbEntityDescriptor.TYPE.equals(ejb.getType())) {
                 EjbEntityNode subNode = new EjbEntityNode();
-                subNode.writeDescriptor(entrepriseBeansNode, EjbTagNames.ENTITY, (EjbEntityDescriptor) ejb);
+                subNode.writeDescriptor(entrepriseBeansNode, ENTITY, (EjbEntityDescriptor) ejb);
             } else if (com.sun.enterprise.deployment.EjbMessageBeanDescriptor.TYPE.equals(ejb.getType())) {
                 MessageDrivenBeanNode subNode = new MessageDrivenBeanNode();
-                subNode.writeDescriptor(entrepriseBeansNode, EjbTagNames.MESSAGE_DRIVEN, (EjbMessageBeanDescriptor) ejb);
+                subNode.writeDescriptor(entrepriseBeansNode, MESSAGE_DRIVEN, (EjbMessageBeanDescriptor) ejb);
             } else {
                 throw new IllegalStateException("Unknow ejb type " + ejb.getType());
             }
         }
 
         if (ejbDesc.hasInterceptors()) {
-            Node interceptorsNode = appendChild(jarNode, EjbTagNames.INTERCEPTORS);
+            Node interceptorsNode = appendChild(jarNode, INTERCEPTORS);
             EjbInterceptorNode interceptorNode = new EjbInterceptorNode();
             for (EjbInterceptor next : ejbDesc.getInterceptors()) {
-                interceptorNode.writeDescriptor(interceptorsNode, EjbTagNames.INTERCEPTOR, next);
+                interceptorNode.writeDescriptor(interceptorsNode, INTERCEPTOR, next);
             }
         }
 
         // relationships*
         if (ejbDesc.hasRelationships()) {
-            RelationshipsNode.writeRelationships(jarNode, EjbTagNames.RELATIONSHIPS, ejbDesc);
+            RelationshipsNode.writeRelationships(jarNode, RELATIONSHIPS, ejbDesc);
         }
 
         // assembly-descriptor
         writeAssemblyDescriptor(jarNode, ejbDesc);
 
-        appendTextChild(jarNode, EjbTagNames.EJB_CLIENT_JAR, ejbDesc.getEjbClientJarUri());
+        appendTextChild(jarNode, EJB_CLIENT_JAR, ejbDesc.getEjbClientJarUri());
         return jarNode;
     }
 
@@ -250,7 +257,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
     @Override
     public List<String> getSystemIDs() {
-        return systemIDs;
+        return SYSTEM_IDS;
     }
 
 
@@ -264,7 +271,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
      * Write assembly-descriptor related xml information to the DOM tree
      */
     private void writeAssemblyDescriptor(Node parentNode, EjbBundleDescriptorImpl bundleDescriptor) {
-        Node assemblyNode = parentNode.getOwnerDocument().createElement(EjbTagNames.ASSEMBLY_DESCRIPTOR);
+        Node assemblyNode = parentNode.getOwnerDocument().createElement(ASSEMBLY_DESCRIPTOR);
 
         // security-role*
         SecurityRoleNode roleNode = new SecurityRoleNode();
@@ -291,7 +298,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
         // container-transaction*
         for (EjbDescriptor ejbDesc : bundleDescriptor.getEjbs()) {
-            ContainerTransactionNode.writeContainerTransactions(assemblyNode, EjbTagNames.CONTAINER_TRANSACTION,
+            ContainerTransactionNode.writeContainerTransactions(assemblyNode, CONTAINER_TRANSACTION,
                 ejbDesc.getName(), ejbDesc.getMethodContainerTransactions());
         }
 
@@ -308,7 +315,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
         // exclude-list*
         if (!excludedMethodsByEjb.isEmpty()) {
-            Node excludeListNode = DeploymentDescriptorNode.appendChild(assemblyNode, EjbTagNames.EXCLUDE_LIST);
+            Node excludeListNode = DeploymentDescriptorNode.appendChild(assemblyNode, EXCLUDE_LIST);
             for (Entry<EjbDescriptor, Vector<MethodDescriptor>> entry : excludedMethodsByEjb.entrySet()) {
                 EjbDescriptor ejbDesc = entry.getKey();
                 Vector<MethodDescriptor> excludedMethods = entry.getValue();
@@ -321,7 +328,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
         for (EjbApplicationExceptionInfo next : bundleDescriptor.getApplicationExceptions().values()) {
             EjbApplicationExceptionNode node = new EjbApplicationExceptionNode();
-            node.writeDescriptor(assemblyNode, EjbTagNames.APPLICATION_EXCEPTION, next);
+            node.writeDescriptor(assemblyNode, APPLICATION_EXCEPTION, next);
         }
 
         if (assemblyNode.hasChildNodes()) {
@@ -349,7 +356,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
                 MethodPermissionDescriptor mpd = new MethodPermissionDescriptor();
                 mpd.addMethodPermission(mp);
                 mpd.addMethods(mpToMethods.get(mp));
-                mpNode.writeDescriptor(assemblyNode, EjbTagNames.METHOD_PERMISSION, mpd, ejb);
+                mpNode.writeDescriptor(assemblyNode, METHOD_PERMISSION, mpd, ejb);
             }
         }
     }

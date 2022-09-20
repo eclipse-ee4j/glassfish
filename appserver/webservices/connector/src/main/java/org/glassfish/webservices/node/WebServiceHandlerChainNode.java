@@ -19,104 +19,83 @@ package org.glassfish.webservices.node;
 import com.sun.enterprise.deployment.WebServiceHandlerChain;
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class WebServiceHandlerChainNode extends DisplayableComponentNode {
+import org.w3c.dom.Node;
 
-    private final static XMLElement tag =
-        new XMLElement(WebServicesTagNames.HANDLER_CHAIN);
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.HANDLER;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.HANDLER_CHAIN;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.HANDLER_CHAINS;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.PORT_NAME_PATTERN;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.PROTOCOL_BINDINGS;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVICE_NAME_PATTERN;
+
+public class WebServiceHandlerChainNode extends DisplayableComponentNode<WebServiceHandlerChain> {
+
+    private final static XMLElement TAG = new XMLElement(HANDLER_CHAIN);
 
     public WebServiceHandlerChainNode() {
-        super();
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.HANDLER),
-             WebServiceHandlerNode.class, "addHandler");
+        registerElementHandler(new XMLElement(HANDLER), WebServiceHandlerNode.class, "addHandler");
     }
+
 
     @Override
     protected WebServiceHandlerChain createDescriptor() {
         return new WebServiceHandlerChain();
     }
 
-    /**
-     * @return the XML tag associated with this XMLNode
-     */
+
+    @Override
     protected XMLElement getXMLRootTag() {
-        return tag;
+        return TAG;
     }
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.SERVICE_NAME_PATTERN, "setServiceNamePattern");
-        table.put(WebServicesTagNames.PORT_NAME_PATTERN, "setPortNamePattern");
-        table.put(WebServicesTagNames.PROTOCOL_BINDINGS, "setProtocolBindings");
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(SERVICE_NAME_PATTERN, "setServiceNamePattern");
+        table.put(PORT_NAME_PATTERN, "setPortNamePattern");
+        table.put(PROTOCOL_BINDINGS, "setProtocolBindings");
         return table;
     }
 
-    /**
-     * receives notification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+
+    @Override
     public void setElementValue(XMLElement element, String value) {
         super.setElementValue(element, value);
     }
 
-    /**
-     * write the method descriptor class to a query-method DOM tree and
-     * return it
-     *
-     * @param parent node in the DOM tree
-     * @param nodeName name for the root element of this xml fragment
-     * @param handler the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                WebServiceHandlerChain handler) {
+
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, WebServiceHandlerChain handler) {
         Node wshNode = super.writeDescriptor(parent, nodeName, handler);
 
-        if(handler.getServiceNamePattern() != null) {
-            appendTextChild(wshNode,
-                        WebServicesTagNames.SERVICE_NAME_PATTERN,
-                        handler.getServiceNamePattern());
+        if (handler.getServiceNamePattern() != null) {
+            appendTextChild(wshNode, SERVICE_NAME_PATTERN, handler.getServiceNamePattern());
         }
-        if(handler.getPortNamePattern() != null) {
-            appendTextChild(wshNode,
-                        WebServicesTagNames.PORT_NAME_PATTERN,
-                        handler.getPortNamePattern());
+        if (handler.getPortNamePattern() != null) {
+            appendTextChild(wshNode, PORT_NAME_PATTERN, handler.getPortNamePattern());
         }
-        if(handler.getProtocolBindings() != null) {
-            appendTextChild(wshNode,
-                        WebServicesTagNames.PROTOCOL_BINDINGS,
-                        handler.getProtocolBindings());
+        if (handler.getProtocolBindings() != null) {
+            appendTextChild(wshNode, PROTOCOL_BINDINGS, handler.getProtocolBindings());
         }
         WebServiceHandlerNode handlerNode = new WebServiceHandlerNode();
         handlerNode.writeWebServiceHandlers(wshNode, handler.getHandlers());
         return wshNode;
     }
 
-    public void writeWebServiceHandlerChains(Node parent, List handlerChain) {
+
+    public void writeWebServiceHandlerChains(Node parent, List<WebServiceHandlerChain> handlerChain) {
         // If there are HanderChains, add the <handler-chains> node before adding
         // individual <handler-chain> nodes
-        if(handlerChain.size() != 0) {
-            parent = super.writeDescriptor(parent, WebServicesTagNames.HANDLER_CHAINS, null);
+        if (!handlerChain.isEmpty()) {
+            parent = super.writeDescriptor(parent, HANDLER_CHAINS, null);
         }
-        for(Iterator iter = handlerChain.iterator(); iter.hasNext();) {
-            WebServiceHandlerChain next = (WebServiceHandlerChain) iter.next();
-            writeDescriptor(parent, WebServicesTagNames.HANDLER_CHAIN, next);
+        for (WebServiceHandlerChain next : handlerChain) {
+            writeDescriptor(parent, HANDLER_CHAIN, next);
         }
     }
-
 }

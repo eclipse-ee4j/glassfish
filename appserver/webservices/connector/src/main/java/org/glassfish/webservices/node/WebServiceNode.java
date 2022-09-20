@@ -28,25 +28,16 @@ import java.util.Map;
 import org.w3c.dom.Node;
 
 /**
- * This node is responsible for loading web services
- * reference information
+ * This node is responsible for loading web services reference information
  *
  * @author  Kenneth Saks
  */
-public class WebServiceNode extends DisplayableComponentNode {
+public class WebServiceNode extends DisplayableComponentNode<WebService> {
 
-    private final static XMLElement tag = new XMLElement(WebServicesTagNames.WEB_SERVICE);
+    private final static XMLElement TAG = new XMLElement(WebServicesTagNames.WEB_SERVICE);
 
     public WebServiceNode() {
-        super();
         registerElementHandler(new XMLElement(WebServicesTagNames.PORT_COMPONENT), WebServiceEndpointNode.class);
-    }
-
-
-    /**
-     * initilizer method after instance creation
-     */
-    protected void init() {
     }
 
 
@@ -56,13 +47,6 @@ public class WebServiceNode extends DisplayableComponentNode {
     }
 
 
-    /**
-     * all sub-implementation of this class can use a dispatch table
-     * to map xml element to method name on the descriptor class for
-     * setting the element value.
-     *
-     * @return map with the element name as a key, the setter method as a value
-     */
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
@@ -73,37 +57,21 @@ public class WebServiceNode extends DisplayableComponentNode {
     }
 
 
-    /**
-     * @return the XML tag associated with this XMLNode
-     */
     @Override
     protected XMLElement getXMLRootTag() {
-        return tag;
+        return TAG;
     }
 
-    /**
-     * Adds  a new DOL descriptor instance to the descriptor
-     * instance associated with this XMLNode
-     *
-     * @param descriptor the new descriptor
-     */
+
     @Override
     public void addDescriptor(Object descriptor) {
         WebServiceEndpoint endpoint = (WebServiceEndpoint) descriptor;
-        WebService webService = (WebService) getDescriptor();
+        WebService webService = getDescriptor();
         webService.addEndpoint(endpoint);
     }
 
 
-    /**
-     * write the method descriptor class to a query-method DOM tree and
-     * return it
-     *
-     * @param parent node in the DOM tree
-     * @param nodeName name for the root element of this xml fragment
-     * @param descriptor the descriptor to write
-     * @return the DOM tree top node
-     */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, WebService descriptor) {
         Node topNode = super.writeDescriptor(parent, nodeName, descriptor);
 
@@ -120,5 +88,4 @@ public class WebServiceNode extends DisplayableComponentNode {
 
         return topNode;
     }
-
 }

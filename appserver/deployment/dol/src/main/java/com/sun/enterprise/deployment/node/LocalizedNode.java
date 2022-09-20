@@ -24,15 +24,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
 /**
- * This class is responsible for handling the xml lang attribute of
- * an xml element
+ * This class is responsible for handling the xml lang attribute of an xml element
  *
  * @author Jerome Dochez
  */
@@ -40,12 +38,6 @@ public class LocalizedNode extends DeploymentDescriptorNode<Descriptor> {
 
     private String lang;
     private String localizedValue;
-
-    @Override
-    public Descriptor getDescriptor() {
-        // return getParentNode().getDescriptor();
-        return null;
-    }
 
 
     protected String getLang() {
@@ -98,9 +90,7 @@ public class LocalizedNode extends DeploymentDescriptorNode<Descriptor> {
             return;
         }
         Set<Entry<String, String>> entrySet = localizedMap.entrySet();
-        Iterator<Entry<String, String>> entryIt = entrySet.iterator();
-        while (entryIt.hasNext()) {
-            Entry<String, String> entry = entryIt.next();
+        for (Entry<String, String> entry : entrySet) {
             String entryLang = entry.getKey();
             Element aLocalizedNode = (Element) appendTextChild(parentNode, tagName, entry.getValue());
             if (aLocalizedNode != null && Locale.getDefault().getLanguage().equals(entryLang)) {

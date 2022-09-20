@@ -250,7 +250,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
      * @param element XMLElement is the XML tag this XMLNode will handle
      * @param handler the class implemenenting the XMLNode interface
      */
-    protected void registerElementHandler(XMLElement element, Class<?> handler) {
+    protected final void registerElementHandler(XMLElement element, Class<?> handler) {
         if (handlers == null) {
             handlers = new Hashtable<>();
         }
@@ -265,7 +265,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
      * @param addMethodName is the method name for adding the descriptor
      * extracted by the handler node to the current descriptor
      */
-    public void registerElementHandler(XMLElement element, Class<?> handler, String addMethodName) {
+    public final void registerElementHandler(XMLElement element, Class<?> handler, String addMethodName) {
         registerElementHandler(element, handler);
         if (addMethods == null) {
             addMethods = new Hashtable<>();
@@ -617,9 +617,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
                 .getNodeMappings(nodeName);
             if (elementToNodeMappings != null) {
                 Set<Map.Entry<String, Class<?>>> entrySet = elementToNodeMappings.entrySet();
-                Iterator<Map.Entry<String, Class<?>>> entryIt = entrySet.iterator();
-                while (entryIt.hasNext()) {
-                    Entry<String, Class<?>> entry = entryIt.next();
+                for (Entry<String, Class<?>> entry : entrySet) {
                     String subElementName = entry.getKey();
                     // skip if it's the element itself and not the subelement
                     if (subElementName.equals(nodeName)) {
@@ -1082,9 +1080,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
         Map<String, String> prefixMapping = descriptor == null ? null : descriptor.getPrefixMapping();
         if (prefixMapping != null) {
             Set<Map.Entry<String, String>> entrySet = prefixMapping.entrySet();
-            Iterator<Map.Entry<String, String>> entryIt = entrySet.iterator();
-            while (entryIt.hasNext()) {
-                Map.Entry<String, String> entry = entryIt.next();
+            for (Entry<String, String> entry : entrySet) {
                 String prefix = entry.getKey();
                 String namespaceURI = entry.getValue();
                 setAttributeNS(node, prefix, namespaceURI);

@@ -236,6 +236,7 @@ public class TckRunner {
     private String toReport(Testsuite suite) {
         StringBuilder report = new StringBuilder();
         report.append("Test suite ").append(suite.getName());
+        report.append(" finished at ").append(suite.getTimestamp());
         report.append(" failed with ").append(suite.getFailures()).append(" failures and ");
         report.append(suite.getErrors()).append(" errors.");
         List<Testcase> tests = suite.getTestcase();

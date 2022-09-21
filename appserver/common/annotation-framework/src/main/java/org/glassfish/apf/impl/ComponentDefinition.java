@@ -20,7 +20,6 @@ package org.glassfish.apf.impl;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -29,6 +28,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.apf.ComponentInfo;
+
+import static java.lang.reflect.Modifier.isPrivate;
+import static java.lang.reflect.Modifier.isProtected;
+import static java.lang.reflect.Modifier.isPublic;
 
 
 /**
@@ -86,8 +89,6 @@ public class ComponentDefinition implements ComponentInfo {
         }
         Class<?> parent = clazz;
         while ((parent = parent.getSuperclass()) != null) {
-            // always check whether this class is in the class list
-            // for skipping annotation processing
             if (!isExcludedFromAnnotationProcessing(parent)) {
                 classes.add(0, parent);
             }
@@ -136,13 +137,14 @@ public class ComponentDefinition implements ComponentInfo {
      */
     private boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
         if (clazz.getPackage() == null) {
-            return false;
+            return true;
         }
         if (clazz.getPackage().getName().startsWith("java.lang")) {
             return true;
         }
         return EXCLUDED_FROM_ANNOTATION_PROCESSING.contains(clazz.getCanonicalName());
     }
+
 
     /**
      * MethodKey represents a method for the annotation's point of view.
@@ -182,16 +184,19 @@ public class ComponentDefinition implements ComponentInfo {
             if (!(o instanceof MethodKey)) {
                 return false;
             }
+
             MethodKey mk2 = (MethodKey) o;
             Method m2 = mk2.m;
             if (m.getName().equals(m2.getName()) && Arrays.equals(m.getParameterTypes(), m2.getParameterTypes())) {
+                int modifiers2 = m2.getModifiers();
                 boolean isSamePackage = hasSamePackage(mk2);
-                if (Modifier.isPrivate(m.getModifiers())) {
-                    // need exact match
-                    return Modifier.isPrivate(m2.getModifiers()) && isSamePackage && className.equals(mk2.className);
+                if (isPrivate(m.getModifiers())) {
+                    return isPrivate(modifiers2) && isSamePackage && className.equals(mk2.className);
                 }
-                return isSamePackage && !Modifier.isPrivate(m2.getModifiers());
+                return isPublic(modifiers2) || isProtected(modifiers2)
+                    || (isPackageProtected(modifiers2) && isSamePackage);
             }
+
             return false;
         }
 
@@ -203,6 +208,11 @@ public class ComponentDefinition implements ComponentInfo {
             }
             return classPackage != null && mk2.classPackage != null
                 && classPackage.getName().equals(mk2.classPackage.getName());
+        }
+
+
+        private static boolean isPackageProtected(int modifiers) {
+            return !isPublic(modifiers) && !isProtected(modifiers) && !isPrivate(modifiers);
         }
     }
 }

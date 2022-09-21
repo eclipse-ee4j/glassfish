@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,50 +17,34 @@
 
 package com.sun.enterprise.deployment.node.connector;
 
-import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.LicenseDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.xml.ConnectorTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.w3c.dom.Node;
 
 
 /**
  * This node is responsible for handling license subtree.
  */
-public class LicenseNode extends DeploymentDescriptorNode {
+public class LicenseNode extends DeploymentDescriptorNode<LicenseDescriptor> {
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to
-     * map xml element to method name on the descriptor class for
-     * setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method
-     *         as a value
-     */
-    @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(ConnectorTagNames.LICENSE_REQUIRED, "setLicenseRequired");
-        return table;
-    }
-
-
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, ConnectorDescriptor descriptor) {
-        LicenseDescriptor licenseDesc = descriptor.getLicenseDescriptor();
+    public static Node writeLicenseDescriptor(Node parent, LicenseDescriptor licenseDesc) {
         if (licenseDesc != null) {
             Node licenseNode = appendChild(parent, ConnectorTagNames.LICENSE);
             writeLocalizedDescriptions(licenseNode, licenseDesc);
             appendTextChild(licenseNode, ConnectorTagNames.LICENSE_REQUIRED, licenseDesc.getLicenseRequiredValue());
         }
         return parent;
+    }
+
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(ConnectorTagNames.LICENSE_REQUIRED, "setLicenseRequired");
+        return table;
     }
 }

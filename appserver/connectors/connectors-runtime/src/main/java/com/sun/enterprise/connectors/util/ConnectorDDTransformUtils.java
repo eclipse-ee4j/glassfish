@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,22 +19,32 @@ package com.sun.enterprise.connectors.util;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.deployment.util.ConnectorArchivist;
-import org.jvnet.hk2.config.types.Property;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.deployment.util.ConnectorArchivist;
 import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.ConnectionDefDescriptor;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.InboundResourceAdapter;
+import com.sun.enterprise.deployment.MessageListener;
+import com.sun.enterprise.deployment.OutboundResourceAdapter;
 import com.sun.enterprise.deployment.deploy.shared.MemoryMappedArchive;
 import com.sun.logging.LogDomains;
-import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.File;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.jvnet.hk2.config.types.Property;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -61,27 +71,18 @@ public class ConnectorDDTransformUtils {
      * @return Transformed ConnectorDescriptorInfo object
      */
 
-    public static ConnectorDescriptorInfo getConnectorDescriptorInfo(
-            ConnectionDefDescriptor connectionDefDescriptor) {
-
-        ConnectorDescriptorInfo connectorDescInfo =
-                new ConnectorDescriptorInfo();
-        connectorDescInfo.setConnectionDefinitionName(
-                connectionDefDescriptor.getConnectionFactoryIntf());
-        connectorDescInfo.setManagedConnectionFactoryClass(
-                connectionDefDescriptor.getManagedConnectionFactoryImpl());
-        connectorDescInfo.setConnectionFactoryClass(
-                connectionDefDescriptor.getConnectionFactoryImpl());
-        connectorDescInfo.setConnectionFactoryInterface(
-                connectionDefDescriptor.getConnectionFactoryIntf());
-        connectorDescInfo.setConnectionInterface(
-                connectionDefDescriptor.getConnectionIntf());
-        connectorDescInfo.setConnectionClass(
-                connectionDefDescriptor.getConnectionImpl());
-        connectorDescInfo.setMCFConfigProperties(
-                connectionDefDescriptor.getConfigProperties());
+    public static ConnectorDescriptorInfo getConnectorDescriptorInfo(ConnectionDefDescriptor connectionDefDescriptor) {
+        ConnectorDescriptorInfo connectorDescInfo = new ConnectorDescriptorInfo();
+        connectorDescInfo.setConnectionDefinitionName(connectionDefDescriptor.getConnectionFactoryIntf());
+        connectorDescInfo.setManagedConnectionFactoryClass(connectionDefDescriptor.getManagedConnectionFactoryImpl());
+        connectorDescInfo.setConnectionFactoryClass(connectionDefDescriptor.getConnectionFactoryImpl());
+        connectorDescInfo.setConnectionFactoryInterface(connectionDefDescriptor.getConnectionFactoryIntf());
+        connectorDescInfo.setConnectionInterface(connectionDefDescriptor.getConnectionIntf());
+        connectorDescInfo.setConnectionClass(connectionDefDescriptor.getConnectionImpl());
+        connectorDescInfo.setMCFConfigProperties(connectionDefDescriptor.getConfigProperties());
         return connectorDescInfo;
     }
+
 
     /**
      * merges the properties mentioned in first parameter with the Set of
@@ -97,62 +98,60 @@ public class ConnectorDDTransformUtils {
      *                         only when both its name as well as its value match.
      * @return Set of merged properties.
      */
-    public static Set mergeProps(List<Property> props, Set defaultMCFProps, Properties propertiesToSkip) {
-        HashSet mergedSet = new HashSet();
+    public static Set<ConnectorConfigProperty> mergeProps(
+        List<Property> props,
+        Set<ConnectorConfigProperty> defaultMCFProps,
+        Properties propertiesToSkip) {
+        HashSet<ConnectorConfigProperty> mergedSet = new HashSet<>();
 
-            if (defaultMCFProps != null) {
-                Object[] defaultProps = defaultMCFProps.toArray();
-
-                for (int i = 0; i < defaultProps.length; i++) {
-                        ConnectorConfigProperty ep1 = (ConnectorConfigProperty) defaultProps[i];
-                        if(propertiesToSkip.containsKey(ep1.getName())){
-                            //Skip the property if the values are equal
-                            String propertyValue = (String)propertiesToSkip.get(ep1.getName());
-                            if(ep1.getValue() != null && propertyValue != null){
-                                if(ep1.getValue().equals(propertyValue)){
-                                    continue;
-                                }
-                            }
-                        }
-                    mergedSet.add(defaultProps[i]);
-                }
-            }
-
-            for (Property property : props) {
-                ConnectorConfigProperty  ep = new ConnectorConfigProperty (
-                        property.getName(), property.getValue(), null);
-                if (defaultMCFProps.contains(ep)) {
-                    //get the environment property in the mergedset
-                    Iterator iter = defaultMCFProps.iterator();
-                    while (iter.hasNext()) {
-                        ConnectorConfigProperty  envProp =
-                                (ConnectorConfigProperty ) iter.next();
-                        if (envProp.equals(ep)) {
-                        //and if they are equal, set ep's type to envProp's type
-                        //This set is important because envProp has the ra.xml
-                        //specified property-Type. When the ra-bean-class does
-                        //not have any getter method for a property, the property
-                        //Type specified in ra.xml should be used.
-
-                            if (envProp.getType() != null) {
-                                ep.setType(envProp.getType());
-                            }
-                            //Make sure that the new environment property inherits
-                            //confidential flag from the DD's property.
-                            ep.setConfidential(envProp.isConfidential());
+        if (defaultMCFProps != null) {
+            ConnectorConfigProperty[] defaultProps = defaultMCFProps.toArray(ConnectorConfigProperty[]::new);
+            for (ConnectorConfigProperty ep1 : defaultProps) {
+                if (propertiesToSkip.containsKey(ep1.getName())) {
+                    // Skip the property if the values are equal
+                    String propertyValue = (String) propertiesToSkip.get(ep1.getName());
+                    if (ep1.getValue() != null && propertyValue != null) {
+                        if (ep1.getValue().equals(propertyValue)) {
+                            continue;
                         }
                     }
-
-                    if(_logger.isLoggable(Level.FINER)) {
-                        _logger.log(Level.FINER,
-                            "After merging props with defaultMCFProps: envPropName: "
-                                    + ep.getName() + " envPropValue : " + ep.getValue());
-                    }
-                    mergedSet.remove(ep);
                 }
-                mergedSet.add(ep);
+                mergedSet.add(ep1);
             }
-            return mergedSet;
+        }
+
+        for (Property property : props) {
+            ConnectorConfigProperty ep = new ConnectorConfigProperty(property.getName(), property.getValue(), null);
+            if (defaultMCFProps.contains(ep)) {
+                // get the environment property in the mergedset
+                Iterator<ConnectorConfigProperty> iter = defaultMCFProps.iterator();
+                while (iter.hasNext()) {
+                    ConnectorConfigProperty envProp = iter.next();
+                    if (envProp.equals(ep)) {
+                        // and if they are equal, set ep's type to envProp's type
+                        // This set is important because envProp has the ra.xml
+                        // specified property-Type. When the ra-bean-class does
+                        // not have any getter method for a property, the property
+                        // Type specified in ra.xml should be used.
+
+                        if (envProp.getType() != null) {
+                            ep.setType(envProp.getType());
+                        }
+                        // Make sure that the new environment property inherits
+                        // confidential flag from the DD's property.
+                        ep.setConfidential(envProp.isConfidential());
+                    }
+                }
+
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.log(Level.FINER, "After merging props with defaultMCFProps: envPropName: " + ep.getName()
+                        + " envPropValue : " + ep.getValue());
+                }
+                mergedSet.remove(ep);
+            }
+            mergedSet.add(ep);
+        }
+        return mergedSet;
     }
     /**
      * merges the properties mentioned in first parameter with the Set of
@@ -166,7 +165,9 @@ public class ConnectorDDTransformUtils {
      *                   takes precedence over  values present in deployment descriptors.
      * @return Set of merged properties.
      */
-    public static Set mergeProps(List<Property> props, Set defaultMCFProps) {
+    public static Set<ConnectorConfigProperty> mergeProps(
+        List<Property> props,
+        Set<ConnectorConfigProperty> defaultMCFProps) {
         return mergeProps(props, defaultMCFProps, new Properties());
     }
 
@@ -193,39 +194,39 @@ public class ConnectorDDTransformUtils {
             FileArchive fileArchive = new FileArchive();
             fileArchive.open(module.toURI());  // directory where rar is exploded
             ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
-            ClassLoader loader ;
-            if(ConnectorsUtil.belongsToSystemRA(rarModuleName)){
+            ClassLoader loader;
+            if (ConnectorsUtil.belongsToSystemRA(rarModuleName)) {
                 loader = ConnectorRuntime.getRuntime().getSystemRARClassLoader(rarModuleName);
                 Thread.currentThread().setContextClassLoader(loader);
-            }else{
+            } else {
                 loader = runtime.createConnectorClassLoader(moduleDir, null, rarModuleName);
             }
 
             ConnectorArchivist connectorArchivist = runtime.getConnectorArchvist();
-            //TODO V3 what happens to embedded .rar ? as its parent classloader should be application CL
-            //setting the classloader so that annotation processor can make use of it.
+            // TODO V3 what happens to embedded .rar ? as its parent classloader should be
+            // application CL setting the classloader so that annotation processor can make use of it.
             connectorArchivist.setClassLoader(loader);
-            //fileArchive.entries("META-INF/ra.xml");
-            //TODO V3 need to check whether ra.xml is present, if so, check the version. process annotations
-            //only if its 1.6 or above ?
+            // fileArchive.entries("META-INF/ra.xml");
+            // TODO V3 need to check whether ra.xml is present, if so, check the version. process
+            // annotations only if its 1.6 or above ?
             connectorArchivist.setAnnotationProcessingRequested(true);
 
             return connectorArchivist.open(fileArchive);
         } catch (IOException ex) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException(
-                    "Failed to read the connector deployment descriptors");
+                "Failed to read the connector deployment descriptors");
             cre.initCause(ex);
             _logger.log(Level.SEVERE, "rardeployment.connector_descriptor_read_error", moduleDir);
             _logger.log(Level.SEVERE, "", cre);
             throw cre;
         } catch (SAXException ex) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException(
-                    "Failed to parse the connector deployment descriptors");
+                "Failed to parse the connector deployment descriptors");
             cre.initCause(ex);
             _logger.log(Level.SEVERE, "rardeployment.connector_descriptor_parse_error", moduleDir);
             _logger.log(Level.SEVERE, "", cre);
             throw cre;
-        }finally{
+        } finally {
             Thread.currentThread().setContextClassLoader(cl);
         }
     }
@@ -265,7 +266,7 @@ public class ConnectorDDTransformUtils {
             FileInputStream fis = new FileInputStream(rarLocation);
             MemoryMappedArchive mma = new MemoryMappedArchive(fis);
             ConnectorArchivist ca = new ConnectorArchivist();
-            ConnectorDescriptor cd = (ConnectorDescriptor) ca.open(mma);
+            ConnectorDescriptor cd = ca.open(mma);
             return cd.getResourceAdapterClass();
         } catch (IOException e) {
             _logger.info(e.getMessage());

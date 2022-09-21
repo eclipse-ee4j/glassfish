@@ -107,22 +107,22 @@ public class DummyEJB
     private boolean checkPostConstructSequence() {
         boolean result = postConstructList.size() == 2;
         if (result) {
-            "DummyBaseEJB".equals(postConstructList.get(0));
-            "DummyEJB".equals(postConstructList.get(1));
+            return "DummyBaseEJB".equals(postConstructList.get(0))
+             && "DummyEJB".equals(postConstructList.get(1));
         }
 
-        return result;
+        return false;
     }
 
     private boolean checkAroundInvokeSequence() {
         boolean result = aroundInvokeList.size() == 3;
         if (result) {
-            "DummyBaseEJB".equals(aroundInvokeList.get(0));
-            "DummyLevel2EJB".equals(aroundInvokeList.get(1));
-            "DummyEJB".equals(aroundInvokeList.get(2));
+            return "DummyBaseEJB".equals(aroundInvokeList.get(0))
+            && "DummyLevel2EJB".equals(aroundInvokeList.get(1))
+            && "DummyEJB".equals(aroundInvokeList.get(2));
         }
 
-        return result;
+        return false;
     }
 
 }

@@ -16,7 +16,7 @@
 
 package org.glassfish.apf;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import java.text.MessageFormat;
 
 /**
  * Exception that denotes a warning or error condition in the
@@ -24,80 +24,89 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
  *
  * @author Jerome Dochez
  */
-public class AnnotationProcessorException extends Exception {
+public final class AnnotationProcessorException extends Exception {
 
-    final private String message;
+    private static final long serialVersionUID = 1L;
 
-    transient final private AnnotationInfo locator; // TODO if this class is meant for serialization, make sure all its constituents are serializable.
+    // TODO if this class is meant for serialization, make sure all its constituents are serializable.
+    private final transient AnnotationInfo annotationInfo;
 
-    boolean isFatal = false;
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AnnotationProcessorException.class);
+    private boolean isFatal;
 
 
     /**
      * Creats a new annotation exception
+     *
      * @param message describing the exception cause
      */
     public AnnotationProcessorException(String message) {
-        this.message = message;
-        this.locator = null;
+        super(message);
+        this.annotationInfo = null;
     }
+
 
     /**
      * Creates a new annotation exception
+     *
      * @param message describing the exception cause
-     * @param locator gives information about the annotation and
-     * the annotated element which caused the exception
+     * @param annotationInfo gives information about the annotation and
+     *            the annotated element which caused the exception
      */
-    public AnnotationProcessorException(String message, AnnotationInfo locator) {
-        this.message = message;
-        this.locator = locator;
+    public AnnotationProcessorException(String message, AnnotationInfo annotationInfo) {
+        super(message);
+        this.annotationInfo = annotationInfo;
     }
 
+
     /**
-     * Return a meaningful string explaining the exception cause
-     * @return the exception reason
+     * Creates a new annotation exception
+     *
+     * @param message describing the exception cause
+     * @param annotationInfo gives information about the annotation and
+     *            the annotated element which caused the exception
+     * @param cause
      */
-    public String getMessage() {
-        return message;
+    public AnnotationProcessorException(String message, AnnotationInfo annotationInfo, Throwable cause) {
+        super(message, cause);
+        this.annotationInfo = annotationInfo;
     }
+
 
     /**
      * Return information about the annotation and annotated element
      * which caused the exception or null if it is not available.
+     *
      * @return the annotation info instance
      */
-    public AnnotationInfo getLocator() {
-        return locator;
+    public AnnotationInfo getAnnotationInfo() {
+        return annotationInfo;
     }
 
-    /**
-     * @return a meaningful description
-     */
-    public String toString() {
-        if (locator == null) {
-            return message;
-        } else {
-            return localStrings.getLocalString("annotationprocessorexception.with.locator", "{0}. Related annotation information: {1}", message, locator);
+
+    @Override
+    public String getMessage() {
+        if (annotationInfo == null) {
+            return super.getMessage();
         }
+        return MessageFormat.format("{0}. Related annotation information: {1}", super.getMessage(), annotationInfo);
     }
 
+
     /**
-     *
      * @return true if this exception was considered by the sender as being
-     * fatal to the annotations processing(i.e. it should stop).
+     *         fatal to the annotations processing(i.e. it should stop).
      */
-    public boolean isFatal(){
+    public boolean isFatal() {
         return isFatal;
     }
 
+
     /**
-     * Sets wether is exception is considered as fatal to the annotation
-     * processing.
-     * @param true if the annotation processing should stop
+     * Sets wether is exception is considered as fatal to the annotation processing.
+     *
+     * @param fatal true if the annotation processing should stop
      */
-     public void setFatal(boolean fatal){
-         this.isFatal = fatal;
-     }
+    public void setFatal(boolean fatal) {
+        this.isFatal = fatal;
+    }
 }

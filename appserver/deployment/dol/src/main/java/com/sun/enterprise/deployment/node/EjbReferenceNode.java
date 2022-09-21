@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,44 +17,44 @@
 
 package com.sun.enterprise.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionTarget;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.w3c.dom.Node;
 
 /**
  * This class handles all information in the ejb-reference xml node
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
+public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReferenceDescriptor> {
 
-    protected EjbReference descriptor;
+    protected EjbReferenceDescriptor descriptor;
 
     public EjbReferenceNode() {
-        super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
-                                InjectionTargetNode.class, "addInjectionTarget");
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), InjectionTargetNode.class,
+            "addInjectionTarget");
     }
 
+
     @Override
-    public EjbReference getDescriptor() {
-        if (descriptor==null) {
+    public EjbReferenceDescriptor getDescriptor() {
+        if (descriptor == null) {
             descriptor = new EjbReferenceDescriptor();
             descriptor.setLocal(false);
         }
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.EJB_REFERENCE_NAME, "setName");
         table.put(TagNames.EJB_REFERENCE_TYPE, "setType");
         table.put(TagNames.HOME, "setEjbHomeInterface");
@@ -66,13 +67,12 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
         return table;
     }
 
+
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, EjbReference descriptor) {
+    public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor descriptor) {
         Node ejbRefNode = appendChild(parent, nodeName);
-        if (descriptor instanceof Descriptor) {
-            Descriptor ejbRefDesc = (Descriptor)descriptor;
-            writeLocalizedDescriptions(ejbRefNode, ejbRefDesc);
-        }
+        Descriptor ejbRefDesc = descriptor;
+        writeLocalizedDescriptions(ejbRefNode, ejbRefDesc);
         appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_NAME, descriptor.getName());
         appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_TYPE, descriptor.getType());
         if (descriptor.isLocal()) {
@@ -84,18 +84,16 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
         }
         appendTextChild(ejbRefNode, TagNames.EJB_LINK, descriptor.getLinkName());
 
-        if( descriptor instanceof EnvironmentProperty) {
-            EnvironmentProperty envProp = (EnvironmentProperty)descriptor;
-            appendTextChild(ejbRefNode, TagNames.MAPPED_NAME, envProp.getMappedName());
-        }
-        if( descriptor.isInjectable() ) {
+        EnvironmentProperty envProp = descriptor;
+        appendTextChild(ejbRefNode, TagNames.MAPPED_NAME, envProp.getMappedName());
+        if (descriptor.isInjectable()) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
             for (InjectionTarget target : descriptor.getInjectionTargets()) {
                 ijNode.writeDescriptor(ejbRefNode, TagNames.INJECTION_TARGET, target);
             }
         }
 
-        if( descriptor.hasLookupName() ) {
+        if (descriptor.hasLookupName()) {
             appendTextChild(ejbRefNode, TagNames.LOOKUP_NAME, descriptor.getLookupName());
         }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,16 @@
 
 package com.sun.enterprise.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.SecurityRoleDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
 import org.glassfish.security.common.Role;
 import org.w3c.dom.Node;
 
 /**
- *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescriptor> {
 
@@ -34,23 +34,27 @@ public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescr
 
     @Override
     public SecurityRoleDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new SecurityRoleDescriptor();
+        if (descriptor == null) {
+            descriptor = new SecurityRoleDescriptor();
+        }
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.ROLE_NAME, "setName");
         return table;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName node name for the root element of this xml fragment
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, Role descriptor) {
@@ -59,6 +63,7 @@ public class SecurityRoleNode extends DeploymentDescriptorNode<SecurityRoleDescr
         appendTextChild(roleNode, TagNames.ROLE_NAME, descriptor.getName());
         return roleNode;
     }
+
 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, SecurityRoleDescriptor descriptor) {

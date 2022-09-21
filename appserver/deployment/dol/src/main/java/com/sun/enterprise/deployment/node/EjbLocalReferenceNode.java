@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,23 +18,20 @@
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
-import com.sun.enterprise.deployment.types.EjbReference;
 
 /**
  * This node handles all information relative to ejb-local-ref
  *
- * @author  Jeorme Dochez
- * @version
+ * @author Jeorme Dochez
  */
-public class EjbLocalReferenceNode  extends EjbReferenceNode {
+public class EjbLocalReferenceNode extends EjbReferenceNode {
 
     @Override
-    public EjbReference getDescriptor() {
-        if (descriptor==null) {
+    public EjbReferenceDescriptor getDescriptor() {
+        if (descriptor == null) {
             descriptor = new EjbReferenceDescriptor();
             descriptor.setLocal(true);
         }
         return descriptor;
     }
-
 }

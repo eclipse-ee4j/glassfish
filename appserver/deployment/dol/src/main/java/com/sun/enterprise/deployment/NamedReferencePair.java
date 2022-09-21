@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,15 +28,16 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class NamedReferencePair implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     // Types of named reference pairs
-    public static final int EJB = 1;
-    public static final int EJB_REF = 2;
-    public static final int RESOURCE_REF = 3;
-    public static final int RESOURCE_ENV_REF = 4;
+    private static final int EJB = 1;
+    private static final int EJB_REF = 2;
+    private static final int RESOURCE_REF = 3;
+    private static final int RESOURCE_ENV_REF = 4;
 
-    private Descriptor referant;
-    private NamedDescriptor referee;
-    private int type;
+    private final Descriptor referant;
+    private final NamedDescriptor referee;
+    private final int type;
 
     public static NamedReferencePair createEjbPair(EjbDescriptor referant, EjbDescriptor referee) {
         if (referant instanceof Descriptor) {
@@ -56,8 +58,7 @@ public class NamedReferencePair implements Serializable {
     }
 
 
-    public static NamedReferencePair createResourceEnvRefPair(Descriptor referant,
-        ResourceEnvReferenceDescriptor referee) {
+    public static NamedReferencePair createResourceEnvRefPair(Descriptor referant, ResourceEnvReferenceDescriptor referee) {
         return new NamedReferencePair(referant, referee, RESOURCE_ENV_REF);
     }
 
@@ -73,13 +74,13 @@ public class NamedReferencePair implements Serializable {
     }
 
 
-    /** Gets the descriptor with the named descriptor. */
+    /** @return the descriptor with the named descriptor. */
     public Descriptor getReferant() {
         return this.referant;
     }
 
 
-    /** Gets the named descriptor for the decriptor. */
+    /** @return the named descriptor for the decriptor. */
     public NamedDescriptor getReferee() {
         return this.referee;
     }
@@ -95,8 +96,9 @@ public class NamedReferencePair implements Serializable {
                 return "RESOURCE REF";
             case RESOURCE_ENV_REF:
                 return "RESOURCE ENV REF";
+            default:
+                throw new IllegalStateException("unknown type = " + type);
         }
-        throw new IllegalStateException("unknown type = " + type);
     }
 
 

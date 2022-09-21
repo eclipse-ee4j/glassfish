@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,21 @@
 
 package com.sun.enterprise.deployment.node;
 
+import org.glassfish.deployment.common.Descriptor;
 import org.jvnet.hk2.annotations.Contract;
 import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
 /**
- * This interface defines the protocol associated with all the nodes. An
- * XML node is responsible for reading the XML file  into a object
- * representation
+ * This interface defines the protocol associated with all the nodes.
+ * An XML node is responsible for reading the XML file into a object representation
  *
- * @author  Jerome Dochez
- * @version
+ * @param <T> XML {@link Descriptor} type.
+ *
+ * @author Jerome Dochez
  */
 @Contract
-public interface XMLNode<T> {
+public interface XMLNode<T/* extends Descriptor*/> { // FIXME: az budu vedet, kde co je
 
     /**
      * notification of the start of an XML element tag in the processed
@@ -38,7 +40,7 @@ public interface XMLNode<T> {
      * @param element the XML element type name
      * @param attributes the specified or defaultted attritutes
      */
-    public void startElement(XMLElement element, Attributes attributes);
+    void startElement(XMLElement element, Attributes attributes);
 
     /**
      * sets the value of an XML element
@@ -46,7 +48,7 @@ public interface XMLNode<T> {
      * @param element the XML element type name
      * @param value the element value
      */
-    public void setElementValue(XMLElement element, String value);
+    void setElementValue(XMLElement element, String value);
 
     /**
      * notification of the end of an XML element in the source XML
@@ -56,7 +58,7 @@ public interface XMLNode<T> {
      * @return true if this node is done with the processing of elements
      * in the processing
      */
-    public boolean endElement(XMLElement element);
+    boolean endElement(XMLElement element);
 
     /**
      * Return true if the XMLNode is responisble for handling the
@@ -65,7 +67,7 @@ public interface XMLNode<T> {
      * @param element the XML element type name
      * @return true if the node processes this element name
      */
-    public boolean handlesElement(XMLElement element);
+    boolean handlesElement(XMLElement element);
 
     /**
      * Return the XMLNode implementation respionsible for
@@ -75,30 +77,30 @@ public interface XMLNode<T> {
      * @return XMLNode implementation responsible for handling
      * the XML tag
      */
-    public XMLNode getHandlerFor(XMLElement element);
+    XMLNode<?> getHandlerFor(XMLElement element);
 
     /**
      * @return the parent node for this XMLNode
      */
-    public XMLNode getParentNode();
+    XMLNode<?> getParentNode();
 
     /**
      * @return the root node for this XMLNode
      */
-    public XMLNode getRootNode();
+    XMLNode<?> getRootNode();
 
     /**
      * @return the XMLPath for the element name this node
      * is handling. The XML path can be a absolute or a
      * relative XMLPath.
      */
-    public String getXMLPath();
+    String getXMLPath();
 
     /**
      * @return the Descriptor subclass that was populated  by reading
      * the source XML file
      */
-    public T getDescriptor();
+    T getDescriptor();
 
     /**
      * Add a new descriptor to the current descriptor associated with
@@ -109,7 +111,7 @@ public interface XMLNode<T> {
      * @param descriptor the new descriptor to be added to the current
      * descriptor.
      */
-    public void addDescriptor(Object descriptor);
+    void addDescriptor(Object descriptor);
 
     /**
      * write the descriptor to an JAXP DOM node and return it
@@ -118,17 +120,17 @@ public interface XMLNode<T> {
      * @param descriptor the descriptor to be written
      * @return the JAXP DOM node for this descriptor
      */
-    public Node writeDescriptor(Node parent, T descriptor);
+    Node writeDescriptor(Node parent, T descriptor);
 
     /**
      * notify of a new prefix mapping used from this node
      */
-    public void addPrefixMapping(String prefix, String uri);
+    void addPrefixMapping(String prefix, String uri);
 
     /**
      * Resolve a QName prefix to its corresponding Namespace URI by
      * searching up node chain starting with the child.
      */
-    public String resolvePrefix(XMLElement element, String prefix);
+    String resolvePrefix(XMLElement element, String prefix);
 }
 

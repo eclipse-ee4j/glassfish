@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,101 +17,106 @@
 
 package org.glassfish.apf.impl;
 
-import java.util.EmptyStackException;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Stack;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Constructor;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EmptyStackException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.apf.ProcessingContext;
-import org.glassfish.apf.AnnotationProcessor;
-import org.glassfish.apf.AnnotationInfo;
-import org.glassfish.apf.AnnotationProcessorException;
-import org.glassfish.apf.AnnotationHandler;
 import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandler;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessor;
+import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.ComponentInfo;
-import org.glassfish.apf.ResultType;
 import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ProcessingContext;
 import org.glassfish.apf.ProcessingResult;
+import org.glassfish.apf.ResultType;
 import org.glassfish.apf.Scanner;
-import java.util.logging.Level;
+
+import static org.glassfish.apf.impl.HandlerProcessingResultImpl.getDefaultResult;
 
 
 /**
- *
  * @author dochez
  */
 public class AnnotationProcessorImpl implements AnnotationProcessor {
 
-    AnnotationProcessorImpl delegate;
-    Map<String, List<AnnotationHandler>> handlers =
-            new HashMap<String, List<AnnotationHandler>>();
+    private static final Logger LOG = AnnotationUtils.getLogger();
 
-    int errorCount;
-    Logger logger;
-    Stack<StackElement> annotatedElements = new Stack<StackElement>();
-    Set<Package> visitedPackages = new HashSet<Package>();
+    private final Map<String, List<AnnotationHandler>> handlers = new HashMap<>();
+    private final Stack<StackElement> annotatedElements = new Stack<>();
+    private final Set<Package> visitedPackages = new HashSet<>();
 
-    /** Creates a new instance of AnnotationProcessorImpl */
-    public AnnotationProcessorImpl() {
-        logger = AnnotationUtils.getLogger();
-    }
+    private AnnotationProcessorImpl delegate;
+    private int errorCount;
 
     public void setDelegate(AnnotationProcessorImpl delegate) {
         this.delegate = delegate;
     }
+
+
+    @Override
     public ProcessingContext createContext() {
         ProcessingContext ctx = new ProcessingContextImpl(this);
         ctx.setErrorHandler(new DefaultErrorHandler());
         return ctx;
     }
 
+
     /**
-     * Log a message on the default logger
+     * Log a message on the default LOG
      */
-    public void log(Level level, AnnotationInfo locator, String localizedMessage){
-        if (logger!=null && logger.isLoggable(level)){
-            if (locator!=null){
-                logger.log(level, AnnotationUtils.getLocalString(
-                    "enterprise.deployment.annotation.error",
-                    "{2}\n symbol: {0}\n location: {1}",
-                    new Object[] { locator.getAnnotation().annotationType().getName(), locator.getAnnotatedElement(), localizedMessage}));
-            } else{
-                logger.log(level, localizedMessage);
+    @Override
+    public void log(Level level, AnnotationInfo locator, String localizedMessage) {
+        if (LOG.isLoggable(level)) {
+            if (locator == null) {
+                LOG.log(level, localizedMessage);
+            } else {
+                LOG.log(level,
+                    MessageFormat.format("{2}\n symbol: {0}\n location: {1}",
+                        new Object[] {
+                            locator.getAnnotation().annotationType().getName(),
+                            locator.getAnnotatedElement(),
+                            localizedMessage,
+                        }));
             }
         }
     }
 
+
     /**
      * Starts the annotation processing tool passing the processing context which
      * encapuslate all information necessary for the configuration of the tool.
+     *
      * @param ctx is the initialized processing context
      * @return the result of the annoations processing
      */
-    public ProcessingResult process(ProcessingContext ctx)
-        throws AnnotationProcessorException
-    {
-
-        Scanner<Object> scanner = ctx.getProcessingInput();
+    @Override
+    public ProcessingResult process(ProcessingContext ctx) throws AnnotationProcessorException {
+        Scanner scanner = ctx.getProcessingInput();
         ProcessingResultImpl result = new ProcessingResultImpl();
-        errorCount=0;
-
-        for (Class c : scanner.getElements()) {
-
+        errorCount = 0;
+        for (Class<?> c : scanner.getElements()) {
             result.add(process(ctx, c));
         }
         return result;
     }
+
 
     /**
      * Process a set of classes from the parameter list rather than from the
@@ -121,22 +127,19 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
      * @param ctx the processing context
      * @param classes the list of classes to process
      * @return the processing result for such classes
-     * @throws AnnotationProcessorException if handlers fail to process
-     * an annotation
+     * @throws AnnotationProcessorException if handlers fail to process an annotation
      */
-    public ProcessingResult process(ProcessingContext ctx, Class[] classes)
-        throws AnnotationProcessorException {
-
+    @Override
+    public ProcessingResult process(ProcessingContext ctx, Class<?>[] classes) throws AnnotationProcessorException {
         ProcessingResultImpl result = new ProcessingResultImpl();
-        for (Class c : classes) {
+        for (Class<?> c : classes) {
             result.add(process(ctx, c));
         }
         return result;
     }
 
-    private ProcessingResult process(ProcessingContext ctx, Class c)
-        throws AnnotationProcessorException {
 
+    private ProcessingResult process(ProcessingContext ctx, Class<?> c) throws AnnotationProcessorException {
         Scanner scanner = ctx.getProcessingInput();
         ProcessingResultImpl result = new ProcessingResultImpl();
 
@@ -144,8 +147,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         Package classPackage = c.getPackage();
         if (classPackage != null && visitedPackages.add(classPackage)) {
             // new package
-            result.add(classPackage,
-                    processAnnotations(ctx, ElementType.PACKAGE, classPackage));
+            result.add(classPackage, processAnnotations(ctx, ElementType.PACKAGE, classPackage));
         }
 
         ComponentInfo info = null;
@@ -153,12 +155,8 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
             info = scanner.getComponentInfo(c);
         } catch (NoClassDefFoundError err) {
             // issue 456: allow verifier to report this issue
-            AnnotationProcessorException ape =
-                    new AnnotationProcessorException(
-                            AnnotationUtils.getLocalString(
-                                    "enterprise.deployment.annotation.classnotfounderror",
-                                    "Class [ {0} ] not found. Error while loading [ {1} ]",
-                                    new Object[]{err.getMessage(), c}));
+            AnnotationProcessorException ape = new AnnotationProcessorException(
+                MessageFormat.format("Class [ {0} ] not found. Error while loading [ {1} ]", err.getMessage(), c));
             ctx.getErrorHandler().error(ape);
             // let's continue to the next class instead of aborting the whole
             // annotation processing
@@ -166,17 +164,17 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         }
 
         // process the class itself.
-        AnnotatedElementHandler handler= ctx.getHandler();
-        logStart(handler, ElementType.TYPE,c);
+        AnnotatedElementHandler handler = ctx.getHandler();
+        logStart(handler, ElementType.TYPE, c);
         result.add(c, processAnnotations(ctx, c));
 
         // now dive into the fields.
         for (Field field : info.getFields()) {
-            result.add(field,processAnnotations(ctx, ElementType.FIELD, field));
+            result.add(field, processAnnotations(ctx, ElementType.FIELD, field));
         }
 
         // constructors...
-        for (Constructor constructor : info.getConstructors()) {
+        for (Constructor<?> constructor : info.getConstructors()) {
             logStart(ctx.getHandler(), ElementType.CONSTRUCTOR, constructor);
             result.add(constructor, processAnnotations(ctx, constructor));
 
@@ -202,8 +200,8 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         // the superclasses to ensure that annotations defined at the
         // TYPE level are processed at this component level.
         // Note : so far, I am ignoring the implemented interfaces
-        Class currentClass = c.getSuperclass();
-        while (currentClass!=null && !currentClass.equals(Object.class)) {
+        Class<?> currentClass = c.getSuperclass();
+        while (currentClass != null && !currentClass.equals(Object.class)) {
             // the trick is to add the results for this class, not
             // for the ones they are defined in...
             result.add(c, processAnnotations(ctx, currentClass));
@@ -217,16 +215,15 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         return result;
     }
 
-    private HandlerProcessingResult processParameters(ProcessingContext ctx, Annotation[][] parametersAnnotations)
-    throws AnnotationProcessorException
-    {
 
+    private HandlerProcessingResult processParameters(ProcessingContext ctx, Annotation[][] parametersAnnotations)
+        throws AnnotationProcessorException {
         HandlerProcessingResultImpl result = new HandlerProcessingResultImpl();
 
         // process the method parameters...
         for (Annotation[] parameterAnnotations : parametersAnnotations) {
             logStart(ctx.getHandler(), ElementType.PARAMETER, null);
-            if (parameterAnnotations!=null) {
+            if (parameterAnnotations != null) {
                 for (Annotation annotation : parameterAnnotations) {
                     AnnotationInfo info = new AnnotationInfo(ctx, null, annotation, ElementType.PARAMETER);
                     process(ctx, info, result);
@@ -238,10 +235,9 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         return result;
     }
 
-    private HandlerProcessingResult processAnnotations(ProcessingContext ctx, ElementType type, AnnotatedElement element)
-        throws AnnotationProcessorException
-    {
 
+    private HandlerProcessingResult processAnnotations(ProcessingContext ctx, ElementType type, AnnotatedElement element)
+        throws AnnotationProcessorException {
         AnnotatedElementHandler handler = ctx.getHandler();
         logStart(handler, type, element);
         HandlerProcessingResult result = processAnnotations(ctx, element);
@@ -252,132 +248,115 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         return result;
     }
 
-    private HandlerProcessingResult processAnnotations(ProcessingContext ctx, AnnotatedElement element)
-        throws AnnotationProcessorException
-    {
 
-        HandlerProcessingResultImpl result= new HandlerProcessingResultImpl();
-        try{
-        for (Annotation annotation : element.getAnnotations()) {
-            // initialize the result...
-            AnnotationInfo subElement = new AnnotationInfo(ctx, element, annotation, getTopElementType());
-            if (!result.processedAnnotations().containsKey(annotation.annotationType())) {
-                process(ctx, subElement, result);
-            } else {
-                if (AnnotationUtils.shouldLog("annotation")) {
-                    logger.finer("Annotation " + annotation.annotationType() + " already processed");
+    private HandlerProcessingResult processAnnotations(ProcessingContext ctx, AnnotatedElement element)
+        throws AnnotationProcessorException {
+        HandlerProcessingResultImpl result = new HandlerProcessingResultImpl();
+        try {
+            for (Annotation annotation : element.getAnnotations()) {
+                // initialize the result...
+                AnnotationInfo subElement = new AnnotationInfo(ctx, element, annotation, getTopElementType());
+                if (result.processedAnnotations().containsKey(annotation.annotationType())) {
+                    LOG.log(Level.FINER, "Annotation {0} already processed.", annotation.annotationType());
+                } else {
+                    process(ctx, subElement, result);
                 }
             }
+        } catch (ArrayStoreException e) {
+            LOG.info("Exception " + e + " encountered while processing annotaton for element " + element
+                + ". Message is: " + e.getMessage() + ". Ignoring annotations and proceeding.");
         }
-    } catch (ArrayStoreException e) {
-        logger.info("Exception " + e.toString()
-            + " encountered while processing annotaton for element "
-            + element + ". Message is: " + e.getMessage()
-            + ". Ignoring annotations and proceeding.");
-    }
         return result;
     }
 
+
     private void process(ProcessingContext ctx, AnnotationInfo element, HandlerProcessingResultImpl result)
-        throws AnnotationProcessorException
-    {
-
-
+        throws AnnotationProcessorException {
         Annotation annotation = element.getAnnotation();
-        if (AnnotationUtils.shouldLog("annotation")) {
-            logger.finer("Annotation : " + annotation.annotationType().getName() + " delegate = " + delegate);
-        }
+        LOG.log(Level.FINER, "Processing annotation: {0} delegate = {1}",
+            new Object[] {element, delegate});
         result.addResult(annotation.annotationType(), ResultType.UNPROCESSED);
 
         // we ignore all java.* annotations
         Package annPackage = annotation.annotationType().getPackage();
-        if (annPackage != null && annPackage.getName().startsWith("java.lang"))
+        if (annPackage != null && annPackage.getName().startsWith("java.lang")) {
             return;
+        }
 
         List<AnnotationHandler> annotationHandlers = handlers.get(annotation.annotationType().getName());
-        if (annotationHandlers!=null) {
-            for (AnnotationHandler handler : annotationHandlers) {
-
-                // here we need to be careful, we are ready to invoke a handler
-                // to process a particular annotation type. However, this handler
-                // may have defined a list of annotations that should be processed
-                // (if present on the annotated element) before itself.
-                // do this check and process those annotations first.
-                Class<? extends Annotation>[] dependencies = handler.getTypeDependencies();
-                if (dependencies!=null) {
-                    AnnotatedElement ae = element.getAnnotatedElement();
-                    for (Class<? extends Annotation> annotationType : dependencies) {
-                        Annotation depAnnotation = ae.getAnnotation(annotationType);
-                        if (depAnnotation!=null) {
-                            ResultType resultType = result.processedAnnotations().get(annotationType);
-                            if (resultType==null || resultType==ResultType.UNPROCESSED){
-                                // annotation is present, process it.
-                                AnnotationInfo info = new AnnotationInfo(ctx, ae, depAnnotation, getTopElementType());
-                                process(ctx, info, result);
-                            }
+        if (annotationHandlers == null) {
+            if (delegate == null) {
+                LOG.log(Level.FINER, "No handler defined for {0}", annotation);
+            } else {
+                delegate.process(ctx, element, result);
+            }
+            return;
+        }
+        for (AnnotationHandler handler : annotationHandlers) {
+            // here we need to be careful, we are ready to invoke a handler
+            // to process a particular annotation type. However, this handler
+            // may have defined a list of annotations that should be processed
+            // (if present on the annotated element) before itself.
+            // do this check and process those annotations first.
+            Class<? extends Annotation>[] dependencies = handler.getTypeDependencies();
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.log(Level.FINEST, "Dependencies of handler " + handler + ", " + Arrays.toString(dependencies));
+            }
+            if (dependencies != null) {
+                AnnotatedElement ae = element.getAnnotatedElement();
+                for (Class<? extends Annotation> annotationType : dependencies) {
+                    Annotation depAnnotation = ae.getAnnotation(annotationType);
+                    if (depAnnotation != null) {
+                        ResultType resultType = result.processedAnnotations().get(annotationType);
+                        if (resultType == null || resultType == ResultType.UNPROCESSED) {
+                            // annotation is present, process it.
+                            AnnotationInfo info = new AnnotationInfo(ctx, ae, depAnnotation, getTopElementType());
+                            process(ctx, info, result);
                         }
                     }
                 }
+            }
 
-                // at this point, all annotation that I declared depending on
-                // are processed
-                HandlerProcessingResult processingResult = null;
-                try {
-                    processingResult = handler.processAnnotation(element);
-                } catch(AnnotationProcessorException ape) {
-                    // I am logging this exception
-                    log(Level.SEVERE, ape.getLocator(), ape.getMessage());
+            // at this point, all annotation that I declared depending on are processed
+            HandlerProcessingResult processingResult = null;
+            try {
+                processingResult = handler.processAnnotation(element);
+            } catch (AnnotationProcessorException ape) {
+                // I am logging this exception
+                log(Level.SEVERE, ape.getAnnotationInfo(), ape.getMessage());
 
-                    // I am not throwing the exception unless it is fatal so annotation
-                    // processing can continue and we have a chance to report all
-                    // errors.
-                    if (ape.isFatal()) {
-                        throw ape;
-                    }
-
-                    if (++errorCount>100){
-                        throw new AnnotationProcessorException(
-                                AnnotationUtils.getLocalString(
-                                    "enterprise.deployment.annotation.toomanyerror",
-                                    "Too many errors, annotation processing abandoned."));
-                    }
-
-                    processingResult =
-                        HandlerProcessingResultImpl.getDefaultResult(
-                        annotation.annotationType(), ResultType.FAILED);
-                } catch(Throwable e){
-                    AnnotationProcessorException ape = new AnnotationProcessorException(e.getMessage(), element);
-                    ape.initCause(e);
+                // I am not throwing the exception unless it is fatal so annotation
+                // processing can continue and we have a chance to report all
+                // errors.
+                if (ape.isFatal()) {
                     throw ape;
                 }
-                result.addAll(processingResult);
+
+                if (++errorCount > 100) {
+                    throw new AnnotationProcessorException("Too many errors, annotation processing abandoned.");
+                }
+
+                processingResult = getDefaultResult(annotation.annotationType(), ResultType.FAILED);
+            } catch (Throwable e) {
+                throw new AnnotationProcessorException(e.getMessage(), element, e);
             }
-        } else {
-            if (delegate!=null) {
-                delegate.process(ctx, element, result);
-            } else {
-                ctx.getErrorHandler().fine(
-                        new AnnotationProcessorException("No handler defined for "
-                            + annotation.annotationType()));
-            }
+            result.addAll(processingResult);
         }
     }
 
     private void dumpProcessingResult(HandlerProcessingResult result) {
-
-        if (result==null || !AnnotationUtils.shouldLog("annotation")) {
+        if (result == null || !LOG.isLoggable(Level.FINER)) {
             return;
         }
-
-        Map<Class<? extends Annotation>, ResultType> annotationResults =
-                result.processedAnnotations();
+        Map<Class<? extends Annotation>, ResultType> annotationResults = result.processedAnnotations();
         for (Map.Entry<Class<? extends Annotation>, ResultType> element : annotationResults.entrySet()) {
-            logger.finer("Annotation " + element.getKey() + " : " +
-                    element.getValue());
+            LOG.finer("Annotation " + element.getKey() + " : " + element.getValue());
         }
     }
-    public void pushAnnotationHandler(AnnotationHandler handler) {
 
+
+    @Override
+    public void pushAnnotationHandler(AnnotationHandler handler) {
         String type = handler.getAnnotationType().getName();
         pushAnnotationHandler(type, handler);
     }
@@ -395,12 +374,13 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
     public void pushAnnotationHandler(String type, AnnotationHandler handler) {
         List<AnnotationHandler> currentHandlers = handlers.get(type);
         if (currentHandlers==null) {
-            currentHandlers = new ArrayList<AnnotationHandler>();
+            currentHandlers = new ArrayList<>();
             handlers.put(type, currentHandlers);
         }
         currentHandlers.add(handler);
     }
 
+    @Override
     public void popAnnotationHandler(Class<? extends Annotation> type) {
         List<AnnotationHandler> currentHandlers = handlers.get(type.getName());
         if (currentHandlers!=null) {
@@ -408,6 +388,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         }
     }
 
+    @Override
     public AnnotationHandler getAnnotationHandler(Class<? extends Annotation> type) {
         List<AnnotationHandler> currentHandlers = handlers.get(type.getName());
         if (currentHandlers!=null && currentHandlers.size()>0) {
@@ -420,52 +401,54 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
      * @return the last element pushed on the stack which ElementType was
      * the one passed or null if no stack element is of the given type.
      */
+    @Override
     public AnnotatedElement getLastAnnotatedElement(ElementType type) {
-        for (int i=annotatedElements.size();i!=0;i--) {
+        for (int i = annotatedElements.size(); i != 0; i--) {
             StackElement e = annotatedElements.get(i - 1);
-            if (e.getElementType().equals(type))
+            if (e.getElementType().equals(type)) {
                 return e.getAnnotatedElement();
+            }
         }
         return null;
     }
+
 
     public Stack<StackElement> getStack() {
         return annotatedElements;
     }
 
-    private void logStart(AnnotatedElementHandler handler, ElementType type, AnnotatedElement c) throws AnnotationProcessorException {
 
-        if (AnnotationUtils.shouldLog("types")) {
-            AnnotationUtils.getLogger().finer(type + " START : " + c);
-        }
+    private void logStart(AnnotatedElementHandler handler, ElementType type, AnnotatedElement c)
+        throws AnnotationProcessorException {
+        LOG.log(Level.FINEST, "{0} START : {1}", new Object[] {type, c});
 
         // push it to our annotated element stack
         annotatedElements.push(new StackElement(type, c));
-        if(delegate!=null) {
+        if (delegate != null) {
             delegate.getStack().push(new StackElement(type, c));
         }
 
-        if (handler!=null) {
+        if (handler != null) {
             handler.startElement(type, c);
         }
     }
 
-    private void logEnd(AnnotatedElementHandler handler, ElementType type, AnnotatedElement c) throws AnnotationProcessorException {
 
-        if (AnnotationUtils.shouldLog("types")) {
-            AnnotationUtils.getLogger().finer(type + " END : " + c);
-        }
+    private void logEnd(AnnotatedElementHandler handler, ElementType type, AnnotatedElement c)
+        throws AnnotationProcessorException {
+        LOG.log(Level.FINEST, "{0} END : {1}", new Object[] {type, c});
 
         // pop it from our annotated element stack
         annotatedElements.pop();
-        if(delegate!=null) {
+        if (delegate != null) {
             delegate.getStack().pop();
         }
 
-        if (handler!=null) {
+        if (handler != null) {
             handler.endElement(type, c);
         }
     }
+
 
     /**
      * @return the top annotated elements stack element type
@@ -474,7 +457,7 @@ public class AnnotationProcessorImpl implements AnnotationProcessor {
         try {
             StackElement top = annotatedElements.peek();
             return top.getElementType();
-        } catch(EmptyStackException ex) {
+        } catch (EmptyStackException ex) {
             return null;
         }
     }

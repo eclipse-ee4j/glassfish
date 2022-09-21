@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,26 +28,37 @@ import org.glassfish.apf.AnnotationProcessorException;
 
 public class RarBundleContext extends AnnotationContext {
 
-    private ConnectorDescriptor desc = null;
+    private final ConnectorDescriptor desc;
+
     public RarBundleContext(ConnectorDescriptor desc) {
         this.desc = desc;
     }
 
-    public ConnectorDescriptor getDescriptor(){
+
+    public ConnectorDescriptor getDescriptor() {
         return desc;
     }
+
+
+    @Override
     public void setProcessingContext(ProcessingContext processingContext) {
         super.setProcessingContext(processingContext);
     }
 
+
+    @Override
     public ProcessingContext getProcessingContext() {
         return super.getProcessingContext();
     }
 
+
+    @Override
     public void startElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
         getProcessingContext().pushHandler(this);
     }
 
+
+    @Override
     public void endElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
         getProcessingContext().popHandler();
     }

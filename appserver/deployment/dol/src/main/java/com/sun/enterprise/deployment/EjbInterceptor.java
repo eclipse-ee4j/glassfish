@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,43 +22,49 @@ import jakarta.enterprise.inject.spi.Interceptor;
 /**
  * Contains information about 1 ejb interceptor.
  */
+public class EjbInterceptor extends InterceptorDescriptor {
 
-public class EjbInterceptor extends InterceptorDescriptor
-{
-
+    private static final long serialVersionUID = 1L;
     private EjbBundleDescriptor ejbBundleDescriptor;
-    private boolean cdiInterceptor = false;
-    private Interceptor interceptor;
+    private boolean cdiInterceptor;
+    private Interceptor<?> interceptor;
 
     public EjbBundleDescriptor getEjbBundleDescriptor() {
         return ejbBundleDescriptor;
     }
+
 
     public void setEjbBundleDescriptor(EjbBundleDescriptor bundleDescriptor) {
         ejbBundleDescriptor = bundleDescriptor;
         super.setBundleDescriptor(bundleDescriptor);
     }
 
+
+    @Override
     public String toString() {
         return "EjbInterceptor class = " + getInterceptorClassName();
     }
+
 
     public void setCDIInterceptor(boolean flag) {
         cdiInterceptor = flag;
     }
 
+
     public boolean isCDIInterceptor() {
         return cdiInterceptor;
     }
 
+
     /**
-     * @return The interceptor.  May be null when CDI is not enabled.
+     * @return The interceptor. May be null when CDI is not enabled.
      */
-    public Interceptor getInterceptor() {
+    public Interceptor<?> getInterceptor() {
         return interceptor;
     }
 
-    public void setInterceptor( Interceptor interceptor ) {
+
+    public void setInterceptor(Interceptor<?> interceptor) {
         this.interceptor = interceptor;
     }
 }

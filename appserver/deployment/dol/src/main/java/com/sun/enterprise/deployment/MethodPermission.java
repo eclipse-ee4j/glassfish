@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,25 @@
 
 package com.sun.enterprise.deployment;
 
+import java.util.Objects;
+
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.security.common.Role;
 
 /**
  * Represents a method permission. A method permission can be associated to
- * a role, be unchecked or excluded.
+ * a role, be PERMIT_ALL or DENY_ALL.
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class MethodPermission extends Descriptor {
 
-    private static MethodPermission unchecked;
-    private static MethodPermission excluded;
-    private boolean isUnchecked = false;
-    private boolean isExcluded = false;
-    private Role role;
+    private static final long serialVersionUID = 1L;
+    private static final MethodPermission PERMIT_ALL = new MethodPermission(true, false);
+    private static final MethodPermission DENY_ALL = new MethodPermission(false, true);
+    private boolean isUnchecked;
+    private boolean isExcluded;
+    private final Role role;
 
     /**
      * construct a new MethodPermission based on a security role
@@ -40,77 +43,78 @@ public class MethodPermission extends Descriptor {
      * @param role the security role associated to the method permission
      */
     public MethodPermission(Role role) {
-        this.role = role;
+        this.role = Objects.requireNonNull(role);
     }
 
-    // We don't want uninitialized method permissins
-    private MethodPermission() {
+
+    private MethodPermission(boolean unchecked, boolean excluded) {
+        this.isUnchecked = unchecked;
+        this.isExcluded = excluded;
+        this.role = null;
     }
 
-    /**
-     * @return an unchecked method permission. Methods associated with such a
-     * method permission can be invoked by anyone
-     */
-    public static synchronized MethodPermission getUncheckedMethodPermission() {
-        if (unchecked==null) {
-            unchecked = new MethodPermission();
-            unchecked.isUnchecked=true;
-        }
-        return unchecked;
-    }
 
     /**
-     * @return an ecluded method permission. Methods associated with such a
-     * method permission cannot be invoked by anyone.
+     * @return an PERMIT_ALL (unchecked in XML) method permission.
+     *         Methods associated with such a method permission can be invoked by anyone
      */
-    public static synchronized MethodPermission getExcludedMethodPermission() {
-        if (excluded==null) {
-            excluded = new MethodPermission();
-            excluded.isExcluded=true;
-        }
-        return excluded;
+    public static MethodPermission getPermitAllMethodPermission() {
+        return PERMIT_ALL;
     }
+
+
+    /**
+     * @return an DENY_ALL method permission.
+     *         Methods associated with such a method permission cannot be invoked by anyone.
+     */
+    public static MethodPermission getDenyAllMethodPermission() {
+        return DENY_ALL;
+    }
+
 
     /**
      * @return true if the method permission is based on a security role
      */
     public boolean isRoleBased() {
-        return role!=null;
+        return role != null;
     }
 
+
     /**
-     * @return true if the method permission is unchecked
+     * @return true if the method permission is PERMIT_ALL (unchecked in XML)
      */
     public boolean isUnchecked() {
         return isUnchecked;
     }
 
+
     /**
-     * @return true if the method permission is excluded
+     * @return true if the method permission is DENY_ALL
      */
     public boolean isExcluded() {
         return isExcluded;
     }
 
+
     /**
      * @return the security role associated with this method permission when
-     * applicable (role based method permission)
+     *         applicable (role based method permission)
      */
     public Role getRole() {
         return role;
     }
 
-    // For Map storage
+
     @Override
     public int hashCode() {
-        if (role!=null) {
-            return role.hashCode();
-        } else {
-            return super.hashCode();
+        // hashCode must honor same rules as equals.
+        if (isRoleBased()) {
+            return Objects.hashCode(role);
         }
+        return Objects.hash(isExcluded, isUnchecked);
     }
 
-    // for Map storage
+
     @Override
     public boolean equals(Object other) {
         boolean ret = false;
@@ -119,11 +123,12 @@ public class MethodPermission extends Descriptor {
             if (isRoleBased()) {
                 ret = role.equals(o.getRole());
             } else {
-                ret = (isExcluded == o.isExcluded()) && (isUnchecked == o.isUnchecked());
+                ret = isExcluded == o.isExcluded() && isUnchecked == o.isUnchecked();
             }
         }
         return ret;
     }
+
 
     @Override
     public void print(StringBuffer toStringBuffer) {
@@ -131,11 +136,10 @@ public class MethodPermission extends Descriptor {
             toStringBuffer.append(role.toString());
         } else {
             if (isExcluded) {
-                toStringBuffer.append("excluded");
-            } else {
-                toStringBuffer.append("unchecked");
+                toStringBuffer.append("DENY_ALL");
+            } else if (isUnchecked) {
+                toStringBuffer.append("PERMIT_ALL");
             }
         }
     }
 }
-

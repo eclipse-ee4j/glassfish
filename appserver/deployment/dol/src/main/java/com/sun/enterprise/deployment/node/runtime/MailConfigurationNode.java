@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,9 +30,9 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
  */
 public class MailConfigurationNode extends DeploymentDescriptorNode {
 
-    private String name = null;
-    private String mail_from = null;
-    private String mail_host = null;
+    private String name;
+    private String mail_from;
+    private String mail_host;
 
     /**
      * receives notification of the value for a particular tag
@@ -39,6 +40,7 @@ public class MailConfigurationNode extends DeploymentDescriptorNode {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (RuntimeTagNames.NAME.equals(element.getQName())) {
             name = value;
@@ -52,6 +54,7 @@ public class MailConfigurationNode extends DeploymentDescriptorNode {
     /**
      * notification of the end of XML parsing for this node
      */
+    @Override
     public void postParsing() {
         getParentNode().addDescriptor(new MailConfiguration(name, mail_from, mail_host));
     }

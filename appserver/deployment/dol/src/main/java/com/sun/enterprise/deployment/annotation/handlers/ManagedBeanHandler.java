@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,46 +17,51 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.InterceptorDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ManagedBeanContext;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.util.TypeUtil;
-import org.glassfish.apf.*;
-import org.glassfish.internal.api.Globals;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.annotation.ManagedBean;
+import jakarta.interceptor.AroundConstruct;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.ExcludeClassInterceptors;
+import jakarta.interceptor.Interceptors;
+
 import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Method;
-
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ProcessingContext;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 @AnnotationHandlerFor(ManagedBean.class)
 public class ManagedBeanHandler extends AbstractHandler {
 
-
     public ManagedBeanHandler() {
     }
 
-    public HandlerProcessingResult processAnnotation(AnnotationInfo element)
-        throws AnnotationProcessorException {
 
-
+    @Override
+    public HandlerProcessingResult processAnnotation(AnnotationInfo element) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = element.getProcessingContext().getHandler();
-        if( aeHandler instanceof ManagedBeanContext ) {
+        if (aeHandler instanceof ManagedBeanContext) {
 
             // Ignore @ManagedBean processing during ManagedBean class processing itself
             return getDefaultProcessedResult();
@@ -67,19 +73,17 @@ public class ManagedBeanHandler extends AbstractHandler {
 
         // name() is optional
         String logicalName = resourceAn.value();
-        if( !logicalName.equals("")) {
+        if (!logicalName.isEmpty()) {
             managedBeanDesc.setName(logicalName);
         }
 
-        Class managedBeanClass = (Class) element.getAnnotatedElement();
+        Class<?> managedBeanClass = (Class<?>) element.getAnnotatedElement();
 
         managedBeanDesc.setBeanClassName(managedBeanClass.getName());
 
-
-        Class[] classInterceptors = null;
-        Map<AccessibleObject, Class[]> methodLevelInterceptors = new HashMap<AccessibleObject, Class[]>();
-        Map<String, InterceptorDescriptor> interceptorDescs = new HashMap<String, InterceptorDescriptor>();
-
+        Class<?>[] classInterceptors = null;
+        Map<AccessibleObject, Class<?>[]> methodLevelInterceptors = new HashMap<>();
+        Map<String, InterceptorDescriptor> interceptorDescs = new HashMap<>();
 
         // For now, just process the jakarta.interceptor related annotations directly instead
         // of relying on the annotation framework.   All the existing jakarta.interceptor
@@ -88,99 +92,73 @@ public class ManagedBeanHandler extends AbstractHandler {
         // annotation processing reflectively to avoid dependency on jakarta.interceptor from
         // DOL module.
 
-        // TODO refactor jakarta.interceptor annotation handlers to support both ejb and non-ejb
-        // related interceptors
-
-        Annotation interceptorsAnn = getClassAnnotation(managedBeanClass, "jakarta.interceptor.Interceptors");
-        if( interceptorsAnn != null ) {
+        Annotation interceptorsAnn = getClassAnnotation(managedBeanClass, Interceptors.class.getName());
+        if (interceptorsAnn != null) {
             try {
                 Method m = interceptorsAnn.annotationType().getDeclaredMethod("value");
                 classInterceptors = (Class[]) m.invoke(interceptorsAnn);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 AnnotationProcessorException ape = new AnnotationProcessorException(e.getMessage(), element);
                 ape.initCause(e);
                 throw ape;
             }
         }
 
-        Class nextIntClass = managedBeanClass;
-        while(nextIntClass != Object.class) {
-            Method managedBeanAroundInvoke =
-                getMethodForMethodAnnotation(nextIntClass, "jakarta.interceptor.AroundInvoke");
+        Class<?> nextIntClass = managedBeanClass;
+        while (nextIntClass != Object.class) {
 
-            if( (managedBeanAroundInvoke != null) && !(methodOverridden(managedBeanAroundInvoke,
-                    nextIntClass, managedBeanClass)) ) {
-
+            Method managedBeanAroundInvoke = getMethodForMethodAnnotation(nextIntClass, AroundInvoke.class.getName());
+            if (managedBeanAroundInvoke != null
+                && !methodOverridden(managedBeanAroundInvoke, nextIntClass, managedBeanClass)) {
                 LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
                 desc.setLifecycleCallbackClass(nextIntClass.getName());
                 desc.setLifecycleCallbackMethod(managedBeanAroundInvoke.getName());
                 managedBeanDesc.addAroundInvokeDescriptor(desc);
             }
-
             nextIntClass = nextIntClass.getSuperclass();
         }
 
-
-        for(Method m : managedBeanClass.getMethods()) {
+        for (Method m : managedBeanClass.getMethods()) {
             processForAnnotations(element, m, methodLevelInterceptors, managedBeanDesc, managedBeanClass);
         }
 
-        for(Constructor c : managedBeanClass.getDeclaredConstructors()) {
+        for (Constructor<?> c : managedBeanClass.getDeclaredConstructors()) {
             processForAnnotations(element, c, methodLevelInterceptors, managedBeanDesc, managedBeanClass);
         }
 
-        if( aeHandler instanceof ResourceContainerContext ) {
+        if (aeHandler instanceof ResourceContainerContext) {
             ((ResourceContainerContext) aeHandler).addManagedBean(managedBeanDesc);
 
-
             // process managed bean class annotations
-            ManagedBeanContext managedBeanContext =
-                new ManagedBeanContext(managedBeanDesc);
+            ManagedBeanContext managedBeanContext = new ManagedBeanContext(managedBeanDesc);
             ProcessingContext procContext = element.getProcessingContext();
             procContext.pushHandler(managedBeanContext);
-
-            procContext.getProcessor().process(
-                procContext, new Class[] { managedBeanClass });
-
-            List<InterceptorDescriptor> classInterceptorChain = new LinkedList<InterceptorDescriptor>();
-
-            if( classInterceptors != null ) {
-
-                for(Class i : classInterceptors) {
-
-                    InterceptorDescriptor nextInterceptor = processInterceptor(i, managedBeanContext,
-                            procContext);
-
+            procContext.getProcessor().process(procContext, new Class[] {managedBeanClass});
+            List<InterceptorDescriptor> classInterceptorChain = new LinkedList<>();
+            if (classInterceptors != null) {
+                for (Class<?> i : classInterceptors) {
+                    InterceptorDescriptor nextInterceptor = processInterceptor(i, managedBeanContext, procContext);
                     // Add interceptor to class-level chain
                     classInterceptorChain.add(nextInterceptor);
-
                     interceptorDescs.put(i.getName(), nextInterceptor);
-
                 }
-
                 managedBeanDesc.setClassInterceptorChain(classInterceptorChain);
-
             }
 
-            for(Map.Entry<AccessibleObject, Class[]> next : methodLevelInterceptors.entrySet()) {
-
+            for (Map.Entry<AccessibleObject, Class<?>[]> next : methodLevelInterceptors.entrySet()) {
                 AccessibleObject o = next.getKey();
-                Class[] interceptors = next.getValue();
+                Class<?>[] interceptors = next.getValue();
+                boolean excludeClassInterceptors = getMethodAnnotation(o,
+                    ExcludeClassInterceptors.class.getName()) != null;
 
-                boolean excludeClassInterceptors =
-                        ( getMethodAnnotation(o, "jakarta.interceptor.ExcludeClassInterceptors")
-                            != null );
+                List<InterceptorDescriptor> methodInterceptorChain = excludeClassInterceptors
+                    ? new LinkedList<>()
+                    : new LinkedList<>(classInterceptorChain);
 
-                List<InterceptorDescriptor> methodInterceptorChain = excludeClassInterceptors ?
-                        new LinkedList<InterceptorDescriptor>() :
-                        new LinkedList<InterceptorDescriptor>(classInterceptorChain);
-
-
-                for(Class nextInterceptor : interceptors) {
+                for (Class<?> nextInterceptor : interceptors) {
                     InterceptorDescriptor interceptorDesc = interceptorDescs.get(nextInterceptor.getName());
-                    if( interceptorDesc == null ) {
-                        interceptorDesc = processInterceptor(nextInterceptor, managedBeanContext,
-                                procContext);
+                    if (interceptorDesc == null) {
+                        interceptorDesc = processInterceptor(nextInterceptor, managedBeanContext, procContext);
                         interceptorDescs.put(nextInterceptor.getName(), interceptorDesc);
                     }
                     methodInterceptorChain.add(interceptorDesc);
@@ -193,21 +171,19 @@ public class ManagedBeanHandler extends AbstractHandler {
             }
 
         }
-
         return getDefaultProcessedResult();
     }
 
-    private void processForAnnotations(AnnotationInfo element, AccessibleObject o,
-                 Map<AccessibleObject, Class[]> methodLevelInterceptors,
-                 ManagedBeanDescriptor managedBeanDesc, Class managedBeanClass)
-                 throws AnnotationProcessorException {
 
-        Annotation ann = getMethodAnnotation(o, "jakarta.interceptor.Interceptors");
-        if(ann != null) {
+    private void processForAnnotations(AnnotationInfo element, AccessibleObject o,
+        Map<AccessibleObject, Class<?>[]> methodLevelInterceptors, ManagedBeanDescriptor managedBeanDesc,
+        Class<?> managedBeanClass) throws AnnotationProcessorException {
+        Annotation ann = getMethodAnnotation(o, Interceptors.class.getName());
+        if (ann != null) {
             try {
                 Method valueM = ann.annotationType().getDeclaredMethod("value");
                 methodLevelInterceptors.put(o, (Class[]) valueM.invoke(ann));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 AnnotationProcessorException ape = new AnnotationProcessorException(e.getMessage(), element);
                 ape.initCause(e);
                 throw ape;
@@ -215,37 +191,34 @@ public class ManagedBeanHandler extends AbstractHandler {
         } else {
             // If the method or constructor excludes
             // class-level interceptors, explicitly set method-level to an empty list.
-            boolean excludeClassInterceptors =
-                    ( getMethodAnnotation(o, "jakarta.interceptor.ExcludeClassInterceptors") != null );
-            if( excludeClassInterceptors ) {
+            boolean excludeClassInterceptors = getMethodAnnotation(o, ExcludeClassInterceptors.class.getName()) != null;
+            if (excludeClassInterceptors) {
                 MethodDescriptor mDesc = getMethodDescriptor(o, managedBeanClass);
                 if (mDesc != null) {
-                    managedBeanDesc.setMethodLevelInterceptorChain(mDesc,
-                            new LinkedList<InterceptorDescriptor>());
+                    managedBeanDesc.setMethodLevelInterceptorChain(mDesc, new LinkedList<InterceptorDescriptor>());
                 }
             }
         }
     }
 
-    private MethodDescriptor getMethodDescriptor(AccessibleObject o, Class managedBeanClass) {
+
+    private MethodDescriptor getMethodDescriptor(AccessibleObject o, Class<?> managedBeanClass) {
         MethodDescriptor mDesc = null;
         if (o instanceof Method) {
-            mDesc = new MethodDescriptor((Method)o);
+            mDesc = new MethodDescriptor((Method) o);
         } else if (o instanceof Constructor) {
-            Class[] ctorParamTypes = ((Constructor)o).getParameterTypes();
+            Class<?>[] ctorParamTypes = ((Constructor<?>) o).getParameterTypes();
             String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
             // MethodDescriptor.EJB_BEAN is just a tag, not to add a new one
-            mDesc = new MethodDescriptor(managedBeanClass.getSimpleName(), null,
-                    parameterClassNames, MethodDescriptor.EJB_BEAN);
+            mDesc = new MethodDescriptor(managedBeanClass.getSimpleName(), null, parameterClassNames,
+                MethodDescriptor.EJB_BEAN);
         }
-
         return mDesc;
     }
 
-    private InterceptorDescriptor processInterceptor(Class interceptorClass, ManagedBeanContext managedBeanCtx,
-                                                     ProcessingContext procCtx)
-        throws AnnotationProcessorException {
 
+    private InterceptorDescriptor processInterceptor(Class<?> interceptorClass, ManagedBeanContext managedBeanCtx,
+        ProcessingContext procCtx) throws AnnotationProcessorException {
         InterceptorDescriptor interceptorDesc = new InterceptorDescriptor();
         interceptorDesc.setInterceptorClassName(interceptorClass.getName());
 
@@ -257,15 +230,13 @@ public class ManagedBeanHandler extends AbstractHandler {
         procCtx.pushHandler(managedBeanCtx);
         procCtx.getProcessor().process(procCtx, new Class[] {interceptorClass});
 
-
         managedBeanCtx.unsetInterceptorMode();
 
-        Class nextIntClass = interceptorClass;
-        while(nextIntClass != Object.class) {
-            Method interceptorAroundInvoke =
-                getMethodForMethodAnnotation(nextIntClass, "jakarta.interceptor.AroundInvoke");
-            if( (interceptorAroundInvoke != null) && !(methodOverridden(interceptorAroundInvoke,
-                    nextIntClass, interceptorClass)) ) {
+        Class<?> nextIntClass = interceptorClass;
+        while (nextIntClass != Object.class) {
+            Method interceptorAroundInvoke = getMethodForMethodAnnotation(nextIntClass, AroundInvoke.class.getName());
+            if (interceptorAroundInvoke != null
+                && !methodOverridden(interceptorAroundInvoke, nextIntClass, interceptorClass)) {
 
                 LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
                 desc.setLifecycleCallbackClass(nextIntClass.getName());
@@ -273,10 +244,9 @@ public class ManagedBeanHandler extends AbstractHandler {
                 interceptorDesc.addAroundInvokeDescriptor(desc);
             }
 
-            Method interceptorAroundConstruct =
-                getMethodForMethodAnnotation(nextIntClass, "jakarta.interceptor.AroundConstruct");
-            if( (interceptorAroundConstruct != null) && !(methodOverridden(interceptorAroundConstruct,
-                    nextIntClass, interceptorClass)) ) {
+            Method interceptorAroundConstruct = getMethodForMethodAnnotation(nextIntClass, AroundConstruct.class.getName());
+            if (interceptorAroundConstruct != null
+                && !methodOverridden(interceptorAroundConstruct, nextIntClass, interceptorClass)) {
 
                 LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
                 desc.setLifecycleCallbackClass(nextIntClass.getName());
@@ -286,26 +256,24 @@ public class ManagedBeanHandler extends AbstractHandler {
 
             nextIntClass = nextIntClass.getSuperclass();
         }
-
-
         return interceptorDesc;
     }
 
-    private Annotation getClassAnnotation(Class c, String annotationClassName) {
-        for(Annotation next : c.getDeclaredAnnotations()) {
 
-            if( next.annotationType().getName().equals(annotationClassName)) {
+    private Annotation getClassAnnotation(Class<?> c, String annotationClassName) {
+        for (Annotation next : c.getDeclaredAnnotations()) {
+            if (next.annotationType().getName().equals(annotationClassName)) {
                 return next;
             }
         }
         return null;
     }
 
-    private Method getMethodForMethodAnnotation(Class c, String annotationClassName) {
-        for(Method m : c.getDeclaredMethods()) {
-            for(Annotation next : m.getDeclaredAnnotations()) {
 
-                if( next.annotationType().getName().equals(annotationClassName)) {
+    private Method getMethodForMethodAnnotation(Class<?> c, String annotationClassName) {
+        for (Method m : c.getDeclaredMethods()) {
+            for (Annotation next : m.getDeclaredAnnotations()) {
+                if (next.annotationType().getName().equals(annotationClassName)) {
                     return m;
                 }
             }
@@ -313,47 +281,34 @@ public class ManagedBeanHandler extends AbstractHandler {
         return null;
     }
 
+
     private Annotation getMethodAnnotation(AccessibleObject o, String annotationClassName) {
-
-        for(Annotation next : o.getDeclaredAnnotations()) {
-
-            if( next.annotationType().getName().equals(annotationClassName)) {
+        for (Annotation next : o.getDeclaredAnnotations()) {
+            if (next.annotationType().getName().equals(annotationClassName)) {
                 return next;
             }
         }
-
         return null;
     }
 
 
-    private boolean methodOverridden(Method m, Class declaringSuperClass, Class leafClass) {
-
-        Class nextClass = leafClass;
-        boolean overridden = false;
-
-        if( Modifier.isPrivate(m.getModifiers())) {
+    private boolean methodOverridden(final Method m, final Class<?> declaringSuperClass, final Class<?> leafClass) {
+        logger.log(Level.FINEST, "Checking if {0} of {1} overrides same method in {2}",
+            new Object[] {m.getName(), leafClass, declaringSuperClass});
+        if (Modifier.isPrivate(m.getModifiers())) {
             return false;
         }
-
-        while((nextClass != declaringSuperClass) && (nextClass != Object.class)) {
-
-            for(Method nextMethod : nextClass.getDeclaredMethods()) {
-
-                if( !Modifier.isPrivate(nextMethod.getModifiers()) &&
-                    TypeUtil.sameMethodSignature(m, nextMethod) ) {
-                    overridden = true;
-                    break;
+        Class<?> nextClass = leafClass;
+        while (nextClass != declaringSuperClass && nextClass != Object.class) {
+            for (final Method nextMethod : nextClass.getDeclaredMethods()) {
+                if (!Modifier.isPrivate(nextMethod.getModifiers()) && TypeUtil.sameMethodSignature(m, nextMethod)) {
+                    logger.log(Level.FINEST, "Method {0} of {1} overrides same method in {2}",
+                        new Object[] {m.getName(), leafClass, nextClass});
+                    return true;
                 }
             }
-
-            if( overridden ) {
-                break;
-            }
-
             nextClass = nextClass.getSuperclass();
         }
-
-        return overridden;
+        return false;
     }
-
 }

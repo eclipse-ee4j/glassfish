@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,11 +22,10 @@ import org.glassfish.deployment.common.Descriptor;
 
 public class PermissionItemDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String permClassName;
     private String targetName;
     private String actions;
-
-    private boolean statingPermIetmRead;
 
     private PermissionsDescriptor parent;
 
@@ -39,7 +39,10 @@ public class PermissionItemDescriptor extends Descriptor {
     }
 
     protected void setParent(PermissionsDescriptor parent) {
-        assert(this.parent==null);
+        if (this.parent != null) {
+            throw new IllegalStateException("Parent was already set to " + this.parent.getModuleID()
+                + ", it cannot be set to " + parent.getModuleID());
+        }
         this.parent = parent;
     }
 

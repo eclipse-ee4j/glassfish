@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,55 +33,51 @@ import java.util.Properties;
  */
 public class PersistenceUnitDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
+
     private PersistenceUnitsDescriptor parent;
 
     private String name;
-
-    private String transactionType = "JTA"; // in persistence.xsd default is JTA
-
+    /** in persistence.xsd default is JTA */
+    private String transactionType = "JTA";
     private String description;
-
     private String provider;
-
     private String jtaDataSource;
-
     private String nonJtaDataSource;
 
-    private List<String> mappingFiles = new ArrayList<String>();
+    private final List<String> mappingFiles = new ArrayList<>();
+    private final List<String> jarFiles = new ArrayList<>();
+    private final List<String> classes = new ArrayList<>();
+    private final Properties properties = new Properties();
 
-    private List<String> jarFiles = new ArrayList<String>();
-
-    private List<String> classes = new ArrayList<String>();
-
-    private Properties properties = new Properties();
-
-    private boolean excludeUnlistedClasses = false;
-
+    private boolean excludeUnlistedClasses;
     private SharedCacheMode sharedCacheMode;
-
     private ValidationMode validationMode;
 
-    public PersistenceUnitDescriptor() {
-    }
 
     public PersistenceUnitsDescriptor getParent() {
         return parent;
     }
 
     protected void setParent(PersistenceUnitsDescriptor parent) {
-        assert(this.parent==null);
+        if (this.parent != null) {
+            throw new IllegalStateException("Parent was already set to " + this.parent.getModuleID()
+                + ", it cannot be set to " + parent.getModuleID());
+        }
         this.parent = parent;
     }
 
     // NOW let's implement some methods specific to this descriptor
     // Most of these setter methods are invoked using reflection
-    // by PersistenceNode. So any change here has to be reflcted there as
+    // by PersistenceNode. So any change here has to be reflected there as
     // well. Compiler won't catch them for you.
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String value) {
         this.name = value;
 
@@ -94,10 +91,12 @@ public class PersistenceUnitDescriptor extends Descriptor {
         this.transactionType = transactionType;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
@@ -107,7 +106,6 @@ public class PersistenceUnitDescriptor extends Descriptor {
     }
 
     public void setProvider(String value) {
-
         this.provider = value;
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package com.sun.enterprise.resource.allocator;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.resource.AssocWithThreadResourceHandle;
 import com.sun.enterprise.resource.ClientSecurityInfo;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
-import com.sun.enterprise.resource.AssocWithThreadResourceHandle;
 import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.ResourceException;
@@ -33,11 +34,13 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ValidatingManagedConnectionFactory;
-import javax.security.auth.Subject;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
 
 
 /**
@@ -81,6 +84,7 @@ public abstract class AbstractConnectorAllocator
 
     }
 
+    @Override
     public Set getInvalidConnections(Set connectionSet)
             throws ResourceException {
         if (mcf instanceof ValidatingManagedConnectionFactory) {
@@ -90,9 +94,10 @@ public abstract class AbstractConnectorAllocator
         return null;
     }
 
+    @Override
     public boolean isConnectionValid(ResourceHandle h) {
-        HashSet conn = new HashSet();
-        conn.add(h.getResource());
+        HashSet<ManagedConnection> conn = new HashSet<>();
+        conn.add((ManagedConnection) h.getResource());
         Set invalids = null;
         try {
             invalids = getInvalidConnections(conn);
@@ -118,24 +123,25 @@ public abstract class AbstractConnectorAllocator
         return true;
     }
 
+    @Override
     public void destroyResource(ResourceHandle resourceHandle)
             throws PoolingException {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void fillInResourceObjects(ResourceHandle resourceHandle)
             throws PoolingException {
         throw new UnsupportedOperationException();
     }
 
-    public boolean supportsReauthentication() {
-        return this.desc.supportsReauthentication();
-    }
 
+    @Override
     public boolean isTransactional() {
         return true;
     }
 
+    @Override
     public void cleanup(ResourceHandle h) throws PoolingException {
         try {
             ManagedConnection mc = (ManagedConnection) h.getResource();
@@ -146,18 +152,19 @@ public abstract class AbstractConnectorAllocator
         }
     }
 
+    @Override
     public boolean matchConnection(ResourceHandle h) {
-        Set set = new HashSet();
-        set.add(h.getResource());
+        Set<ManagedConnection> set = new HashSet<>();
+        set.add((ManagedConnection) h.getResource());
         try {
-            ManagedConnection mc =
-                    mcf.matchManagedConnections(set, subject, reqInfo);
-            return (mc != null);
+            ManagedConnection mc = mcf.matchManagedConnections(set, subject, reqInfo);
+            return mc != null;
         } catch (ResourceException ex) {
             return false;
         }
     }
 
+    @Override
     public void closeUserConnection(ResourceHandle resource) throws PoolingException {
 
         try {
@@ -168,10 +175,12 @@ public abstract class AbstractConnectorAllocator
         }
     }
 
+    @Override
     public boolean shareableWithinComponent() {
         return false;
     }
 
+    @Override
     public Object getSharedConnection(ResourceHandle h)
             throws PoolingException {
         throw new UnsupportedOperationException();
@@ -193,6 +202,7 @@ public abstract class AbstractConnectorAllocator
         }
     }
 
+    @Override
     public boolean hasValidatingMCF() {
         return mcf instanceof ValidatingManagedConnectionFactory;
     }

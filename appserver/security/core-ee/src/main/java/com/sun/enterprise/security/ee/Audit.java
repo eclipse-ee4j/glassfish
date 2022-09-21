@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,6 @@
 
 package com.sun.enterprise.security.ee;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.deployment.common.SecurityRoleMapper;
-import org.glassfish.security.common.Role;
-
 import com.sun.appserv.security.AuditModule;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
@@ -44,12 +33,22 @@ import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.SecurityRole;
 import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.deployment.web.WebResourceCollection;
-
-//V3:Commented import com.sun.enterprise.config.serverbeans.ServerBeansFactory;
-
 import com.sun.logging.LogDomains;
 
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.deployment.common.SecurityRoleMapper;
+import org.glassfish.security.common.Role;
 
 /**
  * Audit support class.
@@ -336,11 +335,10 @@ public class Audit extends AuditModule {
         logger.finest("EJB components: " + getEjbComponentCount(app));
         logger.finest("Web components: " + getWebComponentCount(app));
 
-        Iterator i;
         StringBuffer sb;
 
         // show all roles with associated group & user mappings
-        Set allRoles = app.getRoles();
+        Set<Role> allRoles = app.getRoles();
         if (allRoles == null) {
             logger.finest("- No roles present.");
             return;
@@ -351,18 +349,17 @@ public class Audit extends AuditModule {
             return;
         }
 
-        i = allRoles.iterator();
+        Iterator<Role> i = allRoles.iterator();
         logger.finest("--[ Configured roles and mappings ]--");
-        HashMap allRoleMap = new HashMap();
+        HashMap<String, Set<String>> allRoleMap = new HashMap<>();
 
-        while (i.hasNext()) {
-            Role r = (Role) i.next();
+        for (Role r : allRoles) {
             logger.finest(" [" + r.getName() + "]");
-            allRoleMap.put(r.getName(), new HashSet());
+            allRoleMap.put(r.getName(), new HashSet<>());
 
             sb = new StringBuffer();
             sb.append("  is mapped to groups: ");
-            Enumeration grps = rmap.getGroupsAssignedTo(r);
+            Enumeration<? extends Principal> grps = rmap.getGroupsAssignedTo(r);
             while (grps.hasMoreElements()) {
                 sb.append(grps.nextElement());
                 sb.append(" ");
@@ -371,7 +368,7 @@ public class Audit extends AuditModule {
 
             sb = new StringBuffer();
             sb.append("  is mapped to principals: ");
-            Enumeration users = rmap.getUsersAssignedTo(r);
+            Enumeration<? extends Principal> users = rmap.getUsersAssignedTo(r);
             while (users.hasMoreElements()) {
                 sb.append(users.nextElement());
                 sb.append(" ");
@@ -381,19 +378,11 @@ public class Audit extends AuditModule {
 
         // Process all EJB modules
 
-        Set ejbDescriptorSet = app.getBundleDescriptors(EjbBundleDescriptor.class);
-
-        i = ejbDescriptorSet.iterator();
-        while (i.hasNext()) {
-
-            EjbBundleDescriptor bundle = (EjbBundleDescriptor) i.next();
-
+        Set<EjbBundleDescriptor> ejbDescriptorSet = app.getBundleDescriptors(EjbBundleDescriptor.class);
+        for (EjbBundleDescriptor bundle : ejbDescriptorSet) {
             logger.finest("--[ EJB module: " + bundle.getName() + " ]--");
-            Set ejbs = bundle.getEjbs();
-            Iterator it = ejbs.iterator();
-            while (it.hasNext()) {
-
-                EjbDescriptor ejb = (EjbDescriptor) it.next();
+            Set<? extends EjbDescriptor> ejbs = bundle.getEjbs();
+            for (EjbDescriptor ejb : ejbs) {
                 logger.finest("EJB: " + ejb.getEjbClassName());
 
                 // check and show run-as if present
@@ -415,35 +404,28 @@ public class Audit extends AuditModule {
 
                 // iterate through available methods
                 logger.finest(" Method to Role restriction list:");
-                Set methods = ejb.getMethodDescriptors();
-                Iterator si = methods.iterator();
-
-                while (si.hasNext()) {
-
-                    MethodDescriptor md = (MethodDescriptor) si.next();
+                Set<MethodDescriptor> methods = ejb.getMethodDescriptors();
+                for (MethodDescriptor md : methods) {
                     logger.finest("   " + md.getFormattedString());
 
-                    Set perms = ejb.getMethodPermissionsFor(md);
+                    Set<MethodPermission> perms = ejb.getMethodPermissionsFor(md);
                     StringBuffer rbuf = new StringBuffer();
                     rbuf.append("     can only be invoked by: ");
-                    Iterator sip = perms.iterator();
                     boolean unchecked = false, excluded = false, roleBased = false;
-
-                    while (sip.hasNext()) {
-                        MethodPermission p = (MethodPermission) sip.next();
+                    for (MethodPermission p : perms) {
                         if (p.isExcluded()) {
                             excluded = true;
-                            logger.finest("     excluded - can not " + "be invoked");
+                            logger.finest("     excluded - can not be invoked");
                         } else if (p.isUnchecked()) {
                             unchecked = true;
-                            logger.finest("     unchecked - can be " + "invoked by all");
+                            logger.finest("     unchecked - can be invoked by all");
                         } else if (p.isRoleBased()) {
                             roleBased = true;
                             Role r = p.getRole();
                             rbuf.append(r.getName());
                             rbuf.append(" ");
                             // add to role's accessible list
-                            HashSet ram = (HashSet) allRoleMap.get(r.getName());
+                            Set<String> ram = allRoleMap.get(r.getName());
                             ram.add(bundle.getName() + ":" + ejb.getEjbClassName() + "." + md.getFormattedString());
                         }
                     }
@@ -457,10 +439,9 @@ public class Audit extends AuditModule {
                         if (excluded) {
                             logger.finest("*** Configuration error!");
                         }
-                        Set rks = allRoleMap.keySet();
-                        Iterator rksi = rks.iterator();
-                        while (rksi.hasNext()) {
-                            HashSet ram = (HashSet) allRoleMap.get(rksi.next());
+                        Set<String> rks = allRoleMap.keySet();
+                        for (String key : rks) {
+                            Set<String> ram = allRoleMap.get(key);
                             ram.add(bundle.getName() + ":" + ejb.getEjbClassName() + "." + md.getFormattedString());
                         }
                     } else if (!excluded) {
@@ -470,11 +451,9 @@ public class Audit extends AuditModule {
 
                 // IOR config for this ejb
                 logger.finest(" IOR configuration:");
-                Set iors = ejb.getIORConfigurationDescriptors();
+                Set<EjbIORConfigurationDescriptor> iors = ejb.getIORConfigurationDescriptors();
                 if (iors != null) {
-                    Iterator iorsi = iors.iterator();
-                    while (iorsi.hasNext()) {
-                        EjbIORConfigurationDescriptor ior = (EjbIORConfigurationDescriptor) iorsi.next();
+                    for (EjbIORConfigurationDescriptor ior : iors) {
                         StringBuffer iorsb = new StringBuffer();
                         iorsb.append("realm=");
                         iorsb.append(ior.getRealmName());
@@ -497,26 +476,19 @@ public class Audit extends AuditModule {
         // show role->accessible methods list
         logger.finest("--[ EJB methods accessible by role ]--");
 
-        Set rks = allRoleMap.keySet();
-        Iterator rksi = rks.iterator();
-        while (rksi.hasNext()) {
-            String roleName = (String) rksi.next();
+        Set<String> rks = allRoleMap.keySet();
+        for (String roleName : rks) {
             logger.finest(" [" + roleName + "]");
-            HashSet ram = (HashSet) allRoleMap.get(roleName);
-            Iterator rami = ram.iterator();
-            while (rami.hasNext()) {
-                String meth = (String) rami.next();
+            Set<String> ram = allRoleMap.get(roleName);
+            for (String meth : ram) {
                 logger.finest("   " + meth);
             }
         }
 
         // Process all Web modules
 
-        Set webDescriptorSet = app.getBundleDescriptors(WebBundleDescriptor.class);
-
-        i = webDescriptorSet.iterator();
-        while (i.hasNext()) {
-            WebBundleDescriptor wbd = (WebBundleDescriptor) i.next();
+        Set<WebBundleDescriptor> webDescriptorSet = app.getBundleDescriptors(WebBundleDescriptor.class);
+        for (WebBundleDescriptor wbd : webDescriptorSet) {
             logger.finest("--[ Web module: " + wbd.getContextRoot() + " ]--");
 
             // login config
@@ -528,16 +500,14 @@ public class Audit extends AuditModule {
 
             // get WebComponentDescriptorsSet() info
             logger.finest("  Contains components:");
-            Set webComps = wbd.getWebComponentDescriptors();
-            Iterator webCompsIt = webComps.iterator();
-            while (webCompsIt.hasNext()) {
-                WebComponentDescriptor wcd = (WebComponentDescriptor) webCompsIt.next();
+            Set<WebComponentDescriptor> webComps = wbd.getWebComponentDescriptors();
+            for (WebComponentDescriptor wcd : webComps) {
                 StringBuffer name = new StringBuffer();
-                name.append("   - " + wcd.getCanonicalName());
+                name.append("   - ").append(wcd.getCanonicalName());
                 name.append(" [ ");
-                Enumeration urlPs = wcd.getUrlPatterns();
+                Enumeration<String> urlPs = wcd.getUrlPatterns();
                 while (urlPs.hasMoreElements()) {
-                    name.append(urlPs.nextElement().toString());
+                    name.append(urlPs.nextElement());
                     name.append(" ");
                 }
                 name.append("]");
@@ -557,11 +527,9 @@ public class Audit extends AuditModule {
 
             // security constraints
             logger.finest("  Security constraints:");
-            Enumeration scEnum = wbd.getSecurityConstraints();
+            Enumeration<SecurityConstraint> scEnum = wbd.getSecurityConstraints();
             while (scEnum.hasMoreElements()) {
-
-                SecurityConstraint sc = (SecurityConstraint) scEnum.nextElement();
-
+                SecurityConstraint sc = scEnum.nextElement();
                 for (WebResourceCollection wrc : sc.getWebResourceCollections()) {
                     // show list of methods for this collection
                     StringBuffer sbm = new StringBuffer();
@@ -579,11 +547,11 @@ public class Audit extends AuditModule {
 
                 // show roles which apply to above set of collections
                 AuthorizationConstraint authCons = sc.getAuthorizationConstraint();
-                Enumeration rolesEnum = authCons.getSecurityRoles();
+                Enumeration<SecurityRole> rolesEnum = authCons.getSecurityRoles();
                 StringBuffer rsb = new StringBuffer();
                 rsb.append("     Accessible by roles: ");
                 while (rolesEnum.hasMoreElements()) {
-                    SecurityRole sr = (SecurityRole) rolesEnum.nextElement();
+                    SecurityRole sr = rolesEnum.nextElement();
                     rsb.append(sr.getName());
                     rsb.append(" ");
                 }

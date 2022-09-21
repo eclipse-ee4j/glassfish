@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +23,7 @@ import java.lang.reflect.Proxy;
 import javax.security.auth.Subject;
 
 import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 
@@ -49,8 +50,8 @@ public class MockGenerator {
      */
     public Subject createAsadminSubject() {
         final Subject subject = new Subject();
-        subject.getPrincipals().add(new PrincipalImpl("asadmin"));
-        subject.getPrincipals().add(new PrincipalImpl("_InternalSystemAdministrator_"));
+        subject.getPrincipals().add(new UserNameAndPassword("asadmin"));
+        subject.getPrincipals().add(new UserNameAndPassword("_InternalSystemAdministrator_"));
         return subject;
     }
 

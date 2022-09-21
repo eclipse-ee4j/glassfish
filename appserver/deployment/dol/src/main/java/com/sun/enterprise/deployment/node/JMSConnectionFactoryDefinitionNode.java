@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,23 +21,39 @@ import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.w3c.dom.Node;
-
 import java.util.Map;
 import java.util.logging.Level;
 
-public class JMSConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<JMSConnectionFactoryDefinitionDescriptor> {
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.w3c.dom.Node;
 
-    public final static XMLElement tag = new XMLElement(TagNames.JMS_CONNECTION_FACTORY);
+public class JMSConnectionFactoryDefinitionNode
+    extends DeploymentDescriptorNode<JMSConnectionFactoryDefinitionDescriptor> {
 
-    private JMSConnectionFactoryDefinitionDescriptor descriptor = null;
+    @LogMessageInfo(
+        message = "For jms-connection-factory resource: {0}, there is no application part in its resource adapter name: {1}.",
+        level = "WARNING",
+        cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
+        comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode.")
+    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00024";
+
+    private JMSConnectionFactoryDefinitionDescriptor descriptor;
 
     public JMSConnectionFactoryDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.JMS_CONNECTION_FACTORY_PROPERTY), ResourcePropertyNode.class,
-                "addJMSConnectionFactoryPropertyDescriptor");
+            "addJMSConnectionFactoryPropertyDescriptor");
     }
 
+
+    @Override
+    public JMSConnectionFactoryDefinitionDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new JMSConnectionFactoryDefinitionDescriptor();
+        }
+        return descriptor;
+    }
+
+    @Override
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
@@ -57,14 +74,8 @@ public class JMSConnectionFactoryDefinitionNode extends DeploymentDescriptorNode
         return table;
     }
 
-    @LogMessageInfo(
-        message = "For jms-connection-factory resource: {0}, there is no application part in its resource adapter name: {1}.",
-        level = "WARNING",
-        cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
-        comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode."
-    )
-    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00024";
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, JMSConnectionFactoryDefinitionDescriptor desc) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, TagNames.JMS_CONNECTION_FACTORY_DESCRIPTION, desc.getDescription());
@@ -92,20 +103,12 @@ public class JMSConnectionFactoryDefinitionNode extends DeploymentDescriptorNode
         appendTextChild(node, TagNames.JMS_CONNECTION_FACTORY_PASSWORD, desc.getPassword());
         appendTextChild(node, TagNames.JMS_CONNECTION_FACTORY_CLIENT_ID, desc.getClientId());
 
-        ResourcePropertyNode propertyNode = new ResourcePropertyNode();
-        propertyNode.writeDescriptor(node, desc);
+        ResourcePropertyNode.write(node, desc);
 
         appendTextChild(node, TagNames.JMS_CONNECTION_FACTORY_TRANSACTIONAL, String.valueOf(desc.isTransactional()));
         appendTextChild(node, TagNames.JMS_CONNECTION_FACTORY_MAX_POOL_SIZE, desc.getMaxPoolSize());
         appendTextChild(node, TagNames.JMS_CONNECTION_FACTORY_MIN_POOL_SIZE, desc.getMinPoolSize());
 
         return node;
-    }
-
-    public JMSConnectionFactoryDefinitionDescriptor getDescriptor() {
-        if (descriptor == null) {
-            descriptor = new JMSConnectionFactoryDefinitionDescriptor();
-        }
-        return descriptor;
     }
 }

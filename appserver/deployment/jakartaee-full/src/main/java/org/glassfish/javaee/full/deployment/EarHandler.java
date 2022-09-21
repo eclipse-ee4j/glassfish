@@ -17,9 +17,28 @@
 
 package org.glassfish.javaee.full.deployment;
 
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import com.sun.enterprise.config.serverbeans.DasConfig;
+import com.sun.enterprise.connectors.connector.module.RarType;
+import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
+import com.sun.enterprise.deploy.shared.ArchiveFactory;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
+import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
+import com.sun.enterprise.deployment.deploy.shared.JarArchive;
+import com.sun.enterprise.deployment.deploy.shared.Util;
+import com.sun.enterprise.deployment.io.DescriptorConstants;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.security.integration.DDPermissionsLoader;
+import com.sun.enterprise.security.perms.EarEEPermissionsProcessor;
+import com.sun.enterprise.security.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,43 +72,24 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.CompositeHandler;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.appclient.server.connector.CarDetector;
+import org.glassfish.appclient.server.connector.CarType;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.ejb.deployment.archive.EjbJarDetector;
+import org.glassfish.ejb.deployment.archive.EjbType;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.javaee.core.deployment.ApplicationHolder;
 import org.glassfish.loader.util.ASClassLoaderUtil;
-import org.glassfish.web.sniffer.WarDetector;
+import org.glassfish.web.WarType;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.connectors.connector.module.RarDetector;
-import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.deploy.shared.ArchiveFactory;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
-import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
-import com.sun.enterprise.deployment.deploy.shared.JarArchive;
-import com.sun.enterprise.deployment.deploy.shared.Util;
-import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.security.integration.DDPermissionsLoader;
-import com.sun.enterprise.security.perms.EarEEPermissionsProcessor;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 @Service(name = EarDetector.ARCHIVE_TYPE)
 public class EarHandler extends AbstractArchiveHandler implements CompositeHandler {
@@ -111,7 +111,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     ArchiveDetector detector;
 
     private static final String EAR_LIB = "ear_lib";
-    private static final String EMBEDDED_RAR = "embedded_rar";
 
     private static LocalStringsImpl strings = new LocalStringsImpl(EarHandler.class);
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EarHandler.class);
@@ -164,7 +163,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             ApplicationHolder holder = getApplicationHolder(source2, context, false);
 
             // now start to expand the sub modules
-            for (ModuleDescriptor md : holder.app.getModules()) {
+            for (ModuleDescriptor<?> md : holder.app.getModules()) {
                 String moduleUri = md.getArchiveUri();
                 ReadableArchive subArchive = null;
                 WritableArchive subTarget = null;
@@ -531,23 +530,23 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     // the normal way which might involve annotation scanning
     private ArchiveHandler getArchiveHandlerFromModuleType(ArchiveType type) {
         if (type.equals(DOLUtils.warType())) {
-            return habitat.getService(ArchiveHandler.class, WarDetector.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, WarType.ARCHIVE_TYPE);
         } else if (type.equals(DOLUtils.rarType())) {
-            return habitat.getService(ArchiveHandler.class, RarDetector.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, RarType.ARCHIVE_TYPE);
         } else if (type.equals(DOLUtils.ejbType())) {
-            return habitat.getService(ArchiveHandler.class, EjbJarDetector.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, EjbType.ARCHIVE_TYPE);
         } else if (type.equals(DOLUtils.carType())) {
-            return habitat.getService(ArchiveHandler.class, CarDetector.ARCHIVE_TYPE);
+            return habitat.getService(ArchiveHandler.class, CarType.ARCHIVE_TYPE);
         } else {
             return null;
         }
     }
 
     private static class GFApplicationXmlParser {
-        private XMLStreamReader parser = null;
-        private String compatValue = null;
+        private XMLStreamReader parser;
+        private String compatValue;
 
-        GFApplicationXmlParser(ReadableArchive archive) throws XMLStreamException, FileNotFoundException, IOException {
+        GFApplicationXmlParser(ReadableArchive archive) throws FileNotFoundException, IOException {
             InputStream input = null;
             File runtimeAltDDFile = archive.getArchiveMetaData(DeploymentProperties.RUNTIME_ALT_DD, File.class);
             if (runtimeAltDDFile != null && runtimeAltDDFile.getPath().indexOf(DescriptorConstants.GF_PREFIX) != -1
@@ -682,7 +681,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         private XMLStreamReader parser = null;
         private String compatValue = null;
 
-        SunApplicationXmlParser(File baseDir) throws XMLStreamException, FileNotFoundException {
+        SunApplicationXmlParser(File baseDir) throws FileNotFoundException {
             InputStream input = null;
             File f = new File(baseDir, "META-INF/sun-application.xml");
             if (f.exists()) {

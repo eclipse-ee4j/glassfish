@@ -16,7 +16,7 @@
 
 package connector;
 
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -59,7 +59,7 @@ public class MySecurityContext  extends SecurityContext {
         List<Callback> callbacks = new ArrayList<Callback>();
 
 
-        CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new PrincipalImpl(principalName));
+        CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new UserNameAndPassword(principalName));
         debug("setting caller principal callback with principal : " + principalName);
         callbacks.add(cpc);
 
@@ -123,7 +123,7 @@ public class MySecurityContext  extends SecurityContext {
         if (translationRequired) {
             if (subject == null) {
                 subject = new Subject();
-                subject.getPrincipals().add(new PrincipalImpl(principalName));
+                subject.getPrincipals().add(new UserNameAndPassword(principalName));
                 debug("setting translation required for principal : " + principalName);
             }
             return subject;

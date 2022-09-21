@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,20 +19,20 @@ package org.glassfish.web.deployment.archivist;
 
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.archivist.Archivist;
-import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.Archive;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
-import org.glassfish.web.deployment.io.WebFragmentDeploymentDescriptorFile;
-import org.glassfish.hk2.api.ServiceLocator;
+import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 
 import java.io.IOException;
-import java.util.Vector;
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
+
+import org.glassfish.api.deployment.archive.Archive;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
+import org.glassfish.web.deployment.io.WebFragmentDeploymentDescriptorFile;
 
 
 /**
@@ -41,25 +42,25 @@ import java.util.Collections;
  * and does not implements PrivateArchivist as it will not be
  * looked up through ArchivistFactory.
  *
- * @author  Shing Wai Chan
- * @version
+ * @author Shing Wai Chan
  */
 class WebFragmentArchivist extends Archivist<WebFragmentDescriptor> {
 
-    WebFragmentArchivist (WebArchivist webArchivist, ServiceLocator habitat) {
+    WebFragmentArchivist(WebArchivist webArchivist, ServiceLocator habitat) {
         this.habitat = habitat;
         initializeContext(webArchivist);
     }
 
+
     /**
-     * @return the  module type handled by this archivist
-     * as defined in the application DTD
-     *
+     * @return the module type handled by this archivist
+     *         as defined in the application DTD
      */
     @Override
     public ArchiveType getModuleType() {
         return null;
     }
+
 
     /**
      * Archivist read XML deployment descriptors and keep the
@@ -70,9 +71,10 @@ class WebFragmentArchivist extends Archivist<WebFragmentDescriptor> {
         this.descriptor = null;
     }
 
+
     /**
      * @return the DeploymentDescriptorFile responsible for handling
-     * standard deployment descriptor
+     *         standard deployment descriptor
      */
     @Override
     public DeploymentDescriptorFile<WebFragmentDescriptor> getStandardDDFile() {
@@ -82,13 +84,16 @@ class WebFragmentArchivist extends Archivist<WebFragmentDescriptor> {
         return standardDD;
     }
 
+
     /**
      * @return the list of the DeploymentDescriptorFile responsible for
      *         handling the configuration deployment descriptors
      */
+    @Override
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles() {
         return Collections.emptyList();
     }
+
 
     /**
      * @return a default BundleDescriptor for this archivist
@@ -98,6 +103,7 @@ class WebFragmentArchivist extends Archivist<WebFragmentDescriptor> {
         return new WebFragmentDescriptor();
     }
 
+
     /**
      * perform any post deployment descriptor reading action
      *
@@ -105,34 +111,34 @@ class WebFragmentArchivist extends Archivist<WebFragmentDescriptor> {
      * @param archive the module archive
      */
     @Override
-    protected void postOpen(WebFragmentDescriptor descriptor, ReadableArchive archive)
-        throws IOException
-    {
+    protected void postOpen(WebFragmentDescriptor descriptor, ReadableArchive archive) throws IOException {
         super.postOpen(descriptor, archive);
         postValidate(descriptor, archive);
     }
 
+
     /**
      * In the case of web archive, the super handles() method should be able
-     * to make a unique identification.  If not, then the archive is definitely
+     * to make a unique identification. If not, then the archive is definitely
      * not a war.
      */
     @Override
-    protected boolean postHandles(ReadableArchive abstractArchive)
-            throws IOException {
+    protected boolean postHandles(ReadableArchive abstractArchive) throws IOException {
         return false;
     }
+
 
     @Override
     protected String getArchiveExtension() {
         return WEB_FRAGMENT_EXTENSION;
     }
 
+
     /**
      * @return a list of libraries included in the archivist
      */
     @Override
-    public Vector getLibraries(Archive archive) {
+    public Vector<String> getLibraries(Archive archive) {
         return null;
     }
 }

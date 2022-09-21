@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +18,10 @@
 package org.glassfish.resources.api;
 
 import com.sun.enterprise.repository.ResourceProperty;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 import java.util.Set;
+
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 /**
  * Interface representing J2EE Resource info.
@@ -31,21 +33,21 @@ public interface JavaEEResource {
     /**
      * Resource Types
      */
-    final int JMS_DESTINATION = 1;
-    final int JMS_CNX_FACTORY = 2;
-    final int JDBC_RESOURCE = 3;
-    final int JDBC_XA_RESOURCE = 4;
-    final int JDBC_DRIVER = 5;
-    final int CONNECTOR_RESOURCE = 6;
-    final int RESOURCE_ADAPTER = 7;
+    int JMS_DESTINATION = 1;
+    int JMS_CNX_FACTORY = 2;
+    int JDBC_RESOURCE = 3;
+    int JDBC_XA_RESOURCE = 4;
+    int JDBC_DRIVER = 5;
+    int CONNECTOR_RESOURCE = 6;
+    int RESOURCE_ADAPTER = 7;
 
     // START OF IASRI #4626188
-    final int JDBC_CONNECTION_POOL = 8;
-    final int PMF_RESOURCE = 9;
-    final int EXTERNAL_JNDI_RESOURCE = 10;
-    final int CUSTOM_RESOURCE = 11;
+    int JDBC_CONNECTION_POOL = 8;
+    int PMF_RESOURCE = 9;
+    int EXTERNAL_JNDI_RESOURCE = 10;
+    int CUSTOM_RESOURCE = 11;
     // START OF IASRI #4650786
-    final int MAIL_RESOURCE = 12;
+    int MAIL_RESOURCE = 12;
     // END OF IASRI #4650786
     // END OF IASRI #4626188
 
@@ -67,7 +69,7 @@ public interface JavaEEResource {
      *         resource has 0 properties, empty set is
      *         returned.
      */
-    Set getProperties();
+    Set<ResourceProperty> getProperties();
 
     /**
      * Add a property. Underlying set is keyed by
@@ -92,14 +94,6 @@ public interface JavaEEResource {
      */
     ResourceProperty getProperty(String propertyName);
 
-    /**
-     * Create a new resource with the given name
-     * that has the same attribute and property
-     * settings as the invoked object.
-     */
-    JavaEEResource makeClone(ResourceInfo resourceInfo);
-
-    // START OF IASRI #4626188
     void setEnabled(boolean value);
 
     boolean isEnabled();
@@ -107,5 +101,4 @@ public interface JavaEEResource {
     void setDescription(String value);
 
     String getDescription();
-    // END OF IASRI #4626188
 }

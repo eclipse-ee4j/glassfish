@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDD;
+import org.glassfish.deployment.common.JavaEEResourceType;
 
 public class JMSConnectionFactoryDefinitionDescriptor extends AbstractConnectorResourceDescriptor {
 
@@ -35,11 +36,10 @@ public class JMSConnectionFactoryDefinitionDescriptor extends AbstractConnectorR
     private int maxPoolSize = -1;
     private int minPoolSize = -1;
 
-    private boolean transactionSet = false;
+    private boolean transactionSet;
 
     public JMSConnectionFactoryDefinitionDescriptor() {
-        super();
-        super.setResourceType(JMSCFDD);
+        super.setResourceType(JavaEEResourceType.JMSCFDD);
     }
 
     public String getInterfaceName() {

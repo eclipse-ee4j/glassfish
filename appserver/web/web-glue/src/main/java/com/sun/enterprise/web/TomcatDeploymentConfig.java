@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,25 +27,49 @@ import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.SecurityRoleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.web.*;
-import com.sun.enterprise.web.deploy.*;
+import com.sun.enterprise.deployment.web.AppListenerDescriptor;
+import com.sun.enterprise.deployment.web.ContextParameter;
+import com.sun.enterprise.deployment.web.CookieConfig;
+import com.sun.enterprise.deployment.web.InitializationParameter;
+import com.sun.enterprise.deployment.web.LoginConfiguration;
+import com.sun.enterprise.deployment.web.MimeMapping;
+import com.sun.enterprise.deployment.web.MultipartConfig;
+import com.sun.enterprise.deployment.web.SecurityRoleReference;
+import com.sun.enterprise.deployment.web.ServletFilter;
+import com.sun.enterprise.deployment.web.ServletFilterMapping;
+import com.sun.enterprise.deployment.web.SessionConfig;
+import com.sun.enterprise.deployment.web.WebResourceCollection;
+import com.sun.enterprise.web.deploy.ContextEjbDecorator;
+import com.sun.enterprise.web.deploy.ContextEnvironmentDecorator;
+import com.sun.enterprise.web.deploy.ContextLocalEjbDecorator;
+import com.sun.enterprise.web.deploy.ContextResourceDecorator;
+import com.sun.enterprise.web.deploy.ErrorPageDecorator;
+import com.sun.enterprise.web.deploy.FilterDefDecorator;
+import com.sun.enterprise.web.deploy.LoginConfigDecorator;
+import com.sun.enterprise.web.deploy.MessageDestinationDecorator;
+import com.sun.enterprise.web.deploy.MessageDestinationRefDecorator;
+import com.sun.enterprise.web.deploy.SecurityCollectionDecorator;
+import com.sun.enterprise.web.deploy.SecurityConstraintDecorator;
 import com.sun.enterprise.web.session.WebSessionCookieConfig;
-import org.apache.catalina.Container;
-import org.apache.catalina.LifecycleException;
-import org.apache.catalina.Wrapper;
-import org.apache.catalina.core.StandardWrapper;
-import org.glassfish.web.LogFacade;
-import org.glassfish.web.deployment.descriptor.*;
 
 import jakarta.servlet.SessionCookieConfig;
 import jakarta.servlet.descriptor.JspPropertyGroupDescriptor;
+
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.catalina.Container;
+import org.apache.catalina.LifecycleException;
+import org.apache.catalina.Wrapper;
+import org.apache.catalina.core.StandardWrapper;
+import org.glassfish.web.LogFacade;
+import org.glassfish.web.deployment.descriptor.ErrorPageDescriptor;
+import org.glassfish.web.deployment.descriptor.JspConfigDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 
 /**
  * This class decorates all <code>com.sun.enterprise.deployment.*</code>
@@ -64,12 +89,10 @@ public class TomcatDeploymentConfig {
      * contained in <code>WebBundleDescriptor</code>. This astatic void calling
      * Tomcat 5 internal deployment mechanism by re-using the DOL objects.
      */
-    public static void configureWebModule(WebModule webModule,
-        WebBundleDescriptorImpl webModuleDescriptor)
-            throws LifecycleException {
-
+    public static void configureWebModule(WebModule webModule, WebBundleDescriptorImpl webModuleDescriptor)
+        throws LifecycleException {
         // When context root = "/"
-        if ( webModuleDescriptor == null ){
+        if (webModuleDescriptor == null) {
             return;
         }
 
@@ -101,16 +124,12 @@ public class TomcatDeploymentConfig {
      * <code>&lt;ejb-local-ref&gt;</code>element in the
      * deployment descriptor.
      */
-    protected static void configureEjbReference(WebModule webModule,
-                                         WebBundleDescriptorImpl wmd) {
-        for (EjbReference ejbDescriptor :
-                wmd.getEjbReferenceDescriptors()) {
+    protected static void configureEjbReference(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        for (EjbReference ejbDescriptor : wmd.getEjbReferenceDescriptors()) {
             if (ejbDescriptor.isLocal()) {
-                configureContextLocalEjb(webModule,
-                    (EjbReferenceDescriptor) ejbDescriptor);
+                configureContextLocalEjb(webModule, (EjbReferenceDescriptor) ejbDescriptor);
             } else {
-                configureContextEjb(webModule,
-                    (EjbReferenceDescriptor) ejbDescriptor);
+                configureContextEjb(webModule, (EjbReferenceDescriptor) ejbDescriptor);
             }
         }
     }
@@ -121,10 +140,8 @@ public class TomcatDeploymentConfig {
      * represented in a <code>&lt;ejb-ref&gt;</code> in the
      * deployment descriptor.
      */
-    protected static void configureContextLocalEjb(WebModule webModule,
-                                        EjbReferenceDescriptor ejbDescriptor) {
-        ContextLocalEjbDecorator decorator =
-                                new ContextLocalEjbDecorator(ejbDescriptor);
+    protected static void configureContextLocalEjb(WebModule webModule, EjbReferenceDescriptor ejbDescriptor) {
+        ContextLocalEjbDecorator decorator = new ContextLocalEjbDecorator(ejbDescriptor);
         webModule.addLocalEjb(decorator);
 
     }
@@ -135,8 +152,7 @@ public class TomcatDeploymentConfig {
      * represented in a <code>&lt;ejb-local-ref&gt;</code>element in the
      * deployment descriptor.
      */
-    protected static void configureContextEjb(WebModule webModule,
-                                       EjbReferenceDescriptor ejbDescriptor) {
+    protected static void configureContextEjb(WebModule webModule, EjbReferenceDescriptor ejbDescriptor) {
         ContextEjbDecorator decorator = new ContextEjbDecorator(ejbDescriptor);
         webModule.addEjb(decorator);
     }
@@ -146,11 +162,9 @@ public class TomcatDeploymentConfig {
      * Configure application environment entry, as represented by
      * an <code>&lt;env-entry&gt;</code> element in the deployment descriptor.
      */
-    protected static void configureContextEnvironment(WebModule webModule,
-                                                 WebBundleDescriptorImpl wmd) {
+    protected static void configureContextEnvironment(WebModule webModule, WebBundleDescriptorImpl wmd) {
         for (ContextParameter envRef : wmd.getContextParametersSet()) {
-            webModule.addEnvironment(new ContextEnvironmentDecorator(
-                (EnvironmentProperty) envRef));
+            webModule.addEnvironment(new ContextEnvironmentDecorator((EnvironmentProperty) envRef));
         }
     }
 
@@ -160,12 +174,9 @@ public class TomcatDeploymentConfig {
      * as represented by a <code>&lt;error-page&gt;</code> element in the
      * deployment descriptor.
      */
-    protected static void configureErrorPage(WebModule webModule,
-                                      WebBundleDescriptorImpl wmd) {
-
-        Enumeration<ErrorPageDescriptor> e =
-            wmd.getErrorPageDescriptors();
-        while (e.hasMoreElements()){
+    protected static void configureErrorPage(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Enumeration<ErrorPageDescriptor> e = wmd.getErrorPageDescriptors();
+        while (e.hasMoreElements()) {
             webModule.addErrorPage(new ErrorPageDecorator(e.nextElement()));
         }
     }
@@ -175,34 +186,25 @@ public class TomcatDeploymentConfig {
      * Configure filter definition for a web application, as represented
      * by a <code>&lt;filter&gt;</code> element in the deployment descriptor.
      */
-    protected static void configureFilterDef(WebModule webModule,
-                                             WebBundleDescriptorImpl wmd) {
-
-       Vector vector = wmd.getServletFilters();
-
-       FilterDefDecorator filterDef;
-       ServletFilter servletFilter;
-
-       for (int i=0; i < vector.size(); i++)  {
-           servletFilter = (ServletFilter)vector.get(i);
-           filterDef = new FilterDefDecorator(servletFilter);
-
-           webModule.addFilterDef(filterDef);
-       }
+    protected static void configureFilterDef(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Vector<ServletFilter> vector = wmd.getServletFilters();
+        for (ServletFilter servletFilter : vector) {
+            FilterDefDecorator filterDef = new FilterDefDecorator(servletFilter);
+            webModule.addFilterDef(filterDef);
+        }
     }
 
 
     /**
      * Configure filter mapping for a web application, as represented
      * by a <code>&lt;filter-mapping&gt;</code> element in the deployment
-     * descriptor.  Each filter mapping must contain a filter name plus either
+     * descriptor. Each filter mapping must contain a filter name plus either
      * a URL pattern or a servlet name.
      */
-    protected static void configureFilterMap(WebModule webModule,
-                                             WebBundleDescriptorImpl wmd) {
-        Vector vector = wmd.getServletFilterMappingDescriptors();
-        for (int i=0; i < vector.size(); i++)  {
-            webModule.addFilterMap((ServletFilterMapping)vector.get(i));
+    protected static void configureFilterMap(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Vector<ServletFilterMapping> vector = wmd.getServletFilterMappingDescriptors();
+        for (ServletFilterMapping element : vector) {
+            webModule.addFilterMap(element);
         }
     }
 
@@ -214,13 +216,10 @@ public class TomcatDeploymentConfig {
      * may be configured to allow application overrides or not) without having
      * to modify the application deployment descriptor itself.
      */
-    protected static void configureApplicationListener(
-            WebModule webModule, WebBundleDescriptorImpl wmd) {
-
-        Vector vector = wmd.getAppListenerDescriptors();
-        for (int i=0; i < vector.size() ; i++){
-            webModule.addApplicationListener(
-                        ((AppListenerDescriptor)vector.get(i)).getListener() );
+    protected static void configureApplicationListener(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Vector<AppListenerDescriptor> vector = wmd.getAppListenerDescriptors();
+        for (AppListenerDescriptor element : vector) {
+            webModule.addApplicationListener(element.getListener());
         }
 
     }
@@ -230,14 +229,12 @@ public class TomcatDeploymentConfig {
      * Configure <code>jsp-config</code> element contained in the deployment
      * descriptor
      */
-    protected static void configureJspConfig(WebModule webModule,
-                                             WebBundleDescriptorImpl wmd) {
+    protected static void configureJspConfig(WebModule webModule, WebBundleDescriptorImpl wmd) {
         webModule.setJspConfigDescriptor(wmd.getJspConfigDescriptor());
 
         JspConfigDescriptorImpl jspConfig = wmd.getJspConfigDescriptor();
         if (jspConfig != null) {
-            for (JspPropertyGroupDescriptor jspGroup :
-                    jspConfig.getJspPropertyGroups()) {
+            for (JspPropertyGroupDescriptor jspGroup : jspConfig.getJspPropertyGroups()) {
                 for (String urlPattern : jspGroup.getUrlPatterns()) {
                     webModule.addJspMapping(urlPattern);
                 }
@@ -266,14 +263,12 @@ public class TomcatDeploymentConfig {
     /**
      * Configure mime-mapping defined in the deployment descriptor.
      */
-    protected static void configureMimeMapping(WebModule webModule,
-                                               WebBundleDescriptorImpl wmd) {
-        Enumeration enumeration = wmd.getMimeMappings();
+    protected static void configureMimeMapping(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        Enumeration<MimeMapping> enumeration = wmd.getMimeMappings();
         MimeMapping mimeMapping;
-        while (enumeration.hasMoreElements()){
-            mimeMapping = (MimeMapping)enumeration.nextElement();
-            webModule.addMimeMapping(mimeMapping.getExtension(),
-                                     mimeMapping.getMimeType());
+        while (enumeration.hasMoreElements()) {
+            mimeMapping = enumeration.nextElement();
+            webModule.addMimeMapping(mimeMapping.getExtension(), mimeMapping.getMimeType());
         }
     }
 
@@ -281,11 +276,9 @@ public class TomcatDeploymentConfig {
     /**
      * Configure resource-reference defined in the deployment descriptor.
      */
-    protected static void configureResourceRef(WebModule webModule,
-                                               WebBundleDescriptorImpl wmd) {
-        for (EnvironmentEntry envEntry : wmd.getEnvironmentProperties()) {
-            webModule.addResourceEnvRef(envEntry.getName(),
-                                        envEntry.getType());
+    protected static void configureResourceRef(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        for (EnvironmentProperty envEntry : wmd.getEnvironmentProperties()) {
+            webModule.addResourceEnvRef(envEntry.getName(), envEntry.getType());
         }
     }
 
@@ -293,13 +286,10 @@ public class TomcatDeploymentConfig {
     /**
      * Configure context parameter defined in the deployment descriptor.
      */
-    protected static void configureContextParam(WebModule webModule,
-                                                WebBundleDescriptorImpl wmd) {
+    protected static void configureContextParam(WebModule webModule, WebBundleDescriptorImpl wmd) {
         for (ContextParameter ctxParam : wmd.getContextParametersSet()) {
-            if ("com.sun.faces.injectionProvider".equals(
-                            ctxParam.getName()) &&
-                    "com.sun.faces.vendor.GlassFishInjectionProvider".equals(
-                            ctxParam.getValue())) {
+            if ("com.sun.faces.injectionProvider".equals(ctxParam.getName())
+                && "com.sun.faces.vendor.GlassFishInjectionProvider".equals(ctxParam.getValue())) {
                 // Ignore, see IT 9641
                 continue;
             }
@@ -313,12 +303,9 @@ public class TomcatDeploymentConfig {
      * represented in a <code>&lt;message-destination&gt;</code> element
      * in the deployment descriptor.
      */
-    protected static void configureMessageDestination(
-            WebModule webModule, WebBundleDescriptorImpl wmd) {
-        for (MessageDestinationDescriptor msgDrd :
-                wmd.getMessageDestinations()) {
-            webModule.addMessageDestination(
-                new MessageDestinationDecorator(msgDrd));
+    protected static void configureMessageDestination(WebModule webModule, WebBundleDescriptorImpl wmd) {
+        for (MessageDestinationDescriptor msgDrd : wmd.getMessageDestinations()) {
+            webModule.addMessageDestination(new MessageDestinationDecorator(msgDrd));
         }
     }
 
@@ -581,20 +568,20 @@ public class TomcatDeploymentConfig {
             webModule.getConstraints().iterator();
         while (iter.hasNext()) {
             String[] roles = iter.next().findAuthRoles();
-            for (int j = 0; j < roles.length; j++) {
-                if (!"*".equals(roles[j]) &&
-                        !webModule.hasSecurityRole(roles[j])) {
+            for (String role : roles) {
+                if (!"*".equals(role) &&
+                        !webModule.hasSecurityRole(role)) {
                     logger.log(Level.WARNING,
-                        LogFacade.ROLE_AUTH, roles[j]);
-                    webModule.addSecurityRole(roles[j]);
+                        LogFacade.ROLE_AUTH, role);
+                    webModule.addSecurityRole(role);
                 }
             }
         }
 
         // Check role names used in <servlet> elements
         Container wrappers[] = webModule.findChildren();
-        for (int i = 0; i < wrappers.length; i++) {
-            Wrapper wrapper = (Wrapper) wrappers[i];
+        for (Container wrapper2 : wrappers) {
+            Wrapper wrapper = (Wrapper) wrapper2;
             String runAs = wrapper.getRunAs();
             if ((runAs != null) && !webModule.hasSecurityRole(runAs)) {
                 logger.log(Level.WARNING,
@@ -602,8 +589,8 @@ public class TomcatDeploymentConfig {
                 webModule.addSecurityRole(runAs);
             }
             String names[] = wrapper.findSecurityReferences();
-            for (int j = 0; j < names.length; j++) {
-                String link = wrapper.findSecurityReference(names[j]);
+            for (String name : names) {
+                String link = wrapper.findSecurityReference(name);
                 if ((link != null) && !webModule.hasSecurityRole(link)) {
                     logger.log(Level.WARNING,
                         LogFacade.ROLE_LINK, link);

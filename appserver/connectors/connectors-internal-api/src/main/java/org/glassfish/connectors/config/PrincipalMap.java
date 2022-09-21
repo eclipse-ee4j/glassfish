@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,13 @@
 
 package org.glassfish.connectors.config;
 
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Attribute;
-
 import jakarta.validation.constraints.NotNull;
+
 import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 @Configured
 public interface PrincipalMap extends ConfigBeanProxy {
@@ -31,41 +33,37 @@ public interface PrincipalMap extends ConfigBeanProxy {
      * security domain that is being mapped to a Principal in the
      * application server's security domain.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    @Attribute(key=true)
+    @Attribute(key = true)
     @NotNull
-    public String getEisPrincipal();
+    String getEisPrincipal();
 
     /**
      * Sets the value of the EISPrincipal - a Principal in the EIS
      * security domain that is being mapped to a Principal in the
      * application server's security domain.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
-    public void setEisPrincipal(String value) throws PropertyVetoException;
+    void setEisPrincipal(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the Mapped Principal - A Principal that is
      * valid in the application server's security domain
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     @Attribute
     @NotNull
-    public String getMappedPrincipal();
+    String getMappedPrincipal();
 
     /**
      * Sets the value of the Mapped Principal - A Principal that is
      * valid in the application server's security domain
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
-    public void setMappedPrincipal(String value) throws PropertyVetoException;
+    void setMappedPrincipal(String value) throws PropertyVetoException;
 
 }

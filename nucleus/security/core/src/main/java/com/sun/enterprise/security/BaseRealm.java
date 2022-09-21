@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package com.sun.enterprise.security;
 
-import java.util.Enumeration;
-
 import com.sun.enterprise.security.auth.realm.AuthenticationHandler;
 import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.IASRealm;
@@ -26,6 +25,8 @@ import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.User;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import java.util.Enumeration;
 
 /**
  * Parent class for iAS Realm classes.
@@ -70,7 +71,7 @@ public abstract class BaseRealm extends Realm {
      *
      */
     @Override
-    public Enumeration getUserNames() throws BadRealmException {
+    public Enumeration<String> getUserNames() throws BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
     }
@@ -106,7 +107,7 @@ public abstract class BaseRealm extends Realm {
      *
      */
     @Override
-    public Enumeration getGroupNames() throws BadRealmException {
+    public Enumeration<String> getGroupNames() throws BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
     }

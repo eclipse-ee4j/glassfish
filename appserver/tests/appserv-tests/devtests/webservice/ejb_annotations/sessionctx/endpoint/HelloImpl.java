@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,12 +28,17 @@ import java.security.Principal;
 @Stateless
 public class HelloImpl {
 
-    @Resource SessionContext ejbsc;
+    @Resource
+    SessionContext ejbsc;
 
     public String sayHello(String who) {
         System.out.println("EJB WSCTXT wsc = " + ejbsc);
-        if(ejbsc != null)
-                return "WebSvcTest-Hello " + ejbsc.getCallerPrincipal();
-        return "EJB WebServiceContext injection failed";
+        if (ejbsc != null) {
+            Principal principal = ejbsc.getCallerPrincipal();
+            if (principal != null) {
+                return "WebSvcTest-Hello " + principal.getName();
+            }
+        }
+        return "EJB WebServiceContext injection failed: " + ejbsc;
     }
 }

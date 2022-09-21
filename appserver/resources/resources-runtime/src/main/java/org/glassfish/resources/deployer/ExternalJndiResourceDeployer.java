@@ -160,7 +160,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     }
 
     @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
+    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
 
@@ -215,9 +215,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
             // Get properties to create the initial naming context
             // for the target JNDI factory
-            Hashtable env = new Hashtable();
-            for (Object element : extJndiRes.getProperties()) {
-                ResourceProperty prop = (ResourceProperty) element;
+            Hashtable<String, String> env = new Hashtable();
+            for (ResourceProperty prop : extJndiRes.getProperties()) {
                 env.put(prop.getName(), prop.getValue());
             }
 
@@ -325,8 +324,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
         List<Property> properties = rbean.getProperty();
         if (properties != null) {
             for (Property property : properties) {
-                ResourceProperty rp =
-                        new ResourcePropertyImpl(property.getName(), property.getValue());
+                ResourceProperty rp = new ResourcePropertyImpl(property.getName(), property.getValue());
                 jr.addProperty(rp);
             }
         }

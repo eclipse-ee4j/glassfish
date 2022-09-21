@@ -17,29 +17,34 @@
 
 package com.sun.enterprise.deployment.node;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 /**
  * This class is responsible for producing DOM document instances from
  * the descriptor classes
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class J2EEDocumentBuilder {
 
@@ -92,7 +97,7 @@ public class J2EEDocumentBuilder {
     }
 
     public static void write (Descriptor descriptor, final RootXMLNode node,  final File resultFile) throws Exception {
-        if (node==null) {
+        if (node == null) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {descriptor, null});
             return;
@@ -117,60 +122,23 @@ public class J2EEDocumentBuilder {
     }
 
     public static void write(Descriptor descriptor, final RootXMLNode node, final Result output) throws Exception {
-        if (node==null) {
+        if (node == null) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {descriptor, null});
             return;
         }
-        try {
-            Document document = getDocument(descriptor, node);
-            Source source = new DOMSource(document);
-            Transformer transformer = getTransformer();
-            setTransformerProperties(node, transformer);
-            transformer.transform(source, output);
-        } catch(Exception e) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
-            throw e;
-        }
-    }
-
-    private static Transformer getTransformer() throws Exception {
-        //get current TCL and system property values
-        ClassLoader currentTCL = Thread.currentThread().getContextClassLoader();
-        String userTransformerFactory = System.getProperty("javax.xml.transform.TransformerFactory");
-
-        Transformer transformer = null;
-        try {
-            //Set TCL to system classloader, and clear TransformerProperty
-            //so that we obtain the VM default transformer factory from
-            //the TransformerFactory
-            Thread.currentThread().setContextClassLoader(
-                J2EEDocumentBuilder.class.getClassLoader());
-            if (userTransformerFactory != null) {
-                System.clearProperty("javax.xml.transform.TransformerFactory");
-            }
-
-            //get the VM default transformer factory and use that for DOL
-            //processing
-            transformer = TransformerFactory.newInstance().newTransformer();
-        } finally {
-            //reset thread context classloader and system property to their
-            //original values
-            Thread.currentThread().setContextClassLoader(currentTCL);
-            if (userTransformerFactory != null) {
-                System.setProperty("javax.xml.transform.TransformerFactory", userTransformerFactory);
-            }
-        }
-        return transformer;
+        Document document = getDocument(descriptor, node);
+        Source source = new DOMSource(document);
+        Transformer transformer = TransformerFactory.newDefaultInstance().newTransformer();
+        setTransformerProperties(node, transformer);
+        transformer.transform(source, output);
     }
 
     private static void setTransformerProperties (RootXMLNode node, Transformer transformer) {
-        if (node.getDocType()!=null) {
-            transformer.setOutputProperty(
-                OutputKeys.DOCTYPE_PUBLIC, node.getDocType());
-            if (node.getSystemID()!=null) {
-                transformer.setOutputProperty(
-                    OutputKeys.DOCTYPE_SYSTEM, node.getSystemID());
+        if (node.getDocType() != null) {
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, node.getDocType());
+            if (node.getSystemID() != null) {
+                transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, node.getSystemID());
             }
         }
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");

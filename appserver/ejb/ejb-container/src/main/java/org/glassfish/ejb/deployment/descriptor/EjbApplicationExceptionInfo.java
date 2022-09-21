@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,14 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.io.Serializable;
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Contains information about an ejb application exception.
  */
+public class EjbApplicationExceptionInfo extends Descriptor {
 
-public class EjbApplicationExceptionInfo implements Serializable
-{
+    private static final long serialVersionUID = 1L;
     private String exceptionClassName;
     private boolean rollback;
     private boolean inherited = true;
@@ -32,32 +33,38 @@ public class EjbApplicationExceptionInfo implements Serializable
         exceptionClassName = className;
     }
 
+
     public String getExceptionClassName() {
         return exceptionClassName;
     }
+
 
     public boolean getRollback() {
         return rollback;
     }
 
+
     public void setRollback(boolean flag) {
         rollback = flag;
     }
+
 
     public void setInherited(boolean flag) {
         inherited = flag;
     }
 
+
     public boolean getInherited() {
         return inherited;
     }
 
+
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append("exception class name = " + exceptionClassName + "\t");
-        sb.append("rollback = " + rollback);
-        sb.append("inherited = " + inherited);
+        StringBuilder sb = new StringBuilder();
+        sb.append("exception class name = ").append(exceptionClassName).append('\t');
+        sb.append("rollback = ").append(rollback);
+        sb.append("inherited = ").append(inherited);
         return sb.toString();
     }
 }

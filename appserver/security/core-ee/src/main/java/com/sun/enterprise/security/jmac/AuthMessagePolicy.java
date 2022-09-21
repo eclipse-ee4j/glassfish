@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,6 @@
 
 package com.sun.enterprise.security.jmac;
 
-import static com.sun.enterprise.security.jmac.config.GFServerConfigProvider.SOAP;
-//V3:Commented webservices support
-//import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.internal.api.Globals;
-
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
@@ -44,6 +31,18 @@ import com.sun.enterprise.security.jmac.config.HttpServletConstants;
 import jakarta.security.auth.message.MessagePolicy;
 import jakarta.security.auth.message.MessagePolicy.ProtectionPolicy;
 import jakarta.security.auth.message.MessagePolicy.TargetPolicy;
+
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.internal.api.Globals;
+
+import static com.sun.enterprise.security.jmac.config.GFServerConfigProvider.SOAP;
 
 /**
  * Utility class for JMAC appserver implementation.
@@ -60,7 +59,7 @@ public class AuthMessagePolicy {
     private static final MessagePolicy MANDATORY_POLICY = getMessagePolicy(SENDER, null, true);
     private static final MessagePolicy OPTIONAL_POLICY = getMessagePolicy(SENDER, null, false);
 
-    private static String handlerClassName = null;
+    private static String handlerClassName;
 
     private AuthMessagePolicy() {
     }
@@ -209,10 +208,10 @@ public class AuthMessagePolicy {
                     MessageSecurityDescriptor matchMsd = null;
                     for (int i = 0; i < msgSecDescs.size(); i++) {
                         MessageSecurityDescriptor msd = msgSecDescs.get(i);
-                        ArrayList msgDescs = msd.getMessageDescriptors();
+                        List<MessageDescriptor> msgDescs = msd.getMessageDescriptors();
                         for (int j = i + 1; j < msgDescs.size(); j++) {
                             // XXX don't know how to get JavaMethod from operation
-                            MessageDescriptor msgDesc = (MessageDescriptor) msgDescs.get(j);
+                            MessageDescriptor msgDesc = msgDescs.get(j);
                             String opName = msgDesc.getOperationName();
                             if (opName == null && matchMsd == null) {
                                 matchMsd = msd;
@@ -237,7 +236,7 @@ public class AuthMessagePolicy {
     public static boolean oneSOAPPolicy(MessageSecurityBindingDescriptor binding) {
 
         boolean onePolicy = true;
-        ArrayList msgSecDescs = null;
+        List<MessageSecurityDescriptor> msgSecDescs = null;
         if (binding != null) {
             String layer = binding.getAttributeValue(MessageSecurityBindingDescriptor.AUTH_LAYER);
             if (SOAP.equals(layer)) {
@@ -251,14 +250,13 @@ public class AuthMessagePolicy {
 
         for (int i = 0; i < msgSecDescs.size(); i++) {
 
-            MessageSecurityDescriptor msd = (MessageSecurityDescriptor) msgSecDescs.get(i);
+            MessageSecurityDescriptor msd = msgSecDescs.get(i);
 
             // determine if all the different messageSecurityDesriptors have the
             // same policy which will help us interpret the effective policy if
             // we cannot determine the opcode of a request at runtime.
-
             for (int j = 0; j < msgSecDescs.size(); j++) {
-                if (j != i && !policiesAreEqual(msd, (MessageSecurityDescriptor) msgSecDescs.get(j))) {
+                if (j != i && !policiesAreEqual(msd, msgSecDescs.get(j))) {
                     onePolicy = false;
                 }
             }
@@ -302,8 +300,8 @@ public class AuthMessagePolicy {
                         handlerClassName = System.getProperty(HANDLER_CLASS_PROPERTY, DEFAULT_HANDLER_CLASS);
                     }
                     final String className = handlerClassName;
-                    Class c = Class.forName(className, true, loader);
-                    return c.newInstance();
+                    Class<?> c = Class.forName(className, true, loader);
+                    return c.getDeclaredConstructor().newInstance();
                 }
             });
             return rvalue;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,110 +18,90 @@
 package org.glassfish.resources.api;
 
 import com.sun.enterprise.repository.ResourceProperty;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 /**
  * Base class for common JavaEE Resource implementation.
  */
 public abstract class JavaEEResourceBase implements JavaEEResource, Serializable {
 
-    ResourceInfo resourceInfo;
-    Map properties_;
-    // START OF IASRI #4626188
-    boolean enabled_;
-    String description_;
-    // END OF IASRI #4626188
+    private static final long serialVersionUID = 1L;
+    private final ResourceInfo resourceInfo;
+    private final Map<String, ResourceProperty> properties;
+    private boolean enabled;
+    private String description;
 
     public JavaEEResourceBase(ResourceInfo resourceInfo) {
         this.resourceInfo = resourceInfo;
-        properties_ = new HashMap();
+        this.properties = new HashMap<>();
     }
 
+    @Override
     public ResourceInfo getResourceInfo() {
         return resourceInfo;
     }
 
-    // START OF IASRI #4626188
+    @Override
     public void setEnabled(boolean value) {
-        enabled_ = value;
+        enabled = value;
     }
 
+    @Override
     public boolean isEnabled() {
-        return enabled_;
+        return enabled;
     }
 
+    @Override
     public void setDescription(String value) {
-        description_ = value;
+        description = value;
     }
 
+    @Override
     public String getDescription() {
-        return description_;
+        return description;
     }
-    // END OF IASRI #4626188
 
+
+    @Override
     public abstract int getType();
 
-    public Set getProperties() {
-        Set shallowCopy = new HashSet();
-        Collection collection = properties_.values();
-        for (Iterator iter = collection.iterator(); iter.hasNext();) {
-            ResourceProperty next = (ResourceProperty) iter.next();
+
+    @Override
+    public Set<ResourceProperty> getProperties() {
+        Set<ResourceProperty> shallowCopy = new HashSet<>();
+        Collection<ResourceProperty> collection = properties.values();
+        for (ResourceProperty next : collection) {
             shallowCopy.add(next);
         }
         return shallowCopy;
     }
 
+
+    @Override
     public void addProperty(ResourceProperty property) {
-        properties_.put(property.getName(), property);
+        properties.put(property.getName(), property);
     }
 
+
+    @Override
     public boolean removeProperty(ResourceProperty property) {
-        Object removedObj = properties_.remove(property.getName());
-        return (removedObj != null);
+        return properties.remove(property.getName()) != null;
     }
 
+
+    @Override
     public ResourceProperty getProperty(String propertyName) {
-        return (ResourceProperty) properties_.get(propertyName);
+        return properties.get(propertyName);
     }
 
-    public JavaEEResource makeClone(ResourceInfo resourceInfo) {
-        JavaEEResource clone = doClone(resourceInfo);
-        Set entrySet = properties_.entrySet();
-        for (Iterator iter = entrySet.iterator(); iter.hasNext();) {
-            Map.Entry next = (Map.Entry) iter.next();
-            ResourceProperty propClone =
-                    new ResourcePropertyImpl((String) next.getKey());
-            propClone.setValue(next.getValue());
-
-            clone.addProperty(propClone);
-        }
-        // START OF IASRI #4626188
-        clone.setEnabled(isEnabled());
-        clone.setDescription(getDescription());
-        // END OF IASRI #4626188
-        return clone;
-    }
-
-    protected String getPropsString() {
-        StringBuffer propsBuffer = new StringBuffer();
-        Set props = getProperties();
-        if (!props.isEmpty()) {
-            for (Iterator iter = props.iterator(); iter.hasNext();) {
-                if (propsBuffer.length() == 0) {
-                    propsBuffer.append("[ ");
-                } else {
-                    propsBuffer.append(" , ");
-                }
-                ResourceProperty next = (ResourceProperty) iter.next();
-                propsBuffer.append(next.getName() + "=" + next.getValue());
-            }
-            propsBuffer.append(" ]");
-        }
-        return propsBuffer.toString();
-    }
 
     protected abstract JavaEEResource doClone(ResourceInfo resourceInfo);
 }

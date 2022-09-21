@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,21 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.annotation.context.*;
-import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.annotation.context.ComponentContext;
+import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
+import com.sun.enterprise.deployment.annotation.context.EjbContext;
+import com.sun.enterprise.deployment.annotation.context.EjbsContext;
+import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
+
+import java.lang.annotation.ElementType;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-
-import java.lang.annotation.ElementType;
-import java.util.logging.Level;
 
 /**
  * This is an abstract class encapsulate generic behaviour of annotation
@@ -51,35 +55,43 @@ import java.util.logging.Level;
  * @author Shing Wai Chan
  */
 public abstract class AbstractCommonAttributeHandler extends AbstractHandler {
+
     /**
      * Process Annotation with given EjbContexts.
+     *
      * @param ainfo
      * @param ejbContexts
      * @return HandlerProcessingResult
      */
     protected abstract HandlerProcessingResult processAnnotation(
-            AnnotationInfo ainfo, EjbContext[] ejbContexts)
+        AnnotationInfo ainfo,
+        EjbContext[] ejbContexts)
             throws AnnotationProcessorException;
 
     /**
      * Process Annotation with given WebCompContexts.
+     *
      * @param ainfo
      * @param webCompContexts
      * @return HandlerProcessingResult
      */
     protected abstract HandlerProcessingResult processAnnotation(
-            AnnotationInfo ainfo, WebComponentContext[] webCompContexts)
+        AnnotationInfo ainfo,
+        WebComponentContext[] webCompContexts)
             throws AnnotationProcessorException;
 
     /**
      * Process Annotation with given WebBundleContext.
+     *
      * @param ainfo
      * @param webBundleContext
      * @return HandlerProcessingResult
      */
     protected abstract HandlerProcessingResult processAnnotation(
-            AnnotationInfo ainfo, WebBundleContext webBundleContext)
+        AnnotationInfo ainfo,
+        WebBundleContext webBundleContext)
             throws AnnotationProcessorException;
+
 
     /**
      * Process a particular annotation which type is the same as the
@@ -89,15 +101,14 @@ public abstract class AbstractCommonAttributeHandler extends AbstractHandler {
      *
      * @param ainfo the annotation information
      */
-    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
-            throws AnnotationProcessorException {
-
+    @Override
+    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
         if (aeHandler instanceof EjbBundleContext) {
-            EjbBundleContext ejbBundleContext = (EjbBundleContext)aeHandler;
+            EjbBundleContext ejbBundleContext = (EjbBundleContext) aeHandler;
             aeHandler = ejbBundleContext.createContextForEjb();
         } else if (aeHandler instanceof WebBundleContext) {
-            WebBundleContext webBundleContext = (WebBundleContext)aeHandler;
+            WebBundleContext webBundleContext = (WebBundleContext) aeHandler;
             aeHandler = webBundleContext.createContextForWeb();
             if (aeHandler == null) {
                 // no such web comp, use webBundleContext
@@ -107,51 +118,47 @@ public abstract class AbstractCommonAttributeHandler extends AbstractHandler {
 
         if (aeHandler == null) {
             // no such ejb
-            return getInvalidAnnotatedElementHandlerResult(
-                ainfo.getProcessingContext().getHandler(), ainfo);
+            return getInvalidAnnotatedElementHandlerResult(ainfo.getProcessingContext().getHandler(), ainfo);
         }
 
-        if (!supportTypeInheritance() &&
-                ElementType.TYPE.equals(ainfo.getElementType()) &&
-                aeHandler instanceof ComponentContext) {
-            ComponentContext context = (ComponentContext)aeHandler;
-            Class clazz = (Class)ainfo.getAnnotatedElement();
+        if (!supportTypeInheritance() && ElementType.TYPE.equals(ainfo.getElementType())
+            && aeHandler instanceof ComponentContext) {
+            ComponentContext context = (ComponentContext) aeHandler;
+            Class<?> clazz = (Class<?>) ainfo.getAnnotatedElement();
             if (!clazz.getName().equals(context.getComponentClassName())) {
                 if (logger.isLoggable(Level.WARNING)) {
                     log(Level.WARNING, ainfo,
-                        localStrings.getLocalString(
-                        "enterprise.deployment.annotation.handlers.typeinhernotsupp",
-                        "The annotation symbol inheritance is not supported."));
+                        I18N.getLocalString("enterprise.deployment.annotation.handlers.typeinhernotsupp",
+                            "The annotation symbol inheritance is not supported."));
                 }
                 return getDefaultProcessedResult();
             }
         }
 
-        HandlerProcessingResult procResult = null;
         if (aeHandler instanceof EjbContext) {
-            procResult = processAnnotation(ainfo, new EjbContext[] { (EjbContext)aeHandler });
+            return processAnnotation(ainfo, new EjbContext[] {(EjbContext) aeHandler});
         } else if (aeHandler instanceof EjbsContext) {
-            EjbsContext ejbsContext = (EjbsContext)aeHandler;
-            procResult = processAnnotation(ainfo, ejbsContext.getEjbContexts());
+            EjbsContext ejbsContext = (EjbsContext) aeHandler;
+            return processAnnotation(ainfo, ejbsContext.getEjbContexts());
         } else if (aeHandler instanceof WebComponentContext) {
-            procResult = processAnnotation(ainfo,
-                new WebComponentContext[] { (WebComponentContext)aeHandler });
+            return processAnnotation(ainfo, new WebComponentContext[] {(WebComponentContext) aeHandler});
         } else if (aeHandler instanceof WebComponentsContext) {
-            WebComponentsContext webCompsContext = (WebComponentsContext)aeHandler;
-            procResult = processAnnotation(ainfo, webCompsContext.getWebComponentContexts());
+            WebComponentsContext webCompsContext = (WebComponentsContext) aeHandler;
+            return processAnnotation(ainfo, webCompsContext.getWebComponentContexts());
         } else if (aeHandler instanceof WebBundleContext) {
-            WebBundleContext webBundleContext = (WebBundleContext)aeHandler;
-            procResult = processAnnotation(ainfo, webBundleContext);
+            WebBundleContext webBundleContext = (WebBundleContext) aeHandler;
+            return processAnnotation(ainfo, webBundleContext);
         } else {
             return getInvalidAnnotatedElementHandlerResult(aeHandler, ainfo);
         }
-
-        return procResult;
     }
+
 
     /**
      * This indicates whether the annotation type should be processed for
      * type level in super-class.
+     *
+     * @return false
      */
     protected boolean supportTypeInheritance() {
         return false;

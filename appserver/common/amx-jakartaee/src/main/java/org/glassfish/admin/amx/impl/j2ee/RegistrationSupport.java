@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,8 +35,8 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.archivist.Archivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
+
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -43,13 +44,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.management.*;
+
+import javax.management.JMException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerNotification;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+
 import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.impl.config.ConfigBeanRegistry;
 import org.glassfish.admin.amx.impl.j2ee.loader.J2EEInjectedValues;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
-import org.glassfish.admin.amx.j2ee.*;
+import org.glassfish.admin.amx.j2ee.AMXEELoggerInfo;
+import org.glassfish.admin.amx.j2ee.AppClientModule;
+import org.glassfish.admin.amx.j2ee.EJB;
+import org.glassfish.admin.amx.j2ee.EJBModule;
+import org.glassfish.admin.amx.j2ee.EntityBean;
+import org.glassfish.admin.amx.j2ee.J2EEApplication;
+import org.glassfish.admin.amx.j2ee.J2EEManagedObject;
+import org.glassfish.admin.amx.j2ee.J2EEServer;
+import org.glassfish.admin.amx.j2ee.MessageDrivenBean;
+import org.glassfish.admin.amx.j2ee.ResourceAdapter;
+import org.glassfish.admin.amx.j2ee.ResourceAdapterModule;
+import org.glassfish.admin.amx.j2ee.Servlet;
+import org.glassfish.admin.amx.j2ee.SingletonSessionBean;
+import org.glassfish.admin.amx.j2ee.StatefulSessionBean;
+import org.glassfish.admin.amx.j2ee.StatelessSessionBean;
+import org.glassfish.admin.amx.j2ee.WebModule;
 import org.glassfish.admin.amx.util.ClassUtil;
 import org.glassfish.admin.amx.util.MapUtil;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;
@@ -60,21 +83,18 @@ import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
 /**
-    Handles registrations of resources and applications associated with a J2EEServer.
-    There must be one and only one of these instances per J2EEServer.
+ * Handles registrations of resources and applications associated with a J2EEServer.
+ * There must be one and only one of these instances per J2EEServer.
  */
-final class RegistrationSupport
-{
-    private static void cdebug(Object o)
-    {
-        System.out.println("" + o);
-    }
+final class RegistrationSupport {
+
+    private static final Logger LOG = Logger.getLogger(RegistrationSupport.class.getName());
 
     /**
-        Associates the ObjectName of a ResourceRef or ApplicationRef with its corresponding
-        top-level JSR 77 MBean. Children of those JSR 77 MBeans come and go with their parent.
+     * Associates the ObjectName of a ResourceRef or ApplicationRef with its corresponding
+     * top-level JSR 77 MBean. Children of those JSR 77 MBeans come and go with their parent.
      */
-    private final Map<ObjectName, ObjectName> mConfigRefTo77 = new HashMap<ObjectName, ObjectName>();
+    private final Map<ObjectName, ObjectName> mConfigRefTo77 = new HashMap<>();
 
     private final J2EEServer mJ2EEServer;
 
@@ -93,86 +113,79 @@ final class RegistrationSupport
 
     private final Logger mLogger = AMXEELoggerInfo.getLogger();
 
-    public RegistrationSupport(final J2EEServer server)
-    {
+    public RegistrationSupport(final J2EEServer server) {
         mJ2EEServer = server;
         mMBeanServer = (MBeanServer) server.extra().mbeanServerConnection();
 
-        mResourceRefType    = Util.deduceType(ResourceRef.class);
+        mResourceRefType = Util.deduceType(ResourceRef.class);
         mApplicationRefType = Util.deduceType(ApplicationRef.class);
-        mServer = getDomain().getServers().getServer( mJ2EEServer.getName() );
+        mServer = getDomain().getServers().getServer(mJ2EEServer.getName());
 
         mResourceRefListener = new RefListener();
 
         registerApplications();
     }
 
-    protected void cleanup()
-    {
+
+    protected void cleanup() {
         mResourceRefListener.stopListening();
     }
 
-    public void start()
-    {
+
+    public void start() {
         mResourceRefListener.startListening();
     }
 
     /** Maps configuration MBean type to J2EE type */
-    public static final Map<String, Class> CONFIG_RESOURCE_TYPES =
-            MapUtil.toMap(new Object[]
-            {
-                "jdbc-resource", JDBCResourceImpl.class,
-                "java-mail-resource", JavaMailResourceImpl.class,
-                "jca-resource", JCAResourceImpl.class,
-                "jms-resource", JMSResourceImpl.class,
-                "jndi-resource", JNDIResourceImpl.class,
-                "jta-resource", JTAResourceImpl.class,
-                "rmi-iiop-resource", RMI_IIOPResourceImpl.class,
-                "url-resource", URLResourceImpl.class
-            },
-            String.class, Class.class);
+    public static final Map<String, Class<? extends J2EEManagedObjectImplBase>> CONFIG_RESOURCE_TYPES = Map.of(
+        "jdbc-resource", JDBCResourceImpl.class,
+        "java-mail-resource", JavaMailResourceImpl.class,
+        "jca-resource", JCAResourceImpl.class,
+        "jms-resource", JMSResourceImpl.class,
+        "jndi-resource", JNDIResourceImpl.class,
+        "jta-resource", JTAResourceImpl.class,
+        "rmi-iiop-resource", RMI_IIOPResourceImpl.class,
+        "url-resource", URLResourceImpl.class
+    );
 
-    private Domain getDomain()
-    {
+    private Domain getDomain() {
         return InjectedValues.getInstance().getHabitat().getService(Domain.class);
     }
 
-    private ObjectName getObjectName(ConfigBeanProxy cbp)
-    {
+
+    private ObjectName getObjectName(ConfigBeanProxy cbp) {
         return ConfigBeanRegistry.getInstance().getObjectNameForProxy(cbp);
     }
 
-    private String getDeploymentDescriptor(
-        final BundleDescriptor bundleDesc )
-    {
+
+    private String getDeploymentDescriptor(final BundleDescriptor bundleDesc) {
         final ArchivistFactory archivistFactory = J2EEInjectedValues.getInstance().getArchivistFactory();
 
         String dd = "unavailable";
         ByteArrayOutputStream out = null;
-        try
-        {
-            final Archivist moduleArchivist = archivistFactory.getArchivist(bundleDesc.getModuleDescriptor().getModuleType());
-            final DeploymentDescriptorFile ddFile =  moduleArchivist.getStandardDDFile();
+        try {
+            final Archivist<BundleDescriptor> moduleArchivist = archivistFactory
+                .getArchivist(bundleDesc.getModuleDescriptor().getModuleType());
+            final DeploymentDescriptorFile<BundleDescriptor> ddFile = moduleArchivist.getStandardDDFile();
 
             out = new ByteArrayOutputStream();
             ddFile.write(bundleDesc, out);
             final String charsetName = "UTF-8";
             dd = out.toString(charsetName);
-        }
-        catch( final Exception e )
-        {
+        } catch (final Exception e) {
             dd = null;
-        }
-        finally
-        {
-            if ( out != null )
-            {
-                try { out.close(); } catch( Exception ee) {}
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception ee) {
+                }
             }
         }
 
         return dd;
     }
+
 
     private ObjectName createAppMBeans(
         com.sun.enterprise.config.serverbeans.Application appConfig,
@@ -504,27 +517,25 @@ final class RegistrationSupport
 
 
     /**
-        Examine the MBean to see if it is a ResourceRef that should be manifested under this server,
-        and if so, register a JSR 77 MBean for it.
+     * Examine the MBean to see if it is a ResourceRef that should be manifested under this server,
+     * and if so, register a JSR 77 MBean for it.
      */
-    public ObjectName processResourceRef(final ResourceRef ref)
-    {
-        if (ref == null)
-        {
+    public ObjectName processResourceRef(final ResourceRef ref) {
+        if (ref == null) {
             throw new IllegalArgumentException("resource-ref is null");
         }
 
-        if ( ! mServer.getName().equals(ref.getParent(Server.class).getName()))
-        {
-            cdebug("ResourceRef is not a child of server " + getObjectName(mServer));
+        if (!mServer.getName().equals(ref.getParent(Server.class).getName())) {
+            if (LOG.isLoggable(Level.FINEST)) {
+                LOG.log(Level.FINEST, "ResourceRef is not a child of server " + getObjectName(mServer));
+            }
             return null;
         }
 
         // find the referenced resource
         Resource res = null;
         List<Resource> resources = getDomain().getResources().getResources();
-        for (Resource resource : resources)
-        {
+        for (Resource resource : resources) {
             String name = null;
             if (resource instanceof BindableResource) {
                 name = ((BindableResource) resource).getJndiName();
@@ -535,44 +546,38 @@ final class RegistrationSupport
             if (resource instanceof ResourcePool) {
                 name = ((ResourcePool) resource).getName();
             }
-            if (name != null && name.equals(ref.getRef()))
+            if (name != null && name.equals(ref.getRef())) {
                 res = resource;
+            }
         }
-        if (res == null)
-        {
+        if (res == null) {
             throw new IllegalArgumentException("ResourceRef refers to non-existent resource: " + ref);
         }
 
         final String configType = Util.getTypeProp(getObjectName(res));
-        final Class<J2EEManagedObjectImplBase> implClass = CONFIG_RESOURCE_TYPES.get(configType);
-        if (implClass == null)
-        {
+        final Class<? extends J2EEManagedObjectImplBase> implClass = CONFIG_RESOURCE_TYPES.get(configType);
+        if (implClass == null) {
             mLogger.fine("Unrecognized resource type for JSR 77 purposes: " + getObjectName(res));
             return null;
         }
         final Class<J2EEManagedObject> intf = (Class) ClassUtil.getFieldValue(implClass, "INTF");
 
         ObjectName mbean77 = null;
-        try
-        {
+        try {
             final MetadataImpl meta = new MetadataImpl();
             meta.setCorrespondingRef(getObjectName(ref));
             meta.setCorrespondingConfig(getObjectName(res));
 
-            mbean77 = registerJ2EEChild(mJ2EEServer.objectName(), meta, intf, implClass, Util.getNameProp(getObjectName(res)));
-            synchronized (mConfigRefTo77)
-            {
+            mbean77 = registerJ2EEChild(mJ2EEServer.objectName(), meta, intf, implClass,
+                Util.getNameProp(getObjectName(res)));
+            synchronized (mConfigRefTo77) {
                 mConfigRefTo77.put(getObjectName(ref), mbean77);
             }
+        } catch (final Exception e) {
+            mLogger.log(Level.WARNING, AMXEELoggerInfo.cantRegisterMbean, new Object[] {getObjectName(ref), e});
         }
-        catch (final Exception e)
-        {
-            mLogger.log( Level.INFO, AMXEELoggerInfo.cantRegisterMbean, new Object[] { getObjectName(ref), e });
-        }
-    //cdebug( "Registered " + child + " for  config resource " + amx.objectName() );
         return mbean77;
     }
-
 
     /**
     Listen for registration/unregistration of {@link ResourceRef},
@@ -587,6 +592,7 @@ final class RegistrationSupport
         {
         }
 
+        @Override
         public void handleNotification(final Notification notifIn, final Object handback)
         {
             if (!(notifIn instanceof MBeanServerNotification))

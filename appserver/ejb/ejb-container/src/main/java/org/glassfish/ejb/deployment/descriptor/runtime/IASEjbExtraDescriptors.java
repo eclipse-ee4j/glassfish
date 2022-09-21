@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,25 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * This generated bean class Ejb matches the DTD element ejb
- *
- * Generated on Mon Dec 10 09:16:05 PST 2001
- */
-
 package org.glassfish.ejb.deployment.descriptor.runtime;
 
-import java.util.ArrayList;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.DescriptorConstants;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.runtime.BeanPoolDescriptor;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * Class that contains all the extra iAS elements for an EJB that are not
@@ -55,8 +51,17 @@ import com.sun.enterprise.deployment.util.DOLUtils;
  */
 public class IASEjbExtraDescriptors extends RuntimeDescriptor {
 
-    public static final String AVAILABILITY_ENABLED =
-        "AvailabilityEnabled";
+    public static final String AVAILABILITY_ENABLED = "AvailabilityEnabled";
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * ejb - refresh period in seconds
+     */
+    private static final int REFRESH_PERIOD_IN_SECONDS_DEFAULT = -1;
+
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
+
 
     private boolean isReadOnlyBean;
 
@@ -82,7 +87,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      * A string field whose valid values are either A, B, or C.
      * Default value is set in the server configuration (server.xml).
      */
-    private String commitOption = null;
+    private String commitOption;
 
     /**
      * This contains the bean pool properties. Used only for stateless
@@ -95,29 +100,29 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      */
     private BeanCacheDescriptor beanCache;
 
-    private FlushAtEndOfMethodDescriptor flushMethodDescriptor = null;
+    private FlushAtEndOfMethodDescriptor flushMethodDescriptor;
 
-    private CheckpointAtEndOfMethodDescriptor checkpointMethodDescriptor = null;
+    private CheckpointAtEndOfMethodDescriptor checkpointMethodDescriptor;
 
-    private String checkpointedMethods = null;
+    private String checkpointedMethods;
 
     /**
      * This contains the pass-by-reference property.
      */
-    private Boolean passByReference = null;
+    private Boolean passByReference;
 
 
     /*
      * This contains the EjbDescriptor - J2EE specific descriptor
      * @see com.sun.enterprise.deployment.EjbDescriptor EjbDescriptor
      */
-    private EjbDescriptor ejbDescriptor = null;
+    private EjbDescriptor ejbDescriptor;
 
     /**
      * This contains the timeout used for container started transactions
      * This value is used by the container only if the value is greater than 0
      */
-    private int cmtTimeoutInSeconds = 0;
+    private int cmtTimeoutInSeconds;
 
     /**
      * Specifies the thread pool to be used for this ejb's invocation
@@ -146,7 +151,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
     public IASEjbExtraDescriptors() {
         jmsMaxMessagesLoad = 1;
         isReadOnlyBean = false;
-        refreshPeriodInSeconds = DescriptorConstants.REFRESH_PERIOD_IN_SECONDS_DEFAULT;//RO Bean never refreshed???
+        refreshPeriodInSeconds = REFRESH_PERIOD_IN_SECONDS_DEFAULT;//RO Bean never refreshed???
     }
 
     /**
@@ -259,7 +264,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
 
     /**
      * Setter for property cmt-timeout-in-seconds.
-     * @param commitOption New value of property cmt-timeout-in-seconds.
+     * @param val New value of property cmt-timeout-in-seconds.
      */
     public void setCmtTimeoutInSeconds(int val) {
         this.cmtTimeoutInSeconds = val;
@@ -275,7 +280,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
 
     /**
      * Setter for the property use-thread-pool-id
-     * @param The value for use-thread-pool-id
+     * @param val The value for use-thread-pool-id
      */
     public void setUseThreadPoolId(String val) {
         this.useThreadPoolId = val;
@@ -355,39 +360,27 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      *         it is not null.  Default value is false.
      */
     public boolean getPassByReference() {
-        boolean passByReference = false;  // default
-
-        // if pass-by-reference defined for ejb
         if (this.isPassByReferenceDefined()) {
-            passByReference = this.passByReference.booleanValue();
+            // if pass-by-reference defined for ejb
+            return this.passByReference.booleanValue();
+        }
         // if pass-by-reference undefined for ejb set to
         // application's pass-by-reference value if defined
-        } else {
-            ejbDescriptor = this.getEjbDescriptor();
-            if (ejbDescriptor != null) {
-                Application application = ejbDescriptor.getApplication();
-                if (application != null) {
-                    if (application.isPassByReferenceDefined()) {
-                        passByReference = application.getPassByReference();
-                    }
+        ejbDescriptor = this.getEjbDescriptor();
+        if (ejbDescriptor != null) {
+            Application application = ejbDescriptor.getApplication();
+            if (application != null) {
+                if (application.isPassByReferenceDefined()) {
+                    return application.getPassByReference();
                 }
             }
         }
-
-        return passByReference;
+        return false;
     }
 
     /**
      * Sets ejb pass-by-reference value.
-     * @param pass-by-reference New value of property pass-by-reference.
-     */
-    public void setPassByReference(boolean passByReference) {
-        this.passByReference = Boolean.valueOf(passByReference);
-    }
-
-    /**
-     * Sets ejb pass-by-reference value.
-     * @param pass-by-reference New value of property pass-by-reference.
+     * @param passByReference New value of property pass-by-reference.
      */
     public void setPassByReference(Boolean passByReference) {
         this.passByReference = passByReference;
@@ -408,8 +401,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
 
     /**
      * Getter for property ejbDescriptor.
-     * @returns EjbDescriptor object property - J2EE specific
-     * ejb descriptor
+     * @return EjbDescriptor object property - J2EE specific ejb descriptor
      */
     public EjbDescriptor getEjbDescriptor() {
         return this.ejbDescriptor;
@@ -459,86 +451,75 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
       *
       */
     public void parseCheckpointedMethods(EjbDescriptor ejbDesc) {
-        if (checkpointedMethods == null ||
-            checkpointedMethods.trim().length() == 0) {
+        if (checkpointedMethods == null || checkpointedMethods.isBlank()) {
             return;
         }
         if (checkpointMethodDescriptor == null) {
-            checkpointMethodDescriptor =
-                new CheckpointAtEndOfMethodDescriptor();
+            checkpointMethodDescriptor = new CheckpointAtEndOfMethodDescriptor();
             setCheckpointAtEndOfMethodDescriptor(checkpointMethodDescriptor);
             checkpointMethodDescriptor.setEjbDescriptor(ejbDesc);
         }
-        StringTokenizer methodsTokenizer =
-            new StringTokenizer(checkpointedMethods, METHODS_DELIM);
+        StringTokenizer methodsTokenizer = new StringTokenizer(checkpointedMethods, METHODS_DELIM);
         while (methodsTokenizer.hasMoreTokens()) {
             // process each method
             String method = methodsTokenizer.nextToken().trim();
-            if (method.length() == 0) {
+            if (method.isEmpty()) {
                 continue;
             }
-            MethodDescriptor methodDescriptor =
-                parseCheckpointedMethod(method);
+            MethodDescriptor methodDescriptor = parseCheckpointedMethod(method);
             if (methodDescriptor != null) {
-                checkpointMethodDescriptor.getMethodDescriptors().add(
-                    methodDescriptor);
+                checkpointMethodDescriptor.getMethodDescriptors().add(methodDescriptor);
             }
         }
     }
 
 
     // parse the given method string into a MethodDescriptor
-    private MethodDescriptor parseCheckpointedMethod (String method) {
+    private MethodDescriptor parseCheckpointedMethod(String method) {
         String methodName, methodParams;
-        ArrayList paramTypeList = new ArrayList();
+        ArrayList<String> paramTypeList = new ArrayList<>();
         try {
-            if ( method.indexOf(LEFT_PAREN) != -1 &&
-                method.indexOf(RIGHT_PAREN) != -1 ) {
-                int pos = method.indexOf(LEFT_PAREN);
-                int pos2 = method.indexOf(RIGHT_PAREN);
-                // retrieve the method name
-                methodName = method.substring(0, pos).trim();
-                // retrieve the parameter list
-                if (pos < pos2-1) {
-                    methodParams = method.substring(pos+1, pos2).trim();
-                    StringTokenizer paramsTokenizer =
-                        new StringTokenizer(methodParams, PARAMS_DELIM);
-                    while (paramsTokenizer.hasMoreTokens()) {
-                        // process each param
-                        String param = paramsTokenizer.nextToken().trim();
-                        if (param.length() == 0) {
-                            continue;
-                        }
-                        StringTokenizer paramTokenizer =
-                            new StringTokenizer(param, PARAM_DELIM);
-                        while (paramTokenizer.hasMoreTokens()) {
-                            String paramType =
-                                paramTokenizer.nextToken().trim();
-                            if (paramType.length() != 0) {
-                                paramTypeList.add(paramType);
-                                // only interested in the first token
-                                break;
-                            }
+            if (method.indexOf(LEFT_PAREN) == -1 || method.indexOf(RIGHT_PAREN) == -1) {
+                LOG.log(Level.WARNING, "DPL5412: Bad format: checkpointed-methods [{0}]", method);
+                return null;
+            }
+            int pos = method.indexOf(LEFT_PAREN);
+            int pos2 = method.indexOf(RIGHT_PAREN);
+            // retrieve the method name
+            methodName = method.substring(0, pos).trim();
+            // retrieve the parameter list
+            if (pos < pos2 - 1) {
+                methodParams = method.substring(pos + 1, pos2).trim();
+                StringTokenizer paramsTokenizer = new StringTokenizer(methodParams, PARAMS_DELIM);
+                while (paramsTokenizer.hasMoreTokens()) {
+                    // process each param
+                    String param = paramsTokenizer.nextToken().trim();
+                    if (param.isEmpty()) {
+                        continue;
+                    }
+                    StringTokenizer paramTokenizer = new StringTokenizer(param, PARAM_DELIM);
+                    while (paramTokenizer.hasMoreTokens()) {
+                        String paramType = paramTokenizer.nextToken().trim();
+                        if (!paramType.isEmpty()) {
+                            paramTypeList.add(paramType);
+                            // only interested in the first token
+                            break;
                         }
                     }
                 }
-                if (paramTypeList.size() > 0) {
-                    String[] paramTypeArray = (String[])paramTypeList.toArray(
-                        new String[paramTypeList.size()]);
-                    return new MethodDescriptor(methodName, null,
-                        paramTypeArray, null);
-                } else {
-                    return new MethodDescriptor(methodName, null, null, null);
-                }
-            } else {
-                DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_badformat_checkpointedmethods", new Object[] {method});
-                return null;
             }
+            if (paramTypeList.isEmpty()) {
+                return new MethodDescriptor(methodName, null, null, null);
+            }
+            String[] paramTypeArray = paramTypeList.toArray(new String[paramTypeList.size()]);
+            return new MethodDescriptor(methodName, null, paramTypeArray, null);
         } catch (Exception e) {
             // any parsing exception indicates it is not a well-formed
             // string, we will just print warning and return null
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_badformat_checkpointedmethods", new Object[] {method});
-            DOLUtils.getDefaultLogger().log(Level.WARNING, e.getMessage(), e);
+            LogRecord log = new LogRecord(Level.WARNING, "DPL5412: Bad format: checkpointed-methods [{0}]");
+            log.setParameters(new Object[] {method});
+            log.setThrown(e);
+            LOG.log(log);
             return null;
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,27 @@
 
 package com.sun.enterprise.deployment.web;
 
+import java.util.Set;
+
 public interface NameValuePair {
 
-    public String getName();
-    public void setName(String name);
-    public String getValue();
-    public void setValue(String value);
-    public String getDescription();
-    public void setDescription(String description);
+    /**
+     * @return name of the property
+     */
+    String getName();
+
+    /**
+     * @param name name of the property. Should be unique in the context as it will be usually used
+     *            as a key in a {@link Set}
+     */
+    void setName(String name);
+
+    String getValue();
+
+    void setValue(String value);
+
+    String getDescription();
+
+    void setDescription(String description);
 
 }

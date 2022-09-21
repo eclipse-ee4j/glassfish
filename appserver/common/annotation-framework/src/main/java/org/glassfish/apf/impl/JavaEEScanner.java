@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,52 +15,34 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * JavaEEScanner.java
- *
- * Created on November 1, 2005, 5:30 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package org.glassfish.apf.impl;
-
-import org.glassfish.apf.ComponentInfo;
-import org.glassfish.hk2.classmodel.reflect.Parser;
-import org.glassfish.hk2.classmodel.reflect.ParsingContext;
-import org.glassfish.hk2.classmodel.reflect.Types;
 
 import java.io.File;
 import java.io.IOException;
+
+import org.glassfish.apf.ComponentInfo;
+import org.glassfish.apf.Scanner;
 
 /**
  * Super class for all JavaEE scanners
  *
  * @author Jerome Dochez
  */
-public abstract class JavaEEScanner {
+public abstract class JavaEEScanner<T> implements Scanner {
 
-    Types types;
+    /**
+     * Scan the archive file and gather a list of classes
+     * that should be processed for anntoations
+     *
+     * @param archiveFile the archive file for scanning
+     * @param classLoader the classloader used to scan the annotation
+     * @throws IOException if the file cannot be read.
+     */
+    protected abstract void process(File archiveFile, T descriptor, ClassLoader classLoader) throws IOException;
 
-    public ComponentInfo getComponentInfo(Class componentImpl){
+
+    @Override
+    public ComponentInfo getComponentInfo(Class<?> componentImpl) {
         return new ComponentDefinition(componentImpl);
     }
-
-    protected void initTypes(File file) throws IOException {
-        ParsingContext context = new ParsingContext.Builder().build();
-        Parser cp = new Parser(context);
-        cp.parse(file, null);
-        try {
-            cp.awaitTermination();
-        } catch (InterruptedException e) {
-            throw new IOException(e);
-        }
-        types = cp.getContext().getTypes();
-    }
-
-    public Types getTypes() {
-        return types;
-    }
-
 }

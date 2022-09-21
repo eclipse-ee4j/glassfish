@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,14 @@
 
 package com.sun.enterprise.deployment.types;
 
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+
 import java.util.Set;
 
 /**
- * This interface defines the behaviour of a J2EE component containaing ejb
- * references
+ * This interface defines the behaviour of a J2EE component containaing ejb references
  *
  * @author Jerome Dochez
- * @version
  */
 public interface EjbReferenceContainer {
 
@@ -32,19 +33,19 @@ public interface EjbReferenceContainer {
      *
      * @param the ejb reference
      */
-    void addEjbReferenceDescriptor(EjbReference ejbReference);
+    void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
-     * Looks up an ejb reference with the given name. Throws an IllegalArgumentException
-     * if it is not found.
+     * Looks up an ejb reference with the given name.
      *
      * @param the name of the ejb-reference
+     * @throws an IllegalArgumentException if it is not found.
      */
-    EjbReference getEjbReference(String name);
+    EjbReferenceDescriptor getEjbReference(String name);
 
     /**
-     * Return the set of references to ejbs that I have.
+     * @return the set of references to ejbs that I have.
      */
-    Set getEjbReferenceDescriptors();
+    Set<EjbReferenceDescriptor> getEjbReferenceDescriptors();
 }
 

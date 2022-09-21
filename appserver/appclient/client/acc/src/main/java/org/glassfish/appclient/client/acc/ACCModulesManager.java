@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.appclient.client.acc;
 
 import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.ContextDuplicatePostProcessor;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.enterprise.naming.impl.ClientNamingConfiguratorImpl;
@@ -32,13 +32,14 @@ import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.naming.ClientNamingConfigurator;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
+import org.glassfish.hk2.api.PopulatorPostProcessor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.bootstrap.HK2Populator;
-import org.glassfish.hk2.bootstrap.PopulatorPostProcessor;
-import org.glassfish.hk2.bootstrap.impl.ClasspathDescriptorFileFinder;
 import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
+import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
+import org.glassfish.hk2.utilities.DuplicatePostProcessor;
 import org.glassfish.internal.api.Globals;
 
 /**
@@ -59,7 +60,7 @@ import org.glassfish.internal.api.Globals;
  */
 public class ACCModulesManager /*implements ModuleStartup*/ {
 
-    private static ServiceLocator habitat = null;
+    private static ServiceLocator habitat;
 
     public synchronized static void initialize(final ClassLoader loader) throws URISyntaxException {
         /*
@@ -107,8 +108,8 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
             ModulesRegistry modulesRegistry = new StaticModulesRegistry(ACCModulesManager.class.getClassLoader());
             config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(modulesRegistry));
 
-            config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(
-                    new ProcessEnvironment(ProcessEnvironment.ProcessType.ACC)));
+            config.addActiveDescriptor(
+                BuilderHelper.createConstantDescriptor(new ProcessEnvironment(ProcessEnvironment.ProcessType.ACC)));
 
             /*
              * Create the ClientNamingConfigurator used by naming.
@@ -134,24 +135,25 @@ public class ACCModulesManager /*implements ModuleStartup*/ {
         return habitat.getService(c);
     }
 
+
     /**
      * Sets up the HK2 habitat.
      * <p>
      * Must be invoked at least once before an AppClientContainerBuilder
      * returns a new AppClientContainer to the caller.
+     *
      * @param classLoader
      * @param logger
      * @throws com.sun.enterprise.module.bootstrap.BootException
      * @throws java.net.URISyntaxException
      */
-    private static ServiceLocator prepareHabitat(
-            final ClassLoader loader) {
+    private static ServiceLocator prepareHabitat(final ClassLoader loader) {
         ServiceLocator serviceLocator = ServiceLocatorFactory.getInstance().create("default");
 
         habitat = serviceLocator;
 
-        ContextDuplicatePostProcessor duplicateProcessor = new ContextDuplicatePostProcessor();
-        List<PopulatorPostProcessor> postProcessors = new LinkedList<PopulatorPostProcessor>();
+        DuplicatePostProcessor duplicateProcessor = new DuplicatePostProcessor();
+        List<PopulatorPostProcessor> postProcessors = new LinkedList<>();
         postProcessors.add(duplicateProcessor);
 
         try {

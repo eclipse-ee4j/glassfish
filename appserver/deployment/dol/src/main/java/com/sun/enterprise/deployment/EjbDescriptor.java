@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,12 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.types.EjbReferenceContainer;
+import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
+import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
+import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
+import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +30,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.security.common.Role;
-
-import com.sun.enterprise.deployment.types.EjbReferenceContainer;
-import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
-import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
-import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
-import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
 
 public interface EjbDescriptor extends NamedDescriptor,
         WritableJndiNameEnvironment,
@@ -96,7 +97,7 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     RoleReference getRoleReferenceByName(String roleReferenceName);
 
-    Set getSecurityBusinessMethodDescriptors();
+    Set<MethodDescriptor> getSecurityBusinessMethodDescriptors();
 
     void addPermissionedMethod(MethodPermission mp, MethodDescriptor md);
 
@@ -124,7 +125,7 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     void addMethodLevelChain(List<EjbInterceptor> chain, Method m, boolean aroundInvoke);
 
-    Set getMethodPermissionsFor(MethodDescriptor methodDescriptor);
+    Set<MethodPermission> getMethodPermissionsFor(MethodDescriptor methodDescriptor);
 
     Set<Role> getPermissionedRoles();
 

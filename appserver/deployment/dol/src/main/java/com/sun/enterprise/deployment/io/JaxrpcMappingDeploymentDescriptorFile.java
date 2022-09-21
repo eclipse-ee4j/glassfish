@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,8 @@ package com.sun.enterprise.deployment.io;
 
 import com.sun.enterprise.deployment.JaxrpcMappingDescriptor;
 import com.sun.enterprise.deployment.node.JaxrpcMappingDescriptorNode;
-import com.sun.enterprise.deployment.node.RootXMLNode;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class is responsible for handling the
@@ -26,23 +28,20 @@ import com.sun.enterprise.deployment.node.RootXMLNode;
  *
  * @author Kenneth Saks
  */
-public class JaxrpcMappingDeploymentDescriptorFile extends
-    DeploymentDescriptorFile<JaxrpcMappingDescriptor> {
+public class JaxrpcMappingDeploymentDescriptorFile extends DeploymentDescriptorFile<JaxrpcMappingDescriptor> {
 
-    String mappingFilePath = null;
-
-    public JaxrpcMappingDeploymentDescriptorFile() {
-    }
-
+    private String mappingFilePath;
 
     /**
      * @return the location of the DeploymentDescriptor file for a
-     * particular type of J2EE Archive
+     *         particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
-        // writing not supported.  always copied from input jar.
+        // writing not supported. always copied from input jar.
         return mappingFilePath;
     }
+
 
     /**
      * Sets the mapping file location in the source archive
@@ -51,13 +50,14 @@ public class JaxrpcMappingDeploymentDescriptorFile extends
         this.mappingFilePath = path;
     }
 
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this J2EE module
-     *
+     *         descriptors associated with this J2EE module
      * @param descriptor ignored
      */
-    public RootXMLNode getRootXMLNode(JaxrpcMappingDescriptor descriptor) {
+    @Override
+    public JaxrpcMappingDescriptorNode getRootXMLNode(Descriptor descriptor) {
         return new JaxrpcMappingDescriptorNode();
     }
 }

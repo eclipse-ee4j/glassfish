@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -323,14 +324,14 @@ class ConfigFile extends AuthConfig {
             Object[] initArgs = { entry.getRequestPolicy(), entry.getResponsePolicy(), handler, entry.getOptions() };
 
             try {
-                Method initMethod = newModule.getClass().getMethod(AuthContext.INIT, AuthPolicy.class, AuthPolicy.class,
+                Method initMethod = newModule.getClass().getMethod(AuthContextImpl.INIT, AuthPolicy.class, AuthPolicy.class,
                         CallbackHandler.class, Map.class);
                 initMethod.invoke(newModule, initArgs);
                 // return the new module
                 return newModule;
             } catch (Exception ex) {
                 throw new SecurityException(
-                        "could not invoke " + AuthContext.INIT + " method in module: " + newModule.getClass().getName() + " " + ex, ex);
+                        "could not invoke " + AuthContextImpl.INIT + " method in module: " + newModule.getClass().getName() + " " + ex, ex);
             }
 
         } catch (Exception e) {
@@ -362,8 +363,9 @@ class ConfigFile extends AuthConfig {
 
         private AuthPolicy requestPolicy;
         private AuthPolicy responsePolicy;
-        Object module = null; // convenience location to store instance -
-        // package private for AuthContext
+        // convenience location to store instance -
+        // package private for AuthContextImpl
+        Object module;
 
         /**
          * Construct a ConfigFile entry.
@@ -432,41 +434,6 @@ class ConfigFile extends AuthConfig {
         }
     }
 
-    /**
-     * parsed Intercept entry
-     */
-    /*
-     * static class InterceptEntry {
-     *
-     * String defaultClientID; String defaultServerID; HashMap idMap;
-     *
-     * InterceptEntry(String defaultClientID, String defaultServerID, HashMap idMap) { this.defaultClientID =
-     * defaultClientID; this.defaultServerID = defaultServerID; this.idMap = idMap; } }
-     */
-
-    /**
-     * parsed ID entry
-     */
-    /*
-     * static class IDEntry {
-     *
-     * private String type; // provider type (client, server, client-server) private AuthPolicy requestPolicy; private
-     * AuthPolicy responsePolicy; private ArrayList modules;
-     *
-     * IDEntry(String type, AuthPolicy requestPolicy, AuthPolicy responsePolicy, ArrayList modules) {
-     *
-     * this.type = type; this.modules = modules; this.requestPolicy = requestPolicy; this.responsePolicy = responsePolicy; }
-     *
-     * // XXX delete this later IDEntry(String type, String requestPolicy, String responsePolicy, ArrayList modules) {
-     *
-     * this.type = type;
-     *
-     * if (requestPolicy != null) { this.requestPolicy = new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, true, //
-     * recipient-auth true); // beforeContent } if (responsePolicy != null) { this.responsePolicy = new
-     * AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, true, // recipient-auth false); // beforeContent }
-     *
-     * this.modules = modules; } }
-     */
 
     /**
      * Default implementation of ClientAuthContext.
@@ -474,10 +441,10 @@ class ConfigFile extends AuthConfig {
     private static class ConfigClient implements ClientAuthContext {
 
         // class that does all the work
-        private AuthContext context;
+        private AuthContextImpl context;
 
         ConfigClient(Entry[] entries) throws AuthException {
-            context = new AuthContext(entries, logger);
+            context = new AuthContextImpl(entries, logger);
         }
 
         @Override
@@ -485,21 +452,21 @@ class ConfigFile extends AuthConfig {
 
             // invoke modules
             Object[] args = { param, subject, sharedState };
-            context.invoke(AuthContext.SECURE_REQUEST, args);
+            context.invoke(AuthContextImpl.SECURE_REQUEST, args);
         }
 
         @Override
         public void validateResponse(AuthParam param, Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { param, subject, sharedState };
-            context.invoke(AuthContext.VALIDATE_RESPONSE, args);
+            context.invoke(AuthContextImpl.VALIDATE_RESPONSE, args);
         }
 
         @Override
         public void disposeSubject(Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { subject, sharedState };
-            context.invoke(AuthContext.DISPOSE_SUBJECT, args);
+            context.invoke(AuthContextImpl.DISPOSE_SUBJECT, args);
         }
     }
 
@@ -509,32 +476,32 @@ class ConfigFile extends AuthConfig {
     private static class ConfigServer implements ServerAuthContext {
 
         // class that does all the work
-        private AuthContext context;
+        private AuthContextImpl context;
 
         ConfigServer(Entry[] entries) throws AuthException {
 
-            context = new AuthContext(entries, logger);
+            context = new AuthContextImpl(entries, logger);
         }
 
         @Override
         public void validateRequest(AuthParam param, Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { param, subject, sharedState };
-            context.invoke(AuthContext.VALIDATE_REQUEST, args);
+            context.invoke(AuthContextImpl.VALIDATE_REQUEST, args);
         }
 
         @Override
         public void secureResponse(AuthParam param, Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { param, subject, sharedState };
-            context.invoke(AuthContext.SECURE_RESPONSE, args);
+            context.invoke(AuthContextImpl.SECURE_RESPONSE, args);
         }
 
         @Override
         public void disposeSubject(Subject subject, Map sharedState) throws AuthException {
             // invoke modules
             Object[] args = { subject, sharedState };
-            context.invoke(AuthContext.DISPOSE_SUBJECT, args);
+            context.invoke(AuthContextImpl.DISPOSE_SUBJECT, args);
         }
 
         @Override
@@ -545,7 +512,7 @@ class ConfigFile extends AuthConfig {
             Object[] rValues = null;
 
             try {
-                rValues = context.invoke(AuthContext.MANAGES_SESSIONS, args);
+                rValues = context.invoke(AuthContextImpl.MANAGES_SESSIONS, args);
             } catch (AuthException ae) {
                 // this new method may not be implemeneted
                 // by old modules

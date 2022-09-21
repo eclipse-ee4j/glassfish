@@ -17,7 +17,19 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -27,9 +39,9 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -39,6 +51,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,35 +74,24 @@ import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceConstants.TriState;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deploy.shared.FileArchive;
 import org.omnifaces.concurrent.deployment.ConcurrencyConstants;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
 /**
  * Util class for connector related classes
  */
 public class ConnectorsUtil {
 
-    private static Logger _logger= LogDomains.getLogger(ConnectorsUtil.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(ConnectorsUtil.class, LogDomains.RSR_LOGGER);
 
-    private static Collection<String> validSystemRARs = new HashSet<String>();
-    private static Collection<String> validNonJdbcSystemRARs = new HashSet<String>();
+    private static Collection<String> validSystemRARs = new HashSet<>();
+    private static Collection<String> validNonJdbcSystemRARs = new HashSet<>();
 
     static{
         initializeSystemRars();
@@ -151,14 +154,18 @@ public class ConnectorsUtil {
 
     private static ConfigBeansUtilities getConfigBeansUtilities() {
         ServiceLocator locator = Globals.getDefaultHabitat();
-        if (locator == null) return null;
+        if (locator == null) {
+            return null;
+        }
 
         return locator.getService(ConfigBeansUtilities.class);
     }
 
     private static String internalGetLocation(String moduleName) {
         ConfigBeansUtilities cbu = getConfigBeansUtilities();
-        if (cbu == null) return null;
+        if (cbu == null) {
+            return null;
+        }
 
         return cbu.getLocation(moduleName);
 
@@ -270,7 +277,7 @@ public class ConnectorsUtil {
     }
 
     public static Collection<Resource> getAllResources(Collection<String> poolNames, Resources allResources) {
-        List<Resource> connectorResources = new ArrayList<Resource>();
+        List<Resource> connectorResources = new ArrayList<>();
         for(Resource resource : allResources.getResources()){
             if(resource instanceof ConnectorResource){
                 ConnectorResource connectorResource = (ConnectorResource)resource;
@@ -288,7 +295,7 @@ public class ConnectorsUtil {
      * @return list of pol names
      */
     public static Collection<String> getAllPoolNames(Collection<ConnectorConnectionPool> connectionPools) {
-        Set<String> poolNames = new HashSet<String>();
+        Set<String> poolNames = new HashSet<>();
         for(ConnectorConnectionPool pool : connectionPools){
             poolNames.add(pool.getName());
         }
@@ -296,7 +303,7 @@ public class ConnectorsUtil {
     }
 
     public static Collection<WorkSecurityMap> getAllWorkSecurityMaps(Resources resources, String moduleName){
-        List<WorkSecurityMap> workSecurityMaps = new ArrayList<WorkSecurityMap>();
+        List<WorkSecurityMap> workSecurityMaps = new ArrayList<>();
         for(WorkSecurityMap resource : resources.getResources(WorkSecurityMap.class)){
             if(resource.getResourceAdapterName().equals(moduleName)){
                 workSecurityMaps.add(resource);
@@ -311,7 +318,7 @@ public class ConnectorsUtil {
      * @return collection of connectorConnectionPool
      */
     public static Collection<ConnectorConnectionPool> getAllPoolsOfModule(String moduleName, Resources allResources) {
-        List<ConnectorConnectionPool> connectorConnectionPools = new ArrayList<ConnectorConnectionPool>();
+        List<ConnectorConnectionPool> connectorConnectionPools = new ArrayList<>();
         for(Resource resource : allResources.getResources()){
             if(resource instanceof ConnectorConnectionPool){
                 ConnectorConnectionPool connectorConnectionPool = (ConnectorConnectionPool)resource;
@@ -330,26 +337,26 @@ public class ConnectorsUtil {
      */
     public static Collection<Resource> getAllSystemRAResourcesAndPools(Resources allResources) {
         //Make sure that resources are added first and then pools.
-        List<Resource> resources = new ArrayList<Resource>();
-        List<Resource> pools = new ArrayList<Resource>();
-        for(Resource resource : allResources.getResources()){
-             if( resource instanceof ConnectorConnectionPool){
-                String raName = ((ConnectorConnectionPool)resource).getResourceAdapterName();
-                if( ConnectorsUtil.belongsToSystemRA(raName) ){
+        List<Resource> resources = new ArrayList<>();
+        List<Resource> pools = new ArrayList<>();
+        for (Resource resource : allResources.getResources()) {
+            if (resource instanceof ConnectorConnectionPool) {
+                String raName = ((ConnectorConnectionPool) resource).getResourceAdapterName();
+                if (ConnectorsUtil.belongsToSystemRA(raName)) {
                     pools.add(resource);
                 }
-            } else if( resource instanceof ConnectorResource){
-                String poolName = ((ConnectorResource)resource).getPoolName();
+            } else if (resource instanceof ConnectorResource) {
+                String poolName = ((ConnectorResource) resource).getPoolName();
                 String raName = getResourceAdapterNameOfPool(poolName, allResources);
-                if( ConnectorsUtil.belongsToSystemRA(raName) ){
+                if (ConnectorsUtil.belongsToSystemRA(raName)) {
                     resources.add(resource);
                 }
-            } else if (resource instanceof AdminObjectResource){ // jms-ra
-                String raName = ((AdminObjectResource)resource).getResAdapter();
-                if(ConnectorsUtil.belongsToSystemRA(raName)){
+            } else if (resource instanceof AdminObjectResource) { // jms-ra
+                String raName = ((AdminObjectResource) resource).getResAdapter();
+                if (ConnectorsUtil.belongsToSystemRA(raName)) {
                     resources.add(resource);
                 }
-            } //no need to list work-security-map as they are not deployable artifacts
+            } // no need to list work-security-map as they are not deployable artifacts
         }
         resources.addAll(pools);
         return resources;
@@ -392,13 +399,13 @@ public class ConnectorsUtil {
      * @param allResources resources
      * @return list of work-security-maps
      */
-    public static List<WorkSecurityMap> getWorkSecurityMaps(String raName, Resources allResources){
+    public static List<WorkSecurityMap> getWorkSecurityMaps(String raName, Resources allResources) {
         List<Resource> resourcesList = allResources.getResources();
-        List<WorkSecurityMap> workSecurityMaps = new ArrayList<WorkSecurityMap>();
-        for(Resource resource : resourcesList){
-            if(resource instanceof WorkSecurityMap){
-                WorkSecurityMap wsm = (WorkSecurityMap)resource;
-                if(wsm.getResourceAdapterName().equals(raName)){
+        List<WorkSecurityMap> workSecurityMaps = new ArrayList<>();
+        for (Resource resource : resourcesList) {
+            if (resource instanceof WorkSecurityMap) {
+                WorkSecurityMap wsm = (WorkSecurityMap) resource;
+                if (wsm.getResourceAdapterName().equals(raName)) {
                     workSecurityMaps.add(wsm);
                 }
             }
@@ -406,57 +413,60 @@ public class ConnectorsUtil {
         return workSecurityMaps;
     }
 
-    public static boolean isDynamicReconfigurationEnabled(ResourcePool pool){
+
+    public static boolean isDynamicReconfigurationEnabled(ResourcePool pool) {
         boolean enabled = false;
-        if(pool instanceof PropertyBag){
-            PropertyBag properties = (PropertyBag)pool;
+        if (pool instanceof PropertyBag) {
+            PropertyBag properties = (PropertyBag) pool;
             Property property = properties.getProperty(ConnectorConstants.DYNAMIC_RECONFIGURATION_FLAG);
-            if(property != null){
-                try{
-                    if(Long.parseLong(property.getValue()) > 0){
+            if (property != null) {
+                try {
+                    if (Long.parseLong(property.getValue()) > 0) {
                         enabled = true;
                     }
-                }catch(NumberFormatException nfe){
-                    _logger.log(Level.WARNING, "invalid.dynamic-reconfig.value", property.getValue());
+                } catch (NumberFormatException nfe) {
+                    LOG.log(Level.WARNING, "invalid.dynamic-reconfig.value", property.getValue());
                 }
             }
         }
         return enabled;
     }
 
+
     /**
-     * Prepares the name/value pairs for ActivationSpec. <p>
-     * Rule: <p>
+     * Prepares the name/value pairs for ActivationSpec.
+     * <p>
+     * Rule:
+     * <p>
      * 1. The name/value pairs are the union of activation-config on
      * standard DD (message-driven) and runtime DD (mdb-resource-adapter)
      * 2. If there are duplicate property settings, the value in runtime
      * activation-config will overwrite the one in the standard
      * activation-config.
      */
-    public static Set getMergedActivationConfigProperties(EjbMessageBeanDescriptor msgDesc) {
-
-        Set mergedProps = new HashSet();
-        Set runtimePropNames = new HashSet();
-
-        Set runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
+    public static Set<EnvironmentProperty> getMergedActivationConfigProperties(EjbMessageBeanDescriptor msgDesc) {
+        Set<EnvironmentProperty> mergedProps = new HashSet<>();
+        Set<String> runtimePropNames = new HashSet<>();
+        Set<EnvironmentProperty> runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
         if (runtimeProps != null) {
-            Iterator iter = runtimeProps.iterator();
+            Iterator<EnvironmentProperty> iter = runtimeProps.iterator();
             while (iter.hasNext()) {
-                EnvironmentProperty entry = (EnvironmentProperty) iter.next();
+                EnvironmentProperty entry = iter.next();
                 mergedProps.add(entry);
                 String propName = entry.getName();
                 runtimePropNames.add(propName);
             }
         }
 
-        Set standardProps = msgDesc.getActivationConfigProperties();
+        Set<EnvironmentProperty> standardProps = msgDesc.getActivationConfigProperties();
         if (standardProps != null) {
-            Iterator iter = standardProps.iterator();
+            Iterator<EnvironmentProperty> iter = standardProps.iterator();
             while (iter.hasNext()) {
-                EnvironmentProperty entry = (EnvironmentProperty) iter.next();
+                EnvironmentProperty entry = iter.next();
                 String propName = entry.getName();
-                if (runtimePropNames.contains(propName))
+                if (runtimePropNames.contains(propName)) {
                     continue;
+                }
                 mergedProps.add(entry);
             }
         }
@@ -464,92 +474,77 @@ public class ConnectorsUtil {
         return mergedProps;
     }
 
+
     public static boolean isJMSRA(String moduleName) {
-        if(ConnectorConstants.DEFAULT_JMS_ADAPTER.equals(moduleName)){
+        if (ConnectorConstants.DEFAULT_JMS_ADAPTER.equals(moduleName)) {
             return true;
         }
         return false;
     }
 
+
     public static boolean parseBoolean(String enabled) {
         return Boolean.parseBoolean(enabled);
     }
 
+
     /**
      * Gets the shutdown-timeout attribute from domain.xml
      * via the connector server config bean.
+     *
      * @param connectorService connector-service configuration
      * @return long shutdown timeout (in mill-seconds)
      */
-    public static long getShutdownTimeout(ConnectorService connectorService)  {
+    public static long getShutdownTimeout(ConnectorService connectorService) {
         int shutdownTimeout;
 
         try {
             if (connectorService == null) {
-                //Connector service element is not specified in
-                //domain.xml and hence going with the default time-out
-                shutdownTimeout =
-                        ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Shutdown timeout set to "+  shutdownTimeout + " through default");
+                // Connector service element is not specified in
+                // domain.xml and hence going with the default time-out
+                shutdownTimeout = ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Shutdown timeout set to " + shutdownTimeout + " through default");
                 }
             } else {
                 shutdownTimeout = Integer.parseInt(connectorService.getShutdownTimeoutInSeconds());
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Shutdown timeout set to " + shutdownTimeout + " from domain.xml");
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "Shutdown timeout set to " + shutdownTimeout + " from domain.xml");
                 }
             }
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "error_reading_connectorservice_elt", e);
+            LOG.log(Level.WARNING, "error_reading_connectorservice_elt", e);
             //Going ahead with the default timeout value
             shutdownTimeout = ConnectorConstants.DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT;
         }
         return shutdownTimeout * 1000L;
     }
 
+
     /**
      * Provides the list of built in custom resources by
      * resource-type and factory-class-name pair.
+     *
      * @return map of resource-type & factory-class-name
      */
-    public static Map<String,String> getBuiltInCustomResources(){
-        Map<String, String> resourcesMap = new HashMap<String, String>();
+    public static Map<String, String> getBuiltInCustomResources() {
+        Map<String, String> resourcesMap = new HashMap<>();
 
         // user will have to provide the JavaBean Implementation class and hence we cannot list this factory
         // resourcesMap.put("JavaBean", ConnectorConstants.JAVA_BEAN_FACTORY_CLASS );
 
-        resourcesMap.put("java.lang.Integer", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Long", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Double", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Float", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Character", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Short", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Byte", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.Boolean", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-        resourcesMap.put("java.lang.String", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS );
-
-        resourcesMap.put("java.net.URL", ConnectorConstants.URL_OBJECTS_FACTORY );
-
-        resourcesMap.put("java.util.Properties", ConnectorConstants.PROPERTIES_FACTORY );
-
+        resourcesMap.put("java.lang.Integer", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Long", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Double", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Float", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Character", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Short", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Byte", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.Boolean", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.lang.String", ConnectorConstants.PRIMITIVES_AND_STRING_FACTORY_CLASS);
+        resourcesMap.put("java.net.URL", ConnectorConstants.URL_OBJECTS_FACTORY);
+        resourcesMap.put("java.util.Properties", ConnectorConstants.PROPERTIES_FACTORY);
         return resourcesMap;
-    }
-
-    public static String getTransactionIsolationInt(int tranIsolation) {
-
-        if (tranIsolation == Connection.TRANSACTION_READ_UNCOMMITTED) {
-            return "read-uncommitted";
-        } else if (tranIsolation == Connection.TRANSACTION_READ_COMMITTED) {
-            return "read-committed";
-        } else if(tranIsolation == Connection.TRANSACTION_REPEATABLE_READ){
-            return "repeatable-read";
-        } else if(tranIsolation == Connection.TRANSACTION_SERIALIZABLE){
-            return "serializable";
-        } else {
-            throw new RuntimeException("Invalid transaction isolation; the transaction "
-                    + "isolation level can be empty or any of the following: "
-                    + "read-uncommitted, read-committed, repeatable-read, serializable");
-        }
     }
 
 
@@ -564,43 +559,43 @@ public class ConnectorsUtil {
         String prefixPart1 = null;
         String prefixPart2 = null;
 
-        if(resType!=null) {
+        if (resType != null) {
             switch (resType) {
                 case DSD :
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
-                break;
+                    prefixPart2 = ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
+                    break;
                 case MSD :
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.MAILSESSION_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.MAILSESSION_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case CFD :
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case DSDPOOL:
                     prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case CFDPOOL:
                     prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case JMSCFDD:
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case JMSCFDDPOOL:
                     prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case JMSDD:
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case AODD:
                     prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ConnectorConstants.ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX;
                     break;
                 case MEDD:
                 case MSEDD:
@@ -616,68 +611,76 @@ public class ConnectorsUtil {
             }
         }
 
-        if(compId == null || compId.equals("")){
-            prefix =  prefixPart1 + prefixPart2;
-        }else{
-            prefix = prefixPart1 + prefixPart2 + compId +"/";
+        if (compId == null || compId.isEmpty()) {
+            prefix = prefixPart1 + prefixPart2;
+        } else {
+            prefix = prefixPart1 + prefixPart2 + compId + "/";
         }
         return getReservePrefixedJNDIName(prefix, resourceName);
     }
 
-    public static Map<String,String> convertPropertiesToMap(Properties properties){
-        if(properties == null){
+
+    public static Map<String, String> convertPropertiesToMap(Properties properties) {
+        if (properties == null) {
             properties = new Properties();
         }
         return new TreeMap<String, String>((Map) properties);
     }
 
+
     private static String getReservePrefixedJNDIName(String prefix, String resourceName) {
         return prefix + resourceName;
     }
 
+
     public static String getEmbeddedRarModuleName(String applicationName, String moduleName) {
         String embeddedRarName = moduleName.substring(0,
-                moduleName.indexOf(ConnectorConstants.EXPLODED_EMBEDDED_RAR_EXTENSION));
+            moduleName.indexOf(ConnectorConstants.EXPLODED_EMBEDDED_RAR_EXTENSION));
 
-        moduleName = applicationName + ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER + embeddedRarName;
+        moduleName = applicationName + ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER + embeddedRarName;
         return moduleName;
     }
 
+
     public static String getApplicationNameOfEmbeddedRar(String embeddedRarName) {
-        int index = embeddedRarName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER);
+        int index = embeddedRarName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
         String applicationName = embeddedRarName;
 
-        if(index != -1){
-            applicationName = embeddedRarName.substring(0,index);
+        if (index != -1) {
+            applicationName = embeddedRarName.substring(0, index);
         }
         return applicationName;
     }
 
+
     public static String getRarNameFromApplication(String appName) {
-        int index = appName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER);
+        int index = appName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
         String rarName = appName;
 
-        if(index != -1 && appName.length() > index+1){
-            rarName = appName.substring(index+1);
+        if (index != -1 && appName.length() > index + 1) {
+            rarName = appName.substring(index + 1);
         }
         return rarName;
     }
 
+
     public static boolean isEmbedded(DeploymentContext context) {
         ReadableArchive archive = context.getSource();
-        return (archive != null && archive.getParentArchive() != null);
+        return archive != null && archive.getParentArchive() != null;
     }
+
 
     public static String getApplicationName(DeploymentContext context) {
         String applicationName = null;
         ReadableArchive parentArchive = context.getSource().getParentArchive();
-        if (parentArchive != null) {
-            applicationName = parentArchive.getName();
-        }else{
+        if (parentArchive == null) {
             applicationName = context.getSource().getName();
+        } else {
+            applicationName = parentArchive.getName();
         }
         return applicationName;
     }
+
 
     public static List<URI> getInstalledLibrariesFromManifest(String moduleDirectory, ServerEnvironment env)
             throws ConnectorRuntimeException {
@@ -688,21 +691,21 @@ public class ConnectorsUtil {
         // system-rars can specify only EXTENSTION_LIST in MANIFEST.MF and do not have a way to use --libraries option.
         // So, satisfying system-rars alone as of now.
 
-        List<URI> libURIs = new ArrayList<URI>();
-        if(moduleDirectory != null){
+        List<URI> libURIs = new ArrayList<>();
+        if (moduleDirectory != null) {
             try {
                 File module = new File(moduleDirectory);
                 if (module.exists()) {
 
                     FileArchive fileArchive = new FileArchive();
-                    fileArchive.open(module.toURI());  // directory where rar is exploded
+                    fileArchive.open(module.toURI()); // directory where rar is exploded
                     Set<String> extensionList = InstalledLibrariesResolver.getInstalledLibraries(fileArchive);
 
                     URL[] extensionListLibraries = ASClassLoaderUtil.getLibrariesAsURLs(extensionList, env);
                     for (URL url : extensionListLibraries) {
                         libURIs.add(url.toURI());
-                        if (_logger.isLoggable(Level.FINEST)) {
-                            _logger.log(Level.FINEST, "adding URL [ " + url + " ] to installedLibraries");
+                        if (LOG.isLoggable(Level.FINEST)) {
+                            LOG.log(Level.FINEST, "adding URL [ " + url + " ] to installedLibraries");
                         }
                     }
                 }
@@ -743,9 +746,7 @@ public class ConnectorsUtil {
                 validSystemRARs.add(rarName);
             }
         }
-        if (_logger.isLoggable(Level.FINEST)) {
-            _logger.log(Level.FINEST, "valid system RARs for this runtime are : " + validSystemRARs);
-        }
+        LOG.log(Level.CONFIG, "Valid system RARs for this runtime are : {0}", validSystemRARs);
     }
 
     public static Collection<String> getNonJdbcSystemRars() {
@@ -761,89 +762,66 @@ public class ConnectorsUtil {
         }
     }
 
-    public static boolean systemRarExists(String location){
+
+    public static boolean systemRarExists(String location) {
         boolean result = false;
-        try{
+        try {
             File file = new File(location);
             result = file.exists();
-        }catch(Exception e){
-            if(_logger.isLoggable(Level.FINEST)){
-                _logger.log(Level.FINEST, "Exception occurred while checking System RAR location " +
-                        ": [" + location + "]", e);
-            }
+        } catch (Exception e) {
+            LOG.log(Level.FINEST, "Exception occurred while checking System RAR location: [" + location + "]", e);
         }
         return result;
     }
+
 
     /**
      * GlassFish (Embedded) Uber jar will have .rar bundled in it.
      * This method will extract the .rar from the uber jar into specified directory.
      * As of now, this method is only used in EMBEDDED mode
+     *
      * @param fileName rar-directory-name
      * @param rarName resource-adapter name
      * @param destDir destination directory
      * @return status indicating whether .rar is exploded successfully or not
      */
     public static boolean extractRar(String fileName, String rarName, String destDir) {
-        InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(rarName);
-        if (is != null) {
-            FileArchive fa = new FileArchive();
-            OutputStream os = null;
-            try {
-                os = fa.putNextEntry(fileName);
-
+        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(rarName)) {
+            if (is == null) {
+                LOG.log(Level.INFO, "could not find RAR [ " + rarName + " ] in the archive, skipping .rar extraction");
+                return false;
+            }
+            try (FileArchive fa = new FileArchive(); OutputStream os = fa.putNextEntry(fileName)) {
                 FileUtils.copy(is, os, 0);
+                fa.closeEntry();
             } catch (IOException e) {
-                Object args[] = new Object[]{rarName, e};
-                _logger.log(Level.WARNING, "error.extracting.archive", args);
-                return false;
-            } finally {
-                try {
-                    if (os != null) {
-                        fa.closeEntry();
-                    }
-
-                } catch (IOException ioe) {
-                    if (_logger.isLoggable(Level.FINEST)) {
-                        _logger.log(Level.FINEST, "Exception while closing archive [ " + fileName + " ]", ioe);
-                    }
-                }
-
-                try {
-                    is.close();
-                } catch (IOException ioe) {
-                    if (_logger.isLoggable(Level.FINEST)) {
-                        _logger.log(Level.FINEST, "Exception while closing archive [ " + rarName + " ]", ioe);
-                    }
-                }
-            }
-
-            File file = new File(fileName);
-            if (file.exists()) {
-                try {
-                    extractJar(file, destDir);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return true;
-            } else {
-                _logger.log(Level.INFO, "could not find RAR [ " + rarName + " ] location [ " + fileName + " ] " +
-                        "after extraction");
+                LOG.log(Level.SEVERE, "error.extracting.archive", new Object[] {rarName, e});
                 return false;
             }
-        } else {
-            _logger.log(Level.INFO, "could not find RAR [ " + rarName + " ] in the archive, skipping .rar extraction");
-            return false;
+        } catch (IOException e) {
+            LOG.log(Level.SEVERE, "Exception while closing archive [ " + rarName + " ]", e);
         }
+
+        File file = new File(fileName);
+        if (file.exists()) {
+            try {
+                extractJar(file, destDir);
+            } catch (Exception e) {
+                LOG.log(Level.SEVERE, "Exception while extracting archive [ " + file + " ]", e);
+            }
+            return true;
+        }
+        LOG.log(Level.INFO,
+            "could not find RAR [ " + rarName + " ] location [ " + fileName + " ] " + "after extraction");
+        return false;
     }
 
     private static void extractJar(File jarFile, String destDir) throws IOException {
-        java.util.jar.JarFile jar = new java.util.jar.JarFile(jarFile);
-        java.util.Enumeration enum1 = jar.entries();
-        try{
+        try (JarFile jar = new JarFile(jarFile)) {
+            Enumeration<JarEntry> enum1 = jar.entries();
             while (enum1.hasMoreElements()) {
-                java.util.jar.JarEntry file = (java.util.jar.JarEntry) enum1.nextElement();
-                java.io.File f = new java.io.File(destDir + java.io.File.separator + file.getName());
+                JarEntry file = enum1.nextElement();
+                File f = new File(destDir, file.getName());
                 if (file.isDirectory() && f.mkdir()) {
                     continue;
                 }
@@ -861,9 +839,7 @@ public class ConnectorsUtil {
                             fos.close();
                         }
                     } catch (Exception e) {
-                        if (_logger.isLoggable(Level.FINEST)) {
-                            _logger.log(Level.FINEST, "exception while closing archive [ " + f.getName() + " ]", e);
-                        }
+                        LOG.log(Level.SEVERE, "exception while closing archive [ " + f.getName() + " ]", e);
                     }
 
                     try {
@@ -871,20 +847,12 @@ public class ConnectorsUtil {
                             is.close();
                         }
                     } catch (Exception e) {
-                        if (_logger.isLoggable(Level.FINEST)) {
-                            _logger.log(Level.FINEST, "exception while closing archive [ " + file.getName() + " ]", e);
-                        }
+                        LOG.log(Level.SEVERE, "exception while closing archive [ " + file.getName() + " ]", e);
                     }
                 }
             }
-        }finally{
-            try {
-                jar.close();
-            } catch (Exception e) {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "exception while closing archive [ " + jar.getName() + " ]", e);
-                }
-            }
+        } catch (Exception e) {
+            LOG.log(Level.SEVERE, "exception while closing archive [ " + jarFile + " ]", e);
         }
     }
     public static PoolInfo getPoolInfo(ResourcePool resource){
@@ -892,7 +860,7 @@ public class ConnectorsUtil {
     }
 
     public static ResourceInfo getResourceInfo(BindableResource resource){
-        return org.glassfish.resourcebase.resources.util.ResourceUtil.getResourceInfo(resource);
+        return ResourceUtil.getResourceInfo(resource);
     }
 
 
@@ -910,7 +878,7 @@ public class ConnectorsUtil {
     }
 
     public static boolean isApplicationScopedResource(GenericResourceInfo resourceInfo){
-        return org.glassfish.resourcebase.resources.util.ResourceUtil.isApplicationScopedResource(resourceInfo);
+        return ResourceUtil.isApplicationScopedResource(resourceInfo);
     }
 
     public static boolean isModuleScopedResource(GenericResourceInfo resourceInfo){
@@ -925,39 +893,42 @@ public class ConnectorsUtil {
         String resourcesPrefix = "resources/";
         String suffix = poolInfo.getName();
 
-        if(escapeSlashes){
+        if (escapeSlashes) {
             suffix = escapeResourceNameForMonitoring(suffix);
         }
 
         String subTreeRoot = resourcesPrefix + suffix;
-        if(ConnectorsUtil.isModuleScopedResource(poolInfo)){
-            subTreeRoot = "applications/" + poolInfo.getApplicationName()+ "/" + poolInfo.getModuleName() + "/" +
-                    resourcesPrefix + "/" + suffix;
-        }else if(ConnectorsUtil.isApplicationScopedResource(poolInfo)){
-            subTreeRoot = "applications/" + poolInfo.getApplicationName()  + "/" + resourcesPrefix + "/" + suffix;
+        if (ConnectorsUtil.isModuleScopedResource(poolInfo)) {
+            subTreeRoot = "applications/" + poolInfo.getApplicationName() + "/" + poolInfo.getModuleName() + "/"
+                + resourcesPrefix + "/" + suffix;
+        } else if (ConnectorsUtil.isApplicationScopedResource(poolInfo)) {
+            subTreeRoot = "applications/" + poolInfo.getApplicationName() + "/" + resourcesPrefix + "/" + suffix;
         }
         return subTreeRoot;
     }
 
-    public static String getActualModuleName(String moduleName){
+
+    public static String getActualModuleName(String moduleName) {
         return ResourceUtil.getActualModuleName(moduleName);
     }
+
 
     public static String getModuleName(EjbDescriptor descriptor) {
         String appName = descriptor.getApplication().getAppName();
         String moduleName = descriptor.getEjbBundleDescriptor().getModuleID();
         String actualModuleName = moduleName;
-        if(moduleName != null){
-            String prefix = appName+"#";
-            if(moduleName.startsWith(prefix)){
+        if (moduleName != null) {
+            String prefix = appName + "#";
+            if (moduleName.startsWith(prefix)) {
                 actualModuleName = moduleName.substring(prefix.length());
             }
         }
         return actualModuleName;
     }
 
+
     public static Collection<BindableResource> getResourcesOfPool(Resources resources, String connectionPoolName) {
-        Set<BindableResource> resourcesReferringPool = new HashSet<BindableResource>();
+        Set<BindableResource> resourcesReferringPool = new HashSet<>();
         ResourcePool pool = (ResourcePool) getResourceByName(resources, ResourcePool.class, connectionPoolName);
         if (pool != null) {
             Collection<BindableResource> bindableResources = resources.getResources(BindableResource.class);
@@ -976,51 +947,47 @@ public class ConnectorsUtil {
         return resources.getResourceByName(type, name);
     }
 
-    //TODO what if the module being deployed is a RAR and has gf-resources.xml ?
-    //TODO can the RAR define its own resources ? eg: connector-resource, pool, a-o-r ?
-    public static ResourceConstants.TriState
-    isEmbeddedRarResource(Resource configBeanResource,
-                                          Collection<Resource> configBeanResources) {
-        ConnectorConstants.TriState result = ConnectorConstants.TriState.FALSE;
-        if(configBeanResource instanceof ConnectorResource){
-            String poolName = ((ConnectorResource)configBeanResource).getPoolName();
+
+    // TODO what if the module being deployed is a RAR and has gf-resources.xml ?
+    // TODO can the RAR define its own resources ? eg: connector-resource, pool, a-o-r ?
+    public static TriState isEmbeddedRarResource(Resource configBeanResource, Collection<Resource> configBeanResources) {
+        TriState result = TriState.FALSE;
+        if (configBeanResource instanceof ConnectorResource) {
+            String poolName = ((ConnectorResource) configBeanResource).getPoolName();
             ConnectorConnectionPool pool = getPool(configBeanResources, poolName);
-            if(pool != null){
-                if(pool.getResourceAdapterName().contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER)){
-                    result = ConnectorConstants.TriState.TRUE;
+            if (pool != null) {
+                if (pool.getResourceAdapterName().contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)) {
+                    result = TriState.TRUE;
                 }
-            }else{
-                result = ConnectorConstants.TriState.UNKNOWN;
+            } else {
+                result = TriState.UNKNOWN;
             }
-        }else if(configBeanResource instanceof AdminObjectResource){
-            AdminObjectResource aor = (AdminObjectResource)configBeanResource;
-            if(aor.getResAdapter().contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER)){
-                result = ConnectorConstants.TriState.TRUE;
+        } else if (configBeanResource instanceof AdminObjectResource) {
+            AdminObjectResource aor = (AdminObjectResource) configBeanResource;
+            if (aor.getResAdapter().contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)) {
+                result = TriState.TRUE;
             }
-        }else if (configBeanResource instanceof ConnectorConnectionPool){
-            ConnectorConnectionPool ccp = (ConnectorConnectionPool)configBeanResource;
-            if(ccp.getResourceAdapterName().contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER)){
-                result = ConnectorConstants.TriState.TRUE;
+        } else if (configBeanResource instanceof ConnectorConnectionPool) {
+            ConnectorConnectionPool ccp = (ConnectorConnectionPool) configBeanResource;
+            if (ccp.getResourceAdapterName().contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)) {
+                result = TriState.TRUE;
             }
-        }else if (configBeanResource instanceof WorkSecurityMap){
-            WorkSecurityMap wsm = (WorkSecurityMap)configBeanResource;
-            if(wsm.getResourceAdapterName().contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER)){
-                result = ConnectorConstants.TriState.TRUE;
+        } else if (configBeanResource instanceof WorkSecurityMap) {
+            WorkSecurityMap wsm = (WorkSecurityMap) configBeanResource;
+            if (wsm.getResourceAdapterName().contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)) {
+                result = TriState.TRUE;
             }
-        }/*else if (configBeanResource instanceof ResourceAdapterConfig){
-            ResourceAdapterConfig rac = (ResourceAdapterConfig)configBeanResource;
-            result = rac.getResourceAdapterName().contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER);
-        }*/
+        }
         return result;
     }
 
-    public static ConnectorConnectionPool getPool(
-            Collection<Resource> configBeanResources, String poolName) {
+
+    public static ConnectorConnectionPool getPool(Collection<Resource> configBeanResources, String poolName) {
         ConnectorConnectionPool result = null;
-        for(Resource res : configBeanResources){
-            if(res instanceof ConnectorConnectionPool){
-                if(((ConnectorConnectionPool)res).getName().equals(poolName)){
-                    result = (ConnectorConnectionPool)res;
+        for (Resource res : configBeanResources) {
+            if (res instanceof ConnectorConnectionPool) {
+                if (((ConnectorConnectionPool) res).getName().equals(poolName)) {
+                    result = (ConnectorConnectionPool) res;
                     break;
                 }
             }
@@ -1028,41 +995,40 @@ public class ConnectorsUtil {
         return result;
     }
 
-    public static boolean isRARResource(Resource resource){
-        return resource instanceof ConnectorResource ||
-                resource instanceof AdminObjectResource ||
-                resource instanceof ConnectorConnectionPool ||
-                resource instanceof ResourceAdapterConfig ||
-                resource instanceof WorkSecurityMap;
+
+    public static boolean isRARResource(Resource resource) {
+        return resource instanceof ConnectorResource || resource instanceof AdminObjectResource
+            || resource instanceof ConnectorConnectionPool || resource instanceof ResourceAdapterConfig
+            || resource instanceof WorkSecurityMap;
     }
 
-    public static String getRarNameOfResource(Resource resource, Resources resources){
-        String rarName = null;
-        if(isRARResource(resource)){
-            if(resource instanceof ConnectorResource){
-                String poolName = ((ConnectorResource)resource).getPoolName();
-                for(Resource res : resources.getResources()){
-                    if(res instanceof ConnectorConnectionPool){
-                        ConnectorConnectionPool ccp = ((ConnectorConnectionPool)res);
-                        if(ccp.getName().equals(poolName)){
+
+    public static String getRarNameOfResource(Resource resource, Resources resources) {
+        if (isRARResource(resource)) {
+            if (resource instanceof ConnectorResource) {
+                String poolName = ((ConnectorResource) resource).getPoolName();
+                for (Resource res : resources.getResources()) {
+                    if (res instanceof ConnectorConnectionPool) {
+                        ConnectorConnectionPool ccp = ((ConnectorConnectionPool) res);
+                        if (ccp.getName().equals(poolName)) {
                             return ccp.getResourceAdapterName();
                         }
                     }
                 }
-            }else if (resource instanceof ConnectorConnectionPool){
-                ConnectorConnectionPool ccp = ((ConnectorConnectionPool)resource);
+            } else if (resource instanceof ConnectorConnectionPool) {
+                ConnectorConnectionPool ccp = ((ConnectorConnectionPool) resource);
                 return ccp.getResourceAdapterName();
-            }else if (resource instanceof AdminObjectResource){
-                AdminObjectResource aor = (AdminObjectResource)resource;
+            } else if (resource instanceof AdminObjectResource) {
+                AdminObjectResource aor = (AdminObjectResource) resource;
                 return aor.getResAdapter();
-            }else if (resource instanceof ResourceAdapterConfig){
-                ResourceAdapterConfig rac = (ResourceAdapterConfig)resource;
+            } else if (resource instanceof ResourceAdapterConfig) {
+                ResourceAdapterConfig rac = (ResourceAdapterConfig) resource;
                 return rac.getResourceAdapterName();
-            }else if (resource instanceof WorkSecurityMap){
-                WorkSecurityMap wsm = (WorkSecurityMap)resource;
+            } else if (resource instanceof WorkSecurityMap) {
+                WorkSecurityMap wsm = (WorkSecurityMap) resource;
                 return wsm.getResourceAdapterName();
             }
         }
-        return rarName;
+        return null;
     }
 }

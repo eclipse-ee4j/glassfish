@@ -21,10 +21,10 @@ import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
 import com.sun.enterprise.deployment.xml.PersistenceTagNames;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -36,31 +36,23 @@ import org.jvnet.hk2.annotations.Service;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 @Service
-public class PersistenceNode extends AbstractBundleNode {
+public class PersistenceNode extends AbstractBundleNode<PersistenceUnitsDescriptor> {
 
-    public final static String SCHEMA_NS =
-            "http://java.sun.com/xml/ns/persistence"; // NOI18N
+    public final static String SCHEMA_NS = "http://java.sun.com/xml/ns/persistence"; // NOI18N
 
     public final static String SCHEMA_ID_1_0 = "persistence_1_0.xsd"; // NOI18N
 
     public final static String SCHEMA_ID = "persistence_2_0.xsd"; // NOI18N
 
-    private final static List<String> systemIDs = initSystemIDs();
+    private final static List<String> systemIDs = List.of(SCHEMA_ID, SCHEMA_ID_1_0);
 
     // The XML tag associated with this Node
-    public final static XMLElement ROOT_ELEMENT = new XMLElement(
-            PersistenceTagNames.PERSISTENCE);
+    public final static XMLElement ROOT_ELEMENT = new XMLElement(PersistenceTagNames.PERSISTENCE);
 
     private PersistenceUnitsDescriptor persistenceUnitsDescriptor;
 
     private static final String SPEC_VERSION = "2.0";
 
-    private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<>();
-        systemIDs.add(SCHEMA_ID);
-        systemIDs.add(SCHEMA_ID_1_0);
-        return Collections.unmodifiableList(systemIDs);
-    }
 
     /**
      * This is the default constructor which is also called from other
@@ -75,11 +67,10 @@ public class PersistenceNode extends AbstractBundleNode {
         if (handlers != null) {
             handlers.clear();
         }
-        registerElementHandler(
-                new XMLElement(PersistenceTagNames.PERSISTENCE_UNIT),
-                PersistenceUnitNode.class);
+        registerElementHandler(new XMLElement(PersistenceTagNames.PERSISTENCE_UNIT), PersistenceUnitNode.class);
         SaxParserHandler.registerBundleNode(this, PersistenceTagNames.PERSISTENCE);
     }
+
 
     public PersistenceNode(PersistenceUnitsDescriptor persistenceUnitsDescriptor) {
         this();
@@ -98,25 +89,32 @@ public class PersistenceNode extends AbstractBundleNode {
         getDescriptor().addPersistenceUnitDescriptor(pud);
     }
 
+
     @Override
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
         return ROOT_ELEMENT.getQName();
     }
 
+
     @Override
-    public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, final Map<String, List<Class>> versionUpgrades) {
-        return Collections.EMPTY_MAP;
+    public Map<String, Class<?>> registerRuntimeBundle(
+        Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        return Collections.emptyMap();
     }
+
 
     @Override
     public String getDocType() {
         return null;
     }
 
+
     @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
+
 
     public String getNameSpace() {
         return SCHEMA_NS;

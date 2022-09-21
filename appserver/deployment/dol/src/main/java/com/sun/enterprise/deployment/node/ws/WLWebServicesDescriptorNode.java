@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,19 +19,22 @@ package com.sun.enterprise.deployment.node.ws;
 
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.AbstractBundleNode;
+import com.sun.enterprise.deployment.node.SaxParserHandler;
+import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.node.XMLNode;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import java.util.Map;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.jvnet.hk2.annotations.Service;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.jvnet.hk2.annotations.Service;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Node representing weblogic-webservices root element in weblogic-webservices.xml
@@ -38,20 +42,7 @@ import java.util.List;
  * @author Rama Pulavarthi
  */
 @Service
-public class WLWebServicesDescriptorNode extends AbstractBundleNode {
-
-    public WLWebServicesDescriptorNode(WebServicesDescriptor descriptor) {
-        this();
-        parentDescriptor = descriptor;
-    }
-
-    public WLWebServicesDescriptorNode() {
-        registerElementHandler(new XMLElement(WLWebServicesTagNames.WEB_SERVICE),
-                WLWebServiceNode.class);
-        registerElementHandler(new XMLElement(WLWebServicesTagNames.WEBSERVICE_SECURITY),
-                WLUnSupportedNode.class);
-        SaxParserHandler.registerBundleNode(this, WLWebServicesTagNames.WEB_SERVICES);
-    }
+public class WLWebServicesDescriptorNode extends AbstractBundleNode<WebServicesDescriptor> {
 
     private final static XMLElement ROOT_ELEMENT = new XMLElement(WLWebServicesTagNames.WEB_SERVICES);
 
@@ -59,18 +50,31 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     private final static String SPEC_VERSION = "1.0";
     private final static List<String> systemIDs = initSystemIDs();
 
-    private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<String>();
-        systemIDs.add(SCHEMA_ID);
-        return Collections.unmodifiableList(systemIDs);
+    private WebServicesDescriptor parentDescriptor;
 
+    public WLWebServicesDescriptorNode(WebServicesDescriptor descriptor) {
+        this();
+        parentDescriptor = descriptor;
     }
 
-    private WebServicesDescriptor parentDescriptor;
+
+    public WLWebServicesDescriptorNode() {
+        registerElementHandler(new XMLElement(WLWebServicesTagNames.WEB_SERVICE), WLWebServiceNode.class);
+        registerElementHandler(new XMLElement(WLWebServicesTagNames.WEBSERVICE_SECURITY), WLUnSupportedNode.class);
+        SaxParserHandler.registerBundleNode(this, WLWebServicesTagNames.WEB_SERVICES);
+    }
+
+    private static List<String> initSystemIDs() {
+        List<String> systemIDs = new ArrayList<>();
+        systemIDs.add(SCHEMA_ID);
+        return Collections.unmodifiableList(systemIDs);
+    }
+
 
     /**
      * @return the DOCTYPE of the XML file
      */
+    @Override
     public String getDocType() {
         return null;
     }
@@ -78,6 +82,7 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
@@ -85,6 +90,7 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     /**
      * @return the list of SystemID of the XML schema supported
      */
+    @Override
     public List<String> getSystemIDs() {
         return systemIDs;
     }
@@ -95,14 +101,17 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     }
 
     @Override
-    public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, final Map<String, List<Class>> versionUpgrades) {
-        return Collections.EMPTY_MAP;
+    public Map<String, Class<?>> registerRuntimeBundle(
+        Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        return Collections.emptyMap();
     }
 
 
     /**
      * @return the complete URL for J2EE schemas
      */
+    @Override
     protected String getSchemaURL() {
         return WLDescriptorConstants.WL_WEBSERVICES_SCHEMA_LOCATION;
     }
@@ -110,18 +119,11 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
 
-    /*
-    see setAttributeValue below
-    public void setElementValue(XMLElement element, String value) {
-        if (TagNames.VERSION.equals(element.getQName())) {
-            bundleDescriptor.getWebServices().setSpecVersion(value);
-        } else super.setElementValue(element, value);
-    }
-    */
 
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
@@ -138,12 +140,11 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     }
 
     @Override
-    public XMLNode getHandlerFor(XMLElement element) {
+    public XMLNode<?> getHandlerFor(XMLElement element) {
         if (WLWebServicesTagNames.WEBSERVICE_SECURITY.equals(element.getQName())) {
             throw new UnsupportedConfigurationException(element + " configuration in weblogic-webservices.xml is not supported.");
-        } else {
-            return super.getHandlerFor(element);
         }
+        return super.getHandlerFor(element);
 
     }
 
@@ -156,35 +157,33 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
 
     }
 
+
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
+    @Override
     public WebServicesDescriptor getDescriptor() {
         return parentDescriptor;
     }
 
-    public Node writeDescriptor(Node parent, RootDeploymentDescriptor descriptor) {
-        Node bundleNode;
+
+    @Override
+    public Node writeDescriptor(Node parent, WebServicesDescriptor descriptor) {
+        final Node bundleNode;
         if (getDocType() == null) {
             // we are using schemas for this DDs
             bundleNode = appendChildNS(parent, getXMLRootTag().getQName(), WLDescriptorConstants.WL_WEBSERVICES_XML_NS);
-
             addBundleNodeAttributes((Element) bundleNode, descriptor);
         } else {
             bundleNode = appendChild(parent, getXMLRootTag().getQName());
         }
 
-        //TODO is this needed?
-        // appendTextChild(bundleNode, TagNames.MODULE_NAME, descriptor.getModuleDescriptor().getModuleName());
-
         // description, display-name, icons...
         writeDisplayableComponentInfo(bundleNode, descriptor);
 
-        if (descriptor instanceof WebServicesDescriptor) {
-            WLWebServiceNode wsNode = new WLWebServiceNode();
-            for(WebService next : ((WebServicesDescriptor)descriptor).getWebServices()) {
-                wsNode.writeDescriptor(bundleNode, WebServicesTagNames.WEB_SERVICE,next);
-            }
+        WLWebServiceNode wsNode = new WLWebServiceNode();
+        for (WebService next : descriptor.getWebServices()) {
+            wsNode.writeDescriptor(bundleNode, WebServicesTagNames.WEB_SERVICE, next);
         }
         return bundleNode;
     }
@@ -214,8 +213,8 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
     /**
      * @return the default spec version level this node complies to
      */
+    @Override
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-
 }

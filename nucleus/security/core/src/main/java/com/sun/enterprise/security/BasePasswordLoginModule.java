@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.enterprise.security;
 
+import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.util.i18n.StringManager;
+
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -31,12 +37,8 @@ import javax.security.auth.spi.LoginModule;
 
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
-
-import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.util.i18n.StringManager;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.glassfish.security.common.UserPrincipal;
 
 /**
  * Abstract base class for password-based login modules.
@@ -48,9 +50,7 @@ import com.sun.enterprise.util.i18n.StringManager;
  *
  * <P>
  * Subclasses need to implement the authenticateUser() method and later call commitUserAuthentication().
- *
  */
-
 public abstract class BasePasswordLoginModule implements LoginModule {
     // The _subject, _sharedState and _options satisfy LoginModule and are
     // shared across sub-classes
@@ -66,13 +66,13 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     // the authentication status
     protected boolean _succeeded = false;
     protected boolean _commitSucceeded = false;
-    protected PrincipalImpl _userPrincipal;
+    protected UserPrincipal _userPrincipal;
     protected String[] _groupsList = null;
 
     protected static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     protected final static StringManager sm = StringManager.getManager(LoginCallbackHandler.class);
-    private LoginModule userDefinedLoginModule = null;
+    private LoginModule userDefinedLoginModule;
 
     /**
      * Initialize this login module.
@@ -118,15 +118,14 @@ public abstract class BasePasswordLoginModule implements LoginModule {
         return true;
     }
 
+
     /**
      * Commit the authentication.
-     *
      * <P>
-     * Commit is called after all necessary login modules have succeeded. It adds (if not present) a PrincipalImpl principal and a
-     * LocalCredentials public credential to the Subject.
+     * Commit is called after all necessary login modules have succeeded. It adds (if not present) a
+     * {@link UserNameAndPassword} principal and a LocalCredentials public credential to the Subject.
      *
      * @throws LoginException If commit fails.
-     *
      */
     @Override
     public boolean commit() throws LoginException {
@@ -135,13 +134,13 @@ public abstract class BasePasswordLoginModule implements LoginModule {
         }
 
         // Add a Principal (authenticated identity) to the Subject
-        // Assume the user we authenticated is the PrincipalImpl [RI]
         String realm_name = _currentRealm.getName();
         PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
-        if (factory != null)
+        if (factory == null) {
+            _userPrincipal = new UserNameAndPassword(getUsername());
+        } else {
             _userPrincipal = factory.getPrincipalInstance(getUsername(), realm_name);
-        else
-            _userPrincipal = new PrincipalImpl(getUsername());
+        }
 
         Set<Principal> principalSet = _subject.getPrincipals();
         if (!principalSet.contains(_userPrincipal)) {
@@ -153,10 +152,11 @@ public abstract class BasePasswordLoginModule implements LoginModule {
         for (int i = 0; i < _groupsList.length; i++) {
             if (_groupsList[i] != null) {
                 Group g;
-                if (factory != null)
+                if (factory != null) {
                     g = factory.getGroupInstance(_groupsList[i], realm_name);
-                else
+                } else {
                     g = new Group(_groupsList[i]);
+                }
 
                 if (!principalSet.contains(g)) {
                     principalSet.add(g);
@@ -415,7 +415,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     /**
      * @return the UserPrincipal - for backward compatability
      */
-    public PrincipalImpl getUserPrincipal() {
+    public UserPrincipal getUserPrincipal() {
         return _userPrincipal;
     }
 

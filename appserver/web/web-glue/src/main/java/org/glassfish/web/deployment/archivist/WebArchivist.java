@@ -39,6 +39,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -66,10 +67,10 @@ import org.xml.sax.SAXException;
  * This module is responsible for reading and write web applications
  * archive files (war).
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-@Service @PerLookup
+@Service
+@PerLookup
 @ArchivistFor(WarType.ARCHIVE_TYPE)
 public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
 
@@ -81,7 +82,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Inject
     private ServerEnvironment env;
 
-    private WebBundleDescriptorImpl defaultWebXmlBundleDescriptor = null;
+    private WebBundleDescriptorImpl defaultWebXmlBundleDescriptor;
 
     /**
      * @return the  module type handled by this archivist
@@ -99,13 +100,11 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      * for a particular Archivst type
      */
     public void setDescriptor(Application descriptor) {
-        java.util.Set webBundles = descriptor.getBundleDescriptors(WebBundleDescriptorImpl.class);
-        if (webBundles.size()>0) {
-            this.descriptor = (WebBundleDescriptorImpl) webBundles.iterator().next();
-            if (this.descriptor.getModuleDescriptor().isStandalone()) {
-                return;
-            } else {
-                this.descriptor=null;
+        Set<WebBundleDescriptorImpl> webBundles = descriptor.getBundleDescriptors(WebBundleDescriptorImpl.class);
+        if (!webBundles.isEmpty()) {
+            this.descriptor = webBundles.iterator().next();
+            if (!this.descriptor.getModuleDescriptor().isStandalone()) {
+                this.descriptor = null;
             }
         }
     }
@@ -166,7 +165,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Override
     protected void postStandardDDsRead(WebBundleDescriptorImpl descriptor,
                 ReadableArchive archive,
-                Map<ExtensionsArchivist, RootDeploymentDescriptor> extensions)
+                Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> extensions)
                 throws IOException {
         for (RootDeploymentDescriptor rd : extensions.values()) {
             if (rd instanceof EjbBundleDescriptor) {
@@ -191,8 +190,7 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
             URL defaultWebXml = getDefaultWebXML();
             if (defaultWebXml!=null)  {
                 fis = defaultWebXml.openStream();
-                WebDeploymentDescriptorFile wddf =
-                    new WebDeploymentDescriptorFile();
+                WebDeploymentDescriptorFile wddf = new WebDeploymentDescriptorFile();
                 wddf.setXMLValidation(false);
                 defaultWebBundleDesc.addWebBundleDescriptor(wddf.read(fis));
             }
@@ -219,12 +217,11 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      *      and <tt>web.xml</tt> in the applications need to have everything.
      */
     protected URL getDefaultWebXML() throws IOException {
-        File file = new File(env.getConfigDirPath(),DEFAULT_WEB_XML);
+        File file = new File(env.getConfigDirPath(), DEFAULT_WEB_XML);
         if (file.exists()) {
             return file.toURI().toURL();
-        } else {
-            return null;
         }
+        return null;
     }
 
 
@@ -250,15 +247,16 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     @Override
     public void validate(ClassLoader aClassLoader) {
         ClassLoader cl = aClassLoader;
-        if (cl==null) {
+        if (cl == null) {
             cl = classLoader;
         }
-        if (cl==null) {
+        if (cl == null) {
             return;
         }
         descriptor.setClassLoader(cl);
         descriptor.visit(new WebBundleValidator());
     }
+
 
     /**
      * In the case of web archive, the super handles() method should be able
@@ -281,9 +279,8 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
      */
     @Override
     public Vector<String> getLibraries(Archive archive) {
-
         Enumeration<String> entries = archive.entries();
-        if (entries==null) {
+        if (entries == null) {
             return null;
         }
 
@@ -312,21 +309,19 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         // process annotations in web-fragment
         // extension annotation processing will be done in top level
         if (isProcessAnnotation(descriptor)) {
-            Map<ExtensionsArchivist, RootDeploymentDescriptor> localExtensions =
-                    new HashMap<>();
+            Map<ExtensionsArchivist<?>, RootDeploymentDescriptor> localExtensions = new HashMap<>();
             for (WebFragmentDescriptor wfDesc : wfList) {
                 // if web.xml specifies metadata-complete=true,
                 // all web fragment metadata-complete
                 // should be overridden and be true also
                 if (descriptor.isFullAttribute()) {
-                  wfDesc.setFullAttribute(
-                      String.valueOf(descriptor.isFullAttribute()));
+                    wfDesc.setFullAttribute(String.valueOf(descriptor.isFullAttribute()));
                 }
                 super.readAnnotations(archive, wfDesc, localExtensions);
             }
 
             // scan manifest classpath
-            ModuleScanner scanner = getScanner();
+            ModuleScanner<?> scanner = getScanner();
             if (scanner instanceof WarScanner) {
                 ((WarScanner)scanner).setScanOtherLibraries(true);
                 readAnnotations(archive, descriptor, localExtensions, scanner);
@@ -360,12 +355,10 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
         Vector<String> libs = getLibraries(archive);
         if (libs != null && !libs.isEmpty()) {
 
-            for (Object lib2 : libs) {
-                String lib = (String)lib2;
-                Archivist wfArchivist = new WebFragmentArchivist(this, habitat);
+            for (String lib : libs) {
+                Archivist<?> wfArchivist = new WebFragmentArchivist(this, habitat);
                 wfArchivist.setRuntimeXMLValidation(this.getRuntimeXMLValidation());
-                wfArchivist.setRuntimeXMLValidationLevel(
-                        this.getRuntimeXMLValidationLevel());
+                wfArchivist.setRuntimeXMLValidationLevel(this.getRuntimeXMLValidationLevel());
                 wfArchivist.setAnnotationProcessingRequested(false);
 
                 WebFragmentDescriptor wfDesc = null;

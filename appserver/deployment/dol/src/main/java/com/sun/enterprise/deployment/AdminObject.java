@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * <!ELEMENT adminobject (adminobject-interface, adminobject-class, config-property*)>
@@ -28,19 +29,20 @@ import java.util.Set;
  */
 public class AdminObject extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String theInterface;
     private String theClass;
-    private Set configProperties;
+    private final Set<ConnectorConfigProperty> configProperties;
 
     public AdminObject() {
-        this.configProperties = new OrderedSet();
+        this.configProperties = new OrderedSet<>();
     }
 
 
     public AdminObject(String theInterface, String theClass) {
         this.theInterface = theInterface;
         this.theClass = theClass;
-        this.configProperties = new OrderedSet();
+        this.configProperties = new OrderedSet<>();
     }
 
 
@@ -65,9 +67,9 @@ public class AdminObject extends Descriptor {
 
 
     /**
-     * Set of EnvironmentProperty
+     * @return Set of EnvironmentProperty
      */
-    public Set getConfigProperties() {
+    public Set<ConnectorConfigProperty> getConfigProperties() {
         return configProperties;
     }
 

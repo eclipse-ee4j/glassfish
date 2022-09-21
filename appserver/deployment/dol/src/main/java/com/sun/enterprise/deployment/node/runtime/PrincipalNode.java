@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,25 +19,26 @@ package com.sun.enterprise.deployment.node.runtime;
 
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.glassfish.security.common.PrincipalImpl;
+
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * This mode handles the principal definition in the runtine DDs
  *
  * @author Jerome Dochez
- * @version
  */
-public class PrincipalNode extends DeploymentDescriptorNode {
+public class PrincipalNode extends DeploymentDescriptorNode<PrincipalNameDescriptor> {
 
-    PrincipalImpl principal = null;
+    private PrincipalNameDescriptor principal;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public PrincipalNameDescriptor getDescriptor() {
         return principal;
     }
 
@@ -50,7 +52,7 @@ public class PrincipalNode extends DeploymentDescriptorNode {
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (RuntimeTagNames.NAME.equals(element.getQName())) {
-            principal = new PrincipalImpl(value);
+            principal = new PrincipalNameDescriptor(value);
         } else {
             super.setElementValue(element, value);
         }
@@ -61,14 +63,14 @@ public class PrincipalNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name
-     * @param the descriptor to write
+     * @param nodeName node name
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, PrincipalImpl descriptor) {
-        Node principal = appendChild(parent, nodeName);
-        appendTextChild(principal, RuntimeTagNames.NAME, descriptor.getName());
-        return principal;
-
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, PrincipalNameDescriptor descriptor) {
+        Element element = appendChild(parent, nodeName);
+        appendTextChild(element, RuntimeTagNames.NAME, descriptor.getName());
+        return element;
     }
 }

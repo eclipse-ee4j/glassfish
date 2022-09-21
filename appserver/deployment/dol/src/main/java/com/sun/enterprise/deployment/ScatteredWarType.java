@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,19 +15,26 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.apf.test.example;
+package com.sun.enterprise.deployment;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.glassfish.api.deployment.archive.ArchiveType;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- * @author jwells
+ * {@link ArchiveType} .
+ *
+ * @author sanjeeb.sahoo@oracle.com
  */
-@Retention(RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ClassC {
+@Service(name = ScatteredWarType.ARCHIVE_TYPE)
+// don't change to imports, it is easy to make a mistake and replace it with ejb's Singleton
+@jakarta.inject.Singleton
+public class ScatteredWarType extends ArchiveType {
 
+    public static final String ARCHIVE_TYPE = "scattered-war";
+    public static final String ARCHIVE_EXTENSION = "";
+
+    public ScatteredWarType() {
+        super(ARCHIVE_TYPE, ARCHIVE_EXTENSION);
+    }
 }

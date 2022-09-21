@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,192 +15,155 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * WebServiceEndpointNode.java
- *
- * Created on March 21, 2002, 4:16 PM
- */
-
 package org.glassfish.webservices.node;
 
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
-import javax.xml.namespace.QName;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.xml.namespace.QName;
+
 import org.glassfish.webservices.connector.LogUtils;
+import org.w3c.dom.Node;
+
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.ADDRESSING;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.EJB_LINK;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.ENABLE_MTOM;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.HANDLER;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.HANDLER_CHAIN;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.MTOM_THRESHOLD;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.PORT_COMPONENT;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.PORT_COMPONENT_NAME;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.PROTOCOL_BINDING;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.RESPECT_BINDING;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVICE_IMPL_BEAN;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVLET_LINK;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.WSDL_PORT;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.WSDL_SERVICE;
 
 /**
  * This node handles the web service endpoint definition
  *
  * @author Jerome Dochez
  */
-public class WebServiceEndpointNode extends DisplayableComponentNode {
+public class WebServiceEndpointNode extends DisplayableComponentNode<WebServiceEndpoint> {
 
-    private static final Logger logger = LogUtils.getLogger();
-
-    private final static XMLElement tag =
-        new XMLElement(WebServicesTagNames.PORT_COMPONENT);
+    private static final Logger LOG = LogUtils.getLogger();
+    private static final XMLElement TAG = new XMLElement(PORT_COMPONENT);
 
     /** Creates a new instance of WebServiceEndpointNode */
     public WebServiceEndpointNode() {
-        super();
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.HANDLER),
-             WebServiceHandlerNode.class, "addHandler");
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.ADDRESSING),
-             AddressingNode.class, "setAddressing");
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.RESPECT_BINDING),
-             RespectBindingNode.class, "setRespectBinding");
-        registerElementHandler
-            (new XMLElement(WebServicesTagNames.HANDLER_CHAIN),
-             WebServiceHandlerChainNode.class, "addHandlerChain");
+        registerElementHandler(new XMLElement(HANDLER), WebServiceHandlerNode.class, "addHandler");
+        registerElementHandler(new XMLElement(ADDRESSING), AddressingNode.class, "setAddressing");
+        registerElementHandler(new XMLElement(RESPECT_BINDING), RespectBindingNode.class, "setRespectBinding");
+        registerElementHandler(new XMLElement(HANDLER_CHAIN), WebServiceHandlerChainNode.class, "addHandlerChain");
     }
 
-    /**
-     * @return the XML tag associated with this XMLNode
-     */
+
+    @Override
     protected XMLElement getXMLRootTag() {
-        return tag;
+        return TAG;
     }
+
 
     @Override
     protected WebServiceEndpoint createDescriptor() {
         return new WebServiceEndpoint();
     }
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.PORT_COMPONENT_NAME, "setEndpointName");
-        table.put(WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE,
-                  "setServiceEndpointInterface");
-        table.put(WebServicesTagNames.PROTOCOL_BINDING, "setProtocolBinding");
-        table.put(WebServicesTagNames.ENABLE_MTOM, "setMtomEnabled");
-        table.put(WebServicesTagNames.MTOM_THRESHOLD, "setMtomThreshold");
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(PORT_COMPONENT_NAME, "setEndpointName");
+        table.put(SERVICE_ENDPOINT_INTERFACE, "setServiceEndpointInterface");
+        table.put(PROTOCOL_BINDING, "setProtocolBinding");
+        table.put(ENABLE_MTOM, "setMtomEnabled");
+        table.put(MTOM_THRESHOLD, "setMtomThreshold");
         return table;
     }
 
-    /**
-     * receives notification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+
+    @Override
     public void setElementValue(XMLElement element, String value) {
         String elementName = element.getQName();
-        WebServiceEndpoint endpoint = (WebServiceEndpoint) getDescriptor();
-        if (WebServicesTagNames.EJB_LINK.equals(elementName)) {
+        WebServiceEndpoint endpoint = getDescriptor();
+        if (EJB_LINK.equals(elementName)) {
             endpoint.setEjbLink(value);
-        } else if (WebServicesTagNames.SERVLET_LINK.equals(elementName)) {
+        } else if (SERVLET_LINK.equals(elementName)) {
             endpoint.setWebComponentLink(value);
-        } else if (WebServicesTagNames.WSDL_PORT.equals(elementName)) {
+        } else if (WSDL_PORT.equals(elementName)) {
             String prefix = getPrefixFromQName(value);
             String localPart = getLocalPartFromQName(value);
             String namespaceUri = resolvePrefix(element, prefix);
-            if( namespaceUri == null) {
-                logger.log(Level.SEVERE, LogUtils.INVALID_DESC_MAPPING_FAILURE,
-                    new Object[] {prefix , value });
+            if (namespaceUri == null) {
+                LOG.log(Level.SEVERE, LogUtils.INVALID_DESC_MAPPING_FAILURE, new Object[] {prefix, value});
             } else {
                 QName wsdlPort = new QName(namespaceUri, localPart);
                 endpoint.setWsdlPort(wsdlPort, prefix);
             }
-        } else if(WebServicesTagNames.WSDL_SERVICE.equals(elementName)) {
+        } else if (WSDL_SERVICE.equals(elementName)) {
             String prefix = getPrefixFromQName(value);
             String localPart = getLocalPartFromQName(value);
             String namespaceUri = resolvePrefix(element, prefix);
-            if( namespaceUri == null) {
-                logger.log(Level.SEVERE, LogUtils.INVALID_DESC_MAPPING_FAILURE,
-                    new Object[] {prefix , value });
+            if (namespaceUri == null) {
+                LOG.log(Level.SEVERE, LogUtils.INVALID_DESC_MAPPING_FAILURE, new Object[] {prefix, value});
             } else {
                 QName wsdlSvc = new QName(namespaceUri, localPart);
                 endpoint.setWsdlService(wsdlSvc, prefix);
             }
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
-    /**
-     * write the method descriptor class to a query-method DOM tree
-     * and return it
-     *
-     * @param parent node in the DOM tree
-     * @param nodeName name for the root element of this xml fragment
-     * @param descriptor the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                WebServiceEndpoint descriptor) {
+
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, WebServiceEndpoint descriptor) {
         Node wseNode = super.writeDescriptor(parent, nodeName, descriptor);
 
         writeDisplayableComponentInfo(wseNode, descriptor);
 
-        appendTextChild(wseNode,
-                        WebServicesTagNames.PORT_COMPONENT_NAME,
-                        descriptor.getEndpointName());
+        appendTextChild(wseNode, PORT_COMPONENT_NAME, descriptor.getEndpointName());
 
         QName wsdlService = descriptor.getWsdlService();
-        if((wsdlService!=null) &&
-            (wsdlService.getLocalPart().length() != 0)) {
-            appendQNameChild(WebServicesTagNames.WSDL_SERVICE, wseNode,
-                         wsdlService.getNamespaceURI(), wsdlService.getLocalPart(),
-                         descriptor.getWsdlServiceNamespacePrefix());
+        if (wsdlService != null && !wsdlService.getLocalPart().isEmpty()) {
+            appendQNameChild(WSDL_SERVICE, wseNode, wsdlService.getNamespaceURI(), wsdlService.getLocalPart(),
+                descriptor.getWsdlServiceNamespacePrefix());
         }
 
         QName wsdlPort = descriptor.getWsdlPort();
-        if((wsdlPort!=null) &&
-            (wsdlPort.getLocalPart().length() != 0)) {
-            appendQNameChild(WebServicesTagNames.WSDL_PORT, wseNode,
-                         wsdlPort.getNamespaceURI(), wsdlPort.getLocalPart(),
-                         descriptor.getWsdlPortNamespacePrefix());
+        if (wsdlPort != null && !wsdlPort.getLocalPart().isEmpty()) {
+            appendQNameChild(WSDL_PORT, wseNode, wsdlPort.getNamespaceURI(), wsdlPort.getLocalPart(),
+                descriptor.getWsdlPortNamespacePrefix());
         }
 
-        appendTextChild(wseNode,
-                        WebServicesTagNames.ENABLE_MTOM,
-                        descriptor.getMtomEnabled());
-        appendTextChild(wseNode,
-                        WebServicesTagNames.MTOM_THRESHOLD,
-                        descriptor.getMtomThreshold());
-        //TODO add addressing etc here
-        if(descriptor.hasUserSpecifiedProtocolBinding()) {
-            appendTextChild(wseNode,
-                        WebServicesTagNames.PROTOCOL_BINDING,
-                        descriptor.getProtocolBinding());
+        appendTextChild(wseNode, ENABLE_MTOM, descriptor.getMtomEnabled());
+        appendTextChild(wseNode, MTOM_THRESHOLD, descriptor.getMtomThreshold());
+        // TODO add addressing etc here
+        if (descriptor.hasUserSpecifiedProtocolBinding()) {
+            appendTextChild(wseNode, PROTOCOL_BINDING, descriptor.getProtocolBinding());
         }
 
-        appendTextChild(wseNode,
-                        WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE,
-                        descriptor.getServiceEndpointInterface());
+        appendTextChild(wseNode, SERVICE_ENDPOINT_INTERFACE, descriptor.getServiceEndpointInterface());
 
-        if( descriptor.implementedByWebComponent() ) {
-            Node linkNode =
-                appendChild(wseNode, WebServicesTagNames.SERVICE_IMPL_BEAN);
-            appendTextChild(linkNode, WebServicesTagNames.SERVLET_LINK,
-                            descriptor.getWebComponentLink());
-        } else if( descriptor.implementedByEjbComponent() ) {
-            Node linkNode =
-                appendChild(wseNode, WebServicesTagNames.SERVICE_IMPL_BEAN);
-            appendTextChild(linkNode, WebServicesTagNames.EJB_LINK,
-                            descriptor.getEjbLink());
+        if (descriptor.implementedByWebComponent()) {
+            Node linkNode = appendChild(wseNode, SERVICE_IMPL_BEAN);
+            appendTextChild(linkNode, SERVLET_LINK, descriptor.getWebComponentLink());
+        } else if (descriptor.implementedByEjbComponent()) {
+            Node linkNode = appendChild(wseNode, SERVICE_IMPL_BEAN);
+            appendTextChild(linkNode, EJB_LINK, descriptor.getEjbLink());
         } else {
-            logger.log(Level.INFO, LogUtils.WS_NOT_TIED_TO_COMPONENT,
-                    descriptor.getEndpointName());
+            LOG.log(Level.INFO, LogUtils.WS_NOT_TIED_TO_COMPONENT, descriptor.getEndpointName());
         }
 
         WebServiceHandlerNode handlerNode = new WebServiceHandlerNode();
-        handlerNode.writeWebServiceHandlers(wseNode,
-                                            descriptor.getHandlers());
+        handlerNode.writeWebServiceHandlers(wseNode, descriptor.getHandlers());
 
         WebServiceHandlerChainNode handlerChainNode = new WebServiceHandlerChainNode();
         handlerChainNode.writeWebServiceHandlerChains(wseNode, descriptor.getHandlerChain());

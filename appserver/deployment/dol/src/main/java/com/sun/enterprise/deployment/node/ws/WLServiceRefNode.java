@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,56 +22,53 @@ import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.NameValuePairNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.node.runtime.ServiceRefPortInfoRuntimeNode;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
-import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling runtime info for service references from weblogic DD
  *
  * @author Rama Pulavarthi
  */
-public class WLServiceRefNode extends DeploymentDescriptorNode {
+public class WLServiceRefNode extends DeploymentDescriptorNode<ServiceReferenceDescriptor> {
 
     private ServiceReferenceDescriptor descriptor;
 
     public WLServiceRefNode() {
         super();
-        registerElementHandler
-                (new XMLElement(WLWebServicesTagNames.SERVICE_REFERENCE_PORT_INFO),
-                        WLServiceRefPortInfoRuntimeNode.class);
-        registerElementHandler
-                (new XMLElement(WebServicesTagNames.CALL_PROPERTY),
-                        NameValuePairNode.class, "addCallProperty");
+        registerElementHandler(new XMLElement(WLWebServicesTagNames.SERVICE_REFERENCE_PORT_INFO),
+            WLServiceRefPortInfoRuntimeNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.CALL_PROPERTY), NameValuePairNode.class,
+            "addCallProperty");
     }
 
+
+    @Override
     public void addDescriptor(Object desc) {
         if (desc instanceof ServiceRefPortInfo) {
             ServiceRefPortInfo newPortInfo = (ServiceRefPortInfo) desc;
-            ServiceReferenceDescriptor serviceRef =
-                    (ServiceReferenceDescriptor) getDescriptor();
+            ServiceReferenceDescriptor serviceRef = getDescriptor();
             serviceRef.addRuntimePortInfo(newPortInfo);
         }
     }
 
+
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
-    public Object getDescriptor() {
+    @Override
+    public ServiceReferenceDescriptor getDescriptor() {
         return descriptor;
     }
 
@@ -82,15 +80,15 @@ public class WLServiceRefNode extends DeploymentDescriptorNode {
      * @param value   it's associated value
      */
 
+    @Override
     public void setElementValue(XMLElement element, String value) {
         String name = element.getQName();
         if (WebServicesTagNames.SERVICE_REF_NAME.equals(name)) {
             Object parentDesc = getParentNode().getDescriptor();
             if (parentDesc instanceof JndiNameEnvironment) {
-                descriptor = ((JndiNameEnvironment) parentDesc).
-                        getServiceReferenceByName(value);
+                descriptor = ((JndiNameEnvironment) parentDesc).getServiceReferenceByName(value);
             } else if (parentDesc instanceof WebBundleDescriptor) {
-                WebBundleDescriptor desc = (WebBundleDescriptor)parentDesc;
+                WebBundleDescriptor desc = (WebBundleDescriptor) parentDesc;
                 descriptor = desc.getServiceReferenceByName(value);
             }
         } else if (WLWebServicesTagNames.SERVICE_REFERENCE_WSDL_URL.equals(name)) {
@@ -98,8 +96,7 @@ public class WLServiceRefNode extends DeploymentDescriptorNode {
                 URL url = new URL(value);
                 descriptor.setWsdlOverride(url);
             } catch (MalformedURLException mue) {
-                DOLUtils.getDefaultLogger().log(Level.INFO,
-                        "Warning : Invalid wsdl override url=" + value, mue);
+                DOLUtils.getDefaultLogger().log(Level.INFO, "Warning : Invalid wsdl override url=" + value, mue);
             }
         } else {
             super.setElementValue(element, value);
@@ -107,71 +104,59 @@ public class WLServiceRefNode extends DeploymentDescriptorNode {
 
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent     node for the DOM tree
-     * @param nodeName   for the descriptor
+     * @param parent node for the DOM tree
+     * @param nodeName for the descriptor
      * @param serviceRef the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                ServiceReferenceDescriptor serviceRef) {
-        Node serviceRefNode =
-                super.writeDescriptor(parent, nodeName, serviceRef);
+    public Node writeDescriptor(Node parent, String nodeName, ServiceReferenceDescriptor serviceRef) {
+        Node serviceRefNode = super.writeDescriptor(parent, nodeName, serviceRef);
 
-        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_NAME,
-                serviceRef.getName());
+        appendTextChild(serviceRefNode, WebServicesTagNames.SERVICE_REF_NAME, serviceRef.getName());
 
         if (serviceRef.hasWsdlOverride()) {
             URL wsdlOverride = serviceRef.getWsdlOverride();
             appendTextChild(serviceRefNode, WLWebServicesTagNames.SERVICE_REFERENCE_WSDL_URL,
-                    wsdlOverride.toExternalForm());
+                wsdlOverride.toExternalForm());
         }
 
         NameValuePairNode nameValueNode = new NameValuePairNode();
-        for (Iterator iter = serviceRef.getCallProperties().iterator();
-             iter.hasNext();) {
-            NameValuePairDescriptor next = (NameValuePairDescriptor) iter.next();
-            nameValueNode.writeDescriptor
-                    (serviceRefNode, WebServicesTagNames.CALL_PROPERTY, next);
+        for (NameValuePairDescriptor nameValuePairDescriptor : serviceRef.getCallProperties()) {
+            nameValueNode.writeDescriptor(serviceRefNode, WebServicesTagNames.CALL_PROPERTY, nameValuePairDescriptor);
         }
 
-        WLServiceRefPortInfoRuntimeNode portInfoRuntimeNode =
-                new WLServiceRefPortInfoRuntimeNode();
+        WLServiceRefPortInfoRuntimeNode portInfoRuntimeNode = new WLServiceRefPortInfoRuntimeNode();
 
-        Set portsInfo = serviceRef.getPortsInfo();
-        for (Iterator iter = portsInfo.iterator(); iter.hasNext();) {
-            ServiceRefPortInfo next = (ServiceRefPortInfo) iter.next();
-            portInfoRuntimeNode.writeDescriptor
-                    (serviceRefNode, WLWebServicesTagNames.SERVICE_REFERENCE_PORT_NAME, next);
+        Set<ServiceRefPortInfo> portsInfo = serviceRef.getPortsInfo();
+        for (ServiceRefPortInfo element : portsInfo) {
+            portInfoRuntimeNode.writeDescriptor(serviceRefNode, WLWebServicesTagNames.SERVICE_REFERENCE_PORT_NAME,
+                element);
         }
 
         return serviceRefNode;
     }
 
+
     /**
      * writes all the runtime information for service references
      *
-     * @param parent     node to add the runtime xml info
+     * @param parent node to add the runtime xml info
      * @param descriptor the J2EE component containing service references
      */
-    public static void writeServiceReferences(Node parent,
-                                              JndiNameEnvironment descriptor) {
-        Iterator serviceRefs =
-                descriptor.getServiceReferenceDescriptors().iterator();
+    public static void writeServiceReferences(Node parent, JndiNameEnvironment descriptor) {
+        Iterator<ServiceReferenceDescriptor> serviceRefs = descriptor.getServiceReferenceDescriptors().iterator();
         if (serviceRefs.hasNext()) {
             WLServiceRefNode serviceRefNode = new WLServiceRefNode();
             while (serviceRefs.hasNext()) {
-                ServiceReferenceDescriptor next =
-                        (ServiceReferenceDescriptor) serviceRefs.next();
+                ServiceReferenceDescriptor next = serviceRefs.next();
                 // Only write runtime service-ref entry if there IS
                 // some runtime info...
-                if (!next.getPortsInfo().isEmpty() ||
-                        !next.getCallProperties().isEmpty() ||
-                        next.hasWsdlOverride()) {
-                    serviceRefNode.writeDescriptor
-                            (parent, WLWebServicesTagNames.SERVICE_REFERENCE_DESCRIPTION, next);
+                if (!next.getPortsInfo().isEmpty() || !next.getCallProperties().isEmpty() || next.hasWsdlOverride()) {
+                    serviceRefNode.writeDescriptor(parent, WLWebServicesTagNames.SERVICE_REFERENCE_DESCRIPTION, next);
                 }
             }
         }

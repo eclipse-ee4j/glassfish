@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,36 @@
 
 package com.sun.enterprise.deployment.node;
 
-import org.w3c.dom.Node;
-
-
-import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.Map;
 
+import org.w3c.dom.Node;
+
 public class DataSourceDefinitionNode extends DeploymentDescriptorNode<DataSourceDefinitionDescriptor> {
 
-    public final static XMLElement tag = new XMLElement(TagNames.DATA_SOURCE);
-    private DataSourceDefinitionDescriptor descriptor = null;
+    private DataSourceDefinitionDescriptor descriptor;
+
     public DataSourceDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.RESOURCE_PROPERTY), ResourcePropertyNode.class,
-                "addDataSourcePropertyDescriptor");
+            "addDataSourcePropertyDescriptor");
     }
 
-    protected Map getDispatchTable() {
+
+    @Override
+    public DataSourceDefinitionDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new DataSourceDefinitionDescriptor();
+        }
+        return descriptor;
+    }
+
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
 
         table.put(TagNames.DATA_SOURCE_DESCRIPTION, "setDescription");
         table.put(TagNames.DATA_SOURCE_NAME, "setName");
@@ -60,8 +71,8 @@ public class DataSourceDefinitionNode extends DeploymentDescriptorNode<DataSourc
     }
 
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, DataSourceDefinitionDescriptor dataSourceDesc) {
-
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, TagNames.DATA_SOURCE_DESCRIPTION, dataSourceDesc.getDescription());
         appendTextChild(node, TagNames.DATA_SOURCE_NAME, dataSourceDesc.getName());
@@ -73,15 +84,14 @@ public class DataSourceDefinitionNode extends DeploymentDescriptorNode<DataSourc
         appendTextChild(node, TagNames.DATA_SOURCE_USER, dataSourceDesc.getUser());
         appendTextChild(node, TagNames.DATA_SOURCE_PASSWORD, dataSourceDesc.getPassword());
 
-        ResourcePropertyNode propertyNode = new ResourcePropertyNode();
-        propertyNode.writeDescriptor(node, dataSourceDesc);
+        ResourcePropertyNode.write(node, dataSourceDesc);
 
         appendTextChild(node, TagNames.DATA_SOURCE_LOGIN_TIMEOUT, String.valueOf(dataSourceDesc.getLoginTimeout()));
         appendTextChild(node, TagNames.DATA_SOURCE_TRANSACTIONAL, String.valueOf(dataSourceDesc.isTransactional()));
-        //DD specified Enumeration values are String
-        //Annotation uses integer values and hence this mapping is needed
+        // DD specified Enumeration values are String
+        // Annotation uses integer values and hence this mapping is needed
         String isolationLevelString = dataSourceDesc.getIsolationLevelString();
-        if(isolationLevelString != null){
+        if (isolationLevelString != null) {
             appendTextChild(node, TagNames.DATA_SOURCE_ISOLATION_LEVEL, isolationLevelString);
         }
         appendTextChild(node, TagNames.DATA_SOURCE_INITIAL_POOL_SIZE, dataSourceDesc.getInitialPoolSize());
@@ -91,12 +101,5 @@ public class DataSourceDefinitionNode extends DeploymentDescriptorNode<DataSourc
         appendTextChild(node, TagNames.DATA_SOURCE_MAX_STATEMENTS, dataSourceDesc.getMaxStatements());
 
         return node;
-    }
-
-    public DataSourceDefinitionDescriptor getDescriptor() {
-        if(descriptor == null){
-            descriptor = new DataSourceDefinitionDescriptor();
-        }
-        return descriptor;
     }
 }

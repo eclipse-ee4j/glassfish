@@ -84,13 +84,17 @@ public class AsadminLoggingITest {
     }
 
 
+    /**
+     * See LoggerInfoMetadataService class, it uses a HK2 registry based on generated
+     * META-INF/loggerinfo/LoggerInfoMetadata.properties files.
+     */
     @Test
     public void listLoggers() {
         AsadminResult result = ASADMIN.exec("list-loggers");
         assertThat(result, asadminOK());
         String[] lines = substringBefore(result.getStdOut(), "Command list-loggers executed successfully.").split("\n");
         assertAll(
-            () -> assertThat(lines, arrayWithSize(equalTo(61))),
+            () -> assertThat(lines, arrayWithSize(equalTo(62))),
             () -> assertThat(lines[0], matchesPattern("Logger Name[ ]+Subsystem[ ]+Logger Description[ ]+"))
         );
         Map<String, String[]> loggers = Arrays.stream(lines).skip(1).map(line -> line.split("\\s{2,}"))

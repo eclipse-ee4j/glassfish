@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,28 @@
  */
 
 package org.glassfish.jdbc.recovery;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
+import com.sun.enterprise.transaction.api.XAResourceWrapper;
+import com.sun.enterprise.transaction.config.TransactionService;
+import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.security.PasswordCredential;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -37,31 +60,9 @@ import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.jdbc.util.JdbcResourcesUtil;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Module;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.connectors.util.ResourcesUtil;
-import com.sun.enterprise.deployment.ResourcePrincipal;
-import com.sun.enterprise.transaction.api.XAResourceWrapper;
-import com.sun.enterprise.transaction.config.TransactionService;
-import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ManagedConnection;
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.resource.spi.security.PasswordCredential;
 
 /**
  * Recovery Handler for Jdbc Resources
@@ -122,7 +123,7 @@ public class JdbcRecoveryResourceHandler implements RecoveryResourceHandler {
     }
 
     private Collection<JdbcResource> getAllJdbcResources() {
-        Collection<JdbcResource> allResources = new ArrayList<JdbcResource>();
+        Collection<JdbcResource> allResources = new ArrayList<>();
         Collection<JdbcResource> jdbcResources = domain.getResources().getResources(JdbcResource.class);
         allResources.addAll(jdbcResources);
         for (Application app : applications.getApplications()) {
@@ -171,7 +172,7 @@ public class JdbcRecoveryResourceHandler implements RecoveryResourceHandler {
             return;
         }
 
-        List<JdbcConnectionPool> jdbcPools = new ArrayList<JdbcConnectionPool>();
+        List<JdbcConnectionPool> jdbcPools = new ArrayList<>();
 
         for (Resource resource : jdbcResources) {
             JdbcResource jdbcResource = (JdbcResource) resource;
@@ -253,7 +254,7 @@ public class JdbcRecoveryResourceHandler implements RecoveryResourceHandler {
                 Subject subject = new Subject();
                 PasswordCredential pc = new PasswordCredential(dbUser, dbPassword.toCharArray());
                 pc.setManagedConnectionFactory(fac);
-                Principal prin = new ResourcePrincipal(dbUser, dbPassword);
+                Principal prin = new UserNameAndPassword(dbUser, dbPassword);
                 subject.getPrincipals().add(prin);
                 subject.getPrivateCredentials().add(pc);
                 ManagedConnection mc = fac.createManagedConnection(subject, null);

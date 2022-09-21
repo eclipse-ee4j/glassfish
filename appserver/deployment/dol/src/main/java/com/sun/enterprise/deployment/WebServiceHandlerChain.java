@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,13 +28,15 @@ import java.util.List;
  */
 public class WebServiceHandlerChain extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
+
     // List of handlers associated with this endpoint.
     // Handler order is important and must be preserved.
     private LinkedList<WebServiceHandler> handlers;
 
-    private String protocolBinding = null;
-    private String serviceNamePattern = null;
-    private String portNamePattern = null;
+    private String protocolBinding;
+    private String serviceNamePattern;
+    private String portNamePattern;
 
     // copy constructor
     public WebServiceHandlerChain(WebServiceHandlerChain other) {
@@ -41,55 +44,61 @@ public class WebServiceHandlerChain extends Descriptor {
         this.protocolBinding = other.protocolBinding;
         this.serviceNamePattern = other.serviceNamePattern;
         this.portNamePattern = other.portNamePattern;
-        if (other.handlers != null) {
-            handlers = new LinkedList();
-            for (Iterator i = other.handlers.iterator(); i.hasNext();) {
-                WebServiceHandler wsh = (WebServiceHandler) i.next();
-                handlers.addLast(new WebServiceHandler(wsh));
-            }
-        } else {
+        if (other.handlers == null) {
             handlers = null;
+        } else {
+            handlers = new LinkedList<>();
+            for (WebServiceHandler handler : other.handlers) {
+                handlers.addLast(new WebServiceHandler(handler));
+            }
         }
     }
 
+
     public WebServiceHandlerChain() {
-        handlers = new LinkedList();
+        handlers = new LinkedList<>();
     }
+
 
     public void setProtocolBindings(String bindingId) {
         protocolBinding = bindingId;
 
     }
 
+
     public String getProtocolBindings() {
         return protocolBinding;
     }
 
+
     public void setServiceNamePattern(String pattern) {
         serviceNamePattern = pattern;
-
     }
+
 
     public String getServiceNamePattern() {
         return serviceNamePattern;
     }
 
+
     public void setPortNamePattern(String pattern) {
         portNamePattern = pattern;
-
     }
+
 
     public String getPortNamePattern() {
         return portNamePattern;
     }
 
+
     /**
-     *@return true if this endpoint has at least one handler in its
-     * handler chain.
+     * @return true if this endpoint has at least one handler in its
+     *         handler chain.
      */
     public boolean hasHandlers() {
-        return ( handlers.size() > 0 );
+        return !handlers.isEmpty();
     }
+
 
     /**
      * Append handler to end of handler chain for this endpoint.
@@ -98,24 +107,25 @@ public class WebServiceHandlerChain extends Descriptor {
         handlers.addLast(handler);
     }
 
+
     public void removeHandler(WebServiceHandler handler) {
         handlers.remove(handler);
-
     }
 
+
     public void removeHandlerByName(String handlerName) {
-        for (Iterator iter = handlers.iterator(); iter.hasNext();) {
-            WebServiceHandler next = (WebServiceHandler) iter.next();
+        for (Iterator<WebServiceHandler> iter = handlers.iterator(); iter.hasNext();) {
+            WebServiceHandler next = iter.next();
             if (next.getHandlerName().equals(handlerName)) {
                 iter.remove();
-
                 break;
             }
         }
     }
 
+
     /**
-     * Get ordered list of WebServiceHandler handlers for this endpoint.
+     * @return ordered list of WebServiceHandler handlers for this endpoint.
      */
     public List<WebServiceHandler> getHandlers() {
         return handlers;

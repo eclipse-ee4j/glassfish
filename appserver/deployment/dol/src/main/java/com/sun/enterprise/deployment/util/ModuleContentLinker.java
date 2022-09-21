@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,23 @@
 
 package com.sun.enterprise.deployment.util;
 
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.WSDolSupport;
-import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.internal.api.Globals;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WSDolSupport;
+import com.sun.enterprise.deployment.WebService;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.Iterator;
-import java.util.Set;
+import java.net.URL;
 import java.util.logging.Level;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.internal.api.Globals;
 
 /**
  *
@@ -61,23 +61,23 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
     protected ModuleContentLinker() {
     }
 
+    @Override
     public void accept (BundleDescriptor bundle) {
-        for (Iterator<WebService> itr = bundle.getWebServices().getWebServices().iterator(); itr.hasNext();) {
-            WebService aWebService = itr.next();
+        for (WebService aWebService : bundle.getWebServices().getWebServices()) {
             accept(aWebService);
         }
 
         if (bundle instanceof JndiNameEnvironment) {
-            for (Iterator<ServiceReferenceDescriptor> itr = ((JndiNameEnvironment)bundle).getServiceReferenceDescriptors().iterator(); itr.hasNext();) {
-                accept(itr.next());
+            for (ServiceReferenceDescriptor serviceReferenceDescriptor : ((JndiNameEnvironment)bundle).getServiceReferenceDescriptors()) {
+                accept(serviceReferenceDescriptor);
             }
         }
 
         if (bundle instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor)bundle;
             for (EjbDescriptor anEjb : ejbBundle.getEjbs()) {
-                for (Iterator<ServiceReferenceDescriptor> itr = anEjb.getServiceReferenceDescriptors().iterator(); itr.hasNext();) {
-                    accept(itr.next());
+                for (ServiceReferenceDescriptor serviceReferenceDescriptor : anEjb.getServiceReferenceDescriptors()) {
+                    accept(serviceReferenceDescriptor);
                 }
             }
         }
@@ -130,6 +130,7 @@ public class ModuleContentLinker extends DefaultDOLVisitor implements ComponentV
         return url;
     }
 
+    @Override
     public void accept(ServiceReferenceDescriptor serviceRef) {
         try {
             ModuleDescriptor moduleDesc =

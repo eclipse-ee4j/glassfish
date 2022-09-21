@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,8 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.MailConfiguration;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
@@ -29,13 +26,17 @@ import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
+
 import org.w3c.dom.Node;
 
 /**
  * This node handles the runtime deployment descriptors for resource-ref tag
  *
  * @author  Jerome Dochez
- * @version
  */
 public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceDescriptor> {
 
@@ -43,18 +44,21 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
 
     public ResourceRefNode() {
         registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL),
-                               DefaultResourcePrincipalNode.class, "setResourcePrincipal");
+            DefaultResourcePrincipalNode.class, "setResourcePrincipal");
     }
+
 
     @Override
     public ResourceReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ResourceReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new ResourceReferenceDescriptor();
+        }
         return descriptor;
     }
 
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
@@ -71,30 +75,31 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
             }
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (descriptor == null) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment.backend.addDescriptorFailure",
+            DOLUtils.getDefaultLogger().log(Level.WARNING, DOLUtils.INVALID_DESC_MAPPING,
                 new Object[] {newDescriptor, this});
             return;
         }
-        if (newDescriptor instanceof ResourcePrincipal) {
-            descriptor.setResourcePrincipal((ResourcePrincipal) newDescriptor);
+        if (newDescriptor instanceof ResourcePrincipalDescriptor) {
+            descriptor.setResourcePrincipal((ResourcePrincipalDescriptor) newDescriptor);
         } else if (newDescriptor instanceof MailConfiguration) {
             // XXX - This special case doesn't seem to be needed since no one
-            // ever uses the value set here.  I'm not even sure this case can
+            // ever uses the value set here. I'm not even sure this case can
             // ever happen; see MailConfigurationNode.
             descriptor.setMailConfiguration((MailConfiguration) newDescriptor);
         } else {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{"In " + this + " do not know what to do with " + newDescriptor});
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
+                new Object[] {"In " + this + " do not know what to do with " + newDescriptor});
         }
     }
 
-    @Override
     public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor rrDescriptor) {
         Node rrNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(rrNode, TagNames.RESOURCE_REFERENCE_NAME, rrDescriptor.getName());
@@ -102,7 +107,7 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
         if (rrDescriptor.getResourcePrincipal() != null) {
             DefaultResourcePrincipalNode drpNode = new DefaultResourcePrincipalNode();
             drpNode.writeDescriptor(rrNode, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL,
-                                    rrDescriptor.getResourcePrincipal());
+                rrDescriptor.getResourcePrincipal());
         }
         return rrNode;
     }
@@ -111,17 +116,16 @@ public class ResourceRefNode extends DeploymentDescriptorNode<ResourceReferenceD
      * writes all the runtime information for resources references
      *
      * @param parent node to add the runtime xml info
-     * @param the J2EE component containing ejb references
+     * @param descriptor the J2EE component containing ejb references
      */
     public static void writeResourceReferences(Node parent, ResourceReferenceContainer descriptor) {
         // resource-ref*
-        Iterator rrs = descriptor.getResourceReferenceDescriptors().iterator();
+        Iterator<ResourceReferenceDescriptor> rrs = descriptor.getResourceReferenceDescriptors().iterator();
         if (rrs.hasNext()) {
 
             ResourceRefNode rrNode = new ResourceRefNode();
             while (rrs.hasNext()) {
-                rrNode.writeDescriptor(parent, TagNames.RESOURCE_REFERENCE,
-                    (ResourceReferenceDescriptor) rrs.next());
+                rrNode.writeDescriptor(parent, TagNames.RESOURCE_REFERENCE, rrs.next());
             }
         }
     }

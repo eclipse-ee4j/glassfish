@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,6 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
@@ -28,6 +26,10 @@ import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Iterator;
+import java.util.Map;
+
 import org.w3c.dom.Node;
 
 /**
@@ -39,15 +41,39 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
 
     private MessageDestinationReferenceDescriptor descriptor;
 
+    /**
+     * writes all the runtime information for JMS destination references
+     *
+     * @param parent node to add the runtime xml info
+     * @param descriptor the J2EE component containing message destination references
+     */
+    public static void writeMessageDestinationReferences(Node parent, MessageDestinationReferenceContainer descriptor) {
+        // message-destination-ref*
+        Iterator<MessageDestinationReferenceDescriptor> msgDestRefs = descriptor
+            .getMessageDestinationReferenceDescriptors().iterator();
+        if (!msgDestRefs.hasNext()) {
+            return;
+        }
+        MessageDestinationRefNode messageDestinationRefNode = new MessageDestinationRefNode();
+        while (msgDestRefs.hasNext()) {
+            MessageDestinationReferenceDescriptor next = msgDestRefs.next();
+            messageDestinationRefNode.write(parent, TagNames.MESSAGE_DESTINATION_REFERENCE, next);
+        }
+    }
+
+
     @Override
     public MessageDestinationReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new MessageDestinationReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new MessageDestinationReferenceDescriptor();
+        }
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
@@ -55,7 +81,7 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.MESSAGE_DESTINATION_REFERENCE_NAME.equals(element.getQName())) {
-            XMLNode parentNode = getParentNode();
+            XMLNode<?> parentNode = getParentNode();
             Object parentDesc = null;
             // in case of web
             if (parentNode.getDescriptor() instanceof WebBundleDescriptor) {
@@ -67,46 +93,23 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
 
             if (parentDesc instanceof MessageDestinationReferenceContainer) {
                 try {
-                    descriptor = ((MessageDestinationReferenceContainer) parentDesc).getMessageDestinationReferenceByName(value);
+                    descriptor = ((MessageDestinationReferenceContainer) parentDesc)
+                        .getMessageDestinationReferenceByName(value);
                 } catch (IllegalArgumentException iae) {
                     DOLUtils.getDefaultLogger().warning(iae.getMessage());
                 }
 
             }
-        } else super.setElementValue(element, value);
-    }
-
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName,
-        MessageDestinationReferenceDescriptor msgDestRef) {
-        Node msgDestRefNode = super.writeDescriptor(parent, nodeName, msgDestRef);
-        appendTextChild(msgDestRefNode,
-            RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE_NAME,
-            msgDestRef.getName());
-        appendTextChild(msgDestRefNode, RuntimeTagNames.JNDI_NAME,
-            msgDestRef.getJndiName());
-        return msgDestRefNode;
-    }
-
-    /**
-     * writes all the runtime information for JMS destination references
-     *
-     * @param parent node to add the runtime xml info
-     * @param the J2EE component containing message destination references
-     */
-    public static void writeMessageDestinationReferences(Node parent,
-        MessageDestinationReferenceContainer descriptor) {
-        // message-destination-ref*
-        Iterator msgDestRefs =
-            descriptor.getMessageDestinationReferenceDescriptors().iterator();
-        if (msgDestRefs.hasNext()) {
-            MessageDestinationRefNode messageDestinationRefNode =
-                new MessageDestinationRefNode();
-            while (msgDestRefs.hasNext()) {
-                messageDestinationRefNode.writeDescriptor(parent,
-                    TagNames.MESSAGE_DESTINATION_REFERENCE,
-                    (MessageDestinationReferenceDescriptor) msgDestRefs.next());
-            }
+        } else {
+            super.setElementValue(element, value);
         }
+    }
+
+
+    private Node write(Node parent, String nodeName, MessageDestinationReferenceDescriptor msgDestRef) {
+        Node msgDestRefNode = super.writeDescriptor(parent, nodeName, msgDestRef);
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_REFERENCE_NAME, msgDestRef.getName());
+        appendTextChild(msgDestRefNode, RuntimeTagNames.JNDI_NAME, msgDestRef.getJndiName());
+        return msgDestRefNode;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
@@ -25,7 +25,21 @@ import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.WSDolSupport;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContextImpl;
-import com.sun.enterprise.deployment.core.*;
+import com.sun.enterprise.deployment.core.MetadataSource;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.lang.annotation.ElementType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
@@ -33,25 +47,11 @@ import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 
-import jakarta.annotation.Resource;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.logging.Level;
-
 /**
- * This handler is responsible for handling the jakarta.annotation.Resource
- * annotation.
+ * This handler is responsible for handling the jakarta.annotation.Resource annotation.
  */
 @Service
 @AnnotationHandlerFor(Resource.class)
@@ -67,11 +67,10 @@ public class ResourceHandler extends AbstractResourceHandler {
     // corresponding types.
     // XXX - this needs to be synchronized with the list in
     // com.sun.enterprise.deployment.EnvironmentProperty
-    private static final Map<Class, Class> envEntryTypes;
+    private static final Map<Class<?>, Class<?>> envEntryTypes;
 
     static {
-
-        envEntryTypes = new HashMap<Class, Class>();
+        envEntryTypes = new HashMap<>();
 
         envEntryTypes.put(String.class, String.class);
 
@@ -115,35 +114,30 @@ public class ResourceHandler extends AbstractResourceHandler {
     public ResourceHandler() {
     }
 
+
     /**
      * This entry point is used both for a single @Resource and iteratively
      * from a compound @Resources processor.
      */
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
-
-        Resource resourceAn = (Resource)ainfo.getAnnotation();
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
+        throws AnnotationProcessorException {
+        Resource resourceAn = (Resource) ainfo.getAnnotation();
         return processResource(ainfo, rcContexts, resourceAn);
     }
 
-    protected HandlerProcessingResult processResource(AnnotationInfo ainfo,
-                                   ResourceContainerContext[] rcContexts,
-                                   Resource resourceAn)
-        throws AnnotationProcessorException {
 
-        ResourceReferenceDescriptor resourceRefs[] = null;
+    protected HandlerProcessingResult processResource(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts,
+        Resource resourceAn) throws AnnotationProcessorException {
 
-        String defaultLogicalName = null;
-        Class defaultResourceType = null;
-        InjectionTarget target = null;
-
+        final String defaultLogicalName;
+        final Class<?> defaultResourceType;
+        final InjectionTarget target;
         if (ElementType.FIELD.equals(ainfo.getElementType())) {
-            Field f = (Field)ainfo.getAnnotatedElement();
+            Field f = (Field) ainfo.getAnnotatedElement();
             String targetClassName = f.getDeclaringClass().getName();
 
             defaultLogicalName = targetClassName + "/" + f.getName();
-
             defaultResourceType = f.getType();
 
             target = new InjectionTarget();
@@ -153,7 +147,7 @@ public class ResourceHandler extends AbstractResourceHandler {
 
         } else if (ElementType.METHOD.equals(ainfo.getElementType())) {
 
-            Method m = (Method)ainfo.getAnnotatedElement();
+            Method m = (Method) ainfo.getAnnotatedElement();
             String targetClassName = m.getDeclaringClass().getName();
 
             validateInjectionMethod(m, ainfo);
@@ -163,7 +157,6 @@ public class ResourceHandler extends AbstractResourceHandler {
 
             // prefixing with fully qualified type name
             defaultLogicalName = targetClassName + "/" + propertyName;
-
             defaultResourceType = m.getParameterTypes()[0];
 
             target = new InjectionTarget();
@@ -173,44 +166,42 @@ public class ResourceHandler extends AbstractResourceHandler {
 
         } else if (ElementType.TYPE.equals(ainfo.getElementType())) {
             // name() and type() are required for TYPE-level @Resource
-            if (resourceAn.name().equals("") ||
-                    resourceAn.type() == Object.class) {
-                Class c = (Class) ainfo.getAnnotatedElement();
-                log(Level.SEVERE, ainfo,
-                    localStrings.getLocalString(
-        "enterprise.deployment.annotation.handlers.invalidtypelevelresource",
-                    "Invalid TYPE-level @Resource with name() = [{0}] and " +
-                    "type = [{1}] in {2}. Each TYPE-level @Resource must " +
-                    "specify both name() and type().",
-                    new Object[] { resourceAn.name(), resourceAn.type(), c }));
+            if (resourceAn.name().isEmpty() || resourceAn.type() == Object.class) {
+                Class<?> c = (Class<?>) ainfo.getAnnotatedElement();
+                log(Level.SEVERE, ainfo, I18N.getLocalString(
+                    "enterprise.deployment.annotation.handlers.invalidtypelevelresource",
+                    "Invalid TYPE-level @Resource with name() = [{0}] and "
+                        + "type = [{1}] in {2}. Each TYPE-level @Resource must " + "specify both name() and type().",
+                    new Object[] {resourceAn.name(), resourceAn.type(), c}));
                 return getDefaultFailedResult();
             }
+            defaultLogicalName = null;
+            defaultResourceType = null;
+            target = null;
         } else {
             // can't happen
             return getDefaultFailedResult();
         }
 
         // NOTE that default value is Object.class, not null
-        Class resourceType = (resourceAn.type() == Object.class) ?
-                defaultResourceType : resourceAn.type();
-        String logicalName = resourceAn.name().equals("") ?
-                defaultLogicalName : resourceAn.name();
+        Class<?> resourceType = resourceAn.type() == Object.class ? defaultResourceType : resourceAn.type();
+        String logicalName = resourceAn.name().isEmpty() ? defaultLogicalName : resourceAn.name();
 
         /*
-         * Get corresponding class type.  This does the appropriate
-         * mapping for primitives.  For everything else, the type is
-         * unchanged.  Really onlt need to do this for simple env-entries,
+         * Get corresponding class type. This does the appropriate
+         * mapping for primitives. For everything else, the type is
+         * unchanged. Really onlt need to do this for simple env-entries,
          * but it shouldn't hurt to do it for everything.
          */
-        if (envEntryTypes.containsKey(resourceType))
+        if (envEntryTypes.containsKey(resourceType)) {
             resourceType = envEntryTypes.get(resourceType);
+        }
 
-        EnvironmentProperty[] descriptors =
-            getDescriptors(resourceType, logicalName, rcContexts, resourceAn);
-
+        EnvironmentProperty[] descriptors = getDescriptors(resourceType, logicalName, rcContexts, resourceAn);
         for (EnvironmentProperty desc : descriptors) {
-            if (target != null)
+            if (target != null) {
                 desc.addInjectionTarget(target);
+            }
 
             if (!ok(desc.getName())) { // a new one
                 desc.setName(logicalName);
@@ -222,47 +213,45 @@ public class ResourceHandler extends AbstractResourceHandler {
             }
 
             // merge description
-            if (!ok(desc.getDescription()) && ok(resourceAn.description()))
+            if (!ok(desc.getDescription()) && ok(resourceAn.description())) {
                 desc.setDescription(resourceAn.description());
+            }
 
             // merge lookup-name and mapped-name
-            if (!desc.hasLookupName() && !desc.isSetValueCalled() &&
-                    ok(getResourceLookupValue(resourceAn, ainfo)))
+            if (!desc.hasLookupName() && !desc.isSetValueCalled() && ok(getResourceLookupValue(resourceAn, ainfo))) {
                 desc.setLookupName(getResourceLookupValue(resourceAn, ainfo));
-            if (!ok(desc.getMappedName()) && ok(resourceAn.mappedName()))
+            }
+            if (!ok(desc.getMappedName()) && ok(resourceAn.mappedName())) {
                 desc.setMappedName(resourceAn.mappedName());
+            }
 
             // merge authentication-type and shareable
             if (desc instanceof ResourceReferenceDescriptor) {
-                ResourceReferenceDescriptor rdesc =
-                    (ResourceReferenceDescriptor)desc;
+                ResourceReferenceDescriptor rdesc = (ResourceReferenceDescriptor) desc;
                 if (!rdesc.hasAuthorization()) {
                     switch (resourceAn.authenticationType()) {
-                    case APPLICATION:
-                        rdesc.setAuthorization(
-                         ResourceReferenceDescriptor.APPLICATION_AUTHORIZATION);
-                        break;
-                    case CONTAINER:
-                        rdesc.setAuthorization(
-                         ResourceReferenceDescriptor.CONTAINER_AUTHORIZATION);
-                        break;
-                    default:    // should never happen
-                        Class c = (Class) ainfo.getAnnotatedElement();
-                        log(Level.SEVERE, ainfo,
-                            localStrings.getLocalString(
-        "enterprise.deployment.annotation.handlers.invalidauthenticationtype",
-                            "Invalid AuthenticationType [{0}] in @Resource " +
-                            "with name() = [{1}] and " +
-                            "type = [{1}] in {2}.",
-                            new Object[] { resourceAn.authenticationType(),
-                                    resourceAn.name(), resourceAn.type(), c }));
-                        return getDefaultFailedResult();
+                        case APPLICATION:
+                            rdesc.setAuthorization(ResourceReferenceDescriptor.APPLICATION_AUTHORIZATION);
+                            break;
+                        case CONTAINER:
+                            rdesc.setAuthorization(ResourceReferenceDescriptor.CONTAINER_AUTHORIZATION);
+                            break;
+                        default: // should never happen
+                            Class<?> c = (Class<?>) ainfo.getAnnotatedElement();
+                            log(Level.SEVERE, ainfo,
+                                I18N.getLocalString(
+                                    "enterprise.deployment.annotation.handlers.invalidauthenticationtype",
+                                    "Invalid AuthenticationType [{0}] in @Resource " + "with name() = [{1}] and "
+                                        + "type = [{1}] in {2}.",
+                                    new Object[] {resourceAn.authenticationType(), resourceAn.name(), resourceAn.type(),
+                                        c}));
+                            return getDefaultFailedResult();
                     }
                 }
                 if (!rdesc.hasSharingScope()) {
-                    rdesc.setSharingScope(resourceAn.shareable() ?
-                         ResourceReferenceDescriptor.RESOURCE_SHAREABLE :
-                         ResourceReferenceDescriptor.RESOURCE_UNSHAREABLE);
+                    rdesc.setSharingScope(resourceAn.shareable()
+                        ? ResourceReferenceDescriptor.RESOURCE_SHAREABLE
+                        : ResourceReferenceDescriptor.RESOURCE_UNSHAREABLE);
                 }
             }
         }
@@ -270,62 +259,57 @@ public class ResourceHandler extends AbstractResourceHandler {
         return getDefaultProcessedResult();
     }
 
-    private EnvironmentProperty[] getDescriptors(Class resourceType,
-        String logicalName, ResourceContainerContext[] rcContexts, Resource resourceAn) {
 
-        Class webServiceContext = null;
+    private EnvironmentProperty[] getDescriptors(Class<?> resourceType, String logicalName,
+        ResourceContainerContext[] rcContexts, Resource resourceAn) {
+        Class<?> webServiceContext = null;
         try {
-
-            WSDolSupport support  = wSDolSupportProvider.get();
-            if (support!=null) {
+            WSDolSupport support = wSDolSupportProvider.get();
+            if (support != null) {
                 webServiceContext = support.getType("jakarta.xml.ws.WebServiceContext");
             }
-        }   catch(Exception e) {
+        } catch (Exception e) {
             // we don't care, either we don't have the class, ot the bundled is not installed
         }
-        if (resourceType.getName().equals("jakarta.jms.Queue") ||
-                resourceType.getName().equals("jakarta.jms.Topic")) {
-            return getMessageDestinationReferenceDescriptors(
-                                                    logicalName, rcContexts);
-        } else if (envEntryTypes.containsKey(resourceType) ||
-                resourceType.isEnum()) {
-            return getEnvironmentPropertyDescriptors(logicalName, rcContexts,
-                                                    resourceAn);
-        } else if (resourceType == javax.sql.DataSource.class ||
-                resourceType.getName().equals("jakarta.jms.ConnectionFactory") ||
-                resourceType.getName().equals("jakarta.jms.QueueConnectionFactory") ||
-                resourceType.getName().equals("jakarta.jms.TopicConnectionFactory") ||
-                resourceType == webServiceContext ||
-                resourceType.getName().equals("jakarta.mail.Session") ||
-                resourceType.getName().equals("java.net.URL") ||
-                resourceType.getName().equals("jakarta.resource.cci.ConnectionFactory") ||
-                resourceType == org.omg.CORBA_2_3.ORB.class ||
-                resourceType == org.omg.CORBA.ORB.class ||
-                resourceType.getName().equals("jakarta.jms.XAConnectionFactory") ||
-                resourceType.getName().equals("jakarta.jms.XAQueueConnectionFactory") ||
-                resourceType.getName().equals("jakarta.jms.XATopicConnectionFactory") ||
-                DOLUtils.isRAConnectionFactory(habitat, resourceType.getName(), ((ResourceContainerContextImpl)rcContexts[0]).getAppFromDescriptor()) ) {
+        if (resourceType.getName().equals("jakarta.jms.Queue") || resourceType.getName().equals("jakarta.jms.Topic")) {
+            return getMessageDestinationReferenceDescriptors(logicalName, rcContexts);
+        } else if (envEntryTypes.containsKey(resourceType) || resourceType.isEnum()) {
+            return getEnvironmentPropertyDescriptors(logicalName, rcContexts, resourceAn);
+        } else if (resourceType == javax.sql.DataSource.class
+            || resourceType.getName().equals("jakarta.jms.ConnectionFactory")
+            || resourceType.getName().equals("jakarta.jms.QueueConnectionFactory")
+            || resourceType.getName().equals("jakarta.jms.TopicConnectionFactory")
+            || resourceType == webServiceContext
+            || resourceType.getName().equals("jakarta.mail.Session")
+            || resourceType.getName().equals("java.net.URL")
+            || resourceType.getName().equals("jakarta.resource.cci.ConnectionFactory")
+            || resourceType == org.omg.CORBA_2_3.ORB.class
+            || resourceType == org.omg.CORBA.ORB.class
+            || resourceType.getName().equals("jakarta.jms.XAConnectionFactory")
+            || resourceType.getName().equals("jakarta.jms.XAQueueConnectionFactory")
+            || resourceType.getName().equals("jakarta.jms.XATopicConnectionFactory")
+            || DOLUtils.isRAConnectionFactory(habitat, resourceType.getName(),
+                ((ResourceContainerContextImpl) rcContexts[0]).getAppFromDescriptor())) {
             return getResourceReferenceDescriptors(logicalName, rcContexts);
         } else {
-            return getResourceEnvReferenceDescriptors(logicalName,
-                                                            rcContexts);
+            return getResourceEnvReferenceDescriptors(logicalName, rcContexts);
         }
     }
+
 
     /**
      * Return ResourceReferenceDescriptors with given name if exists or a new
      * one without name being set.
+     *
      * @param logicalName
      * @param rcContexts
      * @return an array of ResourceReferenceDescriptor
      */
-    private ResourceReferenceDescriptor[] getResourceReferenceDescriptors(
-            String logicalName, ResourceContainerContext[] rcContexts) {
-        ResourceReferenceDescriptor resourceRefs[] =
-                new ResourceReferenceDescriptor[rcContexts.length];
+    private ResourceReferenceDescriptor[] getResourceReferenceDescriptors(String logicalName,
+        ResourceContainerContext[] rcContexts) {
+        ResourceReferenceDescriptor resourceRefs[] = new ResourceReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
-            ResourceReferenceDescriptor resourceRef =
-                rcContexts[i].getResourceReference(logicalName);
+            ResourceReferenceDescriptor resourceRef = rcContexts[i].getResourceReference(logicalName);
             if (resourceRef == null) {
                 resourceRef = new ResourceReferenceDescriptor();
                 rcContexts[i].addResourceReferenceDescriptor(resourceRef);
@@ -336,26 +320,23 @@ public class ResourceHandler extends AbstractResourceHandler {
         return resourceRefs;
     }
 
+
     /**
      * Return MessageDestinationReferenceDescriptors with given name
      * if exists or a new one without name being set.
+     *
      * @param logicName
      * @param rcContexts
      * @return an array of message destination reference descriptors
      */
-    private MessageDestinationReferenceDescriptor[]
-        getMessageDestinationReferenceDescriptors
-        (String logicName, ResourceContainerContext[] rcContexts) {
-
-        MessageDestinationReferenceDescriptor msgDestRefs[] =
-                new MessageDestinationReferenceDescriptor[rcContexts.length];
+    private MessageDestinationReferenceDescriptor[] getMessageDestinationReferenceDescriptors(String logicName,
+        ResourceContainerContext[] rcContexts) {
+        MessageDestinationReferenceDescriptor msgDestRefs[] = new MessageDestinationReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
-            MessageDestinationReferenceDescriptor msgDestRef =
-                rcContexts[i].getMessageDestinationReference(logicName);
+            MessageDestinationReferenceDescriptor msgDestRef = rcContexts[i].getMessageDestinationReference(logicName);
             if (msgDestRef == null) {
-               msgDestRef = new MessageDestinationReferenceDescriptor();
-               rcContexts[i].addMessageDestinationReferenceDescriptor(
-                   msgDestRef);
+                msgDestRef = new MessageDestinationReferenceDescriptor();
+                rcContexts[i].addMessageDestinationReferenceDescriptor(msgDestRef);
             }
             msgDestRefs[i] = msgDestRef;
         }
@@ -363,26 +344,23 @@ public class ResourceHandler extends AbstractResourceHandler {
         return msgDestRefs;
     }
 
+
     /**
      * Return ResourceEnvReferenceDescriptors with given name
      * if exists or a new one without name being set.
+     *
      * @param logicName
      * @param rcContexts
      * @return an array of resource env reference descriptors
      */
-    private ResourceEnvReferenceDescriptor[]
-        getResourceEnvReferenceDescriptors
-        (String logicName, ResourceContainerContext[] rcContexts) {
-
-        ResourceEnvReferenceDescriptor resourceEnvRefs[] =
-                new ResourceEnvReferenceDescriptor[rcContexts.length];
+    private ResourceEnvReferenceDescriptor[] getResourceEnvReferenceDescriptors(String logicName,
+        ResourceContainerContext[] rcContexts) {
+        ResourceEnvReferenceDescriptor resourceEnvRefs[] = new ResourceEnvReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
-            ResourceEnvReferenceDescriptor resourceEnvRef =
-                rcContexts[i].getResourceEnvReference(logicName);
+            ResourceEnvReferenceDescriptor resourceEnvRef = rcContexts[i].getResourceEnvReference(logicName);
             if (resourceEnvRef == null) {
-               resourceEnvRef = new ResourceEnvReferenceDescriptor();
-               rcContexts[i].addResourceEnvReferenceDescriptor(
-                   resourceEnvRef);
+                resourceEnvRef = new ResourceEnvReferenceDescriptor();
+                rcContexts[i].addResourceEnvReferenceDescriptor(resourceEnvRef);
             }
             resourceEnvRefs[i] = resourceEnvRef;
         }
@@ -390,25 +368,20 @@ public class ResourceHandler extends AbstractResourceHandler {
         return resourceEnvRefs;
     }
 
+
     /**
      * Return EnvironmentProperty descriptors with the given name
      * if it exists or a new one without name being set.
      *
-     * @param logicalName       the JNDI name
+     * @param logicalName the JNDI name
      * @param rcContexts
      * @return an array of EnvironmentProperty descriptors
      */
-    private EnvironmentProperty[] getEnvironmentPropertyDescriptors(
-                                    String logicalName,
-                                    ResourceContainerContext[] rcContexts,
-                                    Resource annotation) {
-
-        Collection<EnvironmentProperty> envEntries =
-            new ArrayList<EnvironmentProperty>();
-
-        for (int i = 0; i < rcContexts.length; i++) {
-            EnvironmentProperty envEntry =
-                rcContexts[i].getEnvEntry(logicalName);
+    private EnvironmentProperty[] getEnvironmentPropertyDescriptors(String logicalName,
+        ResourceContainerContext[] rcContexts, Resource annotation) {
+        Collection<EnvironmentProperty> envEntries = new ArrayList<>();
+        for (ResourceContainerContext rcContext : rcContexts) {
+            EnvironmentProperty envEntry = rcContext.getEnvEntry(logicalName);
             // For @Resource declarations that map to env-entries, if there
             // is no corresponding deployment descriptor entry that has a
             // value and no lookup(), it's treated as if the declaration
@@ -420,12 +393,13 @@ public class ResourceHandler extends AbstractResourceHandler {
             } else {
                 envEntry = new EnvironmentProperty();
                 envEntries.add(envEntry);
-                rcContexts[i].addEnvEntryDescriptor(envEntry);
+                rcContext.addEnvEntryDescriptor(envEntry);
             }
         }
 
         return envEntries.toArray(new EnvironmentProperty[envEntries.size()]);
     }
+
 
     /**
      * Return the value of the "lookup" element of the @Resource annotation.
@@ -436,22 +410,19 @@ public class ResourceHandler extends AbstractResourceHandler {
      *
      * @return the value of the lookup element
      */
-    private String getResourceLookupValue(Resource annotation,
-                                            AnnotationInfo ainfo) {
-        String lookupValue = "";
+    private String getResourceLookupValue(Resource annotation, AnnotationInfo ainfo) {
         try {
-            lookupValue = annotation.lookup();
-        } catch(NoSuchMethodError nsme) {
+            return annotation.lookup();
+        } catch (NoSuchMethodError nsme) {
             // Probably means an older version of Resource is being picked up from somewhere.
             // Don't treat this as a fatal error.
             try {
                 log(Level.WARNING, ainfo,
-                    localStrings.getLocalString(
-                "enterprise.deployment.annotation.handlers.wrongresourceclass",
-                        "Incorrect @Resource annotation class definition - " +
-                        "missing lookup attribute"));
-            } catch (AnnotationProcessorException ex) { }
+                    I18N.getLocalString("enterprise.deployment.annotation.handlers.wrongresourceclass",
+                        "Incorrect @Resource annotation class definition - " + "missing lookup attribute"));
+            } catch (AnnotationProcessorException ex) {
+            }
         }
-        return lookupValue;
+        return "";
     }
 }

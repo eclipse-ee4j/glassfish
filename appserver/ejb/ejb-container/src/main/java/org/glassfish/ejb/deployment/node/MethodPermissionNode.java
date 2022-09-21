@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,11 +32,9 @@ import org.w3c.dom.Node;
 import org.xml.sax.Attributes;
 
 /**
- * This class handles all the method-permission xml tag
- * information
+ * This class handles all the method-permission xml tag information
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class MethodPermissionNode extends DeploymentDescriptorNode<MethodPermissionDescriptor> {
 
@@ -44,17 +43,18 @@ public class MethodPermissionNode extends DeploymentDescriptorNode<MethodPermiss
     /** Creates new MethodPermissionNode */
     public MethodPermissionNode() {
         super();
-        registerElementHandler(new XMLElement(EjbTagNames.METHOD),
-                                                            MethodNode.class, "addMethod");
+        registerElementHandler(new XMLElement(EjbTagNames.METHOD), MethodNode.class, "addMethod");
     }
+
 
     @Override
     public MethodPermissionDescriptor getDescriptor() {
-       if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new MethodPermissionDescriptor();
         }
         return descriptor;
     }
+
 
     /**
      * SAX Parser API implementation, we don't really care for now.
@@ -62,10 +62,12 @@ public class MethodPermissionNode extends DeploymentDescriptorNode<MethodPermiss
     @Override
     public void startElement(XMLElement element, Attributes attributes) {
         if (EjbTagNames.UNCHECKED.equals(element.getQName())) {
-            descriptor.addMethodPermission(MethodPermission.getUncheckedMethodPermission());
-        } else
+            descriptor.addMethodPermission(MethodPermission.getPermitAllMethodPermission());
+        } else {
             super.startElement(element, attributes);
+        }
     }
+
 
     /**
      * receives notification of the value for a particular tag
@@ -83,19 +85,20 @@ public class MethodPermissionNode extends DeploymentDescriptorNode<MethodPermiss
         }
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName node name for the root element of this xml fragment
+     * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, MethodPermissionDescriptor descriptor,
-                EjbDescriptor ejb) {
+    public Node writeDescriptor(Node parent, String nodeName, MethodPermissionDescriptor descriptor, EjbDescriptor ejb) {
         Node subNode = super.writeDescriptor(parent, nodeName, descriptor);
         return writeDescriptorInNode(subNode, descriptor, ejb);
     }
+
 
     /**
      * Write the descriptor in a DOM tree which root element is provided
@@ -104,30 +107,30 @@ public class MethodPermissionNode extends DeploymentDescriptorNode<MethodPermiss
      * @param descriptor the method permisison descriptor
      * @param ejb the ejb descriptor the above method permission belongs to
      */
-    public Node writeDescriptorInNode(Node subNode, MethodPermissionDescriptor descriptor,
-                EjbDescriptor ejb) {
+    public Node writeDescriptorInNode(Node subNode, MethodPermissionDescriptor descriptor, EjbDescriptor ejb) {
 
         writeLocalizedDescriptions(subNode, descriptor);
 
         MethodPermission[] mps = descriptor.getMethodPermissions();
-        if (mps.length==0)
+        if (mps.length == 0) {
             return null;
+        }
 
         if (!mps[0].isExcluded()) {
             if (mps[0].isUnchecked()) {
                 appendChild(subNode, EjbTagNames.UNCHECKED);
             } else {
-                for (int i=0;i<mps.length;i++) {
-                    appendTextChild(subNode, TagNames.ROLE_NAME, mps[i].getRole().getName());
+                for (MethodPermission mp : mps) {
+                    appendTextChild(subNode, TagNames.ROLE_NAME, mp.getRole().getName());
                 }
             }
         }
 
         MethodDescriptor[] methods = descriptor.getMethods();
         MethodNode mn = new MethodNode();
-        for (int i=0;i<methods.length;i++) {
+        for (MethodDescriptor method : methods) {
             String ejbName = ejb.getName();
-            mn.writeDescriptor(subNode, EjbTagNames.METHOD, methods[i], ejbName);
+            mn.writeDescriptor(subNode, EjbTagNames.METHOD, method, ejbName);
         }
         return subNode;
     }

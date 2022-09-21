@@ -32,14 +32,14 @@ import java.util.Set;
 public interface ServiceReferenceContainer {
 
     /**
-     * get a particular service reference by name
+     * @return a particular service reference by name
      */
     ServiceReferenceDescriptor getServiceReferenceByName(String name);
 
     /**
-     * return the list of service references
+     * @return the set of service references
      */
-    Set getServiceReferenceDescriptors();
+    Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors();
 
     /**
      * Add a new service reference

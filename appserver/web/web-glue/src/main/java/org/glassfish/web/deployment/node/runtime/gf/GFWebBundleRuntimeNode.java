@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,14 @@
 
 package org.glassfish.web.deployment.node.runtime.gf;
 
-import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
-import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 import java.util.List;
 import java.util.Map;
+
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 
 /**
  * This node is responsible for handling all runtime information for
@@ -65,18 +66,18 @@ public class GFWebBundleRuntimeNode extends WebBundleRuntimeNode {
         return DTDRegistry.GF_WEBAPP_301_DTD_SYSTEM_ID;
     }
 
-   /**
-    * register this node as a root node capable of loading entire DD files
-    *
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
-    * @param versionUpgrades The list of upgrades from older versions
-    * to the latest schema
-    * @return the doctype tag name
-    */
-    public static String registerBundle(Map<String, String> publicIDToDTD,
-                                        Map<String, List<Class>> versionUpgrades) {
-       publicIDToDTD.put(DTDRegistry.GF_WEBAPP_301_DTD_PUBLIC_ID, DTDRegistry.GF_WEBAPP_301_DTD_SYSTEM_ID);
 
-       return RuntimeTagNames.GF_WEB_RUNTIME_TAG;
-   }
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @param versionUpgrades The list of upgrades from older versions
+     *            to the latest schema
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map<String, String> publicIDToDTD,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        publicIDToDTD.put(DTDRegistry.GF_WEBAPP_301_DTD_PUBLIC_ID, DTDRegistry.GF_WEBAPP_301_DTD_SYSTEM_ID);
+        return RuntimeTagNames.GF_WEB_RUNTIME_TAG;
+    }
 }

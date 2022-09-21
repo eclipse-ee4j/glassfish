@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.enterprise.security.perms;
 
+import com.sun.enterprise.config.serverbeans.DasConfig;
+import com.sun.enterprise.deployment.PermissionsDescriptor;
+import com.sun.enterprise.deployment.io.PermissionsDeploymentDescriptorFile;
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,56 +37,46 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.config.serverbeans.DasConfig;
-import com.sun.enterprise.deployment.PermissionsDescriptor;
-import com.sun.enterprise.deployment.io.PermissionsDeploymentDescriptorFile;
-import com.sun.logging.LogDomains;
-
 /**
- *
  * Utility class to get declared permissions
- *
  */
-
 public class XMLPermissionsHandler {
 
+    private static final Logger LOG = Logger.getLogger(LogDomains.SECURITY_LOGGER);
+    private static final String PERMISSIONS_XML = "META-INF/permissions.xml";
+
     private static ServiceLocator serviceLocator = Globals.getDefaultBaseServiceLocator();
+
     private DasConfig dasConfig;
+    private PermissionCollection declaredPermXml;
+    private final SMGlobalPolicyUtil.CommponentType compType;
 
-    private PermissionCollection declaredPermXml = null;
-    private PermissionCollection restrictedPC = null; // per app based restriction, not used for now
-
-    private SMGlobalPolicyUtil.CommponentType compType;
-
-    private static final Logger logger = Logger.getLogger(LogDomains.SECURITY_LOGGER);
-
-    public XMLPermissionsHandler(File base, SMGlobalPolicyUtil.CommponentType type) throws XMLStreamException, FileNotFoundException {
+    public XMLPermissionsHandler(File base, SMGlobalPolicyUtil.CommponentType type)
+        throws XMLStreamException, FileNotFoundException {
         this.compType = type;
 
         configureAppDeclaredPermissions(base);
         checkServerRestrictedPermissions();
     }
 
-    public XMLPermissionsHandler(InputStream restrictPermInput, InputStream allowedPermInput, SMGlobalPolicyUtil.CommponentType type)
-            throws XMLStreamException, FileNotFoundException {
 
+    public XMLPermissionsHandler(InputStream restrictPermInput, InputStream allowedPermInput,
+        SMGlobalPolicyUtil.CommponentType type) throws XMLStreamException, FileNotFoundException {
         this.compType = type;
 
         configureAppDeclaredPermissions(allowedPermInput);
         checkServerRestrictedPermissions();
     }
 
+
     public PermissionCollection getAppDeclaredPermissions() {
         return declaredPermXml;
     }
 
-    public PermissionCollection getRestrictedPermissions() {
-        return restrictedPC;
-    }
 
-    private void configureAppDeclaredPermissions(File base) throws XMLStreamException, FileNotFoundException {
+    private void configureAppDeclaredPermissions(File base) {
 
-        File permissionsXml = new File(base.getAbsolutePath(), PermissionXMLParser.PERMISSIONS_XML);
+        File permissionsXml = new File(base.getAbsolutePath(), PERMISSIONS_XML);
 
         if (permissionsXml.exists()) {
             FileInputStream fi = null;
@@ -105,6 +101,7 @@ public class XMLPermissionsHandler {
                 PermissionsDescriptor pd = (PermissionsDescriptor) pddf.read(fi);
 
                 declaredPermXml = pd.getDeclaredPermissions();
+                LOG.log(Level.FINE, "App declared permission = {0}", declaredPermXml);
 
             } catch (SAXException | IOException e) {
                 throw new SecurityException(e);
@@ -116,23 +113,15 @@ public class XMLPermissionsHandler {
                     }
                 }
             }
-
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("App declared permission = " + declaredPermXml);
-            }
         }
     }
 
     private void configureAppDeclaredPermissions(InputStream permInput) throws XMLStreamException, FileNotFoundException {
-
         if (permInput != null) {
             // this one has no shchema check (for client)
-            PermissionXMLParser parser = new PermissionXMLParser(permInput, restrictedPC);
+            PermissionXMLParser parser = new PermissionXMLParser(permInput, null);
             this.declaredPermXml = parser.getPermissions();
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("App declared permission = " + declaredPermXml);
-            }
-
+            LOG.log(Level.FINE, "App declared permission = {0}", declaredPermXml);
         }
     }
 

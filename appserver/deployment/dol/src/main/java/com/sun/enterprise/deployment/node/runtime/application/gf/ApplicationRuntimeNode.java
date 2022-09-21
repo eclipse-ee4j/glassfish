@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,24 +18,35 @@
 package com.sun.enterprise.deployment.node.runtime.application.gf;
 
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.node.ApplicationNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.node.runtime.*;
+import com.sun.enterprise.deployment.node.runtime.EjbRefNode;
+import com.sun.enterprise.deployment.node.runtime.MessageDestinationRefNode;
+import com.sun.enterprise.deployment.node.runtime.MessageDestinationRuntimeNode;
+import com.sun.enterprise.deployment.node.runtime.ResourceEnvRefNode;
+import com.sun.enterprise.deployment.node.runtime.ResourceRefNode;
+import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
+import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
+import com.sun.enterprise.deployment.node.runtime.ServiceRefNode;
 import com.sun.enterprise.deployment.node.runtime.common.SecurityRoleMappingNode;
+import com.sun.enterprise.deployment.runtime.common.GroupNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
+import java.util.List;
+import java.util.Map;
+
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.Role;
 import org.w3c.dom.Node;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * This node handles all runtime-information pertinent to applications
@@ -43,12 +55,11 @@ import java.util.Map;
  * unique sun-ri.xml file. In J2EE 1.4, each sub archivist is responsible
  * for saving its runtime-info at his level.
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
 
-    private String currentWebUri = null;
+    private String currentWebUri;
 
     public ApplicationRuntimeNode(Application descriptor) {
         super(descriptor);
@@ -59,13 +70,14 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     /**
      * Initialize the child handlers
      */
+    @Override
     protected void init() {
         super.init();
         registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING), SecurityRoleMappingNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.EJB_REFERENCE), EjbRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
         registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), ServiceRefNode.class);
     }
@@ -77,7 +89,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
      * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
-    public static String registerBundle(Map publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
+    public static String registerBundle(Map<String, String> publicIDToDTD, Map<String, List<Class<?>>> versionUpgrades) {
         publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_130_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_130_DTD_SYSTEM_ID);
         publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_140_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_140_DTD_SYSTEM_ID);
         publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_141_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_141_DTD_SYSTEM_ID);
@@ -94,6 +106,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.S1AS_APPLICATION_RUNTIME_TAG);
     }
@@ -102,6 +115,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     /**
      * @return the DOCTYPE that should be written to the XML file
      */
+    @Override
     public String getDocType() {
         return DTDRegistry.SUN_APPLICATION_600_DTD_PUBLIC_ID;
     }
@@ -110,6 +124,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return DTDRegistry.SUN_APPLICATION_600_DTD_SYSTEM_ID;
     }
@@ -118,6 +133,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     /**
      * @return NULL for all runtime nodes.
      */
+    @Override
     public List<String> getSystemIDs() {
         return null;
     }
@@ -129,8 +145,9 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
      *
      * @return the map with the element name as a key, the setter method as a value
      */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.REALM, "setRealm");
         return table;
     }
@@ -142,6 +159,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (element.getQName().equals(RuntimeTagNames.PASS_BY_REFERENCE)) {
             descriptor.setPassByReference("true".equalsIgnoreCase(value));
@@ -156,7 +174,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
             currentWebUri = value;
         } else if (element.getQName().equals(RuntimeTagNames.CONTEXT_ROOT)) {
             if (currentWebUri != null) {
-                ModuleDescriptor md = descriptor.getModuleDescriptorByUri(currentWebUri);
+                ModuleDescriptor<BundleDescriptor> md = descriptor.getModuleDescriptorByUri(currentWebUri);
                 if (md == null) {
                     throw new RuntimeException("No bundle in application with uri " + currentWebUri);
                 }
@@ -184,6 +202,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
      *
      * @param newDescriptor the new descriptor
      */
+    @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof SecurityRoleMapping) {
             SecurityRoleMapping roleMap = (SecurityRoleMapping) newDescriptor;
@@ -193,12 +212,12 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
                 SecurityRoleMapper rm = descriptor.getRoleMapper();
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = roleMap.getPrincipalNames();
-                    for (int i = 0; i < principals.size(); i++) {
-                        rm.assignRole(principals.get(i).getPrincipal(), role, descriptor);
+                    for (PrincipalNameDescriptor principal : principals) {
+                        rm.assignRole(principal.toPrincipal(), role, descriptor);
                     }
                     List<String> groups = roleMap.getGroupNames();
-                    for (int i = 0; i < groups.size(); i++) {
-                        rm.assignRole(new Group(groups.get(i)), role, descriptor);
+                    for (String group : groups) {
+                        rm.assignRole(new Group(group), role, descriptor);
                     }
                 }
             }
@@ -214,11 +233,12 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
      * @param application the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, Application application) {
         Node appNode = super.writeDescriptor(parent, nodeName, application);
 
         // web*
-        for (ModuleDescriptor module : application.getModules()) {
+        for (ModuleDescriptor<BundleDescriptor> module : application.getModules()) {
             if (module.getModuleType().equals(DOLUtils.warType())) {
                 Node web = appendChild(appNode, RuntimeTagNames.WEB);
                 appendTextChild(web, RuntimeTagNames.WEB_URI, module.getArchiveUri());
@@ -237,9 +257,9 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
 
         // security-role-mapping*
         List<SecurityRoleMapping> roleMappings = application.getSecurityRoleMappings();
-        for (int i = 0; i < roleMappings.size(); i++) {
+        for (SecurityRoleMapping roleMapping : roleMappings) {
             SecurityRoleMappingNode srmn = new SecurityRoleMappingNode();
-            srmn.writeDescriptor(appNode, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMappings.get(i));
+            srmn.writeDescriptor(appNode, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMapping);
         }
 
         // realm?

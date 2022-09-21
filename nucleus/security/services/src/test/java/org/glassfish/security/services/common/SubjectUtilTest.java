@@ -24,7 +24,7 @@ import java.util.Set;
 
 import javax.security.auth.Subject;
 
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -70,7 +70,7 @@ public class SubjectUtilTest {
     @Test
     public void testUserNameUtil_multi() {
         Subject sub = createSub(USERNAME, GROUPS);
-        sub.getPrincipals().add(new PrincipalImpl(USERNAME2));
+        sub.getPrincipals().add(new UserNameAndPassword(USERNAME2));
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
         assertThat(usernames, hasSize(2));
     }
@@ -78,7 +78,7 @@ public class SubjectUtilTest {
     private static Subject createSub(String username, String[] groups) {
         Set<Principal> pset = new HashSet<>();
         if (username != null) {
-            Principal u = new PrincipalImpl(username);
+            Principal u = new UserNameAndPassword(username);
             pset.add(u);
         }
 

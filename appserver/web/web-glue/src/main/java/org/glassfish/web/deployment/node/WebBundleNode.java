@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,50 +18,57 @@
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.SaxParserHandler;
+import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.glassfish.web.WarType;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 
-import java.util.*;
-
 /**
  * This node is responsible for handling the web-app xml tree
  *
  * @author  Jerome Dochez
- * @version
  */
 public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
 
-    public final static XMLElement tag = new XMLElement(WebTagNames.WEB_BUNDLE);
+    private static final XMLElement tag = new XMLElement(WebTagNames.WEB_BUNDLE);
 
     /**
      * The public ID for my documents.
      */
-    public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN";
-    public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
+    private static final String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN";
+    private static final String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN";
     /**
      * The system ID of my documents.
      */
-    public final static String SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_3.dtd";
-    public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/web-app_2_2.dtd";
+    private static final String SYSTEM_ID = "http://java.sun.com/dtd/web-app_2_3.dtd";
+    private static final String SYSTEM_ID_12 = "http://java.sun.com/dtd/web-app_2_2.dtd";
 
-    public final static String SCHEMA_ID_24 = "web-app_2_4.xsd";
-    public final static String SCHEMA_ID_25 = "web-app_2_5.xsd";
-    public final static String SCHEMA_ID_30 = "web-app_3_0.xsd";
-    public final static String SCHEMA_ID_31 = "web-app_3_1.xsd";
-    public final static String SCHEMA_ID_40 = "web-app_4_0.xsd";
-    public final static String SCHEMA_ID = "web-app_5_0.xsd";
+    private static final String SCHEMA_ID_24 = "web-app_2_4.xsd";
+    private static final String SCHEMA_ID_25 = "web-app_2_5.xsd";
+    private static final String SCHEMA_ID_30 = "web-app_3_0.xsd";
+    private static final String SCHEMA_ID_31 = "web-app_3_1.xsd";
+    private static final String SCHEMA_ID_40 = "web-app_4_0.xsd";
+    private static final String SCHEMA_ID = "web-app_5_0.xsd";
     private final static List<String> systemIDs = initSystemIDs();
 
 
     private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<String>();
+        List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_24);
         systemIDs.add(SCHEMA_ID_25);
@@ -83,29 +91,30 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         return tag.getQName();
     }
 
-    @Override
-     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
-        final Map<String,Class> result = new HashMap<String,Class>();
-        for (ConfigurationDeploymentDescriptorFile wddFile :
-                DOLUtils.getConfigurationDeploymentDescriptorFiles(
-                        serviceLocator, WarType.ARCHIVE_TYPE)) {
 
+    @Override
+    public Map<String, Class<?>> registerRuntimeBundle(
+        final Map<String, String> publicIDToDTD,
+        final Map<String, List<Class<?>>> versionUpgrades) {
+
+        final Map<String, Class<?>> result = new HashMap<>();
+        for (ConfigurationDeploymentDescriptorFile<?> wddFile : DOLUtils
+            .getConfigurationDeploymentDescriptorFiles(serviceLocator, WarType.ARCHIVE_TYPE)) {
             wddFile.registerBundle(result, publicIDToDTD, versionUpgrades);
         }
-
         return result;
     }
 
     @Override
     public Collection<String> elementsAllowingEmptyValue() {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         result.add(WebTagNames.LOAD_ON_STARTUP);
         return result;
     }
 
     @Override
     public Collection<String> elementsPreservingWhiteSpace() {
-        final Set<String> result = new HashSet<String>();
+        final Set<String> result = new HashSet<>();
         result.add(WebTagNames.URL_PATTERN);
         return result;
     }
@@ -144,27 +153,28 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         if (WebTagNames.DENY_UNCOVERED_HTTP_METHODS.equals(element.getQName())) {
             descriptor.setDenyUncoveredHttpMethods(true);
             return false;
-        } else {
-            return super.endElement(element);
         }
+        return super.endElement(element);
     }
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
     @Override
     public WebBundleDescriptorImpl getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new WebBundleDescriptorImpl();
         }
         return descriptor;
     }
 
-   /**
+
+    /**
      * @return the XML tag associated with this XMLNode
      */
-   @Override
-   protected XMLElement getXMLRootTag() {
+    @Override
+    protected XMLElement getXMLRootTag() {
         return tag;
     }
 
@@ -192,17 +202,9 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         return systemIDs;
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
-    @Override
-    public Node writeDescriptor(Node parent,
-        WebBundleDescriptorImpl webBundleDesc) {
 
+    @Override
+    public Node writeDescriptor(Node parent, WebBundleDescriptorImpl webBundleDesc) {
         Node jarNode = super.writeDescriptor(parent, webBundleDesc);
         if (webBundleDesc.isDenyUncoveredHttpMethods()) {
             appendChild(jarNode, WebTagNames.DENY_UNCOVERED_HTTP_METHODS);
@@ -210,9 +212,8 @@ public class WebBundleNode extends WebCommonNode<WebBundleDescriptorImpl> {
         if (webBundleDesc.getAbsoluteOrderingDescriptor() != null) {
             AbsoluteOrderingNode absOrderingNode = new AbsoluteOrderingNode();
             absOrderingNode.writeDescriptor(jarNode, WebTagNames.ABSOLUTE_ORDERING,
-                    webBundleDesc.getAbsoluteOrderingDescriptor());
+                webBundleDesc.getAbsoluteOrderingDescriptor());
         }
         return jarNode;
     }
-
 }

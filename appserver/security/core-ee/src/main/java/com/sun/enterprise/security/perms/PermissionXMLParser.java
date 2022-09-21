@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,46 +17,29 @@
 
 package com.sun.enterprise.security.perms;
 
-import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import com.sun.enterprise.security.integration.PermissionCreator;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-//import java.text.MessageFormat;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-//import com.sun.enterprise.deploy.shared.LogMessageInfo;
-import com.sun.enterprise.security.integration.PermissionCreator;
+import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
  * Paser to parse permissions.xml packaged in a ear or in a standalone module
  */
 public class PermissionXMLParser {
 
-    protected static final String PERMISSIONS_XML = "META-INF/permissions.xml";
-    protected static final String RESTRICTED_PERMISSIONS_XML = "META-INF/restricted-permissions.xml";
-
-    protected XMLStreamReader parser = null;
-
-    PermissionCollection pc = new Permissions();
-
-    private PermissionCollection permissionCollectionToBeRestricted = null;
-
     private static XMLInputFactory xmlInputFactory;
-
     static {
         xmlInputFactory = XMLInputFactory.newInstance();
         xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
@@ -72,35 +56,17 @@ public class PermissionXMLParser {
         });
     }
 
-    // @LogMessageInfo(message = "This is an unexpected end of document", level = "WARNING")
-    // public static final String UNEXPECTED_END_IN_XMLDOCUMENT = "NCLS-DEPLOYMENT-00048";
+    private XMLStreamReader parser;
+    private final PermissionCollection pc = new Permissions();
+    private final PermissionCollection permissionCollectionToBeRestricted;
 
-    public PermissionXMLParser(File permissionsXmlFile, PermissionCollection permissionCollectionToBeRestricted)
-            throws XMLStreamException, FileNotFoundException {
-
-        FileInputStream fi = null;
-        try {
-            this.permissionCollectionToBeRestricted = permissionCollectionToBeRestricted;
-            fi = new FileInputStream(permissionsXmlFile);
-            init(fi);
-        } finally {
-            if (fi != null) {
-                try {
-                    fi.close();
-                } catch (IOException e) {
-                }
-            }
-        }
-
-    }
 
     public PermissionXMLParser(InputStream input, PermissionCollection permissionCollectionToBeRestricted)
-            throws XMLStreamException, FileNotFoundException {
-
+        throws XMLStreamException {
         this.permissionCollectionToBeRestricted = permissionCollectionToBeRestricted;
         init(input);
-
     }
+
 
     protected static XMLInputFactory getXMLInputFactory() {
         return xmlInputFactory;
@@ -110,9 +76,8 @@ public class PermissionXMLParser {
      * This method will parse the input stream and set the XMLStreamReader object for latter use.
      *
      * @param input InputStream
-     * @exception XMLStreamException;
+     * @throws XMLStreamException;
      */
-    // @Override
     protected void read(InputStream input) throws XMLStreamException {
         parser = getXMLInputFactory().createXMLStreamReader(input);
 
@@ -185,9 +150,7 @@ public class PermissionXMLParser {
         while (true) {
             int event = parser.next();
             if (event == END_DOCUMENT) {
-                throw new XMLStreamException(
-                        // rb.getString(UNEXPECTED_END_IN_XMLDOCUMENT));
-                        "Unexpected element with name " + name);
+                throw new XMLStreamException("Unexpected element with name " + name);
             }
             if (event == END_ELEMENT && name.equals(parser.getLocalName())) {
                 return;
@@ -198,15 +161,13 @@ public class PermissionXMLParser {
     private void addPermission(String classname, String target, String actions) {
         try {
             Permission pm = PermissionCreator.getInstance(classname, target, actions);
-
             if (pm != null) {
                 if (permissionCollectionToBeRestricted != null && permissionCollectionToBeRestricted.implies(pm)) {
                     throw new SecurityException("Restricted Permission Declared - fail deployment!");
                 }
                 pc.add(pm);
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException
-                | InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             throw new SecurityException(e);
         }
     }

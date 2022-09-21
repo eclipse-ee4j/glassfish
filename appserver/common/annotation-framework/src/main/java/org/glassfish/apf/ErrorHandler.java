@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,28 +23,29 @@ package org.glassfish.apf;
  * @author Jerome Dochez
  */
 public interface ErrorHandler {
+
     /**
      * Receive notication of a fine error message
+     *
      * @param ape The warning information
      * @throws any exception to stop the annotation processing
      */
-    public void fine(AnnotationProcessorException ape) throws
-            AnnotationProcessorException;
+    void fine(AnnotationProcessorException ape) throws AnnotationProcessorException;
 
     /**
      * Receive notification of a warning
+     *
      * @param ape The warning information
      * @throws any exception to stop the annotation processing
      */
-    public void warning(AnnotationProcessorException ape) throws
-            AnnotationProcessorException;
+    void warning(AnnotationProcessorException ape) throws AnnotationProcessorException;
 
     /**
      * Receive notification of an error
+     *
      * @param ape The error information
      * @throws amy exception to stop the annotation processing
      */
-    public void error(AnnotationProcessorException ape) throws
-            AnnotationProcessorException;
+    void error(AnnotationProcessorException ape) throws AnnotationProcessorException;
 
 }

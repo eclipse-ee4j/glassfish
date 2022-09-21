@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.enterprise.deployment.node.runtime;
 
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import org.w3c.dom.Node;
 
 /**
@@ -30,17 +32,17 @@ import org.w3c.dom.Node;
  * @author Jerome Dochez
  * @version
  */
-public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
+public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode<ResourcePrincipalDescriptor> {
 
-    private String name = null;
-    private String passwd = null;
+    private String name;
+    private String passwd;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
-        return null;
+    public ResourcePrincipalDescriptor getDescriptor() {
+        return new ResourcePrincipalDescriptor(name, passwd);
     }
 
 
@@ -69,9 +71,9 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
     public void postParsing() {
         if (getParentNode().getDescriptor() instanceof ResourceReferenceDescriptor) {
             ((ResourceReferenceDescriptor) getParentNode().getDescriptor())
-                .setResourcePrincipal(new ResourcePrincipal(name, passwd));
+                .setResourcePrincipal(new ResourcePrincipalDescriptor(name, passwd));
         } else {
-            getParentNode().addDescriptor(new ResourcePrincipal(name, passwd));
+            getParentNode().addDescriptor(new ResourcePrincipalDescriptor(name, passwd));
         }
     }
 
@@ -80,11 +82,12 @@ public class DefaultResourcePrincipalNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName node name for the descriptor
+     * @param rpDescriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, ResourcePrincipal rpDescriptor) {
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, ResourcePrincipalDescriptor rpDescriptor) {
         Node principalNode = super.writeDescriptor(parent, nodeName, null);
         appendTextChild(principalNode, RuntimeTagNames.NAME, rpDescriptor.getName());
         appendTextChild(principalNode, RuntimeTagNames.PASSWORD, rpDescriptor.getPassword());

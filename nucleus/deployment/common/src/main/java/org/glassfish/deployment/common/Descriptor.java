@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,14 @@
 
 package org.glassfish.deployment.common;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 /**
  * Descriptor is the root class for all objects
@@ -29,40 +34,34 @@ import java.util.*;
  *
  * @author Danny Coward
  */
-
 public class Descriptor extends DynamicAttributesDescriptor {
 
-    /**
-     * Notification String for a general descriptor change.
-     */
-    public static final String DESCRIPTOR_CHANGED = "Descriptor change";
-    public static final String NAME_CHANGED = "NameChanged";
-    public static final String DESCRIPTION_CHANGED = "DescriptionChanged";
-    public static final String LARGE_ICON_CHANGED = "LargeIconChanged";
-    public static final String SMALL_ICON_CHANGED = "SmallIconChanged";
+    private static final String EXTRA_ATTR_KEY_DEPLOYMENT_EXTENSION = "deployment-extension";
+    private static final long serialVersionUID = 1L;
+    private static final String EXTRA_ATTR_KEY_PREFIX_MAPPING = "prefix-mapping";
 
     /**
-     * static flag to indicate descriptors should bounds check.
+     * Static flag to indicate descriptors should bounds check.
      */
     private static boolean boundsChecking = true;
 
     /**
      * My display name indexed by language
      */
-    private Map<String, String> displayNames = null;
+    private Map<String, String> displayNames;
 
     /**
      * My descriptions indexed by language
      */
-    private Map<String, String> descriptions = null;
+    private Map<String, String> descriptions;
 
     /**
      * icons map indexed by language
      */
-    private Map<String, String> largeIcons = null;
-    private Map<String, String> smallIcons = null;
+    private Map<String, String> largeIcons;
+    private Map<String, String> smallIcons;
 
-    private Map<Class<? extends Descriptor>, List<? extends Descriptor>> descriptorExtensions = new HashMap<Class<? extends Descriptor>, List<? extends Descriptor>>();
+    private final Map<Class<? extends Descriptor>, List<? extends Descriptor>> descriptorExtensions = new HashMap<>();
 
     /**
      * The default constructor. Constructs a descriptor with
@@ -71,40 +70,37 @@ public class Descriptor extends DynamicAttributesDescriptor {
     public Descriptor() {
     }
 
+
     /**
      * Add a child descriptor to the parent descriptor as an extension.
      *
      * @param dde the child descriptor
-     *
      */
     public <T extends Descriptor> void addDescriptorExtension(final T dde) {
-        List<T> descriptorList = (List<T>)
-            descriptorExtensions.get(dde.getClass());
+        List<T> descriptorList = (List<T>) descriptorExtensions.get(dde.getClass());
         if (descriptorList == null) {
-            descriptorList = new ArrayList<T>();
+            descriptorList = new ArrayList<>();
             descriptorExtensions.put(dde.getClass(), descriptorList);
         }
         descriptorList.add(dde);
     }
+
 
     /**
      * Get all child descriptor extensions for a given type.
      *
      * @param c the child descriptor type
      * @return the list of descriptor extension for a given type
-     *
      */
-    public <T extends Descriptor> List<T> getDescriptorExtensions (
-        final Class<T> c) {
+    public <T extends Descriptor> List<T> getDescriptorExtensions(final Class<T> c) {
         return (List<T>) descriptorExtensions.get(c);
     }
 
+
     /**
      * Get child descriptor extension for a given type.
-     *
      * It is a convenience API to get the single child extension descriptor
      * if the XML element it represents can only occur once.
-     *
      * Returns that single descriptor if the XML element that the given type
      * represents can only occur once.
      * Returns the first element of the list of descriptors if the XML element
@@ -112,37 +108,42 @@ public class Descriptor extends DynamicAttributesDescriptor {
      *
      * @param c the child descriptor type
      * @return the single or the first descriptor extension for a given type
-     *
      */
     public <T extends Descriptor> T getDescriptorExtension(final Class<T> c) {
         List<T> descriptorList = (List<T>) descriptorExtensions.get(c);
         if (descriptorList == null || descriptorList.isEmpty()) {
             return null;
-        } else {
-            return descriptorList.get(0);
         }
+        return descriptorList.get(0);
     }
+
 
     /**
      * The copy constructor.
+     *
      * @param other the source descriptor
      */
     protected Descriptor(Descriptor other) {
-        if (other.displayNames != null)
-            this.displayNames = new HashMap<String, String>(other.displayNames);
-        if (other.descriptions != null)
-            this.descriptions = new HashMap<String, String>(other.descriptions);
-        if (other.largeIcons != null)
-            this.largeIcons = new HashMap<String, String>(other.largeIcons);
-        if (other.smallIcons != null)
-            this.smallIcons = new HashMap<String, String>(other.smallIcons);
+        if (other.displayNames != null) {
+            this.displayNames = new HashMap<>(other.displayNames);
+        }
+        if (other.descriptions != null) {
+            this.descriptions = new HashMap<>(other.descriptions);
+        }
+        if (other.largeIcons != null) {
+            this.largeIcons = new HashMap<>(other.largeIcons);
+        }
+        if (other.smallIcons != null) {
+            this.smallIcons = new HashMap<>(other.smallIcons);
+        }
     }
+
 
     /**
      * Constructs a descriptor with given
      * name, description.
      *
-     * @param name        the name of the descriptor.
+     * @param name the name of the descriptor.
      * @param description the name of the descriptor.
      */
     public Descriptor(String name, String description) {
@@ -151,66 +152,79 @@ public class Descriptor extends DynamicAttributesDescriptor {
         setLocalizedDescription(null, description);
     }
 
+
     /**
      * Sets a global flag to enable or disable boudsn checking
      * of deployment information
      *
+     * @deprecated Changes global state, synchronization doesn't prevent concurrent change, because
+     *             setters are not synchronized.
      * @param b true for bounds checking on, false else.
      */
+    @Deprecated(since = "7.0.0", forRemoval = true)
     public static synchronized void setBoundsChecking(boolean b) {
         boundsChecking = b;
     }
 
+
     /**
      * Answers whether the object model is bounds checking.
      *
+     * @deprecated Changes global state, synchronization doesn't prevent concurrent change, because
+     *             setters are not synchronized. Even worse, usages often rely on a change made by
+     *             SetMethodAction (side effect).
      * @return true for boudsn checking, false else.
      */
+    @Deprecated(since = "7.0.0", forRemoval = true)
     public static synchronized boolean isBoundsChecking() {
         return boundsChecking;
     }
+
 
     /**
      * Sets the name of this descriptor.
      *
      * @param name the new name of the descriptor.
      */
+    @Deprecated(since = "JEE1.4", forRemoval = true)
     public void setName(String name) {
         setLocalizedDisplayName(null, name);
     }
+
 
     /**
      * The name of this descriptor as a String.
      *
      * @return the name of this descriptor
      */
+    @Deprecated(since = "JEE1.4", forRemoval = true)
     public String getName() {
         return getLocalizedDisplayName(null);
     }
 
+
     /**
      * Add a localized display name for this descriptor
      *
-     * @param lang        the local identifier (null if using default locale)
+     * @param lang the local identifier (null if using default locale)
      * @param displayName the localized string
      */
     public void setLocalizedDisplayName(String lang, String displayName) {
-
         if (lang == null) {
             lang = Locale.getDefault().getLanguage();
         }
         if (displayNames == null) {
-            displayNames = new HashMap<String, String>();
+            displayNames = new HashMap<>();
         }
         displayNames.put(lang, displayName);
     }
+
 
     /**
      * @param language the language
      * @return the localized display name for the passed language
      */
     public String getLocalizedDisplayName(String language) {
-
         if (displayNames == null) {
             return "";
         }
@@ -230,27 +244,31 @@ public class Descriptor extends DynamicAttributesDescriptor {
         // between machines with different locales, if I have
         // at least one value, and no language was specified,
         // let's return it.
-        if (originalLanguage == null && displayNames.size() > 0) {
+        if (originalLanguage == null && !displayNames.isEmpty()) {
             return displayNames.values().iterator().next();
         }
         // all other cases return empty strings
         return "";
     }
 
+
     /**
      * @return the localized display name indexed by language
      */
-    public Map<? extends String, ? extends String> getLocalizedDisplayNames() {
+    public Map<String, String> getLocalizedDisplayNames() {
         return displayNames;
     }
 
+
     /**
      * sets the display name for this bundle
+     *
      * @param name the display name
      */
     public void setDisplayName(String name) {
         setName(name);
     }
+
 
     /**
      * @return the display name
@@ -258,6 +276,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     public String getDisplayName() {
         return getName();
     }
+
 
     /**
      * Sets the description text of this descriptor.
@@ -268,6 +287,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
         setLocalizedDescription(null, description);
     }
 
+
     /**
      * The description text of this descriptor as a String.
      *
@@ -277,10 +297,11 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return getLocalizedDescription(null);
     }
 
+
     /**
      * Add a localized description for this descriptor
      *
-     * @param lang        the local identifier (null if using default locale)
+     * @param lang the local identifier (null if using default locale)
      * @param description the localized string
      */
     public void setLocalizedDescription(String lang, String description) {
@@ -288,19 +309,20 @@ public class Descriptor extends DynamicAttributesDescriptor {
             lang = Locale.getDefault().getLanguage();
         }
         if (descriptions == null) {
-            descriptions = new HashMap<String, String>();
+            descriptions = new HashMap<>();
         }
         descriptions.put(lang, description);
     }
+
 
     /**
      * @param lang the local language
      * @return the localized description
      */
     public String getLocalizedDescription(String lang) {
-
-        if (descriptions == null)
+        if (descriptions == null) {
             return "";
+        }
         if (lang == null) {
             lang = Locale.getDefault().getLanguage();
         }
@@ -311,28 +333,31 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return description;
     }
 
+
     /**
      * @return a Map of localized description, where lang is the key
      */
-    public Map<? extends String, ? extends String> getLocalizedDescriptions() {
+    public Map<String, String> getLocalizedDescriptions() {
         return descriptions;
     }
+
 
     /**
      * Sets the large icon uri for a particular language
      *
      * @param lang the language identifier
-     * @param uri  the large icon uri
+     * @param uri the large icon uri
      */
     public void setLocalizedLargeIconUri(String lang, String uri) {
         if (lang == null) {
             lang = Locale.getDefault().getLanguage();
         }
         if (largeIcons == null) {
-            largeIcons = new HashMap<String, String>();
+            largeIcons = new HashMap<>();
         }
         largeIcons.put(lang, uri);
     }
+
 
     /**
      * @param lang the language or null for the current locale
@@ -348,29 +373,32 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return largeIcons.get(lang);
     }
 
+
     /**
      * @return a map of localized large icons uris indexed
      *         by language
      */
-    public Map getLocalizedLargeIconUris() {
+    public Map<String, String> getLocalizedLargeIconUris() {
         return largeIcons;
     }
+
 
     /**
      * set the localized small icon uri for the passed language
      *
      * @param lang the language
-     * @param uri  the uri for the small icon
+     * @param uri the uri for the small icon
      */
     public void setLocalizedSmallIconUri(String lang, String uri) {
         if (lang == null) {
             lang = Locale.getDefault().getLanguage();
         }
         if (smallIcons == null) {
-            smallIcons = new HashMap<String, String>();
+            smallIcons = new HashMap<>();
         }
         smallIcons.put(lang, uri);
     }
+
 
     /**
      * @param lang the language
@@ -386,13 +414,14 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return smallIcons.get(lang);
     }
 
+
     /**
-     *
      * @return the map of small icons indexed by language
      */
-    public Map<? extends String, ? extends String> getLocalizedSmallIconUris() {
+    public Map<String, String> getLocalizedSmallIconUris() {
         return smallIcons;
     }
+
 
     /**
      * The large icon name of this descriptor as a String.
@@ -403,6 +432,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return getLocalizedLargeIconUri(null);
     }
 
+
     /**
      * Sets the large icon name of this descriptor as a String.
      *
@@ -411,6 +441,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
     public void setLargeIconUri(String largeIconUri) {
         setLocalizedLargeIconUri(null, largeIconUri);
     }
+
 
     /**
      * The small icon name of this descriptor as a String.
@@ -421,6 +452,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return getLocalizedSmallIconUri(null);
     }
 
+
     /**
      * Sets the small icon name of this descriptor as a String.
      *
@@ -430,9 +462,11 @@ public class Descriptor extends DynamicAttributesDescriptor {
         setLocalizedSmallIconUri(null, smallIconUri);
     }
 
+
     /**
      * Returns the largest substring of the given string that
      * does not have an integer at the end.
+     *
      * @param s the source string
      * @return the stripped string
      */
@@ -440,9 +474,11 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return recursiveStripIntegerEndingFrom(s);
     }
 
+
     /**
      * Returns the largest substring of the given string that
      * does not have an integer at the end.
+     *
      * @param s the source string
      * @return the stripped string
      */
@@ -457,16 +493,16 @@ public class Descriptor extends DynamicAttributesDescriptor {
             } catch (NumberFormatException nfe) {
                 return s;
             }
-
         }
         return s;
     }
+
 
     /**
      * Returns String based on the trial name that is guaramteed to be different
      * from any of the strings in the vector of String names.
      *
-     * @param trialName  the suggested name
+     * @param trialName the suggested name
      * @param v The Vector of String objects none of which will be the same as the return
      * @param index the index in the vector
      * @return the unique String
@@ -481,16 +517,16 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return trialName;
     }
 
+
     /**
      * Returns String based on the trial name that is guaramteed to be different
      * from any of the strings in the vector of String names.
      *
-     * @param trialName  the suggested name
+     * @param trialName the suggested name
      * @param otherNames The Vector of String objects none of which will be the same as the return
      * @return the unique String
      */
     public static String createUniqueFilenameAmongst(String trialName, Vector<String> otherNames) {
-
         /* extract file.ext */
         int p = trialName.lastIndexOf(".");
         if (p < 0) {
@@ -500,9 +536,9 @@ public class Descriptor extends DynamicAttributesDescriptor {
         String file = trialName.substring(0, p);
 
         /* get list of filenames less extension */
-        Vector<String> nameList = new Vector<String>();
-        for (Enumeration e = otherNames.elements(); e.hasMoreElements();) {
-            String name = e.nextElement().toString();
+        Vector<String> nameList = new Vector<>();
+        for (Object otherName : otherNames) {
+            String name = otherName.toString();
             if (name.endsWith(ext)) {
                 nameList.add(name.substring(0, name.length() - ext.length()));
             }
@@ -512,11 +548,12 @@ public class Descriptor extends DynamicAttributesDescriptor {
 
     }
 
+
     /**
      * Returns String based on the trial name that is guaramteed to be different
      * from any of the strings in the vector of String names.
      *
-     * @param trialName  the suggested name
+     * @param trialName the suggested name
      * @param otherNames The Vector of String objects none of which will be the same as the return
      * @return the unique String
      */
@@ -524,60 +561,78 @@ public class Descriptor extends DynamicAttributesDescriptor {
         return uniquifyString(trialName, otherNames, 0);
     }
 
+
     /**
      * Returns String based on the trial name that is guaramteed to be different
-     * from any of the strings returnsed by the getName() call in any of the Descriptor objects in the Set supplied.
+     * from any of the strings returnsed by the getName() call in any of the Descriptor objects in
+     * the Set supplied.
      *
-     * @param trialName   the suggested name
-     * @param descriptors The Set of Descriptor objects to whose name attribute will not be the same as the return
+     * @param trialName the suggested name
+     * @param descriptors The Set of Descriptor objects to whose name attribute will not be the same
+     *            as the return
      * @return the unique String
      */
-    public static String createUniqueNameAmongstNamedDescriptors(String trialName, Set<? extends Descriptor> descriptors) {
-        Vector<String> v = new Vector<String>();
+    public static String createUniqueNameAmongstNamedDescriptors(String trialName,
+        Set<? extends Descriptor> descriptors) {
+        Vector<String> v = new Vector<>();
         for (Descriptor next : descriptors) {
             v.addElement(next.getName());
         }
         return createUniqueNameAmongst(trialName, v);
     }
 
+
     /**
      * @return an iterator on the deployment-extension
      */
-    public Iterator getDeploymentExtensions() {
-        Vector extensions = (Vector) getExtraAttribute("deployment-extension");
+    public Iterator<Descriptor> getDeploymentExtensions() {
+        Vector<Descriptor> extensions = (Vector<Descriptor>) getExtraAttribute(EXTRA_ATTR_KEY_DEPLOYMENT_EXTENSION);
         if (extensions != null) {
             return extensions.iterator();
         }
         return null;
     }
 
+
     /**
      * add a prefix mapping
+     *
      * @param mapping the mapping
      * @param uri the uri
      */
     public void addPrefixMapping(String mapping, String uri) {
         Map<String, String> prefixMapping = getPrefixMapping();
         if (prefixMapping == null) {
-            prefixMapping = new java.util.HashMap<String, String>();
-            addExtraAttribute("prefix-mapping", prefixMapping);
+            prefixMapping = new HashMap<>();
+            addExtraAttribute(EXTRA_ATTR_KEY_PREFIX_MAPPING, prefixMapping);
         }
         prefixMapping.put(mapping, uri);
     }
 
+
     /**
      * @return the map of prefix to namepace uri
      */
-    @SuppressWarnings("unchecked")
     public Map<String, String> getPrefixMapping() {
-        return (Map<String, String>) getExtraAttribute("prefix-mapping");
+        return (Map<String, String>) getExtraAttribute(EXTRA_ATTR_KEY_PREFIX_MAPPING);
     }
+
+
+    /**
+     * Visitor API implementation, all descriptors must be visitable
+     *
+     * @param aVisitor the visitor implementation
+     */
+    public void visit(DescriptorVisitor aVisitor) {
+        aVisitor.accept(this);
+    }
+
 
     /**
      * A String representation of this object.
      */
+    @Override
     public void print(StringBuffer sb) {
-
         if (displayNames != null) {
             sb.append("Display Names:");
             displayLocalizedMap(sb, displayNames);
@@ -595,21 +650,24 @@ public class Descriptor extends DynamicAttributesDescriptor {
             displayLocalizedMap(sb, largeIcons);
         }
         Map<String, String> prefix = getPrefixMapping();
-        if (prefix != null)
+        if (prefix != null) {
             sb.append("\n Prefix Mapping = ").append(prefix);
-        Iterator itr = getDeploymentExtensions();
+        }
+        Iterator<Descriptor> itr = getDeploymentExtensions();
         if (itr != null && itr.hasNext()) {
             do {
                 sb.append("\n Deployment Extension : ");
-                ((Descriptor) (itr.next())).print(sb);
+                itr.next().print(sb);
             } while (itr.hasNext());
         }
         sb.append("\n");
         super.print(sb);
     }
 
+
     /**
      * helper method to display a localized map
+     *
      * @param sb the buffer
      * @param localizedMap the localized Map
      */
@@ -619,40 +677,6 @@ public class Descriptor extends DynamicAttributesDescriptor {
             sb.append(entry.getKey());
             sb.append("]  = ");
             sb.append(localizedMap.get(entry.getValue()));
-        }
-    }
-
-
-    /**
-     * Visitor API implementation, all descriptors must be visitable
-     *
-     * @param aVisitor the visitor implementation
-     */
-    public void visit(DescriptorVisitor aVisitor) {
-        aVisitor.accept(this);
-    }
-
-    //start IASRI 4713550
-    public String docType = null;
-
-    public String getDocType() {
-        return docType;
-    }
-
-    public void fillDocType(InputStream in) {
-        try {
-            BufferedReader inr = new BufferedReader(new InputStreamReader(in));
-            String s = inr.readLine();
-            while (s != null) {
-                if (s.indexOf("DOCTYPE") > -1) {
-                    docType = s;
-                    in.close();
-                    return;
-                }
-                s = inr.readLine();
-            }
-        } catch (Exception e) {
-            // ignore
         }
     }
 }

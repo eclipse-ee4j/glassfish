@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,27 @@
 
 package com.sun.enterprise.deployment.runtime.ws;
 
+import org.glassfish.deployment.common.Descriptor;
+
 /**
  * @author Rama Pulavarthi
  */
-public class ReliabilityConfig {
-    String inactivityTimeout;
-    String baseRetransmissionInterval;
-    String retransmissionExponentialBackoff;
-    String acknowledgementInterval;
-    String sequenceExpiration;
-    String bufferRetryCount;
-    String bufferRetryDelay;
+public class ReliabilityConfig extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
+
+    private String inactivityTimeout;
+    private String baseRetransmissionInterval;
+    private String retransmissionExponentialBackoff;
+    private String acknowledgementInterval;
+    private String sequenceExpiration;
+    private String bufferRetryCount;
+    private String bufferRetryDelay;
 
     public String getInactivityTimeout() {
         return inactivityTimeout;
     }
+
 
     public void setInactivityTimeout(String inactivityTimeout) {
         this.inactivityTimeout = inactivityTimeout;
@@ -83,5 +90,4 @@ public class ReliabilityConfig {
     public void setBufferRetryDelay(String bufferRetryDelay) {
         this.bufferRetryDelay = bufferRetryDelay;
     }
-
 }

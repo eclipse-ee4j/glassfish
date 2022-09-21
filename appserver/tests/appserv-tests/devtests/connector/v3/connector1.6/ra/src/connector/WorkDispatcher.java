@@ -17,7 +17,7 @@
 package connector;
 
 import com.sun.enterprise.connectors.work.context.CustomWorkContext_D;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import java.lang.reflect.Method;
 import jakarta.resource.spi.ActivationSpec;
@@ -1292,7 +1292,7 @@ public class WorkDispatcher implements Work {
             JSR322Work w1 =
                     new JSR322Work(ep2, numOfMessages, "WRITE");
 
-            SinglePrincipalSIC spsic = new SinglePrincipalSIC(new PrincipalImpl(principal));
+            SinglePrincipalSIC spsic = new SinglePrincipalSIC(new UserNameAndPassword(principal));
             w1.addWorkContext(spsic);
 
             TransactionContext tic = new TransactionContext();

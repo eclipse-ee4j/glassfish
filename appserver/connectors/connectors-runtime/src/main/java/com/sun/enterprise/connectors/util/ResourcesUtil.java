@@ -265,7 +265,7 @@ public class ResourcesUtil {
                 return null;
             }
         } catch (Exception e) {
-            String message = localStrings.getString(
+            String message = I18N.getString(
                     "error.finding.resources.references",
                     resourceInfo);
             _logger.log(Level.WARNING, message + e.getMessage());
@@ -322,7 +322,7 @@ public class ResourcesUtil {
                 }
             }
         } catch (Exception e) {
-            String message = localStrings.getString("error.finding.resources.references", resourceInfo);
+            String message = I18N.getString("error.finding.resources.references", resourceInfo);
             _logger.log(Level.WARNING, message + e.getMessage());
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE,message + e.getMessage(), e);
@@ -378,7 +378,7 @@ public class ResourcesUtil {
                 return null;
             }
         } catch (Exception e) {
-            String message = localStrings.getString(
+            String message = I18N.getString(
                     "error.finding.resources.references",
                     resourceInfo);
             _logger.log(Level.WARNING, message + e.getMessage());

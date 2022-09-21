@@ -21,6 +21,7 @@ import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorRegistry;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.logging.LogDomains;
 
@@ -32,6 +33,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +82,7 @@ public class BasicPasswordAuthenticationService implements AuthenticationService
      * @return Mapped Backendprincipal
      */
     @Override
-    public Principal mapPrincipal(Principal callerPrincipal, Set principalSet) {
+    public ResourcePrincipalDescriptor mapPrincipal(Principal callerPrincipal, Set<Principal> principalSet) {
 
         // If no security maps are associated with this pool, return empty
         RuntimeSecurityMap runtimeSecurityMap = connectorRegistry.getRuntimeSecurityMap(poolInfo);
@@ -92,9 +94,9 @@ public class BasicPasswordAuthenticationService implements AuthenticationService
 
         // Create a list of Group Names from group Set
         List<String> groupNames = new ArrayList<>();
-        Iterator iter = principalSet.iterator();
+        Iterator<Principal> iter = principalSet.iterator();
         while (iter.hasNext()) {
-            Principal p = (Principal) iter.next();
+            Principal p = iter.next();
             // remove the caller principal (calling user) from the Set.
             if (p.equals(callerPrincipal)) {
                 continue;
@@ -117,7 +119,7 @@ public class BasicPasswordAuthenticationService implements AuthenticationService
      * existing mapping. If a map is found the backendPrincipal is
      * returned else null is returned .
      */
-    private Principal doMap(String principalName, List<String> groupNames,
+    private ResourcePrincipalDescriptor doMap(String principalName, List<String> groupNames,
             String roleName, RuntimeSecurityMap runtimeSecurityMap) {
 
         // Policy:
@@ -126,18 +128,18 @@ public class BasicPasswordAuthenticationService implements AuthenticationService
         // user contains *
         // role/group contains *
 
-        HashMap userNameSecurityMap = runtimeSecurityMap.getUserMap();
-        HashMap groupNameSecurityMap = runtimeSecurityMap.getGroupMap();
+        HashMap<String, ResourcePrincipalDescriptor> userNameSecurityMap = runtimeSecurityMap.getUserMap();
+        HashMap<String, ResourcePrincipalDescriptor> groupNameSecurityMap = runtimeSecurityMap.getGroupMap();
 
         // Check if caller's user-name is preset in the User Map
         if (userNameSecurityMap.containsKey(principalName)) {
-            return (Principal) userNameSecurityMap.get(principalName);
+            return userNameSecurityMap.get(principalName);
         }
 
         // Check if caller's role is present in the Group Map
         if (isContainerContextAWebModuleObject() && roleName != null) {
             if (groupNameSecurityMap.containsKey(roleName)) {
-                return (Principal) groupNameSecurityMap.get(roleName);
+                return groupNameSecurityMap.get(roleName);
             }
         }
 
@@ -147,13 +149,12 @@ public class BasicPasswordAuthenticationService implements AuthenticationService
                     ConnectorRuntime.getRuntime().getInvocationManager().getCurrentInvocation();
             EJBInvocation ejbInvocation = (EJBInvocation) componentInvocation;
             EJBContext ejbcontext = ejbInvocation.getEJBContext();
-            Set<Map.Entry> s = groupNameSecurityMap.entrySet();
-            Iterator i = s.iterator();
+            Set<Entry<String, ResourcePrincipalDescriptor>> s = groupNameSecurityMap.entrySet();
+            Iterator<Entry<String, ResourcePrincipalDescriptor>> i = s.iterator();
             while(i.hasNext()) {
-                Map.Entry mapEntry = (Map.Entry) i.next();
-                String key = (String) mapEntry.getKey();
-                Principal entry = (Principal) mapEntry.getValue();
-
+                Entry<String, ResourcePrincipalDescriptor> mapEntry = i.next();
+                String key = mapEntry.getKey();
+                ResourcePrincipalDescriptor entry = mapEntry.getValue();
                 boolean isInRole = false;
                 try {
                     isInRole = ejbcontext.isCallerInRole(key);
@@ -164,23 +165,23 @@ public class BasicPasswordAuthenticationService implements AuthenticationService
                     return entry;
                 }
             }
-       }
+        }
 
         // Check if caller's group(s) is/are present in the Group Map
         for (String groupName : groupNames) {
             if (groupNameSecurityMap.containsKey(groupName)) {
-                return (Principal) groupNameSecurityMap.get(groupName);
+                return groupNameSecurityMap.get(groupName);
             }
         }
 
         // Check if user name is * in Security Map
         if (userNameSecurityMap.containsKey(ConnectorConstants.SECURITYMAPMETACHAR)) {
-            return (Principal) userNameSecurityMap.get(ConnectorConstants.SECURITYMAPMETACHAR);
+            return userNameSecurityMap.get(ConnectorConstants.SECURITYMAPMETACHAR);
         }
 
         // Check if role/group name is * in Security Map
         if (groupNameSecurityMap.containsKey(ConnectorConstants.SECURITYMAPMETACHAR)) {
-            return (Principal) groupNameSecurityMap.get(ConnectorConstants.SECURITYMAPMETACHAR);
+            return groupNameSecurityMap.get(ConnectorConstants.SECURITYMAPMETACHAR);
         }
 
         return null;

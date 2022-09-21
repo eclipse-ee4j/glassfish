@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,10 +28,11 @@ import org.glassfish.deployment.versioning.VersioningUtils;
 /**
  * This class describes a module information for an applicaiton module
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
 
     /**
      * type of the module, currently EJB, WEB...
@@ -65,7 +67,7 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     /**
      * is it a standalone module, or part of a J2EE Application
      */
-    private boolean standalone=false;
+    private boolean standalone;
 
     private String moduleName;
 
@@ -82,7 +84,7 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
      * @return the module type for this module
      */
     public ArchiveType getModuleType() {
-        if (descriptor!=null) {
+        if (descriptor != null) {
             return descriptor.getModuleType();
         }
         return type;
@@ -123,13 +125,12 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     }
 
     /**
-     * Sets the @see BundleDescriptor descriptor for this
-     * module
+     * Sets the @see BundleDescriptor descriptor for this module
      * @param descriptor the module descriptor
      */
     public void setDescriptor(T descriptor) {
         this.descriptor = descriptor;
-        descriptor.setModuleDescriptor(this);
+        descriptor.setModuleDescriptor((ModuleDescriptor<RootDeploymentDescriptor>) this);
     }
 
     /**
@@ -213,8 +214,8 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     /**
      * @return an iterator on the deployment-extension
      */
-    public Iterator getWebDeploymentExtensions() {
-        Vector extensions = (Vector) getExtraAttribute("web-deployment-extension");
+    public Iterator<?> getWebDeploymentExtensions() {
+        Vector<?> extensions = (Vector<?>) getExtraAttribute("web-deployment-extension");
         if (extensions!=null) {
             return extensions.iterator();
         }
@@ -225,37 +226,34 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     /**
      * @return a meaningful string about myself
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append(type + " ModuleDescriptor: [  " + path + " ] , altDD = " + altDD);
-        if (contextRoot!=null) {
+        if (contextRoot != null) {
             toStringBuffer.append(" , ContextRoot = " + contextRoot);
         }
     }
 
 
     /**
-     * Implementation of the serializable interface since ModuleType is not
-     * serializable
+     * Implementation of the serializable interface since ModuleType is not serializable
      */
-    private void writeObject(java.io.ObjectOutputStream out)
-     throws IOException {
-
-         // just write this intance fields...
-         out.writeObject(path);
-         out.writeObject(altDD);
-         out.writeObject(contextRoot);
-         out.writeObject(descriptor);
-         out.writeBoolean(standalone);
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        // just write this intance fields...
+        out.writeObject(path);
+        out.writeObject(altDD);
+        out.writeObject(contextRoot);
+        out.writeObject(descriptor);
+        out.writeBoolean(standalone);
     }
 
-    private void readObject(java.io.ObjectInputStream in)
-     throws IOException, ClassNotFoundException {
 
-         // just read this intance fields...
-         path = (String) in.readObject();
-         altDD = (String) in.readObject();
-         contextRoot = (String) in.readObject();
-         descriptor = (T) in.readObject();
-         standalone = in.readBoolean();
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        // just read this intance fields...
+        path = (String) in.readObject();
+        altDD = (String) in.readObject();
+        contextRoot = (String) in.readObject();
+        descriptor = (T) in.readObject();
+        standalone = in.readBoolean();
     }
 }

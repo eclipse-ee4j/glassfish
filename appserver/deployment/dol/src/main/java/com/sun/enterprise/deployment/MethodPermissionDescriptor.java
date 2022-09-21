@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,45 +15,41 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MethodPermissionDescriptor.java
- *
- * Created on December 6, 2001, 2:32 PM
- */
-
 package com.sun.enterprise.deployment;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * This class defines a method permission information in the assembly
- * descriptor
+ * This class defines a method permission information in the assembly descriptor
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class MethodPermissionDescriptor extends DescribableDescriptor {
 
-    Vector methods = new Vector();
-    Vector mps = new Vector() ;
+    private static final long serialVersionUID = 1L;
+    private final Vector<MethodDescriptor> methods = new Vector<>();
+    private final Vector<MethodPermission> mps = new Vector<>();
 
     /** Creates new MethodPermissionDescriptor */
     public MethodPermissionDescriptor() {
     }
 
+
     public void addMethod(MethodDescriptor aMethod) {
         methods.add(aMethod);
     }
 
-    public void addMethods(Collection methods) {
+
+    public void addMethods(Collection<MethodDescriptor> methods) {
         this.methods.addAll(methods);
     }
+
 
     public void addMethodPermission(MethodPermission mp) {
         mps.add(mp);
     }
+
 
     public MethodDescriptor[] getMethods() {
         MethodDescriptor[] array = new MethodDescriptor[methods.size()];
@@ -60,26 +57,29 @@ public class MethodPermissionDescriptor extends DescribableDescriptor {
         return array;
     }
 
+
     public MethodPermission[] getMethodPermissions() {
         MethodPermission[] array = new MethodPermission[mps.size()];
         mps.copyInto(array);
         return array;
     }
 
+
+    @Override
     public void print(StringBuffer toStringBuffer) {
         StringBuffer buffer = toStringBuffer;
-        buffer.append("Method Permission " + (getDescription()==null?"":getDescription()) );
+        if (getDescription() != null) {
+            buffer.append("Method Permission ").append(getDescription());
+        }
         buffer.append("\nFor the following Permissions ");
-        for (Iterator mpsIterator = mps.iterator();mpsIterator.hasNext();) {
-            MethodPermission mp = (MethodPermission) mpsIterator.next();
+        for (MethodPermission mp : mps) {
             mp.print(buffer);
-            buffer.append("\n");
+            buffer.append('\n');
         }
         buffer.append("\nFor the following ").append(methods.size()).append(" methods\n");
-        for (Iterator methodsIterator = methods.iterator();methodsIterator.hasNext();) {
-            MethodDescriptor md = (MethodDescriptor) methodsIterator.next();
+        for (MethodDescriptor md : methods) {
             md.print(buffer);
-            buffer.append("\n");
+            buffer.append('\n');
         }
     }
 }

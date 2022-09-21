@@ -26,8 +26,8 @@
 <html>
 <head><title>JSP Page Access Profile</title></head>
 <body>
-<% 
-    out.println("The web user principal = "+request.getUserPrincipal() );
+<%
+    out.println("The web user principal = "+request.getUserPrincipal().getName() );
     out.println();
 %>
 <H3> Calling the ProfileInfoBean </H3>
@@ -35,10 +35,10 @@
     try{
         InitialContext ic = new InitialContext();
         java.lang.Object obj = ic.lookup("jsp2sful");
-	out.println("Looked up home!!");
-	ProfileInfoHome home = (ProfileInfoHome)PortableRemoteObject.narrow(
-					   obj, ProfileInfoHome.class);
-	out.println("Narrowed home!!");
+  out.println("Looked up home!!");
+  ProfileInfoHome home = (ProfileInfoHome)PortableRemoteObject.narrow(
+             obj, ProfileInfoHome.class);
+  out.println("Narrowed home!!");
         ProfileInfoRemote hr = home.create("a name");
         out.println("Got the EJB!!");
         out.println("<li>User profile: ");

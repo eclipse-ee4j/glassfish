@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,22 +28,24 @@ import org.w3c.dom.Node;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This node is responsible for handling WebService runtime info
  *
- * @author  Kenneth Saks
- * @version
+ * @author Kenneth Saks
  */
-public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
+public class WebServiceRuntimeNode extends DeploymentDescriptorNode<WebService> {
 
+    private static final Logger LOG = DOLUtils.getDefaultLogger();
     private WebService descriptor;
 
-    public Object getDescriptor() {
+    @Override
+    public WebService getDescriptor() {
         return descriptor;
     }
+
 
     /**
      * receives notiification of the value for a particular tag
@@ -51,79 +54,64 @@ public class WebServiceRuntimeNode extends DeploymentDescriptorNode {
      * @param value it's associated value
      */
 
+    @Override
     public void setElementValue(XMLElement element, String value) {
-        if (WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME.equals
-            (element.getQName())) {
-            BundleDescriptor parent = (BundleDescriptor)getParentNode().getDescriptor();
+        if (WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME.equals(element.getQName())) {
+            BundleDescriptor parent = (BundleDescriptor) getParentNode().getDescriptor();
             WebServicesDescriptor webServices = parent.getWebServices();
             descriptor = webServices.getWebServiceByName(value);
-        } else if( WebServicesTagNames.CLIENT_WSDL_PUBLISH_URL.equals
-                   (element.getQName()) ) {
-            if( descriptor == null ) {
-                DOLUtils.getDefaultLogger().info
-                    ("Warning : WebService descriptor is null for "
-                     + "final wsdl url=" + value);
+        } else if (WebServicesTagNames.CLIENT_WSDL_PUBLISH_URL.equals(element.getQName())) {
+            if (descriptor == null) {
+                LOG.warning("Warning : WebService descriptor is null for final wsdl url=" + value);
                 return;
             }
             try {
                 URL url = new URL(value);
                 descriptor.setClientPublishUrl(url);
-            } catch(MalformedURLException mue) {
-                DOLUtils.getDefaultLogger().log(Level.INFO,
-                  "Warning : Invalid final wsdl url=" + value, mue);
+            } catch (MalformedURLException mue) {
+                LOG.log(Level.WARNING, "Warning : Invalid final wsdl url=" + value, mue);
             }
         } else {
             super.setElementValue(element, value);
         }
     }
 
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName node name for the descriptor
+     * @param webService the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                WebService webService) {
-        Node webServiceNode =
-            super.writeDescriptor(parent, nodeName, webService);
-
-        appendTextChild(webServiceNode,
-                        WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
-                        webService.getName());
-
-        if( webService.hasClientPublishUrl() ) {
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, WebService webService) {
+        Node webServiceNode = super.writeDescriptor(parent, nodeName, webService);
+        appendTextChild(webServiceNode, WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME, webService.getName());
+        if (webService.hasClientPublishUrl()) {
             URL url = webService.getClientPublishUrl();
-            appendTextChild(webServiceNode,
-                            WebServicesTagNames.CLIENT_WSDL_PUBLISH_URL,
-                            url.toExternalForm());
+            appendTextChild(webServiceNode, WebServicesTagNames.CLIENT_WSDL_PUBLISH_URL, url.toExternalForm());
         }
-
         return webServiceNode;
     }
+
 
     /**
      * writes all the runtime information for the web services for a given
      * bundle descriptor
      *
      * @param parent node to add the runtime xml info
-     * @param the bundle descriptor
+     * @param bundle the bundle descriptor
      */
-    public void writeWebServiceRuntimeInfo(Node parent,
-                                           BundleDescriptor bundle) {
+    public void writeWebServiceRuntimeInfo(Node parent, BundleDescriptor bundle) {
         WebServicesDescriptor webServices = bundle.getWebServices();
-        if( webServices != null ) {
-            for(Iterator iter = webServices.getWebServices().iterator();
-                iter.hasNext();) {
-                WebService next = (WebService) iter.next();
-                if( next.hasClientPublishUrl() ) {
-                    writeDescriptor
-                        (parent, WebServicesTagNames.WEB_SERVICE, next);
+        if (webServices != null) {
+            for (WebService element : webServices.getWebServices()) {
+                if (element.hasClientPublishUrl()) {
+                    writeDescriptor(parent, WebServicesTagNames.WEB_SERVICE, element);
                 }
             }
         }
     }
-
 }

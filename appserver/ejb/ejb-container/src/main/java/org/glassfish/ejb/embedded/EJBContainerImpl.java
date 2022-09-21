@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,10 +58,10 @@ public class EJBContainerImpl extends EJBContainer {
 
     private String deployedAppName;
 
-    private ServiceLocator habitat;
+    private final ServiceLocator habitat;
 
     private volatile int state = STARTING;
-    private Cleanup cleanup = null;
+    private final Cleanup cleanup;
     private DeploymentElement.ResultApplication res_app;
 
     private final static int STARTING = 0;
@@ -132,6 +133,7 @@ public class EJBContainerImpl extends EJBContainer {
      *
      * @return naming context
      */
+    @Override
     public Context getContext() {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("IN getContext()");
@@ -147,6 +149,7 @@ public class EJBContainerImpl extends EJBContainer {
     /**
      * Shutdown an embeddable EJBContainer instance.
      */
+    @Override
     public void close() {
         if (cleanup != null) {
             cleanup.disable();
@@ -283,6 +286,7 @@ public class EJBContainerImpl extends EJBContainer {
             );
         }
 
+        @Override
         public void run() {
             if (container.isOpen()) {
                 container.forceClose();

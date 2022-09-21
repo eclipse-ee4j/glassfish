@@ -89,7 +89,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             if (annCtx instanceof AppClientContext){
                 if (!Modifier.isStatic(annotatedField.getModifiers())){
                     throw new AnnotationProcessorException(
-                            localStrings.getLocalString(
+                            I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.injectionfieldnotstatic",
                             "Injection fields for application clients must be declared STATIC"),
                             annInfo);
@@ -111,7 +111,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             if (annCtx instanceof AppClientContext){
                 if (!Modifier.isStatic(annotatedMethod.getModifiers())){
                     throw new AnnotationProcessorException(
-                            localStrings.getLocalString(
+                            I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.injectionmethodnotstatic",
                             "Injection methods for application clients must be declared STATIC"),
                             annInfo);
@@ -133,7 +133,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             // name must be specified.
             if (!ok(annotation.name())) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.nonametypelevel",
                         "TYPE-Level annotation  must specify name member."),  annInfo);
             }
@@ -142,7 +142,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             annotatedType = annotation.type();
             if (annotatedType == null || annotatedType == Object.class) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.typenotfound",
                         "TYPE-level annotation symbol must specify type member."),
                          annInfo);
@@ -150,7 +150,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             declaringClass = (Class) annElem;
         } else {
             throw new AnnotationProcessorException(
-                    localStrings.getLocalString(
+                    I18N.getLocalString(
                     "enterprise.deployment.annotation.handlers.invalidtype",
                     "annotation not allowed on this element."),  annInfo);
 
@@ -191,7 +191,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
         if (containers == null || containers.length == 0) {
             annInfo.getProcessingContext().getErrorHandler().fine(
                     new AnnotationProcessorException(
-                    localStrings.getLocalString(
+                    I18N.getLocalString(
                     "enterprise.deployment.annotation.handlers.invalidannotationforthisclass",
                     "Illegal annotation symbol for this class will be ignored"),
                     annInfo));
@@ -297,7 +297,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             }
             if (wsclientAnn == null) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.classnotannotated",
                         "Class must be annotated with a {1} annotation\n symbol : {1}\n location: {0}",
                         new Object[] { annotatedType.toString(), WebServiceClient.class.toString() }));
@@ -354,7 +354,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             // Don't treat this as a fatal error.
             try {
                 log(Level.WARNING, ainfo,
-                    localStrings.getLocalString(
+                    I18N.getLocalString(
                 "enterprise.deployment.annotation.handlers.wrongresourceclass",
                         "Incorrect @Resource annotation class definition - " +
                         "missing lookup attribute"));

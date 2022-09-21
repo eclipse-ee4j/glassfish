@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,10 +24,11 @@ import com.sun.enterprise.deployment.util.DOLUtils;
  * An object representing a component environment reference
  * to an EntityManagerFactory
  */
-public class EntityManagerFactoryReferenceDescriptor extends
-    EnvironmentProperty implements EntityManagerFactoryReference {
+public class EntityManagerFactoryReferenceDescriptor extends EnvironmentProperty
+    implements EntityManagerFactoryReference {
 
-    private String unitName = null;
+    private static final long serialVersionUID = 1L;
+    private String unitName;
     private BundleDescriptor referringBundle;
 
     public EntityManagerFactoryReferenceDescriptor(String name, String unitName) {
@@ -75,10 +77,10 @@ public class EntityManagerFactoryReferenceDescriptor extends
         return referringBundle;
     }
 
+
     public boolean isConflict(EntityManagerFactoryReferenceDescriptor other) {
-        return (getName().equals(other.getName())) &&
-            (!DOLUtils.equals(getUnitName(), other.getUnitName())
-            || isConflictResourceGroup(other));
+        return getName().equals(other.getName())
+            && (!DOLUtils.equals(getUnitName(), other.getUnitName()) || isConflictResourceGroup(other));
     }
 }
 

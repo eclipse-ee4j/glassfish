@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,10 @@
 
 package org.glassfish.webservices.node;
 
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import com.sun.enterprise.deployment.Addressing;
 import com.sun.enterprise.deployment.RespectBinding;
 import com.sun.enterprise.deployment.node.DisplayableComponentNode;
 import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
 import java.util.Map;
 
@@ -31,76 +31,47 @@ import org.w3c.dom.Node;
  *
  * @author Bhakti Mehta
  */
-public class RespectBindingNode extends DisplayableComponentNode {
+public class RespectBindingNode extends DisplayableComponentNode<RespectBinding> {
 
-    private final static XMLElement tag =
-        new XMLElement(WebServicesTagNames.RESPECT_BINDING);
+    private final static XMLElement TAG = new XMLElement(WebServicesTagNames.RESPECT_BINDING);
 
-
-    public RespectBindingNode() {
-        super();
-    }
-
-    /**
-     * @return the XML tag associated with this XMLNode
-     */
+    @Override
     protected XMLElement getXMLRootTag() {
-        return tag;
+        return TAG;
     }
+
 
     @Override
     protected RespectBinding createDescriptor() {
-       return new RespectBinding();
+        return new RespectBinding();
     }
 
 
-    /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(WebServicesTagNames.RESPECT_BINDING_ENABLED, "setEnabled");
-
         return table;
     }
 
-    /**
-     * receives notification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+
+    @Override
     public void setElementValue(XMLElement element, String value) {
         String qname = element.getQName();
-        RespectBinding rb = (RespectBinding) getDescriptor();
+        RespectBinding rb = getDescriptor();
         if (WebServicesTagNames.RESPECT_BINDING_ENABLED.equals(qname)) {
-            rb.setEnabled( Boolean.valueOf(value));
-        } else super.setElementValue(element, value);
+            rb.setEnabled(Boolean.valueOf(value));
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
-    /**
-     * write the method descriptor class to a query-method DOM tree and
-     * return it
-     *
-     * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, String nodeName,
-                                RespectBinding rb) {
+
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, RespectBinding rb) {
         Node wshNode = super.writeDescriptor(parent, nodeName, rb);
-
         writeDisplayableComponentInfo(wshNode, rb);
-        appendTextChild(wshNode,
-                WebServicesTagNames.RESPECT_BINDING_ENABLED,
-                Boolean.valueOf(rb.isEnabled()).toString());
-
+        appendTextChild(wshNode, WebServicesTagNames.RESPECT_BINDING_ENABLED, Boolean.toString(rb.isEnabled()));
         return wshNode;
     }
-
-
 }

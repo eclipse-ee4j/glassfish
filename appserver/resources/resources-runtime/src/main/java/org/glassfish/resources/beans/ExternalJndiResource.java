@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,10 @@
 
 package org.glassfish.resources.beans;
 
-import org.glassfish.resources.api.JavaEEResource;
-import org.glassfish.resources.api.JavaEEResourceBase;
 import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resources.api.JavaEEResource;
+import org.glassfish.resources.api.JavaEEResourceBase;
 
 /**
  * Resource info for ExternalJndiResource.
@@ -30,6 +31,7 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
  */
 public class ExternalJndiResource extends JavaEEResourceBase {
 
+    private static final long serialVersionUID = 1L;
     private String jndiLookupName_;
     private String resType_;
     private String factoryClass_;
@@ -38,6 +40,7 @@ public class ExternalJndiResource extends JavaEEResourceBase {
         super(resourceInfo);
     }
 
+    @Override
     protected JavaEEResource doClone(ResourceInfo resourceInfo) {
         ExternalJndiResource clone = new ExternalJndiResource(resourceInfo);
         clone.setJndiLookupName(getJndiLookupName());
@@ -46,6 +49,7 @@ public class ExternalJndiResource extends JavaEEResourceBase {
         return clone;
     }
 
+    @Override
     public int getType() {
         return JavaEEResource.EXTERNAL_JNDI_RESOURCE;
     }
@@ -76,13 +80,16 @@ public class ExternalJndiResource extends JavaEEResourceBase {
 
     //START OF IASRI 4660565
     public boolean isJMSConnectionFactory() {
-        if (resType_ == null) return false;
+        if (resType_ == null) {
+            return false;
+        }
 
-        return (ResourceConstants.JMS_QUEUE_CONNECTION_FACTORY.equals(resType_) ||
-                ResourceConstants.JMS_TOPIC_CONNECTION_FACTORY.equals(resType_));
+        return ResourceConstants.JMS_QUEUE_CONNECTION_FACTORY.equals(resType_)
+            || ResourceConstants.JMS_TOPIC_CONNECTION_FACTORY.equals(resType_);
     }
     //END OF IASRI 4660565
 
+    @Override
     public String toString() {
         return "< External Jndi Resource : " + getResourceInfo() + " , " + getJndiLookupName() + "... >";
     }

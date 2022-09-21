@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,18 @@
 
 package org.glassfish.appclient.server.connector;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.jar.Manifest;
-import java.util.jar.Attributes;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
+import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
@@ -39,12 +39,11 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = CarDetector.ARCHIVE_TYPE)
+@Service(name = CarType.ARCHIVE_TYPE)
 @Singleton
 public class CarDetector implements ArchiveDetector {
-    public static final String CAR_DETECTOR_RANK_PROP = "glassfish.car.detector.rank";
-    public static final int DEFAULT_CAR_DETECTOR_RANK = 500;
-    public static final String ARCHIVE_TYPE = CarType.ARCHIVE_TYPE;
+    private static final String CAR_DETECTOR_RANK_PROP = "glassfish.car.detector.rank";
+    private static final int DEFAULT_CAR_DETECTOR_RANK = 500;
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -54,7 +53,7 @@ public class CarDetector implements ArchiveDetector {
     private CarType archiveType;
     private ArchiveHandler archiveHandler;
 
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    private static final Logger LOG = Logger.getLogger(CarDetector.class.getName());
 
     private static final String APPLICATION_CLIENT_XML = "META-INF/application-client.xml";
     private static final String SUN_APPLICATION_CLIENT_XML = "META-INF/sun-application-client.xml";
@@ -91,11 +90,11 @@ public class CarDetector implements ArchiveDetector {
         synchronized (this) {
             if (archiveHandler == null) {
                 try {
-                    sniffer.setup(null, logger);
+                    sniffer.setup(null, LOG);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                archiveHandler = serviceLocator.getService(ArchiveHandler.class, ARCHIVE_TYPE);
+                archiveHandler = serviceLocator.getService(ArchiveHandler.class, CarType.ARCHIVE_TYPE);
             }
             return archiveHandler;
         }

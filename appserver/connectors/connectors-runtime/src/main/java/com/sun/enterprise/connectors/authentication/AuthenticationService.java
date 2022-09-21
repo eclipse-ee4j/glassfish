@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,28 @@
 
 package com.sun.enterprise.connectors.authentication;
 
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
 import java.security.Principal;
 import java.util.Set;
 
 
 /**
-  * Interface class consisting of methods for securityMap functionality.
-  * For a given principal/userGrooup, a mapping is done to a backendPrincipal
-  * which is actually used to authenticate/get connection to the backend.
-  * @author    Srikanth P
-  */
+ * Interface class consisting of methods for securityMap functionality.
+ * For a given principal/userGrooup, a mapping is done to a backendPrincipal
+ * which is actually used to authenticate/get connection to the backend.
+ *
+ * @author Srikanth P
+ */
 public interface AuthenticationService {
 
-    /** Maps the principal name to the backendPrincipal.
-     *  @param principal Name of the principal
-     *  @param principalSet principalSet
-     *  @return mapped backendPrincipal.
+    /**
+     * Maps the principal name to the backendPrincipal.
+     *
+     * @param principal Name of the principal
+     * @param principalSet principalSet
+     * @return mapped backendPrincipal.
      */
-    public Principal mapPrincipal(Principal principal, Set principalSet);
+    ResourcePrincipalDescriptor mapPrincipal(Principal principal, Set<Principal> principalSet);
 
 }

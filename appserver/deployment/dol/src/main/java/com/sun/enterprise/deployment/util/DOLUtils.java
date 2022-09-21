@@ -17,10 +17,25 @@
 
 package com.sun.enterprise.deployment.util;
 
-import static com.sun.enterprise.deployment.deploy.shared.Util.toURI;
-import static java.util.Collections.emptyList;
-import static org.glassfish.deployment.common.DeploymentUtils.getManifestLibraries;
-import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibrariesAsList;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.ScatteredWarType;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.archivist.Archivist;
+import com.sun.enterprise.deployment.archivist.ArchivistFactory;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
+import com.sun.enterprise.deployment.io.DescriptorConstants;
+import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,6 +52,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -63,30 +79,15 @@ import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.xml.sax.SAXException;
 
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.archivist.Archivist;
-import com.sun.enterprise.deployment.archivist.ArchivistFactory;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
-import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.XMLElement;
-import com.sun.enterprise.deployment.xml.TagNames;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static com.sun.enterprise.deployment.deploy.shared.Util.toURI;
+import static java.util.Collections.emptyList;
+import static org.glassfish.deployment.common.DeploymentUtils.getManifestLibraries;
+import static org.glassfish.loader.util.ASClassLoaderUtil.getAppLibDirLibrariesAsList;
 
 /**
  * Utility class for convenience methods
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
 public class DOLUtils {
 
@@ -116,9 +117,6 @@ public class DOLUtils {
 
     @LogMessageInfo(message = "Unsupported deployment descriptors element {0} value {1}.", level="WARNING")
     public static final String INVALID_DESC_MAPPING = "AS-DEPLOYMENT-00015";
-
-    @LogMessageInfo(message = "DOLUtils: converting EJB to web bundle id {0}.", level="FINER")
-    private static final String CONVERT_EJB_TO_WEB_ID = "AS-DEPLOYMENT-00017";
 
     @LogMessageInfo(message = "DOLUtils: Invalid Deployment Descriptors in {0} \nLine {1} Column {2} -- {3}.", level="SEVERE",
         cause = "Failed to find the resource specified in the deployment descriptor. May be because of wrong specification in the descriptor",
@@ -163,6 +161,13 @@ public class DOLUtils {
             cause = "Unknown",
             action = "Unknown")
     public static final String INVALID_JNDI_SCOPE = "enterprise.deployment.util.application.invalid.jndiname.scope";
+
+    @LogMessageInfo(message = "DPL8006: get/add descriptor failure : {0} TO {1}",
+        level = "SEVERE",
+        cause = "Adding or getting a descriptor failed. May be because the node / information to be added is not valid; may be because of the descriptor was not registered",
+        action = "Ensure that the node to be added is valid. Ensure that the permissions are set as expected."
+    )
+    public static final String ADD_DESCRIPTOR_FAILURE = "enterprise.deployment.backend.addDescriptorFailure";
 
     // The system property to control the precedence between GF DD
     // and WLS DD when they are both present. When this property is
@@ -288,6 +293,11 @@ public class DOLUtils {
         return getModuleType("ejb");
     }
 
+
+    /**
+     * @return Can return null when not executed on the server!!!
+     * @see ProcessEnvironment#getProcessType()
+     */
     public static ArchiveType carType() {
         return getModuleType("car");
     }
@@ -298,6 +308,10 @@ public class DOLUtils {
 
     public static ArchiveType rarType() {
         return getModuleType("rar");
+    }
+
+    public static ArchiveType scatteredWarType() {
+        return getModuleType(ScatteredWarType.ARCHIVE_TYPE);
     }
 
     /**
@@ -315,13 +329,10 @@ public class DOLUtils {
         if (moduleType == null) {
             return null;
         }
-        final ServiceLocator services = Globals.getDefaultHabitat();
-        ArchiveType result = null;
-        // This method is called without HK2 being setup when dol unit tests are run, so protect against NPE.
-        if(services != null) {
-            result = services.getService(ArchiveType.class, moduleType);
-        }
-        return result;
+        final ServiceLocator services = Globals.getStaticBaseServiceLocator();
+        // This method is called without HK2 being setup when dol unit tests are run,
+        // so protect against NPE.
+        return services == null ? null : services.getService(ArchiveType.class, moduleType);
     }
 
     // returns true if GF DD should have higher precedence over
@@ -614,6 +625,9 @@ public class DOLUtils {
         return sniffers;
     }
 
+    /**
+     * @return Sniffer/Container type for moduleType or null
+     */
     private static String getTypeFromModuleType(ArchiveType moduleType) {
         if (moduleType.equals(DOLUtils.warType())) {
             return "web";
@@ -656,14 +670,12 @@ public class DOLUtils {
     }
 
     /**
-     * receives notiification of the value for a particular tag
+     * Receives notiification of the value for a particular tag
      *
      * @param element the xml element
      * @param value it's associated value
      */
-    public static boolean setElementValue(XMLElement element,
-        String value,
-        Object o) {
+    public static boolean setElementValue(XMLElement element, String value, Object o) {
         if (SCHEMA_LOCATION_TAG.equals(element.getCompleteName())) {
             // we need to keep all the non j2ee/javaee schemaLocation tags
             StringTokenizer st = new StringTokenizer(value);
@@ -694,7 +706,7 @@ public class DOLUtils {
                 sb.append(schema);
             }
             String clientSchemaLocation = sb.toString();
-            if (clientSchemaLocation.length()!=0) {
+            if (!clientSchemaLocation.isEmpty()) {
                 if (o instanceof RootDeploymentDescriptor) {
                     ((RootDeploymentDescriptor) o).setSchemaLocation(clientSchemaLocation);
                 }
@@ -709,7 +721,7 @@ public class DOLUtils {
         return false;
     }
 
-    /*
+    /**
      * Returns a list of the proprietary schema namespaces
      */
     public static List<String> getProprietarySchemaNamespaces() {
@@ -719,7 +731,7 @@ public class DOLUtils {
         return ns;
     }
 
-    /*
+    /**
      * Returns a list of the proprietary dtd system IDs
      */
     public static List<String> getProprietaryDTDStart() {
@@ -729,103 +741,78 @@ public class DOLUtils {
     }
 
     public static Application getApplicationFromEnv(JndiNameEnvironment env) {
-        Application app = null;
-
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;
-            app = ejbEnv.getApplication();
+            return ejbEnv.getApplication();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
-            app = ejbBundle.getApplication();
+            return ejbBundle.getApplication();
         } else if (env instanceof WebBundleDescriptor) {
             WebBundleDescriptor webEnv = (WebBundleDescriptor) env;
-            app = webEnv.getApplication();
+            return webEnv.getApplication();
         } else if (env instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
-            app = appEnv.getApplication();
+            return appEnv.getApplication();
         } else if (env instanceof ManagedBeanDescriptor) {
             ManagedBeanDescriptor mb = (ManagedBeanDescriptor) env;
-            app = mb.getBundle().getApplication();
+            return mb.getBundle().getApplication();
         } else if (env instanceof Application) {
-            app = ((Application) env);
+            return ((Application) env);
         } else {
             throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
         }
-
-        return app;
     }
 
     public static String getApplicationName(JndiNameEnvironment env) {
-        String appName = "";
-
-        Application app = getApplicationFromEnv(env);
+        final Application app = getApplicationFromEnv(env);
         if (app != null) {
-            appName = app.getAppName();
-        } else {
-            throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
+            return app.getAppName();
         }
-
-        return appName;
+        throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
     }
 
     public static String getModuleName(JndiNameEnvironment env) {
-
-        String moduleName = null;
-
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;
             EjbBundleDescriptor ejbBundle = ejbEnv.getEjbBundleDescriptor();
-            moduleName = ejbBundle.getModuleDescriptor().getModuleName();
+            return ejbBundle.getModuleDescriptor().getModuleName();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
-            moduleName = ejbBundle.getModuleDescriptor().getModuleName();
+            return ejbBundle.getModuleDescriptor().getModuleName();
         } else if (env instanceof WebBundleDescriptor) {
             WebBundleDescriptor webEnv = (WebBundleDescriptor) env;
-            moduleName = webEnv.getModuleName();
+            return webEnv.getModuleName();
         } else if (env instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
-            moduleName = appEnv.getModuleName();
+            return appEnv.getModuleName();
         } else if (env instanceof ManagedBeanDescriptor) {
             ManagedBeanDescriptor mb = (ManagedBeanDescriptor) env;
-            moduleName = mb.getBundle().getModuleName();
+            return mb.getBundle().getModuleName();
         } else {
             throw new IllegalArgumentException("IllegalJndiNameEnvironment : env");
         }
-
-        return moduleName;
-
     }
 
     public static boolean getTreatComponentAsModule(JndiNameEnvironment env) {
-
-        boolean treatComponentAsModule = false;
-
         if (env instanceof WebBundleDescriptor) {
-            treatComponentAsModule = true;
-        } else {
-
-            if (env instanceof EjbDescriptor) {
-
-                EjbDescriptor ejbDesc = (EjbDescriptor) env;
-                EjbBundleDescriptor ejbBundle = ejbDesc.getEjbBundleDescriptor();
-                if (ejbBundle.getModuleDescriptor().getDescriptor() instanceof WebBundleDescriptor) {
-                    treatComponentAsModule = true;
-                }
-            }
-
+            return true;
         }
-
-        return treatComponentAsModule;
+        if (env instanceof EjbDescriptor) {
+            EjbDescriptor ejbDesc = (EjbDescriptor) env;
+            EjbBundleDescriptor ejbBundle = ejbDesc.getEjbBundleDescriptor();
+            if (ejbBundle.getModuleDescriptor().getDescriptor() instanceof WebBundleDescriptor) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
      * Generate a unique id name for each J2EE component.
      */
     public static String getComponentEnvId(JndiNameEnvironment env) {
-        String id = null;
-
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;
@@ -841,35 +828,24 @@ public class DOLUtils {
             if (d instanceof WebBundleDescriptor) {
                 // copy of code below
                 WebBundleDescriptor webEnv = (WebBundleDescriptor) d;
-                id = webEnv.getApplication().getName() + ID_SEPARATOR
-                    + webEnv.getContextRoot();
-                if (deplLogger.isLoggable(Level.FINER)) {
-                    deplLogger.log(Level.FINER, CONVERT_EJB_TO_WEB_ID, id);
-                }
-
-            } else {
-                id = ejbEnv.getApplication().getName() + ID_SEPARATOR
-                    + ejbBundle.getModuleDescriptor().getArchiveUri() + ID_SEPARATOR
-                    + ejbEnv.getName() + ID_SEPARATOR + flattedJndiName
-                    + ejbEnv.getUniqueId();
+                return webEnv.getApplication().getName() + ID_SEPARATOR + webEnv.getContextRoot();
             }
+            return ejbEnv.getApplication().getName() + ID_SEPARATOR + ejbBundle.getModuleDescriptor().getArchiveUri()
+                + ID_SEPARATOR + ejbEnv.getName() + ID_SEPARATOR + flattedJndiName + ejbEnv.getUniqueId();
         } else if (env instanceof WebBundleDescriptor) {
             WebBundleDescriptor webEnv = (WebBundleDescriptor) env;
-            id = webEnv.getApplication().getName() + ID_SEPARATOR
-                + webEnv.getContextRoot();
+            return webEnv.getApplication().getName() + ID_SEPARATOR + webEnv.getContextRoot();
         } else if (env instanceof ApplicationClientDescriptor) {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
-            id = "client" + ID_SEPARATOR + appEnv.getName() + ID_SEPARATOR
-                + appEnv.getMainClassName();
+            return "client" + ID_SEPARATOR + appEnv.getName() + ID_SEPARATOR + appEnv.getMainClassName();
         } else if (env instanceof ManagedBeanDescriptor) {
-            id = ((ManagedBeanDescriptor) env).getGlobalJndiName();
+            return ((ManagedBeanDescriptor) env).getGlobalJndiName();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
-            id = "__ejbBundle__" + ID_SEPARATOR
-                + ejbBundle.getApplication().getName() + ID_SEPARATOR
+            return "__ejbBundle__" + ID_SEPARATOR + ejbBundle.getApplication().getName() + ID_SEPARATOR
                 + ejbBundle.getModuleName();
+        } else {
+            return null;
         }
-
-        return id;
     }
 }

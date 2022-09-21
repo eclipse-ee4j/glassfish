@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,9 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.util.HashMap;
@@ -29,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Contains information about jndiEnvironmentRefsGroup.
@@ -38,23 +36,23 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
     implements EjbReferenceContainer, ResourceReferenceContainer, MessageDestinationReferenceContainer,
     WritableJndiNameEnvironment {
 
+    private static final long serialVersionUID = 1L;
+
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(
         JndiEnvironmentRefsGroupDescriptor.class);
 
-    private static final Logger _logger = DOLUtils.getDefaultLogger();
+    private final Map<CallbackType, Set<LifecycleCallbackDescriptor>> callbackDescriptors = new HashMap<>();
 
-    protected Map<CallbackType, Set<LifecycleCallbackDescriptor>> callbackDescriptors = new HashMap<>();
+    private BundleDescriptor bundleDescriptor;
 
-    protected BundleDescriptor bundleDescriptor;
-
-    protected Set environmentProperties;
-    protected Set ejbReferences;
-    protected Set resourceEnvReferences;
-    protected Set messageDestReferences;
-    protected Set resourceReferences;
-    protected Set serviceReferences;
-    protected Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences;
-    protected Set<EntityManagerReferenceDescriptor> entityManagerReferences;
+    private Set<EnvironmentProperty> environmentProperties;
+    private Set<EjbReferenceDescriptor> ejbReferences;
+    private Set<ResourceEnvReferenceDescriptor> resourceEnvReferences;
+    private Set<MessageDestinationReferenceDescriptor> messageDestReferences;
+    private Set<ResourceReferenceDescriptor> resourceReferences;
+    private Set<ServiceReferenceDescriptor> serviceReferences;
+    private Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences;
+    private Set<EntityManagerReferenceDescriptor> entityManagerReferences;
 
     public void setBundleDescriptor(BundleDescriptor desc) {
         bundleDescriptor = desc;
@@ -69,7 +67,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
         Set<LifecycleCallbackDescriptor> llcDescs = getCallbackDescriptors(type);
         boolean found = false;
         for (LifecycleCallbackDescriptor llcD : llcDescs) {
-            if ((llcDesc.getLifecycleCallbackClass() != null)
+            if (llcDesc.getLifecycleCallbackClass() != null
                 && llcDesc.getLifecycleCallbackClass().equals(llcD.getLifecycleCallbackClass())) {
                 found = true;
             }
@@ -99,7 +97,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     public boolean hasCallbackDescriptor(CallbackType type) {
-        return (getCallbackDescriptors(type).size() > 0);
+        return !getCallbackDescriptors(type).isEmpty();
     }
 
 
@@ -141,15 +139,14 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
     // ejb ref
     @Override
-    public void addEjbReferenceDescriptor(EjbReference ejbReference) {
+    public void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
         this.getEjbReferenceDescriptors().add(ejbReference);
         ejbReference.setReferringBundleDescriptor(getBundleDescriptor());
     }
 
     @Override
-    public EjbReference getEjbReference(String name) {
-        for (Object element : this.getEjbReferenceDescriptors()) {
-            EjbReference er = (EjbReference) element;
+    public EjbReferenceDescriptor getEjbReference(String name) {
+        for (EjbReferenceDescriptor er : this.getEjbReferenceDescriptors()) {
             if (er.getName().equals(name)) {
                 return er;
             }
@@ -162,16 +159,17 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set getEjbReferenceDescriptors() {
+    public Set<EjbReferenceDescriptor> getEjbReferenceDescriptors() {
         if (this.ejbReferences == null) {
-            this.ejbReferences = new OrderedSet();
+            this.ejbReferences = new OrderedSet<>();
         }
-        return this.ejbReferences = new OrderedSet(this.ejbReferences);
+        this.ejbReferences = new OrderedSet<>(this.ejbReferences);
+        return this.ejbReferences;
     }
 
 
     @Override
-    public void removeEjbReferenceDescriptor(EjbReference ejbReference) {
+    public void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference) {
         this.getEjbReferenceDescriptors().remove(ejbReference);
         ejbReference.setReferringBundleDescriptor(null);
     }
@@ -189,8 +187,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
     @Override
     public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name) {
-        for (Object element : this.getMessageDestinationReferenceDescriptors()) {
-            MessageDestinationReferenceDescriptor mdr = (MessageDestinationReferenceDescriptor) element;
+        for (MessageDestinationReferenceDescriptor mdr : this.getMessageDestinationReferenceDescriptors()) {
             if (mdr.getName().equals(name)) {
                 return mdr;
             }
@@ -203,11 +200,12 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set getMessageDestinationReferenceDescriptors() {
+    public Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors() {
         if (this.messageDestReferences == null) {
-            this.messageDestReferences = new OrderedSet();
+            this.messageDestReferences = new OrderedSet<>();
         }
-        return this.messageDestReferences = new OrderedSet(this.messageDestReferences);
+        this.messageDestReferences = new OrderedSet<>(this.messageDestReferences);
+        return this.messageDestReferences;
     }
 
 
@@ -225,11 +223,12 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set getEnvironmentProperties() {
+    public Set<EnvironmentProperty> getEnvironmentProperties() {
         if (this.environmentProperties == null) {
-            this.environmentProperties = new OrderedSet();
+            this.environmentProperties = new OrderedSet<>();
         }
-        return this.environmentProperties = new OrderedSet(this.environmentProperties);
+        this.environmentProperties = new OrderedSet<>(this.environmentProperties);
+        return this.environmentProperties;
     }
 
 
@@ -263,18 +262,18 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set getServiceReferenceDescriptors() {
+    public Set<ServiceReferenceDescriptor> getServiceReferenceDescriptors() {
         if (this.serviceReferences == null) {
-            this.serviceReferences = new OrderedSet();
+            this.serviceReferences = new OrderedSet<>();
         }
-        return this.serviceReferences = new OrderedSet(this.serviceReferences);
+        this.serviceReferences = new OrderedSet<>(this.serviceReferences);
+        return this.serviceReferences;
     }
 
 
     @Override
     public ServiceReferenceDescriptor getServiceReferenceByName(String name) {
-        for (Object element : this.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor srd = (ServiceReferenceDescriptor) element;
+        for (ServiceReferenceDescriptor srd : this.getServiceReferenceDescriptors()) {
             if (srd.getName().equals(name)) {
                 return srd;
             }
@@ -287,8 +286,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public void removeServiceReferenceDescriptor(
-        ServiceReferenceDescriptor serviceReference) {
+    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference) {
         this.getServiceReferenceDescriptors().remove(serviceReference);
     }
 
@@ -301,18 +299,18 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set getResourceReferenceDescriptors() {
+    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptors() {
         if (this.resourceReferences == null) {
-            this.resourceReferences = new OrderedSet();
+            this.resourceReferences = new OrderedSet<>();
         }
-        return this.resourceReferences = new OrderedSet(this.resourceReferences);
+        this.resourceReferences = new OrderedSet<>(this.resourceReferences);
+        return this.resourceReferences;
     }
 
 
     @Override
     public ResourceReferenceDescriptor getResourceReferenceByName(String name) {
-        for (Object element : this.getResourceReferenceDescriptors()) {
-            ResourceReferenceDescriptor next = (ResourceReferenceDescriptor) element;
+        for (ResourceReferenceDescriptor next : this.getResourceReferenceDescriptors()) {
             if (next.getName().equals(name)) {
                 return next;
             }
@@ -338,20 +336,20 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public Set getResourceEnvReferenceDescriptors() {
+    public Set<ResourceEnvReferenceDescriptor> getResourceEnvReferenceDescriptors() {
         if (this.resourceEnvReferences == null) {
-            this.resourceEnvReferences = new OrderedSet();
+            this.resourceEnvReferences = new OrderedSet<>();
         }
-        return this.resourceEnvReferences = new OrderedSet(this.resourceEnvReferences);
+        this.resourceEnvReferences = new OrderedSet<>(this.resourceEnvReferences);
+        return this.resourceEnvReferences;
     }
 
 
     @Override
     public ResourceEnvReferenceDescriptor getResourceEnvReferenceByName(String name) {
-        for (Object element : this.getResourceEnvReferenceDescriptors()) {
-            ResourceEnvReferenceDescriptor jdr = (ResourceEnvReferenceDescriptor) element;
-            if (jdr.getName().equals(name)) {
-            return jdr;
+        for (ResourceEnvReferenceDescriptor element : this.getResourceEnvReferenceDescriptors()) {
+            if (element.getName().equals(name)) {
+                return element;
             }
         }
         throw new IllegalArgumentException(localStrings.getLocalString(
@@ -440,7 +438,7 @@ public abstract class JndiEnvironmentRefsGroupDescriptor extends CommonResourceD
 
 
     @Override
-    public InjectionInfo getInjectionInfoByClass(Class clazz) {
+    public InjectionInfo getInjectionInfoByClass(Class<?> clazz) {
         throw new UnsupportedOperationException();
     }
 }

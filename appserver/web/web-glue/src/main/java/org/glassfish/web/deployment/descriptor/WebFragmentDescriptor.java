@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,17 +34,15 @@ import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.ServletFilter;
-import org.glassfish.deployment.common.JavaEEResourceType;
 
-import java.util.HashSet;
 import java.util.Set;
+
+import org.glassfish.deployment.common.JavaEEResourceType;
 
 /**
  * I am an object that represents all the deployment information about
@@ -51,11 +50,11 @@ import java.util.Set;
  *
  * @author Shing Wai Chan
  */
+public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
 
-public class WebFragmentDescriptor extends WebBundleDescriptorImpl
-{
-    private String jarName = null;
-    private OrderingDescriptor ordering = null;
+    private static final long serialVersionUID = 1L;
+    private String jarName;
+    private OrderingDescriptor ordering;
 
     /**
      * Constrct an empty web app [{0}].
@@ -162,139 +161,128 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl
 
     @Override
     protected void combineEnvironmentEntries(JndiNameEnvironment env) {
-        for (Object oenve : env.getEnvironmentProperties()) {
-            EnvironmentEntry enve = (EnvironmentEntry)oenve;
+        for (EnvironmentProperty enve : env.getEnvironmentProperties()) {
             EnvironmentProperty envProp = _getEnvironmentPropertyByName(enve.getName());
-            if (envProp != null) {
-                if (envProp.isConflict((EnvironmentProperty)enve)) {
+            if (envProp == null) {
+                addEnvironmentEntry(enve);
+            } else {
+                if (envProp.isConflict(enve)) {
                     conflictEnvironmentEntry = true;
                 }
-                combineInjectionTargets(envProp, (EnvironmentProperty)enve);
-            } else {
-                addEnvironmentEntry(enve);
+                combineInjectionTargets(envProp, enve);
             }
         }
     }
 
     @Override
     protected void combineEjbReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object oejbRef : env.getEjbReferenceDescriptors()) {
-            EjbReference ejbRef = (EjbReference)oejbRef;
-            EjbReferenceDescriptor ejbRefDesc =
-                    (EjbReferenceDescriptor)_getEjbReference(ejbRef.getName());
-            if (ejbRefDesc != null) {
-                if (ejbRefDesc.isConflict((EjbReferenceDescriptor)ejbRef)) {
+        for (EjbReferenceDescriptor ejbRef : env.getEjbReferenceDescriptors()) {
+            EjbReferenceDescriptor ejbRefDesc = _getEjbReference(ejbRef.getName());
+            if (ejbRefDesc == null) {
+                addEjbReferenceDescriptor(ejbRef);
+            } else {
+                if (ejbRefDesc.isConflict(ejbRef)) {
                     conflictEjbReference = true;
                 }
-                combineInjectionTargets(ejbRefDesc, (EnvironmentProperty)ejbRef);
-            } else {
-                addEjbReferenceDescriptor(ejbRef);
+                combineInjectionTargets(ejbRefDesc, ejbRef);
             }
         }
     }
 
     @Override
     protected void combineServiceReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object oserviceRef : env.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor serviceRef =
-                (ServiceReferenceDescriptor)oserviceRef;
+        for (ServiceReferenceDescriptor serviceRef : env.getServiceReferenceDescriptors()) {
             ServiceReferenceDescriptor sr = _getServiceReferenceByName(serviceRef.getName());
-            if (sr != null) {
-                if (sr.isConflict((ServiceReferenceDescriptor)serviceRef)) {
+            if (sr == null) {
+                addServiceReferenceDescriptor(serviceRef);
+            } else {
+                if (sr.isConflict(serviceRef)) {
                     conflictServiceReference = true;
                 }
                 combineInjectionTargets(sr, serviceRef);
-            } else {
-                addServiceReferenceDescriptor(serviceRef);
             }
         }
     }
 
     @Override
     protected void combineResourceReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object oresRef : env.getResourceReferenceDescriptors()) {
-            ResourceReferenceDescriptor resRef =
-                (ResourceReferenceDescriptor)oresRef;
+        for (ResourceReferenceDescriptor resRef : env.getResourceReferenceDescriptors()) {
             ResourceReferenceDescriptor rrd = _getResourceReferenceByName(resRef.getName());
-            if (rrd != null) {
+            if (rrd == null) {
+                addResourceReferenceDescriptor(resRef);
+            } else {
                 if (resRef.isConflict(rrd)) {
                     conflictResourceReference = true;
                 }
                 combineInjectionTargets(rrd, resRef);
-            } else {
-                addResourceReferenceDescriptor(resRef);
             }
         }
     }
+
 
     @Override
     protected void combineResourceEnvReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object ojdRef : env.getResourceEnvReferenceDescriptors()) {
-            ResourceEnvReferenceDescriptor jdRef =
-                (ResourceEnvReferenceDescriptor)ojdRef;
+        for (ResourceEnvReferenceDescriptor jdRef : env.getResourceEnvReferenceDescriptors()) {
             ResourceEnvReferenceDescriptor jdr = _getResourceEnvReferenceByName(jdRef.getName());
-            if (jdr != null) {
-                if (jdr.isConflict((ResourceEnvReferenceDescriptor)jdRef)) {
+            if (jdr == null) {
+                addResourceEnvReferenceDescriptor(jdRef);
+            } else {
+                if (jdr.isConflict(jdRef)) {
                     conflictResourceEnvReference = true;
                 }
                 combineInjectionTargets(jdr, jdRef);
-            } else {
-                addResourceEnvReferenceDescriptor(jdRef);
             }
         }
     }
 
+
     @Override
     protected void combineMessageDestinationReferenceDescriptors(JndiNameEnvironment env) {
-        for (Object omdRef : env.getMessageDestinationReferenceDescriptors()) {
-            MessageDestinationReferenceDescriptor mdRef =
-                (MessageDestinationReferenceDescriptor)omdRef;
-            MessageDestinationReferenceDescriptor mdr =
-                _getMessageDestinationReferenceByName(mdRef.getName());
-            if (mdr != null) {
+        for (MessageDestinationReferenceDescriptor mdRef : env.getMessageDestinationReferenceDescriptors()) {
+            MessageDestinationReferenceDescriptor mdr = _getMessageDestinationReferenceByName(mdRef.getName());
+            if (mdr == null) {
+                addMessageDestinationReferenceDescriptor(mdRef);
+            } else {
                 if (mdr.isConflict(mdRef)) {
                     conflictMessageDestinationReference = true;
                 }
                 combineInjectionTargets(mdr, mdRef);
-            } else {
-                addMessageDestinationReferenceDescriptor(mdRef);
             }
         }
     }
 
+
     @Override
     protected void combineEntityManagerReferenceDescriptors(JndiNameEnvironment env) {
-        for (EntityManagerReferenceDescriptor emRef :
-                env.getEntityManagerReferenceDescriptors()) {
-            EntityManagerReferenceDescriptor emr =
-                _getEntityManagerReferenceByName(emRef.getName());
-            if (emr != null) {
+        for (EntityManagerReferenceDescriptor emRef : env.getEntityManagerReferenceDescriptors()) {
+            EntityManagerReferenceDescriptor emr = _getEntityManagerReferenceByName(emRef.getName());
+            if (emr == null) {
+                addEntityManagerReferenceDescriptor(emRef);
+            } else {
                 if (emr.isConflict(emRef)) {
                     conflictEntityManagerReference = true;
                 }
                 combineInjectionTargets(emr, emRef);
-            } else {
-                addEntityManagerReferenceDescriptor(emRef);
             }
         }
     }
 
+
     @Override
-     protected void combineEntityManagerFactoryReferenceDescriptors(JndiNameEnvironment env) {
-        for (EntityManagerFactoryReferenceDescriptor emfRef :
-                env.getEntityManagerFactoryReferenceDescriptors()) {
-            EntityManagerFactoryReferenceDescriptor emfr =
-                _getEntityManagerFactoryReferenceByName(emfRef.getName());
-            if (emfr != null) {
+    protected void combineEntityManagerFactoryReferenceDescriptors(JndiNameEnvironment env) {
+        for (EntityManagerFactoryReferenceDescriptor emfRef : env.getEntityManagerFactoryReferenceDescriptors()) {
+            EntityManagerFactoryReferenceDescriptor emfr = _getEntityManagerFactoryReferenceByName(emfRef.getName());
+            if (emfr == null) {
+                addEntityManagerFactoryReferenceDescriptor(emfRef);
+            } else {
                 if (emfr.isConflict(emfRef)) {
                     conflictEntityManagerFactoryReference = true;
                 }
                 combineInjectionTargets(emfr, emfRef);
-            } else {
-                addEntityManagerFactoryReferenceDescriptor(emfRef);
             }
         }
     }
+
 
     @Override
     protected void combinePostConstructDescriptors(WebBundleDescriptor webBundleDescriptor) {
@@ -309,6 +297,7 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl
     /**
      * Return a formatted version as a String.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nWeb Fragment descriptor");
         toStringBuffer.append("\n");
@@ -322,31 +311,35 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl
     }
 
     @Override
-    protected void combineResourceDescriptors(JndiNameEnvironment env,JavaEEResourceType javaEEResourceType) {
-        for (ResourceDescriptor ddd: env.getResourceDescriptors(javaEEResourceType)) {
+    protected void combineResourceDescriptors(JndiNameEnvironment env, JavaEEResourceType javaEEResourceType) {
+        for (ResourceDescriptor ddd : env.getResourceDescriptors(javaEEResourceType)) {
             ResourceDescriptor descriptor = getResourceDescriptor(javaEEResourceType, ddd.getName());
-            if (descriptor != null) {
-                if (descriptor.getResourceType().equals(JavaEEResourceType.DSD) &&
-                        ((DataSourceDefinitionDescriptor)descriptor).isConflict((DataSourceDefinitionDescriptor)ddd)) {
+            if (descriptor == null) {
+                getResourceDescriptors(javaEEResourceType).add(ddd);
+            } else {
+                if (descriptor.getResourceType().equals(JavaEEResourceType.DSD)
+                    && ((DataSourceDefinitionDescriptor) descriptor).isConflict((DataSourceDefinitionDescriptor) ddd)) {
                     conflictDataSourceDefinition = true;
-                } else if (descriptor.getResourceType().equals(JavaEEResourceType.MSD) &&
-                        ((MailSessionDescriptor)descriptor).isConflict((MailSessionDescriptor)ddd)) {
+                } else if (descriptor.getResourceType().equals(JavaEEResourceType.MSD)
+                    && ((MailSessionDescriptor) descriptor).isConflict((MailSessionDescriptor) ddd)) {
                     conflictMailSessionDefinition = true;
-                } else if (descriptor.getResourceType().equals(JavaEEResourceType.AODD) &&
-                        ((AdministeredObjectDefinitionDescriptor)descriptor).isConflict((AdministeredObjectDefinitionDescriptor)ddd)) {
+                } else if (descriptor.getResourceType().equals(JavaEEResourceType.AODD)
+                    && ((AdministeredObjectDefinitionDescriptor) descriptor)
+                        .isConflict((AdministeredObjectDefinitionDescriptor) ddd)) {
                     conflictAdminObjectDefinition = true;
-                } else if (descriptor.getResourceType().equals(JavaEEResourceType.CFD) &&
-                        ((ConnectionFactoryDefinitionDescriptor)descriptor).isConflict((ConnectionFactoryDefinitionDescriptor)ddd)) {
+                } else if (descriptor.getResourceType().equals(JavaEEResourceType.CFD)
+                    && ((ConnectionFactoryDefinitionDescriptor) descriptor)
+                        .isConflict((ConnectionFactoryDefinitionDescriptor) ddd)) {
                     conflictConnectionFactoryDefinition = true;
-                } else if (descriptor.getResourceType().equals(JavaEEResourceType.JMSCFDD) &&
-                        ((JMSConnectionFactoryDefinitionDescriptor)descriptor).isConflict((JMSConnectionFactoryDefinitionDescriptor)ddd)) {
+                } else if (descriptor.getResourceType().equals(JavaEEResourceType.JMSCFDD)
+                    && ((JMSConnectionFactoryDefinitionDescriptor) descriptor)
+                        .isConflict((JMSConnectionFactoryDefinitionDescriptor) ddd)) {
                     conflictJMSConnectionFactoryDefinition = true;
-                } else if (descriptor.getResourceType().equals(JavaEEResourceType.JMSDD) &&
-                        ((JMSDestinationDefinitionDescriptor)descriptor).isConflict((JMSDestinationDefinitionDescriptor)ddd)) {
+                } else if (descriptor.getResourceType().equals(JavaEEResourceType.JMSDD)
+                    && ((JMSDestinationDefinitionDescriptor) descriptor)
+                        .isConflict((JMSDestinationDefinitionDescriptor) ddd)) {
                     conflictJMSDestinationDefinition = true;
                 }
-            } else {
-                getResourceDescriptors(javaEEResourceType).add(ddd);
             }
         }
     }

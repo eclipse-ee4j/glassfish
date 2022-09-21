@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,44 +23,34 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import org.w3c.dom.Node;
 
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * This node is responsible for handling the module xml fragment from
- * application.xml files
+ * This node is responsible for handling the module xml fragment from application.xml files
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class ModuleNode extends DeploymentDescriptorNode {
+public class ModuleNode extends DeploymentDescriptorNode<ModuleDescriptor<?>> {
 
     @Override
-    protected Object createDescriptor() {
-        return new ModuleDescriptor();
+    protected ModuleDescriptor<?> createDescriptor() {
+        return new ModuleDescriptor<>();
     }
 
 
-   /**
-     * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value.
-     *
-     * @return the map with the element name as a key, the setter method as a value
-     */
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(ApplicationTagNames.ALTERNATIVE_DD, "setAlternateDescriptor");
         table.put(ApplicationTagNames.CONTEXT_ROOT, "setContextRoot");
         return table;
     }
 
-    /**
-     * receives notification of the value for a particular tag
-     *
-     * @param element the xml element
-     * @param value it's associated value
-     */
+
+    @Override
     public void setElementValue(XMLElement element, String value) {
-        ModuleDescriptor descriptor = (ModuleDescriptor) getDescriptor();
-         if (element.getQName().equals(ApplicationTagNames.WEB_URI)) {
+        ModuleDescriptor<?> descriptor = getDescriptor();
+        if (element.getQName().equals(ApplicationTagNames.WEB_URI)) {
             descriptor.setModuleType(DOLUtils.warType());
             descriptor.setArchiveUri(value);
         } else if (element.getQName().equals(ApplicationTagNames.EJB)) {
@@ -73,18 +64,14 @@ public class ModuleNode extends DeploymentDescriptorNode {
             descriptor.setArchiveUri(value);
         } else if (element.getQName().equals(ApplicationTagNames.WEB)) {
             descriptor.setModuleType(DOLUtils.warType());
-        } else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
-    /**
-     * write the descriptor class to a DOM tree and return it
-     *
-     * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
-     * @return the DOM tree top node
-     */
-    public Node writeDescriptor(Node parent, String nodeName, ModuleDescriptor descriptor) {
+
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, ModuleDescriptor<?> descriptor) {
 
         Node module = appendChild(parent, nodeName);
         if (DOLUtils.warType().equals(descriptor.getModuleType())) {
@@ -94,11 +81,13 @@ public class ModuleNode extends DeploymentDescriptorNode {
 
         } else {
             // default initialization if ejb...
-            String type = ApplicationTagNames.EJB;
-            if (DOLUtils.carType().equals(descriptor.getModuleType())) {
+            final String type;
+            if (Objects.equals(DOLUtils.carType(), descriptor.getModuleType())) {
                 type = ApplicationTagNames.APPLICATION_CLIENT;
-            } else if (DOLUtils.rarType().equals(descriptor.getModuleType())) {
+            } else if (Objects.equals(DOLUtils.rarType(), descriptor.getModuleType())) {
                 type = ApplicationTagNames.CONNECTOR;
+            } else {
+                type = ApplicationTagNames.EJB;
             }
             appendTextChild(module, type, descriptor.getArchiveUri());
         }

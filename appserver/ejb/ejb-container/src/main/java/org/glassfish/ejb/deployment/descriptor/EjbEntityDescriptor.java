@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
-
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This class contains deployment information for an EntityBean with
@@ -34,6 +35,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
  */
 public class EjbEntityDescriptor extends EjbDescriptor {
 
+    private static final long serialVersionUID = 1L;
     public static final String TYPE = "Entity";
     public static final String BEAN_PERSISTENCE = "Bean";
     public static final String CONTAINER_PERSISTENCE = "Container";
@@ -42,7 +44,7 @@ public class EjbEntityDescriptor extends EjbDescriptor {
 
     // EntityBean attributes
     protected String persistenceType;
-    protected boolean isReentrant = false;
+    protected boolean isReentrant;
     protected String primaryKeyClassName;
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbEntityDescriptor.class);
@@ -73,14 +75,6 @@ public class EjbEntityDescriptor extends EjbDescriptor {
         return "EntityBean";
     }
 
-    /**
-     * Gets the container transaction type for this entity bean. Entity
-     * beans always have CONTAINER_TRANSACTION_TYPE transaction type.
-     */
-    @Override
-    public String getTransactionType() {
-        return super.transactionType;
-    }
 
     /**
      * Sets the transaction type for this entity bean.
@@ -112,11 +106,7 @@ public class EjbEntityDescriptor extends EjbDescriptor {
     }
 
     public String getReentrant() {
-        if (this.isReentrant()) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
+        return this.isReentrant() ? TRUE : FALSE;
     }
 
     public void setReentrant(String reentrantString) {

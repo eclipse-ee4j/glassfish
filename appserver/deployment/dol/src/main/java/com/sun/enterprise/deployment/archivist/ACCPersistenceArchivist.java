@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -44,7 +45,6 @@ import org.xml.sax.SAXException;
  * PersistenceArchivist for app clients that knows how to scan for PUs in
  * the app client itself as well as in library JARs (or top-level JARs from
  * the containing EAR) that might accompany the app client.
- *
  */
 @Service
 @ExtensionsArchivistFor("jpa")
@@ -58,15 +58,15 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return (moduleType != null && moduleType.equals(DOLUtils.carType())) && (env.getProcessType() == ProcessType.ACC) ;
+        return Objects.equals(moduleType, DOLUtils.carType()) && env.getProcessType() == ProcessType.ACC;
     }
 
+
     @Override
-    public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "ACCPersistencerArchivist", "readPersistenceDeploymentDescriptors",
-                "archive = {0}", archive.getURI());
-        }
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor)
+        throws IOException, SAXException {
+        deplLogger.logp(Level.FINE, "ACCPersistencerArchivist", "readPersistenceDeploymentDescriptors", "archive = {0}",
+            archive.getURI());
 
         // The descriptor had better be an ApplicationClientDescriptor!
         if ( ! (descriptor instanceof ApplicationClientDescriptor)) {
@@ -114,8 +114,8 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         return relativePathToGroupFacade == null;
     }
 
-    private URI clientURI(final ReadableArchive archive,
-            final ApplicationClientDescriptor acDesc) throws IOException {
+
+    private URI clientURI(final ReadableArchive archive, final ApplicationClientDescriptor acDesc) throws IOException {
         if (archive instanceof MultiReadableArchive) {
             /*
              * Getting the manifest from a MultiReadableArchive returns the
@@ -133,8 +133,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
              * the download directory.
              */
             final URI absURIToClient = ((MultiReadableArchive) archive).getURI(1);
-            final String relativeURIPathToAnchorDir =
-                    facadeMainAttrs.getValue(AppClientArchivist.GLASSFISH_ANCHOR_DIR);
+            final String relativeURIPathToAnchorDir = facadeMainAttrs.getValue(AppClientArchivist.GLASSFISH_ANCHOR_DIR);
             final URI absURIToAnchorDir = archive.getURI().resolve(relativeURIPathToAnchorDir);
             return absURIToAnchorDir.relativize(absURIToClient);
         }
@@ -147,7 +146,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
          * For a non-deployed app (this case), the descriptor for a stand-alone
          * app client has a null application value.
          */
-        return (ac.getApplication() == null || ac.isStandalone());
+        return ac.getApplication() == null || ac.isStandalone();
     }
 
     private boolean isDeployed(final Attributes mainAttrs) throws IOException {
@@ -187,9 +186,6 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
                 acDescr.getApplication(),
                 true,
                 candidates);
-
-
-
     }
 
 
@@ -202,31 +198,6 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         for (String uriText : relativeURIs) {
             final URI scanTargetURI = archive.getURI().resolve(uriText);
             candidates.put(uriText, archiveFactory.openArchive(scanTargetURI));
-        }
-    }
-
-    private class AppClientPURootScanner extends SubArchivePURootScanner {
-
-        private final ReadableArchive clientArchive;
-
-        private AppClientPURootScanner(final ReadableArchive clientArchive) {
-            this.clientArchive = clientArchive;
-        }
-
-        @Override
-        ReadableArchive getSubArchiveToScan(ReadableArchive parentArchive) {
-            return clientArchive;
-        }
-
-        /**
-         * The superclass requires this implementation, but it is never used
-         * because we also override getSubArchiveToScan.
-         *
-         * @return
-         */
-        @Override
-        String getPathOfSubArchiveToScan() {
-            return "";
         }
     }
 }

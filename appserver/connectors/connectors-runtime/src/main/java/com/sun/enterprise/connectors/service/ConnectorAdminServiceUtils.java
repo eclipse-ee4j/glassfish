@@ -21,7 +21,7 @@ import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
@@ -44,13 +44,13 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     }
 
     /*
-     * Returns a ResourcePrincipal object populated with a pool's
+     * Returns a ResourcePrincipalDescriptor object populated with a pool's
      * default USERNAME and PASSWORD
      *
      * @throws NamingException if poolname lookup fails
      */
 
-    public static ResourcePrincipal getDefaultResourcePrincipal(PoolInfo poolInfo)
+    public static ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo)
             throws NamingException {
         // All this to get the default user name and principal
         ConnectorConnectionPool connectorConnectionPool = null;
@@ -82,8 +82,8 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
             }
         }
 
-        //Now return the ResourcePrincipal
-        return new ResourcePrincipal(userName, password);
+        //Now return the ResourcePrincipalDescriptor
+        return new ResourcePrincipalDescriptor(userName, password);
 
     }
 

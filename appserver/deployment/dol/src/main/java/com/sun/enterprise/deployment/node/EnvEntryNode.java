@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.enterprise.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
 import org.w3c.dom.Node;
 
 /**
@@ -36,13 +38,16 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
 
     public EnvEntryNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
-                                InjectionTargetNode.class, "addInjectionTarget");
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), InjectionTargetNode.class,
+            "addInjectionTarget");
     }
+
 
     @Override
     public EnvironmentProperty getDescriptor() {
-        if (envProp == null) envProp = new EnvironmentProperty();
+        if (envProp == null) {
+            envProp = new EnvironmentProperty();
+        }
         return envProp;
     }
 
@@ -63,12 +68,14 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
             // name element is always right before value, so initialize
             // setValueCalled to false when it is processed.
             setValueCalled = false;
-        } else if( TagNames.ENVIRONMENT_PROPERTY_VALUE.equals
-                   (element.getQName()) ) {
+        } else if (TagNames.ENVIRONMENT_PROPERTY_VALUE.equals(element.getQName())) {
             setValueCalled = true;
         } else if (TagNames.LOOKUP_NAME.equals(element.getQName())) {
             if (setValueCalled) {
-                throw new IllegalArgumentException(localStrings.getLocalString( "enterprise.deployment.node.invalidenventry", "Cannot specify both the env-entry-value and lookup-name elements for env-entry element {0}", new Object[] {envProp.getName()}));
+                throw new IllegalArgumentException(
+                    I18N_NODE.getLocalString("enterprise.deployment.node.invalidenventry",
+                        "Cannot specify both the env-entry-value and lookup-name elements for env-entry element {0}",
+                        new Object[] {envProp.getName()}));
             }
         }
         return super.endElement(element);
@@ -76,7 +83,7 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
 
     @Override
     public void addDescriptor(Object newDescriptor) {
-        if( setValueCalled ) {
+        if (setValueCalled) {
             super.addDescriptor(newDescriptor);
         } else {
             // Don't add it to DOL.  The env-entry only exists
@@ -92,7 +99,7 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
         appendTextChild(envEntryNode, TagNames.ENVIRONMENT_PROPERTY_TYPE, envProp.getType());
         appendTextChild(envEntryNode, TagNames.ENVIRONMENT_PROPERTY_VALUE, envProp.getValue());
         appendTextChild(envEntryNode, TagNames.MAPPED_NAME, envProp.getMappedName());
-        if( envProp.isInjectable() ) {
+        if (envProp.isInjectable()) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
             for (InjectionTarget target : envProp.getInjectionTargets()) {
                 ijNode.writeDescriptor(envEntryNode, TagNames.INJECTION_TARGET, target);

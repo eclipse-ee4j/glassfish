@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -46,7 +47,7 @@ public interface MessageDestinationReferenceContainer {
     /**
      * Return the set of message destination references declared.
      */
-    Set getMessageDestinationReferenceDescriptors();
+    Set<MessageDestinationReferenceDescriptor> getMessageDestinationReferenceDescriptors();
 
     /**
      * Removes the specified message destination reference from the receiver.

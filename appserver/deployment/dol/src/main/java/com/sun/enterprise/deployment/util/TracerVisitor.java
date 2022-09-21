@@ -59,7 +59,7 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
             }
 
             for (BundleDescriptor acd : application.getBundleDescriptorsOfType(DOLUtils.carType())) {
-               acd.visit(getSubDescriptorVisitor(acd));
+                acd.visit(getSubDescriptorVisitor(acd));
             }
             super.accept(descriptor);
         } else {

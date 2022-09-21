@@ -83,7 +83,7 @@ public class InterceptorManager {
 
     private String[] pre30LCMethodNames;
 
-    private Class<?>[] lcAnnotationClasses;
+    private final Class<?>[] lcAnnotationClasses;
 
     private CallbackChainImpl[] callbackChain;
 
@@ -116,6 +116,7 @@ public class InterceptorManager {
         this.beanClassName = className;
         this.beanClass = loader.loadClass(beanClassName);
         this.interceptorInfo = interceptorInfo;
+        this.lcAnnotationClasses = null;
 
         if (interceptorInfo.getSupportRuntimeDelegate()) {
             frameworkInterceptors.add(SystemInterceptorProxy.createInterceptorDesc());
@@ -354,10 +355,10 @@ public class InterceptorManager {
         Set<Class<?>> listOfClasses = new HashSet<>();
 
         for (EjbInterceptor ejbInterceptor : ejbDesc.getInterceptorClasses()) {
-            if (ejbInterceptor.getInterceptorClass() != null) {
-                listOfClasses.add(ejbInterceptor.getInterceptorClass());
-            } else {
+            if (ejbInterceptor.getInterceptorClass() == null) {
                 listOfClasses.add(loader.loadClass(ejbInterceptor.getInterceptorClassName()));
+            } else {
+                listOfClasses.add(ejbInterceptor.getInterceptorClass());
             }
         }
 
@@ -374,7 +375,7 @@ public class InterceptorManager {
 
         initInterceptorClasses(listOfClasses);
 
-        interceptorsExists = (listOfClasses.size() > 0) || ejbDesc.hasAroundInvokeMethod() || ejbDesc.hasAroundTimeoutMethod();
+        interceptorsExists = (!listOfClasses.isEmpty()) || ejbDesc.hasAroundInvokeMethod() || ejbDesc.hasAroundTimeoutMethod();
 
         initEjbCallbackIndices();
     }
@@ -636,7 +637,7 @@ public class InterceptorManager {
                 .append(" interceptors");
         sbldr.append("\n\tbeanClassName: ").append(beanClassName);
         sbldr.append("\n\tInterceptors: ");
-        for (Class clazz : interceptorClasses) {
+        for (Class<?> clazz : interceptorClasses) {
             sbldr.append("\n\t\t").append(clazz.getName());
         }
         if (lcAnnotationClasses != null) {

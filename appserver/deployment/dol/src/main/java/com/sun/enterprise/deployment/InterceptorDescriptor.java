@@ -17,26 +17,21 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
-
-import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * Contains information about 1 Jakarta EE interceptor.
  */
 public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
-    private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(InterceptorDescriptor.class);
 
-    private static final Logger _logger = DOLUtils.getDefaultLogger();
+    private static final long serialVersionUID = 1L;
 
     private Set<LifecycleCallbackDescriptor> aroundInvokeDescriptors;
     private Set<LifecycleCallbackDescriptor> aroundTimeoutDescriptors;
@@ -49,7 +44,7 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     // descriptor were defined on the bean class itself (or one of its
     // super-classes).  false if the methods are defined
     // on a separate interceptor class (or one of its super-classes).
-    private boolean fromBeanClass = false;
+    private boolean fromBeanClass;
 
     public String getInterceptorClassName() {
         return interceptorClassName;
@@ -60,13 +55,13 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
 
-    public Class getInterceptorClass() {
+    public Class<?> getInterceptorClass() {
         return interceptorClass;
     }
 
     // Should ONLY be used for system-level interceptors whose class
     // is loaded by something other than the application class-loader
-    public void setInterceptorClass(Class c) {
+    public void setInterceptorClass(Class<?> c) {
         interceptorClass = c;
         setInterceptorClassName(c.getName());
     }
@@ -74,114 +69,110 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     public Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
         if (aroundInvokeDescriptors == null) {
-            aroundInvokeDescriptors =
-                new HashSet<>();
+            aroundInvokeDescriptors = new HashSet<>();
         }
         return aroundInvokeDescriptors;
     }
+
 
     /**
      * Some clients need the AroundInvoke methods for this inheritance
      * hierarchy in the spec-defined "least derived --> most derived" order.
      */
-    public List<LifecycleCallbackDescriptor> getOrderedAroundInvokeDescriptors
-        (ClassLoader loader) throws Exception {
-
+    public List<LifecycleCallbackDescriptor> getOrderedAroundInvokeDescriptors(ClassLoader loader) throws Exception {
         return orderDescriptors(getAroundInvokeDescriptors(), loader);
 
     }
 
+
     public Set<LifecycleCallbackDescriptor> getAroundTimeoutDescriptors() {
         if (aroundTimeoutDescriptors == null) {
-            aroundTimeoutDescriptors =
-                new HashSet<>();
+            aroundTimeoutDescriptors = new HashSet<>();
         }
         return aroundTimeoutDescriptors;
     }
+
 
     /**
      * Some clients need the AroundTimeout methods for this inheritance
      * hierarchy in the spec-defined "least derived --> most derived" order.
      */
-    public List<LifecycleCallbackDescriptor> getOrderedAroundTimeoutDescriptors
-        (ClassLoader loader) throws Exception {
-
+    public List<LifecycleCallbackDescriptor> getOrderedAroundTimeoutDescriptors(ClassLoader loader) throws Exception {
         return orderDescriptors(getAroundTimeoutDescriptors(), loader);
-
     }
+
 
     public void setFromBeanClass(boolean flag) {
         fromBeanClass = flag;
     }
 
+
     public boolean getFromBeanClass() {
         return fromBeanClass;
     }
 
-    public void addAroundInvokeDescriptor(LifecycleCallbackDescriptor aroundInvokeDesc) {
-        Set<LifecycleCallbackDescriptor> aroundInvokeDescs =
-            getAroundInvokeDescriptors();
 
+    public void addAroundInvokeDescriptor(LifecycleCallbackDescriptor aroundInvokeDesc) {
+        Set<LifecycleCallbackDescriptor> aroundInvokeDescs = getAroundInvokeDescriptors();
         if (!knownLifecycleCallbackDescriptor(aroundInvokeDesc, aroundInvokeDescs)) {
             aroundInvokeDescs.add(aroundInvokeDesc);
         }
     }
 
-    public void addAroundInvokeDescriptors(
-        Set<LifecycleCallbackDescriptor> aroundInvokes) {
+
+    public void addAroundInvokeDescriptors(Set<LifecycleCallbackDescriptor> aroundInvokes) {
         for (LifecycleCallbackDescriptor ai : aroundInvokes) {
             addAroundInvokeDescriptor(ai);
         }
     }
 
     public boolean hasAroundInvokeDescriptor() {
-        return (getAroundInvokeDescriptors().size() > 0);
+        return !getAroundInvokeDescriptors().isEmpty();
     }
 
+
     public void addAroundTimeoutDescriptor(LifecycleCallbackDescriptor aroundTimeoutDesc) {
-        Set<LifecycleCallbackDescriptor> aroundTimeoutDescs =
-            getAroundTimeoutDescriptors();
+        Set<LifecycleCallbackDescriptor> aroundTimeoutDescs = getAroundTimeoutDescriptors();
 
         if (!knownLifecycleCallbackDescriptor(aroundTimeoutDesc, aroundTimeoutDescs)) {
             aroundTimeoutDescs.add(aroundTimeoutDesc);
         }
     }
 
-    private boolean knownLifecycleCallbackDescriptor(
-            LifecycleCallbackDescriptor desc, Set<LifecycleCallbackDescriptor> descs) {
-        boolean found = false;
 
+    private boolean knownLifecycleCallbackDescriptor(LifecycleCallbackDescriptor desc,
+        Set<LifecycleCallbackDescriptor> descs) {
         for (LifecycleCallbackDescriptor ai : descs) {
-            if ((desc.getLifecycleCallbackClass() != null) &&
-                    desc.getLifecycleCallbackClass().equals(
-                    ai.getLifecycleCallbackClass())) {
-                found = true;
+            if ((desc.getLifecycleCallbackClass() != null)
+                && desc.getLifecycleCallbackClass().equals(ai.getLifecycleCallbackClass())) {
+                return true;
             }
         }
-
-        return found;
+        return false;
     }
 
-    public void addAroundTimeoutDescriptors(
-        Set<LifecycleCallbackDescriptor> aroundTimeouts) {
+
+    public void addAroundTimeoutDescriptors(Set<LifecycleCallbackDescriptor> aroundTimeouts) {
         for (LifecycleCallbackDescriptor ai : aroundTimeouts) {
             addAroundTimeoutDescriptor(ai);
         }
     }
 
+
     public boolean hasAroundTimeoutDescriptor() {
-        return (getAroundTimeoutDescriptors().size() > 0);
+        return !getAroundTimeoutDescriptors().isEmpty();
     }
+
 
     /**
      * Some clients need the Callback methods for this inheritance
      * hierarchy in the spec-defined "least derived --> most derived" order.
      */
-    public List<LifecycleCallbackDescriptor> getOrderedCallbackDescriptors
-        (CallbackType type, ClassLoader loader) throws Exception {
-
+    public List<LifecycleCallbackDescriptor> getOrderedCallbackDescriptors(CallbackType type, ClassLoader loader)
+        throws Exception {
         return orderDescriptors(getCallbackDescriptors(type), loader);
     }
+
 
     public void addAroundConstructDescriptor(LifecycleCallbackDescriptor lcDesc) {
         addCallbackDescriptor(CallbackType.AROUND_CONSTRUCT, lcDesc);
@@ -200,34 +191,26 @@ public class InterceptorDescriptor extends JndiEnvironmentRefsGroupDescriptor {
      * inheritance hierarchy with highest precedence assigned to the
      * least derived class.
      */
-    private List<LifecycleCallbackDescriptor> orderDescriptors
-        (Set<LifecycleCallbackDescriptor> lcds, ClassLoader loader)
-        throws Exception
-    {
+    private List<LifecycleCallbackDescriptor> orderDescriptors(Set<LifecycleCallbackDescriptor> lcds,
+        ClassLoader loader) throws Exception {
+        LinkedList<LifecycleCallbackDescriptor> orderedDescs = new LinkedList<>();
+        Map<String, LifecycleCallbackDescriptor> map = new HashMap<>();
 
-        LinkedList<LifecycleCallbackDescriptor> orderedDescs =
-            new LinkedList<>();
-
-        Map<String, LifecycleCallbackDescriptor> map =
-            new HashMap<>();
-
-        for(LifecycleCallbackDescriptor next : lcds) {
+        for (LifecycleCallbackDescriptor next : lcds) {
             map.put(next.getLifecycleCallbackClass(), next);
         }
 
-        Class<?> nextClass = interceptorClass != null? interceptorClass : loader.loadClass(getInterceptorClassName());
+        Class<?> nextClass = interceptorClass != null ? interceptorClass : loader.loadClass(getInterceptorClassName());
 
-        while((nextClass != Object.class) && (nextClass != null)) {
+        while (nextClass != Object.class && nextClass != null) {
             String nextClassName = nextClass.getName();
-            if( map.containsKey(nextClassName) ) {
+            if (map.containsKey(nextClassName)) {
                 LifecycleCallbackDescriptor lcd = map.get(nextClassName);
                 orderedDescs.addFirst(lcd);
             }
 
             nextClass = nextClass.getSuperclass();
         }
-
-
         return orderedDescs;
 
     }

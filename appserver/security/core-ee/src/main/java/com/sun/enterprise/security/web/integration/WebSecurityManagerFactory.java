@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,6 @@
 
 package com.sun.enterprise.security.web.integration;
 
-import static java.util.logging.Level.FINE;
-
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-
-import org.glassfish.internal.api.ServerContext;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
 import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
@@ -35,6 +24,19 @@ import com.sun.enterprise.security.factory.SecurityManagerFactory;
 
 import jakarta.inject.Singleton;
 import jakarta.security.jacc.PolicyContextException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.UserPrincipal;
+import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
 
 /**
  * @author JeanFrancois Arcand
@@ -45,16 +47,16 @@ import jakarta.security.jacc.PolicyContextException;
 public class WebSecurityManagerFactory extends SecurityManagerFactory {
 
     private static Logger logger = LogUtils.getLogger();
-    private WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
+    private final WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
 
-    final PolicyContextHandlerImpl pcHandlerImpl = (PolicyContextHandlerImpl) PolicyContextHandlerImpl.getInstance();
+    final PolicyContextHandlerImpl pcHandlerImpl = PolicyContextHandlerImpl.getInstance();
 
-    private final Map<String, Principal> adminPrincipals = new ConcurrentHashMap<>();
-    private final Map<String, Principal> adminGroups = new ConcurrentHashMap<>();
+    private final Map<String, UserPrincipal> adminPrincipals = new ConcurrentHashMap<>();
+    private final Map<String, Group> adminGroups = new ConcurrentHashMap<>();
 
     // stores the context ids to appnames for standalone web apps
-    private Map<String, ArrayList<String>> CONTEXT_IDS = new HashMap<>();
-    private Map<String, Map<String, WebSecurityManager>> SECURITY_MANAGERS = new HashMap<>();
+    private final Map<String, ArrayList<String>> CONTEXT_IDS = new HashMap<>();
+    private final Map<String, Map<String, WebSecurityManager>> SECURITY_MANAGERS = new HashMap<>();
 
     public WebSecurityManager getManager(String ctxId) {
         return getManager(SECURITY_MANAGERS, ctxId, null, false);
@@ -108,19 +110,27 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
         addManagerToApp(SECURITY_MANAGERS, CONTEXT_IDS, ctxId, name, appName, manager);
     }
 
-    public Principal getAdminPrincipal(String username, String realmName) {
+
+    public UserPrincipal getAdminPrincipal(String username, String realmName) {
+        // FIXME: can be hacked: "ab+cd" = "a+bcd"
         return adminPrincipals.get(realmName + username);
     }
 
-    public void putAdminPrincipal(String username, String realmName, Principal principal) {
-        adminPrincipals.put(realmName + username, principal);
+
+    public void putAdminPrincipal(String realmName, UserPrincipal principal) {
+        // FIXME: can be hacked: "ab+cd" = "a+bcd"
+        adminPrincipals.put(realmName + principal.getName(), principal);
     }
 
-    public Principal getAdminGroup(String group, String realmName) {
+
+    public Group getAdminGroup(String group, String realmName) {
+        // FIXME: can be hacked: "ab+cd" = "a+bcd"
         return adminGroups.get(realmName + group);
     }
 
-    public void putAdminGroup(String group, String realmName, Principal principal) {
+
+    public void putAdminGroup(String group, String realmName, Group principal) {
+        // FIXME: can be hacked: "ab+cd" = "a+bcd"
         adminGroups.put(realmName + group, principal);
     }
 }

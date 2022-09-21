@@ -131,7 +131,7 @@ public class WebServiceHandler extends AbstractHandler {
              if(annCtx instanceof EjbContext &&   (provider !=null) &&
                     (provider.getType("jakarta.ejb.Stateless") == null)) {
                 AnnotationProcessorException ape = new AnnotationProcessorException(
-                        localStrings.getLocalString("enterprise.deployment.annotation.handlers.webeppkgwrong",
+                        I18N.getLocalString("enterprise.deployment.annotation.handlers.webeppkgwrong",
                                 "Class {0} is annotated with @WebService and without @Stateless
                                  but is packaged in a JAR." +
                                  " If it is supposed to be a servlet endpoint, it should be
@@ -145,7 +145,7 @@ public class WebServiceHandler extends AbstractHandler {
             if(annCtx instanceof EjbBundleContext && (provider !=null) &&
                     (provider.getType("jakarta.ejb.Stateless") == null)) {
                 AnnotationProcessorException ape = new AnnotationProcessorException(
-                        localStrings.getLocalString  ("enterprise.deployment.annotation.handlers.webeppkgwrong",
+                        I18N.getLocalString  ("enterprise.deployment.annotation.handlers.webeppkgwrong",
                                 "Class {0} is annotated with @WebService and without @Stateless but is packaged in a JAR." +
                                         " If it is supposed to be a servlet endpoint, it should be packaged in a WAR; Deployment will continue assuming this " +
                                         "class to be just a POJO used by other classes in the JARbeing deployed",
@@ -156,7 +156,7 @@ public class WebServiceHandler extends AbstractHandler {
             if(annCtx instanceof WebBundleContext && (provider !=null) &&
                     (provider.getType("jakarta.ejb.Stateless") != null)) {
                 AnnotationProcessorException ape = new AnnotationProcessorException(
-                        localStrings.getLocalString
+                        I18N.getLocalString
                          ("enterprise.deployment.annotation.handlers.ejbeppkgwrong",
                          "Class {0} is annotated with @WebService and @Stateless but is packaged in a WAR." +" If it is supposed to be an EJB endpoint, it should be  packaged in a JAR; Deployment will continue assuming this "
                         +" class to be just a POJO used by other classes in the WAR being deployed",
@@ -255,7 +255,7 @@ public class WebServiceHandler extends AbstractHandler {
                 endpointIntf = ((Class) annElem).getClassLoader().loadClass(ann.endpointInterface());
             } catch(java.lang.ClassNotFoundException cfne) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
+                        I18N.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
                             "class {0} referenced from annotation symbol cannot be loaded",
                             new Object[] { ann.endpointInterface() }), annInfo);
             }

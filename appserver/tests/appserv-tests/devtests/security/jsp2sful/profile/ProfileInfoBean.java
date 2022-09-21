@@ -40,7 +40,7 @@ public class ProfileInfoBean implements SessionBean {
     }
 
     public String getCallerInfo() {
-        return sc.getCallerPrincipal().toString();
+        return sc.getCallerPrincipal().getName();
     }
 
     public String getSecretInfo() {

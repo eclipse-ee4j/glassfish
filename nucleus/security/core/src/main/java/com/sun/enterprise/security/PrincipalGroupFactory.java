@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,7 @@
 package com.sun.enterprise.security;
 
 import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserPrincipal;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -26,7 +27,7 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface PrincipalGroupFactory {
 
-    PrincipalImpl getPrincipalInstance(String name, String realm);
+    UserPrincipal getPrincipalInstance(String name, String realm);
 
     Group getGroupInstance(String name, String realm);
 }

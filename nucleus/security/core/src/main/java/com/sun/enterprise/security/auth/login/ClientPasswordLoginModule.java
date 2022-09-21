@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.UsernamePasswordStore;
+import com.sun.enterprise.security.auth.login.common.PasswordCredential;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,24 +36,17 @@ import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
 
-import org.glassfish.security.common.PrincipalImpl;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.UsernamePasswordStore;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.glassfish.security.common.UserPrincipal;
 
 /**
- * <p>
  * This sample LoginModule authenticates users with a password.
- *
  * <p>
- * If testUser successfully authenticates itself, a <code>PrincipalImpl</code> with the testUser's username is added to the
- * Subject.
+ * If testUser successfully authenticates itself, a {@link UserPrincipal} with the testUser's
+ * username is added to the Subject.
  *
  * @author Harpreet Singh (harpreet.singh@sun.com)
  */
-
 public class ClientPasswordLoginModule implements LoginModule {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
@@ -57,19 +56,16 @@ public class ClientPasswordLoginModule implements LoginModule {
     // initial state
     private Subject subject;
     private CallbackHandler callbackHandler;
-    private Map sharedState;
-    private Map options;
 
     // the authentication status
-    private boolean succeeded = false;
-    private boolean commitSucceeded = false;
+    private boolean succeeded;
+    private boolean commitSucceeded;
 
     // username and password
     private String username;
     private char[] password;
 
-    // testUser's PrincipalImpl
-    private PrincipalImpl userPrincipal;
+    private UserPrincipal userPrincipal;
     public static final String LOGIN_NAME = "j2eelogin.name";
     public static final String LOGIN_PASSWORD = "j2eelogin.password";
 
@@ -92,12 +88,8 @@ public class ClientPasswordLoginModule implements LoginModule {
      */
     @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
-
         this.subject = subject;
         this.callbackHandler = callbackHandler;
-        this.sharedState = sharedState;
-        this.options = options;
-
     }
 
     /**
@@ -188,80 +180,70 @@ public class ClientPasswordLoginModule implements LoginModule {
         // that the login successful. The actual login will take place
         // on the server side.
 
-        _logger.log(Level.FINEST, "\t\t[ClientPasswordLoginModule] " + "authentication succeeded");
+        _logger.log(Level.FINEST, "\t\t[ClientPasswordLoginModule] authentication succeeded");
         succeeded = true;
         return true;
     }
 
+
     /**
      * <p>
-     * This method is called if the LoginContext's overall authentication succeeded (the relevant REQUIRED, REQUISITE, SUFFICIENT and
-     * OPTIONAL LoginModules succeeded).
-     *
+     * This method is called if the LoginContext's overall authentication succeeded (the relevant
+     * REQUIRED, REQUISITE, SUFFICIENT and OPTIONAL LoginModules succeeded).
      * <p>
-     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private state saved by the
-     * <code>login</code> method), then this method associates a <code>PrincipalImpl</code> with the <code>Subject</code> located in
-     * the <code>LoginModule</code>. If this LoginModule's own authentication attempted failed, then this method removes any state
+     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private
+     * state saved by the <code>login</code> method), then this method associates a
+     * {@link UserPrincipal} with the <code>Subject</code> located in the <code>LoginModule</code>.
+     * If this LoginModule's own authentication attempted failed, then this method removes any state
      * that was originally saved.
      *
-     * <p>
-     *
      * @exception LoginException if the commit fails.
-     *
      * @return true if this LoginModule's own login and commit attempts succeeded, or false otherwise.
      */
     @Override
     public boolean commit() throws LoginException {
         if (succeeded == false) {
             return false;
-        } else {
-            // add a Principal (authenticated identity)
-            // to the Subject
-
-            // assume the user we authenticated is the PrincipalImpl
-            userPrincipal = new PrincipalImpl(username);
-            if (!subject.getPrincipals().contains(userPrincipal)) {
-                subject.getPrincipals().add(userPrincipal);
-            }
-            _logger.log(Level.FINE, "\t\t[ClientPasswordLoginModule] " + "added PrincipalImpl to Subject");
-
-            String realm = DEFAULT_REALMNAME;
-
-            PasswordCredential pc = new PasswordCredential(username, password, realm);
-            if (!subject.getPrivateCredentials().contains(pc)) {
-                subject.getPrivateCredentials().add(pc);
-            }
-            // in any case, clean out state
-            username = null;
-            for (int i = 0; i < password.length; i++) {
-                password[i] = ' ';
-            }
-            password = null;
-            commitSucceeded = true;
-            return true;
         }
+        userPrincipal = new UserNameAndPassword(username);
+        if (!subject.getPrincipals().contains(userPrincipal)) {
+            subject.getPrincipals().add(userPrincipal);
+        }
+        _logger.log(Level.FINE, "\t\t[ClientPasswordLoginModule] added UserPrincipal to Subject");
+
+        String realm = DEFAULT_REALMNAME;
+
+        PasswordCredential pc = new PasswordCredential(username, password, realm);
+        if (!subject.getPrivateCredentials().contains(pc)) {
+            subject.getPrivateCredentials().add(pc);
+        }
+        // in any case, clean out state
+        username = null;
+        for (int i = 0; i < password.length; i++) {
+            password[i] = ' ';
+        }
+        password = null;
+        commitSucceeded = true;
+        return true;
     }
 
+
     /**
+     * This method is called if the LoginContext's overall authentication failed. (the relevant
+     * REQUIRED, REQUISITE, SUFFICIENT and OPTIONAL LoginModules did not succeed).
      * <p>
-     * This method is called if the LoginContext's overall authentication failed. (the relevant REQUIRED, REQUISITE, SUFFICIENT and
-     * OPTIONAL LoginModules did not succeed).
-     *
-     * <p>
-     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private state saved by the
-     * <code>login</code> and <code>commit</code> methods), then this method cleans up any state that was originally saved.
-     *
-     * <p>
+     * If this LoginModule's own authentication attempt succeeded (checked by retrieving the private
+     * state saved by the <code>login</code> and <code>commit</code> methods), then this method
+     * cleans up any state that was originally saved.
      *
      * @exception LoginException if the abort fails.
-     *
      * @return false if this LoginModule's own login and/or commit attempts failed, and true otherwise.
      */
     @Override
     public boolean abort() throws LoginException {
         if (succeeded == false) {
             return false;
-        } else if (succeeded == true && commitSucceeded == false) {
+        } else if (succeeded && !commitSucceeded) {
             // login succeeded but overall authentication failed
             succeeded = false;
             username = null;
@@ -280,21 +262,18 @@ public class ClientPasswordLoginModule implements LoginModule {
         return true;
     }
 
+
     /**
      * Logout the user.
-     *
      * <p>
-     * This method removes the <code>PrincipalImpl</code> that was added by the <code>commit</code> method.
-     *
-     * <p>
+     * This method removes the {@link UserPrincipal} that was added by the <code>commit</code>
+     * method.
      *
      * @exception LoginException if the logout fails.
-     *
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.
      */
     @Override
     public boolean logout() throws LoginException {
-
         subject.getPrincipals().remove(userPrincipal);
         succeeded = commitSucceeded;
         username = null;

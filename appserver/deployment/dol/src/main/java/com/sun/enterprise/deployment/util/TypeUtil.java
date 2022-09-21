@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,10 +37,10 @@ public class TypeUtil {
     private static final char[] digits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
     // Map of primitive class name and its associated Class object
-    private static Hashtable primitiveClasses_;
+    private static Hashtable<String, Class<?>> primitiveClasses_;
 
     static {
-        primitiveClasses_ = new Hashtable();
+        primitiveClasses_ = new Hashtable<>();
         primitiveClasses_.put(Character.TYPE.getName(), Character.TYPE);
         primitiveClasses_.put(Boolean.TYPE.getName(), Boolean.TYPE);
         primitiveClasses_.put(Byte.TYPE.getName(), Byte.TYPE);
@@ -142,22 +143,6 @@ public class TypeUtil {
             power = power / 10;
         }
         return offset - init_offset;
-    }
-
-
-    /**
-     * Work around a performance bug in String.hashCode() for strings longer
-     * than sixteen characters, by calculating a (slower) hash on all the
-     * characters in the string. Not needed starting in the JDK 1.2 release.
-     */
-    public static int hashCode(String s) {
-        int length = s.length();
-        int h = 1;
-
-        for (int i = 0; i < length; i++) {
-            h = (h * 37) + s.charAt(i);
-        }
-        return h;
     }
 
 
@@ -318,24 +303,6 @@ public class TypeUtil {
 
 
     /**
-     * Test if a class is a subclass of another.
-     *
-     * @deprecated Use <em>sup.isAssignableFrom(sub)</em>
-     */
-    @Deprecated
-    public static boolean isSubclassOf(Class sub, Class sup) {
-        if (sub == sup) {
-            return true;
-        }
-        Class superclass = sub.getSuperclass();
-        while (superclass != null && superclass != sup) {
-            superclass = superclass.getSuperclass();
-        }
-        return (superclass != null);
-    }
-
-
-    /**
      * Get all super-interfaces of a class, excluding the
      * given base interface.
      * Returns a set of strings containing class names.
@@ -367,7 +334,7 @@ public class TypeUtil {
             for (int pIndex = 0; pIndex < parameterTypes.length; pIndex++) {
                 String next = paramClassNames[pIndex];
                 if (primitiveClasses_.containsKey(next)) {
-                    parameterTypes[pIndex] = (Class) primitiveClasses_.get(next);
+                    parameterTypes[pIndex] = primitiveClasses_.get(next);
                 } else {
                     parameterTypes[pIndex] = Class.forName(next, true, loader);
                 }
@@ -377,15 +344,15 @@ public class TypeUtil {
     }
 
 
-    public static Method getDeclaredMethod(Class declaringClass, ClassLoader loader, String name,
+    public static Method getDeclaredMethod(Class<?> declaringClass, ClassLoader loader, String name,
         String[] paramClassNames) throws Exception {
-        Class[] parameterTypes = null;
+        Class<?>[] parameterTypes = null;
         if (paramClassNames != null) {
             parameterTypes = new Class[paramClassNames.length];
             for (int pIndex = 0; pIndex < parameterTypes.length; pIndex++) {
                 String next = paramClassNames[pIndex];
                 if (primitiveClasses_.containsKey(next)) {
-                    parameterTypes[pIndex] = (Class) primitiveClasses_.get(next);
+                    parameterTypes[pIndex] = primitiveClasses_.get(next);
                 } else {
                     parameterTypes[pIndex] = Class.forName(next, true, loader);
                 }
@@ -408,7 +375,7 @@ public class TypeUtil {
         Type[] gpm1 = m1.getGenericParameterTypes();
         Type[] gpm2 = m2.getGenericParameterTypes();
 
-        if ((gpm1.length == gpm2.length)) {
+        if (gpm1.length == gpm2.length) {
             same = true;
             for (int i = 0; i < gpm1.length; i++) {
                 if (!gpm1[i].equals(gpm2[i])) {
@@ -442,13 +409,10 @@ public class TypeUtil {
      * 1) declaring class 2) exceptions
      */
     public static boolean sameMethodSignature(Method m1, Method m2) {
-        boolean same = false;
-
         if (m1.getName().equals(m2.getName())) {
-            same = sameParamTypes(m1, m2) && sameReturnTypes(m1, m2);
+            return sameParamTypes(m1, m2) && sameReturnTypes(m1, m2);
         }
-
-        return same;
+        return false;
     }
 
 
@@ -508,14 +472,14 @@ public class TypeUtil {
     /**
      * Convert String array of class names into array of Classes.
      */
-    public static Class[] paramClassNamesToTypes(String[] paramClassNames, ClassLoader loader) throws Exception {
-        Class[] parameterTypes = null;
+    public static Class<?>[] paramClassNamesToTypes(String[] paramClassNames, ClassLoader loader) throws Exception {
+        Class<?>[] parameterTypes = null;
         if (paramClassNames != null) {
             parameterTypes = new Class[paramClassNames.length];
             for (int pIndex = 0; pIndex < parameterTypes.length; pIndex++) {
                 String next = paramClassNames[pIndex];
                 if (primitiveClasses_.containsKey(next)) {
-                    parameterTypes[pIndex] = (Class) primitiveClasses_.get(next);
+                    parameterTypes[pIndex] = primitiveClasses_.get(next);
                 } else {
                     parameterTypes[pIndex] = Class.forName(next, true, loader);
                 }

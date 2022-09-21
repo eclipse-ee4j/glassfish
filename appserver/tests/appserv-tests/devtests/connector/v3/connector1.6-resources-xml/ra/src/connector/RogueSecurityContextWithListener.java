@@ -16,7 +16,7 @@
 
 package connector;
 
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.Subject;
@@ -41,7 +41,7 @@ public class RogueSecurityContextWithListener extends MySecurityContextWithListe
 /*
         String principalName = "xyz";
 
-        CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new PrincipalImpl(principalName));
+        CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new UserNameAndPassword(principalName));
         debug("setting caller principal callback with principal : " + principalName);
 */
         callbacks.add(pvc);

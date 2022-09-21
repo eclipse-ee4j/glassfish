@@ -15,42 +15,40 @@
  */
 package com.sun.enterprise.deployment.node;
 
-import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
-
 import java.util.Map;
 
 import org.omnifaces.concurrent.deployment.ManagedThreadFactoryDefinitionDescriptor;
 import org.omnifaces.concurrent.node.ManagedThreadFactoryDefinitionNodeDelegate;
 import org.w3c.dom.Node;
 
-public class ManagedThreadFactoryDefinitionNode extends DeploymentDescriptorNode<ManagedThreadFactoryDefinitionDescriptor> {
+import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
-    public final static XMLElement tag = new XMLElement(ManagedThreadFactoryDefinitionNodeDelegate.getQname());
+public class ManagedThreadFactoryDefinitionNode
+    extends DeploymentDescriptorNode<ManagedThreadFactoryDefinitionDescriptor> {
 
-    ManagedThreadFactoryDefinitionNodeDelegate delegate = new ManagedThreadFactoryDefinitionNodeDelegate();
+    private final ManagedThreadFactoryDefinitionNodeDelegate delegate = new ManagedThreadFactoryDefinitionNodeDelegate();
 
     public ManagedThreadFactoryDefinitionNode() {
-        registerElementHandler(
-                new XMLElement(RESOURCE_PROPERTY),
-                ResourcePropertyNode.class,
-                delegate.getHandlerAdMethodName());
+        registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
+            delegate.getHandlerAdMethodName());
     }
+
+
+    @Override
+    public ManagedThreadFactoryDefinitionDescriptor getDescriptor() {
+        return delegate.getDescriptor();
+    }
+
 
     @Override
     protected Map<String, String> getDispatchTable() {
         return delegate.getDispatchTable(super.getDispatchTable());
     }
 
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName, ManagedThreadFactoryDefinitionDescriptor managedThreadFactoryDefinitionDescriptor) {
-        Node node = delegate.getDescriptor(parent, nodeName, managedThreadFactoryDefinitionDescriptor);
-        new ResourcePropertyNode().writeDescriptor(node, managedThreadFactoryDefinitionDescriptor);
-
-        return node;
-    }
 
     @Override
-    public ManagedThreadFactoryDefinitionDescriptor getDescriptor() {
-        return delegate.getDescriptor();
+    public Node writeDescriptor(Node parent, String nodeName, ManagedThreadFactoryDefinitionDescriptor descriptor) {
+        Node node = delegate.getDescriptor(parent, nodeName, descriptor);
+        return ResourcePropertyNode.write(node, descriptor);
     }
 }

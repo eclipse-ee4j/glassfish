@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,8 @@ import org.glassfish.deployment.common.Descriptor;
  */
 public class NameValuePairDescriptor extends Descriptor {
 
-    private String value=null;
+    private static final long serialVersionUID = 1L;
+    private String value;
 
     /**
      * copy constructor.
@@ -35,12 +37,14 @@ public class NameValuePairDescriptor extends Descriptor {
         value = other.value;
     }
 
+
     /**
      * standard constructor.
      */
     public NameValuePairDescriptor() {
         super();
     }
+
 
     /**
      * set the value
@@ -49,12 +53,14 @@ public class NameValuePairDescriptor extends Descriptor {
         this.value = value;
     }
 
+
     /**
      * @return the value
      */
     public String getValue() {
         return value;
     }
+
 
     /**
      * Appends a string describing the values I hold
@@ -63,5 +69,4 @@ public class NameValuePairDescriptor extends Descriptor {
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nProp : ").append(getName()).append("->").append(value);
     }
-
 }

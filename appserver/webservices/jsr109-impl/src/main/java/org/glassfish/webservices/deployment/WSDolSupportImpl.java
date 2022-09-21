@@ -34,51 +34,57 @@ import com.sun.enterprise.deployment.WSDolSupport;
 @Service
 public class WSDolSupportImpl implements WSDolSupport {
 
-    public static final String SOAP11_TOKEN = "##SOAP11_HTTP";
-    public static final String SOAP12_TOKEN = "##SOAP12_HTTP";
-    public static final String SOAP11_MTOM_TOKEN = "##SOAP11_HTTP_MTOM";
-    public static final String SOAP12_MTOM_TOKEN = "##SOAP12_HTTP_MTOM";
-    public static final String XML_TOKEN = "##XML_HTTP";
+    private static final String SOAP11_TOKEN = "##SOAP11_HTTP";
+    private static final String SOAP12_TOKEN = "##SOAP12_HTTP";
+    private static final String SOAP11_MTOM_TOKEN = "##SOAP11_HTTP_MTOM";
+    private static final String SOAP12_MTOM_TOKEN = "##SOAP12_HTTP_MTOM";
+    private static final String XML_TOKEN = "##XML_HTTP";
 
+    @Override
     public String getProtocolBinding(String value) {
-        if (value==null) {
-            return SOAPBinding.SOAP11HTTP_BINDING ;
-        } else if(SOAP11_TOKEN.equals(value)) {
+        if (value == null) {
             return SOAPBinding.SOAP11HTTP_BINDING;
-        } else if(SOAP11_MTOM_TOKEN.equals(value)) {
+        } else if (SOAP11_TOKEN.equals(value)) {
+            return SOAPBinding.SOAP11HTTP_BINDING;
+        } else if (SOAP11_MTOM_TOKEN.equals(value)) {
             return SOAPBinding.SOAP11HTTP_MTOM_BINDING;
-        } else if(SOAP12_TOKEN.equals(value)) {
+        } else if (SOAP12_TOKEN.equals(value)) {
             return SOAPBinding.SOAP12HTTP_BINDING;
-        } else if(SOAP12_MTOM_TOKEN.equals(value)) {
+        } else if (SOAP12_MTOM_TOKEN.equals(value)) {
             return SOAPBinding.SOAP12HTTP_MTOM_BINDING;
-        } else if(XML_TOKEN.equals(value)) {
+        } else if (XML_TOKEN.equals(value)) {
             return HTTPBinding.HTTP_BINDING;
         } else {
             return value;
         }
     }
 
+
+    @Override
     public String getSoapAddressPrefix(String protocolBinding) {
-        if((SOAPBinding.SOAP12HTTP_BINDING.equals(protocolBinding)) ||
-            (SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(protocolBinding)) ||
-            (SOAP12_TOKEN.equals(protocolBinding)) ||
-            (SOAP12_MTOM_TOKEN.equals(protocolBinding))) {
+        if ((SOAPBinding.SOAP12HTTP_BINDING.equals(protocolBinding))
+            || (SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(protocolBinding)) || (SOAP12_TOKEN.equals(protocolBinding))
+            || (SOAP12_MTOM_TOKEN.equals(protocolBinding))) {
             return "soap12";
         }
         // anything else should be soap11
         return "soap";
     }
 
+
+    @Override
     public void setServiceRef(Class annotatedClass, ServiceReferenceDescriptor ref) {
-        WebServiceClient wsc = (WebServiceClient)annotatedClass.getAnnotation(jakarta.xml.ws.WebServiceClient.class);
+        WebServiceClient wsc = (WebServiceClient) annotatedClass.getAnnotation(WebServiceClient.class);
         if (wsc != null) {
             ref.setWsdlFileUri(wsc.wsdlLocation());
-            //we set the service QName too from the @WebServiceClient annotation
-            ref.setServiceName(new QName(wsc.targetNamespace(),wsc.name()) );
+            // we set the service QName too from the @WebServiceClient annotation
+            ref.setServiceName(new QName(wsc.targetNamespace(), wsc.name()));
         }
     }
 
-    public Class getType(String className) throws ClassNotFoundException {
+
+    @Override
+    public Class<?> getType(String className) throws ClassNotFoundException {
         return this.getClass().getClassLoader().loadClass(className);
     }
 }

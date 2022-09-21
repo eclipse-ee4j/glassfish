@@ -146,7 +146,9 @@ public abstract class GenericSniffer implements Sniffer {
     }
 
     /**
-     * Returns the container name associated with this sniffer
+     * Returns the container name associated with this sniffer.
+     * <p>
+     * WARNING: This is different from {@link ArchiveType}!
      *
      * @return the container name
      */

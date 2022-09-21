@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,73 +17,86 @@
 
 package com.sun.enterprise.deployment.node.ws;
 
-import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.runtime.ws.ReliabilityConfig;
+
+import java.util.Map;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.Map;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.ACKNOWLEDGEMENT_INTERVAL;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.BASE_RETRANSMISSION_INTERVAL;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.BUFFER_RETRY_COUNT;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.BUFFER_RETRY_DELAY;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.INACTIVITY_TIMEOUT;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.RELIABILITY_CONFIG;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.RETRANSMISSION_EXPONENTIAL_BACKOFF;
+import static com.sun.enterprise.deployment.node.ws.WLWebServicesTagNames.SEQUENCE_EXPIRATION;
 
 /**
  * This node represents reliability-config in weblogic-webservices.xml
  *
  * @author Rama Pulavarthi
  */
-public class ReliabilityConfigNode extends DeploymentDescriptorNode {
-    private final XMLElement tag =
-            new XMLElement(WLWebServicesTagNames.RELIABILITY_CONFIG);
+public class ReliabilityConfigNode extends DeploymentDescriptorNode<ReliabilityConfig> {
 
-    ReliabilityConfig rmConfig = new ReliabilityConfig();
-    /*
-    public ReliabilityConfigNode(WebServiceEndpoint endpoint) {
-        this.endpoint = endpoint;
-    }
-     */
+    private final XMLElement tag = new XMLElement(WLWebServicesTagNames.RELIABILITY_CONFIG);
+    private final ReliabilityConfig rmConfig = new ReliabilityConfig();
+
+
+    @Override
     protected XMLElement getXMLRootTag() {
         return tag;
     }
 
-    public Object getDescriptor() {
+
+    @Override
+    public ReliabilityConfig getDescriptor() {
         return rmConfig;
     }
 
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(WLWebServicesTagNames.INACTIVITY_TIMEOUT, "setInactivityTimeout");
-        table.put(WLWebServicesTagNames.BASE_RETRANSMISSION_INTERVAL, "setBaseRetransmissionInterval");
-        table.put(WLWebServicesTagNames.RETRANSMISSION_EXPONENTIAL_BACKOFF, "setRetransmissionExponentialBackoff");
-        table.put(WLWebServicesTagNames.ACKNOWLEDGEMENT_INTERVAL, "setAcknowledgementInterval");
-        table.put(WLWebServicesTagNames.SEQUENCE_EXPIRATION, "setSequenceExpiration");
-        table.put(WLWebServicesTagNames.BUFFER_RETRY_COUNT, "setBufferRetryCount");
-        table.put(WLWebServicesTagNames.BUFFER_RETRY_DELAY, "setBufferRetryDelay");
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(INACTIVITY_TIMEOUT, "setInactivityTimeout");
+        table.put(BASE_RETRANSMISSION_INTERVAL, "setBaseRetransmissionInterval");
+        table.put(RETRANSMISSION_EXPONENTIAL_BACKOFF, "setRetransmissionExponentialBackoff");
+        table.put(ACKNOWLEDGEMENT_INTERVAL, "setAcknowledgementInterval");
+        table.put(SEQUENCE_EXPIRATION, "setSequenceExpiration");
+        table.put(BUFFER_RETRY_COUNT, "setBufferRetryCount");
+        table.put(BUFFER_RETRY_DELAY, "setBufferRetryDelay");
         return table;
     }
 
+
+    @Override
     public Node writeDescriptor(Node parent, ReliabilityConfig descriptor) {
         if (descriptor != null) {
             Document doc = getOwnerDocument(parent);
-            Element reliablityConfig = doc.createElement(WLWebServicesTagNames.RELIABILITY_CONFIG);
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.INACTIVITY_TIMEOUT, descriptor.getInactivityTimeout());
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.BASE_RETRANSMISSION_INTERVAL, descriptor.getBaseRetransmissionInterval());
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.RETRANSMISSION_EXPONENTIAL_BACKOFF, descriptor.getRetransmissionExponentialBackoff());
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.ACKNOWLEDGEMENT_INTERVAL, descriptor.getAcknowledgementInterval());
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.SEQUENCE_EXPIRATION, descriptor.getSequenceExpiration());
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.BUFFER_RETRY_COUNT, descriptor.getBufferRetryCount());
-            addElementIfNonNull(doc,reliablityConfig, WLWebServicesTagNames.BUFFER_RETRY_DELAY, descriptor.getBufferRetryDelay());
+            Element reliablityConfig = doc.createElement(RELIABILITY_CONFIG);
+            addElementIfNonNull(doc, reliablityConfig, INACTIVITY_TIMEOUT, descriptor.getInactivityTimeout());
+            addElementIfNonNull(doc, reliablityConfig, BASE_RETRANSMISSION_INTERVAL, descriptor.getBaseRetransmissionInterval());
+            addElementIfNonNull(doc, reliablityConfig, RETRANSMISSION_EXPONENTIAL_BACKOFF, descriptor.getRetransmissionExponentialBackoff());
+            addElementIfNonNull(doc, reliablityConfig, ACKNOWLEDGEMENT_INTERVAL, descriptor.getAcknowledgementInterval());
+            addElementIfNonNull(doc, reliablityConfig, SEQUENCE_EXPIRATION, descriptor.getSequenceExpiration());
+            addElementIfNonNull(doc, reliablityConfig, BUFFER_RETRY_COUNT, descriptor.getBufferRetryCount());
+            addElementIfNonNull(doc, reliablityConfig, BUFFER_RETRY_DELAY, descriptor.getBufferRetryDelay());
             parent.appendChild(reliablityConfig);
             return reliablityConfig;
         }
         return null;
     }
 
+
     private void addElementIfNonNull(Document doc, Node parentNode, String tagName, String value) {
         if (value != null) {
-            Element tag = doc.createElement(tagName);
-            tag.appendChild(doc.createTextNode(value));
-            parentNode.appendChild(tag);
+            Element element = doc.createElement(tagName);
+            element.appendChild(doc.createTextNode(value));
+            parentNode.appendChild(element);
         }
     }
 }

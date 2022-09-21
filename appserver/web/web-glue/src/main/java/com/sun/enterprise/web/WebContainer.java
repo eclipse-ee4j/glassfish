@@ -779,7 +779,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
             MappingData md = new MappingData();
             try {
-                mapper.map(host, mb, md);
+                if (mapper != null) {
+                    mapper.map(host, mb, md);
+                }
             } catch (Exception e) {
                 if (logger.isLoggable(FINE)) {
                     logger.log(FINE, "", e);

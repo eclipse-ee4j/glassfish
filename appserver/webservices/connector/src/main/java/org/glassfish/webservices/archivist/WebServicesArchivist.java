@@ -71,13 +71,13 @@ public class WebServicesArchivist extends ExtensionsArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return (DOLUtils.warType().equals(moduleType) || DOLUtils.ejbType().equals(moduleType));
+        return DOLUtils.warType().equals(moduleType) || DOLUtils.ejbType().equals(moduleType)
+            || DOLUtils.scatteredWarType().equals(moduleType);
     }
 
     @Override
-    public Object open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        BundleDescriptor bundleDescriptor =
-            BundleDescriptor.class.cast(super.open(main, archive, descriptor));
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive archive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
+        BundleDescriptor bundleDescriptor = BundleDescriptor.class.cast(super.open(main, archive, descriptor));
 
         if (bundleDescriptor != null) {
             return bundleDescriptor.getWebServices();

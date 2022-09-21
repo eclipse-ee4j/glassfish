@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,23 +27,22 @@ import org.glassfish.ejb.deployment.EjbTagNames;
 /**
  * This class is responsible for handling the exclude-list DD tag
  *
- * @author  Jeromeochez
- * @version
+ * @author Jeromeochez
  */
 public class ExcludeListNode extends DeploymentDescriptorNode<MethodPermissionDescriptor> {
 
     private MethodPermissionDescriptor descriptor;
 
     public ExcludeListNode() {
-       registerElementHandler(new XMLElement(EjbTagNames.METHOD),
-                                                            MethodNode.class, "addMethod");
+        registerElementHandler(new XMLElement(EjbTagNames.METHOD), MethodNode.class, "addMethod");
     }
+
 
     @Override
     public MethodPermissionDescriptor getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new MethodPermissionDescriptor();
-            descriptor.addMethodPermission(MethodPermission.getExcludedMethodPermission());
+            descriptor.addMethodPermission(MethodPermission.getDenyAllMethodPermission());
         }
         return descriptor;
     }

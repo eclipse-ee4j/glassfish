@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,21 +15,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.MetadataSource;
 import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.ContextParameter;
-import com.sun.enterprise.deployment.web.EnvironmentEntry;
 import com.sun.enterprise.deployment.web.InitializationParameter;
 import com.sun.enterprise.deployment.web.WebDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.internal.api.RelativePathResolver;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.internal.api.RelativePathResolver;
 
 /**
  * The EnvironmentProperty class hold the data about a single environment entry for J2EE components.
@@ -36,41 +37,41 @@ import java.util.Set;
  * @author Danny Coward
  */
 public class EnvironmentProperty extends Descriptor implements InitializationParameter, ContextParameter,
-    ApplicationParam, WebDescriptor, EnvironmentEntry, InjectionCapable {
+    ApplicationParam, WebDescriptor, InjectionCapable {
 
+    private static final long serialVersionUID = 1L;
     private String value;
     private String type;
     private Object valueObject;
-    private boolean setValueCalled = false;
+    private boolean setValueCalled;
 
     // list of injection targes
     private Set<InjectionTarget> injectionTargets;
 
-    private static Class[] allowedTypes = {
-                int.class,
-                boolean.class,
-                double.class,
-                float.class,
-                long.class,
-                short.class,
-                byte.class,
-                char.class,
-                java.lang.String.class,
-                java.lang.Boolean.class,
-                java.lang.Integer.class,
-                java.lang.Double.class,
-                java.lang.Byte.class,
-                java.lang.Short.class,
-                java.lang.Long.class,
-                java.lang.Float.class,
-                java.lang.Character.class,
-                java.lang.Class.class
+    private static Class<?>[] allowedTypes = {
+        int.class,
+        boolean.class,
+        double.class,
+        float.class,
+        long.class,
+        short.class,
+        byte.class,
+        char.class,
+        java.lang.String.class,
+        java.lang.Boolean.class,
+        java.lang.Integer.class,
+        java.lang.Double.class,
+        java.lang.Byte.class,
+        java.lang.Short.class,
+        java.lang.Long.class,
+        java.lang.Float.class,
+        java.lang.Character.class,
+        java.lang.Class.class,
     };
 
     static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EnvironmentProperty.class);
 
     protected String mappedName;
-
     protected String lookupName;
 
     /**
@@ -142,7 +143,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      */
     private void checkType(String type) {
         if (type != null) {
-            Class typeClass = null;
+            Class<?> typeClass = null;
             // is it loadable ?
             try {
                 typeClass = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
@@ -151,12 +152,11 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
                     throw new IllegalArgumentException(
                         localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedpropertytype",
                             "{0} is not an allowed property value type", new Object[] {type}));
-                } else {
-                    return;
                 }
+                return;
             }
             boolean allowedType = false;
-            for (Class allowedType2 : allowedTypes) {
+            for (Class<?> allowedType2 : allowedTypes) {
                 if (allowedType2.equals(typeClass)) {
                     allowedType = true;
                     break;
@@ -176,7 +176,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     /**
-     * Returns the typed value object of this environment property.
+     * @return the typed value object of this environment property.
      * Throws an IllegalArgumentException if bounds checking is true and the value cannot be
      * reconciled with the given type.
      */
@@ -189,27 +189,25 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     /**
-     * Returns value type of this environment property.
+     * @return value type of this environment property.
      */
-
-    public Class getValueType() {
+    public Class<?> getValueType() {
         if (this.type == null) {
             return String.class;
-        } else {
-            try {
-                return Class.forName(this.type, true, Thread.currentThread().getContextClassLoader());
-            } catch (Throwable t) {
-                return null;
-            }
+        }
+        try {
+            return Class.forName(this.type, true, Thread.currentThread().getContextClassLoader());
+        } catch (Throwable t) {
+            return null;
         }
     }
 
 
     /**
-     * Returns value type of this environment property.
-     * Throws Illegal argument exception if this is not an allowed type and bounds checking.
+     * Sets the type of this environment property.
+     *
+     * @throws IllegalArgumentException if this is not an allowed type and bounds checking.
      */
-    @Override
     public void setType(String type) {
         checkType(type);
         this.type = type;
@@ -242,16 +240,14 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     /**
-     * Returns value type of this environment property as a classname.
+     * @return value type of this environment property as a classname.
      */
-    @Override
     public String getType() {
         if (type == null && Descriptor.isBoundsChecking()) {
             return String.class.getName();
-        } else {
-            type = convertPrimitiveTypes(type);
-            return type;
         }
+        type = convertPrimitiveTypes(type);
+        return type;
     }
 
 
@@ -271,12 +267,12 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     public String getLookupName() {
-        return (lookupName != null) ? lookupName : "";
+        return lookupName == null ? "" : lookupName;
     }
 
 
     public boolean hasLookupName() {
-        return (lookupName != null && lookupName.length() > 0);
+        return lookupName != null && !lookupName.isEmpty();
     }
 
 
@@ -297,7 +293,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     public boolean hasAValue() {
-        return (setValueCalled || hasLookupName() || getMappedName().length() > 0);
+        return (setValueCalled || hasLookupName() || !getMappedName().isEmpty());
     }
 
 
@@ -327,9 +323,10 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      */
     @Override
     public void print(StringBuffer toStringBuffer) {
-    toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
+        toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
         printInjectableResourceInfo(toStringBuffer);
-        toStringBuffer.append("@").append(this.getType()).append("@").append(this.getValue()).append("@").append("@").append(super.getDescription());
+        toStringBuffer.append("@").append(this.getType()).append("@").append(this.getValue()).append("@").append("@");
+        toStringBuffer.append(super.getDescription());
     }
 
 
@@ -340,7 +337,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
                 return obj;
             }
         }
-        if (string == null || ("".equals(string) && !type.equals(String.class))) {
+        if (string == null || (string.isEmpty() && !type.equals(String.class))) {
             return null;
         }
         try {
@@ -361,29 +358,27 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
             } else if (Long.class.equals(type)) {
                 return Long.valueOf(string);
             } else if (Character.class.equals(type)) {
-                if (string.length() != 1) {
-                    throw new IllegalArgumentException();
-                } else {
+                if (string.length() == 1) {
                     return Character.valueOf(string.charAt(0));
                 }
+                throw new IllegalArgumentException();
             } else if (Class.class.equals(type)) {
                 return Class.forName(string, true, Thread.currentThread().getContextClassLoader());
             } else if (type != null && type.isEnum()) {
                 return Enum.valueOf(type, string);
             }
         } catch (Throwable t) {
-            throw new IllegalArgumentException(localStrings.getLocalString(
-                                           "enterprise.deployment.exceptioncouldnotcreateinstancetype",
-                                           "Could not create instance of {0} from {1}\n reason: {2}" + t, new Object[] {type, string, t}));
+            throw new IllegalArgumentException(
+                localStrings.getLocalString("enterprise.deployment.exceptioncouldnotcreateinstancetype",
+                    "Could not create instance of {0} from {1}\n reason: {2}" + t, new Object[] {type, string, t}));
         }
-        throw new IllegalArgumentException(localStrings.getLocalString(
-                                           "enterprise.deployment.exceptionillegaltypeenvproperty",
-                                           "Illegal type for environment properties: {0}", new Object[] {type}));
+        throw new IllegalArgumentException(
+            localStrings.getLocalString("enterprise.deployment.exceptionillegaltypeenvproperty",
+                "Illegal type for environment properties: {0}", new Object[] {type}));
     }
 
 
-    private Object getValueObjectUsingAllowedTypes(String string)
-                                  throws IllegalArgumentException {
+    private Object getValueObjectUsingAllowedTypes(String string) throws IllegalArgumentException {
         if (this.type.equals(int.class.getName())) {
             return Integer.valueOf(string);
         } else if (this.type.equals(long.class.getName())) {
@@ -418,8 +413,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     }
 
     protected boolean isConflictResourceGroup(EnvironmentProperty other) {
-        return !(getLookupName().equals(other.getLookupName()) &&
-                getMappedName().equals(other.getMappedName()));
+        return !getLookupName().equals(other.getLookupName()) || !getMappedName().equals(other.getMappedName());
     }
 
     //
@@ -430,40 +424,33 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
         if (injectionTargets==null) {
             injectionTargets = new HashSet<>();
         }
-        boolean found = false;
         for (InjectionTarget injTarget : injectionTargets) {
             if (injTarget.equals(target)) {
-                found = true;
-                break;
+                return;
             }
         }
-        if (!found) {
-            injectionTargets.add(target);
-        }
+        injectionTargets.add(target);
     }
 
     @Override
     public Set<InjectionTarget> getInjectionTargets() {
-        return (injectionTargets != null) ? injectionTargets : new HashSet<>();
+        return injectionTargets == null ? new HashSet<>() : injectionTargets;
     }
 
     @Override
     public boolean isInjectable() {
-        return (injectionTargets!=null && injectionTargets.size()>0);
-        //return (getInjectTargetName() != null);
+        return injectionTargets != null && !injectionTargets.isEmpty();
     }
 
     public boolean hasInjectionTargetFromXml() {
-        boolean fromXml = false;
         if (injectionTargets != null) {
             for (InjectionTarget injTarget: injectionTargets) {
-                fromXml = (MetadataSource.XML == injTarget.getMetadataSource());
-                if (fromXml) {
-                    break;
+                if (MetadataSource.XML == injTarget.getMetadataSource()) {
+                    return true;
                 }
             }
         }
-        return fromXml;
+        return false;
     }
 
     @Override
@@ -482,19 +469,15 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     }
 
 
-    public StringBuffer printInjectableResourceInfo
-        (StringBuffer toStringBuffer) {
-
-        if( isInjectable() ) {
+    public StringBuffer printInjectableResourceInfo(StringBuffer toStringBuffer) {
+        if (isInjectable()) {
             for (InjectionTarget target : getInjectionTargets()) {
-                if( target.isFieldInjectable() ) {
-                    toStringBuffer.append("Field-Injectable Resource. Class name = ").
-                            append(target.getClassName()).append(" Field name=").
-                            append(target.getFieldName());
+                if (target.isFieldInjectable()) {
+                    toStringBuffer.append("Field-Injectable Resource. Class name = ").append(target.getClassName())
+                        .append(" Field name=").append(target.getFieldName());
                 } else {
-                    toStringBuffer.append("Method-Injectable Resource. Class name =").
-                            append(target.getClassName()).append(" Method =").
-                            append(target.getMethodName());
+                    toStringBuffer.append("Method-Injectable Resource. Class name =").append(target.getClassName())
+                        .append(" Method =").append(target.getMethodName());
                 }
             }
         } else {
@@ -503,8 +486,4 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
         return toStringBuffer;
     }
-
-    //
-    // End InjectableResource implementation
-    //
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,7 @@
 
 package org.glassfish.web.embed.impl;
 
-import org.apache.catalina.startup.Constants;
-import org.glassfish.internal.api.ServerContext;
 import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PostConstruct;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +25,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.catalina.startup.Constants;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.internal.api.ServerContext;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 
 /**
  * For Embedded GlassFish, override loading of known DTDs via
@@ -39,17 +40,15 @@ import java.util.Map;
  * @author bhavanishankar@dev.java.net
  * @see org.glassfish.web.WebEntityResolver#resolveEntity(String, String)
  */
-//@Service(name="web")
-//@ContractsProvided({EmbeddedWebEntityResolver.class, EntityResolver.class})
 public class EmbeddedWebEntityResolver implements EntityResolver, PostConstruct {
 
     @Inject
-    ServerContext serverContext;
+    private ServerContext serverContext;
 
     private File dtdDir;
 
     public static final Map<String/*public id*/, String/*bare file name*/> knownDTDs =
-            new HashMap<String, String>();
+            new HashMap<>();
 
     static {
         knownDTDs.put(Constants.TldDtdPublicId_11, "web-jsptaglibrary_1_1.dtd");
@@ -58,6 +57,7 @@ public class EmbeddedWebEntityResolver implements EntityResolver, PostConstruct 
         knownDTDs.put(Constants.WebDtdPublicId_23, "web-app_2_3.dtd");
     }
 
+    @Override
     public void postConstruct() {
         if (serverContext != null) {
             File root = serverContext.getInstallRoot();
@@ -66,22 +66,22 @@ public class EmbeddedWebEntityResolver implements EntityResolver, PostConstruct 
         }
     }
 
+
     /**
      * Fetch the DTD via getClass().getResource() if the DTD is not
      *
      * @param publicId
      * @param systemId
-     * @return
-     * @throws SAXException
+     * @return {@link InputSource}
      * @throws IOException
      */
-    public InputSource resolveEntity(String publicId, String systemId)
-            throws SAXException, IOException {
-        InputSource resolvedEntity = __resolveEntity(publicId, systemId);
+    @Override
+    public InputSource resolveEntity(String publicId, String systemId) throws IOException {
+        InputSource resolvedEntity = resolveEntityAsFile(publicId, systemId);
         if (resolvedEntity == null) {
             String fileName = knownDTDs.get(publicId);
             URL url = this.getClass().getResource("/dtds/" + fileName);
-            InputStream stream = url != null ? url.openStream() : null;
+            InputStream stream = url == null ? null : url.openStream();
             if (stream != null) {
                 resolvedEntity = new InputSource(stream);
                 resolvedEntity.setSystemId(url.toString());
@@ -90,11 +90,11 @@ public class EmbeddedWebEntityResolver implements EntityResolver, PostConstruct 
         return resolvedEntity;
     }
 
+
     /**
      * Try to fetch DTD from installRoot. Copied from org.glassfish.web.WebEntityResolver
      */
-    public InputSource __resolveEntity(String publicId, String systemId)
-            throws SAXException, IOException {
+    private InputSource resolveEntityAsFile(String publicId, String systemId) {
         String fileName = knownDTDs.get(publicId);
         if (fileName != null && dtdDir != null) {
             File dtd = new File(dtdDir, fileName);

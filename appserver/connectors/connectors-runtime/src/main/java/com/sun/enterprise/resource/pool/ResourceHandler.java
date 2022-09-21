@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,13 @@
 
 package com.sun.enterprise.resource.pool;
 
+import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.appserv.connectors.internal.api.PoolingException;
 
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ManagedConnection;
+
 import java.util.Set;
 
 /**
@@ -56,7 +59,7 @@ public interface ResourceHandler {
      * @return invalid connections set
      * @throws ResourceException when unable to validate
      */
-    Set getInvalidConnections(Set connections) throws ResourceException;
+    Set<ManagedConnection> getInvalidConnections(Set<ManagedConnection> connections) throws ResourceException;
 
     /**
      * callback method to handle the case of invalid connection detected

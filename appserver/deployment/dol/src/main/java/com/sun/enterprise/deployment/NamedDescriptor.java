@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,36 +15,36 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
- /**
-  * Objects implementing this interface have a JNDI
-  * name property.
-  *
-  * @author Danny Coward
-  */
- public interface NamedDescriptor {
+/**
+ * Objects implementing this interface have a JNDI
+ * name property.
+ *
+ * @author Danny Coward
+ */
+public interface NamedDescriptor {
 
-     /**
-      * The name of this descriptor.
-      *
-      * @return java.lang.String name
-      */
-     String getName();
+    /**
+     * The name of this descriptor.
+     *
+     * @return java.lang.String name
+     */
+    String getName();
 
-     /**
-      * Returns the JNDI name property of the receiver.
-      *
-      * @return java.lang.String JNDI name
-      */
+    /**
+     * Returns the JNDI name property of the receiver.
+     *
+     * @return java.lang.String JNDI name
+     */
 
-     String getJndiName();
+    String getJndiName();
 
-     /**
-      * Sets the JNDI name property of the reciever as a String.
-      *
-      * @param jndiName the new JNDI name of the receiver.
-      */
-     void setJndiName(String jndiName);
+    /**
+     * Sets the JNDI name property of the reciever as a String.
+     *
+     * @param jndiName the new JNDI name of the receiver.
+     */
+    void setJndiName(String jndiName);
 
- }
+}

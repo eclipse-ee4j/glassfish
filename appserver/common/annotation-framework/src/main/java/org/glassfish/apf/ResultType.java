@@ -38,4 +38,4 @@ public enum ResultType {
      * Annotation has been processed unsuccessfully
      */
     FAILED
-};
+}

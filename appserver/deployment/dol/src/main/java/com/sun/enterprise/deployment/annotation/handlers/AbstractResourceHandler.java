@@ -17,20 +17,20 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.context.EjbsContext;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
 
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import org.glassfish.apf.AnnotatedElementHandler;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * This is an abstract class encapsulate generic behaviour of resource
@@ -48,15 +48,16 @@ import java.lang.reflect.Method;
  * @author Shing Wai Chan
  */
 public abstract class AbstractResourceHandler extends AbstractHandler {
+
     /**
      * Process Annotation with given ResourceContainerContexts.
+     *
      * @param ainfo
      * @param rcContexts
      */
-    protected abstract HandlerProcessingResult processAnnotation(
-            AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException;
+    protected abstract HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
+        ResourceContainerContext[] rcContexts) throws AnnotationProcessorException;
+
 
     /**
      * Process a particular annotation which type is the same as the
@@ -66,12 +67,11 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
      *
      * @param ainfo the annotation information
      */
-    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
-            throws AnnotationProcessorException {
-
+    @Override
+    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();
         if (aeHandler instanceof EjbBundleContext) {
-            EjbBundleContext ejbBundleContext = (EjbBundleContext)aeHandler;
+            EjbBundleContext ejbBundleContext = (EjbBundleContext) aeHandler;
             aeHandler = ejbBundleContext.createContextForEjb();
             if (aeHandler == null) {
                 aeHandler = ejbBundleContext.createContextForEjbInterceptor();
@@ -81,37 +81,31 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
             // This way we process dependencies on any classes (other than ejbs ,
             // interceptors , and their super-classes) that have annotations in case
             // we need the info for managed classes we wouldn't normally know about
-            // (e.g. CDI classes).   In a .war, those are already processed during the
+            // (e.g. CDI classes). In a .war, those are already processed during the
             // .war annotation scanning.
 
             EjbBundleDescriptor bundleDesc = ejbBundleContext.getDescriptor();
             RootDeploymentDescriptor enclosingBundle = bundleDesc.getModuleDescriptor().getDescriptor();
-
             boolean ejbJar = enclosingBundle instanceof EjbBundleDescriptor;
-
-            if( (aeHandler == null) && ejbJar ) {
+            if (aeHandler == null && ejbJar) {
                 aeHandler = ejbBundleContext;
             }
-
-
         }
-        // WebBundleContext is a ResourceContainerContext.
 
+        // WebBundleContext is a ResourceContainerContext.
         if (aeHandler == null) {
             // not an ejb, interceptor in ejbBundle
-            return getInvalidAnnotatedElementHandlerResult(
-                ainfo.getProcessingContext().getHandler(), ainfo);
+            return getInvalidAnnotatedElementHandlerResult(ainfo.getProcessingContext().getHandler(), ainfo);
         }
-        ResourceContainerContext[] rcContexts = null;
+        final ResourceContainerContext[] rcContexts;
         if (aeHandler instanceof EjbsContext) {
-            EjbsContext ejbsContext = (EjbsContext)aeHandler;
-            rcContexts = (ResourceContainerContext[])ejbsContext.getEjbContexts();
+            EjbsContext ejbsContext = (EjbsContext) aeHandler;
+            rcContexts = ejbsContext.getEjbContexts();
         } else if (aeHandler instanceof WebComponentsContext) {
-            WebComponentsContext webCompsContext = (WebComponentsContext)aeHandler;
-            rcContexts = (ResourceContainerContext[])webCompsContext.getWebComponentContexts();
+            WebComponentsContext webCompsContext = (WebComponentsContext) aeHandler;
+            rcContexts = webCompsContext.getWebComponentContexts();
         } else if (aeHandler instanceof ResourceContainerContext) {
-            rcContexts = new ResourceContainerContext[] {
-                    (ResourceContainerContext)aeHandler };
+            rcContexts = new ResourceContainerContext[] {(ResourceContainerContext) aeHandler};
         } else {
             return getInvalidAnnotatedElementHandlerResult(aeHandler, ainfo);
         }
@@ -119,6 +113,8 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
         return processAnnotation(ainfo, rcContexts);
     }
 
+
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();
     }
@@ -136,6 +132,7 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
         return false;
     }
 
+
     protected boolean isAWebComponentClass(Annotation[] annotations) {
         Class<? extends Annotation> webAnnotations[] = getWebAnnotationTypes();
         for (Annotation annotation : annotations) {
@@ -148,24 +145,29 @@ public abstract class AbstractResourceHandler extends AbstractHandler {
         return false;
     }
 
-    // validate methods that are annotated with @PostConstruct and @PreDestroy
-    // to conform the spec
+
+    /**
+     * Validate methods that are annotated with @PostConstruct and @PreDestroy to conform the spec
+     */
     protected void validateAnnotatedLifecycleMethod(Method method) {
-        Class[] parameterTypes = method.getParameterTypes();
+        Class<?>[] parameterTypes = method.getParameterTypes();
         if (parameterTypes.length > 1) {
-            throw new IllegalArgumentException(localStrings.getLocalString("lifecycle_method_invalid_param_size", "The lifecycle method [{0}] must not have more than one parameter", method.getName()));
+            throw new IllegalArgumentException(I18N.getLocalString("lifecycle_method_invalid_param_size",
+                "The lifecycle method [{0}] must not have more than one parameter", method.getName()));
         }
 
         if (parameterTypes.length == 0) {
-            Class[] exceptionTypes = method.getExceptionTypes();
-            for (Class exception : exceptionTypes) {
-                 if (!RuntimeException.class.isAssignableFrom(exception)) {
-                     throw new IllegalArgumentException(localStrings.getLocalString("lifecycle_method_no_checked_exception", "The lifecycle method [{0}] must not throw a checked exception", method.getName()));
-                 }
+            Class<?>[] exceptionTypes = method.getExceptionTypes();
+            for (Class<?> exception : exceptionTypes) {
+                if (!RuntimeException.class.isAssignableFrom(exception)) {
+                    throw new IllegalArgumentException(I18N.getLocalString("lifecycle_method_no_checked_exception",
+                        "The lifecycle method [{0}] must not throw a checked exception", method.getName()));
+                }
             }
-            Class returnType = method.getReturnType();
+            Class<?> returnType = method.getReturnType();
             if (!returnType.equals(Void.TYPE)) {
-                throw new IllegalArgumentException(localStrings.getLocalString("lifecycle_method_return_type_void", "The return type of the lifecycle method [{0}] must be void", method.getName()));
+                throw new IllegalArgumentException(I18N.getLocalString("lifecycle_method_return_type_void",
+                    "The return type of the lifecycle method [{0}] must be void", method.getName()));
             }
         }
     }

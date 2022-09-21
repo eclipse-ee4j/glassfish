@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,69 +19,77 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.JaxrpcMappingDescriptor;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.Attributes;
-
-import java.util.*;
 
 /**
  * Root node for jaxrpc mapping deployment descriptor
  *
- * @author  Kenneth Saks
- * @version
+ * @author Kenneth Saks
  */
 @Service
-public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
+public class JaxrpcMappingDescriptorNode extends AbstractBundleNode<JaxrpcMappingDescriptor> {
 
-{
+    private static final XMLElement ROOT_ELEMENT = new XMLElement(WebServicesTagNames.JAXRPC_MAPPING_FILE_ROOT);
 
-    public final static XMLElement ROOT_ELEMENT =
-        new XMLElement(WebServicesTagNames.JAXRPC_MAPPING_FILE_ROOT);
-
-    public final static String SCHEMA_ID = "j2ee_jaxrpc_mapping_1_1.xsd";
+    private static final String SCHEMA_ID = "j2ee_jaxrpc_mapping_1_1.xsd";
     private final static List<String> systemIDs = initSystemIDs();
 
-    private static final Set complexElements = initComplexElements();
-    private JaxrpcMappingDescriptor descriptor=null;
-    private String javaPackage=null;
+    private static final Set<String> complexElements = initComplexElements();
+    private final JaxrpcMappingDescriptor descriptor;
+    private String javaPackage;
 
     // true if mapping file contains more than just package->namespace mappings.
-    private boolean complexMapping=false;
+    private boolean complexMapping;
 
-    private static Set initComplexElements() {
-        Set complexElements = new HashSet();
+    private static Set<String> initComplexElements() {
+        Set<String> complexElements = new HashSet<>();
         complexElements.add(WebServicesTagNames.JAVA_XML_TYPE_MAPPING);
         complexElements.add(WebServicesTagNames.EXCEPTION_MAPPING);
         complexElements.add(WebServicesTagNames.SERVICE_INTERFACE_MAPPING);
-        complexElements.add
-            (WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE_MAPPING);
+        complexElements.add(WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE_MAPPING);
         return Collections.unmodifiableSet(complexElements);
     }
 
+
     private static List<String> initSystemIDs() {
-        ArrayList<String> systemIDs = new ArrayList<String>();
+        ArrayList<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         return Collections.unmodifiableList(systemIDs);
     }
+
 
     public JaxrpcMappingDescriptorNode() {
         descriptor = new JaxrpcMappingDescriptor();
         SaxParserHandler.registerBundleNode(this, WebServicesTagNames.JAXRPC_MAPPING_FILE_ROOT);
     }
 
+
     @Override
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
         return ROOT_ELEMENT.getQName();
     }
 
+
     @Override
-    public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, final Map<String, List<Class>> versionUpgrades) {
-        return Collections.EMPTY_MAP;
+    public Map<String, Class<?>> registerRuntimeBundle(
+        Map<String, String> publicIDToSystemIDMapping,
+        Map<String, List<Class<?>>> versionUpgrades) {
+        return Collections.emptyMap();
     }
 
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return ROOT_ELEMENT;
     }
@@ -88,6 +97,7 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
     /**
      * @return the DOCTYPE of the XML file
      */
+    @Override
     public String getDocType() {
         return null;
     }
@@ -95,6 +105,7 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
@@ -102,6 +113,7 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
     /**
      * @return the list of SystemID of the XML schema supported
      */
+    @Override
     public List<String> getSystemIDs() {
         return systemIDs;
     }
@@ -109,6 +121,7 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
         /**
      * @return the complete URL for J2EE schemas
      */
+    @Override
     protected String getSchemaURL() {
        return WebServicesTagNames.IBM_NAMESPACE + "/" + getSystemID();
     }
@@ -116,16 +129,18 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
    /**
     * @return the descriptor instance to associate with this XMLNode
     */
-    public Object getDescriptor() {
+    @Override
+    public JaxrpcMappingDescriptor getDescriptor() {
         return descriptor;
     }
 
+    @Override
     public void startElement(XMLElement element, Attributes attributes) {
-        if( complexMapping ) {
+        if (complexMapping) {
             // NOTE : we don't call super.startElement in this case because
             // we don't need to process any of the attributes
             return;
-        } else if( complexElements.contains(element.getQName()) ) {
+        } else if (complexElements.contains(element.getQName())) {
             complexMapping = true;
             descriptor.setIsSimpleMapping(false);
             // NOTE : we don't call super.startElement in this case because
@@ -141,6 +156,7 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (complexMapping) {
             // We only gather namespace->package mapping. In exhaustive(complex)
@@ -161,9 +177,8 @@ public class JaxrpcMappingDescriptorNode extends AbstractBundleNode
     /**
      * @return the default spec version level this node complies to
      */
+    @Override
     public String getSpecVersion() {
         return "1.1";
     }
-
-
 }

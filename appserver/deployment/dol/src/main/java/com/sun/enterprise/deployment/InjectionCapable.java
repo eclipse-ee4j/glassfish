@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,28 +34,28 @@ public interface InjectionCapable {
      * A resource is either field injectable or method injectable but never
      * both.
      */
-    public boolean isInjectable();
+    boolean isInjectable();
 
     /**
      * @return the set of injection targets for this resource dependency
      */
-    public Set<InjectionTarget> getInjectionTargets();
+    Set<InjectionTarget> getInjectionTargets();
 
     /**
      * Add a new injection target for this dependency
      */
-    public void addInjectionTarget(InjectionTarget target);
+    void addInjectionTarget(InjectionTarget target);
 
     /**
      * ComponentEnvName is the name of the corresponding java:comp/env
      * entry for the object that is to be injected.
      */
-    public String getComponentEnvName();
+    String getComponentEnvName();
 
     /**
      * This is the class name of the type of resource that is to be injected.
      */
-    public String getInjectResourceType();
-    public void setInjectResourceType(String resourceType);
+    String getInjectResourceType();
+    void setInjectResourceType(String resourceType);
 
 }

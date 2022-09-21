@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,37 @@
 
 package org.glassfish.web.deployment.node;
 
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.SaxParserHandler;
+import com.sun.enterprise.deployment.node.XMLElement;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
 import org.glassfish.web.deployment.xml.WebTagNames;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
 
-import java.util.*;
-
 /**
  * This node is responsible for handling the web-fragment xml tree
  *
- * @author  Shing Wai Chan
- * @version
+ * @author Shing Wai Chan
  */
 @Service
 public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
 
-   public final static XMLElement tag = new XMLElement(WebTagNames.WEB_FRAGMENT);
+    private static final XMLElement TAG = new XMLElement(WebTagNames.WEB_FRAGMENT);
 
     /**
      * The system ID of my documents.
      */
-    public final static String SCHEMA_ID = "web-fragment_3_0.xsd";
+    private static final String SCHEMA_ID = "web-fragment_3_0.xsd";
     private final static List<String> systemIDs = initSystemIDs();
 
     private static List<String> initSystemIDs() {
-        List<String> systemIDs = new ArrayList<String>();
+        List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         return Collections.unmodifiableList(systemIDs);
     }
@@ -54,23 +59,24 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
      * @return the doctype tag name
      */
     @Override
-    public String registerBundle(Map publicIDToDTD) {
-        return tag.getQName();
+    public String registerBundle(Map<String, String> publicIDToDTD) {
+        return TAG.getQName();
     }
 
 
     @Override
-    public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
+    public Map<String, Class<?>> registerRuntimeBundle(final Map<String, String> publicIDToDTD,
+        Map<String, List<Class<?>>> versionUpgrades) {
         return Collections.emptyMap();
     }
 
-    /** Creates new WebBundleNode */
+    /** Creates new WebFragmentNode */
     public WebFragmentNode()  {
         super();
-        registerElementHandler(new XMLElement(WebTagNames.ORDERING),
-                OrderingNode.class, "setOrderingDescriptor");
+        registerElementHandler(new XMLElement(WebTagNames.ORDERING), OrderingNode.class, "setOrderingDescriptor");
         SaxParserHandler.registerBundleNode(this, WebTagNames.WEB_FRAGMENT);
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -90,12 +96,13 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
      */
     @Override
     protected XMLElement getXMLRootTag() {
-        return tag;
+        return TAG;
     }
 
     /**
      * @return the DOCTYPE of the XML file
      */
+    @Override
     public String getDocType() {
         return null;
     }
@@ -103,6 +110,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return SCHEMA_ID;
     }
@@ -110,6 +118,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     /**
      * @return the list of SystemID of the XML schema supported
      */
+    @Override
     public List<String> getSystemIDs() {
         return systemIDs;
     }
@@ -120,11 +129,12 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     @Override
     public WebFragmentDescriptor getDescriptor() {
         // no default bundle for web-fragment
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new WebFragmentDescriptor();
         }
         return descriptor;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -134,16 +144,13 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent,
-        WebFragmentDescriptor webFragmentDesc) {
+    public Node writeDescriptor(Node parent, WebFragmentDescriptor webFragmentDesc) {
         Node jarNode = super.writeDescriptor(parent, webFragmentDesc);
         if (webFragmentDesc.getOrderingDescriptor() != null) {
             OrderingNode orderingNode = new OrderingNode();
-            orderingNode.writeDescriptor(jarNode, WebTagNames.ORDERING,
-                    webFragmentDesc.getOrderingDescriptor());
+            orderingNode.writeDescriptor(jarNode, WebTagNames.ORDERING, webFragmentDesc.getOrderingDescriptor());
         }
         return jarNode;
     }
-
 
 }

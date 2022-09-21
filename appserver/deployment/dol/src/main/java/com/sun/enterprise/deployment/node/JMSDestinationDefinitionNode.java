@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,15 +29,31 @@ import java.util.logging.Level;
 
 public class JMSDestinationDefinitionNode extends DeploymentDescriptorNode<JMSDestinationDefinitionDescriptor> {
 
-    public final static XMLElement tag = new XMLElement(TagNames.JMS_DESTINATION);
+    @LogMessageInfo(
+        message = "For jms-destination resource: {0}, there is no application part in its resource adapter name: {1}.",
+        level = "WARNING",
+        cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
+        comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode.")
+    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00025";
 
-    private JMSDestinationDefinitionDescriptor descriptor = null;
+    private JMSDestinationDefinitionDescriptor descriptor;
 
     public JMSDestinationDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION_PROPERTY), ResourcePropertyNode.class,
-                "addJMSDestinationPropertyDescriptor");
+            "addJMSDestinationPropertyDescriptor");
     }
 
+
+    @Override
+    public JMSDestinationDefinitionDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new JMSDestinationDefinitionDescriptor();
+        }
+        return descriptor;
+    }
+
+
+    @Override
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
@@ -51,14 +68,8 @@ public class JMSDestinationDefinitionNode extends DeploymentDescriptorNode<JMSDe
         return table;
     }
 
-    @LogMessageInfo(
-        message = "For jms-destination resource: {0}, there is no application part in its resource adapter name: {1}.",
-        level = "WARNING",
-        cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
-        comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode."
-    )
-    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00025";
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, JMSDestinationDefinitionDescriptor desc) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, TagNames.JMS_DESTINATION_DESCRIPTION, desc.getDescription());
@@ -71,12 +82,13 @@ public class JMSDestinationDefinitionNode extends DeploymentDescriptorNode<JMSDe
         if (resourceAdapter != null) {
             int poundIndex = resourceAdapter.indexOf("#");
             if (poundIndex > 0) {
-                // the internal format of resource adapter name is "appName#raName", remove the appName part
-                resourceAdapter =  resourceAdapter.substring(poundIndex);
+                // the internal format of resource adapter name is "appName#raName",
+                // remove the appName part
+                resourceAdapter = resourceAdapter.substring(poundIndex);
             } else if (poundIndex == 0) {
                 // the resource adapter name should not be the standard format "#raName" here
                 DOLUtils.getDefaultLogger().log(Level.WARNING, RESOURCE_ADAPTER_NAME_INVALID,
-                        new Object[] { desc.getName(), desc.getResourceAdapter() });
+                    new Object[] {desc.getName(), desc.getResourceAdapter()});
             } else {
                 // the resource adapter name represent the standalone RA in this case.
             }
@@ -84,16 +96,6 @@ public class JMSDestinationDefinitionNode extends DeploymentDescriptorNode<JMSDe
         appendTextChild(node, TagNames.JMS_DESTINATION_RESOURCE_ADAPTER, resourceAdapter);
         appendTextChild(node, TagNames.JMS_DESTINATION_DESTINATION_NAME, desc.getDestinationName());
 
-        ResourcePropertyNode propertyNode = new ResourcePropertyNode();
-        propertyNode.writeDescriptor(node, desc);
-
-        return node;
-    }
-
-    public JMSDestinationDefinitionDescriptor getDescriptor() {
-        if (descriptor == null) {
-            descriptor = new JMSDestinationDefinitionDescriptor();
-        }
-        return descriptor;
+        return ResourcePropertyNode.write(node, desc);
     }
 }

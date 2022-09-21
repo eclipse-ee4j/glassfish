@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,10 +27,9 @@ import java.util.Map;
 /**
  * This node handles all the role mapping information
  *
- * @author  Jerome Dochez
- * @version
+ * @author Jerome Dochez
  */
-public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode {
+public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode<DefaultResourcePrincipal> {
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
@@ -38,8 +38,8 @@ public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode {
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(RuntimeTagNames.NAME, "setName");
         table.put(RuntimeTagNames.PASSWORD, "setPassword");
         return table;
@@ -54,6 +54,7 @@ public class DefaultResourcePrincipalNode extends RuntimeDescriptorNode {
      * @param the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, DefaultResourcePrincipal descriptor) {
         Node ejbRef = appendChild(parent, nodeName);
         appendTextChild(ejbRef, RuntimeTagNames.NAME, descriptor.getName());

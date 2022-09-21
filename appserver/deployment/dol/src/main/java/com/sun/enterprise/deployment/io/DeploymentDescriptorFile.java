@@ -24,23 +24,7 @@ import com.sun.enterprise.deployment.node.SaxParserHandlerFactory;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.Descriptor;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXParseException;
 
-import static com.sun.enterprise.deployment.node.SaxParserHandler.JAXP_SCHEMA_LANGUAGE;
-import static com.sun.enterprise.deployment.util.DOLUtils.INVALILD_DESCRIPTOR_SHORT;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,29 +34,49 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXNotRecognizedException;
+import org.xml.sax.SAXParseException;
+
+import static com.sun.enterprise.deployment.util.DOLUtils.INVALILD_DESCRIPTOR_SHORT;
+
 /**
  * This abstract class defines common behaviour for classes responsible
  * for loading/saving XML deployment descriptors
+ *
+ * @param <T> Deployment {@link Descriptor} type.
  *
  * @author Jerome Dochez
  */
 public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
-    public final static String FULL_VALIDATION = "full";
-    public final static String PARSING_VALIDATION = "parsing";
+    private static final String JAXP_SCHEMA_LANGUAGE = "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+
+    private static final String FULL_VALIDATION = "full";
+    private static final String PARSING_VALIDATION = "parsing";
 
     // should we validate the XML ?
     private boolean xmlValidation = true;
 
     // error reporting level
-    private String validationLevel=PARSING_VALIDATION;
+    private String validationLevel = PARSING_VALIDATION;
 
     // error reporting string, used for xml validation error
-    private String errorReportingString=null;
+    private String errorReportingString;
 
     // for i18N
-    private static LocalStringManagerImpl localStrings=
-        new LocalStringManagerImpl(DeploymentDescriptorFile.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(DeploymentDescriptorFile.class);
 
     private ArchiveType archiveType;
 
@@ -88,13 +92,13 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         return getSAXParser(false);
     }
 
+
     /**
      * @return a SAX Parser to read an XML file (containing
-     * Deployment Descriptors) into DOL descriptors
-     *
+     *         Deployment Descriptors) into DOL descriptors
      * @param validating true if the parser should excercise DTD validation
      */
-    public SAXParser getSAXParser (boolean validating) {
+    public SAXParser getSAXParser(boolean validating) {
         // always use system SAXParser to parse DDs, see IT 8229
         ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
@@ -168,10 +172,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      */
     public DocumentBuilder getDocumentBuilder(boolean validating) {
         try {
-            // always use system default to parse DD
-            System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            System.clearProperty("javax.xml.parsers.DocumentBuilderFactory");
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
 
             // set the namespace awareness
             dbf.setNamespaceAware(true);
@@ -259,7 +260,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
 
         errorReportingString = FileUtils.revertFriendlyFilenameExtension(errorReportingString);
         String error = (errorReportingString == null)? errorReportingString:new File(errorReportingString).getName();
-        String errorReporting = localStrings.getLocalString(
+        String errorReporting = I18N.getLocalString(
             "enterprise.deployment.io.errorcontext",
             "archive {0} and deployment descriptor file {1}",
                         error, getDeploymentDescriptorPath());
@@ -269,7 +270,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         if (validationLevel.equals(FULL_VALIDATION)) {
             dh.setStopOnError(true);
         }
-        if (descriptor!=null) {
+        if (descriptor != null) {
             dh.setTopNode(getRootXMLNode(descriptor));
         }
 
@@ -307,9 +308,10 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             for (StackTraceElement stElement : e.getStackTrace()) {
                 if (stElement.getClassName().equals("java.net.Socket") &&
                         stElement.getMethodName().equals("connect")) {
-                    String msg = localStrings.getLocalString(
+                    String msg = I18N.getLocalString(
                             "enterprise.deployment.can_not_locate_dtd",
-                            "Unable to locate the DTD to validate your deployment descriptor file [{1}] in archive [{0}]. Please make sure the DOCTYPE is correct (no typo in public ID or system ID) and you have proper access to the Internet.",
+                            "Unable to locate the DTD to validate your deployment descriptor file [{1}] in archive [{0}]. "
+                            + "Please make sure the DOCTYPE is correct (no typo in public ID or system ID) and you have proper access to the Internet.",
                             error, getDeploymentDescriptorPath());
                     IOException ioe = new IOException(msg);
                     ioe.initCause(e);
@@ -317,7 +319,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                 }
             }
 
-            IOException ioe = new IOException(localStrings.getLocalString(
+            IOException ioe = new IOException(I18N.getLocalString(
                     "enterprise.deployment.backend.error_parsing_descr",
                     "Error parsing descriptor: {0}", errorReporting));
             ioe.initCause(e);
@@ -413,7 +415,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      *
      * @param descriptor the descriptor for which we need the node
      */
-    public abstract RootXMLNode<T> getRootXMLNode(T descriptor);
+    public abstract RootXMLNode<T> getRootXMLNode(Descriptor descriptor);
 
     /**
      * @return true if XML validation should be performed at load time
@@ -485,7 +487,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
     }
 
     /**
-     * @param the archive type to set on this deployment descriptor file
+     * @param type the archive type to set on this deployment descriptor file
      */
     public void setArchiveType(ArchiveType type) {
         archiveType = type;

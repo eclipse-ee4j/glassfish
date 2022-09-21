@@ -21,22 +21,16 @@ import java.util.Vector;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
- * Created by IntelliJ IDEA.
- * User: naman
- * Date: 24/5/12
- * Time: 11:23 AM
- * To change this template use File | Settings | File Templates.
+ * @author naman, date: 24/5/12
  */
 public class CommonResourceValidator {
 
     private Descriptor descriptor;
-
     private String jndiName;
+    private Vector<String> scope;
 
-    private Vector scope;
 
-
-    public CommonResourceValidator(Descriptor descriptor,String jndiName, Vector scope) {
+    public CommonResourceValidator(Descriptor descriptor,String jndiName, Vector<String> scope) {
         this.setDescriptor(descriptor);
         this.setJndiName(jndiName);
         this.setScope(scope);
@@ -58,11 +52,11 @@ public class CommonResourceValidator {
         this.jndiName = jndiName;
     }
 
-    public Vector getScope() {
+    public Vector<String> getScope() {
         return scope;
     }
 
-    public void setScope(Vector scope) {
+    public void setScope(Vector<String> scope) {
         this.scope = scope;
     }
 }

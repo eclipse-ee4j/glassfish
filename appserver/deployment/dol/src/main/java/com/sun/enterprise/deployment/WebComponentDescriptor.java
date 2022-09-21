@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +34,8 @@ import java.util.Set;
  * @author Jerome Dochez
  */
 public abstract class WebComponentDescriptor extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
 
     public abstract Set<InitializationParameter> getInitializationParameterSet();
 
@@ -111,12 +114,6 @@ public abstract class WebComponentDescriptor extends Descriptor {
     public abstract boolean isConflict();
 
     public abstract Method[] getUserDefinedHttpMethods();
-
-    //public abstract void print(StringBuffer toStringBuffer);
-
-    public abstract boolean equals(Object other);
-
-    public abstract int hashCode();
 
     public abstract void add(WebComponentDescriptor other);
 

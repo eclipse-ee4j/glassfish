@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,27 +19,27 @@ package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
-import org.glassfish.web.deployment.xml.WebTagNames;
-import org.w3c.dom.Node;
 
 import java.util.Map;
+
+import org.glassfish.web.deployment.xml.WebTagNames;
+import org.w3c.dom.Node;
 
 /**
  * This node is responsible for handling init-param and context-param xml subtree.
  *
  * @author  Jerome Dochez
- * @version
  */
 public class InitParamNode extends DeploymentDescriptorNode<EnvironmentProperty> {
 
-    protected EnvironmentProperty descriptor = null;
+    protected EnvironmentProperty descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
     public EnvironmentProperty getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new EnvironmentProperty();
         }
         return descriptor;
@@ -69,7 +70,6 @@ public class InitParamNode extends DeploymentDescriptorNode<EnvironmentProperty>
     @Override
     public Node writeDescriptor(Node parent, String nodeName, EnvironmentProperty descriptor) {
         Node myNode = appendChild(parent, nodeName);
-
         writeLocalizedDescriptions(myNode, descriptor);
         appendTextChild(myNode, WebTagNames.PARAM_NAME, descriptor.getName());
         appendTextChild(myNode, WebTagNames.PARAM_VALUE, descriptor.getValue());

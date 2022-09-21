@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
-
 import java.util.Set;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class argueably could be rolled up to the
@@ -33,14 +34,15 @@ import java.util.Set;
  */
 public class InboundResourceAdapter extends Descriptor {
 
-    private Set messageListeners;
+    private static final long serialVersionUID = 1L;
+    private final Set<MessageListener> messageListeners;
 
     public InboundResourceAdapter() {
-        messageListeners = new OrderedSet();
+        messageListeners = new OrderedSet<>();
     }
 
 
-    public Set getMessageListeners() {
+    public Set<MessageListener> getMessageListeners() {
         return messageListeners;
     }
 
@@ -56,8 +58,7 @@ public class InboundResourceAdapter extends Descriptor {
 
 
     public boolean hasMessageListenerType(String msgListenerType) {
-        for (Object messageListenerObject : messageListeners) {
-            MessageListener ml = (MessageListener) messageListenerObject;
+        for (MessageListener ml : messageListeners) {
             if (ml.getMessageListenerType().equals(msgListenerType)) {
                 return true;
             }
@@ -67,8 +68,7 @@ public class InboundResourceAdapter extends Descriptor {
 
 
     public MessageListener getMessageListener(String msgListenerType) {
-        for (Object messageListenerObject : messageListeners) {
-            MessageListener ml = (MessageListener) messageListenerObject;
+        for (MessageListener ml : messageListeners) {
             if (ml.getMessageListenerType().equals(msgListenerType)) {
                 return ml;
             }

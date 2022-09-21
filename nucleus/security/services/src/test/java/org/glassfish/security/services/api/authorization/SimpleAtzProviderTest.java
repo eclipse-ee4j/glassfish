@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,12 +17,14 @@
 
 package org.glassfish.security.services.api.authorization;
 
+import jakarta.inject.Inject;
+
 import java.net.URI;
 
 import javax.security.auth.Subject;
 
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.security.services.api.common.Attributes;
 import org.glassfish.security.services.api.context.SecurityContextService;
 import org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl;
@@ -32,8 +34,6 @@ import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -82,7 +82,7 @@ public class SimpleAtzProviderTest {
 
     private Subject adminSubject() {
         final Subject result = new Subject();
-        result.getPrincipals().add(new PrincipalImpl("asadmin"));
+        result.getPrincipals().add(new UserNameAndPassword("asadmin"));
         return result;
     }
 }

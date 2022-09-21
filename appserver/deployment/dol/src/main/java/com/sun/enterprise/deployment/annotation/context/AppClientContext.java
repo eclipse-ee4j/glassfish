@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,27 +27,29 @@ import java.util.List;
 /**
  * This provides a context for Application Client.
  *
- * @Author Shing Wai Chan
+ * @author Shing Wai Chan
  */
 public class AppClientContext extends ResourceContainerContextImpl {
+
     public AppClientContext(ApplicationClientDescriptor appClientDescriptor) {
         super(appClientDescriptor);
         componentClassName = appClientDescriptor.getMainClassName();
     }
 
+
     public ApplicationClientDescriptor getDescriptor() {
-        return (ApplicationClientDescriptor)descriptor;
+        return (ApplicationClientDescriptor) descriptor;
     }
 
-    public HandlerChainContainer[]
-            getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
-        if(serviceSideHandlerChain) {
+
+    @Override
+    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
+        if (serviceSideHandlerChain) {
             // We should not come here at all - anyway return null
             return null;
-        } else {
-            List<ServiceReferenceDescriptor> result = new ArrayList<ServiceReferenceDescriptor>();
-            result.addAll(getDescriptor().getServiceReferenceDescriptors());
-            return(result.toArray(new HandlerChainContainer[result.size()]));
         }
+        List<ServiceReferenceDescriptor> result = new ArrayList<>();
+        result.addAll(getDescriptor().getServiceReferenceDescriptors());
+        return (result.toArray(new HandlerChainContainer[result.size()]));
     }
 }

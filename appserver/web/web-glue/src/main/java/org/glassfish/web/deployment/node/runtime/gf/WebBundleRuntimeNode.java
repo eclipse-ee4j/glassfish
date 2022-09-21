@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.web.deployment.node.runtime.gf;
 
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
@@ -36,12 +38,11 @@ import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.runtime.web.IdempotentUrlPattern;
 import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -92,6 +93,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
     /**
      * Initialize the child handlers
      */
+    @Override
     protected void init() {
         // we do not care about our standard DDS handles
         handlers = null;
@@ -101,11 +103,11 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
             org.glassfish.web.deployment.node.runtime.gf.ServletNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.IDEMPOTENT_URL_PATTERN), IdempotentUrlPatternNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.SESSION_CONFIG), SessionConfigNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
 
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.EJB_REFERENCE), EjbRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbRefNode.class);
 
         registerElementHandler(new XMLElement(RuntimeTagNames.CACHE), CacheNode.class);
 
@@ -136,6 +138,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
     /**
      * @return the DOCTYPE that should be written to the XML file
      */
+    @Override
     public String getDocType() {
         return DTDRegistry.SUN_WEBAPP_300_DTD_PUBLIC_ID;
     }
@@ -143,48 +146,55 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
         return DTDRegistry.SUN_WEBAPP_300_DTD_SYSTEM_ID;
     }
 
+
     /**
      * @return NULL for all runtime nodes.
      */
+    @Override
     public List<String> getSystemIDs() {
         return null;
     }
 
-   /**
-    * register this node as a root node capable of loading entire DD files
-    *
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
-    * @param versionUpgrades The list of upgrades from older versions
-    * to the latest schema
-    * @return the doctype tag name
-    */
-   public static String registerBundle(Map<String, String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_230_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_230_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_231_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_231_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_240_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_241_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_241_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_250_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_250_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_300_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_300_DTD_SYSTEM_ID);
-       if (!restrictDTDDeclarations()) {
-           publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240beta_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_240beta_DTD_SYSTEM_ID);
-       }
 
-       return RuntimeTagNames.S1AS_WEB_RUNTIME_TAG;
-   }
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @param versionUpgrades The list of upgrades from older versions
+     *            to the latest schema
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map<String, String> publicIDToDTD, Map<String, List<Class<?>>> versionUpgrades) {
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_230_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_230_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_231_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_231_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_240_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_241_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_241_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_250_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_250_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_300_DTD_PUBLIC_ID, DTDRegistry.SUN_WEBAPP_300_DTD_SYSTEM_ID);
+        if (!restrictDTDDeclarations()) {
+            publicIDToDTD.put(DTDRegistry.SUN_WEBAPP_240beta_DTD_PUBLIC_ID,
+                DTDRegistry.SUN_WEBAPP_240beta_DTD_SYSTEM_ID);
+        }
 
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */
+        return RuntimeTagNames.S1AS_WEB_RUNTIME_TAG;
+    }
+
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
     public Object getSunDescriptor() {
         return descriptor.getSunDescriptor();
     }
 
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with
+     * Adds a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param newDescriptor the new descriptor
@@ -202,8 +212,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
                 s1descriptor.setPrincipalName(servlet.getRunAsIdentity().getPrincipal());
             }
             sunWebApp.addServlet(s1descriptor);
-    } else
-        if (newDescriptor instanceof ServiceReferenceDescriptor) {
+        } else if (newDescriptor instanceof ServiceReferenceDescriptor) {
             descriptor.addServiceReferenceDescriptor((ServiceReferenceDescriptor) newDescriptor);
         } else if (newDescriptor instanceof SecurityRoleMapping) {
             SecurityRoleMapping srm = (SecurityRoleMapping) newDescriptor;
@@ -215,12 +224,12 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
                 SecurityRoleMapper rm = app.getRoleMapper();
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = srm.getPrincipalNames();
-                    for (int i = 0; i < principals.size(); i++) {
-                        rm.assignRole(principals.get(i).getPrincipal(), role, descriptor);
+                    for (PrincipalNameDescriptor principal : principals) {
+                        rm.assignRole(principal.toPrincipal(), role, descriptor);
                     }
                     List<String> groups = srm.getGroupNames();
-                    for (int i = 0; i < groups.size(); i++) {
-                        rm.assignRole(new Group(groups.get(i)), role, descriptor);
+                    for (String group : groups) {
+                        rm.assignRole(new Group(group), role, descriptor);
                     }
                 }
             }
@@ -240,8 +249,9 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
             sunWebApp.addWebProperty((WebProperty) newDescriptor);
         } else if (newDescriptor instanceof Valve) {
             sunWebApp.addValve((Valve) newDescriptor);
+        } else {
+            super.addDescriptor(descriptor);
         }
-    else super.addDescriptor(descriptor);
     }
 
     @Override
@@ -259,7 +269,9 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
                     sunWebApp.setAttributeValue(SunWebApp.PARAMETER_ENCODING, SunWebApp.FORM_HINT_FIELD, attributes.getValue(i));
                 }
             }
-        } else super.startElement(element, attributes);
+        } else {
+            super.startElement(element, attributes);
+        }
     }
 
     /**
@@ -327,19 +339,17 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         appendTextChild(web, RuntimeTagNames.CONTEXT_ROOT, bundleDescriptor.getContextRoot());
         // security-role-mapping
         SecurityRoleMapping[] roleMappings = sunWebApp.getSecurityRoleMapping();
-        if (roleMappings!=null && roleMappings.length>0) {
+        if (roleMappings != null && roleMappings.length > 0) {
             SecurityRoleMappingNode srmn = new SecurityRoleMappingNode();
-            for (int i=0;i<roleMappings.length;i++) {
-                srmn.writeDescriptor(web, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMappings[i]);
+            for (SecurityRoleMapping roleMapping : roleMappings) {
+                srmn.writeDescriptor(web, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMapping);
             }
         }
 
         // servlet
-        Set servlets = bundleDescriptor.getServletDescriptors();
-        org.glassfish.web.deployment.node.runtime.gf.ServletNode servletNode =
-            new org.glassfish.web.deployment.node.runtime.gf.ServletNode();
-        for (Iterator itr=servlets.iterator();itr.hasNext();) {
-            WebComponentDescriptor servlet = (WebComponentDescriptor) itr.next();
+        Set<WebComponentDescriptor> servlets = bundleDescriptor.getServletDescriptors();
+        org.glassfish.web.deployment.node.runtime.gf.ServletNode servletNode = new org.glassfish.web.deployment.node.runtime.gf.ServletNode();
+        for (WebComponentDescriptor servlet : servlets) {
             servletNode.writeDescriptor(web, RuntimeTagNames.SERVLET, servlet);
         }
 
@@ -347,29 +357,29 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         IdempotentUrlPattern[] patterns = sunWebApp.getIdempotentUrlPatterns();
         if (patterns != null && patterns.length > 0) {
             IdempotentUrlPatternNode node = new IdempotentUrlPatternNode();
-            for (int i = 0;i < patterns.length; i++) {
-                node.writeDescriptor(web, RuntimeTagNames.IDEMPOTENT_URL_PATTERN, patterns[i]);
+            for (IdempotentUrlPattern pattern : patterns) {
+                node.writeDescriptor(web, RuntimeTagNames.IDEMPOTENT_URL_PATTERN, pattern);
             }
         }
 
         // session-config?
-        if (sunWebApp.getSessionConfig()!=null) {
+        if (sunWebApp.getSessionConfig() != null) {
             SessionConfigNode scn = new SessionConfigNode();
             scn.writeDescriptor(web, RuntimeTagNames.SESSION_CONFIG, sunWebApp.getSessionConfig());
         }
 
         // ejb-ref*
-        Set<EjbReference> ejbRefs = bundleDescriptor.getEjbReferenceDescriptors();
-        if (ejbRefs.size()>0) {
+        Set<EjbReferenceDescriptor> ejbRefs = bundleDescriptor.getEjbReferenceDescriptors();
+        if (!ejbRefs.isEmpty()) {
             EjbRefNode node = new EjbRefNode();
-            for (EjbReference ejbRef : ejbRefs) {
+            for (EjbReferenceDescriptor ejbRef : ejbRefs) {
                 node.writeDescriptor(web, RuntimeTagNames.EJB_REF, ejbRef);
             }
         }
 
         // resource-ref*
         Set<ResourceReferenceDescriptor> resourceRefs = bundleDescriptor.getResourceReferenceDescriptors();
-        if (resourceRefs.size()>0) {
+        if (!resourceRefs.isEmpty()) {
             ResourceRefNode node = new ResourceRefNode();
             for (ResourceReferenceDescriptor resourceRef : resourceRefs) {
                 node.writeDescriptor(web, RuntimeTagNames.RESOURCE_REF, resourceRef);
@@ -378,7 +388,7 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
 
         // resource-env-ref*
         Set<ResourceEnvReferenceDescriptor> resourceEnvRefs = bundleDescriptor.getResourceEnvReferenceDescriptors();
-        if (resourceEnvRefs.size()>0) {
+        if (!resourceEnvRefs.isEmpty()) {
             ResourceEnvRefNode node = new ResourceEnvRefNode();
             for (ResourceEnvReferenceDescriptor resourceEnvRef : resourceEnvRefs) {
                 node.writeDescriptor(web, RuntimeTagNames.RESOURCE_ENV_REF, resourceEnvRef);
@@ -388,10 +398,8 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
         // service-ref*
         if (bundleDescriptor.hasServiceReferenceDescriptors()) {
             ServiceRefNode serviceNode = new ServiceRefNode();
-            for (Iterator serviceItr=bundleDescriptor.getServiceReferenceDescriptors().iterator();
-                serviceItr.hasNext();) {
-                ServiceReferenceDescriptor next = (ServiceReferenceDescriptor) serviceItr.next();
-                serviceNode.writeDescriptor(web, WebServicesTagNames.SERVICE_REF, next);
+            for (ServiceReferenceDescriptor element : bundleDescriptor.getServiceReferenceDescriptors()) {
+                serviceNode.writeDescriptor(web, WebServicesTagNames.SERVICE_REF, element);
             }
         }
 
@@ -402,27 +410,28 @@ public class WebBundleRuntimeNode extends RuntimeBundleNode<WebBundleDescriptorI
 
         // cache?
         Cache cache = sunWebApp.getCache();
-        if (cache!=null) {
+        if (cache != null) {
             CacheNode cn = new CacheNode();
             cn.writeDescriptor(web, RuntimeTagNames.CACHE, cache);
         }
 
         // class-loader?
         ClassLoader classLoader = sunWebApp.getClassLoader();
-        if (classLoader!=null) {
+        if (classLoader != null) {
             ClassLoaderNode cln = new ClassLoaderNode();
             cln.writeDescriptor(web, RuntimeTagNames.CLASS_LOADER, classLoader);
         }
 
         // jsp-config?
-        if (sunWebApp.getJspConfig()!=null) {
+        if (sunWebApp.getJspConfig() != null) {
             WebPropertyNode propertyNode = new WebPropertyNode();
             Node jspConfig = appendChild(web, RuntimeTagNames.JSP_CONFIG);
-            propertyNode.writeDescriptor(jspConfig, RuntimeTagNames.PROPERTY, sunWebApp.getJspConfig().getWebProperty());
+            propertyNode.writeDescriptor(jspConfig, RuntimeTagNames.PROPERTY,
+                sunWebApp.getJspConfig().getWebProperty());
         }
 
         // locale-charset-info?
-        if (sunWebApp.getLocaleCharsetInfo()!=null) {
+        if (sunWebApp.getLocaleCharsetInfo() != null) {
             LocaleCharsetInfoNode localeNode = new LocaleCharsetInfoNode();
             localeNode.writeDescriptor(web, RuntimeTagNames.LOCALE_CHARSET_INFO, sunWebApp.getLocaleCharsetInfo());
         }

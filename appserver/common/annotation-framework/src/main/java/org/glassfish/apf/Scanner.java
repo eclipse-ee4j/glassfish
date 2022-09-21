@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,9 @@
 
 package org.glassfish.apf;
 
-import org.glassfish.hk2.classmodel.reflect.Types;
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.Set;
-import java.io.File;
-import java.io.IOException;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This interface is responsible for scanning the binary location
@@ -30,31 +28,22 @@ import java.io.IOException;
  * @author Jerome Dochez
  */
 @Contract
-public interface Scanner<T> {
-
-    /**
-     * Scan the archive file and gather a list of classes
-     * that should be processed for anntoations
-     * @param archiveFile the archive file for scanning
-     * @param bundleDesc the bundle descriptor associated with this archive
-     * @param classloader the classloader used to scan the annotation
-     */
-    public void process(File archiveFile, T bundleDesc,
-            ClassLoader classLoader) throws IOException;
-
+public interface Scanner {
 
     /**
      * Returns a ClassLoader capable of loading classes from the
      * underlying medium
+     *
      * @return a class loader capable of loading the classes
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
     /**
      * Return a complete set of classes available from this location.
+     *
      * @return the complete set of classes
      */
-    public Set<Class> getElements();
+    Set<Class<?>> getElements();
 
     /**
      * Sometimes, annotations processing requires more than a single class,
@@ -62,14 +51,10 @@ public interface Scanner<T> {
      * Java EE). The implementation returned from the getComponent will be
      * responsible for defining the complete view of this component starting
      * from it's implementation class.
+     *
      * @param componentImpl class of the component.
+     * @return {@link ComponentInfo}
      */
-    public ComponentInfo getComponentInfo(Class componentImpl);
-
-    /**
-     * Return the types information for this module
-     * @return types the archive resulting types
-     */
-    public Types getTypes();
+    ComponentInfo getComponentInfo(Class<?> componentImpl);
 
 }

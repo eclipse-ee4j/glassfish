@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +33,7 @@ import org.w3c.dom.Node;
  * @author  Jerome Dochez
  * @version
  */
-public class PrincipalNode extends RuntimeDescriptorNode {
+public class PrincipalNode extends RuntimeDescriptorNode<RuntimeDescriptor> {
 
     /**
      * receives notification of the value for a particular tag
@@ -42,7 +43,7 @@ public class PrincipalNode extends RuntimeDescriptorNode {
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-        RuntimeDescriptor descriptor = (RuntimeDescriptor) getDescriptor();
+        RuntimeDescriptor descriptor = getDescriptor();
         if (descriptor == null) {
             throw new RuntimeException("Trying to set values on a null descriptor");
         }

@@ -18,7 +18,6 @@
 package com.sun.enterprise.deployment.archivist;
 
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,23 +32,24 @@ import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.xml.sax.SAXException;
 
+import static com.sun.enterprise.deployment.util.DOLUtils.scatteredWarType;
+import static com.sun.enterprise.deployment.util.DOLUtils.warType;
+
 @Service
 @ExtensionsArchivistFor("jpa")
 public class WarPersistenceArchivist extends PersistenceArchivist {
 
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
-        return moduleType != null && moduleType.equals(DOLUtils.warType());
+        return warType().equals(moduleType) || scatteredWarType().equals(moduleType);
     }
 
-    @Override
-    public Object open(Archivist main, ReadableArchive warArchive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
-        final String CLASSES_DIR = "WEB-INF/classes/";
 
-        if (deplLogger.isLoggable(Level.FINE)) {
-            deplLogger.logp(Level.FINE, "WarPersistenceArchivist", "readPersistenceDeploymentDescriptors",
-                "archive = {0}", warArchive.getURI());
-        }
+    @Override
+    public RootDeploymentDescriptor open(Archivist main, ReadableArchive warArchive, RootDeploymentDescriptor descriptor) throws IOException, SAXException {
+        final String CLASSES_DIR = "WEB-INF/classes/";
+        deplLogger.logp(Level.FINE, "WarPersistenceArchivist", "readPersistenceDeploymentDescriptors", "archive = {0}",
+            warArchive.getURI());
         Map<String, ReadableArchive> probablePersitenceArchives = new HashMap<>();
         try {
             SubArchivePURootScanner warLibScanner = new SubArchivePURootScanner() {

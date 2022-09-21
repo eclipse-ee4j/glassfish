@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,16 @@
 
 package com.sun.enterprise.deployment.archivist;
 
+import com.sun.enterprise.deployment.util.DOLUtils;
+
+import jakarta.inject.Inject;
+
+import java.util.Objects;
+
+import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.api.admin.*;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import jakarta.inject.Inject;
 
 
 /**
@@ -36,9 +41,9 @@ public class ServerSidePersistenceArchivist extends PersistenceArchivist {
     @Override
     public boolean supportsModuleType(ArchiveType moduleType) {
         // Reads persitence.xml for ejb jars
-        return moduleType != null && (moduleType.equals(DOLUtils.ejbType()) ||
-                // Or App client modules if running inside server
-                (moduleType.equals(DOLUtils.carType()) && env.getProcessType().isServer()));
+        // Or App client modules if running inside server
+        return Objects.equals(DOLUtils.ejbType(), moduleType)
+            || (env.getProcessType().isServer() && Objects.equals(DOLUtils.carType(), moduleType));
     }
 
     @Override

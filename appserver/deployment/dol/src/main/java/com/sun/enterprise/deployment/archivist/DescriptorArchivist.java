@@ -52,17 +52,17 @@ public class DescriptorArchivist {
      */
     public void write(Application application, ReadableArchive in, WritableArchive out) throws IOException {
         if (application.isVirtual()) {
-            ModuleDescriptor aModule = application.getModules().iterator().next();
-            Archivist moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
-            write((BundleDescriptor) aModule.getDescriptor(), moduleArchivist, in, out);
+            ModuleDescriptor<BundleDescriptor> aModule = application.getModules().iterator().next();
+            Archivist<?> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
+            write(aModule.getDescriptor(), moduleArchivist, in, out);
         } else {
             // this is a real application.
             // let's start by writing out all submodules deployment descriptors
-            for (ModuleDescriptor aModule : application.getModules()) {
-                Archivist moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
+            for (ModuleDescriptor<BundleDescriptor> aModule : application.getModules()) {
+                Archivist<?> moduleArchivist = archivistFactory.getArchivist(aModule.getModuleType());
                 WritableArchive moduleArchive = out.createSubArchive(aModule.getArchiveUri());
                 try (ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri())) {
-                    write((BundleDescriptor) aModule.getDescriptor(), moduleArchivist, moduleArchive2, moduleArchive);
+                    write(aModule.getDescriptor(), moduleArchivist, moduleArchive2, moduleArchive);
                 }
             }
 

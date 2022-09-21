@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,68 +17,57 @@
 
 package com.sun.enterprise.deployment;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import com.sun.enterprise.security.integration.PermissionCreator;
+
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import com.sun.enterprise.security.integration.PermissionCreator;
 
 public class PermissionsDescriptor extends RootDeploymentDescriptor {
 
+    private static final long serialVersionUID = 1L;
     private RootDeploymentDescriptor parent;
-
     private PermissionCollection declaredPerms;
 
-
-    public PermissionsDescriptor() {
-
-    }
-
-    public RootDeploymentDescriptor getParent() {
-        return parent;
-    }
-
-    public void setParent(RootDeploymentDescriptor parent) {
-        this.parent = parent;
-    }
-
-
+    /** @return canonical name of the class and hash code */
     @Override
     public String getModuleID() {
-        throw new RuntimeException();
+        return this.getClass().getCanonicalName() + '@' + hashCode();
     }
+
 
     @Override
     public String getDefaultSpecVersion() {
-
         return "7";
     }
 
+
     @Override
     public boolean isEmpty() {
-        return declaredPerms != null &&
-                declaredPerms.elements().hasMoreElements();
+        return declaredPerms != null && declaredPerms.elements().hasMoreElements();
     }
+
 
     @Override
     public ArchiveType getModuleType() {
         throw new RuntimeException();
     }
 
+
     @Override
     public ClassLoader getClassLoader() {
-        if (parent == null)
+        if (parent == null) {
             return null;
+        }
         return parent.getClassLoader();
     }
 
+
     @Override
     public boolean isApplication() {
-
         return false;
     }
 
@@ -87,13 +77,16 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
         addPermission(permItem);
     }
 
+
     public PermissionCollection getDeclaredPermissions() {
         return declaredPerms;
     }
 
-    private void addPermission(PermissionItemDescriptor permItem)  {
-        if (permItem == null)
+
+    private void addPermission(PermissionItemDescriptor permItem) {
+        if (permItem == null) {
             return;
+        }
 
         String classname = permItem.getPermissionClassName();
         String target = permItem.getTargetName();
@@ -101,23 +94,14 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
 
         try {
             Permission pm = PermissionCreator.getInstance(classname, target, actions);
-
             if (pm != null) {
-                if(declaredPerms == null)
+                if (declaredPerms == null) {
                     declaredPerms = new Permissions();
+                }
                 this.declaredPerms.add(pm);
             }
-        } catch (ClassNotFoundException e) {
-            throw new SecurityException(e);
-        } catch (NoSuchMethodException e) {
-            throw new SecurityException(e);
-        } catch (InstantiationException e) {
-            throw new SecurityException(e);
-        } catch (IllegalAccessException e) {
-            throw new SecurityException(e);
-        } catch (InvocationTargetException e) {
+        } catch (ReflectiveOperationException e) {
             throw new SecurityException(e);
         }
     }
-
 }

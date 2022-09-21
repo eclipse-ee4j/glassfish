@@ -18,7 +18,7 @@ package org.glassfish.ejb.deployment.node.runtime;
 
 import java.util.Map;
 
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.DefaultResourcePrincipalNode;
@@ -55,8 +55,8 @@ public class MDBConnectionFactoryNode extends DeploymentDescriptorNode<MdbConnec
 
     @Override
     public void addDescriptor(Object newDescriptor) {
-        if (newDescriptor instanceof ResourcePrincipal) {
-            descriptor.setDefaultResourcePrincipal((ResourcePrincipal) newDescriptor);
+        if (newDescriptor instanceof ResourcePrincipalDescriptor) {
+            descriptor.setDefaultResourcePrincipal((ResourcePrincipalDescriptor) newDescriptor);
         } else {
             super.addDescriptor(newDescriptor);
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,8 +26,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 
 
 /**
- * This node is responsible for handling all runtime information for
- * ejb.
+ * This node is responsible for handling all runtime information for ejb.
  */
 public class GFEjbBundleRuntimeNode extends EjbBundleRuntimeNode {
 
@@ -59,7 +59,7 @@ public class GFEjbBundleRuntimeNode extends EjbBundleRuntimeNode {
     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
     * @return the doctype tag name
     */
-   public static String registerBundle(Map publicIDToDTD) {
+   public static String registerBundle(Map<String, String> publicIDToDTD) {
        publicIDToDTD.put(DTDRegistry.GF_EJBJAR_311_DTD_PUBLIC_ID, DTDRegistry.GF_EJBJAR_311_DTD_SYSTEM_ID);
        return RuntimeTagNames.GF_EJB_RUNTIME_TAG;
    }

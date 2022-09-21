@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,12 +22,14 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.types.HandlerChainContainer;
-import org.glassfish.apf.AnnotatedElementHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.context.AnnotationContext;
 
 /**
  * This ClientContext implementation holds a top level reference
@@ -41,9 +44,11 @@ public class WebBundleContext extends ResourceContainerContextImpl {
         super(webBundleDescriptor);
     }
 
+
     public WebBundleDescriptor getDescriptor() {
-        return (WebBundleDescriptor)descriptor;
+        return (WebBundleDescriptor) descriptor;
     }
+
 
     /**
      * This method create a context for web component(s) by using
@@ -51,16 +56,15 @@ public class WebBundleContext extends ResourceContainerContextImpl {
      * Return null if corresponding descriptor is not found.
      */
     public AnnotatedElementHandler createContextForWeb() {
-        AnnotatedElement anTypeElement =
-                this.getProcessingContext().getProcessor(
-                ).getLastAnnotatedElement(ElementType.TYPE);
+        AnnotatedElement anTypeElement = this.getProcessingContext().getProcessor()
+            .getLastAnnotatedElement(ElementType.TYPE);
         WebComponentDescriptor[] webComps = null;
         if (anTypeElement != null) {
-            String implClassName = ((Class)anTypeElement).getName();
+            String implClassName = ((Class<?>) anTypeElement).getName();
             webComps = getDescriptor().getWebComponentByImplName(implClassName);
         }
 
-        AnnotatedElementHandler aeHandler = null;
+        AnnotationContext aeHandler = null;
         if (webComps != null && webComps.length > 1) {
             aeHandler = new WebComponentsContext(webComps);
         } else if (webComps != null && webComps.length == 1) {
@@ -74,20 +78,20 @@ public class WebBundleContext extends ResourceContainerContextImpl {
         return aeHandler;
     }
 
-    public HandlerChainContainer[]
-            getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
-        if(serviceSideHandlerChain) {
-            List<WebServiceEndpoint> result = new ArrayList<WebServiceEndpoint>();
+
+    @Override
+    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class<?> declaringClass) {
+        if (serviceSideHandlerChain) {
+            List<WebServiceEndpoint> result = new ArrayList<>();
             for (WebServiceEndpoint endpoint : getDescriptor().getWebServices().getEndpoints()) {
                 if (endpoint.getWebComponentImpl().getWebComponentImplementation().equals(declaringClass.getName())) {
                     result.add(endpoint);
                 }
             }
-            return(result.toArray(new HandlerChainContainer[result.size()]));
-        } else {
-            List<ServiceReferenceDescriptor> result = new ArrayList<ServiceReferenceDescriptor>();
-            result.addAll(getDescriptor().getServiceReferenceDescriptors());
-            return(result.toArray(new HandlerChainContainer[result.size()]));
+            return (result.toArray(new HandlerChainContainer[result.size()]));
         }
+        List<ServiceReferenceDescriptor> result = new ArrayList<>();
+        result.addAll(getDescriptor().getServiceReferenceDescriptors());
+        return (result.toArray(new HandlerChainContainer[result.size()]));
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,22 +21,39 @@ import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.w3c.dom.Node;
-
 import java.util.Map;
 import java.util.logging.Level;
 
-public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<ConnectionFactoryDefinitionDescriptor> {
-    public final static XMLElement tag = new XMLElement(TagNames.CONNECTION_FACTORY);
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.w3c.dom.Node;
 
-    private ConnectionFactoryDefinitionDescriptor descriptor = null;
+public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<ConnectionFactoryDefinitionDescriptor> {
+
+    @LogMessageInfo(
+        message = "For connection-factory resource: {0}, there is no application part in its resource adapter name: {1}.",
+        level = "WARNING",
+        cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
+        comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.ConnectionFactoryDefinitionNode.")
+    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00023";
+
+    private ConnectionFactoryDefinitionDescriptor descriptor;
 
     public ConnectionFactoryDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.RESOURCE_PROPERTY), ResourcePropertyNode.class,
-                "addConnectionFactoryPropertyDescriptor");
+            "addConnectionFactoryPropertyDescriptor");
     }
 
+
+    @Override
+    public ConnectionFactoryDefinitionDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new ConnectionFactoryDefinitionDescriptor();
+        }
+        return descriptor;
+    }
+
+
+    @Override
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
@@ -49,14 +67,8 @@ public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<Co
         return table;
     }
 
-    @LogMessageInfo(
-            message = "For connection-factory resource: {0}, there is no application part in its resource adapter name: {1}.",
-            level="WARNING",
-            cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
-            comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.ConnectionFactoryDefinitionNode."
-            )
-    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00023";
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, ConnectionFactoryDefinitionDescriptor desc) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, TagNames.CONNECTION_FACTORY_DESCRIPTION, desc.getDescription());
@@ -66,15 +78,16 @@ public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<Co
         // change the resource adapter name from internal format to standard format
         String resourceAdapterName = desc.getResourceAdapter();
         int poundIndex = resourceAdapterName.indexOf("#");
-        if(poundIndex > 0){
-            // the internal format of resource adapter name is "appName#raName", remove the appName part
-            resourceAdapterName =  resourceAdapterName.substring(poundIndex);
+        if (poundIndex > 0) {
+            // the internal format of resource adapter name is "appName#raName", remove the appName
+            // part
+            resourceAdapterName = resourceAdapterName.substring(poundIndex);
 
-        }else if(poundIndex == 0){
+        } else if (poundIndex == 0) {
             // the resource adapter name should not be the standard format "#raName" here
             DOLUtils.getDefaultLogger().log(Level.WARNING, RESOURCE_ADAPTER_NAME_INVALID,
-                    new Object[] { desc.getName(), desc.getResourceAdapter() });
-        }else{
+                new Object[] {desc.getName(), desc.getResourceAdapter()});
+        } else {
             // the resource adapter name represent the standalone RA in this case.
         }
         appendTextChild(node, TagNames.CONNECTION_FACTORY_ADAPTER, resourceAdapterName);
@@ -83,17 +96,6 @@ public class ConnectionFactoryDefinitionNode extends DeploymentDescriptorNode<Co
         appendTextChild(node, TagNames.CONNECTION_FACTORY_MIN_POOL_SIZE, desc.getMinPoolSize());
         appendTextChild(node, TagNames.CONNECTION_FACTORY_TRANSACTION_SUPPORT, desc.getTransactionSupport());
 
-        ResourcePropertyNode propertyNode = new ResourcePropertyNode();
-        propertyNode.writeDescriptor(node, desc);
-
-        return node;
+        return ResourcePropertyNode.write(node, desc);
     }
-
-    public ConnectionFactoryDefinitionDescriptor getDescriptor() {
-        if(descriptor == null){
-            descriptor = new ConnectionFactoryDefinitionDescriptor();
-        }
-        return descriptor;
-    }
-
 }

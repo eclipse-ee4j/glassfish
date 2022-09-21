@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,56 +18,49 @@
 package org.glassfish.webservices.io;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.glassfish.webservices.node.WebServicesDescriptorNode;
-import com.sun.enterprise.deployment.node.RootXMLNode;
-
 
 import java.util.Vector;
 
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.webservices.node.WebServicesDescriptorNode;
+
 /**
- * This class is responsible for handling the
- * JSR 109 webservices deployment descriptor
+ * This class is responsible for handling the JSR 109 webservices deployment descriptor
  *
  * @author Kenneth Saks
  */
-public class WebServicesDeploymentDescriptorFile extends DeploymentDescriptorFile {
+public class WebServicesDeploymentDescriptorFile extends DeploymentDescriptorFile<BundleDescriptor> {
 
-    private String descriptorPath;
+    private final String descriptorPath;
 
     public WebServicesDeploymentDescriptorFile(RootDeploymentDescriptor desc) {
-        descriptorPath = ( desc instanceof WebBundleDescriptor ) ?
-            DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY : DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY;
+        descriptorPath = desc instanceof WebBundleDescriptor
+            ? DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY
+            : DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY;
     }
 
-    /**
-     * @return the location of the DeploymentDescriptor file for a
-     * particular type of J2EE Archive
-     */
+
+    @Override
     public String getDeploymentDescriptorPath() {
         return descriptorPath;
     }
 
-    public static Vector getAllDescriptorPaths() {
-        Vector allDescPaths = new Vector();
+
+    public static Vector<String> getAllDescriptorPaths() {
+        Vector<String> allDescPaths = new Vector<>();
         allDescPaths.add(DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY);
         allDescPaths.add(DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY);
-
         return allDescPaths;
     }
 
-    /**
-     * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this J2EE module
-     *
-     * @param the descriptor for which we need the node
-     */
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-        if( descriptor instanceof BundleDescriptor ) {
+
+    @Override
+    public WebServicesDescriptorNode getRootXMLNode(Descriptor descriptor) {
+        if (descriptor instanceof BundleDescriptor) {
             return new WebServicesDescriptorNode((BundleDescriptor) descriptor);
         }
         return null;

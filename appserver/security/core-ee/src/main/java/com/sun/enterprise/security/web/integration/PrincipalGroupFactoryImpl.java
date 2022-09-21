@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,25 +15,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * PrincipalGroupFactory.java
- *
- * Created on October 28, 2004, 12:34 PM
- */
-
 package com.sun.enterprise.security.web.integration;
+
+import com.sun.enterprise.security.PrincipalGroupFactory;
 
 import java.lang.ref.WeakReference;
 
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.glassfish.security.common.UserPrincipal;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.security.PrincipalGroupFactory;
-
 /**
- *
  * @author Harpreet Singh
  */
 @Service
@@ -49,6 +44,7 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
         return webSecurityManagerFactory.get();
     }
 
+
     private static WebSecurityManagerFactory getWebSecurityManagerFactory() {
         if (webSecurityManagerFactory.get() != null) {
             return webSecurityManagerFactory.get();
@@ -56,20 +52,22 @@ public class PrincipalGroupFactoryImpl implements PrincipalGroupFactory {
         return _getWebSecurityManagerFactory();
     }
 
+
     @Override
-    public PrincipalImpl getPrincipalInstance(String name, String realm) {
+    public UserPrincipal getPrincipalInstance(String name, String realm) {
         WebSecurityManagerFactory fact = getWebSecurityManagerFactory();
-        PrincipalImpl p = (PrincipalImpl) fact.getAdminPrincipal(name, realm);
+        UserPrincipal p = fact.getAdminPrincipal(name, realm);
         if (p == null) {
-            p = new PrincipalImpl(name);
+            p = new UserNameAndPassword(name);
         }
         return p;
     }
 
+
     @Override
     public Group getGroupInstance(String name, String realm) {
         WebSecurityManagerFactory fact = getWebSecurityManagerFactory();
-        Group g = (Group) fact.getAdminGroup(name, realm);
+        Group g = fact.getAdminGroup(name, realm);
         if (g == null) {
             g = new Group(name);
         }

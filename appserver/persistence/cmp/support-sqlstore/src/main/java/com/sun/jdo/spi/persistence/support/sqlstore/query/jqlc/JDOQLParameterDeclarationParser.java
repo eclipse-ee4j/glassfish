@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,50 +17,54 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.jqlc;
 
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.JDOQueryException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.ResourceBundle;
 
-import antlr.ANTLRException;
-import antlr.collections.AST;
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import org.glassfish.ejb.deployment.descriptor.QueryParser;
 import org.glassfish.persistence.common.I18NHelper;
 
-/** Helper class to support parsing of JDOQL parameter declarations.
- *
+import antlr.ANTLRException;
+import antlr.collections.AST;
+
+/**
+ * Helper class to support parsing of JDOQL parameter declarations.
  * Created on October 16, 2002
- * @author  Michael Bouschen
+ *
+ * @author Michael Bouschen
  */
-public class JDOQLParameterDeclarationParser
-    implements QueryParser
-{
+public class JDOQLParameterDeclarationParser implements QueryParser {
+
     /**
      * I18N support
      */
-    protected final static ResourceBundle messages = I18NHelper.loadBundle(
-        JDOQLParameterDeclarationParser.class);
+    protected final static ResourceBundle messages = I18NHelper.loadBundle(JDOQLParameterDeclarationParser.class);
 
     /**
      * Returns an iterator over the parameter types of the specified JDOQL
      * parameter declartion. The types are represented by their name, thus
      * the Iterator's next method returns Strings.
+     *
      * @param text the JDOQL parameter declaration
      * @return an iterator over parameter types
      * @exception JDOQueryException indicates a parse error
      */
-    public Iterator parameterTypeIterator(String text)
-    {
+    @Override
+    public Iterator<String> parameterTypeIterator(String text) {
         return new ParameterTypeIterator(parse(text));
     }
 
+
     /**
      * Internal method parsing the JDOQL parameter declaration.
+     *
      * @param text the JDOQL parameter declaration
      * @return an AST representing the parameter declarations
      */
-    private AST parse(String text)
-    {
+    private AST parse(String text) {
         if (text == null) {
             return null;
         }
@@ -78,8 +83,7 @@ public class JDOQLParameterDeclarationParser
             parser.parseParameters();
             // get the AST representation
             paramsAST = parser.getAST();
-        }
-        catch (ANTLRException ex) {
+        } catch (ANTLRException ex) {
             // handle any exceptions thrown by lexer or parser
             JQLParser.handleANTLRException(ex, errorMsg);
         }
@@ -87,13 +91,12 @@ public class JDOQLParameterDeclarationParser
         return paramsAST;
     }
 
-   /**
-    * Iterator over the parameter types. The next method returns the type
-    * of the next parameter represented as String.
-    */
-    private static class ParameterTypeIterator
-        implements Iterator
-    {
+    /**
+     * Iterator over the parameter types. The next method returns the type
+     * of the next parameter represented as String.
+     */
+    private static class ParameterTypeIterator implements Iterator<String> {
+
         // current parameter declaration node
         private AST current;
 
@@ -103,42 +106,46 @@ public class JDOQLParameterDeclarationParser
          * root. The first child is the type, the next child is the name of
          * the parameter. All subsequent parameter declarations as siblings
          * of the specified ast node.
+         *
          * @param ast the list of parameter declarations nodes
          */
-        ParameterTypeIterator(AST ast)
-        {
+        ParameterTypeIterator(AST ast) {
             current = ast;
         }
 
+
         /**
          * Returns <code>true</code> if the iteration has more elements.
+         *
          * @return <code>true</code> if the iterator has more elements.
          */
-        public boolean hasNext()
-        {
+        @Override
+        public boolean hasNext() {
             return (current != null);
         }
+
 
         /**
          * Returns the next element in the iteration. For this Iterator it
          * returns the String representation of the type of the next
          * parameter declaration.
+         *
          * @return the type of the next parameter declaration.
          * @exception NoSuchElementException iteration has no more elements.
          */
-        public Object next()
-        {
+        @Override
+        public String next() {
             // check whether iteration has no more elements
-            if (current == null)
+            if (current == null) {
                 throw new NoSuchElementException();
+            }
 
             // Check whether the current node has the token type
             // PARAMETER_DEF => throw exception if not.
-            if (current.getType() != JQLParser.PARAMETER_DEF)
-                throw new JDOFatalInternalException(I18NHelper.getMessage(
-                    messages,
-                    "jqlc.jdoqlparameterdeclarationparser.next.wrongtoken", //NOI18N
-                    current.getType()));
+            if (current.getType() != JQLTokenTypes.PARAMETER_DEF) {
+                throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
+                    "jqlc.jdoqlparameterdeclarationparser.next.wrongtoken", current.getType()));
+            }
 
             // get string repr of parameter type node
             String typeRepr = getTypeRepr(current.getFirstChild());
@@ -149,27 +156,34 @@ public class JDOQLParameterDeclarationParser
             return typeRepr;
         }
 
+
         /**
          * Not supported.
+         *
          * @exception UnsupportedOperationException remove is not supported
-         * by this Iterator
+         *                by this Iterator
          */
-        public void remove() { throw new UnsupportedOperationException(); }
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
 
         /**
          * Internal method to calculate the string representation of a type
          * node.
+         *
          * @param ast the type node
          * @return the string representation
          */
-        private String getTypeRepr(AST ast)
-        {
-            if (ast == null)
+        private String getTypeRepr(AST ast) {
+            if (ast == null) {
                 return "";
+            }
 
             // Check for DOT nodes #(DOT left right)
             // They are represented as left.right
-            if (ast.getType() == JQLParser.DOT) {
+            if (ast.getType() == JQLTokenTypes.DOT) {
                 AST left = ast.getFirstChild();
                 AST right = left.getNextSibling();
                 return getTypeRepr(left) + "." + getTypeRepr(right);
@@ -179,33 +193,4 @@ public class JDOQLParameterDeclarationParser
             return ast.getText();
         }
     }
-
-    /**
-     * Method main for testing purposes. Parameter args is expected to a
-     * an array of parameter declaration String. One parameter declaration
-     * may declare multiple parameters according to the JDOQL parameter
-     * declaration syntax. Calling
-     * java com...jqlc.ParameterDeclarationHelper "int a, String b"
-     * will print
-     * <br><code>
-     * Parameter types for >int a, String b<
-     * <br>
-     *   int
-     * <br>
-     *   String</code>
-     * <br>
-     */
-    public static void main(String[] args)
-    {
-        QueryParser helper = new JDOQLParameterDeclarationParser();
-        for (int i = 0; i < args.length; i++) {
-            String text = args[i];
-            System.out.println("Parameter types for >" + text + "<");
-            for (Iterator types = helper.parameterTypeIterator(text);
-                 types.hasNext();) {
-                System.out.println("  " + types.next());
-            }
-        }
-    }
-
 }

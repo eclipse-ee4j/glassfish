@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,19 @@
 
 package org.glassfish.ejb.deployment.archive;
 
-import org.glassfish.api.deployment.archive.ArchiveDetector;
-import org.glassfish.api.deployment.archive.ArchiveHandler;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentUtils;
-import org.glassfish.deployment.common.GenericAnnotationDetector;
-import org.glassfish.hk2.api.ServiceLocator;
-
 import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import org.glassfish.api.deployment.archive.ArchiveDetector;
+import org.glassfish.api.deployment.archive.ArchiveHandler;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.GenericAnnotationDetector;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Detects EJB jar type archive.
@@ -39,12 +38,18 @@ import java.util.logging.Logger;
  *
  * @author sanjeeb.sahoo@oracle.com
  */
-@Service(name = EjbJarDetector.ARCHIVE_TYPE)
+@Service(name = EjbType.ARCHIVE_TYPE)
 @Singleton
 public class EjbJarDetector implements ArchiveDetector {
-    public static final String EJB_JAR_DETECTOR_RANK_PROP = "glassfish.ejb.jar.detector.rank";
-    public static final int DEFAULT_EJB_JAR_DETECTOR_RANK = 400;
-    public static final String ARCHIVE_TYPE = EjbType.ARCHIVE_TYPE;
+
+    private static final String EJB_JAR_DETECTOR_RANK_PROP = "glassfish.ejb.jar.detector.rank";
+    private static final int DEFAULT_EJB_JAR_DETECTOR_RANK = 400;
+
+    private static final Logger LOG = Logger.getLogger(EjbJarDetector.class.getName());
+
+    private static final String EJB_JAR_XML = "META-INF/ejb-jar.xml";
+    private static final String SUN_EJB_JAR_XML = "META-INF/sun-ejb-jar.xml";
+    private static final String GF_EJB_JAR_XML = "META-INF/glassfish-ejb-jar.xml";
 
     @Inject
     private EjbSniffer sniffer;
@@ -53,50 +58,46 @@ public class EjbJarDetector implements ArchiveDetector {
     @Inject
     private ServiceLocator baseServiceLocator;
 
-    private ArchiveHandler archiveHandler; // lazy initialisation
-    private Logger logger = Logger.getLogger(getClass().getPackage().getName());
+    // lazy initialisation
+    private ArchiveHandler archiveHandler;
 
-    private static final String EJB_JAR_XML = "META-INF/ejb-jar.xml";
-    private static final String SUN_EJB_JAR_XML = "META-INF/sun-ejb-jar.xml";
-    private static final String GF_EJB_JAR_XML = "META-INF/glassfish-ejb-jar.xml";
     @Override
     public int rank() {
         return Integer.getInteger(EJB_JAR_DETECTOR_RANK_PROP, DEFAULT_EJB_JAR_DETECTOR_RANK);
     }
 
+
     @Override
     public boolean handles(ReadableArchive archive) {
         try {
-            if (archive.exists(EJB_JAR_XML) ||
-                archive.exists(SUN_EJB_JAR_XML) ||
-                archive.exists(GF_EJB_JAR_XML)) {
+            if (archive.exists(EJB_JAR_XML) || archive.exists(SUN_EJB_JAR_XML) || archive.exists(GF_EJB_JAR_XML)) {
                 return true;
             }
-
-            GenericAnnotationDetector detector =
-                new GenericAnnotationDetector(sniffer.getAnnotationTypes());
-
+            GenericAnnotationDetector detector = new GenericAnnotationDetector(sniffer.getAnnotationTypes());
             return detector.hasAnnotationInArchive(archive);
-        }catch(IOException ioe){
-            //ignore
+        } catch (IOException ioe) {
+            // ignore
         }
         return false;
     }
+
 
     @Override
     public ArchiveHandler getArchiveHandler() {
         synchronized (this) {
             if (archiveHandler == null) {
                 try {
-                    sniffer.setup(null, logger);
+                    sniffer.setup(null, LOG);
                 } catch (IOException e) {
-                    throw new RuntimeException(e); // TODO(Sahoo): Proper Exception Handling
+                    // TODO(Sahoo): Proper Exception Handling
+                    throw new RuntimeException(e);
                 }
-                archiveHandler = baseServiceLocator.getService(ArchiveHandler.class, ARCHIVE_TYPE);
+                archiveHandler = baseServiceLocator.getService(ArchiveHandler.class, EjbType.ARCHIVE_TYPE);
             }
             return archiveHandler;
         }
     }
+
 
     @Override
     public ArchiveType getArchiveType() {

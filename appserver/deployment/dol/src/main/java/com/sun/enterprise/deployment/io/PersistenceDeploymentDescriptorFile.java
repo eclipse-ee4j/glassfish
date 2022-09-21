@@ -21,34 +21,35 @@ import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.node.PersistenceNode;
-import com.sun.enterprise.deployment.node.RootXMLNode;
+
 import org.glassfish.deployment.common.Descriptor;
 
 /**
  * @author Sanjeeb.Sahoo@Sun.COM
  */
-public class PersistenceDeploymentDescriptorFile extends DeploymentDescriptorFile {
+public class PersistenceDeploymentDescriptorFile extends DeploymentDescriptorFile<PersistenceUnitsDescriptor> {
+
+    @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.PERSISTENCE_DD_ENTRY;
     }
 
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
+
+    @Override
+    public PersistenceNode getRootXMLNode(Descriptor descriptor) {
         // This method is called from SaxParserHandler.startElement() method
         // as well as DeploymentDescriptorFile.getDefaultSchemaSource().
         // When it is called from former method, descriptor is non-null,
         // but when it is called later method, descriptor is null.
-        if(descriptor==null ||
-                descriptor instanceof Application ||
-                descriptor instanceof ApplicationClientDescriptor ||
-                descriptor instanceof EjbBundleDescriptor ||
-                descriptor instanceof WebBundleDescriptor) {
+        if (descriptor == null
+            || descriptor instanceof Application
+            || descriptor instanceof ApplicationClientDescriptor
+            || descriptor instanceof EjbBundleDescriptor
+            || descriptor instanceof WebBundleDescriptor) {
             return new PersistenceNode(new PersistenceUnitsDescriptor());
-        } else {
-            throw new IllegalArgumentException(descriptor.getClass().getName()+
-                    "is not allowed to contain persistence.xml file");
         }
+        throw new IllegalArgumentException(
+            descriptor.getClass().getName() + "is not allowed to contain persistence.xml file");
     }
-
 }

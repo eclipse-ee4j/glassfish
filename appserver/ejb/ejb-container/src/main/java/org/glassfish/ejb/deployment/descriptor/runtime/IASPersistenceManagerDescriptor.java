@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,9 +27,9 @@ import org.glassfish.deployment.common.Descriptor;
  *
  * @author Prashant Jamkhedkar
  */
-
 public class IASPersistenceManagerDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     public static final String PM_IDENTIFIER_DEFAULT = "SunOne"; // NOI18N
     public static final String PM_VERSION_DEFAULT = "1.0"; // NOI18N
     public static final String PM_CONFIG_DEFAULT = "myconfig.config";
@@ -49,20 +50,23 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
        pm_mapping_factory = PM_MAPPING_FACTORY_DEFAULT;
     }
 
+
     /**
      * The copy constructor.
      */
     public IASPersistenceManagerDescriptor(String id, String ver, String conf, String generator, String factory) {
-       pm_identifier = id;
-       pm_version = ver;
-       pm_config = conf;
-       pm_class_generator = generator;
-       pm_mapping_factory = factory;
+        pm_identifier = id;
+        pm_version = ver;
+        pm_config = conf;
+        pm_class_generator = generator;
+        pm_mapping_factory = factory;
     }
 
+
     public String getPersistenceManagerIdentifier() {
-      return pm_identifier;
+        return pm_identifier;
     }
+
 
     public void setPersistenceManagerIdentifier(String pm_identifier) {
         if (pm_identifier == null) {
@@ -72,9 +76,11 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
         }
     }
 
+
     public String getPersistenceManagerVersion() {
-      return pm_version;
+        return pm_version;
     }
+
 
     public void setPersistenceManagerVersion(String pm_version) {
         if (pm_version == null) {
@@ -84,9 +90,11 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
         }
     }
 
-    public String getPersistenceManagerConfig () {
-      return pm_config;
+
+    public String getPersistenceManagerConfig() {
+        return pm_config;
     }
+
 
     public void setPersistenceManagerConfig(String pm_config) {
         if (pm_config == null) {
@@ -96,9 +104,11 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
         }
     }
 
+
     public String getPersistenceManagerClassGenerator() {
-      return pm_class_generator;
+        return pm_class_generator;
     }
+
 
     public void setPersistenceManagerClassGenerator(String pm_class_generator) {
         if (pm_class_generator == null) {
@@ -108,9 +118,11 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
         }
     }
 
+
     public String getPersistenceManagerMappingFactory() {
-      return pm_mapping_factory;
+        return pm_mapping_factory;
     }
+
 
     public void setPersistenceManagerMappingFactory(String pm_mapping_factory) {
         if (pm_mapping_factory == null) {
@@ -119,13 +131,4 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
             this.pm_mapping_factory = pm_mapping_factory;
         }
     }
-
-    /**
-     * Called from EjbCMPEntityDescriptor
-     * when some classes in this object are updated.
-     */
-    public boolean classesChanged() {
-        return false;
-    }
-
 }

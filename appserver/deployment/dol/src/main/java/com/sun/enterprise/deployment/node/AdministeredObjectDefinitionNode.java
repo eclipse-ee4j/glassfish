@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,29 +21,44 @@ import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 
-import org.glassfish.logging.annotation.LogMessageInfo;
-import org.w3c.dom.Node;
-
 import java.util.Map;
 import java.util.logging.Level;
+
+import org.glassfish.logging.annotation.LogMessageInfo;
+import org.w3c.dom.Node;
 
 /**
  * This class handles all information related to the administered-object xml tag
  *
- * @author  Dapeng Hu
- * @version
+ * @author Dapeng Hu
  */
-
 public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<AdministeredObjectDefinitionDescriptor> {
-    public final static XMLElement tag = new XMLElement(TagNames.ADMINISTERED_OBJECT);
 
-    private AdministeredObjectDefinitionDescriptor descriptor = null;
+    @LogMessageInfo(
+        message = "For administered-object resource: {0}, there is no application part in its resource adapter name: {1}.",
+        level = "WARNING",
+        cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
+        comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.AdministeredObjectDefinitionNode.")
+    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00022";
+
+    private AdministeredObjectDefinitionDescriptor descriptor;
 
     public AdministeredObjectDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.ADMINISTERED_OBJECT_PROPERTY), ResourcePropertyNode.class,
-                "addAdministeredObjectPropertyDescriptor");
+            "addAdministeredObjectPropertyDescriptor");
     }
 
+
+    @Override
+    public AdministeredObjectDefinitionDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new AdministeredObjectDefinitionDescriptor();
+        }
+        return descriptor;
+    }
+
+
+    @Override
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
@@ -54,14 +70,8 @@ public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<A
         return table;
     }
 
-    @LogMessageInfo(
-            message = "For administered-object resource: {0}, there is no application part in its resource adapter name: {1}.",
-            level="WARNING",
-            cause = "For embedded resource adapter, its internal format of resource adapter name should contains application name.",
-            comment = "For the method writeDescriptor of com.sun.enterprise.deployment.node.AdministeredObjectDefinitionNode."
-            )
-    private static final String RESOURCE_ADAPTER_NAME_INVALID = "AS-DEPLOYMENT-00022";
 
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, AdministeredObjectDefinitionDescriptor desc) {
         Node node = appendChild(parent, nodeName);
         appendTextChild(node, TagNames.ADMINISTERED_OBJECT_DESCRIPTION, desc.getDescription());
@@ -72,30 +82,20 @@ public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<A
         // change the resource adapter name from internal format to standard format
         String resourceAdapterName = desc.getResourceAdapter();
         int poundIndex = resourceAdapterName.indexOf("#");
-        if(poundIndex > 0){
-            // the internal format of resource adapter name is "appName#raName", remove the appName part
-            resourceAdapterName =  resourceAdapterName.substring(poundIndex);
+        if (poundIndex > 0) {
+            // the internal format of resource adapter name is "appName#raName", remove the appName
+            // part
+            resourceAdapterName = resourceAdapterName.substring(poundIndex);
 
-        }else if(poundIndex == 0){
+        } else if (poundIndex == 0) {
             // the resource adapter name should not be the standard format "#raName" here
             DOLUtils.getDefaultLogger().log(Level.WARNING, RESOURCE_ADAPTER_NAME_INVALID,
-                    new Object[] { desc.getName(), desc.getResourceAdapter() });
-        }else{
+                new Object[] {desc.getName(), desc.getResourceAdapter()});
+        } else {
             // the resource adapter name represent the standalone RA in this case.
         }
         appendTextChild(node, TagNames.ADMINISTERED_OBJECT_ADAPTER, resourceAdapterName);
 
-        ResourcePropertyNode propertyNode = new ResourcePropertyNode();
-        propertyNode.writeDescriptor(node, desc);
-
-        return node;
+        return ResourcePropertyNode.write(node, desc);
     }
-
-    public AdministeredObjectDefinitionDescriptor getDescriptor() {
-        if(descriptor == null){
-            descriptor = new AdministeredObjectDefinitionDescriptor();
-        }
-        return descriptor;
-    }
-
 }

@@ -79,7 +79,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
             } else if (TRANSACTION.equals(value)) {
                 contextType = PersistenceContextType.TRANSACTION;
             } else {
-                throw new IllegalArgumentException(localStrings.getLocalString(
+                throw new IllegalArgumentException(I18N_NODE.getLocalString(
                 "enterprise.deployment.node.invalidvalue",
                 "Invalid value for a tag under {0} : {1}",
                 new Object[] {TagNames.PERSISTENCE_CONTEXT_TYPE, value}));
@@ -96,7 +96,7 @@ public class EntityManagerReferenceNode extends DeploymentDescriptorNode {
             } else if (UNSYNCHRONIZED.equals(value)) {
                 synchronizationType = SynchronizationType.UNSYNCHRONIZED;
             } else {
-                throw new IllegalArgumentException(localStrings.getLocalString(
+                throw new IllegalArgumentException(I18N_NODE.getLocalString(
                         "enterprise.deployment.node.invalidvalue",
                         "Invalid value for a tag under {0} : {1}",
                         new Object[] {TagNames.PERSISTENCE_CONTEXT_SYNCHRONIZATION_TYPE, value}));

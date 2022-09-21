@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,33 +21,53 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.connectors.*;
+import com.sun.enterprise.connectors.ActiveResourceAdapter;
+import com.sun.enterprise.connectors.ConnectorConnectionPool;
+import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.ConnectorRuntimeExtension;
+import com.sun.enterprise.connectors.PoolMetaData;
 import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
-import com.sun.enterprise.connectors.util.*;
+import com.sun.enterprise.connectors.util.ConnectionDefinitionUtils;
+import com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils;
+import com.sun.enterprise.connectors.util.ConnectionPoolReconfigHelper;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
+import com.sun.enterprise.connectors.util.SecurityMapUtils;
+import com.sun.enterprise.connectors.util.SetMethodAction;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.enterprise.deployment.ResourcePrincipal;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import com.sun.enterprise.resource.listener.UnpooledConnectionEventListener;
 import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.util.i18n.StringManager;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.TransactionSupport;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+
 import org.glassfish.connectors.config.SecurityMap;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.RelativePathResolver;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.config.types.Property;
-
-import javax.naming.NamingException;
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ConnectionRequestInfo;
-import jakarta.resource.spi.ManagedConnection;
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.resource.spi.TransactionSupport;
-import javax.security.auth.Subject;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.logging.Level;
 
 
 /**
@@ -88,7 +109,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Wrong parameters for pool creation ");
             }
-            String i18nMsg = localStrings.getString("ccp_adm.wrong_params_for_create");
+            String i18nMsg = I18N.getString("ccp_adm.wrong_params_for_create");
             throw new ConnectorRuntimeException(i18nMsg);
         }
         ConnectorDescriptorInfo cdi = new ConnectorDescriptorInfo();
@@ -96,7 +117,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         ConnectorDescriptor connectorDescriptor = _registry.getDescriptor(rarName);
 
         if (connectorDescriptor == null) {
-            String i18nMsg = localStrings.getString("ccp_adm.no_conn_pool_obj", rarName);
+            String i18nMsg = I18N.getString("ccp_adm.no_conn_pool_obj", rarName);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
             _logger.log(Level.SEVERE, "rardeployment.connector_descriptor_notfound_registry", rarName);
             _logger.log(Level.SEVERE, "", cre);
@@ -217,7 +238,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Wrong parameters for pool creation ");
             }
-            String i18nMsg = localStrings.getString("ccp_adm.wrong_params_for_create");
+            String i18nMsg = I18N.getString("ccp_adm.wrong_params_for_create");
             throw new ConnectorRuntimeException(i18nMsg);
         }
         String moduleName =
@@ -230,7 +251,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                 _registry.getDescriptor(moduleName);
 
         if (connectorDescriptor == null) {
-            String i18nMsg = localStrings.getString("ccp_adm.null_connector_desc", moduleName);
+            String i18nMsg = I18N.getString("ccp_adm.null_connector_desc", moduleName);
             ConnectorRuntimeException cre = new
                     ConnectorRuntimeException(i18nMsg);
             _logger.log(Level.SEVERE, "rardeployment.null_mcf_in_registry", moduleName);
@@ -387,7 +408,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * 1. obtainManagedConnection for the poolname<br>
      * 2. lookup ConnectorDescriptorInfo from InitialContext using poolname<br>
      * 3. from cdi get username and password<br>
-     * 4. create ResourcePrincipal using default username and password<br>
+     * 4. create ResourcePrincipalDescriptor using default username and password<br>
      * 5. create a Subject from this (doPriveleged)<br>
      * 6. createManagedConnection using above subject<br>
      * 7. getConnection from the ManagedConnection with above subject<br>
@@ -436,11 +457,11 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws jakarta.resource.ResourceException
      */
     protected Subject getDefaultSubject(PoolInfo poolInfo, ManagedConnectionFactory mcf,
-            ResourcePrincipal prin) throws ResourceException {
-        ResourcePrincipal resourcePrincipal = null;
+            ResourcePrincipalDescriptor prin) throws ResourceException {
+        ResourcePrincipalDescriptor resourcePrincipalDescriptor = null;
         if (prin == null) {
             try {
-                resourcePrincipal = getDefaultResourcePrincipal(poolInfo, mcf);
+                resourcePrincipalDescriptor = getDefaultResourcePrincipal(poolInfo, mcf);
             } catch (NamingException ne) {
                 _logger.log(Level.WARNING, "jdbc.pool_not_reachable",
                         ne.getMessage());
@@ -451,11 +472,11 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                 throw e;
             }
         } else {
-            resourcePrincipal = prin;
+            resourcePrincipalDescriptor = prin;
         }
 
         final Subject defaultSubject =
-                ConnectionPoolObjectsUtils.createSubject(mcf, resourcePrincipal);
+                ConnectionPoolObjectsUtils.createSubject(mcf, resourcePrincipalDescriptor);
 
 
         if (_logger.isLoggable(Level.FINE)) {
@@ -545,7 +566,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                     logFine("getUnpooledConnection:: " +
                             "done obtainManagedConnectionFactory again");
                 } catch (ConnectorRuntimeException creAgain) {
-                    String l10nMsg = localStrings.getString(
+                    String l10nMsg = I18N.getString(
                             "pingpool.cannot_obtain_mcf", poolName);
                     _logger.log(Level.WARNING, "jdbc.pool_not_reachable",
                             l10nMsg);
@@ -556,7 +577,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             } else {
                 _logger.log(Level.WARNING, "jdbc.pool_not_reachable",
                         cre.getMessage());
-                String l10nMsg = localStrings.getString(
+                String l10nMsg = I18N.getString(
                         "pingpool.cannot_obtain_mcf", poolName);
                 ResourceException e = new ResourceException(l10nMsg);
                 e.initCause(cre);
@@ -568,6 +589,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
     }
 */
 
+
     /**
      * This method is used to provide backend functionality for the
      * ping-connection-pool asadmin command. Briefly the design is as
@@ -575,22 +597,22 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * 1. obtainManagedConnectionFactory for the poolname<br>
      * 2. lookup ConnectorDescriptorInfo from InitialContext using poolname<br>
      * 3. from cdi get username and password<br>
-     * 4. create ResourcePrincipal using default username and password<br>
+     * 4. create ResourcePrincipalDescriptor using default username and password<br>
      * 5. create a Subject from this (doPriveleged)<br>
      * 6. createManagedConnection using above subject<br>
      * 7. add a dummy ConnectionEventListener to the mc that simply handles connectionClosed
      * 8. getConnection from the ManagedConnection with above subject<br>
      *
-     * @param poolInfo               The poolname from whose MCF to obtain the unpooled mc
-     * @param principal                   The ResourcePrincipal to use for authenticating the request if not null.
-     *                               If null, the pool's default authentication mechanism is used
+     * @param poolInfo The poolname from whose MCF to obtain the unpooled mc
+     * @param principal The ResourcePrincipalDescriptor to use for authenticating the request if not null.
+     *            If null, the pool's default authentication mechanism is used
      * @param returnConnectionHandle If true will return the logical connection handle
-     *                               derived from the Managed Connection, else will only return mc
+     *            derived from the Managed Connection, else will only return mc
      * @return an unPooled connection
      * @throws ResourceException for various error conditions
      */
-    public Object getUnpooledConnection(PoolInfo poolInfo, ResourcePrincipal principal, boolean returnConnectionHandle)
-            throws ResourceException {
+    public Object getUnpooledConnection(PoolInfo poolInfo, ResourcePrincipalDescriptor principal,
+        boolean returnConnectionHandle) throws ResourceException {
         ManagedConnectionFactory mcf = null;
         ResourcePool poolToDeploy = null;
         boolean needToUndeployPool = false;
@@ -606,8 +628,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             //END CR 6597868
             mcf = obtainManagedConnectionFactory(poolInfo, new Hashtable());
         } catch (ConnectorRuntimeException re) {
-            logFine("getUnpooledConnection :: obtainManagedConnectionFactory " +
-                    "threw exception. So doing checkAndLoadPoolResource");
+            logFine("getUnpooledConnection :: obtainManagedConnectionFactory "
+                + "threw exception. So doing checkAndLoadPoolResource");
             if (checkAndLoadPool(poolInfo)) {
                 logFine("getUnpooledConnection:: checkAndLoadPoolResource is true");
                 try {
@@ -651,10 +673,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             }
         }
 
-        ResourcePrincipal resourcePrincipal = null;
+        ResourcePrincipalDescriptor resourcePrincipalDescriptor = null;
         if (principal == null) {
             try {
-                resourcePrincipal = getDefaultResourcePrincipal(poolInfo, mcf);
+                resourcePrincipalDescriptor = getDefaultResourcePrincipal(poolInfo, mcf);
             } catch (NamingException ne) {
                 _logger.log(Level.WARNING, "jdbc.pool_not_reachable", ne.getMessage());
                 String l10nMsg = localStrings.getString("pingpool.name_not_bound", poolInfo);
@@ -663,10 +685,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                 throw e;
             }
         } else {
-            resourcePrincipal = principal;
+            resourcePrincipalDescriptor = principal;
         }
 
-        final Subject defaultSubject = ConnectionPoolObjectsUtils.createSubject(mcf, resourcePrincipal);
+        final Subject defaultSubject = ConnectionPoolObjectsUtils.createSubject(mcf, resourcePrincipalDescriptor);
 
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("using subject: " + defaultSubject);
@@ -738,18 +760,19 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         return result;
     }
 
-    private ResourcePrincipal getDefaultResourcePrincipal( PoolInfo poolInfo,
+    private ResourcePrincipalDescriptor getDefaultResourcePrincipal( PoolInfo poolInfo,
         ManagedConnectionFactory mcf ) throws NamingException {
         return getDefaultResourcePrincipal(poolInfo, mcf, null);
     }
 
-    /*
-    * Returns a ResourcePrincipal object populated with a pool's
-    * default USERNAME and PASSWORD
-    *
-    * @throws NamingException if poolname lookup fails
-    */
-    private ResourcePrincipal getDefaultResourcePrincipal(PoolInfo poolInfo,
+
+    /**
+     * Returns a ResourcePrincipalDescriptor object populated with a pool's
+     * default USERNAME and PASSWORD
+     *
+     * @throws NamingException if poolname lookup fails
+     */
+    private ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo,
                                                           ManagedConnectionFactory mcf, Hashtable env)
             throws NamingException {
         String userName = null;
@@ -788,8 +811,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             }
             password = ConnectionPoolObjectsUtils.getValueFromMCF("Password", poolInfo, mcf);
         }
-        //Now return the ResourcePrincipal
-        return new ResourcePrincipal(userName, password);
+        //Now return the ResourcePrincipalDescriptor
+        return new ResourcePrincipalDescriptor(userName, password);
     }
 
     /**
@@ -907,57 +930,49 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         return activeResourceAdapter;
     }
 
-    /** Returns the MCF instances.
-     *  @param poolInfo Name of the pool.MCF pertaining to this pool is
-     *         created/returned.
-     *  @return created/already present MCF instance
-     *  @throws ConnectorRuntimeException if creation/retrieval of MCF fails
+
+    /**
+     * Returns the MCF instances.
+     *
+     * @param poolInfo Name of the pool.MCF pertaining to this pool is
+     *            created/returned.
+     * @return created/already present MCF instance
+     * @throws ConnectorRuntimeException if creation/retrieval of MCF fails
      */
-    public ManagedConnectionFactory[] obtainManagedConnectionFactories(
-           PoolInfo poolInfo) throws ConnectorRuntimeException {
-    ManagedConnectionFactory[] mcfs = null;
+    public ManagedConnectionFactory[] obtainManagedConnectionFactories(PoolInfo poolInfo)
+        throws ConnectorRuntimeException {
+        ManagedConnectionFactory[] mcfs = null;
         String raName = null;
         try {
-        ConnectorConnectionPool conPool =
-                getConnectorConnectionPool(poolInfo);
-        ActiveResourceAdapter activeResourceAdapter =
-                    getResourceAdapter(conPool);
+            ConnectorConnectionPool conPool = getConnectorConnectionPool(poolInfo);
+            ActiveResourceAdapter activeResourceAdapter = getResourceAdapter(conPool);
             raName = activeResourceAdapter.getModuleName();
-                mcfs =
-                     activeResourceAdapter.
-                        createManagedConnectionFactories
-                                (conPool, null);
-        } catch(NamingException ne) {
-            String i18nMsg = localStrings.getString(
-                "pingpool.name_not_bound", poolInfo);
-            ConnectorRuntimeException cre = new
-                ConnectorRuntimeException( i18nMsg);
+            mcfs = activeResourceAdapter.createManagedConnectionFactories(conPool, null);
+        } catch (NamingException ne) {
+            String i18nMsg = localStrings.getString("pingpool.name_not_bound", poolInfo);
+            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
             cre.initCause(ne);
             if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "rardeployment.jndi_lookup_failed",
-                        poolInfo);
+                _logger.log(Level.FINE, "rardeployment.jndi_lookup_failed", poolInfo);
                 _logger.log(Level.FINE, "", cre);
             }
-            //_logger.log(Level.SEVERE,"",cre);
+            // _logger.log(Level.SEVERE,"",cre);
             throw cre;
-        }
-        catch(NullPointerException ne) {
-            String i18nMsg = localStrings.getString(
-                "ccp_adm.failed_to_register_mcf", poolInfo);
-            ConnectorRuntimeException cre = new
-                ConnectorRuntimeException( i18nMsg );
+        } catch (NullPointerException ne) {
+            String i18nMsg = localStrings.getString("ccp_adm.failed_to_register_mcf", poolInfo);
+            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
             cre.initCause(ne);
-            _logger.log(Level.SEVERE,"mcf_add_toregistry_failed",poolInfo);
-            if (_logger.isLoggable( Level.FINE ) ) {
-                _logger.log(Level.FINE,"",cre);
+            _logger.log(Level.SEVERE, "mcf_add_toregistry_failed", poolInfo);
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, "", cre);
             }
-            //_logger.log(Level.SEVERE,"",cre);
+            // _logger.log(Level.SEVERE,"",cre);
             throw cre;
         }
-        for(ManagedConnectionFactory mcf : mcfs){
+        for (ManagedConnectionFactory mcf : mcfs) {
             validateMCF(mcf, raName);
         }
-    return mcfs;
+        return mcfs;
     }
 
     private void validateMCF(ManagedConnectionFactory mcf, String raName) {
@@ -984,94 +999,89 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         try {
             if (_registry.isMCFCreated(poolInfo)) {
                 return _registry.getManagedConnectionFactory(poolInfo);
-            } else {
+            }
+            ConnectorConnectionPool connectorConnectionPool = getConnectorConnectionPool(poolInfo, env);
+            ActiveResourceAdapter activeResourceAdapter = getResourceAdapter(connectorConnectionPool);
+            ClassLoader loader = activeResourceAdapter.getClassLoader();
+            ManagedConnectionFactory mcf
+                = activeResourceAdapter.createManagedConnectionFactory(connectorConnectionPool, loader);
+            if (mcf != null) {
+                // validate MCF before it is used or related pooling infrastructure is created.
+                validateMCF(mcf, activeResourceAdapter.getModuleName());
 
-                ConnectorConnectionPool connectorConnectionPool = getConnectorConnectionPool(poolInfo, env);
-                ActiveResourceAdapter activeResourceAdapter = getResourceAdapter(connectorConnectionPool);
-                ClassLoader loader = activeResourceAdapter.getClassLoader();
-                ManagedConnectionFactory mcf = activeResourceAdapter.
-                        createManagedConnectionFactory(connectorConnectionPool, loader);
-                if (mcf != null) {
-                    //validate MCF before it is used or related pooling infrastructure is created.
-                    validateMCF(mcf, activeResourceAdapter.getModuleName());
+                ResourcePrincipalDescriptor prin = getDefaultResourcePrincipal(poolInfo, mcf, env);
+                Subject s = ConnectionPoolObjectsUtils.createSubject(mcf, prin);
+                int txSupport = connectorConnectionPool.getTransactionSupport();
 
-                    ResourcePrincipal prin =
-                            getDefaultResourcePrincipal(poolInfo, mcf, env);
-                    Subject s = ConnectionPoolObjectsUtils.createSubject(mcf, prin);
-                    int txSupport = connectorConnectionPool.getTransactionSupport();
+                // JSR-322 : check the runtime transaction level support of MCF and use
+                // appropriately.
+                if (mcf instanceof jakarta.resource.spi.TransactionSupport) {
+                    TransactionSupport.TransactionSupportLevel mcfTS = ((jakarta.resource.spi.TransactionSupport) mcf)
+                        .getTransactionSupport();
 
-                    //JSR-322 : check the runtime transaction level support of MCF and use appropriately.
-                    if (mcf instanceof jakarta.resource.spi.TransactionSupport) {
-                        TransactionSupport.TransactionSupportLevel mcfTS =
-                                ((jakarta.resource.spi.TransactionSupport) mcf).getTransactionSupport();
+                    int containerTxSupport = ConnectionPoolObjectsUtils.convertSpecTxSupportToContainerTxSupport(mcfTS);
+                    boolean isValidTxSupportLevel = ConnectionPoolObjectsUtils
+                        .isTxSupportConfigurationSane(containerTxSupport, activeResourceAdapter.getModuleName());
 
-                        int containerTxSupport = ConnectionPoolObjectsUtils.convertSpecTxSupportToContainerTxSupport(mcfTS);
-                        boolean isValidTxSupportLevel = ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(
-                                containerTxSupport, activeResourceAdapter.getModuleName());
-
-                        if (isValidTxSupportLevel) {
-                            txSupport = containerTxSupport;
-                        } else {
-
-                            Object params[] = { mcfTS, activeResourceAdapter.getModuleName() };
-                            String i18nMsg = localStrings.getString("ccp_adm_service.incorrect_tx_support", params);
-                            ConnectorRuntimeException cre = new
-                                    ConnectorRuntimeException(i18nMsg);
-                            _logger.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
-                                    connectorConnectionPool.getName());
-                            throw cre;
-                        }
+                    if (isValidTxSupportLevel) {
+                        txSupport = containerTxSupport;
+                    } else {
+                        Object[] params = {mcfTS, activeResourceAdapter.getModuleName()};
+                        String i18nMsg = localStrings.getString("ccp_adm_service.incorrect_tx_support", params);
+                        ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
+                        _logger.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
+                            connectorConnectionPool.getName());
+                        throw cre;
                     }
-
-                    boolean isPM = connectorConnectionPool.isNonComponent();
-                    boolean isNonTx = connectorConnectionPool.isNonTransactional();
-                    ConnectorSecurityMap[] securityMaps =
-                            connectorConnectionPool.getSecurityMaps();
-                    RuntimeSecurityMap runtimeSecurityMap =
-                            SecurityMapUtils.processSecurityMaps(securityMaps);
-                    boolean lazyEnlistable = connectorConnectionPool.isLazyConnectionEnlist();
-                    boolean lazyAssoc = connectorConnectionPool.isLazyConnectionAssoc();
-
-                    if (isPM || isNonTx) {
-                        /*
-                        We should not do lazyEnlistment if we are an __pm
-                        resource since we won't have an InvocationContext and
-                        the lazy enlistment depends upon an InvocationContext
-                        For a nonTx resource enlistment (lazy or otherwise)
-                        doesn't come into the picture at all
-                        */
-                        lazyEnlistable = false;
-                    }
-
-                    if (isPM) {
-                        //We need to switch off lazy association here because of
-                        //the way our Persistence layer behaves. Adding a system
-                        //property here to allow other persistence layers to use
-                        //lazy association with PM resources
-                        if (lazyAssoc) {
-                            String str = System.getProperty(
-                                    "com.sun.enterprise.resource.AllowLazyAssociationWithPM", "FALSE");
-                            if (str.toUpperCase(Locale.getDefault()).trim().equals("FALSE")) {
-                                lazyAssoc = false;
-                            }
-                        }
-                    }
-
-                    PoolMetaData pmd = new PoolMetaData(poolInfo, mcf, s, txSupport, prin,
-                            isPM, isNonTx, lazyEnlistable, runtimeSecurityMap, lazyAssoc);
-                    logFine(pmd.toString());
-                    _registry.addManagedConnectionFactory(poolInfo, pmd);
                 }
 
-                PoolType pt = getPoolType(connectorConnectionPool);
+                boolean isPM = connectorConnectionPool.isNonComponent();
+                boolean isNonTx = connectorConnectionPool.isNonTransactional();
+                ConnectorSecurityMap[] securityMaps =
+                        connectorConnectionPool.getSecurityMaps();
+                RuntimeSecurityMap runtimeSecurityMap =
+                        SecurityMapUtils.processSecurityMaps(securityMaps);
+                boolean lazyEnlistable = connectorConnectionPool.isLazyConnectionEnlist();
+                boolean lazyAssoc = connectorConnectionPool.isLazyConnectionAssoc();
 
-                createAndAddPool(poolInfo, pt, env);
-                return mcf;
+                if (isPM || isNonTx) {
+                    /*
+                    We should not do lazyEnlistment if we are an __pm
+                    resource since we won't have an InvocationContext and
+                    the lazy enlistment depends upon an InvocationContext
+                    For a nonTx resource enlistment (lazy or otherwise)
+                    doesn't come into the picture at all
+                    */
+                    lazyEnlistable = false;
+                }
+
+                if (isPM) {
+                    //We need to switch off lazy association here because of
+                    //the way our Persistence layer behaves. Adding a system
+                    //property here to allow other persistence layers to use
+                    //lazy association with PM resources
+                    if (lazyAssoc) {
+                        String str = System.getProperty(
+                                "com.sun.enterprise.resource.AllowLazyAssociationWithPM", "FALSE");
+                        if (str.toUpperCase(Locale.getDefault()).trim().equals("FALSE")) {
+                            lazyAssoc = false;
+                        }
+                    }
+                }
+
+                PoolMetaData pmd = new PoolMetaData(poolInfo, mcf, s, txSupport, prin,
+                        isPM, isNonTx, lazyEnlistable, runtimeSecurityMap, lazyAssoc);
+                logFine(pmd.toString());
+                _registry.addManagedConnectionFactory(poolInfo, pmd);
             }
+
+            PoolType pt = getPoolType(connectorConnectionPool);
+
+            createAndAddPool(poolInfo, pt, env);
+            return mcf;
         } catch (NamingException ne) {
             String i18nMsg = localStrings.getString("pingpool.name_not_bound", poolInfo);
-            ConnectorRuntimeException cre = new
-                    ConnectorRuntimeException(i18nMsg);
+            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
             cre.initCause(ne);
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "rardeployment.jndi_lookup_failed", poolInfo);
@@ -1262,12 +1272,11 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         //Run setXXX methods on the copy of the MCF that we have
         //this is done to update the MCF to reflect changes in the
         //MCF properties for which we don't really need to recreate
-        //the pool
+        // the pool
         ConnectorRegistry registry = ConnectorRegistry.getInstance();
-        ManagedConnectionFactory mcf = registry.getManagedConnectionFactory(
-                poolInfo);
-        SetMethodAction sma = new SetMethodAction(mcf,
-                ccp.getConnectorDescriptorInfo().getMCFConfigProperties());
+        ManagedConnectionFactory mcf = registry.getManagedConnectionFactory(poolInfo);
+        SetMethodAction<ConnectorConfigProperty> sma = new SetMethodAction<>(mcf,
+            ccp.getConnectorDescriptorInfo().getMCFConfigProperties());
         try {
             sma.run();
         } catch (Exception e) {
@@ -1432,7 +1441,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             connectorDescriptor = _runtime.getConnectorDescriptor(rarName);
         }
         if (connectorDescriptor == null) {
-            String i18nMsg = localStrings.getString(
+            String i18nMsg = I18N.getString(
                     "ccp_adm.no_conn_pool_obj", rarName);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(
                     i18nMsg);
@@ -1531,8 +1540,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             //but password can be
             //if user is null we will use default authentication
             //TODO: Discuss if this is the right thing to do
-            ResourcePrincipal prin = (user == null) ?
-                    null : new ResourcePrincipal(user, passwd);
+            ResourcePrincipalDescriptor prin = (user == null) ?
+                    null : new ResourcePrincipalDescriptor(user, passwd);
             con = (java.sql.Connection) getUnpooledConnection(poolInfo, prin, true);
             if (con == null) {
                 String i18nMsg = localStrings.getString(

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,59 +17,100 @@
 
 package org.glassfish.webservices;
 
-import com.sun.enterprise.v3.admin.AdminAdapter;
-import com.sun.enterprise.v3.admin.adapter.AdminConsoleAdapter;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.grizzly.config.dom.NetworkListener;
-import com.sun.xml.ws.api.server.SDDocumentSource;
-import com.sun.xml.ws.api.WSBinding;
-import com.sun.xml.ws.api.BindingID;
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.web.UserDataConstraint;
-import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
-import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServiceHandler;
+import com.sun.enterprise.deployment.WebServiceHandlerChain;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.web.SecurityConstraint;
+import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.v3.admin.AdminAdapter;
+import com.sun.enterprise.v3.admin.adapter.AdminConsoleAdapter;
+import com.sun.xml.ws.api.BindingID;
+import com.sun.xml.ws.api.WSBinding;
+import com.sun.xml.ws.api.server.SDDocumentSource;
 
-import jakarta.servlet.http.*;
-import javax.xml.namespace.QName;
-
-import java.util.*;
-import java.net.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import javax.xml.parsers.*;
-import jakarta.xml.ws.soap.SOAPBinding;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.xml.soap.MessageFactory;
+import jakarta.xml.soap.MimeHeader;
+import jakarta.xml.soap.MimeHeaders;
+import jakarta.xml.soap.SOAPBody;
+import jakarta.xml.soap.SOAPEnvelope;
+import jakarta.xml.soap.SOAPException;
+import jakarta.xml.soap.SOAPFault;
+import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.ws.handler.Handler;
 import jakarta.xml.ws.http.HTTPBinding;
-import jakarta.xml.soap.*;
+import jakarta.xml.ws.soap.SOAPBinding;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.transform.stream.StreamResult;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.xml.transform.stream.StreamSource;
 
-import org.glassfish.web.deployment.util.WebServerInfo;
-import org.glassfish.web.deployment.util.VirtualServerInfo;
-import org.glassfish.web.util.HtmlEntityEncoder;
-import org.w3c.dom.*;
-import org.w3c.dom.Node;
-
-import java.io.*;
-import java.security.AccessController;
-import java.security.PrivilegedExceptionAction;
-import java.security.PrivilegedActionException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.text.MessageFormat;
-
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.web.deployment.util.VirtualServerInfo;
+import org.glassfish.web.deployment.util.WebServerInfo;
+import org.glassfish.web.util.HtmlEntityEncoder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXParseException;
 
 /**
  * Web service related utilities.
@@ -83,24 +125,31 @@ public class WsUtil {
     // xslt processing parameters for final wsdl transformation
     public static final String ENDPOINT_ADDRESS_PARAM_NAME = "endpointAddressParam";
 
-    public final String WSDL_IMPORT_NAMESPACE_PARAM_NAME = "wsdlImportNamespaceParam";
+    public static final String WSDL_IMPORT_NAMESPACE_PARAM_NAME = "wsdlImportNamespaceParam";
     public static final String WSDL_IMPORT_LOCATION_PARAM_NAME = "wsdlImportLocationParam";
     public static final String WSDL_INCLUDE_LOCATION_PARAM_NAME = "wsdlIncludeLocationParam";
 
-    public final String SCHEMA_IMPORT_NAMESPACE_PARAM_NAME = "schemaImportNamespaceParam";
+    public static final String SCHEMA_IMPORT_NAMESPACE_PARAM_NAME = "schemaImportNamespaceParam";
     public static final String SCHEMA_IMPORT_LOCATION_PARAM_NAME = "schemaImportLocationParam";
     public static final String SCHEMA_INCLUDE_LOCATION_PARAM_NAME = "schemaIncludeLocationParam";
 
-    private Config config = null;
-    private List<NetworkListener> networkListeners = null;
+    private static final String SOAP11_TOKEN = "##SOAP11_HTTP";
+    private static final String SOAP12_TOKEN = "##SOAP12_HTTP";
+    private static final String SOAP11_MTOM_TOKEN = "##SOAP11_HTTP_MTOM";
+    private static final String SOAP12_MTOM_TOKEN = "##SOAP12_HTTP_MTOM";
+    private static final String XML_TOKEN = "##XML_HTTP";
+
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(WsUtil.class);
+    private static final Logger LOG = LogUtils.getLogger();
+
+
+    private final Config config;
+    private List<NetworkListener> networkListeners;
 
     public WsUtil() {
         config = WebServiceContractImpl.getInstance().getConfig();
     }
 
-    private static final String SECURITY_POLICY_NAMESPACE_URI = "http://schemas.xmlsoap.org/ws/2005/07/securitypolicy";
-
-    private static final Logger logger = LogUtils.getLogger();
 
     /**
      * Serve up the FINAL wsdl associated with this web service.
@@ -108,27 +157,26 @@ public class WsUtil {
      * @return true for success, false for failure
      */
     public boolean handleGet(HttpServletRequest request, HttpServletResponse response, WebServiceEndpoint endpoint) throws IOException {
-
         MimeHeaders headers = getHeaders(request);
         if (hasSomeTextXmlContent(headers)) {
-            String message = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.GET_RECEIVED), endpoint.getEndpointName(),
-                    endpoint.getEndpointAddressUri());
+            String message = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.GET_RECEIVED),
+                endpoint.getEndpointName(), endpoint.getEndpointAddressUri());
 
             writeInvalidMethodType(response, message);
 
-            logger.info(message);
+            LOG.info(message);
 
             return false;
         }
 
-        URL wsdlUrl = null;
 
         String requestUriRaw = request.getRequestURI();
-        String requestUri = (requestUriRaw.charAt(0) == '/') ? requestUriRaw.substring(1) : requestUriRaw;
+        String requestUri = requestUriRaw.charAt(0) == '/' ? requestUriRaw.substring(1) : requestUriRaw;
         String queryString = request.getQueryString();
 
         WebService webService = endpoint.getWebService();
 
+        URL wsdlUrl = null;
         if (queryString == null) {
 
             // Get portion of request uri representing location within a module
@@ -154,10 +202,10 @@ public class WsUtil {
                     File wsdlDir = new File(wsdlDirPath);
                     File wsdlFile = new File(wsdlDir, wsdlPath.replace('/', File.separatorChar));
                     try {
-                        wsdlUrl = wsdlFile.toURL();
+                        wsdlUrl = wsdlFile.toURI().toURL();
                     } catch (MalformedURLException mue) {
-                        String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
-                        logger.log(Level.INFO, msg, mue);
+                        String msg = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
+                        LOG.log(Level.INFO, msg, mue);
                     }
 
                 }
@@ -208,13 +256,13 @@ public class WsUtil {
                     copyIsToOs(is, response.getOutputStream());
                 }
                 success = true;
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, LogUtils.SERVING_FINAL_WSDL,
-                            new Object[] { wsdlUrl, request.getRequestURL() + (queryString != null ? ("?" + queryString) : "") });
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, LogUtils.SERVING_FINAL_WSDL, new Object[] {wsdlUrl,
+                        request.getRequestURL() + (queryString == null ? "" : ("?" + queryString))});
                 }
             } catch (Exception e) {
-                String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
-                logger.log(Level.INFO, msg, e);
+                String msg = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.FAILURE_SERVING_WSDL), webService.getName());
+                LOG.log(Level.INFO, msg, e);
             } finally {
                 if (is != null) {
                     try {
@@ -226,9 +274,9 @@ public class WsUtil {
         }
 
         if (!success) {
-            String message = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.INVALID_WSDL_REQUEST),
+            String message = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.INVALID_WSDL_REQUEST),
                     request.getRequestURL() + (queryString != null ? ("?" + queryString) : ""), webService.getName());
-            logger.info(message);
+            LOG.info(message);
 
             writeInvalidMethodType(response, message);
         }
@@ -280,8 +328,8 @@ public class WsUtil {
      *
      * @param schemaRelativeImports outupt param in which schema relative imports will be added
      */
-    private void parseRelativeImports(URL wsdlFileUrl, Collection wsdlRelativeImports, Collection wsdlIncludes, Collection schemaRelativeImports,
-            Collection schemaIncludes) {
+    private void parseRelativeImports(URL wsdlFileUrl, Collection<Import> wsdlRelativeImports,
+        Collection<Import> wsdlIncludes, Collection<Import> schemaRelativeImports, Collection<Import> schemaIncludes) {
         // We will use our little parser rather than using JAXRPC's heavy weight WSDL parser
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
@@ -291,7 +339,7 @@ public class WsUtil {
         try {
             factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         } catch (ParserConfigurationException pce) {
-            logger.log(Level.FINE, LogUtils.PARSER_UNSUPPORTED_FEATURE,
+            LOG.log(Level.FINE, LogUtils.PARSER_UNSUPPORTED_FEATURE,
                     new Object[] { factory.getClass().getName(), "http://apache.org/xml/features/disallow-doctype-decl" });
         }
         InputStream is = null;
@@ -305,15 +353,15 @@ public class WsUtil {
             procesWsdlIncludes(document, wsdlIncludes);
         } catch (SAXParseException spe) {
             // Error generated by the parser
-            logger.log(Level.SEVERE, LogUtils.PARSING_ERROR, new Object[] { spe.getLineNumber(), spe.getSystemId() });
+            LOG.log(Level.SEVERE, LogUtils.PARSING_ERROR, new Object[] { spe.getLineNumber(), spe.getSystemId() });
             // Use the contained exception, if any
             Exception x = spe;
             if (spe.getException() != null) {
                 x = spe.getException();
             }
-            logger.log(Level.SEVERE, LogUtils.ERROR_OCCURED, x);
+            LOG.log(Level.SEVERE, LogUtils.ERROR_OCCURED, x);
         } catch (Exception sxe) {
-            logger.log(Level.SEVERE, LogUtils.WSDL_PARSING_ERROR, sxe);
+            LOG.log(Level.SEVERE, LogUtils.WSDL_PARSING_ERROR, sxe);
         } finally {
             try {
                 if (is != null) {
@@ -324,8 +372,7 @@ public class WsUtil {
         }
     }
 
-    private void addImportsAndIncludes(NodeList list, Collection result, String namespace, String location)
-            throws SAXException, ParserConfigurationException, IOException, SAXParseException {
+    private void addImportsAndIncludes(NodeList list, Collection<Import> result, String namespace, String location) {
         for (int i = 0; i < list.getLength(); i++) {
             String givenLocation = null;
             Node element = list.item(i);
@@ -334,7 +381,7 @@ public class WsUtil {
             if (n != null) {
                 givenLocation = n.getNodeValue();
             }
-            if ((givenLocation == null) || (givenLocation.startsWith("http"))) {
+            if (givenLocation == null || givenLocation.startsWith("http")) {
                 continue;
             }
             Import imp = new Import();
@@ -350,30 +397,35 @@ public class WsUtil {
         return;
     }
 
-    private void procesSchemaImports(Document document, Collection schemaImportCollection) throws SAXException, ParserConfigurationException, IOException {
+
+    private void procesSchemaImports(Document document, Collection<Import> schemaImportCollection) {
         NodeList schemaImports = document.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "import");
         addImportsAndIncludes(schemaImports, schemaImportCollection, "namespace", "schemaLocation");
     }
 
-    private void procesWsdlImports(Document document, Collection wsdlImportCollection) throws SAXException, ParserConfigurationException, IOException {
+
+    private void procesWsdlImports(Document document, Collection<Import> wsdlImportCollection) {
         NodeList wsdlImports = document.getElementsByTagNameNS("http://schemas.xmlsoap.org/wsdl/", "import");
         addImportsAndIncludes(wsdlImports, wsdlImportCollection, "namespace", "location");
     }
 
-    private void procesSchemaIncludes(Document document, Collection schemaIncludeCollection) throws SAXException, ParserConfigurationException, IOException {
+
+    private void procesSchemaIncludes(Document document, Collection<Import> schemaIncludeCollection) {
         NodeList schemaIncludes = document.getElementsByTagNameNS("http://www.w3.org/2001/XMLSchema", "include");
         addImportsAndIncludes(schemaIncludes, schemaIncludeCollection, null, "schemaLocation");
     }
 
-    private void procesWsdlIncludes(Document document, Collection wsdlIncludesCollection) throws SAXException, ParserConfigurationException, IOException {
+
+    private void procesWsdlIncludes(Document document, Collection<Import> wsdlIncludesCollection) {
         NodeList wsdlIncludes = document.getElementsByTagNameNS("http://schemas.xmlsoap.org/wsdl/", "include");
         addImportsAndIncludes(wsdlIncludes, wsdlIncludesCollection, null, "location");
     }
 
+
     /**
-     * Transform the deployed WSDL document for a given webservice by replacing the ENDPOINT ADDRESS for each port with the
+     * Transform the deployed WSDL document for a given webservice by replacing the ENDPOINT ADDRESS
+     * for each port with the
      * actual endpoint address on which it will be listening.
-     *
      */
     public void generateFinalWsdl(URL wsdlFileUrl, WebService webService, WebServerInfo wsi, File finalWsdlFile) throws Exception {
         OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(finalWsdlFile));
@@ -383,15 +435,15 @@ public class WsUtil {
 
     public void generateFinalWsdl(URL wsdlFileUrl, WebService webService, WebServerInfo wsi, OutputStream outputStream) throws Exception {
 
-        Collection wsdlRelativeImports = new HashSet();
-        Collection wsdlIncludes = new HashSet();
-        Collection schemaRelativeImports = new HashSet();
-        Collection schemaIncludes = new HashSet();
+        Collection<Import> wsdlRelativeImports = new HashSet<>();
+        Collection<Import> wsdlIncludes = new HashSet<>();
+        Collection<Import> schemaRelativeImports = new HashSet<>();
+        Collection<Import> schemaIncludes = new HashSet<>();
         if (webService.hasUrlPublishing()) {
             parseRelativeImports(wsdlFileUrl, wsdlRelativeImports, wsdlIncludes, schemaRelativeImports, schemaIncludes);
         }
 
-        Collection endpoints = webService.getEndpoints();
+        Collection<WebServiceEndpoint> endpoints = webService.getEndpoints();
 
         // a WSDL file can contain several ports associated to a service.
         // however Deployment descriptors can be expressed in two ways
@@ -403,24 +455,24 @@ public class WsUtil {
         // endpoint information and the JAXRPC stubs generated correctly.
         // So we need to check if this bundle is declaring more webservice
         // descriptor pointing to the same WSDL file...
-        Collection endpointsCopy = new ArrayList();
+        Collection<WebServiceEndpoint> endpointsCopy = new ArrayList<>();
         endpointsCopy.addAll(endpoints);
 
         BundleDescriptor bundle = webService.getBundleDescriptor();
         WebServicesDescriptor wsd = bundle.getWebServices();
-        Collection webServices = wsd.getWebServices();
+        Collection<WebService> webServices = wsd.getWebServices();
         if (webServices.size() > 1) {
-            for (Iterator wsIter = webServices.iterator(); wsIter.hasNext();) {
-                WebService aWS = (WebService) wsIter.next();
+            for (WebService aWS : webServices) {
                 if (webService.getName().equals(aWS.getName())) {
                     continue;
                 }
                 // this is another web service defined in the same bundle.
                 // let's check if it points to the same WSDL file
-                if ((webService.getWsdlFileUri() != null) && (aWS.getWsdlFileUri() != null) && (webService.getWsdlFileUri().equals(aWS.getWsdlFileUri()))) {
+                if (webService.getWsdlFileUri() != null && aWS.getWsdlFileUri() != null
+                    && webService.getWsdlFileUri().equals(aWS.getWsdlFileUri())) {
                     endpointsCopy.addAll(aWS.getEndpoints());
-                } else if ((webService.getWsdlFileUrl() != null) && (aWS.getWsdlFileUrl() != null)
-                        && ((webService.getWsdlFileUrl().toString()).equals(aWS.getWsdlFileUrl().toString()))) {
+                } else if (webService.getWsdlFileUrl() != null && aWS.getWsdlFileUrl() != null
+                    && webService.getWsdlFileUrl().toString().equals(aWS.getWsdlFileUrl().toString())) {
                     endpointsCopy.addAll(aWS.getEndpoints());
                 }
             }
@@ -442,8 +494,7 @@ public class WsUtil {
         URL finalWsdlUrl = endpointForImport.composeFinalWsdlUrl(root);
 
         int wsdlImportNum = 0;
-        for (Iterator iter = wsdlRelativeImports.iterator(); iter.hasNext();) {
-            Import next = (Import) iter.next();
+        for (Import next : wsdlRelativeImports) {
             transformer.setParameter(WSDL_IMPORT_NAMESPACE_PARAM_NAME + wsdlImportNum, next.getNamespace());
 
             // Convert each relative import into an absolute import, using
@@ -455,8 +506,7 @@ public class WsUtil {
         }
 
         int schemaImportNum = 0;
-        for (Iterator iter = schemaRelativeImports.iterator(); iter.hasNext();) {
-            Import next = (Import) iter.next();
+        for (Import next : schemaRelativeImports) {
             transformer.setParameter(SCHEMA_IMPORT_NAMESPACE_PARAM_NAME + schemaImportNum, next.getNamespace());
 
             // Convert each relative import into an absolute import, using
@@ -468,24 +518,21 @@ public class WsUtil {
         }
 
         int wsdlIncludeNum = 0;
-        for (Iterator iter = wsdlIncludes.iterator(); iter.hasNext();) {
-            Import next = (Import) iter.next();
+        for (Import next : wsdlIncludes) {
             URL relativeUrl = new URL(finalWsdlUrl, next.getLocation());
             transformer.setParameter(WSDL_INCLUDE_LOCATION_PARAM_NAME + wsdlIncludeNum, relativeUrl);
             wsdlIncludeNum++;
         }
 
         int schemaIncludeNum = 0;
-        for (Iterator iter = schemaIncludes.iterator(); iter.hasNext();) {
-            Import next = (Import) iter.next();
+        for (Import next : schemaIncludes) {
             URL relativeUrl = new URL(finalWsdlUrl, next.getLocation());
             transformer.setParameter(SCHEMA_INCLUDE_LOCATION_PARAM_NAME + schemaIncludeNum, relativeUrl);
             schemaIncludeNum++;
         }
 
         int endpointNum = 0;
-        for (Iterator iter = endpointsCopy.iterator(); iter.hasNext();) {
-            WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
+        for (WebServiceEndpoint next : endpointsCopy) {
 
             // Get a URL for the root of the webserver, where the host portion
             // is a canonical host name. Since this will be used to compose the
@@ -501,7 +548,7 @@ public class WsUtil {
             transformer.setParameter(ENDPOINT_ADDRESS_PARAM_NAME + endpointNum, actualAddress.toExternalForm());
 
             String endpointType = next.implementedByEjbComponent() ? "EJB" : "Servlet";
-            logger.log(Level.INFO, LogUtils.ENDPOINT_REGISTRATION, new Object[] { "[" + endpointType + "] " + next.getEndpointName(), actualAddress });
+            LOG.log(Level.INFO, LogUtils.ENDPOINT_REGISTRATION, new Object[] { "[" + endpointType + "] " + next.getEndpointName(), actualAddress });
 
             endpointNum++;
         }
@@ -521,6 +568,7 @@ public class WsUtil {
         try {
             final ServiceReferenceDescriptor serviceRef = desc;
             wsdlFileURL = (URL) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
+                @Override
                 public java.lang.Object run() throws Exception {
                     URL retVal;
                     if (serviceRef.hasWsdlOverride()) {
@@ -577,7 +625,7 @@ public class WsUtil {
                 }
             });
         } catch (PrivilegedActionException pae) {
-            logger.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
+            LOG.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
             Exception e = new Exception();
             e.initCause(pae.getCause());
             throw e;
@@ -588,9 +636,9 @@ public class WsUtil {
     /**
      * Create an xslt template for transforming the packaged webservice WSDL to a final WSDL.
      */
-    private Templates createTemplatesFor(Collection endpoints, Collection wsdlRelativeImports, Collection wsdlIncludes, Collection schemaRelativeImports,
-            Collection schemaIncludes) throws Exception {
-
+    private Templates createTemplatesFor(Collection<WebServiceEndpoint> endpoints,
+        Collection<Import> wsdlRelativeImports, Collection<Import> wsdlIncludes,
+        Collection<Import> schemaRelativeImports, Collection<Import> schemaIncludes) throws Exception {
         // create the stylesheet
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(bos, "UTF-8");
@@ -599,9 +647,7 @@ public class WsUtil {
                 "<xsl:transform version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:wsdl=\"http://schemas.xmlsoap.org/wsdl/\" xmlns:soap=\"http://schemas.xmlsoap.org/wsdl/soap/\" xmlns:soap12=\"http://schemas.xmlsoap.org/wsdl/soap12/\">\n");
 
         int wsdlImportNum = 0;
-        for (Iterator iter = wsdlRelativeImports.iterator(); iter.hasNext();) {
-
-            Import next = (Import) iter.next();
+        for (Import next : wsdlRelativeImports) {
             String importNamespaceParam = WSDL_IMPORT_NAMESPACE_PARAM_NAME + wsdlImportNum;
             String importLocationParam = WSDL_IMPORT_LOCATION_PARAM_NAME + wsdlImportNum;
             writer.write("<xsl:param name=\"" + importNamespaceParam + "\"/>\n");
@@ -622,9 +668,7 @@ public class WsUtil {
         }
 
         int wsdlIncludeNum = 0;
-        for (Iterator iter = wsdlIncludes.iterator(); iter.hasNext();) {
-
-            Import next = (Import) iter.next();
+        for (Import next : wsdlIncludes) {
             String importLocationParam = WSDL_INCLUDE_LOCATION_PARAM_NAME + wsdlIncludeNum;
             writer.write("<xsl:param name=\"" + importLocationParam + "\"/>\n");
 
@@ -641,9 +685,7 @@ public class WsUtil {
         }
 
         int schemaImportNum = 0;
-        for (Iterator iter = schemaRelativeImports.iterator(); iter.hasNext();) {
-
-            Import next = (Import) iter.next();
+        for (Import next : schemaRelativeImports) {
             String importNamespaceParam = SCHEMA_IMPORT_NAMESPACE_PARAM_NAME + schemaImportNum;
             String importLocationParam = SCHEMA_IMPORT_LOCATION_PARAM_NAME + schemaImportNum;
             writer.write("<xsl:param name=\"" + importNamespaceParam + "\"/>\n");
@@ -664,9 +706,7 @@ public class WsUtil {
         }
 
         int schemaIncludeNum = 0;
-        for (Iterator iter = schemaIncludes.iterator(); iter.hasNext();) {
-
-            Import next = (Import) iter.next();
+        for (Import next : schemaIncludes) {
             String importLocationParam = SCHEMA_INCLUDE_LOCATION_PARAM_NAME + schemaIncludeNum;
             writer.write("<xsl:param name=\"" + importLocationParam + "\"/>\n");
 
@@ -683,9 +723,7 @@ public class WsUtil {
         }
 
         int endpointNum = 0;
-        for (Iterator iter = endpoints.iterator(); iter.hasNext();) {
-            WebServiceEndpoint endpoint = (WebServiceEndpoint) iter.next();
-
+        for (WebServiceEndpoint endpoint : endpoints) {
             if (!endpoint.hasWsdlPort()) {
                 throw new Exception("No WSDL port specified for endpoint " + endpoint.getEndpointName());
             }
@@ -719,8 +757,8 @@ public class WsUtil {
         writer.close();
         byte[] stylesheet = bos.toByteArray();
 
-        if (logger.isLoggable(Level.FINE)) {
-            logger.fine(new String(stylesheet));
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.fine(new String(stylesheet));
         }
 
         Source stylesheetSource = new StreamSource(new ByteArrayInputStream(stylesheet));
@@ -730,29 +768,13 @@ public class WsUtil {
         return templates;
     }
 
-    /* *//**
-          * Called from client side deployment object on receipt of final wsdl from server.
-          *
-          * @param clientPublishUrl Url of directory on local file system to which wsdl is published
-          *
-          * @param finalWsdlUri location relative to publish directory where final wsdl should be written, in uri form.
-          *
-          * @return file to which final wsdl was written
-          *//*
-             * public File publishFinalWsdl(URL clientPublishUrl, String finalWsdlUri, byte[] finalWsdlBytes) throws Exception {
-             * File finalWsdlFile = null; FileOutputStream fos = null; try { finalWsdlFile = new File (clientPublishUrl.getFile(),
-             * finalWsdlUri.replace('/', File.separatorChar)); File parent = finalWsdlFile.getParentFile(); if( !parent.exists() ) {
-             * boolean madeDirs = parent.mkdirs(); if( !madeDirs ) { throw new IOException("Error creating " + parent); } } fos =
-             * new FileOutputStream(finalWsdlFile); fos.write(finalWsdlBytes, 0, finalWsdlBytes.length); } finally { if( fos != null
-             * ) { try { fos.close(); } catch(IOException ioe) { logger.log(Level.INFO, "", ioe); } } } return finalWsdlFile; }
-             */
 
     private static void putHeaders(MimeHeaders headers, HttpServletResponse response) {
         headers.removeHeader("Content-Type");
         headers.removeHeader("Content-Length");
-        Iterator it = headers.getAllHeaders();
+        Iterator<MimeHeader> it = headers.getAllHeaders();
         while (it.hasNext()) {
-            MimeHeader header = (MimeHeader) it.next();
+            MimeHeader header = it.next();
             response.setHeader(header.getName(), header.getValue());
         }
     }
@@ -767,7 +789,7 @@ public class WsUtil {
                 PrintWriter writer = new PrintWriter(resp.getOutputStream());
                 writer.println("<error>" + faultString + "</error>");
             } catch (IOException ioe) {
-                logger.log(Level.WARNING, LogUtils.CANNOT_WRITE_HTTPXML, ioe.getMessage());
+                LOG.log(Level.WARNING, LogUtils.CANNOT_WRITE_HTTPXML, ioe.getMessage());
             }
         } else {
             String protocol;
@@ -783,7 +805,7 @@ public class WsUtil {
                 try {
                     fault.writeTo(resp.getOutputStream());
                 } catch (Exception ex) {
-                    logger.log(Level.WARNING, LogUtils.CANNOT_WRITE_SOAPFAULT, ex);
+                    LOG.log(Level.WARNING, LogUtils.CANNOT_WRITE_SOAPFAULT, ex);
                 }
             }
         }
@@ -809,7 +831,7 @@ public class WsUtil {
             fault.setFaultCode(faultCode);
             return message;
         } catch (SOAPException e) {
-            logger.log(Level.WARNING, LogUtils.CANNOT_CREATE_SOAPFAULT, faultString);
+            LOG.log(Level.WARNING, LogUtils.CANNOT_CREATE_SOAPFAULT, faultString);
         }
         return null;
     }
@@ -874,15 +896,13 @@ public class WsUtil {
     }
 
     MimeHeaders getHeaders(HttpServletRequest request) {
-        Enumeration e = request.getHeaderNames();
+        Enumeration<String> e = request.getHeaderNames();
         MimeHeaders headers = new MimeHeaders();
-
         while (e.hasMoreElements()) {
-            String headerName = (String) e.nextElement();
+            String headerName = e.nextElement();
             String headerValue = request.getHeader(headerName);
             headers.addHeader(headerName, headerValue);
         }
-
         return headers;
     }
 
@@ -890,7 +910,7 @@ public class WsUtil {
         WebServerInfo wsi = new WebServerInfo();
 
         if (this.networkListeners == null) {
-            List<Integer> adminPorts = new ArrayList<Integer>();
+            List<Integer> adminPorts = new ArrayList<>();
 
             for (org.glassfish.api.container.Adapter subAdapter : WebServiceContractImpl.getInstance().getAdapters()) {
                 if (subAdapter instanceof AdminAdapter) {
@@ -905,8 +925,9 @@ public class WsUtil {
             for (NetworkListener nl : config.getNetworkConfig().getNetworkListeners().getNetworkListener()) {
 
                 if (!adminPorts.contains(Integer.valueOf(nl.getPort()))) { // get rid of admin ports
-                    if (networkListeners == null)
-                        networkListeners = new ArrayList<NetworkListener>();
+                    if (networkListeners == null) {
+                        networkListeners = new ArrayList<>();
+                    }
 
                     networkListeners.add(nl);
                 }
@@ -917,17 +938,19 @@ public class WsUtil {
         if ((networkListeners != null) && (!networkListeners.isEmpty())) {
             for (NetworkListener listener : networkListeners) {
                 String host = listener.getAddress();
-                if (listener.getAddress().equals("0.0.0.0"))
+                if (listener.getAddress().equals("0.0.0.0")) {
                     try {
                         host = InetAddress.getLocalHost().getHostName();
                     } catch (UnknownHostException e) {
                         host = "localhost"; // fallback
                     }
+                }
 
-                if (listener.findHttpProtocol().getSecurityEnabled().equals("false"))
+                if (listener.findHttpProtocol().getSecurityEnabled().equals("false")) {
                     wsi.setHttpVS(new VirtualServerInfo("http", host, Integer.parseInt(listener.getPort())));
-                else if (listener.findHttpProtocol().getSecurityEnabled().equals("true"))
+                } else if (listener.findHttpProtocol().getSecurityEnabled().equals("true")) {
                     wsi.setHttpsVS(new VirtualServerInfo("https", host, Integer.parseInt(listener.getPort())));
+                }
             }
         } else {
             wsi.setHttpVS(new VirtualServerInfo("http", "localhost", 0));
@@ -936,25 +959,25 @@ public class WsUtil {
         return wsi;
     }
 
+
     /**
      * @return the default Logger implementation for this package
      */
     public static Logger getDefaultLogger() {
-        return logger;
+        return LOG;
     }
 
-    // resources...
-    static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(WsUtil.class);
 
     public static LocalStringManagerImpl getDefaultStringManager() {
-        return localStrings;
+        return I18N;
     }
+
 
     public void validateEjbEndpoint(WebServiceEndpoint ejbEndpoint) {
         EjbDescriptor ejbDescriptor = ejbEndpoint.getEjbComponentImpl();
         BundleDescriptor bundle = ejbDescriptor.getEjbBundleDescriptor();
         WebServicesDescriptor webServices = bundle.getWebServices();
-        Collection endpoints = webServices.getEndpointsImplementedBy(ejbDescriptor);
+        Collection<WebServiceEndpoint> endpoints = webServices.getEndpointsImplementedBy(ejbDescriptor);
         if (endpoints.size() == 1) {
             if (ejbDescriptor.hasWebServiceEndpointInterface()) {
                 if (!ejbEndpoint.getServiceEndpointInterface().equals(ejbDescriptor.getWebServiceEndpointInterfaceName())) {
@@ -980,11 +1003,11 @@ public class WsUtil {
         // replaced with the name of the container's servlet class.
         endpoint.saveServletImplClass();
 
-        WebComponentDescriptor webComp = (WebComponentDescriptor) endpoint.getWebComponentImpl();
+        WebComponentDescriptor webComp = endpoint.getWebComponentImpl();
 
         WebBundleDescriptor bundle = webComp.getWebBundleDescriptor();
         WebServicesDescriptor webServices = bundle.getWebServices();
-        Collection endpoints = webServices.getEndpointsImplementedBy(webComp);
+        Collection<WebServiceEndpoint> endpoints = webServices.getEndpointsImplementedBy(webComp);
 
         if (endpoints.size() > 1) {
             String msg = "Servlet " + endpoint.getWebComponentLink() + " implements " + endpoints.size() + " web service endpoints "
@@ -993,61 +1016,45 @@ public class WsUtil {
         }
 
         if (endpoint.getEndpointAddressUri() == null) {
-            Set urlPatterns = webComp.getUrlPatternsSet();
-            if (urlPatterns.size() == 1) {
-
-                // Set endpoint-address-uri runtime info to uri.
-                // Final endpoint address will still be relative to context roo
-
-                String uri = (String) urlPatterns.iterator().next();
-                endpoint.setEndpointAddressUri(uri);
-
-                // Set transport guarantee in runtime info if transport
-                // guarantee is INTEGRAL or CONDIFIDENTIAL for any
-                // security constraint with this url-pattern.
-                Collection constraints = bundle.getSecurityConstraintsForUrlPattern(uri);
-                for (Iterator i = constraints.iterator(); i.hasNext();) {
-                    SecurityConstraint next = (SecurityConstraint) i.next();
-
-                    UserDataConstraint dataConstraint = next.getUserDataConstraint();
-                    String guarantee = (dataConstraint != null) ? dataConstraint.getTransportGuarantee() : null;
-
-                    if ((guarantee != null)
-                            && (guarantee.equals(UserDataConstraint.INTEGRAL_TRANSPORT) || guarantee.equals(UserDataConstraint.CONFIDENTIAL_TRANSPORT))) {
-                        endpoint.setTransportGuarantee(guarantee);
-                        break;
-                    }
-                }
-            } else {
-                String msg = "Endpoint " + endpoint.getEndpointName() + " has not been assigned an endpoint address " + " and is associated with servlet "
-                        + webComp.getCanonicalName() + " , which has " + urlPatterns.size() + " url patterns";
+            Set<String> urlPatterns = webComp.getUrlPatternsSet();
+            if (urlPatterns.size() != 1) {
+                String msg = "Endpoint " + endpoint.getEndpointName() + " has not been assigned an endpoint address "
+                    + " and is associated with servlet " + webComp.getCanonicalName() + " , which has "
+                    + urlPatterns.size() + " url patterns";
                 throw new IllegalStateException(msg);
+            }
+            String uri = urlPatterns.iterator().next();
+            endpoint.setEndpointAddressUri(uri);
+
+            // Set transport guarantee in runtime info if transport
+            // guarantee is INTEGRAL or CONDIFIDENTIAL for any
+            // security constraint with this url-pattern.
+            Collection<SecurityConstraint> constraints = bundle.getSecurityConstraintsForUrlPattern(uri);
+            for (SecurityConstraint next : constraints) {
+                UserDataConstraint dataConstraint = next.getUserDataConstraint();
+                String guarantee = (dataConstraint != null) ? dataConstraint.getTransportGuarantee() : null;
+                if (UserDataConstraint.INTEGRAL_TRANSPORT.equals(guarantee)
+                    || UserDataConstraint.CONFIDENTIAL_TRANSPORT.equals(guarantee)) {
+                    endpoint.setTransportGuarantee(guarantee);
+                    break;
+                }
             }
         }
     }
 
-    /*
-     * public void downloadFile(URL httpUrl, File toFile) throws Exception { InputStream is = null; FileOutputStream os =
-     * null; try { if(!toFile.createNewFile()) { throw new Exception("Unable to create new File " +
-     * toFile.getAbsolutePath()); } is = httpUrl.openStream();
-     *
-     * os = new FileOutputStream(toFile, true); int readCount; byte[] buffer = new byte[10240]; // Read 10KB at a time
-     * while(true) { readCount = is.read(buffer, 0, 10240); if(readCount != -1) { os.write(buffer, 0, readCount); } else {
-     * break; } } } finally { if(is != null) { is.close(); } if(os != null) { os.flush(); os.close(); } } }
-     */
 
     public Collection getWsdlsAndSchemas(File pkgedWsdl) throws Exception {
 
-        ArrayList<SDDocumentSource> cumulative = new ArrayList<SDDocumentSource>();
+        ArrayList<SDDocumentSource> cumulative = new ArrayList<>();
         getWsdlsAndSchemas(pkgedWsdl, cumulative);
 
         // if there are circular imports of wsdls, the original wsdl might
         // be in this Collection of imported metadata documents. If so, remove it.
-        URL id = pkgedWsdl.toURL();
+        URL id = pkgedWsdl.toURI().toURL();
         SDDocumentSource toRemove = null;
 
         for (SDDocumentSource source : cumulative) {
-            if ((id.toString()).equals(source.getSystemId().toString())) {
+            if (id.toString().equals(source.getSystemId().toString())) {
                 toRemove = source;
             }
         }
@@ -1066,9 +1073,9 @@ public class WsUtil {
      * @return
      * @throws Exception
      */
-    public Collection getWsdlsAndSchemas(URL pkgedWsdl) throws Exception {
+    public Collection<SDDocumentSource> getWsdlsAndSchemas(URL pkgedWsdl) throws Exception {
 
-        ArrayList<SDDocumentSource> cumulative = new ArrayList<SDDocumentSource>();
+        ArrayList<SDDocumentSource> cumulative = new ArrayList<>();
         getWsdlsAndSchemas(pkgedWsdl, cumulative);
 
         // if there are circular imports of wsdls, the original wsdl might
@@ -1090,10 +1097,10 @@ public class WsUtil {
     private void getWsdlsAndSchemas(URL wsdlRoot, ArrayList<SDDocumentSource> cumulative) throws Exception {
 
         // Get a list of wsdl and schema relative imports in this wsdl
-        Collection<Import> wsdlRelativeImports = new HashSet();
-        Collection<Import> schemaRelativeImports = new HashSet();
-        Collection<Import> wsdlIncludes = new HashSet();
-        Collection<Import> schemaIncludes = new HashSet();
+        Collection<Import> wsdlRelativeImports = new HashSet<>();
+        Collection<Import> schemaRelativeImports = new HashSet<>();
+        Collection<Import> wsdlIncludes = new HashSet<>();
+        Collection<Import> schemaIncludes = new HashSet<>();
 
         parseRelativeImports(wsdlRoot, wsdlRelativeImports, wsdlIncludes, schemaRelativeImports, schemaIncludes);
 
@@ -1135,13 +1142,13 @@ public class WsUtil {
     public void getWsdlsAndSchemas(File wsdl, ArrayList<SDDocumentSource> cumulative) throws Exception {
 
         // Get a list of wsdl and schema relative imports in this wsdl
-        Collection<Import> wsdlRelativeImports = new HashSet();
-        Collection<Import> schemaRelativeImports = new HashSet();
-        Collection<Import> wsdlIncludes = new HashSet();
-        Collection<Import> schemaIncludes = new HashSet();
+        Collection<Import> wsdlRelativeImports = new HashSet<>();
+        Collection<Import> schemaRelativeImports = new HashSet<>();
+        Collection<Import> wsdlIncludes = new HashSet<>();
+        Collection<Import> schemaIncludes = new HashSet<>();
         String wsdlRoot = wsdl.getParent();
 
-        parseRelativeImports(wsdl.toURL(), wsdlRelativeImports, wsdlIncludes, schemaRelativeImports, schemaIncludes);
+        parseRelativeImports(wsdl.toURI().toURL(), wsdlRelativeImports, wsdlIncludes, schemaRelativeImports, schemaIncludes);
 
         wsdlRelativeImports.addAll(wsdlIncludes);
         schemaRelativeImports.addAll(schemaIncludes);
@@ -1177,11 +1184,11 @@ public class WsUtil {
         }
 
         // make sure we have not processed this file before
-        URL id = file.toURL();
+        URL id = file.toURI().toURL();
         boolean alreadyProcessed = false;
 
         for (SDDocumentSource source : cumulative) {
-            if ((id.toString()).equals(source.getSystemId().toString())) {
+            if (id.toString().equals(source.getSystemId().toString())) {
                 alreadyProcessed = true;
                 break;
             }
@@ -1193,41 +1200,42 @@ public class WsUtil {
 
     }
 
-    /*
+    /**
      * Calls @PostConstruct method in the implementor
      */
     public void doPostConstruct(Class impl, Object implObj) {
         invokeServiceMethod(jakarta.annotation.PostConstruct.class, impl, implObj);
     }
 
-    /*
+    /**
      * Calls @PreDestroy method in the implementor
      */
     public void doPreDestroy(WebServiceEndpoint ep, ClassLoader loader) {
         // Call @PreDestroy in endpoint, if any
         try {
-            Class impl = Class.forName(ep.getServletImplClass(), true, loader);
-            invokeServiceMethod(jakarta.annotation.PreDestroy.class, impl, impl.newInstance());
+            Class<?> impl = Class.forName(ep.getServletImplClass(), true, loader);
+            invokeServiceMethod(jakarta.annotation.PreDestroy.class, impl, impl.getDeclaredConstructor().newInstance());
         } catch (Throwable ex) {
-            String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.CLASS_NOT_FOUND_IN_PREDESTROY), ep.getServletImplClass());
-            logger.log(Level.SEVERE, msg, ex);
+            String msg = MessageFormat.format(
+                LOG.getResourceBundle().getString(LogUtils.CLASS_NOT_FOUND_IN_PREDESTROY), ep.getServletImplClass());
+            LOG.log(Level.SEVERE, msg, ex);
         }
 
         // Call @PreDestroy in the handlers if any
         if (!ep.hasHandlerChain()) {
             return;
         }
-        for (Iterator<WebServiceHandlerChain> hc = ep.getHandlerChain().iterator(); hc.hasNext();) {
-            WebServiceHandlerChain thisHc = hc.next();
-            for (Iterator<WebServiceHandler> h = thisHc.getHandlers().iterator(); h.hasNext();) {
-                WebServiceHandler thisHandler = h.next();
+        for (WebServiceHandlerChain thisHc : ep.getHandlerChain()) {
+            for (WebServiceHandler thisHandler : thisHc.getHandlers()) {
                 try {
-                    Class handlerClass = Class.forName(thisHandler.getHandlerClass(), true, loader);
-                    invokeServiceMethod(jakarta.annotation.PreDestroy.class, handlerClass, handlerClass.newInstance());
+                    Class<?> handlerClass = Class.forName(thisHandler.getHandlerClass(), true, loader);
+                    invokeServiceMethod(jakarta.annotation.PreDestroy.class, handlerClass,
+                        handlerClass.getDeclaredConstructor().newInstance());
                 } catch (Throwable ex) {
-                    String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.HANDLER_NOT_FOUND_IN_PREDESTROY),
-                            thisHandler.getHandlerClass());
-                    logger.log(Level.SEVERE, msg, ex);
+                    String msg = MessageFormat.format(
+                        LOG.getResourceBundle().getString(LogUtils.HANDLER_NOT_FOUND_IN_PREDESTROY),
+                        thisHandler.getHandlerClass());
+                    LOG.log(Level.SEVERE, msg, ex);
                 }
             }
         }
@@ -1244,6 +1252,7 @@ public class WsUtil {
             if (method.getAnnotation(annType) != null) {
                 try {
                     AccessController.doPrivileged(new PrivilegedExceptionAction() {
+                        @Override
                         public Object run() throws IllegalAccessException, InvocationTargetException {
                             if (!method.isAccessible()) {
                                 method.setAccessible(true);
@@ -1254,7 +1263,7 @@ public class WsUtil {
                     });
                 } catch (Throwable e) {
                     // Should we log or throw an exception
-                    logger.log(Level.SEVERE, LogUtils.FAILURE_CALLING_POST_PRE, e);
+                    LOG.log(Level.SEVERE, LogUtils.FAILURE_CALLING_POST_PRE, e);
                 }
                 break;
             }
@@ -1293,42 +1302,42 @@ public class WsUtil {
         if (hc.getProtocolBindings() != null && bindingId != null) {
             String givenBindings = hc.getProtocolBindings();
             if ((bindingId.equals(HTTPBinding.HTTP_BINDING))
-                    && ((givenBindings.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (givenBindings.indexOf(WebServiceEndpoint.XML_TOKEN) != -1))) {
+                    && ((givenBindings.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (givenBindings.indexOf(XML_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP11HTTP_BINDING))
-                    && ((givenBindings.indexOf(SOAPBinding.SOAP11HTTP_BINDING) != -1) || (givenBindings.indexOf(WebServiceEndpoint.SOAP11_TOKEN) != -1))) {
+                    && ((givenBindings.indexOf(SOAPBinding.SOAP11HTTP_BINDING) != -1) || (givenBindings.indexOf(SOAP11_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP12HTTP_BINDING))
-                    && ((givenBindings.indexOf(SOAPBinding.SOAP12HTTP_BINDING) != -1) || (givenBindings.indexOf(WebServiceEndpoint.SOAP12_TOKEN) != -1))) {
+                    && ((givenBindings.indexOf(SOAPBinding.SOAP12HTTP_BINDING) != -1) || (givenBindings.indexOf(SOAP12_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP11HTTP_MTOM_BINDING)) && ((givenBindings.indexOf(SOAPBinding.SOAP11HTTP_MTOM_BINDING) != -1)
-                    || (givenBindings.indexOf(WebServiceEndpoint.SOAP11_MTOM_TOKEN) != -1))) {
+                    || (givenBindings.indexOf(SOAP11_MTOM_TOKEN) != -1))) {
                 return true;
             }
             if ((bindingId.equals(SOAPBinding.SOAP12HTTP_MTOM_BINDING)) && ((givenBindings.indexOf(SOAPBinding.SOAP12HTTP_MTOM_BINDING) != -1)
-                    || (givenBindings.indexOf(WebServiceEndpoint.SOAP12_MTOM_TOKEN) != -1))) {
+                    || (givenBindings.indexOf(SOAP12_MTOM_TOKEN) != -1))) {
                 return true;
             }
         }
         return true;
     }
 
-    private List<Handler> processConfiguredHandlers(List<WebServiceHandler> handlersList, Set<String> roles) {
-        List<Handler> handlerChain = new ArrayList<Handler>();
+    private List<Handler<?>> processConfiguredHandlers(List<WebServiceHandler> handlersList, Set<String> roles) {
+        List<Handler<?>> handlerChain = new ArrayList<>();
         for (WebServiceHandler h : handlersList) {
-            Handler handler = null;
+            Handler<?> handler = null;
 
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             // Get Handler Class instance
-            Class handlerClass;
+            Class<?> handlerClass;
             try {
                 handlerClass = Class.forName(h.getHandlerClass(), true, loader);
             } catch (Throwable t) {
-                String msg = MessageFormat.format(logger.getResourceBundle().getString(LogUtils.HANDLER_UNABLE_TO_ADD), h.getHandlerClass());
-                logger.log(Level.SEVERE, msg, t);
+                String msg = MessageFormat.format(LOG.getResourceBundle().getString(LogUtils.HANDLER_UNABLE_TO_ADD), h.getHandlerClass());
+                LOG.log(Level.SEVERE, msg, t);
 
                 continue;
             }
@@ -1338,9 +1347,9 @@ public class WsUtil {
                 WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
                 InjectionManager injManager = wscImpl.getInjectionManager();
                 // PostConstruct is invoked by createManagedObject as well
-                handler = (Handler) injManager.createManagedObject(handlerClass);
+                handler = (Handler<?>) injManager.createManagedObject(handlerClass);
             } catch (InjectionException e) {
-                logger.log(Level.SEVERE, LogUtils.HANDLER_INJECTION_FAILED, new Object[] { h.getHandlerClass(), e.getMessage() });
+                LOG.log(Level.SEVERE, LogUtils.HANDLER_INJECTION_FAILED, new Object[] { h.getHandlerClass(), e.getMessage() });
                 continue;
             }
 
@@ -1359,11 +1368,10 @@ public class WsUtil {
         if (!ep.hasHandlerChain()) {
             return;
         }
-        LinkedList handlerChainList = ep.getHandlerChain();
-        List<Handler> finalHandlerList = new ArrayList<Handler>();
-        Set<String> roles = new HashSet();
-        for (Iterator<WebServiceHandlerChain> i = handlerChainList.iterator(); i.hasNext();) {
-            WebServiceHandlerChain hc = i.next();
+        LinkedList<WebServiceHandlerChain> handlerChainList = ep.getHandlerChain();
+        List<Handler> finalHandlerList = new ArrayList<>();
+        Set<String> roles = new HashSet<>();
+        for (WebServiceHandlerChain hc : handlerChainList) {
             // Apply the serviceName / portName / bindings filter to ensure
             // that the handlers are for this endpoint
             if (!patternsMatch(hc, ep.getServiceName(), ep.getWsdlPort(), bindingId)) {
@@ -1371,7 +1379,7 @@ public class WsUtil {
             }
             // OK - this handler has to be configured for this endpoint
             // Iterate through all handlers that have been configured
-            List<Handler> handlerInfo = processConfiguredHandlers(hc.getHandlers(), roles);
+            List<Handler<?>> handlerInfo = processConfiguredHandlers(hc.getHandlers(), roles);
             finalHandlerList.addAll(handlerInfo);
         }
         // Processing of all handlers over;
@@ -1389,23 +1397,22 @@ public class WsUtil {
 
         HandlerResolverImpl resolver = new HandlerResolverImpl();
 
-        Set<String> roles = new HashSet();
+        Set<String> roles = new HashSet<>();
 
         Iterator<QName> ports = svcClass.getPorts();
 
         // Set handler chain for each port of this service
         while (ports.hasNext()) {
             QName nextPort = ports.next();
-            LinkedList handlerChainList = desc.getHandlerChain();
-            for (Iterator<WebServiceHandlerChain> i = handlerChainList.iterator(); i.hasNext();) {
-                WebServiceHandlerChain hc = i.next();
+            LinkedList<WebServiceHandlerChain> handlerChainList = desc.getHandlerChain();
+            for (WebServiceHandlerChain hc : handlerChainList) {
                 // Apply the serviceName / portName filter to ensure
                 // that the handlers are for this service and this port
                 if (!patternsMatch(hc, desc.getServiceName(), nextPort, null)) {
                     continue;
                 }
                 // Decide for what all protocols this handler should be applied
-                ArrayList<String> protocols = new ArrayList<String>();
+                ArrayList<String> protocols = new ArrayList<>();
                 if (hc.getProtocolBindings() == null) {
                     // No protocol bindings given in descriptor; apply this handler
                     // for all protocols
@@ -1417,23 +1424,23 @@ public class WsUtil {
                 } else {
                     // protocols specified; handlers are for only these protocols
                     String specifiedProtocols = hc.getProtocolBindings();
-                    if ((specifiedProtocols.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (specifiedProtocols.indexOf(WebServiceEndpoint.XML_TOKEN) != -1)) {
+                    if ((specifiedProtocols.indexOf(HTTPBinding.HTTP_BINDING) != -1) || (specifiedProtocols.indexOf(XML_TOKEN) != -1)) {
                         protocols.add(HTTPBinding.HTTP_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP11HTTP_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP11_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP11_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP11HTTP_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP12HTTP_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP12_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP12_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP12HTTP_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP11HTTP_MTOM_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP11_MTOM_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP11_MTOM_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP11HTTP_MTOM_BINDING);
                     }
                     if ((specifiedProtocols.indexOf(SOAPBinding.SOAP12HTTP_MTOM_BINDING) != -1)
-                            || (specifiedProtocols.indexOf(WebServiceEndpoint.SOAP12_MTOM_TOKEN) != -1)) {
+                            || (specifiedProtocols.indexOf(SOAP12_MTOM_TOKEN) != -1)) {
                         protocols.add(SOAPBinding.SOAP12HTTP_MTOM_BINDING);
                     }
                 }
@@ -1442,18 +1449,18 @@ public class WsUtil {
                 // From this list, remove those handlers that have port-name that is different
                 // than the current port
                 for (WebServiceHandler thisOne : handlersList) {
-                    Collection portNames = thisOne.getPortNames();
+                    Collection<String> portNames = thisOne.getPortNames();
                     if (!portNames.isEmpty() && !portNames.contains(nextPort.getLocalPart())) {
                         handlersList.remove(thisOne);
                     }
                 }
                 // Now you have the handlers that need to be added; process them
-                List<Handler> handlerInfo = processConfiguredHandlers(handlersList, roles);
+                List handlerInfo = processConfiguredHandlers(handlersList, roles);
                 // Now you have the handler list; Set it in resolver;
                 // one set for each protocol
-                for (Iterator<String> s = protocols.iterator(); s.hasNext();) {
+                for (String protocol : protocols) {
                     jakarta.xml.ws.handler.PortInfo portInfo;
-                    portInfo = new PortInfoImpl(BindingID.parse(s.next()), nextPort, desc.getServiceName());
+                    portInfo = new PortInfoImpl(BindingID.parse(protocol), nextPort, desc.getServiceName());
                     resolver.setHandlerChain(portInfo, handlerInfo);
                 }
             }
@@ -1466,7 +1473,7 @@ public class WsUtil {
         // XXX TODO : What to do with soap roles on client side ?
     }
 
-    /*
+    /**
      * This util is to implement the jaxws table that defines how MTOM is set
      *
      * BindingType - enable-mtom in DD - final MTOM value
@@ -1476,13 +1483,15 @@ public class WsUtil {
      */
     public boolean getMtom(WebServiceEndpoint ep) {
         String currentBinding = ep.getProtocolBinding();
-        if ((ep.getMtomEnabled() == null)
-                && (SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(currentBinding) || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(currentBinding))) {
+        if ((ep.getMtomEnabled() == null) && (SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(currentBinding)
+            || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(currentBinding))) {
             return true;
         }
-        if ((Boolean.valueOf(ep.getMtomEnabled())).booleanValue()
-                && (SOAPBinding.SOAP11HTTP_BINDING.equals(currentBinding) || SOAPBinding.SOAP12HTTP_BINDING.equals(currentBinding)
-                        || SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(currentBinding) || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(currentBinding))) {
+        if (Boolean.parseBoolean(ep.getMtomEnabled())
+            && (SOAPBinding.SOAP11HTTP_BINDING.equals(currentBinding)
+                || SOAPBinding.SOAP12HTTP_BINDING.equals(currentBinding)
+                || SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(currentBinding)
+                || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(currentBinding))) {
             return true;
         }
         return false;

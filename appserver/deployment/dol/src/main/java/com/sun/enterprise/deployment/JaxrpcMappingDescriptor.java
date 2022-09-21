@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,15 @@
 
 package com.sun.enterprise.deployment;
 
-import org.glassfish.deployment.common.Descriptor;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import java.util.*;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 /**
  * Holds namespace-to-package mapping information from a
@@ -26,48 +33,79 @@ import java.util.*;
  *
  * @author Kenneth Saks
  */
+public class JaxrpcMappingDescriptor extends RootDeploymentDescriptor {
 
-public class JaxrpcMappingDescriptor extends Descriptor {
-
-    private Map packageToNamespaceUriMap = new HashMap();
-    private Map namespaceUriToPackageMap = new HashMap();
+    private static final long serialVersionUID = 1L;
+    private final Map<String, String> packageToNamespaceUriMap = new HashMap<>();
+    private final Map<String, String> namespaceUriToPackageMap = new HashMap<>();
 
     private boolean simpleMapping = true;
 
-    public JaxrpcMappingDescriptor() {
+    @Override
+    public String getModuleID() {
+        return "";
     }
 
-    public void setSpecVersion(String version) {
-        // ignore
+
+    @Override
+    public String getDefaultSpecVersion() {
+        return "1.0";
     }
+
+
+    @Override
+    public boolean isEmpty() {
+        return namespaceUriToPackageMap.isEmpty();
+    }
+
+
+    @Override
+    public ArchiveType getModuleType() {
+        return null;
+    }
+
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return null;
+    }
+
+
+    @Override
+    public boolean isApplication() {
+        return false;
+    }
+
 
     public void setIsSimpleMapping(boolean flag) {
         simpleMapping = flag;
     }
 
+
     /**
-     * @return true if only mapping info only contains package->namespace
-     * mapping.
+     * @return true if only mapping info only contains package->namespace mapping.
      */
     public boolean isSimpleMapping() {
         return simpleMapping;
     }
+
 
     public void addMapping(String javaPackage, String namespaceUri) {
         packageToNamespaceUriMap.put(javaPackage, namespaceUri);
         namespaceUriToPackageMap.put(namespaceUri, javaPackage);
     }
 
+
     /**
      * @return Collection of Mapping elements
      */
-    public Collection getMappings() {
-        Collection mappings = new HashSet();
-        Iterator nIter = namespaceUriToPackageMap.entrySet().iterator();
-        while(nIter.hasNext()){
-            Map.Entry entry = (Map.Entry) nIter.next();
-            String namespaceUri = (String) entry.getKey();
-            String javaPackage = (String) entry.getValue();
+    public Collection<Mapping> getMappings() {
+        Collection<Mapping> mappings = new HashSet<>();
+        Iterator<Entry<String, String>> nIter = namespaceUriToPackageMap.entrySet().iterator();
+        while (nIter.hasNext()) {
+            Entry<String, String> entry = nIter.next();
+            String namespaceUri = entry.getKey();
+            String javaPackage = entry.getValue();
             Mapping mapping = new Mapping(namespaceUri, javaPackage);
             mappings.add(mapping);
         }
@@ -75,8 +113,8 @@ public class JaxrpcMappingDescriptor extends Descriptor {
     }
 
     public static class Mapping {
-        private String namespaceUri;
-        private String javaPackage;
+        private final String namespaceUri;
+        private final String javaPackage;
 
         public Mapping(String namespace, String thePackage) {
             namespaceUri = namespace;
@@ -91,5 +129,4 @@ public class JaxrpcMappingDescriptor extends Descriptor {
             return javaPackage;
         }
     }
-
 }

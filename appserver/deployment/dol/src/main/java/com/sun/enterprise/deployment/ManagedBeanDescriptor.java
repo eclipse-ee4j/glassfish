@@ -40,6 +40,8 @@ import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
  */
 public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
+    private static final long serialVersionUID = 1L;
+
     // *Optional* managed bean name.  Only non-null if the
     // bean has been assigned a name by the developer.
     // (E.g., via the @ManagedBean name() attribute)
@@ -51,8 +53,8 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     // Module in which managed bean is defined
     private BundleDescriptor enclosingBundle;
 
-    private Object interceptorBuilder = null;
-    private final Collection beanInstances = new HashSet();
+    private Object interceptorBuilder;
+    private final Collection<Object> beanInstances = new HashSet<>();
     private final Map<Object, Object> beanSupportingInfo = new HashMap<>();
 
     private List<InterceptorDescriptor> classInterceptorChain = new LinkedList<>();
@@ -73,9 +75,11 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     private final Map<MethodDescriptor, List<InterceptorDescriptor>> methodInterceptorsMap = new HashMap<>();
 
     /**
-    * Default constructor.
-    */
-    public ManagedBeanDescriptor() {}
+     * Default constructor.
+     */
+    public ManagedBeanDescriptor() {
+    }
+
 
     @Override
     public void setName(String name) {
@@ -117,35 +121,37 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
     public boolean hasInterceptorBuilder() {
-        return (interceptorBuilder != null);
+        return interceptorBuilder != null;
     }
 
 
     public void addBeanInstanceInfo(Object o) {
-         addBeanInstanceInfo(o, null);
-     }
+        addBeanInstanceInfo(o, null);
+    }
+
 
     // InterceptorInfo can be null
     public void addBeanInstanceInfo(Object o, Object supportingInfo) {
         beanInstances.add(o);
-        if( supportingInfo != null ) {
+        if (supportingInfo != null) {
             beanSupportingInfo.put(o, supportingInfo);
         }
     }
 
-    public Collection getBeanInstances() {
+
+    public Collection<Object> getBeanInstances() {
         return new HashSet(beanInstances);
     }
+
 
     public Object getSupportingInfoForBeanInstance(Object o) {
         return beanSupportingInfo.get(o);
     }
 
-    public void clearBeanInstanceInfo(Object beanInstance) {
 
+    public void clearBeanInstanceInfo(Object beanInstance) {
         beanInstances.remove(beanInstance);
         beanSupportingInfo.remove(beanInstance);
-
     }
 
     public void clearAllBeanInstanceInfo() {
@@ -156,40 +162,36 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     public Set<String> getAllInterceptorClasses() {
         Set<String> classes = new HashSet<>();
-
-        for(InterceptorDescriptor desc : classInterceptorChain) {
+        for (InterceptorDescriptor desc : classInterceptorChain) {
             classes.add(desc.getInterceptorClassName());
         }
 
-        for(List intList : methodInterceptorsMap.values()) {
-            for(Object o : intList) {
-                InterceptorDescriptor interceptor = (InterceptorDescriptor) o;
+        for (List<InterceptorDescriptor> intList : methodInterceptorsMap.values()) {
+            for (InterceptorDescriptor interceptor : intList) {
                 classes.add(interceptor.getInterceptorClassName());
             }
         }
-
         return classes;
     }
+
 
     public void setClassInterceptorChain(List<InterceptorDescriptor> chain) {
         classInterceptorChain = new LinkedList<>(chain);
     }
 
+
     public void setMethodLevelInterceptorChain(MethodDescriptor m, List<InterceptorDescriptor> chain) {
-
         methodInterceptorsMap.put(m, chain);
-
     }
 
-     /**
-     * Return the ordered list of AroundConstruct interceptors
+
+    /**
+     * @return the ordered list of AroundConstruct interceptors
      */
     public List<InterceptorDescriptor> getAroundConstructCallbackInterceptors(Class clz, Constructor ctor) {
-        LinkedList<InterceptorDescriptor> callbackInterceptors =
-                new LinkedList<>();
-
-        Class[] ctorParamTypes = ctor.getParameterTypes();
-        String[] parameterClassNames = (new MethodDescriptor()).getParameterClassNamesFor(null, ctorParamTypes);
+        LinkedList<InterceptorDescriptor> callbackInterceptors = new LinkedList<>();
+        Class<?>[] ctorParamTypes = ctor.getParameterTypes();
+        String[] parameterClassNames = new MethodDescriptor().getParameterClassNamesFor(null, ctorParamTypes);
         MethodDescriptor mDesc = new MethodDescriptor(clz.getSimpleName(), null, parameterClassNames, EJB_BEAN);
 
         List<InterceptorDescriptor> interceptors = methodInterceptorsMap.get(mDesc);
@@ -204,20 +206,18 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         }
 
         // There are no bean-level AroundConstruct interceptors
-
         return callbackInterceptors;
     }
 
-     /**
-     * Return the ordered list of interceptor info for a particular
-     * callback event type.  This list *does* include the info
-     * on any bean class callback.  If present, this would always be the
-     * last element in the list because of the precedence defined by the spec.
+
+    /**
+     * @return the ordered list of interceptor info for a particular
+     *         callback event type. This list *does* include the info
+     *         on any bean class callback. If present, this would always be the
+     *         last element in the list because of the precedence defined by the spec.
      */
     public List<InterceptorDescriptor> getCallbackInterceptors(CallbackType type) {
-
-        LinkedList<InterceptorDescriptor> callbackInterceptors =
-                new LinkedList<>();
+        LinkedList<InterceptorDescriptor> callbackInterceptors = new LinkedList<>();
 
         for (InterceptorDescriptor next : classInterceptorChain) {
             if (!next.getCallbackDescriptors(type).isEmpty()) {
@@ -236,7 +236,8 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         return callbackInterceptors;
     }
 
-   public Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
+
+    public Set<LifecycleCallbackDescriptor> getAroundInvokeDescriptors() {
         return aroundInvokeDescs;
     }
 
@@ -257,8 +258,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
 
     public LifecycleCallbackDescriptor getAroundInvokeDescriptorByClass(String className) {
-        for (LifecycleCallbackDescriptor next :
-                getAroundInvokeDescriptors()) {
+        for (LifecycleCallbackDescriptor next : getAroundInvokeDescriptors()) {
             if (next.getLifecycleCallbackClass().equals(className)) {
                 return next;
             }
@@ -267,7 +267,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
     public boolean hasAroundInvokeMethod() {
-        return (getAroundInvokeDescriptors().size() > 0);
+        return !getAroundInvokeDescriptors().isEmpty();
     }
 
     /**
@@ -280,13 +280,13 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         MethodDescriptor mDesc = new MethodDescriptor(m);
 
         // See if there's any method-level setting (either a chain
-        // or a empty list ).  If not, use class-level chain
+        // or a empty list ). If not, use class-level chain
         List<InterceptorDescriptor> aroundInvokeInterceptors = methodInterceptorsMap.get(mDesc);
 
-        if( aroundInvokeInterceptors == null ) {
+        if (aroundInvokeInterceptors == null) {
             aroundInvokeInterceptors = new LinkedList<>();
-            for(InterceptorDescriptor desc : classInterceptorChain) {
-                if( desc.hasAroundInvokeDescriptor() ) {
+            for (InterceptorDescriptor desc : classInterceptorChain) {
+                if (desc.hasAroundInvokeDescriptor()) {
                     aroundInvokeInterceptors.add(desc);
                 }
             }
@@ -308,27 +308,19 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
 
     public String getGlobalJndiName() {
-
-        String appName = null;
-
         if (enclosingBundle == null) {
             return null;
         }
 
         Application app = enclosingBundle.getApplication();
-        if ( !app.isVirtual()  ) {
-            appName = enclosingBundle.getApplication().getAppName();
-        }
-
+        String appName = app.isVirtual() ? null : enclosingBundle.getApplication().getAppName();
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
 
-        StringBuffer javaGlobalPrefix = new StringBuffer("java:global/");
-
+        StringBuilder javaGlobalPrefix = new StringBuilder("java:global/");
         if (appName != null) {
             javaGlobalPrefix.append(appName);
             javaGlobalPrefix.append("/");
         }
-
         javaGlobalPrefix.append(modName);
         javaGlobalPrefix.append("/");
 
@@ -340,24 +332,18 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         String componentName = isNamed() ? name : "___internal_managed_bean_" + beanClassName;
         javaGlobalPrefix.append(componentName);
-
-
         return javaGlobalPrefix.toString();
     }
 
     public String getAppJndiName() {
-
         if (enclosingBundle == null) {
             return null;
         }
 
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
-
         StringBuilder javaAppPrefix = new StringBuilder("java:app/");
-
         javaAppPrefix.append(modName);
         javaAppPrefix.append("/");
-
 
         // If the managed bean is named, use the name for the final component
         // of the managed bean global name.  Otherwise, use a derived internal
@@ -366,40 +352,30 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         String componentName = isNamed() ? name : "___internal_managed_bean_" + beanClassName;
         javaAppPrefix.append(componentName);
-
-
         return javaAppPrefix.toString();
 
     }
 
 
-    /**
-    * Returns a formatted String of the attributes of this object.
-    */
     @Override
     public void print(StringBuffer toStringBuffer) {
-
-    // toStringBuffer.append("\n homeClassName ").append(homeClassName);
-
     }
+
 
     public void validate() {
-
         visit(new ApplicationValidator());
-
     }
+
 
     public void visit(ManagedBeanVisitor aVisitor) {
         aVisitor.accept(this);
     }
 
+
     @Override
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
-
         List<InjectionCapable> injectables = new LinkedList<>();
-
-        for (Object element : getEnvironmentProperties()) {
-            EnvironmentProperty envEntry = (EnvironmentProperty) element;
+        for (EnvironmentProperty envEntry : getEnvironmentProperties()) {
             // Only env-entries that have been assigned a value are
             // eligible for injection.
             if (envEntry.hasAValue()) {
@@ -417,7 +393,6 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         injectables.addAll(getEntityManagerReferenceDescriptors());
 
         List<InjectionCapable> injectablesByClass = new LinkedList<>();
-
         for (InjectionCapable next : injectables ) {
             if (next.isInjectable()) {
                 for (InjectionTarget target : next.getInjectionTargets()) {
@@ -432,7 +407,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
     @Override
-    public InjectionInfo getInjectionInfoByClass(Class clazz) {
+    public InjectionInfo getInjectionInfoByClass(Class<?> clazz) {
 
         // TODO This is invariant data so we could cache it
 

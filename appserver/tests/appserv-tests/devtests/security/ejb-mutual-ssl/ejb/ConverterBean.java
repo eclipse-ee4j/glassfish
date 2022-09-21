@@ -35,7 +35,7 @@ public class ConverterBean implements SessionBean {
     SessionContext mysc = null;
 
     public String myCallerPrincipal(){
-        return mysc.getCallerPrincipal().toString();
+        return mysc.getCallerPrincipal().getName();
     }
     /**
      * Returns the yen value for a given dollar amount.

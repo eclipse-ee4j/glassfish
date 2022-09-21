@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,11 +18,12 @@
 package org.glassfish.appclient.client.acc;
 
 import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.deployment.deploy.shared.MemoryMappedArchive;
+import com.sun.enterprise.deployment.util.DOLUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +35,7 @@ import java.util.jar.Attributes;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.xml.sax.SAXException;
@@ -44,23 +47,24 @@ import org.xml.sax.SAXException;
  *
  * @author tjquinn
  */
-public class
-        MainClassLaunchable implements Launchable {
+public class MainClassLaunchable implements Launchable {
 
-    private final Class mainClass;
-    private ApplicationClientDescriptor acDesc = null;
-    private ClassLoader classLoader = null;
-    private AppClientArchivist archivist = null;
+    private final Class<?> mainClass;
+    private ApplicationClientDescriptor acDesc;
+    private ClassLoader classLoader;
+    private AppClientArchivist archivist;
 
     MainClassLaunchable(final ServiceLocator habitat, final Class mainClass) {
         super();
         this.mainClass = mainClass;
     }
 
-    public Class getMainClass() throws ClassNotFoundException {
+    @Override
+    public Class<?> getMainClass() throws ClassNotFoundException {
         return mainClass;
     }
 
+    @Override
     public ApplicationClientDescriptor getDescriptor(final URLClassLoader loader) throws IOException, SAXException {
         /*
          * There is no developer-provided descriptor possible so just
@@ -157,8 +161,8 @@ public class
     }
 
 
-    private AppClientArchivist getArchivist(final ReadableArchive clientRA,
-            final ClassLoader classLoader) throws IOException {
+    private AppClientArchivist getArchivist(final ReadableArchive clientRA, final ClassLoader classLoader)
+        throws IOException {
         if (archivist == null) {
             ArchivistFactory af = Util.getArchivistFactory();
             /*
@@ -166,25 +170,24 @@ public class
              * having to set the URI to some fake URI that the archivist
              * factory would understand.
              */
-            archivist = completeInit((AppClientArchivist)
-                    af.getArchivist(DOLUtils.carType()));
+            archivist = af.getArchivist(DOLUtils.carType());
+            archivist.setAnnotationProcessingRequested(true);
         }
         return archivist;
     }
 
-    private AppClientArchivist completeInit(final AppClientArchivist arch) {
-            arch.setAnnotationProcessingRequested(true);
-            return arch;
-    }
 
+    @Override
     public void validateDescriptor() {
         archivist.validate(classLoader);
     }
 
+    @Override
     public URI getURI() {
         return null;
     }
 
+    @Override
     public String getAnchorDir() {
         return null;
     }

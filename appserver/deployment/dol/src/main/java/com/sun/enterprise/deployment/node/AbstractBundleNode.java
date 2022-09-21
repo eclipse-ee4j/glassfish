@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,49 +17,50 @@
 
 package com.sun.enterprise.deployment.node;
 
-import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.xml.TagNames;
+
 import java.util.Collection;
 import java.util.Collections;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 /**
- * This class defines all the common behaviour among nodes responsibles for
- * handling bundles
+ * This class defines all the common behaviour among nodes responsibles for handling bundles
+ *
+ * @param <T> {@link RootDeploymentDescriptor} type
  *
  * @author Jerome Dochez
  */
 public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
         extends DisplayableComponentNode<T> implements BundleNode, RootXMLNode<T> {
 
-    public final static String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
-    public final static String W3C_XML_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
+    private static final String W3C_XML_SCHEMA = "http://www.w3.org/2001/XMLSchema";
+    protected static final String W3C_XML_SCHEMA_INSTANCE = "http://www.w3.org/2001/XMLSchema-instance";
+    protected static final String SCHEMA_LOCATION_TAG = "xsi:schemaLocation";
 
-    protected final static String SCHEMA_LOCATION_TAG = "xsi:schemaLocation";
-
-    protected String docType;
+    private String docType;
 
     /**
      * set the DOCTYPE as read in the input XML File
      * @param docType for the xml
      */
+    @Override
     public void setDocType(String docType) {
         this.docType = docType;
         setSpecVersion();
     }
 
-    public static Element appendChildNS(Node parent, String elementName,
-        String nameSpace) {
+
+    public static Element appendChildNS(Node parent, String elementName, String nameSpace) {
         Element child = getOwnerDocument(parent).createElementNS(nameSpace, elementName);
         parent.appendChild(child);
         return child;
@@ -84,10 +86,11 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
-      if (! DOLUtils.setElementValue(element, value, getDescriptor())) {
-        super.setElementValue(element, value);
-      }
+        if (!DOLUtils.setElementValue(element, value, getDescriptor())) {
+            super.setElementValue(element, value);
+        }
     }
 
     /**
@@ -97,13 +100,12 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, T descriptor) {
         Node bundleNode;
-        if (getDocType()==null) {
+        if (getDocType() == null) {
             // we are using schemas for this DDs
-
-            bundleNode = appendChildNS(parent, getXMLRootTag().getQName(),
-                    TagNames.JAKARTAEE_NAMESPACE);
+            bundleNode = appendChildNS(parent, getXMLRootTag().getQName(), TagNames.JAKARTAEE_NAMESPACE);
             addBundleNodeAttributes((Element) bundleNode, descriptor);
         } else {
             bundleNode = appendChild(parent, getXMLRootTag().getQName());
@@ -112,8 +114,6 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
 
         // description, display-name, icons...
         writeDisplayableComponentInfo(bundleNode, descriptor);
-
-
         return bundleNode;
     }
 
@@ -132,7 +132,6 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * corresponding to this bundle node type.
      *
      * @param descriptor descriptor data structure for the current node
-     * @return
      */
     protected String topLevelTagValue(T descriptor) {
         return descriptor.getModuleDescriptor().getModuleName();
@@ -148,17 +147,16 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
         return Collections.emptySet();
     }
 
-    protected void writeMessageDestinations(Node parentNode,
-                                            Iterator msgDestinations) {
-        if ( (msgDestinations == null) || !msgDestinations.hasNext() )
+
+    protected void writeMessageDestinations(Node parentNode, Iterator msgDestinations) {
+        if (msgDestinations == null || !msgDestinations.hasNext()) {
             return;
+        }
 
         MessageDestinationNode subNode = new MessageDestinationNode();
-        for (;msgDestinations.hasNext();) {
-            MessageDestinationDescriptor next =
-                (MessageDestinationDescriptor) msgDestinations.next();
-            subNode.writeDescriptor(parentNode,
-                                    TagNames.MESSAGE_DESTINATION, next);
+        while (msgDestinations.hasNext()) {
+            MessageDestinationDescriptor next = (MessageDestinationDescriptor) msgDestinations.next();
+            subNode.writeDescriptor(parentNode, TagNames.MESSAGE_DESTINATION, next);
         }
     }
 
@@ -166,23 +164,12 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * write the necessary attributes for the root node of this DDs document
      */
     protected void addBundleNodeAttributes(Element bundleNode, RootDeploymentDescriptor descriptor) {
-        String schemaLocation;
-
-        /*
-        bundleNode.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", TagNames.JAVAEE_NAMESPACE);
-        */
-        schemaLocation = TagNames.JAVAEE_NAMESPACE + " " +
-          getSchemaURL();
+        String schemaLocation = TagNames.JAVAEE_NAMESPACE + " " + getSchemaURL();
         bundleNode.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", W3C_XML_SCHEMA_INSTANCE);
 
         // add all custom global namespaces
         addNamespaceDeclaration(bundleNode, descriptor);
-        /*
-        String clientSchemaLocation = descriptor.getSchemaLocation();
-        if (clientSchemaLocation!=null) {
-            schemaLocation = schemaLocation + " " + clientSchemaLocation;
-        }
-        */
+
         bundleNode.setAttributeNS(W3C_XML_SCHEMA_INSTANCE, SCHEMA_LOCATION_TAG, schemaLocation);
         bundleNode.setAttribute(TagNames.VERSION, getSpecVersion());
 
@@ -191,9 +178,8 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
         // when we come here to write it out, the annotation information
         // has already been processed and saved in DD, so written out DD
         // is always a full DD.
-        if (descriptor instanceof BundleDescriptor &&
-            !(descriptor instanceof Application) ) {
-            BundleDescriptor bundleDesc = (BundleDescriptor)descriptor;
+        if (descriptor instanceof BundleDescriptor && !(descriptor instanceof Application)) {
+            BundleDescriptor bundleDesc = (BundleDescriptor) descriptor;
             // In the common case that metadata-complete isn't already set to
             // true, set it to true.
             if (! bundleDesc.isDDWithNoAnnotationAllowed()) {
@@ -205,16 +191,21 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
     /**
      * notify of a new prefix mapping used in this document
      */
+    @Override
     public void addPrefixMapping(String prefix, String uri) {
         // we don't care about the default ones...
-        if (uri.equals(TagNames.J2EE_NAMESPACE))
+        if (uri.equals(TagNames.J2EE_NAMESPACE)) {
             return;
-        if (uri.equals(TagNames.JAVAEE_NAMESPACE))
+        }
+        if (uri.equals(TagNames.JAVAEE_NAMESPACE)) {
             return;
-        if (uri.equals(TagNames.JAKARTAEE_NAMESPACE))
+        }
+        if (uri.equals(TagNames.JAKARTAEE_NAMESPACE)) {
             return;
-        if (uri.equals(W3C_XML_SCHEMA_INSTANCE))
+        }
+        if (uri.equals(W3C_XML_SCHEMA_INSTANCE)) {
             return;
+        }
         super.addPrefixMapping(prefix, uri);
     }
 
@@ -222,16 +213,17 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * @return the complete URL for JAKARTAEE schemas
      */
     protected String getSchemaURL() {
-       // by default, it comes from our web site
-       return TagNames.JAKARTAEE_NAMESPACE + "/" + getSystemID();
+        // by default, it comes from our web site
+        return TagNames.JAKARTAEE_NAMESPACE + "/" + getSystemID();
     }
 
     /**
      * Sets the specVersion for this descriptor depending on the docType
      */
     protected void setSpecVersion() {
-        if (docType==null)
+        if (docType == null) {
             return;
+        }
         StringTokenizer st = new StringTokenizer(docType, "//");
         while (st.hasMoreElements()) {
             String tmp = st.nextToken();
@@ -242,7 +234,7 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
                     String versionStr = versionST.nextToken();
                     try {
                         Float.valueOf(versionStr);
-                        RootDeploymentDescriptor rdd = (RootDeploymentDescriptor) getDescriptor();
+                        RootDeploymentDescriptor rdd = getDescriptor();
                         rdd.setSpecVersion(versionStr);
                         return;
                     } catch(NumberFormatException nfe) {

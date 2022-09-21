@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * DescribableDescriptor.java
- *
- * Created on December 6, 2001, 2:51 PM
- */
-
 package com.sun.enterprise.deployment;
 
 import org.glassfish.deployment.common.Descriptor;
@@ -29,22 +24,25 @@ import org.glassfish.deployment.common.Descriptor;
  * with a description
  *
  * @author  Jerome Dochez
- * @version
  */
 public class DescribableDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private String description;
 
     /** Creates new DescribableDescriptor */
     public DescribableDescriptor() {
     }
 
+
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String  getDescription() {
+
+    @Override
+    public String getDescription() {
         return description;
     }
-
 }

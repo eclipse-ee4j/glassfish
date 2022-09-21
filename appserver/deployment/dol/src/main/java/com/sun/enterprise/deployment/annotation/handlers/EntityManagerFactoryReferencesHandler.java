@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,44 +18,40 @@
 package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+
+import jakarta.persistence.PersistenceUnit;
+import jakarta.persistence.PersistenceUnits;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.persistence.PersistenceUnit;
-import jakarta.persistence.PersistenceUnits;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This handler is responsible for handling the
  * jakarta.persistence.PersistenceUnits annotation.
- *
  */
 @Service
 @AnnotationHandlerFor(PersistenceUnits.class)
-public class EntityManagerFactoryReferencesHandler
-    extends EntityManagerFactoryReferenceHandler {
+public class EntityManagerFactoryReferencesHandler extends EntityManagerFactoryReferenceHandler {
 
     public EntityManagerFactoryReferencesHandler() {
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
 
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
+        throws AnnotationProcessorException {
         PersistenceUnits annotation = (PersistenceUnits) ainfo.getAnnotation();
-
         PersistenceUnit[] emfRefAnnotations = annotation.value();
-        List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
-
-        for(PersistenceUnit emfRef : emfRefAnnotations) {
+        List<HandlerProcessingResult> results = new ArrayList<>();
+        for (PersistenceUnit emfRef : emfRefAnnotations) {
             results.add(processEmfRef(ainfo, rcContexts, emfRef));
         }
-
         return getOverallProcessingResult(results);
     }
-
 }

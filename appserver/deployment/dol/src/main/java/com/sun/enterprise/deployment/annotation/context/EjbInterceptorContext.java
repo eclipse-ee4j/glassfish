@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,20 +28,24 @@ import java.lang.reflect.AnnotatedElement;
  * @author Shing Wai Chan
  */
 public class EjbInterceptorContext extends ResourceContainerContextImpl {
+
     public EjbInterceptorContext(EjbInterceptor ejbInterceptor) {
         super(ejbInterceptor);
     }
 
+
     public EjbInterceptor getDescriptor() {
-        return (EjbInterceptor)descriptor;
+        return (EjbInterceptor) descriptor;
     }
+
 
     public void setDescriptor(EjbInterceptor ejbInterceptor) {
         descriptor = ejbInterceptor;
     }
 
-    public void endElement(ElementType type, AnnotatedElement element) {
 
+    @Override
+    public void endElement(ElementType type, AnnotatedElement element) {
         if (ElementType.TYPE.equals(type)) {
             // done with processing this class, let's pop this context
             getProcessingContext().popHandler();

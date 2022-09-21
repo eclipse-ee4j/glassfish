@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,11 @@
 
 package org.glassfish.web.deployment.io;
 
-import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.io.DeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
+
+import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.node.WebBundleNode;
 
@@ -46,9 +48,7 @@ public class WebDeploymentDescriptorFile extends DeploymentDescriptorFile<WebBun
      * @param descriptor descriptor for which we need the node
      */
     @Override
-    public RootXMLNode<WebBundleDescriptorImpl> getRootXMLNode(WebBundleDescriptorImpl descriptor) {
+    public RootXMLNode<WebBundleDescriptorImpl> getRootXMLNode(Descriptor descriptor) {
         return new WebBundleNode();
     }
-
-
 }

@@ -37,6 +37,7 @@ import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Contract;
 
+import com.sun.enterprise.security.BaseRealm;
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -70,7 +71,7 @@ public abstract class Realm implements Comparable {
     final static String RI_DEFAULT = "default";
 
     // All realms have a set of properties from config file, consolidate.
-    private Properties ctxProps;
+    private final Properties ctxProps;
 
     // for assign-groups
     private static final String PARAM_GROUPS = "assign-groups";
@@ -82,7 +83,7 @@ public abstract class Realm implements Comparable {
     private static final String DEFAULT_DIGEST_ALGORITHM = "default-digest-algorithm";
     private static final String DEFAULT_DEF_DIG_ALGO_VAL = "SHA-256";
 
-    private static WeakReference<RealmsManager> realmsManager = new WeakReference<RealmsManager>(null);
+    private static WeakReference<RealmsManager> realmsManager = new WeakReference<>(null);
     private String defaultDigestAlgorithm = null;
 
     protected static final Logger _logger = SecurityLoggerInfo.getLogger();
@@ -478,7 +479,7 @@ public abstract class Realm implements Comparable {
      *
      */
     public synchronized String getJAASContext() {
-        return ctxProps.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
+        return ctxProps.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
     }
 
     /**
@@ -585,10 +586,10 @@ public abstract class Realm implements Comparable {
         String groupList = props.getProperty(PARAM_GROUPS);
         if (groupList != null && groupList.length() > 0) {
             this.setProperty(PARAM_GROUPS, groupList);
-            assignGroups = new ArrayList<String>();
+            assignGroups = new ArrayList<>();
             StringTokenizer st = new StringTokenizer(groupList, GROUPS_SEP);
             while (st.hasMoreTokens()) {
-                String grp = (String) st.nextToken();
+                String grp = st.nextToken();
                 if (!assignGroups.contains(grp)) {
                     assignGroups.add(grp);
                 }
@@ -609,7 +610,7 @@ public abstract class Realm implements Comparable {
     private static synchronized RealmsManager _getRealmsManager() {
         if (realmsManager.get() == null) {
             if (Globals.getDefaultHabitat() != null) {
-                realmsManager = new WeakReference<RealmsManager>(Globals.get(RealmsManager.class));
+                realmsManager = new WeakReference<>(Globals.get(RealmsManager.class));
             } else {
                 return null;
             }
@@ -660,7 +661,7 @@ public abstract class Realm implements Comparable {
     protected String[] addAssignGroups(String[] grps) {
         String[] resultGroups = grps;
         if (assignGroups != null && assignGroups.size() > 0) {
-            List<String> groupList = new ArrayList<String>();
+            List<String> groupList = new ArrayList<>();
             if (grps != null && grps.length > 0) {
                 for (String grp : grps) {
                     groupList.add(grp);
@@ -679,7 +680,7 @@ public abstract class Realm implements Comparable {
 
     protected ArrayList<String> getMappedGroupNames(String group) {
         if (groupMapper != null) {
-            ArrayList<String> result = new ArrayList<String>();
+            ArrayList<String> result = new ArrayList<>();
             groupMapper.getMappedGroups(group, result);
             return result;
         }
@@ -727,7 +728,7 @@ public abstract class Realm implements Comparable {
      * @return enumeration of group names (strings)
      * @exception BadRealmException if realm data structures are bad
      */
-    public abstract Enumeration getGroupNames() throws BadRealmException;
+    public abstract Enumeration<String> getGroupNames() throws BadRealmException;
 
     /**
      * Returns the name of all the groups that this user belongs to
@@ -737,7 +738,7 @@ public abstract class Realm implements Comparable {
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
      * support this operation
      */
-    public abstract Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException;
+    public abstract Enumeration<String> getGroupNames(String username) throws InvalidOperationException, NoSuchUserException;
 
     /**
      * Refreshes the realm data so that new users/groups are visible.

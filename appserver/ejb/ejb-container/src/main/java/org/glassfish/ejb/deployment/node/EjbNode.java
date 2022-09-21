@@ -17,36 +17,7 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import static com.sun.enterprise.deployment.xml.TagNames.ADMINISTERED_OBJECT;
-import static com.sun.enterprise.deployment.xml.TagNames.CONNECTION_FACTORY;
-import static com.sun.enterprise.deployment.xml.TagNames.DATA_SOURCE;
-import static com.sun.enterprise.deployment.xml.TagNames.EJB_LOCAL_REFERENCE;
-import static com.sun.enterprise.deployment.xml.TagNames.EJB_REFERENCE;
-import static com.sun.enterprise.deployment.xml.TagNames.ENVIRONMENT_PROPERTY;
-import static com.sun.enterprise.deployment.xml.TagNames.JMS_CONNECTION_FACTORY;
-import static com.sun.enterprise.deployment.xml.TagNames.JMS_DESTINATION;
-import static com.sun.enterprise.deployment.xml.TagNames.MAIL_SESSION;
-import static com.sun.enterprise.deployment.xml.TagNames.MESSAGE_DESTINATION_REFERENCE;
-import static com.sun.enterprise.deployment.xml.TagNames.PERSISTENCE_CONTEXT_REF;
-import static com.sun.enterprise.deployment.xml.TagNames.PERSISTENCE_UNIT_REF;
-import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_ENV_REFERENCE;
-import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_REFERENCE;
-import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVICE_REF;
-import static org.glassfish.ejb.deployment.EjbTagNames.SECURITY_IDENTITY;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.logging.Level;
-
-import org.glassfish.ejb.deployment.EjbTagNames;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.w3c.dom.Node;
-
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.RoleReference;
@@ -77,9 +48,39 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.TagNames;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.logging.Level;
+
+import org.glassfish.ejb.deployment.EjbTagNames;
+import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.w3c.dom.Node;
+
+import static com.sun.enterprise.deployment.xml.TagNames.ADMINISTERED_OBJECT;
+import static com.sun.enterprise.deployment.xml.TagNames.CONNECTION_FACTORY;
+import static com.sun.enterprise.deployment.xml.TagNames.DATA_SOURCE;
+import static com.sun.enterprise.deployment.xml.TagNames.EJB_LOCAL_REFERENCE;
+import static com.sun.enterprise.deployment.xml.TagNames.EJB_REFERENCE;
+import static com.sun.enterprise.deployment.xml.TagNames.ENVIRONMENT_PROPERTY;
+import static com.sun.enterprise.deployment.xml.TagNames.JMS_CONNECTION_FACTORY;
+import static com.sun.enterprise.deployment.xml.TagNames.JMS_DESTINATION;
+import static com.sun.enterprise.deployment.xml.TagNames.MAIL_SESSION;
+import static com.sun.enterprise.deployment.xml.TagNames.MESSAGE_DESTINATION_REFERENCE;
+import static com.sun.enterprise.deployment.xml.TagNames.PERSISTENCE_CONTEXT_REF;
+import static com.sun.enterprise.deployment.xml.TagNames.PERSISTENCE_UNIT_REF;
+import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_ENV_REFERENCE;
+import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_REFERENCE;
+import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVICE_REF;
+import static org.glassfish.ejb.deployment.EjbTagNames.SECURITY_IDENTITY;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
+import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
+
 /**
- * This class is responsible for handling all common information shared by all types of enterprise beans (MDB, session,
- * entity)
+ * This class is responsible for handling all common information shared by all types of enterprise
+ * beans (MDB, session, entity)
  *
  * @author Jerome Dochez
  * @version
@@ -92,7 +93,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
         registerElementHandler(new XMLElement(ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, SERVICE_REF);
+        JndiEnvRefNode<?> serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(SERVICE_REF), serviceRefNode.getClass(), "addServiceReferenceDescriptor");
         }
@@ -125,7 +126,7 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
             }
-            getEjbDescriptor().addEjbReferenceDescriptor((EjbReference) newDescriptor);
+            getEjbDescriptor().addEjbReferenceDescriptor((EjbReferenceDescriptor) newDescriptor);
         } else if (newDescriptor instanceof RunAsIdentityDescriptor) {
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding security-identity" + newDescriptor);
@@ -152,10 +153,10 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
     public abstract S getEjbDescriptor();
 
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
-        table.put(EjbTagNames.EJB_NAME, "setName");
+        Map<String, String> table = super.getDispatchTable();
+        table.put(TagNames.EJB_NAME, "setName");
         table.put(EjbTagNames.EJB_CLASS, "setEjbClassName");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         return table;
@@ -164,27 +165,26 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
     /**
      * write the common descriptor info to a DOM tree and return it
      *
-     * @param parent node for the DOM tree
-     * @param the descriptor to write
+     * @param ejbNode parent node for the DOM tree
+     * @param descriptor the descriptor to write
      */
     protected void writeCommonHeaderEjbDescriptor(Node ejbNode, EjbDescriptor descriptor) {
-        appendTextChild(ejbNode, EjbTagNames.EJB_NAME, descriptor.getName());
+        appendTextChild(ejbNode, TagNames.EJB_NAME, descriptor.getName());
         appendTextChild(ejbNode, TagNames.MAPPED_NAME, descriptor.getMappedName());
     }
+
 
     /**
      * write the security identity information about an EJB
      *
      * @param parent node for the DOM tree
-     * @param the EJB descriptor the security information to be retrieved
+     * @param descriptor the EJB descriptor the security information to be retrieved
      */
     protected void writeSecurityIdentityDescriptor(Node parent, EjbDescriptor descriptor) {
         if (!descriptor.getUsesCallerIdentity() && descriptor.getRunAsIdentity() == null) {
             return;
         }
-
-        SecurityIdentityNode node = new SecurityIdentityNode();
-        node.writeDescriptor(parent, SECURITY_IDENTITY, descriptor);
+        SecurityIdentityNode.writeSecureIdentity(parent, SECURITY_IDENTITY, descriptor);
     }
 
     /**
@@ -193,34 +193,38 @@ public abstract class EjbNode<S extends EjbDescriptor> extends DisplayableCompon
      * @param parentNode for the DOM tree
      * @param refs iterator over the RoleReference descriptors to write
      */
-    protected void writeRoleReferenceDescriptors(Node parentNode, Iterator refs) {
+    protected void writeRoleReferenceDescriptors(Node parentNode, Iterator<RoleReference> refs) {
         SecurityRoleRefNode node = new SecurityRoleRefNode();
-        for (; refs.hasNext();) {
-            RoleReference roleRef = (RoleReference) refs.next();
+        while (refs.hasNext()) {
+            RoleReference roleRef = refs.next();
             node.writeDescriptor(parentNode, TagNames.ROLE_REFERENCE, roleRef);
         }
     }
 
-    protected static void writeAroundInvokeDescriptors(Node parentNode, Iterator aroundInvokeDescs) {
+
+    protected static void writeAroundInvokeDescriptors(Node parentNode,
+        Iterator<LifecycleCallbackDescriptor> aroundInvokeDescs) {
         if (aroundInvokeDescs == null || !aroundInvokeDescs.hasNext()) {
             return;
         }
 
         AroundInvokeNode subNode = new AroundInvokeNode();
-        for (; aroundInvokeDescs.hasNext();) {
-            LifecycleCallbackDescriptor next = (LifecycleCallbackDescriptor) aroundInvokeDescs.next();
+        while (aroundInvokeDescs.hasNext()) {
+            LifecycleCallbackDescriptor next = aroundInvokeDescs.next();
             subNode.writeDescriptor(parentNode, EjbTagNames.AROUND_INVOKE_METHOD, next);
         }
     }
 
-    protected static void writeAroundTimeoutDescriptors(Node parentNode, Iterator aroundTimeoutDescs) {
+
+    protected static void writeAroundTimeoutDescriptors(Node parentNode,
+        Iterator<LifecycleCallbackDescriptor> aroundTimeoutDescs) {
         if (aroundTimeoutDescs == null || !aroundTimeoutDescs.hasNext()) {
             return;
         }
 
         AroundTimeoutNode subNode = new AroundTimeoutNode();
-        for (; aroundTimeoutDescs.hasNext();) {
-            LifecycleCallbackDescriptor next = (LifecycleCallbackDescriptor) aroundTimeoutDescs.next();
+        while (aroundTimeoutDescs.hasNext()) {
+            LifecycleCallbackDescriptor next = aroundTimeoutDescs.next();
             subNode.writeDescriptor(parentNode, EjbTagNames.AROUND_TIMEOUT_METHOD, next);
         }
     }

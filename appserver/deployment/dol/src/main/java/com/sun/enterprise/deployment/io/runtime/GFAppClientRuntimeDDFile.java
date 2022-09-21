@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,27 @@
 
 package com.sun.enterprise.deployment.io.runtime;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
-import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.node.runtime.GFAppClientRuntimeNode;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class is responsible for handling the XML configuration information
  * for the Glassfish Application Client Container
  */
-public class GFAppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
-    /**
-     * @return the location of the DeploymentDescriptor file for a
-     * particular type of J2EE Archive
-     */
+public class GFAppClientRuntimeDDFile extends ConfigurationDeploymentDescriptorFile<ApplicationClientDescriptor> {
+
+    @Override
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.GF_APP_CLIENT_JAR_ENTRY;
     }
 
-    /**
-     * @return a RootXMLNode responsible for handling the deployment
-     * descriptors associated with this J2EE module
-     *
-     * @param the descriptor for which we need the node
-     */
-    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
 
+    @Override
+    public GFAppClientRuntimeNode getRootXMLNode(Descriptor descriptor) {
         if (descriptor instanceof ApplicationClientDescriptor) {
             return new GFAppClientRuntimeNode((ApplicationClientDescriptor) descriptor);
         }

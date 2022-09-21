@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,35 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.types.EntityManagerFactoryReference;
 import com.sun.enterprise.deployment.types.EntityManagerReference;
-import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.ApplicationValidator;
+import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.node.RootXMLNode;
-import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.security.common.Role;
 
 import jakarta.persistence.EntityManagerFactory;
+
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.security.common.Role;
 
 /**
  * I am an abstract class representing all the deployment information common
@@ -40,11 +53,11 @@ import java.util.*;
  *
  * @author Danny Coward
  */
-
 public abstract class BundleDescriptor extends RootDeploymentDescriptor implements Roles {
 
-    private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(BundleDescriptor.class);
+    private static final long serialVersionUID = 1L;
+    private static final String PERSISTENCE_UNIT_NAME_SEPARATOR = "#";
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(BundleDescriptor.class);
 
     private final static String DEPLOYMENT_DESCRIPTOR_DIR = "META-INF";
     private final static String WSDL_DIR = "wsdl";
@@ -55,35 +68,31 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     private final static double ANNOTATION_WAR_VER = 2.5;
     private final static double ANNOTATION_CAR_VER = 5.0;
 
-    private boolean fullFlag = false;
-    private boolean fullAttribute = false;
+    private boolean fullFlag;
+    private boolean fullAttribute;
 
-    private final String PERSISTENCE_UNIT_NAME_SEPARATOR = "#";
 
     private Application application;
     private Set<Role> roles;
-    private Set<MessageDestinationDescriptor> messageDestinations = new HashSet<MessageDestinationDescriptor>();
-    private WebServicesDescriptor webServices = new WebServicesDescriptor();
+    private Set<MessageDestinationDescriptor> messageDestinations = new HashSet<>();
+    private final WebServicesDescriptor webServices = new WebServicesDescriptor();
 
-    private Set<ManagedBeanDescriptor> managedBeans = new HashSet<ManagedBeanDescriptor>();
+    private final Set<ManagedBeanDescriptor> managedBeans = new HashSet<>();
 
     // Physical entity manager factory corresponding to the unit name of
-    // each module-level persistence unit.  Only available at runtime.
-    private Map<String, EntityManagerFactory> entityManagerFactories =
-            new HashMap<String, EntityManagerFactory>();
-
+    // each module-level persistence unit. Only available at runtime.
+    private final Map<String, EntityManagerFactory> entityManagerFactories = new HashMap<>();
 
     // table for caching InjectionInfo with the class name as index
-    private Hashtable<InjectionInfoCacheKey, InjectionInfo> injectionInfos =
-            new Hashtable<InjectionInfoCacheKey, InjectionInfo>();
+    private final Hashtable<InjectionInfoCacheKey, InjectionInfo> injectionInfos = new Hashtable<>();
 
-    private boolean policyModified = false;
+    private boolean policyModified;
 
     private String compatValue;
 
-    private boolean keepState = false;
+    private boolean keepState;
 
-    protected HashMap<String, RootXMLNode> rootNodes = new HashMap<String, RootXMLNode>();
+    private final HashMap<String, RootXMLNode<?>> rootNodes = new HashMap<>();
 
     /**
      * Construct a new BundleDescriptor
@@ -134,6 +143,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * @return true if this module is an application object
      */
+    @Override
     public boolean isApplication() {
         return false;
     }
@@ -152,11 +162,11 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return application;
     }
 
-    public void addRootNode(String ddPath, RootXMLNode rootNode) {
+    public void addRootNode(String ddPath, RootXMLNode<?> rootNode) {
         rootNodes.put(ddPath, rootNode);
     }
 
-    public RootXMLNode getRootNode(String ddPath) {
+    public RootXMLNode<?> getRootNode(String ddPath) {
         return rootNodes.get(ddPath);
     }
 
@@ -164,9 +174,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Set the physical entity manager factory for a persistence unit
      * within this module.
      */
-    public void addEntityManagerFactory(String unitName,
-                                        EntityManagerFactory emf) {
-
+    public void addEntityManagerFactory(String unitName, EntityManagerFactory emf) {
         entityManagerFactories.put(unitName, emf);
     }
 
@@ -177,7 +185,6 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * no matching entry is found.
      */
     public EntityManagerFactory getEntityManagerFactory(String unitName) {
-
         return entityManagerFactories.get(unitName);
     }
 
@@ -186,10 +193,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * with persistence units in this module.
      */
     public Set<EntityManagerFactory> getEntityManagerFactories() {
-
-        return new HashSet<EntityManagerFactory>
-                (entityManagerFactories.values());
-
+        return new HashSet<>(entityManagerFactories.values());
     }
 
     public void addManagedBean(ManagedBeanDescriptor desc) {
@@ -220,21 +224,18 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return (descriptor != null);
     }
 
-    public ManagedBeanDescriptor getManagedBeanByBeanClass(String beanClassName) {
-        ManagedBeanDescriptor match = null;
 
-        for(ManagedBeanDescriptor next : managedBeans) {
-            if( beanClassName.equals(next.getBeanClassName()) ) {
-                match = next;
-                break;
+    public ManagedBeanDescriptor getManagedBeanByBeanClass(String beanClassName) {
+        for (ManagedBeanDescriptor next : managedBeans) {
+            if (beanClassName.equals(next.getBeanClassName())) {
+                return next;
             }
         }
-
-        return match;
+        return null;
     }
 
     public Set<ManagedBeanDescriptor> getManagedBeans() {
-        return new HashSet<ManagedBeanDescriptor>(managedBeans);
+        return new HashSet<>(managedBeans);
     }
 
     /**
@@ -269,7 +270,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      */
     public Set<MessageDestinationDescriptor> getMessageDestinations() {
         if (messageDestinations == null) {
-            messageDestinations = new HashSet<MessageDestinationDescriptor>();
+            messageDestinations = new HashSet<>();
         }
         return messageDestinations;
     }
@@ -290,8 +291,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Returns a message destination descriptor that I have by the
      * same name, or throws an IllegalArgumentException
      */
-    public MessageDestinationDescriptor getMessageDestinationByName
-            (String name) {
+    public MessageDestinationDescriptor getMessageDestinationByName(String name) {
         for (MessageDestinationDescriptor mtd : getMessageDestinations()) {
             if (mtd.getName().equals(name)) {
                 return mtd;
@@ -305,8 +305,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Add a message destination to me.
      */
-    public void addMessageDestination(MessageDestinationDescriptor
-            messageDestination) {
+    public void addMessageDestination(MessageDestinationDescriptor messageDestination) {
         messageDestination.setBundleDescriptor(this);
         this.getMessageDestinations().add(messageDestination);
     }
@@ -323,9 +322,10 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Return the set of com.sun.enterprise.deployment.Role objects
      * I have plus the ones from application
      */
+    @Override
     public Set<Role> getRoles() {
         if (roles == null) {
-            roles = new OrderedSet<Role>();
+            roles = new OrderedSet<>();
         }
         if (application != null) {
             roles.addAll(application.getAppRoles());
@@ -337,6 +337,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Adds a role object to me.
      */
+    @Override
     public void addRole(Role role) {
         this.getRoles().add(role);
     }
@@ -354,14 +355,14 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * @param descriptor SecurityRoleDescriptor that describes the username and description of the role
      */
     public void addRole(SecurityRoleDescriptor descriptor) {
-        Role role = new Role(descriptor.getName());
-        role.setDescription(descriptor.getDescription());
+        Role role = new Role(descriptor.getName(), descriptor.getDescription());
         this.addRole(role);
     }
 
     /**
      * Removes a role object from me.
      */
+    @Override
     public void removeRole(Role role) {
         this.getRoles().remove(role);
     }
@@ -369,20 +370,16 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Utility method for iterating the set of named descriptors in the supplied nameEnvironment
      */
-    protected Collection getNamedDescriptorsFrom(JndiNameEnvironment nameEnvironment) {
-        Collection namedDescriptors = new Vector();
-        for (Iterator itr = nameEnvironment.getResourceReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceReferenceDescriptor resourceReference = (ResourceReferenceDescriptor) itr.next();
-            namedDescriptors.add(resourceReference);
+    protected Collection<NamedDescriptor> getNamedDescriptorsFrom(JndiNameEnvironment nameEnvironment) {
+        Collection<NamedDescriptor> namedDescriptors = new Vector<>();
+        for (ResourceReferenceDescriptor element : nameEnvironment.getResourceReferenceDescriptors()) {
+            namedDescriptors.add(element);
         }
-        for (Iterator itr = nameEnvironment.getEjbReferenceDescriptors().iterator(); itr.hasNext();) {
-            EjbReferenceDescriptor ejbReference = (EjbReferenceDescriptor) itr.next();
-            namedDescriptors.add(ejbReference);
+        for (EjbReferenceDescriptor element : nameEnvironment.getEjbReferenceDescriptors()) {
+            namedDescriptors.add(element);
         }
-        for (Iterator itr = nameEnvironment.getResourceEnvReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceEnvReferenceDescriptor resourceEnvRef =
-                    (ResourceEnvReferenceDescriptor) itr.next();
-            namedDescriptors.add(resourceEnvRef);
+        for (ResourceEnvReferenceDescriptor element : nameEnvironment.getResourceEnvReferenceDescriptors()) {
+            namedDescriptors.add(element);
         }
 
         return namedDescriptors;
@@ -392,54 +389,49 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * Utility method for iterating the set of NameReference pairs in the supplied nameEnvironment
      */
     protected Vector<NamedReferencePair> getNamedReferencePairsFrom(JndiNameEnvironment nameEnvironment) {
-        Vector<NamedReferencePair> pairs = new Vector<NamedReferencePair>();
-        for (Iterator itr = nameEnvironment.getResourceReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceReferenceDescriptor resourceReference = (ResourceReferenceDescriptor) itr.next();
-            pairs.add(NamedReferencePair.createResourceRefPair((Descriptor) nameEnvironment, resourceReference));
+        Vector<NamedReferencePair> pairs = new Vector<>();
+        for (ResourceReferenceDescriptor element : nameEnvironment.getResourceReferenceDescriptors()) {
+            pairs.add(NamedReferencePair.createResourceRefPair((Descriptor) nameEnvironment, element));
         }
-        for (Iterator itr = nameEnvironment.getEjbReferenceDescriptors().iterator(); itr.hasNext();) {
-            EjbReferenceDescriptor ejbReference = (EjbReferenceDescriptor) itr.next();
-            pairs.add(NamedReferencePair.createEjbRefPair((Descriptor) nameEnvironment, ejbReference));
+        for (EjbReferenceDescriptor element : nameEnvironment.getEjbReferenceDescriptors()) {
+            pairs.add(NamedReferencePair.createEjbRefPair((Descriptor) nameEnvironment, element));
         }
-        for (Iterator itr = nameEnvironment.getResourceEnvReferenceDescriptors().iterator(); itr.hasNext();) {
-            ResourceEnvReferenceDescriptor resourceEnvRef =
-                    (ResourceEnvReferenceDescriptor) itr.next();
-            pairs.add(NamedReferencePair.createResourceEnvRefPair((Descriptor) nameEnvironment, resourceEnvRef));
+        for (ResourceEnvReferenceDescriptor element : nameEnvironment.getResourceEnvReferenceDescriptors()) {
+            pairs.add(NamedReferencePair.createResourceEnvRefPair((Descriptor) nameEnvironment, element));
         }
-
         return pairs;
     }
 
     private static final class InjectionInfoCacheKey {
         String beanName;
-        Class clazz;
+        Class<?> clazz;
         int hc;
 
-        InjectionInfoCacheKey(String beanName, Class clazz) {
+        InjectionInfoCacheKey(String beanName, Class<?> clazz) {
             this.beanName = beanName;
             this.clazz = clazz;
             hc = beanName.hashCode();
         }
 
+        @Override
         public int hashCode() {
             return hc;
         }
 
+        @Override
         public boolean equals(Object o) {
             boolean result = false;
             if (o instanceof InjectionInfoCacheKey) {
                 InjectionInfoCacheKey other = (InjectionInfoCacheKey) o;
                 if (hc == other.hc) {
-                    return ((clazz == other.clazz) && (beanName.equals(other.beanName)));
+                    return (clazz == other.clazz && beanName.equals(other.beanName));
                 }
             }
             return result;
         }
     }
 
-    public InjectionInfo getInjectionInfoByClass(Class clazz,
-                                                 JndiNameEnvironment jndiNameEnv) {
-
+    public InjectionInfo getInjectionInfoByClass(Class<?> clazz, JndiNameEnvironment jndiNameEnv) {
         // first look in the cache
         InjectionInfoCacheKey key = null;
         if (jndiNameEnv instanceof EjbDescriptor) {
@@ -457,29 +449,22 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         String className = clazz.getName();
 
         // if it's not in the cache, create a new one
-        LifecycleCallbackDescriptor postConstructDesc =
-                getPostConstructDescriptorByClass(className, jndiNameEnv);
-        String postConstructMethodName = (postConstructDesc != null) ?
-                postConstructDesc.getLifecycleCallbackMethod() : null;
-        LifecycleCallbackDescriptor preDestroyDesc =
-                getPreDestroyDescriptorByClass(className, jndiNameEnv);
-        String preDestroyMethodName = (preDestroyDesc != null) ?
-                preDestroyDesc.getLifecycleCallbackMethod() : null;
-        injectionInfo = new InjectionInfo(className,
-                postConstructMethodName, preDestroyMethodName,
-                getInjectableResourcesByClass(className,
-                        jndiNameEnv));
+        LifecycleCallbackDescriptor postConstructDesc = getPostConstructDescriptorByClass(className, jndiNameEnv);
+        String postConstructMethodName = postConstructDesc == null ? null : postConstructDesc.getLifecycleCallbackMethod();
+        LifecycleCallbackDescriptor preDestroyDesc = getPreDestroyDescriptorByClass(className, jndiNameEnv);
+        String preDestroyMethodName = preDestroyDesc == null ? null : preDestroyDesc.getLifecycleCallbackMethod();
+        injectionInfo = new InjectionInfo(className, postConstructMethodName, preDestroyMethodName,
+            getInjectableResourcesByClass(className, jndiNameEnv));
 
         // store it in the cache and return
         injectionInfos.put(key, injectionInfo);
         return injectionInfo;
     }
 
-    public LifecycleCallbackDescriptor
-    getPostConstructDescriptorByClass(String className,
-                                      JndiNameEnvironment jndiNameEnv) {
-        for (LifecycleCallbackDescriptor next :
-                jndiNameEnv.getPostConstructDescriptors()) {
+
+    public LifecycleCallbackDescriptor getPostConstructDescriptorByClass(String className,
+        JndiNameEnvironment jndiNameEnv) {
+        for (LifecycleCallbackDescriptor next : jndiNameEnv.getPostConstructDescriptors()) {
             if (next.getLifecycleCallbackClass().equals(className)) {
                 return next;
             }
@@ -487,11 +472,10 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return null;
     }
 
-    public LifecycleCallbackDescriptor
-    getPreDestroyDescriptorByClass(String className,
-                                   JndiNameEnvironment jndiNameEnv) {
-        for (LifecycleCallbackDescriptor next :
-                jndiNameEnv.getPreDestroyDescriptors()) {
+
+    public LifecycleCallbackDescriptor getPreDestroyDescriptorByClass(String className,
+        JndiNameEnvironment jndiNameEnv) {
+        for (LifecycleCallbackDescriptor next : jndiNameEnv.getPreDestroyDescriptors()) {
             if (next.getLifecycleCallbackClass().equals(className)) {
                 return next;
             }
@@ -499,34 +483,25 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return null;
     }
 
-    public List<InjectionCapable> getInjectableResources
-            (JndiNameEnvironment jndiNameEnv) {
 
-        List<InjectionCapable> injectables =
-                new LinkedList<InjectionCapable>();
-
+    public List<InjectionCapable> getInjectableResources(JndiNameEnvironment jndiNameEnv) {
+        List<InjectionCapable> injectables = new LinkedList<>();
         addJndiNameEnvironmentInjectables(jndiNameEnv, injectables);
-
         return injectables;
     }
 
+
     private void addJndiNameEnvironmentInjectables(JndiNameEnvironment jndiNameEnv,
-                                                   List<InjectionCapable> injectables) {
+        List<InjectionCapable> injectables) {
+        Collection<InjectionCapable> allEnvProps = new HashSet<>();
 
-        Collection allEnvProps = new HashSet();
-
-        for (Iterator envEntryItr =
-                jndiNameEnv.getEnvironmentProperties().iterator();
-             envEntryItr.hasNext();) {
-            EnvironmentProperty envEntry = (EnvironmentProperty)
-                    envEntryItr.next();
-
+        for (EnvironmentProperty envEntry : jndiNameEnv.getEnvironmentProperties()) {
             // Only env-entries that have been assigned a value are
             // eligible for injection.
             // If the jndiNameEnv is an EjbBundleDescriptor then we have to account for this because
             // there can be injection points on classes inside the ejb jar but not accounted for
             // in the deployment descriptor.
-            if (envEntry.hasAValue() || ( jndiNameEnv instanceof EjbBundleDescriptor ) ){
+            if (envEntry.hasAValue() || (jndiNameEnv instanceof EjbBundleDescriptor)) {
                 allEnvProps.add(envEntry);
             }
         }
@@ -540,23 +515,20 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         allEnvProps.addAll(jndiNameEnv.getEntityManagerFactoryReferenceDescriptors());
         allEnvProps.addAll(jndiNameEnv.getEntityManagerReferenceDescriptors());
 
-        for (Iterator envItr = allEnvProps.iterator(); envItr.hasNext();) {
-            InjectionCapable next = (InjectionCapable) envItr.next();
+        for (InjectionCapable next : allEnvProps) {
             if (next.isInjectable()) {
                 injectables.add(next);
             }
         }
-
     }
+
 
     /**
      * Define implementation of getInjectableResourceByClass here so it
      * isn't replicated across appclient, web, ejb descriptors.
      */
-    protected List<InjectionCapable> getInjectableResourcesByClass(String className,
-                                  JndiNameEnvironment jndiNameEnv) {
-        List<InjectionCapable> injectables =
-                new LinkedList<InjectionCapable>();
+    protected List<InjectionCapable> getInjectableResourcesByClass(String className, JndiNameEnvironment jndiNameEnv) {
+        List<InjectionCapable> injectables = new LinkedList<>();
 
         for (InjectionCapable next : getInjectableResources(jndiNameEnv)) {
             if (next.isInjectable()) {
@@ -567,13 +539,13 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
                 }
             }
         }
-
         return injectables;
     }
 
     /**
      * @return the class loader associated with this module
      */
+    @Override
     public ClassLoader getClassLoader() {
         if (classLoader != null) {
             return classLoader;
@@ -581,13 +553,13 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         if (application != null) {
             return application.getClassLoader();
         }
-
         return classLoader;
     }
 
     /**
      * Prints a formatted string representing my state.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\n");
         super.print(toStringBuffer);
@@ -601,6 +573,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * @return the  type of this bundle descriptor
      */
+    @Override
     public abstract ArchiveType getModuleType();
 
     /**
@@ -620,6 +593,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * @return the module ID for this module descriptor
      */
+    @Override
     public String getModuleID() {
         if (moduleID == null) {
             moduleID = getModuleDescriptor().getArchiveUri();
@@ -628,11 +602,9 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
             return moduleID;
         }
         if (application != null && !application.isVirtual()) {
-            return application.getRegistrationName() + "#" +
-                getModuleDescriptor().getArchiveUri();
-        } else {
-            return moduleID;
+            return application.getRegistrationName() + "#" + getModuleDescriptor().getArchiveUri();
         }
+        return moduleID;
     }
 
     /**
@@ -666,36 +638,32 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * @return persistence units that are referenced by this module
      */
     public Collection<? extends PersistenceUnitDescriptor> findReferencedPUs() {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
+
 
     /**
      * helper method: find all PUs referenced via @PersistenceUnit or
      * <persistence-unit-ref>
      */
-    protected static Collection<? extends PersistenceUnitDescriptor>
-    findReferencedPUsViaPURefs(JndiNameEnvironment component) {
-        Collection<PersistenceUnitDescriptor> pus =
-                new HashSet<PersistenceUnitDescriptor>();
-        for (EntityManagerFactoryReference emfRef :
-                component.getEntityManagerFactoryReferenceDescriptors()) {
+    protected static Collection<? extends PersistenceUnitDescriptor> findReferencedPUsViaPURefs(
+        JndiNameEnvironment component) {
+        Collection<PersistenceUnitDescriptor> pus = new HashSet<>();
+        for (EntityManagerFactoryReference emfRef : component.getEntityManagerFactoryReferenceDescriptors()) {
             PersistenceUnitDescriptor pu = findReferencedPUViaEMFRef(emfRef);
             pus.add(pu);
         }
         return pus;
     }
 
+
     protected static PersistenceUnitDescriptor findReferencedPUViaEMFRef(EntityManagerFactoryReference emfRef) {
         final String unitName = emfRef.getUnitName();
-        final BundleDescriptor bundle =
-                emfRef.getReferringBundleDescriptor();
+        final BundleDescriptor bundle = emfRef.getReferringBundleDescriptor();
         PersistenceUnitDescriptor pu = bundle.findReferencedPU(unitName);
         if (pu == null) {
-            throw new RuntimeException(localStrings.getLocalString(
-                    "enterprise.deployment.exception-unresolved-pu-ref", "xxx", // NOI18N
-                    new Object[]{emfRef.getName(),
-                            bundle.getName()})
-            );
+            throw new RuntimeException(localStrings.getLocalString("enterprise.deployment.exception-unresolved-pu-ref",
+                "xxx", new Object[] {emfRef.getName(), bundle.getName()}));
         }
         return pu;
     }
@@ -704,12 +672,10 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * helper method: find all PUs referenced via @PersistenceContext or
      * <persistence-context-ref>
      */
-    protected static Collection<? extends PersistenceUnitDescriptor>
-    findReferencedPUsViaPCRefs(JndiNameEnvironment component) {
-        Collection<PersistenceUnitDescriptor> pus =
-                new HashSet<PersistenceUnitDescriptor>();
-        for (EntityManagerReference emRef :
-                component.getEntityManagerReferenceDescriptors()) {
+    protected static Collection<? extends PersistenceUnitDescriptor> findReferencedPUsViaPCRefs(
+        JndiNameEnvironment component) {
+        Collection<PersistenceUnitDescriptor> pus = new HashSet<>();
+        for (EntityManagerReference emRef : component.getEntityManagerReferenceDescriptors()) {
             PersistenceUnitDescriptor pu = findReferencedPUViaEMRef(emRef);
             pus.add(pu);
         }
@@ -718,23 +684,17 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
     protected static PersistenceUnitDescriptor findReferencedPUViaEMRef(EntityManagerReference emRef) {
         final String unitName = emRef.getUnitName();
-        final BundleDescriptor bundle =
-                emRef.getReferringBundleDescriptor();
+        final BundleDescriptor bundle = emRef.getReferringBundleDescriptor();
         PersistenceUnitDescriptor pu = bundle.findReferencedPU(unitName);
         if (pu == null) {
-            throw new RuntimeException(localStrings.getLocalString(
-                    "enterprise.deployment.exception-unresolved-pc-ref", "xxx", // NOI18N
-                    new Object[]{emRef.getName(),
-                            bundle.getName()})
-            );
+            throw new RuntimeException(
+                localStrings.getLocalString("enterprise.deployment.exception-unresolved-pc-ref", "xxx",
+                    new Object[] {emRef.getName(), bundle.getName()}));
         }
-        if ("RESOURCE_LOCAL".equals(pu.getTransactionType())) { // NOI18N
-            throw new RuntimeException(localStrings.getLocalString(
-                    "enterprise.deployment.exception-non-jta-container-managed-em", "xxx", // NOI18N
-                    new Object[]{emRef.getName(),
-                            bundle.getName(),
-                            pu.getName()})
-            );
+        if ("RESOURCE_LOCAL".equals(pu.getTransactionType())) {
+            throw new RuntimeException(
+                localStrings.getLocalString("enterprise.deployment.exception-non-jta-container-managed-em", "xxx",
+                    new Object[] {emRef.getName(), bundle.getName(), pu.getName()}));
         }
         return pu;
     }
@@ -754,11 +714,10 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      *         Returns null, if unitName could not be resolved.
      */
     public PersistenceUnitDescriptor findReferencedPU(String unitName) {
-        if (unitName == null || unitName.length() == 0) { // uses default PU.
+        if (unitName == null || unitName.isEmpty()) { // uses default PU.
             return findDefaultPU();
-        } else {
-            return findReferencedPU0(unitName);
         }
+        return findReferencedPU0(unitName);
     }
 
     /**
@@ -773,10 +732,9 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         // step #1: see if we have only one PU in the local scope.
         PersistenceUnitDescriptor pu = null;
         int totalNumberOfPUInBundle = 0;
-        for (PersistenceUnitsDescriptor nextPUs :
-                getModuleDescriptor().getDescriptor().getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
-            for (PersistenceUnitDescriptor nextPU :
-                    nextPUs.getPersistenceUnitDescriptors()) {
+        for (PersistenceUnitsDescriptor nextPUs : getModuleDescriptor().getDescriptor()
+            .getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
+            for (PersistenceUnitDescriptor nextPU : nextPUs.getPersistenceUnitDescriptors()) {
                 pu = nextPU;
                 totalNumberOfPUInBundle++;
             }
@@ -786,10 +744,9 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         } else if (totalNumberOfPUInBundle == 0) { // there are no PUs in this bundle.
             // step #2: see if we have only one PU in the ear.
             int totalNumberOfPUInEar = 0;
-            for (PersistenceUnitsDescriptor nextPUs :
-                    getApplication().getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
-                for (PersistenceUnitDescriptor nextPU :
-                        nextPUs.getPersistenceUnitDescriptors()) {
+            for (PersistenceUnitsDescriptor nextPUs : getApplication()
+                .getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
+                for (PersistenceUnitDescriptor nextPU : nextPUs.getPersistenceUnitDescriptors()) {
                     pu = nextPU;
                     totalNumberOfPUInEar++;
                 }
@@ -810,22 +767,19 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * @return
      */
     private PersistenceUnitDescriptor findReferencedPU0(String unitName) {
-        int separatorIndex =
-                unitName.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
+        int separatorIndex = unitName.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
 
         if (separatorIndex != -1) { // qualified name
             // uses # => must be defined in a utility jar at ear scope.
-            String unqualifiedUnitName =
-                    unitName.substring(separatorIndex + 1);
+            String unqualifiedUnitName = unitName.substring(separatorIndex + 1);
             String path = unitName.substring(0, separatorIndex);
             // it' necessary to call getTargetUri as that takes care of
             // converting ././b to canonical forms.
             String puRoot = getTargetUri(this, path);
-            final PersistenceUnitsDescriptor pus =
-                    getApplication().getExtensionsDescriptors(PersistenceUnitsDescriptor.class, puRoot);
+            final PersistenceUnitsDescriptor pus = getApplication()
+                .getExtensionsDescriptors(PersistenceUnitsDescriptor.class, puRoot);
             if (pus != null) {
-                for (PersistenceUnitDescriptor pu :
-                        pus.getPersistenceUnitDescriptors()) {
+                for (PersistenceUnitDescriptor pu : pus.getPersistenceUnitDescriptors()) {
                     if (pu.getName().equals(unqualifiedUnitName)) {
                         return pu;
                     }
@@ -834,27 +788,25 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         } else { // uses unqualified name.
             // first look to see if there is a match with unqualified name,
             // b'cos local scope takes precedence.
-            Map<String, PersistenceUnitDescriptor> visiblePUs =
-                    getVisiblePUs();
+            Map<String, PersistenceUnitDescriptor> visiblePUs = getVisiblePUs();
             PersistenceUnitDescriptor result = visiblePUs.get(unitName);
-            if (result != null) return result;
+            if (result != null) {
+                return result;
+            }
 
             // next look to see if there is unique match in ear scope.
             int sameNamedEarScopedPUCount = 0;
-            Set<Map.Entry<String, PersistenceUnitDescriptor>> entrySet =
-              visiblePUs.entrySet();
-            Iterator <Map.Entry<String, PersistenceUnitDescriptor>> entryIt =
-              entrySet.iterator();
+            Set<Map.Entry<String, PersistenceUnitDescriptor>> entrySet = visiblePUs.entrySet();
+            Iterator<Map.Entry<String, PersistenceUnitDescriptor>> entryIt = entrySet.iterator();
             while (entryIt.hasNext()) {
-              Map.Entry<String, PersistenceUnitDescriptor> entry =
-                entryIt.next();
-              String s = entry.getKey();
-              int idx = s.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
-              if (idx != -1 // ear scoped
-                  && s.substring(idx + 1).matches(unitName)) {
-                result = entry.getValue();
-                sameNamedEarScopedPUCount++;
-              }
+                Map.Entry<String, PersistenceUnitDescriptor> entry = entryIt.next();
+                String s = entry.getKey();
+                int idx = s.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
+                if (idx != -1 // ear scoped
+                    && s.substring(idx + 1).matches(unitName)) {
+                    result = entry.getValue();
+                    sameNamedEarScopedPUCount++;
+                }
             }
             // if there are more than one ear scoped PU with same name (this
             // is possible when PU is inside two different library jar),
@@ -880,14 +832,12 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      *         where as it is in unqualified form for local PUs.
      */
     public Map<String, PersistenceUnitDescriptor> getVisiblePUs() {
-        Map<String, PersistenceUnitDescriptor> result =
-                new HashMap<String, PersistenceUnitDescriptor>();
+        Map<String, PersistenceUnitDescriptor> result = new HashMap<>();
 
         // local scoped PUs
-        for (PersistenceUnitsDescriptor pus :
-                getModuleDescriptor().getDescriptor().getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
-            for (PersistenceUnitDescriptor pu :
-                    pus.getPersistenceUnitDescriptors()) {
+        for (PersistenceUnitsDescriptor pus : getModuleDescriptor().getDescriptor()
+            .getExtensionsDescriptors(PersistenceUnitsDescriptor.class)) {
+            for (PersistenceUnitDescriptor pu : pus.getPersistenceUnitDescriptors()) {
                 // for local PUs, use unqualified name.
                 result.put(pu.getName(), pu);
             }
@@ -917,8 +867,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      *                          descriptor
      * @return target uri
      */
-    private String getTargetUri(BundleDescriptor origin,
-                                String relativeTargetUri) {
+    private String getTargetUri(BundleDescriptor origin, String relativeTargetUri) {
         try {
             String archiveUri = origin.getModuleDescriptor().getArchiveUri();
             return new URI(archiveUri).resolve(relativeTargetUri).getPath();
@@ -929,16 +878,12 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
 
     public String getModuleName() {
-        String moduleName = null;
-
         // for standalone jars, return its registration name
         // for applications, return the module uri
         if (getApplication().isVirtual()) {
-            moduleName = getApplication().getRegistrationName();
-        } else {
-            moduleName = getModuleDescriptor().getArchiveUri();
+            return getApplication().getRegistrationName();
         }
-        return moduleName;
+        return getModuleDescriptor().getArchiveUri();
     }
 
     // return a short unique representation of this BundleDescriptor
@@ -976,9 +921,10 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * descriptor will be ignored.
      * @param flag a boolean to set or unset the flag
      */
-     public void setFullFlag(boolean flag) {
-         fullFlag=flag;
-     }
+    public void setFullFlag(boolean flag) {
+        fullFlag = flag;
+    }
+
 
     /**
      * Sets the full attribute of the deployment descriptor
@@ -996,16 +942,19 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return fullAttribute;
     }
 
+
     /**
-     * @ return true for following cases:
-     *   1. When it's been tagged as "full" when processing annotations.
-     *   2. When DD has a version which doesn't allowed annotations.
-     *   return false otherwise.
+     * @return true for any of following cases:
+     *         <ol>
+     *         <li>When it's been tagged as "full" when processing annotations.
+     *         <li>When DD has a version which doesn't allow annotations.
+     *         </ol>
+     *         returns false otherwise.
      */
     public boolean isFullFlag() {
         // if it's been tagged as full,
         // return true
-        if (fullFlag == true) {
+        if (fullFlag) {
             return true;
         }
         return isDDWithNoAnnotationAllowed();
@@ -1013,30 +962,25 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
 
 
     /**
-     * @ return true for following cases:
-     *   a. ejb module and schema version earlier than 3.0;
-     *   b. web module and schema version earlier than 2.5;
-     *   c. appclient module and schema version earlier than 5.0.
-     *   d. connector module and schema version earlier than 1.6
+     * @return true for any of following cases:
+     * <ol>
+     * <li>ejb module and schema version earlier than 3.0;
+     * <li>web module and schema version earlier than 2.5;
+     * <li>appclient module and schema version earlier than 5.0.
+     * <li>connector module and schema version earlier than 1.6
+     * </ol>
      */
     public boolean isDDWithNoAnnotationAllowed() {
         ArchiveType mType = getModuleType();
-        if (mType == null) return false;
+        if (mType == null) {
+            return false;
+        }
         double specVersion = Double.parseDouble(getSpecVersion());
 
-            // we do not process annotations for earlier versions of DD
-            if ( (mType.equals(DOLUtils.ejbType()) &&
-                  specVersion < ANNOTATION_EJB_VER) ||
-                 (mType.equals(DOLUtils.warType()) &&
-                  specVersion < ANNOTATION_WAR_VER) ||
-                 (mType.equals(DOLUtils.carType()) &&
-                  specVersion < ANNOTATION_CAR_VER)  ||
-                 (mType.equals(DOLUtils.rarType()) &&
-                  specVersion < ANNOTATION_RAR_VER)) {
-                return true;
-            } else {
-                return false;
-            }
+        // we do not process annotations for earlier versions of DD
+        return (mType.equals(DOLUtils.ejbType()) && specVersion < ANNOTATION_EJB_VER
+            || mType.equals(DOLUtils.warType()) && specVersion < ANNOTATION_WAR_VER
+            || mType.equals(DOLUtils.carType()) && specVersion < ANNOTATION_CAR_VER
+            || mType.equals(DOLUtils.rarType()) && specVersion < ANNOTATION_RAR_VER);
     }
-
 }

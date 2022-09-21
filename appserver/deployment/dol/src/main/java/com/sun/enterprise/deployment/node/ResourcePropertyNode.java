@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,38 +22,49 @@ import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
-import com.sun.enterprise.deployment.core.*;
+import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
-import org.glassfish.deployment.common.Descriptor;
-import org.w3c.dom.Node;
 
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.glassfish.deployment.common.Descriptor;
+import org.w3c.dom.Node;
+
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 7/9/12
- * Time: 12:18 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman
  */
 public class ResourcePropertyNode extends DeploymentDescriptorNode<ResourcePropertyDescriptor> {
 
-    private ResourcePropertyDescriptor descriptor = null;
+    private ResourcePropertyDescriptor descriptor;
 
-    protected Map getDispatchTable() {
+    @Override
+    public ResourcePropertyDescriptor getDescriptor() {
+        if (descriptor == null) {
+            descriptor = new ResourcePropertyDescriptor();
+        }
+        return descriptor;
+    }
+
+
+    @Override
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.RESOURCE_PROPERTY_NAME, "setName");
         table.put(TagNames.RESOURCE_PROPERTY_VALUE, "setValue");
         return table;
     }
 
-    public Node writeDescriptor(Node node, Descriptor desc) {
 
-        Properties properties = null;
-
+    /**
+     * @param node
+     * @param desc
+     * @return node parameter
+     */
+    public static Node write(Node node, Descriptor desc) {
+        final Properties properties;
         if (desc instanceof MailSessionDescriptor) {
             properties = ((MailSessionDescriptor) desc).getProperties();
         } else if (desc instanceof ConnectionFactoryDefinitionDescriptor) {
@@ -63,13 +75,13 @@ public class ResourcePropertyNode extends DeploymentDescriptorNode<ResourcePrope
             properties = ((JMSConnectionFactoryDefinitionDescriptor) desc).getProperties();
         } else if (desc instanceof JMSDestinationDefinitionDescriptor) {
             properties = ((JMSDestinationDefinitionDescriptor) desc).getProperties();
+        } else {
+            properties = null;
         }
 
         if (properties != null) {
-            Set keys = properties.keySet();
-
-            for (Object key : keys) {
-                String name = (String) key;
+            Set<String> keys = properties.stringPropertyNames();
+            for (String name : keys) {
                 String value = (String) properties.get(name);
                 Node propertyNode = appendChild(node, TagNames.RESOURCE_PROPERTY);
                 appendTextChild(propertyNode, TagNames.RESOURCE_PROPERTY_NAME, name);
@@ -77,13 +89,5 @@ public class ResourcePropertyNode extends DeploymentDescriptorNode<ResourcePrope
             }
         }
         return node;
-    }
-
-
-    public ResourcePropertyDescriptor getDescriptor() {
-        if (descriptor == null) {
-            descriptor = new ResourcePropertyDescriptor();
-        }
-        return descriptor;
     }
 }

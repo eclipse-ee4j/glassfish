@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,11 +20,10 @@ package com.sun.enterprise.deployment.node.ws;
 import com.sun.enterprise.deployment.WebService;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.deployment.WebServicesDescriptor;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.node.*;
+import com.sun.enterprise.deployment.node.DisplayableComponentNode;
+import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import org.w3c.dom.Node;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -31,23 +31,23 @@ import java.net.URL;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.w3c.dom.Node;
+
 /**
  * This node represents webservice-description node in weblogic-webservices.xml
  *
  * @author Rama Pulavarthi
  */
-public class WLWebServiceNode extends DisplayableComponentNode {
+public class WLWebServiceNode extends DisplayableComponentNode<WebService> {
 
-    private WebService descriptor = null;
+    private static final XMLElement tag = new XMLElement(WLWebServicesTagNames.WEB_SERVICE);
+    private WebService descriptor;
     private String serviceDescriptionName;
-    private final static XMLElement tag =
-            new XMLElement(WLWebServicesTagNames.WEB_SERVICE);
 
     public WLWebServiceNode() {
-        registerElementHandler(new XMLElement(WLWebServicesTagNames.PORT_COMPONENT),
-                WLWebServiceEndpointNode.class);
-
+        registerElementHandler(new XMLElement(WLWebServicesTagNames.PORT_COMPONENT), WLWebServiceEndpointNode.class);
     }
+
 
     /**
      * all sub-implementation of this class can use a dispatch table
@@ -57,9 +57,8 @@ public class WLWebServiceNode extends DisplayableComponentNode {
      * @return map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        //table.put(WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,"setName");
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(WLWebServicesTagNames.WEBSERVICE_TYPE, "setType");
         return table;
     }
@@ -73,32 +72,30 @@ public class WLWebServiceNode extends DisplayableComponentNode {
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-        if (WLWebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME.equals
-                (element.getQName())) {
+        if (WLWebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME.equals(element.getQName())) {
             WebServicesDescriptor webServices = (WebServicesDescriptor) getParentNode().getDescriptor();
             descriptor = webServices.getWebServiceByName(value);
             serviceDescriptionName = value;
         } else {
             if (descriptor == null) {
-                    DOLUtils.getDefaultLogger().severe
-                            ("Warning : WebService descriptor cannot be found webservice-description-name "
-                                    + serviceDescriptionName);
-                    throw new RuntimeException("DeploymentException: WebService descriptor cannot be found for webservice-description-name:" +
-                            serviceDescriptionName +" specified in weblogic-webservices.xml");
+                DOLUtils.getDefaultLogger()
+                    .severe("Warning : WebService descriptor cannot be found webservice-description-name "
+                        + serviceDescriptionName);
+                throw new RuntimeException(
+                    "DeploymentException: WebService descriptor cannot be found for webservice-description-name:"
+                        + serviceDescriptionName + " specified in weblogic-webservices.xml");
             }
 
-            if (WLWebServicesTagNames.WSDL_PUBLISH_FILE.equals
-                    (element.getQName())) {
+            if (WLWebServicesTagNames.WSDL_PUBLISH_FILE.equals(element.getQName())) {
                 URL url = null;
                 try {
                     url = new URL(value);
                 } catch (MalformedURLException e) {
                     try {
-                        //try file
+                        // try file
                         url = new File(value).toURI().toURL();
                     } catch (MalformedURLException mue) {
-                        DOLUtils.getDefaultLogger().log(Level.INFO,
-                                "Warning : Invalid final wsdl url=" + value, mue);
+                        DOLUtils.getDefaultLogger().log(Level.INFO, "Warning : Invalid final wsdl url=" + value, mue);
                     }
                 }
                 if (url != null) {
@@ -111,7 +108,7 @@ public class WLWebServiceNode extends DisplayableComponentNode {
     }
 
     @Override
-    public Object getDescriptor() {
+    public WebService getDescriptor() {
         return descriptor;
     }
 
@@ -123,8 +120,9 @@ public class WLWebServiceNode extends DisplayableComponentNode {
         return tag;
     }
 
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor
+     * Adds a new DOL descriptor instance to the descriptor
      * instance associated with this XMLNode
      *
      * @param descriptor the new descriptor
@@ -132,23 +130,19 @@ public class WLWebServiceNode extends DisplayableComponentNode {
     @Override
     public void addDescriptor(Object descriptor) {
         WebServiceEndpoint endpoint = (WebServiceEndpoint) descriptor;
-        WebService webService = (WebService) getDescriptor();
+        WebService webService = getDescriptor();
         webService.addEndpoint(endpoint);
     }
 
-    public Node writeDescriptor(Node parent, String nodeName,
-                                WebService descriptor) {
-        Node topNode =
-                super.writeDescriptor(parent, nodeName, descriptor);
 
-        //TODO is this needed?
-        //writeDisplayableComponentInfo(topNode, descriptor);
+    public Node writeDescriptor(Node parent, String nodeName, WebService descriptor) {
+        Node topNode = super.writeDescriptor(parent, nodeName, descriptor);
 
-        appendTextChild(topNode,
-                WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
-                descriptor.getName());
-        appendTextChild(topNode, WLWebServicesTagNames.WEBSERVICE_TYPE,
-                descriptor.getType());
+        // TODO is this needed?
+        // writeDisplayableComponentInfo(topNode, descriptor);
+
+        appendTextChild(topNode, WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME, descriptor.getName());
+        appendTextChild(topNode, WLWebServicesTagNames.WEBSERVICE_TYPE, descriptor.getType());
         if (descriptor.getClientPublishUrl() != null) {
             appendTextChild(topNode, WLWebServicesTagNames.WSDL_PUBLISH_FILE,
                 descriptor.getClientPublishUrl().toString());
@@ -156,8 +150,7 @@ public class WLWebServiceNode extends DisplayableComponentNode {
 
         WLWebServiceEndpointNode endpointNode = new WLWebServiceEndpointNode();
         for (WebServiceEndpoint next : descriptor.getEndpoints()) {
-            endpointNode.writeDescriptor
-                    (topNode, WebServicesTagNames.PORT_COMPONENT, next);
+            endpointNode.writeDescriptor(topNode, WebServicesTagNames.PORT_COMPONENT, next);
         }
 
         return topNode;

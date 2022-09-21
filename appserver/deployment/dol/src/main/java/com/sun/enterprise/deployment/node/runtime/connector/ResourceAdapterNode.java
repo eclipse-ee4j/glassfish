@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,9 +35,9 @@ import org.w3c.dom.Node;
  * @author  Jerome Dochez
  * @version
  */
-public class ResourceAdapterNode extends RuntimeDescriptorNode {
+public class ResourceAdapterNode extends RuntimeDescriptorNode<RuntimeDescriptor> {
 
-    protected RuntimeDescriptor descriptor = null;
+    protected RuntimeDescriptor descriptor;
 
     /**
      * Initialize the child handlers
@@ -54,9 +55,9 @@ public class ResourceAdapterNode extends RuntimeDescriptorNode {
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
-    public Object getDescriptor() {
+    public RuntimeDescriptor getDescriptor() {
         if (descriptor == null) {
-            descriptor = (RuntimeDescriptor) super.getDescriptor();
+            descriptor = super.getDescriptor();
             descriptor.setValue(ResourceAdapter.MAX_POOL_SIZE, "32");
             descriptor.setValue(ResourceAdapter.STEADY_POOL_SIZE, "4");
             descriptor.setValue(ResourceAdapter.MAX_WAIT_TIME_IN_MILLIS, "10000");

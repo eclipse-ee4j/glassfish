@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,54 +17,57 @@
 
 package org.glassfish.webservices.connector.annotation.handlers;
 
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServiceHandler;
+import com.sun.enterprise.deployment.WebServiceHandlerChain;
+import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
+import com.sun.enterprise.deployment.annotation.context.HandlerContext;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContextImpl;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
+import com.sun.enterprise.deployment.types.HandlerChainContainer;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
+import jakarta.jws.HandlerChain;
 import jakarta.jws.WebService;
 import jakarta.xml.ws.WebServiceProvider;
 import jakarta.xml.ws.WebServiceRef;
-import jakarta.jws.HandlerChain;
 
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.AnnotatedElement;
-import java.lang.annotation.Annotation;
-
 import java.net.URL;
-import java.util.List;
-import java.util.Iterator;
 import java.util.ArrayList;
-import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
-
-import org.glassfish.apf.*;
-import org.glassfish.apf.impl.HandlerProcessingResultImpl;
-import com.sun.enterprise.deployment.annotation.context.ResourceContainerContextImpl;
-
-import com.sun.enterprise.deployment.WebServiceHandlerChain;
-import com.sun.enterprise.deployment.WebServiceHandler;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import org.glassfish.deployment.common.Descriptor;
-import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
-import com.sun.enterprise.deployment.types.HandlerChainContainer;
-import com.sun.enterprise.deployment.annotation.context.HandlerContext;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.glassfish.webservices.connector.LogUtils;
 
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ProcessingContext;
+import org.glassfish.apf.ResultType;
+import org.glassfish.apf.impl.HandlerProcessingResultImpl;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.webservices.connector.LogUtils;
+import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.jvnet.hk2.annotations.Service;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * This handler takes care of the jakarta.jws.HandlerChain
@@ -85,6 +89,7 @@ public class HandlerChainHandler extends AbstractHandler {
      * require to be processed (if present) before it processes it's own
      * annotation type.
      */
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         Class<? extends Annotation>[] dependencies = new Class[3];
         dependencies[0] = WebService.class;
@@ -93,18 +98,18 @@ public class HandlerChainHandler extends AbstractHandler {
         return dependencies;
     }
 
+    @Override
     public HandlerProcessingResult processAnnotation(AnnotationInfo annInfo)
         throws AnnotationProcessorException {
 
         AnnotatedElementHandler annCtx = annInfo.getProcessingContext().getHandler();
         AnnotatedElement annElem = annInfo.getAnnotatedElement();
-        Class declaringClass;
+        Class<?> declaringClass;
 
-        boolean serviceSideChain =
-                ((annElem.getAnnotation(WebService.class) != null) ||
-                 (annElem.getAnnotation(WebServiceProvider.class) != null)) ? true : false;
-        if(serviceSideChain) {
-            declaringClass = (Class)annElem;
+        boolean serviceSideChain = annElem.getAnnotation(WebService.class) != null
+            || annElem.getAnnotation(WebServiceProvider.class) != null;
+        if (serviceSideChain) {
+            declaringClass = (Class<?>) annElem;
         } else {
             if (annInfo.getElementType().equals(ElementType.FIELD)) {
                 // this is a field injection
@@ -116,7 +121,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 declaringClass = (Class) annElem;
             } else {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.invalidtype",
                         "annotation not allowed on this element."),  annInfo);
             }
@@ -150,7 +155,7 @@ public class HandlerChainHandler extends AbstractHandler {
                             endpointIntf = declaringClass.getClassLoader().loadClass(webService.endpointInterface());
                         } catch(java.lang.ClassNotFoundException cfne) {
                             throw new AnnotationProcessorException(
-                                    localStrings.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
+                                    I18N.getLocalString("enterprise.deployment.annotation.handlers.classnotfound",
                                         "class {0} referenced from annotation symbol cannot be loaded",
                                         new Object[] { webService.endpointInterface() }), annInfo);
                         }
@@ -181,7 +186,7 @@ public class HandlerChainHandler extends AbstractHandler {
         if (!clientSideHandlerChain && (containers==null || containers.length==0)) {
             // could not find my web service...
             throw new AnnotationProcessorException(
-                    localStrings.getLocalString(
+                    I18N.getLocalString(
                         "enterprise.deployment.annotation.handlers.componentnotfound",
                         "component referenced from annotation symbol cannot be found"),
                     annInfo);
@@ -218,7 +223,7 @@ public class HandlerChainHandler extends AbstractHandler {
             }
             if (handlerFileStream==null) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.handlerfilenotfound",
                             "handler file {0} not found",
                             new Object[] { handlerFile }),
@@ -235,7 +240,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 document = builder.parse(handlerFileStream);
             } catch (SAXParseException spe) {
                 throw new AnnotationProcessorException(
-                        localStrings.getLocalString(
+                        I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.parserexception",
                             "{0} XML Parsing error : line  {1} ; Error = {2}",
                             new Object[] { handlerFile, spe.getLineNumber(), spe.getMessage()}));
@@ -245,7 +250,7 @@ public class HandlerChainHandler extends AbstractHandler {
                 }
             }
             for (HandlerChainContainer container : containers) {
-                boolean fromDD=true;
+                boolean fromDD = true;
                 if (!container.hasHandlerChain()) {
                     fromDD = false;
                     processHandlerFile(document, container);
@@ -255,14 +260,14 @@ public class HandlerChainHandler extends AbstractHandler {
                 // and manually invoke the handlers annotation processing since
                 // we know they are Jax-ws handlers.
                 List<WebServiceHandlerChain> chains = container.getHandlerChain();
-                ArrayList<Class> handlerClasses = new ArrayList<Class>();
+                ArrayList<Class<?>> handlerClasses = new ArrayList<>();
                 ClassLoader clo = annInfo.getProcessingContext().getProcessingInput().getClassLoader();
                 for (WebServiceHandlerChain chain : chains) {
                     for (WebServiceHandler handler : chain.getHandlers()) {
                         String className = handler.getHandlerClass();
                         try {
                             handlerClasses.add(clo.loadClass(className));
-                        } catch(ClassNotFoundException e) {
+                        } catch (ClassNotFoundException e) {
                             if (fromDD) {
                                 conLogger.log(Level.WARNING, LogUtils.DDHANDLER_NOT_FOUND, className);
                             } else {
@@ -274,34 +279,35 @@ public class HandlerChainHandler extends AbstractHandler {
                 }
                 // we have the list of handler classes, we can now
                 // push the context and call back annotation processing.
-                Descriptor jndiContainer=null;
+                Descriptor jndiContainer = null;
                 if (serviceSideChain) {
                     WebServiceEndpoint endpoint = (WebServiceEndpoint) container;
                     if (DOLUtils.warType().equals(endpoint.getBundleDescriptor().getModuleType())) {
                         jndiContainer = endpoint.getBundleDescriptor();
                     } else {
                         EjbDescriptor ejbDescriptor = endpoint.getEjbComponentImpl();
-                        if(ejbDescriptor instanceof Descriptor) {
+                        if (ejbDescriptor instanceof Descriptor) {
                             jndiContainer = Descriptor.class.cast(ejbDescriptor);
                         }
                     }
                 } else {
                     ServiceReferenceDescriptor ref = (ServiceReferenceDescriptor) container;
-                    if(DOLUtils.ejbType().equals(ref.getBundleDescriptor().getModuleType())) {
+                    if (DOLUtils.ejbType().equals(ref.getBundleDescriptor().getModuleType())) {
                         EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) ref.getBundleDescriptor();
                         Iterator<? extends EjbDescriptor> ejbsIter = ejbBundle.getEjbs().iterator();
-                        while(ejbsIter.hasNext()) {
+                        while (ejbsIter.hasNext()) {
                             EjbDescriptor ejb = ejbsIter.next();
                             try {
-                                if(ejb.getServiceReferenceByName(ref.getName()) != null) {
+                                if (ejb.getServiceReferenceByName(ref.getName()) != null) {
                                     // found the ejb; break out of the loop
-                                    if (ejb instanceof Descriptor)
+                                    if (ejb instanceof Descriptor) {
                                         jndiContainer = Descriptor.class.cast(ejb);
+                                    }
                                     break;
                                 }
                             } catch (IllegalArgumentException illex) {
                                 // this ejb does not have a service-ref by this name;
-                                // swallow this exception and  go to next
+                                // swallow this exception and go to next
                             }
                         }
                     } else {

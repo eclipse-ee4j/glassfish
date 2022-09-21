@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,42 +17,45 @@
 
 package com.sun.enterprise.deployment;
 
-
 import org.glassfish.deployment.common.Descriptor;
 
 public class LicenseDescriptor extends Descriptor {
 
+    private static final long serialVersionUID = 1L;
     private Boolean licenseRequired;
 
-    /** get value for licenseRequired
-    */
+    /**
+     * get value for licenseRequired
+     */
     public Boolean getLicenseRequired() {
         return licenseRequired;
     }
 
-    /** get value for licenseRequired
-    */
+
+    /**
+     * get value for licenseRequired
+     */
     public String getLicenseRequiredValue() {
-        if (licenseRequired.booleanValue() == true)
-            return "true";
-        else return "false";
+        return Boolean.toString(licenseRequired.booleanValue());
     }
 
-    /** set value for licenseRequired
-    */
+
+    /**
+     * set value for licenseRequired
+     */
     public void setLicenseRequired(boolean licenseRequired) {
-        if(licenseRequired==true)
-            this.licenseRequired =Boolean.TRUE;
-        else
-            this.licenseRequired =Boolean.FALSE;
+        this.licenseRequired = licenseRequired;
     }
 
-    /** set value for licenseRequired
-    */
+
+    /**
+     * set value for licenseRequired
+     */
     public void setLicenseRequired(String licenseRequired) {
-        if(licenseRequired.equals("true"))
-            this.licenseRequired =Boolean.TRUE;
-        else if(licenseRequired.equals("false"))
-            this.licenseRequired =Boolean.FALSE;
+        if ("true".equals(licenseRequired)) {
+            this.licenseRequired = Boolean.TRUE;
+        } else if ("false".equals(licenseRequired)) {
+            this.licenseRequired = Boolean.FALSE;
+        }
     }
 }

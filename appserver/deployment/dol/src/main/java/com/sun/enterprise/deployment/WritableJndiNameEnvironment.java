@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.types.EjbReference;
 
 /**
  * Objects implementing this interface allow their
@@ -47,14 +47,14 @@ public interface WritableJndiNameEnvironment extends JndiNameEnvironment {
      *
      * @param ejbReference the EjbReferenceDescriptor to add.
      */
-    void addEjbReferenceDescriptor(EjbReference ejbReference);
+    void addEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
      * Removes the specificed ejb reference from the receiver.
      *
      * @param ejbReference the EjbReferenceDescriptor to remove.
      */
-    void removeEjbReferenceDescriptor(EjbReference ejbReference);
+    void removeEjbReferenceDescriptor(EjbReferenceDescriptor ejbReference);
 
     /**
      * Adds the specified resource reference to the receiver.
@@ -73,56 +73,56 @@ public interface WritableJndiNameEnvironment extends JndiNameEnvironment {
     /**
      * Adds the specified resource environment reference to the receiver.
      *
-     * @param the ResourceEnvReferenceDescriptor to add.
+     * @param resourceEnvReference the ResourceEnvReferenceDescriptor to add.
      */
     void addResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference);
 
     /**
      * Removes the specified resource environment reference from the receiver.
      *
-     * @param the ResourceEnvReferenceDescriptor to remove.
+     * @param resourceEnvReference the ResourceEnvReferenceDescriptor to remove.
      */
     void removeResourceEnvReferenceDescriptor(ResourceEnvReferenceDescriptor resourceEnvReference);
 
     /**
      * Adds the specified message destination reference to the receiver.
      *
-     * @param the MessageDestinationReferenceDescriptor to add.
+     * @param msgDestRef the MessageDestinationReferenceDescriptor to add.
      */
     void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef);
 
     /**
      * Removes the specified message destination reference from the receiver.
      *
-     * @param ref MessageDestinationReferenceDescriptor to remove.
+     * @param msgDestRef ref MessageDestinationReferenceDescriptor to remove.
      */
     void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef);
 
     /**
      * Adds the specified post-construct descriptor to the receiver.
      *
-     * @param the post-construct LifecycleCallbackDescriptor to add.
+     * @param postConstructDesc the post-construct LifecycleCallbackDescriptor to add.
      */
     void addPostConstructDescriptor(LifecycleCallbackDescriptor postConstructDesc);
 
     /**
      * Adds the specified pre-destroy descriptor to the receiver.
      *
-     * @param the pre-destroy LifecycleCallbackDescriptor to add.
+     * @param preDestroyDesc the pre-destroy LifecycleCallbackDescriptor to add.
      */
     void addPreDestroyDescriptor(LifecycleCallbackDescriptor preDestroyDesc);
 
     /**
      * Adds the specified service reference to the receiver.
      *
-     * @param the ServiceReferenceDescriptor to add.
+     * @param serviceReference the ServiceReferenceDescriptor to add.
      */
     void addServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference);
 
     /**
      * Removes the specified service reference from the receiver.
      *
-     * @param the ServiceReferenceDescriptor to remove.
+     * @param serviceReference the ServiceReferenceDescriptor to remove.
      */
     void removeServiceReferenceDescriptor(ServiceReferenceDescriptor serviceReference);
 

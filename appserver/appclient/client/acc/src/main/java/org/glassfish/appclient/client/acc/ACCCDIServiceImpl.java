@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +17,6 @@
 
 package org.glassfish.appclient.client.acc;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
-
-import javax.naming.NamingException;
-
-import org.jboss.weld.environment.se.Weld;
-import org.jboss.weld.environment.se.WeldContainer;
-import org.jboss.weld.manager.api.WeldManager;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.container.common.spi.InterceptorInvoker;
 import com.sun.enterprise.container.common.spi.JavaEEInterceptorBuilder;
@@ -45,6 +33,18 @@ import jakarta.enterprise.inject.spi.InjectionTarget;
 import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
+
+import javax.naming.NamingException;
+
+import org.jboss.weld.environment.se.Weld;
+import org.jboss.weld.environment.se.WeldContainer;
+import org.jboss.weld.manager.api.WeldManager;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author <a href="mailto:phil.zampino@oracle.com">Phil Zampino</a>
@@ -107,7 +107,6 @@ public class ACCCDIServiceImpl implements CDIService {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public CDIInjectionContext createManagedObject(Class managedClass, BundleDescriptor bundle, boolean invokePostConstruct) {
         Object managedObject = null;
 

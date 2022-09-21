@@ -17,7 +17,7 @@
 package connector;
 
 import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.UserNameAndPassword;
 
 import javax.security.auth.Subject;
 import jakarta.security.auth.message.callback.CallerPrincipalCallback;
@@ -32,11 +32,11 @@ import java.io.IOException;
 
 
 public class MyPlainSecurityContext extends SecurityContext {
-    private String userName;
-    private String password;
-    private String principalName;
+    private final String userName;
+    private final String password;
+    private final String principalName;
     private Subject subject;
-    private boolean translationRequired;
+    private final boolean translationRequired;
     public MyPlainSecurityContext(String userName, String password, String principalName, boolean translationRequired){
         this.userName = userName;
         this.password = password;
@@ -49,11 +49,11 @@ public class MyPlainSecurityContext extends SecurityContext {
 
         ////execSubject.getPublicCredentials().add(new Group("employee"));
 
-        //execSubject.getPublicCredentials().add(new PrincipalImpl(principalName));
-        execSubject.getPrincipals().add(new PrincipalImpl(principalName));
+        //execSubject.getPublicCredentials().add(new UserNameAndPassword(principalName));
+        execSubject.getPrincipals().add(new UserNameAndPassword(principalName));
         List<Callback> callbacks = new ArrayList<Callback>();
 
-        CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new PrincipalImpl(principalName));
+        CallerPrincipalCallback cpc = new CallerPrincipalCallback(execSubject, new UserNameAndPassword(principalName));
 
         debug("setting caller principal callback with principal : " + principalName);
         callbacks.add(cpc);

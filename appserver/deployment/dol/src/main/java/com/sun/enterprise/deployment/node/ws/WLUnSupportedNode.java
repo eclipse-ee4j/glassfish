@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,37 +29,43 @@ import org.w3c.dom.Node;
  *
  * @author Rama Pulavarthi
  */
-public class WLUnSupportedNode extends DeploymentDescriptorNode {
+public class WLUnSupportedNode extends DeploymentDescriptorNode<Descriptor> {
+
     private final XMLElement tag;
 
     public WLUnSupportedNode(XMLElement tag) {
         this.tag = tag;
     }
 
+
     @Override
     protected XMLElement getXMLRootTag() {
         return tag;
     }
 
+
     @Override
     public void setElementValue(XMLElement element, String value) {
-        DOLUtils.getDefaultLogger().warning("Unsupported configuration " + element.getQName() + " in weblogic-webservices.xml");
+        DOLUtils.getDefaultLogger()
+            .warning("Unsupported configuration " + element.getQName() + " in weblogic-webservices.xml");
     }
 
-    public Node writeDescriptor(Node parent, String nodeName,
-                                Descriptor descriptor) {
+
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, Descriptor descriptor) {
         // This node does not preserve the original node information
         // TODO, Fix to write it back.
         return parent;
     }
 
+
     @Override
-    public Object getDescriptor() {
+    public Descriptor getDescriptor() {
         return null;
     }
 
+
     @Override
     public void addDescriptor(Object descriptor) {
-
     }
 }

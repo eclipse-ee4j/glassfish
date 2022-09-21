@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,19 +22,23 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import java.util.ArrayList;
 
 public class MessageSecurityBindingDescriptor extends RuntimeDescriptor {
+
+    private static final long serialVersionUID = 1L;
     public static final String AUTH_LAYER = "AuthLayer";
     public static final String PROVIDER_ID = "ProviderID";
 
-    private ArrayList messageSecDescs = new ArrayList();
+    private final ArrayList<MessageSecurityDescriptor> messageSecDescs = new ArrayList<>();
 
-    public MessageSecurityBindingDescriptor() {}
+    public MessageSecurityBindingDescriptor() {
+    }
 
-    public void addMessageSecurityDescriptor(
-        MessageSecurityDescriptor messageSecDesc) {
+
+    public void addMessageSecurityDescriptor(MessageSecurityDescriptor messageSecDesc) {
         messageSecDescs.add(messageSecDesc);
     }
 
-    public ArrayList getMessageSecurityDescriptors() {
+
+    public ArrayList<MessageSecurityDescriptor> getMessageSecurityDescriptors() {
         return messageSecDescs;
     }
 }

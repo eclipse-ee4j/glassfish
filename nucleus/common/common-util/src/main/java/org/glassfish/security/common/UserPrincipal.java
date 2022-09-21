@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,19 +14,18 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.apf.test.example;
+package org.glassfish.security.common;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.io.Serializable;
+import java.security.Principal;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 
 /**
- * @author jwells
+ * Principal representing user, usually with some additional attributes used for the authentication
+ * and authorization.
+ *
+ * @author David Matejcek
  */
-@Retention(RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ClassB {
+public interface UserPrincipal extends Serializable, Principal {
 
 }

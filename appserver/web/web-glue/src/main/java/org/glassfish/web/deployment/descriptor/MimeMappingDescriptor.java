@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,7 @@ package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.MimeMapping;
 
-import java.io.Serializable;
+import org.glassfish.deployment.common.Descriptor;
 
 /***
  * I represent a mapping between a mime type and a file extension for specifiying how
@@ -26,14 +27,14 @@ import java.io.Serializable;
  *
  * @author Danny Coward
  */
-public class MimeMappingDescriptor implements MimeMapping, Serializable {
+public class MimeMappingDescriptor extends Descriptor implements MimeMapping {
 
+    private static final long serialVersionUID = 1L;
     private String extension;
     private String mimeType;
 
     /** copy constructor */
     public MimeMappingDescriptor(MimeMappingDescriptor other) {
-        // super(other);
         extension = other.extension;
         mimeType = other.mimeType;
     }
@@ -46,7 +47,7 @@ public class MimeMappingDescriptor implements MimeMapping, Serializable {
     }
 
 
-    /* Default constructor. */
+    /** Default constructor. */
     public MimeMappingDescriptor() {
     }
 
@@ -86,6 +87,7 @@ public class MimeMappingDescriptor implements MimeMapping, Serializable {
 
 
     /** My pretty format. */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("MimeMapping: ").append(this.getExtension()).append("@").append(this.getMimeType());
     }

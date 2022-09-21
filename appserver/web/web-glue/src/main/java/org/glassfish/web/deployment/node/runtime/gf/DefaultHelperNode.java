@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,11 @@ package org.glassfish.web.deployment.node.runtime.gf;
 
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
-import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
 import org.glassfish.web.deployment.runtime.DefaultHelper;
 import org.glassfish.web.deployment.runtime.WebProperty;
+import org.glassfish.web.deployment.runtime.WebPropertyContainer;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -33,9 +35,7 @@ import org.w3c.dom.Node;
 public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
 
     public DefaultHelperNode() {
-
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
-                               WebPropertyNode.class, "addWebProperty");
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), WebPropertyNode.class, "addWebProperty");
     }
 
     protected DefaultHelper descriptor = null;
@@ -45,7 +45,7 @@ public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
      */
     @Override
     public DefaultHelper getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new DefaultHelper();
         }
         return descriptor;
@@ -61,9 +61,8 @@ public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
      */
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
-        RuntimeDescriptor descriptor = getDescriptor();
         if (attributeName.getQName().equals(RuntimeTagNames.NAME)) {
-            descriptor.setAttributeValue(DefaultHelper.NAME, value);
+            getDescriptor().setAttributeValue(WebPropertyContainer.NAME, value);
             return true;
         }
         return false;
@@ -83,13 +82,13 @@ public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
 
         // property*
         WebProperty[] properties = descriptor.getWebProperty();
-        if (properties.length>0) {
+        if (properties.length > 0) {
             WebPropertyNode wpn = new WebPropertyNode();
             wpn.writeDescriptor(defaultHelper, RuntimeTagNames.PROPERTY, properties);
         }
 
         // name, class-name attribute
-        setAttribute(defaultHelper, RuntimeTagNames.NAME, (String) descriptor.getAttributeValue(DefaultHelper.NAME));
+        setAttribute(defaultHelper, RuntimeTagNames.NAME, descriptor.getAttributeValue(WebPropertyContainer.NAME));
 
         return defaultHelper;
     }

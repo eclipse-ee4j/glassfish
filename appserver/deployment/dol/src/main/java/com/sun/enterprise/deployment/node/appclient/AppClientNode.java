@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,38 @@
 
 package com.sun.enterprise.deployment.node.appclient;
 
+import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.node.AbstractBundleNode;
+import com.sun.enterprise.deployment.node.DataSourceDefinitionNode;
+import com.sun.enterprise.deployment.node.EjbLocalReferenceNode;
+import com.sun.enterprise.deployment.node.EjbReferenceNode;
+import com.sun.enterprise.deployment.node.EntityManagerFactoryReferenceNode;
+import com.sun.enterprise.deployment.node.EnvEntryNode;
+import com.sun.enterprise.deployment.node.JMSConnectionFactoryDefinitionNode;
+import com.sun.enterprise.deployment.node.JMSDestinationDefinitionNode;
+import com.sun.enterprise.deployment.node.JndiEnvRefNode;
+import com.sun.enterprise.deployment.node.LifecycleCallbackNode;
+import com.sun.enterprise.deployment.node.MailSessionNode;
+import com.sun.enterprise.deployment.node.MessageDestinationNode;
+import com.sun.enterprise.deployment.node.MessageDestinationRefNode;
+import com.sun.enterprise.deployment.node.ResourceEnvRefNode;
+import com.sun.enterprise.deployment.node.ResourceRefNode;
+import com.sun.enterprise.deployment.node.SaxParserHandler;
+import com.sun.enterprise.deployment.node.XMLElement;
+import com.sun.enterprise.deployment.node.runtime.AppClientRuntimeNode;
+import com.sun.enterprise.deployment.node.runtime.GFAppClientRuntimeNode;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.deployment.xml.ApplicationClientTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sun.enterprise.deployment.ApplicationClientDescriptor;
-import com.sun.enterprise.deployment.node.*;
-import com.sun.enterprise.deployment.node.runtime.AppClientRuntimeNode;
-import com.sun.enterprise.deployment.node.runtime.GFAppClientRuntimeNode;
-import com.sun.enterprise.deployment.types.EjbReference;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.xml.ApplicationClientTagNames;
-import com.sun.enterprise.deployment.xml.TagNames;
-import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
@@ -46,27 +64,27 @@ import org.w3c.dom.Node;
 public class AppClientNode extends AbstractBundleNode<ApplicationClientDescriptor> {
 
     //app client 1.2
-    public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.2//EN";
-    public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/application-client_1_2.dtd";
+    private static final String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.2//EN";
+    private static final String SYSTEM_ID_12 = "http://java.sun.com/dtd/application-client_1_2.dtd";
 
     //app client 1.3
-    public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.3//EN";
-    public final static String SYSTEM_ID = "http://java.sun.com/dtd/application-client_1_3.dtd";
+    private static final String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD J2EE Application Client 1.3//EN";
+    private static final String SYSTEM_ID = "http://java.sun.com/dtd/application-client_1_3.dtd";
 
-    public final static String SCHEMA_ID_14 = "application-client_1_4.xsd";
+    private static final String SCHEMA_ID_14 = "application-client_1_4.xsd";
 
-    public final static String SCHEMA_ID_15 = "application-client_5.xsd";
-    public final static String SCHEMA_ID_16 = "application-client_6.xsd";
-    public final static String SCHEMA_ID_17 = "application-client_7.xsd";
-    public final static String SCHEMA_ID_18 = "application-client_8.xsd";
-    public final static String SCHEMA_ID = "application-client_9.xsd";
-    public final static String SPEC_VERSION = "9";
+    private static final String SCHEMA_ID_15 = "application-client_5.xsd";
+    private static final String SCHEMA_ID_16 = "application-client_6.xsd";
+    private static final String SCHEMA_ID_17 = "application-client_7.xsd";
+    private static final String SCHEMA_ID_18 = "application-client_8.xsd";
+    private static final String SCHEMA_ID = "application-client_9.xsd";
+    public static final String SPEC_VERSION = "9";
     private final static List<String> systemIDs = initSystemIDs();
 
-    public final static XMLElement tag = new XMLElement(ApplicationClientTagNames.APPLICATION_CLIENT_TAG);
+    private static final XMLElement tag = new XMLElement(ApplicationClientTagNames.APPLICATION_CLIENT_TAG);
 
     private static List<String> initSystemIDs() {
-        final ArrayList<String> systemIDs = new ArrayList<String>();
+        final ArrayList<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_14);
         systemIDs.add(SCHEMA_ID_15);
@@ -76,11 +94,12 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
         return Collections.unmodifiableList(systemIDs);
     }
 
+
     public AppClientNode() {
-    registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
+        registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
+        JndiEnvRefNode<?> serviceRefNode = serviceLocator.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
@@ -106,25 +125,26 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
      * @return the doctype tag name
      */
     @Override
-    public String registerBundle(Map publicIDToDTD) {
+    public String registerBundle(Map<String, String> publicIDToDTD) {
         publicIDToDTD.put(PUBLIC_DTD_ID, SYSTEM_ID);
         publicIDToDTD.put(PUBLIC_DTD_ID_12, SYSTEM_ID_12);
         return tag.getQName();
     }
 
     @Override
-    public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, final Map<String, List<Class>> versionUpgrades) {
-        final Map<String,Class> result = new HashMap<>();
+    public Map<String, Class<?>> registerRuntimeBundle(final Map<String, String> publicIDToDTD,
+        final Map<String, List<Class<?>>> versionUpgrades) {
+        final Map<String, Class<?>> result = new HashMap<>();
         result.put(AppClientRuntimeNode.registerBundle(publicIDToDTD), AppClientRuntimeNode.class);
         result.put(GFAppClientRuntimeNode.registerBundle(publicIDToDTD), GFAppClientRuntimeNode.class);
         return result;
     }
 
     @Override
-    public void addDescriptor(Object  newDescriptor) {
-        if (newDescriptor instanceof EjbReference) {
+    public void addDescriptor(Object newDescriptor) {
+        if (newDescriptor instanceof EjbReferenceDescriptor) {
             DOLUtils.getDefaultLogger().fine("Adding ejb ref " + newDescriptor);
-            (getDescriptor()).addEjbReferenceDescriptor((EjbReference) newDescriptor);
+            getDescriptor().addEjbReferenceDescriptor((EjbReferenceDescriptor) newDescriptor);
         } else {
             super.addDescriptor(newDescriptor);
         }
@@ -136,9 +156,9 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     }
 
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(ApplicationClientTagNames.CALLBACK_HANDLER, "setCallbackHandler");
         return table;
     }
@@ -173,8 +193,7 @@ public class AppClientNode extends AbstractBundleNode<ApplicationClientDescripto
     }
 
     @Override
-    public Node writeDescriptor(Node parent,
-        ApplicationClientDescriptor appclientDesc) {
+    public Node writeDescriptor(Node parent, ApplicationClientDescriptor appclientDesc) {
         Node appclientNode = super.writeDescriptor(parent, appclientDesc);
 
         // env-entry*

@@ -18,23 +18,21 @@ package com.sun.enterprise.deployment.annotation.impl;
 
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import org.glassfish.apf.impl.AnnotationUtils;
+import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import org.glassfish.hk2.api.PerLookup;
-
-
-@Service(name="rar")
+@Service(name = "rar")
 @PerLookup
-public class RarScanner extends ModuleScanner<ConnectorDescriptor>{
+public class RarScanner extends ModuleScanner<ConnectorDescriptor> {
 
-    public void process(File archiveFile, ConnectorDescriptor desc,
-        ClassLoader classLoader) throws IOException {
+    @Override
+    public void process(File archiveFile, ConnectorDescriptor desc, ClassLoader classLoader) throws IOException {
         if (AnnotationUtils.getLogger().isLoggable(Level.FINE)) {
             AnnotationUtils.getLogger().fine("archiveFile is " + archiveFile);
             AnnotationUtils.getLogger().fine("classLoader is " + classLoader);
@@ -45,19 +43,14 @@ public class RarScanner extends ModuleScanner<ConnectorDescriptor>{
             addScanDirectory(archiveFile);
 
             // add top level jars for scanning
-            File[] jarFiles = archiveFile.listFiles(new FileFilter() {
-                 public boolean accept(File pathname) {
-                     return (pathname.isFile() &&
-                            pathname.getAbsolutePath().endsWith(".jar"));
-                 }
-            });
-
+            FileFilter filter = pathname -> pathname.isFile() && pathname.getAbsolutePath().endsWith(".jar");
+            File[] jarFiles = archiveFile.listFiles(filter);
             if (jarFiles != null && jarFiles.length > 0) {
                 for (File jarFile : jarFiles) {
                     addScanJar(jarFile);
                 }
             }
-        }else{
+        } else {
             AnnotationUtils.getLogger().fine("RARScanner : not a directory : " + archiveFile.getName());
         }
     }

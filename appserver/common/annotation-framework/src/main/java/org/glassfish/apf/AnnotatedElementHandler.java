@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,6 @@ package org.glassfish.apf;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 
-
 /**
  * Provides notification when the annotation processor is visiting a
  * new AnnotatedElement.
@@ -34,11 +34,9 @@ public interface AnnotatedElementHandler {
      *
      * @param type the annotated element type (class, field, method...)
      * @param element the annotated element we are starting to visit.
-     *
-     * @exception AnnotationProcessorException;
+     * @throws AnnotationProcessorException;
      */
-    public void startElement(ElementType type, AnnotatedElement element)
-        throws AnnotationProcessorException;
+    void startElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException;
 
     /**
      * After annotations for an annotated element are processed, the
@@ -46,10 +44,8 @@ public interface AnnotatedElementHandler {
      *
      * @param type the annotated element type (class, field, method...)
      * @param element the annotated element we are done visiting.
-     *
-     * @exception AnnotationProcessorException;
+     * @throws AnnotationProcessorException;
      */
-    public void endElement(ElementType type, AnnotatedElement element)
-        throws AnnotationProcessorException;
+    void endElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException;
 
 }

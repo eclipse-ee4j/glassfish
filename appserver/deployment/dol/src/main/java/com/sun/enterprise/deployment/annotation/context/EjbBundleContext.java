@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,12 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * EjbBundleContext.java
- *
- * Created on January 12, 2005, 10:20 AM
- */
-
 package com.sun.enterprise.deployment.annotation.context;
 
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
@@ -27,14 +22,15 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.types.HandlerChainContainer;
 import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
-import org.glassfish.apf.AnnotatedElementHandler;
 
 import java.lang.annotation.ElementType;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.context.AnnotationContext;
 
 /**
  * This ClientContext implementation holds a top level reference
@@ -50,9 +46,11 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
         super(descriptor);
     }
 
+
     public EjbBundleDescriptor getDescriptor() {
-        return (EjbBundleDescriptor)descriptor;
+        return (EjbBundleDescriptor) descriptor;
     }
+
 
     /**
      * This methods create a context for Ejb(s) by using descriptor(s)
@@ -60,8 +58,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
      * Return null if corresponding descriptor is not found.
      */
     public AnnotatedElementHandler createContextForEjb() {
-        Class ejbClass = (Class)this.getProcessingContext().getProcessor(
-                ).getLastAnnotatedElement(ElementType.TYPE);
+        Class<?> ejbClass = (Class<?>) getProcessingContext().getProcessor().getLastAnnotatedElement(ElementType.TYPE);
         EjbDescriptor[] ejbDescs = null;
         String ejbClassName = null;
         if (ejbClass != null) {
@@ -69,7 +66,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
             ejbDescs = this.getDescriptor().getEjbByClassName(ejbClassName);
         }
 
-        AnnotatedElementHandler aeHandler = null;
+        AnnotationContext aeHandler = null;
         if (ejbDescs != null && ejbDescs.length > 1) {
             aeHandler = new EjbsContext(ejbDescs, ejbClass);
         } else if (ejbDescs != null && ejbDescs.length == 1) {
@@ -78,59 +75,54 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
 
         if (aeHandler != null) {
             // push a EjbContext to stack
-            this.getProcessingContext().pushHandler(aeHandler);
+            getProcessingContext().pushHandler(aeHandler);
         }
         return aeHandler;
     }
 
-    public HandlerChainContainer[]
-            getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
-        if(serviceSideHandlerChain) {
+
+    @Override
+    public HandlerChainContainer[] getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
+        if (serviceSideHandlerChain) {
             EjbDescriptor[] ejbs;
-            if(declaringClass.isInterface()) {
+            if (declaringClass.isInterface()) {
                 ejbs = getDescriptor().getEjbBySEIName(declaringClass.getName());
             } else {
                 ejbs = getDescriptor().getEjbByClassName(declaringClass.getName());
             }
-            List<WebServiceEndpoint> result = new ArrayList<WebServiceEndpoint>();
+            List<WebServiceEndpoint> result = new ArrayList<>();
             for (EjbDescriptor ejb : ejbs) {
                 result.addAll(getDescriptor().getWebServices().getEndpointsImplementedBy(ejb));
             }
-            return(result.toArray(new HandlerChainContainer[result.size()]));
-        } else {
-            List<ServiceReferenceDescriptor> result = new ArrayList<ServiceReferenceDescriptor>();
-            result.addAll(getDescriptor().getEjbServiceReferenceDescriptors());
-            return(result.toArray(new HandlerChainContainer[result.size()]));
+            return (result.toArray(new HandlerChainContainer[result.size()]));
         }
+        List<ServiceReferenceDescriptor> result = new ArrayList<>();
+        result.addAll(getDescriptor().getEjbServiceReferenceDescriptors());
+        return result.toArray(new HandlerChainContainer[result.size()]);
     }
 
+
+    @Override
     public ServiceReferenceContainer[] getServiceRefContainers() {
-        ServiceReferenceContainer[] container =
-                new ServiceReferenceContainer[getDescriptor().getEjbs().size()];
-        ServiceReferenceContainer[] ret =
-                (ServiceReferenceContainer[])getDescriptor().getEjbs().toArray(container);
-        return ret;
+        ServiceReferenceContainer[] container = new ServiceReferenceContainer[getDescriptor().getEjbs().size()];
+        return getDescriptor().getEjbs().toArray(container);
     }
+
 
     /**
-     * This methods create a context for EjbInterceptor associated to
-     * given className.
+     * This methods create a context for EjbInterceptor associated to given className.
      * Return null if corresponding descriptor is not found.
      */
     public AnnotatedElementHandler createContextForEjbInterceptor() {
-        Class interceptorClass =
-                (Class)this.getProcessingContext().getProcessor(
-                ).getLastAnnotatedElement(ElementType.TYPE);
-        EjbInterceptor ejbInterceptor =
-                this.getDescriptor().getInterceptorByClassName(
-                interceptorClass.getName());
-
-        AnnotatedElementHandler aeHandler = null;
-        if (ejbInterceptor != null) {
-            aeHandler = new EjbInterceptorContext(ejbInterceptor);
-            // push a EjbInterceptorContext to stack
-            this.getProcessingContext().pushHandler(aeHandler);
+        Class<?> interceptorClass = (Class<?>) getProcessingContext().getProcessor()
+            .getLastAnnotatedElement(ElementType.TYPE);
+        EjbInterceptor ejbInterceptor = getDescriptor().getInterceptorByClassName(interceptorClass.getName());
+        if (ejbInterceptor == null) {
+            return null;
         }
+        EjbInterceptorContext aeHandler = new EjbInterceptorContext(ejbInterceptor);
+        // push a EjbInterceptorContext to stack
+        getProcessingContext().pushHandler(aeHandler);
         return aeHandler;
     }
 }

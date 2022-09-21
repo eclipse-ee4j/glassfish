@@ -17,48 +17,49 @@
 
 package com.sun.enterprise.security.web.integration;
 
-import java.security.Principal;
-import java.security.cert.X509Certificate;
-import java.util.Arrays;
-
-import org.glassfish.security.common.PrincipalImpl;
-
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityContextProxy;
 
-public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy {
+import java.security.Principal;
+import java.security.cert.X509Certificate;
+
+import org.glassfish.security.common.UserNameAndPassword;
+
+public class WebPrincipal extends UserNameAndPassword implements SecurityContextProxy {
 
     private static final long serialVersionUID = -7855179427171479644L;
 
-    private char[] password;
     private X509Certificate[] certificates;
-    private boolean useCertificate;
-    private SecurityContext securityContext;
+    private final boolean useCertificate;
+    private final SecurityContext securityContext;
     private Principal customPrincipal;
+
+    public WebPrincipal(UserNameAndPassword principal, SecurityContext context) {
+        super(principal.getName(), principal.getPassword());
+        this.useCertificate = false;
+        this.securityContext = context;
+    }
+
 
     public WebPrincipal(Principal principal, SecurityContext context) {
         super(principal.getName());
-        if (!(principal instanceof PrincipalImpl)) {
-            customPrincipal = principal;
-        }
+        this.customPrincipal = principal;
         this.useCertificate = false;
         this.securityContext = context;
     }
 
-    public WebPrincipal(String user, char[] pwd, SecurityContext context) {
-        super(user);
-
-        // Copy the password to another reference before storing it to the
-        // instance field.
-        this.password = pwd == null ? null : Arrays.copyOf(pwd, pwd.length);
-
-        this.useCertificate = false;
-        this.securityContext = context;
-    }
 
     public WebPrincipal(String user, String password, SecurityContext context) {
-        this(user, password.toCharArray(), context);
+        this(user, password == null ? null : password.toCharArray(), context);
     }
+
+
+    public WebPrincipal(String user, char[] pwd, SecurityContext context) {
+        super(user, pwd);
+        this.useCertificate = false;
+        this.securityContext = context;
+    }
+
 
     public WebPrincipal(X509Certificate[] certs, SecurityContext context) {
         super(getPrincipalName(context, certs));
@@ -67,74 +68,63 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
         this.securityContext = context;
     }
 
-    public char[] getPassword() {
-        // Copy the password to another reference and return the reference
-        return password == null ? null : Arrays.copyOf(password, password.length);
-    }
-
-    public X509Certificate[] getCertificates() {
-        return certificates;
-    }
-
-    public boolean isUsingCertificate() {
-        return useCertificate;
-    }
 
     @Override
     public SecurityContext getSecurityContext() {
         return securityContext;
     }
 
+
+    public X509Certificate[] getCertificates() {
+        return certificates;
+    }
+
+
+    public boolean isUsingCertificate() {
+        return useCertificate;
+    }
+
+
     public Principal getCustomPrincipal() {
         return customPrincipal;
     }
 
-    @Override
-    public String getName() {
-        if (customPrincipal == null) {
-            return super.getName();
-        }
-
-        return customPrincipal.getName();
-    }
 
     @Override
     public boolean equals(Object another) {
         if (customPrincipal == null) {
             return super.equals(another);
         }
-
         return customPrincipal.equals(another);
     }
+
 
     @Override
     public int hashCode() {
         if (customPrincipal == null) {
             return super.hashCode();
         }
-
         return customPrincipal.hashCode();
     }
+
 
     @Override
     public String toString() {
         if (customPrincipal == null) {
             return super.toString();
         }
-
         return customPrincipal.toString();
     }
+
 
     private static String getPrincipalName(SecurityContext securityContext, X509Certificate[] certificates) {
         Principal callerPrincipal = securityContext.getCallerPrincipal();
         if (callerPrincipal != null) {
             return callerPrincipal.getName();
         }
-
         if (certificates != null && certificates.length > 0) {
             return certificates[0].getSubjectX500Principal().getName();
         }
-
         return null;
     }
 }

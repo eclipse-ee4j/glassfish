@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,18 @@
 
 package org.glassfish.ejb.deployment.node;
 
-import java.util.GregorianCalendar;
-import java.util.Map;
-import java.util.logging.Level;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.MethodNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.util.DOLUtils;
+
+import java.util.GregorianCalendar;
+import java.util.Map;
+import java.util.logging.Level;
+
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import org.glassfish.ejb.deployment.EjbTagNames;
 import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
 import org.w3c.dom.Node;
@@ -35,21 +38,23 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
     private ScheduledTimerDescriptor descriptor;
 
     public ScheduledTimerNode() {
-        super();
-        registerElementHandler(new XMLElement(EjbTagNames.TIMEOUT_METHOD), MethodNode.class,
-                "setTimeoutMethod");
+        registerElementHandler(new XMLElement(EjbTagNames.TIMEOUT_METHOD), MethodNode.class, "setTimeoutMethod");
     }
+
 
     @Override
     public ScheduledTimerDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ScheduledTimerDescriptor();
+        if (descriptor == null) {
+            descriptor = new ScheduledTimerDescriptor();
+        }
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
 
         table.put(EjbTagNames.TIMER_SECOND, "setSecond");
         table.put(EjbTagNames.TIMER_MINUTE, "setMinute");
@@ -63,13 +68,11 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
         table.put(EjbTagNames.TIMER_INFO,  "setInfo");
         table.put(EjbTagNames.TIMER_TIMEZONE, "setTimezone");
 
-
         return table;
     }
 
     @Override
     public void setElementValue(XMLElement element, String value) {
-
         if (EjbTagNames.TIMER_START.equals(element.getQName())) {
             try {
                 DatatypeFactory dFactory = DatatypeFactory.newInstance();
@@ -81,7 +84,7 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
                 DOLUtils.getDefaultLogger().warning(e.getMessage());
             }
 
-        } else if(EjbTagNames.TIMER_END.equals(element.getQName())) {
+        } else if (EjbTagNames.TIMER_END.equals(element.getQName())) {
             try {
                 DatatypeFactory dFactory = DatatypeFactory.newInstance();
 
@@ -95,8 +98,8 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
         } else {
             super.setElementValue(element, value);
         }
-
     }
+
 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, ScheduledTimerDescriptor desc) {
@@ -132,25 +135,19 @@ public class ScheduledTimerNode extends DeploymentDescriptorNode<ScheduledTimerD
         }
 
         MethodNode methodNode = new MethodNode();
-
-        methodNode.writeJavaMethodDescriptor(timerNode, EjbTagNames.TIMEOUT_METHOD,
-                 desc.getTimeoutMethod());
-
-        appendTextChild(timerNode, EjbTagNames.TIMER_PERSISTENT,
-            Boolean.toString(desc.getPersistent()));
-
+        methodNode.writeJavaMethodDescriptor(timerNode, EjbTagNames.TIMEOUT_METHOD, desc.getTimeoutMethod());
+        appendTextChild(timerNode, EjbTagNames.TIMER_PERSISTENT, Boolean.toString(desc.getPersistent()));
 
         String tz = desc.getTimezone();
-        if( tz != null ) {
+        if (tz != null) {
             appendTextChild(timerNode, EjbTagNames.TIMER_TIMEZONE, tz);
         }
 
         String info = desc.getInfo();
-        if( info != null ) {
+        if (info != null) {
             appendTextChild(timerNode, EjbTagNames.TIMER_INFO, info);
         }
 
         return timerNode;
-     }
-
+    }
 }

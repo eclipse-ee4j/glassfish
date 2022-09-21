@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,24 +18,27 @@
 package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
-import org.glassfish.apf.AnnotationHandlerFor;
-import org.glassfish.security.common.Role;
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
 import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
+
+import jakarta.annotation.security.RunAs;
+
+import java.lang.annotation.Annotation;
+
+import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.security.common.Role;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.annotation.security.RunAs;
-import java.lang.annotation.Annotation;
 
 /**
  * This handler is responsible for handling the
  * jakarta.annotation.security.RunAs.
+ *
  * @author Shing Wai Chan
  */
 @Service
@@ -44,11 +48,12 @@ public class RunAsHandler extends AbstractCommonAttributeHandler {
     public RunAsHandler() {
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
-        RunAs runAsAn = (RunAs)ainfo.getAnnotation();
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, EjbContext[] ejbContexts)
+        throws AnnotationProcessorException {
 
+        RunAs runAsAn = (RunAs) ainfo.getAnnotation();
         for (EjbContext ejbContext : ejbContexts) {
             EjbDescriptor ejbDesc = ejbContext.getDescriptor();
             // override by xml
@@ -70,10 +75,12 @@ public class RunAsHandler extends AbstractCommonAttributeHandler {
         return getDefaultProcessedResult();
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            WebComponentContext[] webCompContexts) throws AnnotationProcessorException {
-        RunAs runAsAn = (RunAs)ainfo.getAnnotation();
 
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, WebComponentContext[] webCompContexts)
+        throws AnnotationProcessorException {
+
+        RunAs runAsAn = (RunAs) ainfo.getAnnotation();
         for (WebComponentContext webCompContext : webCompContexts) {
             WebComponentDescriptor webDesc = webCompContext.getDescriptor();
             // override by xml
@@ -92,14 +99,15 @@ public class RunAsHandler extends AbstractCommonAttributeHandler {
         return getDefaultProcessedResult();
     }
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-             WebBundleContext webBundleContext)
-             throws AnnotationProcessorException {
-        return getInvalidAnnotatedElementHandlerResult(
-            ainfo.getProcessingContext().getHandler(), ainfo);
+
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, WebBundleContext webBundleContext)
+        throws AnnotationProcessorException {
+        return getInvalidAnnotatedElementHandlerResult(ainfo.getProcessingContext().getHandler(), ainfo);
     }
 
 
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();
     }

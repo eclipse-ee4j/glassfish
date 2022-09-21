@@ -449,12 +449,12 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
             if (desc.getServiceName().equals(endpoint.getServiceName())
                     && desc.getServiceNamespaceUri().equals(endpoint.getWsdlService().getNamespaceURI())) {
                 String endPointAddressURI = endpoint.getEndpointAddressUri();
-                if (endPointAddressURI == null || endPointAddressURI.length() == 0) {
+                if (endPointAddressURI == null || endPointAddressURI.isEmpty()) {
                     return null;
                 }
                 webSevicePath = endPointAddressURI.startsWith("/") ? endPointAddressURI : ("/" + endPointAddressURI);
                 publishingContext = "/" + endpoint.getPublishingUri() + "/" + webService.getWsdlFileUri();
-                Adapter adapter = JAXWSAdapterRegistry.getInstance()
+                Adapter<?> adapter = JAXWSAdapterRegistry.getInstance()
                         .getAdapter(contextRoot, webSevicePath, publishingContext);
                 return adapter instanceof ServletAdapter ? (ServletAdapter) adapter : null;
 

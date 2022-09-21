@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,6 @@
 
 package org.glassfish.ejb.deployment.node.runtime;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
-import java.util.logging.Level;
-
 import com.sun.enterprise.deployment.NameValuePairDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.node.PropertiesNode;
@@ -29,9 +25,23 @@ import com.sun.enterprise.deployment.node.runtime.DefaultResourcePrincipalNode;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.node.runtime.common.RuntimeNameValuePairNode;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.w3c.dom.Node;
+
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.CREATE_TABLES_AT_DEPLOY;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.DATABASE_VENDOR_NAME;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.DROP_TABLES_AT_UNDEPLOY;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.JNDI_NAME;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.PROPERTY;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.SCHEMA_GENERATOR_PROPERTIES;
+import static com.sun.enterprise.deployment.xml.RuntimeTagNames.TRUE;
 
 /**
  * This node handles the cmp-resource runtime xml tag
@@ -44,36 +54,37 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
     private ResourceReferenceDescriptor descriptor;
 
     public CmpResourceNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL),
-                               DefaultResourcePrincipalNode.class, "setResourcePrincipal");
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
-                               RuntimeNameValuePairNode.class, "addProperty");
-        registerElementHandler(new XMLElement(RuntimeTagNames.SCHEMA_GENERATOR_PROPERTIES),
-                                PropertiesNode.class, "setSchemaGeneratorProperties");
+        registerElementHandler(new XMLElement(DEFAULT_RESOURCE_PRINCIPAL), DefaultResourcePrincipalNode.class,
+            "setResourcePrincipal");
+        registerElementHandler(new XMLElement(PROPERTY), RuntimeNameValuePairNode.class, "addProperty");
+        registerElementHandler(new XMLElement(SCHEMA_GENERATOR_PROPERTIES), PropertiesNode.class,
+            "setSchemaGeneratorProperties");
     }
+
 
     @Override
     public ResourceReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ResourceReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new ResourceReferenceDescriptor();
+        }
         return descriptor;
     }
 
     @Override
     protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
-        table.put(RuntimeTagNames.CREATE_TABLES_AT_DEPLOY, "setCreateTablesAtDeploy");
-        table.put(RuntimeTagNames.DROP_TABLES_AT_UNDEPLOY, "setDropTablesAtUndeploy");
-        table.put(RuntimeTagNames.DATABASE_VENDOR_NAME, "setDatabaseVendorName");
+        Map<String, String> table = super.getDispatchTable();
+        table.put(JNDI_NAME, "setJndiName");
+        table.put(CREATE_TABLES_AT_DEPLOY, "setCreateTablesAtDeploy");
+        table.put(DROP_TABLES_AT_UNDEPLOY, "setDropTablesAtUndeploy");
+        table.put(DATABASE_VENDOR_NAME, "setDatabaseVendorName");
         return table;
     }
 
     @Override
     public void postParsing() {
         EjbBundleDescriptorImpl bd = (EjbBundleDescriptorImpl) getParentNode().getDescriptor();
-        if (bd==null) {
-            DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
-                    new Object[]{descriptor});
+        if (bd == null) {
+            DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.ADD_DESCRIPTOR_FAILURE, new Object[] {descriptor});
             return;
         }
         bd.setCMPResourceReference(descriptor);
@@ -82,37 +93,36 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
     @Override
     public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor descriptor) {
         Node cmp = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(cmp, RuntimeTagNames.JNDI_NAME, descriptor.getJndiName());
+        appendTextChild(cmp, JNDI_NAME, descriptor.getJndiName());
         if (descriptor.getResourcePrincipal() != null) {
             DefaultResourcePrincipalNode drpNode = new DefaultResourcePrincipalNode();
-            drpNode.writeDescriptor(cmp, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL,
-                descriptor.getResourcePrincipal());
+            drpNode.writeDescriptor(cmp, DEFAULT_RESOURCE_PRINCIPAL, descriptor.getResourcePrincipal());
         }
         // properties*
-        Iterator properties = descriptor.getProperties();
-        if (properties!=null) {
+        Iterator<NameValuePairDescriptor> properties = descriptor.getProperties();
+        if (properties != null) {
             RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();
             while (properties.hasNext()) {
-                NameValuePairDescriptor aProp = (NameValuePairDescriptor) properties.next();
-                propNode.writeDescriptor(cmp, RuntimeTagNames.PROPERTY, aProp);
+                NameValuePairDescriptor aProp = properties.next();
+                propNode.writeDescriptor(cmp, PROPERTY, aProp);
             }
         }
 
         // createTableAtDeploy, dropTableAtUndeploy
         if (descriptor.isCreateTablesAtDeploy()) {
-            appendTextChild(cmp, RuntimeTagNames.CREATE_TABLES_AT_DEPLOY, RuntimeTagNames.TRUE);
+            appendTextChild(cmp, CREATE_TABLES_AT_DEPLOY, TRUE);
         }
         if (descriptor.isDropTablesAtUndeploy()) {
-            appendTextChild(cmp, RuntimeTagNames.DROP_TABLES_AT_UNDEPLOY, RuntimeTagNames.TRUE);
+            appendTextChild(cmp, DROP_TABLES_AT_UNDEPLOY, TRUE);
         }
         // database vendor name
-        appendTextChild(cmp, RuntimeTagNames.DATABASE_VENDOR_NAME, descriptor.getDatabaseVendorName());
+        appendTextChild(cmp, DATABASE_VENDOR_NAME, descriptor.getDatabaseVendorName());
 
         // schema-generator-properties?
         Properties schemaGeneratorProps = descriptor.getSchemaGeneratorProperties();
-        if (schemaGeneratorProps!=null) {
-            PropertiesNode pn = new PropertiesNode();
-            pn.writeDescriptor(cmp, RuntimeTagNames.SCHEMA_GENERATOR_PROPERTIES, schemaGeneratorProps);
+        if (schemaGeneratorProps != null) {
+            PropertiesNode node = new PropertiesNode();
+            node.write(cmp, SCHEMA_GENERATOR_PROPERTIES, schemaGeneratorProps);
         }
 
         return cmp;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,11 +32,14 @@ import org.glassfish.security.common.Role;
  */
 public class RoleReference extends EnvironmentProperty implements SecurityRoleReference {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Default constructor.
      */
     public RoleReference() {
     }
+
 
     /**
      * Construct a role reference from the given name and description.
@@ -110,6 +114,5 @@ public class RoleReference extends EnvironmentProperty implements SecurityRoleRe
         toStringBuffer.append("Role-Ref-Env-Prop: ").append(super.getName()).append("@").append(this.getRole())
             .append("@").append(super.getDescription());
     }
-
 }
 

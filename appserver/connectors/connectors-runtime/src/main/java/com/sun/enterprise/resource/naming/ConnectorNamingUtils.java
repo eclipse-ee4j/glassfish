@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,16 +18,14 @@
 package com.sun.enterprise.resource.naming;
 
 import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.module.single.StaticModulesRegistry;
 import com.sun.logging.LogDomains;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.api.admin.*;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.api.Globals;
 
@@ -36,8 +35,7 @@ import org.glassfish.internal.api.Globals;
  */
 public class ConnectorNamingUtils {
 
-    private static Logger _logger =
-    LogDomains.getLogger(ConnectorNamingUtils.class, LogDomains.RSR_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(ConnectorNamingUtils.class, LogDomains.RSR_LOGGER);
 
     private volatile static ConnectorRuntime runtime;
 
@@ -68,13 +66,11 @@ public class ConnectorNamingUtils {
         return runtime;
     }
 
-    static private ServiceLocator getHabitat() {
+    private static ServiceLocator getHabitat() {
         ServiceLocator habitat = Globals.getStaticHabitat();
         StartupContext startupContext = new StartupContext();
         ServiceLocatorUtilities.addOneConstant(habitat, startupContext);
-        ServiceLocatorUtilities.addOneConstant(habitat,
-                new ProcessEnvironment(ProcessEnvironment.ProcessType.Other));
-
+        ServiceLocatorUtilities.addOneConstant(habitat, new ProcessEnvironment(ProcessEnvironment.ProcessType.Other));
         return habitat;
     }
 }

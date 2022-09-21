@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,16 +29,19 @@ import com.sun.enterprise.web.WebModule;
 import com.sun.web.security.RealmAdapter;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 
-import java.lang.ref.WeakReference;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.security.Principal;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.catalina.Globals;
-import org.apache.catalina.util.Base64;
+import org.glassfish.security.common.UserNameAndPassword;
 import org.glassfish.webservices.EjbRuntimeEndpointInfo;
 import org.glassfish.webservices.SecurityService;
 import org.glassfish.webservices.WebServiceContextImpl;
@@ -46,14 +50,7 @@ import org.glassfish.webservices.monitoring.Endpoint;
 import org.glassfish.webservices.monitoring.WebServiceEngineImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
-import jakarta.security.jacc.PolicyContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.xml.soap.SOAPMessage;
-
 /**
- *
  * @author Kumar
  */
 @Service
@@ -67,8 +64,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     private static final String AUTHORIZATION_HEADER = "authorization";
 
-    private static ThreadLocal<WeakReference<SOAPMessage>> req = new ThreadLocal<WeakReference<SOAPMessage>>();
-
+    @Override
     public Object mergeSOAPMessageSecurityPolicies(MessageSecurityBindingDescriptor desc) {
         try {
             // merge message security policy from domain.xml and sun-specific
@@ -82,6 +78,7 @@ public class SecurityServiceImpl implements SecurityService {
         return null;
     }
 
+    @Override
     public boolean doSecurity(HttpServletRequest hreq, EjbRuntimeEndpointInfo epInfo, String realmName, WebServiceContextImpl context) {
         //BUG2263 - Clear the value of UserPrincipal from previous request
         //If authentication succeeds, the proper value will be set later in
@@ -117,26 +114,24 @@ public class SecurityServiceImpl implements SecurityService {
                     return false;
                 }
 
-                List<Object> usernamePassword =
-                        parseUsernameAndPassword(rawAuthInfo);
-                if (usernamePassword != null) {
-                    webPrincipal = new WebPrincipal((String)usernamePassword.get(0), (char[])usernamePassword.get(1), SecurityContext.init());
-                } else {
+                UserNameAndPassword usernamePassword = parseUsernameAndPassword(rawAuthInfo);
+                if (usernamePassword == null) {
                     _logger.log(Level.WARNING, LogUtils.BASIC_AUTH_ERROR, endpointName);
+                } else {
+                    webPrincipal = new WebPrincipal(usernamePassword, SecurityContext.init());
                 }
             } else {
                 //org.apache.coyote.request.X509Certificate
                 X509Certificate certs[] = (X509Certificate[]) hreq.getAttribute(Globals.CERTIFICATES_ATTR);
-                if ((certs == null) || (certs.length < 1)) {
+                if (certs == null || certs.length < 1) {
                     certs = (X509Certificate[]) hreq.getAttribute(Globals.SSL_CERTIFICATE_ATTR);
                 }
 
-                if (certs != null) {
-                    webPrincipal = new WebPrincipal(certs, SecurityContext.init());
-                } else {
+                if (certs == null) {
                     _logger.log(Level.WARNING, LogUtils.CLIENT_CERT_ERROR, endpointName);
+                } else {
+                    webPrincipal = new WebPrincipal(certs, SecurityContext.init());
                 }
-
             }
 
             if (webPrincipal == null) {
@@ -144,15 +139,13 @@ public class SecurityServiceImpl implements SecurityService {
                 return authenticated;
             }
 
-            RealmAdapter ra = new RealmAdapter(realmName,endpoint.getBundleDescriptor().getModuleID());
+            RealmAdapter ra = new RealmAdapter(realmName, endpoint.getBundleDescriptor().getModuleID());
             authenticated = ra.authenticate(webPrincipal);
-            if (authenticated == false) {
-                sendAuthenticationEvents(false, hreq.getRequestURI(), webPrincipal);
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("authentication failed for " + endpointName);
-                }
-            } else {
+            if (authenticated) {
                 sendAuthenticationEvents(true, hreq.getRequestURI(), webPrincipal);
+            } else {
+                sendAuthenticationEvents(false, hreq.getRequestURI(), webPrincipal);
+                _logger.log(Level.FINE, "authentication failed for {0}", endpointName);
             }
 
             //Setting if userPrincipal in WSCtxt applies for JAXWS endpoints only
@@ -164,56 +157,54 @@ public class SecurityServiceImpl implements SecurityService {
             throw new RuntimeException(e);
         } finally {
             if (auditManager != null && auditManager.isAuditOn()) {
-                auditManager.ejbAsWebServiceInvocation(
-                        epInfo.getEndpoint().getEndpointName(), authenticated);
+                auditManager.ejbAsWebServiceInvocation(epInfo.getEndpoint().getEndpointName(), authenticated);
             }
         }
         return authenticated;
     }
 
 
-    private List<Object> parseUsernameAndPassword(String rawAuthInfo) {
-        List usernamePassword = null;
-        if ( (rawAuthInfo != null) &&
-             (rawAuthInfo.startsWith("Basic ")) ) {
+    private UserNameAndPassword parseUsernameAndPassword(String rawAuthInfo) {
+        if (rawAuthInfo != null && rawAuthInfo.startsWith("Basic ")) {
             String authString = rawAuthInfo.substring(6).trim();
             // Decode and parse the authorization credentials
-            String unencoded =
-                new String(Base64.decode(authString.getBytes()));
+            String unencoded = new String(Base64.getDecoder().decode(authString.getBytes()));
             int colon = unencoded.indexOf(':');
             if (colon > 0) {
-                usernamePassword = new ArrayList();
-                usernamePassword.add(unencoded.substring(0, colon).trim());
-                usernamePassword.add(unencoded.substring(colon + 1).trim().toCharArray());
+                String user = unencoded.substring(0, colon).trim();
+                String password = unencoded.substring(colon + 1).trim();
+                return new UserNameAndPassword(user, password);
             }
         }
-        return usernamePassword;
+        return null;
     }
 
 
     private void sendAuthenticationEvents(boolean success, String url, Principal principal) {
         Endpoint endpoint = WebServiceEngineImpl.getInstance().getEndpoint(url);
-        if (endpoint==null) {
+        if (endpoint == null) {
             return;
         }
         for (AuthenticationListener listener : WebServiceEngineImpl.getInstance().getAuthListeners()) {
             if (success) {
-                listener.authSucess(endpoint.getDescriptor().getBundleDescriptor(),
-                        endpoint, principal);
+                listener.authSucess(endpoint.getDescriptor().getBundleDescriptor(), endpoint, principal);
             } else {
-                listener.authFailure(endpoint.getDescriptor().getBundleDescriptor(),
-                        endpoint, principal);
+                listener.authFailure(endpoint.getDescriptor().getBundleDescriptor(), endpoint, principal);
             }
         }
     }
 
+
+    @Override
     public void resetSecurityContext() {
         SecurityContext.setUnauthenticatedContext();
     }
 
+
+    @Override
     public void resetPolicyContext() {
-       ((PolicyContextHandlerImpl)PolicyContextHandlerImpl.getInstance()).reset();
-       PolicyContext.setContextID(null);
+        PolicyContextHandlerImpl.getInstance().reset();
+        PolicyContext.setContextID(null);
     }
 
 
@@ -223,6 +214,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
 
+    @Override
     public Principal getUserPrincipal(boolean isWeb) {
         // This is a servlet endpoint
         SecurityContext ctx = SecurityContext.getCurrent();
@@ -238,6 +230,7 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
 
+    @Override
     public boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role) {
         if (webModule.getRealm() instanceof RealmAdapter) {
             RealmAdapter realmAdapter = (RealmAdapter) webModule.getRealm();

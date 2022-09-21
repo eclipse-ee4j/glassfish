@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,45 @@
 
 package org.glassfish.ejb.deployment.descriptor.runtime;
 
-import com.sun.enterprise.deployment.DescriptorConstants;
 import org.glassfish.deployment.common.Descriptor;
+
 
 /**
  * iAS specific DD Element (see the ias-ejb-jar_2_0.dtd for this element)
  * @author Ludo
  * @since JDK 1.4
  */
-public class BeanCacheDescriptor extends Descriptor implements DescriptorConstants{
+public class BeanCacheDescriptor extends Descriptor {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Bean Cache - sfsb and eb are created and cached, on demand.
+     */
+    private static final int MAX_CACHE_SIZE_DEFAULT = -1;
+
+    /**
+     * Bean Cache - resize quantity
+     */
+    private static final int RESIZE_QUANTITY_DEFAULT = -1;
+
+    /**
+     * Bean Cache - Passivated bean (sfsb/eb) instance is removed if it
+     * is not accesed within  this time, after passivation
+     */
+    private static final int REMOVAL_TIMEOUT_DEFAULT = -1;
+
+    /**
+     * Bean Cache - idle bean instance in a pool becomes a candidate for
+     * passivation (sfsb/eb) or deletion (slsb), when this timeout expires.
+     */
+    private static final int CACHE_IDLE_TIMEOUT_DEFAULT = -1;
+
 
     private Boolean isCacheOverflowAllowed;
     private String victimSelectionPolicy;
 
-    //initialized default values for class variables
+    // initialized default values for class variables
     private int maxCacheSize = MAX_CACHE_SIZE_DEFAULT;
     private int resizeQuantity = RESIZE_QUANTITY_DEFAULT;
     private int cacheIdleTimeoutInSeconds = CACHE_IDLE_TIMEOUT_DEFAULT;

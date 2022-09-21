@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,11 +15,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment.interfaces;
+package com.sun.enterprise.deployment.interfaces;
 
- import java.util.Set;
+import com.sun.enterprise.repository.ResourceProperty;
 
- public interface MailResourceIntf {
+import java.util.Set;
+
+public interface MailResourceIntf {
 
     String getName();
 
@@ -26,7 +29,7 @@
 
     boolean isEnabled();
 
-    Set getProperties();
+    Set<ResourceProperty> getProperties();
 
     int getType();
 

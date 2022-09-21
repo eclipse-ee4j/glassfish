@@ -17,6 +17,17 @@
 
 package com.sun.enterprise.deployment;
 
+import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import org.glassfish.deployment.common.JavaEEResourceType;
+
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.Arrays.asList;
 import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
@@ -30,17 +41,6 @@ import static org.glassfish.deployment.common.JavaEEResourceType.MSD;
 import static org.glassfish.deployment.common.JavaEEResourceType.MSEDD;
 import static org.glassfish.deployment.common.JavaEEResourceType.MTFDD;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.glassfish.deployment.common.JavaEEResourceType;
-
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 /**
  * This class maintains registry for all resources and used by all Descriptor and BundleDescriptor classes.
  *
@@ -49,15 +49,15 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 public class ResourceDescriptorRegistry implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ResourceDescriptorRegistry.class);
 
-    private static Map<JavaEEResourceType, Set<Class<?>>> invalidResourceTypeScopes = new HashMap<>();
-
-    /*
+    /**
      * This map contains the list of descriptors for where a particular annotation is not applicable. In future update this
      * list for non applicable descriptor.
      *
      * e.g. ConnectionFactoryDescriptor and AdminObjectDescriptor is not allowed to define at Application Client Descriptor.
      */
+    private static Map<JavaEEResourceType, Set<Class<?>>> invalidResourceTypeScopes = new HashMap<>();
     static {
         invalidResourceTypeScopes.put(MSD, new HashSet<>());
         invalidResourceTypeScopes.put(DSD, new HashSet<>());
@@ -71,18 +71,14 @@ public class ResourceDescriptorRegistry implements Serializable {
         invalidResourceTypeScopes.put(MTFDD, new HashSet<>());
     }
 
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ResourceDescriptorRegistry.class);
 
-    private Map<JavaEEResourceType, Set<ResourceDescriptor>> resourceDescriptors = new HashMap<>();
+    private final Map<JavaEEResourceType, Set<ResourceDescriptor>> resourceDescriptors = new HashMap<>();
 
     /**
-     * This method returns all descriptors associated with the app.
-     *
-     * @return
+     * @return all descriptors associated with the app.
      */
     public Set<ResourceDescriptor> getAllResourcesDescriptors() {
         Set<ResourceDescriptor> allResourceDescriptors = new HashSet<>();
-
         allResourceDescriptors.addAll(getResourceDescriptors(DSD));
         allResourceDescriptors.addAll(getResourceDescriptors(MSD));
         allResourceDescriptors.addAll(getResourceDescriptors(CFD));
@@ -93,16 +89,14 @@ public class ResourceDescriptorRegistry implements Serializable {
         allResourceDescriptors.addAll(getResourceDescriptors(MEDD));
         allResourceDescriptors.addAll(getResourceDescriptors(MSEDD));
         allResourceDescriptors.addAll(getResourceDescriptors(MTFDD));
-
         return allResourceDescriptors;
     }
 
+
     /**
-     * This method returns all valid descriptor for given class. USes 'invalidResourceTypeScopes' to validate the scope for
-     * givneClazz
-     *
      * @param givenClazz - Class which is either AppClientDescriptor, Application etc.
-     * @return
+     * @return all valid descriptor for given class. USes 'invalidResourceTypeScopes' to validate
+     *         the scope for given class.
      */
     public Set<ResourceDescriptor> getAllResourcesDescriptors(Class<?> givenClazz) {
         Set<ResourceDescriptor> allResourceDescriptors = new HashSet<>();
@@ -123,11 +117,9 @@ public class ResourceDescriptorRegistry implements Serializable {
         return allResourceDescriptors;
     }
 
+
     /**
-     * Return descriptor by name.
-     *
-     * @param name
-     * @return
+     * @return descriptor by name.
      */
     protected ResourceDescriptor getResourcesDescriptor(String name) {
         for (ResourceDescriptor resourceDescriptor : getAllResourcesDescriptors()) {
@@ -139,6 +131,7 @@ public class ResourceDescriptorRegistry implements Serializable {
         return null;
     }
 
+
     /**
      * Validate descriptor is already defined or not.
      *
@@ -149,11 +142,9 @@ public class ResourceDescriptorRegistry implements Serializable {
         return getResourcesDescriptor(reference.getName()) != null;
     }
 
+
     /**
-     * Returns descriptor based on the Resource Type.
-     *
-     * @param javaEEResourceType
-     * @return
+     * @return descriptors based on the Resource Type.
      */
     public Set<ResourceDescriptor> getResourceDescriptors(JavaEEResourceType javaEEResourceType) {
         Set<ResourceDescriptor> resourceDescriptorSet = resourceDescriptors.get(javaEEResourceType);
@@ -164,12 +155,9 @@ public class ResourceDescriptorRegistry implements Serializable {
         return resourceDescriptors.get(javaEEResourceType);
     }
 
+
     /**
-     * Return descriptors based on resource type and given name.
-     *
-     * @param javaEEResourceType
-     * @param name
-     * @return
+     * @return descriptors based on resource type and given name.
      */
     protected ResourceDescriptor getResourceDescriptor(JavaEEResourceType javaEEResourceType, String name) {
         for (ResourceDescriptor resourceDescriptor : getResourceDescriptors(javaEEResourceType)) {
@@ -181,6 +169,7 @@ public class ResourceDescriptorRegistry implements Serializable {
         return null;
     }
 
+
     /**
      * Adding resource descriptor for gvien reference
      *
@@ -188,14 +177,15 @@ public class ResourceDescriptorRegistry implements Serializable {
      */
     public void addResourceDescriptor(ResourceDescriptor reference) {
         if (isDescriptorRegistered(reference)) {
-            throw new IllegalStateException(localStrings.getLocalString("exceptionwebduplicatedescriptor",
-                    "This app cannot have descriptor definitions of same name : [{0}]", reference.getName()));
+            throw new IllegalStateException(I18N.getLocalString("exceptionwebduplicatedescriptor",
+                "This app cannot have descriptor definitions of same name : [{0}]", reference.getName()));
         }
 
         Set<ResourceDescriptor> resourceDescriptorSet = getResourceDescriptors(reference.getResourceType());
         resourceDescriptorSet.add(reference);
         resourceDescriptors.put(reference.getResourceType(), resourceDescriptorSet);
     }
+
 
     /**
      * Remove resource descriptor based on resource type and given reference

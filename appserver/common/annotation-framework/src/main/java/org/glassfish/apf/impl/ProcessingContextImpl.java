@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,15 @@
 
 package org.glassfish.apf.impl;
 
-import org.glassfish.apf.Scanner;
 import java.util.Stack;
-import org.glassfish.apf.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationProcessor;
+import org.glassfish.apf.ErrorHandler;
+import org.glassfish.apf.ProcessingContext;
+import org.glassfish.apf.Scanner;
 import org.glassfish.apf.context.AnnotationContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 
@@ -28,84 +35,91 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
  * @author Jerome ochez
  */
 class ProcessingContextImpl implements ProcessingContext {
+    private static final Logger LOG = AnnotationUtils.getLogger();
 
     protected AnnotationProcessor processor;
-    protected Stack<AnnotatedElementHandler> handlers = new Stack<AnnotatedElementHandler>();
+    protected Stack<AnnotatedElementHandler> handlers = new Stack<>();
     protected Scanner scanner;
     protected ReadableArchive archive;
+    private ErrorHandler errorHandler;
 
     /** Creates a new instance of ProcessingContextHelper */
     ProcessingContextImpl(AnnotationProcessor processor) {
         this.processor = processor;
     }
 
+
+    @Override
     public AnnotationProcessor getProcessor() {
         return processor;
     }
 
+
+    @Override
     public ReadableArchive getArchive() {
         return archive;
     }
 
+
+    @Override
     public void setArchive(ReadableArchive archive) {
         this.archive = archive;
     }
 
-    public void pushHandler(AnnotatedElementHandler handler) {
-        if (handler instanceof AnnotationContext) {
-            ((AnnotationContext) handler).setProcessingContext(this);
-        }
+
+    @Override
+    public void pushHandler(AnnotationContext handler) {
+        LOG.log(Level.FINEST, "pushHandler: {0}", handler);
+        handler.setProcessingContext(this);
         handlers.push(handler);
     }
 
+
+    @Override
     public AnnotatedElementHandler getHandler() {
-        if (handlers.isEmpty())
+        if (handlers.isEmpty()) {
             return null;
+        }
 
         return handlers.peek();
     }
 
+
+    @Override
     public AnnotatedElementHandler popHandler() {
-        if (handlers.isEmpty())
+        if (handlers.isEmpty()) {
             return null;
+        }
 
         return handlers.pop();
     }
 
-    /**
-     * @return the previously set ClientContext casted to the requestd
-     * type if possible or throw an exception otherwise.
-     */
-    public <U extends AnnotatedElementHandler> U getHandler(Class<U> contextType)
-        throws ClassCastException {
 
-        if (handlers.isEmpty())
-            return null;
-        if (AnnotationUtils.shouldLog("handler")) {
-            AnnotationUtils.getLogger().finer("Top handler is " + handlers.peek());
-        }
-        return contextType.cast(handlers.peek());
-    }
-
+    @Override
     public Scanner getProcessingInput() {
         return scanner;
     }
+
+
+    @Override
     public void setProcessingInput(Scanner scanner) {
         this.scanner = scanner;
     }
 
-    private ErrorHandler errorHandler = null;
 
     /**
      * Sets the error handler for this processing context.
      */
+    @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
     }
 
+
     /**
      * @return the error handler for this processing context.
      */
+    @Override
     public ErrorHandler getErrorHandler() {
         return errorHandler;
     }

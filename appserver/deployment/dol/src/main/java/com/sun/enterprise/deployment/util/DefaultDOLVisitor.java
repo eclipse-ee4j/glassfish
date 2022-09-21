@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,17 @@
 
 package com.sun.enterprise.deployment.util;
 
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.deployment.common.DescriptorVisitor;
-
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.MessageDestinationDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.types.*;
+import com.sun.enterprise.deployment.types.EjbReference;
+import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 
-import java.util.Iterator;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.DescriptorVisitor;
 
 /**
  * Default implementation of DescriptorVisitor interface for convenience
@@ -36,62 +35,69 @@ import java.util.Iterator;
  * @author  Jerome Dochez
  * @version
  */
-
 public class DefaultDOLVisitor implements DescriptorVisitor {
-
-    /**
-     * visits a J2EE descriptor
-     * @param the descriptor
-     */
-    public void accept(Descriptor descriptor) {
-    }
 
     /**
      * get the visitor for its sub descriptor
      * @param sub descriptor to return visitor for
      */
+    @Override
     public DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor) {
         return this;
     }
 
     protected void accept(BundleDescriptor bundleDescriptor) {
         if (bundleDescriptor instanceof JndiNameEnvironment) {
-            JndiNameEnvironment nameEnvironment = (JndiNameEnvironment)bundleDescriptor;
-            for (Iterator<EjbReference> itr = nameEnvironment.getEjbReferenceDescriptors().iterator();itr.hasNext();) {
-                accept(itr.next());
+            JndiNameEnvironment nameEnvironment = (JndiNameEnvironment) bundleDescriptor;
+            for (EjbReference ejbReferenceDescriptor : nameEnvironment.getEjbReferenceDescriptors()) {
+                accept(ejbReferenceDescriptor);
             }
 
-            for (Iterator<ResourceReferenceDescriptor> itr = nameEnvironment.getResourceReferenceDescriptors().iterator(); itr.hasNext();) {
-                accept(itr.next());
+            for (ResourceReferenceDescriptor resourceReferenceDescriptor : nameEnvironment.getResourceReferenceDescriptors()) {
+                accept(resourceReferenceDescriptor);
             }
 
-            for (Iterator<ResourceEnvReferenceDescriptor> itr= nameEnvironment.getResourceEnvReferenceDescriptors().iterator(); itr.hasNext();) {
-                accept(itr.next());
+            for (ResourceEnvReferenceDescriptor resourceEnvReferenceDescriptor : nameEnvironment.getResourceEnvReferenceDescriptors()) {
+                accept(resourceEnvReferenceDescriptor);
             }
 
-            for (Iterator<MessageDestinationReferencer> itr = nameEnvironment.getMessageDestinationReferenceDescriptors().iterator();itr.hasNext();) {
-                accept(itr.next());
+            for (MessageDestinationReferencer messageDestinationReferencer : nameEnvironment.getMessageDestinationReferenceDescriptors()) {
+                accept(messageDestinationReferencer);
             }
 
-            for (Iterator<MessageDestinationDescriptor> itr = bundleDescriptor.getMessageDestinations().iterator(); itr.hasNext();) {
-                accept(itr.next());
+            for (MessageDestinationDescriptor messageDestinationDescriptor : bundleDescriptor.getMessageDestinations()) {
+                accept(messageDestinationDescriptor);
             }
 
-            for (Iterator<ServiceReferenceDescriptor> itr = nameEnvironment.getServiceReferenceDescriptors().iterator();itr.hasNext();) {
-                accept(itr.next());
+            for (ServiceReferenceDescriptor serviceReferenceDescriptor : nameEnvironment.getServiceReferenceDescriptors()) {
+                accept(serviceReferenceDescriptor);
             }
         }
     }
 
+
+    /**
+     * visits a J2EE descriptor
+     *
+     * @param descriptor the descriptor
+     */
+    @Override
+    public void accept(Descriptor descriptor) {
+    }
+
+
     /**
      * visits an ejb reference for the last J2EE component visited
-     * @param the ejb reference
+     *
+     * @param ejbRef the ejb reference
      */
     protected void accept(EjbReference ejbRef) {
     }
 
+
     /**
      * visits a web service reference descriptor
+     *
      * @param serviceRef
      */
     protected void accept(ServiceReferenceDescriptor serviceRef) {

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,22 +19,25 @@ package com.sun.enterprise.connectors.util;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
 import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.logging.LogDomains;
 import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * This is a utility class to obtain the properties of a
@@ -45,9 +48,9 @@ import java.net.URLClassLoader;
  * @author Sivakumar Thyagarajan
  */
 public class RARUtils {
+
     private final static Logger _logger = LogDomains.getLogger(RARUtils.class, LogDomains.RSR_LOGGER);
-    private static StringManager localStrings =
-        StringManager.getManager( RARUtils.class );
+    private static StringManager localStrings = StringManager.getManager(RARUtils.class);
 
     /**
      * Finds the properties of a RA JavaBean bundled in a RAR
@@ -62,7 +65,7 @@ public class RARUtils {
     public static Map getRABeanProperties (String pathToDeployableUnit) throws ConnectorRuntimeException {
         File f = new File(pathToDeployableUnit);
         if (!f.exists()){
-            String i18nMsg = localStrings.getString(
+            String i18nMsg = I18N.getString(
                 "rar_archive_not_found", pathToDeployableUnit);
             throw new ConnectorRuntimeException( i18nMsg );
         }
@@ -160,30 +163,31 @@ public class RARUtils {
      *    activation-config will overwrite the one in the standard
      *    activation-config.
      */
-    public static Set getMergedActivationConfigProperties(EjbMessageBeanDescriptor msgDesc) {
+    public static Set<EnvironmentProperty> getMergedActivationConfigProperties(EjbMessageBeanDescriptor msgDesc) {
 
-        Set mergedProps = new HashSet();
-        Set runtimePropNames = new HashSet();
+        Set<EnvironmentProperty> mergedProps = new HashSet<>();
+        Set<String> runtimePropNames = new HashSet<>();
 
-        Set runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
+        Set<EnvironmentProperty> runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
         if(runtimeProps != null){
-            Iterator iter = runtimeProps.iterator();
+            Iterator<EnvironmentProperty> iter = runtimeProps.iterator();
             while (iter.hasNext()) {
-                EnvironmentProperty entry = (EnvironmentProperty) iter.next();
+                EnvironmentProperty entry = iter.next();
                 mergedProps.add(entry);
-                String propName = (String) entry.getName();
+                String propName = entry.getName();
                 runtimePropNames.add(propName);
             }
         }
 
-        Set standardProps = msgDesc.getActivationConfigProperties();
+        Set<EnvironmentProperty> standardProps = msgDesc.getActivationConfigProperties();
         if(standardProps != null){
-            Iterator iter = standardProps.iterator();
+            Iterator<EnvironmentProperty> iter = standardProps.iterator();
             while (iter.hasNext()) {
-                EnvironmentProperty entry = (EnvironmentProperty) iter.next();
-                String propName = (String) entry.getName();
-                if (runtimePropNames.contains(propName))
+                EnvironmentProperty entry = iter.next();
+                String propName = entry.getName();
+                if (runtimePropNames.contains(propName)) {
                     continue;
+                }
                 mergedProps.add(entry);
             }
         }
@@ -192,7 +196,7 @@ public class RARUtils {
 
     }
 
-    public static Class loadClassFromRar(String rarName, String beanClassName) throws ConnectorRuntimeException{
+    public static Class<?> loadClassFromRar(String rarName, String beanClassName) throws ConnectorRuntimeException{
         String rarLocation = getRarLocation(rarName);
         return loadClass(rarLocation, beanClassName);
     }
@@ -214,8 +218,8 @@ public class RARUtils {
      * @return loaded class
      * @throws ConnectorRuntimeException when unable to load the class
      */
-    private static Class loadClass(String pathToDeployableUnit, String beanClassName) throws ConnectorRuntimeException {
-        Class cls = null;
+    private static Class<?> loadClass(String pathToDeployableUnit, String beanClassName) throws ConnectorRuntimeException {
+        Class<?> cls = null;
 
         ClassLoader cl = getClassLoader(pathToDeployableUnit);
 
@@ -223,7 +227,7 @@ public class RARUtils {
             //Only if RA is a 1.5 RAR, we need to get RA JavaBean properties, else
             //return an empty map.
 
-            if (beanClassName != null && beanClassName.trim().length() != 0) {
+            if (beanClassName != null && !beanClassName.isBlank()) {
                 cls = cl.loadClass(beanClassName);
             }
             return cls;
@@ -253,7 +257,7 @@ public class RARUtils {
             ClassLoader commonClassLoader =
                     ConnectorRuntime.getRuntime().getClassLoaderHierarchy().getCommonClassLoader();
             if (f.isDirectory()) {
-                List<URL> urls = new ArrayList<URL>();
+                List<URL> urls = new ArrayList<>();
                 urls.add(f.toURI().toURL());
                 appendURLs(urls, f);
                 cl = new URLClassLoader(urls.toArray(new URL[urls.size()]), commonClassLoader);

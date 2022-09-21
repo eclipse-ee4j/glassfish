@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,10 @@
 package org.glassfish.deployment.common;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Set;
 
 /**
  * This class is a value holder for dynamic attributes. Dynamic attributes
@@ -28,16 +32,16 @@ import java.util.*;
  */
 public class DynamicAttributesDescriptor extends Observable implements Serializable {
 
-    private Map dynamicAttributes;
+    private Map<String, Object> dynamicAttributes;
 
     /**
     * Direct acess to the dynamic attributes repository
     * @return the Map of dynamic attributes
     */
 
-    public Map getExtraAttributes() {
+    public Map<String, Object> getExtraAttributes() {
         if (dynamicAttributes == null) {
-            dynamicAttributes = new Hashtable();
+            dynamicAttributes = new Hashtable<>();
         }
         return dynamicAttributes;
     }
@@ -48,11 +52,11 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
      * @param value the attribute value
      */
     public void addExtraAttribute(String name, Object value) {
-        if (value==null) {
+        if (value == null) {
             return;
         }
         if (dynamicAttributes == null) {
-            dynamicAttributes = new Hashtable();
+            dynamicAttributes = new Hashtable<>();
         }
         dynamicAttributes.put(name, value);
         changed();
@@ -63,11 +67,11 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
      * @param name the attribute name
      * @return the attribute value of null of non existent
      */
-    public Object getExtraAttribute(String name) {
+    public <T> T getExtraAttribute(String name) {
         if (dynamicAttributes == null) {
             return null;
         }
-        return dynamicAttributes.get(name);
+        return (T) dynamicAttributes.get(name);
     }
 
     /**
@@ -111,46 +115,54 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
            }
      */
     public void print(StringBuffer toStringBuffer) {
-        if (dynamicAttributes==null) {
+        if (dynamicAttributes == null) {
             toStringBuffer.append("<== No attribute ==>");
-        }  else {
-           toStringBuffer.append("==>Dynamic Attribute");
-           Set keys = dynamicAttributes.keySet();
-           for (Iterator itr = keys.iterator();itr.hasNext();) {
-               String keyName = (String) itr.next();
-               Object o = getExtraAttribute(keyName);
-               if (o instanceof Object[]) {
-                   Object[] objects = (Object[]) o;
-                   for (int i=0;i<objects.length;i++) {
-                       toStringBuffer.append("\n Indexed prop name ").append(keyName).append("[").append(i).append("] = ");
-                       if(objects[i] instanceof DynamicAttributesDescriptor)
-                            ((DynamicAttributesDescriptor)objects[i]).print(toStringBuffer);
-                       else
+        } else {
+            toStringBuffer.append("==>Dynamic Attribute");
+            Set<String> keys = dynamicAttributes.keySet();
+            for (Object key : keys) {
+                String keyName = (String) key;
+                Object o = getExtraAttribute(keyName);
+                if (o instanceof Object[]) {
+                    Object[] objects = (Object[]) o;
+                    for (int i = 0; i < objects.length; i++) {
+                        toStringBuffer.append("\n Indexed prop name ").append(keyName).append("[").append(i)
+                            .append("] = ");
+                        if (objects[i] instanceof DynamicAttributesDescriptor) {
+                            ((DynamicAttributesDescriptor) objects[i]).print(toStringBuffer);
+                        } else {
                             toStringBuffer.append(objects[i]);
-                   }
-               } else {
-                   toStringBuffer.append("\n  Property name = ").append(keyName).append(" value = ");
-                   if(o instanceof DynamicAttributesDescriptor)
-                            ((DynamicAttributesDescriptor)o).print(toStringBuffer);
-                       else
-                            toStringBuffer.append(o);
-               }
-           }
-           toStringBuffer.append("\n<==End");
-           return ;
+                        }
+                    }
+                } else {
+                    toStringBuffer.append("\n  Property name = ").append(keyName).append(" value = ");
+                    if (o instanceof DynamicAttributesDescriptor) {
+                        ((DynamicAttributesDescriptor) o).print(toStringBuffer);
+                    } else {
+                        toStringBuffer.append(o);
+                    }
+                }
+            }
+            toStringBuffer.append("\n<==End");
+            return;
         }
     }
     /**
-     * @return a meaningfull string about ourself
-     * No Descriptor class which inherits this class should override this method.  Rather print() method which is defined in this class
-     * should be overridden to describe itself. Refer to the comments on print() method for more details.
+     * Provides a meaningfull string about ourself.
+     * <p>
+     * No Descriptor class which inherits this class should override this method.
+     * Rather print() method which is defined in this class should be overridden to describe itself.
+     * Refer to the comments on print() method for more details.
+     * <p>
      * This method is optimized for persformance reasons.
      */
+    @Override
     public String toString() {
         StringBuffer toStringBuf = new StringBuffer();
         this.print(toStringBuf);
         return toStringBuf.toString();
     }
+
 
     /**
      * notify our observers we have changed

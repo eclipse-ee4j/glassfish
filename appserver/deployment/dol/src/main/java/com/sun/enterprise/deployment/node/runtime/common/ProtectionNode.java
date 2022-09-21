@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,21 +21,22 @@ import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.runtime.common.ProtectionDescriptor;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * This node handles request-protection and response-protection elements
- *
  */
-public class ProtectionNode extends DeploymentDescriptorNode {
+public class ProtectionNode extends DeploymentDescriptorNode<ProtectionDescriptor> {
 
-    ProtectionDescriptor descriptor = null;
+    private ProtectionDescriptor descriptor;
 
     /**
     * @return the descriptor instance to associate with this XMLNode
     */
-    public Object getDescriptor() {
+    @Override
+    public ProtectionDescriptor getDescriptor() {
        if (descriptor == null) {
             descriptor = new ProtectionDescriptor();
         }
@@ -50,18 +52,18 @@ public class ProtectionNode extends DeploymentDescriptorNode {
      * @param the attribute value
      * @return true if the attribute was processed
      */
-    protected boolean setAttributeValue(XMLElement elementName,
-        XMLElement attributeName, String value) {
+    @Override
+    protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
         if (attributeName.getQName().equals(WebServicesTagNames.AUTH_SOURCE)) {
-            descriptor.setAttributeValue(descriptor.AUTH_SOURCE, value);
+            descriptor.setAttributeValue(ProtectionDescriptor.AUTH_SOURCE, value);
             return true;
-        } else if (attributeName.getQName().equals(
-            WebServicesTagNames.AUTH_RECIPIENT)) {
-            descriptor.setAttributeValue(descriptor.AUTH_RECIPIENT, value);
+        } else if (attributeName.getQName().equals(WebServicesTagNames.AUTH_RECIPIENT)) {
+            descriptor.setAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT, value);
             return true;
         }
         return false;
     }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -71,21 +73,20 @@ public class ProtectionNode extends DeploymentDescriptorNode {
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName,
-        ProtectionDescriptor protectionDesc) {
-        Element protectionNode =
-            (Element)super.writeDescriptor(parent, nodeName, protectionDesc);
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, ProtectionDescriptor protectionDesc) {
+        Element protectionNode = (Element) super.writeDescriptor(parent, nodeName, protectionDesc);
 
         // auth-source
-        if (protectionDesc.getAttributeValue(protectionDesc.AUTH_SOURCE)
-            != null) {
-            setAttribute(protectionNode, WebServicesTagNames.AUTH_SOURCE, protectionDesc.getAttributeValue(protectionDesc.AUTH_SOURCE));
+        if (protectionDesc.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE) != null) {
+            setAttribute(protectionNode, WebServicesTagNames.AUTH_SOURCE,
+                protectionDesc.getAttributeValue(ProtectionDescriptor.AUTH_SOURCE));
         }
 
         // auth-recipient
-        if (protectionDesc.getAttributeValue(protectionDesc.AUTH_RECIPIENT)
-           != null) {
-            setAttribute(protectionNode, WebServicesTagNames.AUTH_RECIPIENT, protectionDesc.getAttributeValue(protectionDesc.AUTH_RECIPIENT));
+        if (protectionDesc.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT) != null) {
+            setAttribute(protectionNode, WebServicesTagNames.AUTH_RECIPIENT,
+                protectionDesc.getAttributeValue(ProtectionDescriptor.AUTH_RECIPIENT));
         }
 
         return protectionNode;

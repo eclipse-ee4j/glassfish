@@ -148,7 +148,7 @@ public class CreateJndiResource implements AdminCommand {
 
         // ensure we don't already have one of this name
         if (domain.getResources().getResourceByName(BindableResource.class, jndiName) != null){
-            report.setMessage(localStrings.getLocalString(
+            report.setMessage(I18N.getLocalString(
                     "create.jndi.resource.duplicate.1",
                     "Resource named {0} already exists.",
                     jndiName));
@@ -192,12 +192,12 @@ public class CreateJndiResource implements AdminCommand {
             }, domain.getResources());
 
             resourceUtil.createResourceRef(jndiName, enabledValueForTarget.toString(), target);
-            report.setMessage(localStrings.getLocalString(
+            report.setMessage(I18N.getLocalString(
                     "create.jndi.resource.success",
                     "JNDI resource {0} created.", jndiName));
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         } catch (TransactionFailure tfe) {
-            report.setMessage(localStrings.getLocalString(
+            report.setMessage(I18N.getLocalString(
                     "create.jndi.resource.fail",
                     "Unable to create JNDI resource {0}.", jndiName) +
                     " " + tfe.getLocalizedMessage());

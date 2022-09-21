@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package org.glassfish.internal.deployment;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.lang.annotation.Annotation;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Defines a pluggability facility to retrieve annotation types from various
@@ -27,8 +28,7 @@ import java.lang.annotation.Annotation;
 @Contract
 public interface AnnotationTypesProvider {
 
-    public Class<? extends Annotation>[] getAnnotationTypes();
+    Class<? extends Annotation>[] getAnnotationTypes();
 
-    public Class getType(String typename) throws ClassNotFoundException;
-
+    Class<?> getType(String typename) throws ClassNotFoundException;
 }

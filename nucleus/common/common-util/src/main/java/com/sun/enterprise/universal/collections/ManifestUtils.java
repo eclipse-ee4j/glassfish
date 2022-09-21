@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,16 @@
 
 package com.sun.enterprise.universal.collections;
 
-import java.util.*;
-import java.util.jar.*;
-import java.net.URLDecoder;
-import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 /**
  * all-static methods for handling operations with Manifests
  * It automatically replace all occurences of EOL_TOKEN with linefeeds
+ *
  * @author bnevins
  */
 public class ManifestUtils {
@@ -52,7 +55,7 @@ public class ManifestUtils {
     public final static Map<String, Map<String,String>> normalize(Manifest m)
     {
         // first add the "main attributes
-        Map<String, Map<String,String>> all = new HashMap<String, Map<String,String>>();
+        Map<String, Map<String,String>> all = new HashMap<>();
         Attributes mainAtt = m.getMainAttributes();
         all.put(MAIN_ATTS, normalize(mainAtt));
 
@@ -64,8 +67,9 @@ public class ManifestUtils {
             String name = entry.getKey();
             Attributes value = entry.getValue();
 
-            if(name == null || value == null)
+            if(name == null || value == null) {
                 continue;
+            }
 
             all.put(name, normalize(value));
         }
@@ -80,7 +84,7 @@ public class ManifestUtils {
     public final static Map<String,String> normalize(Attributes att)
     {
         Set<Map.Entry<Object,Object>> entries = att.entrySet();
-        Map<String,String> pristine = new HashMap<String,String>(entries.size());
+        Map<String,String> pristine = new HashMap<>(entries.size());
 
         for(Map.Entry<Object,Object> entry : entries) {
             String key = entry.getKey().toString();
@@ -104,16 +108,18 @@ public class ManifestUtils {
         // Never return null
         // do NOT return Collections.emptyMap because then we'll get an error when
         // they try to add to it!
-        if(map == null)
-            map = new HashMap<String,String>(0);
+        if(map == null) {
+            map = new HashMap<>(0);
+        }
 
         return map;
     }
 
     public static String decode(String s) {
         // replace "null" with null
-        if(s == null || s.equals("null"))
+        if(s == null || s.equals("null")) {
             return null;
+        }
 
         // replace special tokens with eol
         return s.replaceAll(EOL_TOKEN, EOL);

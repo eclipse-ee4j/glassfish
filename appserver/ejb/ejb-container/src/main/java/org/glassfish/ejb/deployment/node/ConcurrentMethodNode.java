@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,70 +17,66 @@
 
 package org.glassfish.ejb.deployment.node;
 
-
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 import com.sun.enterprise.deployment.node.MethodNode;
 import com.sun.enterprise.deployment.node.XMLElement;
-import org.glassfish.ejb.deployment.EjbTagNames;
+
 import org.glassfish.ejb.deployment.descriptor.ConcurrentMethodDescriptor;
 import org.glassfish.ejb.deployment.descriptor.TimeoutValueDescriptor;
 import org.w3c.dom.Node;
+
+import static org.glassfish.ejb.deployment.EjbTagNames.CONCURRENT_ACCESS_TIMEOUT;
+import static org.glassfish.ejb.deployment.EjbTagNames.CONCURRENT_LOCK;
+import static org.glassfish.ejb.deployment.EjbTagNames.METHOD;
 
 public class ConcurrentMethodNode extends DeploymentDescriptorNode<ConcurrentMethodDescriptor> {
 
     private static final String WRITE_LOCK = "Write";
 
-    private ConcurrentMethodDescriptor descriptor = null;
+    private ConcurrentMethodDescriptor descriptor;
 
     public ConcurrentMethodNode() {
-        super();
-
-        registerElementHandler(new XMLElement(EjbTagNames.METHOD), MethodNode.class,
-                "setConcurrentMethod");
-        registerElementHandler(new XMLElement(EjbTagNames.CONCURRENT_ACCESS_TIMEOUT),
-                TimeoutValueNode.class, "setAccessTimeout");
-
+        registerElementHandler(new XMLElement(METHOD), MethodNode.class, "setConcurrentMethod");
+        registerElementHandler(new XMLElement(CONCURRENT_ACCESS_TIMEOUT), TimeoutValueNode.class, "setAccessTimeout");
     }
+
 
     @Override
     public ConcurrentMethodDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ConcurrentMethodDescriptor();
+        if (descriptor == null) {
+            descriptor = new ConcurrentMethodDescriptor();
+        }
         return descriptor;
     }
 
+
     @Override
     public void setElementValue(XMLElement element, String value) {
-        if (EjbTagNames.CONCURRENT_LOCK.equals(element.getQName())) {
+        if (CONCURRENT_LOCK.equals(element.getQName())) {
             descriptor.setWriteLock(value.equals(WRITE_LOCK));
         } else {
             super.setElementValue(element, value);
         }
     }
 
+
     @Override
     public Node writeDescriptor(Node parent, String nodeName, ConcurrentMethodDescriptor desc) {
         Node concurrentNode = super.writeDescriptor(parent, nodeName, descriptor);
-
         MethodNode methodNode = new MethodNode();
-
-        methodNode.writeJavaMethodDescriptor(concurrentNode, EjbTagNames.METHOD,
-                desc.getConcurrentMethod());
-
-        if( desc.hasLockMetadata() ) {
+        methodNode.writeJavaMethodDescriptor(concurrentNode, METHOD, desc.getConcurrentMethod());
+        if (desc.hasLockMetadata()) {
             String lockType = desc.isWriteLocked() ? "Write" : "Read";
-            appendTextChild(concurrentNode, EjbTagNames.CONCURRENT_LOCK, lockType);
+            appendTextChild(concurrentNode, CONCURRENT_LOCK, lockType);
         }
 
-        if( desc.hasAccessTimeout() ) {
+        if (desc.hasAccessTimeout()) {
             TimeoutValueNode timeoutValueNode = new TimeoutValueNode();
             TimeoutValueDescriptor timeoutDesc = new TimeoutValueDescriptor();
             timeoutDesc.setValue(desc.getAccessTimeoutValue());
             timeoutDesc.setUnit(desc.getAccessTimeoutUnit());
-            timeoutValueNode.writeDescriptor(concurrentNode, EjbTagNames.CONCURRENT_ACCESS_TIMEOUT,
-                timeoutDesc);
+            timeoutValueNode.writeDescriptor(concurrentNode, CONCURRENT_ACCESS_TIMEOUT, timeoutDesc);
         }
-
         return concurrentNode;
-     }
-
+    }
 }

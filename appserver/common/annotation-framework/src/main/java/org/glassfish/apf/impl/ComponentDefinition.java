@@ -137,7 +137,7 @@ public class ComponentDefinition implements ComponentInfo {
      */
     private boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
         if (clazz.getPackage() == null) {
-            return true;
+            return false;
         }
         if (clazz.getPackage().getName().startsWith("java.lang")) {
             return true;

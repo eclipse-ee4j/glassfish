@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${project.version}</version>
+            <version>${glassfish.version}</version>
             <type>zip</type>
             <scope>runtime</scope>
         </dependency>
@@ -120,6 +120,9 @@
                             <sources>
                                 <source>src/main/resources/junit-results.xsd</source>
                             </sources>
+                            <xjbSources>
+                                <xjbSource>src/main/resources/junit-results.xjb</xjbSource>
+                            </xjbSources>
                             <packageName>org.glassfish.main.tests.tck.ant.junit.generated</packageName>
                         </configuration>
                     </execution>

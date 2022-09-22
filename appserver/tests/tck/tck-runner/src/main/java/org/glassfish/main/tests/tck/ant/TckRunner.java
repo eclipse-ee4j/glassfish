@@ -190,6 +190,7 @@ public class TckRunner {
 
     private void configureEnvironment(Map<String, String> env) {
         env.put("LC_ALL", "en_US.UTF-8");
+        env.put("LANG", "en");
         env.put("WORKSPACE", cfg.getTargetDir().getAbsolutePath());
         env.put("JAVA_HOME", cfg.getJdkDirectory().getAbsolutePath());
         env.put("JDK17_HOME", cfg.getJdkDirectory().getAbsolutePath());
@@ -236,6 +237,7 @@ public class TckRunner {
     private String toReport(Testsuite suite) {
         StringBuilder report = new StringBuilder();
         report.append("Test suite ").append(suite.getName());
+        report.append(" finished at ").append(suite.getTimestamp());
         report.append(" failed with ").append(suite.getFailures()).append(" failures and ");
         report.append(suite.getErrors()).append(" errors.");
         List<Testcase> tests = suite.getTestcase();

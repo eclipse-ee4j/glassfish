@@ -190,6 +190,7 @@ public class TckRunner {
 
     private void configureEnvironment(Map<String, String> env) {
         env.put("LC_ALL", "en_US.UTF-8");
+        env.put("LANG", "en");
         env.put("WORKSPACE", cfg.getTargetDir().getAbsolutePath());
         env.put("JAVA_HOME", cfg.getJdkDirectory().getAbsolutePath());
         env.put("JDK17_HOME", cfg.getJdkDirectory().getAbsolutePath());

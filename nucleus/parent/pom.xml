@@ -146,7 +146,7 @@
         <jackson-databind.version>2.13.4</jackson-databind.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.5.0</jettison.version>
+        <jettison.version>1.5.1</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>

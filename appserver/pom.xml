@@ -88,7 +88,7 @@
         <tyrus.version>2.1.0</tyrus.version>
 
         <!-- Jakarta Concurrency -->
-        <jakarta.concurrent-api.version>3.0.1</jakarta.concurrent-api.version>
+        <jakarta.concurrent-api.version>3.0.2</jakarta.concurrent-api.version>
         <concurrent.version>3.0.0</concurrent.version>
         <concurrent2.version>3.0.0-RC5</concurrent2.version>
 
@@ -101,7 +101,7 @@
         <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
         <soteria.version>3.0.0</soteria.version>
         <exousia.version>2.1.0</exousia.version>
-        <nimbus.version>9.25</nimbus.version>
+        <nimbus.version>9.25.4</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -144,7 +144,7 @@
 
         <!-- Jakarta Standard Tag Library -->
         <jstl-api.version>3.0.0</jstl-api.version>
-        <jstl-impl.version>3.0.0</jstl-impl.version>
+        <jstl-impl.version>3.0.1</jstl-impl.version>
 
         <!-- Jakarta CDI -->
         <jakarta.cdi-api.version>4.0.1</jakarta.cdi-api.version>
@@ -156,7 +156,7 @@
         <krazo.version>3.0.0</krazo.version>
 
         <!-- MicroProfile Config -->
-        <microprofile.config-api.version>3.0.1</microprofile.config-api.version>
+        <microprofile.config-api.version>3.0.2</microprofile.config-api.version>
         <helidon-config.version>3.0.1</helidon-config.version>
 
         <!-- Admin console components -->

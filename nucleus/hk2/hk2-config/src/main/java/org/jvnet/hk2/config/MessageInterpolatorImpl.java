@@ -113,22 +113,12 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
         // if the message is not already in the cache we have to run step 1-3 of the message resolution
         if (resolvedMessage == null) {
             ResourceBundle userResourceBundle = new ContextResourceBundle(context, locale);
-            ClassLoader cl;
-            if (System.getSecurityManager()!=null) {
-                cl = AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
-                    @Override
-                    public ClassLoader run() {
-                        return MessageInterpolator.class.getClassLoader();
-                    }
-                });
-            } else {
-                cl = MessageInterpolator.class.getClassLoader();
-            }
+            ClassLoader classLoader = MessageInterpolatorImpl.class.getClassLoader();
             ResourceBundle defaultResourceBundle = null;
             try {
                 defaultResourceBundle = ResourceBundle.getBundle(DEFAULT_VALIDATION_MESSAGES,
                     locale,
-                    cl);
+                    classLoader);
             }
             catch (MissingResourceException mre) {
                 // defaultResourceBundle is already null

@@ -28,7 +28,9 @@ import javax.transaction.xa.Xid;
 import jakarta.resource.spi.XATerminator;
 
 /**
- * Proxy for XATerminator.<br>
+ * Proxy for XATerminator.
+ *
+ * <p>
  * This implementation is Serializable(Externalizable) such that RAR implementation can use it safely in Serialization
  * mandated scenarios<br>
  *
@@ -36,15 +38,15 @@ import jakarta.resource.spi.XATerminator;
  */
 public class XATerminatorProxy implements XATerminator, Externalizable {
 
-    private transient XATerminator xat;
+    private transient XATerminator xaTerminator;
 
     /**
      * Provides a proxy for XATerminator
-     * 
+     *
      * @param xat Actual XATerminator
      */
     public XATerminatorProxy(XATerminator xat) {
-        this.xat = xat;
+        this.xaTerminator = xat;
     }
 
     /**
@@ -59,7 +61,7 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
      */
     @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
-        xat.commit(xid, onePhase);
+        xaTerminator.commit(xid, onePhase);
     }
 
     /**
@@ -67,7 +69,7 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
      */
     @Override
     public void forget(Xid xid) throws XAException {
-        xat.forget(xid);
+        xaTerminator.forget(xid);
     }
 
     /**
@@ -75,7 +77,7 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
      */
     @Override
     public int prepare(Xid xid) throws XAException {
-        return xat.prepare(xid);
+        return xaTerminator.prepare(xid);
     }
 
     /**
@@ -83,7 +85,7 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
      */
     @Override
     public Xid[] recover(int flag) throws XAException {
-        return xat.recover(flag);
+        return xaTerminator.recover(flag);
     }
 
     /**
@@ -91,7 +93,7 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
      */
     @Override
     public void rollback(Xid xid) throws XAException {
-        xat.rollback(xid);
+        xaTerminator.rollback(xid);
     }
 
     /**
@@ -107,6 +109,6 @@ public class XATerminatorProxy implements XATerminator, Externalizable {
      */
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        xat = ConnectorRuntime.getRuntime().getTransactionManager().getXATerminator();
+        xaTerminator = ConnectorRuntime.getRuntime().getTransactionManager().getXATerminator();
     }
 }

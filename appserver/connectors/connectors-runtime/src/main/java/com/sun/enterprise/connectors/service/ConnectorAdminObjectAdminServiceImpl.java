@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,18 @@
 
 package com.sun.enterprise.connectors.service;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.connectors.ActiveOutboundResourceAdapter;
-import com.sun.enterprise.connectors.ActiveResourceAdapter;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import java.util.Properties;
+import java.util.logging.Level;
 
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import java.util.Properties;
-import java.util.logging.Level;
+
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.connectors.ActiveOutboundResourceAdapter;
+import com.sun.enterprise.connectors.ActiveResourceAdapter;
 
 /**
  * AdminObject administration service. It performs the functionality of
@@ -40,7 +43,6 @@ public class ConnectorAdminObjectAdminServiceImpl extends
 
 
     public ConnectorAdminObjectAdminServiceImpl() {
-        super();
     }
 
     public void addAdminObject(

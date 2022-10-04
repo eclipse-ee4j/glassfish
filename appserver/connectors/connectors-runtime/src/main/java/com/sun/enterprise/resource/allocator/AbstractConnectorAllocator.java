@@ -17,6 +17,13 @@
 
 package com.sun.enterprise.resource.allocator;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -34,13 +41,6 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ValidatingManagedConnectionFactory;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
 
 
 /**

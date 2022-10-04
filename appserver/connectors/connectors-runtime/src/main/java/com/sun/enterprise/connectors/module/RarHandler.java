@@ -17,18 +17,6 @@
 
 package com.sun.enterprise.connectors.module;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.connector.module.RarType;
-import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
-import com.sun.enterprise.security.perms.PermsArchiveDelegate;
-import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -44,6 +32,18 @@ import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.connectors.connector.module.RarType;
+import com.sun.enterprise.deploy.shared.AbstractArchiveHandler;
+import com.sun.enterprise.security.perms.PermsArchiveDelegate;
+import com.sun.enterprise.security.perms.SMGlobalPolicyUtil;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Archive handler for resource-adapters

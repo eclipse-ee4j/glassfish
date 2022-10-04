@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,11 @@
 
 package com.sun.enterprise.resource.pool;
 
-
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
- * Reflects the current status of the Connection Pool. This class is used to
- * get the status of the pool specifically the number of connections free or
- * used.
+ * Reflects the current status of the Connection Pool. This class is used to get the status of the pool specifically the
+ * number of connections free or used.
  *
  * @author Shalini M
  */
@@ -30,10 +29,10 @@ public class PoolStatus {
 
     private PoolInfo poolInfo;
 
-    //Number of free connections in the pool
+    // Number of free connections in the pool
     private int numConnFree;
 
-    //Number of connections in the pool that are being used currently.
+    // Number of connections in the pool that are being used currently.
     private int numConnUsed;
 
     public int getNumConnFree() {

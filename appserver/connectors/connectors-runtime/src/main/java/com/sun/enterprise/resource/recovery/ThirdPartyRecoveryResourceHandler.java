@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,18 @@
 
 package com.sun.enterprise.resource.recovery;
 
-import jakarta.inject.Inject;
-import javax.transaction.xa.XAResource;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
+
+import javax.transaction.xa.XAResource;
 
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.transaction.spi.RecoveryResourceListener;
-import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
-import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
 
+import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
+import com.sun.enterprise.transaction.spi.RecoveryResourceHandler;
+import com.sun.enterprise.transaction.spi.RecoveryResourceListener;
+
+import jakarta.inject.Inject;
 
 /**
  * RecoveryResourceHandler for third party resources
@@ -36,26 +39,21 @@ import com.sun.enterprise.transaction.api.RecoveryResourceRegistry;
 public class ThirdPartyRecoveryResourceHandler implements RecoveryResourceHandler {
 
     @Inject
-    private RecoveryResourceRegistry rrr;
-    /**
-     * {@inheritDoc}
-     */
-    public void loadXAResourcesAndItsConnections(List xaresList, List connList) {
-        Set<RecoveryResourceListener> listeners =
-                rrr.getListeners();
+    private RecoveryResourceRegistry recoveryResourceRegistry;
 
-        for (RecoveryResourceListener rrl : listeners) {
-            XAResource[] xars = rrl.getXAResources();
-            for (XAResource xar : xars) {
+    @Override
+    public void loadXAResourcesAndItsConnections(List xaresList, List connList) {
+        Set<RecoveryResourceListener> listeners = recoveryResourceRegistry.getListeners();
+
+        for (RecoveryResourceListener recoveryResourceListener : listeners) {
+            for (XAResource xar : recoveryResourceListener.getXAResources()) {
                 xaresList.add(xar);
             }
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void closeConnections(List connList) {
-        //do nothing
+        // do nothing
     }
 }

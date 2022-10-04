@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,23 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.external.probe.provider.PluginPoint;
+import org.glassfish.external.probe.provider.StatsProviderManager;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -29,20 +47,10 @@ import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
 import com.sun.enterprise.resource.pool.PoolLifeCycleRegistry;
 import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.external.probe.provider.PluginPoint;
-import org.glassfish.external.probe.provider.StatsProviderManager;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Bootstrap operations of stats provider objects are done by this class.
@@ -88,9 +96,9 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     private ConnectorRuntime runtime;
 
     public ConnectionPoolStatsProviderBootstrap() {
-        ccStatsProviders = new ArrayList<ConnectorConnPoolStatsProvider>();
-        poolEmitters = new HashMap<PoolInfo, ConnectionPoolEmitterImpl>();
-        poolRegistries = new HashMap<PoolInfo, PoolLifeCycleListenerRegistry>();
+        ccStatsProviders = new ArrayList<>();
+        poolEmitters = new HashMap<>();
+        poolRegistries = new HashMap<>();
         runtime = ConnectorRuntime.getRuntime();
 
     }
@@ -108,6 +116,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
         registerPoolLifeCycleListener();
     }
 
+    @Override
     public void postConstruct() {
         if(logger.isLoggable(Level.FINEST)) {
             logger.finest("[Monitor]In the ConnectionPoolStatsProviderBootstrap");
@@ -307,6 +316,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      * of any monitoring attributes.
      * @param poolInfo
      */
+    @Override
     public void poolCreated(PoolInfo poolInfo) {
         if(logger.isLoggable(Level.FINEST)) {
             logger.finest("Pool created : " + poolInfo);
@@ -332,6 +342,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      * should be unregistered.
      * @param poolInfo
      */
+    @Override
     public void poolDestroyed(PoolInfo poolInfo) {
         if(logger.isLoggable(Level.FINEST)) {
             logger.finest("Pool Destroyed : " + poolInfo);

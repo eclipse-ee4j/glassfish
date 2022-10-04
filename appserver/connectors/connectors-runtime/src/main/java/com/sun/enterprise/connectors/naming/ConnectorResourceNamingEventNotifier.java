@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,10 @@
 
 package com.sun.enterprise.connectors.naming;
 
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
-
 import java.util.ArrayList;
+
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
 
 /**
  * Notifier for connector resource naming events
@@ -31,7 +32,7 @@ public class ConnectorResourceNamingEventNotifier implements ConnectorNamingEven
      private static ConnectorResourceNamingEventNotifier notifier;
 
      private ConnectorResourceNamingEventNotifier(){
-        listeners= new ArrayList<ConnectorNamingEventListener>();
+        listeners= new ArrayList<>();
      }
 
       /**
@@ -49,6 +50,7 @@ public class ConnectorResourceNamingEventNotifier implements ConnectorNamingEven
      * To add Listener which gets notified when the event happens
      * @param listener
      */
+    @Override
     public void addListener(ConnectorNamingEventListener listener){
         listeners.add(listener);
     }
@@ -57,6 +59,7 @@ public class ConnectorResourceNamingEventNotifier implements ConnectorNamingEven
      * To remove listener such that it wont be notified anymore.
      * @param listener
      */
+    @Override
     public void removeListener(ConnectorNamingEventListener listener){
         listeners.remove(listener);
     }
@@ -65,6 +68,7 @@ public class ConnectorResourceNamingEventNotifier implements ConnectorNamingEven
      * Notifies all the registered listeners about the naming event.
      * @param event
      */
+    @Override
     public void notifyListeners(ConnectorNamingEvent event){
 
         for(ConnectorNamingEventListener listener : listeners){

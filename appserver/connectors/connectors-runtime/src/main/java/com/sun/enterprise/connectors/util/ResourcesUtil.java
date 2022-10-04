@@ -17,27 +17,6 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.ApplicationRef;
-import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.config.serverbeans.ResourceRef;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.ConnectorRuntimeExtension;
-import com.sun.enterprise.connectors.DeferredResourceConfig;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +37,27 @@ import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resources.api.ResourcesRegistry;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.ConnectorRuntimeExtension;
+import com.sun.enterprise.connectors.DeferredResourceConfig;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 
 public class ResourcesUtil {
@@ -722,16 +722,8 @@ public class ResourcesUtil {
             AdminObjectResource adminObjectResource = (AdminObjectResource)resource;
             String resourceAdapterName = adminObjectResource.getResAdapter();
 
-            if(resourceAdapterName == null) {
-                continue;
-            }
-            if(raName!= null && !raName.equals(resourceAdapterName)) {
-                continue;
-            }
-
-
             // skips the admin resource if it is not referenced by the server
-            if(!isEnabled(adminObjectResource)) {
+            if((resourceAdapterName == null) || (raName!= null && !raName.equals(resourceAdapterName)) || !isEnabled(adminObjectResource)) {
                 continue;
             }
             adminObjectResources.add(adminObjectResource);
@@ -795,10 +787,8 @@ public class ResourcesUtil {
             ResourceRef ref = getServer().getResourceRef(resourceInfo.getName());
             if (ref != null) {
                 enabled = ref.getEnabled();
-            } else {
-                if(_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("ResourcesUtil :: isResourceReferenceEnabled null ref");
-                }
+            } else if(_logger.isLoggable(Level.FINE)) {
+                _logger.fine("ResourcesUtil :: isResourceReferenceEnabled null ref");
             }
         }
         if(_logger.isLoggable(Level.FINE)) {
@@ -922,20 +912,18 @@ public class ResourcesUtil {
         }
         if (resources != null) {
             resource = ConnectorsUtil.getResourceByName( resources, resourceType, jndiName);
-        } else {
-            //it is possible that "application" is being deployed (eg: during deployment "prepare" or application "start")
-            if (ConnectorsUtil.isApplicationScopedResource(resourceInfo) ||
-                    ConnectorsUtil.isModuleScopedResource(resourceInfo)) {
+        } else //it is possible that "application" is being deployed (eg: during deployment "prepare" or application "start")
+        if (ConnectorsUtil.isApplicationScopedResource(resourceInfo) ||
+                ConnectorsUtil.isModuleScopedResource(resourceInfo)) {
 
-                //for app-scoped-resource, resource is stored in "app-name" key
-                if (ConnectorsUtil.isApplicationScopedResource(resourceInfo)) {
-                    moduleName = appName;
-                }
+            //for app-scoped-resource, resource is stored in "app-name" key
+            if (ConnectorsUtil.isApplicationScopedResource(resourceInfo)) {
+                moduleName = appName;
+            }
 
-                resources = ResourcesRegistry.getResources(appName, moduleName);
-                if (resources != null) {
-                    resource = ConnectorsUtil.getResourceByName( resources, resourceType, jndiName);
-                }
+            resources = ResourcesRegistry.getResources(appName, moduleName);
+            if (resources != null) {
+                resource = ConnectorsUtil.getResourceByName( resources, resourceType, jndiName);
             }
         }
         return resource;

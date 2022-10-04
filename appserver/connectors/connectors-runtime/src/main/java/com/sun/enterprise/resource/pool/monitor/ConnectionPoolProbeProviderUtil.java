@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,16 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
+import java.util.Collection;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.enterprise.connectors.ConnectionPoolMonitoringExtension;
 import com.sun.enterprise.connectors.ConnectorRuntime;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import java.util.Collection;
 
 /**
  * Utility class to create providers for monitoring purposes.

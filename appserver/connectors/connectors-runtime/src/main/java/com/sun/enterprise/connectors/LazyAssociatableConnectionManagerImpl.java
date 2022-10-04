@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +34,7 @@ public class LazyAssociatableConnectionManagerImpl extends ConnectionManagerImpl
         super(poolInfo, resourceInfo);
     }
 
+    @Override
     public void associateConnection(Object connection,
                                     jakarta.resource.spi.ManagedConnectionFactory mcf,
                                     jakarta.resource.spi.ConnectionRequestInfo info)
@@ -42,6 +44,7 @@ public class LazyAssociatableConnectionManagerImpl extends ConnectionManagerImpl
         allocateConnection(mcf, info, jndiName, connection);
     }
 
+    @Override
     public void inactiveConnectionClosed(Object connection, ManagedConnectionFactory mcf) {
         //do nothing as application server does not keep track of dissociated connection's connection handles
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,86 +17,98 @@
 
 package com.sun.enterprise.connectors;
 
-import jakarta.resource.spi.XATerminator;
-import javax.transaction.xa.Xid;
-import javax.transaction.xa.XAException;
 import java.io.Externalizable;
-import java.io.ObjectOutput;
 import java.io.IOException;
 import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.Xid;
+
+import jakarta.resource.spi.XATerminator;
 
 /**
- * Proxy for XATerminator.<br>
- * This implementation is Serializable(Externalizable) such that RAR implementation
- * can use it safely in Serialization mandated scenarios<br>
+ * Proxy for XATerminator.
+ *
+ * <p>
+ * This implementation is Serializable(Externalizable) such that RAR implementation can use it safely in Serialization
+ * mandated scenarios<br>
  *
  * @author Jagadish Ramu
  */
 public class XATerminatorProxy implements XATerminator, Externalizable {
 
-    private transient XATerminator xat;
+    private transient XATerminator xaTerminator;
 
     /**
      * Provides a proxy for XATerminator
+     *
      * @param xat Actual XATerminator
      */
-    public XATerminatorProxy(XATerminator xat){
-        this.xat = xat;
+    public XATerminatorProxy(XATerminator xat) {
+        this.xaTerminator = xat;
     }
 
     /**
      * Provides a proxy for XATerminator<br>
      * no-args constructor for de-serialization
      */
-    public XATerminatorProxy(){
+    public XATerminatorProxy() {
     }
 
     /**
      * @see jakarta.resource.spi.XATerminator
      */
+    @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
-        xat.commit(xid, onePhase);
+        xaTerminator.commit(xid, onePhase);
     }
 
     /**
      * @see jakarta.resource.spi.XATerminator
      */
+    @Override
     public void forget(Xid xid) throws XAException {
-        xat.forget(xid);
+        xaTerminator.forget(xid);
     }
 
     /**
      * @see jakarta.resource.spi.XATerminator
      */
+    @Override
     public int prepare(Xid xid) throws XAException {
-        return xat.prepare(xid);
+        return xaTerminator.prepare(xid);
     }
 
     /**
      * @see jakarta.resource.spi.XATerminator
      */
+    @Override
     public Xid[] recover(int flag) throws XAException {
-        return xat.recover(flag);
+        return xaTerminator.recover(flag);
     }
 
     /**
      * @see jakarta.resource.spi.XATerminator
      */
+    @Override
     public void rollback(Xid xid) throws XAException {
-        xat.rollback(xid);
+        xaTerminator.rollback(xid);
     }
 
     /**
      * @see java.io.Externalizable
      */
+    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        //do nothing
+        // do nothing
     }
 
     /**
      * @see java.io.Externalizable
      */
+    @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        xat = ConnectorRuntime.getRuntime().getTransactionManager().getXATerminator();
+        xaTerminator = ConnectorRuntime.getRuntime().getTransactionManager().getXATerminator();
     }
 }

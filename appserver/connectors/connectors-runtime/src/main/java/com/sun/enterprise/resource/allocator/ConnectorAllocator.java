@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,18 +20,22 @@ package com.sun.enterprise.resource.allocator;
 
 import java.util.logging.Level;
 
-import javax.transaction.xa.XAResource;
-import jakarta.resource.spi.*;
-import jakarta.resource.ResourceException;
 import javax.security.auth.Subject;
-
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.ResourceSpec;
-import com.sun.enterprise.resource.ClientSecurityInfo;
+import javax.transaction.xa.XAResource;
 
 import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.resource.ClientSecurityInfo;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.ResourceSpec;
+import com.sun.enterprise.resource.pool.PoolManager;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
 
 
 /**
@@ -48,6 +53,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
             this.resource = resource;
         }
 
+        @Override
         public void connectionClosed(ConnectionEvent evt) {
             if (resource.hasConnectionErrorOccurred()) {
                 return;
@@ -63,6 +69,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
          *
          * @param evt ConnectionEvent
          */
+        @Override
         public void badConnectionClosed(ConnectionEvent evt) {
 
             if (resource.hasConnectionErrorOccurred()) {
@@ -81,6 +88,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
          *
          * @param evt ConnectionEvent
          */
+        @Override
         public void connectionAbortOccurred(ConnectionEvent evt) {
             resource.setConnectionErrorOccurred();
 
@@ -89,6 +97,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
             poolMgr.resourceAbortOccurred(resource);
         }
 
+        @Override
         public void connectionErrorOccurred(ConnectionEvent evt) {
             resource.setConnectionErrorOccurred();
 
@@ -104,14 +113,17 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
 */
         }
 
+        @Override
         public void localTransactionStarted(ConnectionEvent evt) {
             // no-op
         }
 
+        @Override
         public void localTransactionCommitted(ConnectionEvent evt) {
             // no-op
         }
 
+        @Override
         public void localTransactionRolledback(ConnectionEvent evt) {
             // no-op
         }
@@ -130,6 +142,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
     }
 
 
+    @Override
     public ResourceHandle createResource()
             throws PoolingException {
         try {
@@ -158,6 +171,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public void fillInResourceObjects(ResourceHandle resource)
             throws PoolingException {
         try {
@@ -171,6 +185,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public void destroyResource(ResourceHandle resource)
             throws PoolingException {
 
@@ -189,6 +204,7 @@ public class ConnectorAllocator extends AbstractConnectorAllocator {
 
     }
 
+    @Override
     public boolean shareableWithinComponent() {
         return shareable;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,22 @@
 
 package com.sun.enterprise.connectors;
 
+import java.io.Serializable;
+import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.WorkContextHandler;
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.spi.BootstrapContext;
 import jakarta.resource.spi.XATerminator;
-import jakarta.resource.spi.work.WorkManager;
 import jakarta.resource.spi.work.WorkContext;
+import jakarta.resource.spi.work.WorkManager;
 import jakarta.transaction.TransactionSynchronizationRegistry;
-import javax.naming.InitialContext;
-
-import java.io.Serializable;
-import java.util.Timer;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 
 /**
@@ -88,6 +90,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
      *
      * @return <code>java.util.Timer</code> object.
      */
+    @Override
     public Timer createTimer() {
         // set the timer as 'daemon' such that RAs that do not cancel the timer during
         // ra.stop() will not block (eg : server shutdown)
@@ -97,6 +100,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isContextSupported(Class<? extends WorkContext> aClass) {
         WorkContextHandler wch = ConnectorRuntime.getRuntime().getWorkContextHandler();
         wch.init(moduleName, rarCL);
@@ -106,6 +110,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
     /**
      * {@inheritDoc}
      */
+    @Override
     public TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
         try{
             InitialContext ic = new InitialContext();
@@ -125,6 +130,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
      * @see com.sun.enterprise.connectors.work.CommonWorkManager
      * @see com.sun.enterprise.connectors.work.WorkManagerFactoryImpl
      */
+    @Override
     public WorkManager getWorkManager() {
         initializeWorkManager();
         return wm;
@@ -147,6 +153,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
     /**
      * Retrieves the <code>XATerminator</code> object.
      */
+    @Override
     public XATerminator getXATerminator() {
         initializeXATerminator();
         return xa;

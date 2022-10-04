@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,10 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-
 import java.util.Properties;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 /** Interface class of admin object interface parser methods.
  *  @author Srikanth P
@@ -33,7 +34,7 @@ public interface AdminObjectConfigParser extends ConnectorConfigParser {
      *  @throws ConnectorRuntimeException If rar is not exploded or
      *                                    incorrect ra.xml
      */
-    public String[] getAdminObjectInterfaceNames(ConnectorDescriptor desc)
+    String[] getAdminObjectInterfaceNames(ConnectorDescriptor desc)
                       throws ConnectorRuntimeException;
 
     /**
@@ -45,7 +46,7 @@ public interface AdminObjectConfigParser extends ConnectorConfigParser {
      * @return Array of AdminObjectInterface names as Strings
      * @throws ConnectorRuntimeException if parsing fails
      */
-    public String[] getAdminObjectClassNames(ConnectorDescriptor desc, String intfName)
+    String[] getAdminObjectClassNames(ConnectorDescriptor desc, String intfName)
             throws ConnectorRuntimeException ;
 
     /**
@@ -58,7 +59,7 @@ public interface AdminObjectConfigParser extends ConnectorConfigParser {
      *  @throws ConnectorRuntimeException If rar is not exploded or
      *                                    incorrect ra.xml
      */
-    public boolean hasAdminObject(ConnectorDescriptor desc, String intfName, String className)
+    boolean hasAdminObject(ConnectorDescriptor desc, String intfName, String className)
         throws ConnectorRuntimeException;
 
     /**

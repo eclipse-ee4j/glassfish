@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,13 @@
 
 package com.sun.enterprise.resource.pool;
 
-import com.sun.logging.LogDomains;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.logging.LogDomains;
 
 /**
  * Resource gateway used to restrict the resource access. eg: based on priority.
@@ -59,9 +60,9 @@ public class ResourceGateway {
         return gateway;
     }
 
-    private static ResourceGateway initializeCustomResourceGatewayInPrivilegedMode(final String className)
-            throws PoolingException {
+    private static ResourceGateway initializeCustomResourceGatewayInPrivilegedMode(final String className) throws PoolingException {
         Object result = AccessController.doPrivileged(new PrivilegedAction() {
+            @Override
             public Object run() {
 
                 Object result = null;
@@ -88,9 +89,9 @@ public class ResourceGateway {
         return gateway;
     }
 
-
     protected static void debug(String debugStatement) {
-        if (_logger.isLoggable(Level.FINE))
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, debugStatement);
+        }
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 package com.sun.enterprise.connectors.naming;
 
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
 import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
 
 /**
  * To notify events related to Connector objects published using JNDI
@@ -29,16 +30,16 @@ public interface ConnectorNamingEventNotifier{
      * To add Listener which gets notified when the event happens
      * @param listener
      */
-    public void addListener(ConnectorNamingEventListener listener);
+    void addListener(ConnectorNamingEventListener listener);
 
     /**
      * To remove listener such that it wont be notified anymore.
      * @param listener
      */
-    public void removeListener(ConnectorNamingEventListener listener);
+    void removeListener(ConnectorNamingEventListener listener);
 
      /** Notifies all the registered listeners about naming event.
      * @param event
      */
-    public void notifyListeners(ConnectorNamingEvent event);
+    void notifyListeners(ConnectorNamingEvent event);
 }

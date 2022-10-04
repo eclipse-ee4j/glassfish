@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.resource.pool;
 
+import java.util.Set;
+
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
-
-import java.util.Set;
 
 /**
  * ResourceHandler to create/delete resource
@@ -35,12 +35,14 @@ public interface ResourceHandler {
 
     /**
      * destroys the given resource
+     *
      * @param resourceHandle resource to be destroyed
      */
     void deleteResource(ResourceHandle resourceHandle);
 
     /**
      * create a new resource using the given resource-allocator
+     *
      * @param allocator allocator to create a resource
      * @return newly created resource
      * @throws PoolingException when unable to create a resource
@@ -49,12 +51,14 @@ public interface ResourceHandler {
 
     /**
      * create a new resource and add it to pool (using default resource-allocator)
+     *
      * @throws PoolingException when unable to create a resource
      */
     void createResourceAndAddToPool() throws PoolingException;
 
     /**
      * gets the invalid connections from the given connections set
+     *
      * @param connections that need to be validated
      * @return invalid connections set
      * @throws ResourceException when unable to validate
@@ -63,6 +67,7 @@ public interface ResourceHandler {
 
     /**
      * callback method to handle the case of invalid connection detected
+     *
      * @param h connection that is invalid
      */
     void invalidConnectionDetected(ResourceHandle h);

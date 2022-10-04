@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,14 +26,15 @@ import jakarta.resource.spi.ConnectionEvent;
  *
  * @author Jagadish Ramu
  */
-public abstract class ConnectionEventListener implements jakarta.resource.spi.ConnectionEventListener,
-        BadConnectionEventListener {
+public abstract class ConnectionEventListener implements jakarta.resource.spi.ConnectionEventListener, BadConnectionEventListener {
 
+    @Override
     public void badConnectionClosed(ConnectionEvent ce) {
-        //do nothing as of now
+        // do nothing as of now
     }
 
+    @Override
     public void connectionAbortOccurred(ConnectionEvent ce) {
-        //Do nothing.
+        // Do nothing.
     }
 }

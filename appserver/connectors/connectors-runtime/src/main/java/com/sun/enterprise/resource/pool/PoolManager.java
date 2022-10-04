@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.enterprise.resource.pool;
 
+import java.util.Hashtable;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Contract;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.appserv.connectors.internal.api.TransactedPoolManager;
@@ -26,14 +32,11 @@ import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.allocator.ResourceAllocator;
 import com.sun.enterprise.resource.listener.PoolLifeCycle;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Contract;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Transaction;
-import java.util.Hashtable;
 
 /**
  * PoolManager manages jdbc and connector connection pool
@@ -42,92 +45,81 @@ import java.util.Hashtable;
 public interface PoolManager extends TransactedPoolManager {
 
     // transaction support levels
-    static public final int NO_TRANSACTION = 0;
-    static public final int LOCAL_TRANSACTION = 1;
-    static public final int XA_TRANSACTION = 2;
+    int NO_TRANSACTION = 0;
+    int LOCAL_TRANSACTION = 1;
+    int XA_TRANSACTION = 2;
 
     // Authentication mechanism levels
-    static public final int BASIC_PASSWORD = 0;
-    static public final int KERBV5 = 1;
+    int BASIC_PASSWORD = 0;
+    int KERBV5 = 1;
 
     // Credential Interest levels
-    static public final String PASSWORD_CREDENTIAL = "jakarta.resource.spi.security.PasswordCredential";
-    static public final String GENERIC_CREDENTIAL = "jakarta.resource.spi.security.GenericCredential";
+    String PASSWORD_CREDENTIAL = "jakarta.resource.spi.security.PasswordCredential";
+    String GENERIC_CREDENTIAL = "jakarta.resource.spi.security.GenericCredential";
 
     /**
-     * Flush Connection pool by reinitializing the connections
-     * established in the pool.
+     * Flush Connection pool by reinitializing the connections established in the pool.
+     *
      * @param poolInfo
      * @throws com.sun.appserv.connectors.internal.api.PoolingException
      */
-    public boolean flushConnectionPool(PoolInfo poolInfo) throws PoolingException;
+    boolean flushConnectionPool(PoolInfo poolInfo) throws PoolingException;
 
-    //Get status of pool
-    public PoolStatus getPoolStatus(PoolInfo poolInfo);
+    // Get status of pool
+    PoolStatus getPoolStatus(PoolInfo poolInfo);
 
+    ResourceHandle getResourceFromPool(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info, Transaction transaction) throws PoolingException, RetryableUnavailableException;
 
-    public ResourceHandle getResourceFromPool(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info,
-                                       Transaction tran) throws PoolingException, RetryableUnavailableException;
+    void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pt, Hashtable env) throws PoolingException;
 
-    public void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pt, Hashtable env) throws PoolingException;
+    void putbackResourceToPool(ResourceHandle resourceHandle, boolean errorOccurred);
 
+    void putbackBadResourceToPool(ResourceHandle resourceHandle);
 
-    public void putbackResourceToPool(ResourceHandle h, boolean errorOccurred);
+    void putbackDirectToPool(ResourceHandle resourceHandle, PoolInfo poolInfo);
 
-    public void putbackBadResourceToPool(ResourceHandle h);
+    void resourceClosed(ResourceHandle resourceHandle);
 
-    public void putbackDirectToPool(ResourceHandle h, PoolInfo poolInfo);
+    void badResourceClosed(ResourceHandle resourceHandle);
 
+    void resourceErrorOccurred(ResourceHandle resourceHandle);
 
-    public void resourceClosed(ResourceHandle res);
+    void resourceAbortOccurred(ResourceHandle resourceHandle);
 
-    public void badResourceClosed(ResourceHandle res);
+    void transactionCompleted(Transaction transaction, int status);
 
-    public void resourceErrorOccurred(ResourceHandle res);
+    void emptyResourcePool(ResourceSpec spec);
 
-    public void resourceAbortOccurred(ResourceHandle res);
+    void killPool(PoolInfo poolInfo);
 
-    public void transactionCompleted(Transaction tran, int status);
+    void reconfigPoolProperties(ConnectorConnectionPool ccp) throws PoolingException;
 
-    public void emptyResourcePool(ResourceSpec spec);
-
-    public void killPool(PoolInfo poolInfo);
-
-    public void reconfigPoolProperties(ConnectorConnectionPool ccp) throws PoolingException;
-
-/*
-    public ConcurrentHashMap getMonitoredPoolTable();
-*/
-
-    public boolean switchOnMatching(PoolInfo poolInfo);
+    boolean switchOnMatching(PoolInfo poolInfo);
 
     /**
      * Obtain a transactional resource such as JDBC connection
      *
-     * @param spec  Specification for the resource
+     * @param spec Specification for the resource
      * @param alloc Allocator for the resource
-     * @param info  Client security for this request
+     * @param info Client security for this request
      * @return An object that represents a connection to the resource
-     * @throws PoolingException Thrown if some error occurs while
-     *                          obtaining the resource
+     * @throws PoolingException Thrown if some error occurs while obtaining the resource
      */
-    public Object getResource(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info)
-            throws PoolingException, RetryableUnavailableException;
+    Object getResource(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info) throws PoolingException, RetryableUnavailableException;
 
-    public ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName);
+    ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName);
 
-    public void killAllPools();
+    void killAllPools();
 
-    public void killFreeConnectionsInPools();
+    void killFreeConnectionsInPools();
 
-    public ResourcePool getPool(PoolInfo poolInfo);
+    ResourcePool getPool(PoolInfo poolInfo);
 
-    public void setSelfManaged(PoolInfo poolInfo, boolean flag);
+    void setSelfManaged(PoolInfo poolInfo, boolean flag);
 
-    public void lazyEnlist(ManagedConnection mc) throws ResourceException;
+    void lazyEnlist(ManagedConnection mc) throws ResourceException;
 
-    public void registerPoolLifeCycleListener(PoolLifeCycle poolListener);
+    void registerPoolLifeCycleListener(PoolLifeCycle poolListener);
 
-    public void unregisterPoolLifeCycleListener();
+    void unregisterPoolLifeCycleListener();
 }
-

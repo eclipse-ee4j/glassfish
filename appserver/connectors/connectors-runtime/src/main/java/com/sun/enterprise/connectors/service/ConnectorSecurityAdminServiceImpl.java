@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,15 @@
 
 package com.sun.enterprise.connectors.service;
 
+import java.util.Set;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+
 import com.sun.enterprise.connectors.authentication.AuthenticationService;
 import com.sun.enterprise.connectors.authentication.BasicPasswordAuthenticationService;
 import com.sun.enterprise.deployment.AuthMechanism;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import java.util.Set;
 
 /**
  * This is Security administration service. Performs funtionality of
@@ -39,7 +41,6 @@ public class ConnectorSecurityAdminServiceImpl extends ConnectorService {
      * Default constructor
      */
     public ConnectorSecurityAdminServiceImpl() {
-        super();
     }
 
 

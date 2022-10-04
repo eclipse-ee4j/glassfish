@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.connectors.util;
 
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.logging.LogDomains;
-
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public final class ConnectionPoolReconfigHelper {
 
@@ -63,19 +63,7 @@ public final class ConnectionPoolReconfigHelper {
 
         //for all the following properties, we need to recreate pool if they
         //have changed
-        if(newCcp.isPoolingOn() != oldCcp.isPoolingOn()) {
-            return ReconfigAction.RECREATE_POOL;
-        }
-
-        if (newCcp.getTransactionSupport() != oldCcp.getTransactionSupport()) {
-            return ReconfigAction.RECREATE_POOL;
-        }
-
-        if (newCcp.isAssociateWithThread() != oldCcp.isAssociateWithThread()) {
-            return ReconfigAction.RECREATE_POOL;
-        }
-
-        if (newCcp.isLazyConnectionAssoc() != oldCcp.isLazyConnectionAssoc()) {
+        if ((newCcp.isPoolingOn() != oldCcp.isPoolingOn()) || (newCcp.getTransactionSupport() != oldCcp.getTransactionSupport()) || (newCcp.isAssociateWithThread() != oldCcp.isAssociateWithThread()) || (newCcp.isLazyConnectionAssoc() != oldCcp.isLazyConnectionAssoc())) {
             return ReconfigAction.RECREATE_POOL;
         }
 

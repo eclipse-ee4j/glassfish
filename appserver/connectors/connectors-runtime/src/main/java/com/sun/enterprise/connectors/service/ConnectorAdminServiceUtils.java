@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,23 @@
 
 package com.sun.enterprise.connectors.service;
 
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+
+import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
-import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * Util classes common to all connector Services
@@ -97,13 +101,13 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     }
 
     private static String getScopedName(GenericResourceInfo resourceInfo, String name){
-        if(resourceInfo.getName().startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX)){
-            if(!name.startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX)){
-                name = ConnectorConstants.JAVA_APP_SCOPE_PREFIX + name;
+        if(resourceInfo.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)){
+            if(!name.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)){
+                name = ResourceConstants.JAVA_APP_SCOPE_PREFIX + name;
             }
-        }else if (resourceInfo.getName().startsWith(ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX)){
-            if(!name.startsWith(ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX)){
-                name = ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX + name;
+        }else if (resourceInfo.getName().startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
+            if(!name.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
+                name = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + name;
             }
         }
         return name;
@@ -131,13 +135,13 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
 
     //TODO V3 is this right approach ? (just checking '#') ?
     public static boolean isEmbeddedConnectorModule(String moduleName) {
-        return (moduleName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1);
+        return (moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1);
     }
 
     public static String getApplicationName(String moduleName) {
         if (isEmbeddedConnectorModule(moduleName)) {
             int idx = moduleName.indexOf(
-                    ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER);
+                    ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
             return moduleName.substring(0, idx);
         } else {
             return null;
@@ -147,7 +151,7 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     public static String getConnectorModuleName(String moduleName) {
         if (isEmbeddedConnectorModule(moduleName)) {
             int idx = moduleName.indexOf(
-                    ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER);
+                    ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
             return moduleName.substring(idx + 1);
         } else {
             return moduleName;

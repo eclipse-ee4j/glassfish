@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,6 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import com.sun.logging.LogDomains;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,16 +33,20 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.StringTokenizer;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.logging.LogDomains;
 
 /**
  * Driver Loader to load the jdbc drivers and get driver/datasource classnames
@@ -85,7 +85,7 @@ public class DriverLoader implements ConnectorConstants {
             System.getProperty(ConnectorConstants.INSTALL_ROOT) + File.separator +
             "lib" + File.separator + "install" + File.separator + "databases" +
             File.separator + "dbvendormapping" + File.separator;
-    private final static String DS_PROPERTIES = "ds.properties";
+    private final static String DS_PROPERTIES = "dataStructure.properties";
     private final static String CPDS_PROPERTIES = "cpds.properties";
     private final static String XADS_PROPERTIES = "xads.properties";
     private final static String DRIVER_PROPERTIES = "driver.properties";
@@ -98,7 +98,7 @@ public class DriverLoader implements ConnectorConstants {
     public Set<String> getDatabaseVendorNames() {
         File dbVendorFile = new File(DBVENDOR_MAPPINGS_ROOT + VENDOR_PROPERTIES);
         Properties fileProperties = loadFile(dbVendorFile);
-        Set<String> dbvendorNames = new TreeSet<String>();
+        Set<String> dbvendorNames = new TreeSet<>();
 
         Enumeration e = fileProperties.propertyNames();
         while(e.hasMoreElements()) {
@@ -139,10 +139,8 @@ public class DriverLoader implements ConnectorConstants {
                             + mappingFile.getAbsolutePath());
                 }
             }
-        } else {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.fine("File not found : " + mappingFile.getAbsolutePath());
-            }
+        } else if (logger.isLoggable(Level.FINE)) {
+            logger.fine("File not found : " + mappingFile.getAbsolutePath());
         }
         return fileProperties;
     }
@@ -198,8 +196,8 @@ public class DriverLoader implements ConnectorConstants {
             boolean introspect) {
         //Map of all jar files with the set of driver implementations. every file
         // that is a jdbc jar will have a set of driver impls.
-        Set<String> implClassNames = new TreeSet<String>();
-        Set<String> allImplClassNames = new TreeSet<String>();
+        Set<String> implClassNames = new TreeSet<>();
+        Set<String> allImplClassNames = new TreeSet<>();
         //Used for introspection.
         String vendor = null;
 
@@ -222,7 +220,7 @@ public class DriverLoader implements ConnectorConstants {
         }
 
         List<File> jarFileLocations = getJdbcDriverLocations();
-        Set<File> allJars = new HashSet<File>();
+        Set<File> allJars = new HashSet<>();
         for(File lib : jarFileLocations) {
             if (lib.isDirectory()) {
                 File[] files = lib.listFiles(new JarFileFilter());
@@ -254,7 +252,7 @@ public class DriverLoader implements ConnectorConstants {
 
     private Set<String> getImplClassesByIteration(File f, String resType,
             String dbVendor, String origDbVendor) {
-        SortedSet<String> implClassNames = new TreeSet<String>();
+        SortedSet<String> implClassNames = new TreeSet<>();
         String implClass = null;
         JarFile jarFile = null;
         try {
@@ -369,16 +367,18 @@ public class DriverLoader implements ConnectorConstants {
             }
         } finally {
             try {
-                if(buffReader != null)
+                if(buffReader != null) {
                     buffReader.close();
+                }
             } catch (IOException ex) {
                 if(logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, "Error while closing File handles after reading META-INF files : ", ex);
                 }
             }
             try {
-                if(reader != null)
+                if(reader != null) {
                     reader.close();
+                }
             } catch (IOException ex) {
                 if(logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, "Error while closing File handles after reading META-INF files : ", ex);
@@ -510,13 +510,11 @@ public class DriverLoader implements ConnectorConstants {
             if (isVendorSpecific(dbVendor, className)) {
                 isVendorSpecific = true;
             }
-        } else {
-            //Got from Manifest file.
-            if (vendor.equalsIgnoreCase(dbVendor) ||
-                    vendor.toUpperCase(Locale.getDefault()).indexOf(
-                    dbVendor.toUpperCase(Locale.getDefault())) != -1) {
-                isVendorSpecific = true;
-            }
+        } else //Got from Manifest file.
+        if (vendor.equalsIgnoreCase(dbVendor) ||
+                vendor.toUpperCase(Locale.getDefault()).indexOf(
+                dbVendor.toUpperCase(Locale.getDefault())) != -1) {
+            isVendorSpecific = true;
         }
         if(isVendorSpecific) {
             if(origDbVendor.endsWith(DATABASE_VENDOR_30)) {
@@ -530,7 +528,7 @@ public class DriverLoader implements ConnectorConstants {
     }
 
     private List<File> getJdbcDriverLocations() {
-    List<File> jarFileLocations = new ArrayList<File>();
+    List<File> jarFileLocations = new ArrayList<>();
         jarFileLocations.add(getLocation(SystemPropertyConstants.DERBY_ROOT_PROPERTY));
         jarFileLocations.add(getLocation(SystemPropertyConstants.INSTALL_ROOT_PROPERTY));
         jarFileLocations.add(getLocation(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY));
@@ -545,6 +543,7 @@ public class DriverLoader implements ConnectorConstants {
 
         private static final String JAR_EXT = ".jar";
 
+        @Override
         public boolean accept(File dir, String name) {
             return name.endsWith(JAR_EXT);
         }

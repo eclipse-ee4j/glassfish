@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,19 @@
 
 package com.sun.enterprise.connectors.service;
 
+import java.util.Hashtable;
+import java.util.logging.Level;
+
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingException;
+import javax.naming.RefAddr;
+import javax.naming.StringRefAddr;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.glassfish.resources.naming.SerializableObjectRefAddr;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -24,17 +38,6 @@ import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.naming.ConnectorNamingEventNotifier;
 import com.sun.enterprise.connectors.naming.ConnectorResourceNamingEventNotifier;
-import org.glassfish.resources.naming.SerializableObjectRefAddr;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-
-import javax.naming.NameNotFoundException;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.StringRefAddr;
-import java.util.Hashtable;
-import java.util.logging.Level;
 
 /**
  * This is connector resource admin service. It creates and deletes the
@@ -49,7 +52,6 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
      * Default constructor
      */
     public ConnectorResourceAdminServiceImpl() {
-        super();
     }
 
     /**

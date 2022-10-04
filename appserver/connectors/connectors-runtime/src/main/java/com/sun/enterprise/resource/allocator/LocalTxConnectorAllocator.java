@@ -1,6 +1,6 @@
 /*
+ * Copyright 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,21 +17,28 @@
 
 package com.sun.enterprise.resource.allocator;
 
-import javax.transaction.xa.XAResource;
-import jakarta.transaction.Status;
-import jakarta.transaction.SystemException;
-import jakarta.resource.spi.*;
-import jakarta.resource.ResourceException;
-import javax.security.auth.Subject;
-import java.util.logging.*;
+import java.util.logging.Level;
 
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAResource;
+
+import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.enterprise.transaction.api.JavaEETransaction;
-import com.sun.enterprise.resource.*;
+import com.sun.enterprise.resource.ClientSecurityInfo;
+import com.sun.enterprise.resource.ConnectorXAResource;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.listener.ConnectionEventListener;
 import com.sun.enterprise.resource.listener.LocalTxConnectionEventListener;
-import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.pool.PoolManager;
+import com.sun.enterprise.transaction.api.JavaEETransaction;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnection;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
 
 /**
  * @author Tony Ng
@@ -58,6 +65,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
         transactionCompletionMode = System.getProperty("com.sun.enterprise.in-progress-local-transaction.completion-mode");
     }
 
+    @Override
     public ResourceHandle createResource()
             throws PoolingException {
         try {
@@ -88,6 +96,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public void fillInResourceObjects(ResourceHandle resource)
             throws PoolingException {
         try {
@@ -103,6 +112,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public void destroyResource(ResourceHandle resource)
             throws PoolingException {
         try {
@@ -152,6 +162,7 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public boolean shareableWithinComponent() {
         return shareable;
     }

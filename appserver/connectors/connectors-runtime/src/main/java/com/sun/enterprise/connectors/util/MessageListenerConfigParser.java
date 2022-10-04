@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,10 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import java.util.Properties;
 
-import java.util.*;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 /** Interface class of managed connection factory parser methods.
  *  @author Srikanth P
@@ -34,7 +35,7 @@ public interface MessageListenerConfigParser extends ConnectorConfigParser {
      *  @throws ConnectorRuntimeException If rar is not exploded or
      *                                    incorrect ra.xml
      */
-    public String[] getMessageListenerTypes(ConnectorDescriptor desc)
+    String[] getMessageListenerTypes(ConnectorDescriptor desc)
                       throws ConnectorRuntimeException;
 
     /**
@@ -45,7 +46,7 @@ public interface MessageListenerConfigParser extends ConnectorConfigParser {
      *  @throws ConnectorRuntimeException If rar is not exploded or
      *                                    incorrect ra.xml
      */
-    public String getActivationSpecClass(ConnectorDescriptor desc,
+    String getActivationSpecClass(ConnectorDescriptor desc,
           String messageListenerType) throws ConnectorRuntimeException;
 
     /**
@@ -61,6 +62,6 @@ public interface MessageListenerConfigParser extends ConnectorConfigParser {
      *           If corresponding rar is not deployed i.e moduleDir is invalid.
      *           If messagelistener type is not found in ra.xml
      */
-    public Properties getJavaBeanReturnTypes(ConnectorDescriptor desc,
+    Properties getJavaBeanReturnTypes(ConnectorDescriptor desc,
           String messageListenerType, String rarName) throws ConnectorRuntimeException;
 }

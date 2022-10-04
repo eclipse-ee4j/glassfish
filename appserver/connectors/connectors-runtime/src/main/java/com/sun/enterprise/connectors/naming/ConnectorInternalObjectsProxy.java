@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,10 @@
 
 package com.sun.enterprise.connectors.naming;
 
-import org.glassfish.api.naming.NamingObjectProxy;
-
 import javax.naming.Context;
 import javax.naming.NamingException;
+
+import org.glassfish.api.naming.NamingObjectProxy;
 
 
 public class ConnectorInternalObjectsProxy implements NamingObjectProxy {
@@ -30,6 +31,7 @@ public class ConnectorInternalObjectsProxy implements NamingObjectProxy {
         this.actualObject = o;
     }
 
+    @Override
     public Object create(Context ic) throws NamingException {
         return actualObject;
     }

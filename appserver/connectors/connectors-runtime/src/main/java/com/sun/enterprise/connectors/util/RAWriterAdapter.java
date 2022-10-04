@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,6 +42,7 @@ public class RAWriterAdapter extends Writer {
         autoFlush = Boolean.valueOf(autoFlushValue);
     }
 
+    @Override
     public void write(char cbuf[], int off, int len) {
         if (autoFlush) {
             logger.log(Level.INFO, new String(cbuf, off, len));
@@ -54,6 +56,7 @@ public class RAWriterAdapter extends Writer {
         }
     }
 
+    @Override
     public void flush() {
         if (!autoFlush) {
             logger.log(Level.INFO, log.toString());
@@ -61,6 +64,7 @@ public class RAWriterAdapter extends Writer {
         }
     }
 
+    @Override
     public void close() {
         //no-op
     }

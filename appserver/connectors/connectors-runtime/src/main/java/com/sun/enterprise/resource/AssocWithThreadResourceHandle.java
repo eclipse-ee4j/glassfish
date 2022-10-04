@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,14 +24,13 @@ import com.sun.enterprise.resource.allocator.ResourceAllocator;
  *
  * @author Jagadish Ramu
  */
-public class AssocWithThreadResourceHandle extends ResourceHandle{
+public class AssocWithThreadResourceHandle extends ResourceHandle {
 
-    private boolean associated_ = false;
+    private boolean associated_;
     private long threadId_;
     private boolean dirty_;
 
-    public AssocWithThreadResourceHandle(Object resource, ResourceSpec spec, ResourceAllocator alloc,
-                                         ClientSecurityInfo info) {
+    public AssocWithThreadResourceHandle(Object resource, ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info) {
         super(resource, spec, alloc, info);
     }
 
@@ -46,7 +46,7 @@ public class AssocWithThreadResourceHandle extends ResourceHandle{
         return associated_;
     }
 
-    public void setAssociated( boolean flag ) {
+    public void setAssociated(boolean flag) {
         associated_ = flag;
     }
 
@@ -54,7 +54,7 @@ public class AssocWithThreadResourceHandle extends ResourceHandle{
         return threadId_;
     }
 
-    public void setThreadId( long threadId ) {
+    public void setThreadId(long threadId) {
         threadId_ = threadId;
     }
 

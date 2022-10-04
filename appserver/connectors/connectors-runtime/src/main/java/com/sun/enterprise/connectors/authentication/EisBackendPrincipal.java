@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,14 +20,17 @@ package com.sun.enterprise.connectors.authentication;
 import java.io.Serializable;
 
 /**
- * This a javabean class thatabstracts the backend principal.
- * The backend principal consist of the userName and password
- * which is used for authenticating/getting connection from
+ * This a javabean class that abstracts the backend principal.
+ *
+ * <p>
+ * The backend principal consist of the userName and password which is used for authenticating/getting connection from
  * the backend.
  *
  * @author Srikanth P
  */
 public class EisBackendPrincipal implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String userName;
     private String password;
@@ -50,6 +54,7 @@ public class EisBackendPrincipal implements Serializable {
 
     /**
      * Setter method for UserName property
+     *
      * @param userName UserName
      */
     public void setUserName(String userName) {
@@ -58,6 +63,7 @@ public class EisBackendPrincipal implements Serializable {
 
     /**
      * Setter method for password property
+     *
      * @param password Password
      */
     public void setPassword(String password) {
@@ -66,6 +72,7 @@ public class EisBackendPrincipal implements Serializable {
 
     /**
      * Getter method for UserName property
+     *
      * @return UserName
      */
     public String getUserName() {
@@ -74,6 +81,7 @@ public class EisBackendPrincipal implements Serializable {
 
     /**
      * Getter method for Password property
+     *
      * @return Password
      */
     public String getPassword() {
@@ -81,34 +89,29 @@ public class EisBackendPrincipal implements Serializable {
     }
 
     /**
-     * Overloaded method from "Object" class
-     * Checks the equality.
+     * Overloaded method from "Object" class Checks the equality.
+     *
      * @param backendPrincipal Backend principal against which equality has to
-     * @return true if they are equal
-     *         false if hey are not equal.
+     * @return true if they are equal false if hey are not equal.
      */
+    @Override
     public boolean equals(Object backendPrincipal) {
-
-        if (backendPrincipal == null ||
-                !(backendPrincipal instanceof EisBackendPrincipal)) {
+        if (backendPrincipal == null || !(backendPrincipal instanceof EisBackendPrincipal)) {
             return false;
         }
-        EisBackendPrincipal eisBackendPrincipal =
-                (EisBackendPrincipal) backendPrincipal;
+        EisBackendPrincipal eisBackendPrincipal = (EisBackendPrincipal) backendPrincipal;
 
-        if (isEqual(eisBackendPrincipal.userName, this.userName) &&
-                isEqual(eisBackendPrincipal.password, this.password)) {
+        if (isEqual(eisBackendPrincipal.userName, this.userName) && isEqual(eisBackendPrincipal.password, this.password)) {
             return true;
-        } else {
-            return false;
-
         }
+
+        return false;
     }
 
     /**
-     * Checks whether two strings are equal including the null string
-     * cases.
-     * @param first  first String
+     * Checks whether two strings are equal including the null string cases.
+     *
+     * @param first first String
      * @param second second String
      * @return boolean equality status
      */
@@ -123,16 +126,19 @@ public class EisBackendPrincipal implements Serializable {
     }
 
     /**
-     * Overloaded method from "Object" class
-     * Generates the hashcode
+     * Overloaded method from "Object" class Generates the hashcode
+     *
      * @return a hash code value for this object
      */
+    @Override
     public int hashCode() {
         int result = 67;
-        if (userName != null)
+        if (userName != null) {
             result = 67 * result + userName.hashCode();
-        if (password != null)
+        }
+        if (password != null) {
             result = 67 * result + password.hashCode();
+        }
         return result;
     }
 }

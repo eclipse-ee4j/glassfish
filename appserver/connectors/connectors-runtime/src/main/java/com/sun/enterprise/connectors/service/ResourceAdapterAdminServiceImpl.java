@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,26 @@
 
 package com.sun.enterprise.connectors.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
@@ -27,18 +48,10 @@ import com.sun.enterprise.connectors.util.ConnectorDDTransformUtils;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.connectors.config.ResourceAdapterConfig;
 
-import javax.naming.NamingException;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterAssociation;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.concurrent.*;
-
-import org.jvnet.hk2.config.types.Property;
 
 
 /**
@@ -51,7 +64,8 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
 
     private ExecutorService execService =
     Executors.newCachedThreadPool(new ThreadFactory() {
-           public Thread newThread(Runnable r) {
+           @Override
+        public Thread newThread(Runnable r) {
              Thread th = new Thread(r);
              th.setDaemon(true);
              return th;
@@ -62,7 +76,6 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
      * Default constructor
      */
     public ResourceAdapterAdminServiceImpl() {
-        super();
     }
 
     /**
@@ -402,8 +415,8 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
                 ConnectorRegistry.getInstance().getAllActiveResourceAdapters();
 
         //stop system-rars after stopping all other rars.
-        Set<ActiveResourceAdapter> systemRAs = new HashSet<ActiveResourceAdapter>();
-        List<Future> rarExitStatusList = new ArrayList<Future>();
+        Set<ActiveResourceAdapter> systemRAs = new HashSet<>();
+        List<Future> rarExitStatusList = new ArrayList<>();
 
         for (ActiveResourceAdapter resourceAdapter : resourceAdapters) {
             if(!ConnectorsUtil.belongsToSystemRA(resourceAdapter.getModuleName())){
@@ -589,10 +602,10 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
         private ActiveResourceAdapter ra;
 
         public RAShutdownTask(ActiveResourceAdapter ratoBeShutDown) {
-            super();
             this.ra = ratoBeShutDown;
         }
 
+        @Override
         public void run() {
             if(_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Calling RA [ " + ra.getModuleName() + " ] shutdown ");
@@ -607,6 +620,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
         public RAShutdownHandler(String moduleName){
             this.moduleName = moduleName;
         }
+        @Override
         public void run(){
             stopActiveResourceAdapter(moduleName);
         }

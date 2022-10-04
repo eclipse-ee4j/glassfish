@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,16 @@
 
 package com.sun.enterprise.resource.listener;
 
-
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
- * Pool Life cycle listener that can be implemented by listeners for getting
- * events on the pool's lifecycle like creation/destruction.
+ * Pool Life cycle listener that can be implemented by listeners for getting events on the pool's lifecycle like
+ * creation/destruction.
  *
  * @author Jagadish Ramu
  */
 public interface PoolLifeCycle {
     void poolCreated(PoolInfo poolInfo);
+
     void poolDestroyed(PoolInfo poolInfo);
 }

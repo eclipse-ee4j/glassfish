@@ -17,14 +17,6 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -32,12 +24,19 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 /**
  * This is a utility class to obtain the properties of a
@@ -170,9 +169,7 @@ public class RARUtils {
 
         Set<EnvironmentProperty> runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
         if(runtimeProps != null){
-            Iterator<EnvironmentProperty> iter = runtimeProps.iterator();
-            while (iter.hasNext()) {
-                EnvironmentProperty entry = iter.next();
+            for (EnvironmentProperty entry : runtimeProps) {
                 mergedProps.add(entry);
                 String propName = entry.getName();
                 runtimePropNames.add(propName);
@@ -181,9 +178,7 @@ public class RARUtils {
 
         Set<EnvironmentProperty> standardProps = msgDesc.getActivationConfigProperties();
         if(standardProps != null){
-            Iterator<EnvironmentProperty> iter = standardProps.iterator();
-            while (iter.hasNext()) {
-                EnvironmentProperty entry = iter.next();
+            for (EnvironmentProperty entry : standardProps) {
                 String propName = entry.getName();
                 if (runtimePropNames.contains(propName)) {
                     continue;

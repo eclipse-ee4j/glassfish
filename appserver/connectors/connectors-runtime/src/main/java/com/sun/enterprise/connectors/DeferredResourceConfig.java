@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,14 @@
 
 package com.sun.enterprise.connectors;
 
+import org.glassfish.connectors.config.AdminObjectResource;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
-import org.glassfish.connectors.config.*;
 
 public class DeferredResourceConfig {
-
 
     private String rarName;
     private AdminObjectResource adminObject;
@@ -31,17 +33,12 @@ public class DeferredResourceConfig {
     private ResourceAdapterConfig[] resourceAdapterConfig;
     private Resource[] resourcesToLoad;
 
-
     public DeferredResourceConfig() {
 
     }
 
-    public DeferredResourceConfig(
-            String rarName,
-            AdminObjectResource adminObject,
-            ResourcePool resourcePool,
-            BindableResource bindableResource,
-            ResourceAdapterConfig[] resAdapterConfig) {
+    public DeferredResourceConfig(String rarName, AdminObjectResource adminObject, ResourcePool resourcePool,
+            BindableResource bindableResource, ResourceAdapterConfig[] resAdapterConfig) {
 
         this.rarName = rarName;
         this.adminObject = adminObject;
@@ -67,8 +64,7 @@ public class DeferredResourceConfig {
         return this.adminObject;
     }
 
-    public void setResourcePool(
-            ResourcePool resourcePool) {
+    public void setResourcePool(ResourcePool resourcePool) {
         this.resourcePool = resourcePool;
     }
 
@@ -84,8 +80,7 @@ public class DeferredResourceConfig {
         return this.bindableResource;
     }
 
-    public void setResourceAdapterConfig(
-            ResourceAdapterConfig[] resourceAdapterConfig) {
+    public void setResourceAdapterConfig(ResourceAdapterConfig[] resourceAdapterConfig) {
         this.resourceAdapterConfig = resourceAdapterConfig;
     }
 

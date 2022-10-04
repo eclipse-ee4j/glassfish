@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.enterprise.resource.deployer;
 
 import org.glassfish.connectors.config.WorkSecurityMap;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.jvnet.hk2.annotations.Service;
 
@@ -28,35 +28,43 @@ import jakarta.inject.Singleton;
 @Singleton
 public class ConnectorWorkSecurityMapDeployer  extends AbstractConnectorResourceDeployer {
 
+    @Override
     public synchronized void deployResource(Object resource, String applicationName, String moduleName)
             throws Exception {
         //no-op
     }
 
+    @Override
     public void deployResource(Object resoure) throws Exception {
         //no-op
     }
 
+    @Override
     public void undeployResource(Object resoure) throws Exception {
         //no-op
     }
 
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception{
         //no-op
     }
 
+    @Override
     public void redeployResource(Object resource) throws Exception {
         //no-op
     }
 
+    @Override
     public void enableResource(Object resoure) throws Exception {
         //no-op
     }
 
+    @Override
     public void disableResource(Object resoure) throws Exception {
         //no-op
     }
 
+    @Override
     public boolean handles(Object resource) {
         return resource instanceof WorkSecurityMap;
     }
@@ -64,6 +72,7 @@ public class ConnectorWorkSecurityMapDeployer  extends AbstractConnectorResource
     /**
      * @inheritDoc
      */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
@@ -71,6 +80,7 @@ public class ConnectorWorkSecurityMapDeployer  extends AbstractConnectorResource
     /**
      * @inheritDoc
      */
+    @Override
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }

@@ -17,14 +17,9 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.logging.LogDomains;
-
 import java.lang.reflect.Method;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -32,6 +27,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.logging.LogDomains;
 
 /**
  * Executes setter methods on java beans.
@@ -61,9 +60,7 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
     @Override
     public Void run() throws Exception {
         methods = bean.getClass().getMethods();
-        final Iterator<P> it = props.iterator();
-        while (it.hasNext()) {
-            final EnvironmentProperty prop = it.next();
+        for (EnvironmentProperty prop : props) {
             final String resolvedValue = prop.getResolvedValue();
             if (resolvedValue == null || resolvedValue.isBlank()) {
                 continue;

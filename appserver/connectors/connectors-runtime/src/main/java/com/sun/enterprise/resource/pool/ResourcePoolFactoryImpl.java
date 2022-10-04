@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,17 @@
 
 package com.sun.enterprise.resource.pool;
 
+import static java.util.logging.Level.FINE;
+
+import java.util.Hashtable;
+import java.util.logging.Logger;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.logging.LogDomains;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Factory to create appropriate connection pool.
@@ -34,36 +36,35 @@ import java.util.logging.Logger;
  */
 public class ResourcePoolFactoryImpl {
 
-    //property to take care of switching off connection pooling in ACC
-    //since 9.1
-    private static final String SWITCH_OFF_ACC_CONNECTION_POOLING =
-     "com.sun.enterprise.connectors.SwitchoffACCConnectionPooling";
-    private static String switchOffACCConnectionPoolingProperty =
-            System.getProperty(SWITCH_OFF_ACC_CONNECTION_POOLING);
+    // Property to take care of switching off connection pooling in ACC
+    // since 9.1
+    private static final String SWITCH_OFF_ACC_CONNECTION_POOLING = "com.sun.enterprise.connectors.SwitchoffACCConnectionPooling";
+    private static String switchOffACCConnectionPoolingProperty = System.getProperty(SWITCH_OFF_ACC_CONNECTION_POOLING);
 
-    private static Logger _logger = LogDomains.getLogger(ResourcePoolFactoryImpl.class,LogDomains.RSR_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(ResourcePoolFactoryImpl.class, LogDomains.RSR_LOGGER);
 
-    public static ResourcePool newInstance(PoolInfo poolInfo, PoolType pt, Hashtable env)
-            throws PoolingException {
+    public static ResourcePool newInstance(PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
+        if (ConnectorRuntime.getRuntime().isACCRuntime()) {
+            if ("TRUE".equalsIgnoreCase(switchOffACCConnectionPoolingProperty)) {
+                return new UnpooledResource(poolInfo, env);
+            }
+        }
 
-        if(ConnectorRuntime.getRuntime().isACCRuntime()){
-            if("TRUE".equalsIgnoreCase(switchOffACCConnectionPoolingProperty))
-                return new UnpooledResource( poolInfo, env );
+        if (poolType == PoolType.POOLING_DISABLED) {
+            return new UnpooledResource(poolInfo, env);
         }
 
         ResourcePool pool = null;
-        if( pt == PoolType.POOLING_DISABLED ) {
-            return new UnpooledResource( poolInfo, env );
-        }
-        if ( pt == PoolType.ASSOCIATE_WITH_THREAD_POOL ) {
-            pool = new AssocWithThreadResourcePool( poolInfo, env );
+        if (poolType == PoolType.ASSOCIATE_WITH_THREAD_POOL) {
+            pool = new AssocWithThreadResourcePool(poolInfo, env);
         } else {
-            pool = new ConnectionPool( poolInfo, env );
+            pool = new ConnectionPool(poolInfo, env);
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Created a pool of type : " + pt);
+        if (_logger.isLoggable(FINE)) {
+            _logger.fine("Created a pool of type : " + poolType);
         }
+
         return pool;
     }
 }

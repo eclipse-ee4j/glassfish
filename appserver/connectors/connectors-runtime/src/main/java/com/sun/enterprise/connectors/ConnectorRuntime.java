@@ -17,6 +17,50 @@
 
 package com.sun.enterprise.connectors;
 
+import java.io.PrintWriter;
+import java.net.URI;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.admin.monitor.MonitoringBootstrap;
+import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.connectors.config.WorkSecurityMap;
+import org.glassfish.deployment.common.SecurityRoleMapperFactory;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.ConnectorClassLoaderService;
+import org.glassfish.internal.api.DelegatingClassLoader;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
+import org.glassfish.resources.api.ResourcesRegistry;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
@@ -76,50 +120,6 @@ import jakarta.resource.spi.XATerminator;
 import jakarta.resource.spi.work.WorkManager;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
-
-import java.io.PrintWriter;
-import java.net.URI;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Timer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.admin.monitor.MonitoringBootstrap;
-import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.connectors.config.WorkSecurityMap;
-import org.glassfish.deployment.common.SecurityRoleMapperFactory;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.ConnectorClassLoaderService;
-import org.glassfish.internal.api.DelegatingClassLoader;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
-import org.glassfish.resources.api.ResourcesRegistry;
-import org.glassfish.server.ServerEnvironmentImpl;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
 
 
 /**

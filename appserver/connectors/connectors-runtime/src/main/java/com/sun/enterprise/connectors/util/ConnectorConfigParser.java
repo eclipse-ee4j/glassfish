@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package com.sun.enterprise.connectors.util;
 
-import java.util.*;
+import java.util.List;
+import java.util.Properties;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.connectors.*;
-import com.sun.enterprise.deployment.*;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 /**
  * Interface class of connector configuration parser methods.

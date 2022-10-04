@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,31 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.logging.LogDomains;
-import org.glassfish.server.ServerEnvironmentImpl;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import jakarta.inject.Singleton;
-import org.jvnet.hk2.config.*;
-
 import java.beans.PropertyChangeEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.ObservableBean;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
+import com.sun.enterprise.config.serverbeans.MonitoringService;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 @Service
 @Singleton
@@ -49,6 +60,7 @@ public class PoolMonitoringLevelListener implements PostConstruct, PreDestroy, C
 
     private static final Logger _logger = LogDomains.getLogger(PoolMonitoringLevelListener.class, LogDomains.RSR_LOGGER);
 
+    @Override
     public void postConstruct() {
         String instanceName = serverEnvironment.getInstanceName();
         Server server = domain.getServerNamed(instanceName);
@@ -59,7 +71,7 @@ public class PoolMonitoringLevelListener implements PostConstruct, PreDestroy, C
                 ModuleMonitoringLevels monitoringLevel = monitoringService.getModuleMonitoringLevels();
                 if (monitoringLevel != null) {
                     this.monitoringLevel = monitoringLevel;
-                    ObservableBean bean = (ObservableBean) ConfigSupport.getImpl((ConfigBeanProxy) monitoringLevel);
+                    ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(monitoringLevel);
                     bean.addListener(this);
                     jdbcPoolMonitoringEnabled = !monitoringLevel.getJdbcConnectionPool().equalsIgnoreCase("OFF");
                     connectorPoolMonitoringEnabled = !monitoringLevel.getConnectorConnectionPool().equalsIgnoreCase("OFF");
@@ -68,13 +80,15 @@ public class PoolMonitoringLevelListener implements PostConstruct, PreDestroy, C
         }
     }
 
+    @Override
     public void preDestroy() {
         if(monitoringLevel != null){
-            ObservableBean bean = (ObservableBean) ConfigSupport.getImpl((ConfigBeanProxy)monitoringLevel);
+            ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(monitoringLevel);
             bean.removeListener(this);
         }
     }
 
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         return ConfigSupport.sortAndDispatch(events, new PropertyChangeHandler(events), _logger);
     }
@@ -93,6 +107,7 @@ public class PoolMonitoringLevelListener implements PostConstruct, PreDestroy, C
              * @param changedType     type of the configuration object
              * @param changedInstance changed instance.
              */
+            @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
                 NotProcessed np = null;
 

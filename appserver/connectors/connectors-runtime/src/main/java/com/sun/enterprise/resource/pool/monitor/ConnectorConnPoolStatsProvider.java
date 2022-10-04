@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,9 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
-import com.sun.enterprise.resource.pool.PoolStatus;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
@@ -33,8 +34,9 @@ import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.pool.PoolLifeCycleListenerRegistry;
+import com.sun.enterprise.resource.pool.PoolStatus;
 
 
 /**

@@ -17,14 +17,14 @@
 
 package com.sun.enterprise.resource.rm;
 
-import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
 
 import jakarta.transaction.Transaction;
 
 /**
- * Interface definition for the Resource Manager. Depending on the
- * ResourceSpec, PoolManager selects appropriate Resource Manager.
+ * Interface definition for the Resource Manager. Depending on the ResourceSpec, PoolManager selects appropriate
+ * Resource Manager.
  *
  * @author Binod PG
  */
@@ -34,15 +34,13 @@ public interface ResourceManager {
      * Returns the current Transaction, resource should be dealing with.
      *
      * @return An instance of Transaction object.
-     * @throws PoolingException
-     *          If there is any error in getting the
-     *          transaction
+     * @throws PoolingException If there is any error in getting the transaction
      */
     Transaction getTransaction() throws PoolingException;
 
     /**
-     * Get the component involved in invocation. Returns null , if there is
-     * no component is involved in the current invocation.
+     * Get the component involved in invocation. Returns null , if there is no component is involved in the current
+     * invocation.
      *
      * @return object handle
      */
@@ -52,8 +50,7 @@ public interface ResourceManager {
      * Enlist the Resource handle to the transaction.
      *
      * @param h Resource to be enlisted.
-     * @throws PoolingException
-     *          If there is any error in enlisting.
+     * @throws PoolingException If there is any error in enlisting.
      */
     void enlistResource(ResourceHandle h) throws PoolingException;
 
@@ -73,7 +70,7 @@ public interface ResourceManager {
     /**
      * Delist the resource from the transaction.
      *
-     * @param resource  Resource to be delisted.
+     * @param resource Resource to be delisted.
      * @param xaresFlag XA Flag
      */
     void delistResource(ResourceHandle resource, int xaresFlag);
@@ -81,7 +78,7 @@ public interface ResourceManager {
     /**
      * Unregister the resource from a transaction's list.
      *
-     * @param resource  Resource to be unregistered.
+     * @param resource Resource to be unregistered.
      * @param xaresFlag XA Flag
      */
     void unregisterResource(ResourceHandle resource, int xaresFlag);

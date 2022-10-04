@@ -17,19 +17,6 @@
 
 package com.sun.enterprise.resource.beans;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.connectors.ConnectorRegistry;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.util.SetMethodAction;
-import com.sun.enterprise.deployment.AdminObject;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.logging.LogDomains;
-
-import jakarta.resource.ResourceException;
-import jakarta.resource.spi.ResourceAdapter;
-import jakarta.resource.spi.ResourceAdapterAssociation;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
@@ -44,6 +31,19 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resources.api.JavaEEResource;
 import org.glassfish.resources.api.JavaEEResourceBase;
 import org.glassfish.resources.naming.SerializableObjectRefAddr;
+
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.util.SetMethodAction;
+import com.sun.enterprise.deployment.AdminObject;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.ResourceAdapterAssociation;
 
 /**
  * Resource infor for Connector administered objects
@@ -60,11 +60,9 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
     private String adminObjectType_;
     private Set<ConnectorConfigProperty> configProperties_;
 
-
     public AdministeredObjectResource(ResourceInfo resourceInfo) {
         super(resourceInfo);
     }
-
 
     @Override
     protected JavaEEResource doClone(ResourceInfo resourceInfo) {
@@ -74,12 +72,11 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
         return clone;
     }
 
-
     @Override
     public int getType() {
         // FIXME
         return 0;
-        //return J2EEResource.ADMINISTERED_OBJECT;
+        // return J2EEResource.ADMINISTERED_OBJECT;
     }
 
     public void initialize(AdminObject desc) {
@@ -126,17 +123,14 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
         this.configProperties_.remove(configProperty);
     }
 
-
     public Reference createAdminObjectReference() {
         return new Reference(getAdminObjectType(), new SerializableObjectRefAddr("jndiName", this),
-            ConnectorConstants.ADMINISTERED_OBJECT_FACTORY, null);
+                ConnectorConstants.ADMINISTERED_OBJECT_FACTORY, null);
     }
 
-
     // called by com.sun.enterprise.naming.factory.AdministeredObjectFactory
-    // FIXME.  embedded??
-    public Object createAdministeredObject(ClassLoader jcl)
-            throws PoolingException {
+    // FIXME. embedded??
+    public Object createAdministeredObject(ClassLoader jcl) throws PoolingException {
 
         try {
             if (jcl == null) {
@@ -152,8 +146,7 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
             // associate ResourceAdapter if the admin-object is RAA
             if (adminObject instanceof ResourceAdapterAssociation) {
                 try {
-                    ResourceAdapter ra = ConnectorRegistry.getInstance().getActiveResourceAdapter(resadapter_)
-                        .getResourceAdapter();
+                    ResourceAdapter ra = ConnectorRegistry.getInstance().getActiveResourceAdapter(resadapter_).getResourceAdapter();
                     ((ResourceAdapterAssociation) adminObject).setResourceAdapter(ra);
                 } catch (ResourceException ex) {
                     _logger.log(Level.SEVERE, "rardeployment.assoc_failed", ex);
@@ -175,11 +168,8 @@ public class AdministeredObjectResource extends JavaEEResourceBase {
         }
     }
 
-
     @Override
     public String toString() {
-        return "< Administered Object : " + getResourceInfo() +
-                " , " + getResourceAdapter() +
-                " , " + getAdminObjectType() + " >";
+        return "< Administered Object : " + getResourceInfo() + " , " + getResourceAdapter() + " , " + getAdminObjectType() + " >";
     }
 }

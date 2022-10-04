@@ -17,6 +17,27 @@
 
 package com.sun.enterprise.resource.recovery;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAResource;
+
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
@@ -48,27 +69,6 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.security.PasswordCredential;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.security.auth.Subject;
-import javax.transaction.xa.XAResource;
-
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.connectors.config.ConnectorResource;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.security.common.UserNameAndPassword;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
 
 /**
  * Recovery handler for connector resources
@@ -105,7 +105,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
     private static final Logger LOG = LogDomains.getLogger(ConnectorsRecoveryResourceHandler.class, LogDomains.RSR_LOGGER);
     private static final Locale locale = Locale.getDefault();
 
-
     private Collection<ConnectorResource> getAllConnectorResources() {
         Collection<ConnectorResource> allResources = new ArrayList<>();
         Collection<ConnectorResource> connectorResources = domain.getResources().getResources(ConnectorResource.class);
@@ -130,7 +129,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
         return allResources;
     }
 
-
     /**
      * does a lookup of resources so that they are loaded for sure.
      */
@@ -148,7 +146,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                         try {
                             ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(connResource);
                             ConnectorConnectionPool connConnectionPool = getResourcesUtil()
-                                .getConnectorConnectionPoolOfResource(resourceInfo);
+                                    .getConnectorConnectionPoolOfResource(resourceInfo);
                             if (connConnectionPool != null) {
                                 // TODO V3 ideally this should not happen if connector modules (and
                                 // embedded rars) are loaded before recovery
@@ -156,15 +154,13 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                                 getConnectorResourceDeployer().deployResource(connResource);
                             }
                         } catch (Exception ex) {
-                            LOG.log(Level.SEVERE, "error.loading.connector.resources.during.recovery",
-                                connResource.getJndiName());
+                            LOG.log(Level.SEVERE, "error.loading.connector.resources.during.recovery", connResource.getJndiName());
                             if (LOG.isLoggable(Level.FINE)) {
                                 LOG.log(Level.FINE, ne.toString(), ne);
                             }
                         }
                     } catch (Exception ex) {
-                        LOG.log(Level.SEVERE, "error.loading.connector.resources.during.recovery",
-                            connResource.getJndiName());
+                        LOG.log(Level.SEVERE, "error.loading.connector.resources.during.recovery", connResource.getJndiName());
                         if (LOG.isLoggable(Level.FINE)) {
                             LOG.log(Level.FINE, ex.toString(), ex);
                         }
@@ -178,7 +174,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
             }
         }
     }
-
 
     private ResourcesUtil getResourcesUtil() {
         if (resourcesUtil == null) {
@@ -197,10 +192,10 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
     @Override
     public void loadXAResourcesAndItsConnections(List xaresList, List connList) {
 
-        //Done so as to initialize connectors-runtime before loading connector-resources. need a better way ?
+        // Done so as to initialize connectors-runtime before loading connector-resources. need a better way ?
         ConnectorRuntime crt = connectorRuntimeProvider.get();
 
-        //Done so as to load all connector-modules. need to load only connector-modules instead of all apps
+        // Done so as to load all connector-modules. need to load only connector-modules instead of all apps
         startupProvider.get();
 
         Collection<ConnectorResource> connectorResources = getAllConnectorResources();
@@ -212,15 +207,13 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
         List<ConnectorConnectionPool> connPools = new ArrayList<>();
         for (Resource resource : connectorResources) {
             ConnectorResource connResource = (ConnectorResource) resource;
-            if(getResourcesUtil().isEnabled(connResource)) {
+            if (getResourcesUtil().isEnabled(connResource)) {
                 ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(connResource);
                 ConnectorConnectionPool pool = ResourcesUtil.createInstance().getConnectorConnectionPoolOfResource(resourceInfo);
-                if (pool != null
-                    && ConnectorConstants.XA_TRANSACTION_TX_SUPPORT_STRING.equals(getTransactionSupport(pool))) {
+                if (pool != null && ConnectorConstants.XA_TRANSACTION_TX_SUPPORT_STRING.equals(getTransactionSupport(pool))) {
                     connPools.add(pool);
-                    LOG.log(Level.FINE,
-                        "ConnectorsRecoveryResourceHandler loadXAResourcesAndItsConnections :: adding : {0}",
-                        connResource.getPoolName());
+                    LOG.log(Level.FINE, "ConnectorsRecoveryResourceHandler loadXAResourcesAndItsConnections :: adding : {0}",
+                            connResource.getPoolName());
                 }
             }
         }
@@ -308,10 +301,9 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
         }
     }
 
-
     /**
-     * provides the transaction support for the pool.
-     * If none specified in the pool, tx support at RA level will be returned.
+     * provides the transaction support for the pool. If none specified in the pool, tx support at RA level will be
+     * returned.
      *
      * @param pool connector connection pool
      * @return tx support level
@@ -325,10 +317,10 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
         }
 
         try {
-            txSupport = ConnectorRuntime.getRuntime().getConnectorDescriptor(pool.getResourceAdapterName())
-                .getOutboundResourceAdapter().getTransSupport();
+            txSupport = ConnectorRuntime.getRuntime().getConnectorDescriptor(pool.getResourceAdapterName()).getOutboundResourceAdapter()
+                    .getTransSupport();
         } catch (ConnectorRuntimeException cre) {
-            Object[] params = new Object[] {pool.getResourceAdapterName(), cre};
+            Object[] params = new Object[] { pool.getResourceAdapterName(), cre };
             LOG.log(Level.WARNING, "error.retrieving.tx-support.from.rar", params);
             if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("setting no-tx-support as tx-support-level for pool : " + pool.getName());
@@ -338,7 +330,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
 
         return txSupport;
     }
-
 
     /**
      * {@inheritDoc}
@@ -358,7 +349,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
         }
     }
 
-
     private String[] getdbUserPasswordOfConnectorConnectionPool(ConnectorConnectionPool connectorConnectionPool) {
         String[] userPassword = new String[2];
         userPassword[0] = null;
@@ -376,7 +366,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                     foundUserPassword = true;
                 }
             }
-            if (foundUserPassword == true) {
+            if (foundUserPassword) {
                 return userPassword;
             }
         }
@@ -406,7 +396,6 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
         userPassword[1] = ConnectionPoolObjectsUtils.getValueFromMCF("Password", poolInfo, mcf);
         return userPassword;
     }
-
 
     private void createActiveResourceAdapter(String rarModuleName) throws ConnectorRuntimeException {
         ConnectorRuntime cr = ConnectorRuntime.getRuntime();

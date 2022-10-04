@@ -17,6 +17,12 @@
 
 package com.sun.enterprise.resource.rm;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
+import java.util.logging.Logger;
+
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
@@ -26,9 +32,6 @@ import com.sun.logging.LogDomains;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * SystemResourceManagerImpl manages the resource requests from system
  *
@@ -37,7 +40,6 @@ import java.util.logging.Logger;
 public class SystemResourceManagerImpl implements ResourceManager {
 
     private static final Logger LOG = LogDomains.getLogger(SystemResourceManagerImpl.class, LogDomains.RSR_LOGGER);
-
 
     /**
      * Returns the transaction component is participating.
@@ -50,7 +52,7 @@ public class SystemResourceManagerImpl implements ResourceManager {
         try {
             return ConnectorRuntime.getRuntime().getTransaction();
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE,"poolmgr.unexpected_exception",ex);
+            LOG.log(SEVERE, "poolmgr.unexpected_exception", ex);
             throw new PoolingException(ex.toString(), ex);
         }
     }
@@ -63,7 +65,6 @@ public class SystemResourceManagerImpl implements ResourceManager {
         return null;
     }
 
-
     /**
      * Register the <code>ResourceHandle</code> in the transaction
      *
@@ -73,13 +74,13 @@ public class SystemResourceManagerImpl implements ResourceManager {
     @Override
     public void enlistResource(ResourceHandle handle) throws PoolingException {
         try {
-            JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
-            Transaction tran = tm.getTransaction();
-            if (tran != null) {
-                tm.enlistResource(tran, handle);
+            JavaEETransactionManager transactionManager = getTransactionManager();
+            Transaction transaction = transactionManager.getTransaction();
+            if (transaction != null) {
+                transactionManager.enlistResource(transaction, handle);
             }
         } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "poolmgr.unexpected_exception", ex);
+            LOG.log(SEVERE, "poolmgr.unexpected_exception", ex);
             throw new PoolingException(ex.toString(), ex);
         }
     }
@@ -88,45 +89,41 @@ public class SystemResourceManagerImpl implements ResourceManager {
      * Dont do any thing for System Resource.
      */
     @Override
-    public void registerResource(ResourceHandle handle)
-         throws PoolingException {
+    public void registerResource(ResourceHandle handle) throws PoolingException {
     }
 
     @Override
     public void rollBackTransaction() {
         try {
-            JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
-            Transaction tran = tm.getTransaction();
-            if (tran != null) {
-                tran.setRollbackOnly();
+            Transaction transaction = getCurrentTransaction();
+            if (transaction != null) {
+                transaction.setRollbackOnly();
             }
         } catch (SystemException ex) {
-            LOG.log(Level.WARNING,"poolmgr.system_exception",ex);
+            LOG.log(WARNING, "poolmgr.system_exception", ex);
         } catch (IllegalStateException ex) {
-            LOG.log(Level.FINEST,"Ignoring IllegalStateException.", ex);
+            LOG.log(FINEST, "Ignoring IllegalStateException.", ex);
         }
     }
-
 
     /**
      * delist the <code>ResourceHandle</code> from the transaction
      *
      * @param h <code>ResourceHandle</code> object
-     * @param xaresFlag flag indicating transaction success. This can
-     *            be XAResource.TMSUCCESS or XAResource.TMFAIL
+     * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
     @Override
     public void delistResource(ResourceHandle h, int xaresFlag) {
         try {
-            JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
-            Transaction tran = tm.getTransaction();
-            if (tran != null) {
-                tm.delistResource(tran, h, xaresFlag);
+            JavaEETransactionManager transactionManager = getTransactionManager();
+            Transaction transaction = transactionManager.getTransaction();
+            if (transaction != null) {
+                transactionManager.delistResource(transaction, h, xaresFlag);
             }
         } catch (SystemException ex) {
-            LOG.log(Level.WARNING,"poolmgr.system_exception",ex);
+            LOG.log(WARNING, "poolmgr.system_exception", ex);
         } catch (IllegalStateException ex) {
-            LOG.log(Level.FINEST,"Ignoring IllegalStateException.", ex);
+            LOG.log(FINEST, "Ignoring IllegalStateException.", ex);
         }
     }
 
@@ -135,5 +132,13 @@ public class SystemResourceManagerImpl implements ResourceManager {
      */
     @Override
     public void unregisterResource(ResourceHandle resource, int xaresFlag) {
+    }
+
+    private static JavaEETransactionManager getTransactionManager() {
+        return ConnectorRuntime.getRuntime().getTransactionManager();
+    }
+
+    private static Transaction getCurrentTransaction() throws SystemException {
+        return getTransactionManager().getTransaction();
     }
 }

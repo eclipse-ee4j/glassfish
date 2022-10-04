@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,12 @@
 
 package com.sun.enterprise.resource.pool.waitqueue;
 
-import com.sun.logging.LogDomains;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.logging.LogDomains;
 
 /**
  * Default wait queue for the connection pool
@@ -42,29 +43,32 @@ public class DefaultPoolWaitQueue implements PoolWaitQueue {
         initializeDefaultQueue();
     }
 
+    @Override
     public synchronized int getQueueLength() {
         return list.size();
     }
 
+    @Override
     public synchronized void addToQueue(Object waitMonitor) {
 
         list.addLast(waitMonitor);
     }
 
+    @Override
     public synchronized boolean removeFromQueue(Object o) {
         return list.remove(o);
     }
 
-/*
-    public synchronized Object removeFirst() {
-        return list.removeFirst();
-    }
-*/
+    /*
+     * public synchronized Object removeFirst() { return list.removeFirst(); }
+     */
 
+    @Override
     public synchronized Object remove() {
         return list.removeFirst();
     }
 
+    @Override
     public Object peek() {
         Object result = null;
         if (list.size() > 0) {
@@ -73,12 +77,13 @@ public class DefaultPoolWaitQueue implements PoolWaitQueue {
         return result;
     }
 
+    @Override
     public Collection getQueueContents() {
         return list;
     }
 
     protected void debug(String debugStatement) {
-        if(_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, debugStatement);
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,20 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.logging.LogDomains;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorRuntime;
-
-import java.util.logging.*;
+import com.sun.logging.LogDomains;
 
 /**
  * A simple class to get the properties of a ConnectionDefinition class , that
@@ -53,12 +59,12 @@ public class ConnectionDefinitionUtils {
             Method[] methods=
                 ConnectorRuntime.getRuntime().getConnectorClassLoader().loadClass(
                         connectionDefinitionClassName).getMethods();
-            for (int i= 0; i < methods.length; i++) {
+            for (Method method : methods) {
                 //Method starts with "set" and has only one parameter and has
                 // a
                 // valid argument
-                if (isValidSetterMethod(methods[i])) {
-                    String name= methods[i].getName();
+                if (isValidSetterMethod(method)) {
+                    String name= method.getName();
                     String propertyName=
                         name.substring(
                             (name.indexOf("set") + "set".length()),
@@ -85,7 +91,7 @@ public class ConnectionDefinitionUtils {
      */
     private static void ignoreOracle10gProperties(String className, Map map){
 
-           Set<String> oracleClasses = new HashSet<String>();
+           Set<String> oracleClasses = new HashSet<>();
            oracleClasses.add("oracle.jdbc.pool.oracledatasource");
            oracleClasses.add("oracle.jdbc.pool.oracleconnectionpooldatasource");
            oracleClasses.add("oracle.jdbc.xa.client.oraclexadatasource");
@@ -125,10 +131,10 @@ public class ConnectionDefinitionUtils {
     private static boolean isValidArgumentType(Method method) {
         Class[] parameters= method.getParameterTypes();
         boolean isValid= true;
-        for (int i= 0; i < parameters.length; i++) {
-            Class param= parameters[i];
-            if (!(param.isPrimitive() || param.equals(String.class)))
+        for (Class param : parameters) {
+            if (!(param.isPrimitive() || param.equals(String.class))) {
                 return false;
+            }
         }
         return isValid;
     }
@@ -217,8 +223,8 @@ public class ConnectionDefinitionUtils {
              "user", "password", "roleName", "datasourceName" };
 
         //assuming that the provided map is not null
-        for(int i=0; i<defaultProperties.length; i++){
-            map.put(defaultProperties[i],null);
+        for (String element : defaultProperties) {
+            map.put(element,null);
         }
     }
 
@@ -226,9 +232,9 @@ public class ConnectionDefinitionUtils {
         String[] defaultProperties = {"URL", "user", "password"};
 
         //assuming that the provided map is not null
-        for(int i=0; i<defaultProperties.length; i++){
-            if(!containsProperty(defaultProperties[i], map)) {
-                map.put(defaultProperties[i], null);
+        for (String element : defaultProperties) {
+            if(!containsProperty(element, map)) {
+                map.put(element, null);
             }
         }
     }

@@ -17,6 +17,18 @@
 
 package com.sun.enterprise.connectors;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -39,20 +51,14 @@ import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 import jakarta.resource.ResourceException;
-import jakarta.resource.spi.*;
+import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.IllegalStateException;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ResourceAllocationException;
+import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.resource.spi.SecurityException;
-import javax.security.auth.Subject;
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -252,16 +258,14 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 //create non-null Subject associated with no credentials
                 //System.out.println("RAR name "+ rarName);
                 subject = ConnectionPoolObjectsUtils.createSubject(mcf, null);
+            } else if (prin == null) {
+                info = new ClientSecurityInfo(cxRequestInfo);
             } else {
-                if (prin == null) {
-                    info = new ClientSecurityInfo(cxRequestInfo);
+                info = new ClientSecurityInfo(prin);
+                if (prin.equals(defaultPrin)) {
+                    subject = pmd.getSubject();
                 } else {
-                    info = new ClientSecurityInfo(prin);
-                    if (prin.equals(defaultPrin)) {
-                        subject = pmd.getSubject();
-                    } else {
-                        subject = ConnectionPoolObjectsUtils.createSubject(mcf, prin);
-                    }
+                    subject = ConnectionPoolObjectsUtils.createSubject(mcf, prin);
                 }
             }
 

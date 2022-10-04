@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,6 +43,7 @@ public class ConnectorRARClassLoader extends SecureClassLoader{
         return (jarResources.getResource(className));
     }
 
+    @Override
     public Class findClass(String name) throws ClassNotFoundException {
         byte[] b = loadClassBytes(name);
         if (b == null) {

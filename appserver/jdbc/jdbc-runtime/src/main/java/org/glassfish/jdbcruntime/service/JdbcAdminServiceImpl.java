@@ -70,7 +70,7 @@ public class JdbcAdminServiceImpl extends ConnectorService {
         "dbvendormapping" + File.separator;
 
     private final static String JDBC40_CONNECTION_VALIDATION = "org.glassfish.api.jdbc.validation.JDBC40ConnectionValidation";
-    private final static String DS_PROPERTIES = "ds.properties";
+    private final static String DS_PROPERTIES = "dataStructure.properties";
     private final static String CPDS_PROPERTIES = "cpds.properties";
     private final static String XADS_PROPERTIES = "xads.properties";
     private final static String DRIVER_PROPERTIES = "driver.properties";

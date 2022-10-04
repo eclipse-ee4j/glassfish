@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,18 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
-import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.pool.ResourceHandler;
-import com.sun.enterprise.resource.pool.datastructure.strategy.ResourceSelectionStrategy;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.logging.LogDomains;
-
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.allocator.ResourceAllocator;
+import com.sun.enterprise.resource.pool.ResourceHandler;
+import com.sun.enterprise.resource.pool.datastructure.strategy.ResourceSelectionStrategy;
+import com.sun.logging.LogDomains;
 
 /**
  * ReadWriteLock based datastructure for pool
@@ -49,7 +50,7 @@ public class RWLockDataStructure implements DataStructure {
 
     public RWLockDataStructure(String parameters, int maxSize,
                                               ResourceHandler handler, String strategyClass) {
-        resources = new ArrayList<ResourceHandle>((maxSize > 1000) ? 1000 : maxSize);
+        resources = new ArrayList<>((maxSize > 1000) ? 1000 : maxSize);
         this.maxSize = maxSize;
         this.handler = handler;
         initializeStrategy(strategyClass);
@@ -65,6 +66,7 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int addResource(ResourceAllocator allocator, int count) throws PoolingException {
         int numResAdded = 0;
         writeLock.lock();
@@ -88,11 +90,11 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public ResourceHandle getResource() {
         readLock.lock();
         try {
-            for (int i = 0; i < resources.size(); i++) {
-                ResourceHandle h = resources.get(i);
+            for (ResourceHandle h : resources) {
                 if (!h.isBusy()) {
                     readLock.unlock();
                     writeLock.lock();
@@ -124,6 +126,7 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void removeResource(ResourceHandle resource) {
         boolean removed = false;
         writeLock.lock();
@@ -140,6 +143,7 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void returnResource(ResourceHandle resource) {
         writeLock.lock();
         try{
@@ -152,14 +156,13 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getFreeListSize() {
         //inefficient implementation.
         int free = 0;
         readLock.lock();
         try{
-            Iterator it = resources.iterator();
-            while (it.hasNext()) {
-                ResourceHandle rh = (ResourceHandle)it.next();
+            for (ResourceHandle rh : resources) {
                 if(!rh.isBusy()){
                     free++;
                 }
@@ -173,6 +176,7 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void removeAll() {
         writeLock.lock();
         try {
@@ -190,6 +194,7 @@ public class RWLockDataStructure implements DataStructure {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getResourcesSize() {
         return resources.size();
     }
@@ -200,6 +205,7 @@ public class RWLockDataStructure implements DataStructure {
      *
      * @param maxSize
      */
+    @Override
     public void setMaxSize(int maxSize) {
         this.maxSize = maxSize;
     }

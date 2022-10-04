@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,22 @@
 
 package com.sun.enterprise.connectors.service;
 
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.deployment.SecurityPermission;
-import com.sun.enterprise.connectors.util.*;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Set;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.connectors.util.AdminObjectConfigParser;
+import com.sun.enterprise.connectors.util.ConnectorConfigParser;
+import com.sun.enterprise.connectors.util.ConnectorConfigParserFactory;
+import com.sun.enterprise.connectors.util.MCFConfigParser;
+import com.sun.enterprise.connectors.util.MessageListenerConfigParser;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.SecurityPermission;
 
 
 /**
@@ -41,7 +46,6 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
      * Default constructor
      */
      public ConnectorConfigurationParserServiceImpl() {
-         super();
      }
 
     /**

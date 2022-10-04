@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,6 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.deployment.*;
-import com.sun.logging.LogDomains;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.deployment.common.JavaEEResourceType;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.glassfish.javaee.services.CommonResourceProxy;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resources.mail.config.MailResource;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import javax.naming.NamingException;
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,6 +24,40 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.deployment.common.JavaEEResourceType;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+import org.glassfish.javaee.services.CommonResourceProxy;
+import org.glassfish.resourcebase.resources.api.ResourceConflictException;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resources.mail.config.MailResource;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 /**
  * Handle deployment of resources defined by @MailSessionDefinition
@@ -215,12 +225,12 @@ public class MailSessionDeployer implements ResourceDeployer {
             org.glassfish.resourcebase.resources.naming.ResourceNamingService resourceNamingService = resourceNamingServiceProvider.get();
             proxy.setDescriptor(msd);
 
-            if(msd.getName().startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX)){
+            if(msd.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)){
                 msd.setResourceId(appName);
             }
 
-            if (msd.getName().startsWith(ConnectorConstants.JAVA_GLOBAL_SCOPE_PREFIX)
-                    || msd.getName().startsWith(ConnectorConstants.JAVA_APP_SCOPE_PREFIX)) {
+            if (msd.getName().startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)
+                    || msd.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
                 ResourceInfo resourceInfo = new ResourceInfo(msd.getName(), appName);
                 try {
                     resourceNamingService.publishObject(resourceInfo, proxy, true);
@@ -330,26 +340,32 @@ public class MailSessionDeployer implements ResourceDeployer {
             this.value = value;
         }
 
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public void setName(String value) throws PropertyVetoException {
             this.name = value;
         }
 
+        @Override
         public String getValue() {
             return value;
         }
 
+        @Override
         public void setValue(String value) throws PropertyVetoException {
             this.value = value;
         }
 
+        @Override
         public String getDescription() {
             return description;
         }
 
+        @Override
         public void setDescription(String value) throws PropertyVetoException {
             this.description = value;
         }
@@ -488,9 +504,10 @@ public class MailSessionDeployer implements ResourceDeployer {
         @Override
         public List<Property> getProperty() {
             // make a copy in the required format
-            List<Property> props = new ArrayList<Property>();
-            for (String key : desc.getProperties().stringPropertyNames())
+            List<Property> props = new ArrayList<>();
+            for (String key : desc.getProperties().stringPropertyNames()) {
                 props.add(new MailSessionProperty(key, desc.getProperty(key)));
+            }
             return props;
         }
 

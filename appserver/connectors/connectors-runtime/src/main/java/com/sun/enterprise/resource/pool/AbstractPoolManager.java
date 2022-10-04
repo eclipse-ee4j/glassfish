@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,28 @@
 
 package com.sun.enterprise.resource.pool;
 
-import com.sun.enterprise.resource.ResourceSpec;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import java.util.concurrent.ConcurrentHashMap;
+import com.sun.enterprise.resource.ResourceSpec;
 
 /**
  * Abstract Pool manager for unimplemented features. Throws UnsupportedOperationException when invoked.
  */
 public abstract class AbstractPoolManager implements PoolManager {
 
+    @Override
     public void emptyResourcePool(ResourceSpec spec) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void killAllPools() {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public void setSelfManaged(PoolInfo poolInfo, boolean flag) {
         throw new UnsupportedOperationException();
     }

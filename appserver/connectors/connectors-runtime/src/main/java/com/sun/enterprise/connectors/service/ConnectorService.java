@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,17 @@
 
 package com.sun.enterprise.connectors.service;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -31,15 +43,6 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.logging.LogDomains;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -124,6 +127,7 @@ public class ConnectorService implements ConnectorConstants {
                 loadDeferredResourceAdapter(rarName);
                 final Resource[] resToLoad = defResConfig.getResourcesToLoad();
                 AccessController.doPrivileged(new PrivilegedAction() {
+                    @Override
                     public Object run() {
                         try {
                             loadDeferredResources(resToLoad);
@@ -241,10 +245,12 @@ public class ConnectorService implements ConnectorConstants {
 
         //If the RAR is embedded try loading the descriptor directly
         //using the applicationarchivist
-        if (rarName.indexOf(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1){
+        if (rarName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1){
             try {
                 desc = loadConnectorDescriptorForEmbeddedRAR(rarName);
-                if (desc != null) return desc;
+                if (desc != null) {
+                    return desc;
+                }
             } catch (ConnectorRuntimeException e) {
                 throw e;
             }
@@ -366,6 +372,7 @@ public class ConnectorService implements ConnectorConstants {
 
                     final ClassLoader temp = parent;
                     Object obj = AccessController.doPrivileged(new PrivilegedAction() {
+                        @Override
                         public Object run() {
                             return temp.getParent();
                         }

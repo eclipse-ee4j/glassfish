@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,23 @@
 
 package com.sun.enterprise.resource.allocator;
 
+import java.util.logging.Level;
+
+import javax.security.auth.Subject;
+
+import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.resource.ClientSecurityInfo;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.resource.ResourceSpec;
 import com.sun.enterprise.resource.listener.ConnectionEventListener;
 import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.appserv.connectors.internal.api.PoolingException;
 
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionEvent;
 import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
-import javax.security.auth.Subject;
-import java.util.logging.Level;
 
 /**
  * @author Tony Ng
@@ -44,6 +47,7 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
             this.resource = resource;
         }
 
+        @Override
         public void connectionClosed(ConnectionEvent evt) {
             poolMgr.putbackResourceToPool(resource, false);
         }
@@ -53,12 +57,14 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
          *
          * @param evt ConnectionEvent
          */
+        @Override
         public void badConnectionClosed(ConnectionEvent evt) {
             ManagedConnection mc = (ManagedConnection) evt.getSource();
             mc.removeConnectionEventListener(this);
             poolMgr.badResourceClosed(resource);
         }
 
+        @Override
         public void connectionErrorOccurred(ConnectionEvent evt) {
             ManagedConnection mc = (ManagedConnection) evt.getSource();
             mc.removeConnectionEventListener(this);
@@ -74,14 +80,17 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
             resource.setConnectionErrorOccurred();
         }
 
+        @Override
         public void localTransactionStarted(ConnectionEvent evt) {
             throw new IllegalStateException("local transaction not supported");
         }
 
+        @Override
         public void localTransactionCommitted(ConnectionEvent evt) {
             throw new IllegalStateException("local transaction not supported");
         }
 
+        @Override
         public void localTransactionRolledback(ConnectionEvent evt) {
             throw new IllegalStateException("local transaction not supported");
         }
@@ -98,6 +107,7 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
     }
 
 
+    @Override
     public ResourceHandle createResource()
             throws PoolingException {
         try {
@@ -125,6 +135,7 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public void fillInResourceObjects(ResourceHandle resource)
             throws PoolingException {
         try {
@@ -136,6 +147,7 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public void destroyResource(ResourceHandle resource)
             throws PoolingException {
 
@@ -147,6 +159,7 @@ public class NoTxConnectorAllocator extends AbstractConnectorAllocator {
         }
     }
 
+    @Override
     public boolean isTransactional() {
         return false;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,8 @@ package com.sun.appserv.connectors.internal.api;
  * Generic exception class to indicate exceptions pertaining to pooling infrastructure
  */
 public class PoolingException extends Exception {
+
+    private static final long serialVersionUID = 1L;
 
     public PoolingException() {
     }

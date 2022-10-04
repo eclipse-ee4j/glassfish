@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,63 +17,64 @@
 
 package com.sun.enterprise.resource;
 
-import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.logging.LogDomains;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.transaction.spi.TransactionalResource;
+import static java.util.logging.Level.FINEST;
 
-import jakarta.resource.spi.ConnectionEventListener;
+import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 import javax.transaction.xa.XAResource;
-import jakarta.transaction.Transaction;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.allocator.LocalTxConnectorAllocator;
+import com.sun.enterprise.resource.allocator.ResourceAllocator;
+import com.sun.enterprise.transaction.spi.TransactionalResource;
+import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.ConnectionEventListener;
+import jakarta.transaction.Transaction;
 
 /**
- * ResourceHandle encapsulates a resource connection.
- * Equality on the handle is based on the id field
+ * ResourceHandle encapsulates a resource connection. Equality on the handle is based on the id field
  *
  * @author Tony Ng
  */
-public class ResourceHandle implements
-        com.sun.appserv.connectors.internal.api.ResourceHandle, TransactionalResource {
+public class ResourceHandle implements com.sun.appserv.connectors.internal.api.ResourceHandle, TransactionalResource {
+
+    private static Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
 
     // unique ID for resource handles
     static private long idSequence;
 
     private long id;
     private ClientSecurityInfo info;
-    private Object resource;  // represents MC
+    private Object resource; // represents MC
     private ResourceSpec spec;
     private XAResource xares;
-    private Object usercon;   // represents connection-handle to user
-    private ResourceAllocator alloc;
-    private Object instance;  // the component instance holding this resource
-    private int shareCount;   // sharing within a component (XA only)
-    private boolean supportsXAResource = false;
+    private Object userConnection; // represents connection-handle to user
+    private ResourceAllocator resourceAllocator;
+    private Object instance; // the component instance holding this resource
+    private int shareCount; // sharing within a component (XA only)
+    private boolean supportsXAResource;
 
     private volatile boolean busy;
 
-    private Subject subject = null;
+    private Subject subject;
 
-    private ResourceState state = null;
-    private ConnectionEventListener listener = null;
+    private ResourceState state;
+    private ConnectionEventListener listener;
 
-    private boolean enlistmentSuspended = false;
+    private boolean enlistmentSuspended;
 
-    private boolean supportsLazyEnlistment_ = false;
-    private boolean supportsLazyAssoc_ = false;
-
-    private static Logger logger = LogDomains.getLogger(ResourceHandle.class, LogDomains.RSR_LOGGER);
+    private boolean supportsLazyEnlistment_;
+    private boolean supportsLazyAssoc_;
 
     public final Object lock = new Object();
-    private long lastValidated; //holds the latest time at which the connection was validated.
-    private int usageCount; //holds the no. of times the handle(connection) is used so far.
+    private long lastValidated; // holds the latest time at which the connection was validated.
+    private int usageCount; // holds the no. of times the handle(connection) is used so far.
     private int partition;
-    private boolean isDestroyByLeakTimeOut = false;
+    private boolean isDestroyByLeakTimeOut;
+    private boolean connectionErrorOccurred;
 
     static private long getNextId() {
         synchronized (ResourceHandle.class) {
@@ -80,64 +82,37 @@ public class ResourceHandle implements
             return idSequence;
         }
     }
-    private boolean markedReclaim = false;
 
-    public ResourceHandle(Object resource,
-                          ResourceSpec spec,
-                          ResourceAllocator alloc,
-                          ClientSecurityInfo info) {
+    private boolean markedReclaim;
+
+    public ResourceHandle(Object resource, ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info) {
         this.id = getNextId();
         this.spec = spec;
         this.info = info;
         this.resource = resource;
-        this.alloc = alloc;
+        this.resourceAllocator = alloc;
 
-        if (alloc instanceof LocalTxConnectorAllocator)
+        if (alloc instanceof LocalTxConnectorAllocator) {
             supportsXAResource = false;
-        else
+        } else {
             supportsXAResource = true;
+        }
 
-        if (resource instanceof
-                jakarta.resource.spi.LazyEnlistableManagedConnection) {
+        if (resource instanceof jakarta.resource.spi.LazyEnlistableManagedConnection) {
             supportsLazyEnlistment_ = true;
         }
 
-        if (resource instanceof
-                jakarta.resource.spi.DissociatableManagedConnection) {
+        if (resource instanceof jakarta.resource.spi.DissociatableManagedConnection) {
             supportsLazyAssoc_ = true;
         }
     }
 
-/*    public ResourceHandle(Object resource,
-                          ResourceSpec spec,
-                          ResourceAllocator alloc,
-                          ClientSecurityInfo info,
-                          boolean supportsXA) {
-        this.id = getNextId();
-        this.spec = spec;
-        this.info = info;
-        this.resource = resource;
-        this.alloc = alloc;
-
-        supportsXAResource = supportsXA;
-
-        if (resource instanceof
-                jakarta.resource.spi.LazyEnlistableManagedConnection) {
-            supportsLazyEnlistment_ = true;
-        }
-
-        if (resource instanceof
-                jakarta.resource.spi.DissociatableManagedConnection) {
-            supportsLazyAssoc_ = true;
-        }
-    } */
-
-
     /**
      * Does this resource need enlistment to transaction manager?
      */
+    @Override
     public boolean isTransactional() {
-        return alloc.isTransactional();
+        return resourceAllocator.isTransactional();
     }
 
     /**
@@ -146,10 +121,12 @@ public class ResourceHandle implements
      *
      * @return boolean
      */
+    @Override
     public boolean isEnlistmentSuspended() {
         return enlistmentSuspended;
     }
 
+    @Override
     public void setEnlistmentSuspended(boolean enlistmentSuspended) {
         this.enlistmentSuspended = enlistmentSuspended;
     }
@@ -167,12 +144,13 @@ public class ResourceHandle implements
         return markedReclaim;
     }
 
+    @Override
     public boolean supportsXA() {
         return supportsXAResource;
     }
 
     public ResourceAllocator getResourceAllocator() {
-        return alloc;
+        return resourceAllocator;
     }
 
     public Object getResource() {
@@ -191,22 +169,26 @@ public class ResourceHandle implements
         return spec;
     }
 
+    @Override
     public XAResource getXAResource() {
         return xares;
     }
 
     public Object getUserConnection() {
-        return usercon;
+        return userConnection;
     }
 
+    @Override
     public void setComponentInstance(Object instance) {
         this.instance = instance;
     }
 
+    @Override
     public void closeUserConnection() throws PoolingException {
         getResourceAllocator().closeUserConnection(this);
     }
 
+    @Override
     public Object getComponentInstance() {
         return instance;
     }
@@ -215,17 +197,17 @@ public class ResourceHandle implements
         return id;
     }
 
-    public void fillInResourceObjects(Object userConnection,
-                                      XAResource xaRes) {
-        if (userConnection != null) usercon = userConnection;
+    public void fillInResourceObjects(Object userConnection, XAResource xaRes) {
+        if (userConnection != null) {
+            this.userConnection = userConnection;
+        }
 
         if (xaRes != null) {
-            if (logger.isLoggable(Level.FINEST)) {
-                //When Log level is Finest, XAResourceWrapper is used to log
-                //all XA interactions - Don't wrap XAResourceWrapper if it is
-                //already wrapped
-                if ((xaRes instanceof XAResourceWrapper) ||
-                        (xaRes instanceof ConnectorXAResource)) {
+            if (logger.isLoggable(FINEST)) {
+                // When Log level is Finest, XAResourceWrapper is used to log
+                // all XA interactions - Don't wrap XAResourceWrapper if it is
+                // already wrapped
+                if ((xaRes instanceof XAResourceWrapper) || (xaRes instanceof ConnectorXAResource)) {
                     this.xares = xaRes;
                 } else {
                     this.xares = new XAResourceWrapper(xaRes);
@@ -247,9 +229,9 @@ public class ResourceHandle implements
     public void decrementCount() {
         if (shareCount == 0) {
             throw new IllegalStateException("shareCount cannot be negative");
-        } else {
-            shareCount--;
         }
+
+        shareCount--;
     }
 
     public int getShareCount() {
@@ -264,23 +246,28 @@ public class ResourceHandle implements
         return subject;
     }
 
+    @Override
     public boolean equals(Object other) {
-        if (other == null) return false;
+        if (other == null) {
+            return false;
+        }
+
         if (other instanceof ResourceHandle) {
             return this.id == (((ResourceHandle) other).id);
         }
+
         return false;
     }
 
+    @Override
     public int hashCode() {
         return Long.valueOf(id).hashCode();
     }
 
+    @Override
     public String toString() {
         return String.valueOf(id);
     }
-
-    private boolean connectionErrorOccurred = false;
 
     public void setConnectionErrorOccurred() {
         connectionErrorOccurred = true;
@@ -306,14 +293,17 @@ public class ResourceHandle implements
         return listener;
     }
 
+    @Override
     public boolean isShareable() {
-        return alloc.shareableWithinComponent();
+        return resourceAllocator.shareableWithinComponent();
     }
 
+    @Override
     public void destroyResource() {
         throw new UnsupportedOperationException("Transaction is not supported yet");
     }
 
+    @Override
     public boolean isEnlisted() {
         return state != null && state.isEnlisted();
     }
@@ -342,6 +332,7 @@ public class ResourceHandle implements
         this.partition = partition;
     }
 
+    @Override
     public String getName() {
         return spec.getResourceId();
     }
@@ -354,23 +345,24 @@ public class ResourceHandle implements
         return supportsLazyAssoc_;
     }
 
-    public void enlistedInTransaction(Transaction tran) throws IllegalStateException {
-        ConnectorRuntime.getRuntime().getPoolManager().resourceEnlisted(tran, this);
+    @Override
+    public void enlistedInTransaction(Transaction transaction) throws IllegalStateException {
+        ConnectorRuntime.getRuntime().getPoolManager().resourceEnlisted(transaction, this);
     }
 
-    public void setBusy(boolean isBusy){
+    public void setBusy(boolean isBusy) {
         busy = isBusy;
     }
 
-    public boolean isBusy(){
+    public boolean isBusy() {
         return busy;
     }
 
-    public boolean getDestroyByLeakTimeOut(){
+    public boolean getDestroyByLeakTimeOut() {
         return isDestroyByLeakTimeOut;
     }
 
-    public void setDestroyByLeakTimeOut(boolean isDestroyByLeakTimeOut){
+    public void setDestroyByLeakTimeOut(boolean isDestroyByLeakTimeOut) {
         this.isDestroyByLeakTimeOut = isDestroyByLeakTimeOut;
     }
 }

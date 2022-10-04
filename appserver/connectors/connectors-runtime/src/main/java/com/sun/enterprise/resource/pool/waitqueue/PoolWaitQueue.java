@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +31,7 @@ public interface PoolWaitQueue {
 
     /**
      * returns the length of wait queue
+     *
      * @return length of wait queue.
      */
     int getQueueLength();
@@ -37,12 +39,14 @@ public interface PoolWaitQueue {
     /**
      * resource requesting thread will be added to queue<br>
      * and the object on which it is made to wait is returned
+     *
      * @param o Object
      */
     void addToQueue(Object o);
 
     /**
      * removes the specified object (resource request) from the queue
+     *
      * @param o Object
      * @return boolean indicating whether the object was removed or not
      */
@@ -52,25 +56,27 @@ public interface PoolWaitQueue {
      * removes the first object (resource request) from the queue
      */
     /*
-    Object removeFirst();
-    */
+     * Object removeFirst();
+     */
 
     /**
      * removes the first object (resource request) from the queue
+     *
      * @return Object first object
      */
     Object remove();
 
     /**
      * returns (does not remove) the first object (resource request) from the queue
+     *
      * @return Object first object
      */
     Object peek();
 
     /**
      * used to get access to the list of waiting clients<br>
-     * Useful in case of rolling over from one pool to another
-     * eg: transparent-dynamic-pool-reconfiguration.
+     * Useful in case of rolling over from one pool to another eg: transparent-dynamic-pool-reconfiguration.
+     *
      * @return Collection
      */
     Collection getQueueContents();

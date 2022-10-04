@@ -18,6 +18,21 @@
 package com.sun.enterprise.resource.deployer;
 
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -34,21 +49,6 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
 
 
 /**
@@ -317,22 +317,20 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
             txSupportIntVal = ConnectionPoolObjectsUtils.getTransactionSupportFromRaXml(
                     domainCcp.getResourceAdapterName());
 
-        } else {
-            //We got some valid transaction-support attribute value
-            //so go figure if it is valid.
-            //The tx support is valid if it is less-than/equal-to
-            //the value specified in the ra.xml
-            if (!ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(txSupportIntVal,
-                    domainCcp.getResourceAdapterName())) {
+        } else //We got some valid transaction-support attribute value
+        //so go figure if it is valid.
+        //The tx support is valid if it is less-than/equal-to
+        //the value specified in the ra.xml
+        if (!ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(txSupportIntVal,
+                domainCcp.getResourceAdapterName())) {
 
-                String i18nMsg = MESSAGES.getString("ccp_deployer.incorrect_tx_support");
-                ConnectorRuntimeException cre = new
-                        ConnectorRuntimeException(i18nMsg);
+            String i18nMsg = MESSAGES.getString("ccp_deployer.incorrect_tx_support");
+            ConnectorRuntimeException cre = new
+                    ConnectorRuntimeException(i18nMsg);
 
-                LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
-                        ccp.getName());
-                throw cre;
-            }
+            LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
+                    ccp.getName());
+            throw cre;
         }
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("setting txSupportVal to " + txSupportIntVal +

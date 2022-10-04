@@ -17,15 +17,15 @@
 
 package com.sun.enterprise.connectors;
 
-import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.logging.LogDomains;
-
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.logging.LogDomains;
 
 /**
  * This class abstracts a connection connection pool. It contains

@@ -17,6 +17,27 @@
 
 package com.sun.enterprise.connectors.service;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.RelativePathResolver;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -48,27 +69,6 @@ import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.TransactionSupport;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
-import javax.naming.NamingException;
-import javax.security.auth.Subject;
-
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.RelativePathResolver;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.config.types.Property;
-
 
 /**
  * Connector connection pool admin service performs the
@@ -86,7 +86,6 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * Default constructor
      */
     public ConnectorConnectionPoolAdminServiceImpl() {
-        super();
 
     }
 
@@ -1373,7 +1372,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
 
         killPool(poolInfo);
         boolean result = _registry.removeManagedConnectionFactory(poolInfo);
-        if (result == false) {
+        if (!result) {
             _logger.log(Level.SEVERE,
                     "rardeployment.mcf_removal_failure", poolInfo);
             String i18nMsg = localStrings.getString(

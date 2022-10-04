@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,15 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.appserv.connectors.internal.api.PoolingException;
 import java.util.ArrayList;
 
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.allocator.ResourceAllocator;
+
 /**
- * Represents a pool datastructure. Helps to plug-in various implementations
- * that the pool can use.<br> Datastructure need to synchronize the operations.
+ * Represents a pool datastructure. Helps to plug-in various implementations that the pool can use.<br>
+ * Datastructure need to synchronize the operations.
  *
  * @author Jagadish Ramu
  */
@@ -34,9 +36,8 @@ public interface DataStructure {
     String DS_TYPE_PARTITIONED = "PARTITIONED";
 
     /**
-     * Set maxSize based on the new max pool size set on the connection pool
-     * during a reconfiguration.
-
+     * Set maxSize based on the new max pool size set on the connection pool during a reconfiguration.
+     *
      * @param maxSize
      */
     void setMaxSize(int maxSize);
@@ -45,7 +46,7 @@ public interface DataStructure {
      * creates a new resource and adds to the datastructure.
      *
      * @param allocator ResourceAllocator
-     * @param count     Number (units) of resources to create
+     * @param count Number (units) of resources to create
      * @return int number of resources added.
      * @throws PoolingException when unable to create a resource
      */
@@ -92,12 +93,10 @@ public interface DataStructure {
     int getResourcesSize();
 
     /**
-     * Get all resources in the datastructure
-     * Note : do not use this for normal usages as it
-     * can potentially represent all resources
-     * (including the ones in use).
-     * This is used under special circumstances where there is a need
-     * to process all resources.
+     * Get all resources in the datastructure Note : do not use this for normal usages as it can potentially represent all
+     * resources (including the ones in use). This is used under special circumstances where there is a need to process all
+     * resources.
+     *
      * @return ArrayList<ResourceHandle>
      */
     ArrayList<ResourceHandle> getAllResources();

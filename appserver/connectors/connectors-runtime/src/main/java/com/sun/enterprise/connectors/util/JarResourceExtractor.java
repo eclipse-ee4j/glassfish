@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,19 @@
 
 package com.sun.enterprise.connectors.util;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import com.sun.logging.LogDomains;
-import java.util.logging.Level;
 
 
 /**
@@ -141,13 +148,13 @@ public final class JarResourceExtractor {
         // -1 means unknown size.
         if (size != -1) {
             //got a proper size, read 'size' bytes
-            b = new byte[(int) size];
+            b = new byte[size];
 
             int rb = 0;
             int chunk = 0;
 
-            while (((int) size - rb) > 0) {
-                chunk = zis.read(b, rb, (int) size - rb);
+            while ((size - rb) > 0) {
+                chunk = zis.read(b, rb, size - rb);
                 if (chunk == -1) {
                     break;
                 }

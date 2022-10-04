@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,19 @@
 
 package com.sun.enterprise.connectors;
 
-import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
-import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import jakarta.resource.spi.ManagedConnectionFactory;
 import javax.security.auth.Subject;
 
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
+
+import jakarta.resource.spi.ManagedConnectionFactory;
 
 /**
- * Information about the ConnectorConnectionPool.
- * Stored inofrmation is:
- * 1. Default Subject
- * 2. MCF Instance
- * 3. Password, UserName
- * 4. The transaction-support attribute level in case of connector
- * connection pools
- * 5. The allow-non-component-callers, non-trasnactional-connections
- * attribs for jdbc connection pools
+ * Information about the ConnectorConnectionPool. Stored inofrmation is: 1. Default Subject 2. MCF Instance 3. Password,
+ * UserName 4. The transaction-support attribute level in case of connector connection pools 5. The
+ * allow-non-component-callers, non-trasnactional-connections attribs for jdbc connection pools
  *
  * @author Binod P.G., Aditya Gore
  */
@@ -52,10 +48,8 @@ public class PoolMetaData {
     private boolean lazyAssoc_ = false;
     private boolean isAuthCredentialsDefinedInPool_ = true;
 
-    public PoolMetaData(PoolInfo poolInfo, ManagedConnectionFactory mcf,
-                        Subject s, int txSupport, ResourcePrincipalDescriptor prin,
-                        boolean isPM, boolean isNonTx, boolean lazyEnlistable,
-                        RuntimeSecurityMap runtimeSecurityMap, boolean lazyAssoc) {
+    public PoolMetaData(PoolInfo poolInfo, ManagedConnectionFactory mcf, Subject s, int txSupport, ResourcePrincipalDescriptor prin,
+            boolean isPM, boolean isNonTx, boolean lazyEnlistable, RuntimeSecurityMap runtimeSecurityMap, boolean lazyAssoc) {
         this.poolInfo = poolInfo;
         this.mcf = mcf;
         this.subj = s;
@@ -84,21 +78,17 @@ public class PoolMetaData {
         return prin_;
     }
 
-
     public void setIsNonTx(boolean flag) {
         isNonTx_ = flag;
     }
-
 
     public boolean isNonTx() {
         return isNonTx_;
     }
 
-
     public void setIsPM(boolean flag) {
         isPM_ = flag;
     }
-
 
     public boolean isPM() {
         return isPM_;
@@ -132,6 +122,7 @@ public class PoolMetaData {
         return this.isAuthCredentialsDefinedInPool_;
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("PoolMetaData : " + poolInfo);
         sb.append("\ntxSupport => " + txSupport_);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,60 +22,67 @@ import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 import jakarta.resource.spi.ConnectionRequestInfo;
 
 /**
- * This class represents the client-specific information associated
- * with a resource. Used for pool partitioning
+ * This class represents the client-specific information associated with a resource. Used for pool partitioning
  *
  * @author Tony Ng
  */
 public class ClientSecurityInfo {
 
-    // union: either store Principal or ConnectionRequestInfo
-    private ResourcePrincipalDescriptor prin;
-    private ConnectionRequestInfo info;
-
     static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
 
-    public ClientSecurityInfo(ResourcePrincipalDescriptor prin) {
-        if (prin == null) {
+    // union: either store Principal or ConnectionRequestInfo
+    private ResourcePrincipalDescriptor resourcePrincipalDescriptor;
+    private ConnectionRequestInfo connectionRequestInfo;
+
+    public ClientSecurityInfo(ResourcePrincipalDescriptor resourcePrincipalDescriptor) {
+        if (resourcePrincipalDescriptor == null) {
             throw new NullPointerException("Principal is null");
         }
-        this.prin = prin;
-        this.info = null;
+
+        this.resourcePrincipalDescriptor = resourcePrincipalDescriptor;
+        this.connectionRequestInfo = null;
     }
 
     public ClientSecurityInfo(ConnectionRequestInfo info) {
         // info can be null
-        this.prin = null;
-        this.info = info;
+        this.resourcePrincipalDescriptor = null;
+        this.connectionRequestInfo = info;
     }
 
-
     public ResourcePrincipalDescriptor getPrincipal() {
-        return prin;
+        return resourcePrincipalDescriptor;
     }
 
     public ConnectionRequestInfo getConnectionRequestInfo() {
-        return info;
+        return connectionRequestInfo;
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
         if (obj instanceof ClientSecurityInfo) {
             ClientSecurityInfo other = (ClientSecurityInfo) obj;
-            return ((isEqual(prin, other.prin)) &&
-                    (isEqual(info, other.info)));
+            return ((isEqual(resourcePrincipalDescriptor, other.resourcePrincipalDescriptor)) && (isEqual(connectionRequestInfo, other.connectionRequestInfo)));
         }
+
         return false;
     }
 
+    @Override
     public int hashCode() {
         int result = NULL_HASH_CODE;
-        if (prin != null) {
-            result = prin.hashCode();
+        if (resourcePrincipalDescriptor != null) {
+            result = resourcePrincipalDescriptor.hashCode();
         }
-        if (info != null) {
-            result += info.hashCode();
+        if (connectionRequestInfo != null) {
+            result += connectionRequestInfo.hashCode();
         }
         return result;
     }
@@ -82,12 +90,13 @@ public class ClientSecurityInfo {
     private boolean isEqual(Object a, Object b) {
         if (a == null) {
             return (b == null);
-        } else {
-            return (a.equals(b));
         }
+
+        return a.equals(b);
     }
 
+    @Override
     public String toString() {
-        return "ClientSecurityInfo: prin=" + prin + " info=" + info;
+        return "ClientSecurityInfo: prin=" + resourcePrincipalDescriptor + " info=" + connectionRequestInfo;
     }
 }

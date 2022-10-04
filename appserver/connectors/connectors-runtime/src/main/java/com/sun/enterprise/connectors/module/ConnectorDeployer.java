@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,20 @@
 
 package com.sun.enterprise.connectors.module;
 
-import com.sun.appserv.connectors.internal.api.ConnectorClassFinder;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.connectors.ConnectorRegistry;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.util.ResourcesUtil;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
+import java.beans.PropertyVetoException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
@@ -37,7 +40,11 @@ import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
-import org.glassfish.connectors.config.*;
+import org.glassfish.connectors.config.AdminObjectResource;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.connectors.config.WorkSecurityMap;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
@@ -45,21 +52,40 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.internal.api.Target;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.javaee.core.deployment.JavaEEDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.resources.listener.ApplicationScopedResourcesManager;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import com.sun.appserv.connectors.internal.api.ConnectorClassFinder;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.ApplicationRef;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
-import jakarta.validation.*;
+import jakarta.validation.Configuration;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorContext;
+import jakarta.validation.ValidatorFactory;
 import jakarta.validation.bootstrap.GenericBootstrap;
-import java.beans.PropertyVetoException;
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Deployer for a resource-adapter.
@@ -110,6 +136,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
      *
      * @return the meta data for this Deployer
      */
+    @Override
     public MetaData getMetaData() {
         return new MetaData(false, null,
                 new Class[]{Application.class});
@@ -120,6 +147,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
      *
      * @param type type of metadata that this deployer has declared providing.
      */
+    @Override
     public <T> T loadMetaData(Class<T> type, DeploymentContext context) {
         return null;
     }
@@ -200,6 +228,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
      * @param appContainer instance to be stopped
      * @param context      of the undeployment
      */
+    @Override
     public void unload(ConnectorApplication appContainer, DeploymentContext context) {
 
         String moduleName = appContainer.getModuleName();
@@ -234,6 +263,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
      *
      * @param dc deployment context
      */
+    @Override
     public void clean(DeploymentContext dc) {
         super.clean(dc);
         //delete resource configuration
@@ -281,6 +311,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
             try {
                 // delete resource-adapter-config
                 if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                    @Override
                     public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                         return param.getResources().remove(rac);
                     }
@@ -301,6 +332,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
                 // delete work-security-maps
                 if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
 
+                    @Override
                     public Object run(Resources param) throws PropertyVetoException,
                             TransactionFailure {
                         for (WorkSecurityMap resource : workSecurityMaps) {
@@ -333,6 +365,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
 
                 // delete admin-object-resource
                 if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                    @Override
                     public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                         for (AdminObjectResource resource : adminObjectResources) {
                             param.getResources().remove(resource);
@@ -364,6 +397,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
 
                 // delete connector-resource
                 if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                    @Override
                     public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                         for (Resource resource : connectorResources) {
                             param.getResources().remove(resource);
@@ -383,11 +417,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
 
     private void deleteResourceRef(String jndiName, String target) throws TransactionFailure {
 
-        if (target.equals(DOMAIN)) {
-            return ;
-        }
-
-        if( domain.getConfigNamed(target) != null){
+        if( target.equals(DOMAIN) || (domain.getConfigNamed(target) != null)){
             return ;
         }
 
@@ -422,6 +452,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
             // delete connector connection pool
             try {
                 if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                    @Override
                     public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                         for (ConnectorConnectionPool cp : conPools) {
                             return param.getResources().remove(cp);
@@ -444,6 +475,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
      * The component has been injected with any dependency and
      * will be placed into commission by the subsystem.
      */
+    @Override
     public void postConstruct() {
         resources = domain.getResources();
         events.register(this);
@@ -517,7 +549,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
         String validationMappingNSName = "jboss.org/xml/ns/javax/validation/mapping";
 
         Enumeration entries = archive.entries();
-        List<String> mappingList = new ArrayList<String>();
+        List<String> mappingList = new ArrayList<>();
 
         while (entries.hasMoreElements()) {
 
@@ -560,6 +592,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
         registry.removeBeanValidator(rarName);
     }
 
+    @Override
     public void event(Event event) {
 
         // added this pre-check so as to validate whether connector-resources referring
@@ -610,7 +643,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
                 for (Module module : modules) {
                     moduleName = module.getName();
                     if (module.getEngine(ConnectorConstants.CONNECTOR_MODULE) != null) {
-                        moduleName = appName + ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER + moduleName;
+                        moduleName = appName + ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER + moduleName;
                         if (moduleName.toLowerCase(Locale.getDefault()).endsWith(".rar")) {
                             int index = moduleName.lastIndexOf(".rar");
                             moduleName = moduleName.substring(0, index);
@@ -622,11 +655,9 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
                         }
                     }
                 }
-            } else {
-                if (resourcesUtil.filterConnectorResources
-                        (resourceManager.getAllResources(), moduleName, true).size() > 0) {
-                    setFailureStatus(dc, moduleName);
-                }
+            } else if (resourcesUtil.filterConnectorResources
+                    (resourceManager.getAllResources(), moduleName, true).size() > 0) {
+                setFailureStatus(dc, moduleName);
             }
         }
     }
@@ -640,6 +671,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
         report.setMessage(message);
     }
 
+    @Override
     public void preDestroy() {
         events.unregister(this);
     }

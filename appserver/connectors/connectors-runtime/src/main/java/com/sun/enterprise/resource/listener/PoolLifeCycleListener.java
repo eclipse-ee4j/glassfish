@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,7 @@ public interface PoolLifeCycleListener {
 
     /**
      * Print stack trace in server.log
+     *
      * @param stackTrace
      */
     void toString(StringBuffer stackTrace);
@@ -36,6 +38,7 @@ public interface PoolLifeCycleListener {
 
     /**
      * indicates that a connection request is server in the time
+     *
      * @param timeTakenInMillis time taken to serve a connection
      */
     void connectionRequestServed(long timeTakenInMillis);
@@ -82,12 +85,14 @@ public interface PoolLifeCycleListener {
 
     /**
      * indicates that a number of connections have failed validation
+     *
      * @param count number of connections
      */
     void connectionValidationFailed(int count);
 
     /**
      * indicates the number of connections freed to pool
+     *
      * @param count number of connections
      */
     void connectionsFreed(int count);
@@ -104,6 +109,7 @@ public interface PoolLifeCycleListener {
 
     /**
      * indicates that a connection is freed and the count is to be incremented.
+     *
      * @param beingDestroyed in case of an error.
      * @param steadyPoolSize
      */

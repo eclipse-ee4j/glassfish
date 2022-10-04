@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,15 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
-import com.sun.logging.LogDomains;
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
@@ -31,16 +36,14 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Dapeng Hu
@@ -55,10 +58,12 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     private static Logger _logger = LogDomains.getLogger(AdministeredObjectDefinitionDeployer.class, LogDomains.RSR_LOGGER);
     final static String PROPERTY_PREFIX = "org.glassfish.admin-object.";
 
+    @Override
     public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
+    @Override
     public void deployResource(Object resource) throws Exception {
 
         final AdministeredObjectDefinitionDescriptor desc = (AdministeredObjectDefinitionDescriptor) resource;
@@ -77,6 +82,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource){
         if(handles(resource)){
             if(!postApplicationDeployment){
@@ -89,6 +95,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
                                           com.sun.enterprise.config.serverbeans.Application newApp,
                                           Resource resource,
@@ -106,10 +113,12 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
         return new AdministeredObjectProperty(name, value);
     }
 
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
+    @Override
     public void undeployResource(Object resource) throws Exception {
 
         final AdministeredObjectDefinitionDescriptor desc = (AdministeredObjectDefinitionDescriptor) resource;
@@ -126,18 +135,22 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
 
     }
 
+    @Override
     public void redeployResource(Object resource) throws Exception {
         throw new UnsupportedOperationException("redeploy() not supported for administered-object-definition type");
     }
 
+    @Override
     public void enableResource(Object resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for administered-object-definition type");
     }
 
+    @Override
     public void disableResource(Object resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for administered-object-definition type");
     }
 
+    @Override
     public boolean handles(Object resource) {
         return resource instanceof AdministeredObjectDefinitionDescriptor;
     }
@@ -145,6 +158,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     /**
      * @inheritDoc
      */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
@@ -152,6 +166,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     /**
      * @inheritDoc
      */
+    @Override
     @SuppressWarnings("rawtypes")
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
@@ -159,18 +174,22 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
 
+        @Override
         public ConfigBeanProxy deepCopy(ConfigBeanProxy parent) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public ConfigBeanProxy getParent() {
             return null;
         }
 
+        @Override
         public <T extends ConfigBeanProxy> T getParent(Class<T> tClass) {
             return null;
         }
 
+        @Override
         public <T extends ConfigBeanProxy> T createChild(Class<T> tClass) throws TransactionFailure {
             return null;
         }
@@ -187,26 +206,32 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
             this.value = value;
         }
 
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public void setName(String value) throws PropertyVetoException {
             this.name = value;
         }
 
+        @Override
         public String getValue() {
             return value;
         }
 
+        @Override
         public void setValue(String value) throws PropertyVetoException {
             this.value = value;
         }
 
+        @Override
         public String getDescription() {
             return description;
         }
 
+        @Override
         public void setDescription(String value) throws PropertyVetoException {
             this.description = value;
         }
@@ -236,22 +261,27 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
             //To change body of implemented methods use File | Settings | File Templates.
         }
 
+        @Override
         public String getIdentity() {
             return name;
         }
 
+        @Override
         public String getResAdapter() {
             return desc.getResourceAdapter();
         }
 
+        @Override
         public void setResAdapter(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getDescription() {
             return desc.getDescription();
         }
 
+        @Override
         public void setDescription(String value) throws PropertyVetoException {
             //do nothing
         }
@@ -296,9 +326,10 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
             //do nothing
         }
 
+        @Override
         public List<Property> getProperty() {
             Properties p = desc.getProperties();
-            List<Property> administeredObjectProperties = new ArrayList<Property>();
+            List<Property> administeredObjectProperties = new ArrayList<>();
             for (Entry<Object, Object> entry : p.entrySet()) {
                 String key = (String) entry.getKey();
                 if(key.startsWith(PROPERTY_PREFIX)){
@@ -312,15 +343,18 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
             return administeredObjectProperties;
         }
 
+        @Override
         public Property getProperty(String name) {
             String value = desc.getProperty(name);
             return new AdministeredObjectProperty(name, value);
         }
 
+        @Override
         public String getPropertyValue(String name) {
             return desc.getProperty(name);
         }
 
+        @Override
         public String getPropertyValue(String name, String defaultValue) {
             String value = null;
             value = desc.getProperty(name);
@@ -335,10 +369,12 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
             //do nothing
         }
 
+        @Override
         public String getDeploymentOrder() {
             return null;
         }
 
+        @Override
         public void setDeploymentOrder(String value) {
             //do nothing
         }

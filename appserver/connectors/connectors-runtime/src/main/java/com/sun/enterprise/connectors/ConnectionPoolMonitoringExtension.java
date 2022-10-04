@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,11 @@
 
 package com.sun.enterprise.connectors;
 
-import com.sun.enterprise.resource.pool.monitor.ConnectionPoolAppProbeProvider;
-import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProvider;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Contract;
+
+import com.sun.enterprise.resource.pool.monitor.ConnectionPoolAppProbeProvider;
+import com.sun.enterprise.resource.pool.monitor.ConnectionPoolProbeProvider;
 
 /**
  * @author Shalini M

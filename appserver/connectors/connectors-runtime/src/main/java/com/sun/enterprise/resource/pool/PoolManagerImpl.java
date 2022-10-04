@@ -17,6 +17,23 @@
 
 package com.sun.enterprise.resource.pool;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static javax.transaction.xa.XAResource.TMSUCCESS;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ComponentInvocationHandler;
+import org.glassfish.api.invocation.InvocationException;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -42,28 +59,12 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.DissociatableManagedConnection;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transaction;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.transaction.xa.XAResource;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.InvocationException;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author Tony Ng, Aditya Gore
@@ -94,22 +95,22 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     }
 
     @Override
-    public void createEmptyConnectionPool(PoolInfo poolInfo,
-                                          PoolType pt, Hashtable env) throws PoolingException {
-        //Create and initialise the connection pool
-        createAndInitPool(poolInfo, pt, env);
+    public void createEmptyConnectionPool(PoolInfo poolInfo, PoolType pooltype, Hashtable env) throws PoolingException {
+        // Create and initialise the connection pool
+        createAndInitPool(poolInfo, pooltype, env);
         if (listener != null) {
             try {
-               listener.poolCreated(poolInfo);
+                listener.poolCreated(poolInfo);
             } catch (Exception ex) {
-                LOG.log(Level.WARNING, "Exception thrown on pool listener", ex);
+                LOG.log(WARNING, "Exception thrown on pool listener", ex);
             }
         }
-        //notify mcf-create
-        ManagedConnectionFactory mcf = ConnectorRegistry.getInstance().getManagedConnectionFactory(poolInfo);
-        if(mcf != null){
-            if(mcf instanceof MCFLifecycleListener){
-                ((MCFLifecycleListener)mcf).mcfCreated();
+
+        // notify mcf-create
+        ManagedConnectionFactory managedConnectionFactory = ConnectorRegistry.getInstance().getManagedConnectionFactory(poolInfo);
+        if (managedConnectionFactory != null) {
+            if (managedConnectionFactory instanceof MCFLifecycleListener) {
+                ((MCFLifecycleListener) managedConnectionFactory).mcfCreated();
             }
         }
     }
@@ -118,113 +119,107 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      * Create and initialize pool if not created already.
      *
      * @param poolInfo Name of the pool to be created
-     * @param pt       - PoolType
+     * @param poolType - PoolType
      * @return ResourcePool - newly created pool
      * @throws PoolingException when unable to create/initialize pool
      */
-    private ResourcePool createAndInitPool(final PoolInfo poolInfo, PoolType pt, Hashtable env)
-            throws PoolingException {
+    private ResourcePool createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
         ResourcePool pool = getPool(poolInfo);
+
         if (pool == null) {
-            pool = ResourcePoolFactoryImpl.newInstance(poolInfo, pt, env);
+            pool = ResourcePoolFactoryImpl.newInstance(poolInfo, poolType, env);
             addPool(pool);
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Created connection  pool  and added it to PoolManager: " + pool);
+            if (LOG.isLoggable(FINE)) {
+                LOG.log(FINE, "Created connection  pool  and added it to PoolManager: " + pool);
             }
         }
+
         return pool;
     }
 
-
     // invoked by DataSource objects to obtain a connection
     @Override
-    public Object getResource(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info)
-            throws PoolingException, RetryableUnavailableException {
+    public Object getResource(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator, ClientSecurityInfo clientSecurityInfo) throws PoolingException, RetryableUnavailableException {
 
-        Transaction tran = null;
-        boolean transactional = alloc.isTransactional();
+        Transaction transaction = null;
+        boolean transactional = resourceAllocator.isTransactional();
 
         if (transactional) {
-            tran = getResourceManager(spec).getTransaction();
+            transaction = getResourceManager(resourceSpec).getTransaction();
         }
 
-        ResourceHandle handle =
-                getResourceFromPool(spec, alloc, info, tran);
+        ResourceHandle resourceHandle = getResourceFromPool(resourceSpec, resourceAllocator, clientSecurityInfo, transaction);
 
-        if (!handle.supportsLazyAssociation()) {
-            spec.setLazyAssociatable(false);
+        if (!resourceHandle.supportsLazyAssociation()) {
+            resourceSpec.setLazyAssociatable(false);
         }
 
-        if (spec.isLazyAssociatable() &&
-                spec.getConnectionToAssociate() != null) {
-            //If getConnectionToAssociate returns a connection that means
-            //we need to associate a new connection with it
+        if (resourceSpec.isLazyAssociatable() && resourceSpec.getConnectionToAssociate() != null) {
+            // If getConnectionToAssociate returns a connection that means
+            // we need to associate a new connection with it
             try {
-                Object connection = spec.getConnectionToAssociate();
-                ManagedConnection dmc
-                        = (ManagedConnection) handle.getResource();
-                dmc.associateConnection(connection);
+                Object connection = resourceSpec.getConnectionToAssociate();
+                ManagedConnection managedConnection = (ManagedConnection) resourceHandle.getResource();
+                managedConnection.associateConnection(connection);
             } catch (ResourceException e) {
-                putbackDirectToPool(handle, spec.getPoolInfo());
-                PoolingException pe = new PoolingException(
-                        e.getMessage());
-                pe.initCause(e);
-                throw pe;
+                putbackDirectToPool(resourceHandle, resourceSpec.getPoolInfo());
+
+                throw new PoolingException(e.getMessage(), e);
             }
         }
 
-        //If the ResourceAdapter does not support lazy enlistment
-        //we cannot either
-        if (!handle.supportsLazyEnlistment()) {
-            spec.setLazyEnlistable(false);
+        // If the ResourceAdapter does not support lazy enlistment we cannot either
+        if (!resourceHandle.supportsLazyEnlistment()) {
+            resourceSpec.setLazyEnlistable(false);
         }
 
-        handle.setResourceSpec(spec);
+        resourceHandle.setResourceSpec(resourceSpec);
 
         try {
-            if (handle.getResourceState().isUnenlisted()) {
-                //The spec being used here is the spec with the updated
-                //lazy enlistment info
-                //Here's the real place where we care about the correct
-                //resource manager (which in turn depends upon the ResourceSpec)
-                //and that's because if lazy enlistment needs to be done
-                //we need to get the LazyEnlistableResourceManager
-                getResourceManager(spec).enlistResource(handle);
+            if (resourceHandle.getResourceState().isUnenlisted()) {
+                // The spec being used here is the spec with the updated lazy enlistment info.
+
+                // Here's the real place where we care about the correct resource manager
+                // (which in turn depends upon the ResourceSpec)
+                // and that's because if lazy enlistment needs to be done we need to get the
+                // LazyEnlistableResourceManager
+
+                getResourceManager(resourceSpec).enlistResource(resourceHandle);
             }
         } catch (Exception e) {
-            //In the rare cases where enlistResource throws exception, we
-            //should return the resource to the pool
-            putbackDirectToPool(handle, spec.getPoolInfo());
-            LOG.log(Level.WARNING, "poolmgr.err_enlisting_res_in_getconn", spec.getPoolInfo());
-            LOG.fine("rm.enlistResource threw Exception. Returning resource to pool");
-            //and rethrow the exception
-            throw new PoolingException(e);
+            // In the rare cases where enlistResource throws exception, we should return the resource to the pool
+            putbackDirectToPool(resourceHandle, resourceSpec.getPoolInfo());
 
+            LOG.log(WARNING, "poolmgr.err_enlisting_res_in_getconn", resourceSpec.getPoolInfo());
+            LOG.fine("rm.enlistResource threw Exception. Returning resource to pool");
+
+            // and rethrow the exception
+            throw new PoolingException(e);
         }
 
-        return handle.getUserConnection();
+        return resourceHandle.getUserConnection();
     }
 
     @Override
-    public void putbackDirectToPool(ResourceHandle h, PoolInfo poolInfo) {
-        // notify pool
+    public void putbackDirectToPool(ResourceHandle resourceHandle, PoolInfo poolInfo) {
+        // Notify pool
         if (poolInfo != null) {
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
-                pool.resourceClosed(h);
+                pool.resourceClosed(resourceHandle);
             }
         }
     }
 
     @Override
-    public ResourceHandle getResourceFromPool(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info,
-                                              Transaction tran) throws PoolingException, RetryableUnavailableException {
-        ResourcePool pool = getPool(spec.getPoolInfo());
+    public ResourceHandle getResourceFromPool(ResourceSpec resourceSpec, ResourceAllocator resourceAllocator, ClientSecurityInfo info, Transaction transaction) throws PoolingException, RetryableUnavailableException {
+
         // pool.getResource() has been modified to:
-        //      - be able to create new resource if needed
-        //      - block the caller until a resource is acquired or
-        //              the max-wait-time expires
-        return pool.getResource(spec, alloc, tran);
+        // - be able to create new resource if needed
+        // - block the caller until a resource is acquired or
+        // the max-wait-time expires
+
+        return getPool(resourceSpec.getPoolInfo()).getResource(resourceSpec, resourceAllocator, transaction);
     }
 
     /**
@@ -235,115 +230,108 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     @Override
     public boolean switchOnMatching(PoolInfo poolInfo) {
         ResourcePool pool = getPool(poolInfo);
-
-        if (pool != null) {
-            pool.switchOnMatching();
-            return true;
-        } else {
+        if (pool == null) {
             return false;
         }
-    }
 
+        pool.switchOnMatching();
 
-/*    private ConcurrentHashMap<PoolInfo, ResourcePool> getPoolTable() {
-        return poolTable;
+        return true;
     }
-*/
 
     private void addPool(ResourcePool pool) {
-        if (LOG.isLoggable(Level.FINE)) {
+        if (LOG.isLoggable(FINE)) {
             LOG.fine("Adding pool " + pool.getPoolInfo() + "to pooltable");
         }
+
         poolTable.put(pool.getPoolStatus().getPoolInfo(), pool);
     }
 
-
-    private ResourceManager getResourceManager(ResourceSpec spec) {
-        if (spec.isNonTx()) {
+    private ResourceManager getResourceManager(ResourceSpec resourceSpec) {
+        if (resourceSpec.isNonTx()) {
             LOG.fine("Returning noTxResourceManager");
             return noTxResourceManager;
-        } else if (spec.isPM()) {
+        }
+
+        if (resourceSpec.isPM()) {
             LOG.fine("Returning sysResourceManager");
             return sysResourceManager;
-        } else if (spec.isLazyEnlistable()) {
+        }
+
+        if (resourceSpec.isLazyEnlistable()) {
             LOG.fine("Returning LazyEnlistableResourceManager");
             return lazyEnlistableResourceManager;
-        } else {
-            LOG.fine("Returning resourceManager");
-            return resourceManager;
         }
+
+        LOG.fine("Returning resourceManager");
+        return resourceManager;
     }
 
-    private void addSyncListener(Transaction tran) {
-        Synchronization sync = new SynchronizationListener(tran);
+    private void addSyncListener(Transaction transaction) {
         try {
-            tran.registerSynchronization(sync);
+            transaction.registerSynchronization(new SynchronizationListener(transaction));
         } catch (Exception ex) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Error adding syncListener : " + (ex.getMessage() != null ? ex.getMessage() : " "));
-            }
+            LOG.log(FINE, () -> "Error adding syncListener : " + (ex.getMessage() != null ? ex.getMessage() : " "));
         }
     }
 
     // called by EJB Transaction Manager
     @Override
-    public void transactionCompleted(Transaction tran, int status)
-            throws IllegalStateException {
+    public void transactionCompleted(Transaction transaction, int status) throws IllegalStateException {
+        Set<PoolInfo> pools = ((JavaEETransaction) transaction).getAllParticipatingPools();
 
-        Iterator iter = ((JavaEETransaction) tran).getAllParticipatingPools().iterator();
-        while (iter.hasNext()) {
-            ResourcePool pool = getPool((PoolInfo) iter.next());
-            if (LOG.isLoggable(Level.FINE)) {
+        for (PoolInfo poolInfo : pools) {
+            ResourcePool pool = getPool(poolInfo);
+            if (LOG.isLoggable(FINE)) {
                 LOG.fine("calling transactionCompleted on " + pool.getPoolInfo());
             }
-            pool.transactionCompleted(tran, status);
+
+            pool.transactionCompleted(transaction, status);
         }
     }
 
     @Override
-    public void resourceEnlisted(Transaction tran, com.sun.appserv.connectors.internal.api.ResourceHandle h)
-            throws IllegalStateException {
-        ResourceHandle res = (ResourceHandle) h;
+    public void resourceEnlisted(Transaction transaction, com.sun.appserv.connectors.internal.api.ResourceHandle internalHandle) throws IllegalStateException {
+        ResourceHandle resourceHandle = (ResourceHandle) internalHandle;
 
-        PoolInfo poolInfo = res.getResourceSpec().getPoolInfo();
+        PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
         try {
-            JavaEETransaction j2eeTran = (JavaEETransaction) tran;
-            if (poolInfo != null && j2eeTran.getResources(poolInfo) == null) {
-                addSyncListener(tran);
+            JavaEETransaction javaEETransaction = (JavaEETransaction) transaction;
+            if (poolInfo != null && javaEETransaction.getResources(poolInfo) == null) {
+                addSyncListener(transaction);
             }
         } catch (ClassCastException e) {
-            addSyncListener(tran);
+            addSyncListener(transaction);
         }
+
         if (poolInfo != null) {
             ResourcePool pool = getPool(poolInfo);
             if (pool != null) {
-                pool.resourceEnlisted(tran, res);
+                pool.resourceEnlisted(transaction, resourceHandle);
             }
         }
     }
 
     /**
-     * This method gets called by the LazyEnlistableConnectionManagerImpl when
-     * a connection needs enlistment, i.e on use of a Statement etc.
+     * This method gets called by the LazyEnlistableConnectionManagerImpl when a connection needs enlistment, i.e on use of
+     * a Statement etc.
      */
     @Override
     public void lazyEnlist(ManagedConnection mc) throws ResourceException {
         lazyEnlistableResourceManager.lazyEnlist(mc);
     }
 
-
     private ConnectorRuntime getConnectorRuntime() {
-        if(runtime == null){
+        if (runtime == null) {
             runtime = connectorRuntimeProvider.get();
         }
         return runtime;
     }
 
     @Override
-    public void registerResource(com.sun.appserv.connectors.internal.api.ResourceHandle handle) throws PoolingException {
-        ResourceHandle h = (ResourceHandle)handle;
-        ResourceManager rm = getResourceManager(h.getResourceSpec());
-        rm.registerResource(h);
+    public void registerResource(com.sun.appserv.connectors.internal.api.ResourceHandle internalHandle) throws PoolingException {
+        ResourceHandle resourceHandle = (ResourceHandle) internalHandle;
+        getResourceManager(resourceHandle.getResourceSpec()).registerResource(resourceHandle);
     }
 
     @Override
@@ -357,23 +345,20 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     }
 
     @Override
-    public void unregisterResource(com.sun.appserv.connectors.internal.api.ResourceHandle resource, int xaresFlag) {
-        ResourceHandle h = (ResourceHandle)resource;
-        ResourceManager rm = getResourceManager(h.getResourceSpec());
-        rm.unregisterResource(h, xaresFlag);
+    public void unregisterResource(com.sun.appserv.connectors.internal.api.ResourceHandle internalResource, int xaresFlag) {
+        ResourceHandle resourceHandle = (ResourceHandle) internalResource;
+        getResourceManager(resourceHandle.getResourceSpec()).unregisterResource(resourceHandle, xaresFlag);
     }
 
     @Override
     public void resourceClosed(ResourceHandle resource) {
-        ResourceManager rm = getResourceManager(resource.getResourceSpec());
-        rm.delistResource(resource, XAResource.TMSUCCESS);
+        getResourceManager(resource.getResourceSpec()).delistResource(resource, TMSUCCESS);
         putbackResourceToPool(resource, false);
     }
 
     @Override
     public void badResourceClosed(ResourceHandle resource) {
-        ResourceManager rm = getResourceManager(resource.getResourceSpec());
-        rm.delistResource(resource, XAResource.TMSUCCESS);
+        getResourceManager(resource.getResourceSpec()).delistResource(resource, TMSUCCESS);
         putbackBadResourceToPool(resource);
     }
 
@@ -384,52 +369,48 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     @Override
     public void resourceAbortOccurred(ResourceHandle resource) {
-        ResourceManager rm = getResourceManager(resource.getResourceSpec());
-        rm.delistResource(resource, XAResource.TMSUCCESS);
+        getResourceManager(resource.getResourceSpec()).delistResource(resource, TMSUCCESS);
         putbackResourceToPool(resource, true);
     }
 
     @Override
-    public void putbackBadResourceToPool(ResourceHandle h) {
-
-        // notify pool
-        PoolInfo poolInfo = h.getResourceSpec().getPoolInfo();
+    public void putbackBadResourceToPool(ResourceHandle resourceHandle) {
+        // Notify pool
+        PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
         if (poolInfo != null) {
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
                 synchronized (pool) {
-                    pool.resourceClosed(h);
-                    h.setConnectionErrorOccurred();
-                    pool.resourceErrorOccurred(h);
+                    pool.resourceClosed(resourceHandle);
+                    resourceHandle.setConnectionErrorOccurred();
+                    pool.resourceErrorOccurred(resourceHandle);
                 }
             }
         }
     }
 
     @Override
-    public void putbackResourceToPool(ResourceHandle h,
-                                      boolean errorOccurred) {
-
-        // notify pool
-        PoolInfo poolInfo = h.getResourceSpec().getPoolInfo();
+    public void putbackResourceToPool(ResourceHandle resourceHandle, boolean errorOccurred) {
+        // Notify pool
+        PoolInfo poolInfo = resourceHandle.getResourceSpec().getPoolInfo();
         if (poolInfo != null) {
             ResourcePool pool = poolTable.get(poolInfo);
             if (pool != null) {
                 if (errorOccurred) {
-                    pool.resourceErrorOccurred(h);
+                    pool.resourceErrorOccurred(resourceHandle);
                 } else {
-                    pool.resourceClosed(h);
+                    pool.resourceClosed(resourceHandle);
                 }
             }
         }
     }
-
 
     @Override
     public ResourcePool getPool(PoolInfo poolInfo) {
         if (poolInfo == null) {
             return null;
         }
+
         return poolTable.get(poolInfo);
     }
 
@@ -440,26 +421,25 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      */
     @Override
     public void killPool(PoolInfo poolInfo) {
-
-        //empty the pool
-        //and remove from poolTable
+        // Empty the pool and remove from poolTable
         ResourcePool pool = poolTable.get(poolInfo);
         if (pool != null) {
             pool.cancelResizerTask();
             pool.emptyPool();
-            if (LOG.isLoggable(Level.FINE)) {
+            if (LOG.isLoggable(FINE)) {
                 LOG.fine("Removing pool " + pool + " from pooltable");
             }
+
             poolTable.remove(poolInfo);
-            if (listener != null){
+            if (listener != null) {
                 listener.poolDestroyed(poolInfo);
             }
 
-            //notify mcf-destroy
-            ManagedConnectionFactory mcf = ConnectorRegistry.getInstance().getManagedConnectionFactory(poolInfo);
-            if(mcf != null){
-                if(mcf instanceof MCFLifecycleListener){
-                    ((MCFLifecycleListener)mcf).mcfDestroyed();
+            // Notify mcf-destroy
+            ManagedConnectionFactory managedConnectionFactory = ConnectorRegistry.getInstance().getManagedConnectionFactory(poolInfo);
+            if (managedConnectionFactory != null) {
+                if (managedConnectionFactory instanceof MCFLifecycleListener) {
+                    ((MCFLifecycleListener) managedConnectionFactory).mcfDestroyed();
                 }
             }
         }
@@ -467,111 +447,101 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     @Override
     public void killFreeConnectionsInPools() {
-           Iterator pools = poolTable.values().iterator();
-           LOG.fine("Killing all free connections in pools");
-           while (pools.hasNext()) {
-               ResourcePool pool = (ResourcePool) pools.next();
-               if (pool != null) {
-                   PoolInfo poolInfo = pool.getPoolStatus().getPoolInfo();
-                   try {
-                       if (poolInfo != null) {
-                           ResourcePool poolToKill = poolTable.get(poolInfo);
-                           if (poolToKill != null) {
-                               pool.emptyFreeConnectionsInPool();
-                           }
-                           if (LOG.isLoggable(Level.FINE)){
-                               LOG.fine("Now killing free connections in pool : " + poolInfo);
-                           }
-                       }
-                   } catch (Exception e) {
-                       if (LOG.isLoggable(Level.FINE)) {
-                           LOG.fine("Error killing pool : " + poolInfo + " :: "
-                               + (e.getMessage() == null ? " " : e.getMessage()));
-                       }
-                   }
-               }
-           }
-       }
+        LOG.fine("Killing all free connections in pools");
 
-    @Override
-    public ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName) {
-        Set descriptors = getConnectorRuntime().getResourceReferenceDescriptor();
-        List matchingRefs = new ArrayList();
+        for (ResourcePool pool : poolTable.values()) {
+            if (pool != null) {
+                PoolInfo poolInfo = pool.getPoolStatus().getPoolInfo();
+                try {
+                    if (poolInfo != null) {
+                        ResourcePool poolToKill = poolTable.get(poolInfo);
+                        if (poolToKill != null) {
+                            pool.emptyFreeConnectionsInPool();
+                        }
 
-        if (descriptors != null) {
-            for (Object descriptor : descriptors) {
-                ResourceReferenceDescriptor ref =
-                        (ResourceReferenceDescriptor) descriptor;
-                String name = ref.getJndiName();
-                if (jndiName.equals(name)) {
-                     matchingRefs.add(ref);
-                }
-            }
-        }
-        if(matchingRefs.size()==1){
-            return (ResourceReferenceDescriptor)matchingRefs.get(0);
-        }else if(matchingRefs.size() > 1){
-            Iterator it = matchingRefs.iterator();
-            while(it.hasNext()){
-                ResourceReferenceDescriptor rrd = (ResourceReferenceDescriptor)it.next();
-                String refName = rrd.getName();
-                if(refName != null && logicalName != null){
-                    refName = getJavaName(refName);
-                    if(refName.equals(getJavaName(logicalName))){
-                        return rrd;
+                        if (LOG.isLoggable(FINE)) {
+                            LOG.fine("Now killing free connections in pool : " + poolInfo);
+                        }
+                    }
+                } catch (Exception e) {
+                    if (LOG.isLoggable(FINE)) {
+                        LOG.fine("Error killing pool : " + poolInfo + " :: " + (e.getMessage() == null ? " " : e.getMessage()));
                     }
                 }
             }
         }
+    }
+
+    @Override
+    public ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName) {
+        Set descriptors = getConnectorRuntime().getResourceReferenceDescriptor();
+        List<ResourceReferenceDescriptor> matchingRefs = new ArrayList<>();
+
+        if (descriptors != null) {
+            for (Object descriptor : descriptors) {
+                ResourceReferenceDescriptor resourceReferenceDescriptor = (ResourceReferenceDescriptor) descriptor;
+                String name = resourceReferenceDescriptor.getJndiName();
+                if (jndiName.equals(name)) {
+                    matchingRefs.add(resourceReferenceDescriptor);
+                }
+            }
+        }
+
+        if (matchingRefs.size() == 1) {
+            return matchingRefs.get(0);
+        }
+
+        if (matchingRefs.size() > 1) {
+            for (ResourceReferenceDescriptor resourceReferenceDescriptor : matchingRefs) {
+                String refName = resourceReferenceDescriptor.getName();
+                if (refName != null && logicalName != null) {
+                    refName = getJavaName(refName);
+                    if (refName.equals(getJavaName(logicalName))) {
+                        return resourceReferenceDescriptor;
+                    }
+                }
+            }
+        }
+
         return null;
     }
 
-    private static String getJavaName(String name){
-        if(name == null || name.startsWith("java:")){
+    private static String getJavaName(String name) {
+        if (name == null || name.startsWith("java:")) {
             return name;
-        }else {
-            //by default, scope is "comp"
-            return "java:comp/env/" + name;
         }
+
+        // by default, scope is "comp"
+        return "java:comp/env/" + name;
     }
 
     @Override
-    public void beforePreInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv,
-                                ComponentInvocation newInv) throws InvocationException {
-        //no-op
+    public void beforePreInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv) throws InvocationException {
+        // no-op
     }
 
     @Override
-    public void afterPreInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv,
-                               ComponentInvocation curInv) throws InvocationException {
-        //no-op
+    public void afterPreInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        // no-op
     }
 
     @Override
-    public void beforePostInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv,
-                                 ComponentInvocation curInv) throws InvocationException {
-        //no-op
+    public void beforePostInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        // no-op
     }
 
     /*
-    * Called by the InvocationManager at methodEnd. This method
-    * will disassociate ManagedConnection instances from Connection
-    * handles if the ResourceAdapter supports that.
-    */
+     * Called by the InvocationManager at methodEnd. This method will disassociate ManagedConnection instances from
+     * Connection handles if the ResourceAdapter supports that.
+     */
     @Override
-    public void afterPostInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv,
-                                ComponentInvocation curInv) throws InvocationException {
+    public void afterPostInvoke(ComponentInvocation.ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
         postInvoke(curInv);
     }
 
-    private void postInvoke(ComponentInvocation curInv){
-
+    private void postInvoke(ComponentInvocation curInv) {
         ComponentInvocation invToUse = curInv;
-/*
-        if(invToUse == null){
-            invToUse = getConnectorRuntime().getInvocationManager().getCurrentInvocation();
-        }
-*/
+
         if (invToUse == null) {
             return;
         }
@@ -587,58 +557,49 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     /**
      * If the connections associated with the component are lazily-associatable, dissociate them.
+     *
      * @param comp Component that acquired connections
      * @param invToUse component invocation
      */
     private void handleLazilyAssociatedConnectionPools(Object comp, ComponentInvocation invToUse) {
-        JavaEETransactionManager tm = getConnectorRuntime().getTransactionManager();
-        List<ResourceHandle> list = tm.getExistingResourceList(comp, invToUse);
-        if (list == null) {
-            //For invocations of asadmin the ComponentInvocation does not
-            //have any resources and hence the existingResourcesList is null
-            return;
-        }
+        JavaEETransactionManager jJavaEETransactionManager = getConnectorRuntime().getTransactionManager();
+        List<ResourceHandle> list = jJavaEETransactionManager.getExistingResourceList(comp, invToUse);
 
-        if (list.isEmpty()) {
+        if ((list == null) || list.isEmpty()) {
             return;
         }
 
         ResourceHandle[] handles = list.toArray(ResourceHandle[]::new);
-        for (ResourceHandle h : handles) {
+        for (ResourceHandle resourceHandle : handles) {
 
-            if(h==null) {
-                LOG.log(Level.WARNING, "lazy_association.lazy_association_resource_handle");
-            }
-            else {
-                ResourceSpec spec = h.getResourceSpec();
-                if(spec == null) {
-                    LOG.log(Level.WARNING, "lazy_association.lazy_association_resource_spec");
-                } else {
-                    if (spec.isLazyAssociatable()) {
-                        //In this case we are assured that the managedConnection is
-                        //of type DissociatableManagedConnection
-                        if(h.getResource()!=null) {
-                            jakarta.resource.spi.DissociatableManagedConnection mc =
-                                    (jakarta.resource.spi.DissociatableManagedConnection) h.getResource();
-                            if (h.isEnlisted()) {
-                                getResourceManager(spec).delistResource(
-                                        h, XAResource.TMSUCCESS);
-                            }
-                            try {
-                                mc.dissociateConnections();
-                            } catch (ResourceException re) {
-                                InvocationException ie = new InvocationException(
-                                        re.getMessage());
-                                ie.initCause(re);
-                                throw ie;
-                            } finally {
-                                if (h.getResourceState().isBusy()) {
-                                    putbackDirectToPool(h, spec.getPoolInfo());
-                                }
-                            }
-                        } else {
-                            LOG.log(Level.WARNING, "lazy_association.lazy_association_resource");
+            if (resourceHandle == null) {
+                LOG.log(WARNING, "lazy_association.lazy_association_resource_handle");
+            } else {
+                ResourceSpec spec = resourceHandle.getResourceSpec();
+                if (spec == null) {
+                    LOG.log(WARNING, "lazy_association.lazy_association_resource_spec");
+                } else if (spec.isLazyAssociatable()) {
+                    // In this case we are assured that the managedConnection is
+                    // of type DissociatableManagedConnection
+                    if (resourceHandle.getResource() != null) {
+                        DissociatableManagedConnection managedConnection = (DissociatableManagedConnection)
+                            resourceHandle.getResource();
+
+                        if (resourceHandle.isEnlisted()) {
+                            getResourceManager(spec).delistResource(resourceHandle, TMSUCCESS);
                         }
+
+                        try {
+                            managedConnection.dissociateConnections();
+                        } catch (ResourceException re) {
+                            throw new InvocationException(re.getMessage(), re);
+                        } finally {
+                            if (resourceHandle.getResourceState().isBusy()) {
+                                putbackDirectToPool(resourceHandle, spec.getPoolInfo());
+                            }
+                        }
+                    } else {
+                        LOG.log(WARNING, "lazy_association.lazy_association_resource");
                     }
                 }
             }
@@ -647,20 +608,18 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
 
     class SynchronizationListener implements Synchronization {
 
-        private final Transaction tran;
+        private final Transaction transaction;
 
-        SynchronizationListener(Transaction tran) {
-            this.tran = tran;
+        SynchronizationListener(Transaction transaction) {
+            this.transaction = transaction;
         }
 
         @Override
         public void afterCompletion(int status) {
             try {
-                transactionCompleted(tran, status);
+                transactionCompleted(transaction, status);
             } catch (Exception ex) {
-                if(LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Exception in afterCompletion : " + (ex.getMessage() == null ? " " : ex.getMessage()));
-                }
+                LOG.log(FINE, () -> "Exception in afterCompletion : " + (ex.getMessage() == null ? " " : ex.getMessage()));
             }
         }
 
@@ -671,47 +630,48 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     }
 
     @Override
-    public void reconfigPoolProperties(ConnectorConnectionPool ccp) throws PoolingException {
-        PoolInfo poolInfo = ccp.getPoolInfo();
-        ResourcePool pool = getPool( poolInfo );
-        if (pool != null ) {
-            pool.reconfigurePool( ccp );
+    public void reconfigPoolProperties(ConnectorConnectionPool connectorConnectionPool) throws PoolingException {
+        ResourcePool pool = getPool(connectorConnectionPool.getPoolInfo());
+        if (pool != null) {
+            pool.reconfigurePool(connectorConnectionPool);
         }
     }
 
     /**
-     * Flush Connection pool by reinitializing the connections
-     * established in the pool.
+     * Flush Connection pool by reinitializing the connections established in the pool.
+     *
      * @param poolInfo
      * @throws com.sun.appserv.connectors.internal.api.PoolingException
      */
     @Override
     public boolean flushConnectionPool(PoolInfo poolInfo) throws PoolingException {
         boolean result = false;
-        ResourcePool pool = getPool( poolInfo );
-        if(pool != null) {
+
+        ResourcePool pool = getPool(poolInfo);
+        if (pool != null) {
             result = pool.flushConnectionPool();
         } else {
-            LOG.log(Level.WARNING, "poolmgr.flush_noop_pool_not_initialized", poolInfo);
-            String exString = MESSAGES.getString("poolmgr.flush_noop_pool_not_initialized",
-                    poolInfo.toString());
-            throw new PoolingException(exString);
+            LOG.log(WARNING, "poolmgr.flush_noop_pool_not_initialized", poolInfo);
+            throw new PoolingException(MESSAGES.getString("poolmgr.flush_noop_pool_not_initialized", poolInfo.toString()));
         }
+
         return result;
     }
 
     /**
      * Get connection pool status.
+     *
      * @param poolInfo
      * @return
      */
     @Override
     public PoolStatus getPoolStatus(PoolInfo poolInfo) {
         ResourcePool pool = poolTable.get(poolInfo);
-        if(pool != null) {
+        if (pool != null) {
             return pool.getPoolStatus();
         }
-        //TODO log exception
+
+        // TODO log exception
         return null;
     }
 }

@@ -17,16 +17,16 @@
 
 package com.sun.enterprise.resource.rm;
 
-import com.sun.enterprise.resource.ResourceHandle;
+import java.util.logging.Logger;
+
 import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.logging.LogDomains;
 
 import jakarta.transaction.Transaction;
-import java.util.logging.Logger;
 
 /**
- * Resource Manager for a resource request from a component
- * that is not to be associated with a transaction.
+ * Resource Manager for a resource request from a component that is not to be associated with a transaction.
  *
  * @author Aditya Gore
  */
@@ -55,8 +55,7 @@ public class NoTxResourceManagerImpl implements ResourceManager {
     }
 
     /**
-     * Enlist the <code>ResourceHandle</code> in the transaction
-     * This implementation of the method is expected to be a no-op
+     * Enlist the <code>ResourceHandle</code> in the transaction This implementation of the method is expected to be a no-op
      *
      * @param h <code>ResourceHandle</code> object
      * @throws PoolingException when unable to enlist resource
@@ -67,21 +66,20 @@ public class NoTxResourceManagerImpl implements ResourceManager {
     }
 
     /**
-     * Register the <code>ResourceHandle</code> in the transaction
-     * This implementation of the method is expected to be a no-op
+     * Register the <code>ResourceHandle</code> in the transaction This implementation of the method is expected to be a
+     * no-op
      *
      * @param handle <code>ResourceHandle</code> object
      * @throws PoolingException when unable to register resource
      */
     @Override
-    public void registerResource(ResourceHandle handle)
-            throws PoolingException {
+    public void registerResource(ResourceHandle handle) throws PoolingException {
         LOG.fine("NoTxResourceManagerImpl :: registerResource called");
     }
 
     /**
-     * Get's the component's transaction and marks it for rolling back.
-     * This implementation of the method is expected to be a no-op
+     * Get's the component's transaction and marks it for rolling back. This implementation of the method is expected to be
+     * a no-op
      */
     @Override
     public void rollBackTransaction() {
@@ -89,12 +87,11 @@ public class NoTxResourceManagerImpl implements ResourceManager {
     }
 
     /**
-     * delist the <code>ResourceHandle</code> from the transaction
-     * This implementation of the method is expected to be a no-op
+     * delist the <code>ResourceHandle</code> from the transaction This implementation of the method is expected to be a
+     * no-op
      *
-     * @param resource  <code>ResourceHandle</code> object
-     * @param xaresFlag flag indicating transaction success. This can
-     *                  be XAResource.TMSUCCESS or XAResource.TMFAIL
+     * @param resource <code>ResourceHandle</code> object
+     * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
     @Override
     public void delistResource(ResourceHandle resource, int xaresFlag) {
@@ -102,12 +99,11 @@ public class NoTxResourceManagerImpl implements ResourceManager {
     }
 
     /**
-     * Unregister the <code>ResourceHandle</code> from the transaction
-     * This implementation of the method is expected to be a no-op
+     * Unregister the <code>ResourceHandle</code> from the transaction This implementation of the method is expected to be a
+     * no-op
      *
-     * @param resource  <code>ResourceHandle</code> object
-     * @param xaresFlag flag indicating transaction success. This can
-     *                  be XAResource.TMSUCCESS or XAResource.TMFAIL
+     * @param resource <code>ResourceHandle</code> object
+     * @param xaresFlag flag indicating transaction success. This can be XAResource.TMSUCCESS or XAResource.TMFAIL
      */
     @Override
     public void unregisterResource(ResourceHandle resource, int xaresFlag) {

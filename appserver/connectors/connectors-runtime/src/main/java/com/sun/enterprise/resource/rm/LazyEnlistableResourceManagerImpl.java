@@ -17,10 +17,18 @@
 
 package com.sun.enterprise.resource.rm;
 
+import static com.sun.logging.LogDomains.RSR_LOGGER;
+import static java.util.logging.Level.WARNING;
+
+import java.util.List;
+import java.util.ListIterator;
+import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.logging.LogDomains;
 
@@ -28,15 +36,6 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
-
-import java.util.List;
-import java.util.ListIterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-
-import static com.sun.logging.LogDomains.RSR_LOGGER;
 
 /**
  * This class is used for lazy enlistment of a resource
@@ -46,15 +45,14 @@ import static com.sun.logging.LogDomains.RSR_LOGGER;
 public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
     private static final Logger LOG = LogDomains.getLogger(LazyEnlistableResourceManagerImpl.class, RSR_LOGGER);
 
-
     @Override
-    protected void enlist( JavaEETransactionManager tm, Transaction tran,
-        ResourceHandle h ){
-        //do nothing
+    protected void enlist(JavaEETransactionManager tm, Transaction transaction, ResourceHandle h) {
+        // do nothing
     }
 
     /**
      * Overridden to suspend lazyenlistment.
+     *
      * @param handle
      * @throws PoolingException
      */
@@ -64,77 +62,74 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         super.registerResource(handle);
     }
 
-
     /**
-     * This is called by the PoolManager (in turn by the LazyEnlistableConnectionManager)
-     * when a lazy enlistment is sought.
+     * This is called by the PoolManager (in turn by the LazyEnlistableConnectionManager) when a lazy enlistment is sought.
      *
-     * @param mc ManagedConnection
+     * @param managedConnection ManagedConnection
      * @throws ResourceException
      */
-    public void lazyEnlist(ManagedConnection mc) throws ResourceException {
+    public void lazyEnlist(ManagedConnection managedConnection) throws ResourceException {
         LOG.fine("Entering lazyEnlist");
 
-        //J2EETransactionManager tm = Switch.getSwitch().getTransactionManager();
-        JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
-        Transaction tran = null;
+        JavaEETransactionManager transactionManager = ConnectorRuntime.getRuntime().getTransactionManager();
+        Transaction transaction = null;
 
         try {
-            tran = tm.getTransaction();
-            if (tran == null) {
+            transaction = transactionManager.getTransaction();
+            if (transaction == null) {
                 LOG.fine(" Transaction null - not enlisting ");
                 return;
             }
         } catch (SystemException se) {
-            ResourceException re = new ResourceException(se.getMessage());
-            re.initCause(se);
-            throw re;
+            throw new ResourceException(se.getMessage(), se);
         }
 
-        //List invList = Switch.getSwitch().getInvocationManager().getAllInvocations();
-        List invList = ConnectorRuntime.getRuntime().getInvocationManager().getAllInvocations();
+        List<? extends ComponentInvocation> invList = ConnectorRuntime.getRuntime().getInvocationManager().getAllInvocations();
 
-        ResourceHandle h = null;
+        ResourceHandle resourceHandle = null;
         for (int j = invList.size(); j > 0; j--) {
-            ComponentInvocation inv = (ComponentInvocation) invList.get(j - 1);
-            Object comp = inv.getInstance();
+            ComponentInvocation componentInvocation = invList.get(j - 1);
+            Object comp = componentInvocation.getInstance();
 
-            List l = tm.getResourceList(comp, inv);
+            List l = transactionManager.getResourceList(comp, componentInvocation);
 
             ListIterator it = l.listIterator();
             while (it.hasNext()) {
                 ResourceHandle hand = (ResourceHandle) it.next();
                 ManagedConnection toEnlist = (ManagedConnection) hand.getResource();
-                if (mc.equals(toEnlist)) {
-                    h = hand;
+                if (managedConnection.equals(toEnlist)) {
+                    resourceHandle = hand;
                     break;
                 }
             }
         }
 
-        //NOTE: Notice that here we are always assuming that the connection we
-        //are trying to enlist was acquired in this component only. This
-        //might be inadequate in situations where component A acquires a connection
-        //and passes it on to a method of component B, and the lazyEnlist is
-        //triggered in B
-        //At this point however, we will only support the straight and narrow
-        //case where a connection is acquired and then used in the same component.
-        //The other case might or might not work
-        if (h != null && h.getResourceState().isUnenlisted()) {
+        // NOTE: Notice that here we are always assuming that the connection we
+        // are trying to enlist was acquired in this component only. This
+        // might be inadequate in situations where component A acquires a connection
+        // and passes it on to a method of component B, and the lazyEnlist is
+        // triggered in B
+        // At this point however, we will only support the straight and narrow
+        // case where a connection is acquired and then used in the same component.
+        // The other case might or might not work
+        if (resourceHandle != null && resourceHandle.getResourceState().isUnenlisted()) {
             try {
                 // Enable the suspended lazyenlistment so as to enlist the resource.
-                h.setEnlistmentSuspended(false);
-                tm.enlistResource(tran, h);
+                resourceHandle.setEnlistmentSuspended(false);
+                transactionManager.enlistResource(transaction, resourceHandle);
+
                 // Suspend it back
-                h.setEnlistmentSuspended(true);
+                resourceHandle.setEnlistmentSuspended(true);
             } catch (Exception e) {
                 // In the rare cases where enlistResource throws exception, we
                 // should return the resource to the pool
-                PoolManager mgr = ConnectorRuntime.getRuntime().getPoolManager();
-                mgr.putbackDirectToPool(h, h.getResourceSpec().getPoolInfo());
-                LOG.log(Level.WARNING, "poolmgr.err_enlisting_res_in_getconn", h.getResourceSpec().getPoolInfo());
+                ConnectorRuntime.getRuntime().getPoolManager().putbackDirectToPool(resourceHandle,
+                        resourceHandle.getResourceSpec().getPoolInfo());
+
+                LOG.log(WARNING, "poolmgr.err_enlisting_res_in_getconn", resourceHandle.getResourceSpec().getPoolInfo());
                 LOG.fine("rm.enlistResource threw Exception. Returning resource to pool");
-                //and rethrow the exception
+
+                // And rethrow the exception
                 throw new ResourceException(e);
             }
         }

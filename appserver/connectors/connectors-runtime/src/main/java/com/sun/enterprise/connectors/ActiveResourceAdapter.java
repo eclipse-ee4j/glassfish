@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,13 @@
 
 package com.sun.enterprise.connectors;
 
+import org.jvnet.hk2.annotations.Contract;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ResourceAdapter;
-
-import org.jvnet.hk2.annotations.Contract;
 
 
 /**
@@ -44,7 +45,7 @@ public interface ActiveResourceAdapter {
      * @param loader classloader for the RAR
      * @throws ConnectorRuntimeException when unable to initialize the runtime RA
      */
-    public void init(ResourceAdapter ra, ConnectorDescriptor cd, String moduleName, ClassLoader loader)
+    void init(ResourceAdapter ra, ConnectorDescriptor cd, String moduleName, ClassLoader loader)
             throws ConnectorRuntimeException;
 
     /**
@@ -53,19 +54,19 @@ public interface ActiveResourceAdapter {
      * @throws ConnectorRuntimeException This exception is thrown if the
      *                                   setup/initialization fails.
      */
-    public void setup() throws ConnectorRuntimeException;
+    void setup() throws ConnectorRuntimeException;
 
     /**
      * uninitializes the resource adapter.
      */
-    public void destroy();
+    void destroy();
 
     /**
      * Returns the Connector descriptor which represents/holds ra.xml
      *
      * @return ConnectorDescriptor Representation of ra.xml.
      */
-    public ConnectorDescriptor getDescriptor();
+    ConnectorDescriptor getDescriptor();
 
     /**
      * Indicates whether a particular implementation of ActiveRA can handle the RAR in question.
@@ -73,7 +74,7 @@ public interface ActiveResourceAdapter {
      * @param moduleName resource adapter name
      * @return boolean indiating whether a ActiveRA can handle the RAR
      */
-    public boolean handles(ConnectorDescriptor desc, String moduleName);
+    boolean handles(ConnectorDescriptor desc, String moduleName);
 
     /**
      * Creates managed Connection factories corresponding to one pool.
@@ -87,7 +88,7 @@ public interface ActiveResourceAdapter {
      * @param loader Classloader used to managed connection factory class.
      * @return ManagedConnectionFactory created managed connection factories
      */
-    public ManagedConnectionFactory[] createManagedConnectionFactories
+    ManagedConnectionFactory[] createManagedConnectionFactories
             (ConnectorConnectionPool ccp, ClassLoader loader);
 
     /**
@@ -100,7 +101,7 @@ public interface ActiveResourceAdapter {
      * @return ManagedConnectionFactory created managed connection factory
      *         instance
      */
-    public ManagedConnectionFactory createManagedConnectionFactory
+    ManagedConnectionFactory createManagedConnectionFactory
             (ConnectorConnectionPool ccp, ClassLoader loader);
 
     /**
@@ -108,7 +109,7 @@ public interface ActiveResourceAdapter {
      *
      * @return <code>ClassLoader</code> object.
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
     /**
      * Returns the module Name of the RAR
@@ -116,7 +117,7 @@ public interface ActiveResourceAdapter {
      * @return A <code>String</code> representing the name of the
      *         connector module
      */
-    public String getModuleName();
+    String getModuleName();
 
     /**
      * returns the resource-adapter bean

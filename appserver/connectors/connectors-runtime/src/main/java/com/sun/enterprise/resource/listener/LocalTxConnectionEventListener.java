@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,22 @@
 
 package com.sun.enterprise.resource.listener;
 
-import com.sun.enterprise.resource.pool.PoolManager;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.resource.*;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
-import jakarta.resource.spi.*;
-import java.util.*;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.pool.PoolManager;
+
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.ManagedConnection;
 
 /**
  * @author Binod P.G
  */
 public class LocalTxConnectionEventListener extends ConnectionEventListener {
 
-    private PoolManager poolMgr;
+    private PoolManager poolManager;
 
     // connectionHandle -> ResourceHandle
     // Whenever a connection is associated with a ManagedConnection,
@@ -41,37 +45,34 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     public LocalTxConnectionEventListener(ResourceHandle resource) {
         this.resource = resource;
         this.associatedHandles = new IdentityHashMap(10);
-        this.poolMgr = ConnectorRuntime.getRuntime().getPoolManager();
+        this.poolManager = ConnectorRuntime.getRuntime().getPoolManager();
     }
 
+    @Override
     public void connectionClosed(ConnectionEvent evt) {
         Object connectionHandle = evt.getConnectionHandle();
         ResourceHandle handle = resource;
         if (associatedHandles.containsKey(connectionHandle)) {
             handle = (ResourceHandle) associatedHandles.get(connectionHandle);
         }
-        poolMgr.resourceClosed(handle);
+        poolManager.resourceClosed(handle);
     }
 
+    @Override
     public void connectionErrorOccurred(ConnectionEvent evt) {
         resource.setConnectionErrorOccurred();
         ManagedConnection mc = (ManagedConnection) evt.getSource();
         mc.removeConnectionEventListener(this);
-        poolMgr.resourceErrorOccurred( resource );
-/*
-        try {
-            mc.destroy();
-        } catch (Exception ex) {
-            // ignore exception
-        }
-*/
+        poolManager.resourceErrorOccurred(resource);
     }
 
     /**
      * Resource adapters will signal that the connection being closed is bad.
+     *
      * @param evt ConnectionEvent
      */
-    public void badConnectionClosed(ConnectionEvent evt){
+    @Override
+    public void badConnectionClosed(ConnectionEvent evt) {
         Object connectionHandle = evt.getConnectionHandle();
         ResourceHandle handle = resource;
         if (associatedHandles.containsKey(connectionHandle)) {
@@ -80,17 +81,20 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
         ManagedConnection mc = (ManagedConnection) evt.getSource();
         mc.removeConnectionEventListener(this);
 
-        poolMgr.badResourceClosed(handle);
+        poolManager.badResourceClosed(handle);
     }
 
+    @Override
     public void localTransactionStarted(ConnectionEvent evt) {
-            // no-op
+        // no-op
     }
 
+    @Override
     public void localTransactionCommitted(ConnectionEvent evt) {
-         // no-op
+        // no-op
     }
 
+    @Override
     public void localTransactionRolledback(ConnectionEvent evt) {
         // no-op
     }
@@ -99,13 +103,12 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
         associatedHandles.put(c, h);
     }
 
-    public ResourceHandle  removeAssociation(Object c) {
+    public ResourceHandle removeAssociation(Object c) {
         return (ResourceHandle) associatedHandles.remove(c);
     }
 
-    public Map getAssociatedHandles(){
+    public Map getAssociatedHandles() {
         return associatedHandles;
     }
 
 }
-

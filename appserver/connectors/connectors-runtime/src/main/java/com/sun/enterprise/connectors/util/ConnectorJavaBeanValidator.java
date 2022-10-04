@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,23 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.validation.*;
-import jakarta.validation.metadata.BeanDescriptor;
-import java.util.Set;
-import java.util.Iterator;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import com.sun.logging.LogDomains;
 import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.logging.LogDomains;
+
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.metadata.BeanDescriptor;
 
 @Service
 public class ConnectorJavaBeanValidator {
@@ -64,10 +70,8 @@ public class ConnectorJavaBeanValidator {
                     _logger.log(Level.SEVERE, "validation.constraints.violation",args);
                     throw cve;
                 }
-            } else {
-                if(_logger.isLoggable(Level.FINEST)){
-                   _logger.log(Level.FINEST, "No Bean Validator is available for RAR [ " + rarName + " ]");
-                }
+            } else if(_logger.isLoggable(Level.FINEST)){
+               _logger.log(Level.FINEST, "No Bean Validator is available for RAR [ " + rarName + " ]");
             }
         }
     }

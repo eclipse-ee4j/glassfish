@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,17 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
-import com.sun.logging.LogDomains;
+import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDDPOOL;
+
+import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
 import org.glassfish.connectors.config.SecurityMap;
@@ -34,18 +40,15 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.logging.LogDomains;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import java.beans.PropertyVetoException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.glassfish.deployment.common.JavaEEResourceType.*;
 
 @Service
 @ResourceDeployerInfo(JMSConnectionFactoryDefinitionDescriptor.class)
@@ -57,10 +60,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     private static Logger _logger = LogDomains.getLogger(JMSConnectionFactoryDefinitionDeployer.class, LogDomains.RSR_LOGGER);
     final static String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
 
+    @Override
     public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
+    @Override
     public void deployResource(Object resource) throws Exception {
 
         final JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor)resource;
@@ -86,6 +91,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
         if (handles(resource)) {
             if (!postApplicationDeployment) {
@@ -98,6 +104,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
                                           com.sun.enterprise.config.serverbeans.Application newApp,
                                           Resource resource,
@@ -115,10 +122,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
         return new JMSConnectionFactoryProperty(name, value);
     }
 
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
+    @Override
     public void undeployResource(Object resource) throws Exception {
 
         final JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor) resource;
@@ -141,18 +150,22 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
 
     }
 
+    @Override
     public void redeployResource(Object resource) throws Exception {
         throw new UnsupportedOperationException("redeploy() not supported for jms-connection-factory-definition type");
     }
 
+    @Override
     public void enableResource(Object resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for jms-connection-factory-definition type");
     }
 
+    @Override
     public void disableResource(Object resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for jms-connection-factory-definition type");
     }
 
+    @Override
     public boolean handles(Object resource) {
         return resource instanceof JMSConnectionFactoryDefinitionDescriptor;
     }
@@ -160,6 +173,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     /**
      * @inheritDoc
      */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
@@ -167,6 +181,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     /**
      * @inheritDoc
      */
+    @Override
     @SuppressWarnings("rawtypes")
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
@@ -178,18 +193,22 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
 
+        @Override
         public ConfigBeanProxy deepCopy(ConfigBeanProxy parent) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public ConfigBeanProxy getParent() {
             return null;
         }
 
+        @Override
         public <T extends ConfigBeanProxy> T getParent(Class<T> tClass) {
             return null;
         }
 
+        @Override
         public <T extends ConfigBeanProxy> T createChild(Class<T> tClass) throws TransactionFailure {
             return null;
         }
@@ -206,26 +225,32 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             this.value = value;
         }
 
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public void setName(String value) throws PropertyVetoException {
             this.name = value;
         }
 
+        @Override
         public String getValue() {
             return value;
         }
 
+        @Override
         public void setValue(String value) throws PropertyVetoException {
             this.value = value;
         }
 
+        @Override
         public String getDescription() {
             return description;
         }
 
+        @Override
         public void setDescription(String value) throws PropertyVetoException {
             this.description = value;
         }
@@ -245,51 +270,64 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             this.jndiName = jndiName;
         }
 
+        @Override
         public String getPoolName() {
             return poolName;
         }
 
+        @Override
         public void setPoolName(String value) throws PropertyVetoException {
             this.poolName = value;
         }
 
+        @Override
         public String getObjectType() {
             return null;
         }
 
+        @Override
         public void setObjectType(String value) throws PropertyVetoException {
         }
 
+        @Override
         public String getIdentity() {
             return jndiName;
         }
 
+        @Override
         public String getEnabled() {
             return String.valueOf(true);
         }
 
+        @Override
         public void setEnabled(String value) throws PropertyVetoException {
         }
 
+        @Override
         public String getDescription() {
             return null;
         }
 
+        @Override
         public void setDescription(String value) throws PropertyVetoException {
         }
 
+        @Override
         public List<Property> getProperty() {
             return null;
         }
 
+        @Override
         public Property getProperty(String name) {
             return null;
         }
 
+        @Override
         public String getPropertyValue(String name) {
             return null;
         }
 
+        @Override
         public String getPropertyValue(String name, String defaultValue) {
             return null;
         }
@@ -297,18 +335,22 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
         public void injectedInto(Object o) {
         }
 
+        @Override
         public String getJndiName() {
             return jndiName;
         }
 
+        @Override
         public void setJndiName(String value) throws PropertyVetoException {
             this.jndiName = value;
         }
 
+        @Override
         public String getDeploymentOrder() {
             return null;
         }
 
+        @Override
         public void setDeploymentOrder(String value) {
             //do nothing
         }
@@ -354,10 +396,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             //To change body of implemented methods use File | Settings | File Templates.
         }
 
+        @Override
         public String getIdentity() {
             return name;
         }
 
+        @Override
         public String getSteadyPoolSize() {
             int minPoolSize = desc.getMinPoolSize();
             if (minPoolSize >= 0) {
@@ -367,10 +411,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setSteadyPoolSize(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getMaxPoolSize() {
             int maxPoolSize = desc.getMaxPoolSize();
             if (maxPoolSize >= 0) {
@@ -380,10 +426,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setMaxPoolSize(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getMaxWaitTimeInMillis() {
             String maxWaitTimeInMillis = desc.getProperty(PROPERTY_PREFIX + "max-wait-time-in-millis");
             if (isValidProperty(maxWaitTimeInMillis)) {
@@ -393,10 +441,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setMaxWaitTimeInMillis(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getPoolResizeQuantity() {
             String poolResizeQuantity = desc.getProperty(PROPERTY_PREFIX + "pool-resize-quantity");
             if (isValidProperty(poolResizeQuantity)) {
@@ -406,10 +456,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setPoolResizeQuantity(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getIdleTimeoutInSeconds() {
             String idleTimeoutInSeconds = desc.getProperty(PROPERTY_PREFIX + "idle-timeout-in-seconds");
             if (isValidProperty(idleTimeoutInSeconds)) {
@@ -419,10 +471,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setIdleTimeoutInSeconds(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getIsConnectionValidationRequired() {
             String isConnectionValidationRequired = desc.getProperty(PROPERTY_PREFIX + "is-connection-validation-required");
             if (isValidProperty(isConnectionValidationRequired)) {
@@ -432,10 +486,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setIsConnectionValidationRequired(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getResourceAdapterName() {
             String resourceAdapter = desc.getResourceAdapter();
             if (isValidProperty(resourceAdapter)) {
@@ -445,10 +501,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setResourceAdapterName(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getConnectionDefinitionName() {
             String interfaceName = desc.getInterfaceName();
             if (isValidProperty(interfaceName)) {
@@ -458,10 +516,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setConnectionDefinitionName(String value)  throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getFailAllConnections() {
             String failAllConnections = desc.getProperty(PROPERTY_PREFIX + "fail-all-connections");
             if (isValidProperty(failAllConnections)) {
@@ -471,10 +531,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setFailAllConnections(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getTransactionSupport() {
             String transactionSupport = desc.getProperty(PROPERTY_PREFIX + "transaction-support");
             if (isValidProperty(transactionSupport)) {
@@ -484,10 +546,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setTransactionSupport(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getValidateAtmostOncePeriodInSeconds() {
             String validateAtmostOncePeriodInSeconds = desc.getProperty(PROPERTY_PREFIX + "validate-at-most-once-period-in-seconds");
             if (isValidProperty(validateAtmostOncePeriodInSeconds)) {
@@ -497,10 +561,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setValidateAtmostOncePeriodInSeconds(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getConnectionLeakTimeoutInSeconds() {
             String connectionLeakTimeoutInSeconds = desc.getProperty(PROPERTY_PREFIX + "connection-leak-timeout-in-seconds");
             if (isValidProperty(connectionLeakTimeoutInSeconds)) {
@@ -510,10 +576,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setConnectionLeakTimeoutInSeconds(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getConnectionLeakReclaim() {
             String connectionLeakReclaim = desc.getProperty(PROPERTY_PREFIX + "connection-leak-reclaim");
             if (isValidProperty(connectionLeakReclaim)) {
@@ -523,10 +591,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setConnectionLeakReclaim(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getConnectionCreationRetryAttempts() {
             String connectionCreationRetryAttempts = desc.getProperty(PROPERTY_PREFIX + "connection-creation-retry-attempts");
             if (isValidProperty(connectionCreationRetryAttempts)) {
@@ -536,10 +606,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setConnectionCreationRetryAttempts(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getConnectionCreationRetryIntervalInSeconds() {
             String connectionCreationRetryIntervalInSeconds = desc.getProperty(PROPERTY_PREFIX + "connection-creation-retry-interval-in-seconds");
             if (isValidProperty(connectionCreationRetryIntervalInSeconds)) {
@@ -549,10 +621,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setConnectionCreationRetryIntervalInSeconds(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getLazyConnectionEnlistment() {
             String lazyConnectionEnlistment = desc.getProperty(PROPERTY_PREFIX + "lazy-connection-enlistment");
             if (isValidProperty(lazyConnectionEnlistment)) {
@@ -562,10 +636,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setLazyConnectionEnlistment(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getLazyConnectionAssociation() {
             String lazyConnectionAssociation = desc.getProperty(PROPERTY_PREFIX + "lazy-connection-association");
             if (isValidProperty(lazyConnectionAssociation)) {
@@ -575,10 +651,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setLazyConnectionAssociation(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getAssociateWithThread() {
             String associateWithThread = desc.getProperty(PROPERTY_PREFIX + "associate-with-thread");
             if (isValidProperty(associateWithThread)) {
@@ -588,10 +666,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setAssociateWithThread(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getPooling() {
             String pooling = desc.getProperty(PROPERTY_PREFIX + "pooling");
             if (isValidProperty(pooling)) {
@@ -601,10 +681,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setPooling(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getMatchConnections() {
             String matchConnections = desc.getProperty(PROPERTY_PREFIX + "match-connections");
             if (isValidProperty(matchConnections)) {
@@ -614,10 +696,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setMatchConnections(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getMaxConnectionUsageCount() {
             String maxConnectionUsageCount = desc.getProperty(PROPERTY_PREFIX + "max-connection-usage-count");
             if (isValidProperty(maxConnectionUsageCount)) {
@@ -627,21 +711,25 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setMaxConnectionUsageCount(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getDescription() {
             return desc.getDescription();
         }
 
+        @Override
         public void setDescription(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public List<Property> getProperty() {
             Properties p = desc.getProperties();
-            List<Property> jmsConnectionFactoryProperties = new ArrayList<Property>();
+            List<Property> jmsConnectionFactoryProperties = new ArrayList<>();
 
             if (isValidProperty(desc.getUser())) {
                 JMSConnectionFactoryProperty property = convertProperty("UserName", desc.getUser());
@@ -674,15 +762,18 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             return jmsConnectionFactoryProperties;
         }
 
+        @Override
         public Property getProperty(String name) {
             String value = desc.getProperty(name);
             return new JMSConnectionFactoryProperty(name, value);
         }
 
+        @Override
         public String getPropertyValue(String name) {
             return desc.getProperty(name);
         }
 
+        @Override
         public String getPropertyValue(String name, String defaultValue) {
             String value = null;
             value = desc.getProperty(name);
@@ -697,14 +788,17 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             //do nothing
         }
 
+        @Override
         public String getName() {
             return name;
         }
 
+        @Override
         public void setName(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public String getPing() {
             String ping = desc.getProperty(PROPERTY_PREFIX + "ping");
             if (isValidProperty(ping)) {
@@ -714,18 +808,22 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
             }
         }
 
+        @Override
         public void setPing(String value) throws PropertyVetoException {
             //do nothing
         }
 
+        @Override
         public List<SecurityMap> getSecurityMap() {
-            return new ArrayList<SecurityMap>(0);
+            return new ArrayList<>(0);
         }
 
+        @Override
         public String getDeploymentOrder() {
             return null;
         }
 
+        @Override
         public void setDeploymentOrder(String value) {
             //do nothing
         }

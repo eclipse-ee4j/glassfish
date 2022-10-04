@@ -17,10 +17,10 @@
 
 package com.sun.enterprise.connectors.authentication;
 
-import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
-
 import java.util.HashMap;
 import java.util.Objects;
+
+import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
 /**
  * @author Kanwar Oberoi
@@ -35,40 +35,35 @@ public class RuntimeSecurityMap {
         this.groupMap = new HashMap<>();
     }
 
-
     @SuppressWarnings("unchecked")
     public RuntimeSecurityMap(HashMap<String, ResourcePrincipalDescriptor> userMap, HashMap<String, ResourcePrincipalDescriptor> groupMap) {
         this.userMap = (HashMap<String, ResourcePrincipalDescriptor>) userMap.clone();
         this.groupMap = (HashMap<String, ResourcePrincipalDescriptor>) groupMap.clone();
     }
 
-
     @Override
     public boolean equals(Object map) {
         if (map instanceof RuntimeSecurityMap) {
-            RuntimeSecurityMap rsm = (RuntimeSecurityMap) map;
-            return Objects.equals(userMap, rsm.userMap) && Objects.equals(groupMap, rsm.groupMap);
+            RuntimeSecurityMap runtimeSecurityMap = (RuntimeSecurityMap) map;
+            return Objects.equals(userMap, runtimeSecurityMap.userMap) && Objects.equals(groupMap, runtimeSecurityMap.groupMap);
         }
+
         return false;
     }
-
 
     @Override
     public int hashCode() {
         return Objects.hash(this.userMap, this.groupMap);
     }
 
-
     public boolean isEmpty() {
         return this.userMap.isEmpty() && this.groupMap.isEmpty();
     }
-
 
     @SuppressWarnings("unchecked")
     public HashMap<String, ResourcePrincipalDescriptor> getUserMap() {
         return (HashMap<String, ResourcePrincipalDescriptor>) this.userMap.clone();
     }
-
 
     @SuppressWarnings("unchecked")
     public HashMap<String, ResourcePrincipalDescriptor> getGroupMap() {

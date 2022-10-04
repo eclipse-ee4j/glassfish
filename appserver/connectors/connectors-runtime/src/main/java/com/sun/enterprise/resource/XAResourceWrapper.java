@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,14 @@
 
 package com.sun.enterprise.resource;
 
-import javax.transaction.xa.*;
-import java.util.logging.*;
-import com.sun.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import com.sun.logging.LogDomains;
 
 /**
  * This is class is used for debugging. It prints out
@@ -45,11 +51,13 @@ public class XAResourceWrapper implements XAResource {
            _logger = LogDomains.getLogger(XAResourceWrapper.class, LogDomains.RSR_LOGGER);
           }
 
+    @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
         print("XAResource.commit: " + xidToString(xid) + "," + onePhase);
         res.commit(xid, onePhase);
     }
 
+    @Override
     public void end(Xid xid, int flags) throws XAException {
         print("XAResource.end: " + xidToString(xid) + "," +
               flagToString(flags));
@@ -57,15 +65,18 @@ public class XAResourceWrapper implements XAResource {
     }
 
 
+    @Override
     public void forget(Xid xid) throws XAException {
         print("XAResource.forget: " + xidToString(xid));
         res.forget(xid);
     }
 
+    @Override
     public int getTransactionTimeout() throws XAException {
         return res.getTransactionTimeout();
     }
 
+    @Override
     public boolean isSameRM(XAResource xares) throws XAException {
         if (xares instanceof XAResourceWrapper) {
             XAResourceWrapper other = (XAResourceWrapper) xares;
@@ -82,6 +93,7 @@ public class XAResourceWrapper implements XAResource {
         }
     }
 
+    @Override
     public int prepare(Xid xid) throws XAException {
         print("XAResource.prepare: " + xidToString(xid));
         int result = res.prepare(xid);
@@ -89,20 +101,24 @@ public class XAResourceWrapper implements XAResource {
         return result;
     }
 
+    @Override
     public Xid[] recover(int flag) throws XAException {
         print("XAResource.recover: " + flagToString(flag));
         return res.recover(flag);
     }
 
+    @Override
     public void rollback(Xid xid) throws XAException {
         print("XAResource.rollback: " + xidToString(xid));
         res.rollback(xid);
     }
 
+    @Override
     public boolean setTransactionTimeout(int seconds) throws XAException {
         return res.setTransactionTimeout(seconds);
     }
 
+    @Override
     public void start(Xid xid, int flags) throws XAException {
         print("XAResource.start: " + xidToString(xid) + "," +
               flagToString(flags));
@@ -147,9 +163,14 @@ public class XAResourceWrapper implements XAResource {
         }
     }
 
+    @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null) return false;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
         if (obj instanceof XAResourceWrapper) {
             XAResource other = ((XAResourceWrapper) obj).res;
             return res.equals(other);
@@ -161,6 +182,7 @@ public class XAResourceWrapper implements XAResource {
         return false;
     }
 
+    @Override
     public int hashCode() {
         return res.hashCode();
     }

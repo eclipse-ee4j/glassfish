@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,30 @@
 
 package com.sun.enterprise.connectors;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.enterprise.connectors.module.ConnectorApplication;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.logging.LogDomains;
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.validation.Validator;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.*;
 
 
 /**
@@ -89,10 +100,10 @@ public class ConnectorRegistry {
         resourceAdapterConfig = Collections.synchronizedMap(new HashMap<String, ResourceAdapterConfig>());
         rarModules = Collections.synchronizedMap(new HashMap<String, ConnectorApplication>());
         beanValidators = Collections.synchronizedMap(new HashMap<String, Validator>());
-        resourceInfoVersion = new ConcurrentHashMap<ResourceInfo, AtomicLong>();
-        resourceInfos = new HashSet<ResourceInfo>();
-        transparentDynamicReconfigPools = new HashSet<PoolInfo>();
-        locks = new HashMap<String, Object>();
+        resourceInfoVersion = new ConcurrentHashMap<>();
+        resourceInfos = new HashSet<>();
+        transparentDynamicReconfigPools = new HashSet<>();
+        locks = new HashMap<>();
         if(_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "initialized the connector registry");
         }
@@ -658,7 +669,7 @@ public class ConnectorRegistry {
      */
     public List<String> getConnectorsSupportingMessageListener(String messageListener){
 
-        List<String> rars = new ArrayList<String>();
+        List<String> rars = new ArrayList<>();
         for(ActiveResourceAdapter ara : resourceAdapters.values()){
             ConnectorDescriptor desc = ara.getDescriptor();
             if(desc.getInBoundDefined()){

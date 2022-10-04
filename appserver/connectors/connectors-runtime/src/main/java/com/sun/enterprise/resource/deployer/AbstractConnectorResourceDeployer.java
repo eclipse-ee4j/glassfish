@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,36 +17,34 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.glassfish.resourcebase.resources.api.ResourceConflictException;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.resources.api.GlobalResourceDeployer;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Module;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resources.api.GlobalResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-import org.glassfish.resourcebase.resources.util.ResourceUtil;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDeployer implements ResourceDeployer {
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource){
         if(handles(resource)){
-            if(postApplicationDeployment &&
-                    ConnectorsUtil.isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.TRUE){
-                    return true;
-            }
-
-            if(!postApplicationDeployment&&
-                    ConnectorsUtil.isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.FALSE){
+            if((postApplicationDeployment &&
+                    ConnectorsUtil.isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.TRUE) || (!postApplicationDeployment&&
+                    ConnectorsUtil.isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.FALSE)){
                     return true;
             }
 
@@ -57,12 +55,13 @@ public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDe
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
                                           Resources allResources)
             throws ResourceConflictException {
 
         //check whether old app has any RAR
-        List<Module> oldRARModules = new ArrayList<Module>();
+        List<Module> oldRARModules = new ArrayList<>();
         List<Module> oldModules = oldApp.getModule();
         for (Module oldModule : oldModules) {
             if (oldModule.getEngine(ConnectorConstants.CONNECTOR_MODULE) != null) {
@@ -85,7 +84,7 @@ public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDe
 
 
         //check whether all old RARs are present in new RARs list.
-        List<Module> staleRars = new ArrayList<Module>();
+        List<Module> staleRars = new ArrayList<>();
         for (Module oldRARModule : oldRARModules) {
             String oldRARModuleName = oldRARModule.getName();
             boolean found = false;
@@ -122,7 +121,7 @@ public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDe
             //connector type of resource may be : connector-resource, ccp, aor, wsm, rac
             if (ConnectorsUtil.isRARResource(resource)) {
                 String rarNameOfResource = ConnectorsUtil.getRarNameOfResource(resource, resources);
-                if (rarNameOfResource.contains(ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER)) {
+                if (rarNameOfResource.contains(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER)) {
                     String embeddedRARName = ConnectorsUtil.getRarNameFromApplication(rarNameOfResource);
                     for (Module module : staleRars) {
                         //check whether these RARs are referenced by app-scoped-resources ?

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,16 +24,16 @@ import java.util.List;
  * @author Kanwar Oberoi
  */
 public class ConnectorSecurityMap implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String name;
 
     private List<String> principals;
-
     private List<String> userGroups;
-
     private EisBackendPrincipal backendPrincipal;
 
-    public ConnectorSecurityMap(String name, List<String> principals,
-                                List<String> userGroups, EisBackendPrincipal backendPrincipal) {
+    public ConnectorSecurityMap(String name, List<String> principals, List<String> userGroups, EisBackendPrincipal backendPrincipal) {
         this.name = name;
         this.principals = principals;
         this.userGroups = userGroups;

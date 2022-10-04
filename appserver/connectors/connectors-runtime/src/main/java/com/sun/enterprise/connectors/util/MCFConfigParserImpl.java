@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,20 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.logging.LogDomains;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import java.util.logging.*;
-import java.util.*;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.ConnectionDefDescriptor;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.deployment.OutboundResourceAdapter;
+import com.sun.logging.LogDomains;
 
 /**
  *  This is managed connection factory configuration parser. It parses the
@@ -57,6 +66,7 @@ public class MCFConfigParserImpl implements MCFConfigParser {
      *
      */
 
+    @Override
     public String[] getConnectionDefinitionNames(ConnectorDescriptor desc)
                throws ConnectorRuntimeException
     {
@@ -65,7 +75,7 @@ public class MCFConfigParserImpl implements MCFConfigParser {
             throw new ConnectorRuntimeException("Invalid arguments");
         }
 
-        ConnectionDefDescriptor cdd[] = ddTransformUtil.getConnectionDefs(desc);
+        ConnectionDefDescriptor cdd[] = ConnectorDDTransformUtils.getConnectionDefs(desc);
 
         String[] connDefNames = new String[cdd.length];
         for(int i=0;i<cdd.length;++i) {
@@ -102,12 +112,15 @@ public class MCFConfigParserImpl implements MCFConfigParser {
      *           If no connection definition name is found in ra.xml
      */
 
+    @Override
     public Properties getJavaBeanProps(ConnectorDescriptor desc,
                String connectionDefName, String rarName) throws ConnectorRuntimeException
     {
 
         ConnectionDefDescriptor cdd = getConnectionDefinition(desc, connectionDefName);
-        if (cdd == null) return null;
+        if (cdd == null) {
+            return null;
+        }
 
         Properties mergedVals = null;
         Set ddVals = cdd.getConfigProperties();
@@ -167,13 +180,14 @@ public class MCFConfigParserImpl implements MCFConfigParser {
     }
 
 
+    @Override
     public List<String> getConfidentialProperties(ConnectorDescriptor desc, String rarName, String... keyFields)
             throws ConnectorRuntimeException {
         if(keyFields == null || keyFields.length == 0 || keyFields[0] == null){
             throw new ConnectorRuntimeException("ConnectionDefinitionName must be specified");
         }
         ConnectionDefDescriptor cdd = getConnectionDefinition(desc, keyFields[0]);
-        List<String> confidentialProperties = new ArrayList<String>();
+        List<String> confidentialProperties = new ArrayList<>();
         if(cdd != null){
             Set configProperties = cdd.getConfigProperties();
             if(configProperties != null){

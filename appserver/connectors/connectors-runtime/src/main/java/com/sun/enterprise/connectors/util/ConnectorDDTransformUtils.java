@@ -17,6 +17,20 @@
 
 package com.sun.enterprise.connectors.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.jvnet.hk2.config.types.Property;
+import org.xml.sax.SAXException;
+
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
@@ -31,20 +45,6 @@ import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.deployment.OutboundResourceAdapter;
 import com.sun.enterprise.deployment.deploy.shared.MemoryMappedArchive;
 import com.sun.logging.LogDomains;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.jvnet.hk2.config.types.Property;
-import org.xml.sax.SAXException;
 
 
 /**
@@ -123,10 +123,7 @@ public class ConnectorDDTransformUtils {
         for (Property property : props) {
             ConnectorConfigProperty ep = new ConnectorConfigProperty(property.getName(), property.getValue(), null);
             if (defaultMCFProps.contains(ep)) {
-                // get the environment property in the mergedset
-                Iterator<ConnectorConfigProperty> iter = defaultMCFProps.iterator();
-                while (iter.hasNext()) {
-                    ConnectorConfigProperty envProp = iter.next();
+                for (ConnectorConfigProperty envProp : defaultMCFProps) {
                     if (envProp.equals(ep)) {
                         // and if they are equal, set ep's type to envProp's type
                         // This set is important because envProp has the ra.xml

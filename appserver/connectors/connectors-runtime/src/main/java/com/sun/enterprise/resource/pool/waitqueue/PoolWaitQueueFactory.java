@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,16 @@
 
 package com.sun.enterprise.resource.pool.waitqueue;
 
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.WARNING;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.logging.LogDomains;
 
 /**
  * Factory to create appropriate Pool Wait Queue
@@ -46,39 +50,38 @@ public class PoolWaitQueueFactory {
     }
 
     private static PoolWaitQueue initializeCustomWaitQueueInPrivilegedMode(final String className) throws PoolingException {
-        Object result = AccessController.doPrivileged(new PrivilegedAction() {
+        Object result = AccessController.doPrivileged(new PrivilegedAction<Object>() {
+            @Override
             public Object run() {
-
                 Object result = null;
                 try {
                     result = initializeCustomWaitQueue(className);
                 } catch (Exception e) {
-                    _logger.log(Level.WARNING, "pool.waitqueue.init.failure", className);
-                    _logger.log(Level.WARNING, "pool.waitqueue.init.failure.exception", e);
+                    _logger.log(WARNING, "pool.waitqueue.init.failure", className);
+                    _logger.log(WARNING, "pool.waitqueue.init.failure.exception", e);
                 }
+
                 return result;
             }
         });
+
         if (result != null) {
             return (PoolWaitQueue) result;
-        } else {
-            throw new PoolingException("Unable to initalize custom PoolWaitQueue : " + className);
         }
+
+        throw new PoolingException("Unable to initalize custom PoolWaitQueue : " + className);
     }
 
     private static PoolWaitQueue initializeCustomWaitQueue(String className) throws Exception {
         PoolWaitQueue waitQueue;
         Class class1 = Thread.currentThread().getContextClassLoader().loadClass(className);
         waitQueue = (PoolWaitQueue) class1.newInstance();
-        if(_logger.isLoggable(Level.FINEST)) {
-            _logger.log(Level.FINEST, "Using Pool Wait Queue class : ", className);
-        }
+
+        _logger.log(FINEST, "Using Pool Wait Queue class : ", className);
         return waitQueue;
     }
 
     private static void debug(String debugStatement) {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, debugStatement);
-        }
+        _logger.log(FINE, debugStatement);
     }
 }

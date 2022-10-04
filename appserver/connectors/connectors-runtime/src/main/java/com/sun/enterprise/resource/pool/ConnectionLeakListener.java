@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,10 +19,9 @@ package com.sun.enterprise.resource.pool;
 
 import com.sun.enterprise.resource.ResourceHandle;
 
-
 /**
- * Leak listener that will be used by ConnectionLeakDetector to intimate the listeners
- * during connection leaks and to print-leak-stack-trace, reclaim leaked connection.
+ * Leak listener that will be used by ConnectionLeakDetector to intimate the listeners during connection leaks and to
+ * print-leak-stack-trace, reclaim leaked connection.
  *
  * @author Jagadish Ramu
  */
@@ -30,17 +30,19 @@ public interface ConnectionLeakListener {
     /**
      * listener method to handle in the event of connection leak detected
      */
-    public void potentialConnectionLeakFound();
+    void potentialConnectionLeakFound();
 
     /**
      * to print the stack trace of the caller of getConnection
+     *
      * @param stackTrace Stack trace of the caller
      */
-    public void printConnectionLeakTrace(StringBuffer stackTrace);
+    void printConnectionLeakTrace(StringBuffer stackTrace);
 
     /**
      * reclaim the leaked connection
+     *
      * @param handle Resource to be reclaimed
      */
-    public void reclaimConnection(ResourceHandle handle);
+    void reclaimConnection(ResourceHandle handle);
 }

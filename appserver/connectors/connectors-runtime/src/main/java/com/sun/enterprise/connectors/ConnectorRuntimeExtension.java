@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,16 @@
 
 package com.sun.enterprise.connectors;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.deployment.Application;
+import java.util.Collection;
+
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-import java.util.Collection;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.deployment.Application;
 
 /**
  * @author Shalini M
@@ -45,15 +47,15 @@ public interface ConnectorRuntimeExtension {
 
     void unRegisterDataSourceDefinitions(Application application);
 
-    public Object lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException;
+    Object lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException;
 
-    public DeferredResourceConfig getDeferredResourceConfig(Object resource,
+    DeferredResourceConfig getDeferredResourceConfig(Object resource,
                                                             Object pool, String resType, String raName)
             throws ConnectorRuntimeException;
 
-    public String getResourceType(ConfigBeanProxy cb);
+    String getResourceType(ConfigBeanProxy cb);
 
-    public boolean isConnectionPoolReferredInServerInstance(PoolInfo poolInfo);
+    boolean isConnectionPoolReferredInServerInstance(PoolInfo poolInfo);
 
-    public PoolInfo getPoolNameFromResourceJndiName(ResourceInfo resourceInfo);
+    PoolInfo getPoolNameFromResourceJndiName(ResourceInfo resourceInfo);
 }

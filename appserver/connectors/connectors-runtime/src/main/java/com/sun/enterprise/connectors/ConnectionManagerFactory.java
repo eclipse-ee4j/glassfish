@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,16 @@
 
 package com.sun.enterprise.connectors;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.logging.LogDomains;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.logging.LogDomains;
+
 import jakarta.resource.spi.ConnectionManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /* Authors : Binod P G, Aditya Gore
  *

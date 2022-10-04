@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,14 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.resource.pool.ResourceHandler;
-import com.sun.enterprise.resource.pool.datastructure.strategy.ResourceSelectionStrategy;
-
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
+
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.allocator.ResourceAllocator;
+import com.sun.enterprise.resource.pool.ResourceHandler;
+import com.sun.enterprise.resource.pool.datastructure.strategy.ResourceSelectionStrategy;
 
 /**
  * List based datastructure that can be used by connection pool <br>
@@ -42,8 +43,8 @@ public class ListDataStructure implements DataStructure {
     private ResourceSelectionStrategy strategy;
 
     public ListDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
-        resources = new ArrayList<ResourceHandle>((maxSize > 1000) ? 1000 : maxSize);
-        free = new ArrayList<ResourceHandle>((maxSize > 1000) ? 1000 : maxSize);
+        resources = new ArrayList<>((maxSize > 1000) ? 1000 : maxSize);
+        free = new ArrayList<>((maxSize > 1000) ? 1000 : maxSize);
         this.handler = handler;
         initializeStrategy(strategyClass);
         dynSemaphore = new DynamicSemaphore();
@@ -62,6 +63,7 @@ public class ListDataStructure implements DataStructure {
      * to act based on the new configuration.
      * @param newMaxSize
      */
+    @Override
     public synchronized void setMaxSize(int newMaxSize) {
 
         //Find currently open with the current maxsize
@@ -93,6 +95,7 @@ public class ListDataStructure implements DataStructure {
      * @param count     Number (units) of resources to create
      * @return int number of resources added
      */
+    @Override
     public int addResource(ResourceAllocator allocator, int count) throws PoolingException {
         int numResAdded = 0;
         for (int i = 0; i < count && resources.size() < maxSize; i++) {
@@ -123,6 +126,7 @@ public class ListDataStructure implements DataStructure {
      *
      * @return ResourceHandle
      */
+    @Override
     public ResourceHandle getResource() {
         ResourceHandle resource = null;
         if (strategy != null) {
@@ -142,6 +146,7 @@ public class ListDataStructure implements DataStructure {
      *
      * @param resource ResourceHandle
      */
+    @Override
     public void removeResource(ResourceHandle resource) {
         boolean removed = false;
         synchronized (resources) {
@@ -161,6 +166,7 @@ public class ListDataStructure implements DataStructure {
      *
      * @param resource ResourceHandle
      */
+    @Override
     public void returnResource(ResourceHandle resource) {
         synchronized (free) {
             free.add(resource);
@@ -172,6 +178,7 @@ public class ListDataStructure implements DataStructure {
      *
      * @return int count
      */
+    @Override
     public int getFreeListSize() {
         return free.size();
     }
@@ -179,6 +186,7 @@ public class ListDataStructure implements DataStructure {
     /**
      * remove & destroy all resources from the datastructure.
      */
+    @Override
     public void removeAll() {
         synchronized (resources) {
             synchronized (free) {
@@ -199,6 +207,7 @@ public class ListDataStructure implements DataStructure {
      *
      * @return int count
      */
+    @Override
     public int getResourcesSize() {
         return resources.size();
     }

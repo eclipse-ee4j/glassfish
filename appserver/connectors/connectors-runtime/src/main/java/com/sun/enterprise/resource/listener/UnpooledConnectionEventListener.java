@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,65 +16,70 @@
  */
 
 package com.sun.enterprise.resource.listener;
-import jakarta.resource.spi.*;
+
 import java.util.logging.Logger;
-import java.util.logging.Level;
+
 import com.sun.logging.LogDomains;
 
+import jakarta.resource.spi.ConnectionEvent;
+import jakarta.resource.spi.ManagedConnection;
+
 /**
- * This class is a ConnectionEventListener for handling the "close" of a
- * ManagedConnection that is not acquired through the appserver's pool.
- * The ManagedConnection is simply destroyed after close is called
- * Such an "unpooled" ManagedConnection is obtained for testConnectionPool
- * and the ConnectorRuntime.getConnection() APIs
+ * This class is a ConnectionEventListener for handling the "close" of a ManagedConnection that is not acquired through
+ * the appserver's pool.
+ *
+ * <p>
+ * The ManagedConnection is simply destroyed after close is called. Such an "unpooled"
+ * ManagedConnection is obtained for testConnectionPool and the ConnectorRuntime.getConnection() APIs
  *
  * @author Aditya Gore
  * @since SJSAS 8.1
  */
 public class UnpooledConnectionEventListener extends ConnectionEventListener {
 
+    private static Logger _logger = LogDomains.getLogger(UnpooledConnectionEventListener.class, LogDomains.RSR_LOGGER);
 
-    private static Logger _logger = LogDomains.getLogger(UnpooledConnectionEventListener.class,LogDomains.RSR_LOGGER);
-
-    public void connectionClosed(ConnectionEvent evt) {
-        ManagedConnection mc = (ManagedConnection) evt.getSource();
+    @Override
+    public void connectionClosed(ConnectionEvent connectionEvent) {
+        ManagedConnection managedConnection = (ManagedConnection) connectionEvent.getSource();
         try {
-            mc.destroy();
+            managedConnection.destroy();
         } catch (Throwable re) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.fine("error while destroying Unpooled Managed Connection");
-            }
+            _logger.fine("error while destroying Unpooled Managed Connection");
         }
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("UnpooledConnectionEventListener: Connection closed");
-        }
+        _logger.fine("UnpooledConnectionEventListener: Connection closed");
     }
 
     /**
      * Resource adapters will signal that the connection being closed is bad.
-     * @param evt ConnectionEvent
+     *
+     * @param connectionEvent ConnectionEvent
      */
-    public void badConnectionClosed(ConnectionEvent evt){
-        ManagedConnection mc = (ManagedConnection) evt.getSource();
-        mc.removeConnectionEventListener(this);
-        connectionClosed(evt);
+    @Override
+    public void badConnectionClosed(ConnectionEvent connectionEvent) {
+        ManagedConnection managedConnection = (ManagedConnection) connectionEvent.getSource();
+        managedConnection.removeConnectionEventListener(this);
+        connectionClosed(connectionEvent);
     }
 
+    @Override
     public void connectionErrorOccurred(ConnectionEvent evt) {
-        //no-op
+        // no-op
     }
 
+    @Override
     public void localTransactionStarted(ConnectionEvent evt) {
-            // no-op
+        // no-op
     }
 
+    @Override
     public void localTransactionCommitted(ConnectionEvent evt) {
-         // no-op
+        // no-op
     }
 
+    @Override
     public void localTransactionRolledback(ConnectionEvent evt) {
         // no-op
     }
 
 }
-

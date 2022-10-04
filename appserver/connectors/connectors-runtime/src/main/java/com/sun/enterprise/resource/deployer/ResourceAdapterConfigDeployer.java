@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,19 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.logging.LogDomains;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Srikanth P
@@ -46,6 +48,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource, String applicationName, String moduleName)
             throws Exception {
         deployResource(resource);
@@ -54,6 +57,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void deployResource(Object resource) throws Exception {
 
         ResourceAdapterConfig domainConfig =
@@ -78,6 +82,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception{
         undeployResource(resource);
     }
@@ -85,6 +90,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void undeployResource(Object resource)
             throws Exception {
         ResourceAdapterConfig domainConfig =
@@ -97,6 +103,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void redeployResource(Object resource)
             throws Exception {
         deployResource(resource);
@@ -105,6 +112,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean handles(Object resource) {
         boolean canHandle = false;
         if (resource instanceof ResourceAdapterConfig) {
@@ -116,6 +124,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * @inheritDoc
      */
+    @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
@@ -123,6 +132,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * @inheritDoc
      */
+    @Override
     public Class[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
@@ -130,6 +140,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void disableResource(Object resource)
             throws Exception {
     }
@@ -137,6 +148,7 @@ public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDepl
     /**
      * {@inheritDoc}
      */
+    @Override
     public synchronized void enableResource(Object resource) throws Exception {
     }
 }

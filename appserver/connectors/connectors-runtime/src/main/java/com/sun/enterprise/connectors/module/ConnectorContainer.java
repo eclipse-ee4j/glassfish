@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,17 @@
 
 package com.sun.enterprise.connectors.module;
 
-import com.sun.logging.LogDomains;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import org.glassfish.api.deployment.Deployer;
-import org.glassfish.api.container.Container;
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.container.Container;
+import org.glassfish.api.deployment.Deployer;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.logging.LogDomains;
 
 
 /**
@@ -38,10 +40,12 @@ public class ConnectorContainer implements Container, PostConstruct, PreDestroy 
 
     private static Logger _logger = LogDomains.getLogger(ConnectorContainer.class, LogDomains.RSR_LOGGER);
 
+    @Override
     public void postConstruct() {
         logFine("postConstruct of ConnectorContainer");
     }
 
+    @Override
     public void preDestroy() {
         logFine("preDestroy of ConnectorContainer");
     }
@@ -52,6 +56,7 @@ public class ConnectorContainer implements Container, PostConstruct, PreDestroy 
      *
      * @return the Deployer implementation
      */
+    @Override
     public Class<? extends Deployer> getDeployer() {
         return ConnectorDeployer.class;
     }
@@ -63,6 +68,7 @@ public class ConnectorContainer implements Container, PostConstruct, PreDestroy 
      *
      * @return a human readable name for this container.
      */
+    @Override
     public String getName() {
         return ConnectorConstants.CONNECTOR_MODULE;
     }

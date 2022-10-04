@@ -17,6 +17,21 @@
 
 package com.sun.enterprise.connectors.util;
 
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.config.types.Property;
+
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.spi.TransactionSupport;
@@ -32,21 +47,6 @@ import com.sun.logging.LogDomains;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.TransactionSupport.TransactionSupportLevel;
 import jakarta.resource.spi.security.PasswordCredential;
-
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.Locale;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.security.auth.Subject;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.config.types.Property;
 
 
 /**

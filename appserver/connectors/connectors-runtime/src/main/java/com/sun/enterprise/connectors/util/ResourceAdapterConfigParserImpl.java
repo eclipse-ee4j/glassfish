@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,15 @@
 
 package com.sun.enterprise.connectors.util;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.connectors.*;
-import com.sun.logging.LogDomains;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
-import java.util.logging.*;
-import java.util.*;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 /**
  * This is Resource Adapter configuration parser. It parses the
@@ -59,6 +62,7 @@ public class ResourceAdapterConfigParserImpl implements ConnectorConfigParser {
      * @throws ConnectorRuntimeException if moduleDir is null .
      *                                   If corresponding rar is not deployed i.e moduleDir is invalid.
      */
+    @Override
     public Properties getJavaBeanProps(ConnectorDescriptor desc,
                                        String connectionDefName, String rarName) throws ConnectorRuntimeException {
 
@@ -86,6 +90,7 @@ public class ResourceAdapterConfigParserImpl implements ConnectorConfigParser {
         return mergedVals;
     }
 
+    @Override
     public List<String> getConfidentialProperties(ConnectorDescriptor desc, String rarName, String... keyFields)
             throws ConnectorRuntimeException {
 
@@ -93,7 +98,7 @@ public class ResourceAdapterConfigParserImpl implements ConnectorConfigParser {
             throw new ConnectorRuntimeException("Invalid arguments");
         }
 
-        List<String> confidentialProperties = new ArrayList<String>();
+        List<String> confidentialProperties = new ArrayList<>();
         Set configProperties = desc.getConfigProperties();
         if(configProperties != null){
             Iterator iterator = configProperties.iterator();

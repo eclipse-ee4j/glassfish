@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.MetadataSource;
-
 import java.lang.reflect.Method;
 
 import org.glassfish.deployment.common.Descriptor;

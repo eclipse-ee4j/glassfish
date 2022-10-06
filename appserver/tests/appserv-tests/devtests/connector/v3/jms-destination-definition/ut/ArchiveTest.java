@@ -18,7 +18,6 @@ package com.sun.s1asdev.jmsdd;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
 import com.sun.enterprise.loader.ASURLClassLoader;

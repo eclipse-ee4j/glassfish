@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import jakarta.resource.spi.TransactionSupport.TransactionSupportLevel;

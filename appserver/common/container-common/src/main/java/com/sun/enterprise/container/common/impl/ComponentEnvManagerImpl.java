@@ -35,10 +35,10 @@ import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import com.sun.enterprise.naming.spi.NamingUtils;
@@ -1004,6 +1004,12 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         @Override
         public Object getValue() {
             return value;
+        }
+
+
+        @Override
+        public String toString() {
+            return super.toString() + "[name=" + name + ", value=" + value + "]";
         }
 
     }

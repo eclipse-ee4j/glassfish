@@ -15,40 +15,48 @@
  */
 package com.sun.enterprise.deployment.node;
 
+import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
+
 import java.util.Map;
 
-import org.omnifaces.concurrent.deployment.ManagedThreadFactoryDefinitionDescriptor;
-import org.omnifaces.concurrent.node.ManagedThreadFactoryDefinitionNodeDelegate;
 import org.w3c.dom.Node;
 
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY_PRIORITY;
+import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedThreadFactoryDefinitionNode
     extends DeploymentDescriptorNode<ManagedThreadFactoryDefinitionDescriptor> {
 
-    private final ManagedThreadFactoryDefinitionNodeDelegate delegate = new ManagedThreadFactoryDefinitionNodeDelegate();
-
     public ManagedThreadFactoryDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
-            delegate.getHandlerAdMethodName());
+            "addManagedThreadFactoryPropertyDescriptor");
     }
 
 
     @Override
-    public ManagedThreadFactoryDefinitionDescriptor getDescriptor() {
-        return delegate.getDescriptor();
+    public ManagedThreadFactoryDefinitionDescriptor createDescriptor() {
+        return new ManagedThreadFactoryDefinitionDescriptor();
     }
 
 
     @Override
     protected Map<String, String> getDispatchTable() {
-        return delegate.getDispatchTable(super.getDispatchTable());
+        Map<String, String> map = super.getDispatchTable();
+        map.put(NAME, "setName");
+        map.put(MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, "setContext");
+        map.put(MANAGED_THREAD_FACTORY_PRIORITY, "setPriority");
+        return map;
     }
 
 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, ManagedThreadFactoryDefinitionDescriptor descriptor) {
-        Node node = delegate.getDescriptor(parent, nodeName, descriptor);
+        Node node = appendChild(parent, nodeName);
+        appendTextChild(node, NAME, descriptor.getName());
+        appendTextChild(node, MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, descriptor.getContext());
+        appendTextChild(node, MANAGED_THREAD_FACTORY_PRIORITY, String.valueOf(descriptor.getPriority()));
         return ResourcePropertyNode.write(node, descriptor);
     }
 }

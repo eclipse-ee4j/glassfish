@@ -894,24 +894,26 @@ public class WebappClassLoader extends URLClassLoader
 
 
     /**
-     * Render a String representation of this object.
+     * Constructs a short description of the classloader.
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("WebappClassLoader (delegate=");
-        sb.append(delegate);
+        StringBuilder sb = new StringBuilder(256);
+        sb.append(super.toString());
+        sb.append("[delegate=").append(delegate);
+        sb.append(", context=").append(getContextName());
         if (repositories != null) {
-            sb.append("; repositories=");
+            sb.append(", repositories={");
             for (int i = 0; i < repositories.length; i++) {
                 sb.append(repositories[i]);
                 if (i != (repositories.length-1)) {
                     sb.append(",");
                 }
             }
+            sb.append('}');
         }
-        sb.append(")");
-        return (sb.toString());
+        sb.append(']');
+        return sb.toString();
     }
 
 
@@ -1501,9 +1503,7 @@ public class WebappClassLoader extends URLClassLoader
                 pc.add(p);
             }
 
-            Iterator<Permission> perms = permissionList.iterator();
-            while (perms.hasNext()) {
-                Permission p = perms.next();
+            for (Permission p : permissionList) {
                 pc.add(p);
             }
 

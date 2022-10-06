@@ -41,10 +41,10 @@ import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
 
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_SCHEDULED_EXECUTOR;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY;
 
 /**
  * This class is responsible for loading and saving XML elements

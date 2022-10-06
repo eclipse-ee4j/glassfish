@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,97 +17,79 @@
 
 package org.glassfish.resourcebase.resources.api;
 
+import java.util.Objects;
 
 /**
  * Represents pool information.
+ *
  * @author Jagadish Ramu
  */
-public class PoolInfo implements org.glassfish.resourcebase.resources.api.GenericResourceInfo {
+public class PoolInfo implements GenericResourceInfo {
 
-    private String name;
-    private String applicationName = null;
-    private String moduleName = null;
+    private static final long serialVersionUID = -232381806483116871L;
 
-    public PoolInfo(String name){
-        this.name = name;
-    }
-    public PoolInfo(String name, String applicationName){
-        this.name = name;
-        this.applicationName = applicationName;
+    private final String name;
+    private final String applicationName;
+    private final String moduleName;
+
+    public PoolInfo(String name) {
+        this(name, null, null);
     }
 
-    public PoolInfo(String name, String applicationName, String moduleName){
+
+    public PoolInfo(String name, String applicationName) {
+        this(name, applicationName, null);
+    }
+
+
+    public PoolInfo(String name, String applicationName, String moduleName) {
         this.name = name;
         this.applicationName = applicationName;
         this.moduleName = moduleName;
     }
 
-    /**
-     * @inheritDoc
-     */
+
+    @Override
     public String getName() {
         return name;
     }
 
-    /**
-     * @inheritDoc
-     */
+
+    @Override
     public String getApplicationName() {
         return applicationName;
     }
 
-    /**
-     * @inheritDoc
-     */
+
+    @Override
     public String getModuleName() {
         return moduleName;
     }
 
-        public String toString(){
-            if(applicationName != null && moduleName != null){
-                return "{ PoolInfo : (name="+name+"), (applicationName="+applicationName+"), (moduleName="+moduleName+")}";
-            }else if(applicationName != null){
-                return "{ PoolInfo : (name="+name+"), (applicationName="+applicationName+") }";
-            }else{
-                return name;
-            }
-    }
 
-    public boolean equals(Object o){
-        boolean result = false;
-        if(o == this){
-            result = true;
-        }else if(o instanceof PoolInfo){
-            PoolInfo poolInfo = (PoolInfo)o;
-            boolean poolNameEqual = poolInfo.getName().equals(name);
-            boolean appNameEqual = false;
-            if(applicationName == null && poolInfo.getApplicationName() == null){
-                appNameEqual = true;
-            }else if(applicationName !=null && poolInfo.getApplicationName() != null
-                    && applicationName.equals(poolInfo.getApplicationName())){
-                appNameEqual = true;
-            }
-            boolean moduleNameEqual = false;
-            if(moduleName == null && poolInfo.getModuleName() == null){
-                moduleNameEqual = true;
-            }else if(moduleName !=null && poolInfo.getModuleName() != null
-                    && moduleName.equals(poolInfo.getModuleName())){
-                moduleNameEqual = true;
-            }
-            result = poolNameEqual && appNameEqual && moduleNameEqual;
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
         }
-        return result;
+        if (o instanceof PoolInfo) {
+            PoolInfo ri = (PoolInfo) o;
+            return Objects.equals(this.name, ri.name) && Objects.equals(this.applicationName, ri.applicationName)
+                && Objects.equals(this.moduleName, ri.moduleName);
+        }
+        return false;
     }
 
-    public int hashCode(){
-        int result = 67;
-        if (name != null)
-            result = 67 * result + name.hashCode();
-        if (applicationName != null)
-            result = 67 * result + applicationName.hashCode();
-        if (moduleName != null)
-            result = 67 * result + moduleName.hashCode();
 
-        return result;
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, applicationName, moduleName);
+    }
+
+
+    @Override
+    public String toString() {
+        return super.toString() + "[jndiName=" + name + ", applicationName=" + applicationName + ", moduleName="
+            + moduleName + "]";
     }
 }

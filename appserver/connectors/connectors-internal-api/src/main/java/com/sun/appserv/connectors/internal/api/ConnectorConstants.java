@@ -369,4 +369,9 @@ public interface ConnectorConstants extends ResourceConstants {
      */
     String MSL = "MessageListener";
 
+    /**
+     * Reserved sub-context where concurrent objects are bound with generated names.
+     */
+    String CONCURRENT_JNDINAME_PREFIX = "concurrent/";
+
 }

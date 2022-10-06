@@ -43,7 +43,7 @@ import java.util.Properties;
  * Create Context Service Command
  *
  */
-@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG })
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="create-context-service")
 @PerLookup
@@ -85,6 +85,7 @@ public class CreateContextService implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 

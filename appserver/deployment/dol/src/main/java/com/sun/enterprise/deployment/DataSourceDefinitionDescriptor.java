@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.sql.Connection;
@@ -57,9 +55,6 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     private boolean serverNameSet;
 
     private boolean deployed;
-
-    private static final String JAVA_URL = "java:";
-    private static final String JAVA_COMP_URL = "java:comp/";
 
     // represents the valid values for isolation-level in Deployment Descriptors
     private static final String TRANSACTION_NONE = "TRANSACTION_NONE";
@@ -334,7 +329,7 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     public boolean equals(Object object) {
         if (object instanceof DataSourceDefinitionDescriptor) {
             DataSourceDefinitionDescriptor reference = (DataSourceDefinitionDescriptor) object;
-            return getJavaName(this.getName()).equals(getJavaName(reference.getName()));
+            return getJndiName().equals(reference.getJndiName());
         }
         return false;
     }
@@ -345,14 +340,6 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
         int result = 17;
         result = 37 * result + getName().hashCode();
         return result;
-    }
-
-
-    public static String getJavaName(String thisName) {
-        if (!thisName.contains(JAVA_URL)) {
-            thisName = JAVA_COMP_URL + thisName;
-        }
-        return thisName;
     }
 
     public void addDataSourcePropertyDescriptor(ResourcePropertyDescriptor propertyDescriptor){

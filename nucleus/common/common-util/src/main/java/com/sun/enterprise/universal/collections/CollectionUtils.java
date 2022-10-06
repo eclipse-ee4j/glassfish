@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,13 +28,14 @@ import java.util.Set;
  *
  * @author bnevins
  */
-public class CollectionUtils {
+public final class CollectionUtils {
 
-    private static final String EOL = System.getProperty("line.separator");
+    private static final String EOL = System.lineSeparator();
 
     private CollectionUtils() {
-
+        // utility class
     }
+
 
     /**
      * Convert a Properties object, which is a <code>Map&lt;Object,Object></code> into a <code<Map&lt;String,String></code>

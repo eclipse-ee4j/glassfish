@@ -36,7 +36,7 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
 
     public JspGroupNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.NAME), LocalizedInfoNode.class);
+        registerElementHandler(new XMLElement(TagNames.DISPLAY_NAME), LocalizedInfoNode.class);
     }
 
 
@@ -52,7 +52,7 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.URL_PATTERN, "addUrlPattern");
-        table.put(TagNames.NAME, "setDisplayName");
+        table.put(TagNames.DISPLAY_NAME, "setDisplayName");
         table.put(WebTagNames.EL_IGNORED, "setElIgnored");
         table.put(WebTagNames.PAGE_ENCODING, "setPageEncoding");
         table.put(WebTagNames.SCRIPTING_INVALID, "setScriptingInvalid");
@@ -94,7 +94,7 @@ public class JspGroupNode  extends DeploymentDescriptorNode<JspGroupDescriptor> 
 
         LocalizedInfoNode localizedNode = new LocalizedInfoNode();
         writeLocalizedDescriptions(myNode, descriptor);
-        localizedNode.writeLocalizedMap(myNode, TagNames.NAME, descriptor.getLocalizedDisplayNames());
+        localizedNode.writeLocalizedMap(myNode, TagNames.DISPLAY_NAME, descriptor.getLocalizedDisplayNames());
 
         // url-pattern*
         for (String urlPattern : descriptor.getUrlPatterns()) {

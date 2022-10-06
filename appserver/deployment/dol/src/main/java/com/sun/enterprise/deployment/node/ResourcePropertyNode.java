@@ -22,7 +22,7 @@ import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
-import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
+import com.sun.enterprise.deployment.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
 
 import java.util.Map;

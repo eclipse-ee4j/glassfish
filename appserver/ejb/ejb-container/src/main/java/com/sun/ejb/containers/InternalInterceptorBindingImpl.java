@@ -17,75 +17,62 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.core.*;
 
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.api.invocation.ComponentInvocation;
 import java.util.Collection;
 
+import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
-import com.sun.enterprise.container.common.spi.ManagedBeanManager;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.glassfish.hk2.api.ServiceLocator;
 
 public class InternalInterceptorBindingImpl  {
 
-    private ServiceLocator services;
+    private final ServiceLocator services;
 
     public InternalInterceptorBindingImpl(ServiceLocator services) {
         this.services = services;
     }
 
-    public void registerInterceptor(Object systemInterceptor) {
 
+    public void registerInterceptor(Object systemInterceptor) {
         InvocationManager invManager = services.getService(InvocationManager.class);
 
         ComponentInvocation currentInv = invManager.getCurrentInvocation();
 
-        if(currentInv == null) {
+        if (currentInv == null) {
             throw new IllegalStateException("no current invocation");
-        } else if (currentInv.getInvocationType() !=
-                       ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION) {
-            throw new IllegalStateException
-                        ("Illegal invocation type : " +  currentInv.getInvocationType() +
-                         ".  This operation is only available from a web app context");
+        } else if (currentInv.getInvocationType() != ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION) {
+            throw new IllegalStateException("Illegal invocation type: " + currentInv.getInvocationType()
+                + ".  This operation is only available from a web app context");
         }
 
         ComponentEnvManager compEnvManager = services.getService(ComponentEnvManager.class);
-
         JndiNameEnvironment env = compEnvManager.getCurrentJndiNameEnvironment();
-
         BundleDescriptor webBundle = (BundleDescriptor) env;
-
-        ModuleDescriptor moduleDesc = webBundle.getModuleDescriptor();
+        ModuleDescriptor<?> moduleDesc = webBundle.getModuleDescriptor();
 
         // Register interceptor for EJB components
-        if( EjbContainerUtilImpl.isInitialized() ) {
-
-            Collection<EjbBundleDescriptor> ejbBundles =
-                    moduleDesc.getDescriptor().getExtensionsDescriptors(EjbBundleDescriptor.class);
-
-            if( ejbBundles.size() == 1) {
-
+        if (EjbContainerUtilImpl.isInitialized()) {
+            Collection<EjbBundleDescriptor> ejbBundles = moduleDesc.getDescriptor()
+                .getExtensionsDescriptors(EjbBundleDescriptor.class);
+            if (ejbBundles.size() == 1) {
                 EjbBundleDescriptor ejbBundle = ejbBundles.iterator().next();
-                for(EjbDescriptor ejb : ejbBundle.getEjbs()) {
-                    BaseContainer container =
-                        EjbContainerUtilImpl.getInstance().getContainer(ejb.getUniqueId());
+                for (EjbDescriptor ejb : ejbBundle.getEjbs()) {
+                    BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(ejb.getUniqueId());
                     container.registerSystemInterceptor(systemInterceptor);
-
                 }
             }
-
         }
 
         // Register interceptor for any managed beans
         // TODO Handle CDI-enabled case
-        ManagedBeanManager managedBeanManager = services.getService(ManagedBeanManager.class,
-                "ManagedBeanManagerImpl");
+        ManagedBeanManager managedBeanManager = services.getService(ManagedBeanManager.class, "ManagedBeanManagerImpl");
         managedBeanManager.registerRuntimeInterceptor(systemInterceptor, webBundle);
     }
 }

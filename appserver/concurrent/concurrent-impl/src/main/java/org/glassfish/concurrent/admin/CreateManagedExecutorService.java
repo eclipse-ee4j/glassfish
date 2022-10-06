@@ -39,7 +39,7 @@ import java.util.HashMap;
  * Create Managed Executor Service Command
  *
  */
-@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG })
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="create-managed-executor-service")
 @PerLookup
@@ -58,6 +58,7 @@ public class CreateManagedExecutorService extends CreateManagedExecutorServiceBa
     @Inject
     private ManagedExecutorServiceManager managedExecutorServiceMgr;
 
+    @Override
     protected void setAttributeList(HashMap attrList) {
         super.setAttributeList(attrList);
         attrList.put(ResourceConstants.MAXIMUM_POOL_SIZE,
@@ -71,6 +72,7 @@ public class CreateManagedExecutorService extends CreateManagedExecutorServiceBa
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 

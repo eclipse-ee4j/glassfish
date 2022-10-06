@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,46 +17,45 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
-import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 
-import org.glassfish.api.invocation.ApplicationEnvironment;
-import org.glassfish.api.naming.JNDIBinding;
-import org.jvnet.hk2.annotations.Contract;
+import java.util.Collection;
 
 import javax.naming.NamingException;
-import java.util.Collection;
+
+import org.glassfish.api.invocation.ApplicationEnvironment;
+import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface ComponentEnvManager {
 
-    //Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
-    public JndiNameEnvironment getJndiNameEnvironment(String componentId);
+    // Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
+    JndiNameEnvironment getJndiNameEnvironment(String componentId);
 
-    //Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
-    public JndiNameEnvironment getCurrentJndiNameEnvironment();
+    // Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
+    JndiNameEnvironment getCurrentJndiNameEnvironment();
 
-    public String getComponentEnvId(JndiNameEnvironment env);
+    String getComponentEnvId(JndiNameEnvironment env);
 
-    public String bindToComponentNamespace(JndiNameEnvironment env)
-        throws NamingException;
+    String bindToComponentNamespace(JndiNameEnvironment env) throws NamingException;
 
-    public void addToComponentNamespace(JndiNameEnvironment origEnv,
-                                        Collection<EnvironmentProperty> envProps,
-                                        Collection<ResourceReferenceDescriptor> resRefs)
-        throws NamingException;
+    void addToComponentNamespace(
+        JndiNameEnvironment origEnv,
+        Collection<EnvironmentProperty> envProps,
+        Collection<ResourceReferenceDescriptor> resRefs)
+            throws NamingException;
 
-    public void unbindFromComponentNamespace(JndiNameEnvironment env)
-        throws NamingException;
+    void unbindFromComponentNamespace(JndiNameEnvironment env) throws NamingException;
 
     /**
      * Returns the current application environment if not running in a specified
      * container
      *
      * @return The current application environment or null if we are not currently
-     * running as a specific application
+     *         running as a specific application
      */
-    public ApplicationEnvironment getCurrentApplicationEnvironment();
+    ApplicationEnvironment getCurrentApplicationEnvironment();
 
 }

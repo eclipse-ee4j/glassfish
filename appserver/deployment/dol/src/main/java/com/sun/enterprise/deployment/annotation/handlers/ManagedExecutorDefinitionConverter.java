@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package com.sun.enterprise.deployment.annotation.handlers;
+
+import com.sun.enterprise.deployment.annotation.factory.ManagedExecutorDefinitionData;
+
+import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
+
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.glassfish.config.support.TranslatedConfigView;
+import org.jvnet.hk2.annotations.Service;
+
+/**
+ * @author David Matejcek
+ */
+@Service
+class ManagedExecutorDefinitionConverter {
+    private static final Logger LOG = System.getLogger(ManagedExecutorDefinitionConverter.class.getName());
+
+    Set<ManagedExecutorDefinitionData> convert(ManagedExecutorDefinition[] definitions) {
+        LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
+        if (definitions == null) {
+            return Collections.emptySet();
+        }
+        return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
+    }
+
+
+    ManagedExecutorDefinitionData convert(ManagedExecutorDefinition annotation) {
+        LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
+        ManagedExecutorDefinitionData data = new ManagedExecutorDefinitionData();
+        data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        data.setContext(TranslatedConfigView.expandValue(annotation.context()));
+
+        if (annotation.hungTaskThreshold() < 0) {
+            data.setHungAfterSeconds(0);
+        } else {
+            data.setHungAfterSeconds(annotation.hungTaskThreshold());
+        }
+
+        if (annotation.maxAsync() < 0) {
+            data.setMaximumPoolSize(Integer.MAX_VALUE);
+        } else {
+            data.setMaximumPoolSize(annotation.maxAsync());
+        }
+        return data;
+    }
+
+
+    void merge(ManagedExecutorDefinitionData annotationData, ManagedExecutorDefinitionData descriptorData) {
+        LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
+        if (!annotationData.getName().equals(descriptorData.getName())) {
+            throw new IllegalArgumentException("Cannot merge managed executors with different names: "
+                + annotationData.getName() + " x " + descriptorData.getName());
+        }
+        if (descriptorData.getHungAfterSeconds() <= 0 && annotationData.getHungAfterSeconds() != 0) {
+            descriptorData.setHungAfterSeconds(annotationData.getHungAfterSeconds());
+        }
+
+        if (descriptorData.getMaximumPoolSize() <= 0 && annotationData.getMaximumPoolSize() > 0
+            && annotationData.getMaximumPoolSize() < Integer.MAX_VALUE) {
+            descriptorData.setMaximumPoolSize(annotationData.getMaximumPoolSize());
+        }
+
+        if (descriptorData.getContext() == null && annotationData.getContext() != null
+            && !annotationData.getContext().isBlank()) {
+            descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));
+        }
+    }
+}

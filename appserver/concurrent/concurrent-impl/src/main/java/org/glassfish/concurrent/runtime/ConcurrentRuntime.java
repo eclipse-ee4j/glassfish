@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,65 +18,83 @@
 package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.concurrent.LogFacade;
-import org.glassfish.concurrent.runtime.deployer.ContextServiceConfig;
-import org.glassfish.concurrent.runtime.deployer.ManagedExecutorServiceConfig;
-import org.glassfish.concurrent.runtime.deployer.ManagedScheduledExecutorServiceConfig;
-import org.glassfish.concurrent.runtime.deployer.ManagedThreadFactoryConfig;
-import org.glassfish.enterprise.concurrent.*;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.deployment.Deployment;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
+import org.glassfish.enterprise.concurrent.AbstractManagedExecutorService;
+import org.glassfish.enterprise.concurrent.AbstractManagedThread;
+import org.glassfish.enterprise.concurrent.ContextServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedExecutorServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedScheduledExecutorServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedThreadFactoryImpl;
+import org.glassfish.enterprise.concurrent.spi.ContextHandle;
+import org.glassfish.enterprise.concurrent.spi.ContextSetupProvider;
+import org.glassfish.enterprise.concurrent.spi.TransactionSetupProvider;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.Deployment;
+import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.ALL_STANTARD_CONTEXT_TYPES;
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Classloader;
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.WorkArea;
+import static java.util.Collections.emptySet;
+import static org.glassfish.concurrent.runtime.deployer.cfg.ContextInfoParser.parseContextInfo;
 
 /**
  * This class provides API to create various Concurrency Utilities objects
  */
 @Service
 @Singleton
-public class ConcurrentRuntime implements PostConstruct, PreDestroy {
+public class ConcurrentRuntime {
 
-    private static ConcurrentRuntime _runtime;
+    private static final Logger LOG = LogFacade.getLogger();
+    private static ConcurrentRuntime singletonInstance;
 
-    private Map<String, ManagedExecutorServiceImpl> managedExecutorServiceMap;
-    private Map<String, ManagedScheduledExecutorServiceImpl> managedScheduledExecutorServiceMap;
-    private Map<String, ContextServiceImpl> contextServiceMap;
-    private Map<String, ManagedThreadFactoryImpl> managedThreadFactoryMap;
-
-    public static final String CONTEXT_INFO_CLASSLOADER = "Classloader";
-    public static final String CONTEXT_INFO_JNDI = "JNDI";
-    public static final String CONTEXT_INFO_SECURITY = "Security";
-    public static final String CONTEXT_INFO_WORKAREA = "WorkArea";
+    private final Map<String, ManagedExecutorServiceImpl> managedExecutorServiceMap = new HashMap<>();
+    private final Map<String, ManagedScheduledExecutorServiceImpl> managedScheduledExecutorServiceMap = new HashMap<>();
+    private final Map<String, ContextServiceImpl> contextServiceMap = new HashMap<>();
+    private final Map<String, ManagedThreadFactoryImpl> managedThreadFactoryMap = new HashMap<>();
 
     private ScheduledExecutorService internalScheduler;
-    private static final Logger logger  = LogFacade.getLogger();
 
     @Inject
-    InvocationManager invocationManager;
-
+    private InvocationManager invocationManager;
     @Inject
-    Deployment deployment;
-
+    private Deployment deployment;
     @Inject
-    Applications applications;
-
+    private Applications applications;
     @Inject
-    JavaEETransactionManager transactionManager;
-
+    private JavaEETransactionManager transactionManager;
     @Inject
-    ApplicationRegistry applicationRegistry;
+    private ApplicationRegistry applicationRegistry;
+    @Inject
+    private ResourceNamingService resourceNamingService;
 
     /**
      * Returns the ConcurrentRuntime instance.
@@ -87,21 +105,17 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
      * @return ConcurrentRuntime instance
      */
     public static ConcurrentRuntime getRuntime() {
-        if (_runtime == null) {
+        if (singletonInstance == null) {
             throw new RuntimeException("ConcurrentRuntime not initialized");
         }
-        return _runtime;
-    }
-
-    private static void setRuntime(ConcurrentRuntime runtime) {
-        _runtime = runtime;
+        return singletonInstance;
     }
 
     /**
      * Constructor should be private to follow singleton pattern, but package access for unit testing.
      */
     ConcurrentRuntime() {
-        setRuntime(this);
+        singletonInstance = this;
     }
 
     InvocationManager getInvocationManager() {
@@ -124,94 +138,54 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         return applicationRegistry;
     }
 
-    public synchronized ContextServiceImpl getContextService(ResourceInfo resource, ContextServiceConfig config) {
-        String jndiName = config.getJndiName();
-        if (contextServiceMap != null && contextServiceMap.containsKey(jndiName)) {
-            return contextServiceMap.get(jndiName);
-        }
-        ContextServiceImpl contextService = createContextService(config.getJndiName(),
-                config.getContextInfo(), config.getContextInfoEnabled(), false);
-        if (contextServiceMap == null) {
-            contextServiceMap = new HashMap();
-        }
-        contextServiceMap.put(jndiName, contextService);
-        return contextService;
-    }
 
-    public void shutdownContextService(String jndiName) {
-        synchronized(this) {
-            if (contextServiceMap != null) {
-                contextServiceMap.remove(jndiName);
-            }
-        }
-    }
-
-    public synchronized ManagedExecutorServiceImpl getManagedExecutorService(ResourceInfo resource, ManagedExecutorServiceConfig config) {
-        String jndiName = config.getJndiName();
+    public synchronized ManagedExecutorServiceImpl getManagedExecutorService(ManagedExecutorServiceCfg config) {
+        LOG.log(Level.FINEST, "getManagedExecutorService(config={0})", config);
+        String jndiName = config.getServiceConfig().getJndiName();
         if (managedExecutorServiceMap != null && managedExecutorServiceMap.containsKey(jndiName)) {
             return managedExecutorServiceMap.get(jndiName);
         }
-        ManagedThreadFactoryImpl managedThreadFactory = new ManagedThreadFactoryImpl(
-                config.getJndiName() + "-managedThreadFactory",
+        ContextServiceImpl contextService = getContextService(config.getServiceConfig(), true);
+        ManagedExecutorServiceImpl mes = createManagedExecutorService(config, contextService);
+        managedExecutorServiceMap.put(jndiName, mes);
+        return mes;
+    }
+
+
+    public synchronized ManagedExecutorServiceImpl createManagedExecutorService(ManagedExecutorServiceCfg config, ContextServiceImpl contextService) {
+        LOG.log(Level.FINE, "createManagedExecutorService(config={0}, contextService={1})",
+            new Object[] {config, contextService});
+        String jndiName = config.getServiceConfig().getJndiName();
+        GlassFishManagedThreadFactory managedThreadFactory = new GlassFishManagedThreadFactory(
+                toManagedThreadFactoryName(jndiName),
                 null,
                 config.getThreadPriority());
-        ManagedExecutorServiceImpl mes = new ManagedExecutorServiceImpl(config.getJndiName(),
+        ManagedExecutorServiceImpl mes = new ManagedExecutorServiceImpl(jndiName,
                 managedThreadFactory,
-                config.getHungAfterSeconds() * 1000L, // in millseconds
+                config.getHungAfterSeconds() * 1000L, // in millis
                 config.isLongRunningTasks(),
                 config.getCorePoolSize(),
                 config.getMaximumPoolSize(),
                 config.getKeepAliveSeconds(), TimeUnit.SECONDS,
                 config.getThreadLifeTimeSeconds(),
                 config.getTaskQueueCapacity(),
-                createContextService(config.getJndiName() + "-contextservice",
-                        config.getContextInfo(), config.getContextInfoEnabled(), true),
+                contextService,
                 AbstractManagedExecutorService.RejectPolicy.ABORT);
-        if (managedExecutorServiceMap == null) {
-            managedExecutorServiceMap = new HashMap();
-        }
-        managedExecutorServiceMap.put(jndiName, mes);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
             scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds(), config.isHungLoggerPrintOnce());
         }
         return mes;
     }
 
-    public void shutdownManagedExecutorService(String jndiName) {
-        ManagedExecutorServiceImpl mes = null;
-        synchronized(this) {
-            if (managedExecutorServiceMap != null) {
-                mes = managedExecutorServiceMap.remove(jndiName);
-            }
-        }
-        if (mes != null) {
-            mes.shutdownNow();
-        }
-    }
 
-    public synchronized ManagedScheduledExecutorServiceImpl getManagedScheduledExecutorService(ResourceInfo resource,
-                                                                                               ManagedScheduledExecutorServiceConfig config) {
-        String jndiName = config.getJndiName();
+    public synchronized ManagedScheduledExecutorServiceImpl getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
+        LOG.log(Level.FINE, "getManagedScheduledExecutorService(config={0})", config);
+        String jndiName = config.getServiceConfig().getJndiName();
         if (managedScheduledExecutorServiceMap != null && managedScheduledExecutorServiceMap.containsKey(jndiName)) {
             return managedScheduledExecutorServiceMap.get(jndiName);
         }
-        ManagedThreadFactoryImpl managedThreadFactory = new ManagedThreadFactoryImpl(
-                config.getJndiName() + "-managedThreadFactory",
-                null,
-                config.getThreadPriority());
-        ManagedScheduledExecutorServiceImpl mes = new ManagedScheduledExecutorServiceImpl(config.getJndiName(),
-                managedThreadFactory,
-                config.getHungAfterSeconds() * 1000L, // in millseconds
-                config.isLongRunningTasks(),
-                config.getCorePoolSize(),
-                config.getKeepAliveSeconds(), TimeUnit.SECONDS,
-                config.getThreadLifeTimeSeconds(),
-                createContextService(config.getJndiName() + "-contextservice",
-                        config.getContextInfo(), config.getContextInfoEnabled(), true),
-                AbstractManagedExecutorService.RejectPolicy.ABORT);
-        if (managedScheduledExecutorServiceMap == null) {
-            managedScheduledExecutorServiceMap = new HashMap();
-        }
+        ContextServiceImpl contextService = getContextService(config.getServiceConfig(), true);
+        ManagedScheduledExecutorServiceImpl mes = createManagedScheduledExecutorService(config, contextService);
         managedScheduledExecutorServiceMap.put(jndiName, mes);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
             scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds(), config.isHungLoggerPrintOnce());
@@ -219,129 +193,234 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         return mes;
     }
 
-    public void shutdownScheduledManagedExecutorService(String jndiName) {
-        ManagedScheduledExecutorServiceImpl mses = null;
-        synchronized(this) {
-            if (managedScheduledExecutorServiceMap != null) {
-                mses = managedScheduledExecutorServiceMap.remove(jndiName);
-            }
+
+    public ManagedScheduledExecutorServiceImpl createManagedScheduledExecutorService(
+        ManagedScheduledExecutorServiceCfg config, ContextServiceImpl contextService) {
+        String jndiName = config.getServiceConfig().getJndiName();
+        GlassFishManagedThreadFactory managedThreadFactory = new GlassFishManagedThreadFactory(
+                toManagedThreadFactoryName(jndiName),
+                null,
+                config.getThreadPriority());
+        ManagedScheduledExecutorServiceImpl mes = new ManagedScheduledExecutorServiceImpl(jndiName,
+                managedThreadFactory,
+                config.getHungAfterSeconds() * 1000L,
+                config.isLongRunningTasks(),
+                config.getCorePoolSize(),
+                config.getKeepAliveSeconds(), TimeUnit.SECONDS,
+                config.getThreadLifeTimeSeconds(),
+                contextService,
+                AbstractManagedExecutorService.RejectPolicy.ABORT);
+        return mes;
+    }
+
+    public synchronized ManagedThreadFactoryImpl getManagedThreadFactory(ManagedThreadFactoryCfg config) {
+        LOG.log(Level.FINE, "getManagedThreadFactory(config={0})", config);
+        String jndiName = config.getServiceConfig().getJndiName();
+        if (managedThreadFactoryMap != null && managedThreadFactoryMap.containsKey(jndiName)) {
+            return managedThreadFactoryMap.get(jndiName);
         }
+        ContextServiceImpl contextService = getContextService(config.getServiceConfig(), true);
+        GlassFishManagedThreadFactory managedThreadFactory = createManagedThreadFactory(config, contextService);
+        managedThreadFactoryMap.put(jndiName, managedThreadFactory);
+        return managedThreadFactory;
+    }
+
+
+    public GlassFishManagedThreadFactory createManagedThreadFactory(ManagedThreadFactoryCfg config, ContextServiceImpl contextService) {
+        String jndiName = config.getServiceConfig().getJndiName();
+        return new GlassFishManagedThreadFactory(jndiName, contextService, config.getThreadPriority());
+    }
+
+
+    public ContextServiceImpl findOrCreateContextService(ContextualResourceDefinition definition, String applicationName, String moduleName) {
+        String jndiName = toContextServiceName(definition.getContext(), definition.getName());
+        LOG.log(Level.FINEST, "findOrCreateContextService(jndiName={0}, applicationName={1}, moduleName={2})",
+            new Object[] {definition, applicationName, moduleName});
+        ResourceInfo contextResourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        ContextServiceImpl lookup1 = lookup(contextResourceInfo, jndiName);
+        if (lookup1 != null) {
+            return lookup1;
+        }
+        ContextServiceImpl lookup2 = lookup(definition.getContext());
+        if (lookup2 != null) {
+            return lookup2;
+        }
+        // Create default
+        ConcurrentServiceCfg config = new ConcurrentServiceCfg(jndiName, ALL_STANTARD_CONTEXT_TYPES, true, null);
+        return contextServiceMap.computeIfAbsent(jndiName, n -> createContextService(jndiName, config, true));
+    }
+
+
+    public synchronized ContextServiceImpl getContextService(ContextServiceCfg config) {
+        return contextServiceMap.computeIfAbsent(config.getServiceConfig().getJndiName(),
+            n -> createContextService(config));
+    }
+
+
+    public synchronized ContextServiceImpl createContextService(ContextServiceCfg config) {
+        LOG.log(Level.FINE, "createContextService(config={0})", config);
+        boolean keepTxUnchanged = config.getUnchangedContexts().contains(WorkArea.name());
+        boolean clearTx = config.getClearedContexts().contains(WorkArea.name());
+        TransactionSetupProvider txSetupProvider = createTxSetupProvider(keepTxUnchanged, clearTx);
+        ContextSetupProvider ctxSetupProvider = new ContextSetupProviderImpl(config.getPropagatedContexts(),
+            config.getClearedContexts(), config.getUnchangedContexts());
+        String jndiName = config.getServiceConfig().getJndiName();
+        return new ContextServiceImpl(jndiName, ctxSetupProvider, txSetupProvider);
+    }
+
+
+    public synchronized ContextServiceImpl getContextService(ConcurrentServiceCfg config, boolean cleanupTransaction) {
+        String contextServiceJndiName = toContextServiceName(config.getContext(), config.getJndiName());
+        return contextServiceMap.computeIfAbsent(contextServiceJndiName,
+            n -> createContextService(contextServiceJndiName, config, cleanupTransaction));
+    }
+
+
+    public void shutdownManagedExecutorService(String jndiName) {
+        ManagedExecutorServiceImpl mes = removeManagedExecutorService(jndiName);
+        if (mes != null) {
+            mes.shutdownNow();
+        }
+    }
+
+
+    public void shutdownScheduledManagedExecutorService(String jndiName) {
+        ManagedScheduledExecutorServiceImpl mses = removeManagedScheduledExecutorService(jndiName);
         if (mses != null) {
             mses.shutdownNow();
         }
     }
 
-    public synchronized ManagedThreadFactoryImpl getManagedThreadFactory(ResourceInfo resource, ManagedThreadFactoryConfig config) {
-        String jndiName = config.getJndiName();
-        if (managedThreadFactoryMap != null && managedThreadFactoryMap.containsKey(jndiName)) {
-            return managedThreadFactoryMap.get(jndiName);
-        }
-        ManagedThreadFactoryImpl managedThreadFactory = new ManagedThreadFactoryImpl(config.getJndiName(),
-                createContextService(config.getJndiName() + "-contextservice",
-                        config.getContextInfo(), config.getContextInfoEnabled(), true),
-                config.getThreadPriority());
-        if (managedThreadFactoryMap == null) {
-            managedThreadFactoryMap = new HashMap();
-        }
-        managedThreadFactoryMap.put(jndiName, managedThreadFactory);
-        return managedThreadFactory;
-    }
 
     public void shutdownManagedThreadFactory(String jndiName) {
-        ManagedThreadFactoryImpl mtf = null;
-        synchronized(this) {
-            if (managedThreadFactoryMap != null) {
-                mtf = managedThreadFactoryMap.remove(jndiName);
-            }
-        }
+        ManagedThreadFactoryImpl mtf = removeManagedThreadFactory(jndiName);
         if (mtf != null) {
             mtf.stop();
         }
     }
 
-    private ContextServiceImpl createContextService(String jndiName, String contextInfo,
-                                                    String contextInfoEnabled, boolean cleanupTransaction) {
-        boolean isContextInfoEnabled = Boolean.valueOf(contextInfoEnabled);
-        ContextSetupProviderImpl.CONTEXT_TYPE[] contextTypes = parseContextInfo(contextInfo, isContextInfoEnabled);
-        ContextSetupProviderImpl contextSetupProvider =
-                new ContextSetupProviderImpl(invocationManager, deployment, applications,
-                                             cleanupTransaction? transactionManager: null, contextTypes);
-        ContextServiceImpl obj = new ContextServiceImpl(jndiName, contextSetupProvider,
-                new TransactionSetupProviderImpl(transactionManager));
-        return obj;
+
+    public synchronized void shutdownContextService(String jndiName) {
+        contextServiceMap.remove(jndiName);
     }
 
-    private ContextSetupProviderImpl.CONTEXT_TYPE[] parseContextInfo(String contextInfo, boolean isContextInfoEnabled) {
-        ArrayList<ContextSetupProviderImpl.CONTEXT_TYPE> contextTypeArray = new ArrayList<>();
-        ContextSetupProviderImpl.CONTEXT_TYPE[] contextTypes = new ContextSetupProviderImpl.CONTEXT_TYPE[] {};
-        if (contextInfo == null) {
-            // by default, if no context info is passed, we propagate all context types
-            contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.CLASSLOADING);
-            contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.NAMING);
-            contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.SECURITY);
-            contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.WORKAREA);
-            return contextTypeArray.toArray(contextTypes);
+
+    private ContextServiceImpl createContextService(String contextServiceJndiName, ConcurrentServiceCfg config,
+        boolean cleanupTransaction) {
+        LOG.log(Level.FINE, "createContextService(contextServiceJndiName={0}, config={1}, cleanupTransaction={2})",
+            new Object[] {contextServiceJndiName, config, cleanupTransaction});
+        // if the context service is not known, create it
+        Set<String> propagated = parseContextInfo(config.getContextInfo(), config.isContextInfoEnabled());
+        final Set<String> cleared;
+        final boolean clearTx;
+        if (cleanupTransaction && !propagated.contains(WorkArea.name())) {
+            // pass the cleanup transaction in list of cleared handlers
+            cleared = Set.of(WorkArea.name());
+            clearTx = true;
+        } else {
+            cleared = emptySet();
+            clearTx = false;
         }
-        if (isContextInfoEnabled) {
-        StringTokenizer st = new StringTokenizer(contextInfo, ",", false);
-            while(st.hasMoreTokens()) {
-                String token = st.nextToken().trim();
-                if (CONTEXT_INFO_CLASSLOADER.equalsIgnoreCase(token)) {
-                    contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.CLASSLOADING);
-                } else if (CONTEXT_INFO_JNDI.equalsIgnoreCase(token)) {
-                    contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.NAMING);
-                } else if (CONTEXT_INFO_SECURITY.equalsIgnoreCase(token)) {
-                    contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.SECURITY);
-                } else if (CONTEXT_INFO_WORKAREA.equalsIgnoreCase(token)) {
-                    contextTypeArray.add(ContextSetupProviderImpl.CONTEXT_TYPE.WORKAREA);
-                }
-            }
-        }
-        return contextTypeArray.toArray(contextTypes);
+        TransactionSetupProvider txSetupProvider = createTxSetupProvider(false, clearTx);
+        ContextSetupProvider ctxSetupProvider = new ContextSetupProviderImpl(propagated, cleared, emptySet());
+        return new ContextServiceImpl(contextServiceJndiName, ctxSetupProvider, txSetupProvider);
     }
+
 
     private void scheduleInternalTimer(long initialDelay, long interval, boolean logOnce) {
-        if (internalScheduler == null) {
-            String name = "glassfish-internal";
-            ManagedThreadFactoryImpl managedThreadFactory = new ManagedThreadFactoryImpl(
-                    name + "-managedThreadFactory",
-                    null,
-                    Thread.NORM_PRIORITY);
-            internalScheduler = new ManagedScheduledExecutorServiceImpl(name,
-                    managedThreadFactory,
-                    0L,
-                    false,
-                    1,
-                    60, TimeUnit.SECONDS,
-                    0L,
-                    createContextService(name + "-contextservice",
-                            CONTEXT_INFO_CLASSLOADER, "true", false),
-                    AbstractManagedExecutorService.RejectPolicy.ABORT);
-            internalScheduler.scheduleAtFixedRate(new HungTasksLogger(logOnce), initialDelay, interval, TimeUnit.SECONDS);
+        if (internalScheduler != null) {
+            return;
+        }
+        final String name = "Glassfish-Internal";
+        ManagedThreadFactoryImpl managedThreadFactory = new GlassFishManagedThreadFactory(
+                toManagedThreadFactoryName(name),
+                null,
+                Thread.NORM_PRIORITY);
+        ConcurrentServiceCfg config = new ConcurrentServiceCfg(toContextServiceName(name), Classloader.name(), true, null);
+        ContextServiceImpl contextService = getContextService(config, false);
+        internalScheduler = new ManagedScheduledExecutorServiceImpl(name,
+                managedThreadFactory,
+                0L,
+                false,
+                1,
+                60, TimeUnit.SECONDS,
+                0L,
+                contextService,
+                AbstractManagedExecutorService.RejectPolicy.ABORT);
+        internalScheduler.scheduleAtFixedRate(
+            new HungTasksLogger(logOnce), initialDelay, interval, TimeUnit.SECONDS);
+    }
+
+
+    private TransactionSetupProvider createTxSetupProvider(boolean keepTransactionUnchanged, boolean clearTransaction) {
+        return new TransactionSetupProviderImpl(transactionManager, keepTransactionUnchanged, clearTransaction);
+    }
+
+
+    private ContextServiceImpl lookup(GenericResourceInfo contextResourceInfo, String jndiName) {
+        try {
+            return (ContextServiceImpl) resourceNamingService.lookup(contextResourceInfo, jndiName);
+        } catch (NamingException e) {
+            return null;
         }
     }
 
-    @Override
-    public void postConstruct() {
+
+    private ContextServiceImpl lookup(String jndiName) {
+        LOG.log(Level.FINEST, "lookup(jndiName={0})", jndiName);
+        try {
+            return InitialContext.doLookup(jndiName);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    @Override
-    public void preDestroy() {
-        // TODO shut down objects here
+
+    private synchronized ManagedExecutorServiceImpl removeManagedExecutorService(String jndiName) {
+        return managedExecutorServiceMap.remove(jndiName);
     }
+
+
+    private synchronized ManagedScheduledExecutorServiceImpl removeManagedScheduledExecutorService(String jndiName) {
+        return managedScheduledExecutorServiceMap.remove(jndiName);
+    }
+
+
+    private synchronized ManagedThreadFactoryImpl removeManagedThreadFactory(String jndiName) {
+        return managedThreadFactoryMap.remove(jndiName);
+    }
+
+
+    private static String toContextServiceName(String configuredContextJndiName, String parentObjectJndiName) {
+        return configuredContextJndiName == null ? toContextServiceName(parentObjectJndiName)
+            : configuredContextJndiName;
+    }
+
+
+    private static String toContextServiceName(final String jndiName) {
+        return jndiName + "-ContextService";
+    }
+
+
+    private static String toManagedThreadFactoryName(String jndiName) {
+        return jndiName + "-ManagedThreadFactory";
+    }
+
 
     class HungTasksLogger implements Runnable {
 
-        private Boolean logOnce;
-        private Map<String, Collection<AbstractManagedThread>> cachedHungThreadsMap = new HashMap<>();
+        private final Boolean logOnce;
+        private final Map<String, Collection<AbstractManagedThread>> cachedHungThreadsMap = new HashMap<>();
 
         HungTasksLogger(Boolean logOnce) {
             this.logOnce = logOnce;
         }
 
+
+        @Override
         public void run() {
-            ArrayList<ManagedExecutorServiceImpl> executorServices = new ArrayList();
-            ArrayList<ManagedScheduledExecutorServiceImpl> scheduledExecutorServices = new ArrayList();
+            ArrayList<ManagedExecutorServiceImpl> executorServices = new ArrayList<>();
+            ArrayList<ManagedScheduledExecutorServiceImpl> scheduledExecutorServices = new ArrayList<>();
             synchronized (ConcurrentRuntime.this) {
                 if (managedExecutorServiceMap != null) {
                     Collection<ManagedExecutorServiceImpl> mesColl = managedExecutorServiceMap.values();
@@ -364,37 +443,62 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
             }
         }
 
-        private void logHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf, String mesName) {
-             if (!logOnce){
-                 logRawHungThreads(hungThreads, mtf, mesName);
-                 return;
-             }
-             if (hungThreads == null) {
-                 cachedHungThreadsMap.remove(mesName);
-                 return;
-             }
-             Collection<AbstractManagedThread> targetHungThreads = new HashSet<>();
-             targetHungThreads.addAll(hungThreads);
-             Collection<AbstractManagedThread> cachedHungThreads = cachedHungThreadsMap.get(mesName);
-             if (cachedHungThreads != null) {
-                 targetHungThreads.removeAll(cachedHungThreads);
-             }
-             logRawHungThreads(targetHungThreads, mtf, mesName);
-             cachedHungThreadsMap.put(mesName, hungThreads);
+
+        private void logHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf,
+            String mesName) {
+            if (!logOnce) {
+                logRawHungThreads(hungThreads, mtf, mesName);
+                return;
+            }
+            if (hungThreads == null) {
+                cachedHungThreadsMap.remove(mesName);
+                return;
+            }
+            Collection<AbstractManagedThread> targetHungThreads = new HashSet<>();
+            targetHungThreads.addAll(hungThreads);
+            Collection<AbstractManagedThread> cachedHungThreads = cachedHungThreadsMap.get(mesName);
+            if (cachedHungThreads != null) {
+                targetHungThreads.removeAll(cachedHungThreads);
+            }
+            logRawHungThreads(targetHungThreads, mtf, mesName);
+            cachedHungThreadsMap.put(mesName, hungThreads);
         }
 
-        private void logRawHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf, String mesName) {
+
+        private void logRawHungThreads(Collection<AbstractManagedThread> hungThreads, ManagedThreadFactoryImpl mtf,
+            String mesName) {
             if (hungThreads != null) {
-                for (AbstractManagedThread hungThread: hungThreads) {
-                    Object[] params = {hungThread.getTaskIdentityName(),
-                                       hungThread.getName(),
-                                       hungThread.getTaskRunTime(System.currentTimeMillis()) / 1000,
-                                       mtf.getHungTaskThreshold() / 1000,
-                                       mesName};
-                    logger.log(Level.WARNING, LogFacade.UNRESPONSIVE_TASK, params);
+                for (AbstractManagedThread hungThread : hungThreads) {
+                    Object[] params = {hungThread.getTaskIdentityName(), hungThread.getName(),
+                        hungThread.getTaskRunTime(System.currentTimeMillis()) / 1000, mtf.getHungTaskThreshold() / 1000,
+                        mesName};
+                    LOG.log(Level.WARNING, LogFacade.UNRESPONSIVE_TASK, params);
                 }
             }
         }
     }
 
+    private static class GlassFishManagedThreadFactory extends ManagedThreadFactoryImpl {
+
+        private static final Logger LOG = Logger.getLogger(GlassFishManagedThreadFactory.class.getName());
+
+        GlassFishManagedThreadFactory(String name, ContextServiceImpl contextService, int threadPriority) {
+            super(name, contextService, threadPriority);
+        }
+
+
+        @Override
+        protected AbstractManagedThread createThread(Runnable runnable, ContextHandle contextHandleForSetup) {
+            LOG.log(Level.FINE, "createThread(runnable={0}, contextHandleForSetup={1})",
+                new Object[] {runnable, contextHandleForSetup});
+            Thread thread = Thread.currentThread();
+            ClassLoader originalCL = thread.getContextClassLoader();
+            thread.setContextClassLoader(null);
+            try {
+                return super.createThread(runnable, contextHandleForSetup);
+            } finally {
+                thread.setContextClassLoader(originalCL);
+            }
+        }
+    }
 }

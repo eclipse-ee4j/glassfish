@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,19 @@
 
 package org.glassfish.apf.impl;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.glassfish.apf.ResultType;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.apf.AnnotationHandler;
+import org.glassfish.apf.ResultType;
 
 /**
- *
  * @author dochez
  */
 public class HandlerProcessingResultImpl implements HandlerProcessingResult {
 
-    Map<Class<? extends Annotation>,ResultType> results;
+    Map<Class<? extends Annotation>, ResultType> results;
     ResultType overallResult = ResultType.UNPROCESSED;
 
     /**
@@ -40,40 +39,48 @@ public class HandlerProcessingResultImpl implements HandlerProcessingResult {
         this.results = results;
     }
 
+
     public HandlerProcessingResultImpl() {
-        results = new HashMap<Class<? extends Annotation>, ResultType>();
+        results = new HashMap<>();
     }
 
-    public static HandlerProcessingResultImpl getDefaultResult(Class<? extends Annotation> annotationType, ResultType result) {
 
+    public static HandlerProcessingResultImpl getDefaultResult(Class<? extends Annotation> annotationType,
+        ResultType result) {
         HandlerProcessingResultImpl impl = new HandlerProcessingResultImpl();
         impl.results.put(annotationType, result);
         impl.overallResult = result;
         return impl;
     }
 
-    public Map<Class<? extends Annotation>,ResultType> processedAnnotations() {
+
+    @Override
+    public Map<Class<? extends Annotation>, ResultType> processedAnnotations() {
         return results;
     }
 
+
     public void addResult(Class<? extends Annotation> annotationType, ResultType result) {
-        if (result.compareTo(overallResult)>0) {
+        if (result.compareTo(overallResult) > 0) {
             overallResult = result;
         }
         results.put(annotationType, result);
     }
 
+
     public void addAll(HandlerProcessingResult result) {
-         if (result == null) {
-             return;
-         }
-         if (result.getOverallResult().compareTo(overallResult)>0) {
+        if (result == null) {
+            return;
+        }
+        if (result.getOverallResult().compareTo(overallResult) > 0) {
             overallResult = result.getOverallResult();
         }
         results.putAll(result.processedAnnotations());
     }
 
-    public ResultType getOverallResult(){
+
+    @Override
+    public ResultType getOverallResult() {
         return overallResult;
     }
 

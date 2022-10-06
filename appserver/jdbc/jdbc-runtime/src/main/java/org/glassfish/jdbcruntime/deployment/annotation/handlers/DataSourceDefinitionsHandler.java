@@ -17,7 +17,7 @@
 
 package org.glassfish.jdbcruntime.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -42,10 +42,7 @@ import org.jvnet.hk2.annotations.Service;
 @AnnotationHandlerFor(DataSourceDefinitions.class)
 public class DataSourceDefinitionsHandler extends AbstractResourceHandler {
 
-    protected final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DataSourceDefinitionsHandler.class);
-
-    public DataSourceDefinitionsHandler() {
-    }
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(DataSourceDefinitionsHandler.class);
 
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
@@ -56,9 +53,9 @@ public class DataSourceDefinitionsHandler extends AbstractResourceHandler {
         Set<String> duplicates = new HashSet<>();
         if (values != null && values.length > 0) {
             for (DataSourceDefinition defn : values) {
-                String defnName = DataSourceDefinitionDescriptor.getJavaName(defn.name());
+                String defnName = ResourceDescriptor.getJavaComponentJndiName(defn.name());
                 if (duplicates.contains(defnName)) {
-                    String localString = localStrings.getLocalString(
+                    String localString = I18N.getLocalString(
                             "enterprise.deployment.annotation.handlers.datasourcedefinitionsduplicates",
                             "@DataSourceDefinitions cannot have multiple definitions with same name : ''{0}''", defnName);
                     throw new IllegalStateException(localString);

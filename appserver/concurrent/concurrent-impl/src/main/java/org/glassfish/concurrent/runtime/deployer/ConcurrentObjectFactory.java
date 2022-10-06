@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,75 +18,62 @@
 package org.glassfish.concurrent.runtime.deployer;
 
 import com.sun.logging.LogDomains;
-import org.glassfish.concurrent.runtime.ConcurrentRuntime;
-import org.glassfish.enterprise.concurrent.*;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
+import java.util.Hashtable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
-import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
+import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
+import org.glassfish.enterprise.concurrent.ContextServiceImpl;
+import org.glassfish.enterprise.concurrent.ManagedExecutorServiceAdapter;
+import org.glassfish.enterprise.concurrent.ManagedScheduledExecutorServiceAdapter;
+import org.glassfish.enterprise.concurrent.ManagedThreadFactoryImpl;
+
+import static org.glassfish.concurrent.runtime.ConcurrentRuntime.getRuntime;
 
 public class ConcurrentObjectFactory implements ObjectFactory {
 
-    private static Logger _logger = LogDomains.getLogger(ConcurrentObjectFactory.class, LogDomains.JNDI_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(ConcurrentObjectFactory.class, LogDomains.JNDI_LOGGER, false);
 
     @Override
-    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) throws Exception {
+    public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment) {
+        LOG.log(Level.FINE, "getObjectInstance(obj={0}, name={1}, nameCtx, environment)", new Object[] {obj, name});
         Reference ref = (Reference) obj;
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,"ConcurrentNamingObjectFactory: " + ref +
-                    " Name:" + name);
+        Object config = ref.get(0).getContent();
+        if (config instanceof ContextServiceCfg) {
+            return getContextService((ContextServiceCfg) config);
+        } else if (config instanceof ManagedThreadFactoryCfg) {
+            return getManagedThreadFactory((ManagedThreadFactoryCfg) config);
+        } else if (config instanceof ManagedExecutorServiceCfg) {
+            return getManagedExecutorService((ManagedExecutorServiceCfg) config);
+        } else if (config instanceof ManagedScheduledExecutorServiceCfg) {
+            return getManagedScheduledExecutorService((ManagedScheduledExecutorServiceCfg) config);
+        } else {
+            throw new IllegalArgumentException("Unknown type of " + config);
         }
-        BaseConfig config = (BaseConfig) ref.get(0).getContent();
-        ResourceInfo resourceInfo = (ResourceInfo) ref.get(1).getContent();
-
-        Object instance = null;
-        switch(config.getType()) {
-            case CONTEXT_SERVICE:
-                instance = getContextService((ContextServiceConfig)config, resourceInfo);
-                break;
-            case MANAGED_EXECUTOR_SERVICE:
-                instance = getManagedExecutorService((ManagedExecutorServiceConfig)config, resourceInfo);
-                break;
-            case MANAGED_SCHEDULED_EXECUTOR_SERVICE:
-                instance = getManagedScheduledExecutorService((ManagedScheduledExecutorServiceConfig)config, resourceInfo);
-                break;
-            case MANAGED_THREAD_FACTORY:
-                instance = getManagedThreadFactory((ManagedThreadFactoryConfig)config, resourceInfo);
-                break;
-            default:
-                break;
-        }
-        return instance;
     }
 
-    private ContextServiceImpl getContextService(ContextServiceConfig config, ResourceInfo resourceInfo) {
-
-        ContextServiceImpl contextService = getRuntime().getContextService(resourceInfo, config);
-        return contextService;
+    private ContextServiceImpl getContextService(ContextServiceCfg config) {
+        return getRuntime().getContextService(config);
     }
 
-    private ManagedThreadFactoryImpl getManagedThreadFactory(ManagedThreadFactoryConfig config, ResourceInfo resourceInfo) {
-        ManagedThreadFactoryImpl managedThreadFactory = getRuntime().getManagedThreadFactory(resourceInfo, config);
-        return managedThreadFactory;
+    private ManagedThreadFactoryImpl getManagedThreadFactory(ManagedThreadFactoryCfg config) {
+        return getRuntime().getManagedThreadFactory(config);
     }
 
-    private ManagedExecutorServiceAdapter getManagedExecutorService(ManagedExecutorServiceConfig config, ResourceInfo resourceInfo) {
-        ManagedExecutorServiceImpl mes = getRuntime().getManagedExecutorService(resourceInfo, config);
-        return mes.getAdapter();
+    private ManagedExecutorServiceAdapter getManagedExecutorService(ManagedExecutorServiceCfg config) {
+        return getRuntime().getManagedExecutorService(config).getAdapter();
     }
 
-    private ManagedScheduledExecutorServiceAdapter getManagedScheduledExecutorService(ManagedScheduledExecutorServiceConfig config, ResourceInfo resourceInfo) {
-        ManagedScheduledExecutorServiceImpl mes = getRuntime().getManagedScheduledExecutorService(resourceInfo, config);
-        return mes.getAdapter();
-    }
-
-    private ConcurrentRuntime getRuntime() {
-        return ConcurrentRuntime.getRuntime();
+    private ManagedScheduledExecutorServiceAdapter getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
+        return getRuntime().getManagedScheduledExecutorService(config).getAdapter();
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,59 +22,79 @@ import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
-import org.glassfish.admin.cli.resources.ResourceConfigCreator;
-import org.glassfish.api.admin.RestRedirect;
-import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
 
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.Min;
+
 import java.beans.PropertyVetoException;
+
+import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
+import org.glassfish.api.admin.RestRedirect;
+import org.glassfish.api.admin.RestRedirects;
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
 
 /**
  * Concurrency managed thread factory resource definition
  */
 
 @Configured
-@ResourceConfigCreator(commandName="create-managed-thread-factory")
+@ResourceConfigCreator(commandName = "create-managed-thread-factory")
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-thread-factory"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-thread-factory")
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-thread-factory"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-thread-factory")
 })
-@ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.MANAGED_THREAD_FACTORY)
-@ReferenceConstraint(skipDuringCreation=true, payload=ManagedThreadFactory.class)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=ManagedThreadFactory.class)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.MANAGED_THREAD_FACTORY)
+@ReferenceConstraint(skipDuringCreation = true, payload = ManagedThreadFactory.class)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ManagedThreadFactory.class)
 @CustomConfiguration(baseConfigurationFileName = "managed-thread-factory-conf.xml")
-public interface ManagedThreadFactory extends ConfigBeanProxy, Resource,
-        BindableResource, ConcurrencyResource, Payload  {
+public interface ManagedThreadFactory
+    extends ConfigBeanProxy, Resource, BindableResource, ConcurrencyResource, Payload {
 
     /**
      * Gets the value of the threadPriority property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String}
      */
-    @Attribute(defaultValue=""+Thread.NORM_PRIORITY, dataType=Integer.class)
-    @Min(value=0)
+    @Attribute(defaultValue = "" + Thread.NORM_PRIORITY, dataType = Integer.class)
+    @Min(value = 0)
     String getThreadPriority();
 
     /**
      * Sets the value of the threadPriority property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
     void setThreadPriority(String value) throws PropertyVetoException;
 
+    /**
+     * Gets the value of the context property.
+     *
+     * @return possible object is {@link String}
+     */
+    @Attribute(defaultValue = "", dataType = String.class)
+    String getContext();
+
+    /**
+     * Sets the value of the context property.
+     *
+     * @param value allowed object is {@link String}
+     */
+    void setContext(String value) throws PropertyVetoException;
+
+    @Override
     @DuckTyped
     String getIdentity();
 
     class Duck {
-        public static String getIdentity(ManagedThreadFactory resource){
+
+        public static String getIdentity(ManagedThreadFactory resource) {
             return resource.getJndiName();
         }
     }

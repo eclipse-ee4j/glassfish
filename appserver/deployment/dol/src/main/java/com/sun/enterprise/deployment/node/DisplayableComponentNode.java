@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
 public abstract class DisplayableComponentNode<T extends Descriptor> extends DeploymentDescriptorNode<T> {
 
     public DisplayableComponentNode() {
-        registerElementHandler(new XMLElement(TagNames.NAME), LocalizedInfoNode.class);
+        registerElementHandler(new XMLElement(TagNames.DISPLAY_NAME), LocalizedInfoNode.class);
         registerElementHandler(new XMLElement(TagNames.ICON), IconNode.class);
         registerElementHandler(new XMLElement(TagNames.SMALL_ICON), IconNode.class);
         registerElementHandler(new XMLElement(TagNames.LARGE_ICON), IconNode.class);
@@ -61,7 +61,7 @@ public abstract class DisplayableComponentNode<T extends Descriptor> extends Dep
     public void writeDisplayableComponentInfo(Node node, T descriptor) {
         LocalizedNode localizedNode = new LocalizedNode();
         localizedNode.writeLocalizedMap(node, TagNames.DESCRIPTION, descriptor.getLocalizedDescriptions());
-        localizedNode.writeLocalizedMap(node, TagNames.NAME, descriptor.getLocalizedDisplayNames());
+        localizedNode.writeLocalizedMap(node, TagNames.DISPLAY_NAME, descriptor.getLocalizedDisplayNames());
         IconNode iconNode = new IconNode();
         iconNode.writeLocalizedInfo(node, descriptor);
     }

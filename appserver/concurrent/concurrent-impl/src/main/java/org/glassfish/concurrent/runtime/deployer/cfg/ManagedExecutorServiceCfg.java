@@ -1,0 +1,120 @@
+/*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+package org.glassfish.concurrent.runtime.deployer.cfg;
+
+import java.io.Serializable;
+
+import org.glassfish.concurrent.config.ManagedExecutorService;
+
+import static org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg.parseInt;
+import static org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg.parseLong;
+
+/**
+ * Contains configuration information for a ManagedExecutorService object
+ */
+public class ManagedExecutorServiceCfg implements Serializable {
+
+    private static final long serialVersionUID = 6798969542162777949L;
+
+    private final ConcurrentServiceCfg serviceConfig;
+    private final int hungAfterSeconds;
+    private final boolean hungLoggerPrintOnce;
+    private final long hungLoggerInitialDelaySeconds;
+    private final long hungLoggerIntervalSeconds;
+    private final boolean longRunningTasks;
+    private final int threadPriority;
+    private final int corePoolSize;
+    private final long keepAliveSeconds;
+    private final int maximumPoolSize;
+    private final int taskQueueCapacity;
+    private final long threadLifeTimeSeconds;
+
+    public ManagedExecutorServiceCfg(ManagedExecutorService config) {
+        serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled(), config.getContext());
+        hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
+        hungLoggerPrintOnce = Boolean.valueOf(config.getHungLoggerPrintOnce());
+        hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60);
+        hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60);
+        longRunningTasks = Boolean.valueOf(config.getLongRunningTasks());
+        threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
+        corePoolSize = parseInt(config.getCorePoolSize(), 0);
+        keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60);
+        maximumPoolSize = parseInt(config.getMaximumPoolSize(), Integer.MAX_VALUE);
+        taskQueueCapacity = parseInt(config.getTaskQueueCapacity(), Integer.MAX_VALUE);
+        threadLifeTimeSeconds = parseLong(config.getThreadLifetimeSeconds(), 0L);
+    }
+
+    public ConcurrentServiceCfg getServiceConfig() {
+        return this.serviceConfig;
+    }
+
+
+    public int getHungAfterSeconds() {
+        return hungAfterSeconds;
+    }
+
+
+    public boolean isHungLoggerPrintOnce() {
+        return hungLoggerPrintOnce;
+    }
+
+
+    public long getHungLoggerInitialDelaySeconds() {
+        return hungLoggerInitialDelaySeconds;
+    }
+
+
+    public long getHungLoggerIntervalSeconds() {
+        return hungLoggerIntervalSeconds;
+    }
+
+
+    public boolean isLongRunningTasks() {
+        return longRunningTasks;
+    }
+
+
+    public int getThreadPriority() {
+        return threadPriority;
+    }
+
+
+    public int getCorePoolSize() {
+        return corePoolSize;
+    }
+
+
+    public long getKeepAliveSeconds() {
+        return keepAliveSeconds;
+    }
+
+
+    public int getMaximumPoolSize() {
+        return maximumPoolSize;
+    }
+
+
+    public int getTaskQueueCapacity() {
+        return taskQueueCapacity;
+    }
+
+
+    public long getThreadLifeTimeSeconds() {
+        return threadLifeTimeSeconds;
+    }
+}

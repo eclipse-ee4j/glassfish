@@ -118,7 +118,7 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
-        table.put(TagNames.NAME, "setName");
+        table.put(TagNames.DISPLAY_NAME, "setName");
         table.put(WebTagNames.SERVLET_NAME, "setCanonicalName");
         return table;
     }

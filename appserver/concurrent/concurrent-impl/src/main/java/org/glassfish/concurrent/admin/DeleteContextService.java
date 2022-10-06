@@ -38,7 +38,7 @@ import jakarta.inject.Inject;
  * Delete Context Service Command
  *
  */
-@TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG,  })
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="delete-context-service")
 @PerLookup

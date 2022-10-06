@@ -159,12 +159,6 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>dol-core</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>dol</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -326,18 +320,13 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-           <groupId>org.omnifaces</groupId>
-            <artifactId>concurrent-connector</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.omnifaces</groupId>
+            <groupId>org.glassfish.main.concurrent</groupId>
             <artifactId>concurrent-impl</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>concurrent-extras</artifactId>
+            <groupId>org.glassfish.main.concurrent</groupId>
+            <artifactId>concurrent-connector</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

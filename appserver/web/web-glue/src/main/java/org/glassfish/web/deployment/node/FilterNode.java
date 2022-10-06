@@ -63,7 +63,7 @@ public class FilterNode extends DisplayableComponentNode<ServletFilterDescriptor
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
-        table.put(WebTagNames.NAME, "setDisplayName");
+        table.put(WebTagNames.DISPLAY_NAME, "setDisplayName");
         table.put(WebTagNames.FILTER_NAME, "setName");
         table.put(WebTagNames.FILTER_CLASS, "setClassName");
         return table;

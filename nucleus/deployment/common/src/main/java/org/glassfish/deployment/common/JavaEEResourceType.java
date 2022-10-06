@@ -21,24 +21,31 @@ package org.glassfish.deployment.common;
  * @author naman
  */
 public enum JavaEEResourceType {
-    /**
-     * MSD: MailSessionDescriptor
-     * DSD: DataSourceDefinitionDescriptor
-     * DSDPOOL: DataSourceDefinitionDescriptor Pool
-     * CFD: ConnectionFactoryDefinitionDescriptor
-     * CFDPOOL: ConnectionFactoryDefinitionDescriptor Pool
-     * JMSCFDD: JMSConnectionFactoryDefinitionDescriptor
-     * JMSCFDDPOOL: JMSConnectionFactoryDefinitionDescriptor Pool
-     * JMSDD: JMSDestinationDefinitionDescriptor
-     * AODD: AdministeredObjectDefinitionDescriptor
-     */
-    MSD, DSD, DSDPOOL, CFD, CFDPOOL, JMSCFDD, JMSCFDDPOOL, JMSDD, AODD,
 
+    /** Mail Session */
+    MSD,
+    /** Data Source Definition */
+    DSD,
+    /** Data Sourve Definition - Pool */
+    DSDPOOL,
+    /** Connection Factory Definition */
+    CFD,
+    /** Connection Factory Definition - Pool */
+    CFDPOOL,
+    /** JMS Connection Factory Definition */
+    JMSCFDD,
+    /** JMS Connection Factory Definition - Pool */
+    JMSCFDDPOOL,
+    /** JMS Destination Definition */
+    JMSDD,
+    /** Administered Object Definition */
+    AODD,
+    /** Context Service Definition */
     CSDD,
-
+    /** Managed Executor Definition */
     MEDD,
-
+    /** Managed Thread Factory Definition */
     MTFDD,
-
+    /** Managed Scheduled Executor Definition */
     MSEDD,
 }

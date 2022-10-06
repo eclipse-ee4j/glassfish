@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,27 +20,31 @@ package org.glassfish.resourcebase.resources.api;
 import java.io.Serializable;
 
 /**
- * Represents resource information
+ * Represents resource information.
  * A resource may be defined in "java:app" scope or "java:module" scope
+ *
  * @author Jagadish Ramu
  */
 public interface GenericResourceInfo extends Serializable {
 
     /**
-     * name of the resource
+     * Name of the resource
+     *
      * @return String name
      */
-    public String getName() ;
+    String getName();
 
     /**
-     * application in which the resource is defined
+     * Application in which the resource is defined
+     *
      * @return String application-name
      */
-    public String getApplicationName() ;
+    String getApplicationName();
 
     /**
-     * module in which the resource is defined
+     * Module in which the resource is defined
+     *
      * @return String module-name
      */
-    public String getModuleName() ;
+    String getModuleName();
 }

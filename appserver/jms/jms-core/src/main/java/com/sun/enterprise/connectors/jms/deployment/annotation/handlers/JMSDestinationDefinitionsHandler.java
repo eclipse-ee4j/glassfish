@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,17 @@
 
 package com.sun.enterprise.connectors.jms.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.jms.JMSDestinationDefinition;
+import jakarta.jms.JMSDestinationDefinitions;
+
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
 import java.util.Set;
-
-import jakarta.jms.JMSDestinationDefinition;
-import jakarta.jms.JMSDestinationDefinitions;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
@@ -38,28 +39,23 @@ import org.jvnet.hk2.annotations.Service;
 @AnnotationHandlerFor(JMSDestinationDefinitions.class)
 public class JMSDestinationDefinitionsHandler extends AbstractResourceHandler {
 
-    protected final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(JMSDestinationDefinitionsHandler.class);
-
-
-    public JMSDestinationDefinitionsHandler() {
-    }
+    private final static LocalStringManagerImpl I18N = new LocalStringManagerImpl(
+        JMSDestinationDefinitionsHandler.class);
 
     @Override
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,  ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
+        throws AnnotationProcessorException {
         JMSDestinationDefinitions defns = (JMSDestinationDefinitions) ainfo.getAnnotation();
         JMSDestinationDefinition values[] = defns.value();
-        Set<String> duplicates = new HashSet<String>();
+        Set<String> duplicates = new HashSet<>();
         if (values != null && values.length > 0) {
             for (JMSDestinationDefinition defn : values) {
-                String defnName = JMSDestinationDefinitionDescriptor.getJavaName(defn.name());
-
+                String defnName = ResourceDescriptor.getJavaComponentJndiName(defn.name());
                 if (duplicates.contains(defnName)) {
-                    String localString = localStrings.getLocalString(
-                            "enterprise.deployment.annotation.handlers.jmsdestinationdefinitionsduplicates",
-                            "@JMSDestinationDefinition cannot have multiple definitions with same name : ''{0}''",
-                            defnName);
+                    String localString = I18N.getLocalString(
+                        "enterprise.deployment.annotation.handlers.jmsdestinationdefinitionsduplicates",
+                        "@JMSDestinationDefinition cannot have multiple definitions with same name : ''{0}''",
+                        defnName);
                     throw new IllegalStateException(localString);
                 } else {
                     duplicates.add(defnName);
@@ -73,8 +69,8 @@ public class JMSDestinationDefinitionsHandler extends AbstractResourceHandler {
     }
 
 
+    @Override
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();
     }
 }
-

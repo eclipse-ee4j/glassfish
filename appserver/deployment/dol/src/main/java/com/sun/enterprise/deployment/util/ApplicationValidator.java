@@ -34,11 +34,11 @@ import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.MailSessionDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -47,9 +47,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -490,10 +489,6 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
     /**
      * Method to validate MSD is unique or not
-     *
-     * @param mailSessionDescriptors
-     * @param scope
-     * @return
      */
     private boolean findExistingDescriptors(Set<ResourceDescriptor> descriptors, String scope) {
         for (ResourceDescriptor descriptor : descriptors) {
@@ -509,77 +504,69 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      * Method to compare existing descriptor with other descriptors. If both descriptor is equal then deployment
      * should be failed. scope is nothing but app level,connector level, ejb level etc., which is used later to
      * compare same jndi name is defined at different scope or not.
-     * @param name
-     * @param descriptor
-     * @param scope
-     * @return
      */
     private boolean isExistsDescriptor(String name, ResourceDescriptor descriptor, String scope) {
-
-        if (descriptor != null) {
-
-            CommonResourceValidator commonResourceValidator = allResourceDescriptors.get(name);
-            if (commonResourceValidator != null) {
-                Descriptor existingDescriptor = commonResourceValidator.getDescriptor();
-                if (descriptor instanceof MailSessionDescriptor && existingDescriptor instanceof MailSessionDescriptor) {
-                    if (descriptor.equals(existingDescriptor)) {
-                        LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
-                    } else {
-                        allUniqueResource = false;
-                        return true;
-                    }
-                } else if (descriptor instanceof DataSourceDefinitionDescriptor
-                    && existingDescriptor instanceof DataSourceDefinitionDescriptor) {
-                    if (descriptor.equals(existingDescriptor)) {
-                        LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
-                    } else {
-                        allUniqueResource = false;
-                        return true;
-                    }
-                } else if (descriptor instanceof ConnectionFactoryDefinitionDescriptor
-                    && existingDescriptor instanceof ConnectionFactoryDefinitionDescriptor) {
-                    if (descriptor.equals(existingDescriptor)) {
-                        LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
-                    } else {
-                        allUniqueResource = false;
-                        return true;
-                    }
-                } else if (descriptor instanceof AdministeredObjectDefinitionDescriptor
-                    && existingDescriptor instanceof AdministeredObjectDefinitionDescriptor) {
-                    if (descriptor.equals(existingDescriptor)) {
-                        LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
-                    } else {
-                        allUniqueResource = false;
-                        return true;
-                    }
+        if (descriptor == null) {
+            return false;
+        }
+        CommonResourceValidator commonResourceValidator = allResourceDescriptors.get(name);
+        if (commonResourceValidator == null) {
+            Vector<String> vectorScope = new Vector<>();
+            vectorScope.add(scope);
+            allResourceDescriptors.put(name, new CommonResourceValidator(descriptor, name, vectorScope));
+        } else {
+            Descriptor existingDescriptor = commonResourceValidator.getDescriptor();
+            if (descriptor instanceof MailSessionDescriptor && existingDescriptor instanceof MailSessionDescriptor) {
+                if (descriptor.equals(existingDescriptor)) {
+                    LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
+                } else {
+                    allUniqueResource = false;
+                    return true;
                 }
-
-                Vector<String> vectorScope = commonResourceValidator.getScope();
-                if (vectorScope != null) {
-                    vectorScope.add(scope);
+            } else if (descriptor instanceof DataSourceDefinitionDescriptor
+                && existingDescriptor instanceof DataSourceDefinitionDescriptor) {
+                if (descriptor.equals(existingDescriptor)) {
+                    LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
+                } else {
+                    allUniqueResource = false;
+                    return true;
                 }
-                commonResourceValidator.setScope(vectorScope);
-                allResourceDescriptors.put(name, commonResourceValidator);
-            } else {
-                Vector<String> vectorScope = new Vector<>();
-                vectorScope.add(scope);
-                allResourceDescriptors.put(name, new CommonResourceValidator(descriptor, name, vectorScope));
+            } else if (descriptor instanceof ConnectionFactoryDefinitionDescriptor
+                && existingDescriptor instanceof ConnectionFactoryDefinitionDescriptor) {
+                if (descriptor.equals(existingDescriptor)) {
+                    LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
+                } else {
+                    allUniqueResource = false;
+                    return true;
+                }
+            } else if (descriptor instanceof AdministeredObjectDefinitionDescriptor
+                && existingDescriptor instanceof AdministeredObjectDefinitionDescriptor) {
+                if (descriptor.equals(existingDescriptor)) {
+                    LOG.log(Level.SEVERE, DOLUtils.DUPLICATE_DESCRIPTOR, new Object[] {descriptor.getName()});
+                } else {
+                    allUniqueResource = false;
+                    return true;
+                }
             }
+
+            Vector<String> vectorScope = commonResourceValidator.getScope();
+            if (vectorScope != null) {
+                vectorScope.add(scope);
+            }
+            commonResourceValidator.setScope(vectorScope);
+            allResourceDescriptors.put(name, commonResourceValidator);
         }
         return false;
     }
 
     /**
      * Compare descriptor at given scope is valid and unique.
-     * @return
      */
     private boolean compareDescriptors() {
 
         Vector<String> appVectorName = validNameSpaceDetails.get(APP_KEYS);
         Vector<String> ebdVectorName = validNameSpaceDetails.get(EJBBUNDLE_KEYS);
-        Iterator<Map.Entry<String, CommonResourceValidator>> entries = allResourceDescriptors.entrySet().iterator();
-        while(entries.hasNext()) {
-            Map.Entry<String, CommonResourceValidator> entry = entries.next();
+        for (Entry<String, CommonResourceValidator> entry : allResourceDescriptors.entrySet()) {
             CommonResourceValidator commonResourceValidator = entry.getValue();
             Vector<String> scopeVector = commonResourceValidator.getScope();
             String jndiName = commonResourceValidator.getJndiName();
@@ -651,8 +638,6 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
     /**
      * Method to validate jndi name for app namespace
-     * @param myVector
-     * @return
      */
     private boolean compareVectorForApp(Vector<String> myVector, String jndiName) {
         for (int j = 0; j < myVector.size(); j++) {
@@ -678,9 +663,6 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
     /**
      * Method to validate jndi name for module namespace
-     *
-     * @param myVector
-     * @return
      */
     private boolean compareVectorForModule(Vector<String> myVector, String jndiName) {
         if (!compareVectorForApp(myVector, jndiName)) {
@@ -715,9 +697,6 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
     /**
      * Method to validate jndi name for comp namespace
-     *
-     * @param myVector
-     * @return
      */
     private boolean compareVectorForComp(Vector<String> myVector, String jndiName) {
         if (!compareVectorForModule(myVector, jndiName)) {

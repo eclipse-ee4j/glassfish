@@ -110,11 +110,6 @@
             <groupId>org.glassfish.ha</groupId>
             <artifactId>ha-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.omnifaces</groupId>
-            <artifactId>concurrent-extras</artifactId>
-        </dependency>
-        
    </dependencies>
 
     <build>

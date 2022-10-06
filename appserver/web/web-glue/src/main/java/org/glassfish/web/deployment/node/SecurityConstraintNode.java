@@ -78,7 +78,7 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
-        table.put(TagNames.NAME, "setName");
+        table.put(TagNames.DISPLAY_NAME, "setName");
         return table;
     }
 
@@ -93,7 +93,7 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
     @Override
     public Node writeDescriptor(Node parent, String nodeName, SecurityConstraintImpl descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        appendTextChild(myNode, TagNames.NAME, descriptor.getName());
+        appendTextChild(myNode, TagNames.DISPLAY_NAME, descriptor.getName());
 
         // web-resource-collection+
         WebResourceCollectionNode wrcNode = new WebResourceCollectionNode();

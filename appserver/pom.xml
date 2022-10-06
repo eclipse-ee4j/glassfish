@@ -90,15 +90,11 @@
         <!-- Jakarta Concurrency -->
         <jakarta.concurrent-api.version>3.0.2</jakarta.concurrent-api.version>
         <concurrent.version>3.0.0</concurrent.version>
-        <concurrent2.version>3.0.0-RC5</concurrent2.version>
 
         <!-- Jakarta Interceptors -->
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
-        <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
-        <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
         <soteria.version>3.0.0</soteria.version>
         <exousia.version>2.1.0</exousia.version>
         <nimbus.version>9.25.4</nimbus.version>
@@ -240,19 +236,14 @@
                 <version>${concurrent.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.omnifaces</groupId>
-                <artifactId>concurrent-connector</artifactId>
-                <version>${concurrent2.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.omnifaces</groupId>
+                <groupId>org.glassfish.main.concurrent</groupId>
                 <artifactId>concurrent-impl</artifactId>
-                <version>${concurrent2.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.omnifaces</groupId>
-                <artifactId>concurrent-extras</artifactId>
-                <version>${concurrent2.version}</version>
+                <groupId>org.glassfish.main.concurrent</groupId>
+                <artifactId>concurrent-connector</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- Jakarta Interceptors -->
@@ -263,27 +254,6 @@
             </dependency>
 
             <!-- Jakarta EE Security + Authentication/Authorization -->
-            <dependency>
-                <groupId>jakarta.security.enterprise</groupId>
-                <artifactId>jakarta.security.enterprise-api</artifactId>
-                <version>${jakarta.security-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.authentication</groupId>
-                <artifactId>jakarta.authentication-api</artifactId>
-                <version>${jakarta.authentication-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>jakarta.authorization</groupId>
-                <artifactId>jakarta.authorization-api</artifactId>
-                <version>${jakarta.authorization-api.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jakarta.servlet</groupId>
-                        <artifactId>jakarta.servlet-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
                 <artifactId>jakarta.security.enterprise</artifactId>

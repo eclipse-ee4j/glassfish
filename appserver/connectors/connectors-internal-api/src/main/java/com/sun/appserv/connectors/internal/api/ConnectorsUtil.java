@@ -45,7 +45,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -79,7 +78,6 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.omnifaces.concurrent.deployment.ConcurrencyConstants;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
@@ -449,9 +447,7 @@ public class ConnectorsUtil {
         Set<String> runtimePropNames = new HashSet<>();
         Set<EnvironmentProperty> runtimeProps = msgDesc.getRuntimeActivationConfigProperties();
         if (runtimeProps != null) {
-            Iterator<EnvironmentProperty> iter = runtimeProps.iterator();
-            while (iter.hasNext()) {
-                EnvironmentProperty entry = iter.next();
+            for (EnvironmentProperty entry : runtimeProps) {
                 mergedProps.add(entry);
                 String propName = entry.getName();
                 runtimePropNames.add(propName);
@@ -460,9 +456,7 @@ public class ConnectorsUtil {
 
         Set<EnvironmentProperty> standardProps = msgDesc.getActivationConfigProperties();
         if (standardProps != null) {
-            Iterator<EnvironmentProperty> iter = standardProps.iterator();
-            while (iter.hasNext()) {
-                EnvironmentProperty entry = iter.next();
+            for (EnvironmentProperty entry : standardProps) {
                 String propName = entry.getName();
                 if (runtimePropNames.contains(propName)) {
                     continue;
@@ -549,12 +543,13 @@ public class ConnectorsUtil {
 
 
     public static String deriveResourceName(String compId, String name, JavaEEResourceType resType) {
-        String derivedName = name;
-        return getReservePrefixedJNDINameForResource(compId, derivedName, resType);
+        return getReservePrefixedJNDINameForResource(compId, name, resType);
 
     }
 
     public static String getReservePrefixedJNDINameForResource(String compId, String resourceName, JavaEEResourceType resType) {
+        LOG.log(Level.FINEST, "getReservePrefixedJNDINameForResource(compId={0}, resourceName={1}, resType={2})",
+            new Object[] {compId, resourceName, resType});
         String prefix = null;
         String prefixPart1 = null;
         String prefixPart2 = null;
@@ -600,12 +595,12 @@ public class ConnectorsUtil {
                 case MEDD:
                 case MSEDD:
                 case MTFDD:
-                    prefixPart1 = ConcurrencyConstants.CONCURRENT_JNDINAME_PREFIX;
+                    prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
                     prefixPart2 = "";
                     break;
                 case CSDD:
-                    prefixPart1 = ConcurrencyConstants.CONCURRENT_JNDINAME_PREFIX;
-                    prefixPart2 = ConcurrencyConstants.CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX;
+                    prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
+                    prefixPart2 = ResourceConstants.CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX;
                     break;
 
             }
@@ -620,16 +615,16 @@ public class ConnectorsUtil {
     }
 
 
+    private static String getReservePrefixedJNDIName(String prefix, String resourceName) {
+        return prefix + resourceName;
+    }
+
+
     public static Map<String, String> convertPropertiesToMap(Properties properties) {
         if (properties == null) {
             properties = new Properties();
         }
         return new TreeMap<String, String>((Map) properties);
-    }
-
-
-    private static String getReservePrefixedJNDIName(String prefix, String resourceName) {
-        return prefix + resourceName;
     }
 
 

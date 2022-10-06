@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,30 +19,20 @@ package com.sun.enterprise.deployment.util;
 
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.types.*;
-
-import java.util.Iterator;
-import java.util.Set;
 
 public class AppClientTracerVisitor extends TracerVisitor implements AppClientVisitor {
 
-    public AppClientTracerVisitor() {
-    }
-
-    public void accept (BundleDescriptor descriptor) {
+    @Override
+    public void accept(BundleDescriptor descriptor) {
         if (descriptor instanceof ApplicationClientDescriptor) {
-            ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor)descriptor;
+            ApplicationClientDescriptor appClientDesc = (ApplicationClientDescriptor) descriptor;
             accept(appClientDesc);
-
             super.accept(descriptor);
         }
     }
 
-     /**
-     * visits an app client descriptor
-     * @param app client descriptor
-     */
+
+    @Override
     public void accept(ApplicationClientDescriptor appclientDesc) {
         DOLUtils.getDefaultLogger().info("==================");
         DOLUtils.getDefaultLogger().info("\tAppClient Description " + appclientDesc.getDescription());
@@ -49,7 +40,6 @@ public class AppClientTracerVisitor extends TracerVisitor implements AppClientVi
         DOLUtils.getDefaultLogger().info("\tAppClient Small Icon " + appclientDesc.getSmallIconUri());
         DOLUtils.getDefaultLogger().info("\tAppClient Large Icon " + appclientDesc.getLargeIconUri());
         DOLUtils.getDefaultLogger().info("\tAppClient Callback Handler " + appclientDesc.getCallbackHandler());
-        //add rest of the tags
+        // add rest of the tags
     }
 }
-

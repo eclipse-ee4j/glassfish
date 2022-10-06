@@ -17,7 +17,7 @@
 package com.sun.s1asdev.cfd;
 
 import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.internal.api.Globals;
 

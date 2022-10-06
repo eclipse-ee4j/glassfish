@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,30 @@
 
 package com.sun.enterprise.transaction.api;
 
-import java.util.List;
+import com.sun.enterprise.transaction.spi.JavaEETransactionManagerDelegate;
+import com.sun.enterprise.transaction.spi.TransactionalResource;
 
-import jakarta.transaction.*;
-import javax.transaction.xa.XAResource;
-import javax.transaction.xa.Xid;
-import java.rmi.RemoteException;
 import jakarta.resource.spi.XATerminator;
 import jakarta.resource.spi.work.WorkException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
 
-import org.jvnet.hk2.annotations.Contract;
+import java.rmi.RemoteException;
+import java.util.List;
 
-import com.sun.enterprise.transaction.spi.TransactionalResource;
-import com.sun.enterprise.transaction.spi.JavaEETransactionManagerDelegate;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.api.invocation.ResourceHandler;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
- *
  * Manages transactions, acting as a gateway to the TM state machine.
  *
  * @author Tony Ng
@@ -56,7 +61,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *    encounters an unexpected error condition
      *
      */
-    public void registerSynchronization(Synchronization sync)
+    void registerSynchronization(Synchronization sync)
         throws RollbackException, IllegalStateException, SystemException;
 
 
@@ -80,7 +85,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *    encounters an unexpected error condition
      *
      */
-    public boolean enlistResource(Transaction tran,
+    boolean enlistResource(Transaction tran,
                                   TransactionalResource h)
         throws RollbackException,
                IllegalStateException, SystemException;
@@ -101,7 +106,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *    encounters an unexpected error condition
      *
      */
-    public boolean delistResource(Transaction tran,
+    boolean delistResource(Transaction tran,
                                   TransactionalResource h,
                                   int flag)
         throws IllegalStateException, SystemException;
@@ -113,7 +118,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * Invocation
      * The TM finds the component through the InvocationManager
      */
-    public void enlistComponentResources() throws RemoteException;
+    void enlistComponentResources() throws RemoteException;
 
     /**
      * This is called by the Container to ask the Transaction
@@ -125,7 +130,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * with TMSUSPEND flag; false otherwise
      *
      */
-    public void delistComponentResources(boolean suspend)
+    void delistComponentResources(boolean suspend)
         throws RemoteException;
 
     /**
@@ -137,7 +142,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param instance The component instance
      * @param inv The ComponentInvocation
      */
-    public void componentDestroyed(Object instance, ComponentInvocation inv);
+    void componentDestroyed(Object instance, ComponentInvocation inv);
 
     /**
      * This is called by Container to indicate that a component
@@ -146,7 +151,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *
      * @param instance The component instance
      */
-    public void componentDestroyed(Object instance);
+    void componentDestroyed(Object instance);
 
     /**
      * This is called by Container to indicate that a component
@@ -155,49 +160,49 @@ public interface JavaEETransactionManager extends TransactionManager {
      *
      * @param rh The ResourceHandler
      */
-    public void componentDestroyed(ResourceHandler rh);
+    void componentDestroyed(ResourceHandler rh);
 
     /**
      * Called by InvocationManager
      */
 
-    public void preInvoke(ComponentInvocation prev)
+    void preInvoke(ComponentInvocation prev)
     throws InvocationException;
 
     /**
      * Called by InvocationManager
      */
 
-    public void postInvoke(ComponentInvocation curr, ComponentInvocation prev)
+    void postInvoke(ComponentInvocation curr, ComponentInvocation prev)
     throws InvocationException;
 
-    public void setDefaultTransactionTimeout(int seconds);
-    public void cleanTxnTimeout(); // clean up thread specific timeout
+    void setDefaultTransactionTimeout(int seconds);
+    void cleanTxnTimeout(); // clean up thread specific timeout
     /**
      * Returns a list of resource handles held by the component
      */
 
-    public List getExistingResourceList(Object instance, ComponentInvocation inv);
+    List getExistingResourceList(Object instance, ComponentInvocation inv);
 
-    public void registerComponentResource(TransactionalResource h);
+    void registerComponentResource(TransactionalResource h);
 
-    public void unregisterComponentResource(TransactionalResource h);
+    void unregisterComponentResource(TransactionalResource h);
 
-    public void recover(XAResource[] resourceList);
+    void recover(XAResource[] resourceList);
 
     /**
      * Initialize recovery framework
      * @param force if true, forces initialization, otherwise relies on the TimerService
      * configuration.
      */
-    public void initRecovery(boolean force);
+    void initRecovery(boolean force);
 
     /**
      * Perform shutdown cleanup.
      */
-    public void shutdown();
+    void shutdown();
 
-    public void begin(int timeout)
+    void begin(int timeout)
         throws NotSupportedException, SystemException;
 
     /**
@@ -208,18 +213,18 @@ public interface JavaEETransactionManager extends TransactionManager {
      * tx but the client container did not support tx interop.
      * See EJB2.0 spec section 18.5.2.1.
      */
-    public boolean isNullTransaction();
+    boolean isNullTransaction();
 
     /**
      * Perform checks during export of a transaction on a remote call.
      */
-    public void checkTransactionExport(boolean isLocal);
+    void checkTransactionExport(boolean isLocal);
 
     /**
      * Perform checks during import of a transaction on a remote call.
      * This is called from the reply interceptors after a remote call completes.
      */
-    public void checkTransactionImport();
+    void checkTransactionImport();
 
 
     /**
@@ -227,7 +232,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * rollback because of timeout. This is applicable only for local transactions
      * as jts transaction will rollback instead of setting the txn for rollback
      */
-    public boolean isTimedOut();
+    boolean isTimedOut();
 
     // START IASRI 4662745
 
@@ -235,31 +240,31 @@ public interface JavaEETransactionManager extends TransactionManager {
      * Returns the list of ActiveTransactions. Called by Admin framework
      *  The ArrayList contains TransactionAdminBean
      */
-    public java.util.ArrayList getActiveTransactions();
+    java.util.ArrayList getActiveTransactions();
 
     /*
      * Called by Admin Framework. Forces the given transaction to be rolled back
      */
-    public void forceRollback(String txnId) throws IllegalStateException, SystemException;
+    void forceRollback(String txnId) throws IllegalStateException, SystemException;
 
     /*
      * Called by Admin Framework.
      */
-    public void setMonitoringEnabled(boolean enabled);
+    void setMonitoringEnabled(boolean enabled);
 
     /*
      * Called by Admin Framework.
      */
-    public void freeze();
+    void freeze();
     /*
      * Called by Admin Framework.
      */
-    public void unfreeze();
+    void unfreeze();
 
     /*
      * Called by Admin Framework
      */
-    public boolean isFrozen();
+    boolean isFrozen();
 
     // END IASRI 4662745
 
@@ -271,7 +276,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *
      * @param xid the Xid object representing a transaction.
      */
-    public void recreate(Xid xid, long timeout) throws WorkException ;
+    void recreate(Xid xid, long timeout) throws WorkException ;
 
     /**
      * Release a transaction. This call causes the calling thread to be
@@ -280,7 +285,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *
      * @param xid the Xid object representing a transaction.
      */
-    public void release(Xid xid) throws WorkException ;
+    void release(Xid xid) throws WorkException ;
 
     /**
      * Provides a handle to a <code>XATerminator</code> instance. The
@@ -291,7 +296,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *
      * @return a <code>XATerminator</code> instance.
      */
-    public XATerminator getXATerminator() ;
+    XATerminator getXATerminator() ;
 
     /**
      * Explicitly set the JavaEETransactionManagerDelegate instance
@@ -299,7 +304,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      *
      * @param delegate the JavaEETransactionManagerDelegate instance.
      */
-    public void setDelegate(JavaEETransactionManagerDelegate delegate);
+    void setDelegate(JavaEETransactionManagerDelegate delegate);
 
     /**
      *
@@ -308,7 +313,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @return the JavaEETransaction associated with the current thread or null
      * if it there is none.
      */
-    public JavaEETransaction getCurrentTransaction();
+    JavaEETransaction getCurrentTransaction();
 
     /**
      *
@@ -317,7 +322,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param tx the JavaEETransaction associated with the current thread or null
      * if the existing transaction had been completed.
      */
-    public void setCurrentTransaction(JavaEETransaction tx);
+    void setCurrentTransaction(JavaEETransaction tx);
 
     /**
      *
@@ -328,7 +333,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @return the XAResourceWrapper instance specific to this datasource class
      * name or null if there is no special wrapper available.
      */
-    public XAResourceWrapper getXAResourceWrapper(String clName);
+    XAResourceWrapper getXAResourceWrapper(String clName);
 
     /**
      * Handle configuration change. Actual change will be performed by the delegate.
@@ -336,7 +341,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param name the name of the configuration property.
      * @param value the ne value of the configuration.
      */
-    public void handlePropertyUpdate(String name, Object value);
+    void handlePropertyUpdate(String name, Object value);
 
     /**
      * Called by the ResourceRecoveryManager to recover the populated
@@ -347,7 +352,7 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param xaresArray the array of XA Resources to be recovered.
      * @return true if the recovery has been successful.
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath,
+    boolean recoverIncompleteTx(boolean delegated, String logPath,
             XAResource[] xaresArray) throws Exception;
 
     /**
@@ -356,36 +361,36 @@ public interface JavaEETransactionManager extends TransactionManager {
      * @param inv Calling component's invocation information
      * @return List of resources
      */
-    public List getResourceList(Object instance, ComponentInvocation inv);
+    List getResourceList(Object instance, ComponentInvocation inv);
 
     /**
      * Clears the transaction associated with the caller thread
      */
-    public void clearThreadTx();
+    void clearThreadTx();
 
     /**
      * Return location of transaction logs
      *
      * @return String location of transaction logs
      */
-    public String getTxLogLocation();
+    String getTxLogLocation();
 
     /**
      * Allows an arbitrary XAResource to register for recovery
      *
      * @param xaResource XAResource to register for recovery
      */
-    public void registerRecoveryResourceHandler(XAResource xaResource);
+    void registerRecoveryResourceHandler(XAResource xaResource);
 
     /**
      * Returns the value to be used to purge transaction tasks after the specified number of cancelled tasks
      */
-    public int getPurgeCancelledTtransactionsAfter();
+    int getPurgeCancelledTtransactionsAfter();
 
     /**
      * Allows to purge transaction tasks after the specified value of cancelled tasks
      */
-    public void setPurgeCancelledTtransactionsAfter(int value);
+    void setPurgeCancelledTtransactionsAfter(int value);
 
 
 }

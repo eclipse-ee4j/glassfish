@@ -17,6 +17,10 @@
 
 package org.glassfish.javaee.services;
 
+import com.sun.enterprise.deployment.ResourceDescriptor;
+
+import jakarta.inject.Inject;
+
 import java.io.Serializable;
 
 import javax.naming.Context;
@@ -29,19 +33,11 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
-import org.omnifaces.concurrent.services.JndiLookupNotifier;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-
-import jakarta.inject.Inject;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 27/8/12
- * Time: 2:51 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman 2012
  */
 @Service
 @PerLookup
@@ -55,16 +51,13 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
     @Override
     public synchronized Object create(Context ic) throws NamingException {
         if (actualResourceName == null) {
-
-            actualResourceName = ConnectorsUtil.deriveResourceName
-                    (desc.getResourceId(), desc.getName(), desc.getResourceType());
-
+            actualResourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
             try {
                 if (serviceLocator == null) {
                     serviceLocator = Globals.getDefaultHabitat();
                     if (serviceLocator == null) {
-                        throw new NamingException("Unable to create resource " +
-                                "[" + desc.getName() + " ] as habitat is null");
+                        throw new NamingException(
+                            "Unable to create resource " + "[" + desc.getName() + " ] as habitat is null");
                     }
                 }
                 getResourceDeployer(desc).deployResource(desc);
@@ -75,17 +68,15 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
             }
         }
 
-        Object resource = ic.lookup(actualResourceName);
-        if (resource instanceof JndiLookupNotifier) {
-            ((JndiLookupNotifier) resource).notifyJndiLookup();
-        }
-
-        return resource;
+        return ic.lookup(actualResourceName);
     }
+
 
     protected ResourceDeployer getResourceDeployer(Object resource) {
-        return serviceLocator.<ResourceManagerFactory>getService(ResourceManagerFactory.class).getResourceDeployer(resource);
+        return serviceLocator.<ResourceManagerFactory> getService(ResourceManagerFactory.class)
+            .getResourceDeployer(resource);
     }
+
 
     public synchronized void setDescriptor(ResourceDescriptor desc) {
         this.desc = desc;

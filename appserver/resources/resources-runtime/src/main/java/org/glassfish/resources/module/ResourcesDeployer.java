@@ -686,20 +686,19 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
     }
 
 
-    public void deployResources(String applicationName, String moduleName,
-        Collection<com.sun.enterprise.config.serverbeans.Resource> resources, boolean postDeployPhase)
-        throws Exception {
+    public void deployResources(String applicationName, String moduleName, Collection<Resource> resources,
+        boolean postDeployPhase) throws Exception {
         for (Resource resource : resources) {
+            ResourceDeployer deployer = getResourceDeployer(resource);
             if (resource instanceof BindableResource) {
-                BindableResource bindableResource = (BindableResource) resource;
-                ResourceInfo resourceInfo = new ResourceInfo(bindableResource.getJndiName(), applicationName,
-                    moduleName);
-                if (getResourceDeployer(bindableResource).canDeploy(postDeployPhase, resources, bindableResource)) {
-                    resourcesBinder.deployResource(resourceInfo, bindableResource);
+                if (deployer.canDeploy(postDeployPhase, resources, resource)) {
+                    BindableResource bindableResource = (BindableResource) resource;
+                    ResourceInfo info = new ResourceInfo(bindableResource.getJndiName(), applicationName, moduleName);
+                    resourcesBinder.deployResource(info, bindableResource);
                 }
             } else {
-                if (getResourceDeployer(resource).canDeploy(postDeployPhase, resources, resource)) {
-                    getResourceDeployer(resource).deployResource(resource, applicationName, moduleName);
+                if (deployer.canDeploy(postDeployPhase, resources, resource)) {
+                    deployer.deployResource(resource, applicationName, moduleName);
                 }
             }
         }

@@ -37,7 +37,7 @@ import java.util.HashMap;
  * Create Managed Scheduled Executor Service Command
  *
  */
-@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG,  })
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="create-managed-scheduled-executor-service")
 @PerLookup

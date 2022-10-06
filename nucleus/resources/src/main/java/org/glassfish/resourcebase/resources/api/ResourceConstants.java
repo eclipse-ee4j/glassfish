@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,109 +25,110 @@ public interface ResourceConstants {
     /**
      * Constant to denote external jndi resource type.
      */
-    public static final String RES_TYPE_EXTERNAL_JNDI = "external-jndi";
+    String RES_TYPE_EXTERNAL_JNDI = "external-jndi";
 
-    public static final String RES_TYPE_JDBC = "jdbc";
+    String RES_TYPE_JDBC = "jdbc";
 
     /**
      * Constant to denote jdbc connection pool resource type.
      */
-    public static final String RES_TYPE_JCP = "jcp";
+    String RES_TYPE_JCP = "jcp";
 
     /**
      * Constant to denote connector connection pool  resource type.
      */
-    public static final String RES_TYPE_CCP = "ccp";
+    String RES_TYPE_CCP = "ccp";
 
     /**
      * Constant to denote connector resource type.
      */
-    public static final String RES_TYPE_CR = "cr";
+    String RES_TYPE_CR = "cr";
 
     /**
      * Constant to denote custom resource type.
      */
-    public static final String RES_TYPE_CUSTOM = "custom";
+    String RES_TYPE_CUSTOM = "custom";
 
     /**
      * Constant to denote admin object resource type.
      */
-    public static final String RES_TYPE_AOR = "aor";
+    String RES_TYPE_AOR = "aor";
 
     /**
      * Constant to denote resource adapter config type.
      */
-    public static final String RES_TYPE_RAC = "rac";
+    String RES_TYPE_RAC = "rac";
 
     /**
      * Constant to denote connector-work-security-map type.
      */
-    public static final String RES_TYPE_CWSM = "cwsm";
+    String RES_TYPE_CWSM = "cwsm";
 
     /**
      * Constant to denote mail resource type.
      */
-    public static final String RES_TYPE_MAIL = "mail";
+    String RES_TYPE_MAIL = "mail";
 
     /**
      * Represents the glassfish-resources.xml handling module name / type for .ear
      */
-    public static final String GF_RESOURCES_MODULE_EAR = "resources_ear";
+    String GF_RESOURCES_MODULE_EAR = "resources_ear";
 
     /**
      * Represents the glassfish-resources.xml handling module name / type for standalone application
      */
-    public static final String GF_RESOURCES_MODULE = "resources";
+    String GF_RESOURCES_MODULE = "resources";
 
     /**
      * Represents the location where glassfish-resources.xml will be present in an archive
      */
-    public static final String GF_RESOURCES_LOCATION ="META-INF/glassfish-resources.xml";
+    String GF_RESOURCES_LOCATION ="META-INF/glassfish-resources.xml";
 
     /** resource type residing in an external JNDI repository */
-    public static final String EXT_JNDI_RES_TYPE = "external-jndi-resource";
+    String EXT_JNDI_RES_TYPE = "external-jndi-resource";
 
-    public static final String JMS_QUEUE = "jakarta.jms.Queue";
-    public static final String JMS_TOPIC = "jakarta.jms.Topic";
-    public static final String JMS_QUEUE_CONNECTION_FACTORY = "jakarta.jms.QueueConnectionFactory";
-    public static final String JMS_TOPIC_CONNECTION_FACTORY = "jakarta.jms.TopicConnectionFactory";
-    public static final String JMS_MESSAGE_LISTENER = "jakarta.jms.MessageListener";
+    String JMS_QUEUE = "jakarta.jms.Queue";
+    String JMS_TOPIC = "jakarta.jms.Topic";
+    String JMS_QUEUE_CONNECTION_FACTORY = "jakarta.jms.QueueConnectionFactory";
+    String JMS_TOPIC_CONNECTION_FACTORY = "jakarta.jms.TopicConnectionFactory";
+    String JMS_MESSAGE_LISTENER = "jakarta.jms.MessageListener";
 
     //TODO should be refactored to non-resources module
     /**
      *  Reserved sub-context where datasource-definition objets (resource and pool) are bound with generated names.
      */
-    public static String DATASOURCE_DEFINITION_JNDINAME_PREFIX = "__datasource_definition/";
-    public static String MAILSESSION_DEFINITION_JNDINAME_PREFIX="__mailsession_definition/";
-    public static String CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX = "__connection_factory_definition/";
-    public static String JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX = "__jms_connection_factory_definition/";
-    public static String JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX = "__jms_destination_definition/";
-    public static String ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX="__administered_object_definition/";
+    String DATASOURCE_DEFINITION_JNDINAME_PREFIX = "__datasource_definition/";
+    String MAILSESSION_DEFINITION_JNDINAME_PREFIX="__mailsession_definition/";
+    String CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX = "__connection_factory_definition/";
+    String JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX = "__jms_connection_factory_definition/";
+    String JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX = "__jms_destination_definition/";
+    String ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX="__administered_object_definition/";
 
-    public static final String JAVA_SCOPE_PREFIX = "java:";
-    public static final String JAVA_APP_SCOPE_PREFIX = "java:app/";
-    public static final String JAVA_COMP_SCOPE_PREFIX = "java:comp/";
-    public static final String JAVA_MODULE_SCOPE_PREFIX = "java:module/";
-    public static final String JAVA_GLOBAL_SCOPE_PREFIX = "java:global/";
-    public static final String JAVA_COMP_ENV_SCOPE_PREFIX = "java:comp/env/";
+    String JAVA_SCOPE_PREFIX = "java:";
+    String JAVA_APP_SCOPE_PREFIX = "java:app/";
+    String JAVA_COMP_SCOPE_PREFIX = "java:comp/";
+    String JAVA_MODULE_SCOPE_PREFIX = "java:module/";
+    String JAVA_GLOBAL_SCOPE_PREFIX = "java:global/";
+    String JAVA_COMP_ENV_SCOPE_PREFIX = "java:comp/env/";
 
-    public static enum TriState {
+    public enum TriState {
         TRUE, FALSE, UNKNOWN
     }
 
-    public final static String CONNECTOR_RESOURCES = "CONNECTOR";
-    public final static String NON_CONNECTOR_RESOURCES = "NON-CONNECTOR";
+    String CONNECTOR_RESOURCES = "CONNECTOR";
+    String NON_CONNECTOR_RESOURCES = "NON-CONNECTOR";
 
     /**
      * Token used for generating the name to refer to the embedded rars.
      * It will be AppName+EMBEDDEDRAR_NAME_DELIMITER+embeddedRarName.
      */
 
-    public static String EMBEDDEDRAR_NAME_DELIMITER="#";
+    String EMBEDDEDRAR_NAME_DELIMITER="#";
 
-    public final static String APP_META_DATA_RESOURCES = "app-level-resources-config";
-    public final static String APP_SCOPED_RESOURCES_JNDI_NAMES = "app-scoped-resources-jndi-names";
-    public final static String APP_SCOPED_RESOURCES_RA_NAMES = "app-scoped-resources-ra-names";
-    public final static String APP_SCOPED_RESOURCES_MAP = "app-scoped-resources-map";
+    String APP_META_DATA_RESOURCES = "app-level-resources-config";
+    String APP_SCOPED_RESOURCES_JNDI_NAMES = "app-scoped-resources-jndi-names";
+    String APP_SCOPED_RESOURCES_RA_NAMES = "app-scoped-resources-ra-names";
+    String APP_SCOPED_RESOURCES_MAP = "app-scoped-resources-map";
 
+    String CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX = "__context_service_definition/";
 }

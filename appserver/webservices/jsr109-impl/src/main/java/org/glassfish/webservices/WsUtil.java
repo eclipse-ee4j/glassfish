@@ -599,7 +599,7 @@ public class WsUtil {
                                         retVal = wsdlFile.toURI().toURL();
                                         if (!wsdlFile.exists()) {
                                             // try the module path for example when we are in an EAR file
-                                            wsdlFile = new File(serviceRef.getBundleDescriptor().getRawModuleID(), serviceRef.getWsdlFileUri());
+                                            wsdlFile = new File(serviceRef.getBundleDescriptor().getModuleDescriptor().getArchiveUri(), serviceRef.getWsdlFileUri());
                                             if (!wsdlFile.exists()) {
                                                 // finally try to load via classloader
                                                 retVal = Thread.currentThread().getContextClassLoader().getResource(serviceRef.getWsdlFileUri());

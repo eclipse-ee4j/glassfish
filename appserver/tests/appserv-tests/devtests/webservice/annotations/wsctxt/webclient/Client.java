@@ -48,7 +48,7 @@ public class Client extends HttpServlet {
                 out.println("</head>");
                 out.println("<body>");
                 out.println("<p>");
-                out.println("So the RESULT OF HELLO SERVICE IS :");
+                out.println("So the RESULT OF HELLO SERVICE IS");
                 out.println("</p>");
                 out.println("[" + ret + "]");
                 out.println("</body>");

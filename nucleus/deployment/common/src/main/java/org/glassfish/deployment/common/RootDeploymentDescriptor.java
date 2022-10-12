@@ -95,14 +95,16 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      * each module is uniquely identified with a moduleID
      * @param moduleID for this module
      */
-    public void setModuleID(String moduleID) {
+    public final void setModuleID(String moduleID) {
         this.moduleID = moduleID;
     }
 
     /**
      * @return the module ID for this module descriptor
      */
-    public abstract String getModuleID();
+    public String getModuleID() {
+        return this.moduleID;
+    }
 
     /**
      * @return the default version of the deployment descriptor loaded by this descriptor
@@ -173,7 +175,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      */
     @Override
     public void setDisplayName(String name) {
-        super.setName(name);
+        setLocalizedDisplayName(null, name);
     }
 
     /**
@@ -181,7 +183,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
      */
     @Override
     public String getDisplayName() {
-        return super.getName();
+        return getLocalizedDisplayName(null);
     }
 
 

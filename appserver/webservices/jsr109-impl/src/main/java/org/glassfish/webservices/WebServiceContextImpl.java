@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,20 @@
 
 package org.glassfish.webservices;
 
-import com.sun.xml.ws.api.message.Packet;
-import com.sun.xml.ws.api.server.WSWebServiceContext;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.web.WebModule;
-import org.glassfish.api.invocation.InvocationManager;
+import com.sun.xml.ws.api.message.Packet;
+import com.sun.xml.ws.api.server.WSWebServiceContext;
 
 import jakarta.xml.ws.EndpointReference;
 import jakarta.xml.ws.handler.MessageContext;
+
 import java.security.Principal;
-import java.util.Set;
 import java.util.Iterator;
+import java.util.Set;
+
 import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.ejb.api.EJBInvocation;
 import org.glassfish.internal.api.Globals;
 
@@ -37,7 +40,6 @@ import org.glassfish.internal.api.Globals;
 public final class WebServiceContextImpl implements WSWebServiceContext {
 
     public static final ThreadLocal msgContext = new ThreadLocal();
-
     public static final ThreadLocal principal = new ThreadLocal();
 
     private WSWebServiceContext jaxwsContextDelegate;
@@ -58,6 +60,7 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
         this.jaxwsContextDelegate = wsc;
     }
 
+    @Override
     public MessageContext getMessageContext() {
         return this.jaxwsContextDelegate.getMessageContext();
     }
@@ -78,6 +81,7 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
         principal.set(p);
     }
 
+    @Override
     public Principal getUserPrincipal() {
         // This could be an EJB endpoint; check the threadlocal variable
         Principal p = (Principal) principal.get();
@@ -97,6 +101,7 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
         return p;
     }
 
+    @Override
     public boolean isUserInRole(String role) {
         WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
         ComponentInvocation.ComponentInvocationType EJBInvocationType = ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
@@ -125,14 +130,17 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
     }
 
     // TODO BM need to fix this after checking with JAXWS spec
+    @Override
     public EndpointReference getEndpointReference(Class clazz, org.w3c.dom.Element... params) {
         return this.jaxwsContextDelegate.getEndpointReference(clazz, params);
     }
 
+    @Override
     public EndpointReference getEndpointReference(org.w3c.dom.Element... params) {
         return this.jaxwsContextDelegate.getEndpointReference(params);
     }
 
+    @Override
     public Packet getRequestPacket() {
         return this.jaxwsContextDelegate.getRequestPacket();
     }
@@ -156,4 +164,8 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + "[servletName=" + servletName + ']';
+    }
 }

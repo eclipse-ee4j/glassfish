@@ -19,6 +19,8 @@ package com.sun.enterprise.universal.collections;
 import java.util.function.Supplier;
 
 /**
+ * Utility class for all trivial functions missing in Java.
+ *
  * @author David Matejcek
  */
 public final class JavaLangUtils {
@@ -27,6 +29,14 @@ public final class JavaLangUtils {
         // utility class
     }
 
+    /**
+     * If the value is null, calls the supplier to obtain the default value.
+     *
+     * @param <T> expected type
+     * @param value provided value
+     * @param supplierOfDefault must not be null.
+     * @return value OR value provided by the supplier. Note that it may be null too.
+     */
     public static <T> T nonNull(T value, Supplier<? extends T> supplierOfDefault) {
         return value == null ? supplierOfDefault.get() : value;
     }

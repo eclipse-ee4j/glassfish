@@ -17,8 +17,9 @@
 
 package com.sun.enterprise.deployment.node;
 
-import org.glassfish.deployment.common.Descriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This node handles the descriptionType xml fragment

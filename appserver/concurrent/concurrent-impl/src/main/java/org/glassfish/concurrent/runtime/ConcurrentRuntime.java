@@ -276,6 +276,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Shut down the runtime service.
+     *
+     * @param jndiName
+     */
     public void shutdownManagedExecutorService(String jndiName) {
         ManagedExecutorServiceImpl mes = removeManagedExecutorService(jndiName);
         if (mes != null) {
@@ -284,6 +289,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Shut down the runtime service.
+     *
+     * @param jndiName
+     */
     public void shutdownScheduledManagedExecutorService(String jndiName) {
         ManagedScheduledExecutorServiceImpl mses = removeManagedScheduledExecutorService(jndiName);
         if (mses != null) {
@@ -292,6 +302,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Stop the runtime thread factory.
+     *
+     * @param jndiName
+     */
     public void shutdownManagedThreadFactory(String jndiName) {
         ManagedThreadFactoryImpl mtf = removeManagedThreadFactory(jndiName);
         if (mtf != null) {
@@ -300,6 +315,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Remove the context service from the internal map.
+     *
+     * @param jndiName
+     */
     public synchronized void shutdownContextService(String jndiName) {
         contextServiceMap.remove(jndiName);
     }

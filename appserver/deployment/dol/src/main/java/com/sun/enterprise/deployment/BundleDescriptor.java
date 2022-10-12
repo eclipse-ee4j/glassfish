@@ -35,10 +35,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
@@ -113,12 +113,12 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Sets the application to which I belong.
      */
-    public void setApplication(Application a) {
-        application = a;
+    public void setApplication(Application application) {
+        this.application = application;
         for (List<? extends RootDeploymentDescriptor> extensionsByType : extensions.values()) {
             for (RootDeploymentDescriptor extension : extensionsByType) {
                 if (extension instanceof BundleDescriptor) {
-                    ((BundleDescriptor) extension).setApplication(a);
+                    ((BundleDescriptor) extension).setApplication(application);
                 }
             }
         }
@@ -615,9 +615,6 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         return DEPLOYMENT_DESCRIPTOR_DIR;
     }
 
-    public String getRawModuleID() {
-        return moduleID;
-    }
     /**
      * @return the wsdl directory location inside the archive file
      */
@@ -797,9 +794,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
             // next look to see if there is unique match in ear scope.
             int sameNamedEarScopedPUCount = 0;
             Set<Map.Entry<String, PersistenceUnitDescriptor>> entrySet = visiblePUs.entrySet();
-            Iterator<Map.Entry<String, PersistenceUnitDescriptor>> entryIt = entrySet.iterator();
-            while (entryIt.hasNext()) {
-                Map.Entry<String, PersistenceUnitDescriptor> entry = entryIt.next();
+            for (Entry<String, PersistenceUnitDescriptor> entry : entrySet) {
                 String s = entry.getKey();
                 int idx = s.lastIndexOf(PERSISTENCE_UNIT_NAME_SEPARATOR);
                 if (idx != -1 // ear scoped

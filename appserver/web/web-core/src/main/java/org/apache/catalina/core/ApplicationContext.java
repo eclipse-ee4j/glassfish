@@ -18,15 +18,26 @@
 
 package org.apache.catalina.core;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextAttributeEvent;
+import jakarta.servlet.ServletContextAttributeListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -43,19 +54,6 @@ import org.apache.catalina.Globals;
 import org.apache.catalina.LogFacade;
 import org.apache.catalina.util.Enumerator;
 import org.apache.catalina.util.ServerInfo;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterRegistration;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextAttributeEvent;
-import jakarta.servlet.ServletContextAttributeListener;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRegistration;
-import jakarta.servlet.SessionCookieConfig;
-import jakarta.servlet.SessionTrackingMode;
-import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 
 /**
@@ -82,7 +80,6 @@ public class ApplicationContext implements ServletContext {
      * @param context The associated Context instance
      */
     public ApplicationContext(StandardContext context) {
-        super();
         this.context = context;
 
         setAttribute("com.sun.faces.useMyFaces",
@@ -99,47 +96,32 @@ public class ApplicationContext implements ServletContext {
     /**
      * The context attributes for this context.
      */
-    private Map<String, Object> attributes =
-        new ConcurrentHashMap<String, Object>();
+    private final Map<String, Object> attributes = new ConcurrentHashMap<>();
 
     /**
      * List of read only attributes for this context.
      */
-    private HashMap<String, String> readOnlyAttributes =
-        new HashMap<String, String>();
+    private final HashMap<String, String> readOnlyAttributes = new HashMap<>();
 
     /**
      * Lock for synchronizing attributes and readOnlyAttributes
      */
-    private Object attributesLock = new Object();
+    private final Object attributesLock = new Object();
 
     /**
      * The Context instance with which we are associated.
      */
-    private StandardContext context = null;
-
-    /**
-     * Empty String collection to serve as the basis for empty enumerations.
-     * <strong>DO NOT ADD ANY ELEMENTS TO THIS COLLECTION!</strong>
-     */
-    private static final List<String> emptyString = Collections.emptyList();
-
-    /**
-     * Empty Servlet collection to serve as the basis for empty enumerations.
-     * <strong>DO NOT ADD ANY ELEMENTS TO THIS COLLECTION!</strong>
-     */
-    private static final List<Servlet> emptyServlet = Collections.emptyList();
+    private final StandardContext context;
 
     /**
      * The facade around this object.
      */
-    private ServletContext facade = new ApplicationContextFacade(this);
+    private final ServletContext facade = new ApplicationContextFacade(this);
 
     /**
      * The merged context initialization parameters for this Context.
      */
-    private ConcurrentMap<String, String> parameters =
-        new ConcurrentHashMap<String, String>();
+    private final ConcurrentMap<String, String> parameters = new ConcurrentHashMap<>();
 
     private boolean isRestricted;
 
@@ -175,7 +157,7 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public Enumeration<String> getAttributeNames() {
-        return new Enumerator<String>(attributes.keySet(), true);
+        return new Enumerator<>(attributes.keySet(), true);
     }
 
     /**
@@ -234,7 +216,7 @@ public class ApplicationContext implements ServletContext {
      */
     @Override
     public Enumeration<String> getInitParameterNames() {
-        return new Enumerator<String>(parameters.keySet());
+        return new Enumerator<>(parameters.keySet());
     }
 
     /**
@@ -420,16 +402,17 @@ public class ApplicationContext implements ServletContext {
     @Override
     public void removeAttribute(String name) {
         Object value = null;
-        boolean found = false;
 
         // Remove the specified attribute
         synchronized (attributesLock) {
             // Check for read only attribute
-            if (readOnlyAttributes.containsKey(name))
+            if (readOnlyAttributes.containsKey(name)) {
                 return;
+            }
             value = attributes.remove(name);
-            if (value == null)
+            if (value == null) {
                 return;
+            }
         }
 
         // Notify interested application event listeners
@@ -438,17 +421,12 @@ public class ApplicationContext implements ServletContext {
             return;
         }
 
-        ServletContextAttributeEvent event =
-            new ServletContextAttributeEvent(context.getServletContext(),
-                                             name, value);
-        Iterator<EventListener> iter = listeners.iterator();
-        while (iter.hasNext()) {
-            EventListener eventListener = iter.next();
+        ServletContextAttributeEvent event = new ServletContextAttributeEvent(context.getServletContext(), name, value);
+        for (EventListener eventListener : listeners) {
             if (!(eventListener instanceof ServletContextAttributeListener)) {
                 continue;
             }
-            ServletContextAttributeListener listener =
-                (ServletContextAttributeListener) eventListener;
+            ServletContextAttributeListener listener = (ServletContextAttributeListener) eventListener;
             try {
                 context.fireContainerEvent(
                     ContainerEvent.BEFORE_CONTEXT_ATTRIBUTE_REMOVED,
@@ -462,8 +440,7 @@ public class ApplicationContext implements ServletContext {
                     ContainerEvent.AFTER_CONTEXT_ATTRIBUTE_REMOVED,
                     listener);
                 // FIXME - should we do anything besides log these?
-                log.log(Level.WARNING,
-                        LogFacade.ATTRIBUTES_EVENT_LISTENER_EXCEPTION, t);
+                log.log(Level.WARNING, LogFacade.ATTRIBUTES_EVENT_LISTENER_EXCEPTION, t);
             }
         }
 
@@ -480,9 +457,10 @@ public class ApplicationContext implements ServletContext {
     public void setAttribute(String name, Object value) {
 
         // Name cannot be null
-        if (name == null)
+        if (name == null) {
             throw new NullPointerException
                     (rb.getString(LogFacade.NULL_NAME_EXCEPTION));
+        }
 
         // Null value is the same as removeAttribute()
         if (value == null) {
@@ -496,11 +474,13 @@ public class ApplicationContext implements ServletContext {
         // Add or replace the specified attribute
         synchronized (attributesLock) {
             // Check for read only attribute
-            if (readOnlyAttributes.containsKey(name))
+            if (readOnlyAttributes.containsKey(name)) {
                 return;
+            }
             oldValue = attributes.get(name);
-            if (oldValue != null)
+            if (oldValue != null) {
                 replaced = true;
+            }
             attributes.put(name, value);
         }
 
@@ -527,9 +507,7 @@ public class ApplicationContext implements ServletContext {
                                                  name, value);
         }
 
-        Iterator<EventListener> iter = listeners.iterator();
-        while (iter.hasNext()) {
-            EventListener eventListener = iter.next();
+        for (EventListener eventListener : listeners) {
             if (!(eventListener instanceof ServletContextAttributeListener)) {
                 continue;
         }
@@ -933,19 +911,14 @@ public class ApplicationContext implements ServletContext {
     void clearAttributes() {
 
         // Create list of attributes to be removed
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         synchronized (attributesLock) {
-            Iterator<String> iter = attributes.keySet().iterator();
-            while (iter.hasNext()) {
-                list.add(iter.next());
+            for (String element : attributes.keySet()) {
+                list.add(element);
             }
         }
 
-        // Remove application originated attributes
-        // (read only attributes will be left in place)
-        Iterator<String> keys = list.iterator();
-        while (keys.hasNext()) {
-            String key = keys.next();
+        for (String key : list) {
             removeAttribute(key);
         }
     }
@@ -962,8 +935,9 @@ public class ApplicationContext implements ServletContext {
      */
     void setAttributeReadOnly(String name) {
         synchronized (attributesLock) {
-            if (attributes.containsKey(name))
+            if (attributes.containsKey(name)) {
                 readOnlyAttributes.put(name, name);
+            }
         }
     }
 
@@ -971,4 +945,9 @@ public class ApplicationContext implements ServletContext {
         this.isRestricted = isRestricted;
     }
 
+
+    @Override
+    public String toString() {
+        return super.toString() + "[context=" + context + ']';
+    }
 }

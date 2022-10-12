@@ -32,10 +32,8 @@ public class PermissionsDescriptor extends RootDeploymentDescriptor {
     private RootDeploymentDescriptor parent;
     private PermissionCollection declaredPerms;
 
-    /** @return canonical name of the class and hash code */
-    @Override
-    public String getModuleID() {
-        return this.getClass().getCanonicalName() + '@' + hashCode();
+    public PermissionsDescriptor() {
+        setModuleID(getClass().getCanonicalName() + '@' + hashCode());
     }
 
 

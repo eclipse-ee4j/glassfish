@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Set;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -30,8 +31,7 @@ public class TestClient {
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    public boolean found1 = false;
-    public boolean found2 = false;
+    public int found = 0;
 
     public static void main (String[] args) {
         stat.addDescription("wsctx");
@@ -60,12 +60,13 @@ public class TestClient {
         InputStream is = c1.getInputStream();
         BufferedReader input = new BufferedReader (new InputStreamReader(is));
         String line = null;
+        Set<String> expected = Set.of("So the RESULT OF HELLO SERVICE IS", "[Hello All-HelloWAR]");
+        log("Expecting lines with the content: " + expected);
         while ((line = input.readLine()) != null) {
             log(line);
-            if(line.indexOf("So the RESULT OF HELLO SERVICE IS") != -1)
-                found1 = true;
-            if(line.indexOf("[Hello AllHelloWAR]") != -1)
-                found2 = true;
+            if(expected.contains(line)) {
+                found++;
+            }
         }
         return code;
     }
@@ -75,10 +76,7 @@ public class TestClient {
             log("Incorrect return code: " + code);
             fail();
         }
-        if(!found1) {
-            fail();
-        }
-        if(!found2) {
+        if(found < 2) {
             fail();
         }
         pass();

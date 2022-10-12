@@ -20,7 +20,6 @@ package com.sun.enterprise.deployment;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -40,12 +39,6 @@ public class JaxrpcMappingDescriptor extends RootDeploymentDescriptor {
     private final Map<String, String> namespaceUriToPackageMap = new HashMap<>();
 
     private boolean simpleMapping = true;
-
-    @Override
-    public String getModuleID() {
-        return "";
-    }
-
 
     @Override
     public String getDefaultSpecVersion() {
@@ -101,9 +94,7 @@ public class JaxrpcMappingDescriptor extends RootDeploymentDescriptor {
      */
     public Collection<Mapping> getMappings() {
         Collection<Mapping> mappings = new HashSet<>();
-        Iterator<Entry<String, String>> nIter = namespaceUriToPackageMap.entrySet().iterator();
-        while (nIter.hasNext()) {
-            Entry<String, String> entry = nIter.next();
+        for (Entry<String, String> entry : namespaceUriToPackageMap.entrySet()) {
             String namespaceUri = entry.getKey();
             String javaPackage = entry.getValue();
             Mapping mapping = new Mapping(namespaceUri, javaPackage);

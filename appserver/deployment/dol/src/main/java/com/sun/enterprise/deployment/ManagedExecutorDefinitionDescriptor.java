@@ -27,7 +27,7 @@ import org.glassfish.deployment.common.JavaEEResourceType;
 /**
  * @author David Matejcek
  */
-public class ManagedExecutorDefinitionDescriptor  extends ResourceDescriptor implements ContextualResourceDefinition {
+public class ManagedExecutorDefinitionDescriptor extends ResourceDescriptor implements ContextualResourceDefinition {
 
     private static final long serialVersionUID = 1L;
 

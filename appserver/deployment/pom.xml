@@ -35,7 +35,6 @@
     <modules>
         <module>dtds</module>
         <module>schemas</module>
-        <module>dol-core</module>
         <module>dol</module>
         <module>jakartaee-core</module>
         <module>jakartaee-full</module>

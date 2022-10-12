@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-
 import java.util.Objects;
 import java.util.Properties;
 
@@ -31,16 +29,6 @@ public abstract class AbstractConnectorResourceDescriptor extends ResourceDescri
     private String name ;
     private String resourceAdapter;
     private final Properties properties = new Properties();
-
-    private static final String JAVA_URL = "java:";
-    private static final String JAVA_COMP_URL = "java:comp/";
-
-    public static String getJavaName(String theName) {
-        if (theName.contains(JAVA_URL)) {
-            return theName;
-        }
-        return JAVA_COMP_URL + theName;
-    }
 
 
     @Override
@@ -85,7 +73,7 @@ public abstract class AbstractConnectorResourceDescriptor extends ResourceDescri
         if (object instanceof AbstractConnectorResourceDescriptor) {
             AbstractConnectorResourceDescriptor another = (AbstractConnectorResourceDescriptor) object;
             if (getResourceType() == another.getResourceType()) {
-                return getJavaName(this.getName()).equals(getJavaName(another.getName()));
+                return getJndiName().equals(another.getJndiName());
             }
         }
         return false;

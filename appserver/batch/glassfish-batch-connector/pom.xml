@@ -48,8 +48,8 @@
             <artifactId>persistence-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-            <dependency>
-            <groupId>org.omnifaces</groupId>
+        <dependency>
+            <groupId>org.glassfish.main.concurrent</groupId>
             <artifactId>concurrent-connector</artifactId>
         </dependency>
         <dependency>

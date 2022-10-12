@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,74 +17,53 @@
 
 package org.glassfish.web.deployment.util;
 
-import com.sun.enterprise.deployment.web.ServletFilter;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WebComponentDescriptor;
 import com.sun.enterprise.deployment.WebService;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.TracerVisitor;
-import org.glassfish.web.deployment.descriptor.ServletFilterDescriptor;
-
-import java.util.Iterator;
+import com.sun.enterprise.deployment.web.ServletFilter;
 
 public class WebBundleTracerVisitor extends TracerVisitor implements WebBundleVisitor {
 
-    public WebBundleTracerVisitor() {
-    }
-
+    @Override
     public void accept (BundleDescriptor descriptor) {
         if (descriptor instanceof WebBundleDescriptor) {
             WebBundleDescriptor webBundle = (WebBundleDescriptor)descriptor;
             accept(webBundle);
 
-            for (Iterator<WebComponentDescriptor> i = webBundle.getWebComponentDescriptors().iterator(); i.hasNext();) {
-                WebComponentDescriptor aWebComp = i.next();
+            for (WebComponentDescriptor aWebComp : webBundle.getWebComponentDescriptors()) {
                 accept(aWebComp);
             }
 
-            for (Iterator<WebService> itr = webBundle.getWebServices().getWebServices().iterator(); itr.hasNext();) {
-                WebService aWebService = itr.next();
+            for (WebService aWebService : webBundle.getWebServices().getWebServices()) {
                 accept(aWebService);
             }
 
             super.accept(descriptor);
 
-            for (Iterator<ServletFilter> itr = webBundle.getServletFilterDescriptors().iterator(); itr.hasNext();) {
-                ServletFilter servletFilterDescriptor = itr.next();
+            for (ServletFilter servletFilterDescriptor : webBundle.getServletFilterDescriptors()) {
                 accept(servletFilterDescriptor);
             }
         }
     }
 
-   /**
-     * visit a web bundle descriptor
-     *
-     * @param the web bundle descriptor
-     */
+
+    @Override
     public void accept(WebBundleDescriptor descriptor) {
         DOLUtils.getDefaultLogger().info(descriptor.toString());
     }
 
-   /**
-     * visit a web component descriptor
-     *
-     * @param the web component
-     */
+
     protected void accept(WebComponentDescriptor descriptor) {
         DOLUtils.getDefaultLogger().info("==================");
         DOLUtils.getDefaultLogger().info(descriptor.toString());
     }
 
-   /**
-     * visit a servlet filter descriptor
-     *
-     * @param the servlet filter
-     */
+
     protected void accept(ServletFilter descriptor) {
         DOLUtils.getDefaultLogger().info("==================");
         DOLUtils.getDefaultLogger().info(descriptor.toString());
     }
 }
-

@@ -18,7 +18,6 @@ package com.sun.s1asdev.cfd;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.enterprise.deployment.io.ApplicationDeploymentDescriptorFile;
 import junit.framework.Assert;
 import junit.framework.TestCase;

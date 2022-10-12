@@ -20,12 +20,12 @@ package com.sun.enterprise.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.WSDolSupport;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContextImpl;
-import com.sun.enterprise.deployment.core.MetadataSource;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import jakarta.annotation.Resource;

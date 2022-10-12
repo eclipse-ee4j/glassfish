@@ -84,14 +84,12 @@ import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_GL
 @ResourceDeployerInfo(DataSourceDefinitionDescriptor.class)
 public class DataSourceDefinitionDeployer implements ResourceDeployer {
 
-    private static Logger _logger = LogDomains.getLogger(DataSourceDefinitionDeployer.class, LogDomains.RSR_LOGGER);
+    private static final Logger LOG = LogDomains.getLogger(DataSourceDefinitionDeployer.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private Provider<ResourceManagerFactory> resourceManagerFactoryProvider;
-
     @Inject
     private Provider<CommonResourceProxy> dataSourceDefinitionProxyProvider;
-
     @Inject
     private Provider<ResourceNamingService> resourceNamingServiceProvider;
 
@@ -107,37 +105,21 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
         String poolName = deriveResourceName(desc.getResourceId(), desc.getName(), DSDPOOL);
         String resourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
 
-        _logger.log(FINE, () ->
+        LOG.log(FINE, () ->
             "DataSourceDefinitionDeployer.deployResource() : pool-name [" + poolName + "], " +
              " resource-name [" + resourceName + "]");
 
         JdbcConnectionPool jdbcConnectionPool = new MyJdbcConnectionPool(desc, poolName);
-
-        // deploy pool
         getDeployer(jdbcConnectionPool).deployResource(jdbcConnectionPool);
-
-        // deploy resource
         JdbcResource jdbcResource = new MyJdbcResource(poolName, resourceName);
         getDeployer(jdbcResource).deployResource(jdbcResource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-
-        return false;
+        return handles(resource) && !postApplicationDeployment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
             throws ResourceConflictException {
@@ -210,7 +192,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
                 undeployResource(dataSourceDefinitionDescriptor);
             }
         } catch (Exception e) {
-            _logger.log(WARNING, "exception while unregistering DSD [ " + dataSourceDefinitionDescriptor.getName() + " ]", e);
+            LOG.log(WARNING, "exception while unregistering DSD [ " + dataSourceDefinitionDescriptor.getName() + " ]", e);
         }
     }
 
@@ -287,7 +269,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
                     resourceNamingService.publishObject(resourceInfo, proxy, true);
                     dataSourceDefinitionDescriptor.setDeployed(true);
                 } catch (NamingException e) {
-                    _logger.log(WARNING, "dsd.registration.failed", new Object[] { appName, dsdName, e });
+                    LOG.log(WARNING, "dsd.registration.failed", new Object[] { appName, dsdName, e });
                 }
             }
         }
@@ -312,7 +294,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
                 dataSourceDefinitionDescriptor.getName(),
                 dataSourceDefinitionDescriptor.getResourceType());
 
-        _logger.log(FINE, () ->
+        LOG.log(FINE, () ->
             "DataSourceDefinitionDeployer.undeployResource() : pool-name [" + poolName + "], " +
             " resource-name [" + resourceName + "]");
 
@@ -353,7 +335,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
+    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
 
@@ -582,7 +564,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
                     type = JAVA_SQL_DRIVER;
                 }
             } catch (ClassNotFoundException e) {
-                    _logger.log(FINEST, () ->
+                    LOG.log(FINEST, () ->
                         "Unable to load class [ " + dataSourceDefinitionDescriptor.getClassName() + " ] to " +
                         "determine its res-type, defaulting to [" + JAVAX_SQL_DATASOURCE + "]");
 

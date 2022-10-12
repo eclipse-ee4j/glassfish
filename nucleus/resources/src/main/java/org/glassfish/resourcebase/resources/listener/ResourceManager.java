@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,27 @@
 
 package org.glassfish.resourcebase.resources.listener;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerResource;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PostConstruct;
@@ -27,26 +47,27 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.InitRunLevel;
 import org.glassfish.internal.api.LogManager;
-import org.glassfish.resourcebase.resources.api.*;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
+import org.glassfish.resourcebase.resources.ResourceTypeOrderProcessor;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerValidator;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.api.ResourcesBinder;
 import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.glassfish.resourcebase.resources.ResourceTypeOrderProcessor;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.ObservableBean;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 
 
 /**
@@ -100,6 +121,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
     @Inject
     private ResourceTypeOrderProcessor resourceTypeOrderProcessor;
 
+    @Override
     public void postConstruct() {
         notifyListeners(ResourceManagerLifecycleListener.EVENT.STARTUP);
         deployResources(resourceTypeOrderProcessor.getOrderedResources(domain.getResources().getResources()));
@@ -155,8 +177,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                 // only other resource types left are RAC, CWSM
                 try {
                     ResourceDeployer deployer = getResourceDeployer(resource);
-                    if (deployer != null)
+                    if (deployer != null) {
                         deployer.deployResource(resource);
+                    }
                 } catch (Exception e) {
                     Object[] params = {ResourceUtil.getGenericResourceInfo(resource), e};
                     logger.log(Level.WARNING, ResourceLoggingConstansts.UNABLE_TO_DEPLOY, params);
@@ -179,6 +202,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
     /**
      * Do cleanup of system-resource-adapter, resources, pools
      */
+    @Override
     public void preDestroy() {
         removeListenerForAllResources();
         removeListenerForResources();
@@ -209,9 +233,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
         for (Resource resource : resources) {
             try {
                 ResourceDeployer deployer = getResourceDeployer(resource);
-                if (deployer != null)
+                if (deployer != null) {
                     deployer.undeployResource(resource);
-                else {
+                } else {
                     Object[] params = {resource.getIdentity()};
                     logger.log(Level.WARNING,
                             ResourceLoggingConstansts.UNABLE_TO_UNDEPLOY,
@@ -231,6 +255,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
      *
      * @param events list of changes
      */
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         return ConfigSupport.sortAndDispatch(events, new PropertyChangeHandler(events), logger);
     }
@@ -252,6 +277,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
          * @param changedType     type of the configuration object
          * @param changedInstance changed instance.
          */
+        @Override
         public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
             NotProcessed np = null;
             ClassLoader contextCL = Thread.currentThread().getContextClassLoader();
@@ -349,15 +375,17 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                         BindableResource bindableResource = (BindableResource) instance.getParent();
                         if (getEnabledResourceRefforResource(bindableResource) && Boolean.valueOf(bindableResource.getEnabled())) {
                             ResourceDeployer parentDeployer = getResourceDeployer(instance.getParent());
-                            if (parentDeployer != null)
+                            if (parentDeployer != null) {
                                 parentDeployer.redeployResource(instance.getParent());
+                            }
                         }
                     } else if (instance instanceof ServerResource){
                         redeployResource((Resource) instance);
                     } else {
                         ResourceDeployer parentDeployer = getResourceDeployer(instance.getParent());
-                        if (parentDeployer != null)
+                        if (parentDeployer != null) {
                             parentDeployer.redeployResource(instance.getParent());
+                        }
                     }
                 } else if (instance instanceof ResourceRef) {
                     ResourceRef ref = (ResourceRef) instance;
@@ -419,8 +447,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                 //only resource type left are RAC and CWSM
                 try {
                     ResourceDeployer deployer = getResourceDeployer(instance);
-                    if (deployer != null)
+                    if (deployer != null) {
                         deployer.deployResource(instance);
+                    }
                 } catch (Exception e) {
                     Object params[] = {ResourceUtil.getGenericResourceInfo((Resource) instance), e};
                     logger.log(Level.WARNING, ResourceLoggingConstansts.UNABLE_TO_DEPLOY, params);
@@ -434,7 +463,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                 Resource resource = ResourceUtil.getResourceByIdentity(domain.getResources(), ref.getRef());
                 if (resource instanceof BindableResource) {
                     BindableResource br = (BindableResource) resource;
-                    if (Boolean.valueOf(ref.getEnabled()) && Boolean.valueOf(br.getEnabled())) {
+                    if (Boolean.parseBoolean(ref.getEnabled()) && Boolean.parseBoolean(br.getEnabled())) {
                         ResourceInfo resourceInfo = new ResourceInfo(br.getJndiName());
                         resourcesBinder.deployResource(resourceInfo, br);
                     }
@@ -468,8 +497,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                     ResourceManager.this.removeListenerForResource(instance);
                     //get appropriate deployer and undeploy resource
                     ResourceDeployer resourceDeployer = getResourceDeployer(instance);
-                    if (resourceDeployer != null)
-                      resourceDeployer.undeployResource(instance);
+                    if (resourceDeployer != null) {
+                        resourceDeployer.undeployResource(instance);
+                    }
                 } else if (ResourceUtil.isValidEventType(instance.getParent())) {
                     //Added in case of a property remove
                     //check for validity of the property's parent and redeploy
@@ -477,8 +507,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                         BindableResource bindableResource = (BindableResource) instance.getParent();
                         if (getEnabledResourceRefforResource(bindableResource) && Boolean.valueOf(bindableResource.getEnabled())) {
                             ResourceDeployer parentDeployer = getResourceDeployer(instance.getParent());
-                            if (parentDeployer != null)
+                            if (parentDeployer != null) {
                                 parentDeployer.redeployResource(instance.getParent());
+                            }
                         }
                     } else {
                         redeployResource((Resource) instance.getParent());
@@ -487,7 +518,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                 } else if (instance instanceof ResourceRef) {
                     //delete-resource-ref
                     ResourceRef ref = (ResourceRef) instance;
-                    Resource resource = (Resource) ResourceUtil.getResourceByName(
+                    Resource resource = ResourceUtil.getResourceByName(
                             Resource.class, domain.getResources(), ref.getRef());
                     //get appropriate deployer and undeploy resource
                     if (resource instanceof BindableResource) {
@@ -495,8 +526,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                         if (resourceEnabled && Boolean.valueOf(ref.getEnabled())) {
                             ResourceDeployer resourceDeployer =
                                 getResourceDeployer(resource);
-                            if (resourceDeployer != null)
+                            if (resourceDeployer != null) {
                                 resourceDeployer.undeployResource(resource);
+                            }
                         }
                     } else if (resource instanceof ServerResource) {
                         undeployServerResource(resource);
@@ -554,7 +586,7 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
         //Instead of injecting ResourceRef[] config array (which will inject all resource-refs in domain.xml
         //including the ones in other server instances), get appropriate instance's resource-refs alone.
         Server server = getServerBean();
-        List<ResourceRef> resourceRefs = new ArrayList<ResourceRef>(server.getResourceRef());
+        List<ResourceRef> resourceRefs = new ArrayList<>(server.getResourceRef());
         // MAC 10/2012 -- If not in cluster, add config refs
         Config config = server.getConfig();
         if (config != null) {
@@ -643,8 +675,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
     private boolean isServerResourceEnabled(Resource res, ResourceDeployer deployer) {
         if (res instanceof ServerResource && deployer != null) {
             ResourceDeployerValidator deployerValidator = getResourceDeployerValidator(deployer);
-            if (deployerValidator != null && deployerValidator.isEnabledLocally(res))
+            if (deployerValidator != null && deployerValidator.isEnabledLocally(res)) {
                 return true;
+            }
         }
         return false;
     }
@@ -653,8 +686,9 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
         ResourceDeployer deployer = getResourceDeployer(resource);
         if (resource instanceof ServerResource && deployer != null) {
             ResourceDeployerValidator deployerValidator = getResourceDeployerValidator(deployer);
-            if (deployerValidator != null && deployerValidator.isDeployedLocally(resource))
+            if (deployerValidator != null && deployerValidator.isDeployedLocally(resource)) {
                 return true;
+            }
         }
         return false;
     }
@@ -701,14 +735,16 @@ public class ResourceManager implements PostConstruct, PreDestroy, ConfigListene
                 boolean enabledLocally = validator.isEnabledLocally(resource);
                 boolean deployed = validator.isDeployedLocally(resource);
                 if (deployed && !enabledLocally) {
-                    if (logger.isLoggable(Level.FINE))
+                    if (logger.isLoggable(Level.FINE)) {
                         logger.fine("Undeploy resource " + resource.getIdentity());
+                    }
                     // resource is deployed locally and
                     // is no longer enabled in the config
                     deployer.undeployResource(resource);
                 } else if (enabledLocally) {
-                    if (logger.isLoggable(Level.FINE))
+                    if (logger.isLoggable(Level.FINE)) {
                         logger.fine("Deploy resource " + resource.getIdentity());
+                    }
                     // a Resource or ResourceRef was removed,
                     // but it's now enabled in the config (e.g., through
                     // inheritance from a Config bean), so

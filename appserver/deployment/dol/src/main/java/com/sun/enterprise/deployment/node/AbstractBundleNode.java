@@ -75,7 +75,7 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
     @Override
     protected Map<String, String> getDispatchTable() {
         Map<String, String> dispatchTable = super.getDispatchTable();
-        dispatchTable.put(TagNames.NAME, "setDisplayName");
+        dispatchTable.put(TagNames.DISPLAY_NAME, "setDisplayName");
         dispatchTable.put(TagNames.VERSION, "setSpecVersion");
         return dispatchTable;
     }

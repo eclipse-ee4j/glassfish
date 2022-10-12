@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,49 +18,70 @@
 package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.security.SecurityContext;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.enterprise.concurrent.spi.ContextHandle;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 
-import javax.security.auth.Subject;
-import java.io.IOException;
-
 public class InvocationContext implements ContextHandle {
+    private static final Logger LOG = System.getLogger(InvocationContext.class.getName());
 
     private transient ComponentInvocation invocation;
     private transient ClassLoader contextClassLoader;
     private transient SecurityContext securityContext;
-    private boolean useTransactionOfExecutionThread;
 
-    static final long serialVersionUID = 5642415011655486579L;
+    private ThreadMgmtData threadCtxData;
+    private final boolean useTxOfExecutionThread;
 
-    public InvocationContext(ComponentInvocation invocation, ClassLoader contextClassLoader, SecurityContext securityContext,
-                             boolean useTransactionOfExecutionThread) {
+    public InvocationContext(ComponentInvocation invocation, ClassLoader contextClassLoader,
+        SecurityContext securityContext, boolean useTxOfExecutionThread, ThreadMgmtData threadManagement) {
+        LOG.log(Level.TRACE,
+            "InvocationContext(\n  invocation={0}\n  contextClassLoader={1}\n  securityContext={2}"
+                + "\n  useTxOfExecutionThread={3}\n  threadCtxData={4}\n)",
+            invocation, contextClassLoader, securityContext, threadManagement);
         this.invocation = invocation;
         this.contextClassLoader = contextClassLoader;
         this.securityContext = securityContext;
-        this.useTransactionOfExecutionThread = useTransactionOfExecutionThread;
+        this.useTxOfExecutionThread = useTxOfExecutionThread;
+        this.threadCtxData = threadManagement;
     }
+
 
     public ComponentInvocation getInvocation() {
         return invocation;
     }
 
+
     public ClassLoader getContextClassLoader() {
         return contextClassLoader;
     }
+
 
     public SecurityContext getSecurityContext() {
         return securityContext;
     }
 
-    public boolean isUseTransactionOfExecutionThread() {
-        return useTransactionOfExecutionThread;
+
+    public ThreadMgmtData getContextData() {
+        return threadCtxData;
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        out.writeBoolean(useTransactionOfExecutionThread);
+
+    public boolean isUseTransactionOfExecutionThread() {
+        return useTxOfExecutionThread;
+    }
+
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
         // write values for invocation
         String componentId = null;
         String appName = null;
@@ -91,10 +113,11 @@ public class InvocationContext implements ContextHandle {
         out.writeObject(principalName);
         out.writeBoolean(defaultSecurityContext);
         out.writeObject(subject);
+        out.writeObject(threadCtxData);
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        useTransactionOfExecutionThread = in.readBoolean();
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         // reconstruct invocation
         String componentId = (String) in.readObject();
         String appName = (String) in.readObject();
@@ -120,6 +143,7 @@ public class InvocationContext implements ContextHandle {
                 contextClassLoader = applicationInfo.getAppClassLoader();
             }
         }
+        threadCtxData = (ThreadMgmtData) in.readObject();
     }
 
     private ComponentInvocation createComponentInvocation(String componentId, String appName, String moduleName) {
@@ -135,6 +159,4 @@ public class InvocationContext implements ContextHandle {
         );
         return newInv;
     }
-
-
 }

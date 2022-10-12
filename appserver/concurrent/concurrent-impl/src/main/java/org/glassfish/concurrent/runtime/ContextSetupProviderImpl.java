@@ -19,153 +19,167 @@ package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.Utility;
 
 import jakarta.enterprise.concurrent.ContextService;
-import jakarta.enterprise.concurrent.ManagedTask;
+import jakarta.enterprise.concurrent.spi.ThreadContextSnapshot;
 import jakarta.transaction.Status;
 import jakarta.transaction.Transaction;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.concurrent.LogFacade;
 import org.glassfish.enterprise.concurrent.spi.ContextHandle;
 import org.glassfish.enterprise.concurrent.spi.ContextSetupProvider;
 import org.glassfish.internal.deployment.Deployment;
 
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Classloader;
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.JNDI;
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Security;
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.WorkArea;
+import static jakarta.enterprise.concurrent.ManagedTask.SUSPEND;
+import static jakarta.enterprise.concurrent.ManagedTask.TRANSACTION;
+import static jakarta.enterprise.concurrent.ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD;
+
+
+/**
+ * 1. save
+ * 2. setup
+ * 3. reset
+ */
 public class ContextSetupProviderImpl implements ContextSetupProvider {
+
+    private static final long serialVersionUID = -2043616384112372091L;
+    private static final Logger LOG  = LogFacade.getLogger();
 
     private transient InvocationManager invocationManager;
     private transient Deployment deployment;
     private transient Applications applications;
+
     // transactionManager should be null for ContextService since it uses TransactionSetupProviderImpl
     private transient JavaEETransactionManager transactionManager;
 
-    private static final Logger LOG  = LogFacade.getLogger();
+    private final ContextSetup setup;
 
-    static final long serialVersionUID = -1095988075917755802L;
-
-    enum CONTEXT_TYPE {CLASSLOADING, SECURITY, NAMING, WORKAREA}
-
-    private boolean classloading, security, naming, workArea;
-
-
-    public ContextSetupProviderImpl(InvocationManager invocationManager,
-                                    Deployment deployment,
-                                    Applications applications,
-                                    JavaEETransactionManager transactionManager,
-                                    CONTEXT_TYPE... contextTypes) {
-        this.invocationManager = invocationManager;
-        this.deployment = deployment;
-        this.applications = applications;
-        this.transactionManager = transactionManager;
-        for (CONTEXT_TYPE contextType: contextTypes) {
-            switch(contextType) {
-                case CLASSLOADING:
-                    classloading = true;
-                    break;
-                case SECURITY:
-                    security = true;
-                    break;
-                case NAMING:
-                    naming = true;
-                    break;
-                case WORKAREA:;
-                    workArea = true;
-                    break;
-            }
-        }
+    public ContextSetupProviderImpl(Set<String> propagated, Set<String> cleared, Set<String> unchanged) {
+        this.setup = new ContextSetup(propagated, cleared, unchanged);
+        ConcurrentRuntime runtime = ConcurrentRuntime.getRuntime();
+        this.invocationManager = runtime.getInvocationManager();
+        this.deployment = runtime.getDeployment();
+        this.applications = runtime.getApplications();
+        this.transactionManager = runtime.getTransactionManager();
     }
+
+
+    public ContextSetup getContextSetup() {
+        return this.setup;
+    }
+
 
     @Override
     public ContextHandle saveContext(ContextService contextService) {
-        return saveContext(contextService, null);
+        return saveContext(contextService, Map.of());
     }
 
-    @Override
-    public ContextHandle saveContext(ContextService contextService, Map<String, String> contextObjectProperties) {
-        // Capture the current thread context
-        ClassLoader contextClassloader = null;
-        SecurityContext currentSecurityContext = null;
-        ComponentInvocation savedInvocation = null;
-        if (classloading) {
-            contextClassloader = Utility.getClassLoader();
-        }
-        if (security) {
-            currentSecurityContext = SecurityContext.getCurrent();
-        }
-        ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
-        if (currentInvocation != null) {
-            savedInvocation = createComponentInvocation(currentInvocation);
-        }
-        boolean useTransactionOfExecutionThread = transactionManager == null && useTransactionOfExecutionThread(contextObjectProperties);
-        // TODO - support workarea propagation
-        return new InvocationContext(savedInvocation, contextClassloader, currentSecurityContext, useTransactionOfExecutionThread);
-    }
 
     @Override
-    public ContextHandle setup(ContextHandle contextHandle) throws IllegalStateException {
+    public ContextHandle saveContext(ContextService contextService, Map<String, String> executionProperties) {
+        LOG.log(Level.FINEST, "saveContext(contextService={0}, executionProperties={1})",
+            new Object[] {contextService, executionProperties});
+        ClassLoader classLoader = Utility.getClassLoader();
+        setup.reloadProviders(classLoader);
+        final ClassLoader contextClassloader;
+        if (setup.isPropagated(Classloader)) {
+            contextClassloader = classLoader;
+        } else {
+            contextClassloader = null;
+        }
+        final SecurityContext securityContext;
+        if (setup.isPropagated(Security)) {
+            securityContext = SecurityContext.getCurrent();
+        } else {
+            securityContext = null;
+        }
+        return createInvocationContext(executionProperties, contextClassloader, securityContext);
+    }
+
+
+    @Override
+    public ContextHandle setup(ContextHandle contextHandle) {
+        LOG.log(Level.FINEST, "setup(contextHandle={0})", contextHandle);
         if (! (contextHandle instanceof InvocationContext)) {
             LOG.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
             return null;
         }
-        InvocationContext handle = (InvocationContext) contextHandle;
-        String appName = null;
+        InvocationContext invocationCtx = (InvocationContext) contextHandle;
+        ComponentInvocation invocation = invocationCtx.getInvocation();
+        final String appName = invocation == null ? null : invocation.getAppName();
 
-        if (handle.getInvocation() != null) {
-            appName = handle.getInvocation().getAppName();
-        }
         // Check whether the application component submitting the task is still running. Throw IllegalStateException if not.
         if (!isApplicationEnabled(appName)) {
             throw new IllegalStateException("Module " + appName + " is disabled");
         }
 
-        ClassLoader resetClassLoader = null;
-        SecurityContext resetSecurityContext = null;
-        if (handle.getContextClassLoader() != null) {
-            resetClassLoader = Utility.setContextClassLoader(handle.getContextClassLoader());
+        final ClassLoader resetClassLoader;
+        if (invocationCtx.getContextClassLoader() != null) {
+            resetClassLoader = Utility.setContextClassLoader(invocationCtx.getContextClassLoader());
+        } else {
+            resetClassLoader = null;
         }
-        if (handle.getSecurityContext() != null) {
+
+        final SecurityContext resetSecurityContext;
+        if (invocationCtx.getSecurityContext() == null || setup.isUnchanged(Security)) {
+            resetSecurityContext = null;
+        } else {
             resetSecurityContext = SecurityContext.getCurrent();
-            SecurityContext.setCurrent(handle.getSecurityContext());
+            SecurityContext.setCurrent(invocationCtx.getSecurityContext());
         }
-        ComponentInvocation invocation = handle.getInvocation();
-        if (invocation != null && !handle.isUseTransactionOfExecutionThread()) {
+        if (invocation != null) {
             // Each invocation needs a ResourceTableKey that returns a unique hashCode for TransactionManager
             invocation.setResourceTableKey(new PairKey(invocation.getInstance(), Thread.currentThread()));
             invocationManager.preInvoke(invocation);
         }
         // Ensure that there is no existing transaction in the current thread
-        if (transactionManager != null) {
+        if (transactionManager != null && setup.isClear(StandardContextType.WorkArea)) {
             transactionManager.clearThreadTx();
         }
-        return new InvocationContext(invocation, resetClassLoader, resetSecurityContext, handle.isUseTransactionOfExecutionThread());
+
+        ThreadMgmtData threadManagement = ThreadMgmtData.createNextGeneration(invocationCtx.getContextData());
+        return new InvocationContext(invocation, resetClassLoader, resetSecurityContext,
+            invocationCtx.isUseTransactionOfExecutionThread(), threadManagement);
     }
+
 
     @Override
     public void reset(ContextHandle contextHandle) {
+        LOG.log(Level.FINEST, "reset(contextHandle={0})", contextHandle);
         if (! (contextHandle instanceof InvocationContext)) {
             LOG.log(Level.SEVERE, LogFacade.UNKNOWN_CONTEXT_HANDLE);
             return;
         }
-        InvocationContext handle = (InvocationContext) contextHandle;
-        if (handle.getContextClassLoader() != null) {
-            Utility.setContextClassLoader(handle.getContextClassLoader());
+        InvocationContext invocationContext = (InvocationContext) contextHandle;
+        invocationContext.getContextData().endContext();
+        if (invocationContext.getContextClassLoader() != null) {
+            Utility.setContextClassLoader(invocationContext.getContextClassLoader());
         }
-        if (handle.getSecurityContext() != null) {
-            SecurityContext.setCurrent(handle.getSecurityContext());
+        if (invocationContext.getSecurityContext() != null) {
+            SecurityContext.setCurrent(invocationContext.getSecurityContext());
         }
-        if (handle.getInvocation() != null && !handle.isUseTransactionOfExecutionThread()) {
-            invocationManager.postInvoke(((InvocationContext)contextHandle).getInvocation());
+        if (invocationContext.getInvocation() != null && !invocationContext.isUseTransactionOfExecutionThread()) {
+            invocationManager.postInvoke(invocationContext.getInvocation());
         }
-        if (transactionManager != null) {
+        if (setup.isClear(WorkArea) && transactionManager != null) {
             // clean up after user if a transaction is still active
             // This is not required by the Concurrency spec
             Transaction transaction = transactionManager.getCurrentTransaction();
@@ -181,61 +195,88 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
                     LOG.log(Level.SEVERE, "Cannot commit or rollback the transaction or get it's status.", ex);
                 }
             }
-          transactionManager.clearThreadTx();
+            transactionManager.clearThreadTx();
         }
     }
 
+
+    private ContextHandle createInvocationContext(final Map<String, String> executionProperties,
+        final ClassLoader classloader, final SecurityContext securityCtx) {
+        final boolean useTxOfExecutionThread = useTransactionOfExecutionThread(executionProperties);
+        final List<ThreadContextSnapshot> threadCtxSnapshots = setup.getThreadContextSnapshots(executionProperties);
+        final ComponentInvocation invocation = getSavedInvocation();
+        final ThreadMgmtData threadMgmtData = new ThreadMgmtData(threadCtxSnapshots);
+        return new InvocationContext(invocation, classloader, securityCtx, useTxOfExecutionThread, threadMgmtData);
+    }
+
+
+    private boolean useTransactionOfExecutionThread(Map<String, String> executionProperties) {
+        return (transactionManager == null
+            && USE_TRANSACTION_OF_EXECUTION_THREAD.equals(getTransactionExecutionProperty(executionProperties)))
+            || setup.isUnchanged(WorkArea);
+    }
+
+
+    private String getTransactionExecutionProperty(Map<String, String> executionProperties) {
+        if (executionProperties == null || executionProperties.isEmpty()) {
+            return SUSPEND;
+        }
+        return executionProperties.getOrDefault(TRANSACTION, SUSPEND);
+    }
+
+
+    private ComponentInvocation getSavedInvocation() {
+        ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
+        if (currentInvocation == null) {
+            return null;
+        }
+        if (setup.isClear(JNDI)) {
+            return new ComponentInvocation();
+        }
+        if (setup.isPropagated(JNDI)) {
+            return cloneComponentInvocation(currentInvocation);
+        }
+        return null;
+    }
+
+
     private boolean isApplicationEnabled(String appId) {
-        if (appId != null) {
-            Application app = applications.getApplication(appId);
-            if (app != null) {
-                return deployment.isAppEnabled(app);
-            }
+        if (appId == null) {
+            // we don't know the application name yet, it is starting.
+            // FIXME: it would be good to know the application name even in this phase.
+            return true;
+        }
+        Application app = applications.getApplication(appId);
+        if (app != null) {
+            return deployment.isAppEnabled(app);
         }
         return false;
     }
 
-    private ComponentInvocation createComponentInvocation(ComponentInvocation currInv) {
-//        ComponentInvocation newInv = new ComponentInvocation(
-//                currInv.getComponentId(),
-//                ComponentInvocation.ComponentInvocationType.SERVLET_INVOCATION,
-//                currInv.getContainer(),
-//                currInv.getAppName(),
-//                currInv.getModuleName()
-//        );
-        ComponentInvocation newInv = currInv.clone();
-        newInv.setResourceTableKey(null);
-        newInv.instance = currInv.getInstance();
-//        if (naming) {
-//            newInv.setJNDIEnvironment(currInv.getJNDIEnvironment());
-//        }
-        if (!naming) {
-            newInv.setJNDIEnvironment(null);
+
+    private ComponentInvocation cloneComponentInvocation(ComponentInvocation currentInvocation) {
+        ComponentInvocation clonedInvocation = currentInvocation.clone();
+        clonedInvocation.setResourceTableKey(null);
+        clonedInvocation.clearRegistry();
+        clonedInvocation.instance = currentInvocation.getInstance();
+        if (!setup.isPropagated(JNDI)) {
+            clonedInvocation.setJNDIEnvironment(null);
         }
-        return newInv;
+        return clonedInvocation;
     }
 
-    private boolean useTransactionOfExecutionThread(Map<String, String> executionProperties) {
-        return (ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD.equals(getTransactionExecutionProperty(executionProperties)));
-    }
 
-    private String getTransactionExecutionProperty(Map<String, String> executionProperties) {
-        if (executionProperties != null && executionProperties.get(ManagedTask.TRANSACTION) != null) {
-            return executionProperties.get(ManagedTask.TRANSACTION);
-        }
-        return ManagedTask.SUSPEND;
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+    private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeBoolean(transactionManager == null);
     }
 
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         boolean nullTransactionManager = in.readBoolean();
         ConcurrentRuntime concurrentRuntime = ConcurrentRuntime.getRuntime();
-        // re-initialize these fields
+        // re-initialize transient fields
         invocationManager = concurrentRuntime.getInvocationManager();
         deployment = concurrentRuntime.getDeployment();
         applications = concurrentRuntime.getApplications();

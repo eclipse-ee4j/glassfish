@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,39 +22,43 @@ import com.sun.enterprise.config.modularity.annotation.CustomConfiguration;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+
+import jakarta.validation.Payload;
+
 import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
 import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-import jakarta.validation.Payload;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
 
 /**
  * Concurrency managed scheduled executor service resource definition
  */
-
 @Configured
-@ResourceConfigCreator(commandName="create-managed-scheduled-executor-service")
+@ResourceConfigCreator(commandName = "create-managed-scheduled-executor-service")
 @RestRedirects({
- @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-scheduled-executor-service"),
- @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-scheduled-executor-service")
+    @RestRedirect(opType = RestRedirect.OpType.POST, commandName = "create-managed-scheduled-executor-service"),
+    @RestRedirect(opType = RestRedirect.OpType.DELETE, commandName = "delete-managed-scheduled-executor-service")
 })
-@ResourceTypeOrder(deploymentOrder=ResourceDeploymentOrder.MANAGED_SCHEDULED_EXECUTOR_SERVICE)
-@ReferenceConstraint(skipDuringCreation=true, payload=ManagedScheduledExecutorService.class)
-@UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=ManagedScheduledExecutorService.class)
+@ResourceTypeOrder(deploymentOrder = ResourceDeploymentOrder.MANAGED_SCHEDULED_EXECUTOR_SERVICE)
+@ReferenceConstraint(skipDuringCreation = true, payload = ManagedScheduledExecutorService.class)
+@UniqueResourceNameConstraint(message = "{resourcename.isnot.unique}", payload = ManagedScheduledExecutorService.class)
 @CustomConfiguration(baseConfigurationFileName = "managed-scheduled-executor-service-conf.xml")
-public interface ManagedScheduledExecutorService extends ConfigBeanProxy,
-        Resource, BindableResource, Payload, ConcurrencyResource, ManagedExecutorServiceBase {
+public interface ManagedScheduledExecutorService
+    extends ConfigBeanProxy, Resource, BindableResource, Payload, ConcurrencyResource, ManagedExecutorServiceBase {
 
+    @Override
     @DuckTyped
     String getIdentity();
 
     class Duck {
-        public static String getIdentity(
-            ManagedScheduledExecutorService resource){
+
+        public static String getIdentity(ManagedScheduledExecutorService resource) {
             return resource.getJndiName();
         }
     }

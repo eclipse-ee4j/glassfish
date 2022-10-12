@@ -24,9 +24,9 @@ import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 
 import java.util.Set;
 
@@ -170,7 +170,7 @@ public interface ResourceContainerContext extends ServiceReferenceContainerConte
     /**
      * get all descriptors based on the type
      *
-     * @return Set of ResourceDescriptor
+     * @return writeable {@link Set} of {@link ResourceDescriptor}
      */
     Set<ResourceDescriptor> getResourceDescriptors(JavaEEResourceType type);
 

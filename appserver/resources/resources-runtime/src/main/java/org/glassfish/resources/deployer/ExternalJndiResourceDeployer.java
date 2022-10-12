@@ -66,31 +66,26 @@ import org.jvnet.hk2.config.types.Property;
  * @since JDK1.4
  */
 @Service
-@ResourceDeployerInfo(ExternalJndiResource.class)
 @Singleton
+@ResourceDeployerInfo(ExternalJndiResource.class)
 public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
     private static final Logger LOG = LogDomains.getLogger(ExternalJndiResourceDeployer.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private ResourceNamingService namingService;
-
     @Inject
     private BindableResourcesHelper bindableResourcesHelper;
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public synchronized void deployResource(Object resource, String applicationName, String moduleName)
+        throws Exception {
         ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
         ResourceInfo resourceInfo = new ResourceInfo(jndiRes.getJndiName(), applicationName, moduleName);
         createExternalJndiResource(jndiRes, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public synchronized void deployResource(Object resource) throws Exception {
         ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
@@ -100,17 +95,11 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
 
     private void createExternalJndiResource(ExternalJndiResource jndiRes, ResourceInfo resourceInfo) {
-        // converts the config data to j2ee resource
         JavaEEResource j2eeRes = toExternalJndiJavaEEResource(jndiRes, resourceInfo);
-
-        // installs the resource
         installExternalJndiResource((org.glassfish.resources.beans.ExternalJndiResource) j2eeRes, resourceInfo);
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
         ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
@@ -118,9 +107,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
         deleteResource(jndiRes, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public synchronized void undeployResource(Object resource) throws Exception {
         ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
@@ -130,25 +117,16 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
 
     private void deleteResource(ExternalJndiResource jndiResource, ResourceInfo resourceInfo) {
-        // converts the config data to j2ee resource
         JavaEEResource j2eeResource = toExternalJndiJavaEEResource(jndiResource, resourceInfo);
-        // un-installs the resource
         uninstallExternalJndiResource(j2eeResource, resourceInfo);
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized void redeployResource(Object resource) throws Exception {
         undeployResource(resource);
         deployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean handles(Object resource) {
         return resource instanceof ExternalJndiResource;
@@ -165,17 +143,11 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized void enableResource(Object resource) throws Exception {
         deployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized void disableResource(Object resource) throws Exception {
         undeployResource(resource);
@@ -331,22 +303,11 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
         return jr;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
+        return handles(resource) && !postApplicationDeployment;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
         Resources allResources) throws ResourceConflictException {

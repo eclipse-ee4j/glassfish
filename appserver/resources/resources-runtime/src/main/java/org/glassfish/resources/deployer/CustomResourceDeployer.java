@@ -73,17 +73,11 @@ public class CustomResourceDeployer implements ResourceDeployer {
 
     @Inject
     private BindableResourcesHelper bindableResourcesHelper;
-
     @Inject
     private ResourceNamingService cns;
-    /**
-     * logger for this deployer
-     */
+
     private static final Logger LOG = LogDomains.getLogger(CustomResourceDeployer.class, LogDomains.RSR_LOGGER);
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized void deployResource(Object resource, String applicationName, String moduleName)
         throws Exception {
@@ -92,9 +86,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
         deployResource(resource, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public synchronized void deployResource(Object resource) throws Exception {
         CustomResource customResource = (CustomResource) resource;
@@ -105,17 +97,11 @@ public class CustomResourceDeployer implements ResourceDeployer {
 
     private void deployResource(Object resource, ResourceInfo resourceInfo) {
         CustomResource customRes = (CustomResource) resource;
-
-        // converts the config data to j2ee resource
         JavaEEResource j2eeResource = toCustomJavaEEResource(customRes, resourceInfo);
-
-        // installs the resource
         installCustomResource((org.glassfish.resources.beans.CustomResource) j2eeResource, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
         CustomResource customResource = (CustomResource) resource;
@@ -124,9 +110,6 @@ public class CustomResourceDeployer implements ResourceDeployer {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public synchronized void undeployResource(Object resource) throws Exception {
         CustomResource customResource = (CustomResource) resource;
@@ -136,86 +119,69 @@ public class CustomResourceDeployer implements ResourceDeployer {
 
 
     private void deleteResource(CustomResource customResource, ResourceInfo resourceInfo) throws NamingException {
-        // converts the config data to j2ee resource
-        // JavaEEResource j2eeResource = toCustomJavaEEResource(customRes, resourceInfo);
-        // removes the resource from jndi naming
         cns.unpublishObject(resourceInfo, resourceInfo.getName());
-
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean handles(Object resource) {
         return resource instanceof CustomResource;
     }
+
 
     @Override
     public boolean supportsDynamicReconfiguration() {
         return false;
     }
 
+
     @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
+    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void redeployResource(Object resource)
-            throws Exception {
 
+    @Override
+    public synchronized void redeployResource(Object resource) throws Exception {
         undeployResource(resource);
         deployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public synchronized void enableResource(Object resource) throws Exception {
         deployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public synchronized void disableResource(Object resource) throws Exception {
         undeployResource(resource);
     }
 
+
     /**
      * Installs the given custom resource. It publishes the resource as a
-     * javax.naming.Reference with the naming manager (jndi). This method gets
-     * called during server initialization and custom resource deployer to
+     * {@link javax.naming.Reference} with the naming manager (jndi).
+     * This method gets called during server initialization and custom resource deployer to
      * handle custom resource events.
      *
      * @param customRes custom resource
      */
     public void installCustomResource(org.glassfish.resources.beans.CustomResource customRes, ResourceInfo resourceInfo) {
-
         try {
             LOG.log(Level.FINE, "installCustomResource by jndi-name : {0}", resourceInfo);
-
-            // bind a Reference to the object factory
             Reference ref = new Reference(customRes.getResType(), customRes.getFactoryClass(), null);
-
-            // add resource properties as StringRefAddrs
             for (ResourceProperty prop : customRes.getProperties()) {
                 ref.add(new StringRefAddr(prop.getName(), prop.getValue()));
             }
-
-            // publish the reference
             cns.publishObject(resourceInfo, ref, true);
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "customrsrc.create_ref_error", resourceInfo);
             LOG.log(Level.SEVERE, "customrsrc.create_ref_error_excp", ex);
         }
     }
+
 
     /**
      * Returns a new instance of j2ee custom resource from the given
@@ -228,21 +194,11 @@ public class CustomResourceDeployer implements ResourceDeployer {
      * @return new instance of j2ee custom resource
      */
     public static JavaEEResource toCustomJavaEEResource(CustomResource rbean, ResourceInfo resourceInfo) {
-        org.glassfish.resources.beans.CustomResource jr
-            = new org.glassfish.resources.beans.CustomResource(resourceInfo);
+        org.glassfish.resources.beans.CustomResource jr = new org.glassfish.resources.beans.CustomResource(resourceInfo);
 
-        //jr.setDescription(rbean.getDescription()); // FIXME: getting error
-
-        // sets the enable flag
         jr.setEnabled(Boolean.valueOf(rbean.getEnabled()));
-
-        // sets the resource type
         jr.setResType(rbean.getResType());
-
-        // sets the factory class name
         jr.setFactoryClass(rbean.getFactoryClass());
-
-        // sets the properties
         List<Property> properties = rbean.getProperty();
         if (properties != null) {
             for (Property property : properties) {
@@ -253,9 +209,7 @@ public class CustomResourceDeployer implements ResourceDeployer {
         return jr;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
         if (handles(resource)) {
@@ -267,12 +221,9 @@ public class CustomResourceDeployer implements ResourceDeployer {
     }
 
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
-        throws ResourceConflictException {
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
+        Resources allResources) throws ResourceConflictException {
         // do nothing.
     }
 }

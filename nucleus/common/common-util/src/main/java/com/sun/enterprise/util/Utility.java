@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,6 +33,8 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.UnsupportedCharsetException;
 import java.rmi.Remote;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -50,9 +52,8 @@ import javax.rmi.PortableRemoteObject;
  */
 public final class Utility {
 
-    static final Logger _logger = CULoggerInfo.getLogger();
-
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Utility.class);
+    private static final Logger LOG = CULoggerInfo.getLogger();
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(Utility.class);
 
     public static void checkJVMVersion() {
         // do not perform any JVM version checking
@@ -221,8 +222,9 @@ public final class Utility {
             }
         } finally {
             try {
-                if (is2 != null)
+                if (is2 != null) {
                     is2.close();
+                }
             } catch (Exception e) {
                 // nothing can be done about it.
             }
@@ -362,7 +364,7 @@ public final class Utility {
      */
     public static void invokeApplicationMain(Class mainClass, String[] args)
             throws InvocationTargetException, IllegalAccessException, ClassNotFoundException {
-        String err = localStrings.getLocalString("utility.no.main", "", new Object[] { mainClass });
+        String err = I18N.getLocalString("utility.no.main", "", new Object[] { mainClass });
 
         // determine the main method using reflection
         // verify that it is public static void and takes
@@ -371,7 +373,7 @@ public final class Utility {
         try {
             mainMethod = mainClass.getMethod("main", new Class[] { String[].class });
         } catch (NoSuchMethodException msme) {
-            _logger.log(Level.SEVERE, CULoggerInfo.exceptionInUtility, msme);
+            LOG.log(Level.SEVERE, CULoggerInfo.exceptionInUtility, msme);
             throw new ClassNotFoundException(err);
         }
 
@@ -379,8 +381,8 @@ public final class Utility {
         // check return type and exceptions
         int modifiers = mainMethod.getModifiers();
         if (!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) || !mainMethod.getReturnType().equals(Void.TYPE)) {
-            err = localStrings.getLocalString("utility.main.invalid", "The main method signature is invalid");
-            _logger.log(Level.SEVERE, CULoggerInfo.mainNotValid);
+            err = I18N.getLocalString("utility.main.invalid", "The main method signature is invalid");
+            LOG.log(Level.SEVERE, CULoggerInfo.mainNotValid);
             throw new ClassNotFoundException(err);
         }
 
@@ -440,8 +442,9 @@ public final class Utility {
                     if (parameterTypes[0].getName().equals("java.lang.String")) {
                         methodFound = true;
                         break;
-                    } else
+                    } else {
                         alternateMethodName = methodsList[i].getName();
+                    }
                 }
 
             }
@@ -468,8 +471,9 @@ public final class Utility {
                 return;
             }
 
-        } else
+        } else {
             throw new NoSuchMethodException(setMeth);
+        }
     }
 
     // Ports are marshalled as shorts on the wire. The IDL
@@ -480,14 +484,16 @@ public final class Utility {
     // for this purpose.
 
     public static short intToShort(int value) {
-        if (value > 32767)
+        if (value > 32767) {
             return (short) (value - 65536);
+        }
         return (short) value;
     }
 
     public static int shortToInt(short value) {
-        if (value < 0)
+        if (value < 0) {
             return value + 65536;
+        }
         return value;
     }
 
@@ -516,30 +522,28 @@ public final class Utility {
     }
 
     /**
-     * Utility routine for setting the context class loader. Returns previous class loader.
+     * Utility routine for setting the context class loader.
+     *
+     * @return previous class loader; can be the same instance.
      */
-    public static ClassLoader setContextClassLoader(ClassLoader newClassLoader) {
-
-        // Can only reference final local variables from dopriveleged block
-        final ClassLoader classLoaderToSet = newClassLoader;
-
+    public static ClassLoader setContextClassLoader(final ClassLoader classLoader) {
         final Thread currentThread = Thread.currentThread();
-        ClassLoader originalClassLoader = currentThread.getContextClassLoader();
-
-        if (classLoaderToSet != originalClassLoader) {
-            if (System.getSecurityManager() == null) {
-                currentThread.setContextClassLoader(classLoaderToSet);
-            } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                    @Override
-                    public java.lang.Object run() {
-                        currentThread.setContextClassLoader(classLoaderToSet);
-                        return null;
-                    }
-                });
-            }
+        final ClassLoader original = currentThread.getContextClassLoader();
+        if (classLoader == original) {
+            return classLoader;
         }
-        return originalClassLoader;
+        LOG.log(Level.FINER, "setContextClassLoader(classLoader={0}; original: {1})",
+            new Object[] {classLoader, original});
+        if (System.getSecurityManager() == null) {
+            currentThread.setContextClassLoader(classLoader);
+        } else {
+            PrivilegedAction<Void> action = () -> {
+                currentThread.setContextClassLoader(classLoader);
+                return null;
+            };
+            AccessController.doPrivileged(action);
+        }
+        return original;
     }
 
     public static void setEnvironment() {

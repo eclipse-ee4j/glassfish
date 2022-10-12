@@ -24,7 +24,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
  * Thread Safe.
  * Immutable
  */
-
+@Deprecated
 public final class Duration {
     public Duration(long msec) {
         long msecLeftover = msec;

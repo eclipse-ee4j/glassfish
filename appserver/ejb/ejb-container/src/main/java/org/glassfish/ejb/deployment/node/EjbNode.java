@@ -57,6 +57,10 @@ import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.w3c.dom.Node;
 
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_SCHEDULED_EXECUTOR;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_THREAD_FACTORY;
 import static com.sun.enterprise.deployment.xml.TagNames.ADMINISTERED_OBJECT;
 import static com.sun.enterprise.deployment.xml.TagNames.CONNECTION_FACTORY;
 import static com.sun.enterprise.deployment.xml.TagNames.DATA_SOURCE;
@@ -73,10 +77,6 @@ import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_ENV_REFERENCE;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_REFERENCE;
 import static com.sun.enterprise.deployment.xml.WebServicesTagNames.SERVICE_REF;
 import static org.glassfish.ejb.deployment.EjbTagNames.SECURITY_IDENTITY;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.CONTEXT_SERVICE;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_SCHEDULED_EXECUTOR;
-import static org.omnifaces.concurrent.deployment.ConcurrencyConstants.MANAGED_THREAD_FACTORY;
 
 /**
  * This class is responsible for handling all common information shared by all types of enterprise

@@ -43,7 +43,7 @@ import java.util.Properties;
  * Create Managed Thread Factory Command
  *
  */
-@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
+@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG,  })
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="create-managed-thread-factory")
 @PerLookup

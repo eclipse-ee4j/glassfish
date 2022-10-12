@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-
 import java.util.Set;
 
 import org.glassfish.deployment.common.JavaEEResourceType;

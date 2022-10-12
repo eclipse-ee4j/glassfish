@@ -52,6 +52,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
@@ -129,16 +130,13 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
             return status;
         }
         String msg = localStrings.getLocalString("create.managed.executor.service.success", "Managed executor service {0} created successfully", jndiName);
-        if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
+        if (ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
             msg = localStrings.getLocalString("create.managed.scheduled.executor.service.success", "Managed scheduled executor service {0} created successfully", jndiName);
         }
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
     protected ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target){
-        ResourceStatus status ;
-
-
         if (jndiName == null) {
             String msg = localStrings.getLocalString("managed.executor.service.noJndiName", "No JNDI name defined for managed executor service.");
             if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
@@ -146,14 +144,13 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
             }
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
-
-        Class clazz = ManagedExecutorService.class;
-        if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
+        final Class<? extends BindableResource> clazz;
+        if (ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
             clazz = ManagedScheduledExecutorService.class;
+        } else {
+            clazz = ManagedExecutorService.class;
         }
-        status = resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, clazz);
-
-        return status;
+        return resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, clazz);
     }
 
     protected void setAttributes(HashMap attributes, String target) {
@@ -170,10 +167,10 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         corePoolSize = (String) attributes.get(CORE_POOL_SIZE);
         keepAliveSeconds = (String) attributes.get(KEEP_ALIVE_SECONDS);
         threadLifetimeSeconds = (String) attributes.get(THREAD_LIFETIME_SECONDS);
-        if(target != null){
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
-        }else{
+        if (target == null) {
             enabled = (String) attributes.get(ENABLED);
+        } else {
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
         }
         enabledValueForTarget = (String) attributes.get(ENABLED);
     }

@@ -17,40 +17,50 @@
 
 package com.sun.enterprise.deployment.node;
 
+import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
+
 import java.util.Map;
 
-import org.omnifaces.concurrent.deployment.ManagedExecutorDefinitionDescriptor;
-import org.omnifaces.concurrent.node.ManagedExecutorDefinitionNodeDelegate;
 import org.w3c.dom.Node;
 
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MANAGED_EXECUTOR_MAX_ASYNC;
+import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedExecutorDefinitionDescriptor> {
 
-    private final ManagedExecutorDefinitionNodeDelegate delegate = new ManagedExecutorDefinitionNodeDelegate();
-
     public ManagedExecutorDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
-            delegate.getHandlerAdMethodName());
+            "addManagedExecutorPropertyDescriptor");
     }
 
 
     @Override
-    public ManagedExecutorDefinitionDescriptor getDescriptor() {
-        return delegate.getDescriptor();
+    public ManagedExecutorDefinitionDescriptor createDescriptor() {
+        return new ManagedExecutorDefinitionDescriptor();
     }
 
 
     @Override
     protected Map<String, String> getDispatchTable() {
-        return delegate.getDispatchTable(super.getDispatchTable());
+        Map<String, String> map = super.getDispatchTable();
+        map.put(NAME, "setName");
+        map.put(MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
+        map.put(MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
+        map.put(MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
+        return map;
     }
 
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName,
-        ManagedExecutorDefinitionDescriptor managedExecutorDefinitionDescriptor) {
-        Node node = delegate.getDescriptor(parent, nodeName, managedExecutorDefinitionDescriptor);
-        return ResourcePropertyNode.write(node, managedExecutorDefinitionDescriptor);
+    public Node writeDescriptor(Node parent, String nodeName, ManagedExecutorDefinitionDescriptor descriptor) {
+        Node node = appendChild(parent, nodeName);
+        appendTextChild(node, NAME, descriptor.getName());
+        appendTextChild(node, MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(descriptor.getMaximumPoolSize()));
+        appendTextChild(node, MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(descriptor.getHungAfterSeconds()));
+        appendTextChild(node, MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, descriptor.getContext());
+        return ResourcePropertyNode.write(node, descriptor);
     }
 }

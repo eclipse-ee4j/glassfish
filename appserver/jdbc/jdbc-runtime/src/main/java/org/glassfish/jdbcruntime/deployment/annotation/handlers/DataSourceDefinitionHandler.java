@@ -20,6 +20,8 @@ package org.glassfish.jdbcruntime.deployment.annotation.handlers;
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.annotation.context.EjbBundleContext;
 import com.sun.enterprise.deployment.annotation.context.EjbContext;
@@ -29,8 +31,6 @@ import com.sun.enterprise.deployment.annotation.context.WebBundleContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentContext;
 import com.sun.enterprise.deployment.annotation.context.WebComponentsContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
-import com.sun.enterprise.deployment.core.MetadataSource;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.interceptor.AroundInvoke;

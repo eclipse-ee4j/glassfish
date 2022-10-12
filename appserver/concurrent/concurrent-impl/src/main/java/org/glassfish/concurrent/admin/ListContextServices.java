@@ -40,7 +40,7 @@ import org.glassfish.concurrent.runtime.deployer.DefaultContextService;
  * List Context Service Resources command
  *
  */
-@TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
+@TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG,  })
 @ExecuteOn(value={RuntimeType.DAS})
 @Service(name="list-context-services")
 @PerLookup

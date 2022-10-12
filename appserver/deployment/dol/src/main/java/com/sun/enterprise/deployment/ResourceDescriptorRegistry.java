@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.Serializable;

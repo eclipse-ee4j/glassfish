@@ -17,40 +17,56 @@
 
 package com.sun.enterprise.deployment.node;
 
+import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
+
 import java.util.Map;
 
-import org.omnifaces.concurrent.deployment.ContextServiceDefinitionDescriptor;
-import org.omnifaces.concurrent.node.ContextServiceDefinitionNodeDelegate;
 import org.w3c.dom.Node;
 
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_CLEARED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_PROPAGATED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_SERVICE_UNCHANGED;
+import static com.sun.enterprise.deployment.xml.TagNames.NAME;
 import static com.sun.enterprise.deployment.xml.TagNames.RESOURCE_PROPERTY;
 
 public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<ContextServiceDefinitionDescriptor> {
 
-    private final ContextServiceDefinitionNodeDelegate delegate = new ContextServiceDefinitionNodeDelegate();
-
     public ContextServiceDefinitionNode() {
         registerElementHandler(new XMLElement(RESOURCE_PROPERTY), ResourcePropertyNode.class,
-            delegate.getHandlerAdMethodName());
+            "addContextServiceExecutorDescriptor");
     }
 
 
     @Override
-    public ContextServiceDefinitionDescriptor getDescriptor() {
-        return delegate.getDescriptor();
+    public ContextServiceDefinitionDescriptor createDescriptor() {
+        return new ContextServiceDefinitionDescriptor();
     }
 
 
     @Override
     protected Map<String, String> getDispatchTable() {
-        return delegate.getDispatchTable(super.getDispatchTable());
+        Map<String, String> map = super.getDispatchTable();
+        map.put(NAME, "setName");
+        map.put(CONTEXT_SERVICE_PROPAGATED, "addPropagated");
+        map.put(CONTEXT_SERVICE_CLEARED, "addCleared");
+        map.put(CONTEXT_SERVICE_UNCHANGED, "addUnchanged");
+        return map;
     }
 
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName,
-        ContextServiceDefinitionDescriptor contextServiceDefinitionDescriptor) {
-        Node node = delegate.getDescriptor(parent, nodeName, contextServiceDefinitionDescriptor);
-        return ResourcePropertyNode.write(node, contextServiceDefinitionDescriptor);
+    public Node writeDescriptor(Node parent, String nodeName, ContextServiceDefinitionDescriptor descriptor) {
+        Node node = appendChild(parent, nodeName);
+        appendTextChild(node, NAME, descriptor.getName());
+        for (String cleared : descriptor.getCleared()) {
+            appendTextChild(node, CONTEXT_SERVICE_CLEARED, cleared);
+        }
+        for (String propagated : descriptor.getPropagated()) {
+            appendTextChild(node, CONTEXT_SERVICE_PROPAGATED, propagated);
+        }
+        for (String unchanged : descriptor.getUnchanged()) {
+            appendTextChild(node, CONTEXT_SERVICE_UNCHANGED, unchanged);
+        }
+        return ResourcePropertyNode.write(node, descriptor);
     }
 }

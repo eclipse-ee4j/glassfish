@@ -46,7 +46,7 @@ public class LocalizedInfoNode extends LocalizedNode {
             Descriptor descriptor = (Descriptor) o;
             if (getXMLRootTag().getQName().equals(TagNames.DESCRIPTION)) {
                 descriptor.setLocalizedDescription(getLang(), getLocalizedValue());
-            } else if (getXMLRootTag().getQName().equals(TagNames.NAME)) {
+            } else if (getXMLRootTag().getQName().equals(TagNames.DISPLAY_NAME)) {
                 descriptor.setLocalizedDisplayName(getLang(), getLocalizedValue());
             }
         }

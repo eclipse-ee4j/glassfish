@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-
 import java.util.List;
 import java.util.Set;
 
@@ -131,7 +129,7 @@ public interface JndiNameEnvironment {
     /**
      * Return a set of descriptors based on the type.
      *
-     * @return java.util.Set of descriptor objects
+     * @return writeable {@link Set} of descriptor objects
      */
     Set<ResourceDescriptor> getResourceDescriptors(JavaEEResourceType type);
 

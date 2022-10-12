@@ -116,6 +116,10 @@
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.1.1</jakarta.annotation-api.version>
 
+        <jakarta.security-api.version>3.0.0</jakarta.security-api.version>
+        <jakarta.authorization-api.version>2.1.0</jakarta.authorization-api.version>
+        <jakarta.authentication-api.version>3.0.0</jakarta.authentication-api.version>
+
 
         <!-- GlassFish Components -->
 
@@ -324,6 +328,29 @@
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
                 <version>${jakarta.annotation-api.version}</version>
+            </dependency>
+
+            <!-- Jakarta EE Security + Authentication/Authorization -->
+            <dependency>
+                <groupId>jakarta.security.enterprise</groupId>
+                <artifactId>jakarta.security.enterprise-api</artifactId>
+                <version>${jakarta.security-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.authentication</groupId>
+                <artifactId>jakarta.authentication-api</artifactId>
+                <version>${jakarta.authentication-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.authorization</groupId>
+                <artifactId>jakarta.authorization-api</artifactId>
+                <version>${jakarta.authorization-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.servlet</groupId>
+                        <artifactId>jakarta.servlet-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
 

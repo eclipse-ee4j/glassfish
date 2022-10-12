@@ -36,6 +36,7 @@ import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.deployment.MethodPermission;
 import com.sun.enterprise.deployment.OrderedSet;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.ResourceEnvReferenceDescriptor;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.RoleReference;
@@ -43,7 +44,6 @@ import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -59,7 +59,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -955,9 +954,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
 
         List<EjbInterceptor> classOrMethodInterceptors = null;
 
-        Iterator<Map.Entry<MethodDescriptor, List<EjbInterceptor>>> entryIterator = methodInterceptorsMap.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<MethodDescriptor, List<EjbInterceptor>> entry = entryIterator.next();
+        for (Entry<MethodDescriptor, List<EjbInterceptor>> entry : methodInterceptorsMap.entrySet()) {
             MethodDescriptor methodDesc = entry.getKey();
             if (methodDesc.implies(businessMethod)) {
                 classOrMethodInterceptors = entry.getValue();
@@ -1544,9 +1541,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
 
         // All remaining methods should now be defined as unchecked...
         MethodPermission permitAll = MethodPermission.getPermitAllMethodPermission();
-        Iterator<MethodDescriptor> iterator = unpermissionedMethods.iterator();
-        while (iterator.hasNext()) {
-            MethodDescriptor md = iterator.next();
+        for (MethodDescriptor md : unpermissionedMethods) {
             if (getMethodPermissions(md).isEmpty()) {
                 addMethodPermissionForMethod(permitAll, md);
             }

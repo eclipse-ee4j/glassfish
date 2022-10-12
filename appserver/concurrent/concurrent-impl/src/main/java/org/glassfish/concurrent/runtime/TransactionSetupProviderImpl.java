@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,31 +25,44 @@ import jakarta.enterprise.concurrent.ManagedTask;
 import jakarta.transaction.InvalidTransactionException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
+
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TransactionSetupProviderImpl implements TransactionSetupProvider {
 
+    private static final long serialVersionUID = 2278968807330359713L;
+
     private transient JavaEETransactionManager transactionManager;
+    private final boolean keepTransactionUnchanged;
+    private final boolean clearTransaction;
 
-    static final long serialVersionUID = -856400645253308289L;
-
-    public TransactionSetupProviderImpl(JavaEETransactionManager transactionManager) {
+    public TransactionSetupProviderImpl(
+        JavaEETransactionManager transactionManager,
+        boolean keepTransactionUnchanged,
+        boolean clearTransaction
+    ) {
         this.transactionManager = transactionManager;
+        this.keepTransactionUnchanged = keepTransactionUnchanged;
+        this.clearTransaction = clearTransaction;
     }
 
     @Override
     public TransactionHandle beforeProxyMethod(String transactionExecutionProperty) {
-        // suspend current transaction if not using transaction of execution thread
-        if (! ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD.equals(transactionExecutionProperty)) {
-            try {
-                Transaction suspendedTxn = transactionManager.suspend();
-                return new TransactionHandleImpl(suspendedTxn);
-            } catch (SystemException e) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, e.toString());
-            }
+        if (keepTransactionUnchanged) {
+            return null;
         }
-        return null;
+        if (!clearTransaction && ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD.equals(transactionExecutionProperty)) {
+            return null;
+        }
+        try {
+            Transaction suspendedTxn = transactionManager.suspend();
+            return new TransactionHandleImpl(suspendedTxn);
+        } catch (SystemException e) {
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "", e);
+            return null;
+        }
     }
 
     @Override
@@ -66,11 +80,12 @@ public class TransactionSetupProviderImpl implements TransactionSetupProvider {
         }
     }
 
-    private void writeObject(java.io.ObjectOutputStream out) {
-        // no field to be written
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
     }
 
-    private void readObject(java.io.ObjectInputStream in) {
+    private void readObject(java.io.ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
         // re-initialize these fields
         ConcurrentRuntime concurrentRuntime = ConcurrentRuntime.getRuntime();
         transactionManager = concurrentRuntime.getTransactionManager();

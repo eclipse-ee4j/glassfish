@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-import com.sun.enterprise.deployment.core.ResourcePropertyDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.util.Properties;
@@ -40,9 +38,6 @@ public class MailSessionDescriptor extends ResourceDescriptor {
     private String from;
     private final Properties properties = new Properties();
 
-    private static final String JAVA_URL = "java:";
-    private static final String JAVA_COMP_URL = "java:comp/";
-
     private boolean deployed;
 
     public MailSessionDescriptor(){
@@ -53,13 +48,6 @@ public class MailSessionDescriptor extends ResourceDescriptor {
     @Override
     public String getName() {
         return name;
-    }
-
-    public static String getName(String thisName) {
-        if (!thisName.contains(JAVA_URL)) {
-            thisName = JAVA_COMP_URL + thisName;
-        }
-        return thisName;
     }
 
     @Override
@@ -143,7 +131,7 @@ public class MailSessionDescriptor extends ResourceDescriptor {
     public boolean equals(Object object) {
         if (object instanceof MailSessionDescriptor) {
             MailSessionDescriptor reference = (MailSessionDescriptor) object;
-            return getJavaName(this.getName()).equals(getJavaName(reference.getName()));
+            return getJndiName().equals(reference.getJndiName());
         }
         return false;
     }
@@ -151,13 +139,6 @@ public class MailSessionDescriptor extends ResourceDescriptor {
     @Override
     public int hashCode() {
         return getName().hashCode();
-    }
-
-    public static String getJavaName(String thisName) {
-        if (thisName.startsWith(JAVA_URL)) {
-            return thisName;
-        }
-        return JAVA_COMP_URL + thisName;
     }
 
     public boolean isConflict(MailSessionDescriptor other) {

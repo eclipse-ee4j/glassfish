@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,25 +20,16 @@ package com.sun.enterprise.deployment.util;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebService;
-import com.sun.enterprise.deployment.core.*;
-import com.sun.enterprise.deployment.web.SecurityConstraint;
-import com.sun.enterprise.deployment.web.UserDataConstraint;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.DeploymentException;
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.Vector;
+
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Allows validation of module content that might involve actually
@@ -60,10 +52,12 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
     public ModuleContentValidator() {
     }
 
+    @Override
     public void setArchive(ReadableArchive archive) {
         archive_ = archive;
     }
 
+    @Override
     public void accept(ServiceReferenceDescriptor serviceRef) {
         if( serviceRef.hasWsdlFile() ) {
             String wsdlFileUri = serviceRef.getWsdlFileUri();
@@ -78,8 +72,9 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
                 // don't care, will eventuall fail below
             }
             if (url!=null) {
-                if (url.getProtocol().equals("http") || url.getProtocol().equals("https"))
+                if (url.getProtocol().equals("http") || url.getProtocol().equals("https")) {
                     return;
+                }
             }
             File tmpFile = new File(wsdlFileUri);
             if(tmpFile.isAbsolute() && tmpFile.exists()) {
@@ -134,6 +129,7 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
         }
     }
 
+    @Override
     public void accept(WebService webService) {
 
         try {
@@ -146,8 +142,9 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
             }
             try {
                 URL url = new URL(wsdlFileUri);
-                if (url.getProtocol()!=null && !url.getProtocol().equals("file"))
+                if (url.getProtocol()!=null && !url.getProtocol().equals("file")) {
                     return;
+                }
             } catch(java.net.MalformedURLException e) {
                 // ignore it could be a relative uri
             }

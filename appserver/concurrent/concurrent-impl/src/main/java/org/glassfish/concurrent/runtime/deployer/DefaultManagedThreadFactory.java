@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,16 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
+import jakarta.inject.Inject;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.concurrent.config.ManagedThreadFactory.ManagedThreadFactoryConfigActivator;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import javax.naming.NamingException;
 
 /**
  * Naming Object Proxy to handle the Default ManagedThreadFactory.
@@ -34,21 +38,22 @@ import javax.naming.NamingException;
 public class DefaultManagedThreadFactory implements NamedNamingObjectProxy, DefaultResourceProxy {
 
     static final String DEFAULT_MANAGED_THREAD_FACTORY = "java:comp/DefaultManagedThreadFactory";
-    static final String DEFAULT_MANAGED_THREAD_FACTORY_PHYS = "concurrent/__defaultManagedThreadFactory";
+    private static final String DEFAULT_MANAGED_THREAD_FACTORY_PHYS = "concurrent/__defaultManagedThreadFactory";
 
-    // Ensure that config for this object has been created
-    @Inject org.glassfish.concurrent.config.ManagedThreadFactory.ManagedThreadFactoryConfigActivator config;
+    @Inject
+    private ManagedThreadFactoryConfigActivator config;
 
     @Override
     public Object handle(String name) throws NamingException {
-        javax.naming.Context ctx = new javax.naming.InitialContext();
-        return ctx.lookup(DEFAULT_MANAGED_THREAD_FACTORY_PHYS);
+        return InitialContext.doLookup(DEFAULT_MANAGED_THREAD_FACTORY_PHYS);
     }
+
 
     @Override
     public String getPhysicalName() {
         return DEFAULT_MANAGED_THREAD_FACTORY_PHYS;
     }
+
 
     @Override
     public String getLogicalName() {

@@ -17,7 +17,7 @@
 package com.sun.s1asdev.aod;
 
 import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
+import com.sun.enterprise.deployment.ResourceDescriptor;
 import org.glassfish.internal.api.Globals;
 
 import java.util.Map;

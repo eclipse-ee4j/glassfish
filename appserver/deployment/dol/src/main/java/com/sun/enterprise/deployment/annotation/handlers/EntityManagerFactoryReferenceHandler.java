@@ -19,8 +19,8 @@ package com.sun.enterprise.deployment.annotation.handlers;
 
 import com.sun.enterprise.deployment.EntityManagerFactoryReferenceDescriptor;
 import com.sun.enterprise.deployment.InjectionTarget;
+import com.sun.enterprise.deployment.MetadataSource;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
-import com.sun.enterprise.deployment.core.MetadataSource;
 
 import jakarta.persistence.PersistenceUnit;
 

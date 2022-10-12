@@ -22,29 +22,30 @@ import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.core.*;
 import com.sun.logging.LogDomains;
-import org.glassfish.api.invocation.ComponentInvocation;
-import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
 
+import jakarta.persistence.Cache;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Cache;
 import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.SynchronizationType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.metamodel.Metamodel;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
 
 /**
  * Wrapper for application references to entity manager factories.
@@ -59,7 +60,7 @@ public class EntityManagerFactoryWrapper
 
     static Logger _logger=LogDomains.getLogger(EntityManagerFactoryWrapper.class, LogDomains.UTIL_LOGGER);
 
-    private String unitName;
+    private final String unitName;
 
     private transient InvocationManager invMgr;
 

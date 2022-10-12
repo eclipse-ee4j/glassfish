@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.core.ResourceDescriptor;
-
 /**
  * Objects implementing this interface allow their
  * environment properties, ejb references and resource

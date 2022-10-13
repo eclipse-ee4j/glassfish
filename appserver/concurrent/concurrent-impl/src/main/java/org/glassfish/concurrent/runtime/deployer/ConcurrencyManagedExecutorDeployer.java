@@ -16,28 +16,19 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 
 import jakarta.inject.Inject;
-
-import java.util.Collection;
 
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
 import org.glassfish.enterprise.concurrent.ManagedExecutorServiceImpl;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 
 /**
@@ -45,7 +36,7 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResou
  */
 @Service
 @ResourceDeployerInfo(ManagedExecutorDefinitionDescriptor.class)
-public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
+public class ConcurrencyManagedExecutorDeployer extends ConcurrencyDeployer<ManagedExecutorDefinitionDescriptor> {
 
     @Inject
     private InvocationManager invocationManager;
@@ -55,7 +46,13 @@ public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
     private ConcurrentRuntime runtime;
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public boolean handles(Object resource) {
+        return resource instanceof ManagedExecutorDefinitionDescriptor;
+    }
+
+
+    @Override
+    public void deployResource(ManagedExecutorDefinitionDescriptor resource) throws Exception {
         String applicationName = invocationManager.getCurrentInvocation().getAppName();
         String moduleName = invocationManager.getCurrentInvocation().getModuleName();
         deployResource(resource, applicationName, moduleName);
@@ -63,8 +60,8 @@ public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
 
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedExecutorDefinitionDescriptor descriptor = (ManagedExecutorDefinitionDescriptor) resource;
+    public void deployResource(ManagedExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
+        ManagedExecutorDefinitionDescriptor descriptor = resource;
         ManagedExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
         String resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
@@ -73,8 +70,8 @@ public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
 
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
-        ManagedExecutorDefinitionDescriptor descriptor = (ManagedExecutorDefinitionDescriptor) resource;
+    public void undeployResource(ManagedExecutorDefinitionDescriptor resource) throws Exception {
+        ManagedExecutorDefinitionDescriptor descriptor = resource;
         String applicationName = invocationManager.getCurrentInvocation().getAppName();
         String moduleName = invocationManager.getCurrentInvocation().getModuleName();
         String resourceName = toResourceName(descriptor);
@@ -85,8 +82,8 @@ public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
 
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedExecutorDefinitionDescriptor descriptor = (ManagedExecutorDefinitionDescriptor) resource;
+    public void undeployResource(ManagedExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
+        ManagedExecutorDefinitionDescriptor descriptor = resource;
         String resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
         namingService.unpublishObject(resourceInfo, resourceInfo.getName());
@@ -95,52 +92,9 @@ public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
 
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
+    public void redeployResource(ManagedExecutorDefinitionDescriptor resource) throws Exception {
         undeployResource(resource);
         deployResource(resource);
-    }
-
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public void disableResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public boolean handles(Object resource) {
-        return resource instanceof ManagedExecutorDefinitionDescriptor;
-    }
-
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-
-    /**
-     * Returns false - cannot be deployed before application.
-     */
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return false;
-    }
-
-
-    @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
-        Resources allResources) throws ResourceConflictException {
     }
 
 
@@ -150,10 +104,5 @@ public class ConcurrencyManagedExecutorDeployer implements ResourceDeployer {
         ManagedExecutorServiceCfg mesConfig = new ManagedExecutorServiceCfg(config);
         ContextServiceImpl contextService = runtime.findOrCreateContextService(descriptor, applicationName, moduleName);
         return runtime.createManagedExecutorService(mesConfig, contextService);
-    }
-
-    // FIXME to parent.
-    private String toResourceName(ManagedExecutorDefinitionDescriptor descriptor) {
-        return deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(), descriptor.getResourceType());
     }
 }

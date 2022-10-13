@@ -17,6 +17,13 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,34 +34,24 @@ import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.glassfish.resources.api.GlobalResourceDeployer;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Module;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isEmbeddedRarResource;
 
-public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDeployer implements ResourceDeployer {
+public abstract class AbstractConnectorResourceDeployer<D extends Resource> extends GlobalResourceDeployer
+    implements ResourceDeployer<D> {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource){
-        if(handles(resource)){
-            if((postApplicationDeployment &&
-                    ConnectorsUtil.isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.TRUE) || (!postApplicationDeployment&&
-                    ConnectorsUtil.isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.FALSE)){
-                    return true;
+    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
+        if (handles(resource)) {
+            if ((postApplicationDeployment && isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.TRUE)
+            || (!postApplicationDeployment && isEmbeddedRarResource(resource, allResources) == ResourceConstants.TriState.FALSE)) {
+                return true;
             }
 
         }
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
                                           Resources allResources)
@@ -113,7 +110,7 @@ public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDe
      * @param appName application-name
      * @param staleRars List of Stale Resource Adapters (ie., were defined in old app, not in new app)
      * @param resources resources that need to be checked for stale RAR references.
-     * @throws org.glassfish.resources.api.ResourceConflictException When any of the resource has reference to old RAR
+     * @throws ResourceConflictException When any of the resource has reference to old RAR
      */
     public static void validateResourcesForStaleReference(String appName, List<Module> staleRars, Resources resources)
             throws ResourceConflictException {

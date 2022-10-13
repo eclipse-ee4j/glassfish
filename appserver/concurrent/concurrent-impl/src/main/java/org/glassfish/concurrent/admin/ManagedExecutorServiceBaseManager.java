@@ -17,21 +17,15 @@
 
 package org.glassfish.concurrent.admin;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CORE_POOL_SIZE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_AFTER_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_PRINT_ONCE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
-import static org.glassfish.resources.admin.cli.ResourceConstants.KEEP_ALIVE_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.LONG_RUNNING_TASKS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_LIFETIME_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_PRIORITY;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
@@ -51,15 +45,21 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.resource.ResourceException;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CORE_POOL_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_AFTER_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_PRINT_ONCE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.KEEP_ALIVE_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.LONG_RUNNING_TASKS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
+import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_LIFETIME_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_PRIORITY;
 
 /**
  *
@@ -153,26 +153,26 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         return resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, clazz);
     }
 
-    protected void setAttributes(HashMap attributes, String target) {
-        jndiName = (String) attributes.get(JNDI_NAME);
-        description = (String) attributes.get(DESCRIPTION);
-        contextInfo = (String) attributes.get(CONTEXT_INFO);
-        contextInfoEnabled = (String) attributes.get(CONTEXT_INFO_ENABLED);
-        threadPriority = (String) attributes.get(THREAD_PRIORITY);
-        longRunningTasks = (String) attributes.get(LONG_RUNNING_TASKS);
-        hungAfterSeconds = (String) attributes.get(HUNG_AFTER_SECONDS);
-        hungLoggerPrintOnce = (String) attributes.get(HUNG_LOGGER_PRINT_ONCE);
-        hungLoggerInitialDelaySeconds = (String) attributes.get(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
-        hungLoggerIntervalSeconds = (String) attributes.get(HUNG_LOGGER_INTERVAL_SECONDS);
-        corePoolSize = (String) attributes.get(CORE_POOL_SIZE);
-        keepAliveSeconds = (String) attributes.get(KEEP_ALIVE_SECONDS);
-        threadLifetimeSeconds = (String) attributes.get(THREAD_LIFETIME_SECONDS);
+    protected void setAttributes(Map<String, String> attributes, String target) {
+        jndiName = attributes.get(JNDI_NAME);
+        description = attributes.get(DESCRIPTION);
+        contextInfo = attributes.get(CONTEXT_INFO);
+        contextInfoEnabled = attributes.get(CONTEXT_INFO_ENABLED);
+        threadPriority = attributes.get(THREAD_PRIORITY);
+        longRunningTasks = attributes.get(LONG_RUNNING_TASKS);
+        hungAfterSeconds = attributes.get(HUNG_AFTER_SECONDS);
+        hungLoggerPrintOnce = attributes.get(HUNG_LOGGER_PRINT_ONCE);
+        hungLoggerInitialDelaySeconds = attributes.get(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
+        hungLoggerIntervalSeconds = attributes.get(HUNG_LOGGER_INTERVAL_SECONDS);
+        corePoolSize = attributes.get(CORE_POOL_SIZE);
+        keepAliveSeconds = attributes.get(KEEP_ALIVE_SECONDS);
+        threadLifetimeSeconds = attributes.get(THREAD_LIFETIME_SECONDS);
         if (target == null) {
-            enabled = (String) attributes.get(ENABLED);
+            enabled = attributes.get(ENABLED);
         } else {
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.get(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
+        enabledValueForTarget = attributes.get(ENABLED);
     }
 
     protected ManagedExecutorServiceBase createResource(Resources param, Properties properties) throws PropertyVetoException, TransactionFailure {

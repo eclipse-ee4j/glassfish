@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -149,12 +148,6 @@ public class ContextServiceDeployer implements ResourceDeployer {
     @Override
     public Class<?>[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
-    }
-
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return handles(resource) && !postApplicationDeployment;
     }
 
 

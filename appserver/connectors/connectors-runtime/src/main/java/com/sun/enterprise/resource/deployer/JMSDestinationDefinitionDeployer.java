@@ -17,9 +17,17 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -35,63 +43,40 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.JMSDestinationDefinitionDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 @Service
 @ResourceDeployerInfo(JMSDestinationDefinitionDescriptor.class)
-public class JMSDestinationDefinitionDeployer implements ResourceDeployer {
+public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDestinationDefinitionDescriptor> {
 
     @Inject
     private Provider<org.glassfish.resourcebase.resources.util.ResourceManagerFactory> resourceManagerFactoryProvider;
 
-    private static Logger _logger = LogDomains.getLogger(JMSDestinationDefinitionDeployer.class, LogDomains.RSR_LOGGER);
-    final static String PROPERTY_PREFIX = "org.glassfish.jms-destination.";
+    private static final Logger LOG = LogDomains.getLogger(JMSDestinationDefinitionDeployer.class, LogDomains.RSR_LOGGER);
+    static final String PROPERTY_PREFIX = "org.glassfish.jms-destination.";
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(JMSDestinationDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public void deployResource(JMSDestinationDefinitionDescriptor resource) throws Exception {
 
-        final JMSDestinationDefinitionDescriptor desc = (JMSDestinationDefinitionDescriptor) resource;
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
+        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
 
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMSDestinationDefinitionDeployer.deployResource() : resource-name [" + resourceName + "]");
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "JMSDestinationDefinitionDeployer.deployResource() : resource-name [" + resourceName + "]");
         }
 
         //deploy resource
-        MyJMSDestinationResource jmsDestinationResource = new MyJMSDestinationResource(desc, resourceName);
+        MyJMSDestinationResource jmsDestinationResource = new MyJMSDestinationResource(resource, resourceName);
         getDeployer(jmsDestinationResource).deployResource(jmsDestinationResource);
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
                                           com.sun.enterprise.config.serverbeans.Application newApp,
@@ -111,62 +96,38 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void undeployResource(JMSDestinationDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
+    public void undeployResource(JMSDestinationDefinitionDescriptor resource) throws Exception {
 
-        final JMSDestinationDefinitionDescriptor desc = (JMSDestinationDefinitionDescriptor)resource;
+        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(),resource.getResourceType());
 
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(),desc.getResourceType());
-
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMSDestinationDefinitionDeployer.undeployResource() : resource-name [" + resourceName + "]");
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "JMSDestinationDefinitionDeployer.undeployResource() : resource-name [" + resourceName + "]");
         }
 
         //undeploy resource
-        MyJMSDestinationResource jmsDestinationResource = new MyJMSDestinationResource(desc, resourceName);
+        MyJMSDestinationResource jmsDestinationResource = new MyJMSDestinationResource(resource, resourceName);
         getDeployer(jmsDestinationResource).undeployResource(jmsDestinationResource);
 
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        throw new UnsupportedOperationException("redeploy() not supported for jms-destination-definition type");
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(JMSDestinationDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for jms-destination-definition type");
     }
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(JMSDestinationDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for jms-destination-definition type");
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof JMSDestinationDefinitionDescriptor;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    @SuppressWarnings("rawtypes")
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
     }
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
@@ -240,8 +201,8 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer {
 
     class MyJMSDestinationResource extends FakeConfigBean implements AdminObjectResource {
 
-        private JMSDestinationDefinitionDescriptor desc;
-        private String name;
+        private final JMSDestinationDefinitionDescriptor desc;
+        private final String name;
 
         public MyJMSDestinationResource(JMSDestinationDefinitionDescriptor desc, String name) {
             this.desc = desc;

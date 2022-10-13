@@ -39,6 +39,7 @@ public enum StandardContextType {
     WorkArea,
     ;
 
+    // FIXME: replace by a set/array/list
     public static final String ALL_STANTARD_CONTEXT_TYPES = Stream.of(StandardContextType.values()).map(Object::toString)
         .collect(Collectors.joining(", "));
 

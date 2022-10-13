@@ -27,7 +27,6 @@ import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
 import jakarta.enterprise.concurrent.ContextService;
 import jakarta.inject.Inject;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -134,12 +133,6 @@ public class ContextServiceDefinitionDeployer implements ResourceDeployer {
     @Override
     public Class<?>[] getProxyClassesForDynamicReconfiguration() {
         return new Class[0];
-    }
-
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return handles(resource) && !postApplicationDeployment;
     }
 
 

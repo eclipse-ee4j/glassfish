@@ -82,7 +82,7 @@ import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_GL
  */
 @Service
 @ResourceDeployerInfo(DataSourceDefinitionDescriptor.class)
-public class DataSourceDefinitionDeployer implements ResourceDeployer {
+public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSourceDefinitionDescriptor> {
 
     private static final Logger LOG = LogDomains.getLogger(DataSourceDefinitionDeployer.class, LogDomains.RSR_LOGGER);
 
@@ -94,31 +94,26 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
     private Provider<ResourceNamingService> resourceNamingServiceProvider;
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(DataSourceDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         // TODO ASR
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public void deployResource(DataSourceDefinitionDescriptor resource) throws Exception {
 
-        final DataSourceDefinitionDescriptor desc = (DataSourceDefinitionDescriptor) resource;
-        String poolName = deriveResourceName(desc.getResourceId(), desc.getName(), DSDPOOL);
-        String resourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
+        String poolName = deriveResourceName(resource.getResourceId(), resource.getName(), DSDPOOL);
+        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
 
         LOG.log(FINE, () ->
             "DataSourceDefinitionDeployer.deployResource() : pool-name [" + poolName + "], " +
              " resource-name [" + resourceName + "]");
 
-        JdbcConnectionPool jdbcConnectionPool = new MyJdbcConnectionPool(desc, poolName);
+        JdbcConnectionPool jdbcConnectionPool = new MyJdbcConnectionPool(resource, poolName);
         getDeployer(jdbcConnectionPool).deployResource(jdbcConnectionPool);
         JdbcResource jdbcResource = new MyJdbcResource(poolName, resourceName);
         getDeployer(jdbcResource).deployResource(jdbcResource);
     }
 
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return handles(resource) && !postApplicationDeployment;
-    }
 
     @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
@@ -276,13 +271,13 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void undeployResource(DataSourceDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         // TODO ASR
     }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
-        final DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor = (DataSourceDefinitionDescriptor) resource;
+    public void undeployResource(DataSourceDefinitionDescriptor resource) throws Exception {
+        final DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor = resource;
 
         String poolName = deriveResourceName(
                 dataSourceDefinitionDescriptor.getResourceId(),
@@ -310,33 +305,18 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        throw new UnsupportedOperationException("redeploy() not supported for datasource-definition type");
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(DataSourceDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for datasource-definition type");
     }
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(DataSourceDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for datasource-definition type");
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof DataSourceDefinitionDescriptor;
-    }
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
     }
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
@@ -581,12 +561,11 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
 
         @Override
         public String getObjectType() {
-            return null; // To change body of implemented methods use File | Settings | File Templates.
+            return null;
         }
 
         @Override
         public void setObjectType(String value) throws PropertyVetoException {
-            // To change body of implemented methods use File | Settings | File Templates.
         }
 
         @Override

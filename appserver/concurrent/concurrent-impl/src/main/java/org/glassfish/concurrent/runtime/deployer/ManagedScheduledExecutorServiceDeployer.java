@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,9 +46,9 @@ import org.glassfish.resources.naming.SerializableObjectRefAddr;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
-@ResourceDeployerInfo(ManagedScheduledExecutorService.class)
 @Singleton
-public class ManagedScheduledExecutorServiceDeployer implements ResourceDeployer {
+@ResourceDeployerInfo(ManagedScheduledExecutorService.class)
+public class ManagedScheduledExecutorServiceDeployer implements ResourceDeployer<ManagedScheduledExecutorService> {
 
     private static final Logger LOG = LogFacade.getLogger();
 
@@ -58,19 +57,37 @@ public class ManagedScheduledExecutorServiceDeployer implements ResourceDeployer
     @Inject
     private ConcurrentRuntime concurrentRuntime;
 
+    @Override
+    public boolean handles(Object resource) {
+        return resource instanceof ManagedScheduledExecutorService;
+    }
+
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedScheduledExecutorService serviceConfig = (ManagedScheduledExecutorService) resource;
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
+        Resources allResources) throws ResourceConflictException {
+        // do nothing
+    }
 
-        if (serviceConfig == null) {
+
+    @Override
+    public void deployResource(ManagedScheduledExecutorService resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
+        deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+    }
+
+
+    @Override
+    public void deployResource(ManagedScheduledExecutorService resource, String applicationName, String moduleName)
+        throws Exception {
+        if (resource == null) {
             LOG.log(Level.WARNING, LogFacade.DEPLOY_ERROR_NULL_CONFIG, "ManagedScheduledExecutorService");
             return;
         }
 
-        String jndiName = serviceConfig.getJndiName();
-        ResourceInfo resourceInfo = new ResourceInfo(serviceConfig.getJndiName(), applicationName, moduleName);
-        ManagedScheduledExecutorServiceCfg config = new ManagedScheduledExecutorServiceCfg(serviceConfig);
+        String jndiName = resource.getJndiName();
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        ManagedScheduledExecutorServiceCfg config = new ManagedScheduledExecutorServiceCfg(resource);
 
         Reference ref= new Reference(
                 jakarta.enterprise.concurrent.ManagedScheduledExecutorService.class.getName(),
@@ -93,75 +110,17 @@ public class ManagedScheduledExecutorServiceDeployer implements ResourceDeployer
 
 
     @Override
-    public void deployResource(Object resource) throws Exception {
-        ManagedScheduledExecutorService service = (ManagedScheduledExecutorService) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(service);
-        deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-    }
-
-
-    @Override
-    public void undeployResource(Object resource) throws Exception {
-        ManagedScheduledExecutorService service = (ManagedScheduledExecutorService) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(service);
+    public void undeployResource(ManagedScheduledExecutorService resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
         undeployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
     }
 
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedScheduledExecutorService service = (ManagedScheduledExecutorService) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(service.getJndiName(), applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, service.getJndiName());
+    public void undeployResource(ManagedScheduledExecutorService resource, String applicationName, String moduleName) throws Exception {
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        namingService.unpublishObject(resourceInfo, resource.getJndiName());
         // stop the runtime object
-        concurrentRuntime.shutdownScheduledManagedExecutorService(service.getJndiName());
-    }
-
-
-    @Override
-    public void redeployResource(Object resource) throws Exception {
-        undeployResource(resource);
-        deployResource(resource);
-    }
-
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
-        deployResource(resource);
-    }
-
-    @Override
-    public void disableResource(Object resource) throws Exception {
-        undeployResource(resource);
-    }
-
-    @Override
-    public boolean handles(Object resource) {
-        return resource instanceof ManagedScheduledExecutorService;
-    }
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources) throws ResourceConflictException {
-        // do nothing
+        concurrentRuntime.shutdownScheduledManagedExecutorService(resource.getJndiName());
     }
 }

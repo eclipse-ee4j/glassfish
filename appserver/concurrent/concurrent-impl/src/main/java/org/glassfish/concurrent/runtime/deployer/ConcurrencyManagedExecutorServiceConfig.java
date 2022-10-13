@@ -18,8 +18,6 @@ package org.glassfish.concurrent.runtime.deployer;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 
-import jakarta.validation.constraints.Min;
-
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -66,7 +64,7 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
 
     @Override
     public String getObjectType() {
-        return "user";
+        return null;
     }
 
 
@@ -192,8 +190,7 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
 
 
     @Override
-    public @Min(0)
-    String getThreadPriority() {
+    public String getThreadPriority() {
         return String.valueOf(Thread.NORM_PRIORITY);
     }
 

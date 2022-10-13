@@ -30,7 +30,7 @@ import org.jvnet.hk2.config.types.PropertyBag;
  * Concurrency resource base class
  */
 @Configured
-public interface ConcurrencyResource extends PropertyBag  {
+public interface ConcurrencyResource extends PropertyBag {
 
     /**
      * Gets the value of the contextInfoEnabled property.

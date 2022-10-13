@@ -39,35 +39,30 @@ import jakarta.inject.Singleton;
 /**
  * @author Srikanth P
  */
-
 @Service
-@ResourceDeployerInfo(AdminObjectResource.class)
 @Singleton
-public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeployer {
+@ResourceDeployerInfo(AdminObjectResource.class)
+public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeployer<AdminObjectResource> {
+
+    private static final Logger LOG = LogDomains.getLogger(AdminObjectResourceDeployer.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private ConnectorRuntime runtime;
 
-    private static Logger _logger = LogDomains.getLogger(AdminObjectResourceDeployer.class, LogDomains.RSR_LOGGER);
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        final AdminObjectResource aor = (AdminObjectResource) resource;
+    public synchronized void deployResource(AdminObjectResource resource, String applicationName, String moduleName) throws Exception {
+        final AdminObjectResource aor = resource;
         String jndiName = aor.getJndiName();
         ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         createAdminObjectResource(aor, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void deployResource(Object resource) throws Exception {
 
-        final AdminObjectResource aor = (AdminObjectResource) resource;
+    @Override
+    public synchronized void deployResource(AdminObjectResource resource) throws Exception {
+
+        final AdminObjectResource aor = resource;
         ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(aor);
         createAdminObjectResource(aor, resourceInfo);
     }
@@ -85,53 +80,40 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
                                 getPropNamesAsStrArr(aor.getElementProperty()),
                                 getPropValuesAsStrArr(aor.getElementProperty()));
                         } else {
-                                _logger.log(Level.INFO, "core.resource_disabled",
+                                LOG.log(Level.INFO, "core.resource_disabled",
                                         new Object[] {jndiName,
                                         IASJ2EEResourceFactoryImpl.JMS_RES_TYPE});
                         }
                 */
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Calling backend to add adminObject", resourceInfo);
-        }
+        LOG.log(Level.FINE, "Calling backend to add adminObject: {0}", resourceInfo);
         runtime.addAdminObject(null, aor.getResAdapter(), resourceInfo,
                 aor.getResType(), aor.getClassName(), transformProps(aor.getProperty()));
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Added adminObject in backend", resourceInfo);
-        }
+        LOG.log(Level.FINE, "Added adminObject in backend: {0}", resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        final AdminObjectResource aor = (AdminObjectResource) resource;
+    public void undeployResource(AdminObjectResource resource, String applicationName, String moduleName) throws Exception {
+        final AdminObjectResource aor = resource;
         ResourceInfo resourceInfo = new ResourceInfo(aor.getJndiName(), applicationName, moduleName);
         deleteAdminObjectResource(aor, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void undeployResource(Object resource)
+    public synchronized void undeployResource(AdminObjectResource resource)
             throws Exception {
-        final AdminObjectResource aor = (AdminObjectResource) resource;
+        final AdminObjectResource aor = resource;
         ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(aor);
         deleteAdminObjectResource(aor, resourceInfo);
     }
 
     private void deleteAdminObjectResource(AdminObjectResource adminObject, ResourceInfo resourceInfo)
             throws ConnectorRuntimeException {
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Calling backend to delete adminObject", resourceInfo);
-        }
+        LOG.log(Level.FINE, "Calling backend to delete adminObject: {0}", resourceInfo);
         runtime.deleteAdminObject(resourceInfo);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Deleted adminObject in backend", resourceInfo);
-        }
+        LOG.log(Level.FINE, "Deleted adminObject in backend: {0}", resourceInfo);
 
         //unregister the managed object
         /* TODO Not needed any more ?
@@ -141,60 +123,26 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
         */
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean handles(Object resource) {
         return resource instanceof AdminObjectResource;
     }
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
 
-    /**
-     * @inheritDoc
-     */
     @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void redeployResource(Object resource)
-            throws Exception {
-        undeployResource(resource);
-        deployResource(resource);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void disableResource(Object resource)
-            throws Exception {
+    public synchronized void disableResource(AdminObjectResource resource) throws Exception {
         undeployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void enableResource(Object resource)
-            throws Exception {
+    public synchronized void enableResource(AdminObjectResource resource) throws Exception {
         deployResource(resource);
     }
+
 
     private Properties transformProps(List<Property> domainProps) {
-
         Properties props = new Properties();
         for (Property domainProp : domainProps) {
             props.setProperty(domainProp.getName(), domainProp.getValue());

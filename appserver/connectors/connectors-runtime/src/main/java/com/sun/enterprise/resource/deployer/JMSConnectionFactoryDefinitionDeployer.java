@@ -17,11 +17,18 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDDPOOL;
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -40,19 +47,11 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDDPOOL;
 
 @Service
 @ResourceDeployerInfo(JMSConnectionFactoryDefinitionDescriptor.class)
-public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer {
+public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<JMSConnectionFactoryDefinitionDescriptor> {
 
     @Inject
     private Provider<ResourceManagerFactory> resourceManagerFactoryProvider;
@@ -61,14 +60,14 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     final static String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(JMSConnectionFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public void deployResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
 
-        final JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor)resource;
+        final JMSConnectionFactoryDefinitionDescriptor desc = resource;
         String poolName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), JMSCFDDPOOL);
         String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
 
@@ -88,22 +87,8 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
                                           com.sun.enterprise.config.serverbeans.Application newApp,
@@ -123,14 +108,14 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void undeployResource(JMSConnectionFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
+    public void undeployResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
 
-        final JMSConnectionFactoryDefinitionDescriptor desc = (JMSConnectionFactoryDefinitionDescriptor) resource;
+        final JMSConnectionFactoryDefinitionDescriptor desc = resource;
 
         String poolName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), JMSCFDDPOOL);
         String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
@@ -151,40 +136,18 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        throw new UnsupportedOperationException("redeploy() not supported for jms-connection-factory-definition type");
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for jms-connection-factory-definition type");
     }
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for jms-connection-factory-definition type");
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof JMSConnectionFactoryDefinitionDescriptor;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    @SuppressWarnings("rawtypes")
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
     }
 
     private boolean isValidProperty(String s) {
@@ -378,8 +341,8 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer 
 
     class MyJMSConnectionFactoryConnectionPool extends FakeConfigBean implements ConnectorConnectionPool {
 
-        private JMSConnectionFactoryDefinitionDescriptor desc;
-        private String name;
+        private final JMSConnectionFactoryDefinitionDescriptor desc;
+        private final String name;
 
         public MyJMSConnectionFactoryConnectionPool(JMSConnectionFactoryDefinitionDescriptor desc, String name) {
             this.desc = desc;

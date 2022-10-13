@@ -17,11 +17,17 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import static org.glassfish.deployment.common.JavaEEResourceType.CFDPOOL;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -39,46 +45,39 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.logging.LogDomains.RSR_LOGGER;
+import static org.glassfish.deployment.common.JavaEEResourceType.CFDPOOL;
 
 /**
  * @author Dapeng Hu
  */
 @Service
 @ResourceDeployerInfo(ConnectionFactoryDefinitionDescriptor.class)
-public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
+public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer<ConnectionFactoryDefinitionDescriptor> {
 
     @Inject
     private Provider<org.glassfish.resourcebase.resources.util.ResourceManagerFactory> resourceManagerFactoryProvider;
 
-    private static Logger _logger = LogDomains.getLogger(ConnectionFactoryDefinitionDeployer.class, LogDomains.RSR_LOGGER);
-    final static String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
+    private static final Logger LOG = LogDomains.getLogger(ConnectionFactoryDefinitionDeployer.class, RSR_LOGGER);
+    static final String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(ConnectionFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public void deployResource(ConnectionFactoryDefinitionDescriptor resource) throws Exception {
 
-        final ConnectionFactoryDefinitionDescriptor desc = (ConnectionFactoryDefinitionDescriptor) resource;
-        String poolName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), CFDPOOL);
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(),desc.getResourceType());
+        String poolName = ConnectorsUtil.deriveResourceName(resource.getResourceId(), resource.getName(), CFDPOOL);
+        String resourceName = ConnectorsUtil.deriveResourceName(resource.getResourceId(), resource.getName(),resource.getResourceType());
 
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "ConnectionFactoryDefinitionDeployer.deployResource() : pool-name ["+poolName+"], " +
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "ConnectionFactoryDefinitionDeployer.deployResource() : pool-name ["+poolName+"], " +
                     " resource-name ["+resourceName+"]");
         }
 
-        ConnectorConnectionPool connectorCp = new MyConnectorConnectionPool(desc, poolName);
+        ConnectorConnectionPool connectorCp = new MyConnectorConnectionPool(resource, poolName);
 
         //deploy pool
         getDeployer(connectorCp).deployResource(connectorCp);
@@ -89,22 +88,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource){
-        if(handles(resource)){
-            if(!postApplicationDeployment){
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
                                           com.sun.enterprise.config.serverbeans.Application newApp,
@@ -124,20 +108,18 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void undeployResource(ConnectionFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
+    public void undeployResource(ConnectionFactoryDefinitionDescriptor resource) throws Exception {
 
-        final ConnectionFactoryDefinitionDescriptor desc = (ConnectionFactoryDefinitionDescriptor) resource;
+        String poolName = ConnectorsUtil.deriveResourceName(resource.getResourceId(), resource.getName(), CFDPOOL);
+        String resourceName = ConnectorsUtil.deriveResourceName(resource.getResourceId(), resource.getName(),resource.getResourceType());
 
-        String poolName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), CFDPOOL);
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(),desc.getResourceType());
-
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "ConnectionFactoryDefinitionDeployer.undeployResource() : pool-name ["+poolName+"], " +
+        if(LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "ConnectionFactoryDefinitionDeployer.undeployResource() : pool-name ["+poolName+"], " +
                     " resource-name ["+resourceName+"]");
         }
 
@@ -146,45 +128,24 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
         getDeployer(connectorResource).undeployResource(connectorResource);
 
         //undeploy pool
-        ConnectorConnectionPool connectorCp = new MyConnectorConnectionPool(desc, poolName);
+        ConnectorConnectionPool connectorCp = new MyConnectorConnectionPool(resource, poolName);
         getDeployer(connectorCp).undeployResource(connectorCp);
 
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        throw new UnsupportedOperationException("redeploy() not supported for connection-factory-definition type");
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(ConnectionFactoryDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for connection-factory-definition type");
     }
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(ConnectionFactoryDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for connection-factory-definition type");
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof ConnectionFactoryDefinitionDescriptor;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
     }
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
@@ -373,8 +334,8 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer {
     }
     class MyConnectorConnectionPool extends FakeConfigBean implements ConnectorConnectionPool {
 
-        private ConnectionFactoryDefinitionDescriptor desc;
-        private String name;
+        private final ConnectionFactoryDefinitionDescriptor desc;
+        private final String name;
 
         public MyConnectorConnectionPool(ConnectionFactoryDefinitionDescriptor desc, String name) {
             this.desc = desc;

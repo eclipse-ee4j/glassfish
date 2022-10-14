@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -216,22 +216,6 @@ public final class ResourceConstants {
     public static final String WORK_SECURITY_MAP_EIS_PRINCIPAL = "eis-principal";
 
     public static final String WORK_SECURITY_MAP_MAPPED_PRINCIPAL = "mapped-principal";
-
-    // concurrent resource objects
-    public static final String CONTEXT_INFO = "context-info";
-    public static final String CONTEXT_INFO_DEFAULT_VALUE = "Classloader,JNDI,Security,WorkArea";
-    public static final String CONTEXT_INFO_ENABLED = "context-info-enabled";
-    public static final String THREAD_PRIORITY = "thread-priority";
-    public static final String LONG_RUNNING_TASKS = "long-runnings-tasks";
-    public static final String HUNG_AFTER_SECONDS = "hung-after-seconds";
-    public static final String HUNG_LOGGER_PRINT_ONCE = "hung-logger-print-once";
-    public static final String HUNG_LOGGER_INITIAL_DELAY_SECONDS = "hung-logger-initial-delay-seconds";
-    public static final String HUNG_LOGGER_INTERVAL_SECONDS = "hung-logger-interval-seconds";
-    public static final String CORE_POOL_SIZE = "core-pool-size";
-    public static final String MAXIMUM_POOL_SIZE = "maximum-pool-size";
-    public static final String KEEP_ALIVE_SECONDS = "keep-alive-seconds";
-    public static final String THREAD_LIFETIME_SECONDS = "thread-lifetime-seconds";
-    public static final String TASK_QUEUE_CAPACITY = "task-queue-capacity";
 
     public static final String SYSTEM_ALL_REQ = "system-all-req";
 }

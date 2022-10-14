@@ -37,5 +37,19 @@ public interface ConcurrencyTagNames extends TagNames {
     String CONTEXT_SERVICE_PROPAGATED = "propagated";
     String CONTEXT_SERVICE_UNCHANGED = "unchanged";
 
+    String CONTEXT_INFO = "context-info";
+    String CONTEXT_INFO_DEFAULT_VALUE = "Classloader,JNDI,Security,WorkArea";
+    String CONTEXT_INFO_ENABLED = "context-info-enabled";
+    String THREAD_PRIORITY = "thread-priority";
+    String LONG_RUNNING_TASKS = "long-runnings-tasks";
+    String HUNG_AFTER_SECONDS = "hung-after-seconds";
+    String HUNG_LOGGER_PRINT_ONCE = "hung-logger-print-once";
+    String HUNG_LOGGER_INITIAL_DELAY_SECONDS = "hung-logger-initial-delay-seconds";
+    String HUNG_LOGGER_INTERVAL_SECONDS = "hung-logger-interval-seconds";
+    String CORE_POOL_SIZE = "core-pool-size";
+    String MAXIMUM_POOL_SIZE = "maximum-pool-size";
+    String KEEP_ALIVE_SECONDS = "keep-alive-seconds";
+    String THREAD_LIFETIME_SECONDS = "thread-lifetime-seconds";
+    String TASK_QUEUE_CAPACITY = "task-queue-capacity";
 
 }

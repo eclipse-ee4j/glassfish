@@ -45,13 +45,13 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_ENABLED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_PRIORITY;
 
 /**
  *

@@ -32,8 +32,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfiguredBy;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.MAXIMUM_POOL_SIZE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.TASK_QUEUE_CAPACITY;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MAXIMUM_POOL_SIZE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.TASK_QUEUE_CAPACITY;
 
 /**
  *

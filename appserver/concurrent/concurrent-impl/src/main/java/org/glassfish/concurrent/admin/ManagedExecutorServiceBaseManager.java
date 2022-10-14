@@ -48,21 +48,21 @@ import org.jvnet.hk2.config.types.Property;
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_EXECUTOR_SERVICE;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CORE_POOL_SIZE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CORE_POOL_SIZE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_AFTER_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_LOGGER_INTERVAL_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_LOGGER_PRINT_ONCE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.KEEP_ALIVE_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.LONG_RUNNING_TASKS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_LIFETIME_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
 import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_AFTER_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_PRINT_ONCE;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
-import static org.glassfish.resources.admin.cli.ResourceConstants.KEEP_ALIVE_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.LONG_RUNNING_TASKS;
 import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_LIFETIME_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_PRIORITY;
 
 /**
  *

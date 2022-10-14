@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +19,15 @@ package org.glassfish.concurrent.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deployment.xml.ConcurrencyTagNames;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -30,18 +38,13 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.HashMap;
-import java.util.Properties;
 
 
 /**
  * Create Managed Thread Factory Command
- *
  */
 @TargetType(value={CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.CONFIG,  })
 @ExecuteOn(RuntimeType.ALL)
@@ -61,7 +64,7 @@ public class CreateManagedThreadFactory implements AdminCommand {
     @Param(name="contextinfoenabled", alias="contextInfoEnabled", defaultValue="true", optional=true)
     private Boolean contextinfoenabled;
 
-    @Param(name="contextinfo", alias="contextInfo", defaultValue=ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE, optional=true)
+    @Param(name="contextinfo", alias="contextInfo", defaultValue=ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE, optional=true)
     private String contextinfo;
 
     @Param(name="threadpriority", alias="threadPriority", defaultValue=""+Thread.NORM_PRIORITY, optional=true)
@@ -88,15 +91,15 @@ public class CreateManagedThreadFactory implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         HashMap attrList = new HashMap();
         attrList.put(ResourceConstants.JNDI_NAME, jndiName);
-        attrList.put(ResourceConstants.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
-        attrList.put(ResourceConstants.CONTEXT_INFO, contextinfo);
-        attrList.put(ResourceConstants.THREAD_PRIORITY,
-            threadpriority.toString());
+        attrList.put(ConcurrencyTagNames.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
+        attrList.put(ConcurrencyTagNames.CONTEXT_INFO, contextinfo);
+        attrList.put(ConcurrencyTagNames.THREAD_PRIORITY, threadpriority.toString());
         attrList.put(ServerTags.DESCRIPTION, description);
         attrList.put(ResourceConstants.ENABLED, enabled.toString());
         ResourceStatus rs;
@@ -115,8 +118,9 @@ public class CreateManagedThreadFactory implements AdminCommand {
         }
         if (rs.getStatus() == ResourceStatus.FAILURE) {
             ec = ActionReport.ExitCode.FAILURE;
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         report.setActionExitCode(ec);
     }

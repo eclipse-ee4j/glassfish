@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,25 +17,39 @@
 
 package org.glassfish.concurrent.admin;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.naming.DefaultResourceProxy;
+import org.glassfish.concurrent.config.ManagedThreadFactory;
+import org.glassfish.concurrent.runtime.deployer.DefaultManagedThreadFactory;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.concurrent.config.ManagedThreadFactory;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.*;
-import org.glassfish.concurrent.runtime.deployer.DefaultManagedThreadFactory;
 
 /**
  * List Managed Thread Factory Resources command
@@ -77,13 +92,14 @@ public class ListManagedThreadFactories implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
 
         try {
             Collection<ManagedThreadFactory> managedThreadFactories = domain.getResources().getResources(ManagedThreadFactory.class);
-            List<Map<String,String>> resourcesList = new ArrayList<Map<String, String>>();
+            List<Map<String,String>> resourcesList = new ArrayList<>();
             List<DefaultResourceProxy> drps = habitat.getAllServices(DefaultResourceProxy.class);
 
             for (ManagedThreadFactory managedThreadFactory : managedThreadFactories) {
@@ -91,7 +107,7 @@ public class ListManagedThreadFactories implements AdminCommand {
                 if(bindableResourcesHelper.resourceExists(jndiName, target)){
                     ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                     part.setMessage(jndiName);
-                    Map<String,String> resourceNameMap = new HashMap<String,String>();
+                    Map<String,String> resourceNameMap = new HashMap<>();
                     String logicalName = DefaultResourceProxy.Util.getLogicalName(drps, jndiName);
                     if (logicalName != null) {
                         resourceNameMap.put("logical-jndi-name", logicalName);

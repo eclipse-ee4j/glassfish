@@ -54,9 +54,12 @@ import static jakarta.enterprise.concurrent.ManagedTask.USE_TRANSACTION_OF_EXECU
 
 
 /**
- * 1. save
- * 2. setup
- * 3. reset
+ * Order of calls:
+ * <ol>
+ * <li>{@link #saveContext(ContextService)} or {@link #saveContext(ContextService, Map)}
+ * <li>{@link #setup}
+ * <li>{@link #reset(ContextHandle)}
+ * </ol>
  */
 public class ContextSetupProviderImpl implements ContextSetupProvider {
 
@@ -126,7 +129,6 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
         ComponentInvocation invocation = invocationCtx.getInvocation();
         final String appName = invocation == null ? null : invocation.getAppName();
 
-        // Check whether the application component submitting the task is still running. Throw IllegalStateException if not.
         if (!isApplicationEnabled(appName)) {
             throw new IllegalStateException("Module " + appName + " is disabled");
         }
@@ -240,10 +242,13 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
     }
 
 
+    /**
+     * Check whether the application component submitting the task is still running.
+     * Throw IllegalStateException if not.
+     */
     private boolean isApplicationEnabled(String appId) {
         if (appId == null) {
             // we don't know the application name yet, it is starting.
-            // FIXME: it would be good to know the application name even in this phase.
             return true;
         }
         Application app = applications.getApplication(appId);

@@ -160,9 +160,9 @@ public class JdbcResourcesUtil {
         JdbcConnectionPool pool = null;
         Resources resources = getResources(resourceInfo);
         if (resources != null) {
-            resource = (JdbcResource) ConnectorsUtil.getResourceByName(resources, JdbcResource.class, resourceInfo.getName());
+            resource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, resourceInfo.getName());
             if (resource != null) {
-                pool = (JdbcConnectionPool) ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, resource.getPoolName());
+                pool = ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, resource.getPoolName());
             }
         }
         return pool;

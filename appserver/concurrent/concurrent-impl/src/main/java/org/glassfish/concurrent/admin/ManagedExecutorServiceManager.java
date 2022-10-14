@@ -59,13 +59,13 @@ public class ManagedExecutorServiceManager extends ManagedExecutorServiceBaseMan
     protected ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target){
         if (Integer.parseInt(corePoolSize) == 0 &&
             Integer.parseInt(maximumPoolSize) == 0) {
-            String msg = localStrings.getLocalString("coresize.maxsize.both.zero", "Options corepoolsize and maximumpoolsize cannot both have value 0.");
+            String msg = I18N.getLocalString("coresize.maxsize.both.zero", "Options corepoolsize and maximumpoolsize cannot both have value 0.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         if (Integer.parseInt(corePoolSize) >
             Integer.parseInt(maximumPoolSize)) {
-            String msg = localStrings.getLocalString("coresize.biggerthan.maxsize", "Option corepoolsize cannot have a bigger value than option maximumpoolsize.");
+            String msg = I18N.getLocalString("coresize.biggerthan.maxsize", "Option corepoolsize cannot have a bigger value than option maximumpoolsize.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 

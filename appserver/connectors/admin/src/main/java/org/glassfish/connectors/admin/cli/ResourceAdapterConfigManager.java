@@ -66,10 +66,12 @@ public class ResourceAdapterConfigManager implements ResourceManager {
     private String objectType = "user";
     private String name = null;
 
+    @Override
     public String getResourceType() {
         return ServerTags.RESOURCE_ADAPTER_CONFIG;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
         setParams(attributes);
@@ -81,6 +83,7 @@ public class ResourceAdapterConfigManager implements ResourceManager {
 
         try {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     ResourceAdapterConfig newResource = createConfigBean(param, properties);
                     param.getResources().add(newResource);
@@ -147,19 +150,21 @@ public class ResourceAdapterConfigManager implements ResourceManager {
         threadPoolIds = (String) attributes.get(THREAD_POOL_IDS);
         objectType = (String) attributes.get(ServerTags.OBJECT_TYPE);
     }
+
+
+    @Override
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-            throws Exception{
+        throws Exception {
         setParams(attributes);
-        ResourceStatus status = null;
-        if(!validate){
-            status = new ResourceStatus(ResourceStatus.SUCCESS,"");
-        }else{
+        final ResourceStatus status;
+        if (validate) {
             status = isValid(resources);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
-        if(status.getStatus() == ResourceStatus.SUCCESS){
+        if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        }else{
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage());
     }
 }

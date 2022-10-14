@@ -137,7 +137,7 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
 
         ResourceInfo actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
         ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
-        jdbcResource = (JdbcResource) ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
+        jdbcResource = ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
                 actualResourceInfo.getName());
         if (jdbcResource == null) {
             String suffix = ConnectorsUtil.getValidSuffix(jndiName);
@@ -146,7 +146,7 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
                 actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
             }
         }
-        jdbcResource = (JdbcResource) ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
+        jdbcResource = ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
                 actualResourceInfo.getName());
 
         if (jdbcResource != null) {

@@ -17,27 +17,6 @@
 
 package com.sun.enterprise.connectors.service;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-
-import javax.naming.NamingException;
-import javax.security.auth.Subject;
-
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.RelativePathResolver;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -68,6 +47,27 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.TransactionSupport;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.RelativePathResolver;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.config.types.Property;
 
 
 /**
@@ -641,8 +641,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                     if (!isConnectorConnectionPoolDeployed(poolInfo)) {
                         logFine("getUnpooledConnection :: isConnectorConnectionPoolDeployed is false");
                         try {
-                            poolToDeploy = (ResourcePool)
-                                    ConnectorsUtil.getResourceByName(runtime.getResources(poolInfo), ResourcePool.class, poolInfo.getName());
+                            poolToDeploy = ConnectorsUtil.getResourceByName(runtime.getResources(poolInfo), ResourcePool.class, poolInfo.getName());
                             runtime.getResourceDeployer(poolToDeploy).deployResource(poolToDeploy);
                             logFine("getUnpooledConnection :: force deployed the ConnectionPool : " + poolInfo);
                             needToUndeployPool = true;

@@ -178,8 +178,7 @@ public class JdbcResourceDeployer implements ResourceDeployer<JdbcResource> {
                 LOG.fine(() -> "Deleting JDBC pool [" + poolName + " ] as there are no more "
                     + "resource-refs to the pool in this server instance");
 
-                JdbcConnectionPool jcp = (JdbcConnectionPool) getResourceByName(resources, JdbcConnectionPool.class,
-                    poolName);
+                JdbcConnectionPool jcp = getResourceByName(resources, JdbcConnectionPool.class, poolName);
 
                 // Delete/Undeploy Pool
                 runtime.getResourceDeployer(jcp).undeployResource(jcp);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +18,22 @@
 package org.glassfish.connectors.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -31,16 +45,13 @@ import org.glassfish.connectors.config.ResourceAdapterConfig;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.config.serverbeans.Module;
 
-import jakarta.inject.Inject;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.glassfish.connectors.admin.cli.CLIConstants.*;
-import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.*;
+import static org.glassfish.connectors.admin.cli.CLIConstants.OBJECT_TYPE;
+import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
+import static org.glassfish.connectors.admin.cli.CLIConstants.TARGET;
+import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.RAC_CREATE_RAC_COMMAND;
+import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.RAC_RA_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.RAC.RAC_THREAD_POOL_ID;
 import static org.glassfish.resources.admin.cli.ResourceConstants.RESOURCE_ADAPTER_CONFIG_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_POOL_IDS;
 
@@ -84,6 +95,7 @@ public class CreateResourceAdapterConfig implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
@@ -108,7 +120,9 @@ public class CreateResourceAdapterConfig implements AdminCommand {
                 if(module != null){
                     Resources msr = module.getResources();
                     if(msr != null){
-                        if(hasDuplicate(msr, report)) return;
+                        if(hasDuplicate(msr, report)) {
+                            return;
+                        }
                     }
                 }
             }
@@ -118,7 +132,9 @@ public class CreateResourceAdapterConfig implements AdminCommand {
             if(application != null){
                 Resources appScopedResources = application.getResources();
                 if(appScopedResources != null){
-                    if(hasDuplicate(appScopedResources, report)) return;
+                    if(hasDuplicate(appScopedResources, report)) {
+                        return;
+                    }
                 }
             }
         }
@@ -146,8 +162,9 @@ public class CreateResourceAdapterConfig implements AdminCommand {
                  report.setMessage(localStrings.getLocalString("create.resource.adapter.config.fail",
                     "Resource adapter config {0} creation failed", raName, ""));
             }
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         report.setActionExitCode(ec);
     }

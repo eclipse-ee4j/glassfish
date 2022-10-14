@@ -17,6 +17,16 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -27,15 +37,7 @@ import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.util.ResourcesUtil;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 
 /**
  * @author Srikanth P
@@ -168,8 +170,7 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
                                 "resource-refs to the pool in this server instance");
                     }
 
-                    ConnectorConnectionPool ccp = (ConnectorConnectionPool)
-                            ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, poolName);
+                    ConnectorConnectionPool ccp = getResourceByName(resources, ConnectorConnectionPool.class, poolName);
                     //Delete/Undeploy Pool
                     runtime.getResourceDeployer(ccp).undeployResource(ccp);
                 }

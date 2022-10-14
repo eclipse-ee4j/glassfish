@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,14 +23,23 @@ import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.resource.ResourceException;
+
+import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.glassfish.resources.admin.cli.ResourceConstants;
-import org.glassfish.resources.admin.cli.ResourceManager;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
+import org.glassfish.resources.admin.cli.ResourceConstants;
+import org.glassfish.resources.admin.cli.ResourceManager;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ConfiguredBy;
@@ -38,14 +47,9 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import jakarta.inject.Inject;
-import jakarta.resource.ResourceException;
-import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
 
 /**
  *
@@ -78,10 +82,12 @@ public class JDBCResourceManager implements ResourceManager {
     @Inject
     private BindableResourcesHelper resourcesHelper;
 
+    @Override
     public String getResourceType () {
         return ServerTags.JDBC_RESOURCE;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
 
@@ -95,6 +101,7 @@ public class JDBCResourceManager implements ResourceManager {
         try {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
 
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     return createResource(param, properties);
                 }
@@ -177,6 +184,7 @@ public class JDBCResourceManager implements ResourceManager {
         return jdbcResource;
     }
 
+    @Override
     public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties,
                                      boolean validate) throws Exception{
         setAttributes(attributes, null);
@@ -209,7 +217,7 @@ public class JDBCResourceManager implements ResourceManager {
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        JdbcResource jdbcResource = (JdbcResource) ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jndiName);
+        JdbcResource jdbcResource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jndiName);
         // ensure we are not deleting resource of the type system-all-req
         if(ResourceConstants.SYSTEM_ALL_REQ.equals(jdbcResource.getObjectType())){
             String msg = localStrings.getLocalString("delete.jdbc.resource.system-all-req.object-type",
@@ -253,8 +261,9 @@ public class JDBCResourceManager implements ResourceManager {
 
             // delete jdbc-resource
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    JdbcResource resource = (JdbcResource) ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jndiName);
+                    JdbcResource resource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jndiName);
                     return param.getResources().remove(resource);
                 }
             }, resources) == null) {

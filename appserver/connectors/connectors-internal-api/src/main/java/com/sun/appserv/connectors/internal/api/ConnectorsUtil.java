@@ -924,7 +924,7 @@ public class ConnectorsUtil {
 
     public static Collection<BindableResource> getResourcesOfPool(Resources resources, String connectionPoolName) {
         Set<BindableResource> resourcesReferringPool = new HashSet<>();
-        ResourcePool pool = (ResourcePool) getResourceByName(resources, ResourcePool.class, connectionPoolName);
+        ResourcePool pool = getResourceByName(resources, ResourcePool.class, connectionPoolName);
         if (pool != null) {
             Collection<BindableResource> bindableResources = resources.getResources(BindableResource.class);
             for (BindableResource resource : bindableResources) {
@@ -938,8 +938,8 @@ public class ConnectorsUtil {
         return resourcesReferringPool;
     }
 
-    public static <T> Resource getResourceByName(Resources resources, Class<T> type, String name) {
-        return resources.getResourceByName(type, name);
+    public static <T extends Resource> T getResourceByName(Resources resources, Class<T> type, String name) {
+        return (T) resources.getResourceByName(type, name);
     }
 
 

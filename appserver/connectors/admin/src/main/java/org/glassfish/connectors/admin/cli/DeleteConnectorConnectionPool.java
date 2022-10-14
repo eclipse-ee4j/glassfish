@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,9 +18,21 @@
 package org.glassfish.connectors.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -36,12 +49,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import jakarta.inject.Inject;
-import java.beans.PropertyVetoException;
-import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Delete Connector Connection Pool Command
  *
@@ -55,8 +62,8 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
     final private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DeleteConnectorConnectionPool.class);
 
-    private @Param(optional=true, obsolete = true)
-    String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(optional=true, obsolete = true)
+    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(optional=true, defaultValue="false")
     private Boolean cascade;
@@ -79,6 +86,7 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
@@ -115,10 +123,11 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
 
             // delete connector connection pool
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ConnectorConnectionPool cp = (ConnectorConnectionPool)
-                            ConnectorsUtil.getResourceByName(domain.getResources(),ConnectorConnectionPool.class, poolname);
-                    if(cp != null){
+                    ConnectorConnectionPool cp = ConnectorsUtil.getResourceByName(domain.getResources(),
+                        ConnectorConnectionPool.class, poolname);
+                    if (cp != null) {
                         return param.getResources().remove(cp);
                     }
                     // not found
@@ -151,6 +160,7 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
                                            final boolean cascade, final String poolName) throws TransactionFailure {
         if (cascade) {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     Collection<BindableResource> referringResources = ConnectorsUtil.getResourcesOfPool(param, poolName);
                     for (BindableResource referringResource : referringResources) {

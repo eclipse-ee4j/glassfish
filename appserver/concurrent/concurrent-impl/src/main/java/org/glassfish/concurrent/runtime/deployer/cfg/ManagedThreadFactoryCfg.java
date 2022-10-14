@@ -17,8 +17,10 @@
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import org.glassfish.concurrent.config.ManagedThreadFactory;
+import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseInt;
 
 /**
  * Contains configuration information for a ManagedThreadFactory object
@@ -31,8 +33,9 @@ public class ManagedThreadFactoryCfg implements Serializable {
     private final int threadPriority;
 
     public ManagedThreadFactoryCfg(ManagedThreadFactory config) {
-        serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled(), config.getContext());
-        threadPriority = ConcurrentServiceCfg.parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
+        Set<String> propagated = CfgParser.parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
+        serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
+        threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
     }
 
     public ConcurrentServiceCfg getServiceConfig() {

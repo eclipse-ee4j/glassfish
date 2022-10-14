@@ -27,13 +27,13 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.standardize;
 import static java.util.ServiceLoader.load;
 
 /**
@@ -95,17 +95,6 @@ public class ContextSetup implements Serializable {
     public String toString() {
         return super.toString() + "[propagated=" + contextPropagate + ", cleared=" + contextClear + ", unchanged="
             + contextUnchanged + "]";
-    }
-
-
-    // FIXME: move to the server, it should be managed on parsing descriptors and annotations.
-    private static Set<String> standardize(final Set<String> contextTypes) {
-        HashSet<String> standardizedTypes = new HashSet<>();
-        for (String input : contextTypes) {
-            StandardContextType contextType = StandardContextType.parse(input);
-            standardizedTypes.add(contextType == null ? input : contextType.name());
-        }
-        return standardizedTypes;
     }
 
 

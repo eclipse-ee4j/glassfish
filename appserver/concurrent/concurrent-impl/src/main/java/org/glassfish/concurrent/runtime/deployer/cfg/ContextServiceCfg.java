@@ -16,11 +16,16 @@
 
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
+import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.glassfish.concurrent.runtime.deployer.cfg.ContextInfoParser.parseContextInfo;
+import org.glassfish.concurrent.config.ContextService;
+
+import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.standardize;
+import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseContextInfo;
 
 
 /**
@@ -34,19 +39,19 @@ public class ContextServiceCfg implements Serializable {
     private final Set<String> clearedContexts;
     private final Set<String> unchangedContexts;
 
-    public ContextServiceCfg(ConcurrentServiceCfg serviceConfig) {
-        this.serviceConfig = serviceConfig;
-        this.clearedContexts = new HashSet<>();
-        this.unchangedContexts = new HashSet<>();
-        this.propagatedContexts = parseContextInfo(serviceConfig.getContextInfo(), serviceConfig.isContextInfoEnabled());
+    public ContextServiceCfg(ContextServiceDefinitionData data) {
+        this.serviceConfig = new ConcurrentServiceCfg(data.getName());
+        this.propagatedContexts = standardize(data.getPropagated());
+        this.clearedContexts = standardize(data.getCleared());
+        this.unchangedContexts = standardize(data.getUnchanged());
     }
 
 
-    public ContextServiceCfg(ConcurrentServiceCfg serviceConfig, Set<String> propagated, Set<String> cleared, Set<String> unchanged) {
-        this.serviceConfig = serviceConfig;
-        this.clearedContexts = cleared;
-        this.unchangedContexts = unchanged;
-        this.propagatedContexts = propagated;
+    public ContextServiceCfg(ContextService data) {
+        this.propagatedContexts = parseContextInfo(data.getContextInfo(), data.getContextInfoEnabled());
+        this.serviceConfig = new ConcurrentServiceCfg(data.getJndiName(), propagatedContexts);
+        this.clearedContexts = new HashSet<>();
+        this.unchangedContexts = new HashSet<>();
     }
 
 

@@ -18,10 +18,10 @@ package com.sun.enterprise.deployment.annotation.handlers;
 
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author David Matejcek
@@ -39,9 +39,10 @@ public enum StandardContextType {
     WorkArea,
     ;
 
-    // FIXME: replace by a set/array/list
-    public static final String ALL_STANTARD_CONTEXT_TYPES = Stream.of(StandardContextType.values()).map(Object::toString)
-        .collect(Collectors.joining(", "));
+    public static Set<String> names() {
+        return Arrays.stream(StandardContextType.values()).map(Enum::name).collect(Collectors.toSet());
+    }
+
 
     public static StandardContextType parse(String name) {
         for (StandardContextType ctxType : StandardContextType.values()) {
@@ -63,10 +64,10 @@ public enum StandardContextType {
     public static Set<String> standardize(Set<String> contexts) {
         Set<String> result = new HashSet<>();
         for (String input : contexts) {
-            if (input.equalsIgnoreCase(ContextServiceDefinition.TRANSACTION)) {
+            if (ContextServiceDefinition.TRANSACTION.equalsIgnoreCase(input)) {
                 result.add(WorkArea.name());
             }
-            if (input.equals(ContextServiceDefinition.APPLICATION)) {
+            if (ContextServiceDefinition.APPLICATION.equals(input)) {
                 result.add(Classloader.name());
                 result.add(JNDI.name());
             }

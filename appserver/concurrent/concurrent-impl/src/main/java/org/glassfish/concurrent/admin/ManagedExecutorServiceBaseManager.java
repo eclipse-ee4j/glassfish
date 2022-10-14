@@ -198,6 +198,9 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setContextInfo(contextInfo);
         managedExecutorService.setThreadPriority(threadPriority);
         managedExecutorService.setHungAfterSeconds(hungAfterSeconds);
+        managedExecutorService.setHungLoggerPrintOnce(hungLoggerPrintOnce);
+        managedExecutorService.setHungLoggerInitialDelaySeconds(hungLoggerInitialDelaySeconds);
+        managedExecutorService.setHungLoggerIntervalSeconds(hungLoggerIntervalSeconds);
         managedExecutorService.setCorePoolSize(corePoolSize);
         managedExecutorService.setKeepAliveSeconds(keepAliveSeconds);
         managedExecutorService.setThreadLifetimeSeconds(threadLifetimeSeconds);

@@ -50,6 +50,45 @@ version.
 The `website/src/main/resources/docs/README.md` file needs to be updated
 to add the previous versions to a "previous versions" section.
 
+## Preview the website in a forked Github repository
+
+1. Run the following from this directory to build documentation and website modules:
+
+```
+mvn install
+```
+
+2. Then run the following to stage the Github pages resources:
+
+```
+mvn -pl website,distribution,publish -Ppublish-site install
+```
+
+3. Check out the `gh-pages` branch to a separate directory:
+
+```
+git clone --branch gh-pages https://github.com/eclipse-ee4j/glassfish.git /separate/directory
+```
+
+4. Copy the files from publish/target/staging to the other repository:
+
+```
+ cp -r publish/target/staging/* /separate/directory
+```
+
+5. Push to a forked repository
+
+* create a fork in GitHub
+* add the fork as a new remote to the other repository
+* commit the changes to the `gh-pages` branch
+* (force) push the `gh-pages` beanch: `git -C /separate/directory push --force https://github.com/myfork/glassfish.git refs/heads/gh-pages:refs/heads/gh-pages` (replace myfork with your GitHub username)
+
+6. Preview the website
+
+After some time, the preview will be available at (replace myfork with your GitHub username):
+
+https://myfork.github.io/glassfish
+
 ## To Do
 
 * Add a Jenkins job that waits for changes and publishes the web site.

@@ -1,5 +1,24 @@
 # Eclipse GlassFish Downloads
 
+## Eclipse GlassFish 7 milestone versions
+
+GlassFish 7 version is going to provide Jakarta EE 10 and a lot of improvements and new features, including:
+
+* Jakarta EE 10 Full Profile
+* Complete JDK 17 compatibility
+* Jakarta MVC 2.1
+* MicroProfile Config 3.0
+* Redesigned logging to improve logging performance
+* Embedded GlassFish Full Profile
+* A lot of performance improvements
+* A lot of security fixes and other fixes
+
+The final version of GlassFish 7 is not released yet but the latest milestone version already provides all the above features.
+
+You can download the latest Eclipse GlassFish 7 milestone version in the [Eclipse Foundation Download portal](https://download.eclipse.org/ee4j/glassfish/).
+
+NOTE: The latest milestone version doesn't provide Admin Console (GUI for administering the server). This will be fixed in the final version of GlassFish 7.
+
 ## Eclipse GlassFish 6.2.5
 
 GlassFish 6.2.5 updates and reenables a lot of tests that were disabled in previous versions (most after the GF 5 to 6 transition), once again improves JDK 17 compatibility (cases found by the new tests), fixes several bugs, and contains new versions of Hibernate Validator, Jackson and others.

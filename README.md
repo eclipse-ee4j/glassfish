@@ -9,6 +9,15 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## September 19, 2022 - Eclipse GlassFish 7.0.0-M8 certified as Jakarta EE 10 compatible
+
+We are pleased to announce that with the milestone release 7.0.0-M8, Eclipse GlassFish is officially certified as a Jakarta EE 10 compatible implementation.
+
+* GlassFish 7.0.0-M8 is a [Jakarta EE 10 Full Profile](https://github.com/eclipse-ee4j/jakartaee-platform/issues/514) compatible implementation
+* GlassFish Web 7.0.0-M8 is a [Jakarta EE 10 Web Profile](https://github.com/eclipse-ee4j/jakartaee-platform/issues/534) compatible implementation
+
+You can download both milestone releases from the [Eclipse Foundation Download portal](https://download.eclipse.org/ee4j/glassfish/) to try out what's new in Jakarta EE 10. 
+
 ## February 13, 2022 -- Eclipse GlassFish 6.2.5 Available
 
 We are pleased to announce the release of Eclipse GlassFish 6.2.5. This release provides implementations

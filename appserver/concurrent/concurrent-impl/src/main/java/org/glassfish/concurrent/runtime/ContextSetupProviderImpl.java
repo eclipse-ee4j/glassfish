@@ -19,7 +19,8 @@ package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
-import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.util.Utility;
@@ -44,10 +45,10 @@ import org.glassfish.enterprise.concurrent.spi.ContextHandle;
 import org.glassfish.enterprise.concurrent.spi.ContextSetupProvider;
 import org.glassfish.internal.deployment.Deployment;
 
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Classloader;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.JNDI;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Security;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.WorkArea;
+import static com.sun.enterprise.deployment.types.StandardContextType.Classloader;
+import static com.sun.enterprise.deployment.types.StandardContextType.JNDI;
+import static com.sun.enterprise.deployment.types.StandardContextType.Security;
+import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static jakarta.enterprise.concurrent.ManagedTask.SUSPEND;
 import static jakarta.enterprise.concurrent.ManagedTask.TRANSACTION;
 import static jakarta.enterprise.concurrent.ManagedTask.USE_TRANSACTION_OF_EXECUTION_THREAD;
@@ -75,7 +76,8 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
 
     private final ContextSetup setup;
 
-    public ContextSetupProviderImpl(Set<String> propagated, Set<String> cleared, Set<String> unchanged) {
+    public ContextSetupProviderImpl(Set<ConcurrencyContextType> propagated, Set<ConcurrencyContextType> cleared,
+        Set<ConcurrencyContextType> unchanged) {
         this.setup = new ContextSetup(propagated, cleared, unchanged);
         ConcurrentRuntime runtime = ConcurrentRuntime.getRuntime();
         this.invocationManager = runtime.getInvocationManager();

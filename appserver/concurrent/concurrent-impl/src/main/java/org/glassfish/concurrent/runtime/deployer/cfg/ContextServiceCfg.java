@@ -17,15 +17,13 @@
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
 import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.glassfish.concurrent.config.ContextService;
-
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.standardize;
-import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseContextInfo;
 
 
 /**
@@ -35,20 +33,20 @@ public class ContextServiceCfg implements Serializable {
     private static final long serialVersionUID = -2284599070400343119L;
 
     private final ConcurrentServiceCfg serviceConfig;
-    private final Set<String> propagatedContexts;
-    private final Set<String> clearedContexts;
-    private final Set<String> unchangedContexts;
+    private final Set<ConcurrencyContextType> propagatedContexts;
+    private final Set<ConcurrencyContextType> clearedContexts;
+    private final Set<ConcurrencyContextType> unchangedContexts;
 
     public ContextServiceCfg(ContextServiceDefinitionData data) {
         this.serviceConfig = new ConcurrentServiceCfg(data.getName());
-        this.propagatedContexts = standardize(data.getPropagated());
-        this.clearedContexts = standardize(data.getCleared());
-        this.unchangedContexts = standardize(data.getUnchanged());
+        this.propagatedContexts = CfgParser.standardize(data.getPropagated());
+        this.clearedContexts = CfgParser.standardize(data.getCleared());
+        this.unchangedContexts = CfgParser.standardize(data.getUnchanged());
     }
 
 
     public ContextServiceCfg(ContextService data) {
-        this.propagatedContexts = parseContextInfo(data.getContextInfo(), data.getContextInfoEnabled());
+        this.propagatedContexts = CfgParser.parseContextInfo(data.getContextInfo(), data.getContextInfoEnabled());
         this.serviceConfig = new ConcurrentServiceCfg(data.getJndiName(), propagatedContexts);
         this.clearedContexts = new HashSet<>();
         this.unchangedContexts = new HashSet<>();
@@ -60,17 +58,17 @@ public class ContextServiceCfg implements Serializable {
     }
 
 
-    public Set<String> getPropagatedContexts() {
+    public Set<ConcurrencyContextType> getPropagatedContexts() {
         return propagatedContexts;
     }
 
 
-    public Set<String> getClearedContexts() {
+    public Set<ConcurrencyContextType> getClearedContexts() {
         return clearedContexts;
     }
 
 
-    public Set<String> getUnchangedContexts() {
+    public Set<ConcurrencyContextType> getUnchangedContexts() {
         return unchangedContexts;
     }
 

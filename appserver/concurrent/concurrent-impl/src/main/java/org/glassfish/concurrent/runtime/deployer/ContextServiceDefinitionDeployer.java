@@ -22,7 +22,7 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
-import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
 
 import jakarta.enterprise.concurrent.ContextService;
 import jakarta.inject.Inject;

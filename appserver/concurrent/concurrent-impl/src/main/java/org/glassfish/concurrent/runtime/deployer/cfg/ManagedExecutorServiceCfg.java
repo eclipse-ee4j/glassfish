@@ -17,6 +17,8 @@
 
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -47,7 +49,7 @@ public class ManagedExecutorServiceCfg implements Serializable {
     private final long threadLifeTimeSeconds;
 
     public ManagedExecutorServiceCfg(ManagedExecutorService config) {
-        Set<String> propagated = parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
+        Set<ConcurrencyContextType> propagated = parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
         serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
         hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
         hungLoggerPrintOnce = Boolean.valueOf(config.getHungLoggerPrintOnce());

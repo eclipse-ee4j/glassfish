@@ -17,7 +17,8 @@
 
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
-import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -27,7 +28,7 @@ public final class ConcurrentServiceCfg implements Serializable {
     private static final long serialVersionUID = -9039607497553448223L;
 
     private final String jndiName;
-    private final Set<String> contextInfo;
+    private final Set<ConcurrencyContextType> contextInfo;
     private final String context;
 
     public ConcurrentServiceCfg(String jndiName) {
@@ -35,14 +36,14 @@ public final class ConcurrentServiceCfg implements Serializable {
     }
 
 
-    public ConcurrentServiceCfg(String jndiName, Set<String> contextInfo) {
+    public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo) {
         this.jndiName = jndiName;
         this.contextInfo = contextInfo;
         this.context = null;
     }
 
 
-    public ConcurrentServiceCfg(String jndiName, Set<String> contextInfo, String context) {
+    public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo, String context) {
         this.jndiName = jndiName;
         this.contextInfo = contextInfo;
         this.context = context;
@@ -51,7 +52,7 @@ public final class ConcurrentServiceCfg implements Serializable {
 
     public ConcurrentServiceCfg(String jndiName, StandardContextType contextInfo, String context) {
         this.jndiName = jndiName;
-        this.contextInfo = Set.of(contextInfo.name());
+        this.contextInfo = Set.of(contextInfo);
         this.context = context;
     }
 
@@ -61,7 +62,7 @@ public final class ConcurrentServiceCfg implements Serializable {
     }
 
 
-    public Set<String> getContextInfo() {
+    public Set<ConcurrencyContextType> getContextInfo() {
         return contextInfo;
     }
 

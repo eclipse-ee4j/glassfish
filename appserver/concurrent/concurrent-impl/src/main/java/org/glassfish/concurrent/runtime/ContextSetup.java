@@ -17,7 +17,9 @@
 package org.glassfish.concurrent.runtime;
 
 
-import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
+import com.sun.enterprise.deployment.types.CustomContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
 
 import jakarta.enterprise.concurrent.spi.ThreadContextProvider;
 import jakarta.enterprise.concurrent.spi.ThreadContextSnapshot;
@@ -27,13 +29,13 @@ import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.standardize;
 import static java.util.ServiceLoader.load;
 
 /**
@@ -43,16 +45,16 @@ public class ContextSetup implements Serializable {
     private static final long serialVersionUID = 7817957604183520917L;
     private static final Logger LOG = System.getLogger(ContextSetup.class.getName());
 
-    private final Set<String> contextPropagate;
-    private final Set<String> contextClear;
-    private final Set<String> contextUnchanged;
-    private transient Map<String, ThreadContextProvider> allThreadContextProviders;
+    private final Set<ConcurrencyContextType> contextPropagate;
+    private final Set<ConcurrencyContextType> contextClear;
+    private final Set<ConcurrencyContextType> contextUnchanged;
+    private transient Map<CustomContextType, ThreadContextProvider> allThreadContextProviders;
 
 
-    public ContextSetup(Set<String> propagated, Set<String> cleared, Set<String> unchanged) {
-        this.contextPropagate = standardize(propagated);
-        this.contextClear = standardize(cleared);
-        this.contextUnchanged = standardize(unchanged);
+    public ContextSetup(Set<ConcurrencyContextType> propagated, Set<ConcurrencyContextType> cleared, Set<ConcurrencyContextType> unchanged) {
+        this.contextPropagate = new HashSet<>(propagated);
+        this.contextClear = new HashSet<>(cleared);
+        this.contextUnchanged = new HashSet<>(unchanged);
     }
 
 
@@ -64,17 +66,17 @@ public class ContextSetup implements Serializable {
 
 
     public boolean isPropagated(StandardContextType contextType) {
-        return contextPropagate.contains(contextType.name());
+        return contextPropagate.contains(contextType);
     }
 
 
     public boolean isClear(StandardContextType contextType) {
-        return contextClear.contains(contextType.name());
+        return contextClear.contains(contextType);
     }
 
 
     public boolean isUnchanged(StandardContextType contextType) {
-        return contextUnchanged.contains(contextType.name());
+        return contextUnchanged.contains(contextType);
     }
 
 
@@ -98,39 +100,39 @@ public class ContextSetup implements Serializable {
     }
 
 
-    private static Map<String, ThreadContextProvider> loadAllProviders(ClassLoader loader) {
+    private static Map<CustomContextType, ThreadContextProvider> loadAllProviders(ClassLoader loader) {
         LOG.log(Level.TRACE, "Using classloader: {0}", loader);
         ServiceLoader<ThreadContextProvider> services = load(ThreadContextProvider.class, loader);
-        Map<String, ThreadContextProvider> providers = new HashMap<>();
+        Map<CustomContextType, ThreadContextProvider> providers = new HashMap<>();
         for (ThreadContextProvider service : services) {
-            String serviceName = service.getThreadContextType();
-            providers.put(serviceName, service);
+            CustomContextType ctxType = new CustomContextType(service.getThreadContextType());
+            providers.put(ctxType, service);
         }
         LOG.log(Level.DEBUG, "Detected ThreadContextProvider implementations: {0}", providers);
         return providers;
     }
 
 
-    private static void addRemaining(Set<String> propagated, Set<String> clear, Set<String> unchanged,
-        Map<String, ThreadContextProvider> allThreadContextProviders) {
-        Set<String> remaining = chooseSet(propagated, clear, unchanged);
+    private static void addRemaining(Set<ConcurrencyContextType> propagated, Set<ConcurrencyContextType> clear,
+        Set<ConcurrencyContextType> unchanged, Map<CustomContextType, ThreadContextProvider> allThreadContextProviders) {
+        Set<ConcurrencyContextType> remaining = chooseSet(propagated, clear, unchanged);
         for (StandardContextType contextType : StandardContextType.values()) {
             if (contextType == StandardContextType.Remaining) {
                 continue;
             }
-            final String name = contextType.name();
-            addIfNotInAnotherSet(name, remaining, propagated, clear, unchanged);
+            addIfNotInAnotherSet(contextType, remaining, propagated, clear, unchanged);
         }
-        for (String name : allThreadContextProviders.keySet()) {
+        for (CustomContextType name : allThreadContextProviders.keySet()) {
             addIfNotInAnotherSet(name, remaining, propagated, clear, unchanged);
         }
     }
 
 
-    private static Set<String> chooseSet(Set<String> propagated, Set<String> clear, Set<String> unchanged) {
-        if (clear.contains(StandardContextType.Remaining.name())) {
+    private static Set<ConcurrencyContextType> chooseSet(Set<ConcurrencyContextType> propagated,
+        Set<ConcurrencyContextType> clear, Set<ConcurrencyContextType> unchanged) {
+        if (clear.contains(StandardContextType.Remaining)) {
             return clear;
-        } else if (unchanged.contains(StandardContextType.Remaining.name())) {
+        } else if (unchanged.contains(StandardContextType.Remaining)) {
             return unchanged;
         } else {
             return propagated;
@@ -138,8 +140,9 @@ public class ContextSetup implements Serializable {
     }
 
 
-    private static void addIfNotInAnotherSet(String name, Set<String> remaining, Set<String> propagated,
-        Set<String> clear, Set<String> unchanged) {
+    private static void addIfNotInAnotherSet(ConcurrencyContextType name, Set<ConcurrencyContextType> remaining,
+        Set<ConcurrencyContextType> propagated, Set<ConcurrencyContextType> clear,
+        Set<ConcurrencyContextType> unchanged) {
         if (propagated.contains(name) || clear.contains(name) || unchanged.contains(name)) {
             return;
         }

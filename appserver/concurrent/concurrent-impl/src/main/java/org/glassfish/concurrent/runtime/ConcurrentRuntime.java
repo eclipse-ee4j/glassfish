@@ -19,7 +19,7 @@ package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
-import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 import jakarta.inject.Inject;
@@ -35,8 +35,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -62,8 +60,8 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Classloader;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.WorkArea;
+import static com.sun.enterprise.deployment.types.StandardContextType.*;
+import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static java.util.Collections.emptySet;
 
 /**
@@ -245,10 +243,7 @@ public class ConcurrentRuntime {
         if (lookup2 != null) {
             return lookup2;
         }
-        // Create default
-        Set<String> provided = Set.of(StandardContextType.Classloader, StandardContextType.JNDI,
-            StandardContextType.Security, StandardContextType.WorkArea).stream().map(Enum::name)
-            .collect(Collectors.toSet());
+        Set<ConcurrencyContextType> provided = Set.of(Classloader, JNDI, Security, WorkArea);
         ConcurrentServiceCfg config = new ConcurrentServiceCfg(jndiName, provided, null);
         return contextServiceMap.computeIfAbsent(jndiName, n -> createContextService(jndiName, config, true));
     }
@@ -262,8 +257,8 @@ public class ConcurrentRuntime {
 
     public synchronized ContextServiceImpl createContextService(ContextServiceCfg config) {
         LOG.log(Level.FINE, "createContextService(config={0})", config);
-        boolean keepTxUnchanged = config.getUnchangedContexts().contains(WorkArea.name());
-        boolean clearTx = config.getClearedContexts().contains(WorkArea.name());
+        boolean keepTxUnchanged = config.getUnchangedContexts().contains(WorkArea);
+        boolean clearTx = config.getClearedContexts().contains(WorkArea);
         TransactionSetupProvider txSetupProvider = createTxSetupProvider(keepTxUnchanged, clearTx);
         ContextSetupProvider ctxSetupProvider = new ContextSetupProviderImpl(config.getPropagatedContexts(),
             config.getClearedContexts(), config.getUnchangedContexts());
@@ -333,12 +328,12 @@ public class ConcurrentRuntime {
         LOG.log(Level.FINE, "createContextService(contextServiceJndiName={0}, config={1}, cleanupTransaction={2})",
             new Object[] {contextServiceJndiName, config, cleanupTransaction});
         // if the context service is not known, create it
-        Set<String> propagated = config.getContextInfo();
-        final Set<String> cleared;
+        final Set<ConcurrencyContextType> propagated = config.getContextInfo();
+        final Set<ConcurrencyContextType> cleared;
         final boolean clearTx;
-        if (cleanupTransaction && !propagated.contains(WorkArea.name())) {
+        if (cleanupTransaction && !propagated.contains(WorkArea)) {
             // pass the cleanup transaction in list of cleared handlers
-            cleared = Set.of(WorkArea.name());
+            cleared = Set.of(WorkArea);
             clearTx = true;
         } else {
             cleared = emptySet();

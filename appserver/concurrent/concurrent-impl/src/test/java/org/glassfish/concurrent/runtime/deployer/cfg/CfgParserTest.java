@@ -16,12 +16,16 @@
 
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
+import com.sun.enterprise.deployment.types.CustomContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
+
 import org.junit.jupiter.api.Test;
 
 import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseContextInfo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static com.sun.enterprise.deployment.types.StandardContextType.*;
 
 /**
  * @author David Matejcek
@@ -32,17 +36,16 @@ public class CfgParserTest {
     public void testParseContextInfo() {
         assertAll(
             () -> assertThat(parseContextInfo(null, "true"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea", "Remaining")),
+                containsInAnyOrder(StandardContextType.values())),
             () -> assertThat(parseContextInfo("Classloader, JNDI, Security, WorkArea", "true"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
+                containsInAnyOrder(Classloader, JNDI, Security, WorkArea)),
             () -> assertThat(parseContextInfo("classloader, jndi, security, workarea", "true"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
+                containsInAnyOrder(Classloader, JNDI, Security, WorkArea)),
             () -> assertThat(parseContextInfo("CLASSLOADER, JNDI, SECURITY, WORKAREA", "true"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
+                containsInAnyOrder(Classloader, JNDI, Security, WorkArea)),
             () -> assertThat(parseContextInfo("JNDI", "false"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea", "Remaining")),
+                containsInAnyOrder(StandardContextType.values())),
             () -> assertThat(parseContextInfo("Classloader, JNDI, JNDI, blah, BEH, Security, WorkArea, ", "true"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea", "blah", "BEH"))
-        );
+                containsInAnyOrder(Classloader, JNDI, Security, WorkArea, new CustomContextType("blah"), new CustomContextType("BEH")))        );
     }
 }

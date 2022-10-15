@@ -32,11 +32,11 @@ import org.glassfish.enterprise.concurrent.internal.ManagedThreadPoolExecutor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Classloader;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.JNDI;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Remaining;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Security;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.WorkArea;
+import static com.sun.enterprise.deployment.types.StandardContextType.Classloader;
+import static com.sun.enterprise.deployment.types.StandardContextType.JNDI;
+import static com.sun.enterprise.deployment.types.StandardContextType.Remaining;
+import static com.sun.enterprise.deployment.types.StandardContextType.Security;
+import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;

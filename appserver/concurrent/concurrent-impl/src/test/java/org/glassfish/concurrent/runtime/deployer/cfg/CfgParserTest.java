@@ -32,7 +32,7 @@ public class CfgParserTest {
     public void testParseContextInfo() {
         assertAll(
             () -> assertThat(parseContextInfo(null, "true"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
+                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea", "Remaining")),
             () -> assertThat(parseContextInfo("Classloader, JNDI, Security, WorkArea", "true"),
                 containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
             () -> assertThat(parseContextInfo("classloader, jndi, security, workarea", "true"),
@@ -40,7 +40,7 @@ public class CfgParserTest {
             () -> assertThat(parseContextInfo("CLASSLOADER, JNDI, SECURITY, WORKAREA", "true"),
                 containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
             () -> assertThat(parseContextInfo("JNDI", "false"),
-                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea")),
+                containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea", "Remaining")),
             () -> assertThat(parseContextInfo("Classloader, JNDI, JNDI, blah, BEH, Security, WorkArea, ", "true"),
                 containsInAnyOrder("Classloader", "JNDI", "Security", "WorkArea", "blah", "BEH"))
         );

@@ -75,7 +75,7 @@ public class ConcurrentRuntimeTest {
             () -> assertTrue(contextSetup.isPropagated(JNDI)),
             () -> assertTrue(contextSetup.isPropagated(Security)),
             () -> assertTrue(contextSetup.isPropagated(WorkArea)),
-            () -> assertFalse(contextSetup.isPropagated(Remaining))
+            () -> assertTrue(contextSetup.isPropagated(Remaining))
         );
     }
 

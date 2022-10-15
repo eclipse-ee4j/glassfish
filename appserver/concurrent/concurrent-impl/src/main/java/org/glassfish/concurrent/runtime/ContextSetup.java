@@ -122,8 +122,8 @@ public class ContextSetup implements Serializable {
             }
             addIfNotInAnotherSet(contextType, remaining, propagated, clear, unchanged);
         }
-        for (CustomContextType name : allThreadContextProviders.keySet()) {
-            addIfNotInAnotherSet(name, remaining, propagated, clear, unchanged);
+        for (CustomContextType ctxType : allThreadContextProviders.keySet()) {
+            addIfNotInAnotherSet(ctxType, remaining, propagated, clear, unchanged);
         }
     }
 
@@ -140,13 +140,13 @@ public class ContextSetup implements Serializable {
     }
 
 
-    private static void addIfNotInAnotherSet(ConcurrencyContextType name, Set<ConcurrencyContextType> remaining,
+    private static void addIfNotInAnotherSet(ConcurrencyContextType ctxType, Set<ConcurrencyContextType> remaining,
         Set<ConcurrencyContextType> propagated, Set<ConcurrencyContextType> clear,
         Set<ConcurrencyContextType> unchanged) {
-        if (propagated.contains(name) || clear.contains(name) || unchanged.contains(name)) {
+        if (propagated.contains(ctxType) || clear.contains(ctxType) || unchanged.contains(ctxType)) {
             return;
         }
-        remaining.add(name);
+        remaining.add(ctxType);
     }
 }
 

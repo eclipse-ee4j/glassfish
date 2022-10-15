@@ -16,6 +16,9 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
+
 import jakarta.enterprise.concurrent.ManagedThreadFactoryDefinition;
 
 import java.lang.System.Logger;
@@ -26,14 +29,34 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author David Matejcek
  */
 @Service
-class ManagedThreadFactoryDefinitionConverter {
+class ManagedThreadFactoryDefinitionConverter extends
+    ConcurrencyDefinitionConvertor<ManagedThreadFactoryDefinitionData, ManagedThreadFactoryDefinitionDescriptor> {
+
     private static final Logger LOG = System.getLogger(ManagedThreadFactoryDefinitionConverter.class.getName());
+
+    ManagedThreadFactoryDefinitionConverter() {
+        super(ManagedThreadFactoryDefinitionDescriptor.class, JavaEEResourceType.MTFDD);
+    }
+
+
+    @Override
+    ManagedThreadFactoryDefinitionDescriptor createDescriptor(ManagedThreadFactoryDefinitionData data) {
+        return new ManagedThreadFactoryDefinitionDescriptor(data, MetadataSource.ANNOTATION);
+    }
+
+
+    @Override
+    ManagedThreadFactoryDefinitionData getData(ManagedThreadFactoryDefinitionDescriptor descriptor) {
+        return descriptor.getData();
+    }
+
 
     Set<ManagedThreadFactoryDefinitionData> convert(final ManagedThreadFactoryDefinition[] definitions) {
         LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
@@ -58,6 +81,7 @@ class ManagedThreadFactoryDefinitionConverter {
     }
 
 
+    @Override
     void merge(ManagedThreadFactoryDefinitionData annotationData,
         ManagedThreadFactoryDefinitionData descriptorData) {
         LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
@@ -65,11 +89,9 @@ class ManagedThreadFactoryDefinitionConverter {
             throw new IllegalArgumentException("Cannot merge managed thread factories with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
         }
-
         if (descriptorData.getPriority() == -1 && annotationData.getPriority() != -1) {
             descriptorData.setPriority(annotationData.getPriority());
         }
-
         if (descriptorData.getContext() == null && annotationData.getContext() != null
             && !annotationData.getContext().isBlank()) {
             descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));

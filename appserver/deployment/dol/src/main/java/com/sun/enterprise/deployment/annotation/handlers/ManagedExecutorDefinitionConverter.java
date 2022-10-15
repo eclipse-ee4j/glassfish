@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
 import com.sun.enterprise.deployment.annotation.factory.ManagedExecutorDefinitionData;
 
 import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
@@ -28,14 +30,34 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author David Matejcek
  */
 @Service
-class ManagedExecutorDefinitionConverter {
+class ManagedExecutorDefinitionConverter
+    extends ConcurrencyDefinitionConvertor<ManagedExecutorDefinitionData, ManagedExecutorDefinitionDescriptor> {
+
     private static final Logger LOG = System.getLogger(ManagedExecutorDefinitionConverter.class.getName());
+
+    ManagedExecutorDefinitionConverter() {
+        super(ManagedExecutorDefinitionDescriptor.class, JavaEEResourceType.MSEDD);
+    }
+
+
+    @Override
+    ManagedExecutorDefinitionDescriptor createDescriptor(ManagedExecutorDefinitionData data) {
+        return new ManagedExecutorDefinitionDescriptor(data, MetadataSource.ANNOTATION);
+    }
+
+
+    @Override
+    ManagedExecutorDefinitionData getData(ManagedExecutorDefinitionDescriptor descriptor) {
+        return descriptor.getData();
+    }
+
 
     Set<ManagedExecutorDefinitionData> convert(ManagedExecutorDefinition[] definitions) {
         LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
@@ -57,7 +79,6 @@ class ManagedExecutorDefinitionConverter {
         } else {
             data.setHungAfterSeconds(annotation.hungTaskThreshold());
         }
-
         if (annotation.maxAsync() < 0) {
             data.setMaximumPoolSize(Integer.MAX_VALUE);
         } else {
@@ -67,6 +88,7 @@ class ManagedExecutorDefinitionConverter {
     }
 
 
+    @Override
     void merge(ManagedExecutorDefinitionData annotationData, ManagedExecutorDefinitionData descriptorData) {
         LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
         if (!annotationData.getName().equals(descriptorData.getName())) {
@@ -76,12 +98,10 @@ class ManagedExecutorDefinitionConverter {
         if (descriptorData.getHungAfterSeconds() <= 0 && annotationData.getHungAfterSeconds() != 0) {
             descriptorData.setHungAfterSeconds(annotationData.getHungAfterSeconds());
         }
-
         if (descriptorData.getMaximumPoolSize() <= 0 && annotationData.getMaximumPoolSize() > 0
             && annotationData.getMaximumPoolSize() < Integer.MAX_VALUE) {
             descriptorData.setMaximumPoolSize(annotationData.getMaximumPoolSize());
         }
-
         if (descriptorData.getContext() == null && annotationData.getContext() != null
             && !annotationData.getContext().isBlank()) {
             descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));

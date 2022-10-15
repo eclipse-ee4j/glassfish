@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
+import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.MetadataSource;
 import jakarta.enterprise.concurrent.ManagedScheduledExecutorDefinition;
 
 import java.lang.System.Logger;
@@ -26,16 +28,36 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.glassfish.config.support.TranslatedConfigView;
+import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
  * @author David Matejcek
  */
 @Service
-class ManagedScheduledExecutorDefinitionConverter {
+class ManagedScheduledExecutorDefinitionConverter extends
+    ConcurrencyDefinitionConvertor<ManagedScheduledExecutorDefinitionData, ManagedScheduledExecutorDefinitionDescriptor> {
+
     private static final Logger LOG = System.getLogger(ManagedScheduledExecutorDefinitionConverter.class.getName());
 
-    public Set<ManagedScheduledExecutorDefinitionData> convert(ManagedScheduledExecutorDefinition[] definitions) {
+    ManagedScheduledExecutorDefinitionConverter() {
+        super(ManagedScheduledExecutorDefinitionDescriptor.class, JavaEEResourceType.MSEDD);
+    }
+
+
+    @Override
+    ManagedScheduledExecutorDefinitionDescriptor createDescriptor(ManagedScheduledExecutorDefinitionData data) {
+        return new ManagedScheduledExecutorDefinitionDescriptor(data, MetadataSource.ANNOTATION);
+    }
+
+
+    @Override
+    ManagedScheduledExecutorDefinitionData getData(ManagedScheduledExecutorDefinitionDescriptor descriptor) {
+        return descriptor.getData();
+    }
+
+
+    Set<ManagedScheduledExecutorDefinitionData> convert(ManagedScheduledExecutorDefinition[] definitions) {
         LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
         if (definitions == null) {
             return Collections.emptySet();
@@ -55,7 +77,6 @@ class ManagedScheduledExecutorDefinitionConverter {
         } else {
             msedd.setHungTaskThreshold(definition.hungTaskThreshold());
         }
-
         if (definition.maxAsync() < 0) {
             msedd.setMaxAsync(Integer.MAX_VALUE);
         } else {
@@ -65,21 +86,19 @@ class ManagedScheduledExecutorDefinitionConverter {
     }
 
 
+    @Override
     void merge(ManagedScheduledExecutorDefinitionData annotationData, ManagedScheduledExecutorDefinitionData descriptorData) {
         LOG.log(Level.DEBUG, "merge(annotationData={0}, descriptorData={1})", annotationData, descriptorData);
         if (!annotationData.getName().equals(descriptorData.getName())) {
             throw new IllegalArgumentException("Cannot merge managed executors with different names: "
                 + annotationData.getName() + " x " + descriptorData.getName());
         }
-
         if (descriptorData.getHungTaskThreshold() <= 0 && annotationData.getHungTaskThreshold() != 0) {
             descriptorData.setHungTaskThreshold(annotationData.getHungTaskThreshold());
         }
-
         if (descriptorData.getMaxAsync() <= 0) {
             descriptorData.setMaxAsync(annotationData.getMaxAsync());
         }
-
         if (descriptorData.getContext() == null && annotationData.getContext() != null
             && !annotationData.getContext().isBlank()) {
             descriptorData.setContext(TranslatedConfigView.expandValue(annotationData.getContext()));

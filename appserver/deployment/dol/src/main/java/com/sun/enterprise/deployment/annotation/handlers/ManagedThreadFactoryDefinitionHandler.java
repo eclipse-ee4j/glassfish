@@ -16,66 +16,31 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 
 import jakarta.enterprise.concurrent.ManagedThreadFactoryDefinition;
 import jakarta.inject.Inject;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.MetadataSource.ANNOTATION;
 
 @Service
 @AnnotationHandlerFor(ManagedThreadFactoryDefinition.class)
-public class ManagedThreadFactoryDefinitionHandler extends ContextualResourceHandler {
+public class ManagedThreadFactoryDefinitionHandler extends AbstractResourceHandler {
 
     @Inject
     private ManagedThreadFactoryDefinitionConverter converter;
 
-    @Override
-    protected Class<ManagedThreadFactoryDefinitionDescriptor> getAcceptableDescriptorType() {
-        return ManagedThreadFactoryDefinitionDescriptor.class;
-    }
 
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
         throws AnnotationProcessorException {
         ManagedThreadFactoryDefinition annotation = (ManagedThreadFactoryDefinition) ainfo.getAnnotation();
         ManagedThreadFactoryDefinitionData data = converter.convert(annotation);
-        updateDescriptors(data, rcContexts);
+        converter.updateDescriptors(data, rcContexts);
         return getDefaultProcessedResult();
-    }
-
-
-    private void updateDescriptors(ManagedThreadFactoryDefinitionData data, ResourceContainerContext[] contexts) {
-        for (ResourceContainerContext context : contexts) {
-            Set<ResourceDescriptor> descriptors = context.getResourceDescriptors(JavaEEResourceType.MTFDD);
-            List<ManagedThreadFactoryDefinitionData> contextData = getExisting(data, descriptors);
-            if (contextData.isEmpty()) {
-                descriptors.add(new ManagedThreadFactoryDefinitionDescriptor(data, ANNOTATION));
-            } else {
-                for (ManagedThreadFactoryDefinitionData existingData : contextData) {
-                    converter.merge(data, existingData);
-                }
-            }
-        }
-    }
-
-
-    private List<ManagedThreadFactoryDefinitionData> getExisting(ManagedThreadFactoryDefinitionData data,
-        Set<ResourceDescriptor> descriptors) {
-        return descriptors.stream().filter(d -> isSameDefinition(data, d))
-            .map(d -> getAcceptableDescriptorType().cast(d).getData()).collect(Collectors.toList());
     }
 }

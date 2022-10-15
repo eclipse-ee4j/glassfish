@@ -20,7 +20,6 @@ package org.glassfish.concurrent.admin;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.inject.Inject;
@@ -46,6 +45,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
+import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_EXECUTOR_SERVICE;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
@@ -73,7 +73,6 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
     protected static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(
         ManagedExecutorServiceBaseManager.class);
-    protected static final String DESCRIPTION = ServerTags.DESCRIPTION;
     protected String jndiName;
     protected String description;
     protected String threadPriority = Integer.toString(Thread.NORM_PRIORITY);
@@ -96,6 +95,8 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
     protected ServerEnvironment environment;
     @Inject
     protected BindableResourcesHelper resourcesHelper;
+
+
     @Override
     public abstract String getResourceType();
 

@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.universal.collections;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -39,5 +40,26 @@ public final class JavaLangUtils {
      */
     public static <T> T nonNull(T value, Supplier<? extends T> supplierOfDefault) {
         return value == null ? supplierOfDefault.get() : value;
+    }
+
+
+    /**
+     * If the value is null, calls the supplier to obtain the default value.
+     * <p>
+     * If the value is not null, applies the function.
+     *
+     * @param <V> input value type
+     * @param <T> expected type
+     * @param value provided value - can be null
+     * @param function function to apply to the value. Must not be null.
+     * @param supplierOfDefault can be null, then supplies null.
+     * @return result of a function OR value provided by the supplier. Note that the returned value
+     *         may be null too.
+     */
+    public static <V, T> T nonNull(V value, Function<V, T> function, Supplier<? extends T> supplierOfDefault) {
+        if (value == null) {
+            return supplierOfDefault == null ? null : supplierOfDefault.get();
+        }
+        return function.apply(value);
     }
 }

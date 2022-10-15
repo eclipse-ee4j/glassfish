@@ -53,12 +53,12 @@ public class ManagedExecutorServiceCfg implements Serializable {
         serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
         hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
         hungLoggerPrintOnce = Boolean.valueOf(config.getHungLoggerPrintOnce());
-        hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60);
-        hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60);
+        hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60L);
+        hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60L);
         longRunningTasks = Boolean.valueOf(config.getLongRunningTasks());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
         corePoolSize = parseInt(config.getCorePoolSize(), 0);
-        keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60);
+        keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60L);
         maximumPoolSize = parseInt(config.getMaximumPoolSize(), Integer.MAX_VALUE);
         taskQueueCapacity = parseInt(config.getTaskQueueCapacity(), Integer.MAX_VALUE);
         threadLifeTimeSeconds = parseLong(config.getThreadLifetimeSeconds(), 0L);

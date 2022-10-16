@@ -118,3 +118,9 @@ Please review the following links:
 * [Contribute](CONTRIBUTING)
 * [Pull Request Acceptance Workflow](pr_workflow)
 * [License](LICENSE)
+
+## Professional Services and Enterprise Support for Eclipse GlassFish
+
+There are companies that provide enterprise support for Eclipse GlassFish and other professional services related to Eclipse GlassFish. 
+
+There's a list of those companies on the [Professional Services and Enterprise Support](support.md) page.

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,20 +19,22 @@ package com.sun.jdo.spi.persistence.support.sqlstore.utility;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resources;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.connectors.config.PersistenceManagerFactoryResource;
+import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.jdbc.config.JdbcResource;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.glassfish.api.admin.config.ConfigurationUpgrade;
-
-import java.util.Collection;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.beans.PropertyVetoException;
 
 /**
  * @author Mitesh Meswani
@@ -41,16 +44,18 @@ public class PersistenceManagerFactoryResourceMigrator implements ConfigurationU
     @Inject
     Resources resources;
 
+    @Override
     public void postConstruct() {
         Collection<PersistenceManagerFactoryResource> pmfResources = resources.getResources(PersistenceManagerFactoryResource.class);
         for (final PersistenceManagerFactoryResource pmfResource : pmfResources) {
             String jdbcResourceName = pmfResource.getJdbcResourceJndiName();
 
-            final JdbcResource jdbcResource = (JdbcResource) ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jdbcResourceName);
+            final JdbcResource jdbcResource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jdbcResourceName);
 
             try {
                 ConfigSupport.apply(new SingleConfigCode<Resources>() {
 
+                    @Override
                     public Object run(Resources resources) throws PropertyVetoException, TransactionFailure {
                         // delete the persitence-manager-factory resource
                         resources.getResources().remove(pmfResource);

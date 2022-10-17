@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,19 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -33,10 +41,8 @@ import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.config.serverbeans.Module;
-
-import jakarta.inject.Inject;
 
 @Service(name = "flush-connection-pool")
 @PerLookup
@@ -48,8 +54,8 @@ import jakarta.inject.Inject;
         description="flush-connection-pool")
 })
 public class FlushConnectionPool implements AdminCommand {
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(FlushConnectionPool.class);
+
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(FlushConnectionPool.class);
 
     @Param(name = "pool_name", primary = true)
     private String poolName;
@@ -72,6 +78,7 @@ public class FlushConnectionPool implements AdminCommand {
     @Inject
     private ConnectorRuntime _runtime;
 
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
@@ -84,14 +91,14 @@ public class FlushConnectionPool implements AdminCommand {
             Application application = applications.getApplication(applicationName);
             Module module = application.getModule(moduleName);
             resources = module.getResources();
-            scope = ConnectorConstants.JAVA_MODULE_SCOPE_PREFIX;
+            scope = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX;
         }else if(applicationName != null){
             if(!poolUtil.isValidApplication(applicationName, poolName, report)){
                 return;
             }
             Application application = applications.getApplication(applicationName);
             resources = application.getResources();
-            scope = ConnectorConstants.JAVA_APP_SCOPE_PREFIX;
+            scope = ResourceConstants.JAVA_APP_SCOPE_PREFIX;
         }
 
         if(!poolUtil.isValidPool(resources, poolName, scope, report)){
@@ -99,8 +106,7 @@ public class FlushConnectionPool implements AdminCommand {
         }
 
         boolean poolingEnabled = false;
-        ResourcePool pool =
-                (ResourcePool) ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolName);
+        ResourcePool pool = ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolName);
         if(pool instanceof ConnectorConnectionPool){
             ConnectorConnectionPool ccp = (ConnectorConnectionPool)pool;
             poolingEnabled = Boolean.valueOf(ccp.getPooling());

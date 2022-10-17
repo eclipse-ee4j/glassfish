@@ -17,34 +17,42 @@
 
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
+
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Set;
 
 public final class ConcurrentServiceCfg implements Serializable {
     private static final long serialVersionUID = -9039607497553448223L;
 
     private final String jndiName;
-    private final String contextInfo;
-    private final boolean contextInfoEnabled;
+    private final Set<ConcurrencyContextType> contextInfo;
     private final String context;
 
     public ConcurrentServiceCfg(String jndiName) {
-        this(jndiName, null, false, null);
+        this(jndiName, Collections.emptySet(), null);
     }
 
 
-    // FIXME: contextInfo can be directly parsed in deployers
-    public ConcurrentServiceCfg(String jndiName, String contextInfo, String contextInfoEnabled, String context) {
+    public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo) {
         this.jndiName = jndiName;
         this.contextInfo = contextInfo;
-        this.contextInfoEnabled = Boolean.parseBoolean(contextInfoEnabled);
+        this.context = null;
+    }
+
+
+    public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo, String context) {
+        this.jndiName = jndiName;
+        this.contextInfo = contextInfo;
         this.context = context;
     }
 
 
-    public ConcurrentServiceCfg(String jndiName, String contextInfo, boolean contextInfoEnabled, String context) {
+    public ConcurrentServiceCfg(String jndiName, StandardContextType contextInfo, String context) {
         this.jndiName = jndiName;
-        this.contextInfo = contextInfo;
-        this.contextInfoEnabled = contextInfoEnabled;
+        this.contextInfo = Set.of(contextInfo);
         this.context = context;
     }
 
@@ -54,13 +62,8 @@ public final class ConcurrentServiceCfg implements Serializable {
     }
 
 
-    public String getContextInfo() {
+    public Set<ConcurrencyContextType> getContextInfo() {
         return contextInfo;
-    }
-
-
-    public boolean isContextInfoEnabled() {
-        return contextInfoEnabled;
     }
 
 
@@ -72,29 +75,5 @@ public final class ConcurrentServiceCfg implements Serializable {
     @Override
     public String toString() {
         return "ConcurrentServiceCfg[" + jndiName + ", context=" + context + "]";
-    }
-
-
-    protected static int parseInt(String strValue, int defaultValue) {
-        if (strValue != null) {
-            try {
-                return Integer.parseInt(strValue);
-            } catch (NumberFormatException e) {
-                // ignore, just return default in this case
-            }
-        }
-        return defaultValue;
-    }
-
-
-    protected static long parseLong(String strValue, long defaultValue) {
-        if (strValue != null) {
-            try {
-                return Long.parseLong(strValue);
-            } catch (NumberFormatException e) {
-                // ignore, just return default in this case
-            }
-        }
-        return defaultValue;
     }
 }

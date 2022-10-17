@@ -19,6 +19,7 @@ package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.deployment.annotation.handlers.ContextualResourceDefinition;
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 import jakarta.inject.Inject;
@@ -34,7 +35,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -60,11 +60,9 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.ALL_STANTARD_CONTEXT_TYPES;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.Classloader;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.WorkArea;
+import static com.sun.enterprise.deployment.types.StandardContextType.*;
+import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static java.util.Collections.emptySet;
-import static org.glassfish.concurrent.runtime.deployer.cfg.ContextInfoParser.parseContextInfo;
 
 /**
  * This class provides API to create various Concurrency Utilities objects
@@ -245,8 +243,8 @@ public class ConcurrentRuntime {
         if (lookup2 != null) {
             return lookup2;
         }
-        // Create default
-        ConcurrentServiceCfg config = new ConcurrentServiceCfg(jndiName, ALL_STANTARD_CONTEXT_TYPES, true, null);
+        Set<ConcurrencyContextType> provided = Set.of(Classloader, JNDI, Security, WorkArea);
+        ConcurrentServiceCfg config = new ConcurrentServiceCfg(jndiName, provided, null);
         return contextServiceMap.computeIfAbsent(jndiName, n -> createContextService(jndiName, config, true));
     }
 
@@ -259,8 +257,8 @@ public class ConcurrentRuntime {
 
     public synchronized ContextServiceImpl createContextService(ContextServiceCfg config) {
         LOG.log(Level.FINE, "createContextService(config={0})", config);
-        boolean keepTxUnchanged = config.getUnchangedContexts().contains(WorkArea.name());
-        boolean clearTx = config.getClearedContexts().contains(WorkArea.name());
+        boolean keepTxUnchanged = config.getUnchangedContexts().contains(WorkArea);
+        boolean clearTx = config.getClearedContexts().contains(WorkArea);
         TransactionSetupProvider txSetupProvider = createTxSetupProvider(keepTxUnchanged, clearTx);
         ContextSetupProvider ctxSetupProvider = new ContextSetupProviderImpl(config.getPropagatedContexts(),
             config.getClearedContexts(), config.getUnchangedContexts());
@@ -276,6 +274,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Shut down the runtime service.
+     *
+     * @param jndiName
+     */
     public void shutdownManagedExecutorService(String jndiName) {
         ManagedExecutorServiceImpl mes = removeManagedExecutorService(jndiName);
         if (mes != null) {
@@ -284,6 +287,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Shut down the runtime service.
+     *
+     * @param jndiName
+     */
     public void shutdownScheduledManagedExecutorService(String jndiName) {
         ManagedScheduledExecutorServiceImpl mses = removeManagedScheduledExecutorService(jndiName);
         if (mses != null) {
@@ -292,6 +300,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Stop the runtime thread factory.
+     *
+     * @param jndiName
+     */
     public void shutdownManagedThreadFactory(String jndiName) {
         ManagedThreadFactoryImpl mtf = removeManagedThreadFactory(jndiName);
         if (mtf != null) {
@@ -300,6 +313,11 @@ public class ConcurrentRuntime {
     }
 
 
+    /**
+     * Remove the context service from the internal map.
+     *
+     * @param jndiName
+     */
     public synchronized void shutdownContextService(String jndiName) {
         contextServiceMap.remove(jndiName);
     }
@@ -310,12 +328,12 @@ public class ConcurrentRuntime {
         LOG.log(Level.FINE, "createContextService(contextServiceJndiName={0}, config={1}, cleanupTransaction={2})",
             new Object[] {contextServiceJndiName, config, cleanupTransaction});
         // if the context service is not known, create it
-        Set<String> propagated = parseContextInfo(config.getContextInfo(), config.isContextInfoEnabled());
-        final Set<String> cleared;
+        final Set<ConcurrencyContextType> propagated = config.getContextInfo();
+        final Set<ConcurrencyContextType> cleared;
         final boolean clearTx;
-        if (cleanupTransaction && !propagated.contains(WorkArea.name())) {
+        if (cleanupTransaction && !propagated.contains(WorkArea)) {
             // pass the cleanup transaction in list of cleared handlers
-            cleared = Set.of(WorkArea.name());
+            cleared = Set.of(WorkArea);
             clearTx = true;
         } else {
             cleared = emptySet();
@@ -336,7 +354,7 @@ public class ConcurrentRuntime {
                 toManagedThreadFactoryName(name),
                 null,
                 Thread.NORM_PRIORITY);
-        ConcurrentServiceCfg config = new ConcurrentServiceCfg(toContextServiceName(name), Classloader.name(), true, null);
+        ConcurrentServiceCfg config = new ConcurrentServiceCfg(toContextServiceName(name), Classloader, null);
         ContextServiceImpl contextService = getContextService(config, false);
         internalScheduler = new ManagedScheduledExecutorServiceImpl(name,
                 managedThreadFactory,

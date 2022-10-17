@@ -16,39 +16,27 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
-import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.factory.ManagedExecutorDefinitionData;
 
 import jakarta.enterprise.concurrent.ManagedExecutorDefinition;
 import jakarta.inject.Inject;
 
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.MetadataSource.ANNOTATION;
 
 
 @Service
 @AnnotationHandlerFor(ManagedExecutorDefinition.List.class)
-public class ManagedExecutorDefinitionListHandler extends ContextualResourceHandler {
+public class ManagedExecutorDefinitionListHandler extends AbstractResourceHandler {
 
     @Inject
     private ManagedExecutorDefinitionConverter converter;
-
-    @Override
-    protected Class<ManagedExecutorDefinitionDescriptor> getAcceptableDescriptorType() {
-        return ManagedExecutorDefinitionDescriptor.class;
-    }
 
 
     @Override
@@ -57,30 +45,8 @@ public class ManagedExecutorDefinitionListHandler extends ContextualResourceHand
         ManagedExecutorDefinition.List annotation = (ManagedExecutorDefinition.List) ainfo.getAnnotation();
         Set<ManagedExecutorDefinitionData> set = converter.convert(annotation.value());
         for (ManagedExecutorDefinitionData data : set) {
-            updateDescriptors(data, rcContexts);
+            converter.updateDescriptors(data, rcContexts);
         }
         return getDefaultProcessedResult();
-    }
-
-    // FIXME: copy and paste with ManagedExecutorDefinitionHandler
-    private void updateDescriptors(ManagedExecutorDefinitionData data, ResourceContainerContext[] contexts) {
-        for (ResourceContainerContext context : contexts) {
-            Set<ResourceDescriptor> descriptors = context.getResourceDescriptors(JavaEEResourceType.MEDD);
-            List<ManagedExecutorDefinitionData> contextData = getExisting(data, descriptors);
-            if (contextData.isEmpty()) {
-                descriptors.add(new ManagedExecutorDefinitionDescriptor(data, ANNOTATION));
-            } else {
-                for (ManagedExecutorDefinitionData existingData : contextData) {
-                    converter.merge(data, existingData);
-                }
-            }
-        }
-    }
-
-
-    private List<ManagedExecutorDefinitionData> getExisting(ManagedExecutorDefinitionData data,
-        Set<ResourceDescriptor> descriptors) {
-        return descriptors.stream().filter(d -> isSameDefinition(data, d))
-            .map(d -> getAcceptableDescriptorType().cast(d).getData()).collect(Collectors.toList());
     }
 }

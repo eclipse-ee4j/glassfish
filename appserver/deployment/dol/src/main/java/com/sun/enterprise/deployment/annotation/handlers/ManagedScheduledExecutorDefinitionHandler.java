@@ -16,67 +16,32 @@
 
 package com.sun.enterprise.deployment.annotation.handlers;
 
-import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
-import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 
 import jakarta.enterprise.concurrent.ManagedScheduledExecutorDefinition;
 import jakarta.inject.Inject;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.enterprise.deployment.MetadataSource.ANNOTATION;
 
 
 @Service
 @AnnotationHandlerFor(ManagedScheduledExecutorDefinition.class)
-public class ManagedScheduledExecutorDefinitionHandler extends ContextualResourceHandler {
+public class ManagedScheduledExecutorDefinitionHandler extends AbstractResourceHandler {
 
     @Inject
     private ManagedScheduledExecutorDefinitionConverter converter;
 
-    @Override
-    protected Class<ManagedScheduledExecutorDefinitionDescriptor> getAcceptableDescriptorType() {
-        return ManagedScheduledExecutorDefinitionDescriptor.class;
-    }
 
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
         throws AnnotationProcessorException {
         ManagedScheduledExecutorDefinition annotation = (ManagedScheduledExecutorDefinition) ainfo.getAnnotation();
         ManagedScheduledExecutorDefinitionData data = converter.convert(annotation);
-        updateDescriptors(data, rcContexts);
+        converter.updateDescriptors(data, rcContexts);
         return getDefaultProcessedResult();
-    }
-
-
-    private void updateDescriptors(ManagedScheduledExecutorDefinitionData data, ResourceContainerContext[] contexts) {
-        for (ResourceContainerContext context : contexts) {
-            Set<ResourceDescriptor> descriptors = context.getResourceDescriptors(JavaEEResourceType.MSEDD);
-            List<ManagedScheduledExecutorDefinitionData> contextData = getExisting(data, descriptors);
-            if (contextData.isEmpty()) {
-                descriptors.add(new ManagedScheduledExecutorDefinitionDescriptor(data, ANNOTATION));
-            } else {
-                for (ManagedScheduledExecutorDefinitionData existingData : contextData) {
-                    converter.merge(data, existingData);
-                }
-            }
-        }
-    }
-
-
-    private List<ManagedScheduledExecutorDefinitionData> getExisting(ManagedScheduledExecutorDefinitionData data,
-        Set<ResourceDescriptor> descriptors) {
-        return descriptors.stream().filter(d -> isSameDefinition(data, d))
-            .map(d -> getAcceptableDescriptorType().cast(d).getData()).collect(Collectors.toList());
     }
 }

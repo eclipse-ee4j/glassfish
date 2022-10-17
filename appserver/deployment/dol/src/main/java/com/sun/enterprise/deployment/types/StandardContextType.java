@@ -14,19 +14,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment.annotation.handlers;
+package com.sun.enterprise.deployment.types;
 
 import jakarta.enterprise.concurrent.ContextServiceDefinition;
 
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
+ * Enum for supported standard context types.
+ *
  * @author David Matejcek
+ * @see ContextServiceDefinition
  */
-public enum StandardContextType {
+public enum StandardContextType implements ConcurrencyContextType {
     /** Same as {@link ContextServiceDefinition#ALL_REMAINING}*/
     Remaining,
     /** Subtype of {@link ContextServiceDefinition#APPLICATION} */
@@ -39,9 +41,22 @@ public enum StandardContextType {
     WorkArea,
     ;
 
-    public static final String ALL_STANTARD_CONTEXT_TYPES = Stream.of(StandardContextType.values()).map(Object::toString)
-        .collect(Collectors.joining(", "));
+    /**
+     * @return all enum names.
+     */
+    public static Set<String> names() {
+        return Arrays.stream(StandardContextType.values()).map(Enum::name).collect(Collectors.toSet());
+    }
 
+
+    /**
+     * Case insensitive parsing of enum names.<br>
+     * Accepts also obsoleted NAMING and CLASSLOADING values as they can be simply converted
+     * to known types.
+     *
+     * @param name
+     * @return parsed {@link StandardContextType} or null.
+     */
     public static StandardContextType parse(String name) {
         for (StandardContextType ctxType : StandardContextType.values()) {
             if (ctxType.name().equalsIgnoreCase(name)) {
@@ -56,22 +71,5 @@ public enum StandardContextType {
             return Classloader;
         }
         return null;
-    }
-
-
-    public static Set<String> standardize(Set<String> contexts) {
-        Set<String> result = new HashSet<>();
-        for (String input : contexts) {
-            if (input.equalsIgnoreCase(ContextServiceDefinition.TRANSACTION)) {
-                result.add(WorkArea.name());
-            }
-            if (input.equals(ContextServiceDefinition.APPLICATION)) {
-                result.add(Classloader.name());
-                result.add(JNDI.name());
-            }
-            StandardContextType contextType = parse(input);
-            result.add(contextType == null ? input : contextType.name());
-        }
-        return result;
     }
 }

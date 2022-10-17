@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +18,35 @@
 package org.glassfish.jms.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.connectors.config.AdminObjectResource;
@@ -31,14 +54,6 @@ import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Properties;
 
 /**
  * Create JMS Resource Command
@@ -142,7 +157,7 @@ public class CreateJMSResource implements AdminCommand {
         jndiNameForConnectionPool = jndiName + JNDINAME_APPENDER;
 
         if (force) {
-            Resource res = null;
+            final Resource res;
             if (resourceType.equals(TOPIC) || resourceType.equals(QUEUE)) {
                 res = ConnectorsUtil.getResourceByName(domain.getResources(), AdminObjectResource.class, jndiName);
             } else {
@@ -185,7 +200,7 @@ public class CreateJMSResource implements AdminCommand {
         ActionReport subReport = report.addSubActionsReport();
 
         if (resourceType.equals(TOPIC_CF) || resourceType.equals(QUEUE_CF) || resourceType.equals(UNIFIED_CF)) {
-            ConnectorConnectionPool cpool = (ConnectorConnectionPool) ConnectorsUtil
+            ConnectorConnectionPool cpool = ConnectorsUtil
                 .getResourceByName(domain.getResources(), ConnectorConnectionPool.class, jndiNameForConnectionPool);
 
             boolean createdPool = false;
@@ -289,9 +304,9 @@ public class CreateJMSResource implements AdminCommand {
         return false;
     }
 
-    Hashtable mapping = null;
+    Hashtable<String, String> mapping = null;
     private void populateJmsRAMap() {
-        mapping = new Hashtable();
+        mapping = new Hashtable<>();
         mapping.put("imqDestinationName","Name");
         mapping.put("imqDestinationDescription","Description");
         mapping.put("imqConnectionURL","ConnectionURL");
@@ -303,7 +318,7 @@ public class CreateJMSResource implements AdminCommand {
     }
 
     public String getMappedName(String key){
-        return (String) mapping.get(key);
+        return mapping.get(key);
     }
 
     private ParameterMap populateConnectionPoolParameters(){

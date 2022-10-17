@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,25 +18,33 @@
 package org.glassfish.jdbc.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.I18n;
-import org.glassfish.jdbc.config.JdbcConnectionPool;
-import org.glassfish.jdbc.util.JdbcResourcesUtil;
-import org.glassfish.resources.admin.cli.ResourceManager;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.resource.ResourceException;
+
 import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
+import org.glassfish.api.I18n;
+import org.glassfish.jdbc.config.JdbcConnectionPool;
+import org.glassfish.jdbc.util.JdbcResourcesUtil;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceManager;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
 
 import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 
@@ -93,10 +102,12 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     public JDBCConnectionPoolManager() {
     }
 
+    @Override
     public String getResourceType() {
         return ServerTags.JDBC_CONNECTION_POOL;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
         setAttributes(attributes);
@@ -109,6 +120,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         try {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
 
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     return createResource(param, properties);
                 }
@@ -164,8 +176,9 @@ public class JDBCConnectionPoolManager implements ResourceManager {
             TransactionFailure {
         JdbcConnectionPool newResource = param.createChild(JdbcConnectionPool.class);
         newResource.setWrapJdbcObjects(wrapJDBCObjects);
-        if (validationtable != null)
+        if (validationtable != null) {
             newResource.setValidationTableName(validationtable);
+        }
         newResource.setValidateAtmostOncePeriodInSeconds(validateAtmostOncePeriod);
         if (isolationlevel != null) {
             newResource.setTransactionIsolationLevel(isolationlevel);
@@ -326,9 +339,9 @@ public class JDBCConnectionPoolManager implements ResourceManager {
 
             // delete jdbc connection pool
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    JdbcConnectionPool cp = (JdbcConnectionPool)
-                            ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName);
+                    JdbcConnectionPool cp = ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName);
                     return param.getResources().remove(cp);
                 }
             }, resources) == null) {
@@ -359,6 +372,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
                                            final boolean cascade, final String poolName) throws TransactionFailure {
         if (cascade) {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     Collection<BindableResource> referringResources = JdbcResourcesUtil.getResourcesOfPool(param, poolName);
                     for (BindableResource referringResource : referringResources) {
@@ -398,6 +412,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         }
     }
 
+    @Override
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
             throws Exception {
         setAttributes(attributes);

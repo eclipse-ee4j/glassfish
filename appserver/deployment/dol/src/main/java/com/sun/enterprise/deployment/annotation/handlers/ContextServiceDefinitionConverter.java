@@ -57,7 +57,6 @@ class ContextServiceDefinitionConverter {
     }
 
 
-    // FIXME: Use StandardContextType
     private Set<String> collectUnusedContexts(ContextServiceDefinition definition) {
         Set<String> usedContexts = new HashSet<>();
         for (String context : definition.propagated()) {

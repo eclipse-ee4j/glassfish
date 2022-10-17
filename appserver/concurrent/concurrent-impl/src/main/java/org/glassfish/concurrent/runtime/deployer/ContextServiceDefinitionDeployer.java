@@ -22,12 +22,11 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.ResourceDescriptor;
 import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitionData;
-import com.sun.enterprise.deployment.annotation.handlers.StandardContextType;
+import com.sun.enterprise.deployment.types.StandardContextType;
 
 import jakarta.enterprise.concurrent.ContextService;
 import jakarta.inject.Inject;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,7 +34,6 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.LogFacade;
-import org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
@@ -46,7 +44,6 @@ import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
-import static com.sun.enterprise.deployment.annotation.handlers.StandardContextType.standardize;
 
 /**
  * @author David Matejcek
@@ -138,12 +135,6 @@ public class ContextServiceDefinitionDeployer implements ResourceDeployer {
 
 
     @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return handles(resource) && !postApplicationDeployment;
-    }
-
-
-    @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
         Resources allResources) throws ResourceConflictException {
     }
@@ -165,8 +156,6 @@ public class ContextServiceDefinitionDeployer implements ResourceDeployer {
         if (data.getPropagated() == null || data.getPropagated().isEmpty()) {
             data.addPropagated(StandardContextType.Remaining.name());
         }
-        ContextServiceCfg config = new ContextServiceCfg(new ConcurrentServiceCfg(data.getName()),
-            standardize(data.getPropagated()), standardize(data.getCleared()), standardize(data.getUnchanged()));
-        return runtime.createContextService(config);
+        return runtime.createContextService(new ContextServiceCfg(data));
     }
 }

@@ -26,7 +26,6 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
@@ -68,7 +67,7 @@ import org.jvnet.hk2.config.types.Property;
 @Service
 @Singleton
 @ResourceDeployerInfo(ExternalJndiResource.class)
-public class ExternalJndiResourceDeployer implements ResourceDeployer {
+public class ExternalJndiResourceDeployer implements ResourceDeployer<ExternalJndiResource> {
 
     private static final Logger LOG = LogDomains.getLogger(ExternalJndiResourceDeployer.class, LogDomains.RSR_LOGGER);
 
@@ -78,19 +77,17 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     private BindableResourcesHelper bindableResourcesHelper;
 
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName)
+    public synchronized void deployResource(ExternalJndiResource resource, String applicationName, String moduleName)
         throws Exception {
-        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(jndiRes.getJndiName(), applicationName, moduleName);
-        createExternalJndiResource(jndiRes, resourceInfo);
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        createExternalJndiResource(resource, resourceInfo);
     }
 
 
     @Override
-    public synchronized void deployResource(Object resource) throws Exception {
-        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(jndiRes);
-        createExternalJndiResource(jndiRes, resourceInfo);
+    public synchronized void deployResource(ExternalJndiResource resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
+        createExternalJndiResource(resource, resourceInfo);
     }
 
 
@@ -101,18 +98,16 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
 
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(jndiRes.getJndiName(), applicationName, moduleName);
-        deleteResource(jndiRes, resourceInfo);
+    public void undeployResource(ExternalJndiResource resource, String applicationName, String moduleName) throws Exception {
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        deleteResource(resource, resourceInfo);
     }
 
 
     @Override
-    public synchronized void undeployResource(Object resource) throws Exception {
-        ExternalJndiResource jndiRes = (ExternalJndiResource) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(jndiRes);
-        deleteResource(jndiRes, resourceInfo);
+    public synchronized void undeployResource(ExternalJndiResource resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
+        deleteResource(resource, resourceInfo);
     }
 
 
@@ -122,34 +117,18 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
     }
 
     @Override
-    public synchronized void redeployResource(Object resource) throws Exception {
-        undeployResource(resource);
-        deployResource(resource);
-    }
-
-    @Override
     public boolean handles(Object resource) {
         return resource instanceof ExternalJndiResource;
     }
 
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
 
     @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-
-    @Override
-    public synchronized void enableResource(Object resource) throws Exception {
+    public synchronized void enableResource(ExternalJndiResource resource) throws Exception {
         deployResource(resource);
     }
 
     @Override
-    public synchronized void disableResource(Object resource) throws Exception {
+    public synchronized void disableResource(ExternalJndiResource resource) throws Exception {
         undeployResource(resource);
     }
 
@@ -303,10 +282,6 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer {
         return jr;
     }
 
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return handles(resource) && !postApplicationDeployment;
-    }
 
     @Override
     public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,

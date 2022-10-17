@@ -16,36 +16,30 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
 
 import jakarta.inject.Inject;
-
-import java.util.Collection;
+import jakarta.inject.Singleton;
 
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
 import org.glassfish.enterprise.concurrent.ManagedScheduledExecutorServiceImpl;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 
 /**
  * @author David Matejcek
  */
 @Service
+@Singleton
 @ResourceDeployerInfo(ManagedScheduledExecutorDefinitionDescriptor.class)
-public class ConcurrencyManagedScheduledExecutorDeployer implements ResourceDeployer {
+public class ConcurrencyManagedScheduledExecutorDeployer
+    extends ConcurrencyDeployer<ManagedScheduledExecutorDefinitionDescriptor> {
 
     @Inject
     private InvocationManager invocationManager;
@@ -53,48 +47,6 @@ public class ConcurrencyManagedScheduledExecutorDeployer implements ResourceDepl
     private ResourceNamingService resourceNamingService;
     @Inject
     private ConcurrentRuntime runtime;
-
-    @Override
-    public void deployResource(Object resource) throws Exception {
-        String applicationName = invocationManager.getCurrentInvocation().getAppName();
-        String moduleName = invocationManager.getCurrentInvocation().getModuleName();
-        deployResource(resource, applicationName, moduleName);
-    }
-
-
-    @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedScheduledExecutorDefinitionDescriptor descriptor = (ManagedScheduledExecutorDefinitionDescriptor) resource;
-        ManagedScheduledExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
-        String resourceName = toResourceName(descriptor);
-        ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        resourceNamingService.publishObject(resourceInfo, resourceName, service, true);
-    }
-
-
-    @Override
-    public void undeployResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-    }
-
-
-    @Override
-    public void redeployResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public void disableResource(Object resource) throws Exception {
-    }
 
 
     @Override
@@ -104,26 +56,30 @@ public class ConcurrencyManagedScheduledExecutorDeployer implements ResourceDepl
 
 
     @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
+    public void deployResource(ManagedScheduledExecutorDefinitionDescriptor resource) throws Exception {
+        String applicationName = invocationManager.getCurrentInvocation().getAppName();
+        String moduleName = invocationManager.getCurrentInvocation().getModuleName();
+        deployResource(resource, applicationName, moduleName);
     }
 
 
     @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
+    public void deployResource(ManagedScheduledExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
+        ManagedScheduledExecutorDefinitionDescriptor descriptor = resource;
+        ManagedScheduledExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
+        String resourceName = toResourceName(descriptor);
+        ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
+        resourceNamingService.publishObject(resourceInfo, resourceName, service, true);
     }
 
 
     @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return false;
+    public void undeployResource(ManagedScheduledExecutorDefinitionDescriptor resource) throws Exception {
     }
 
 
     @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
-        Resources allResources) throws ResourceConflictException {
+    public void undeployResource(ManagedScheduledExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
     }
 
 
@@ -133,10 +89,5 @@ public class ConcurrencyManagedScheduledExecutorDeployer implements ResourceDepl
         ManagedScheduledExecutorServiceCfg mesConfig = new ManagedScheduledExecutorServiceCfg(config);
         ContextServiceImpl contextService = runtime.findOrCreateContextService(descriptor, applicationName, moduleName);
         return runtime.createManagedScheduledExecutorService(mesConfig, contextService);
-    }
-
-
-    private String toResourceName(ManagedScheduledExecutorDefinitionDescriptor descriptor) {
-        return deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(), descriptor.getResourceType());
     }
 }

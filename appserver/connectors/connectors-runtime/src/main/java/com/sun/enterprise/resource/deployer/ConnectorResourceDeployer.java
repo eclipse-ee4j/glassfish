@@ -17,16 +17,6 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.connectors.config.ConnectorResource;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resources;
@@ -37,43 +27,49 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
+
 /**
  * @author Srikanth P
  */
 @Service
-@ResourceDeployerInfo(ConnectorResource.class)
 @Singleton
-public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer {
+@ResourceDeployerInfo(ConnectorResource.class)
+public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer<ConnectorResource> {
 
     @Inject
     private ConnectorRuntime runtime;
     private static Logger _logger = LogDomains.getLogger(ConnectorResourceDeployer.class, LogDomains.RSR_LOGGER);
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public synchronized void deployResource(ConnectorResource resource, String applicationName, String moduleName) throws Exception {
         //deployResource is not synchronized as there is only one caller
         //ResourceProxy which is synchronized
-        ConnectorResource domainResource = (ConnectorResource) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(domainResource.getJndiName(), applicationName, moduleName);
-        PoolInfo poolInfo = new PoolInfo(domainResource.getPoolName(), applicationName, moduleName);
-        createConnectorResource(domainResource, resourceInfo, poolInfo);
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(resource.getPoolName(), applicationName, moduleName);
+        createConnectorResource(resource, resourceInfo, poolInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public void deployResource(ConnectorResource resource) throws Exception {
         //deployResource is not synchronized as there is only one caller
         //ResourceProxy which is synchronized
-        ConnectorResource domainResource = (ConnectorResource) resource;
-        String poolName = domainResource.getPoolName();
-        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(domainResource);
+        String poolName = resource.getPoolName();
+        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
         PoolInfo poolInfo = new PoolInfo(poolName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-        createConnectorResource(domainResource, resourceInfo, poolInfo);
+        createConnectorResource(resource, resourceInfo, poolInfo);
     }
 
     private void createConnectorResource(ConnectorResource connectorResource, ResourceInfo resourceInfo,
@@ -98,25 +94,19 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ConnectorResource domainResource = (ConnectorResource) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(domainResource.getJndiName(), applicationName, moduleName);
-        deleteConnectorResource(domainResource, resourceInfo);
+    public void undeployResource(ConnectorResource resource, String applicationName, String moduleName) throws Exception {
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        deleteConnectorResource(resource, resourceInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void undeployResource(Object resource)
+    public synchronized void undeployResource(ConnectorResource resource)
             throws Exception {
-        ConnectorResource domainResource = (ConnectorResource) resource;
-        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(domainResource);
-        deleteConnectorResource(domainResource, resourceInfo);
+        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
+        deleteConnectorResource(resource, resourceInfo);
     }
 
     private void deleteConnectorResource(ConnectorResource connectorResource, ResourceInfo resourceInfo)
@@ -137,55 +127,24 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
         checkAndDeletePool(connectorResource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void redeployResource(Object resource) throws Exception {
-        undeployResource(resource);
-        deployResource(resource);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public synchronized void disableResource(Object resource)
-            throws Exception {
+    public synchronized void disableResource(ConnectorResource resource) throws Exception {
         undeployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void enableResource(Object resource) throws Exception {
+    public synchronized void enableResource(ConnectorResource resource) throws Exception {
         deployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean handles(Object resource) {
         return resource instanceof ConnectorResource;
     }
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
 
     /**
      * Checks if no more resource-refs to resources exists for the
@@ -211,8 +170,7 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
                                 "resource-refs to the pool in this server instance");
                     }
 
-                    ConnectorConnectionPool ccp = (ConnectorConnectionPool)
-                            ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, poolName);
+                    ConnectorConnectionPool ccp = getResourceByName(resources, ConnectorConnectionPool.class, poolName);
                     //Delete/Undeploy Pool
                     runtime.getResourceDeployer(ccp).undeployResource(ccp);
                 }

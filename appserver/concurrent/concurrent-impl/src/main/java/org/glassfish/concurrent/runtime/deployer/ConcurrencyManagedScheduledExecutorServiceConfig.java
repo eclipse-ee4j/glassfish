@@ -26,6 +26,8 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import static com.sun.enterprise.universal.collections.JavaLangUtils.nonNull;
+
 
 /**
  * @author David Matejcek
@@ -225,9 +227,7 @@ public class ConcurrencyManagedScheduledExecutorServiceConfig implements Managed
 
     @Override
     public void setHungAfterSeconds(String value) throws PropertyVetoException {
-        if (value != null) {
-            descriptor.setHungTaskThreshold(Long.valueOf(value));
-        }
+        descriptor.setHungTaskThreshold(nonNull(value, Long::valueOf, null));
     }
 
 

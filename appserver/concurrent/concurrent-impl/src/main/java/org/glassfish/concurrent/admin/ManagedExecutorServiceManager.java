@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,19 +19,21 @@ package org.glassfish.concurrent.admin;
 
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
+
+import java.beans.PropertyVetoException;
+import java.util.Map;
+import java.util.Properties;
+
 import org.glassfish.api.I18n;
+import org.glassfish.concurrent.config.ManagedExecutorService;
+import org.glassfish.concurrent.config.ManagedExecutorServiceBase;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfiguredBy;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.glassfish.concurrent.config.ManagedExecutorServiceBase;
-import org.glassfish.concurrent.config.ManagedExecutorService;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
-
-import java.util.HashMap;
-import java.util.Properties;
-import java.beans.PropertyVetoException;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.MAXIMUM_POOL_SIZE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.TASK_QUEUE_CAPACITY;
 
 /**
  *
@@ -46,29 +49,30 @@ public class ManagedExecutorServiceManager extends ManagedExecutorServiceBaseMan
     private String taskQueueCapacity = ""+Integer.MAX_VALUE;
 
     @Override
-    protected void setAttributes(HashMap attributes, String target) {
+    protected void setAttributes(Map<String, String> attributes, String target) {
         super.setAttributes(attributes, target);
-        maximumPoolSize = (String) attributes.get(MAXIMUM_POOL_SIZE);
-        taskQueueCapacity = (String) attributes.get(TASK_QUEUE_CAPACITY);
+        maximumPoolSize = attributes.get(MAXIMUM_POOL_SIZE);
+        taskQueueCapacity = attributes.get(TASK_QUEUE_CAPACITY);
     }
 
     @Override
     protected ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target){
         if (Integer.parseInt(corePoolSize) == 0 &&
             Integer.parseInt(maximumPoolSize) == 0) {
-            String msg = localStrings.getLocalString("coresize.maxsize.both.zero", "Options corepoolsize and maximumpoolsize cannot both have value 0.");
+            String msg = I18N.getLocalString("coresize.maxsize.both.zero", "Options corepoolsize and maximumpoolsize cannot both have value 0.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         if (Integer.parseInt(corePoolSize) >
             Integer.parseInt(maximumPoolSize)) {
-            String msg = localStrings.getLocalString("coresize.biggerthan.maxsize", "Option corepoolsize cannot have a bigger value than option maximumpoolsize.");
+            String msg = I18N.getLocalString("coresize.biggerthan.maxsize", "Option corepoolsize cannot have a bigger value than option maximumpoolsize.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         return super.isValid(resources, validateResourceRef, target);
     }
 
+    @Override
     protected ManagedExecutorServiceBase createConfigBean(Resources param, Properties properties) throws PropertyVetoException, TransactionFailure {
         ManagedExecutorService managedExecutorService = param.createChild(ManagedExecutorService.class);
         setAttributesOnConfigBean(managedExecutorService, properties);
@@ -77,6 +81,7 @@ public class ManagedExecutorServiceManager extends ManagedExecutorServiceBaseMan
         return managedExecutorService;
     }
 
+    @Override
     public String getResourceType () {
         return ServerTags.MANAGED_EXECUTOR_SERVICE;
     }

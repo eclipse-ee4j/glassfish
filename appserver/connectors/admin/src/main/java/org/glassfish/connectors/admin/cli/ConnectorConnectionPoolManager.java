@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,30 +20,58 @@ package org.glassfish.connectors.admin.cli;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.I18n;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceManager;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
+
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER;
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import org.glassfish.api.I18n;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceManager;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ASSOCIATE_WITH_THREAD;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_CREATION_RETRY_ATTEMPTS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_CREATION_RETRY_INTERVAL_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_LEAK_RECLAIM;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_LEAK_TIMEOUT_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTOR_CONNECTION_POOL_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONN_DEF_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONN_TRANSACTION_SUPPORT;
+import static org.glassfish.resources.admin.cli.ResourceConstants.FAIL_ALL_CONNECTIONS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.IDLE_TIME_OUT_IN_SECONDS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.IS_CONNECTION_VALIDATION_REQUIRED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.LAZY_CONNECTION_ASSOCIATION;
+import static org.glassfish.resources.admin.cli.ResourceConstants.LAZY_CONNECTION_ENLISTMENT;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MATCH_CONNECTIONS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAX_CONNECTION_USAGE_COUNT;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAX_POOL_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAX_WAIT_TIME_IN_MILLIS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.PING;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOLING;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_SIZE_QUANTITY;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.STEADY_POOL_SIZE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.VALIDATE_ATMOST_ONCE_PERIOD_IN_SECONDS;
 
 
 /**
@@ -68,8 +97,8 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
     final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(ConnectorConnectionPoolManager.class);
 
-    private String raname = null;
-    private String connectiondefinition = null;
+    private String raname;
+    private String connectiondefinition;
     private String steadypoolsize = "8";
     private String maxpoolsize = "32";
     private String maxwait = "60000";
@@ -89,18 +118,20 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
     private String maxConnectionUsageCount = "0";
     private String ping = Boolean.FALSE.toString();
     private String pooling = Boolean.TRUE.toString();
-    private String transactionSupport = null;
+    private String transactionSupport;
 
-    private String description = null;
-    private String poolname = null;
+    private String description;
+    private String poolname;
 
     public ConnectorConnectionPoolManager() {
     }
 
+    @Override
     public String getResourceType() {
         return ServerTags.CONNECTOR_CONNECTION_POOL;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
         setParams(attributes);
@@ -111,6 +142,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         }
         try {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     return createResource(param, properties);
                 }
@@ -333,26 +365,27 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
     private boolean isValidConnectionDefinition(String connectionDef,String raName)
             throws ConnectorRuntimeException {
         String[] names = connectorRuntime.getConnectionDefinitionNames(raName);
-        for(int i = 0; i < names.length; i++) {
-            if(names[i].equals(connectionDef)) {
+        for (String name : names) {
+            if(name.equals(connectionDef)) {
                 return true;
             }
         }
         return false;
     }
+
+    @Override
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-            throws Exception{
+        throws Exception {
         setParams(attributes);
-        ResourceStatus status = null;
-        if(!validate){
-            status = new ResourceStatus(ResourceStatus.SUCCESS,"");
-        }else{
+        final ResourceStatus status;
+        if (validate) {
             status = isValid(resources, false);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
-        if(status.getStatus() == ResourceStatus.SUCCESS){
+        if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        }else{
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage());
     }
 }

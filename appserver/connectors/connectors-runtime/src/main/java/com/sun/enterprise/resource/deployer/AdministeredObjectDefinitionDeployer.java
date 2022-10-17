@@ -17,9 +17,16 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -36,21 +43,14 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 /**
  * @author Dapeng Hu
  */
 @Service
 @ResourceDeployerInfo(AdministeredObjectDefinitionDescriptor.class)
-public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
+public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<AdministeredObjectDefinitionDescriptor> {
 
     @Inject
     private Provider<ResourceManagerFactory> resourceManagerFactoryProvider;
@@ -59,42 +59,26 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     final static String PROPERTY_PREFIX = "org.glassfish.admin-object.";
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(AdministeredObjectDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public void deployResource(AdministeredObjectDefinitionDescriptor resource) throws Exception {
 
-        final AdministeredObjectDefinitionDescriptor desc = (AdministeredObjectDefinitionDescriptor) resource;
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
+        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
 
         if(_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "AdministeredObjectDefinitionDeployer.deployResource() : resource-name ["+resourceName+"]");
         }
 
         //deploy resource
-        MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(desc, resourceName);
+        MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(resource, resourceName);
         getDeployer(adminObjectResource).deployResource(adminObjectResource);
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource){
-        if(handles(resource)){
-            if(!postApplicationDeployment){
-                return true;
-            }
-        }
-        return false;
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void validatePreservedResource(com.sun.enterprise.config.serverbeans.Application oldApp,
                                           com.sun.enterprise.config.serverbeans.Application newApp,
@@ -114,16 +98,16 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void undeployResource(AdministeredObjectDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //TODO ASR
     }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
+    public void undeployResource(AdministeredObjectDefinitionDescriptor resource) throws Exception {
 
-        final AdministeredObjectDefinitionDescriptor desc = (AdministeredObjectDefinitionDescriptor) resource;
+        final AdministeredObjectDefinitionDescriptor desc = resource;
 
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
+        String resourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
 
         if(_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "AdministeredObjectDefinitionDeployer.undeployResource() : resource-name ["+resourceName+"]");
@@ -136,40 +120,18 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        throw new UnsupportedOperationException("redeploy() not supported for administered-object-definition type");
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(AdministeredObjectDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for administered-object-definition type");
     }
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(AdministeredObjectDefinitionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for administered-object-definition type");
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof AdministeredObjectDefinitionDescriptor;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    @SuppressWarnings("rawtypes")
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
     }
 
     abstract class FakeConfigBean implements ConfigBeanProxy {
@@ -243,8 +205,8 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
 
     class MyAdministeredObjectResource extends FakeConfigBean implements AdminObjectResource {
 
-        private AdministeredObjectDefinitionDescriptor desc;
-        private String name;
+        private final AdministeredObjectDefinitionDescriptor desc;
+        private final String name;
 
         public MyAdministeredObjectResource(AdministeredObjectDefinitionDescriptor desc, String name) {
             this.desc = desc;
@@ -356,13 +318,8 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer {
 
         @Override
         public String getPropertyValue(String name, String defaultValue) {
-            String value = null;
-            value = desc.getProperty(name);
-            if (value != null) {
-                return value;
-            } else {
-                return defaultValue;
-            }
+            String value = desc.getProperty(name);
+            return value == null ? defaultValue : value;
         }
 
         public void injectedInto(Object o) {

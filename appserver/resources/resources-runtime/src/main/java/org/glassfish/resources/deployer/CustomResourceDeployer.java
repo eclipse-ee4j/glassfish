@@ -26,7 +26,6 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +41,6 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.glassfish.resources.api.JavaEEResource;
 import org.glassfish.resources.api.ResourcePropertyImpl;
 import org.glassfish.resources.config.CustomResource;
 import org.jvnet.hk2.annotations.Service;
@@ -69,7 +67,7 @@ import org.jvnet.hk2.config.types.Property;
 @Service
 @ResourceDeployerInfo(CustomResource.class)
 @Singleton
-public class CustomResourceDeployer implements ResourceDeployer {
+public class CustomResourceDeployer implements ResourceDeployer<CustomResource> {
 
     @Inject
     private BindableResourcesHelper bindableResourcesHelper;
@@ -79,40 +77,36 @@ public class CustomResourceDeployer implements ResourceDeployer {
     private static final Logger LOG = LogDomains.getLogger(CustomResourceDeployer.class, LogDomains.RSR_LOGGER);
 
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName)
+    public synchronized void deployResource(CustomResource resource, String applicationName, String moduleName)
         throws Exception {
-        CustomResource customResource = (CustomResource) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(customResource.getJndiName(), applicationName, moduleName);
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
         deployResource(resource, resourceInfo);
     }
 
 
     @Override
-    public synchronized void deployResource(Object resource) throws Exception {
-        CustomResource customResource = (CustomResource) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(customResource);
-        deployResource(customResource, resourceInfo);
+    public synchronized void deployResource(CustomResource resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
+        deployResource(resource, resourceInfo);
     }
 
 
-    private void deployResource(Object resource, ResourceInfo resourceInfo) {
-        CustomResource customRes = (CustomResource) resource;
-        JavaEEResource j2eeResource = toCustomJavaEEResource(customRes, resourceInfo);
-        installCustomResource((org.glassfish.resources.beans.CustomResource) j2eeResource, resourceInfo);
-    }
-
-
-    @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        CustomResource customResource = (CustomResource) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(customResource.getJndiName(), applicationName, moduleName);
-        deleteResource(customResource, resourceInfo);
+    private void deployResource(CustomResource resource, ResourceInfo resourceInfo) {
+        org.glassfish.resources.beans.CustomResource j2eeResource = toCustomJavaEEResource(resource, resourceInfo);
+        installCustomResource(j2eeResource, resourceInfo);
     }
 
 
     @Override
-    public synchronized void undeployResource(Object resource) throws Exception {
-        CustomResource customResource = (CustomResource) resource;
+    public void undeployResource(CustomResource resource, String applicationName, String moduleName) throws Exception {
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        deleteResource(resource, resourceInfo);
+    }
+
+
+    @Override
+    public synchronized void undeployResource(CustomResource resource) throws Exception {
+        CustomResource customResource = resource;
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(customResource);
         deleteResource(customResource, resourceInfo);
     }
@@ -130,32 +124,13 @@ public class CustomResourceDeployer implements ResourceDeployer {
 
 
     @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-
-    @Override
-    public synchronized void redeployResource(Object resource) throws Exception {
-        undeployResource(resource);
+    public synchronized void enableResource(CustomResource resource) throws Exception {
         deployResource(resource);
     }
 
 
     @Override
-    public synchronized void enableResource(Object resource) throws Exception {
-        deployResource(resource);
-    }
-
-
-    @Override
-    public synchronized void disableResource(Object resource) throws Exception {
+    public synchronized void disableResource(CustomResource resource) throws Exception {
         undeployResource(resource);
     }
 
@@ -193,9 +168,8 @@ public class CustomResourceDeployer implements ResourceDeployer {
      * @param rbean custom-resource config bean
      * @return new instance of j2ee custom resource
      */
-    public static JavaEEResource toCustomJavaEEResource(CustomResource rbean, ResourceInfo resourceInfo) {
+    private static org.glassfish.resources.beans.CustomResource toCustomJavaEEResource(CustomResource rbean, ResourceInfo resourceInfo) {
         org.glassfish.resources.beans.CustomResource jr = new org.glassfish.resources.beans.CustomResource(resourceInfo);
-
         jr.setEnabled(Boolean.valueOf(rbean.getEnabled()));
         jr.setResType(rbean.getResType());
         jr.setFactoryClass(rbean.getFactoryClass());
@@ -207,17 +181,6 @@ public class CustomResourceDeployer implements ResourceDeployer {
             }
         }
         return jr;
-    }
-
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
     }
 
 

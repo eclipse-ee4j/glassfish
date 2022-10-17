@@ -18,8 +18,6 @@ package org.glassfish.concurrent.runtime.deployer;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 
-import jakarta.validation.constraints.Min;
-
 import java.beans.PropertyVetoException;
 import java.util.List;
 
@@ -27,6 +25,8 @@ import org.glassfish.concurrent.config.ManagedExecutorService;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
+
+import static com.sun.enterprise.universal.collections.JavaLangUtils.nonNull;
 
 
 /**
@@ -66,7 +66,7 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
 
     @Override
     public String getObjectType() {
-        return "user";
+        return null;
     }
 
 
@@ -192,8 +192,7 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
 
 
     @Override
-    public @Min(0)
-    String getThreadPriority() {
+    public String getThreadPriority() {
         return String.valueOf(Thread.NORM_PRIORITY);
     }
 
@@ -216,19 +215,13 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
 
     @Override
     public String getHungAfterSeconds() {
-        long seconds = descriptor.getHungAfterSeconds();
-        if (seconds >= 0) {
-            return Long.toString(seconds);
-        }
-        return null;
+        return nonNull(descriptor.getHungAfterSeconds(), String::valueOf, null);
     }
 
 
     @Override
     public void setHungAfterSeconds(String value) throws PropertyVetoException {
-        if (value != null) {
-            descriptor.setHungAfterSeconds(Long.valueOf(value));
-        }
+        descriptor.setHungAfterSeconds(nonNull(value, Long::valueOf, null));
     }
 
 

@@ -73,11 +73,6 @@ public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
     }
 
     @Override
-    public String getModuleID() {
-        throw new RuntimeException();
-    }
-
-    @Override
     public ArchiveType getModuleType() {
         throw new RuntimeException();
     }

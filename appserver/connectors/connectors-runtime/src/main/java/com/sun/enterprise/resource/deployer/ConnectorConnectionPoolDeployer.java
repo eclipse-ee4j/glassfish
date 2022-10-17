@@ -57,7 +57,8 @@ import jakarta.inject.Singleton;
 @Service
 @ResourceDeployerInfo(org.glassfish.connectors.config.ConnectorConnectionPool.class)
 @Singleton
-public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDeployer{
+public class ConnectorConnectionPoolDeployer
+    extends AbstractConnectorResourceDeployer<org.glassfish.connectors.config.ConnectorConnectionPool> {
 
     @Inject
     private ConnectorRuntime runtime;
@@ -68,38 +69,28 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
 
     private static final Locale locale = Locale.getDefault();
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource, String applicationName, String moduleName) throws Exception {
         //deployResource is not synchronized as there is only one caller
         //ResourceProxy which is synchronized
 
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.fine("ConnectorConnectionPoolDeployer : deployResource ");
-        }
-
-        final org.glassfish.connectors.config.ConnectorConnectionPool
-                domainCcp =
-                (org.glassfish.connectors.config.ConnectorConnectionPool) resource;
-
         // If the user is trying to modify the default pool,
         // redirect call to redeployResource
-        if (ConnectionPoolObjectsUtils.isPoolSystemPool(domainCcp)) {
+        if (ConnectionPoolObjectsUtils.isPoolSystemPool(resource)) {
             this.redeployResource(resource);
             return;
         }
 
-        PoolInfo poolInfo = new PoolInfo(domainCcp.getName(), applicationName, moduleName);
-        final ConnectorConnectionPool ccp = getConnectorConnectionPool(domainCcp, poolInfo);
-        String rarName = domainCcp.getResourceAdapterName();
-        String connDefName = domainCcp.getConnectionDefinitionName();
-        List<Property> props = domainCcp.getProperty();
-        List<SecurityMap> securityMaps = domainCcp.getSecurityMap();
+        PoolInfo poolInfo = new PoolInfo(resource.getName(), applicationName, moduleName);
+        final ConnectorConnectionPool ccp = getConnectorConnectionPool(resource, poolInfo);
+        String rarName = resource.getResourceAdapterName();
+        String connDefName = resource.getConnectionDefinitionName();
+        List<Property> props = resource.getProperty();
+        List<SecurityMap> securityMaps = resource.getSecurityMap();
 
         populateConnectorConnectionPool(ccp, connDefName, rarName, props, securityMaps);
-        final String defName = domainCcp.getConnectionDefinitionName();
+        final String defName = resource.getConnectionDefinitionName();
 
         /*if (domainCcp.isEnabled()) {
             if (UNIVERSAL_CF.equals(defName) || QUEUE_CF.equals(defName) || TOPIC_CF.equals(defName)) {
@@ -119,59 +110,40 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
 
 
         if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Calling backend to add connectorConnectionPool", domainCcp.getResourceAdapterName());
+            LOG.log(Level.FINE, "Calling backend to add connectorConnectionPool", resource.getResourceAdapterName());
         }
-        runtime.createConnectorConnectionPool(ccp, defName, domainCcp.getResourceAdapterName(),
-                domainCcp.getProperty(), domainCcp.getSecurityMap());
+        runtime.createConnectorConnectionPool(ccp, defName, resource.getResourceAdapterName(),
+                resource.getProperty(), resource.getSecurityMap());
         if(LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, "Added connectorConnectionPool in backend",
-                domainCcp.getResourceAdapterName());
+                resource.getResourceAdapterName());
         }
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void deployResource(Object resource) throws Exception {
-        org.glassfish.connectors.config.ConnectorConnectionPool ccp =
-                (org.glassfish.connectors.config.ConnectorConnectionPool)resource;
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(ccp);
+    public void deployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource) throws Exception {
+        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
         deployResource(resource, poolInfo.getApplicationName(), poolInfo.getModuleName());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception{
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.fine("ConnectorConnectionPoolDeployer : undeployResource : ");
-        }
-        final org.glassfish.connectors.config.ConnectorConnectionPool
-                domainCcp =
-                (org.glassfish.connectors.config.ConnectorConnectionPool) resource;
+    public void undeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
+        String applicationName, String moduleName) throws Exception {
         PoolInfo poolInfo = new PoolInfo(domainCcp.getName(), applicationName, moduleName);
         actualUndeployResource(domainCcp, poolInfo);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void undeployResource(Object resource)
-            throws Exception {
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.fine("ConnectorConnectionPoolDeployer : undeployResource : ");
-        }
-        final org.glassfish.connectors.config.ConnectorConnectionPool
-                domainCcp =
-                (org.glassfish.connectors.config.ConnectorConnectionPool) resource;
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(domainCcp);
 
-        actualUndeployResource(domainCcp, poolInfo);
+    @Override
+    public synchronized void undeployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource)
+        throws Exception {
+        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        actualUndeployResource(resource, poolInfo);
     }
+
 
     private void actualUndeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
                                         PoolInfo poolInfo) throws ConnectorRuntimeException {
@@ -192,22 +164,17 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         }*/
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void redeployResource(Object resource)
+    public synchronized void redeployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource)
             throws Exception {
         //Connector connection pool reconfiguration or
         //change in security maps
-        org.glassfish.connectors.config.ConnectorConnectionPool
-                domainCcp =
-                (org.glassfish.connectors.config.ConnectorConnectionPool) resource;
-        List<SecurityMap> securityMaps = domainCcp.getSecurityMap();
+        List<SecurityMap> securityMaps = resource.getSecurityMap();
 
         //Since 8.1 PE/SE/EE, only if pool has already been deployed in this
         //server-instance earlier, reconfig this pool
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(domainCcp);
+        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
         if (!runtime.isConnectorConnectionPoolDeployed(poolInfo)) {
             if(LOG.isLoggable(Level.FINE)) {
                 LOG.fine("The connector connection pool " + poolInfo
@@ -219,10 +186,10 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         }
 
 
-        String rarName = domainCcp.getResourceAdapterName();
-        String connDefName = domainCcp.getConnectionDefinitionName();
-        List<Property> props = domainCcp.getProperty();
-        ConnectorConnectionPool ccp = getConnectorConnectionPool(domainCcp, poolInfo);
+        String rarName = resource.getResourceAdapterName();
+        String connDefName = resource.getConnectionDefinitionName();
+        List<Property> props = resource.getProperty();
+        ConnectorConnectionPool ccp = getConnectorConnectionPool(resource, poolInfo);
         populateConnectorConnectionPool(ccp, connDefName, rarName, props, securityMaps);
 
         boolean poolRecreateRequired = false;
@@ -248,43 +215,21 @@ public class ConnectorConnectionPoolDeployer extends AbstractConnectorResourceDe
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
     public boolean handles(Object resource){
         return resource instanceof org.glassfish.connectors.config.ConnectorConnectionPool;
     }
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
 
-    /**
-     * @inheritDoc
-     */
     @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void disableResource(Object resource)
+    public synchronized void disableResource(org.glassfish.connectors.config.ConnectorConnectionPool resource)
             throws Exception {
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void enableResource(Object resource)
+    public synchronized void enableResource(org.glassfish.connectors.config.ConnectorConnectionPool resource)
             throws Exception {
     }
 

@@ -17,55 +17,46 @@
 
 package com.sun.enterprise.resource.pool.datastructure;
 
+import com.sun.appserv.connectors.internal.api.PoolingException;
+import com.sun.enterprise.resource.ResourceHandle;
+import com.sun.enterprise.resource.allocator.ResourceAllocator;
+import com.sun.enterprise.resource.pool.ResourceHandler;
+import com.sun.logging.LogDomains;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.appserv.connectors.internal.api.PoolingException;
-import com.sun.enterprise.resource.ResourceHandle;
-import com.sun.enterprise.resource.allocator.ResourceAllocator;
-import com.sun.enterprise.resource.pool.ResourceHandler;
-import com.sun.enterprise.resource.pool.datastructure.strategy.ResourceSelectionStrategy;
-import com.sun.logging.LogDomains;
-
 /**
  * ReadWriteLock based datastructure for pool
+ *
+ * @deprecated Incorrect locking. Note: ListDataStructure uses synchronization, better, but slow.
  * @author Jagadish Ramu
  */
+@Deprecated
 public class RWLockDataStructure implements DataStructure {
+    private static final Logger LOG = LogDomains.getLogger(RWLockDataStructure.class, LogDomains.RSR_LOGGER);
 
-    private ResourceHandler handler;
-    private ResourceSelectionStrategy strategy;
     private int maxSize;
 
+    private final ResourceHandler handler;
     private final ArrayList<ResourceHandle> resources;
-    private ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock();
-    private ReentrantReadWriteLock.ReadLock readLock = reentrantLock.readLock();
-    private ReentrantReadWriteLock.WriteLock writeLock = reentrantLock.writeLock();
 
-    protected final static Logger _logger =
-            LogDomains.getLogger(RWLockDataStructure.class,LogDomains.RSR_LOGGER);
+    private final ReentrantReadWriteLock reentrantLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock.ReadLock readLock = reentrantLock.readLock();
+    private final ReentrantReadWriteLock.WriteLock writeLock = reentrantLock.writeLock();
 
-    public RWLockDataStructure(String parameters, int maxSize,
-                                              ResourceHandler handler, String strategyClass) {
-        resources = new ArrayList<>((maxSize > 1000) ? 1000 : maxSize);
-        this.maxSize = maxSize;
+
+    public RWLockDataStructure(String parameters, int maxSize, ResourceHandler handler, String strategyClass) {
+        this.resources = new ArrayList<>(maxSize);
         this.handler = handler;
-        initializeStrategy(strategyClass);
-        if(_logger.isLoggable(Level.FINEST)) {
-            _logger.log(Level.FINEST, "pool.datastructure.rwlockds.init");
-        }
+        this.maxSize = maxSize;
+        LOG.log(Level.FINEST, "pool.datastructure.rwlockds.init");
     }
 
-    private void initializeStrategy(String strategyClass) {
-        //TODO
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int addResource(ResourceAllocator allocator, int count) throws PoolingException {
         int numResAdded = 0;
@@ -87,14 +78,13 @@ public class RWLockDataStructure implements DataStructure {
         return numResAdded;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public ResourceHandle getResource() {
         readLock.lock();
         try {
-            for (ResourceHandle h : resources) {
+            // FIXME: masked concurrent modification exception. Collection may change when iterating.
+            for (int i = 0; i < resources.size(); i++) {
+                ResourceHandle h = resources.get(i);
                 if (!h.isBusy()) {
                     readLock.unlock();
                     writeLock.lock();
@@ -123,9 +113,6 @@ public class RWLockDataStructure implements DataStructure {
         return null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void removeResource(ResourceHandle resource) {
         boolean removed = false;
@@ -140,9 +127,6 @@ public class RWLockDataStructure implements DataStructure {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void returnResource(ResourceHandle resource) {
         writeLock.lock();
@@ -153,9 +137,6 @@ public class RWLockDataStructure implements DataStructure {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getFreeListSize() {
         //inefficient implementation.
@@ -173,16 +154,13 @@ public class RWLockDataStructure implements DataStructure {
         return free;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void removeAll() {
         writeLock.lock();
         try {
-            Iterator it = resources.iterator();
+            Iterator<ResourceHandle> it = resources.iterator();
             while (it.hasNext()) {
-                handler.deleteResource((ResourceHandle) it.next());
+                handler.deleteResource(it.next());
                 it.remove();
             }
         } finally {
@@ -191,20 +169,11 @@ public class RWLockDataStructure implements DataStructure {
         resources.clear();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getResourcesSize() {
         return resources.size();
     }
 
-    /**
-     * Set maxSize based on the new max pool size set on the connection pool
-     * during a reconfiguration.
-     *
-     * @param maxSize
-     */
     @Override
     public void setMaxSize(int maxSize) {
         this.maxSize = maxSize;

@@ -17,13 +17,6 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.logging.LogDomains;
 
@@ -31,124 +24,79 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.jvnet.hk2.annotations.Service;
+
 /**
  * @author Srikanth P
  */
 
 @Service
-@ResourceDeployerInfo(ResourceAdapterConfig.class)
 @Singleton
-public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDeployer {
+@ResourceDeployerInfo(ResourceAdapterConfig.class)
+public class ResourceAdapterConfigDeployer extends AbstractConnectorResourceDeployer<ResourceAdapterConfig> {
+
+    private static final Logger LOG = LogDomains.getLogger(ResourceAdapterConfigDeployer.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private Provider<ConnectorRuntime> connectorRuntimeProvider;
 
-    private static Logger _logger = LogDomains.getLogger(ResourceAdapterConfigDeployer.class, LogDomains.RSR_LOGGER);
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName)
+    public synchronized void deployResource(ResourceAdapterConfig resource, String applicationName, String moduleName)
             throws Exception {
         deployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void deployResource(Object resource) throws Exception {
 
-        ResourceAdapterConfig domainConfig =
-                (ResourceAdapterConfig) resource;
-        String rarName = domainConfig.getResourceAdapterName();
+    @Override
+    public synchronized void deployResource(ResourceAdapterConfig resource) throws Exception {
+        String rarName = resource.getResourceAdapterName();
         ConnectorRuntime crt = getConnectorRuntime();
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,
-                    "Calling backend to add resource adapterConfig ", rarName);
-        }
-        crt.addResourceAdapterConfig(rarName, domainConfig);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,
-                    "Added resource adapterConfig in backend", rarName);
-        }
+        LOG.log(Level.FINE, "Calling backend to add resource adapterConfig ", rarName);
+        crt.addResourceAdapterConfig(rarName, resource);
+        LOG.log(Level.FINE, "Added resource adapterConfig in backend", rarName);
     }
+
 
     private ConnectorRuntime getConnectorRuntime() {
         return connectorRuntimeProvider.get();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception{
+    public void undeployResource(ResourceAdapterConfig resource, String applicationName, String moduleName)
+        throws Exception {
         undeployResource(resource);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+
     @Override
-    public synchronized void undeployResource(Object resource)
-            throws Exception {
-        ResourceAdapterConfig domainConfig =
-                (ResourceAdapterConfig) resource;
+    public synchronized void undeployResource(ResourceAdapterConfig resource) throws Exception {
+        ResourceAdapterConfig domainConfig = resource;
         String rarName = domainConfig.getResourceAdapterName();
         ConnectorRuntime crt = getConnectorRuntime();
         crt.deleteResourceAdapterConfig(rarName);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void redeployResource(Object resource)
-            throws Exception {
-        deployResource(resource);
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean handles(Object resource) {
-        boolean canHandle = false;
-        if (resource instanceof ResourceAdapterConfig) {
-            canHandle = true;
-        }
-        return canHandle;
+        return resource instanceof ResourceAdapterConfig;
     }
 
-    /**
-     * @inheritDoc
-     */
+
     @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
+    public synchronized void disableResource(ResourceAdapterConfig resource) throws Exception {
     }
 
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public synchronized void disableResource(Object resource)
-            throws Exception {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public synchronized void enableResource(Object resource) throws Exception {
+    public synchronized void enableResource(ResourceAdapterConfig resource) throws Exception {
     }
 }

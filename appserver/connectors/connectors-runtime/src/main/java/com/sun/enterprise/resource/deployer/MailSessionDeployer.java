@@ -17,6 +17,22 @@
 
 package com.sun.enterprise.resource.deployer;
 
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbInterceptor;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.MailSessionDescriptor;
+import com.sun.enterprise.deployment.ManagedBeanDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
 import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,22 +58,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbInterceptor;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.MailSessionDescriptor;
-import com.sun.enterprise.deployment.ManagedBeanDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 /**
  * Handle deployment of resources defined by @MailSessionDefinition
@@ -66,91 +67,60 @@ import jakarta.inject.Provider;
 
 @Service
 @ResourceDeployerInfo(MailSessionDescriptor.class)
-public class MailSessionDeployer implements ResourceDeployer {
+public class MailSessionDeployer implements ResourceDeployer<MailSessionDescriptor> {
+
+    private static final Logger LOG = LogDomains.getLogger(MailSessionDeployer.class, LogDomains.RSR_LOGGER);
 
     @Inject
     private Provider<org.glassfish.resourcebase.resources.util.ResourceManagerFactory> resourceManagerFactoryProvider;
-
     @Inject
     private Provider<CommonResourceProxy> mailSessionProxyProvider;
-
     @Inject
     private Provider<org.glassfish.resourcebase.resources.naming.ResourceNamingService> resourceNamingServiceProvider;
-
     @Inject
     private ConnectorRuntime runtime;
 
-    private static Logger _logger = LogDomains.getLogger(MailSessionDeployer.class, LogDomains.RSR_LOGGER);
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void deployResource(MailSessionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //do nothing
     }
 
     @Override
-    public void deployResource(Object resource) throws Exception {
-        assert resource instanceof MailSessionDescriptor;
-        final MailSessionDescriptor desc = (MailSessionDescriptor) resource;
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
-        MailResource mailResource = new MyMailResource(desc,resourceName);
+    public void deployResource(MailSessionDescriptor resource) throws Exception {
+        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
+        MailResource mailResource = new MyMailResource(resource,resourceName);
         getDeployer(mailResource).deployResource(mailResource);
-        _logger.log(Level.FINE, "Mail-Session resource is deployed having resource-name [" + desc.getName() + "]");
+        LOG.log(Level.FINE, "Mail-Session resource is deployed having resource-name [" + resource.getName() + "]");
 
     }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
-        assert resource instanceof MailSessionDescriptor;
-        final MailSessionDescriptor desc = (MailSessionDescriptor) resource;
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(),desc.getResourceType());
-        MailResource mailResource = new MyMailResource(desc, resourceName);
+    public void undeployResource(MailSessionDescriptor resource) throws Exception {
+        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(),resource.getResourceType());
+        MailResource mailResource = new MyMailResource(resource, resourceName);
         getDeployer(mailResource).undeployResource(mailResource);
-        _logger.log(Level.FINE, "Mail-Session resource is undeployed having resource-name [" + desc.getName() + "]");
+        LOG.log(Level.FINE, "Mail-Session resource is undeployed having resource-name [" + resource.getName() + "]");
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
+    public void undeployResource(MailSessionDescriptor resource, String applicationName, String moduleName) throws Exception {
         //do nothing
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        throw new UnsupportedOperationException("redeploy() not supported for mail-session type");
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(MailSessionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("enable() not supported for mail-session type");
     }
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(MailSessionDescriptor resource) throws Exception {
         throw new UnsupportedOperationException("disable() not supported for mail-session type");
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof MailSessionDescriptor;
-    }
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -180,7 +150,6 @@ public class MailSessionDeployer implements ResourceDeployer {
         if (descriptor instanceof JndiNameEnvironment) {
             JndiNameEnvironment env = (JndiNameEnvironment) descriptor;
             for (Descriptor msd : env.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                assert msd instanceof MailSessionDescriptor;
                 registerMSDReferredByApplication(appName, (MailSessionDescriptor)msd);
             }
         }
@@ -191,7 +160,6 @@ public class MailSessionDeployer implements ResourceDeployer {
             Set<EjbDescriptor> ejbDescriptors = (Set<EjbDescriptor>) ejbDesc.getEjbs();
             for (EjbDescriptor ejbDescriptor : ejbDescriptors) {
                 for (Descriptor msd : ejbDescriptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                    assert msd instanceof MailSessionDescriptor;
                     registerMSDReferredByApplication(appName, (MailSessionDescriptor)msd);
                 }
             }
@@ -199,7 +167,6 @@ public class MailSessionDeployer implements ResourceDeployer {
             Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
             for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
                 for (Descriptor msd : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                    assert msd instanceof MailSessionDescriptor;
                     registerMSDReferredByApplication(appName, (MailSessionDescriptor)msd);
                 }
             }
@@ -210,16 +177,14 @@ public class MailSessionDeployer implements ResourceDeployer {
             Set<ManagedBeanDescriptor> managedBeanDescriptors = ((BundleDescriptor) descriptor).getManagedBeans();
             for (ManagedBeanDescriptor mbd : managedBeanDescriptors) {
                 for (Descriptor msd : mbd.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                    assert msd instanceof MailSessionDescriptor;
                     registerMSDReferredByApplication(appName, (MailSessionDescriptor)msd);
                 }
             }
         }
     }
 
-    private void registerMSDReferredByApplication(String appName,
-                                                  MailSessionDescriptor msd) {
 
+    private void registerMSDReferredByApplication(String appName, MailSessionDescriptor msd) {
         if (!msd.isDeployed()) {
             CommonResourceProxy proxy = mailSessionProxyProvider.get();
             org.glassfish.resourcebase.resources.naming.ResourceNamingService resourceNamingService = resourceNamingServiceProvider.get();
@@ -237,7 +202,7 @@ public class MailSessionDeployer implements ResourceDeployer {
                     msd.setDeployed(true);
                 } catch (NamingException e) {
                     Object params[] = new Object[]{appName, msd.getName(), e};
-                    _logger.log(Level.WARNING, "exception while registering mail-session ", params);
+                    LOG.log(Level.WARNING, "exception while registering mail-session ", params);
                 }
             }
         }
@@ -260,7 +225,6 @@ public class MailSessionDeployer implements ResourceDeployer {
         if (descriptor instanceof JndiNameEnvironment) {
             JndiNameEnvironment env = (JndiNameEnvironment) descriptor;
             for (Descriptor msd : env.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                assert msd instanceof MailSessionDescriptor;
                 unRegisterMSDReferredByApplication((MailSessionDescriptor)msd);
             }
         }
@@ -271,7 +235,6 @@ public class MailSessionDeployer implements ResourceDeployer {
             Set<EjbDescriptor> ejbDescriptors = (Set<EjbDescriptor>) ejbDesc.getEjbs();
             for (EjbDescriptor ejbDescriptor : ejbDescriptors) {
                 for (Descriptor msd : ejbDescriptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                    assert msd instanceof MailSessionDescriptor;
                     unRegisterMSDReferredByApplication((MailSessionDescriptor)msd);
                 }
             }
@@ -279,7 +242,6 @@ public class MailSessionDeployer implements ResourceDeployer {
             Set<EjbInterceptor> ejbInterceptors = ejbDesc.getInterceptors();
             for (EjbInterceptor ejbInterceptor : ejbInterceptors) {
                 for (Descriptor msd : ejbInterceptor.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                    assert msd instanceof MailSessionDescriptor;
                     unRegisterMSDReferredByApplication((MailSessionDescriptor)msd);
                 }
             }
@@ -290,7 +252,6 @@ public class MailSessionDeployer implements ResourceDeployer {
             Set<ManagedBeanDescriptor> managedBeanDescriptors = ((BundleDescriptor) descriptor).getManagedBeans();
             for (ManagedBeanDescriptor mbd : managedBeanDescriptors) {
                 for (Descriptor msd : mbd.getResourceDescriptors(JavaEEResourceType.MSD)) {
-                    assert msd instanceof MailSessionDescriptor;
                     unRegisterMSDReferredByApplication((MailSessionDescriptor)msd);
                 }
             }
@@ -303,7 +264,7 @@ public class MailSessionDeployer implements ResourceDeployer {
                 undeployResource(msd);
             }
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "exception while unregistering mail-session [ " + msd.getName() + " ]", e);
+            LOG.log(Level.WARNING, "exception while unregistering mail-session [ " + msd.getName() + " ]", e);
         }
     }
 
@@ -383,8 +344,8 @@ public class MailSessionDeployer implements ResourceDeployer {
      */
     class MyMailResource extends FakeConfigBean implements MailResource {
 
-        private MailSessionDescriptor desc;
-        private String name;
+        private final MailSessionDescriptor desc;
+        private final String name;
 
         public MyMailResource(MailSessionDescriptor desc, String name) {
             this.desc = desc;

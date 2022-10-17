@@ -17,25 +17,18 @@
 
 package org.glassfish.concurrent.admin;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_DEFAULT_VALUE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CONTEXT_INFO_ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.CORE_POOL_SIZE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_AFTER_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_INTERVAL_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.HUNG_LOGGER_PRINT_ONCE;
-import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
-import static org.glassfish.resources.admin.cli.ResourceConstants.KEEP_ALIVE_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.LONG_RUNNING_TASKS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_LIFETIME_SECONDS;
-import static org.glassfish.resources.admin.cli.ResourceConstants.THREAD_PRIORITY;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.resource.ResourceException;
 
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.glassfish.api.admin.ServerEnvironment;
@@ -51,15 +44,25 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.inject.Inject;
-import jakarta.resource.ResourceException;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
+import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
+import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_EXECUTOR_SERVICE;
+import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CORE_POOL_SIZE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_AFTER_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_LOGGER_INITIAL_DELAY_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_LOGGER_INTERVAL_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.HUNG_LOGGER_PRINT_ONCE;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.KEEP_ALIVE_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.LONG_RUNNING_TASKS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_LIFETIME_SECONDS;
+import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.THREAD_PRIORITY;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ;
 
 /**
  *
@@ -68,12 +71,11 @@ import jakarta.resource.ResourceException;
  */
 public abstract class ManagedExecutorServiceBaseManager implements ResourceManager {
 
-    protected final static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(ManagedExecutorServiceBaseManager.class);
-    protected static final String DESCRIPTION = ServerTags.DESCRIPTION;
-    protected String jndiName = null;
-    protected String description = null;
-    protected String threadPriority = ""+Thread.NORM_PRIORITY;
+    protected static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(
+        ManagedExecutorServiceBaseManager.class);
+    protected String jndiName;
+    protected String description;
+    protected String threadPriority = Integer.toString(Thread.NORM_PRIORITY);
     protected String contextInfoEnabled = Boolean.TRUE.toString();
     protected String contextInfo = CONTEXT_INFO_DEFAULT_VALUE;
     protected String longRunningTasks = Boolean.FALSE.toString();
@@ -89,20 +91,19 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
     @Inject
     protected ResourceUtil resourceUtil;
-
     @Inject
     protected ServerEnvironment environment;
-
     @Inject
     protected BindableResourcesHelper resourcesHelper;
+
 
     @Override
     public abstract String getResourceType();
 
-    @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
 
+    @Override
+    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
+        throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
@@ -111,41 +112,41 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
 
         try {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    return createResource(param, properties);
-                }
-            }, resources);
-
-                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            ConfigSupport.apply(param -> createResource(param, properties), resources);
+            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
         } catch (TransactionFailure tfe) {
-             String msg = localStrings.getLocalString("create.managed.executor.service.failed", "Managed executor service {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
-            if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                msg = localStrings.getLocalString("create.managed.scheduled.executor.service.failed", "Managed scheduled executor service {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
+            String msg = I18N.getLocalString("create.managed.executor.service.failed",
+                "Managed executor service {0} creation failed", jndiName) + tfe.getLocalizedMessage();
+            if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                msg = I18N.getLocalString("create.managed.scheduled.executor.service.failed",
+                    "Managed scheduled executor service {0} creation failed", jndiName) + tfe.getLocalizedMessage();
             }
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
-        String msg = localStrings.getLocalString("create.managed.executor.service.success", "Managed executor service {0} created successfully", jndiName);
-        if (ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
-            msg = localStrings.getLocalString("create.managed.scheduled.executor.service.success", "Managed scheduled executor service {0} created successfully", jndiName);
+        String msg = I18N.getLocalString("create.managed.executor.service.success",
+            "Managed executor service {0} created successfully", jndiName);
+        if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+            msg = I18N.getLocalString("create.managed.scheduled.executor.service.success",
+                "Managed scheduled executor service {0} created successfully", jndiName);
         }
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
+
     protected ResourceStatus isValid(Resources resources, boolean validateResourceRef, String target){
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("managed.executor.service.noJndiName", "No JNDI name defined for managed executor service.");
-            if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                msg = localStrings.getLocalString("managed.scheduled.executor.service.noJndiName", "No JNDI name defined for managed scheduled executor service.");
+            String msg = I18N.getLocalString("managed.executor.service.noJndiName",
+                "No JNDI name defined for managed executor service.");
+            if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                msg = I18N.getLocalString("managed.scheduled.executor.service.noJndiName",
+                    "No JNDI name defined for managed scheduled executor service.");
             }
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         final Class<? extends BindableResource> clazz;
-        if (ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+        if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
             clazz = ManagedScheduledExecutorService.class;
         } else {
             clazz = ManagedExecutorService.class;
@@ -153,35 +154,41 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         return resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, clazz);
     }
 
-    protected void setAttributes(HashMap attributes, String target) {
-        jndiName = (String) attributes.get(JNDI_NAME);
-        description = (String) attributes.get(DESCRIPTION);
-        contextInfo = (String) attributes.get(CONTEXT_INFO);
-        contextInfoEnabled = (String) attributes.get(CONTEXT_INFO_ENABLED);
-        threadPriority = (String) attributes.get(THREAD_PRIORITY);
-        longRunningTasks = (String) attributes.get(LONG_RUNNING_TASKS);
-        hungAfterSeconds = (String) attributes.get(HUNG_AFTER_SECONDS);
-        hungLoggerPrintOnce = (String) attributes.get(HUNG_LOGGER_PRINT_ONCE);
-        hungLoggerInitialDelaySeconds = (String) attributes.get(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
-        hungLoggerIntervalSeconds = (String) attributes.get(HUNG_LOGGER_INTERVAL_SECONDS);
-        corePoolSize = (String) attributes.get(CORE_POOL_SIZE);
-        keepAliveSeconds = (String) attributes.get(KEEP_ALIVE_SECONDS);
-        threadLifetimeSeconds = (String) attributes.get(THREAD_LIFETIME_SECONDS);
+
+    protected void setAttributes(Map<String, String> attributes, String target) {
+        jndiName = attributes.get(JNDI_NAME);
+        description = attributes.get(DESCRIPTION);
+        contextInfo = attributes.get(CONTEXT_INFO);
+        contextInfoEnabled = attributes.get(CONTEXT_INFO_ENABLED);
+        threadPriority = attributes.get(THREAD_PRIORITY);
+        longRunningTasks = attributes.get(LONG_RUNNING_TASKS);
+        hungAfterSeconds = attributes.get(HUNG_AFTER_SECONDS);
+        hungLoggerPrintOnce = attributes.get(HUNG_LOGGER_PRINT_ONCE);
+        hungLoggerInitialDelaySeconds = attributes.get(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
+        hungLoggerIntervalSeconds = attributes.get(HUNG_LOGGER_INTERVAL_SECONDS);
+        corePoolSize = attributes.get(CORE_POOL_SIZE);
+        keepAliveSeconds = attributes.get(KEEP_ALIVE_SECONDS);
+        threadLifetimeSeconds = attributes.get(THREAD_LIFETIME_SECONDS);
         if (target == null) {
-            enabled = (String) attributes.get(ENABLED);
+            enabled = attributes.get(ENABLED);
         } else {
-            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget((String)attributes.get(ENABLED), target);
+            enabled = resourceUtil.computeEnabledValueForResourceBasedOnTarget(attributes.get(ENABLED), target);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED);
+        enabledValueForTarget = attributes.get(ENABLED);
     }
 
-    protected ManagedExecutorServiceBase createResource(Resources param, Properties properties) throws PropertyVetoException, TransactionFailure {
+
+    protected ManagedExecutorServiceBase createResource(Resources param, Properties properties)
+        throws PropertyVetoException, TransactionFailure {
         ManagedExecutorServiceBase newResource = createConfigBean(param, properties);
         param.getResources().add(newResource);
         return newResource;
     }
 
-    protected abstract ManagedExecutorServiceBase createConfigBean(Resources param, Properties properties) throws PropertyVetoException,TransactionFailure;
+
+    protected abstract ManagedExecutorServiceBase createConfigBean(Resources param, Properties properties)
+        throws PropertyVetoException, TransactionFailure;
+
 
     protected void setAttributesOnConfigBean(ManagedExecutorServiceBase managedExecutorService, Properties properties) throws PropertyVetoException, TransactionFailure {
         managedExecutorService.setJndiName(jndiName);
@@ -192,15 +199,16 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setContextInfo(contextInfo);
         managedExecutorService.setThreadPriority(threadPriority);
         managedExecutorService.setHungAfterSeconds(hungAfterSeconds);
+        managedExecutorService.setHungLoggerPrintOnce(hungLoggerPrintOnce);
+        managedExecutorService.setHungLoggerInitialDelaySeconds(hungLoggerInitialDelaySeconds);
+        managedExecutorService.setHungLoggerIntervalSeconds(hungLoggerIntervalSeconds);
         managedExecutorService.setCorePoolSize(corePoolSize);
         managedExecutorService.setKeepAliveSeconds(keepAliveSeconds);
         managedExecutorService.setThreadLifetimeSeconds(threadLifetimeSeconds);
         managedExecutorService.setEnabled(enabled);
-        //Fix for GLASSFISH-21251
         managedExecutorService.setLongRunningTasks(longRunningTasks);
-        //end of fix GLASSFISH-21251
         if (properties != null) {
-            for ( Map.Entry e : properties.entrySet()) {
+            for (Entry<Object, Object> e : properties.entrySet()) {
                 Property prop = managedExecutorService.createChild(Property.class);
                 prop.setName((String)e.getKey());
                 prop.setValue((String)e.getValue());
@@ -209,78 +217,97 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
     }
 
+
     @Override
-    public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties, boolean validate) throws Exception{
+    public Resource createConfigBean(final Resources resources, HashMap attributes, final Properties properties,
+        boolean validate) throws Exception {
         setAttributes(attributes, null);
         ResourceStatus status = null;
-        if(!validate){
-            status = new ResourceStatus(ResourceStatus.SUCCESS,"");
-        }else{
+        if (validate) {
             status = isValid(resources, false, null);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
-        if(status.getStatus() == ResourceStatus.SUCCESS){
+        if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        }else{
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage());
     }
 
-    public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
-            throws Exception {
 
+    public ResourceStatus delete(final Resources resources, final String jndiName, final String target)
+        throws Exception {
         if (jndiName == null) {
-            String msg = localStrings.getLocalString("managed.executor.service.noJndiName", "No JNDI name defined for managed executor service.");
-            if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                msg = localStrings.getLocalString("managed.scheduled.executor.service.noJndiName", "No JNDI name defined for managed scheduled executor service.");
+            String msg = I18N.getLocalString("managed.executor.service.noJndiName",
+                "No JNDI name defined for managed executor service.");
+            if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                msg = I18N.getLocalString("managed.scheduled.executor.service.noJndiName",
+                    "No JNDI name defined for managed scheduled executor service.");
             }
-
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         Resource resource = null;
-        if (getResourceType().equals(ServerTags.MANAGED_EXECUTOR_SERVICE)) {
-            resource = ConnectorsUtil.getResourceByName(resources, ManagedExecutorService.class, jndiName);
-        } else if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-            resource = ConnectorsUtil.getResourceByName(resources, ManagedScheduledExecutorService.class, jndiName);
+        if (MANAGED_EXECUTOR_SERVICE.equals(getResourceType())) {
+            resource = getResourceByName(resources, ManagedExecutorService.class, jndiName);
+        } else if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+            resource = getResourceByName(resources, ManagedScheduledExecutorService.class, jndiName);
         }
 
         // ensure we already have this resource
-        if (resource == null){
-            String msg = localStrings.getLocalString("delete.managed.executor.service.notfound", "A managed executor service named {0} does not exist.", jndiName);
-            if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.notfound", "A managed scheduled executor service named {0} does not exist.", jndiName);
+        if (resource == null) {
+            String msg = I18N.getLocalString("delete.managed.executor.service.notfound",
+                "A managed executor service named {0} does not exist.", jndiName);
+            if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                msg = I18N.getLocalString("delete.managed.scheduled.executor.service.notfound",
+                    "A managed scheduled executor service named {0} does not exist.", jndiName);
             }
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         if (SYSTEM_ALL_REQ.equals(resource.getObjectType())) {
-            String msg = localStrings.getLocalString("delete.concurrent.resource.notAllowed", "The {0} resource cannot be deleted as it is required to be configured in the system.", jndiName);
+            String msg = I18N.getLocalString("delete.concurrent.resource.notAllowed",
+                "The {0} resource cannot be deleted as it is required to be configured in the system.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
         if (environment.isDas()) {
-
             if ("domain".equals(target)) {
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 0) {
-                    String msg = localStrings.getLocalString("delete.managed.executor.service.resource-ref.exist", "This managed executor service [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
-                    if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                        msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.resource-ref.exist", "This managed scheduled executor service [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
+                if (!resourceUtil.getTargetsReferringResourceRef(jndiName).isEmpty()) {
+                    String msg = I18N.getLocalString("delete.managed.executor.service.resource-ref.exist",
+                        "This managed executor service [ {0} ] is referenced in an instance/cluster target,"
+                            + " use delete-resource-ref on appropriate target",
+                        jndiName);
+                    if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                        msg = I18N.getLocalString("delete.managed.scheduled.executor.service.resource-ref.exist",
+                            "This managed scheduled executor service [ {0} ] is referenced in an instance/cluster"
+                                + " target, use delete-resource-ref on appropriate target",
+                            jndiName);
                     }
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
                 if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
-                    String msg = localStrings.getLocalString("delete.managed.executor.service.no.resource-ref", "This managed executor service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
-                    if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                        msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.no.resource-ref", "This managed scheduled executor service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
+                    String msg = I18N.getLocalString("delete.managed.executor.service.no.resource-ref",
+                        "This managed executor service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
+                    if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                        msg = I18N.getLocalString("delete.managed.scheduled.executor.service.no.resource-ref",
+                            "This managed scheduled executor service [ {0} ] is not referenced in target [ {1} ]",
+                            jndiName, target);
                     }
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
 
                 if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
-                    String msg = localStrings.getLocalString("delete.managed.executor.service.multiple.resource-refs", "This managed executor service [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
-                    if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                        msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.multiple.resource-refs", "This managed scheduled executor service [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
+                    String msg = I18N.getLocalString("delete.managed.executor.service.multiple.resource-refs",
+                        "This managed executor service [ {0} ] is referenced in multiple instance/cluster targets,"
+                            + " Use delete-resource-ref on appropriate target",
+                        jndiName);
+                    if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                        msg = I18N.getLocalString("delete.managed.scheduled.executor.service.multiple.resource-refs",
+                            "This managed scheduled executor service [ {0} ] is referenced in multiple instance/cluster"
+                                + " targets, Use delete-resource-ref on appropriate target",
+                            jndiName);
                     }
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
@@ -288,41 +315,44 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
 
         try {
-            // delete resource-ref
             resourceUtil.deleteResourceRef(jndiName, target);
 
             // delete managed executor service
-            if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ManagedExecutorServiceBase resource = null;
-                    if (getResourceType().equals(ServerTags.MANAGED_EXECUTOR_SERVICE)) {
-                        resource = (ManagedExecutorService) ConnectorsUtil.getResourceByName(resources, ManagedExecutorService.class, jndiName);
-                    } else {
-                        resource = (ManagedScheduledExecutorService) ConnectorsUtil.getResourceByName(resources, ManagedScheduledExecutorService.class, jndiName);
-                    }
-                    return param.getResources().remove(resource);
+            SingleConfigCode<Resources> configCode = param -> {
+                ManagedExecutorServiceBase removedResource = null;
+                if (MANAGED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                    removedResource = getResourceByName(resources, ManagedExecutorService.class, jndiName);
+                } else {
+                    removedResource = getResourceByName(resources, ManagedScheduledExecutorService.class, jndiName);
                 }
-            }, resources) == null) {
-                String msg = localStrings.getLocalString("delete.managed.executor.service.failed", "Managed executor service {0} deletion failed", jndiName);
-                if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                    msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.failed", "Managed scheduled executor service {0} deletion failed", jndiName);
+                return param.getResources().remove(removedResource);
+            };
+            if (ConfigSupport.apply(configCode, resources) == null) {
+                String msg = I18N.getLocalString("delete.managed.executor.service.failed",
+                    "Managed executor service {0} deletion failed", jndiName);
+                if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                    msg = I18N.getLocalString("delete.managed.scheduled.executor.service.failed",
+                        "Managed scheduled executor service {0} deletion failed", jndiName);
                 }
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
-        } catch(TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("delete.managed.executor.service.failed", "Managed executor service {0} deletion failed ", jndiName);
-            if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-                msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.failed", "Managed scheduled executor service {0} deletion failed ", jndiName);
+        } catch (TransactionFailure tfe) {
+            String msg = I18N.getLocalString("delete.managed.executor.service.failed",
+                "Managed executor service {0} deletion failed ", jndiName);
+            if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+                msg = I18N.getLocalString("delete.managed.scheduled.executor.service.failed",
+                    "Managed scheduled executor service {0} deletion failed ", jndiName);
             }
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
 
-        String msg = localStrings.getLocalString("delete.managed.executor.service.success", "Managed executor service {0} deleted successfully", jndiName);
-        if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
-            msg = localStrings.getLocalString("delete.managed.scheduled.executor.service.success", "Managed scheduled executor service {0} deleted successfully", jndiName);
+        String msg = I18N.getLocalString("delete.managed.executor.service.success",
+            "Managed executor service {0} deleted successfully", jndiName);
+        if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
+            msg = I18N.getLocalString("delete.managed.scheduled.executor.service.success",
+                "Managed scheduled executor service {0} deleted successfully", jndiName);
         }
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }

@@ -51,7 +51,8 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
      */
     @Override
     public String getDefaultSpecVersion() {
-        return "1.3";//TODO fix this WebServicesDescriptorNode.SPEC_VERSION;
+        // FIXME should be WebServicesDescriptorNode.SPEC_VERSION;
+        return "2.0";
     }
 
     public void setBundleDescriptor(BundleDescriptor module) {
@@ -73,22 +74,22 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
     public WebService getWebServiceByName(String webServiceName) {
         for (WebService webService : webServices) {
-            if( webService.getName().equals(webServiceName) ) {
+            if (webService.getDisplayName().equals(webServiceName)) {
                 return webService;
             }
         }
         return null;
     }
 
-    public void addWebService(WebService descriptor) {
-        descriptor.setWebServicesDescriptor(this);
-        webServices.add(descriptor);
+    public void addWebService(WebService ws) {
+        ws.setWebServicesDescriptor(this);
+        webServices.add(ws);
 
     }
 
-    public void removeWebService(WebService descriptor) {
-        descriptor.setWebServicesDescriptor(null);
-        webServices.remove(descriptor);
+    public void removeWebService(WebService ws) {
+        ws.setWebServicesDescriptor(null);
+        webServices.remove(ws);
 
     }
 
@@ -159,15 +160,6 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
             return bundleDesc.getModuleType();
         }
         return null;
-    }
-
-    //
-    // Dummy RootDeploymentDescriptor implementations for methods that
-    // do not apply to WebServicesDescriptor.
-    //
-    @Override
-    public String getModuleID() {
-        return "";
     }
 
     @Override

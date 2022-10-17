@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,20 +18,33 @@
 package org.glassfish.jms.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
@@ -71,7 +85,7 @@ public class ListJMSResources implements AdminCommand {
     String resourceType;
 
     @Param(primary=true, optional=true)
-    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;;
+    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
 
 
     @Inject
@@ -92,11 +106,11 @@ public class ListJMSResources implements AdminCommand {
         ArrayList<Map<String,String>> list = new ArrayList<>();
         Properties extraProperties = new Properties();
 
-        Collection adminObjectResourceList = domain.getResources().getResources(AdminObjectResource.class);
-        Collection connectorResourcesList = domain.getResources().getResources(ConnectorResource.class);
+        Collection<AdminObjectResource> adminObjectResourceList = domain.getResources().getResources(AdminObjectResource.class);
+        Collection<ConnectorResource> connectorResourcesList = domain.getResources().getResources(ConnectorResource.class);
 
-        Object [] connectorResources = connectorResourcesList.toArray();
-        Object [] adminObjectResources = adminObjectResourceList.toArray();
+        Object[] connectorResources = connectorResourcesList.toArray();
+        Object[] adminObjectResources = adminObjectResourceList.toArray();
 
         if (resourceType == null){
           try {
@@ -110,10 +124,10 @@ public class ListJMSResources implements AdminCommand {
                 }
             }
 
-            for (Object c: connectorResources) {
+            for (Object c : connectorResources) {
                 ConnectorResource cr = (ConnectorResource) c;
-                ConnectorConnectionPool cp = (ConnectorConnectionPool) ConnectorsUtil.getResourceByName(
-                        domain.getResources(), ConnectorConnectionPool.class, cr.getPoolName());
+                ConnectorConnectionPool cp = ConnectorsUtil.getResourceByName(domain.getResources(),
+                    ConnectorConnectionPool.class, cr.getPoolName());
 
                 if (cp  != null && JMSRA.equals(cp.getResourceAdapterName())){
                     Map<String,String> m = new HashMap<>();
@@ -135,8 +149,7 @@ public class ListJMSResources implements AdminCommand {
                 case UNIFIED_CF:
                     for (Object c : connectorResources) {
                        ConnectorResource cr = (ConnectorResource)c;
-                       ConnectorConnectionPool cp = (ConnectorConnectionPool)
-                               ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorConnectionPool.class, cr.getPoolName());
+                       ConnectorConnectionPool cp = ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorConnectionPool.class, cr.getPoolName());
                        if(cp != null && resourceType.equals(cp.getConnectionDefinitionName()) && JMSRA.equals(cp.getResourceAdapterName())) {
                             Map<String,String> m = new HashMap<>();
                             m.put("name", cr.getJndiName());
@@ -205,6 +218,3 @@ public class ListJMSResources implements AdminCommand {
         return resourceList;
     }
 }
-
-
-

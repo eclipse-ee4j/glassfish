@@ -16,36 +16,30 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
 
 import jakarta.inject.Inject;
-
-import java.util.Collection;
+import jakarta.inject.Singleton;
 
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
 import org.glassfish.enterprise.concurrent.ManagedThreadFactoryImpl;
-import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
-
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 
 
 /**
  * @author David Matejcek
  */
 @Service
+@Singleton
 @ResourceDeployerInfo(ManagedThreadFactoryDefinitionDescriptor.class)
-public class ConcurrencyManagedThreadFactoryDeployer implements ResourceDeployer {
+public class ConcurrencyManagedThreadFactoryDeployer
+    extends ConcurrencyDeployer<ManagedThreadFactoryDefinitionDescriptor> {
 
     @Inject
     private InvocationManager invocationManager;
@@ -55,7 +49,13 @@ public class ConcurrencyManagedThreadFactoryDeployer implements ResourceDeployer
     private ConcurrentRuntime runtime;
 
     @Override
-    public void deployResource(Object resource) throws Exception {
+    public boolean handles(Object resource) {
+        return resource instanceof ManagedThreadFactoryDefinitionDescriptor;
+    }
+
+
+    @Override
+    public void deployResource(ManagedThreadFactoryDefinitionDescriptor resource) throws Exception {
         String applicationName = invocationManager.getCurrentInvocation().getAppName();
         String moduleName = invocationManager.getCurrentInvocation().getModuleName();
         deployResource(resource, applicationName, moduleName);
@@ -63,8 +63,8 @@ public class ConcurrencyManagedThreadFactoryDeployer implements ResourceDeployer
 
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedThreadFactoryDefinitionDescriptor descriptor = (ManagedThreadFactoryDefinitionDescriptor) resource;
+    public void deployResource(ManagedThreadFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
+        ManagedThreadFactoryDefinitionDescriptor descriptor = resource;
         ManagedThreadFactoryImpl factory = createThreadFactory(applicationName, moduleName, descriptor);
         String resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
@@ -73,57 +73,12 @@ public class ConcurrencyManagedThreadFactoryDeployer implements ResourceDeployer
 
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
+    public void undeployResource(ManagedThreadFactoryDefinitionDescriptor resource) throws Exception {
     }
 
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-    }
-
-
-    @Override
-    public void redeployResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public void disableResource(Object resource) throws Exception {
-    }
-
-
-    @Override
-    public boolean handles(Object resource) {
-        return resource instanceof ManagedThreadFactoryDefinitionDescriptor;
-    }
-
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        return false;
-    }
-
-
-    @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
-        Resources allResources) throws ResourceConflictException {
+    public void undeployResource(ManagedThreadFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
     }
 
 
@@ -133,10 +88,5 @@ public class ConcurrencyManagedThreadFactoryDeployer implements ResourceDeployer
         ManagedThreadFactoryCfg mtfConfig = new ManagedThreadFactoryCfg(config);
         ContextServiceImpl contextService = runtime.findOrCreateContextService(descriptor, applicationName, moduleName);
         return runtime.createManagedThreadFactory(mtfConfig, contextService);
-    }
-
-
-    private String toResourceName(ManagedThreadFactoryDefinitionDescriptor descriptor) {
-        return deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(), descriptor.getResourceType());
     }
 }

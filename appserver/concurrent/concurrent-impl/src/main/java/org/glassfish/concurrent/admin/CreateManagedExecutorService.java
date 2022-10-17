@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,12 @@
 package org.glassfish.concurrent.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.deployment.xml.ConcurrencyTagNames;
+
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -27,12 +34,8 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.HashMap;
 
 
 /**
@@ -61,11 +64,10 @@ public class CreateManagedExecutorService extends CreateManagedExecutorServiceBa
     @Override
     protected void setAttributeList(HashMap attrList) {
         super.setAttributeList(attrList);
-        attrList.put(ResourceConstants.MAXIMUM_POOL_SIZE,
-            maximumpoolsize.toString());
-        attrList.put(ResourceConstants.TASK_QUEUE_CAPACITY,
-            taskqueuecapacity.toString());
+        attrList.put(ConcurrencyTagNames.MAXIMUM_POOL_SIZE, maximumpoolsize.toString());
+        attrList.put(ConcurrencyTagNames.TASK_QUEUE_CAPACITY, taskqueuecapacity.toString());
     }
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -95,8 +97,9 @@ public class CreateManagedExecutorService extends CreateManagedExecutorServiceBa
         }
         if (rs.getStatus() == ResourceStatus.FAILURE) {
             ec = ActionReport.ExitCode.FAILURE;
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         report.setActionExitCode(ec);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +20,10 @@ package org.glassfish.resourcebase.resources.api;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
-import org.jvnet.hk2.annotations.Contract;
 
 import java.util.Collection;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Interface to be implemented by different resource types (eg. jms-resource)
@@ -29,9 +31,68 @@ import java.util.Collection;
  * <p/>
  * The methods can potentially be called concurrently, therefore implementation
  * need to do synchronization if necessary.
+ *
+ * @param <D> Deployable resource descriptor type.
  */
 @Contract
-public interface ResourceDeployer {
+public interface ResourceDeployer<D> {
+
+    /**
+     * Indicates whether a particular resource deployer can handle the resource in question
+     *
+     * @param resource resource that need to be handled
+     * @return boolean
+     */
+    boolean handles(Object resource);
+
+
+    /**
+     * A deployer can indicate whether a particular resource can be deployed before
+     * application deployment
+     * <p>
+     * Used in case of application-scoped-resources, eg. Embedded RAR resources are created after
+     * application (that has embedded .rar) deployment.
+     *
+     * @param postApplicationDeployment post-application-deployment
+     * @param allResources resources collection in which the resource being validated is present.
+     * @param resource resource to be validated
+     * @return boolean
+     */
+    default boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
+        return handles(resource) && !postApplicationDeployment;
+    }
+
+    /**
+     * Indicates whether the resource deployer can handle
+     * transparent-dynamic-reconfiguration of resource
+     *
+     * @return boolean indicating whether transparent-dynamic-reconfiguration is supported.
+     */
+    default boolean supportsDynamicReconfiguration() {
+        return false;
+    }
+
+    /**
+     * List of classes which need to be proxied for dynamic-reconfiguration
+     *
+     * @return list of classes
+     */
+    default Class<?>[] getProxyClassesForDynamicReconfiguration() {
+        return new Class[0];
+    }
+
+
+    void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
+        throws ResourceConflictException;
+
+
+    /**
+     * Deploy the resource into the server's runtime naming context
+     *
+     * @param resource a resource object (eg. JmsResource)
+     * @throws Exception thrown if fail
+     */
+    void deployResource(D resource) throws Exception;
 
     /**
      * Deploy the resource into the server's runtime naming context
@@ -43,15 +104,7 @@ public interface ResourceDeployer {
      * @param moduleName module-name
      * @throws Exception thrown if fail
      */
-    void deployResource(Object resource, String applicationName, String moduleName) throws Exception;
-
-    /**
-     * Deploy the resource into the server's runtime naming context
-     *
-     * @param resource a resource object (eg. JmsResource)
-     * @throws Exception thrown if fail
-     */
-    void deployResource(Object resource) throws Exception;
+    void deployResource(D resource, String applicationName, String moduleName) throws Exception;
 
     /**
      * Undeploy the resource from the server's runtime naming context
@@ -59,7 +112,7 @@ public interface ResourceDeployer {
      * @param resource a resource object (eg. JmsResource)
      * @throws Exception thrown if fail
      */
-    void undeployResource(Object resource) throws Exception;
+    void undeployResource(D resource) throws Exception;
 
     /**
      * Undeploy the resource from the server's runtime naming context
@@ -69,7 +122,7 @@ public interface ResourceDeployer {
      * @param moduleName module-name
      * @throws Exception thrown if fail
      */
-    void undeployResource(Object resource, String applicationName, String moduleName) throws Exception;
+    void undeployResource(D resource, String applicationName, String moduleName) throws Exception;
 
     /**
      * Redeploy the resource into the server's runtime naming context
@@ -77,60 +130,28 @@ public interface ResourceDeployer {
      * @param resource a resource object
      * @throws Exception thrown if fail
      */
-    void redeployResource(Object resource) throws Exception;
+    default void redeployResource(D resource) throws Exception {
+        undeployResource(resource);
+        deployResource(resource);
+    }
 
     /**
      * Enable the resource in the server's runtime naming context
      *
      * @param resource a resource object (eg. JmsResource)
-     * @exception Exception thrown if fail
+     * @throws Exception thrown if fail
      */
-    void enableResource(Object resource) throws Exception;
+    default void enableResource(D resource) throws Exception {
+        deployResource(resource);
+    }
 
     /**
      * Disable the resource in the server's runtime naming context
      *
      * @param resource a resource object (eg. JmsResource)
-     * @exception Exception thrown if fail
+     * @throws Exception thrown if fail
      */
-    void disableResource(Object resource) throws Exception;
-
-    /**
-     * Indicates whether a particular resource deployer can handle the
-     * resource in question
-     * @param resource resource that need to be handled
-     * @return boolean
-     */
-    boolean handles(Object resource);
-
-    /**
-     * Indicates whether the resource deployer can handle
-     * transparent-dynamic-reconfiguration of resource
-     * @return boolean indicating whether transparent-dynamic-reconfiguration is supported.
-     */
-    boolean supportsDynamicReconfiguration();
-
-    /**
-     * List of classes which need to be proxied for dynamic-reconfiguration
-     * @return list of classes
-     */
-    Class[] getProxyClassesForDynamicReconfiguration();
-
-
-    /**
-     * A deployer can indicate whether a particular resource can be deployed before
-     * application deployment</br>
-     * Used in case of application-scoped-resources </br>
-     * eg: Embedded RAR resources are created after application (that has embedded .rar)
-     * deployment.
-     * @param postApplicationDeployment post-application-deployment
-     * @param allResources resources collection in which the resource being validated is present.
-     * @param resource resource to be validated
-     * @return boolean
-     */
-    boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource);
-
-
-    void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources)
-        throws org.glassfish.resourcebase.resources.api.ResourceConflictException;
+    default void disableResource(D resource) throws Exception {
+        undeployResource(resource);
+    }
 }

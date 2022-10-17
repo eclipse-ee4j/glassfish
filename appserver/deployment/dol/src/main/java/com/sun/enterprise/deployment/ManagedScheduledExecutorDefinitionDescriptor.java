@@ -31,93 +31,91 @@ public class ManagedScheduledExecutorDefinitionDescriptor extends ResourceDescri
 
     private static final long serialVersionUID = 1L;
 
-    private final ManagedScheduledExecutorDefinitionData definition;
+    private final ManagedScheduledExecutorDefinitionData data;
 
     public ManagedScheduledExecutorDefinitionDescriptor() {
-        this(new ManagedScheduledExecutorDefinitionData(), null);
+        this(new ManagedScheduledExecutorDefinitionData(), MetadataSource.XML);
     }
 
 
     public ManagedScheduledExecutorDefinitionDescriptor(ManagedScheduledExecutorDefinitionData data, MetadataSource source) {
-        this.definition = data;
+        this.data = data;
         setResourceType(JavaEEResourceType.MSEDD);
-        if (source != null) {
-            setMetadataSource(source);
-        }
+        setMetadataSource(source);
     }
 
 
     @Override
     public String getName() {
-        return this.definition.getName();
+        return this.data.getName();
     }
 
 
     @Override
     public void setName(String name) {
-        this.definition.setName(name);
+        this.data.setName(name);
     }
 
 
     @Override
     public String getContext() {
-        return definition.getContext();
+        return data.getContext();
     }
 
 
     @Override
     public void setContext(String context) {
-        definition.setContext(context);
+        data.setContext(context);
     }
 
 
     public long getHungTaskThreshold() {
-        return definition.getHungTaskThreshold();
+        return data.getHungTaskThreshold();
     }
 
 
     public void setHungTaskThreshold(long hungTaskThreshold) {
-        definition.setHungTaskThreshold(hungTaskThreshold);
+        data.setHungTaskThreshold(hungTaskThreshold);
     }
 
 
     public int getMaxAsync() {
-        return definition.getMaxAsync();
+        return data.getMaxAsync();
     }
 
 
     public void setMaxAsync(int maxAsync) {
-        definition.setMaxAsync(maxAsync);
+        data.setMaxAsync(maxAsync);
     }
 
 
     public Properties getProperties() {
-        return definition.getProperties();
+        return data.getProperties();
     }
 
 
     public void setProperties(Properties properties) {
-        definition.setProperties(properties);
+        data.setProperties(properties);
     }
 
 
     public void addManagedScheduledExecutorDefinitionDescriptor(ResourcePropertyDescriptor properties) {
-        definition.addManagedScheduledExecutorDefinitionDescriptor(properties.getName(), properties.getValue());
+        data.addManagedScheduledExecutorDefinitionDescriptor(properties.getName(), properties.getValue());
     }
 
 
     public void addManagedScheduledExecutorDefinitionDescriptor(String name, String value) {
-        definition.addManagedScheduledExecutorDefinitionDescriptor(name, value);
+        data.addManagedScheduledExecutorDefinitionDescriptor(name, value);
     }
 
 
     public ManagedScheduledExecutorDefinitionData getData() {
-        return definition;
+        return data;
     }
 
 
     @Override
     public String toString() {
-        return "ManagedScheduledExecutorDefinitionDescriptor{definition=" + definition + ')';
+        return "ManagedScheduledExecutorDefinitionDescriptor{data=" + data + ')';
     }
 }

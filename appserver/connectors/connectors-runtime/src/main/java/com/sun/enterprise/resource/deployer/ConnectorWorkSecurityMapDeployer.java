@@ -24,64 +24,48 @@ import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
 @Service
-@ResourceDeployerInfo(WorkSecurityMap.class)
 @Singleton
-public class ConnectorWorkSecurityMapDeployer  extends AbstractConnectorResourceDeployer {
+@ResourceDeployerInfo(WorkSecurityMap.class)
+public class ConnectorWorkSecurityMapDeployer  extends AbstractConnectorResourceDeployer<WorkSecurityMap> {
 
     @Override
-    public synchronized void deployResource(Object resource, String applicationName, String moduleName)
+    public synchronized void deployResource(WorkSecurityMap resource, String applicationName, String moduleName)
             throws Exception {
         //no-op
     }
 
     @Override
-    public void deployResource(Object resoure) throws Exception {
+    public void deployResource(WorkSecurityMap resoure) throws Exception {
         //no-op
     }
 
     @Override
-    public void undeployResource(Object resoure) throws Exception {
+    public void undeployResource(WorkSecurityMap resoure) throws Exception {
         //no-op
     }
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception{
+    public void undeployResource(WorkSecurityMap resource, String applicationName, String moduleName) throws Exception{
         //no-op
     }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
+    public void redeployResource(WorkSecurityMap resource) throws Exception {
         //no-op
     }
 
     @Override
-    public void enableResource(Object resoure) throws Exception {
+    public void enableResource(WorkSecurityMap resoure) throws Exception {
         //no-op
     }
 
     @Override
-    public void disableResource(Object resoure) throws Exception {
+    public void disableResource(WorkSecurityMap resoure) throws Exception {
         //no-op
     }
 
     @Override
     public boolean handles(Object resource) {
         return resource instanceof WorkSecurityMap;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
     }
 }

@@ -17,12 +17,16 @@
 
 package org.glassfish.concurrent.runtime.deployer.cfg;
 
+import com.sun.enterprise.deployment.types.ConcurrencyContextType;
+
 import java.io.Serializable;
+import java.util.Set;
 
 import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
 
-import static org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg.parseInt;
-import static org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg.parseLong;
+import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseContextInfo;
+import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseInt;
+import static org.glassfish.concurrent.runtime.deployer.cfg.CfgParser.parseLong;
 
 /**
  * Contains configuration information for a ManagedScheduledExecutorService object
@@ -43,15 +47,16 @@ public class ManagedScheduledExecutorServiceCfg implements Serializable {
     private final long threadLifeTimeSeconds;
 
     public ManagedScheduledExecutorServiceCfg(ManagedScheduledExecutorService config) {
-        serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled(), config.getContext());
+        Set<ConcurrencyContextType> propagated = parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
+        serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagated, config.getContext());
         hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
         hungLoggerPrintOnce = Boolean.valueOf(config.getHungLoggerPrintOnce());
-        hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60);
-        hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60);
+        hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60L);
+        hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60L);
         longRunningTasks = Boolean.valueOf(config.getLongRunningTasks());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
         corePoolSize = parseInt(config.getCorePoolSize(), 0);
-        keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60);
+        keepAliveSeconds = parseLong(config.getKeepAliveSeconds(), 60L);
         threadLifeTimeSeconds = parseLong(config.getThreadLifetimeSeconds(), 0L);
     }
 

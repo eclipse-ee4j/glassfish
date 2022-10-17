@@ -27,18 +27,21 @@ import jakarta.xml.ws.handler.MessageContext;
 @WebService
 public class Hello {
 
-    @Resource WebServiceContext wsc;
+    @Resource
+    WebServiceContext wsc;
 
     public String sayHello(String param) {
         System.out.println("wsctxt-servlet wsc = " + wsc);
-        if(wsc != null) {
-                 ServletContext sc =
-(ServletContext)wsc.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
-                String a = null;
-                if (sc!= null ) {
-                 a = sc.getServletContextName();
-                }
-                return "Hello " + param +a;
+        if (wsc != null) {
+            ServletContext sc = (ServletContext) wsc.getMessageContext().get(MessageContext.SERVLET_CONTEXT);
+            System.out.println("ServletContext = " + sc);
+            final String a;
+            if (sc != null) {
+                a = sc.getServletContextName();
+            } else {
+                a = "null";
+            }
+            return "Hello " + param  + '-' + a;
         }
         return "WebService Context injection failed";
     }

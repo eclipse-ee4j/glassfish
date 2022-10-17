@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,9 +14,22 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment.util.logging;
+package com.sun.enterprise.deployment.types;
 
-public class Debug
-{
-    public static final boolean enabled = true;
+import jakarta.enterprise.concurrent.spi.ThreadContextProvider;
+
+import java.io.Serializable;
+
+/**
+ * Context type can be standard or provided by some custom {@link ThreadContextProvider}.
+ *
+ * @author David Matejcek
+ */
+public interface ConcurrencyContextType extends Serializable {
+
+    /**
+     * @return name of the context type supported by GlassFish or by the application's
+     *         {@link ThreadContextProvider}.
+     */
+    String name();
 }

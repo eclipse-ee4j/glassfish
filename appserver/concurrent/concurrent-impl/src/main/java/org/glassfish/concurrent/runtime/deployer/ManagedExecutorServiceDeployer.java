@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,28 +46,48 @@ import org.glassfish.resources.naming.SerializableObjectRefAddr;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
-@ResourceDeployerInfo(ManagedExecutorService.class)
 @Singleton
-public class ManagedExecutorServiceDeployer implements ResourceDeployer {
+@ResourceDeployerInfo(ManagedExecutorService.class)
+public class ManagedExecutorServiceDeployer implements ResourceDeployer<ManagedExecutorService> {
+
+    private static final Logger LOG = LogFacade.getLogger();
 
     @Inject
     private ResourceNamingService namingService;
     @Inject
     private ConcurrentRuntime concurrentRuntime;
 
-    private static final Logger LOG = LogFacade.getLogger();
+    @Override
+    public boolean handles(Object resource) {
+        return resource instanceof ManagedExecutorService;
+    }
+
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedExecutorService serviceConfig = (ManagedExecutorService) resource;
-        if (serviceConfig == null) {
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
+        Resources allResources) throws ResourceConflictException {
+        // do nothing
+    }
+
+
+    @Override
+    public void deployResource(ManagedExecutorService resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
+        deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+    }
+
+
+    @Override
+    public void deployResource(ManagedExecutorService resource, String applicationName,
+        String moduleName) throws Exception {
+        if (resource == null) {
             LOG.log(Level.WARNING, LogFacade.DEPLOY_ERROR_NULL_CONFIG, "ManagedExecutorService");
             return;
         }
 
-        String jndiName = serviceConfig.getJndiName();
-        ResourceInfo resourceInfo = new ResourceInfo(serviceConfig.getJndiName(), applicationName, moduleName);
-        ManagedExecutorServiceCfg config = new ManagedExecutorServiceCfg(serviceConfig);
+        String jndiName = resource.getJndiName();
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        ManagedExecutorServiceCfg config = new ManagedExecutorServiceCfg(resource);
 
         Reference ref= new Reference(
                 jakarta.enterprise.concurrent.ManagedExecutorService.class.getName(),
@@ -80,7 +99,6 @@ public class ManagedExecutorServiceDeployer implements ResourceDeployer {
         ref.add(resAddr);
 
         try {
-            // Publish the object ref
             namingService.publishObject(resourceInfo, ref, true);
         } catch (NamingException ex) {
             LogHelper.log(LOG, Level.SEVERE, LogFacade.UNABLE_TO_BIND_OBJECT, ex, "ManagedExecutorService", jndiName);
@@ -89,72 +107,19 @@ public class ManagedExecutorServiceDeployer implements ResourceDeployer {
         concurrentRuntime.getManagedExecutorService(config);
     }
 
-    @Override
-    public void deployResource(Object resource) throws Exception {
-        ManagedExecutorService service = (ManagedExecutorService) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(service);
-        deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-    }
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
-        ManagedExecutorService service = (ManagedExecutorService) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(service);
+    public void undeployResource(ManagedExecutorService resource) throws Exception {
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
         undeployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
     }
 
-    @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedExecutorService service = (ManagedExecutorService) resource;
-        ResourceInfo resourceInfo = new ResourceInfo(service.getJndiName(), applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, service.getJndiName());
-        // stop the runtime object
-        concurrentRuntime.shutdownManagedExecutorService(service.getJndiName());
-    }
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
-        undeployResource(resource);
-        deployResource(resource);
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
-        deployResource(resource);
-    }
-
-    @Override
-    public void disableResource(Object resource) throws Exception {
-        undeployResource(resource);
-    }
-
-    @Override
-    public boolean handles(Object resource) {
-        return resource instanceof ManagedExecutorService;
-    }
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources) throws ResourceConflictException {
-        // do nothing
+    public void undeployResource(ManagedExecutorService resource, String applicationName,
+        String moduleName) throws Exception {
+        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        namingService.unpublishObject(resourceInfo, resource.getJndiName());
+        concurrentRuntime.shutdownManagedExecutorService(resource.getJndiName());
     }
 }

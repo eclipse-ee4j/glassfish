@@ -24,7 +24,6 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,30 +46,47 @@ import org.glassfish.resources.naming.SerializableObjectRefAddr;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
-@ResourceDeployerInfo(ManagedThreadFactory.class)
 @Singleton
-public class ManagedThreadFactoryDeployer implements ResourceDeployer {
+@ResourceDeployerInfo(ManagedThreadFactory.class)
+public class ManagedThreadFactoryDeployer implements ResourceDeployer<ManagedThreadFactory> {
+
+    private static final Logger LOG = LogFacade.getLogger();
 
     @Inject
     private ResourceNamingService namingService;
     @Inject
     private ConcurrentRuntime concurrentRuntime;
 
-    private static final Logger LOG = LogFacade.getLogger();
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedThreadFactory ManagedThreadFactoryRes = (ManagedThreadFactory) resource;
+    public boolean handles(Object resource) {
+        return resource instanceof ManagedThreadFactory;
+    }
 
-        if (ManagedThreadFactoryRes == null) {
+
+    @Override
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources) throws ResourceConflictException {
+        // do nothing
+    }
+
+
+    @Override
+    public void deployResource(ManagedThreadFactory resource) throws Exception {
+        ManagedThreadFactory factory = resource;
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(factory);
+        deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+    }
+
+
+    @Override
+    public void deployResource(ManagedThreadFactory resource, String applicationName, String moduleName) throws Exception {
+        if (resource == null) {
             LOG.log(Level.WARNING, LogFacade.DEPLOY_ERROR_NULL_CONFIG, "ManagedThreadFactory");
             return;
         }
-
-        String jndiName = ManagedThreadFactoryRes.getJndiName();
-        ResourceInfo resourceInfo = new ResourceInfo(ManagedThreadFactoryRes.getJndiName(), applicationName, moduleName);
-        ManagedThreadFactoryCfg config = new ManagedThreadFactoryCfg(ManagedThreadFactoryRes);
-
+        String jndiName = resource.getJndiName();
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        ManagedThreadFactoryCfg config = new ManagedThreadFactoryCfg(resource);
         Reference ref = new Reference(
                 jakarta.enterprise.concurrent.ManagedThreadFactory.class.getName(),
                 "org.glassfish.concurrent.runtime.deployer.ConcurrentObjectFactory",
@@ -81,7 +97,6 @@ public class ManagedThreadFactoryDeployer implements ResourceDeployer {
         ref.add(resAddr);
 
         try {
-            // Publish the object ref
             namingService.publishObject(resourceInfo, ref, true);
         } catch (NamingException ex) {
             LogHelper.log(LOG, Level.SEVERE, LogFacade.UNABLE_TO_BIND_OBJECT, ex, "ManagedThreadFactory", jndiName);
@@ -90,74 +105,19 @@ public class ManagedThreadFactoryDeployer implements ResourceDeployer {
 
 
     @Override
-    public void deployResource(Object resource) throws Exception {
-        ManagedThreadFactory factory = (ManagedThreadFactory) resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(factory);
-        deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-    }
-
-
-    @Override
-    public void undeployResource(Object resource) throws Exception {
-        ManagedThreadFactory factory = (ManagedThreadFactory) resource;
+    public void undeployResource(ManagedThreadFactory resource) throws Exception {
+        ManagedThreadFactory factory = resource;
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(factory);
         undeployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
     }
 
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ManagedThreadFactory factory = (ManagedThreadFactory) resource;
+    public void undeployResource(ManagedThreadFactory resource, String applicationName, String moduleName) throws Exception {
+        ManagedThreadFactory factory = resource;
         ResourceInfo resourceInfo = new ResourceInfo(factory.getJndiName(), applicationName, moduleName);
         namingService.unpublishObject(resourceInfo, factory.getJndiName());
         // stop the runtime object
         concurrentRuntime.shutdownManagedThreadFactory(factory.getJndiName());
-    }
-
-
-    @Override
-    public void redeployResource(Object resource) throws Exception {
-        undeployResource(resource);
-        deployResource(resource);
-    }
-
-    @Override
-    public void enableResource(Object resource) throws Exception {
-        deployResource(resource);
-    }
-
-    @Override
-    public void disableResource(Object resource) throws Exception {
-        undeployResource(resource);
-    }
-
-    @Override
-    public boolean handles(Object resource) {
-        return resource instanceof ManagedThreadFactory;
-    }
-
-    @Override
-    public boolean supportsDynamicReconfiguration() {
-        return false;
-    }
-
-    @Override
-    public Class<?>[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[0];
-    }
-
-    @Override
-    public boolean canDeploy(boolean postApplicationDeployment, Collection<Resource> allResources, Resource resource) {
-        if (handles(resource)) {
-            if (!postApplicationDeployment) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource, Resources allResources) throws ResourceConflictException {
-        // do nothing
     }
 }

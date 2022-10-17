@@ -31,86 +31,84 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
 
     private static final long serialVersionUID = 2537143519647534821L;
 
-    private final ContextServiceDefinitionData definition;
+    private final ContextServiceDefinitionData data;
 
     public ContextServiceDefinitionDescriptor() {
-        this(new ContextServiceDefinitionData(), null);
+        this(new ContextServiceDefinitionData(), MetadataSource.XML);
     }
 
 
     public ContextServiceDefinitionDescriptor(ContextServiceDefinitionData data, MetadataSource source) {
-        this.definition = data;
+        this.data = data;
         setResourceType(JavaEEResourceType.CSDD);
-        if (source != null) {
-            setMetadataSource(source);
-        }
+        setMetadataSource(source);
     }
 
 
     @Override
     public String getName() {
-        return this.definition.getName();
+        return this.data.getName();
     }
 
 
     @Override
     public void setName(String name) {
-        this.definition.setName(name);
+        this.data.setName(name);
     }
 
 
     public Set<String> getCleared() {
-        return definition.getCleared();
+        return data.getCleared();
     }
 
 
     public void setCleared(Set<String> cleared) {
-        definition.setCleared(cleared);
+        data.setCleared(cleared);
     }
 
 
     public void addCleared(String clearedItem) {
-        definition.addCleared(clearedItem);
+        data.addCleared(clearedItem);
     }
 
 
     public Set<String> getPropagated() {
-        return definition.getPropagated();
+        return data.getPropagated();
     }
 
 
     public void setPropagated(Set<String> propagated) {
-        definition.setPropagated(propagated);
+        data.setPropagated(propagated);
     }
 
 
     public void addPropagated(String propagatedItem) {
-        definition.addPropagated(propagatedItem);
+        data.addPropagated(propagatedItem);
     }
 
 
     public Set<String> getUnchanged() {
-        return definition.getUnchanged();
+        return data.getUnchanged();
     }
 
 
     public void setUnchanged(Set<String> unchanged) {
-        definition.setUnchanged(unchanged);
+        data.setUnchanged(unchanged);
     }
 
 
     public void addUnchanged(String unchangedItem) {
-        definition.addUnchanged(unchangedItem);
+        data.addUnchanged(unchangedItem);
     }
 
 
     public Properties getProperties() {
-        return definition.getProperties();
+        return data.getProperties();
     }
 
 
     public void setProperties(Properties properties) {
-        definition.setProperties(properties);
+        data.setProperties(properties);
     }
 
 
@@ -120,17 +118,17 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
 
 
     public void addContextServiceExecutorDescriptor(String name, String value) {
-        definition.addContextServiceExecutorDescriptor(name, value);
+        data.addContextServiceExecutorDescriptor(name, value);
     }
 
 
     public ContextServiceDefinitionData getData() {
-        return definition;
+        return data;
     }
 
 
     @Override
     public String toString() {
-        return "ContextServiceDefinitionDescriptor[definition=" + definition + ']';
+        return "ContextServiceDefinitionDescriptor[data=" + data + ']';
     }
 }

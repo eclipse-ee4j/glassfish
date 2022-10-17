@@ -25,9 +25,7 @@ public class ManagedScheduledExecutorDefinitionData implements ContextualResourc
 
     private String name;
     private String context;
-    // FIXME: rename to hungAfterSeconds
     private long hungTaskThreshold;
-    // FIXME: rename to maximumPoolSize
     private int maxAsync = Integer.MAX_VALUE;
     private Properties properties = new Properties();
 

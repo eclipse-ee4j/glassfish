@@ -57,32 +57,32 @@ class ManagedScheduledExecutorDefinitionConverter extends
     }
 
 
-    Set<ManagedScheduledExecutorDefinitionData> convert(ManagedScheduledExecutorDefinition[] definitions) {
-        LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
-        if (definitions == null) {
+    Set<ManagedScheduledExecutorDefinitionData> convert(ManagedScheduledExecutorDefinition[] annotation) {
+        LOG.log(Level.TRACE, "convert(annotation={0})", (Object) annotation);
+        if (annotation == null) {
             return Collections.emptySet();
         }
-        return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
+        return Arrays.stream(annotation).map(this::convert).collect(Collectors.toSet());
     }
 
 
-    ManagedScheduledExecutorDefinitionData convert(ManagedScheduledExecutorDefinition definition) {
-        LOG.log(Level.DEBUG, "convert(definition={0})", definition);
-        ManagedScheduledExecutorDefinitionData msedd = new ManagedScheduledExecutorDefinitionData();
-        msedd.setName(TranslatedConfigView.expandValue(definition.name()));
-        msedd.setContext(TranslatedConfigView.expandValue(definition.context()));
+    ManagedScheduledExecutorDefinitionData convert(ManagedScheduledExecutorDefinition annotation) {
+        LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
+        ManagedScheduledExecutorDefinitionData data = new ManagedScheduledExecutorDefinitionData();
+        data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        data.setContext(TranslatedConfigView.expandValue(annotation.context()));
 
-        if (definition.hungTaskThreshold() < 0) {
-            msedd.setHungTaskThreshold(0);
+        if (annotation.hungTaskThreshold() < 0) {
+            data.setHungTaskThreshold(0);
         } else {
-            msedd.setHungTaskThreshold(definition.hungTaskThreshold());
+            data.setHungTaskThreshold(annotation.hungTaskThreshold());
         }
-        if (definition.maxAsync() < 0) {
-            msedd.setMaxAsync(Integer.MAX_VALUE);
+        if (annotation.maxAsync() < 0) {
+            data.setMaxAsync(Integer.MAX_VALUE);
         } else {
-            msedd.setMaxAsync(definition.maxAsync());
+            data.setMaxAsync(annotation.maxAsync());
         }
-        return msedd;
+        return data;
     }
 
 

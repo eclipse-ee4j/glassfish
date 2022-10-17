@@ -58,26 +58,26 @@ class ManagedThreadFactoryDefinitionConverter extends
     }
 
 
-    Set<ManagedThreadFactoryDefinitionData> convert(final ManagedThreadFactoryDefinition[] definitions) {
-        LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
-        if (definitions == null) {
+    Set<ManagedThreadFactoryDefinitionData> convert(final ManagedThreadFactoryDefinition[] annotation) {
+        LOG.log(Level.TRACE, "convert(annotation={0})", (Object) annotation);
+        if (annotation == null) {
             return Collections.emptySet();
         }
-        return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
+        return Arrays.stream(annotation).map(this::convert).collect(Collectors.toSet());
     }
 
 
-    ManagedThreadFactoryDefinitionData convert(ManagedThreadFactoryDefinition definition) {
-        LOG.log(Level.DEBUG, "convert(definition={0})", definition);
-        ManagedThreadFactoryDefinitionData mtfdd = new ManagedThreadFactoryDefinitionData();
-        mtfdd.setName(TranslatedConfigView.expandValue(definition.name()));
-        mtfdd.setContext(TranslatedConfigView.expandValue(definition.context()));
-        if (definition.priority() <= 0) {
-            mtfdd.setPriority(Thread.NORM_PRIORITY);
+    ManagedThreadFactoryDefinitionData convert(ManagedThreadFactoryDefinition annotation) {
+        LOG.log(Level.DEBUG, "convert(annotation={0})", annotation);
+        ManagedThreadFactoryDefinitionData data = new ManagedThreadFactoryDefinitionData();
+        data.setName(TranslatedConfigView.expandValue(annotation.name()));
+        data.setContext(TranslatedConfigView.expandValue(annotation.context()));
+        if (annotation.priority() <= 0) {
+            data.setPriority(Thread.NORM_PRIORITY);
         } else {
-            mtfdd.setPriority(definition.priority());
+            data.setPriority(annotation.priority());
         }
-        return mtfdd;
+        return data;
     }
 
 

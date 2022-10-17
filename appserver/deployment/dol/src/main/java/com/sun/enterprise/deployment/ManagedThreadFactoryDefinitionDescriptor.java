@@ -32,63 +32,61 @@ public class ManagedThreadFactoryDefinitionDescriptor extends ResourceDescriptor
 
     private static final long serialVersionUID = 6376196495209425819L;
 
-    private final ManagedThreadFactoryDefinitionData definition;
+    private final ManagedThreadFactoryDefinitionData data;
 
     public ManagedThreadFactoryDefinitionDescriptor() {
-        this(new ManagedThreadFactoryDefinitionData(), null);
+        this(new ManagedThreadFactoryDefinitionData(), MetadataSource.XML);
     }
 
 
     public ManagedThreadFactoryDefinitionDescriptor(ManagedThreadFactoryDefinitionData data, MetadataSource source) {
-        this.definition = data;
+        this.data = data;
         setResourceType(JavaEEResourceType.MTFDD);
-        if (source != null) {
-            setMetadataSource(source);
-        }
+        setMetadataSource(source);
     }
 
 
     @Override
     public String getName() {
-        return this.definition.getName();
+        return this.data.getName();
     }
 
 
     @Override
     public void setName(String name) {
-        this.definition.setName(name);
+        this.data.setName(name);
     }
 
 
     @Override
     public String getContext() {
-        return definition.getContext();
+        return data.getContext();
     }
 
 
     @Override
     public void setContext(String context) {
-        definition.setContext(context);
+        data.setContext(context);
     }
 
 
     public int getPriority() {
-        return definition.getPriority();
+        return data.getPriority();
     }
 
 
     public void setPriority(int priority) {
-        definition.setPriority(priority);
+        data.setPriority(priority);
     }
 
 
     public Properties getProperties() {
-        return definition.getProperties();
+        return data.getProperties();
     }
 
 
     public void setProperties(Properties properties) {
-        definition.setProperties(properties);
+        data.setProperties(properties);
     }
 
 
@@ -98,17 +96,17 @@ public class ManagedThreadFactoryDefinitionDescriptor extends ResourceDescriptor
 
 
     public void addManagedThreadFactoryPropertyDescriptor(String name, String value) {
-        definition.addManagedThreadFactoryPropertyDescriptor(name, value);
+        data.addManagedThreadFactoryPropertyDescriptor(name, value);
     }
 
 
     public ManagedThreadFactoryDefinitionData getData() {
-        return definition;
+        return data;
     }
 
 
     @Override
     public String toString() {
-        return "ManagedThreadFactoryDefinitionDescriptor[definition=" + definition + ']';
+        return "ManagedThreadFactoryDefinitionDescriptor[data=" + data + ']';
     }
 }

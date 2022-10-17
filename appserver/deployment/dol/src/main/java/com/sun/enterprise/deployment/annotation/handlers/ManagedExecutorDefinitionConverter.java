@@ -59,12 +59,12 @@ class ManagedExecutorDefinitionConverter
     }
 
 
-    Set<ManagedExecutorDefinitionData> convert(ManagedExecutorDefinition[] definitions) {
-        LOG.log(Level.TRACE, "convert(definitions={0})", (Object) definitions);
-        if (definitions == null) {
+    Set<ManagedExecutorDefinitionData> convert(ManagedExecutorDefinition[] annotation) {
+        LOG.log(Level.TRACE, "convert(annotation={0})", (Object) annotation);
+        if (annotation == null) {
             return Collections.emptySet();
         }
-        return Arrays.stream(definitions).map(this::convert).collect(Collectors.toSet());
+        return Arrays.stream(annotation).map(this::convert).collect(Collectors.toSet());
     }
 
 

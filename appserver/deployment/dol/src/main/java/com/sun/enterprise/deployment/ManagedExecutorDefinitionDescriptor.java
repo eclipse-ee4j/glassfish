@@ -31,78 +31,76 @@ public class ManagedExecutorDefinitionDescriptor extends ResourceDescriptor impl
 
     private static final long serialVersionUID = 1L;
 
-    private final ManagedExecutorDefinitionData definition;
+    private final ManagedExecutorDefinitionData data;
 
     public ManagedExecutorDefinitionDescriptor() {
-        this(new ManagedExecutorDefinitionData(), null);
+        this(new ManagedExecutorDefinitionData(), MetadataSource.XML);
     }
 
 
     public ManagedExecutorDefinitionDescriptor(ManagedExecutorDefinitionData data, MetadataSource source) {
-        this.definition = data;
+        this.data = data;
         setResourceType(JavaEEResourceType.MEDD);
-        if (source != null) {
-            setMetadataSource(source);
-        }
+        setMetadataSource(source);
     }
 
 
     @Override
     public String getName() {
-        return this.definition.getName();
+        return this.data.getName();
     }
 
 
     @Override
     public void setName(String name) {
-        this.definition.setName(name);
+        this.data.setName(name);
     }
 
 
     @Override
     public String getContext() {
-        return definition.getContext();
+        return data.getContext();
     }
 
 
     @Override
     public void setContext(String context) {
-        definition.setContext(context);
+        data.setContext(context);
     }
 
 
     public int getMaximumPoolSize() {
-        return definition.getMaximumPoolSize();
+        return data.getMaximumPoolSize();
     }
 
 
     public void setMaximumPoolSize(int maximumPoolSize) {
-        definition.setMaximumPoolSize(maximumPoolSize);
+        data.setMaximumPoolSize(maximumPoolSize);
     }
 
 
     public long getHungAfterSeconds() {
-        return definition.getHungAfterSeconds();
+        return data.getHungAfterSeconds();
     }
 
 
     public void setHungAfterSeconds(long hungAfterSeconds) {
-        definition.setHungAfterSeconds(hungAfterSeconds);
+        data.setHungAfterSeconds(hungAfterSeconds);
     }
 
 
     public void addProperty(String key, String value) {
-        definition.addProperty(key, value);
+        data.addProperty(key, value);
     }
 
 
     public String getProperty(String key) {
-        return definition.getProperty(key);
+        return data.getProperty(key);
     }
 
 
     public Properties getProperties() {
-        return definition.getProperties();
+        return data.getProperties();
     }
 
 
@@ -112,17 +110,17 @@ public class ManagedExecutorDefinitionDescriptor extends ResourceDescriptor impl
 
 
     public void addManagedExecutorPropertyDescriptor(String name, String value) {
-        this.definition.addManagedExecutorPropertyDescriptor(name, value);
+        this.data.addManagedExecutorPropertyDescriptor(name, value);
     }
 
 
     public ManagedExecutorDefinitionData getData() {
-        return definition;
+        return data;
     }
 
 
     @Override
     public String toString() {
-        return "ManagedExecutorDefinitionDescriptor{definition=" + definition + ')';
+        return "ManagedExecutorDefinitionDescriptor{data=" + data + ')';
     }
 }

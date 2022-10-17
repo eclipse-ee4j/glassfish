@@ -58,9 +58,8 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
      * Does nothing
      */
     @Override
-    public final void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
+    public void validatePreservedResource(Application oldApp, Application newApp, Resource resource,
         Resources allResources) throws ResourceConflictException {
-        // FIXME: remove finals
     }
 
 
@@ -68,7 +67,7 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
      * Same as {@link #deployResource(Object)}
      */
     @Override
-    public final void enableResource(D resource) throws Exception {
+    public void enableResource(D resource) throws Exception {
         deployResource(resource);
     }
 
@@ -77,7 +76,7 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
      * Same as {@link #undeployResource(Object)}
      */
     @Override
-    public final void disableResource(D resource) throws Exception {
+    public void disableResource(D resource) throws Exception {
         undeployResource(resource);
     }
 
@@ -109,6 +108,13 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
     }
 
 
+    /**
+     * Calls {@link ConnectorsUtil#deriveResourceName(String, String, JavaEEResourceType)} using
+     * descriptor attributes
+     *
+     * @param descriptor
+     * @return JNDI name
+     */
     protected String toResourceName(D descriptor) {
         return deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(), descriptor.getResourceType());
     }

@@ -17,19 +17,8 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
+import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -79,7 +68,19 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
 
 /**
  * Util class for connector related classes
@@ -160,49 +161,37 @@ public class ConnectorsUtil {
     }
 
     private static String internalGetLocation(String moduleName) {
-        ConfigBeansUtilities cbu = getConfigBeansUtilities();
-        if (cbu == null) {
+        ConfigBeansUtilities configBeansUtilities = getConfigBeansUtilities();
+        if (configBeansUtilities == null) {
             return null;
         }
 
-        return cbu.getLocation(moduleName);
+        return configBeansUtilities.getLocation(moduleName);
 
     }
 
     public static String getLocation(String moduleName) throws ConnectorRuntimeException {
         String location = null;
-        if(ConnectorsUtil.belongsToSystemRA(moduleName)){
-            location = ConnectorsUtil.getSystemModuleLocation(moduleName);
-        }else{
+        if (belongsToSystemRA(moduleName)) {
+            location = getSystemModuleLocation(moduleName);
+        } else {
             location = internalGetLocation(moduleName);
-            if(location == null){
-                //check whether its embedded RAR
+            if (location == null) {
+                // check whether its embedded RAR
                 String rarName = getRarNameFromApplication(moduleName);
                 String appName = getApplicationNameOfEmbeddedRar(moduleName);
                 location = internalGetLocation(appName);
-                if(location != null){
+                if (location != null) {
                     location = location + File.separator + rarName + "_rar";
-                }else{
+                } else {
                     throw new ConnectorRuntimeException("Unable to find location for module : " + moduleName);
                 }
             }
         }
-        return location;
-        /* TODO V3
 
-            if(moduleName == null) {
-                return null;
-            }
-            String location  = null;
-            ConnectorModule connectorModule =
-                    dom.getApplications().getConnectorModuleByName(moduleName);
-            if(connectorModule != null) {
-                location = RelativePathResolver.
-                        resolvePath(connectorModule.getLocation());
-            }
-            return location;
-        */
+        return location;
     }
+
     /**
      *  Return the system PM name for the JNDI name
      * @param  jndiName jndi name
@@ -219,12 +208,13 @@ public class ConnectorsUtil {
      */
     public static String getValidSuffix(String name) {
         if (name != null) {
-            for (String validSuffix : ConnectorConstants.JNDI_SUFFIX_VALUES) {
+            for (String validSuffix : JNDI_SUFFIX_VALUES) {
                 if (name.endsWith(validSuffix)) {
                     return validSuffix;
                 }
             }
         }
+
         return null;
     }
 
@@ -237,12 +227,13 @@ public class ConnectorsUtil {
      */
     public static boolean isValidJndiSuffix(String suffix) {
         if (suffix != null) {
-            for (String validSuffix : ConnectorConstants.JNDI_SUFFIX_VALUES) {
+            for (String validSuffix : JNDI_SUFFIX_VALUES) {
                 if (validSuffix.equals(suffix)) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
@@ -254,9 +245,10 @@ public class ConnectorsUtil {
      */
     public static String deriveJndiName(String name, Hashtable env) {
         String suffix = (String) env.get(ConnectorConstants.JNDI_SUFFIX_PROPERTY);
-        if (ConnectorsUtil.isValidJndiSuffix(suffix)) {
+        if (isValidJndiSuffix(suffix)) {
             return name + suffix;
         }
+
         return name;
     }
 
@@ -271,19 +263,21 @@ public class ConnectorsUtil {
                 }
             }
         }
+
         return pool;
     }
 
     public static Collection<Resource> getAllResources(Collection<String> poolNames, Resources allResources) {
         List<Resource> connectorResources = new ArrayList<>();
-        for(Resource resource : allResources.getResources()){
-            if(resource instanceof ConnectorResource){
-                ConnectorResource connectorResource = (ConnectorResource)resource;
-                if(poolNames.contains(connectorResource.getPoolName())){
+        for (Resource resource : allResources.getResources()) {
+            if (resource instanceof ConnectorResource) {
+                ConnectorResource connectorResource = (ConnectorResource) resource;
+                if (poolNames.contains(connectorResource.getPoolName())) {
                     connectorResources.add(connectorResource);
                 }
             }
         }
+
         return connectorResources;
     }
 
@@ -294,16 +288,16 @@ public class ConnectorsUtil {
      */
     public static Collection<String> getAllPoolNames(Collection<ConnectorConnectionPool> connectionPools) {
         Set<String> poolNames = new HashSet<>();
-        for(ConnectorConnectionPool pool : connectionPools){
+        for (ConnectorConnectionPool pool : connectionPools) {
             poolNames.add(pool.getName());
         }
         return poolNames;
     }
 
-    public static Collection<WorkSecurityMap> getAllWorkSecurityMaps(Resources resources, String moduleName){
+    public static Collection<WorkSecurityMap> getAllWorkSecurityMaps(Resources resources, String moduleName) {
         List<WorkSecurityMap> workSecurityMaps = new ArrayList<>();
-        for(WorkSecurityMap resource : resources.getResources(WorkSecurityMap.class)){
-            if(resource.getResourceAdapterName().equals(moduleName)){
+        for (WorkSecurityMap resource : resources.getResources(WorkSecurityMap.class)) {
+            if (resource.getResourceAdapterName().equals(moduleName)) {
                 workSecurityMaps.add(resource);
             }
         }
@@ -312,15 +306,16 @@ public class ConnectorsUtil {
 
     /**
      * get the pools for a particular resource-adapter
+     *
      * @param moduleName resource-adapter name
      * @return collection of connectorConnectionPool
      */
     public static Collection<ConnectorConnectionPool> getAllPoolsOfModule(String moduleName, Resources allResources) {
         List<ConnectorConnectionPool> connectorConnectionPools = new ArrayList<>();
-        for(Resource resource : allResources.getResources()){
-            if(resource instanceof ConnectorConnectionPool){
-                ConnectorConnectionPool connectorConnectionPool = (ConnectorConnectionPool)resource;
-                if(connectorConnectionPool.getResourceAdapterName().equals(moduleName)){
+        for (Resource resource : allResources.getResources()) {
+            if (resource instanceof ConnectorConnectionPool) {
+                ConnectorConnectionPool connectorConnectionPool = (ConnectorConnectionPool) resource;
+                if (connectorConnectionPool.getResourceAdapterName().equals(moduleName)) {
                     connectorConnectionPools.add(connectorConnectionPool);
                 }
             }
@@ -330,11 +325,12 @@ public class ConnectorsUtil {
 
     /**
      * Get all System RAR pools and resources
+     *
      * @param allResources all configured resources
      * @return Collection of system RAR pools
      */
     public static Collection<Resource> getAllSystemRAResourcesAndPools(Resources allResources) {
-        //Make sure that resources are added first and then pools.
+        // Make sure that resources are added first and then pools.
         List<Resource> resources = new ArrayList<>();
         List<Resource> pools = new ArrayList<>();
         for (Resource resource : allResources.getResources()) {
@@ -362,18 +358,19 @@ public class ConnectorsUtil {
 
     /**
      * Given the poolname, retrieve the resourceadapter name
+     *
      * @param poolName connection pool name
      * @param allResources resources
      * @return resource-adapter name
      */
     public static String getResourceAdapterNameOfPool(String poolName, Resources allResources) {
         String raName = null;
-        for(Resource resource : allResources.getResources()){
-            if(resource instanceof ConnectorConnectionPool){
-                ConnectorConnectionPool ccp = (ConnectorConnectionPool)resource;
-                String name = ccp.getName();
-                if(name.equalsIgnoreCase(poolName)){
-                    raName = ccp.getResourceAdapterName();
+        for (Resource resource : allResources.getResources()) {
+            if (resource instanceof ConnectorConnectionPool) {
+                ConnectorConnectionPool connectorConnectionPool = (ConnectorConnectionPool) resource;
+                String name = connectorConnectionPool.getName();
+                if (name.equalsIgnoreCase(poolName)) {
+                    raName = connectorConnectionPool.getResourceAdapterName();
                     break;
                 }
             }
@@ -383,9 +380,9 @@ public class ConnectorsUtil {
 
     public static ResourceAdapterConfig getRAConfig(String raName, Resources allResources) {
         Collection<ResourceAdapterConfig> raConfigs = allResources.getResources(ResourceAdapterConfig.class);
-        for(ResourceAdapterConfig rac : raConfigs){
-            if(rac.getResourceAdapterName().equals(raName)){
-                return rac;
+        for (ResourceAdapterConfig resourceAdapterConfig : raConfigs) {
+            if (resourceAdapterConfig.getResourceAdapterName().equals(raName)) {
+                return resourceAdapterConfig;
             }
         }
         return null;
@@ -402,12 +399,13 @@ public class ConnectorsUtil {
         List<WorkSecurityMap> workSecurityMaps = new ArrayList<>();
         for (Resource resource : resourcesList) {
             if (resource instanceof WorkSecurityMap) {
-                WorkSecurityMap wsm = (WorkSecurityMap) resource;
-                if (wsm.getResourceAdapterName().equals(raName)) {
-                    workSecurityMaps.add(wsm);
+                WorkSecurityMap workSecurityMap = (WorkSecurityMap) resource;
+                if (workSecurityMap.getResourceAdapterName().equals(raName)) {
+                    workSecurityMaps.add(workSecurityMap);
                 }
             }
         }
+
         return workSecurityMaps;
     }
 
@@ -857,7 +855,6 @@ public class ConnectorsUtil {
     public static ResourceInfo getResourceInfo(BindableResource resource){
         return ResourceUtil.getResourceInfo(resource);
     }
-
 
     public static String getApplicationName(Resource resource){
         String applicationName = null;

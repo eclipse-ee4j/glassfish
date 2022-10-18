@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,35 +17,39 @@
 
 package org.glassfish.javaee.services;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.deployment.ResourceDescriptor;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
 
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
-import javax.naming.Context;
-import javax.naming.NamingException;
 
 @Service
 @PerLookup
 public class JMSCFResourcePMProxy extends CommonResourceProxy {
 
+    private static final long serialVersionUID = 1L;
+
     @Override
-    public synchronized Object create(Context ic) throws NamingException {
+    public synchronized Object create(Context context) throws NamingException {
         if (actualResourceName == null) {
             boolean wasDeployed = false;
             try {
-                if (ic.lookup(desc.getName()) != null)
+                if (context.lookup(desc.getName()) != null) {
                     wasDeployed = true;
-            } catch (NamingException ne) {}
+                }
+            } catch (NamingException ne) {
+            }
 
             if (!wasDeployed) {
                 try {
                     if (serviceLocator == null) {
                         serviceLocator = Globals.getDefaultHabitat();
                         if (serviceLocator == null) {
-                            throw new NamingException("Unable to create resource " +
-                                    "[" + desc.getName() + " ] as habitat is null");
+                            throw new NamingException("Unable to create resource " + "[" + desc.getName() + " ] as serviceLocator is null");
                         }
                     }
                     getResourceDeployer(desc).deployResource(desc);
@@ -54,10 +59,15 @@ public class JMSCFResourcePMProxy extends CommonResourceProxy {
                     throw ne;
                 }
             }
-            // append __PM suffix to jndi name
-            actualResourceName = ConnectorsUtil.deriveResourceName
-                    (desc.getResourceId(), ConnectorsUtil.getPMJndiName(desc.getName()), desc.getResourceType());
+
+            // Append __PM suffix to jndi name
+            actualResourceName =
+                deriveResourceName(
+                    desc.getResourceId(),
+                    getPMJndiName(desc.getName()),
+                    desc.getResourceType());
         }
-        return ic.lookup(actualResourceName);
+
+        return context.lookup(actualResourceName);
     }
 }

@@ -17,6 +17,8 @@
 
 package io.helidon.microprofile.config;
 
+import static java.util.Optional.ofNullable;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
@@ -40,10 +42,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
+import org.eclipse.microprofile.config.ConfigValue;
+import org.eclipse.microprofile.config.inject.ConfigProperties;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.config.spi.Converter;
+
 import io.helidon.common.NativeImageHelper;
 import io.helidon.config.ConfigException;
 import io.helidon.config.mp.MpConfig;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.spi.CreationalContext;
@@ -64,14 +72,6 @@ import jakarta.enterprise.inject.spi.ProcessBean;
 import jakarta.enterprise.inject.spi.ProcessObserverMethod;
 import jakarta.enterprise.inject.spi.ProcessSyntheticObserverMethod;
 import jakarta.enterprise.inject.spi.WithAnnotations;
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.ConfigProvider;
-import org.eclipse.microprofile.config.ConfigValue;
-import org.eclipse.microprofile.config.inject.ConfigProperties;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.config.spi.Converter;
-
-import static java.util.Optional.ofNullable;
 
 /**
  * Extension to enable config injection in CDI container (all of {@link io.helidon.config.Config},
@@ -130,11 +130,13 @@ public class ConfigCdiExtension implements Extension {
         AnnotatedType<?> annotatedType = event.getAnnotatedType();
         ConfigProperties configProperties = annotatedType.getAnnotation(ConfigProperties.class);
         if (configProperties == null) {
-            // ignore classes that do not have this annotation on class level
+            // Ignore classes that do not have this annotation on class level
             return;
         }
-        configBeans.put(annotatedType.getJavaClass(), ConfigBeanDescriptor.create(annotatedType, configProperties));
-        // we must veto this annotated type, as we need to create a custom bean to create an instance
+
+        configBeans.put(annotatedType.getJavaClass(), ConfigBeanDescriptor.create(annotatedType.getJavaClass(), configProperties));
+
+        // We must veto this annotated type, as we need to create a custom bean to create an instance
         event.veto();
     }
 

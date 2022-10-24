@@ -800,16 +800,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         // the username and password from MCF, to use in subject. MQ adapter
         // cannot use "","" as the username/password.
 
-        if (userName == null || userName.trim().equals("")) {
-            userName = ConnectionPoolObjectsUtils.getValueFromMCF("UserName", poolInfo, mcf);
-            //It is possible that ResourceAdapter may have getUser() instead of
-            //getUserName() property getter
-            if (userName.trim().equals("")) {
-                userName = ConnectionPoolObjectsUtils.getValueFromMCF("User", poolInfo, mcf);
-            }
+        if (userName == null || userName.isBlank()) {
+            userName = ConnectionPoolObjectsUtils.getValueFromMCF("User", poolInfo, mcf);
             password = ConnectionPoolObjectsUtils.getValueFromMCF("Password", poolInfo, mcf);
         }
-        //Now return the ResourcePrincipalDescriptor
         return new ResourcePrincipalDescriptor(userName, password);
     }
 

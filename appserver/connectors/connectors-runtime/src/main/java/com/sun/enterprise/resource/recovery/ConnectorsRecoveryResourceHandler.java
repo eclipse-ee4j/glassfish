@@ -392,7 +392,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
 
         // else read the default username and password from the ra.xml
         ManagedConnectionFactory mcf = connectorRegistry.getManagedConnectionFactory(poolInfo);
-        userPassword[0] = ConnectionPoolObjectsUtils.getValueFromMCF("UserName", poolInfo, mcf);
+        userPassword[0] = ConnectionPoolObjectsUtils.getValueFromMCF("User", poolInfo, mcf);
         userPassword[1] = ConnectionPoolObjectsUtils.getValueFromMCF("Password", poolInfo, mcf);
         return userPassword;
     }

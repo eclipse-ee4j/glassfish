@@ -199,7 +199,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 desc = getJndiNameEnvironment(inv.componentId);
                 if (_logger.isLoggable(Level.FINEST)) {
                     _logger.finest("ComponentEnvManagerImpl: getCurrentJndiNameEnvironment " + inv.componentId + " is "
-                        + desc.getClass());
+                        + (desc == null ? null : desc.getClass()));
                 }
             }
         }
@@ -319,17 +319,13 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         if (dependencyAppliesToScope(desc, ScopeType.COMPONENT)) {
             return getApplicationName(env) + "/" + getModuleName(env) + "/" + getComponentEnvId(env);
         }
-
         if (dependencyAppliesToScope(desc, ScopeType.MODULE)) {
             return getApplicationName(env) + "/" + getModuleName(env);
         }
-
         if (dependencyAppliesToScope(desc, ScopeType.APP)) {
             return getApplicationName(env);
         }
-
         return "";
-
     }
 
     private void addAllDescriptorBindings(JndiNameEnvironment JndiEnvironment, ScopeType scope, Collection<JNDIBinding> jndiBindings) {

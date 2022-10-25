@@ -42,7 +42,6 @@ The project maintains the following source code repositories:
 * https://github.com/eclipse-ee4j/glassfish-ha-api
 * https://github.com/eclipse-ee4j/glassfish-hk2
 * https://github.com/eclipse-ee4j/glassfish-hk2-extra
-* https://github.com/eclipse-ee4j/glassfish-infra
 * https://github.com/eclipse-ee4j/glassfish-jsftemplating
 * https://github.com/eclipse-ee4j/glassfish-logging-annotation-processor
 * https://github.com/eclipse-ee4j/glassfish-maven-embedded-plugin

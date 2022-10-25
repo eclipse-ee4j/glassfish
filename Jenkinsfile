@@ -83,6 +83,12 @@ def generateMvnPodTemplate(job) {
             timeout(time: 1, unit: 'HOURS') {
               sh """
                 mvn clean install
+                mvn spec-version:check-distribution \
+                  -f appserver -N \
+                  -Dstage.dir=../appserver/distributions/web/target/stage
+                mvn spec-version:check-distribution \
+                  -f appserver -N \
+                  -Dstage.dir=../appserver/distributions/glassfish/target/stage
               """
               junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
             }
@@ -271,6 +277,15 @@ spec:
 
               # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
               mvn clean install -Pfastest,staging -T4C
+
+              mvn spec-version:check-distribution \
+                -f appserver -N \
+                -Dstage.dir=../appserver/distributions/web/target/stage
+
+              mvn spec-version:check-distribution \
+                -f appserver -N \
+                -Dstage.dir=../appserver/distributions/glassfish/target/stage
+
               ./gfbuild.sh archive_bundles
               mvn clean
               tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz

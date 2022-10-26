@@ -15,16 +15,6 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-// the label is unique and identifies the pod descriptor and its resulting pods
-// without this, the agent could be using a pod created from a different descriptor
-env.label = "glassfish-ci-pod-${UUID.randomUUID().toString()}"
-
-// Docker images defined in this project in [glassfish]/etc/docker*
-// Older image
-env.gfImage11 = "dmatej/eclipse-jenkins-glassfish:11.0.14.1"
-// Image required to be able to build hibernate-validator snapshot, but now used for glassfish too
-env.gfImage17 = "dmatej/eclipse-jenkins-glassfish:17.20"
-
 def jobs = [
   "verifyPhase",
   "cdi_all",
@@ -62,70 +52,41 @@ def generateStage(job) {
 
 def generateMvnPodTemplate(job) {
   return {
-    podTemplate(
-      inheritFrom: "${env.label}",
-      containers: [
-        containerTemplate(
-          name: "glassfish-build",
-          image: "${env.gfImage17}",
-          resourceRequestMemory: "7Gi",
-          resourceRequestCpu: "2650m"
-        )
-      ]
-    ) {
-      node(label) {
-        stage("${job}") {
-          container('glassfish-build') {
-            retry(5) {
-              sleep 1
-              checkout scm
-            }
-            timeout(time: 1, unit: 'HOURS') {
-              sh """
-                mvn clean install
-              """
-              junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-            }
+    node {
+      stage("${job}") {
+          checkout scm
+          timeout(time: 1, unit: 'HOURS') {
+            sh """
+              mvn clean install -P staging
+            """
+            junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
           }
         }
-      }
     }
   }
 }
 
 def generateAntPodTemplate(job) {
   return {
-    podTemplate(
-      inheritFrom: "${env.label}",
-      containers: [
-        containerTemplate(
-          name: "glassfish-build",
-          image: "${env.gfImage17}",
-          resourceRequestMemory: "4Gi",
-          resourceRequestCpu: "2650m"
-        )
-      ]
-    ) {
-      node(label) {
-        stage("${job}") {
-          container('glassfish-build') {
-            unstash 'build-bundles'
-            sh """
-              mkdir -p ${WORKSPACE}/appserver/tests
-              tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
-            """
-            try {
-              timeout(time: 1, unit: 'HOURS') {
-                sh """
-                  export CLASSPATH=${WORKSPACE}/glassfish7/javadb
-                  ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
-                """
-              }
-            } finally {
-              archiveArtifacts artifacts: "${job}-results.tar.gz"
-              junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+    node {
+      stage("${job}") {
+        unstash 'build-bundles'
+        sh """
+          mkdir -p ${WORKSPACE}/appserver/tests
+          tar -xzf ${WORKSPACE}/bundles/appserv_tests.tar.gz -C ${WORKSPACE}/appserver/tests
+        """
+        try {
+          timeout(time: 1, unit: 'HOURS') {
+            withAnt(installation: 'apache-ant-latest') {
+              sh """
+                export CLASSPATH=${WORKSPACE}/glassfish7/javadb
+                ${WORKSPACE}/appserver/tests/gftest.sh run_test ${job}
+              """
             }
           }
+        } finally {
+          archiveArtifacts artifacts: "${job}-results.tar.gz"
+          junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
         }
       }
     }
@@ -134,89 +95,7 @@ def generateAntPodTemplate(job) {
 
 pipeline {
 
-  agent {
-    kubernetes {
-      label "${env.label}"
-      yaml """
-apiVersion: v1
-kind: Pod
-metadata:
-spec:
-  containers:
-  - name: jnlp
-    image: jenkins/inbound-agent:4.11-1-alpine-jdk11
-    imagePullPolicy: IfNotPresent
-    env:
-      - name: JAVA_TOOL_OPTIONS
-        value: "-Xmx768m -Xss768k"
-    resources:
-      # fixes random failure: minimum cpu usage per Pod is 200m, but request is 100m.
-      # affects performance on large repositories
-      limits:
-        memory: "1200Mi"
-        cpu: "300m"
-      requests:
-        memory: "1200Mi"
-        cpu: "300m"
-  - name: glassfish-build
-    image: ${env.gfImage17}
-    args:
-    - cat
-    tty: true
-    imagePullPolicy: Always
-    volumeMounts:
-      - name: "jenkins-home"
-        mountPath: "/home/jenkins"
-        readOnly: false
-      - name: maven-repo-shared-storage
-        mountPath: /home/jenkins/.m2/repository
-      - name: settings-xml
-        mountPath: /home/jenkins/.m2/settings.xml
-        subPath: settings.xml
-        readOnly: true
-      - name: settings-security-xml
-        mountPath: /home/jenkins/.m2/settings-security.xml
-        subPath: settings-security.xml
-        readOnly: true
-      - name: maven-repo-local-storage
-        mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
-    env:
-      - name: "MAVEN_OPTS"
-        value: "-Duser.home=/home/jenkins -Xmx2500m -Xss768k -XX:+UseStringDeduplication"
-      - name: "MVN_EXTRA"
-        value: "--batch-mode -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-      - name: JAVA_TOOL_OPTIONS
-        value: "-Xmx2g -Xss768k -XX:+UseStringDeduplication"
-    resources:
-      limits:
-        memory: "12Gi"
-        cpu: "8000m"
-      requests:
-        memory: "7Gi"
-        cpu: "4000m"
-  volumes:
-    - name: "jenkins-home"
-      emptyDir: {}
-    - name: maven-repo-shared-storage
-      persistentVolumeClaim:
-        claimName: glassfish-maven-repo-storage
-    - name: settings-xml
-      secret:
-        secretName: m2-secret-dir
-        items:
-        - key: settings.xml
-          path: settings.xml
-    - name: settings-security-xml
-      secret:
-        secretName: m2-secret-dir
-        items:
-        - key: settings-security.xml
-          path: settings-security.xml
-    - name: maven-repo-local-storage
-      emptyDir: {}
-"""
-    }
-  }
+  agent any
 
   environment {
     S1AS_HOME = "${WORKSPACE}/glassfish7/glassfish"
@@ -250,40 +129,41 @@ spec:
   stages {
 
     stage('build') {
-      agent {
-        kubernetes {
-          label "${env.label}"
-        }
+      agent any
+      tools {
+        jdk 'temurin-jdk17-latest'
+        maven 'apache-maven-latest'
       }
       steps {
-        container('glassfish-build') {
-          timeout(time: 1, unit: 'HOURS') {
-            checkout scm
-            sh '''
-              echo Maven version
-              mvn -v
+        checkout scm
+        sh '''
+          echo Maven version
+          mvn -v
 
-              echo User
-              id
+          echo User
+          id
 
-              echo Uname
-              uname -a
+          echo Uname
+          uname -a
 
-              # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
-              mvn clean install -Pfastest,staging -T4C
-              ./gfbuild.sh archive_bundles
-              mvn clean
-              tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
-              ls -la ${WORKSPACE}/bundles
-            '''
-            archiveArtifacts artifacts: 'bundles/*.zip'
-            stash includes: 'bundles/*', name: 'build-bundles'
-          }
-        }
+          # Until we fix ANTLR in cmp-support-sqlstore, broken in parallel builds. Just -Pfast after the fix.
+          mvn clean install -Pfastest,staging -T4C
+          ./gfbuild.sh archive_bundles
+          mvn clean
+          tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+          ls -la ${WORKSPACE}/bundles
+        '''
+        archiveArtifacts artifacts: 'bundles/*.zip'
+        stash includes: 'bundles/*', name: 'build-bundles'
       }
     }
 
     stage('tests') {
+      agent any
+      tools {
+        jdk 'temurin-jdk17-latest'
+        maven 'apache-maven-latest'
+      }
       steps {
         script {
           parallel parallelStagesMap

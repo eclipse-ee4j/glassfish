@@ -715,6 +715,7 @@
                 <version>2.1</version>
                 <configuration>
                     <dir>${stage.dir}/${install.dir.name}/glassfish/modules</dir>
+                    <includes>jakarta*.jar</includes>
                     <excludes>jakarta.inject-api.jar,jakarta.servlet.jsp.jstl.jar,wasp.jar,jakarta.enterprise.concurrent.jar,
                         jakarta.persistence.jar</excludes>
                     <specs>

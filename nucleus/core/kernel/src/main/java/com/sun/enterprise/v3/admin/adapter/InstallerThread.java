@@ -125,9 +125,12 @@ final class InstallerThread extends Thread {
                 singleModule.setName(app.getName());
                 Engine webe = singleModule.createChild(Engine.class);
                 webe.setSniffer("web");
+                Engine weldEngine = singleModule.createChild(Engine.class);
+                weldEngine.setSniffer("weld");
                 Engine sece = singleModule.createChild(Engine.class);
                 sece.setSniffer("security");
                 singleModule.getEngines().add(webe);
+                singleModule.getEngines().add(weldEngine);
                 singleModule.getEngines().add(sece);
                 Server s = (Server) proxies[1];
                 List<ApplicationRef> arefs = s.getApplicationRef();

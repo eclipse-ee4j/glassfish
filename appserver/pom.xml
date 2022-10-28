@@ -159,7 +159,7 @@
 
         <jsftemplating.version>4.0.0-SNAPSHOT</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>5.0.0</woodstock.version>
+        <woodstock.version>6.0.0-SNAPSHOT</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
         <woodstock-dojo-ajax-nodemo.version>1.12.4</woodstock-dojo-ajax-nodemo.version>
         <woodstock-json.version>2.0</woodstock-json.version>

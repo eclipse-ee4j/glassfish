@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,19 @@
  */
 
 package com.sun.enterprise.security.auth.realm.jdbc;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.enterprise.security.BaseRealm;
+import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Password;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.ee.auth.realm.DigestRealmBase;
+import com.sun.enterprise.universal.GFBase64Encoder;
+import com.sun.enterprise.util.Utility;
 
 import java.io.Reader;
 import java.nio.charset.CharacterCodingException;
@@ -38,23 +52,10 @@ import java.util.logging.Level;
 import javax.security.auth.login.LoginException;
 import javax.sql.DataSource;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.annotations.Service;
-
-//import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.enterprise.security.BaseRealm;
-import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
-import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.ee.auth.realm.DigestRealmBase;
-import com.sun.enterprise.universal.GFBase64Encoder;
-import com.sun.enterprise.util.Utility;
 
 /**
  * Realm for supporting JDBC authentication.
@@ -509,15 +510,10 @@ public final class JDBCRealm extends DigestRealmBase {
      */
     private Connection getConnection() throws LoginException {
 
-        final String dsJndi = this.getProperty(PARAM_DATASOURCE_JNDI);
+        final SimpleJndiName dsJndi = SimpleJndiName.of(this.getProperty(PARAM_DATASOURCE_JNDI));
         final String dbUser = this.getProperty(PARAM_DB_USER);
         final String dbPassword = this.getProperty(PARAM_DB_PASSWORD);
         try {
-            /*
-             * String nonTxJndiName = dsJndi +"__nontx"; InitialContext ic = new InitialContext(); final DataSource dataSource =
-             * //V3 Commented (DataSource)ConnectorRuntime.getRuntime().lookupNonTxResource(dsJndi,false); //replacement code
-             * suggested by jagadish (DataSource)ic.lookup(nonTxJndiName);
-             */
             ConnectorRuntime connectorRuntime = Util.getDefaultHabitat().getServiceHandle(cr).getService();
             final DataSource dataSource = (DataSource) connectorRuntime.lookupNonTxResource(dsJndi, false);
             // (DataSource)ConnectorRuntime.getRuntime().lookupNonTxResource(dsJndi,false);

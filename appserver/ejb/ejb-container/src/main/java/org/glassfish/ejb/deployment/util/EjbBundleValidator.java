@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.deployment.descriptor.DummyEjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
@@ -558,13 +559,11 @@ public class EjbBundleValidator extends ComponentValidator implements EjbBundleV
         }
 
         if (intfName != null) {
-            String jndiName = getDefaultEjbJndiName(intfName);
-            ejb.setJndiName(jndiName);
+            ejb.setJndiName(SimpleJndiName.of(intfName));
         }
 
         if (!ejb.getUsesCallerIdentity()) {
-            computeRunAsPrincipalDefault(
-                ejb.getRunAsIdentity(), ejb.getApplication());
+            computeRunAsPrincipalDefault(ejb.getRunAsIdentity(), ejb.getApplication());
         }
     }
 

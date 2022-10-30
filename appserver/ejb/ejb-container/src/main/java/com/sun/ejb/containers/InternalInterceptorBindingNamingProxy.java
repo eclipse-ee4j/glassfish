@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,16 @@
 
 package com.sun.ejb.containers;
 
-import org.glassfish.api.naming.NamespacePrefixes;
-import org.glassfish.api.naming.NamedNamingObjectProxy;
-import org.glassfish.hk2.api.ServiceLocator;
-
 import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
 
 import javax.naming.NamingException;
+
+import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 
 /**
  * Provides access to internal product-specific spi object for binding
@@ -33,24 +36,18 @@ import javax.naming.NamingException;
  */
 @Service
 @NamespacePrefixes(InternalInterceptorBindingNamingProxy.INTERCEPTOR_BINDING)
-public class InternalInterceptorBindingNamingProxy
-        implements NamedNamingObjectProxy {
+public class InternalInterceptorBindingNamingProxy implements NamedNamingObjectProxy {
 
+    public static final String INTERCEPTOR_BINDING = JNDI_CTX_JAVA
+        + "org.glassfish.ejb.container.interceptor_binding_spi";
     @Inject
     private ServiceLocator services;
 
-    public static final String INTERCEPTOR_BINDING = "java:org.glassfish.ejb.container.interceptor_binding_spi";
-
     @Override
     public Object handle(String name) throws NamingException {
-
-        Object returnValue = null;
-
         if (INTERCEPTOR_BINDING.equals(name)) {
-            returnValue = new InternalInterceptorBindingImpl(services);
+            return new InternalInterceptorBindingImpl(services);
         }
-
-        return returnValue;
+        return null;
     }
-
 }

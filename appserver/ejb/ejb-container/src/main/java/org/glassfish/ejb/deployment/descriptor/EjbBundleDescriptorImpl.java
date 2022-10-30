@@ -121,23 +121,6 @@ public class EjbBundleDescriptorImpl extends com.sun.enterprise.deployment.EjbBu
     private final Set<EntityManagerFactoryReferenceDescriptor> entityManagerFactoryReferences = new HashSet<>();
     private final Set<EntityManagerReferenceDescriptor> entityManagerReferences = new HashSet<>();
 
-    /**
-     * @return true if EJB version is 2.x.  This is the default for any new modules.
-     */
-    // XXX
-    // this method is not true anymore now we have ejb3.0, keep this
-    // method as it is for now, will revisit once ejb30 persistence
-    // is implemented
-    public boolean isEJB20() {
-        return !isEJB11();
-    }
-
-    /**
-     * True if EJB version is 1.x.
-     */
-    public boolean isEJB11() {
-        return getSpecVersion().startsWith("1");
-    }
 
     /**
      * @return the default version of the deployment descriptor

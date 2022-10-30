@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,16 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
+import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBs;
 
-import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
@@ -31,34 +35,30 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * This handler is responsible for handling the jakarta.ejb.EJBs attribute
- *
  */
 @Service
 @AnnotationHandlerFor(EJBs.class)
 public class EJBsHandler extends EJBHandler {
 
-    public EJBsHandler() {
-    }
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EJBsHandler.class);
 
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
-
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
+        throws AnnotationProcessorException {
         EJBs ejbsAnnotation = (EJBs) ainfo.getAnnotation();
 
         EJB[] ejbAnnotations = ejbsAnnotation.value();
 
-        if(ejbAnnotations.length == 0) {
-            String localizedMsg = localStrings.getLocalString(
-                    "enterprise.deployment.annotation.handlers.emptyEJBs",
-                    "No @EJB elements in @EJBs on " + ainfo.getAnnotatedElement(),
-                    new Object[]{ejbsAnnotation, ainfo.getAnnotatedElement()});
+        if (ejbAnnotations.length == 0) {
+            String localizedMsg = I18N.getLocalString("enterprise.deployment.annotation.handlers.emptyEJBs",
+                "No @EJB elements in @EJBs on " + ainfo.getAnnotatedElement(),
+                new Object[] {ejbsAnnotation, ainfo.getAnnotatedElement()});
             logger.log(Level.WARNING, localizedMsg);
         }
 
-        List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
+        List<HandlerProcessingResult> results = new ArrayList<>();
 
-        for(EJB ejb : ejbAnnotations) {
+        for (EJB ejb : ejbAnnotations) {
             results.add(processEJB(ainfo, rcContexts, ejb));
         }
 

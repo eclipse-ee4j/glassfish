@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,25 @@
  */
 
 package org.glassfish.ejb.persistent.timer;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.ejb.containers.BaseContainer;
+import com.sun.ejb.containers.EJBTimerSchedule;
+import com.sun.ejb.containers.EJBTimerService;
+import com.sun.ejb.containers.EjbContainerUtil;
+import com.sun.ejb.containers.EjbContainerUtilImpl;
+import com.sun.ejb.containers.RuntimeTimerState;
+import com.sun.ejb.containers.TimerPrimaryKey;
+import com.sun.enterprise.config.serverbeans.ServerTags;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
+
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.FinderException;
+import jakarta.ejb.TimerConfig;
+import jakarta.transaction.TransactionManager;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -33,28 +52,13 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.ejb.CreateException;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.FinderException;
-import jakarta.ejb.TimerConfig;
-import javax.sql.DataSource;
-import jakarta.transaction.TransactionManager;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.EjbContainerUtil;
-import com.sun.ejb.containers.EjbContainerUtilImpl;
-import com.sun.ejb.containers.EJBTimerService;
-import com.sun.ejb.containers.EJBTimerSchedule;
-import com.sun.ejb.containers.RuntimeTimerState;
-import com.sun.ejb.containers.TimerPrimaryKey;
-import com.sun.enterprise.config.serverbeans.ServerTags;
-import com.sun.enterprise.deployment.MethodDescriptor;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
+import javax.sql.DataSource;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.ejb.config.EjbContainer;
 import org.glassfish.ejb.config.EjbTimerService;
@@ -68,6 +72,8 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * Persistent support part of the EJBTimerService
@@ -94,7 +100,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
     EjbTimerService ejbt = null;
     private DataSource timerDataSource = null;
 
-    private static final String TIMER_RESOURCE_JNDI = "jdbc/__TimerPool";
+    private static final SimpleJndiName TIMER_RESOURCE_JNDI = new SimpleJndiName("jdbc/__TimerPool");
     private static final String TIMER_SERVICE_APP_NAME = "ejb-timer-service-app";
     private static final String TIMER_SERVICE_BEAN_NAME = "TimerBean";
 
@@ -270,8 +276,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
                 }
             }
         } else {
-            logger.log(Level.INFO, fromOwnerId + " has 0 timers in need " +
-                       "of migration");
+            logger.log(Level.INFO, fromOwnerId + " has 0 timers in need of migration");
         }
 
         return totalTimersMigrated;
@@ -346,7 +351,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
                 restoreTimers();
                 rc = true;
             } else {
-                int s = (timerLocal_.findActiveTimersOwnedByThisServer()).size();
+                int s = timerLocal_.findActiveTimersOwnedByThisServer().size();
                 if (s > 0) {
                     logger.log(Level.INFO, "[" + s + "] EJB Timers owned by this server will be restored when timeout beans are loaded");
                 } else {
@@ -1296,16 +1301,14 @@ public class PersistentEJBTimerService extends EJBTimerService {
         if (failed) {
             logger.log(Level.WARNING, "Cannot acquire a connection from the database used by the EJB Timer Service");
         } else {
-            if( logger.isLoggable(Level.FINE) ) {
-                logger.log(Level.FINE, "Connection ok");
-            }
+            logger.log(Level.FINE, "Connection ok");
         }
 
         return failed;
     }
 
     private void lookupTimerResource() throws Exception {
-        String resource_name = getTimerResource();
+        SimpleJndiName resource_name = getTimerResource();
         ConnectorRuntime connectorRuntime = ejbContainerUtil.getServices().getService(ConnectorRuntime.class);
         timerDataSource = DataSource.class.cast(connectorRuntime.lookupNonTxResource(resource_name, false));
     }
@@ -1315,7 +1318,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
         EjbContainerUtil _ejbContainerUtil = EjbContainerUtilImpl.getInstance();
         EjbTimerService _ejbt = _ejbContainerUtil.getEjbTimerService(target);
-        String resourceName = getTimerResource(_ejbt);
+        SimpleJndiName resourceName = getTimerResource(_ejbt);
 
         File root = _ejbContainerUtil.getServerContext().getInstallRoot();
         boolean is_upgrade = isUpgrade(resourceName, _ejbt, root);
@@ -1340,11 +1343,9 @@ public class PersistentEJBTimerService extends EJBTimerService {
 
         if (available) {
             try {
-                ts = new PersistentEJBTimerService("java:global/" +
-                        TIMER_SERVICE_APP_NAME + "/" + TIMER_SERVICE_BEAN_NAME,
-                        removeOldTimers);
-
-                logger.log(Level.INFO, "ejb.timer_service_started", new Object[] { resourceName } );
+                ts = new PersistentEJBTimerService(
+                    JNDI_CTX_JAVA_GLOBAL + TIMER_SERVICE_APP_NAME + "/" + TIMER_SERVICE_BEAN_NAME, removeOldTimers);
+                logger.log(Level.INFO, "ejb.timer_service_started", resourceName);
             } catch (Exception ex) {
                 logger.log(Level.WARNING, "ejb.timer_service_init_error", ex);
             }
@@ -1367,27 +1368,24 @@ public class PersistentEJBTimerService extends EJBTimerService {
         }
     }
 
-    private String getTimerResource() {
+    private SimpleJndiName getTimerResource() {
         return getTimerResource(ejbt);
     }
 
-    private static String getTimerResource(EjbTimerService _ejbt) {
-        String resource = null; // EjbTimerService is not available for domain deployment
+    private static SimpleJndiName getTimerResource(EjbTimerService _ejbt) {
+        SimpleJndiName resource = null; // EjbTimerService is not available for domain deployment
         if (_ejbt != null) {
-            if (_ejbt.getTimerDatasource() != null) {
-                resource = _ejbt.getTimerDatasource();
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.fine("Found Timer Service resource name " + resource);
-                }
-            } else {
+            if (_ejbt.getTimerDatasource() == null) {
                 resource = TIMER_RESOURCE_JNDI;
+            } else {
+                return new SimpleJndiName(_ejbt.getTimerDatasource());
             }
         }
         return resource;
     }
 
     private static boolean deployEJBTimerService(File root, File appScratchFile,
-            String resourceName, boolean is_upgrade) {
+        SimpleJndiName resourceName, boolean is_upgrade) {
         boolean deployed = false;
         logger.log (Level.INFO, "Loading EJBTimerService. Please wait.");
         File app = null;
@@ -1448,7 +1446,7 @@ public class PersistentEJBTimerService extends EJBTimerService {
         return deployed;
     }
 
-    private static boolean isUpgrade(String resource, EjbTimerService _ejbt, File root) {
+    private static boolean isUpgrade(SimpleJndiName resource, EjbTimerService _ejbt, File root) {
         boolean upgrade = false;
         Property prop = null;
         if (_ejbt != null) {

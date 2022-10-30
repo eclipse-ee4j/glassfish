@@ -50,6 +50,9 @@ import javax.naming.InitialContext;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+
 /**
  * Implementation of jakarta.ejb.EJBContext for the J2EE Reference Implementation.
  */
@@ -362,7 +365,7 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
             }
             // if name starts with java: use it as is. Otherwise, treat it
             // as relative to the private component namespace.
-            String lookupString = name.startsWith("java:") ? name : "java:comp/env/" + name;
+            String lookupString = name.startsWith(JNDI_CTX_JAVA) ? name : JNDI_CTX_JAVA_COMPONENT_ENV + name;
 
             o = initialContext.lookup(lookupString);
         } catch (Exception e) {
@@ -389,7 +392,7 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
      */
     @Override
     public Map<String, Object> getContextData() {
-        Map<String, Object> contextData = Collections.EMPTY_MAP;
+        Map<String, Object> contextData = Collections.emptyMap();
         ComponentInvocation inv = EjbContainerUtilImpl.getInstance().getCurrentInvocation();
         if (inv instanceof EjbInvocation) {
             EjbInvocation ejbInv = (EjbInvocation) inv;
@@ -398,19 +401,6 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
         return contextData;
     }
 
-    /**
-     * @deprecated
-     */
-    @Deprecated
-    public boolean isCallerInRole(Identity identity) {
-        // THis method is deprecated.
-        // This implementation is as in EJB2.0 section 21.2.5
-        return isCallerInRole(identity.getName());
-    }
-
-    /**
-     *
-     */
     @Override
     public boolean isCallerInRole(String roleRef) {
         if (roleRef == null) {

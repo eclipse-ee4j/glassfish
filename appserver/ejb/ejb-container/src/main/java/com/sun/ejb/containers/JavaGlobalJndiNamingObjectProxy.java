@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,22 +23,23 @@ import javax.naming.Context;
 
 /**
  * Used to register portable global JNDI names for LOCAL EJB 2.x / 3.x references.
+ *
  * @author Mahesh Kannan
  */
-public class JavaGlobalJndiNamingObjectProxy
-    implements NamingObjectProxy {
-    private BaseContainer container;
+public class JavaGlobalJndiNamingObjectProxy implements NamingObjectProxy {
 
-    private String intfName;
+    private final BaseContainer container;
+    private final String intfName;
 
     public JavaGlobalJndiNamingObjectProxy(BaseContainer container, String intfName) {
         this.container = container;
         this.intfName = intfName;
     }
 
-    public Object create(Context ic) {
-        GenericEJBLocalHome genericLocalHome =
-                container.getEJBLocalBusinessHome(intfName);
-        return genericLocalHome.create(intfName);
+
+    @Override
+    public <T> T create(Context ic) {
+        GenericEJBLocalHome genericLocalHome = container.getEJBLocalBusinessHome(intfName);
+        return (T) genericLocalHome.create(intfName);
     }
 }

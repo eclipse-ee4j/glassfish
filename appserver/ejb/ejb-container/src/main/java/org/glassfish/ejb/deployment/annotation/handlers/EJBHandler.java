@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,27 +17,30 @@
 
 package org.glassfish.ejb.deployment.annotation.handlers;
 
-import java.lang.annotation.ElementType;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.logging.Level;
-import jakarta.ejb.EJB;
-import jakarta.ejb.EJBHome;
-import jakarta.ejb.EJBLocalHome;
-import jakarta.ejb.Local;
-
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.MetadataSource;
 import com.sun.enterprise.deployment.annotation.context.ResourceContainerContext;
 import com.sun.enterprise.deployment.annotation.handlers.AbstractResourceHandler;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBLocalHome;
+import jakarta.ejb.Local;
+
+import java.lang.annotation.ElementType;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.logging.Level;
+
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.ejb.deployment.descriptor.EjbEntityDescriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.StringUtils.ok;
@@ -50,11 +54,8 @@ import static com.sun.enterprise.util.StringUtils.ok;
 @AnnotationHandlerFor(EJB.class)
 public class EJBHandler extends AbstractResourceHandler {
 
-    protected final static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(EJBHandler.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(EJBHandler.class);
 
-    public EJBHandler() {
-    }
 
     /**
      * Process a particular annotation which type is the same as the
@@ -66,10 +67,9 @@ public class EJBHandler extends AbstractResourceHandler {
      * @param rcContexts an array of ResourceContainerContext
      * @return HandlerProcessingResult
      */
-    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts)
-            throws AnnotationProcessorException {
-
+    @Override
+    protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)
+        throws AnnotationProcessorException {
         EJB ejbAn = (EJB)ainfo.getAnnotation();
         return processEJB(ainfo, rcContexts, ejbAn);
     }
@@ -86,9 +86,8 @@ public class EJBHandler extends AbstractResourceHandler {
      * @param ejbAn
      * @return HandlerProcessingResult
      */
-    protected HandlerProcessingResult processEJB(AnnotationInfo ainfo,
-            ResourceContainerContext[] rcContexts, EJB ejbAn)
-            throws AnnotationProcessorException {
+    protected HandlerProcessingResult processEJB(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts, EJB ejbAn)
+        throws AnnotationProcessorException {
         EjbReferenceDescriptor ejbRefs[] = null;
 
         String defaultLogicalName = null;
@@ -134,7 +133,7 @@ public class EJBHandler extends AbstractResourceHandler {
                     ejbAn.beanInterface() == Object.class ) {
                 Class c = (Class) ainfo.getAnnotatedElement();
                 AnnotationProcessorException fatalException =
-                    new AnnotationProcessorException(localStrings.getLocalString(
+                    new AnnotationProcessorException(I18N.getLocalString(
                     "enterprise.deployment.annotation.handlers.invalidtypelevelejb",
                     "Invalid TYPE-level @EJB with name() = [{0}] and " +
                     "beanInterface = [{1}] in {2}.  Each TYPE-level @EJB " +
@@ -150,35 +149,38 @@ public class EJBHandler extends AbstractResourceHandler {
         }
 
         // NOTE that default value is Object.class, not null
-        Class beanInterface = (ejbAn.beanInterface() == Object.class) ?
-            defaultBeanInterface : ejbAn.beanInterface();
-        String logicalName = ejbAn.name().equals("") ?
-            defaultLogicalName : ejbAn.name();
-
+        Class<?> beanInterface = ejbAn.beanInterface() == Object.class ? defaultBeanInterface : ejbAn.beanInterface();
+        String logicalName = ejbAn.name().isEmpty() ? defaultLogicalName : ejbAn.name();
         ejbRefs = getEjbReferenceDescriptors(logicalName, rcContexts);
         for (EjbReferenceDescriptor ejbRef : ejbRefs) {
-            if (target != null)
+            if (target != null) {
                 ejbRef.addInjectionTarget(target);
+            }
 
-            if (!ok(ejbRef.getName()))  // a new one
+            if (!ok(ejbRef.getName())) { // a new one
                 ejbRef.setName(logicalName);
+            }
 
             // merge type information
             setEjbType(ejbRef, beanInterface);
 
             // merge description
-            if (!ok(ejbRef.getDescription()) && ok(ejbAn.description()))
+            if (!ok(ejbRef.getDescription()) && ok(ejbAn.description())) {
                 ejbRef.setDescription(ejbAn.description());
+            }
 
             // merge lookup-name and mapped-name
-            if (!ejbRef.hasLookupName() && ok(ejbAn.lookup()))
-                ejbRef.setLookupName(ejbAn.lookup());
-            if (!ok(ejbRef.getMappedName()) && ok(ejbAn.mappedName()))
-                ejbRef.setMappedName(ejbAn.mappedName());
+            if (!ejbRef.hasLookupName() && ok(ejbAn.lookup())) {
+                ejbRef.setLookupName(SimpleJndiName.of(ejbAn.lookup()));
+            }
+            if ((ejbRef.getMappedName() == null || ejbRef.getMappedName().isEmpty()) && ok(ejbAn.mappedName())) {
+                ejbRef.setMappedName(SimpleJndiName.of(ejbAn.mappedName()));
+            }
 
             // merge beanName/linkName
-            if (!ok(ejbRef.getLinkName()) && ok(ejbAn.beanName()))
+            if (!ok(ejbRef.getLinkName()) && ok(ejbAn.beanName())) {
                 ejbRef.setLinkName(ejbAn.beanName());
+            }
         }
 
         return getDefaultProcessedResult();
@@ -192,12 +194,11 @@ public class EJBHandler extends AbstractResourceHandler {
      * @return an array of EjbReferenceDescriptor
      */
     private EjbReferenceDescriptor[] getEjbReferenceDescriptors(
-            String logicalName, ResourceContainerContext[] rcContexts) {
-        EjbReferenceDescriptor ejbRefs[] =
-                new EjbReferenceDescriptor[rcContexts.length];
+        String logicalName, ResourceContainerContext[] rcContexts) {
+        EjbReferenceDescriptor[] ejbRefs = new EjbReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
             EjbReferenceDescriptor ejbRef =
-                (EjbReferenceDescriptor)rcContexts[i].getEjbReference(logicalName);
+                rcContexts[i].getEjbReference(logicalName);
             if (ejbRef == null) {
                 ejbRef = new EjbReferenceDescriptor();
                 rcContexts[i].addEjbReferenceDescriptor(ejbRef);
@@ -212,10 +213,8 @@ public class EJBHandler extends AbstractResourceHandler {
      * Set the type information for the EJB, but only if it hasn't
      * already been set by the deployment descriptor.
      */
-    private void setEjbType(EjbReferenceDescriptor ejbRef,
-                                         Class beanInterface) {
-        if (EJBHome.class.isAssignableFrom(beanInterface) ||
-                EJBLocalHome.class.isAssignableFrom(beanInterface)) {
+    private void setEjbType(EjbReferenceDescriptor ejbRef, Class beanInterface) {
+        if (EJBHome.class.isAssignableFrom(beanInterface) || EJBLocalHome.class.isAssignableFrom(beanInterface)) {
             setEjbHomeType(ejbRef, beanInterface);
         } else {
             setEjbIntfType(ejbRef, beanInterface);
@@ -226,10 +225,10 @@ public class EJBHandler extends AbstractResourceHandler {
      * Set the type information for the EJB starting with the EJB business
      * interface, but only if it hasn't already been set.
      */
-    private void setEjbIntfType(EjbReferenceDescriptor ejbRef,
-                                        Class beanInterface) {
-        if (ejbRef.getEjbInterface() != null)
+    private void setEjbIntfType(EjbReferenceDescriptor ejbRef, Class beanInterface) {
+        if (ejbRef.getEjbInterface() != null) {
             return;
+        }
 
         // only set it if not already set by DD
         ejbRef.setEjbInterface(beanInterface.getName());
@@ -255,11 +254,10 @@ public class EJBHandler extends AbstractResourceHandler {
      * Set the type information for the EJB starting with the EJB Home
      * interface, but only if it hasn't already been set.
      */
-    private void setEjbHomeType(EjbReferenceDescriptor ejbRef,
-                                        Class beanInterface) {
-
-        if (ejbRef.getHomeClassName() != null)
+    private void setEjbHomeType(EjbReferenceDescriptor ejbRef, Class beanInterface) {
+        if (ejbRef.getHomeClassName() != null) {
             return;
+        }
 
         // default is Session bean
         String targetBeanType = EjbSessionDescriptor.TYPE;
@@ -285,10 +283,7 @@ public class EJBHandler extends AbstractResourceHandler {
                 }
             }
         } catch(Exception e) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.log(Level.FINE,
-                "component intf / ejb type annotation processing error", e);
-            }
+            logger.log(Level.FINE, "component intf / ejb type annotation processing error", e);
         }
 
         ejbRef.setLocal(EJBLocalHome.class.isAssignableFrom(beanInterface));

@@ -532,13 +532,13 @@ public class SaxParserHandler extends DefaultHandler {
                 topNode.setElementValue(element, elementData.toString());
             } else if (element.getQName().equals(TagNames.ENVIRONMENT_PROPERTY_VALUE)) {
                 Object envEntryDesc = topNode.getDescriptor();
-                if (envEntryDesc != null && envEntryDesc instanceof EnvironmentProperty) {
+                if (envEntryDesc instanceof EnvironmentProperty) {
                     EnvironmentProperty envProp = (EnvironmentProperty) envEntryDesc;
                     // we need to preserve white space for env-entry-value
                     // if the env-entry-type is java.lang.String or
                     // java.lang.Character
-                    if (envProp.getType() != null && (envProp.getType().equals("java.lang.String")
-                        || envProp.getType().equals("java.lang.Character"))) {
+                    if (String.class.getName().equals(envProp.getType())
+                        || Character.class.getName().equals(envProp.getType())) {
                         topNode.setElementValue(element, elementData.toString());
                     } else {
                         topNode.setElementValue(element, elementData.toString().trim());
@@ -560,9 +560,7 @@ public class SaxParserHandler extends DefaultHandler {
             elementData = null;
         }
         if (topNode.endElement(element)) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.fine("Removing top node " + topNode);
-            }
+            LOG.log(Level.FINE, "Removing top node {0}", topNode);
             nodes.remove(nodes.size()-1);
         }
 

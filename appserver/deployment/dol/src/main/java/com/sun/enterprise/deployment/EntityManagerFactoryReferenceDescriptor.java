@@ -20,6 +20,8 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.types.EntityManagerFactoryReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
+import jakarta.persistence.EntityManagerFactory;
+
 /**
  * An object representing a component environment reference
  * to an EntityManagerFactory
@@ -50,7 +52,7 @@ public class EntityManagerFactoryReferenceDescriptor extends EnvironmentProperty
 
     @Override
     public String getInjectResourceType() {
-        return "jakarta.persistence.EntityManagerFactory";
+        return EntityManagerFactory.class.getName();
     }
 
     @Override

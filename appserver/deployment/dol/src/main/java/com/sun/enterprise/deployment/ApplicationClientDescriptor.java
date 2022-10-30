@@ -603,8 +603,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      */
     @Override
     public void visit(DescriptorVisitor aVisitor) {
-        if (aVisitor instanceof AppClientVisitor ||
-            aVisitor instanceof ComponentPostVisitor) {
+        if (aVisitor instanceof AppClientVisitor || aVisitor instanceof ComponentPostVisitor) {
             visit((ComponentVisitor) aVisitor);
         } else {
             super.visit(aVisitor);

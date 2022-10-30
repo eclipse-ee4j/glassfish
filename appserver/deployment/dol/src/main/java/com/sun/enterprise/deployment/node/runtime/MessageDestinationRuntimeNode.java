@@ -26,6 +26,7 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 import java.util.Map;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.w3c.dom.Node;
 
 /**
@@ -80,7 +81,7 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode<Mess
             }
         } else if (RuntimeTagNames.JNDI_NAME.equals(element.getQName())) {
             if (descriptor != null) {
-                descriptor.setJndiName(value);
+                descriptor.setJndiName(SimpleJndiName.of(value));
             }
         } else {
             super.setElementValue(element, value);
@@ -96,8 +97,9 @@ public class MessageDestinationRuntimeNode extends DeploymentDescriptorNode<Mess
      * @param msgDest the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, MessageDestinationDescriptor msgDest) {
-        String jndiName = msgDest.getJndiName();
+        SimpleJndiName jndiName = msgDest.getJndiName();
         Node msgDestNode = null;
         if (jndiName != null && !jndiName.isEmpty()) {
             msgDestNode = super.writeDescriptor(parent, nodeName, msgDest);

@@ -18,6 +18,8 @@ package com.sun.enterprise.deployment.annotation.handlers;
 
 import java.io.Serializable;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * @author David Matejcek
  */
@@ -30,4 +32,8 @@ public interface ContextualResourceDefinition extends Serializable {
     String getContext();
 
     void setContext(String context);
+
+    default SimpleJndiName getJndiName() {
+        return new SimpleJndiName(getName());
+    }
 }

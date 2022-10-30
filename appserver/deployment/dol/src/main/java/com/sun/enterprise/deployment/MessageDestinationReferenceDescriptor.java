@@ -20,6 +20,8 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.types.MessageDestinationReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * An object representing the use of a message destination in a J2EE component.
  *
@@ -35,7 +37,7 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty i
     private String destinationType;
 
     // JNDI name of physical destination
-    private String jndiName;
+    private SimpleJndiName jndiName;
 
     // Holds information about the destination to which we are linked.
     private final MessageDestinationReferencerImpl referencer;
@@ -61,8 +63,8 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty i
      * (Consumes, Produces, ConsumesProduces)
      */
     @Override
-    public void setUsage(String destUsage) {
-        usage = destUsage;
+    public void setUsage(String usage) {
+        this.usage = usage;
     }
 
     public String getDestinationType() {
@@ -74,7 +76,7 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty i
     }
 
 
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         if (jndiName != null && !jndiName.isEmpty()) {
             return jndiName;
         }
@@ -85,7 +87,7 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty i
     }
 
 
-    public void setJndiName(String physicalDestinationName) {
+    public void setJndiName(SimpleJndiName physicalDestinationName) {
         jndiName = physicalDestinationName;
     }
 
@@ -224,7 +226,7 @@ public class MessageDestinationReferenceDescriptor extends EnvironmentProperty i
             isConflictResourceGroup(other));
     }
 
-    /* Equality on name. */
+    /** Equality on name. */
     @Override
     public boolean equals(Object object) {
         if (object instanceof MessageDestinationReference) {

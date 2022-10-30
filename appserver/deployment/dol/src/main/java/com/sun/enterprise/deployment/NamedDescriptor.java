@@ -17,6 +17,8 @@
 
 package com.sun.enterprise.deployment;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Objects implementing this interface have a JNDI
  * name property.
@@ -37,14 +39,13 @@ public interface NamedDescriptor {
      *
      * @return java.lang.String JNDI name
      */
-
-    String getJndiName();
+    SimpleJndiName getJndiName();
 
     /**
      * Sets the JNDI name property of the reciever as a String.
      *
      * @param jndiName the new JNDI name of the receiver.
      */
-    void setJndiName(String jndiName);
+    void setJndiName(SimpleJndiName jndiName);
 
 }

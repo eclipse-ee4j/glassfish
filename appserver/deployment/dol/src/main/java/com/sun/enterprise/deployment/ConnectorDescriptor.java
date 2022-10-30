@@ -29,13 +29,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DescriptorVisitor;
 
 /**
@@ -82,7 +82,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     private transient Map<String, Set<AnnotationInfo>> configPropertyAnnotations;
 
     // default resource names for this resource-adpater
-    private final Set<String> defaultResourceNames;
+    private final Set<SimpleJndiName> defaultResourceNames;
 
     private transient Set<String> configPropertyProcessedClasses;
 
@@ -368,10 +368,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         if (this.outboundRA == null) {
             return null;
         }
-        Iterator<ConnectionDefDescriptor> it = this.outboundRA.getConnectionDefs().iterator();
-        while (it.hasNext()) {
-            ConnectionDefDescriptor desc = it.next();
-
+        for (ConnectionDefDescriptor desc : this.outboundRA.getConnectionDefs()) {
             if (type == null) {
                 if (useDefault && this.outboundRA.getConnectionDefs().size() == 1) {
                     return desc;
@@ -394,9 +391,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public AdminObject getAdminObject(String adminObjectInterface, String adminObjectClass) {
-        Iterator<AdminObject> i = getAdminObjects().iterator();
-        while (i.hasNext()) {
-            AdminObject ao = i.next();
+        for (AdminObject ao : getAdminObjects()) {
             if (adminObjectInterface.equals(ao.getAdminObjectInterface())
                 && adminObjectClass.equals(ao.getAdminObjectClass())) {
                 return ao;
@@ -408,9 +403,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
     public List<AdminObject> getAdminObjectsByType(String type) {
         List<AdminObject> adminObjects = new ArrayList<>();
-        Iterator<AdminObject> i = getAdminObjects().iterator();
-        while (i.hasNext()) {
-            AdminObject ao = i.next();
+        for (AdminObject ao : getAdminObjects()) {
             if (type.equals(ao.getAdminObjectInterface())) {
                 adminObjects.add(ao);
             }
@@ -420,9 +413,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
     public List<AdminObject> getAdminObjectsByClass(String adminObjectClass) {
         List<AdminObject> adminObjects = new ArrayList<>();
-        Iterator<AdminObject> i = getAdminObjects().iterator();
-        while (i.hasNext()) {
-            AdminObject ao = i.next();
+        for (AdminObject ao : getAdminObjects()) {
             if (adminObjectClass.equals(ao.getAdminObjectClass())) {
                 adminObjects.add(ao);
             }
@@ -585,9 +576,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
             return null;
         }
 
-        Iterator<MessageListener> i = this.inboundRA.getMessageListeners().iterator();
-        while (i.hasNext()) {
-            MessageListener l = i.next();
+        for (MessageListener l : this.inboundRA.getMessageListeners()) {
             if ((l.getMessageListenerType()).equals(type)) {
                 return l;
             }
@@ -674,7 +663,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * Used while detecting RARs referred by deployed applications
      * @return default resources' names
      */
-    public Collection<String> getDefaultResourcesNames(){
+    public Collection<SimpleJndiName> getDefaultResourcesNames(){
         return defaultResourceNames;
     }
 
@@ -682,7 +671,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * add a default resource to list of default resource names
      * @param resourceName resource-name
      */
-    public void addDefaultResourceName(String resourceName){
+    public void addDefaultResourceName(SimpleJndiName resourceName){
         defaultResourceNames.add(resourceName);
     }
 }

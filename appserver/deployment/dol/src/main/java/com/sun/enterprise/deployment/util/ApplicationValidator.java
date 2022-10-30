@@ -57,6 +57,7 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.ModuleDescriptor;
@@ -87,7 +88,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     private static final Logger LOG = DOLUtils.getDefaultLogger();
 
     /** Used to store all descriptor details for validation purpose */
-    private final HashMap<String, CommonResourceValidator> allResourceDescriptors = new HashMap<>();
+    private final HashMap<SimpleJndiName, CommonResourceValidator> allResourceDescriptors = new HashMap<>();
 
     /** Used to store keys and descriptor names for validation purpose */
     private final HashMap<String, Vector<String>> validNameSpaceDetails = new HashMap<>();
@@ -105,7 +106,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
     private boolean allUniqueResource = true;
 
-    String inValidJndiName = "";
+    private SimpleJndiName inValidJndiName;
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ApplicationValidator.class);
 
@@ -320,14 +321,16 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
             : application.getEnvironmentProperties();
         if (environmentProperties != null) {
             for (EnvironmentProperty environmentProperty : environmentProperties) {
-                String jndiName = environmentProperty.getName();
+                final SimpleJndiName jndiName;
                 if (environmentProperty.hasLookupName()) {
                     jndiName = environmentProperty.getLookupName();
                 } else if (!environmentProperty.getMappedName().isEmpty()) {
                     jndiName = environmentProperty.getMappedName();
+                } else {
+                    jndiName = SimpleJndiName.of(environmentProperty.getName());
                 }
 
-                if (jndiName.startsWith(JNDI_COMP) || jndiName.startsWith(JNDI_MODULE)) {
+                if (jndiName.isJavaComponent() || jndiName.isJavaModule()) {
                     inValidJndiName = jndiName;
                     return false;
                 }
@@ -492,7 +495,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      */
     private boolean findExistingDescriptors(Set<ResourceDescriptor> descriptors, String scope) {
         for (ResourceDescriptor descriptor : descriptors) {
-            if (isExistsDescriptor(descriptor.getName(), descriptor, scope)) {
+            if (isExistsDescriptor(descriptor.getJndiName(), descriptor, scope)) {
                 return true;
             }
         }
@@ -505,7 +508,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
      * should be failed. scope is nothing but app level,connector level, ejb level etc., which is used later to
      * compare same jndi name is defined at different scope or not.
      */
-    private boolean isExistsDescriptor(String name, ResourceDescriptor descriptor, String scope) {
+    private boolean isExistsDescriptor(SimpleJndiName name, ResourceDescriptor descriptor, String scope) {
         if (descriptor == null) {
             return false;
         }
@@ -566,11 +569,12 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
 
         Vector<String> appVectorName = validNameSpaceDetails.get(APP_KEYS);
         Vector<String> ebdVectorName = validNameSpaceDetails.get(EJBBUNDLE_KEYS);
-        for (Entry<String, CommonResourceValidator> entry : allResourceDescriptors.entrySet()) {
+        for (Entry<SimpleJndiName, CommonResourceValidator> entry : allResourceDescriptors.entrySet()) {
             CommonResourceValidator commonResourceValidator = entry.getValue();
             Vector<String> scopeVector = commonResourceValidator.getScope();
-            String jndiName = commonResourceValidator.getJndiName();
+            SimpleJndiName jndiName = commonResourceValidator.getJndiName();
 
+            // FIXME: startsWith?
             if (jndiName.contains(JNDI_COMP)) {
                 for (String scope : scopeVector) {
                     for (String element2 : appVectorName) {
@@ -618,7 +622,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
                 } else {
                     try {
                         InitialContext ic = new InitialContext();
-                        Object lookup = ic.lookup(jndiName);
+                        Object lookup = ic.lookup(jndiName.toString());
                         if (lookup != null) {
                             inValidJndiName = jndiName;
                             LOG.log(Level.SEVERE, DOLUtils.JNDI_LOOKUP_FAILED, jndiName);
@@ -639,7 +643,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     /**
      * Method to validate jndi name for app namespace
      */
-    private boolean compareVectorForApp(Vector<String> myVector, String jndiName) {
+    private boolean compareVectorForApp(Vector<String> myVector, SimpleJndiName jndiName) {
         for (int j = 0; j < myVector.size(); j++) {
             String firstElement = myVector.get(j);
             if (firstElement.contains("#")) {
@@ -664,7 +668,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     /**
      * Method to validate jndi name for module namespace
      */
-    private boolean compareVectorForModule(Vector<String> myVector, String jndiName) {
+    private boolean compareVectorForModule(Vector<String> myVector, SimpleJndiName jndiName) {
         if (!compareVectorForApp(myVector, jndiName)) {
             return false;
         }
@@ -698,7 +702,7 @@ public class ApplicationValidator extends ComponentValidator implements Applicat
     /**
      * Method to validate jndi name for comp namespace
      */
-    private boolean compareVectorForComp(Vector<String> myVector, String jndiName) {
+    private boolean compareVectorForComp(Vector<String> myVector, SimpleJndiName jndiName) {
         if (!compareVectorForModule(myVector, jndiName)) {
             return false;
         }

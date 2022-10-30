@@ -22,6 +22,7 @@ import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -37,9 +38,9 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
 
     // JNDI name of physical destination to which this logical
     // destination is mapped.
-    private String jndiName;
+    private SimpleJndiName jndiName;
     private String mappedName;
-    private String lookupName;
+    private SimpleJndiName lookupName;
 
     // Set of MessageDestinationReferencer descriptors pointing to me.
     private final Set<MessageDestinationReferencer> referencers = new HashSet<>();
@@ -106,19 +107,19 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
     }
 
     @Override
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         if (jndiName != null && !jndiName.isEmpty()) {
             return jndiName;
         }
         if (mappedName != null && !mappedName.isEmpty()) {
-            return mappedName;
+            return new SimpleJndiName(mappedName);
         }
         return lookupName;
     }
 
 
     @Override
-    public void setJndiName(String physicalDestinationName) {
+    public void setJndiName(SimpleJndiName physicalDestinationName) {
         jndiName = physicalDestinationName;
     }
 
@@ -130,12 +131,13 @@ public class MessageDestinationDescriptor extends Descriptor implements NamedDes
         this.mappedName = mappedName;
     }
 
-    public void setLookupName(String lName) {
+    public void setLookupName(SimpleJndiName lName) {
         lookupName = lName;
     }
 
-    public String getLookupName() {
-        return lookupName == null ? "" : lookupName;
+    public SimpleJndiName getLookupName() {
+        // FIXME: no empty strings please.
+        return lookupName == null ? new SimpleJndiName("") : lookupName;
     }
 
 }

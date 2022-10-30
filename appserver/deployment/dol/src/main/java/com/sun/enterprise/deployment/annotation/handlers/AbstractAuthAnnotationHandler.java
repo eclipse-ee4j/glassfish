@@ -226,14 +226,12 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
                     for (MethodDescriptor style3Md : md.doStyleConversion(ejbDesc, allMethods)) {
                         LOG.log(Level.FINEST, "Comparing style3Md: {0} and methodDesc: {1}", new Object[] {style3Md, methodDesc});
                         if (methodDesc.equals(style3Md)) {
-                            LOG.info("Returning true.");
                             return true;
                         }
                     }
                 }
             }
         }
-        LOG.info("Returning false.");
         return false;
     }
 

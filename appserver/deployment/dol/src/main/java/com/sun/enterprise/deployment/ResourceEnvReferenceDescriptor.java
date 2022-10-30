@@ -21,6 +21,8 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 
 import java.util.Objects;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * I am an object representing a dependency on a resource environment
  *
@@ -102,10 +104,10 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty
      * Return the jndi name of the destination to which I refer.
      */
     @Override
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         String jndiName = this.getValue();
         if (!jndiName.isEmpty()) {
-            return jndiName;
+            return new SimpleJndiName(jndiName);
         }
         if (mappedName != null && !mappedName.isEmpty()) {
             return mappedName;
@@ -118,8 +120,8 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty
      * Sets the jndi name of the destination to which I refer
      */
     @Override
-    public void setJndiName(String jndiName) {
-        this.setValue(jndiName);
+    public void setJndiName(SimpleJndiName jndiName) {
+        this.setValue(jndiName == null ? null : jndiName.toString());
     }
 
 

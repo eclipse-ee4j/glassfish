@@ -21,6 +21,8 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.InjectionCapable;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Protocol associated with defining an EJB Interface
  *
@@ -94,8 +96,9 @@ public interface EjbReference  extends NamedInformation, InjectionCapable {
     void setLocal(boolean isLocal);
 
     /**
-     * Set the referring bundle, i.e. the bundle within which this
-     * EJB reference is declared.
+     * Set the referring bundle, i.e. the bundle within which this EJB reference is declared.
+     *
+     * @param referringBundle - can be null, ie. if this reference is invalid.
      */
     void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
@@ -108,17 +111,17 @@ public interface EjbReference  extends NamedInformation, InjectionCapable {
     /**
      * Set the jndi name for this ejb reference
      */
-    void setJndiName(String jndiName);
+    void setJndiName(SimpleJndiName jndiName);
 
     /**
      * @return the jndi name for this ejb reference
      */
-    String getJndiName();
+    SimpleJndiName getJndiName();
 
     boolean hasJndiName();
 
     boolean hasLookupName();
-    String getLookupName();
+    SimpleJndiName getLookupName();
 
     EjbDescriptor getEjbDescriptor();
     void setEjbDescriptor(EjbDescriptor descriptor);

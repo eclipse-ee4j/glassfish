@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.deployment;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
@@ -26,8 +27,6 @@ import org.glassfish.deployment.common.JavaEEResourceType;
 public class ResourceDescriptor extends Descriptor {
 
     private static final long serialVersionUID = 1L;
-    private static final String JAVA_URL = "java:";
-    private static final String JAVA_COMP_URL = "java:comp/";
 
     private MetadataSource metadataSource = MetadataSource.XML;
     private String resourceId;
@@ -62,8 +61,8 @@ public class ResourceDescriptor extends Descriptor {
     }
 
 
-    public String getJndiName() {
-        return getName();
+    public final SimpleJndiName getJndiName() {
+        return SimpleJndiName.of(getName());
     }
 
 
@@ -81,10 +80,10 @@ public class ResourceDescriptor extends Descriptor {
         if (name == null) {
             return null;
         }
-        // some names really contain java: in the middle.
-        if (name.contains(JAVA_URL)) {
+        // some names really contain java: in the middle...?
+        if (name.contains(SimpleJndiName.JNDI_CTX_JAVA)) {
             return name;
         }
-        return JAVA_COMP_URL + name;
+        return SimpleJndiName.JNDI_CTX_JAVA_COMPONENT + name;
     }
 }

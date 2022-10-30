@@ -20,6 +20,7 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.types.EntityManagerReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.SynchronizationType;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class EntityManagerReferenceDescriptor extends EnvironmentProperty implem
 
     @Override
     public String getInjectResourceType() {
-        return "jakarta.persistence.EntityManager";
+        return EntityManager.class.getName();
     }
 
 

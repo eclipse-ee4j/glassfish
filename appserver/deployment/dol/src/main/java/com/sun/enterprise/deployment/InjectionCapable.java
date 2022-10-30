@@ -19,6 +19,8 @@ package com.sun.enterprise.deployment;
 
 import java.util.Set;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * InjectionCapable describes a type of J2EE component environment resource
  * that is capable of being injected at runtime.
@@ -49,13 +51,15 @@ public interface InjectionCapable {
     /**
      * ComponentEnvName is the name of the corresponding java:comp/env
      * entry for the object that is to be injected.
+     * @return {@link SimpleJndiName}, never null.
      */
-    String getComponentEnvName();
+    SimpleJndiName getComponentEnvName();
 
     /**
      * This is the class name of the type of resource that is to be injected.
      */
     String getInjectResourceType();
+
     void setInjectResourceType(String resourceType);
 
 }

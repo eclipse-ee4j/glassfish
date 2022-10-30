@@ -19,11 +19,19 @@ package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.EnvironmentProperty;
 import com.sun.enterprise.deployment.InjectionTarget;
-import com.sun.enterprise.deployment.xml.TagNames;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Map;
 
 import org.w3c.dom.Node;
+
+import static com.sun.enterprise.deployment.xml.TagNames.ENVIRONMENT_PROPERTY_NAME;
+import static com.sun.enterprise.deployment.xml.TagNames.ENVIRONMENT_PROPERTY_TYPE;
+import static com.sun.enterprise.deployment.xml.TagNames.ENVIRONMENT_PROPERTY_VALUE;
+import static com.sun.enterprise.deployment.xml.TagNames.INJECTION_TARGET;
+import static com.sun.enterprise.deployment.xml.TagNames.LOOKUP_NAME;
+import static com.sun.enterprise.deployment.xml.TagNames.MAPPED_NAME;
 
 /**
  * This node is responsible for handling all env-entry related xml tags
@@ -32,58 +40,44 @@ import org.w3c.dom.Node;
  * @version
  */
 public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> {
-
-    private EnvironmentProperty envProp;
-    private boolean setValueCalled = false;
+    private static final Logger LOG = System.getLogger(EnvEntryNode.class.getName());
 
     public EnvEntryNode() {
-        super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), InjectionTargetNode.class,
-            "addInjectionTarget");
+        registerElementHandler(new XMLElement(INJECTION_TARGET), InjectionTargetNode.class, "addInjectionTarget");
     }
 
 
     @Override
-    public EnvironmentProperty getDescriptor() {
-        if (envProp == null) {
-            envProp = new EnvironmentProperty();
-        }
-        return envProp;
+    public EnvironmentProperty createDescriptor() {
+        return new EnvironmentProperty();
     }
 
+
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
-        table.put(TagNames.ENVIRONMENT_PROPERTY_NAME, "setName");
-        table.put(TagNames.ENVIRONMENT_PROPERTY_VALUE, "setValue");
-        table.put(TagNames.ENVIRONMENT_PROPERTY_TYPE, "setType");
-        table.put(TagNames.MAPPED_NAME, "setMappedName");
-        table.put(TagNames.LOOKUP_NAME, "setLookupName");
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
+        table.put(ENVIRONMENT_PROPERTY_NAME, "setName");
+        table.put(ENVIRONMENT_PROPERTY_VALUE, "setValue");
+        table.put(ENVIRONMENT_PROPERTY_TYPE, "setType");
+        table.put(MAPPED_NAME, "setMappedName");
+        table.put(LOOKUP_NAME, "setLookupName");
         return table;
     }
 
     @Override
     public boolean endElement(XMLElement element) {
-        if (TagNames.ENVIRONMENT_PROPERTY_NAME.equals(element.getQName())) {
-            // name element is always right before value, so initialize
-            // setValueCalled to false when it is processed.
-            setValueCalled = false;
-        } else if (TagNames.ENVIRONMENT_PROPERTY_VALUE.equals(element.getQName())) {
-            setValueCalled = true;
-        } else if (TagNames.LOOKUP_NAME.equals(element.getQName())) {
-            if (setValueCalled) {
-                throw new IllegalArgumentException(
-                    I18N_NODE.getLocalString("enterprise.deployment.node.invalidenventry",
-                        "Cannot specify both the env-entry-value and lookup-name elements for env-entry element {0}",
-                        new Object[] {envProp.getName()}));
-            }
+        LOG.log(Level.TRACE, "endElement(element={0}); this={1}", element, this);
+        if (!getDescriptor().getValue().isEmpty() && getDescriptor().hasLookupName()) {
+            throw new IllegalArgumentException(
+                "Cannot specify both the env-entry-value and lookup-name elements for env-entry element: "
+                    + getDescriptor());
         }
         return super.endElement(element);
     }
 
     @Override
     public void addDescriptor(Object newDescriptor) {
-        if (setValueCalled) {
+        if (getDescriptor().hasContent()) {
             super.addDescriptor(newDescriptor);
         } else {
             // Don't add it to DOL.  The env-entry only exists
@@ -95,17 +89,17 @@ public class EnvEntryNode extends DeploymentDescriptorNode<EnvironmentProperty> 
     public Node writeDescriptor(Node parent, String nodeName, EnvironmentProperty envProp) {
         Node envEntryNode = super.writeDescriptor(parent, nodeName, envProp);
         writeLocalizedDescriptions(envEntryNode, envProp);
-        appendTextChild(envEntryNode, TagNames.ENVIRONMENT_PROPERTY_NAME, envProp.getName());
-        appendTextChild(envEntryNode, TagNames.ENVIRONMENT_PROPERTY_TYPE, envProp.getType());
-        appendTextChild(envEntryNode, TagNames.ENVIRONMENT_PROPERTY_VALUE, envProp.getValue());
-        appendTextChild(envEntryNode, TagNames.MAPPED_NAME, envProp.getMappedName());
+        appendTextChild(envEntryNode, ENVIRONMENT_PROPERTY_NAME, envProp.getName());
+        appendTextChild(envEntryNode, ENVIRONMENT_PROPERTY_TYPE, envProp.getType());
+        appendTextChild(envEntryNode, ENVIRONMENT_PROPERTY_VALUE, envProp.getValue());
+        appendTextChild(envEntryNode, MAPPED_NAME, envProp.getMappedName());
         if (envProp.isInjectable()) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
             for (InjectionTarget target : envProp.getInjectionTargets()) {
-                ijNode.writeDescriptor(envEntryNode, TagNames.INJECTION_TARGET, target);
+                ijNode.writeDescriptor(envEntryNode, INJECTION_TARGET, target);
             }
         }
-        appendTextChild(envEntryNode, TagNames.LOOKUP_NAME, envProp.getLookupName());
+        appendTextChild(envEntryNode, LOOKUP_NAME, envProp.getLookupName());
         return envEntryNode;
     }
 }

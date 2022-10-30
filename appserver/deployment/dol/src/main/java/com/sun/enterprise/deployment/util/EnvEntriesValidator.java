@@ -33,14 +33,14 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+
 public class EnvEntriesValidator {
     private static final Logger LOG = DOLUtils.getDefaultLogger();
-
-    private static final String JAVA_COLON = "java:";
-    private static final String JAVA_COMP_ENV_STRING = "java:comp/env/";
-    private static final String JAVA_COMP_PREFIX = "java:comp/";
-    private static final String JAVA_MODULE_PREFIX = "java:module/";
-    private static final String JAVA_APP_PREFIX = "java:app/";
 
     private final Map<String, Map<String, Object>> componentNamespaces;
     private final Map<String, Map<String, Object>> appNamespaces;
@@ -170,7 +170,7 @@ public class EnvEntriesValidator {
     private Map<String, Object> getNamespace(String logicalJndiName, JndiNameEnvironment env) {
         final String appName = DOLUtils.getApplicationName(env);
         LOG.log(Level.FINE, "appName={0}", appName);
-        if (logicalJndiName.startsWith(JAVA_COMP_PREFIX)) {
+        if (logicalJndiName.startsWith(JNDI_CTX_JAVA_COMPONENT)) {
             String componentId = DOLUtils.getComponentEnvId(env);
             LOG.log(Level.FINEST, "Resolved componentId: {0}", componentId);
             Map<String, Object> namespace = componentNamespaces.get(componentId);
@@ -179,7 +179,7 @@ public class EnvEntriesValidator {
                 componentNamespaces.put(componentId, namespace);
             }
             return namespace;
-        } else if (logicalJndiName.startsWith(JAVA_MODULE_PREFIX)) {
+        } else if (logicalJndiName.startsWith(JNDI_CTX_JAVA_MODULE)) {
             String moduleName = DOLUtils.getModuleName(env);
             AppModuleKey appModuleKey = new AppModuleKey(appName, moduleName);
             Map<String, Object> namespace = moduleNamespaces.get(appModuleKey);
@@ -188,7 +188,7 @@ public class EnvEntriesValidator {
                 moduleNamespaces.put(appModuleKey, namespace);
             }
             return namespace;
-        } else if (logicalJndiName.startsWith(JAVA_APP_PREFIX)) {
+        } else if (logicalJndiName.startsWith(JNDI_CTX_JAVA_APP)) {
             Map<String, Object> namespace = appNamespaces.get(appName);
             if (namespace == null) {
                 namespace = new HashMap<>();
@@ -207,7 +207,10 @@ public class EnvEntriesValidator {
     }
 
 
-    private boolean areConflicting(String s1, String s2) {
+    /**
+     * @return similar to {@link Objects#equals(Object)} but uses equals of both objects.
+     */
+    private <T> boolean areConflicting(T s1, T s2) {
         LOG.log(Level.FINEST, "areConflicting? {0} ||| {1}", new Object[] {s1, s2});
         return (s1 != null && !s1.equals(s2)) || (s2 != null && !s2.equals(s1));
     }
@@ -217,7 +220,7 @@ public class EnvEntriesValidator {
      * If no java: prefix is specified, default to component scope.
      */
     private String rawNameToLogicalJndiName(String rawName) {
-        return rawName.startsWith(JAVA_COLON) ? rawName : JAVA_COMP_ENV_STRING + rawName;
+        return rawName.startsWith(JNDI_CTX_JAVA) ? rawName : JNDI_CTX_JAVA_COMPONENT_ENV + rawName;
     }
 
 
@@ -225,15 +228,15 @@ public class EnvEntriesValidator {
      * convert name from java:comp/xxx to java:module/xxx
      */
     private String logicalCompJndiNameToModule(String logicalCompName) {
-        String tail = logicalCompName.substring(JAVA_COMP_PREFIX.length());
-        return JAVA_MODULE_PREFIX + tail;
+        String tail = logicalCompName.substring(JNDI_CTX_JAVA_COMPONENT.length());
+        return JNDI_CTX_JAVA_MODULE + tail;
     }
 
 
     private String getLogicalJNDIName(String name, JndiNameEnvironment env) {
         String logicalJndiName = rawNameToLogicalJndiName(name);
         boolean treatComponentAsModule = DOLUtils.getTreatComponentAsModule(env);
-        if (treatComponentAsModule && logicalJndiName.startsWith(JAVA_COMP_PREFIX)) {
+        if (treatComponentAsModule && logicalJndiName.startsWith(JNDI_CTX_JAVA_COMPONENT)) {
             logicalJndiName = logicalCompJndiNameToModule(logicalJndiName);
         }
         return logicalJndiName;

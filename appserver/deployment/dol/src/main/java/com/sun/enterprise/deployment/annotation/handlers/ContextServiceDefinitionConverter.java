@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.jvnet.hk2.annotations.Service;
 
@@ -49,7 +50,7 @@ class ContextServiceDefinitionConverter {
         LOG.log(Level.DEBUG, "convert(definition={0})", definition);
         Set<String> unused = collectUnusedContexts(definition);
         ContextServiceDefinitionData data = new ContextServiceDefinitionData();
-        data.setName(TranslatedConfigView.expandValue(definition.name()));
+        data.setName(new SimpleJndiName(TranslatedConfigView.expandValue(definition.name())));
         data.setPropagated(evaluateContexts(definition.propagated(), unused));
         data.setCleared(evaluateContexts(definition.cleared(), unused));
         data.setUnchanged(evaluateContexts(definition.unchanged(), unused));

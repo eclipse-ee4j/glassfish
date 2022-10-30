@@ -48,7 +48,7 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
      * Construct an connector config-property of given name value and description.
      */
     public ConnectorConfigProperty(String name, String value, String description) {
-        this(name, value, description, null);
+        this(name, value, description, String.class.getName());
     }
 
 

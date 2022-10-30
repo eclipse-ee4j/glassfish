@@ -30,6 +30,7 @@ import java.util.Properties;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -106,10 +107,10 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
      * @return the JNDI name of the resource reference.
      */
     @Override
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         String jndiName = super.getValue();
         if (!jndiName.isEmpty()) {
-            return jndiName;
+            return new SimpleJndiName(jndiName);
         }
         if (mappedName != null && !mappedName.isEmpty()) {
             return mappedName;
@@ -124,8 +125,8 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
      * @param jndiName JNDI name of the resource reference.
      */
     @Override
-    public void setJndiName(String jndiName) {
-        super.setValue(jndiName);
+    public void setJndiName(SimpleJndiName jndiName) {
+        super.setValue(jndiName == null ? null : jndiName.toString());
     }
 
 
@@ -264,7 +265,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
                 // Get JDBC DataSource for database
                 InitialContext ctx = new InitialContext();
                 // cache the datasource to avoid JNDI lookup overheads
-                dataSource = (DataSource) ctx.lookup(getJndiName());
+                dataSource = (DataSource) ctx.lookup(getJndiName().toString());
             } catch (Exception ex) {
             }
         }

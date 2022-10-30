@@ -34,6 +34,8 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Information about a J2EE web service client.
  *
@@ -45,7 +47,7 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty implements H
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ServiceReferenceDescriptor.class);
 
     private String serviceInterface;
-    private String mappedName;
+    private SimpleJndiName mappedName;
     private String wsdlFileUri;
 
     /**
@@ -208,13 +210,13 @@ public class ServiceReferenceDescriptor extends EnvironmentProperty implements H
 
 
     @Override
-    public String getMappedName() {
+    public SimpleJndiName getMappedName() {
         return mappedName;
     }
 
 
     @Override
-    public void setMappedName(String value) {
+    public void setMappedName(SimpleJndiName value) {
         mappedName = value;
     }
 

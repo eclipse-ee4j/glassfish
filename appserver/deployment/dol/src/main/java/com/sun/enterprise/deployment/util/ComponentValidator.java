@@ -54,7 +54,10 @@ import java.util.logging.Logger;
 import javax.security.auth.Subject;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * @author  dochez
@@ -121,16 +124,6 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         return bundleDescriptor;
     }
 
-
-    /**
-     * @param intfName
-     * @return default jndi name for a given interface name
-     */
-    //XXX this is first implementation. It does not handle two ejb with same
-    //    interface in different jar
-    protected String getDefaultEjbJndiName(String intfName) {
-        return intfName;
-    }
 
     private enum EjbIntfType {
         NONE,
@@ -215,8 +208,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         // method upon successfuly resolution to a local business interface.
         //
 
-        if (ejbRef.getJndiName()!=null && ejbRef.getJndiName().length()!=0) {
-
+        if (ejbRef.getJndiName() != null && !ejbRef.getJndiName().isEmpty()) {
 
             // ok this is getting a little complicated here
             // the jndi name is not null, if this is a remote ref, proceed with resolution
@@ -241,15 +233,12 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
         // with it, attempt to resolve it by checking against all the ejbs
         // within the application.  If no match is found, just fall through
         // and let the existing error-checking logic kick in.
-        if (( (ejbRef.getJndiName() == null) ||
-              (ejbRef.getJndiName().length() == 0) )
-            &&
-            ( (ejbRef.getLinkName() == null) ||
-              (ejbRef.getLinkName().length() == 0) )
-            && !ejbRef.hasLookupName() ) {
+        if ((ejbRef.getJndiName() == null || ejbRef.getJndiName().isEmpty())
+            && (ejbRef.getLinkName() == null || ejbRef.getLinkName().isEmpty())
+            && !ejbRef.hasLookupName()) {
 
             Map<String, EjbIntfInfo> ejbIntfInfoMap = getEjbIntfMap();
-            if ( ejbIntfInfoMap.size() > 0 ) {
+            if (ejbIntfInfoMap.size() > 0) {
 
                 String interfaceToMatch = ejbRef.isEJB30ClientView() ?
                     ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface();
@@ -264,16 +253,13 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 EjbIntfInfo intfInfo = ejbIntfInfoMap.get(interfaceToMatch);
 
                 // make sure exactly one match
-                if ( intfInfo != null ) {
+                if (intfInfo != null) {
                     int numMatches = intfInfo.ejbs.size();
-                    if( numMatches == 1 ) {
+                    if (numMatches == 1) {
                         EjbDescriptor target = intfInfo.ejbs.iterator().next();
 
-                        BundleDescriptor targetModule =
-                            target.getEjbBundleDescriptor();
-                        BundleDescriptor sourceModule =
-                            ejbRef.getReferringBundleDescriptor();
-
+                        BundleDescriptor targetModule = target.getEjbBundleDescriptor();
+                        BundleDescriptor sourceModule = ejbRef.getReferringBundleDescriptor();
                         Application app = targetModule.getApplication();
 
                         //
@@ -336,26 +322,21 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
             // error (unless there is a lookup string) because we must resolve all
             // local refs within the app and we cannot resolve it
             if (ejbRef.isLocal()) {
-                if( ejbRef.hasLookupName() ) {
+                if (ejbRef.hasLookupName()) {
                     return;
                 }
-                LOG.severe("Cannot resolve reference " + ejbRef);
                 throw new RuntimeException("Cannot resolve reference " + ejbRef);
-            } else {
-                // this is a remote interface, jndi will eventually contain the referenced
-                // ejb ref, apply default jndi name if there is none
-                if (!ejbRef.hasJndiName() && !ejbRef.hasLookupName()) {
-                    String jndiName = getDefaultEjbJndiName(
-                        ejbRef.isEJB30ClientView() ?
-                        ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface());
-                    ejbRef.setJndiName(jndiName);
-                    if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("Applying default to ejb reference: " + ejbRef);
-                    }
-                }
-
-                return;
             }
+            // this is a remote interface, jndi will eventually contain the referenced
+            // ejb ref, apply default jndi name if there is none
+            if (!ejbRef.hasJndiName() && !ejbRef.hasLookupName()) {
+                SimpleJndiName jndiName = SimpleJndiName
+                    .of(ejbRef.isEJB30ClientView() ? ejbRef.getEjbInterface() : ejbRef.getEjbHomeInterface());
+                ejbRef.setJndiName(jndiName);
+                LOG.log(Level.FINE, "Applying default to ejb reference: {0}", ejbRef);
+            }
+
+            return;
         }
 
         // Beginning of ejb-link resolution
@@ -715,17 +696,17 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     @Override
     protected void accept(ResourceEnvReferenceDescriptor resourceEnvRef) {
 
-        if (resourceEnvRef.getJndiName() == null ||
-                resourceEnvRef.getJndiName().length() == 0) {
+        if (resourceEnvRef.getJndiName() == null || resourceEnvRef.getJndiName().isEmpty()) {
             Map<String, ManagedBeanDescriptor> managedBeanMap = getManagedBeanMap();
             String refType = resourceEnvRef.getRefType();
-            if( managedBeanMap.containsKey(refType) ) {
+            if (managedBeanMap.containsKey(refType)) {
                 ManagedBeanDescriptor desc = managedBeanMap.get(refType);
 
                 // In app-client, keep lookup local to JVM so it doesn't need to access
                 // server's global JNDI namespace for managed bean.
-                String jndiName = ( bundleDescriptor.getModuleType() == DOLUtils.carType() )
-                        ?  desc.getAppJndiName() : desc.getGlobalJndiName();
+                SimpleJndiName jndiName = bundleDescriptor.getModuleType() == DOLUtils.carType()
+                    ? desc.getAppJndiName()
+                    : desc.getGlobalJndiName();
 
                 resourceEnvRef.setJndiName(jndiName);
                 resourceEnvRef.setIsManagedBean(true);
@@ -940,16 +921,16 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      */
     private void computeRuntimeDefault(ResourceReferenceDescriptor resRef) {
         if (resRef.getType() != null && resRef.getType().equals("org.omg.CORBA.ORB")) {
-            resRef.setJndiName("java:comp/ORB");
+            resRef.setJndiName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "ORB"));
         }
 
         else if (resRef.getJndiName() == null ||
-                resRef.getJndiName().length() == 0) {
+                resRef.getJndiName().isEmpty()) {
             if (resRef.getType() != null) {
                 if (resRef.getType().equals("javax.sql.DataSource")) {
-                    resRef.setLookupName("java:comp/DefaultDataSource");
+                    resRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultDataSource"));
                 } else if (resRef.getType().equals("jakarta.jms.ConnectionFactory")) {
-                    resRef.setLookupName("java:comp/DefaultJMSConnectionFactory");
+                    resRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultJMSConnectionFactory"));
                 } else {
                     resRef.setJndiName(getDefaultResourceJndiName(resRef.getName()));
                 }
@@ -963,32 +944,32 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * Set runtime default value for ResourceEnvReferenceDescriptor.
      */
     private void computeRuntimeDefault(ResourceEnvReferenceDescriptor resourceEnvRef) {
-        if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals(
-            "jakarta.transaction.UserTransaction")) {
-            resourceEnvRef.setJndiName("java:comp/UserTransaction");
-        }
-
-        else if (resourceEnvRef.getRefType() != null && resourceEnvRef.getRefType().equals("jakarta.transaction.TransactionSynchronizationRegistry")) {
-            resourceEnvRef.setJndiName(
-                "java:comp/TransactionSynchronizationRegistry");
-        }
-
-        else if (resourceEnvRef.getJndiName() == null ||
-                resourceEnvRef.getJndiName().length() == 0) {
-            if (resourceEnvRef.getRefType() != null) {
+        if (resourceEnvRef.getRefType() != null
+            && resourceEnvRef.getRefType().equals("jakarta.transaction.UserTransaction")) {
+            resourceEnvRef.setJndiName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "UserTransaction"));
+        } else if (resourceEnvRef.getRefType() != null
+            && resourceEnvRef.getRefType().equals("jakarta.transaction.TransactionSynchronizationRegistry")) {
+            resourceEnvRef
+                .setJndiName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry"));
+        } else if (resourceEnvRef.getJndiName() == null || resourceEnvRef.getJndiName().isEmpty()) {
+            if (resourceEnvRef.getRefType() == null) {
+                resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
+            } else {
                 if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedExecutorService")) {
-                    resourceEnvRef.setLookupName("java:comp/DefaultManagedExecutorService");
-                } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedScheduledExecutorService")) {
-                    resourceEnvRef.setLookupName("java:comp/DefaultManagedScheduledExecutorService");
+                    resourceEnvRef
+                        .setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedExecutorService"));
+                } else if (resourceEnvRef.getRefType()
+                    .equals("jakarta.enterprise.concurrent.ManagedScheduledExecutorService")) {
+                    resourceEnvRef.setLookupName(
+                        new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedScheduledExecutorService"));
                 } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ManagedThreadFactory")) {
-                    resourceEnvRef.setLookupName("java:comp/DefaultManagedThreadFactory");
+                    resourceEnvRef
+                        .setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedThreadFactory"));
                 } else if (resourceEnvRef.getRefType().equals("jakarta.enterprise.concurrent.ContextService")) {
-                    resourceEnvRef.setLookupName("java:comp/DefaultContextService");
+                    resourceEnvRef.setLookupName(new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "DefaultContextService"));
                 } else {
                     resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
                 }
-            }  else {
-                resourceEnvRef.setJndiName(getDefaultResourceJndiName(resourceEnvRef.getName()));
             }
         }
     }
@@ -997,8 +978,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * Set runtime default value for MessageDestinationReferenceDescriptor.
      */
     private void computeRuntimeDefault(MessageDestinationReferenceDescriptor msgDestRef) {
-        if (msgDestRef.getJndiName() == null ||
-                msgDestRef.getJndiName().length() == 0) {
+        if (msgDestRef.getJndiName() == null || msgDestRef.getJndiName().isEmpty()) {
             msgDestRef.setJndiName(getDefaultResourceJndiName(msgDestRef.getName()));
         }
     }
@@ -1007,8 +987,7 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * Set runtime default value for MessageDestinationDescriptor.
      */
     private void computeRuntimeDefault(MessageDestinationDescriptor msgDest) {
-        if (msgDest.getJndiName() == null ||
-                msgDest.getJndiName().length() == 0) {
+        if (msgDest.getJndiName() == null || msgDest.getJndiName().isEmpty()) {
             msgDest.setJndiName(getDefaultResourceJndiName(msgDest.getName()));
         }
     }
@@ -1017,8 +996,8 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
      * @param resName
      * @return default jndi name for a given interface resource name
      */
-    private String getDefaultResourceJndiName(String resName) {
-        return resName;
+    private SimpleJndiName getDefaultResourceJndiName(String resName) {
+        return SimpleJndiName.of(resName);
     }
 
 }

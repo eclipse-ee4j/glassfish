@@ -80,10 +80,21 @@
             <artifactId>common-util</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- See GlassfishNamingManagerImpl, used in InitialContext env properties -->
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-orb</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

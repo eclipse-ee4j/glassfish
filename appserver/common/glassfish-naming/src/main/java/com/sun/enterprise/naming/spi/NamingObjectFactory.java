@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,11 @@
 
 package com.sun.enterprise.naming.spi;
 
+import org.glassfish.api.naming.NamingObjectProxy;
 import org.jvnet.hk2.annotations.Contract;
 
-import org.glassfish.api.naming.NamingObjectProxy;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-
 @Contract
-public interface NamingObjectFactory
-    extends NamingObjectProxy {
+public interface NamingObjectFactory extends NamingObjectProxy {
 
     /**
      * Tells if the result of create() is cacheable. If so
@@ -34,6 +30,5 @@ public interface NamingObjectFactory
      *
      * @return true if the result of create() can be cached
      */
-    public boolean isCreateResultCacheable();
-
+    boolean isCreateResultCacheable();
 }

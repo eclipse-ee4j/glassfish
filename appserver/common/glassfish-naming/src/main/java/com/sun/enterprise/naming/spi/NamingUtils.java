@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,31 +15,22 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+
 package com.sun.enterprise.naming.spi;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.io.OutputStream;
 
 @Contract
 public interface NamingUtils {
 
-    public NamingObjectFactory createSimpleNamingObjectFactory(String name, Object value);
+    <T> NamingObjectFactory createSimpleNamingObjectFactory(SimpleJndiName name, T value);
 
-    public NamingObjectFactory createLazyInitializationNamingObjectFactory(String name, String jndiName,
-            boolean cacheResult);
+    NamingObjectFactory createLazyInitializationNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName, boolean cacheResult);
 
-    public NamingObjectFactory createLazyNamingObjectFactory(String name, String jndiName,
-        boolean cacheResult);
+    NamingObjectFactory createLazyNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName, boolean cacheResult);
 
-    public NamingObjectFactory createCloningNamingObjectFactory(String name, Object value);
+    NamingObjectFactory createCloningNamingObjectFactory(SimpleJndiName name, NamingObjectFactory delegate);
 
-    public NamingObjectFactory createCloningNamingObjectFactory(String name,
-        NamingObjectFactory delegate);
-
-    public NamingObjectFactory createDelegatingNamingObjectFactory(String name,
-        NamingObjectFactory delegate, boolean cacheResult);
-
-    public Object makeCopyOfObject(Object obj);
-
+    <T> T makeCopyOfObject(T obj);
 }

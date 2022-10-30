@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,12 @@
 
 package com.sun.enterprise.naming.impl;
 
-import java.util.*;
-import javax.naming.*;
-import java.rmi.*;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.Hashtable;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
 
 public interface SerialContextProvider extends Remote {
 
@@ -27,75 +31,66 @@ public interface SerialContextProvider extends Remote {
      *
      * @return the object or context bound to the name.
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public Object lookup(String name)
-            throws NamingException, RemoteException;
+    Object lookup(String name) throws NamingException, RemoteException;
 
     /**
      * Bind the object to the specified name.
      *
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public void bind(String name, Object obj)
-            throws NamingException, RemoteException;
+    void bind(String name, Object obj) throws NamingException, RemoteException;
 
     /**
      * Rebind the object to the specified name.
      *
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public void rebind(String name, Object obj)
-            throws NamingException, RemoteException;
+    void rebind(String name, Object obj) throws NamingException, RemoteException;
 
     /**
      * Unbind the specified object.
      *
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public void unbind(String name)
-            throws NamingException, RemoteException;
+    void unbind(String name) throws NamingException, RemoteException;
 
     /**
      * Rename the bound object.
      *
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public void rename(String oldname, String newname)
-            throws NamingException, RemoteException;
+    void rename(String oldname, String newname) throws NamingException, RemoteException;
 
-    public Hashtable list() throws RemoteException;
+    Hashtable<Object, Object> list() throws RemoteException;
 
     /**
      * List the contents of the specified context.
      *
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public Hashtable list(String name) throws NamingException, RemoteException;
+    Hashtable<Object, Object> list(String name) throws NamingException, RemoteException;
 
     /**
      * Create a subcontext with the specified name.
      *
      * @return the created subcontext.
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public Context createSubcontext(String name)
-            throws NamingException, RemoteException;
+    Context createSubcontext(String name) throws NamingException, RemoteException;
 
     /**
      * Destroy the subcontext with the specified name.
      *
      * @throws NamingException if there is a naming exception.
-     * @throws if              there is an RMI exception.
+     * @throws RemoteException there is an RMI exception.
      */
-    public void destroySubcontext(String name)
-            throws NamingException, RemoteException;
+    void destroySubcontext(String name) throws NamingException, RemoteException;
 }
-
-

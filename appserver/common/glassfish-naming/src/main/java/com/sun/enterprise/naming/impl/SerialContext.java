@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.naming.impl;
 
+import java.lang.reflect.InvocationTargetException;
 import java.rmi.RemoteException;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import javax.naming.NamingException;
 import javax.naming.NotContextException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
+import javax.naming.spi.NamingManager;
 import javax.naming.spi.ObjectFactory;
 import javax.rmi.PortableRemoteObject;
 
@@ -43,6 +45,7 @@ import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.api.naming.NamingClusterInfo;
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.ORBLocator;
@@ -79,27 +82,19 @@ public class SerialContext implements Context {
     // Maximum number of recursive calls to lookup on comm error
     private static final int MAX_LEVEL = 5 ;
 
-    private static final String JAVA_URL = "java:";
-
-    private static final String JAVA_GLOBAL_URL = "java:global";
-
-    // Sets unmanaged SerialContext in test mode to prevent attempts to contact server.
-    static final String INITIAL_CONTEXT_TEST_MODE = "com.sun.enterprise.naming.TestMode";
-
     private static final NameParser myParser = new SerialNameParser();
 
-    private static final Map<ProviderCacheKey, SerialContextProvider> providerCache =
-            new HashMap<>();
+    private static final Map<ProviderCacheKey, SerialContextProvider> providerCache = new HashMap<>();
 
-    private static final ThreadLocal<ThreadLocalIC> stickyContext =
-        new ThreadLocal<>() {
-            @Override
-            protected ThreadLocalIC initialValue() {
-                return new ThreadLocalIC() ;
-            }
-        } ;
+    private static final ThreadLocal<ThreadLocalIC> stickyContext = new ThreadLocal<>() {
 
-    private Hashtable myEnv = null; // THREAD UNSAFE
+        @Override
+        protected ThreadLocalIC initialValue() {
+            return new ThreadLocalIC();
+        }
+    };
+
+    private Hashtable<Object, Object> myEnv;
 
     private SerialContextProvider provider;
 
@@ -109,8 +104,6 @@ public class SerialContext implements Context {
 
     private ServiceLocator services;
 
-    private boolean testMode = false;
-
     private ProcessType processType = ProcessType.Server;
 
     private final ORB orbFromEnv;
@@ -118,7 +111,7 @@ public class SerialContext implements Context {
     private String targetHost;
     private String targetPort;
 
-    private ORB orb = null ;
+    private ORB orb;
 
     // True if we're running in the server and no orb,host, or port
     // properties have been explicitly set in the properties
@@ -200,33 +193,26 @@ public class SerialContext implements Context {
 
 
     /**
-     * Constructor for the context. Initializes the object reference to the
-     * remote provider object.
+     * This constructor takes the component id as an argument.
+     * All name arguments to operations are prepended by the component id.
+     * Initializes the object reference to the remote provider object.
      */
-    public SerialContext(String name, Hashtable environment, ServiceLocator h)
-            throws NamingException {
-
+    public SerialContext(String name, Hashtable<Object, Object> environment, ServiceLocator h) throws NamingException {
         services = h;
-        myEnv = (Hashtable) environment.clone();
+        myEnv = environment == null ? new Hashtable<>() : (Hashtable<Object, Object>) environment.clone();
 
         // TODO REMOVE when property stuff is figured out
-        myEnv.put("java.naming.factory.url.pkgs",
-            "com.sun.enterprise.naming");
-        myEnv.put("java.naming.factory.state",
-            "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl" );
+        myEnv.put("java.naming.factory.url.pkgs", "com.sun.enterprise.naming");
+        myEnv.put("java.naming.factory.state", "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
 
         this.myName = name;
-        if( myEnv.get(INITIAL_CONTEXT_TEST_MODE) != null ) {
-            testMode = true;
-            System.out.println("SerialContext in test mode");
-        }
 
-        if( (services == null) && !testMode ) {
-            synchronized(SerialContext.class) {
-                if( SerialInitContextFactory.getDefaultServices() == null ) {
+        if (services == null) {
+            synchronized (SerialContext.class) {
+                if (SerialInitContextFactory.getDefaultServices() == null) {
 
                     // Bootstrap a hk2 environment.
-                    // TODO This will need to be moved somewhere else.  Potentially any
+                    // TODO This will need to be moved somewhere else. Potentially any
                     // piece of glassfish code that can be an initial entry point from a
                     // Java SE client will need to make this happen.
 
@@ -239,52 +225,40 @@ public class SerialContext implements Context {
             }
         }
 
-        if( testMode ) {
-            processType = ProcessType.Server;
-        } else {
-            ProcessEnvironment processEnv = services.getService(ProcessEnvironment.class);
-            if (processEnv == null) {
-                processEnv = services.create(ProcessEnvironment.class);
-                services.inject(processEnv);
-                services.postConstruct(processEnv);
-            }
-
-            processType = processEnv.getProcessType();
+        ProcessEnvironment processEnv = services.getService(ProcessEnvironment.class);
+        if (processEnv == null) {
+            processEnv = services.create(ProcessEnvironment.class);
+            services.inject(processEnv);
+            services.postConstruct(processEnv);
         }
 
-        // using these two temp variables allows instance variables
-        // to be 'final'.
-        JavaURLContext urlContextTemp = null;
+        processType = processEnv.getProcessType();
 
-        if (myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY) != null) {
-            urlContextTemp = new JavaURLContext(myEnv, this);
+        if (myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY) == null) {
+            javaUrlContext = new JavaURLContext(myEnv, null);
         } else {
-            urlContextTemp = new JavaURLContext(myEnv, null);
+            javaUrlContext = new JavaURLContext(myEnv, this);
         }
 
-        javaUrlContext = urlContextTemp;
+        orbFromEnv = (ORB) myEnv.get(ORBLocator.JNDI_CORBA_ORB_PROPERTY);
+        final String targetHostFromEnv = (String) myEnv.get(ORBLocator.OMG_ORB_INIT_HOST_PROPERTY);
+        final String targetPortFromEnv = (String) myEnv.get(ORBLocator.OMG_ORB_INIT_PORT_PROPERTY);
 
-        orbFromEnv  = (ORB) myEnv.get(ORBLocator.JNDI_CORBA_ORB_PROPERTY);
-        String targetHostFromEnv = (String)myEnv.get(
-            ORBLocator.OMG_ORB_INIT_HOST_PROPERTY);
-        String targetPortFromEnv = (String)myEnv.get(
-            ORBLocator.OMG_ORB_INIT_PORT_PROPERTY);
-
-        intraServerLookups = (processType.isServer()) && (orbFromEnv == null) &&
-            (targetHostFromEnv == null) && (targetPortFromEnv == null);
+        intraServerLookups = processType.isServer() && orbFromEnv == null && targetHostFromEnv == null
+            && targetPortFromEnv == null;
 
         // Set target host / port from env.  If only one of the two is set, fill in the
         // other with the default.
-        if( targetHostFromEnv != null ) {
+        if (targetHostFromEnv != null) {
             targetHost = targetHostFromEnv;
-            if( targetPortFromEnv == null ) {
+            if (targetPortFromEnv == null) {
                 targetPort = ORBLocator.DEFAULT_ORB_INIT_PORT;
             }
         }
 
-        if( targetPortFromEnv != null ) {
+        if (targetPortFromEnv != null) {
             targetPort = targetPortFromEnv;
-            if( targetHostFromEnv == null ) {
+            if (targetHostFromEnv == null) {
                 targetHost = ORBLocator.DEFAULT_ORB_INIT_HOST;
             }
         }
@@ -299,10 +273,10 @@ public class SerialContext implements Context {
     }
 
     /**
-     * This constructor takes the component id as an argument. All name
-     * arguments to operations are prepended by the component id.
+     * This constructor uses an empty string as a name.
+     * Initializes the object reference to the remote provider object.
      */
-    public SerialContext(Hashtable env, ServiceLocator services) throws NamingException {
+    public SerialContext(Hashtable<Object, Object> env, ServiceLocator services) throws NamingException {
         this("", env, services);
     }
 
@@ -312,16 +286,13 @@ public class SerialContext implements Context {
         if (provider == null) {
             try {
                 if (intraServerLookups) {
-                    returnValue =
-                        ProviderManager.getProviderManager().getLocalProvider();
-                }  else {
+                    returnValue = ProviderManager.getProviderManager().getLocalProvider();
+                } else {
                     returnValue = getRemoteProvider();
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 clearSticky() ;
-                e.printStackTrace();
-                NamingException ne = new NamingException(
-                    "Unable to acquire SerialContextProvider for " + this);
+                NamingException ne = new NamingException("Unable to acquire SerialContextProvider for " + this);
                 ne.initCause(e);
                 throw ne;
             }
@@ -331,33 +302,28 @@ public class SerialContext implements Context {
     }
 
     private ORB getORB() {
-        ORBLocator orbHelper = services.getService(ORBLocator.class);
         if (orb == null) {
+            ORBLocator orbHelper = services.getService(ORBLocator.class);
             orb = orbHelper.getORB() ;
         }
-
-        return orb ;
+        return orb;
     }
+
 
     private ProviderCacheKey getProviderCacheKey() {
         final ORB myORB = getORB();
-        ProviderCacheKey key;
-
-        String eplist = null ;
+        String eplist = null;
         if (myEnv != null) {
-            eplist = (String)myEnv.get(
-                    NamingClusterInfo.IIOP_URL_PROPERTY) ;
+            eplist = (String) myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY);
         }
 
         if (eplist != null) {
-            key = new ProviderCacheKey(eplist) ;
+            return new ProviderCacheKey(eplist);
         } else if (targetHost == null) {
-            key = new ProviderCacheKey(myORB) ;
-        }  else {
-            key = new ProviderCacheKey(targetHost, targetPort);
+            return new ProviderCacheKey(myORB);
+        } else {
+            return new ProviderCacheKey(targetHost, targetPort);
         }
-
-        return key ;
     }
 
     private void clearProvider() {
@@ -413,8 +379,10 @@ public class SerialContext implements Context {
      * method to check if the name to look up starts with "java:"
      */
     private boolean isjavaURL(String name) {
-        return name.startsWith(JAVA_URL) && !name.startsWith(JAVA_GLOBAL_URL) ;
+        SimpleJndiName jndiName = SimpleJndiName.of(name);
+        return jndiName.hasJavaPrefix() && !jndiName.isJavaGlobal();
     }
+
 
     /**
      * Lookup the specified name in the context. Returns the resolved object.
@@ -424,13 +392,14 @@ public class SerialContext implements Context {
      */
     @Override
     public Object lookup(String name) throws NamingException {
-        return lookup( name, 0 ) ;
+        return lookup(name, 0);
     }
+
 
     private Object lookup(String name, int level ) throws NamingException {
         // Before any lookup bind any NamedNamingObjectProxy
         // Skip if in plain Java SE client
-        // TODO this should really be moved somewhere else
+        // FIXME this should really be moved somewhere else
         NamedNamingObjectManager.checkAndLoadProxies(services);
 
         /**
@@ -442,14 +411,14 @@ public class SerialContext implements Context {
         final boolean useSticky = myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY) != null ;
 
         if (useSticky) {
-            grabSticky() ;
+            grabSticky();
         }
 
         try {
             if (name.isEmpty()) {
                 // Asking to look up this context itself. Create and return
                 // a new instance with its own independent environment.
-                return (new SerialContext(myName, myEnv, services));
+                return new SerialContext(myName, myEnv, services);
             }
 
             name = getRelativeName(name);
@@ -462,23 +431,21 @@ public class SerialContext implements Context {
                     o = getObjectInstance(name, o);
                 }
                 return o;
-            } else {
-                SerialContextProvider prvdr = getProvider() ;
-                Object obj = prvdr.lookup(name);
-                if (obj instanceof NamingObjectProxy) {
-                    return ((NamingObjectProxy) obj).create(this);
-                }
-
-                if (obj instanceof Context) {
-                    return new SerialContext(name, myEnv, services);
-                }
-
-                Object retObj = getObjectInstance(name, obj);
-                return retObj;
             }
+            SerialContextProvider prvdr = getProvider() ;
+            Object obj = prvdr.lookup(name);
+            if (obj instanceof NamingObjectProxy) {
+                return ((NamingObjectProxy) obj).create(this);
+            }
+
+            if (obj instanceof Context) {
+                return new SerialContext(name, myEnv, services);
+            }
+
+            Object retObj = getObjectInstance(name, obj);
+            return retObj;
         } catch (NamingException nnfe) {
-            NamingException ne = new NamingException
-                    ("Lookup failed for '" + name + "' in " + this);
+            NamingException ne = new NamingException("Lookup failed for '" + name + "' in " + this);
             ne.initCause(nnfe);
             throw ne;
         } catch (Exception ex) {
@@ -498,12 +465,8 @@ public class SerialContext implements Context {
                 clearProvider();
                 logger.fine("Resetting provider to NULL. Will get new obj ref for provider since previous obj ref was stale...");
                 return lookup(name, nextLevel );
-            } else {
-                CommunicationException ce = new CommunicationException(
-                    "Communication exception for " + this);
-                ce.initCause(ex);
-                throw ce;
             }
+            throw createCommunicationException("Lookup failed.", ex);
         } finally {
             if (useSticky) {
                 releaseSticky();
@@ -511,10 +474,9 @@ public class SerialContext implements Context {
         }
     }
 
-    private Object getObjectInstance(String name, Object obj) throws Exception
-    {
-        Object retObj = javax.naming.spi.NamingManager.getObjectInstance(
-            obj, new CompositeName(name), null, myEnv);
+
+    private Object getObjectInstance(String name, Object obj) throws Exception {
+        Object retObj = NamingManager.getObjectInstance(obj, new CompositeName(name), null, myEnv);
 
         if (retObj == obj) {
             // NamingManager.getObjectInstance() returns the same object
@@ -532,15 +494,13 @@ public class SerialContext implements Context {
                 Reference ref = getReference(obj);
                 if (ref != null) {
                     logger.logp(Level.FINE, "SerialContext", "getObjectInstance",
-                            "Trying with CommonClassLoader for name {0} ", name);
+                        "Trying with CommonClassLoader for name {0} ", name);
                     ObjectFactory factory = getObjectFactory(ref, commonCL);
                     if (factory != null) {
-                        retObj = factory.getObjectInstance(
-                                ref, new CompositeName(name), null, myEnv);
+                        retObj = factory.getObjectInstance(ref, new CompositeName(name), null, myEnv);
                     }
                     if (retObj != obj) {
-                        logger.logp(Level.FINE, "SerialContext", "getObjectInstance",
-                                "Found with CommonClassLoader");
+                        logger.logp(Level.FINE, "SerialContext", "getObjectInstance", "Found with CommonClassLoader");
                     }
                 }
             }
@@ -582,18 +542,14 @@ public class SerialContext implements Context {
      * @throws InstantiationException
      */
     private ObjectFactory getObjectFactory(Reference ref, ClassLoader cl)
-            throws IllegalAccessException, InstantiationException
-    {
+        throws IllegalAccessException, InstantiationException {
         String factoryName = ref.getFactoryClassName();
         if (factoryName != null) {
-            try
-            {
-                Class c = Class.forName(factoryName, false, cl);
-                return (ObjectFactory)c.newInstance();
-            }
-            catch (ClassNotFoundException e)
-            {
-                // ignore only CNFE, all other exceptions are considered errors
+            try {
+                Class<ObjectFactory> c = (Class<ObjectFactory>) Class.forName(factoryName, false, cl);
+                return c.getDeclaredConstructor().newInstance();
+            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
+                logger.log(Level.CONFIG, "Factory could not be created: {0}", factoryName);
             }
         }
         return null;
@@ -628,7 +584,7 @@ public class SerialContext implements Context {
             try {
                 getProvider().bind(name, obj);
             } catch (RemoteException ex) {
-                throw new CommunicationException(ex.toString());
+                 throw createCommunicationException("Bind failed.", ex);
             }
         }
     }
@@ -663,7 +619,7 @@ public class SerialContext implements Context {
             try {
                 getProvider().rebind(name, obj);
             } catch (RemoteException ex) {
-                throw new CommunicationException(ex.toString());
+                throw createCommunicationException("Rebind failed.", ex);
             }
         }
     }
@@ -696,7 +652,7 @@ public class SerialContext implements Context {
             try {
                 getProvider().unbind(name);
             } catch (RemoteException ex) {
-                throw new CommunicationException(ex.toString());
+                throw createCommunicationException("Unbind failed.", ex);
             }
         }
     }
@@ -730,7 +686,7 @@ public class SerialContext implements Context {
             try {
                 getProvider().rename(oldname, newname);
             } catch (RemoteException ex) {
-                throw new CommunicationException(ex.toString());
+                throw createCommunicationException("Rename failed.", ex);
             }
         }
     }
@@ -760,24 +716,23 @@ public class SerialContext implements Context {
         if (name.isEmpty()) {
             // listing this context
             try {
-                Hashtable bindings = getProvider().list(myName);
+                Hashtable<Object, Object> bindings = getProvider().list(myName);
                 return new RepNames<>(bindings);
             } catch (RemoteException ex) {
-                throw new CommunicationException(ex.toString());
+                throw createCommunicationException("List failed.", ex);
             }
         }
 
         name = getRelativeName(name);
         if (isjavaURL(name)) {
             return javaUrlContext.list(name);
-        } else {
-            // Perhaps 'name' names a context
-            Object target = lookup(name);
-            if (target instanceof Context) {
-                return ((Context) target).list("");
-            }
-            throw new NotContextException(name + " cannot be listed");
         }
+        // Perhaps 'name' names a context
+        Object target = lookup(name);
+        if (target instanceof Context) {
+            return ((Context) target).list("");
+        }
+        throw new NotContextException(name + " cannot be listed");
     }
 
     /**
@@ -803,29 +758,24 @@ public class SerialContext implements Context {
     @Override
     public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
         if (name.isEmpty()) {
-            // listing this context
             try {
-                Hashtable bindings = getProvider().list(myName);
-                return new RepBindings<>(bindings);
+                Hashtable<String, Object> bindings = (Hashtable) getProvider().list(myName);
+                return new RepBindings(bindings);
             } catch (RemoteException ex) {
-                CommunicationException ce = new CommunicationException(ex
-                        .toString());
-                ce.initCause(ex);
-                throw ce;
+                throw createCommunicationException("List Bindings failed.", ex);
             }
         }
 
         name = getRelativeName(name);
         if (isjavaURL(name)) {
             return javaUrlContext.listBindings(name);
-        } else {
-            // Perhaps 'name' names a context
-            Object target = lookup(name);
-            if (target instanceof Context) {
-                return ((Context) target).listBindings("");
-            }
-            throw new NotContextException(name + " cannot be listed");
         }
+        // Perhaps 'name' names a context
+        Object target = lookup(name);
+        if (target instanceof Context) {
+            return ((Context) target).listBindings("");
+        }
+        throw new NotContextException(name + " cannot be listed");
     }
 
     /**
@@ -856,10 +806,7 @@ public class SerialContext implements Context {
             try {
                 getProvider().destroySubcontext(name);
             } catch (RemoteException e) {
-                CommunicationException ce = new CommunicationException(e
-                        .toString());
-                ce.initCause(e);
-                throw ce;
+                throw createCommunicationException("Destroy Subcontext failed.", e);
             }
         }
     }
@@ -889,23 +836,19 @@ public class SerialContext implements Context {
         name = getRelativeName(name);
         if (isjavaURL(name)) {
             return javaUrlContext.createSubcontext(name);
-        } else {
-            try {
-                getProvider().createSubcontext(name);
-                /*
-                 * this simulates the transient context structure on the client
-                 * side. Have to do this - as reference to Transient Context is
-                 * not resolved properly due to rmi
-                 */
-                c = new SerialContext(name, myEnv, services);
-            } catch (RemoteException e) {
-                CommunicationException ce = new CommunicationException(e
-                        .toString());
-                ce.initCause(e);
-                throw ce;
-            }
-            return c;
         }
+        try {
+            getProvider().createSubcontext(name);
+            /*
+             * this simulates the transient context structure on the client
+             * side. Have to do this - as reference to Transient Context is
+             * not resolved properly due to rmi
+             */
+            c = new SerialContext(name, myEnv, services);
+        } catch (RemoteException e) {
+            throw createCommunicationException("Create Subcontext failed", e);
+        }
+        return c;
     }
 
     /**
@@ -933,10 +876,9 @@ public class SerialContext implements Context {
         name = getRelativeName(name);
         if (isjavaURL(name)) {
             return javaUrlContext.lookupLink(name);
-        } else {
-            // This flat context does not treat links specially
-            return lookup(name);
         }
+        // This flat context does not treat links specially
+        return lookup(name);
     }
 
     /**
@@ -1000,10 +942,9 @@ public class SerialContext implements Context {
      * @throws NamingException if there is a naming exception.
      */
     @Override
-    public Object addToEnvironment(String propName, Object propVal)
-            throws NamingException {
+    public Object addToEnvironment(String propName, Object propVal) throws NamingException {
         if (myEnv == null) {
-            myEnv = new Hashtable(5, 0.75f);
+            myEnv = new Hashtable<>(5, 0.75f);
         }
         return myEnv.put(propName, propVal);
     }
@@ -1027,10 +968,9 @@ public class SerialContext implements Context {
      * @throws NamingException if there is a naming exception.
      */
     @Override
-    public Hashtable getEnvironment() throws NamingException {
+    public Hashtable<Object, Object> getEnvironment() throws NamingException {
         if (myEnv == null) {
-            // Must return non-null
-            myEnv = new Hashtable(3, 0.75f);
+            myEnv = new Hashtable<>(3, 0.75f);
         }
         return myEnv;
     }
@@ -1045,11 +985,17 @@ public class SerialContext implements Context {
         myEnv = null;
     }
 
+
+    private CommunicationException createCommunicationException(String message, Exception ex)
+        throws CommunicationException {
+        CommunicationException ce = new CommunicationException(message);
+        ce.initCause(ex);
+        return ce;
+    }
+
+
     private String getRelativeName(String name) {
-        if (!myName.equals("")) {
-            name = myName + "/" + name;
-        }
-        return name;
+        return myName.isEmpty() ? name : myName + "/" + name;
     }
 
     // Class for enumerating name/class pairs
@@ -1096,12 +1042,11 @@ public class SerialContext implements Context {
     }
 
     // Class for enumerating bindings
-    static class RepBindings<T> implements NamingEnumeration<T> {
-        Enumeration names;
+    static class RepBindings implements NamingEnumeration<Binding> {
+        Enumeration<String> names;
+        Hashtable<String, Object> bindings;
 
-        Hashtable bindings;
-
-        RepBindings(Hashtable bindings) {
+        RepBindings(Hashtable<String, Object> bindings) {
             this.bindings = bindings;
             this.names = bindings.keys();
         }
@@ -1117,17 +1062,16 @@ public class SerialContext implements Context {
         }
 
         @Override
-        public T nextElement() {
+        public Binding nextElement() {
             if (hasMoreElements()) {
-                String name = (String) names.nextElement();
-                return (T) (new Binding(name, bindings.get(name)));
-            } else {
-                return null;
+                String name = names.nextElement();
+                return new Binding(name, bindings.get(name));
             }
+            return null;
         }
 
         @Override
-        public T next() throws NamingException {
+        public Binding next() throws NamingException {
             return nextElement();
         }
 
@@ -1140,22 +1084,15 @@ public class SerialContext implements Context {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("SerialContext[");
-        if(testMode) {
-            sb.append("( IN TEST MODE ) ");
-        }
-
-        sb.append( "myEnv=" ) ;
-        sb.append( myEnv ) ;
-
+        sb.append(getClass().getSimpleName()).append('[');
+        sb.append("myEnv=").append(myEnv).append(']');
         return sb.toString();
-
     }
 
     private class ProviderCacheKey {
         // Key is either orb OR host/port combo.
-        private ORB localORB = null ;
-        private String endpoints = null ;
+        private ORB localORB;
+        private String endpoints;
 
         ProviderCacheKey(ORB orb) {
             this.localORB  = orb;
@@ -1163,8 +1100,7 @@ public class SerialContext implements Context {
 
         // Host and Port must both be non-null
         ProviderCacheKey(String host, String port) {
-            endpoints = "corbaloc:iiop:1.2@" + host + ":" + port
-                + "/NameService" ;
+            endpoints = "corbaloc:iiop:1.2@" + host + ":" + port + "/NameService";
         }
 
         ProviderCacheKey( String endpoints ) {
@@ -1175,60 +1111,51 @@ public class SerialContext implements Context {
         public String toString() {
             if (localORB == null) {
                 return "ProviderCacheKey[" + endpoints + "]" ;
-            } else {
-                return "ProviderCacheKey[" + localORB + "]" ;
             }
+            return "ProviderCacheKey[" + localORB + "]" ;
         }
 
-        public SerialContextProvider getNameService() throws InvalidName,
-            NotFound, CannotProceed,
-            org.omg.CosNaming.NamingContextPackage.InvalidName {
 
-            org.omg.CORBA.Object objref = null;
+        public SerialContextProvider getNameService()
+            throws InvalidName, NotFound, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName {
+            final org.omg.CORBA.Object objref;
             if (endpoints == null) {
-                objref = orb.resolve_initial_references( "NameService");
+                objref = orb.resolve_initial_references("NameService");
             } else {
-                objref = orb.string_to_object(endpoints) ;
+                objref = orb.string_to_object(endpoints);
             }
 
             final NamingContext nctx = NamingContextHelper.narrow(objref);
-            final NameComponent[] path =
-                { new NameComponent("SerialContextProvider", "") };
-            final org.omg.CORBA.Object obj = nctx.resolve(path) ;
+            final NameComponent[] path = {new NameComponent("SerialContextProvider", "")};
+            final org.omg.CORBA.Object obj = nctx.resolve(path);
 
-            SerialContextProvider result =
-                (SerialContextProvider)PortableRemoteObject.narrow( obj,
-                    SerialContextProvider.class );
+            SerialContextProvider result = (SerialContextProvider) PortableRemoteObject.narrow(obj,
+                SerialContextProvider.class);
 
-            return result ;
+            return result;
         }
 
         @Override
         public int hashCode() {
-            return (orb != null) ? orb.hashCode() : endpoints.hashCode();
+            return orb == null ? endpoints.hashCode() : orb.hashCode();
         }
 
         @Override
         public boolean equals(Object other) {
             if (other == null) {
-                return false ;
+                return false;
             }
-
             if (!(other instanceof ProviderCacheKey)) {
-                return false ;
+                return false;
             }
-
             ProviderCacheKey otherKey = (ProviderCacheKey) other;
-
             if (localORB != null) {
-                return localORB == otherKey.localORB ;
-            } else {
-                if (endpoints == null) {
-                    return otherKey.endpoints == null ;
-                }
-
-                return endpoints.equals(otherKey.endpoints) ;
+                return localORB == otherKey.localORB;
             }
+            if (endpoints == null) {
+                return otherKey.endpoints == null;
+            }
+            return endpoints.equals(otherKey.endpoints);
         }
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,19 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import org.glassfish.api.naming.NamespacePrefixes;
-import org.glassfish.api.naming.NamedNamingObjectProxy;
-
-import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Inject;
-
-import org.omg.CORBA.ORB;
 
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.api.naming.NamespacePrefixes;
+import org.jvnet.hk2.annotations.Service;
+import org.omg.CORBA.ORB;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+
 /**
  * Proxy for java:comp/ORB lookups
- *
  *
  * @author Ken Saks
  */
@@ -36,12 +37,12 @@ import javax.naming.NamingException;
 @NamespacePrefixes(ORBNamingProxy.ORB_CONTEXT)
 public class ORBNamingProxy implements NamedNamingObjectProxy {
 
-    static final String ORB_CONTEXT
-            = "java:comp/ORB";
+    static final String ORB_CONTEXT = JNDI_CTX_JAVA_COMPONENT + "ORB";
 
     @Inject
     private GlassFishORBHelper orbHelper;
 
+    @Override
     public Object handle(String name) throws NamingException {
 
         ORB orb = null;

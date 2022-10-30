@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,20 @@
 
 package org.glassfish.enterprise.iiop.api;
 
-import org.glassfish.api.naming.NamespacePrefixes;
-import org.glassfish.api.naming.NamedNamingObjectProxy;
-
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-
 import jakarta.ejb.spi.HandleDelegate;
-
+import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
 import javax.naming.NamingException;
+
+import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.api.naming.NamespacePrefixes;
+import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Proxy for java:comp/ORB lookups
- *
  *
  * @author Ken Saks
  */
@@ -37,16 +38,15 @@ import javax.naming.NamingException;
 @NamespacePrefixes(HandleDelegateNamingProxy.HANDLE_DELEGATE)
 public class HandleDelegateNamingProxy implements NamedNamingObjectProxy {
 
-    static final String HANDLE_DELEGATE
-            = "java:comp/HandleDelegate";
+    static final String HANDLE_DELEGATE = JNDI_CTX_JAVA_COMPONENT + "HandleDelegate";
 
     @Inject
     private Provider<HandleDelegateFacade> handleDelegateFacadeProvider;
 
     private volatile HandleDelegateFacade facade;
 
+    @Override
     public Object handle(String name) throws NamingException {
-
         HandleDelegate delegate = null;
 
         if (HANDLE_DELEGATE.equals(name)) {
@@ -57,9 +57,8 @@ public class HandleDelegateNamingProxy implements NamedNamingObjectProxy {
                 }
                 delegate = facade.getHandleDelegate();
 
-            } catch(Throwable t) {
-                NamingException ne = new NamingException
-                        ("Error resolving java:comp/HandleDelegate lookup");
+            } catch (Throwable t) {
+                NamingException ne = new NamingException("Error resolving java:comp/HandleDelegate lookup");
                 ne.initCause(t);
                 throw ne;
             }
@@ -67,6 +66,5 @@ public class HandleDelegateNamingProxy implements NamedNamingObjectProxy {
 
         return delegate;
     }
-
 
 }

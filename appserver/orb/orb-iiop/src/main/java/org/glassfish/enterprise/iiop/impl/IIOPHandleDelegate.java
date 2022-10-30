@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,32 @@
 
 package org.glassfish.enterprise.iiop.impl;
 
-import java.io.*;
+import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 
-import jakarta.ejb.*;
+import jakarta.ejb.EJBHome;
+import jakarta.ejb.EJBObject;
 import jakarta.ejb.spi.HandleDelegate;
+
+import java.io.IOException;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-
 import javax.rmi.PortableRemoteObject;
 
-import org.omg.CORBA.portable.Delegate;
 import org.omg.CORBA.ORB;
-import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * An implementation of HandleDelegate for the IIOP Protocol.
- *
  */
-
-public final class IIOPHandleDelegate
-    implements HandleDelegate
-{
+public final class IIOPHandleDelegate implements HandleDelegate {
 
     public static HandleDelegate getHandleDelegate() {
         HandleDelegate handleDelegate =
             (HandleDelegate) java.security.AccessController.doPrivileged(
                 new java.security.PrivilegedAction() {
+                    @Override
                     public Object run() {
                         try {
                             ClassLoader cl = new HandleDelegateClassLoader();
@@ -58,6 +59,7 @@ public final class IIOPHandleDelegate
     }
 
 
+    @Override
     public void writeEJBObject(jakarta.ejb.EJBObject ejbObject,
             java.io.ObjectOutputStream ostream)
         throws java.io.IOException
@@ -65,12 +67,14 @@ public final class IIOPHandleDelegate
         ostream.writeObject(ejbObject); // IIOP stubs are Serializable
     }
 
+    @Override
     public jakarta.ejb.EJBObject readEJBObject(java.io.ObjectInputStream istream)
         throws java.io.IOException, ClassNotFoundException
     {
         return (EJBObject)getStub(istream, EJBObject.class);
     }
 
+    @Override
     public void writeEJBHome(jakarta.ejb.EJBHome ejbHome,
             java.io.ObjectOutputStream ostream)
         throws java.io.IOException
@@ -78,6 +82,7 @@ public final class IIOPHandleDelegate
         ostream.writeObject(ejbHome); // IIOP stubs are Serializable
     }
 
+    @Override
     public jakarta.ejb.EJBHome readEJBHome(java.io.ObjectInputStream istream)
         throws java.io.IOException, ClassNotFoundException
     {
@@ -107,7 +112,7 @@ public final class IIOPHandleDelegate
                 ORB orb = null;
                 try {
 
-                    orb = (ORB) new InitialContext().lookup("java:comp/ORB");
+                    orb = (ORB) new InitialContext().lookup(JNDI_CTX_JAVA_COMPONENT + "ORB");
 
                 } catch(NamingException ne) {
 
@@ -116,7 +121,7 @@ public final class IIOPHandleDelegate
 
                 // Stub is not connected. This can happen if istream is
                 // not an IIOP input stream (e.g. it's a File stream).
-                StubAdapter.connect(obj, (com.sun.corba.ee.spi.orb.ORB) orb);
+                StubAdapter.connect(obj, orb);
             }
 
         } else {
@@ -127,9 +132,7 @@ public final class IIOPHandleDelegate
         }
 
         // narrow it
-        Object stub = PortableRemoteObject.narrow(obj, stubClass);
-
-        return stub;
+        return PortableRemoteObject.narrow(obj, stubClass);
     }
 
 }

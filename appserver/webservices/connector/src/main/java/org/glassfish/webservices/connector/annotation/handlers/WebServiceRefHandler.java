@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,39 @@
 
 package org.glassfish.webservices.connector.annotation.handlers;
 
-import java.lang.reflect.AnnotatedElement;
+import com.sun.enterprise.deployment.InjectionTarget;
+import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.annotation.context.AppClientContext;
+import com.sun.enterprise.deployment.annotation.context.ServiceReferenceContainerContext;
+import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
+import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
+
+import jakarta.xml.ws.RespectBinding;
+import jakarta.xml.ws.WebServiceClient;
+import jakarta.xml.ws.WebServiceRef;
+import jakarta.xml.ws.soap.Addressing;
+import jakarta.xml.ws.soap.MTOM;
+import jakarta.xml.ws.spi.WebServiceFeatureAnnotation;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-
-import java.util.Map;
 import java.util.HashMap;
-import java.util.logging.Level;
+import java.util.Map;
 
-import jakarta.xml.ws.*;
-import jakarta.xml.ws.RespectBinding;
-import jakarta.xml.ws.spi.WebServiceFeatureAnnotation;
-import jakarta.xml.ws.soap.MTOM;
-import jakarta.xml.ws.soap.Addressing;
-
-import org.glassfish.apf.*;
+import org.glassfish.apf.AnnotatedElementHandler;
+import org.glassfish.apf.AnnotationHandlerFor;
+import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.apf.AnnotationProcessorException;
+import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.apf.ResultType;
 import org.glassfish.apf.impl.HandlerProcessingResultImpl;
-
-import com.sun.enterprise.deployment.annotation.context.AppClientContext;
-import com.sun.enterprise.deployment.annotation.context.ServiceReferenceContainerContext;
-import com.sun.enterprise.deployment.*;
-import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.deployment.annotation.handlers.AbstractHandler;
 
 import static com.sun.enterprise.util.StringUtils.ok;
 
@@ -162,12 +170,13 @@ public class WebServiceRefHandler extends AbstractHandler  {
         // Other annotations like SchemaValidation etc to be passed on to
         // ServiceReferenceDescriptor
         Map<Class<? extends Annotation>, Annotation> otherAnnotations =
-                new HashMap<Class<? extends Annotation>, Annotation>();
+                new HashMap<>();
 
         for (Annotation a : annElem.getAnnotations()) {
             if (!(a.annotationType().isAnnotationPresent(
-                                        WebServiceFeatureAnnotation.class)))
+                                        WebServiceFeatureAnnotation.class))) {
                 continue;
+            }
             if (a instanceof MTOM) {
                 mtom = (MTOM)a;
             } else if (a instanceof Addressing) {
@@ -215,19 +224,21 @@ public class WebServiceRefHandler extends AbstractHandler  {
             // merge other annotations
             Map<Class<? extends Annotation>, Annotation> oa =
                 aRef.getOtherAnnotations();
-            if (oa == null)
+            if (oa == null) {
                 aRef.setOtherAnnotations(otherAnnotations);
-            else {
+            } else {
                 for (Map.Entry<Class<? extends Annotation>, Annotation> entry :
                         otherAnnotations.entrySet()) {
-                    if (!oa.containsKey(entry.getKey()))
+                    if (!oa.containsKey(entry.getKey())) {
                         oa.put(entry.getKey(), entry.getValue());
+                    }
                 }
             }
 
             // merge wsdlLocation
-            if (!ok(aRef.getWsdlFileUri()) && ok(annotation.wsdlLocation()))
+            if (!ok(aRef.getWsdlFileUri()) && ok(annotation.wsdlLocation())) {
                 aRef.setWsdlFileUri(annotation.wsdlLocation());
+            }
 
             if (!aRef.hasMtomEnabled() && mtom != null) {
                 aRef.setMtomEnabled(mtom.enabled());
@@ -244,24 +255,24 @@ public class WebServiceRefHandler extends AbstractHandler  {
 
             // check RespectBinding annotation
             if (aRef.getRespectBinding() == null && respectBinding != null) {
-                aRef.setRespectBinding(
-                        new com.sun.enterprise.deployment.RespectBinding(
-                                respectBinding.enabled()));
+                aRef.setRespectBinding(new com.sun.enterprise.deployment.RespectBinding(respectBinding.enabled()));
             }
 
             // Store mapped name that is specified
-            if (!ok(aRef.getMappedName()) && ok(annotation.mappedName()))
-                    aRef.setMappedName(annotation.mappedName());
+            if ((aRef.getMappedName() == null || aRef.getMappedName().isEmpty()) && ok(annotation.mappedName())) {
+                aRef.setMappedName(new SimpleJndiName(annotation.mappedName()));
+            }
 
             // Store lookup name that is specified
-            if (!aRef.hasLookupName() &&
-                    ok(getLookupValue(annotation, annInfo)))
-                aRef.setLookupName(getLookupValue(annotation, annInfo));
+            if (!aRef.hasLookupName() && ok(annotation.lookup())) {
+                aRef.setLookupName(new SimpleJndiName(annotation.lookup()));
+            }
 
             aRef.setInjectResourceType("jakarta.jws.WebServiceRef");
 
-            if (target != null)
+            if (target != null) {
                 aRef.addInjectionTarget(target);
+            }
 
             // Read the WebServiceClient annotation for the service name space
             // uri and wsdl (if required)
@@ -288,8 +299,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
                 if (aRef.getInjectionTargetType() == null) {
                     aRef.setInjectionTargetType(annotatedType.getName());
                 }
-                wsclientAnn = (WebServiceClient)
-                    annotation.value().getAnnotation(WebServiceClient.class);
+                wsclientAnn = annotation.value().getAnnotation(WebServiceClient.class);
             } else {
                 // no value provided in the annotation
                 wsclientAnn = (WebServiceClient)
@@ -333,33 +343,5 @@ public class WebServiceRefHandler extends AbstractHandler  {
             throws AnnotationProcessorException {
         WebServiceRef annotation = (WebServiceRef) annInfo.getAnnotation();
         return(processAWsRef(annInfo, annotation));
-    }
-
-    /**
-     * Return the value of the "lookup" element of the WebServiceRef annotation.
-     * This method handles the case where the WebServiceRef class is an older
-     * version before the lookup element was added; in that case access to
-     * the lookup element will cause a NoSuchMethodError, which is caught
-     * and ignored (with a warning message).
-     *
-     * @return the value of the lookup element
-     */
-    private String getLookupValue(WebServiceRef annotation,
-                                            AnnotationInfo ainfo) {
-        String lookupValue = "";
-        try {
-            lookupValue = annotation.lookup();
-        } catch(NoSuchMethodError nsme) {
-            // Probably means  an older version of Resource is being picked up from somewhere.
-            // Don't treat this as a fatal error.
-            try {
-                log(Level.WARNING, ainfo,
-                    I18N.getLocalString(
-                "enterprise.deployment.annotation.handlers.wrongresourceclass",
-                        "Incorrect @Resource annotation class definition - " +
-                        "missing lookup attribute"));
-            } catch (AnnotationProcessorException ex) { }
-        }
-        return lookupValue;
     }
 }

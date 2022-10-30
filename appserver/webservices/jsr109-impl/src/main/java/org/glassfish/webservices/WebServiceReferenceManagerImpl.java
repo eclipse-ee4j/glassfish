@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,37 +17,54 @@
 
 package org.glassfish.webservices;
 
-import com.sun.enterprise.deployment.*;
-import com.sun.xml.ws.api.server.*;
-import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.deployment.versioning.VersioningUtils;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.container.common.spi.WebServiceReferenceManager;
+import com.sun.enterprise.deployment.InjectionTarget;
+import com.sun.enterprise.deployment.ServiceRefPortInfo;
+import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebService;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.enterprise.deployment.WebServicesDescriptor;
 import com.sun.xml.ws.api.FeatureConstructor;
+import com.sun.xml.ws.api.server.Adapter;
+import com.sun.xml.ws.api.server.DocumentAddressResolver;
+import com.sun.xml.ws.api.server.PortAddressResolver;
+import com.sun.xml.ws.api.server.SDDocument;
+import com.sun.xml.ws.api.server.ServiceDefinition;
 import com.sun.xml.ws.resources.ModelerMessages;
+import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 import jakarta.inject.Inject;
-import javax.naming.Context;
-import javax.naming.NamingException;
-import javax.naming.InitialContext;
-import jakarta.xml.ws.soap.MTOMFeature;
-import jakarta.xml.ws.soap.AddressingFeature;
-import jakarta.xml.ws.WebServiceFeature;
 import jakarta.xml.ws.RespectBindingFeature;
 import jakarta.xml.ws.WebServiceException;
+import jakarta.xml.ws.WebServiceFeature;
+import jakarta.xml.ws.soap.AddressingFeature;
+import jakarta.xml.ws.soap.MTOMFeature;
 import jakarta.xml.ws.spi.WebServiceFeatureAnnotation;
-import java.io.*;
-import java.lang.reflect.*;
+
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
-import java.util.Iterator;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.security.PrivilegedActionException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.security.PrivilegedActionException;
-import java.net.URL;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.deployment.versioning.VersioningUtils;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -59,7 +76,6 @@ import java.net.URL;
  *
  * @author Bhakti Mehta
  */
-
 @Service
 public class WebServiceReferenceManagerImpl implements WebServiceReferenceManager {
 
@@ -85,9 +101,8 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
         //Implementation for new lookup element in WebserviceRef
         InitialContext iContext = new InitialContext();
-        if( desc.hasLookupName()) {
-            return iContext.lookup(desc.getLookupName());
-
+        if (desc.hasLookupName()) {
+            return iContext.lookup(desc.getLookupName().toString());
         }
 
         try {
@@ -341,10 +356,8 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
             return null;
         }
         ServiceDefinition serviceDefinition = targetEndpoint.getServiceDefinition();
-        Iterator wsdlnum = serviceDefinition.iterator();
         SDDocument wsdlDocument = null;
-        while (wsdlnum.hasNext()) {
-            SDDocument xsdnum = (SDDocument) wsdlnum.next();
+        for (SDDocument xsdnum : serviceDefinition) {
             if (xsdnum == serviceDefinition.getPrimary()) {
                 wsdlDocument = xsdnum;
                 break;
@@ -555,9 +568,8 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         }
         Map<Class<? extends Annotation>, Annotation> otherAnnotations =
             desc.getOtherAnnotations();
-        Iterator it = otherAnnotations.values().iterator();
-        while(it.hasNext()){
-            wsFeatures.add(getWebServiceFeatureBean((Annotation)it.next()));
+        for (Annotation element : otherAnnotations.values()) {
+            wsFeatures.add(getWebServiceFeatureBean(element));
         }
 
         return wsFeatures;

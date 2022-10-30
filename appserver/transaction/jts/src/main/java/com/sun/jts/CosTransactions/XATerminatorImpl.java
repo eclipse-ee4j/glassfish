@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,21 @@
 
 package com.sun.jts.CosTransactions;
 
-import javax.transaction.xa.Xid;
-import javax.transaction.xa.XAException;
-import javax.transaction.xa.XAResource;
+import com.sun.enterprise.transaction.api.TransactionImport;
 
 import jakarta.resource.spi.XATerminator;
-
-import org.omg.CosTransactions.Vote;
-import org.omg.CosTransactions.HeuristicMixed;
-
-import com.sun.enterprise.transaction.api.TransactionImport;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.transaction.xa.XAException;
+import javax.transaction.xa.XAResource;
+import javax.transaction.xa.Xid;
+
+import org.omg.CosTransactions.HeuristicMixed;
+import org.omg.CosTransactions.Vote;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 
 /**
  * This is used for transaction completion and crash recovery flows.
@@ -65,6 +67,7 @@ public class XATerminatorImpl implements XATerminator {
      *  one of the XA_RB* exceptions. Upon return, the resource manager has
      *  rolled back the branch's work and has released all held resources.
      */
+    @Override
     public void commit(Xid xid, boolean onePhase) throws XAException {
 
         check(xid); // check if xid is valid
@@ -170,6 +173,7 @@ public class XATerminatorImpl implements XATerminator {
      * values are XAER_RMERR, XAER_RMFAIL, XAER_NOTA, XAER_INVAL, or
      * XAER_PROTO.
      */
+    @Override
     public void forget(Xid xid) throws XAException {}
 
     /**
@@ -190,6 +194,7 @@ public class XATerminatorImpl implements XATerminator {
      * transaction, it should do so by raising an appropriate XAException
      * in the prepare method.
      */
+    @Override
     public int prepare(Xid xid) throws XAException {
 
         check(xid); // check if xid is valid
@@ -278,12 +283,13 @@ public class XATerminatorImpl implements XATerminator {
      * operation, the resource manager should throw the appropriate
      * XAException.
      */
+    @Override
     public Xid[] recover(int flag) throws XAException {
 
         // wait for recovery to be completed.
         RecoveryManager.waitForResync();
 
-        return (Xid[]) TimeoutManager.getInDoubtXids();
+        return TimeoutManager.getInDoubtXids();
     }
 
     /**
@@ -301,6 +307,7 @@ public class XATerminatorImpl implements XATerminator {
      * the resource manager has rolled back the branch's work and has released
      * all held resources.
      */
+    @Override
     public void rollback(Xid xid) throws XAException {
 
         check(xid); // check if xid is valid
@@ -350,7 +357,7 @@ public class XATerminatorImpl implements XATerminator {
     static private final TransactionImport tim = getTransactionImportManager();
 
    // no standardized JNDI name exists across as implementations for TM, this is Sun App Server specific.
-    private static final String AS_TXN_MGR_JNDI_NAME = "java:appserver/TransactionManager";
+    private static final String AS_TXN_MGR_JNDI_NAME = JNDI_CTX_JAVA + "appserver/TransactionManager";
 
     static private Object jndiLookup(final String jndiName) {
         Object result = null;

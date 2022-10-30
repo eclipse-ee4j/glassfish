@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.transaction;
 
+import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
+
+import jakarta.inject.Inject;
+
 import javax.naming.NamingException;
 
 import org.glassfish.api.admin.ProcessEnvironment;
@@ -27,9 +31,8 @@ import org.glassfish.api.naming.NamespacePrefixes;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
-
-import jakarta.inject.Inject;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Proxy for creating JTA instances that get registered in the naming manager. NamingManager will call the handle()
@@ -51,16 +54,13 @@ public class TransactionNamingProxy implements NamedNamingObjectProxy {
     @Inject
     private ProcessEnvironment processEnv; // Here for ordering
 
-    static final String USER_TX = "java:comp/UserTransaction";
+    static final String USER_TX = JNDI_CTX_JAVA_COMPONENT + "UserTransaction";
     static final String USER_TX_NO_JAVA_COMP = "UserTransaction";
 
-    static final String TRANSACTION_SYNC_REGISTRY = "java:comp/TransactionSynchronizationRegistry";
-
-    static final String APPSERVER_TRANSACTION_SYNC_REGISTRY = "java:appserver/TransactionSynchronizationRegistry";
-
-    static final String TRANSACTION_MGR = "java:pm/TransactionManager";
-
-    static final String APPSERVER_TRANSACTION_MGR = "java:appserver/TransactionManager";
+    static final String TRANSACTION_SYNC_REGISTRY = JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry";
+    static final String APPSERVER_TRANSACTION_SYNC_REGISTRY = JNDI_CTX_JAVA + "appserver/TransactionSynchronizationRegistry";
+    static final String TRANSACTION_MGR = JNDI_CTX_JAVA + "pm/TransactionManager";
+    static final String APPSERVER_TRANSACTION_MGR = JNDI_CTX_JAVA + "appserver/TransactionManager";
 
     @Override
     public Object handle(String name) throws NamingException {

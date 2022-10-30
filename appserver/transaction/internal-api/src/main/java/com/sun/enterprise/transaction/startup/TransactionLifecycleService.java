@@ -33,6 +33,7 @@ import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.PreDestroy;
@@ -55,7 +56,7 @@ import org.jvnet.hk2.annotations.Service;
 public class TransactionLifecycleService implements PostConstruct, PreDestroy {
 
     private static final Logger LOG = LogDomains.getLogger(TransactionLifecycleService.class, LogDomains.JTA_LOGGER, false);
-    private static final String USER_TX_NO_JAVA_COMP = "UserTransaction";
+    private static final SimpleJndiName USER_TX_NO_JAVA_COMP = new SimpleJndiName("UserTransaction");
 
     @Inject
     ServiceLocator habitat;

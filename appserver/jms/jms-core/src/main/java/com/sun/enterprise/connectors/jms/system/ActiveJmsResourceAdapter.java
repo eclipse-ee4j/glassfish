@@ -892,7 +892,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             setProperty(cd, envProp2);
             ConnectorConfigProperty  envProp3 = new ConnectorConfigProperty  (
                     BROKERPORT , brokerPort ,
-                    "Broker Port", "java.lang.String");
+                    "Broker Port", "java.lang.Integer");
             setProperty(cd, envProp3);
             ConnectorConfigProperty  envProp4 = new ConnectorConfigProperty  (
                     BROKERARGS , brokerArgs ,
@@ -916,7 +916,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             setProperty(cd, envProp7);
             ConnectorConfigProperty  envProp8 = new ConnectorConfigProperty  (
                     BROKERSTARTTIMEOUT , "" + brokerTimeOut ,
-                    "Broker Start Timeout", "java.lang.String");
+                    "Broker Start Timeout", "java.lang.Integer");
             setProperty(cd, envProp8);
             ConnectorConfigProperty  envProp9 = new ConnectorConfigProperty  (
                     ADMINUSERNAME , adminUserName,

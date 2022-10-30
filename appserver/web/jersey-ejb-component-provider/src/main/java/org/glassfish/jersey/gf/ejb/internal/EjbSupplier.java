@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +28,8 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
 import static org.glassfish.jersey.gf.ejb.internal.EjbClassUtilities.getRemoteAndLocalIfaces;
 
 /**
@@ -35,8 +38,6 @@ import static org.glassfish.jersey.gf.ejb.internal.EjbClassUtilities.getRemoteAn
  * @param <T> The raw type of the bean
  */
 class EjbSupplier<T> implements Supplier<T> {
-    static final String JNDI_PREFIX_JAVA_MODULE = "java:module/";
-    static final String JNDI_PREFIX_JAVA_APP = "java:app/";
 
     private static final Logger LOG = Logger.getLogger(EjbSupplier.class.getName());
 
@@ -100,14 +101,12 @@ class EjbSupplier<T> implements Supplier<T> {
         throws NamingException {
         final List<String> libNames = provider.getModuleNames();
         if (libNames.isEmpty()) {
-            final String jndiName = toJndiName(
-                JNDI_PREFIX_JAVA_MODULE, null, name, useRawTypeInJndiName ? rawType : null);
+            final String jndiName = toJndiName(JNDI_CTX_JAVA_MODULE, null, name, useRawTypeInJndiName ? rawType : null);
             return lookupTyped(jndiName);
         }
         NamingException exception = null;
         for (final String module : libNames) {
-            final String jndiName = toJndiName(
-                JNDI_PREFIX_JAVA_APP, module, name, useRawTypeInJndiName ? rawType : null);
+            final String jndiName = toJndiName(JNDI_CTX_JAVA_APP, module, name, useRawTypeInJndiName ? rawType : null);
             T result;
             try {
                 result = lookupTyped(jndiName);

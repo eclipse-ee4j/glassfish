@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,11 @@
 
 package com.sun.appserv.connectors.internal.spi;
 
-import jakarta.resource.spi.ManagedConnectionFactory;
-import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.ResourceException;
+import jakarta.resource.spi.ConnectionRequestInfo;
+import jakarta.resource.spi.ManagedConnectionFactory;
+
+import org.glassfish.api.naming.SimpleJndiName;
 
 
 public interface ConnectionManager extends jakarta.resource.spi.ConnectionManager {
@@ -26,17 +29,19 @@ public interface ConnectionManager extends jakarta.resource.spi.ConnectionManage
     /**
      * API for internal glassfish modules (eg: jdbcra) to get a connection that does not take part
      * in transaction.<br>
+     *
      * @param mcf ManagedConnectionFactory
      * @param cxRequestInfo ConnectionRequestInfo
      * @return Connection
      * @throws ResourceException when unable to provide a connection
      */
-    Object allocateNonTxConnection( ManagedConnectionFactory mcf,
-        ConnectionRequestInfo cxRequestInfo ) throws ResourceException;
+    Object allocateNonTxConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo)
+        throws ResourceException;
 
     /**
      * provides the JndiName of the resource
+     *
      * @return jndi name
      */
-    String getJndiName() ;
+    SimpleJndiName getJndiName();
 }

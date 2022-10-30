@@ -17,8 +17,19 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
-import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,6 +59,7 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
@@ -68,19 +80,8 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
+import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
 /**
  * Util class for connector related classes
@@ -188,17 +189,18 @@ public class ConnectorsUtil {
                 }
             }
         }
-
         return location;
     }
 
+
     /**
-     *  Return the system PM name for the JNDI name
-     * @param  jndiName jndi name
-     * @return String jndi name for PM resource
-     **/
-    public  static String getPMJndiName( String jndiName )  {
-        return jndiName + ConnectorConstants.PM_JNDI_SUFFIX;
+     * Return the system PM name for the JNDI name
+     *
+     * @param jndiName jndi name
+     * @return String non-prefixed jndi name for PM resource
+     */
+    public static SimpleJndiName getPMJndiName(SimpleJndiName jndiName) {
+        return new SimpleJndiName(jndiName + ConnectorConstants.PM_JNDI_SUFFIX);
     }
 
     /**
@@ -206,10 +208,10 @@ public class ConnectorsUtil {
      * @param name jndi name
      * @return suffix, if found
      */
-    public static String getValidSuffix(String name) {
+    public static String getValidSuffix(SimpleJndiName name) {
         if (name != null) {
-            for (String validSuffix : JNDI_SUFFIX_VALUES) {
-                if (name.endsWith(validSuffix)) {
+            for (String validSuffix : ConnectorConstants.JNDI_SUFFIX_VALUES) {
+                if (name.hasSuffix(validSuffix)) {
                     return validSuffix;
                 }
             }
@@ -237,16 +239,19 @@ public class ConnectorsUtil {
         return false;
     }
 
+
     /**
-     * Given the name of the resource and its jndi env, derive the complete jndi name. (eg; with __PM / __nontx)
+     * Given the name of the resource and its jndi env, derive the complete jndi name.
+     * (eg; with __PM / __nontx)
+     *
      * @param name name of the resource
      * @param env env
      * @return derived name
      */
-    public static String deriveJndiName(String name, Hashtable env) {
+    public static SimpleJndiName deriveJndiName(SimpleJndiName name, Hashtable<Object, Object> env) {
         String suffix = (String) env.get(ConnectorConstants.JNDI_SUFFIX_PROPERTY);
-        if (isValidJndiSuffix(suffix)) {
-            return name + suffix;
+        if (ConnectorsUtil.isValidJndiSuffix(suffix)) {
+            return new SimpleJndiName(name + suffix);
         }
 
         return name;
@@ -257,7 +262,7 @@ public class ConnectorsUtil {
         for(Resource configuredResource : allResources.getResources()){
             if(configuredResource instanceof ResourcePool){
                 ResourcePool resourcePool= (ResourcePool)configuredResource;
-                if(resourcePool.getName().equals(poolInfo.getName())){
+                if(resourcePool.getName().equals(poolInfo.getName().toString())){
                     pool = resourcePool;
                     break;
                 }
@@ -540,12 +545,12 @@ public class ConnectorsUtil {
     }
 
 
-    public static String deriveResourceName(String compId, String name, JavaEEResourceType resType) {
-        return getReservePrefixedJNDINameForResource(compId, name, resType);
+    public static SimpleJndiName deriveResourceName(String compId, SimpleJndiName resourceName, JavaEEResourceType resType) {
+        return getReservePrefixedJNDINameForResource(compId, resourceName, resType);
 
     }
 
-    public static String getReservePrefixedJNDINameForResource(String compId, String resourceName, JavaEEResourceType resType) {
+    public static SimpleJndiName getReservePrefixedJNDINameForResource(String compId, SimpleJndiName resourceName, JavaEEResourceType resType) {
         LOG.log(Level.FINEST, "getReservePrefixedJNDINameForResource(compId={0}, resourceName={1}, resType={2})",
             new Object[] {compId, resourceName, resType});
         String prefix = null;
@@ -613,8 +618,8 @@ public class ConnectorsUtil {
     }
 
 
-    private static String getReservePrefixedJNDIName(String prefix, String resourceName) {
-        return prefix + resourceName;
+    private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
+        return new SimpleJndiName(prefix + resourceName);
     }
 
 
@@ -716,7 +721,7 @@ public class ConnectorsUtil {
         return libURIs;
     }
 
-    public static String getReservePrefixedJNDINameForDescriptor(String moduleName) {
+    public static SimpleJndiName getReservePrefixedJNDINameForDescriptor(String moduleName) {
         return getReservePrefixedJNDIName(ConnectorConstants.DD_PREFIX, moduleName);
     }
 
@@ -877,16 +882,18 @@ public class ConnectorsUtil {
         return ResourceUtil.isModuleScopedResource(resourceInfo);
     }
 
-    public static String escapeResourceNameForMonitoring(String name){
-        return name.replaceAll("/", SLASH);
+    public static String escapeResourceNameForMonitoring(SimpleJndiName name){
+        return name.toString().replaceAll("/", SLASH);
     }
 
     public static String getPoolMonitoringSubTreeRoot(PoolInfo poolInfo, boolean escapeSlashes) {
         String resourcesPrefix = "resources/";
-        String suffix = poolInfo.getName();
 
+        final String suffix;
         if (escapeSlashes) {
-            suffix = escapeResourceNameForMonitoring(suffix);
+            suffix = escapeResourceNameForMonitoring(poolInfo.getName());
+        } else {
+            suffix = poolInfo.getName().toString();
         }
 
         String subTreeRoot = resourcesPrefix + suffix;
@@ -919,14 +926,14 @@ public class ConnectorsUtil {
     }
 
 
-    public static Collection<BindableResource> getResourcesOfPool(Resources resources, String connectionPoolName) {
+    public static Collection<BindableResource> getResourcesOfPool(Resources resources, SimpleJndiName connectionPoolName) {
         Set<BindableResource> resourcesReferringPool = new HashSet<>();
         ResourcePool pool = getResourceByName(resources, ResourcePool.class, connectionPoolName);
         if (pool != null) {
             Collection<BindableResource> bindableResources = resources.getResources(BindableResource.class);
             for (BindableResource resource : bindableResources) {
                 if (ResourcePoolReference.class.isAssignableFrom(resource.getClass())) {
-                    if ((((ResourcePoolReference) resource).getPoolName()).equals(connectionPoolName)) {
+                    if (((ResourcePoolReference) resource).getPoolName().equals(connectionPoolName.toString())) {
                         resourcesReferringPool.add(resource);
                     }
                 }
@@ -935,8 +942,10 @@ public class ConnectorsUtil {
         return resourcesReferringPool;
     }
 
-    public static <T extends Resource> T getResourceByName(Resources resources, Class<T> type, String name) {
-        return (T) resources.getResourceByName(type, name);
+    @Deprecated
+    // FIXME Use directly!
+    public static <T extends Resource> T getResourceByName(Resources resources, Class<T> type, SimpleJndiName name) {
+        return resources.getResourceByName(type, name);
     }
 
 

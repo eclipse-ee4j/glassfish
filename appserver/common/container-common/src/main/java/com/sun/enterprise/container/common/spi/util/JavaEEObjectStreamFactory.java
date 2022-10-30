@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,34 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
-import com.sun.logging.*;
-import org.jvnet.hk2.annotations.Service;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
 
-import jakarta.inject.Singleton;
-
-import java.io.*;
-import java.security.PrivilegedExceptionAction;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
-import java.util.Collection;
+import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * A Factory class for creating EJBObject input/output Stream
  *
  * @author Mahesh Kannan
  */
-
+// FIXME: Seems dead, unused.
 @Service
 public class JavaEEObjectStreamFactory {
 
@@ -50,7 +55,7 @@ public class JavaEEObjectStreamFactory {
             JavaEEObjectStreamFactory.class, LogDomains.UTIL_LOGGER);
 
     private static Collection<JavaEEObjectStreamHandler> _empty
-            = new ArrayList<JavaEEObjectStreamHandler>();
+            = new ArrayList<>();
     /**
      *
      * Obtain an ObjectOutputStream that allows serialization
@@ -79,6 +84,7 @@ public class JavaEEObjectStreamFactory {
             try {
                 oos = (ObjectOutputStream) AccessController.doPrivileged(
                         new PrivilegedExceptionAction() {
+                    @Override
                     public java.lang.Object run()
                     throws Exception {
                         return new JavaEEObjectOutputStream(os, replaceObject, handlers);
@@ -119,6 +125,7 @@ public class JavaEEObjectStreamFactory {
                 try {
                     ois = (ObjectInputStream)AccessController.doPrivileged(
                             new PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run()
                         throws Exception {
                             return new JavaEEObjectInputStream(

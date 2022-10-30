@@ -17,30 +17,7 @@
 
 package com.sun.enterprise.connectors;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_JMS_ADAPTER;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.LOCAL_TRANSACTION_INT;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.NON_TX_JNDI_SUFFIX;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.NO_TRANSACTION_INT;
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.XA_TRANSACTION_INT;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
-import static com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils.createSubject;
-import static com.sun.enterprise.deployment.ResourceReferenceDescriptor.APPLICATION_AUTHORIZATION;
-import static com.sun.logging.LogDomains.RSR_LOGGER;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
-
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.security.auth.Subject;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -72,19 +49,39 @@ import jakarta.resource.spi.ResourceAllocationException;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.resource.spi.SecurityException;
 
+import java.io.Serializable;
+import java.security.Principal;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_JMS_ADAPTER;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.LOCAL_TRANSACTION_INT;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.NO_TRANSACTION_INT;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.XA_TRANSACTION_INT;
+import static com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils.createSubject;
+import static com.sun.enterprise.deployment.ResourceReferenceDescriptor.APPLICATION_AUTHORIZATION;
+
 /**
  * @author Tony Ng
  */
 public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
     private static final long serialVersionUID = 1L;
-    protected String jndiName;
-    protected String logicalName;
+    private static final Logger LOG = LogDomains.getLogger(ConnectionManagerImpl.class, LogDomains.RSR_LOGGER);
+    private static final StringManager I18N = StringManager.getManager(ConnectionManagerImpl.class);
+
+    protected SimpleJndiName jndiName;
+    protected SimpleJndiName logicalName;
     protected PoolInfo poolInfo;
     protected ResourceInfo resourceInfo;
-
-    private volatile static Logger logger = LogDomains.getLogger(ConnectionManagerImpl.class, RSR_LOGGER);
-    private volatile static StringManager localStrings = StringManager.getManager(ConnectionManagerImpl.class);
 
     protected String rarName;
 
@@ -97,20 +94,20 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         this.resourceInfo = resourceInfo;
     }
 
-    public void setJndiName(String jndiName) {
+    public void setJndiName(SimpleJndiName jndiName) {
         this.jndiName = jndiName;
     }
 
     @Override
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         return jndiName;
     }
 
-    public void setLogicalName(String logicalName) {
+    public void setLogicalName(SimpleJndiName logicalName) {
         this.logicalName = logicalName;
     }
 
-    public String getLogicalName() {
+    public SimpleJndiName getLogicalName() {
         return logicalName;
     }
 
@@ -125,38 +122,43 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
      * functionality might be achieved.
      */
     @Override
-    public Object allocateNonTxConnection(ManagedConnectionFactory managedConnectionFactory, ConnectionRequestInfo connectionRequestInfo) throws ResourceException {
-        String localJndiName = jndiName;
+    public Object allocateNonTxConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo connectionRequestInfo)
+        throws ResourceException {
+        LOG.finest("Allocating NonTxConnection");
 
-        logFine("Allocating NonTxConnection");
-
-        // If a resource has been created with __nontx, we don't want to
-        // add it again.
-        // Otherwise we need to add __nontx at the end to ensure that the
-        // mechanism to check for the correct resource manager still works
-        // We do the addition if and only if we are getting this call
-        // from a normal datasource and not a __nontx datasource.
-        if (!jndiName.endsWith(NON_TX_JNDI_SUFFIX)) {
-            localJndiName = jndiName + NON_TX_JNDI_SUFFIX;
-
-            logFine("Adding __nontx to jndiname");
+        //If a resource has been created with __nontx, we don't want to
+        //add it again.
+        //Otherwise we need to add __nontx at the end to ensure that the
+        //mechanism to check for the correct resource manager still works
+        //We do the addition if and only if we are getting this call
+        //from a normal datasource and not a __nontx datasource.
+        final SimpleJndiName localJndiName;
+        if (jndiName.hasSuffix(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
+            localJndiName = jndiName;
+            LOG.finest("lookup happened from a __nontx datasource directly");
         } else {
-            logFine("lookup happened from a __nontx datasource directly");
+            localJndiName = new SimpleJndiName(jndiName + ConnectorConstants.NON_TX_JNDI_SUFFIX);
+            LOG.finest("Adding __nontx to jndiname");
         }
 
-        return allocateConnection(managedConnectionFactory, connectionRequestInfo, localJndiName);
+        return allocateConnection(mcf, connectionRequestInfo, localJndiName);
     }
+
 
     @Override
     public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
         return allocateConnection(mcf, cxRequestInfo, jndiName);
     }
 
-    public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo, String jndiNameToUse) throws ResourceException {
-        return allocateConnection(mcf, cxRequestInfo, jndiNameToUse, null);
+
+    public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo,
+        SimpleJndiName jndiNameToUse) throws ResourceException {
+        return this.allocateConnection(mcf, cxRequestInfo, jndiNameToUse, null);
     }
 
-    public Object allocateConnection(ManagedConnectionFactory managedConnectionFactory, ConnectionRequestInfo cxRequestInfo, String jndiNameToUse, Object connection) throws ResourceException {
+
+    public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo,
+        SimpleJndiName jndiNameToUse, Object connection) throws ResourceException {
         validateResourceAndPool();
         PoolManager poolmgr = ConnectorRuntime.getRuntime().getPoolManager();
         boolean resourceShareable = true;
@@ -171,14 +173,14 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             }
         }
 
-        // TODO V3 refactor all the 3 cases viz, no res-ref, app-auth, cont-auth.
+        //TODO V3 refactor all the 3 cases viz, no res-ref, app-auth, cont-auth.
         if (resourceReferenceDescriptor == null) {
-            if (getLogger().isLoggable(FINE)) {
-                getLogger().log(FINE, "poolmgr.no_resource_reference", jndiNameToUse);
+            if (LOG.isLoggable(Level.FINE)) {
+                LOG.log(Level.FINE, "poolmgr.no_resource_reference", jndiNameToUse);
             }
 
             return internalGetConnection(
-                    managedConnectionFactory,
+                    mcf,
                     defaultResourcePrincipalDescriptor,
                     cxRequestInfo,
                     resourceShareable,
@@ -190,12 +192,13 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
         if (authorization.equals(APPLICATION_AUTHORIZATION)) {
             if (cxRequestInfo == null) {
-                throw new ResourceException(getLocalStrings().getString("con_mgr.null_userpass"));
+                String msg = I18N.getString("con_mgr.null_userpass");
+                throw new ResourceException(msg);
             }
             ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
 
             return internalGetConnection(
-                    managedConnectionFactory,
+                    mcf,
                     null,
                     cxRequestInfo,
                     resourceShareable,
@@ -223,10 +226,10 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         if (resourcePrincipalDescriptor == null) {
             resourcePrincipalDescriptor = resourceReferenceDescriptor.getResourcePrincipal();
             if (resourcePrincipalDescriptor == null) {
-                getLogger().log(FINE, () ->
-                                "default-resource-principal not specified for " + jndiNameToUse +
-                                ". Defaulting to user/password specified in the pool");
-
+                if (LOG.isLoggable(Level.FINE)) {
+                    LOG.log(Level.FINE, "default-resource-principal not specified for " + jndiNameToUse
+                        + ". Defaulting to user/password specified in the pool");
+                }
                 resourcePrincipalDescriptor = defaultResourcePrincipalDescriptor;
             } else if (!resourcePrincipalDescriptor.equals(defaultResourcePrincipalDescriptor)) {
                 ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
@@ -234,7 +237,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         }
 
         return internalGetConnection(
-                managedConnectionFactory,
+                mcf,
                 resourcePrincipalDescriptor,
                 cxRequestInfo,
                 resourceShareable,
@@ -242,7 +245,10 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 connection, false);
     }
 
-    protected Object internalGetConnection(ManagedConnectionFactory mcf, final ResourcePrincipalDescriptor prin, ConnectionRequestInfo cxRequestInfo, boolean shareable, String jndiNameToUse, Object connection, boolean isUnknownAuth) throws ResourceException {
+    protected Object internalGetConnection(ManagedConnectionFactory mcf,
+                                           final ResourcePrincipalDescriptor prin, ConnectionRequestInfo cxRequestInfo,
+                                           boolean shareable, SimpleJndiName jndiNameToUse, Object connection, boolean isUnknownAuth)
+            throws ResourceException {
         try {
             PoolManager poolManager = ConnectorRuntime.getRuntime().getPoolManager();
             ConnectorRegistry registry = ConnectorRegistry.getInstance();
@@ -252,9 +258,9 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             resourceSpec.setPoolInfo(this.poolInfo);
             ManagedConnectionFactory freshManagedConnectionFactory = poolMetaData.getMCF();
 
-            if (getLogger().isLoggable(Level.INFO)) {
+            if (LOG.isLoggable(Level.INFO)) {
                 if (!freshManagedConnectionFactory.equals(mcf)) {
-                    getLogger().info("conmgr.mcf_not_equal");
+                    LOG.info("conmgr.mcf_not_equal");
                 }
             }
             ConnectorDescriptor rarConnectorDescriptor = registry.getDescriptor(rarName);
@@ -288,10 +294,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             }
 
             int txLevel = poolMetaData.getTransactionSupport();
-            if (getLogger().isLoggable(FINE)) {
-                logFine("ConnectionMgr: poolName " + poolInfo + "  txLevel : " + txLevel);
-            }
-
+            LOG.log(Level.FINE, "Providing connection: poolName={0}, txLevel={1}", new Object[] {poolInfo, txLevel});
             if (connection != null) {
                 resourceSpec.setConnectionToAssociate(connection);
             }
@@ -299,43 +302,44 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             return getResource(txLevel, poolManager, mcf, resourceSpec, subject, cxRequestInfo, info, rarConnectorDescriptor, shareable);
 
         } catch (PoolingException ex) {
-            Object[] params = new Object[] { poolInfo, ex };
-            getLogger().log(Level.WARNING, "poolmgr.get_connection_failure", params);
-
-            // GLASSFISH-19609
-            //
+            LOG.log(Level.WARNING, "poolmgr.get_connection_failure", new Object[]{poolInfo, ex});
             // We can't simply look for ResourceException and throw back since
             // Connector Container also throws ResourceException which might
             // hide the SecurityException thrown by RA.
-            //
             // So, we try to track SecurityException
-
             unwrapSecurityException(ex);
-
-            throw new ResourceAllocationException(getLocalStrings().getString("con_mgr.error_creating_connection", ex.getMessage()), ex);
+            String i18nMsg = I18N.getString("con_mgr.error_creating_connection", ex.getMessage());
+            ResourceAllocationException rae = new ResourceAllocationException(i18nMsg);
+            rae.initCause(ex);
+            throw rae;
         }
     }
 
-    private void unwrapSecurityException(Throwable ex) throws ResourceException {
+    private void unwrapSecurityException(Throwable ex) throws ResourceException{
         if (ex != null) {
             if (ex instanceof SecurityException) {
                 throw (SecurityException) ex;
             }
-
             unwrapSecurityException(ex.getCause());
         }
     }
 
-    private Object getResource(int txLevel, PoolManager poolManager, ManagedConnectionFactory managedConnectionFactory, ResourceSpec resourceSpec, Subject subject, ConnectionRequestInfo connectionRequestInfo, ClientSecurityInfo info, ConnectorDescriptor connectorDescriptor, boolean shareable) throws PoolingException, ResourceAllocationException, IllegalStateException, RetryableUnavailableException {
+
+    private Object getResource(int txLevel, PoolManager poolManager, ManagedConnectionFactory mcf,
+        ResourceSpec resourceSpec, Subject subject, ConnectionRequestInfo connectionRequestInfo,
+        ClientSecurityInfo info, ConnectorDescriptor descriptor, boolean shareable)
+        throws PoolingException, IllegalStateException, RetryableUnavailableException {
         ResourceAllocator resourceAllocator;
 
         switch (txLevel) {
             case NO_TRANSACTION_INT:
-                resourceAllocator = new NoTxConnectorAllocator(poolManager, managedConnectionFactory, resourceSpec, subject, connectionRequestInfo, info, connectorDescriptor);
+                resourceAllocator = new NoTxConnectorAllocator(poolManager, mcf, resourceSpec, subject,
+                    connectionRequestInfo, info, descriptor);
                 break;
 
             case LOCAL_TRANSACTION_INT:
-                resourceAllocator = new LocalTxConnectorAllocator(poolManager, managedConnectionFactory, resourceSpec, subject, connectionRequestInfo, info, connectorDescriptor, shareable);
+                resourceAllocator = new LocalTxConnectorAllocator(poolManager, mcf, resourceSpec, subject,
+                    connectionRequestInfo, info, descriptor, shareable);
                 break;
 
             case XA_TRANSACTION_INT:
@@ -343,11 +347,13 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                     shareable = false;
                 }
                 resourceSpec.markAsXA();
-                resourceAllocator = new ConnectorAllocator(poolManager, managedConnectionFactory, resourceSpec, subject, connectionRequestInfo, info, connectorDescriptor, shareable);
+                resourceAllocator = new ConnectorAllocator(poolManager, mcf, resourceSpec, subject,
+                    connectionRequestInfo, info, descriptor, shareable);
                 break;
 
             default:
-                throw new IllegalStateException(getLocalStrings().getString("con_mgr.illegal_tx_level", txLevel + " "));
+                String i18nMsg = I18N.getString("con_mgr.illegal_tx_level", txLevel + " ");
+                throw new IllegalStateException(i18nMsg);
         }
 
         return poolManager.getResource(resourceSpec, resourceAllocator, info);
@@ -361,15 +367,16 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         return rarName;
     }
 
-    /*
-     * This method is called from the ConnectorObjectFactory lookup With this we move all the housekeeping work in
-     * allocateConnection up-front
+    /**
+     * This method is called from the ConnectorObjectFactory lookup
+     * With this we move all the housekeeping work in allocateConnection
+     * up-front
      */
     public void initialize() throws ConnectorRuntimeException {
         ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
 
         if (runtime.isNonACCRuntime()) {
-            jndiName = getPMJndiName(jndiName);
+            jndiName = ConnectorsUtil.getPMJndiName(jndiName);
         }
 
         defaultResourcePrincipalDescriptor =
@@ -379,7 +386,6 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
     }
 
     private void validateResourceAndPool() throws ResourceException {
-        ResourceInfo resourceInfo = this.resourceInfo;
         ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
 
         ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
@@ -392,33 +398,28 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         // resource/resource-ref are disabled.
 
         if (!registry.isResourceDeployed(resourceInfo)) {
-            if (logger.isLoggable(FINEST)) {
-                logger.log(FINEST, "resourceInfo not found in connector-registry : " + resourceInfo);
-            }
-
+            LOG.log(Level.FINEST,"resourceInfo not found in connector-registry: {0}", resourceInfo);
             boolean isDefaultResource = false;
             boolean isSunRAResource = false;
             ConnectorDescriptor descriptor = registry.getDescriptor(rarName);
             if (descriptor != null) {
                 isDefaultResource = descriptor.getDefaultResourcesNames().contains(resourceInfo.getName());
                 if (descriptor.getSunDescriptor() != null) {
-                    ResourceAdapter resourceAdapter = descriptor.getSunDescriptor().getResourceAdapter();
-                    if (resourceAdapter != null) {
-                        String sunRAJndiName = (String) resourceAdapter.getValue(ResourceAdapter.JNDI_NAME);
+                    ResourceAdapter rar = descriptor.getSunDescriptor().getResourceAdapter();
+                    if (rar != null) {
+                        String sunRAJndiName = (String) rar.getValue(ResourceAdapter.JNDI_NAME);
                         isSunRAResource = resourceInfo.getName().equals(sunRAJndiName);
                     }
                 }
             }
 
-            if (
-                (runtime.isServer() || runtime.isEmbedded()) &&
-                (!resourceInfo.getName().contains(DATASOURCE_DEFINITION_JNDINAME_PREFIX) &&
-                !isDefaultResource && !isSunRAResource)) {
-
+            if ((runtime.isServer() || runtime.isEmbedded())
+                && (!resourceInfo.getName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)
+                    && !isDefaultResource && !isSunRAResource)) {
                 // performance optimization so that resource configuration is not retrieved from
                 // resources config bean each time.
                 if (resourceConfiguration == null) {
-                    resourceConfiguration = (BindableResource) resourcesUtil.getResource(resourceInfo, BindableResource.class);
+                    resourceConfiguration = resourcesUtil.getResource(resourceInfo, BindableResource.class);
                     if (resourceConfiguration == null) {
                         String suffix = ConnectorsUtil.getValidSuffix(resourceInfo.getName());
 
@@ -426,11 +427,12 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                         // check for the enabled status and existence using non-prefixed resource-name
 
                         if (suffix != null) {
-                            String nonPrefixedName = resourceInfo.getName().substring(0, resourceInfo.getName().lastIndexOf(suffix));
-                            resourceInfo =
-                                new ResourceInfo(nonPrefixedName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-
-                            resourceConfiguration = (BindableResource) resourcesUtil.getResource(resourceInfo, BindableResource.class);
+                            String prefixedName = resourceInfo.getName().toString();
+                            SimpleJndiName nonPrefixedName = new SimpleJndiName(
+                                prefixedName.substring(0, prefixedName.lastIndexOf(suffix)));
+                            ResourceInfo toFind = new ResourceInfo(nonPrefixedName, resourceInfo.getApplicationName(),
+                                resourceInfo.getModuleName());
+                            resourceConfiguration = resourcesUtil.getResource(toFind, BindableResource.class);
                         }
                     }
                 } else {
@@ -441,13 +443,14 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                     // It is possible that the resource is a __PM or __NONTX suffixed resource used by JPA/EJB Container
                     // check for the enabled status and existence using non-prefixed resource-name
                     if (suffix != null) {
-                        String nonPrefixedName = resourceInfo.getName().substring(0, resourceInfo.getName().lastIndexOf(suffix));
-                        resourceInfo = new ResourceInfo(nonPrefixedName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+                        SimpleJndiName nonPrefixedName = resourceInfo.getName().removeSuffix(suffix);
+                        resourceInfo = new ResourceInfo(nonPrefixedName, resourceInfo.getApplicationName(),
+                                resourceInfo.getModuleName());
                     }
                 }
 
                 if (resourceConfiguration == null) {
-                    throw new ResourceException("No such resource : " + resourceInfo);
+                    throw new ResourceException("No such resource: " + resourceInfo);
                 }
 
                 if (!resourcesUtil.isEnabled(resourceConfiguration, resourceInfo)) {
@@ -457,36 +460,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         }
 
         if (registry.getPoolMetaData(poolInfo) == null) {
-            throw new ResourceException(poolInfo + ": " + getLocalStrings().getString("con_mgr.no_pool_meta_data", poolInfo));
+            String msg = I18N.getString("con_mgr.no_pool_meta_data", poolInfo);
+            throw new ResourceException(poolInfo + ": " + msg);
         }
-    }
-
-    public void logFine(String message) {
-        if (getLogger().isLoggable(FINE)) {
-            getLogger().fine(message);
-        }
-    }
-
-    private static StringManager getLocalStrings() {
-        if (localStrings == null) {
-            synchronized (ConnectionManagerImpl.class) {
-                if (localStrings == null) {
-                    localStrings = StringManager.getManager(ConnectionManagerImpl.class);
-                }
-            }
-        }
-        return localStrings;
-    }
-
-    protected static Logger getLogger() {
-        if (logger == null) {
-            synchronized (ConnectionManagerImpl.class) {
-                if (logger == null) {
-                    logger = LogDomains.getLogger(ConnectionManagerImpl.class, RSR_LOGGER);
-                }
-            }
-        }
-
-        return logger;
     }
 }

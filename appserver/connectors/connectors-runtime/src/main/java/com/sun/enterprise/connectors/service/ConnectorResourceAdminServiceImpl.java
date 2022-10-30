@@ -25,6 +25,7 @@ import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.StringRefAddr;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
@@ -47,7 +48,7 @@ import com.sun.enterprise.connectors.naming.ConnectorResourceNamingEventNotifier
  */
 public class ConnectorResourceAdminServiceImpl extends ConnectorService {
 
-    private ResourceNamingService namingService = _runtime.getResourceNamingService();
+    private final ResourceNamingService namingService = _runtime.getResourceNamingService();
     /**
      * Default constructor
      */
@@ -67,8 +68,7 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
 
         try {
             ConnectorConnectionPool ccp = null;
-            String jndiNameForPool = ConnectorAdminServiceUtils.
-                    getReservePrefixedJNDINameForPool(poolInfo);
+            SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
             try {
                 ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
             } catch (NamingException ne) {
@@ -104,28 +104,19 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
             }catch(NamingException ne){
                 ConnectorRuntimeException cre = new ConnectorRuntimeException(ne.getMessage());
                 cre.initCause(ne);
-                Object params[] = new Object[]{resourceInfo, cre};
+                Object[] params = new Object[]{resourceInfo, cre};
                 _logger.log(Level.SEVERE, "rardeployment.resource_jndi_bind_failure", params);
                 throw cre;
             }
 
-/*
-
-            ConnectorObjectFactory cof = new ConnectorObjectFactory(jndiName, ccp.getConnectorDescriptorInfo().
-                    getConnectionFactoryClass(), cdi.getRarName(), poolName);
-
-            _runtime.getNamingManager().publishObject(jndiName, cof, true);
-*/
-
             //To notify that a connector resource rebind has happened.
-            ConnectorResourceNamingEventNotifier.getInstance().
-                    notifyListeners(new ConnectorNamingEvent(resourceInfo.toString(),
-                            ConnectorNamingEvent.EVENT_OBJECT_REBIND));
+            ConnectorResourceNamingEventNotifier.getInstance().notifyListeners(
+                new ConnectorNamingEvent(resourceInfo.getName(), ConnectorNamingEvent.EVENT_OBJECT_REBIND));
 
         } catch (NamingException ne) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException(ne.getMessage());
             cre.initCause(ne);
-            Object params[] = new Object[]{resourceInfo, cre};
+            Object[] params = new Object[]{resourceInfo, cre};
             _logger.log(Level.SEVERE, "rardeployment.jndi_lookup_failed", params);
             throw cre;
         }
@@ -185,17 +176,17 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
      * @return Object - from jndi
      * @throws NamingException - when unable to get the object form jndi
      */
-    public Object lookup(ResourceInfo resourceInfo) throws NamingException {
-
-        Hashtable env = null;
-        String jndiName = resourceInfo.getName();
+    public <T> T lookup(ResourceInfo resourceInfo) throws NamingException {
+        // To pass suffix that will be used by connector runtime during lookup
+        SimpleJndiName jndiName = resourceInfo.getName();
         String suffix = ConnectorsUtil.getValidSuffix(jndiName);
-
-        //To pass suffix that will be used by connector runtime during lookup
-        if(suffix != null){
-            env = new Hashtable();
+        final Hashtable<Object, Object> env;
+        if (suffix == null) {
+            env = null;
+        } else {
+            env = new Hashtable<>();
             env.put(ConnectorConstants.JNDI_SUFFIX_PROPERTY, suffix);
-            jndiName = jndiName.substring(0, jndiName.lastIndexOf(suffix));
+            jndiName = jndiName.removeSuffix(suffix);
         }
         ResourceInfo actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(),
                 resourceInfo.getModuleName());

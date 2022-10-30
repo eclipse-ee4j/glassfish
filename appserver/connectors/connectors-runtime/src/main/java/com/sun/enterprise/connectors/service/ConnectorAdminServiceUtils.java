@@ -17,17 +17,6 @@
 
 package com.sun.enterprise.connectors.service;
 
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.naming.Context;
-import javax.naming.NamingException;
-
-import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
@@ -35,51 +24,51 @@ import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.deployment.ConnectorConfigProperty;
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
 
+import java.util.Locale;
+import java.util.Set;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+
 /**
  * Util classes common to all connector Services
  *
  * @author Srikanth P
  */
-
 public class ConnectorAdminServiceUtils implements ConnectorConstants {
 
-    //Private Constructor, to prevent initialising this class
     private ConnectorAdminServiceUtils() {
+        // Private Constructor, to prevent initialising this class
     }
 
-    /*
+    /**
      * Returns a ResourcePrincipalDescriptor object populated with a pool's
      * default USERNAME and PASSWORD
      *
      * @throws NamingException if poolname lookup fails
      */
-
     public static ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo)
             throws NamingException {
         // All this to get the default user name and principal
-        ConnectorConnectionPool connectorConnectionPool = null;
-        try {
-            String jndiNameForPool = getReservePrefixedJNDINameForPool(poolInfo);
-            Context ic = ConnectorRuntime.getRuntime().getNamingManager().getInitialContext();
-            connectorConnectionPool =
-                    (ConnectorConnectionPool) ic.lookup(jndiNameForPool);
-        } catch (NamingException ne) {
-            throw ne;
-        }
+        SimpleJndiName jndiNameForPool = getReservePrefixedJNDINameForPool(poolInfo);
+        Context ic = ConnectorRuntime.getRuntime().getNamingManager().getInitialContext();
+        ConnectorConnectionPool connectorConnectionPool = (ConnectorConnectionPool) ic.lookup(jndiNameForPool.toString());
+        ConnectorDescriptorInfo cdi = connectorConnectionPool.getConnectorDescriptorInfo();
 
-        ConnectorDescriptorInfo cdi = connectorConnectionPool.
-                getConnectorDescriptorInfo();
-
-        Set mcfConfigProperties = cdi.getMCFConfigProperties();
-        Iterator mcfConfPropsIter = mcfConfigProperties.iterator();
+        Set<ConnectorConfigProperty> mcfConfigProperties = cdi.getMCFConfigProperties();
         String userName = "";
         String password = "";
-        while (mcfConfPropsIter.hasNext()) {
-            ConnectorConfigProperty  prop =
-                    (ConnectorConfigProperty) mcfConfPropsIter.next();
-
-            if (prop.getName().toUpperCase(Locale.getDefault()).equals("USERNAME") ||
-                    prop.getName().toUpperCase(Locale.getDefault()).equals("USER")) {
+        for (ConnectorConfigProperty prop : mcfConfigProperties) {
+            if (prop.getName().toUpperCase(Locale.getDefault()).equals("USERNAME")
+                || prop.getName().toUpperCase(Locale.getDefault()).equals("USER")) {
                 userName = prop.getValue();
             } else if (prop.getName().toUpperCase(Locale.getDefault()).equals("PASSWORD")) {
                 password = prop.getValue();
@@ -91,71 +80,57 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
 
     }
 
-    private static String getReservePrefixedJNDIName(String prefix, String resourceName) {
-        return prefix + resourceName;
+    private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
+        return new SimpleJndiName(prefix + resourceName);
     }
 
-    public static String getReservePrefixedJNDINameForPool(PoolInfo poolInfo) {
-        String name = getReservePrefixedJNDIName(ConnectorConstants.POOLS_JNDINAME_PREFIX, poolInfo.getName());
+    public static SimpleJndiName getReservePrefixedJNDINameForPool(PoolInfo poolInfo) {
+        SimpleJndiName name = getReservePrefixedJNDIName(ConnectorConstants.POOLS_JNDINAME_PREFIX, poolInfo.getName());
         return getScopedName(poolInfo, name);
     }
 
-    private static String getScopedName(GenericResourceInfo resourceInfo, String name){
-        if(resourceInfo.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)){
-            if(!name.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)){
-                name = ResourceConstants.JAVA_APP_SCOPE_PREFIX + name;
+    private static SimpleJndiName getScopedName(GenericResourceInfo resourceInfo, SimpleJndiName name){
+        if (resourceInfo.getName().isJavaApp()) {
+            if (!name.isJavaApp()) {
+                return new SimpleJndiName(JNDI_CTX_JAVA_APP + name);
             }
-        }else if (resourceInfo.getName().startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
-            if(!name.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
-                name = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + name;
+        } else if (resourceInfo.getName().isJavaModule()) {
+            if (!name.isJavaModule()) {
+                return new SimpleJndiName(JNDI_CTX_JAVA_MODULE + name);
             }
         }
         return name;
     }
 
-    public static String getReservePrefixedJNDINameForDescriptor(String moduleName) {
+    public static SimpleJndiName getReservePrefixedJNDINameForDescriptor(String moduleName) {
         return getReservePrefixedJNDIName(ConnectorConstants.DD_PREFIX, moduleName);
     }
 
-    public static String getReservePrefixedJNDINameForResource(String moduleName) {
+    public static SimpleJndiName getReservePrefixedJNDINameForResource(String moduleName) {
         return getReservePrefixedJNDIName(ConnectorConstants.RESOURCE_JNDINAME_PREFIX, moduleName);
-    }
-
-    public static String getOriginalResourceName(String reservePrefixedJNDIName) {
-        String prefix = null;
-        if (reservePrefixedJNDIName.startsWith(ConnectorConstants.POOLS_JNDINAME_PREFIX)) {
-            prefix = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-        } else if (reservePrefixedJNDIName.startsWith(ConnectorConstants.DD_PREFIX)) {
-            prefix = ConnectorConstants.DD_PREFIX;
-        } else if (reservePrefixedJNDIName.startsWith(ConnectorConstants.RESOURCE_JNDINAME_PREFIX)) {
-            prefix = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-        }
-        return ((prefix == null) ? reservePrefixedJNDIName : reservePrefixedJNDIName.substring(prefix.length()));
     }
 
     //TODO V3 is this right approach ? (just checking '#') ?
     public static boolean isEmbeddedConnectorModule(String moduleName) {
-        return (moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1);
+        return moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1;
     }
+
 
     public static String getApplicationName(String moduleName) {
         if (isEmbeddedConnectorModule(moduleName)) {
-            int idx = moduleName.indexOf(
-                    ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
+            int idx = moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
             return moduleName.substring(0, idx);
-        } else {
-            return null;
         }
+        return null;
     }
+
 
     public static String getConnectorModuleName(String moduleName) {
         if (isEmbeddedConnectorModule(moduleName)) {
-            int idx = moduleName.indexOf(
-                    ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
+            int idx = moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
             return moduleName.substring(idx + 1);
-        } else {
-            return moduleName;
         }
+        return moduleName;
     }
 
     public static boolean isJMSRA(String moduleName) {

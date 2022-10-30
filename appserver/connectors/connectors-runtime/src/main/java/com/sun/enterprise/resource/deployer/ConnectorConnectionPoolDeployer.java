@@ -18,21 +18,6 @@
 package com.sun.enterprise.resource.deployer;
 
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -49,6 +34,22 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 
 /**
@@ -82,7 +83,8 @@ public class ConnectorConnectionPoolDeployer
             return;
         }
 
-        PoolInfo poolInfo = new PoolInfo(resource.getName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getName());
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         final ConnectorConnectionPool ccp = getConnectorConnectionPool(resource, poolInfo);
         String rarName = resource.getResourceAdapterName();
         String connDefName = resource.getConnectionDefinitionName();
@@ -92,33 +94,14 @@ public class ConnectorConnectionPoolDeployer
         populateConnectorConnectionPool(ccp, connDefName, rarName, props, securityMaps);
         final String defName = resource.getConnectionDefinitionName();
 
-        /*if (domainCcp.isEnabled()) {
-            if (UNIVERSAL_CF.equals(defName) || QUEUE_CF.equals(defName) || TOPIC_CF.equals(defName)) {
-            //registers the jsr77 object for the mail resource deployed
-            final ManagementObjectManager mgr =
-                getAppServerSwitchObject().getManagementObjectManager();
-            mgr.registerJMSResource(domainCcp.getName(), defName, null, null,
-                    getPropNamesAsStrArr(domainCcp.getElementProperty()),
-                    getPropValuesAsStrArr(domainCcp.getElementProperty()));
-            }
-
-        } else {
-                _logger.log(Level.INFO, "core.resource_disabled",
-                        new Object[] {domainCcp.getName(),
-                        IASJ2EEResourceFactoryImpl.CONNECTOR_CONN_POOL_TYPE});
-        }*/
-
-
-        if(LOG.isLoggable(Level.FINE)) {
+        if (LOG.isLoggable(Level.FINE)) {
             LOG.log(Level.FINE, "Calling backend to add connectorConnectionPool", resource.getResourceAdapterName());
         }
-        runtime.createConnectorConnectionPool(ccp, defName, resource.getResourceAdapterName(),
-                resource.getProperty(), resource.getSecurityMap());
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Added connectorConnectionPool in backend",
-                resource.getResourceAdapterName());
+        runtime.createConnectorConnectionPool(ccp, defName, resource.getResourceAdapterName(), resource.getProperty(),
+            resource.getSecurityMap());
+        if (LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, "Added connectorConnectionPool in backend", resource.getResourceAdapterName());
         }
-
     }
 
 
@@ -132,7 +115,8 @@ public class ConnectorConnectionPoolDeployer
     @Override
     public void undeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
         String applicationName, String moduleName) throws Exception {
-        PoolInfo poolInfo = new PoolInfo(domainCcp.getName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(domainCcp.getName());
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         actualUndeployResource(domainCcp, poolInfo);
     }
 
@@ -267,15 +251,14 @@ public class ConnectorConnectionPoolDeployer
         //The tx support is valid if it is less-than/equal-to
         //the value specified in the ra.xml
         if (!ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(txSupportIntVal,
-                domainCcp.getResourceAdapterName())) {
+            domainCcp.getResourceAdapterName())) {
 
             String i18nMsg = MESSAGES.getString("ccp_deployer.incorrect_tx_support");
             ConnectorRuntimeException cre = new
                     ConnectorRuntimeException(i18nMsg);
 
-            LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
-                    ccp.getName());
-            throw cre;
+                    LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support", ccp.getName());
+                    throw cre;
         }
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("setting txSupportVal to " + txSupportIntVal +

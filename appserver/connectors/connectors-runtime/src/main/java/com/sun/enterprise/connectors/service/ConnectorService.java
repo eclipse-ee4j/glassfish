@@ -17,17 +17,6 @@
 
 package com.sun.enterprise.connectors.service;
 
-import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -43,6 +32,18 @@ import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.resource.pool.PoolManager;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.logging.LogDomains;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceConstants;
 
 
 /**
@@ -84,9 +85,9 @@ public class ConnectorService implements ConnectorConstants {
      * @return generated connection poolname
      */
     // TODO V3 can the default pool name generation be fully done by connector-admin-service-utils ?
-    public String getDefaultPoolName(String moduleName,
+    public SimpleJndiName getDefaultPoolName(String moduleName,
                                      String connectionDefName) {
-        return moduleName + POOLNAME_APPENDER + connectionDefName;
+        return new SimpleJndiName(moduleName + POOLNAME_APPENDER + connectionDefName);
     }
 
     /**
@@ -98,27 +99,15 @@ public class ConnectorService implements ConnectorConstants {
      * @return generated default connector resource name
      */
     // TODO V3 can the default resource name generation be fully done by connector-admin-service-utils ?
-    public String getDefaultResourceName(String moduleName,
+    public SimpleJndiName getDefaultResourceName(String moduleName,
                                          String connectionDefName) {
         //Construct the default resource name as
         // <JNDIName_of_RA>#<connectionDefnName>
-        String resourceJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForResource(moduleName);
-        return resourceJNDIName + RESOURCENAME_APPENDER + connectionDefName;
+        SimpleJndiName resourceJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForResource(moduleName);
+        return new SimpleJndiName(resourceJNDIName + RESOURCENAME_APPENDER + connectionDefName);
     }
 
-/*    public boolean checkAndLoadResource(Object resource, Object pool, String resourceType, String resourceName,
-                                        String raName)
-            throws ConnectorRuntimeException {
-        String resname = ConnectorAdminServiceUtils.getOriginalResourceName(resourceName);
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ConnectorService :: checkAndLoadResource resolved to load " + resname);
-        }
 
-        DeferredResourceConfig defResConfig = getResourcesUtil().getDeferredResourceConfig(resource, pool, resourceType, raName);
-        //DeferredResourceConfig defResConfig = resUtil.getDeferredResourceConfig(resname);
-        return loadResourcesAndItsRar(defResConfig);
-    }
-*/
     public boolean loadResourcesAndItsRar(DeferredResourceConfig defResConfig) {
         if (defResConfig != null) {
             try {

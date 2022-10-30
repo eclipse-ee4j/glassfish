@@ -43,12 +43,12 @@ import java.util.logging.Logger;
 
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.javaee.services.CommonResourceProxy;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
@@ -88,8 +88,8 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
 
     @Override
     public void deployResource(MailSessionDescriptor resource) throws Exception {
-        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
-        MailResource mailResource = new MyMailResource(resource,resourceName);
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
+        MailResource mailResource = new MyMailResource(resource, resourceName);
         getDeployer(mailResource).deployResource(mailResource);
         LOG.log(Level.FINE, "Mail-Session resource is deployed having resource-name [" + resource.getName() + "]");
 
@@ -97,7 +97,7 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
 
     @Override
     public void undeployResource(MailSessionDescriptor resource) throws Exception {
-        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(),resource.getResourceType());
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
         MailResource mailResource = new MyMailResource(resource, resourceName);
         getDeployer(mailResource).undeployResource(mailResource);
         LOG.log(Level.FINE, "Mail-Session resource is undeployed having resource-name [" + resource.getName() + "]");
@@ -190,23 +190,23 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
             org.glassfish.resourcebase.resources.naming.ResourceNamingService resourceNamingService = resourceNamingServiceProvider.get();
             proxy.setDescriptor(msd);
 
-            if(msd.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)){
+            if (msd.getJndiName().isJavaApp()) {
                 msd.setResourceId(appName);
             }
 
-            if (msd.getName().startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)
-                    || msd.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
-                ResourceInfo resourceInfo = new ResourceInfo(msd.getName(), appName);
+            if (msd.getJndiName().isJavaGlobal() || msd.getJndiName().isJavaApp()) {
+                ResourceInfo resourceInfo = new ResourceInfo(msd.getJndiName(), appName);
                 try {
                     resourceNamingService.publishObject(resourceInfo, proxy, true);
                     msd.setDeployed(true);
                 } catch (NamingException e) {
-                    Object params[] = new Object[]{appName, msd.getName(), e};
+                    Object params[] = new Object[] {appName, msd.getName(), e};
                     LOG.log(Level.WARNING, "exception while registering mail-session ", params);
                 }
             }
         }
     }
+
 
     public void unRegisterMailSessions(com.sun.enterprise.deployment.Application application) {
         Set<BundleDescriptor> bundles = application.getBundleDescriptors();
@@ -345,9 +345,9 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
     class MyMailResource extends FakeConfigBean implements MailResource {
 
         private final MailSessionDescriptor desc;
-        private final String name;
+        private final SimpleJndiName name;
 
-        public MyMailResource(MailSessionDescriptor desc, String name) {
+        public MyMailResource(MailSessionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }
@@ -434,7 +434,7 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
 
         @Override
         public String getJndiName() {
-            return name;
+            return name.toString();
         }
 
         @Override
@@ -500,7 +500,7 @@ public class MailSessionDeployer implements ResourceDeployer<MailSessionDescript
 
         @Override
         public String getIdentity() {
-            return name;
+            return name.toString();
         }
 
         @Override

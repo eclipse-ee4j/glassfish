@@ -17,23 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.WARNING;
-import static javax.transaction.xa.XAResource.TMSUCCESS;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.InvocationException;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.PoolingException;
@@ -65,6 +48,24 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transaction;
+
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ComponentInvocationHandler;
+import org.glassfish.api.invocation.InvocationException;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+import static javax.transaction.xa.XAResource.TMSUCCESS;
 
 /**
  * @author Tony Ng, Aditya Gore
@@ -473,16 +474,15 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     }
 
     @Override
-    public ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName) {
-        Set descriptors = getConnectorRuntime().getResourceReferenceDescriptor();
+    public ResourceReferenceDescriptor getResourceReference(SimpleJndiName jndiName, SimpleJndiName logicalName) {
+        Set<ResourceReferenceDescriptor> descriptors = getConnectorRuntime().getResourceReferenceDescriptor();
         List<ResourceReferenceDescriptor> matchingRefs = new ArrayList<>();
 
         if (descriptors != null) {
-            for (Object descriptor : descriptors) {
-                ResourceReferenceDescriptor resourceReferenceDescriptor = (ResourceReferenceDescriptor) descriptor;
-                String name = resourceReferenceDescriptor.getJndiName();
+            for (ResourceReferenceDescriptor descriptor : descriptors) {
+                SimpleJndiName name = descriptor.getJndiName();
                 if (jndiName.equals(name)) {
-                    matchingRefs.add(resourceReferenceDescriptor);
+                    matchingRefs.add(descriptor);
                 }
             }
         }
@@ -495,8 +495,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
             for (ResourceReferenceDescriptor resourceReferenceDescriptor : matchingRefs) {
                 String refName = resourceReferenceDescriptor.getName();
                 if (refName != null && logicalName != null) {
-                    refName = getJavaName(refName);
-                    if (refName.equals(getJavaName(logicalName))) {
+                    if (getJavaName(new SimpleJndiName(refName)).equals(getJavaName(logicalName))) {
                         return resourceReferenceDescriptor;
                     }
                 }
@@ -506,13 +505,13 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         return null;
     }
 
-    private static String getJavaName(String name) {
-        if (name == null || name.startsWith("java:")) {
+    private static SimpleJndiName getJavaName(SimpleJndiName name) {
+        if (name == null || name.hasJavaPrefix()) {
             return name;
         }
 
         // by default, scope is "comp"
-        return "java:comp/env/" + name;
+        return new SimpleJndiName(SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV + name);
     }
 
     @Override

@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,20 +17,28 @@
 
 package com.sun.enterprise.resource.naming;
 
-import com.sun.enterprise.resource.beans.AdministeredObjectResource;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.ConnectorRegistry;
-import com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils;
-import com.sun.enterprise.deployment.ConnectorDescriptor;
-import com.sun.logging.LogDomains;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.enterprise.connectors.ConnectorRegistry;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
+import com.sun.enterprise.resource.beans.AdministeredObjectResource;
+import com.sun.logging.LogDomains;
 
 import java.util.Hashtable;
-import java.util.logging.Logger;
 import java.util.logging.Level;
-import javax.naming.*;
+import java.util.logging.Logger;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
+
+import org.glassfish.api.naming.SimpleJndiName;
+
+import static com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor;
 
 /**
  * An object factory to handle creation of administered object
@@ -46,6 +54,7 @@ public class AdministeredObjectFactory implements ObjectFactory {
     //required by ObjectFactory
     public AdministeredObjectFactory() {}
 
+    @Override
     public Object getObjectInstance(Object obj,
                     Name name,
                     Context nameCtx,
@@ -57,10 +66,8 @@ public class AdministeredObjectFactory implements ObjectFactory {
                     + " Name:" + name);
         }
 
-        AdministeredObjectResource aor =
-            (AdministeredObjectResource) ref.get(0).getContent();
+        AdministeredObjectResource aor = (AdministeredObjectResource) ref.get(0).getContent();
         String moduleName = aor.getResourceAdapter();
-
 
         //If call fom application client, start resource adapter lazily.
         //todo: Similar code in ConnectorObjectFactory - to refactor.
@@ -70,9 +77,8 @@ public class AdministeredObjectFactory implements ObjectFactory {
             ConnectorDescriptor connectorDescriptor = null;
             try {
                 Context ic = new InitialContext();
-                String descriptorJNDIName = ConnectorAdminServiceUtils.
-                        getReservePrefixedJNDINameForDescriptor(moduleName);
-                connectorDescriptor = (ConnectorDescriptor) ic.lookup(descriptorJNDIName);
+                SimpleJndiName descriptorJNDIName = getReservePrefixedJNDINameForDescriptor(moduleName);
+                connectorDescriptor = (ConnectorDescriptor) ic.lookup(descriptorJNDIName.toString());
             } catch (NamingException ne) {
                 if (logger.isLoggable(Level.FINE)) {
                     logger.log(Level.FINE, "Failed to look up ConnectorDescriptor "

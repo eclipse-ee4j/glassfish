@@ -35,7 +35,7 @@ public interface ConnectionManager extends jakarta.resource.spi.ConnectionManage
      * @return Connection
      * @throws ResourceException when unable to provide a connection
      */
-    Object allocateNonTxConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo)
+    Object allocateNonTxConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo connectionRequestInfo)
         throws ResourceException;
 
     /**

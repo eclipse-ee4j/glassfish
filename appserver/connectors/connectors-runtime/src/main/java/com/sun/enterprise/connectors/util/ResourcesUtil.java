@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
@@ -73,20 +74,16 @@ public class ResourcesUtil {
 
 */
     static Logger _logger = LogDomains.getLogger(ResourcesUtil.class,LogDomains.RSR_LOGGER);
-
     static StringManager localStrings = StringManager.getManager(ResourcesUtil.class);
 
     static ServerContext sc_;
+    private volatile static ResourcesUtil resourcesUtil;
 
     protected Domain domain;
-
-    protected Resources resources;
+    private Server server;
 
     private ConnectorRuntime runtime;
 
-    private Server server;
-
-    private volatile static ResourcesUtil resourcesUtil;
 
     private ResourcesUtil(){
     }
@@ -198,16 +195,6 @@ public class ResourcesUtil {
     }
 
 
-    protected String getCorrespondingCmpResourceName(ResourceInfo resourceInfo) {
-
-        int index = resourceInfo.getName().lastIndexOf("__pm");
-        if(index != -1) {
-            return resourceInfo.getName().substring(0,index);
-        }
-        return null;
-    }
-
-
     /**
      * Returns true if the given resource is referenced by this server.
      *
@@ -220,8 +207,7 @@ public class ResourcesUtil {
                 ConnectorsUtil.isApplicationScopedResource(resourceInfo)) {
             refExists = getServer().getApplicationRef(resourceInfo.getApplicationName()) != null;
         } else {
-            String resourceName = resourceInfo.getName();
-            refExists = getServer().isResourceRefExists(resourceName);
+            refExists = getServer().isResourceRefExists(resourceInfo.getName());
         }
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("isReferenced :: " + resourceInfo + " - " + refExists);
@@ -256,25 +242,23 @@ public class ResourcesUtil {
      * @since 8.1 PE/SE/EE
      */
     public boolean isEnabled(Resource resource) {
-        if(_logger.isLoggable(Level.FINE)) {
+        if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("ResourcesUtil :: isEnabled");
         }
-        if (resource == null){
+        if (resource == null) {
             return false;
-        }else if (resource instanceof BindableResource) {
-            BindableResource bindableResource = (BindableResource)resource;
-            if(bindableResource.getJndiName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)){
+        } else if (resource instanceof BindableResource) {
+            BindableResource bindableResource = (BindableResource) resource;
+            if (bindableResource.getJndiName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)) {
                 return Boolean.valueOf(bindableResource.getEnabled());
             }
-            ResourceRef resRef = getServer().getResourceRef(
-                    ((BindableResource) resource).getJndiName());
-            return isEnabled((BindableResource) resource) &&
-                    ((resRef != null) && parseBoolean(resRef.getEnabled()));
-        } else if(resource instanceof ResourcePool) {
+            ResourceRef resRef = getServer().getResourceRef(SimpleJndiName.of(bindableResource.getJndiName()));
+            return isEnabled(bindableResource) && resRef != null && parseBoolean(resRef.getEnabled());
+        } else if (resource instanceof ResourcePool) {
             return isEnabled((ResourcePool) resource);
-        }else if(resource instanceof WorkSecurityMap || resource instanceof ResourceAdapterConfig){
+        } else if (resource instanceof WorkSecurityMap || resource instanceof ResourceAdapterConfig) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -311,8 +295,9 @@ public class ResourcesUtil {
 
         if(br instanceof ConnectorResource) {
             ConnectorResource cr = (ConnectorResource) br;
-            String poolName = cr.getPoolName();
-            ConnectorConnectionPool ccp = ConnectorsUtil.getResourceByName(getResources(resourceInfo), ConnectorConnectionPool.class, poolName);
+            SimpleJndiName poolName = new SimpleJndiName(cr.getPoolName());
+            ConnectorConnectionPool ccp = ConnectorsUtil.getResourceByName(getResources(resourceInfo),
+                ConnectorConnectionPool.class, poolName);
             if (ccp == null) {
                 return false;
             }
@@ -372,24 +357,7 @@ public class ResourcesUtil {
 
     public Collection<AdminObjectResource> getEnabledAdminObjectResources(String raName)  {
         Collection<AdminObjectResource> allResources = new ArrayList<>();
-
         allResources.addAll(getEnabledAdminObjectResources(raName, getGlobalResources()));
-
-/*        Collection<Application> apps = getApplications().getApplications();
-        for(Application app : apps){
-            //TODO ASR check for enabled app and app-ref
-            Resources appScopedResources = app.getResources();
-            if(appScopedResources != null){
-                allResources.addAll(getEnabledAdminObjectResources(raName, appScopedResources));
-            }
-            List<Module> modules = app.getModule();
-            for(Module module : modules){
-                Resources moduleScopedResources = module.getResources();
-                if(moduleScopedResources != null){
-                    allResources.addAll(getEnabledAdminObjectResources(raName, moduleScopedResources));
-                }
-            }
-        }*/
         return allResources;
     }
 
@@ -408,9 +376,6 @@ public class ResourcesUtil {
             }
             adminObjectResources.add(adminObjectResource);
         }
-        //AdminObjectResource[] allAdminObjectResources =
-        //            new AdminObjectResource[adminObjectResources.size()];
-        //return adminObjectResources.toArray(allAdminObjectResources);
         return adminObjectResources;
     }
 
@@ -428,17 +393,13 @@ public class ResourcesUtil {
     }
 
     private String getAppNameToken(String rarName) {
-        if(rarName == null) {
+        if (rarName == null) {
             return null;
         }
-        int index = rarName.indexOf(
-                ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
-        if(index != -1) {
-            return rarName.substring(0,index);
-        } else {
-            return null;
-        }
+        int index = rarName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
+        return index == -1 ? null : rarName.substring(0, index);
     }
+
 
     /**
      * Checks if a resource reference is enabled
@@ -465,15 +426,13 @@ public class ResourcesUtil {
             }
         } else {
             ResourceRef ref = getServer().getResourceRef(resourceInfo.getName());
-            if (ref != null) {
-                enabled = ref.getEnabled();
-            } else if(_logger.isLoggable(Level.FINE)) {
+            if (ref == null) {
                 _logger.fine("ResourcesUtil :: isResourceReferenceEnabled null ref");
+            } else {
+                enabled = ref.getEnabled();
             }
         }
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ResourcesUtil :: isResourceReferenceEnabled ref enabled ?" + enabled);
-        }
+        _logger.log(Level.FINE, "ResourcesUtil :: isResourceReferenceEnabled ref enabled? {0}", enabled);
 
         return ConnectorsUtil.parseBoolean(enabled);
     }
@@ -530,8 +489,8 @@ public class ResourcesUtil {
                 _logger.fine("poolname " + resource.getPoolName() + "resource " + resource.getJndiName());
             }
             ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
-            if ((resource.getPoolName().equalsIgnoreCase(poolInfo.getName())) && isReferenced(resourceInfo)
-                    && isEnabled(resource)){
+            if (resource.getPoolName().equalsIgnoreCase(poolInfo.getName().toString()) && isReferenced(resourceInfo)
+                && isEnabled(resource)) {
                 if(_logger.isLoggable(Level.FINE)) {
                     _logger.fine("Connector resource "  + resource.getJndiName() + "refers "
                         + poolInfo + "in this server instance and is enabled");
@@ -558,10 +517,11 @@ public class ResourcesUtil {
         ConnectorResource resource = null;
         ConnectorConnectionPool pool = null;
         Resources resources = getResources(resourceInfo);
-        if(resources != null){
+        if (resources != null) {
             resource = ConnectorsUtil.getResourceByName(resources, ConnectorResource.class, resourceInfo.getName());
-            if(resource != null){
-                pool = ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, resource.getPoolName());
+            if (resource != null) {
+                SimpleJndiName poolName = new SimpleJndiName(resource.getPoolName());
+                pool = ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, poolName);
             }
         }
         return pool;
@@ -576,10 +536,9 @@ public class ResourcesUtil {
     }
 
 
-    public Resource getResource(ResourceInfo resourceInfo, Class resourceType) {
-        Resource resource = null;
+    public <T extends Resource> T getResource(ResourceInfo resourceInfo, Class<T> resourceType) {
         String appName = resourceInfo.getApplicationName();
-        String jndiName = resourceInfo.getName();
+        SimpleJndiName jndiName = resourceInfo.getName();
         String moduleName = resourceInfo.getModuleName();
         Resources resources = null;
         if (ConnectorsUtil.isApplicationScopedResource(resourceInfo) ||
@@ -590,8 +549,9 @@ public class ResourcesUtil {
         } else {
             resources = getResources(resourceInfo);
         }
+        T resource = null;
         if (resources != null) {
-            resource = ConnectorsUtil.getResourceByName( resources, resourceType, jndiName);
+            resource = ConnectorsUtil.getResourceByName(resources, resourceType, jndiName);
         } else if (ConnectorsUtil.isApplicationScopedResource(resourceInfo)
             || ConnectorsUtil.isModuleScopedResource(resourceInfo)) {
             // it is possible that "application" is being deployed (eg: during deployment "prepare"
@@ -604,13 +564,13 @@ public class ResourcesUtil {
 
             resources = ResourcesRegistry.getResources(appName, moduleName);
             if (resources != null) {
-                resource = ConnectorsUtil.getResourceByName( resources, resourceType, jndiName);
+                resource = ConnectorsUtil.getResourceByName(resources, resourceType, jndiName);
             }
         }
         return resource;
     }
 
-    public Resource getResource(String jndiName, String appName, String moduleName, Class resourceType) {
+    public <T extends Resource> T getResource(SimpleJndiName jndiName, String appName, String moduleName, Class<T> resourceType) {
         ResourceInfo resourceInfo = new ResourceInfo(jndiName, appName, moduleName);
         return getResource(resourceInfo, resourceType);
     }
@@ -621,10 +581,10 @@ public class ResourcesUtil {
                 ConnectorsUtil.getAllPoolsOfModule(moduleName, allResources);
         Collection<String> poolNames = ConnectorsUtil.getAllPoolNames(connectionPools);
         Collection<Resource> resources = ConnectorsUtil.getAllResources(poolNames, allResources);
-        Collection<AdminObjectResource> adminObjectResources =
-                ResourcesUtil.createInstance().getEnabledAdminObjectResources(moduleName);
+        Collection<AdminObjectResource> adminObjectResources = ResourcesUtil.createInstance()
+            .getEnabledAdminObjectResources(moduleName);
         resources.addAll(adminObjectResources);
-        if(includePools){
+        if (includePools) {
             Collection<ConnectorConnectionPool> allPoolsOfModule = ConnectorsUtil.getAllPoolsOfModule(moduleName, allResources);
             resources.addAll(allPoolsOfModule);
         }

@@ -18,7 +18,6 @@
 package com.sun.enterprise.resource.deployer;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
@@ -32,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
 import org.glassfish.connectors.config.SecurityMap;
@@ -47,6 +46,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
 import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDDPOOL;
 
 @Service
@@ -66,25 +66,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
     @Override
     public void deployResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
-
-        final JMSConnectionFactoryDefinitionDescriptor desc = resource;
-        String poolName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), JMSCFDDPOOL);
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
-
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMSConnectionFactoryDefinitionDeployer.deployResource() : pool-name [" + poolName + "], " +
-                    " resource-name ["+resourceName+"]");
-        }
-
-        ConnectorConnectionPool connectorCp = new MyJMSConnectionFactoryConnectionPool(desc, poolName);
-
-        //deploy pool
+        SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), JMSCFDDPOOL);
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
+        ConnectorConnectionPool connectorCp = new MyJMSConnectionFactoryConnectionPool(resource, poolName);
         getDeployer(connectorCp).deployResource(connectorCp);
-
-        //deploy resource
         ConnectorResource connectorResource = new MyJMSConnectionFactoryResource(poolName, resourceName);
         getDeployer(connectorResource).deployResource(connectorResource);
-
     }
 
 
@@ -114,25 +101,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
     @Override
     public void undeployResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
-
-        final JMSConnectionFactoryDefinitionDescriptor desc = resource;
-
-        String poolName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), JMSCFDDPOOL);
-        String resourceName = ConnectorsUtil.deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
-
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "JMSConnectionFactoryDefinitionDeployer.undeployResource() : pool-name [" + poolName + "], " +
-                    " resource-name ["+resourceName+"]");
-        }
-
-        //undeploy resource
+        SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), JMSCFDDPOOL);
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
         ConnectorResource connectorResource = new MyJMSConnectionFactoryResource(poolName, resourceName);
         getDeployer(connectorResource).undeployResource(connectorResource);
-
-        //undeploy pool
-        ConnectorConnectionPool connectorCp = new MyJMSConnectionFactoryConnectionPool(desc, poolName);
+        ConnectorConnectionPool connectorCp = new MyJMSConnectionFactoryConnectionPool(resource, poolName);
         getDeployer(connectorCp).undeployResource(connectorCp);
-
     }
 
     @Override
@@ -225,22 +199,22 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
     class MyJMSConnectionFactoryResource extends FakeConfigBean implements ConnectorResource {
 
-        private String poolName;
-        private String jndiName;
+        private SimpleJndiName poolName;
+        private SimpleJndiName jndiName;
 
-        MyJMSConnectionFactoryResource(String poolName, String jndiName) {
+        MyJMSConnectionFactoryResource(SimpleJndiName poolName, SimpleJndiName jndiName) {
             this.poolName = poolName;
             this.jndiName = jndiName;
         }
 
         @Override
         public String getPoolName() {
-            return poolName;
+            return poolName.toString();
         }
 
         @Override
         public void setPoolName(String value) throws PropertyVetoException {
-            this.poolName = value;
+            this.poolName = new SimpleJndiName(value);
         }
 
         @Override
@@ -254,7 +228,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
         @Override
         public String getIdentity() {
-            return jndiName;
+            return jndiName.toString();
         }
 
         @Override
@@ -300,12 +274,12 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
         @Override
         public String getJndiName() {
-            return jndiName;
+            return jndiName.toString();
         }
 
         @Override
         public void setJndiName(String value) throws PropertyVetoException {
-            this.jndiName = value;
+            this.jndiName = new SimpleJndiName(value);
         }
 
         @Override
@@ -342,9 +316,9 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
     class MyJMSConnectionFactoryConnectionPool extends FakeConfigBean implements ConnectorConnectionPool {
 
         private final JMSConnectionFactoryDefinitionDescriptor desc;
-        private final String name;
+        private final SimpleJndiName name;
 
-        public MyJMSConnectionFactoryConnectionPool(JMSConnectionFactoryDefinitionDescriptor desc, String name) {
+        public MyJMSConnectionFactoryConnectionPool(JMSConnectionFactoryDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }
@@ -361,7 +335,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
         @Override
         public String getIdentity() {
-            return name;
+            return name.toString();
         }
 
         @Override
@@ -753,7 +727,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
         @Override
         public String getName() {
-            return name;
+            return name.toString();
         }
 
         @Override

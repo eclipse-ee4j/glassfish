@@ -17,15 +17,16 @@
 
 package com.sun.enterprise.connectors;
 
+import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
+import com.sun.enterprise.deployment.ConnectorConfigProperty;
+import com.sun.logging.LogDomains;
+
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import com.sun.enterprise.connectors.authentication.ConnectorSecurityMap;
-import com.sun.enterprise.deployment.ConnectorConfigProperty;
-import com.sun.logging.LogDomains;
 
 /**
  * This class abstracts a connection connection pool. It contains
@@ -38,6 +39,15 @@ import com.sun.logging.LogDomains;
  */
 public class ConnectorConnectionPool implements Serializable {
 
+    private static final long serialVersionUID = 1405898931936731912L;
+    public static final String DEFAULT_MAX_CONNECTION_USAGE = "0";
+    public static final String DEFAULT_CON_CREATION_RETRY_ATTEMPTS = "0";
+    public static final String DEFAULT_CON_CREATION_RETRY_INTERVAL = "10";
+    public static final String DEFAULT_VALIDATE_ATMOST_ONCE_PERIOD = "0";
+    public static final String DEFAULT_LEAK_TIMEOUT = "0";
+
+    private static final Logger LOG = LogDomains.getLogger(ConnectorConnectionPool.class, LogDomains.RSR_LOGGER);
+
     protected ConnectorDescriptorInfo connectorDescriptorInfo_;
 
     protected String steadyPoolSize_;
@@ -49,30 +59,30 @@ public class ConnectorConnectionPool implements Serializable {
     //This property will *always* initially be set to:
     // true - by ConnectorConnectionPoolDeployer
     // false - by JdbcConnectionPoolDeployer
-    protected boolean matchConnections_ = false;
+    protected boolean matchConnections_;
 
     protected int transactionSupport_;
-    protected boolean isConnectionValidationRequired_ = false;
+    protected boolean isConnectionValidationRequired_;
 
 
-    private boolean lazyConnectionAssoc_ = false;
-    private boolean lazyConnectionEnlist_ = false;
-    private boolean associateWithThread_ = false;
-    private boolean partitionedPool = false;
+    private boolean lazyConnectionAssoc_;
+    private boolean lazyConnectionEnlist_;
+    private boolean associateWithThread_;
+    private boolean partitionedPool;
     private boolean poolingOn = true;
-    private boolean pingDuringPoolCreation = false;
+    private boolean pingDuringPoolCreation;
     private String poolDataStructureType;
     private String poolWaitQueue;
     private String dataStructureParameters;
     private String resourceGatewayClass;
     private String resourceSelectionStrategyClass;
-    private boolean nonTransactional_ = false;
-    private boolean nonComponent_ = false;
+    private boolean nonTransactional_;
+    private boolean nonComponent_;
 
-    private long dynamicReconfigWaitTimeout = 0;
+    private long dynamicReconfigWaitTimeout;
 
-    private ConnectorSecurityMap[] securityMaps = null;
-    private boolean isAuthCredentialsDefinedInPool_ = false;
+    private ConnectorSecurityMap[] securityMaps;
+    private boolean isAuthCredentialsDefinedInPool_;
 
     private String maxConnectionUsage;
 
@@ -80,84 +90,51 @@ public class ConnectorConnectionPool implements Serializable {
     //validated in the past x sec. (x=idle-timeout)
     //The property will be set from system property :
     //com.sun.enterprise.connectors.ValidateAtmostEveryIdleSecs=true
-    private boolean validateAtmostEveryIdleSecs = false;
+    private boolean validateAtmostEveryIdleSecs;
     //This property will be set by ConnectorConnectionPoolDeployer or
     //JdbcConnectionPoolDeployer.
-    private boolean preferValidateOverRecreate_ = false;
+    private boolean preferValidateOverRecreate_;
 
-    private String validateAtmostOncePeriod_ = null;
+    private String validateAtmostOncePeriod_;
 
-    private String conCreationRetryAttempts_ = null;
-    private String conCreationRetryInterval_ = null;
+    private String conCreationRetryAttempts_;
+    private String conCreationRetryInterval_;
 
-    private String connectionLeakTracingTimeout_ = null;
-    private boolean connectionReclaim_ = false;
+    private String connectionLeakTracingTimeout_;
+    private boolean connectionReclaim_;
 
-    public static final String DEFAULT_MAX_CONNECTION_USAGE = "0";
-    public static final String DEFAULT_CON_CREATION_RETRY_ATTEMPTS = "0";
-    public static final String DEFAULT_CON_CREATION_RETRY_INTERVAL = "10";
-    public static final String DEFAULT_VALIDATE_ATMOST_ONCE_PERIOD = "0";
-    public static final String DEFAULT_LEAK_TIMEOUT = "0";
-
-    private static Logger _logger = LogDomains.getLogger(ConnectorConnectionPool.class, LogDomains.RSR_LOGGER);
-    private final String name;
+    private final SimpleJndiName name;
     private String applicationName;
     private String moduleName;
 
-
-    /**
-     * Constructor
-     *
-     * @param name Name of the connector connection pool
-     */
-    public ConnectorConnectionPool(String name, String applicationName) {
-        this.name = name;
-        this.applicationName = applicationName;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param name Name of the connector connection pool
-     */
-    public ConnectorConnectionPool(String name, String applicationName, String moduleName) {
-        this.name = name;
-        this.applicationName = applicationName;
-        this.moduleName = moduleName;
-    }
-
-    /**
-     * Constructor
-     *
-     * @param name Name of the connector connection pool
-     */
-    public ConnectorConnectionPool(String name) {
-        this.name = name;
-    }
-
-    public ConnectorConnectionPool(PoolInfo poolInfo){
+    public ConnectorConnectionPool(PoolInfo poolInfo) {
         this.name = poolInfo.getName();
         this.applicationName = poolInfo.getApplicationName();
         this.moduleName = poolInfo.getModuleName();
     }
 
-    public String getApplicationName(){
+
+    public String getApplicationName() {
         return applicationName;
     }
 
-    public void setApplicationName(String applicationName){
+
+    public void setApplicationName(String applicationName) {
         this.applicationName = applicationName;
     }
 
-    public String getModuleName(){
+
+    public String getModuleName() {
         return moduleName;
     }
 
-    public void setModuleName(String moduleName){
+
+    public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
     }
 
-    public boolean isApplicationScopedResource(){
+
+    public boolean isApplicationScopedResource() {
         return applicationName != null;
     }
 
@@ -186,52 +163,8 @@ public class ConnectorConnectionPool implements Serializable {
     public void setPooling(boolean enabled) {
         poolingOn = enabled;
     }
-    /**
-     * Clone method.
-     */
 
-    protected ConnectorConnectionPool doClone(String name) {
-
-        ConnectorConnectionPool clone = new ConnectorConnectionPool(name);
-        ConnectorDescriptorInfo cdi = connectorDescriptorInfo_.doClone();
-        clone.setSecurityMaps(this.securityMaps);
-
-        clone.setSteadyPoolSize(getSteadyPoolSize());
-        clone.setMaxPoolSize(getMaxPoolSize());
-        clone.setMaxWaitTimeInMillis(getMaxWaitTimeInMillis());
-        clone.setPoolResizeQuantity(getPoolResizeQuantity());
-        clone.setIdleTimeoutInSeconds(getIdleTimeoutInSeconds());
-
-        clone.setConnectionValidationRequired(isConnectionValidationRequired_);
-        clone.setFailAllConnections(isFailAllConnections());
-
-        clone.setTransactionSupport(getTransactionSupport());
-        clone.setConnectorDescriptorInfo(cdi);
-        clone.setNonComponent(isNonComponent());
-        clone.setNonTransactional(isNonTransactional());
-
-        clone.setMatchConnections(matchConnections());
-        clone.setLazyConnectionAssoc(isLazyConnectionAssoc());
-        clone.setAssociateWithThread(isAssociateWithThread());
-        clone.setPartitionedPool(isPartitionedPool());
-        clone.setDataStructureParameters(getDataStructureParameters());
-        clone.setPoolDataStructureType(getPoolDataStructureType());
-        clone.setPoolWaitQueue(getPoolWaitQueue());
-        clone.setLazyConnectionEnlist(isLazyConnectionEnlist());
-
-        clone.setMaxConnectionUsage(getMaxConnectionUsage());
-        clone.setValidateAtmostOncePeriod(getValidateAtmostOncePeriod());
-
-        clone.setConnectionLeakTracingTimeout(getConnectionLeakTracingTimeout());
-        clone.setConCreationRetryInterval(getConCreationRetryInterval());
-        clone.setConCreationRetryAttempts(getConCreationRetryAttempts());
-        clone.setPreferValidateOverRecreate(isPreferValidateOverRecreate());
-        clone.setPooling(isPoolingOn());
-        clone.setPingDuringPoolCreation(getPingDuringPoolCreation());
-        return clone;
-    }
-
-    public String getName() {
+    public SimpleJndiName getName() {
         return name;
     }
 
@@ -796,7 +729,7 @@ public class ConnectorConnectionPool implements Serializable {
             }
             returnVal = sb.toString();
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "Exception while computing toString() of connection pool [ "+name+" ]", e);
+            LOG.log(Level.WARNING, "Exception while computing toString() of connection pool [ "+name+" ]", e);
         }
         return returnVal;
     }

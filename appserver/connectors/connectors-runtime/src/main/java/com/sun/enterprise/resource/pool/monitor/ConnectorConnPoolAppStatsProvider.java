@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,26 +45,26 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 @ManagedObject
 @Description("Connector Connection Pool Application based Statistics")
 public class ConnectorConnPoolAppStatsProvider {
-    private RangeStatisticImpl numConnUsed = new RangeStatisticImpl(
+    private final RangeStatisticImpl numConnUsed = new RangeStatisticImpl(
             0, 0, 0,
             "NumConnUsed", StatisticImpl.UNIT_COUNT, "Provides connection usage " +
             "statistics. The total number of connections that are currently being " +
             "used, as well as information about the maximum number of connections " +
             "that were used (the high water mark).",
             System.currentTimeMillis(), System.currentTimeMillis());
-    private CountStatisticImpl numConnAcquired = new CountStatisticImpl(
+    private final CountStatisticImpl numConnAcquired = new CountStatisticImpl(
             "NumConnAcquired", StatisticImpl.UNIT_COUNT, "Number of logical " +
             "connections acquired from the pool.");
-    private CountStatisticImpl numConnReleased = new CountStatisticImpl(
+    private final CountStatisticImpl numConnReleased = new CountStatisticImpl(
             "NumConnReleased", StatisticImpl.UNIT_COUNT, "Number of logical " +
             "connections released to the pool.");
     private static final String JCA_APP_PROBE_LISTENER = "glassfish:connector-pool:applications:";
 
-    private String poolName;
-    private String appName;
+    private final String poolName;
+    private final String appName;
 
     public ConnectorConnPoolAppStatsProvider(PoolInfo poolInfo, String appName) {
-        this.poolName = poolInfo.getName();
+        this.poolName = poolInfo.getName().toString();
         this.appName = appName;
     }
 

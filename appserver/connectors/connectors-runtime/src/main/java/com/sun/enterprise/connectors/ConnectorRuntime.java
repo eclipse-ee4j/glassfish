@@ -17,58 +17,6 @@
 
 package com.sun.enterprise.connectors;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getApplicationNameOfEmbeddedRar;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getRarNameFromApplication;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isApplicationScopedResource;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isModuleScopedResource;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isStandAloneRA;
-import static com.sun.logging.LogDomains.RSR_LOGGER;
-
-import java.io.PrintWriter;
-import java.net.URI;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Timer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.security.auth.callback.CallbackHandler;
-
-import org.glassfish.admin.monitor.MonitoringBootstrap;
-import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.connectors.config.WorkSecurityMap;
-import org.glassfish.deployment.common.SecurityRoleMapperFactory;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.ConnectorClassLoaderService;
-import org.glassfish.internal.api.DelegatingClassLoader;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.listener.ResourceManager;
-import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
-import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
-import org.glassfish.resources.api.ResourcesRegistry;
-import org.glassfish.server.ServerEnvironmentImpl;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
@@ -106,6 +54,7 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.archivist.ApplicationArchivist;
 import com.sun.enterprise.deployment.archivist.ArchivistFactory;
 import com.sun.enterprise.resource.pool.PoolManager;
@@ -128,6 +77,60 @@ import jakarta.resource.spi.XATerminator;
 import jakarta.resource.spi.work.WorkManager;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
+
+import java.io.PrintWriter;
+import java.net.URI;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.security.auth.callback.CallbackHandler;
+
+import org.glassfish.admin.monitor.MonitoringBootstrap;
+import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.connectors.config.WorkSecurityMap;
+import org.glassfish.deployment.common.SecurityRoleMapperFactory;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.ConnectorClassLoaderService;
+import org.glassfish.internal.api.DelegatingClassLoader;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.listener.ResourceManager;
+import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
+import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
+import org.glassfish.resources.api.ResourcesRegistry;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
+
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getApplicationNameOfEmbeddedRar;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getRarNameFromApplication;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isApplicationScopedResource;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isModuleScopedResource;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.isStandAloneRA;
+import static com.sun.logging.LogDomains.RSR_LOGGER;
+
 
 /**
  * This class is the entry point to connector backend module. It exposes different API's called by external entities
@@ -314,7 +317,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      * @param connectionDefName connection definition name
      * @return generated connection poolname
      */
-    public String getDefaultPoolName(String moduleName, String connectionDefName) {
+    public SimpleJndiName getDefaultPoolName(String moduleName, String connectionDefName) {
         return connectorService.getDefaultPoolName(moduleName, connectionDefName);
     }
 
@@ -358,7 +361,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      * @param connectionDefName connection definition name
      * @return generated default connector resource name
      */
-    public String getDefaultResourceName(String moduleName, String connectionDefName) {
+    public SimpleJndiName getDefaultResourceName(String moduleName, String connectionDefName) {
         return connectorService.getDefaultResourceName(moduleName, connectionDefName);
     }
 
@@ -484,74 +487,59 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     @Override
-    public Object lookupPMResource(ResourceInfo resourceInfo, boolean force) throws NamingException {
-        Object result;
+    public <T> T lookupPMResource(ResourceInfo resourceInfo, boolean force) throws NamingException{
         try {
-            if (!resourceInfo.getName().endsWith(PM_JNDI_SUFFIX)) {
-                resourceInfo =
-                    new ResourceInfo(
-                         resourceInfo.getName() + PM_JNDI_SUFFIX,
-                         resourceInfo.getApplicationName(),
-                         resourceInfo.getModuleName());
+            String jndiName = resourceInfo.getName().toString();
+            if (jndiName.endsWith(PM_JNDI_SUFFIX)) {
+                return connectorResourceAdmService.lookup(resourceInfo);
             }
-
-            result = connectorResourceAdmService.lookup(resourceInfo);
+            ResourceInfo pmResourceInfo = new ResourceInfo(new SimpleJndiName(jndiName + PM_JNDI_SUFFIX),
+                resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+            return connectorResourceAdmService.lookup(pmResourceInfo);
         } catch (NamingException ne) {
             if (force && isDAS()) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", new Object[] { resourceInfo });
-                }
-                result = lookupDataSourceInDAS(resourceInfo);
-            } else {
-                throw ne;
+                _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", resourceInfo);
+                return lookupDataSourceInDAS(resourceInfo);
             }
+            throw ne;
         }
-
-        return result;
     }
 
     @Override
-    public Object lookupPMResource(String jndiName, boolean force) throws NamingException {
-        return lookupPMResource(new ResourceInfo(jndiName), force);
+    public <T> T lookupPMResource(SimpleJndiName jndiName, boolean force) throws NamingException {
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName);
+        return lookupPMResource(resourceInfo, force);
     }
 
     @Override
-    public Object lookupNonTxResource(String jndiName, boolean force) throws NamingException {
+    public <T> T lookupNonTxResource(SimpleJndiName jndiName, boolean force) throws NamingException {
         ResourceInfo resourceInfo = new ResourceInfo(jndiName);
         return lookupNonTxResource(resourceInfo, force);
     }
 
     @Override
-    public Object lookupNonTxResource(ResourceInfo resourceInfo, boolean force) throws NamingException {
-        Object nonTxResource;
-
+    public <T> T lookupNonTxResource(ResourceInfo resourceInfo, boolean force) throws NamingException {
         try {
-            if (!resourceInfo.getName().endsWith(NON_TX_JNDI_SUFFIX)) {
-                resourceInfo =
-                    new ResourceInfo(
-                        resourceInfo.getName() + NON_TX_JNDI_SUFFIX,
-                        resourceInfo.getApplicationName(),
-                        resourceInfo.getModuleName());
+            String jndiName = resourceInfo.getName().toString();
+            if (jndiName.endsWith(NON_TX_JNDI_SUFFIX)) {
+                return connectorResourceAdmService.lookup(resourceInfo);
             }
-
-            nonTxResource = connectorResourceAdmService.lookup(resourceInfo);
+            ResourceInfo tmpInfo = new ResourceInfo(new SimpleJndiName(jndiName + NON_TX_JNDI_SUFFIX),
+                resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+            return connectorResourceAdmService.lookup(tmpInfo);
         } catch (NamingException ne) {
             if (force && isDAS()) {
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", new Object[] { resourceInfo });
-                }
-                nonTxResource = lookupDataSourceInDAS(resourceInfo);
-            } else {
-                throw ne;
+                _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", resourceInfo);
+                return lookupDataSourceInDAS(resourceInfo);
             }
+            throw ne;
         }
-
-        return nonTxResource;
     }
 
     private boolean isDAS() {
         return serverEnvironmentImpl.isDas();
     }
+
 
     /**
      * Get a wrapper datasource specified by the jdbcjndi name This API is intended to be used in the DAS. The motivation
@@ -563,17 +551,17 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      * @param resourceInfo jndi name of the resource
      * @return DataSource representing the resource.
      */
-    private Object lookupDataSourceInDAS(ResourceInfo resourceInfo) {
+    private <T> T lookupDataSourceInDAS(ResourceInfo resourceInfo) {
         try {
-            Collection<ConnectorRuntimeExtension> extensions = serviceLocator.getAllServices(ConnectorRuntimeExtension.class);
+            Collection<ConnectorRuntimeExtension> extensions = serviceLocator
+                .getAllServices(ConnectorRuntimeExtension.class);
             for (ConnectorRuntimeExtension extension : extensions) {
                 return extension.lookupDataSourceInDAS(resourceInfo);
             }
-            // return connectorResourceAdmService.lookupDataSourceInDAS(resourceInfo);
+            return null;
         } catch (ConnectorRuntimeException cre) {
             throw new RuntimeException(cre.getMessage(), cre);
         }
-        return null;
     }
 
     /**
@@ -915,13 +903,9 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
      * @return set of resource-refs
      */
     @Override
-    public Set getResourceReferenceDescriptor() {
+    public Set<ResourceReferenceDescriptor> getResourceReferenceDescriptor() {
         JndiNameEnvironment jndiEnv = componentEnvManager.getCurrentJndiNameEnvironment();
-        if (jndiEnv == null) {
-            return null;
-        }
-
-        return jndiEnv.getResourceReferenceDescriptors();
+        return jndiEnv == null ? null : jndiEnv.getResourceReferenceDescriptors();
     }
 
     /**
@@ -1367,17 +1351,6 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     @Override
     public long getShutdownTimeout() {
         return ConnectorsUtil.getShutdownTimeout(connectorServiceProvider.get());
-    }
-
-    /**
-     * Flush Connection pool by reinitializing the connections established in the pool.
-     *
-     * @param poolName
-     * @throws com.sun.appserv.connectors.internal.api.ConnectorRuntimeException
-     */
-    @Override
-    public boolean flushConnectionPool(String poolName) throws ConnectorRuntimeException {
-        return ccPoolAdmService.flushConnectionPool(new PoolInfo(poolName));
     }
 
     /**

@@ -40,6 +40,7 @@ import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
@@ -415,12 +416,13 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
         }
     }
 
-    private void deleteResourceRef(String jndiName, String target) throws TransactionFailure {
+    private void deleteResourceRef(String name, String target) throws TransactionFailure {
 
         if( target.equals(DOMAIN) || (domain.getConfigNamed(target) != null)){
             return ;
         }
 
+        SimpleJndiName jndiName = SimpleJndiName.of(name);
         Server server = configBeansUtilities.getServerNamed(target);
         if (server != null) {
             if (server.isResourceRefExists(jndiName)) {

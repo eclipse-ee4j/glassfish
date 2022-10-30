@@ -48,6 +48,7 @@ import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 
 import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
@@ -79,9 +80,9 @@ public class ConnectorObjectFactory implements ObjectFactory {
         if (getRuntime().isACCRuntime() || getRuntime().isNonACCRuntime()) {
             ConnectorDescriptor connectorDescriptor = null;
 
-            String descriptorJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor(moduleName);
+            SimpleJndiName descriptorJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor(moduleName);
             Context ic = new InitialContext(env);
-            connectorDescriptor = (ConnectorDescriptor) ic.lookup(descriptorJNDIName);
+            connectorDescriptor = (ConnectorDescriptor) ic.lookup(descriptorJNDIName.toString());
             try {
                 getRuntime().createActiveResourceAdapter(connectorDescriptor, moduleName, null);
             } catch (ConnectorRuntimeException e) {
@@ -109,18 +110,18 @@ public class ConnectorObjectFactory implements ObjectFactory {
 
             boolean forceNoLazyAssoc = false;
 
-            String jndiName = name.toString();
-            if (jndiName.endsWith(ConnectorConstants.PM_JNDI_SUFFIX)) {
+            SimpleJndiName jndiName = SimpleJndiName.of(name);
+            if (jndiName.hasSuffix(ConnectorConstants.PM_JNDI_SUFFIX)) {
                 forceNoLazyAssoc = true;
             }
 
-            String derivedJndiName = ConnectorsUtil.deriveJndiName(jndiName, env);
-            ConnectionManagerImpl mgr = (ConnectionManagerImpl)
-                    getRuntime().obtainConnectionManager(poolInfo, forceNoLazyAssoc, resourceInfo);
+            SimpleJndiName derivedJndiName = ConnectorsUtil.deriveJndiName(jndiName, env);
+            ConnectionManagerImpl mgr = (ConnectionManagerImpl) getRuntime().obtainConnectionManager(poolInfo,
+                forceNoLazyAssoc, resourceInfo);
             mgr.setJndiName(derivedJndiName);
             mgr.setRarName(moduleName);
 
-            String logicalName = (String)env.get(GlassfishNamingManager.LOGICAL_NAME);
+            SimpleJndiName logicalName = (SimpleJndiName) env.get(GlassfishNamingManager.LOGICAL_NAME);
             if(logicalName != null){
                 mgr.setLogicalName(logicalName);
             }

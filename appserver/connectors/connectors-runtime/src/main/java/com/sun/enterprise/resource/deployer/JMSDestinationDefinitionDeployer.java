@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
@@ -62,17 +62,9 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDes
 
     @Override
     public void deployResource(JMSDestinationDefinitionDescriptor resource) throws Exception {
-
-        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
-
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "JMSDestinationDefinitionDeployer.deployResource() : resource-name [" + resourceName + "]");
-        }
-
-        //deploy resource
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
         MyJMSDestinationResource jmsDestinationResource = new MyJMSDestinationResource(resource, resourceName);
         getDeployer(jmsDestinationResource).deployResource(jmsDestinationResource);
-
     }
 
 
@@ -102,17 +94,9 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDes
 
     @Override
     public void undeployResource(JMSDestinationDefinitionDescriptor resource) throws Exception {
-
-        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(),resource.getResourceType());
-
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "JMSDestinationDefinitionDeployer.undeployResource() : resource-name [" + resourceName + "]");
-        }
-
-        //undeploy resource
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
         MyJMSDestinationResource jmsDestinationResource = new MyJMSDestinationResource(resource, resourceName);
         getDeployer(jmsDestinationResource).undeployResource(jmsDestinationResource);
-
     }
 
     @Override
@@ -202,26 +186,25 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDes
     class MyJMSDestinationResource extends FakeConfigBean implements AdminObjectResource {
 
         private final JMSDestinationDefinitionDescriptor desc;
-        private final String name;
+        private final SimpleJndiName name;
 
-        public MyJMSDestinationResource(JMSDestinationDefinitionDescriptor desc, String name) {
+        public MyJMSDestinationResource(JMSDestinationDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }
 
         @Override
         public String getObjectType() {
-            return "user";  //To change body of implemented methods use File | Settings | File Templates.
+            return "user";
         }
 
         @Override
         public void setObjectType(String value) throws PropertyVetoException {
-            //To change body of implemented methods use File | Settings | File Templates.
         }
 
         @Override
         public String getIdentity() {
-            return name;
+            return name.toString();
         }
 
         @Override
@@ -250,7 +233,7 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDes
 
         @Override
         public String getJndiName() {
-            return name;
+            return name.toString();
         }
 
         @Override

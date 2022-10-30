@@ -17,10 +17,17 @@
 
 package com.sun.enterprise.web;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.WARNING;
-import static org.glassfish.web.LogFacade.CLASS_CAST_EXCEPTION;
+import com.sun.appserv.web.cache.CacheManager;
+import com.sun.enterprise.container.common.spi.CDIService;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebComponentDescriptor;
+import com.sun.enterprise.deployment.runtime.web.SunWebApp;
+import com.sun.enterprise.deployment.web.InitializationParameter;
+import com.sun.enterprise.util.net.JarURIPattern;
+import com.sun.enterprise.web.jsp.JspProbeEmitterImpl;
+import com.sun.enterprise.web.jsp.ResourceInjectorImpl;
+
+import jakarta.servlet.ServletContext;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -32,9 +39,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-//import com.sun.enterprise.server.PersistenceUnitLoaderImpl;
-//import com.sun.enterprise.server.PersistenceUnitLoader;
-//import com.sun.enterprise.config.ConfigException;
 
 import javax.naming.NamingException;
 
@@ -53,17 +57,10 @@ import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 import org.glassfish.web.deployment.runtime.WebProperty;
 import org.glassfish.web.deployment.util.WebValidatorWithCL;
 
-import com.sun.appserv.web.cache.CacheManager;
-import com.sun.enterprise.container.common.spi.CDIService;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.WebComponentDescriptor;
-import com.sun.enterprise.deployment.runtime.web.SunWebApp;
-import com.sun.enterprise.deployment.web.InitializationParameter;
-import com.sun.enterprise.util.net.JarURIPattern;
-import com.sun.enterprise.web.jsp.JspProbeEmitterImpl;
-import com.sun.enterprise.web.jsp.ResourceInjectorImpl;
-
-import jakarta.servlet.ServletContext;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.WARNING;
+import static org.glassfish.web.LogFacade.CLASS_CAST_EXCEPTION;
 
 /**
  * Startup event listener for a <b>Context</b> that configures the properties of that Jsp Servlet from sun-web.xml
@@ -79,8 +76,8 @@ final class WebModuleListener implements LifecycleListener {
     /**
      * Descriptor object associated with this web application. Used for loading persistence units.
      */
-    private WebBundleDescriptor webBundleDescriptor;
-    private WebContainer webContainer;
+    private final WebBundleDescriptor webBundleDescriptor;
+    private final WebContainer webContainer;
 
     /**
      * Constructor.
@@ -203,9 +200,9 @@ final class WebModuleListener implements LifecycleListener {
         }
         if (bean != null && bean.getJspConfig() != null) {
             WebProperty[] props = bean.getJspConfig().getWebProperty();
-            for (int i = 0; i < props.length; i++) {
-                String pname = props[i].getAttributeValue("name");
-                String pvalue = props[i].getAttributeValue("value");
+            for (WebProperty prop : props) {
+                String pname = prop.getAttributeValue("name");
+                String pvalue = prop.getAttributeValue("value");
                 if (_logger.isLoggable(FINE)) {
                     _logger.log(FINE, LogFacade.JSP_CONFIG_PROPERTY, "[" + webModule.getID() + "] is [" + pname + "] = [" + pvalue + "]");
                 }
@@ -261,7 +258,7 @@ final class WebModuleListener implements LifecycleListener {
                 cdiService.setELResolver(servletContext);
             }
         } catch (NamingException e) {
-            // Ignore
+            _logger.log(Level.CONFIG, "Setting the ELResolver failed. Ignoring the exception.", e);
         } finally {
             invocationManager.postInvoke(webComponentInvocation);
         }
@@ -376,9 +373,7 @@ final class WebModuleListener implements LifecycleListener {
                 try {
                     // first start the CacheManager, if enabled
                     cm.start();
-                    if (_logger.isLoggable(FINE)) {
-                        _logger.log(FINE, LogFacade.CACHE_MANAGER_STARTED);
-                    }
+                    _logger.log(FINE, LogFacade.CACHE_MANAGER_STARTED);
                     // set this manager as a context attribute so that
                     // caching filters/tags can find it
                     ServletContext ctxt = webModule.getServletContext();
@@ -397,9 +392,7 @@ final class WebModuleListener implements LifecycleListener {
         if (cm != null) {
             try {
                 cm.stop();
-                if (_logger.isLoggable(FINE)) {
-                    _logger.log(FINE, LogFacade.CACHE_MANAGER_STOPPED);
-                }
+                _logger.log(FINE, LogFacade.CACHE_MANAGER_STOPPED);
                 ctxt.removeAttribute(CacheManager.CACHE_MANAGER_ATTR_NAME);
             } catch (LifecycleException ee) {
                 _logger.log(WARNING, ee.getMessage(), ee.getCause());

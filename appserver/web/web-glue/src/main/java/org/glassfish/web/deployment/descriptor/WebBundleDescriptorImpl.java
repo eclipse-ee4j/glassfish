@@ -1697,8 +1697,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             EnvironmentProperty envProp = _getEnvironmentPropertyByName(enve.getName());
             if (envProp != null) {
                 combineInjectionTargets(envProp, enve);
-                EnvironmentProperty envP = enve;
-                if (!envProp.hasInjectionTargetFromXml() && (!envProp.isSetValueCalled()) && envP.isSetValueCalled()) {
+                if (enve.isSetValueCalled() && !envProp.hasInjectionTargetFromXml() && !envProp.isSetValueCalled()) {
                     envProp.setValue(enve.getValue());
                 }
             } else {

@@ -29,7 +29,6 @@ import com.sun.enterprise.deployment.web.ContextParameter;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -50,6 +49,7 @@ import org.apache.catalina.deploy.ContextResource;
 import org.apache.catalina.deploy.LoginConfig;
 import org.apache.catalina.startup.ContextConfig;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
@@ -61,7 +61,6 @@ import org.glassfish.web.valve.GlassFishValve;
  *
  * @author Jean-Francois Arcand
  */
-
 public class WebModuleContextConfig extends ContextConfig {
 
     private static final String DEFAULT_DIGEST_ALGORITHM = "default-digest-algorithm";
@@ -132,9 +131,7 @@ public class WebModuleContextConfig extends ContextConfig {
         List<ApplicationParameter> appParams = context.findApplicationParameters();
         ContextParameter contextParam;
         synchronized (appParams) {
-            Iterator<ApplicationParameter> i = appParams.iterator();
-            while (i.hasNext()) {
-                ApplicationParameter appParam = i.next();
+            for (ApplicationParameter appParam : appParams) {
                 contextParam = new EnvironmentProperty(appParam.getName(), appParam.getValue(),
                     appParam.getDescription());
                 webBundleDescriptor.addContextParameter(contextParam);
@@ -154,26 +151,23 @@ public class WebModuleContextConfig extends ContextConfig {
         }
 
         ContextResource[] resources = context.findResources();
-        ResourceReferenceDescriptor resourceReference;
         Set<ResourceReferenceDescriptor> rrs = webBundleDescriptor.getResourceReferenceDescriptors();
-        ResourcePrincipalDescriptor rp;
-
-        for (ContextResource element : resources) {
-            resourceReference = new ResourceReferenceDescriptor(element.getName(), element.getDescription(),
-                element.getType());
-            resourceReference.setJndiName(element.getName());
+        for (ContextResource resource : resources) {
+            ResourceReferenceDescriptor descriptor = new ResourceReferenceDescriptor(resource.getName(),
+                resource.getDescription(), resource.getType());
+            descriptor.setJndiName(new SimpleJndiName(resource.getName()));
             for (ResourceReferenceDescriptor rr : rrs) {
-                if (element.getName().equals(rr.getName())) {
-                    resourceReference.setJndiName(rr.getJndiName());
-                    rp = rr.getResourcePrincipal();
+                if (resource.getName().equals(rr.getName())) {
+                    descriptor.setJndiName(rr.getJndiName());
+                    ResourcePrincipalDescriptor rp = rr.getResourcePrincipal();
                     if (rp != null) {
-                        resourceReference.setResourcePrincipal(new ResourcePrincipalDescriptor(rp.getName(), rp.getPassword()));
+                        descriptor.setResourcePrincipal(new ResourcePrincipalDescriptor(rp.getName(), rp.getPassword()));
                     }
                 }
             }
-            resourceReference.setAuthorization(element.getAuth());
-            webBundleDescriptor.addResourceReferenceDescriptor(resourceReference);
-            resRefs.add(resourceReference);
+            descriptor.setAuthorization(resource.getAuth());
+            webBundleDescriptor.addResourceReferenceDescriptor(descriptor);
+            resRefs.add(descriptor);
         }
     }
 

@@ -94,16 +94,16 @@ public class JdbcDataSource implements DataSource {
 
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        throw new SQLException("Not supported operation");
+        return iface.isInstance(this);
     }
 
     @Override
     public <T> T unwrap(Class<T> iface) throws SQLException {
-        throw new SQLException("Not supported operation");
+        return iface.cast(this);
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new SQLFeatureNotSupportedException("Not supported operation");
+        return Logger.getLogger(getClass().getName());
     }
 }

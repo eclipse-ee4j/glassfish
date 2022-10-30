@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,23 +17,37 @@
 
 package org.glassfish.admin.cli.resources;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.RefContainer;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.util.List;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.List;
-
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -51,10 +66,10 @@ import org.jvnet.hk2.config.TransactionFailure;
 @I18n("delete.resource.ref")
 public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteResourceRef.class);
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(DeleteResourceRef.class);
 
-    @Param(optional = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     @Param(name = "reference_name", primary = true)
     private String refName;
@@ -72,10 +87,10 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
-    private RefContainer refContainer = null;
+    private RefContainer refContainer;
 
     @AccessRequired.To("delete")
-    private ResourceRef resourceRef = null;
+    private ResourceRef resourceRef;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
@@ -113,12 +128,12 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
             if (refName.equals("jdbc/__default")) {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 report.setMessage(
-                        localStrings.getLocalString("delete.resource.ref.jdbc.default", "Default JDBC resource ref cannot be deleted."));
+                        I18N.getLocalString("delete.resource.ref.jdbc.default", "Default JDBC resource ref cannot be deleted."));
                 return;
             }
             if (refName.equals("jms/__defaultConnectionFactory")) {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                report.setMessage(localStrings.getLocalString("delete.resource.ref.jms.default",
+                report.setMessage(I18N.getLocalString("delete.resource.ref.jms.default",
                         "Default JMS connection factory ref cannot be deleted."));
                 return;
             }
@@ -129,7 +144,7 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
                 Target tgt = habitat.getService(Target.class);
                 List<Server> instances = tgt.getInstances(target);
                 for (Server svr : instances) {
-                    svr.deleteResourceRef(refName);
+                    svr.deleteResourceRef(SimpleJndiName.of(refName));
                 }
             }
         } catch (Exception e) {
@@ -137,7 +152,7 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
             return;
         }
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-        report.setMessage(localStrings.getLocalString("delete.resource.ref.success",
+        report.setMessage(I18N.getLocalString("delete.resource.ref.success",
                 "resource-ref {0} deleted successfully from target {1}.", refName, target));
     }
 
@@ -154,13 +169,13 @@ public class DeleteResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     }
 
     private void setResourceRefDoNotExistMessage(ActionReport report) {
-        report.setMessage(localStrings.getLocalString("delete.resource.ref.doesNotExist",
+        report.setMessage(I18N.getLocalString("delete.resource.ref.doesNotExist",
                 "A resource ref named {0} does not exist for target {1}.", refName, target));
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
     }
 
     private void setFailureMessage(ActionReport report, Exception e) {
-        report.setMessage(localStrings.getLocalString("delete.resource.ref.failed", "Resource ref {0} deletion failed", refName));
+        report.setMessage(I18N.getLocalString("delete.resource.ref.failed", "Resource ref {0} deletion failed", refName));
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         report.setFailureCause(e);
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,39 @@
 
 package org.glassfish.admin.cli.resources;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Cluster;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.RefContainer;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.ServerResource;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import java.beans.PropertyVetoException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-//import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AccessRequired.AccessCheck;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.ActiveDescriptor;
@@ -32,20 +57,12 @@ import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.glassfish.api.admin.AccessRequired.AccessCheck;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Create Resource Ref Command
@@ -67,8 +84,8 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     @Param(optional = true, defaultValue = "true")
     private Boolean enabled;
 
-    @Param(optional = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     @Param(name = "reference_name", primary = true)
     private String refName;
@@ -86,7 +103,7 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
 
     private CommandTarget targets[];
 
-    private boolean isTargetValid = false;
+    private final boolean isTargetValid = false;
 
     private RefContainer refContainer = null;
 
@@ -117,7 +134,7 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
-        final Collection<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
+        final Collection<AccessCheck> accessChecks = new ArrayList<>();
         accessChecks.add(new AccessCheck(
                 AccessRequired.Util.resourceNameFromConfigBeanType(refContainer, null /* collection name */, ResourceRef.class), "create"));
         return accessChecks;
@@ -146,7 +163,7 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
                 Target tgt = locator.getService(Target.class);
                 List<Server> instances = tgt.getInstances(target);
                 for (Server svr : instances) {
-                    svr.createResourceRef(enabled.toString(), refName);
+                    svr.createResourceRef(enabled.toString(), SimpleJndiName.of(refName));
                 }
             }
             ActionReport.ExitCode ec = ActionReport.ExitCode.SUCCESS;
@@ -161,7 +178,8 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     }
 
     private boolean isElegibleResource(String refName) {
-        return isBindableResource(refName) || isServerResource(refName);
+        SimpleJndiName jndiName = SimpleJndiName.of(refName);
+        return isBindableResource(jndiName) || isServerResource(jndiName);
     }
 
     private boolean isResourceRefAlreadyPresent() {
@@ -176,6 +194,7 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     private void createResourceRef() throws TransactionFailure {
         ConfigSupport.apply(new SingleConfigCode<RefContainer>() {
 
+            @Override
             public Object run(RefContainer param) throws PropertyVetoException, TransactionFailure {
 
                 ResourceRef newResourceRef = param.createChild(ResourceRef.class);
@@ -192,78 +211,66 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
 
         Class<?>[] allInterfaces = resourceOfInterest.getClass().getInterfaces();
         for (Class<?> resourceInterface : allInterfaces) {
-            ResourceConfigCreator resourceConfigCreator = (ResourceConfigCreator) resourceInterface
+            ResourceConfigCreator resourceConfigCreator = resourceInterface
                     .getAnnotation(ResourceConfigCreator.class);
             if (resourceConfigCreator != null) {
                 commandName = resourceConfigCreator.commandName();
             }
         }
 
-        if (commandName != null) {
-            List<ServiceHandle<?>> serviceHandles = locator.getAllServiceHandles(new Filter() {
-                @Override
-                public boolean matches(Descriptor arg0) {
-                    String name = arg0.getName();
-                    if (name != null && name.equals(commandName)) {
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            for (ServiceHandle<?> handle : serviceHandles) {
-                ActiveDescriptor<?> descriptor = handle.getActiveDescriptor();
-                if (descriptor.getName().equals(commandName)) {
-                    if (!descriptor.isReified()) {
-                        locator.reifyDescriptor(descriptor);
-                    }
-                    AdminCommand service = locator.<AdminCommand>getService(descriptor.getImplementationClass());
-                    if (service != null) {
-                        TargetType targetType = descriptor.getImplementationClass().getAnnotation(TargetType.class);
-                        targets = targetType.value();
-                        break;
-                    }
-                }
-            }
-
-            if (!(isTargetValid = validateTarget(target, targets))) {
-                return null;
-            }
-
-            Config config = domain.getConfigs().getConfigByName(target);
-            if (config != null) {
-                return config;
-            }
-            Server server = configBeansUtilities.getServerNamed(target);
-            if (server != null) {
-                return server;
-            }
-            Cluster cluster = domain.getClusterNamed(target);
-            return cluster;
-        } else {
+        if (commandName == null) {
             report.setMessage(localStrings.getLocalString("create.resource.ref.failed", "Resource ref {0} creation failed", refName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return null;
         }
+        List<ServiceHandle<?>> serviceHandles = locator.getAllServiceHandles(new Filter() {
+            @Override
+            public boolean matches(Descriptor arg0) {
+                String name = arg0.getName();
+                if (name != null && name.equals(commandName)) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        for (ServiceHandle<?> handle : serviceHandles) {
+            ActiveDescriptor<?> descriptor = handle.getActiveDescriptor();
+            if (descriptor.getName().equals(commandName)) {
+                if (!descriptor.isReified()) {
+                    locator.reifyDescriptor(descriptor);
+                }
+                AdminCommand service = locator.<AdminCommand>getService(descriptor.getImplementationClass());
+                if (service != null) {
+                    TargetType targetType = descriptor.getImplementationClass().getAnnotation(TargetType.class);
+                    targets = targetType.value();
+                    break;
+                }
+            }
+        }
+
+        if (isTargetValid != validateTarget(target, targets)) {
+            return null;
+        }
+
+        Config config = domain.getConfigs().getConfigByName(target);
+        if (config != null) {
+            return config;
+        }
+        Server server = configBeansUtilities.getServerNamed(target);
+        if (server != null) {
+            return server;
+        }
+        Cluster cluster = domain.getClusterNamed(target);
+        return cluster;
     }
 
-    private boolean isBindableResource(String name) {
+    private boolean isBindableResource(SimpleJndiName name) {
         return domain.getResources().getResourceByName(BindableResource.class, name) != null;
     }
 
-    private boolean isServerResource(String name) {
+    private boolean isServerResource(SimpleJndiName name) {
         return domain.getResources().getResourceByName(ServerResource.class, name) != null;
     }
-
-    //    private Resource getResourceByJndiName(String jndiName) {
-    //        for (Resource resource : domain.getResources().getResources()) {
-    //            if (resource instanceof BindableResource) {
-    //                if (((BindableResource) resource).getJndiName().equals(jndiName)) {
-    //                    return resource;
-    //                }
-    //            }
-    //        }
-    //        return null;
-    //    }
 
     private Resource getResourceByIdentity(String id) {
         for (Resource resource : domain.getResources().getResources()) {
@@ -275,7 +282,7 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     }
 
     private boolean validateTarget(String target, CommandTarget targets[]) {
-        List<String> validTarget = new ArrayList<String>();
+        List<String> validTarget = new ArrayList<>();
 
         for (CommandTarget commandTarget : targets) {
             validTarget.add(commandTarget.name());

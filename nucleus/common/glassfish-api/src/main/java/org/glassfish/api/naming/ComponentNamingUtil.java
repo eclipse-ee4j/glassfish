@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,9 +19,6 @@ package org.glassfish.api.naming;
 
 import org.jvnet.hk2.annotations.Contract;
 
-/**
- */
-
 @Contract
 public interface ComponentNamingUtil {
 
@@ -30,8 +28,8 @@ public interface ComponentNamingUtil {
      *
      * @param appName name of application within which dependency is defined
      * @param origJavaAppName logical java:app name of the dependency
-     * @return
+     * @return {@link SimpleJndiName}
      */
-    String composeInternalGlobalJavaAppName(String appName, String origJavaAppName);
+    SimpleJndiName composeInternalGlobalJavaAppName(String appName, SimpleJndiName origJavaAppName);
 
 }

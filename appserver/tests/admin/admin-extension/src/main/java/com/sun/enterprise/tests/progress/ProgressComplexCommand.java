@@ -17,8 +17,6 @@
 
 package com.sun.enterprise.tests.progress;
 
-import com.sun.logging.LogDomains;
-
 import java.util.logging.Logger;
 
 import org.glassfish.api.I18n;
@@ -44,9 +42,6 @@ import org.jvnet.hk2.annotations.Service;
 @ManagedJob
 @Progress(name="complex", totalStepCount=20)
 public class ProgressComplexCommand implements AdminCommand {
-
-    private final static Logger logger =
-            LogDomains.getLogger(ProgressComplexCommand.class, LogDomains.ADMIN_LOGGER);
 
     @Override
     public void execute(AdminCommandContext context) {

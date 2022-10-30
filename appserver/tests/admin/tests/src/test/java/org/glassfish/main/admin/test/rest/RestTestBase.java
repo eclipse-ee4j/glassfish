@@ -175,7 +175,7 @@ public class RestTestBase {
         assertEquals(404, response.getStatus());
     }
 
-    /*
+    /**
      * Arguments contextRoot and name can be null, then they are not set in the deploy command
      */
     public Map<String, String> deployApp(final File archive, final String contextRoot, final String name) {

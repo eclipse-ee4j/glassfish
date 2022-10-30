@@ -80,6 +80,9 @@ public class ElementStarITest extends RestTestBase {
     }
 
 
+    /**
+     * FIXME: this test may be affected by failed {@link ResourceRefITest}
+     */
     @Test
     public void testResources() {
         // The DAS should already have two resource-refs (jdbc/__TimerPool and jdbc/__default)

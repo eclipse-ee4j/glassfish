@@ -54,13 +54,7 @@ public class SystemPropertiesITest extends RestTestBase {
     public void createSystemProperties() {
         final String prop1 = "property" + generateRandomString();
         final String prop2 = "property" + generateRandomString();
-        Map<String, String> payload = new HashMap<>() {
-
-            {
-                put(prop1, "value1");
-                put(prop2, "value2");
-            }
-        };
+        Map<String, String> payload = Map.of(prop1, "value1", prop2, "value2");
         Response response = managementClient.post(URL_DAS_SYSTEM_PROPERTIES, payload);
         assertEquals(200, response.getStatus());
         response = managementClient.get(URL_DAS_SYSTEM_PROPERTIES);

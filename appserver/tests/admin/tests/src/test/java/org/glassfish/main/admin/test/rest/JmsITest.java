@@ -35,16 +35,16 @@ import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * @author jasonlee
- * @since May 26, 2010
+ * @author jasonlee 2010
+ * @author David Matejcek 2022
  */
 public class JmsITest extends RestTestBase {
-    static final String URL_ADMIN_OBJECT_RESOURCE = "/domain/resources/admin-object-resource";
-    static final String URL_CONNECTOR_CONNECTION_POOL = "/domain/resources/connector-connection-pool";
-    static final String URL_CONNECTOR_RESOURCE = "/domain/resources/connector-resource";
-    static final String URL_JMS_HOST = "/domain/configs/config/server-config/jms-service/jms-host";
-    static final String URL_SEVER_JMS_DEST = "/domain/servers/server/server";
-    static final String DEST_TYPE = "topic";
+    private static final String URL_ADMIN_OBJECT_RESOURCE = "/domain/resources/admin-object-resource";
+    private static final String URL_CONNECTOR_CONNECTION_POOL = "/domain/resources/connector-connection-pool";
+    private static final String URL_CONNECTOR_RESOURCE = "/domain/resources/connector-resource";
+    private static final String URL_JMS_HOST = "/domain/configs/config/server-config/jms-service/jms-host";
+    private static final String URL_SEVER_JMS_DEST = "/domain/servers/server/server";
+    private static final String DEST_TYPE = "topic";
 
     @Test
     public void testJmsConnectionFactories() {
@@ -84,8 +84,12 @@ public class JmsITest extends RestTestBase {
         assertThat(pool.get("description"), equalTo(poolName));
 
         // Delete objects
+        response = managementClient.get("/domain/servers/server/server/resource-ref/" + resourceName);
+        assertEquals(200, response.getStatus());
         response = managementClient.delete(URL_CONNECTOR_CONNECTION_POOL + "/" + poolName, Map.of("cascade", "true"));
         assertThat(response.getStatus(), equalTo(200));
+        response = managementClient.get("/domain/servers/server/server/resource-ref/" + resourceName);
+        assertEquals(404, response.getStatus());
     }
 
     @Test

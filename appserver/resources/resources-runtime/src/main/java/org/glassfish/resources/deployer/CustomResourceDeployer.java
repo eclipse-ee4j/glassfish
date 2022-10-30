@@ -34,6 +34,7 @@ import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
@@ -79,7 +80,8 @@ public class CustomResourceDeployer implements ResourceDeployer<CustomResource> 
     @Override
     public synchronized void deployResource(CustomResource resource, String applicationName, String moduleName)
         throws Exception {
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         deployResource(resource, resourceInfo);
     }
 
@@ -99,7 +101,8 @@ public class CustomResourceDeployer implements ResourceDeployer<CustomResource> 
 
     @Override
     public void undeployResource(CustomResource resource, String applicationName, String moduleName) throws Exception {
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         deleteResource(resource, resourceInfo);
     }
 

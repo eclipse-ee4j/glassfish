@@ -37,6 +37,7 @@ import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 import javax.naming.spi.InitialContextFactory;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
@@ -79,7 +80,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer<ExternalJn
     @Override
     public synchronized void deployResource(ExternalJndiResource resource, String applicationName, String moduleName)
         throws Exception {
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         createExternalJndiResource(resource, resourceInfo);
     }
 
@@ -99,7 +101,8 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer<ExternalJn
 
     @Override
     public void undeployResource(ExternalJndiResource resource, String applicationName, String moduleName) throws Exception {
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         deleteResource(resource, resourceInfo);
     }
 
@@ -202,7 +205,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer<ExternalJn
             ref.add(new StringRefAddr("jndiFactoryClass", factoryClass));
 
             // add Context info as a reference address
-            ref.add(new ProxyRefAddr(extJndiRes.getResourceInfo().getName(), env));
+            ref.add(new ProxyRefAddr(extJndiRes.getResourceInfo().getName().toString(), env));
 
             // Publish the reference
             namingService.publishObject(resourceInfo, ref, true);
@@ -221,19 +224,11 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer<ExternalJn
     public void uninstallExternalJndiResource(JavaEEResource resource, ResourceInfo resourceInfo) {
 
         // removes the jndi context from the factory cache
-        //String bindName = resource.getResourceInfo().getName();
         JndiProxyObjectFactory.removeInitialContext(resource.getResourceInfo());
 
         // removes the resource from jndi naming
         try {
             namingService.unpublishObject(resourceInfo, resourceInfo.getName());
-            /* TODO V3 handle jms later
-            //START OF IASRI 4660565
-            if (((ExternalJndiResource)resource).isJMSConnectionFactory()) {
-                nm.unpublishObject(IASJmsUtil.getXAConnectionFactoryName(resourceName));
-            }
-            //END OF IASRI 4660565
-            */
         } catch (javax.naming.NamingException e) {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.log(Level.FINE, "Error while unpublishing resource: " + resourceInfo, e);

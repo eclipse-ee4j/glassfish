@@ -53,6 +53,7 @@ import org.glassfish.api.deployment.UndeployCommandParameters;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.DeploymentUtils;
@@ -78,14 +79,15 @@ import org.glassfish.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_META_DATA_RESOURCES;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_SCOPED_RESOURCES_JNDI_NAMES;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_SCOPED_RESOURCES_MAP;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.APP_SCOPED_RESOURCES_RA_NAMES;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.CONNECTOR_RESOURCES;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_APP_SCOPE_PREFIX;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_MODULE_SCOPE_PREFIX;
 import static org.glassfish.resourcebase.resources.api.ResourceConstants.NON_CONNECTOR_RESOURCES;
+import static org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleNameWithExtension;
 import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_POOL_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
 import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
@@ -213,14 +215,8 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                     String fileName = entry.getValue();
                     debug("GlassFish Resources XML : " + fileName);
 
-                    moduleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleNameWithExtension(moduleName);
-                    String scope;
-                    if (appName.equals(moduleName)) {
-                        scope = JAVA_APP_SCOPE_PREFIX;
-                    } else {
-                        scope = JAVA_MODULE_SCOPE_PREFIX;
-                    }
-
+                    moduleName = getActualModuleNameWithExtension(moduleName);
+                    String scope = appName.equals(moduleName) ? JNDI_CTX_JAVA_APP : JNDI_CTX_JAVA_MODULE;
                     File file = new File(fileName);
                     ResourcesXMLParser parser = new ResourcesXMLParser(file, scope);
 
@@ -260,7 +256,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             if (ResourceUtil.hasResourcesXML(archive, locator)) {
 
                 Map<String,Map<String, List>> appScopedResources = new HashMap<>();
-                Map<String, List<String>> jndiNames = new HashMap<>();
+                Map<String, List<SimpleJndiName>> jndiNames = new HashMap<>();
                 List<Map.Entry<String, String>> raNames = new ArrayList<>();
                 Map<String, String> fileNames = new HashMap<>();
 
@@ -274,14 +270,8 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                     String fileName = entry.getValue();
                     debug("Sun Resources XML : " + fileName);
 
-                    moduleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleNameWithExtension(moduleName);
-                    String scope ;
-                    if(appName.equals(moduleName)){
-                        scope = JAVA_APP_SCOPE_PREFIX;
-                    }else{
-                        scope = JAVA_MODULE_SCOPE_PREFIX;
-                    }
-
+                    moduleName = getActualModuleNameWithExtension(moduleName);
+                    String scope = appName.equals(moduleName) ? JNDI_CTX_JAVA_APP : JNDI_CTX_JAVA_MODULE;
                     File file = new File(fileName);
                     ResourcesXMLParser parser = new ResourcesXMLParser(file, scope);
 
@@ -290,12 +280,12 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                     List list = parser.getResourcesList();
 
                     Map<String, List> resourcesList = new HashMap<>();
-                    List<String> jndiNamesList = new ArrayList<>();
+                    List<SimpleJndiName> jndiNamesList = new ArrayList<>();
                     List<org.glassfish.resources.api.Resource> nonConnectorResources =
                             ResourcesXMLParser.getNonConnectorResourcesList(list, false, true);
                     resourcesList.put(NON_CONNECTOR_RESOURCES, nonConnectorResources);
                     for (org.glassfish.resources.api.Resource resource : nonConnectorResources) {
-                        String jndiName = extractJNDIName(resource);
+                        SimpleJndiName jndiName = extractJNDIName(resource);
                         if (hasRAName(resource)) {
                             raNames.add(new AbstractMap.SimpleEntry<>(extractRAName(resource), resource.getType()));
                         }
@@ -308,7 +298,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                             ResourcesXMLParser.getConnectorResourcesList(list, false, true);
                     resourcesList.put(CONNECTOR_RESOURCES, connectorResources);
                     for (org.glassfish.resources.api.Resource resource : connectorResources) {
-                        String jndiName = extractJNDIName(resource);
+                        SimpleJndiName jndiName = extractJNDIName(resource);
                         if (hasRAName(resource)) {
                             raNames.add(new AbstractMap.SimpleEntry<>(extractRAName(resource), resource.getType()));
                         }
@@ -342,9 +332,9 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      * @param resource
      * @return jndi name if present, null otherwise
      */
-    private String extractJNDIName(org.glassfish.resources.api.Resource resource) {
+    private SimpleJndiName extractJNDIName(org.glassfish.resources.api.Resource resource) {
         HashMap attrs = resource.getAttributes();
-        return (String) attrs.get(JNDI_NAME);
+        return new SimpleJndiName((String) attrs.get(JNDI_NAME));
     }
 
     private boolean hasRAName(org.glassfish.resources.api.Resource resource) {
@@ -362,10 +352,9 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      */
     private String extractRAName(org.glassfish.resources.api.Resource resource) {
         if (resource.getType().equals(ADMIN_OBJECT_RESOURCE)) {
-            return (String)resource.getAttributes().get(RES_ADAPTER);
-        } else {
-            return (String)resource.getAttributes().get(RES_ADAPTER_NAME);
+            return (String) resource.getAttributes().get(RES_ADAPTER);
         }
+        return (String) resource.getAttributes().get(RES_ADAPTER_NAME);
     }
 
     private static void validateResourcesXML(File file, ResourcesXMLParser parser) throws ResourceConflictException {
@@ -456,7 +445,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             List<Module> modules = app.getModule();
             if (modules != null) {
                 for (Module module : modules) {
-                    String actualModuleName = org.glassfish.resourcebase.resources.util.ResourceUtil.getActualModuleNameWithExtension(module.getName());
+                    String actualModuleName = getActualModuleNameWithExtension(module.getName());
                     //create resources for modules, ignore standalone applications where
                     //module name will be the same as app name
                     if(!appName.equals(actualModuleName)){
@@ -693,7 +682,8 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             if (resource instanceof BindableResource) {
                 if (deployer.canDeploy(postDeployPhase, resources, resource)) {
                     BindableResource bindableResource = (BindableResource) resource;
-                    ResourceInfo info = new ResourceInfo(bindableResource.getJndiName(), applicationName, moduleName);
+                    SimpleJndiName jndiName = new SimpleJndiName(bindableResource.getJndiName());
+                    ResourceInfo info = new ResourceInfo(jndiName, applicationName, moduleName);
                     resourcesBinder.deployResource(info, bindableResource);
                 }
             } else {

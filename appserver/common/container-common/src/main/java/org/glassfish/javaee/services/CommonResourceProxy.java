@@ -27,6 +27,7 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
@@ -46,29 +47,29 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
     @Inject
     protected transient ServiceLocator serviceLocator;
     protected ResourceDescriptor desc;
-    protected String actualResourceName;
+    protected SimpleJndiName actualResourceName;
 
     @Override
-    public synchronized Object create(Context ic) throws NamingException {
+    public synchronized <T> T create(Context ic) throws NamingException {
         if (actualResourceName == null) {
-            actualResourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
+            actualResourceName = deriveResourceName(desc.getResourceId(), desc.getJndiName(), desc.getResourceType());
             try {
                 if (serviceLocator == null) {
                     serviceLocator = Globals.getDefaultHabitat();
                     if (serviceLocator == null) {
                         throw new NamingException(
-                            "Unable to create resource " + "[" + desc.getName() + " ] as habitat is null");
+                            "Unable to create resource " + "[" + desc.getJndiName() + " ] as habitat is null");
                     }
                 }
                 getResourceDeployer(desc).deployResource(desc);
             } catch (Exception e) {
-                NamingException ne = new NamingException("Unable to create resource [" + desc.getName() + " ]");
+                NamingException ne = new NamingException("Unable to create resource [" + desc.getJndiName() + " ]");
                 ne.initCause(e);
                 throw ne;
             }
         }
 
-        return ic.lookup(actualResourceName);
+        return (T) ic.lookup(actualResourceName.toString());
     }
 
 

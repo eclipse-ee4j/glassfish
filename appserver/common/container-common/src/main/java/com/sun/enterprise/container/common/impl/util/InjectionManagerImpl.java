@@ -17,26 +17,6 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import static java.util.logging.Level.FINE;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-
-import org.glassfish.api.admin.ProcessEnvironment;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.container.common.spi.CDIService;
 import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
@@ -46,10 +26,33 @@ import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.InjectionInfo;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
 import jakarta.annotation.ManagedBean;
 import jakarta.inject.Inject;
+
+import java.lang.System.Logger;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.text.MessageFormat;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.naming.NamingException;
+
+import org.glassfish.api.admin.ProcessEnvironment;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+
 
 /**
  * Implementation of InjectionManager.
@@ -59,23 +62,16 @@ import jakarta.inject.Inject;
 @Service
 public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
-    @Inject
-    private Logger _logger;
-
-    static private LocalStringManagerImpl localStrings = new LocalStringManagerImpl(InjectionManagerImpl.class);
+    private static final Logger LOG = System.getLogger(InjectionManagerImpl.class.getName());
 
     @Inject
     private ComponentEnvManager componentEnvManager;
-
     @Inject
     private InvocationManager invocationManager;
-
     @Inject
     private GlassfishNamingManager glassfishNamingManager;
-
     @Inject
     private ServiceLocator serviceLocator;
-
     @Inject
     private ProcessEnvironment processEnvironment;
 
@@ -87,7 +83,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
         if (processEnvironment.getProcessType().isServer()) {
             try {
-                glassfishNamingManager.publishObject("com.sun.enterprise.container.common.spi.util.InjectionManager", this, true);
+                SimpleJndiName jndiName = new SimpleJndiName(InjectionManager.class.getName());
+                glassfishNamingManager.publishObject(jndiName, this, true);
             } catch (NamingException ne) {
                 throw new RuntimeException(ne);
             }
@@ -103,21 +100,14 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     @Override
     public void injectInstance(Object instance, boolean invokePostConstruct) throws InjectionException {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
-
-        if (currentInvocation != null) {
-            JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(currentInvocation.getComponentId());
-
-            if (componentEnv != null) {
-                inject(instance.getClass(), instance, componentEnv, null, invokePostConstruct);
-            } else {
-                throw new InjectionException(localStrings.getLocalString("injection-manager.no-descriptor-registered-for-invocation",
-                        "No descriptor registered for current invocation: {0}", currentInvocation));
-            }
-
-        } else {
-            throw new InjectionException(
-                    localStrings.getLocalString("injection-manager.null-invocation-context", "Null invocation context"));
+        if (currentInvocation == null) {
+            throw new InjectionException("Null invocation context");
         }
+        JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(currentInvocation.getComponentId());
+        if (componentEnv == null) {
+            throw new InjectionException("No descriptor registered for current invocation: " + currentInvocation);
+        }
+        inject(instance.getClass(), instance, componentEnv, null, invokePostConstruct);
 
     }
 
@@ -132,46 +122,41 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     @Override
-    public void injectInstance(Object instance, String componentId, boolean invokePostConstruct) throws InjectionException {
+    public void injectInstance(Object instance, SimpleJndiName jndiName, boolean invokePostConstruct) throws InjectionException {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
         if (currentInvocation == null) {
-            throw new InjectionException(
-                    localStrings.getLocalString("injection-manager.null-invocation-context", "Null invocation context"));
+            throw new InjectionException("Null invocation context");
         }
-
+        String componentId = jndiName == null ? null : jndiName.toString();
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
         if (componentEnv == null) {
-            throw new InjectionException(localStrings.getLocalString("injection-manager.no-descriptor-registered-for-component",
-                    "No descriptor registered for componentId: {0}", componentId));
+            throw new InjectionException("No descriptor registered for componentId: " + jndiName);
         }
-
         inject(instance.getClass(), instance, componentEnv, componentId, invokePostConstruct);
     }
 
     @Override
-    public void injectClass(Class clazz, String componentId, boolean invokePostConstruct) throws InjectionException {
+    public void injectClass(Class<?> clazz, SimpleJndiName jndiName, boolean invokePostConstruct) throws InjectionException {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
         if (currentInvocation == null) {
-            throw new InjectionException(
-                    localStrings.getLocalString("injection-manager.null-invocation-context", "Null invocation context"));
+            throw new InjectionException("Null invocation context");
         }
-
+        String componentId = jndiName == null ? null : jndiName.toString();
         JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
         if (componentEnv == null) {
-            throw new InjectionException(localStrings.getLocalString("injection-manager.no-descriptor-registered-for-component",
-                    "No descriptor registered for componentId: {0}", componentId));
+            throw new InjectionException("No descriptor registered for jndiName: " + jndiName);
         }
 
         injectClass(clazz, componentEnv, invokePostConstruct);
     }
 
     @Override
-    public void injectClass(Class clazz, JndiNameEnvironment componentEnv) throws InjectionException {
+    public void injectClass(Class<?> clazz, JndiNameEnvironment componentEnv) throws InjectionException {
         injectClass(clazz, componentEnv, true);
     }
 
     @Override
-    public void injectClass(Class clazz, JndiNameEnvironment componentEnv, boolean invokePostConstruct) throws InjectionException {
+    public void injectClass(Class<?> clazz, JndiNameEnvironment componentEnv, boolean invokePostConstruct) throws InjectionException {
         inject(clazz, null, componentEnv, null, invokePostConstruct);
     }
 
@@ -193,31 +178,27 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     @Override
     public void invokeInstancePreDestroy(Object instance, boolean validate) throws InjectionException {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
-
+        LOG.log(DEBUG, "invokeInstancePreDestroy(instance={0}, validate={1}); invocation={1}", instance, validate,
+            currentInvocation);
         // if ComponentInv is null and validate is true, throw InjectionException;
         // if component JndiNameEnvironment is null and validate is true, throw InjectionException;
         // if validate is false, the above 2 null conditions are basically ignored,
         // except that when fine logging is enabled, fine-log a message.
-        if (currentInvocation != null) {
-            JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(currentInvocation.getComponentId());
-
-            if (componentEnv != null) {
-                invokePreDestroy(instance.getClass(), instance, componentEnv);
-            } else if (validate || _logger.isLoggable(FINE)) {
-                String msg1 = localStrings.getLocalString("injection-manager.no-descriptor-registered-for-invocation",
-                        "No descriptor registered for current invocation: {0}", currentInvocation);
-                if (validate) {
-                    throw new InjectionException(msg1);
-                }
-                _logger.log(FINE, msg1);
-            }
-        } else if (validate || _logger.isLoggable(FINE)) {
-            String msg2 = localStrings.getLocalString("injection-manager.null-invocation-context", "Null invocation context");
+        if (currentInvocation == null) {
             if (validate) {
-                throw new InjectionException(msg2);
+                throw new InjectionException("Null invocation context");
             }
-            _logger.log(FINE, msg2);
+            return;
         }
+        String componentId = currentInvocation.getComponentId();
+        JndiNameEnvironment componentEnv = componentEnvManager.getJndiNameEnvironment(componentId);
+        if (componentEnv == null) {
+            if (validate) {
+                throw new InjectionException("No descriptor registered for current invocation: " + currentInvocation);
+            }
+            return;
+        }
+        invokePreDestroy(instance.getClass(), instance, componentEnv);
     }
 
     @Override
@@ -270,8 +251,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 }
             }
         } catch (Exception e) {
-            throw new InjectionException(localStrings.getLocalString("injection-manager.error-creating-managed-object",
-                    "Error creating managed object for class: {0}", clazz), e);
+            throw new InjectionException("Error creating managed object for class: " + clazz, e);
         }
 
         return managedObject;
@@ -326,8 +306,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             }
 
         } catch (Exception e) {
-            throw new InjectionException(localStrings.getLocalString("injection-manager.error-creating-managed-object",
-                    "Error creating managed object for class: {0}", clazz), e);
+            throw new InjectionException("Error creating managed object for class: " + clazz, e);
         }
 
         return managedObject;
@@ -385,24 +364,24 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      * portion of injection is propagated immediately.
      */
     @Override
-    public void inject(final Class clazz, final Object instance, JndiNameEnvironment envDescriptor, String componentId, boolean invokePostConstruct) throws InjectionException {
+    public <T> void inject(final Class<? extends T> clazz, final T instance, JndiNameEnvironment envDescriptor, String componentId,
+        boolean invokePostConstruct) throws InjectionException {
+        LOG.log(DEBUG, "inject(clazz={0}, instance={1}, envDescriptor, componentId={2}, invokePostConstruct={3})",
+            clazz, instance, componentId, invokePostConstruct);
+        LinkedList<Method> postConstructMethods = new LinkedList<>();
 
-        LinkedList<Method> postConstructMethods = new LinkedList<Method>();
-
-        Class nextClass = clazz;
+        Class<?> nextClass = clazz;
 
         // Process each class in the inheritance hierarchy, starting with
         // the most derived class and ignoring java.lang.Object.
-        while ((nextClass != Object.class) && (nextClass != null)) {
+        while (nextClass != Object.class && nextClass != null) {
 
             InjectionInfo injInfo = envDescriptor.getInjectionInfoByClass(nextClass);
-
-            if (injInfo.getInjectionResources().size() > 0) {
+            if (!injInfo.getInjectionResources().isEmpty()) {
                 _inject(nextClass, instance, componentId, injInfo.getInjectionResources());
             }
 
             if (invokePostConstruct) {
-
                 if (injInfo.getPostConstructMethodName() != null) {
 
                     Method postConstructMethod = getPostConstructMethod(injInfo, nextClass);
@@ -414,26 +393,22 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                     postConstructMethods.addFirst(postConstructMethod);
                 }
             }
-
             nextClass = nextClass.getSuperclass();
         }
 
         for (Method postConstructMethod : postConstructMethods) {
-
             invokeLifecycleMethod(postConstructMethod, instance);
-
         }
-
     }
 
     /**
      * @param instance Target instance for preDestroy, or null if class-based.
      */
-    private void invokePreDestroy(final Class clazz, final Object instance, JndiNameEnvironment envDescriptor) throws InjectionException {
+    private void invokePreDestroy(final Class<?> clazz, final Object instance, JndiNameEnvironment envDescriptor) throws InjectionException {
+        LOG.log(TRACE, "invokePreDestroy(clazz={0}, instance, envDescriptor.class={1})", clazz, envDescriptor.getClass());
+        LinkedList<Method> preDestroyMethods = new LinkedList<>();
 
-        LinkedList<Method> preDestroyMethods = new LinkedList<Method>();
-
-        Class nextClass = clazz;
+        Class<?> nextClass = clazz;
 
         // Process each class in the inheritance hierarchy, starting with
         // the most derived class and ignoring java.lang.Object.
@@ -466,7 +441,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      */
     private void invokePostConstruct(final Class clazz, final Object instance, JndiNameEnvironment envDescriptor)
             throws InjectionException {
-        LinkedList<Method> postConstructMethods = new LinkedList<Method>();
+        LinkedList<Method> postConstructMethods = new LinkedList<>();
 
         Class nextClass = clazz;
 
@@ -494,23 +469,23 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     /**
-     *
      * Internal injection operation. componentId is only specified if componentId-specific lookup operation should be used.
      */
-    private void _inject(final Class clazz, final Object instance, String componentId, List<InjectionCapable> injectableResources)
+    private void _inject(final Class<?> clazz, final Object instance, String componentId, List<InjectionCapable> injectableResources)
             throws InjectionException {
 
         for (InjectionCapable next : injectableResources) {
 
             try {
 
-                String lookupName = next.getComponentEnvName();
-                if (!lookupName.startsWith("java:")) {
-                    lookupName = "java:comp/env/" + lookupName;
+                SimpleJndiName lookupName = next.getComponentEnvName();
+                if (!lookupName.hasJavaPrefix()) {
+                    lookupName = new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT_ENV + lookupName);
                 }
 
-                final Object value = (componentId != null) ? glassfishNamingManager.lookup(componentId, lookupName)
-                        : glassfishNamingManager.getInitialContext().lookup(lookupName);
+                final Object value = componentId == null
+                    ? glassfishNamingManager.getInitialContext().lookup(lookupName.toString())
+                    : glassfishNamingManager.lookup(componentId, lookupName);
 
                 // there still could be 2 injection on the same class, better
                 // do a loop here
@@ -518,29 +493,26 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
                     // if target class is not the class we are injecting
                     // we can just jump to the next target
-                    if (!clazz.getName().equals(target.getClassName()))
+                    if (!clazz.getName().equals(target.getClassName())) {
                         continue;
+                    }
 
                     if (target.isFieldInjectable()) {
-
                         final Field f = getField(target, clazz);
-
-                        if (Modifier.isStatic(f.getModifiers()) && (instance != null)) {
-                            throw new InjectionException(localStrings.getLocalString("injection-manager.illegal-use-of-static-field",
-                                    "Illegal use of static field on class that only supports instance-based injection: {0}", f));
-                        }
-
-                        if ((instance == null) && !Modifier.isStatic(f.getModifiers())) {
+                        if (Modifier.isStatic(f.getModifiers()) && instance != null) {
                             throw new InjectionException(
-                                    localStrings.getLocalString("injection-manager.appclient-injected-field-must-be-static",
-                                            "Injected field: {0} on Application Client class: {1} must be declared static", f, clazz));
+                                "Illegal use of static field on class that only supports instance-based injection: "
+                                    + f);
                         }
 
-                        if (_logger.isLoggable(FINE)) {
-                            _logger.fine(localStrings.getLocalString("injection-manager.injecting-dependency-field",
-                                    "Injecting dependency with logical name: {0} into field: {1} on class: {2}", next.getComponentEnvName(),
-                                    f, clazz));
+                        if (instance == null && !Modifier.isStatic(f.getModifiers())) {
+                            throw new InjectionException(MessageFormat.format(
+                                "Injected field: {0} on Application Client class: {1} must be declared static", f,
+                                clazz));
                         }
+
+                        LOG.log(DEBUG, "Injecting dependency with logical name: {0} into field: {1} on class: {2}",
+                            next.getComponentEnvName(), f, clazz);
 
                         // Wrap actual value insertion in doPrivileged to
                         // allow for private/protected field access.
@@ -560,21 +532,19 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                         final Method m = getMethod(next, target, clazz);
 
                         if (Modifier.isStatic(m.getModifiers()) && (instance != null)) {
-                            throw new InjectionException(localStrings.getLocalString("injection-manager.illegal-use-of-static-method",
-                                    "Illegal use of static method on class that only supports instance-based injection: {0}", m));
-                        }
-
-                        if ((instance == null) && !Modifier.isStatic(m.getModifiers())) {
                             throw new InjectionException(
-                                    localStrings.getLocalString("injection-manager.appclient-injected-method-must-be-static",
-                                            "Injected method: {0} on Application Client class: {1} must be declared static", m, clazz));
+                                "Illegal use of static method on class that only supports instance-based injection: "
+                                    + m);
                         }
 
-                        if (_logger.isLoggable(FINE)) {
-                            _logger.fine(localStrings.getLocalString("injection-manager.injecting-dependency-method",
-                                    "Injecting dependency with logical name: {0} into method: {1} on class: {2}",
-                                    next.getComponentEnvName(), m, clazz));
+                        if (instance == null && !Modifier.isStatic(m.getModifiers())) {
+                            throw new InjectionException(MessageFormat.format(
+                                "Injected method: {0} on Application Client class: {1} must be declared static", m,
+                                clazz));
                         }
+
+                        LOG.log(DEBUG, "Injecting dependency with logical name: {0} into method: {1} on class: {2}",
+                            next.getComponentEnvName(), m, clazz);
 
                         if (System.getSecurityManager() != null) {
                             // Wrap actual value insertion in doPrivileged to
@@ -594,9 +564,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 }
             } catch (Throwable t) {
                 Throwable cause = (t instanceof InvocationTargetException) ? ((InvocationTargetException) t).getCause() : t;
-                String msg = localStrings.getLocalString("injection-manager.exception-to-inject",
-                        "Exception attempting to inject {0} into {1}: {2}", next, clazz, cause.getMessage());
-                _logger.log(FINE, msg, t);
+                String msg = MessageFormat.format("Exception attempting to inject {0} into {1}: {2}", next, clazz,
+                    cause.getMessage());
                 throw new InjectionException(msg, cause);
             }
         }
@@ -606,10 +575,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
 
         try {
 
-            if (_logger.isLoggable(FINE)) {
-                _logger.fine(localStrings.getLocalString("injection-manager.calling-lifecycle-method",
-                        "Calling lifecycle method: {0} on class: {1}", lifecycleMethod, lifecycleMethod.getDeclaringClass()));
-            }
+            LOG.log(DEBUG, "Calling lifecycle method: {0} on class: {1}", lifecycleMethod,
+                lifecycleMethod.getDeclaringClass());
 
             // Wrap actual value insertion in doPrivileged to
             // allow for private/protected field access.
@@ -624,10 +591,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 }
             });
         } catch (Throwable t) {
-            String msg = localStrings.getLocalString("injection-manager.exception-invoke-lifecycle-method",
-                    "Exception attempting invoke lifecycle method: {0}", lifecycleMethod);
-            _logger.log(FINE, msg, t);
-            InjectionException ie = new InjectionException(msg);
+            InjectionException ie = new InjectionException(
+                "Exception attempting invoke lifecycle method: " + lifecycleMethod);
             Throwable cause = (t instanceof InvocationTargetException) ? ((InvocationTargetException) t).getCause() : t;
             ie.initCause(cause);
             throw ie;
@@ -667,8 +632,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
 
         if (f == null) {
-            throw new Exception(localStrings.getLocalString("injection-manager.field-not-found",
-                    "InjectionManager exception.  Field: {0} not found in class: {1}", target.getFieldName(), resourceClass));
+            throw new Exception(MessageFormat.format("InjectionManager exception.  Field: {0} not found in class: {1}",
+                target.getFieldName(), resourceClass));
         }
 
         return f;
@@ -704,9 +669,9 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
 
         if (m == null) {
-            throw new Exception(localStrings.getLocalString("injection-manager.method-not-found",
-                    "InjectionManager exception.  Method: void {0} ({1}) not found in class: {2}", target.getMethodName(),
-                    resource.getInjectResourceType(), resourceClass));
+            throw new Exception(
+                MessageFormat.format("InjectionManager exception.  Method: void {0} ({1}) not found in class: {2}",
+                    target.getMethodName(), resource.getInjectResourceType(), resourceClass));
         }
 
         return m;
@@ -733,9 +698,9 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
 
         if (m == null) {
-            throw new InjectionException(localStrings.getLocalString("injection-manager.postconstruct-not-found",
-                    "InjectionManager exception. PostConstruct method: {0} not found in class: {1}", injInfo.getPostConstructMethodName(),
-                    injInfo.getClassName()));
+            throw new InjectionException(
+                MessageFormat.format("InjectionManager exception. PostConstruct method: {0} not found in class: {1}",
+                    injInfo.getPostConstructMethodName(), injInfo.getClassName()));
         }
 
         return m;
@@ -761,9 +726,9 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
         }
 
         if (preDestroyMethod == null) {
-            throw new InjectionException(localStrings.getLocalString("injection-manager.predestroy-not-found",
-                    "InjectionManager exception. PreDestroy method: {0} not found in class: {1}", injInfo.getPreDestroyMethodName(),
-                    injInfo.getClassName()));
+            throw new InjectionException(
+                MessageFormat.format("InjectionManager exception. PreDestroy method: {0} not found in class: {1}",
+                    injInfo.getPreDestroyMethodName(), injInfo.getClassName()));
         }
 
         return preDestroyMethod;

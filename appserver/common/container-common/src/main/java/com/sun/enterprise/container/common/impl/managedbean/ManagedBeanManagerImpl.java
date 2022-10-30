@@ -45,6 +45,7 @@ import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.runlevel.RunLevel;
@@ -219,7 +220,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
 
                     compEnvManager.bindToComponentNamespace(managedBeanDescriptor);
 
-                    String jndiName = managedBeanDescriptor.getGlobalJndiName();
+                    SimpleJndiName jndiName = managedBeanDescriptor.getGlobalJndiName();
                     ManagedBeanNamingProxy namingProxy = new ManagedBeanNamingProxy(managedBeanDescriptor, serviceLocator);
 
                     if (processType.isServer()) {
@@ -227,7 +228,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                     } else {
                         // Can't store them in server's global naming service so keep
                         // them in local map.
-                        appClientManagedBeans.put(jndiName, namingProxy);
+                        appClientManagedBeans.put(jndiName.toString(), namingProxy);
                     }
 
                 } catch (Exception e) {
@@ -322,7 +323,7 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                 }
 
                 GlassfishNamingManager namingManager = serviceLocator.getService(GlassfishNamingManager.class);
-                String jndiName = managedBeanDescriptor.getGlobalJndiName();
+                SimpleJndiName jndiName = managedBeanDescriptor.getGlobalJndiName();
 
                 if (processType.isServer()) {
                     try {
@@ -581,11 +582,8 @@ public class ManagedBeanManagerImpl implements ManagedBeanManager, PostConstruct
                         return null;
                     }
                 });
-
                 Proxy proxy = (Proxy) proxyField.get(managedBean);
-
                 InterceptorInvoker invoker = (InterceptorInvoker) Proxy.getInvocationHandler(proxy);
-
                 managedBeanInstance = invoker.getTargetInstance();
             } catch (Exception e) {
                 throw new IllegalArgumentException("invalid managed bean " + managedBean, e);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,35 +19,35 @@ package com.sun.enterprise.container.common.impl;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
-import org.glassfish.api.invocation.InvocationManager;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
 
+import org.glassfish.api.invocation.InvocationManager;
 
-public class FactoryForEntityManagerFactoryWrapper
-    implements NamingObjectFactory {
 
-    InvocationManager invMgr;
+public class FactoryForEntityManagerFactoryWrapper implements NamingObjectFactory {
 
-    ComponentEnvManager compEnvMgr;
+    private final InvocationManager invMgr;
+    private final ComponentEnvManager compEnvMgr;
+    private final String unitName;
 
-    private String unitName;
-
-    public FactoryForEntityManagerFactoryWrapper(String unitName,
-        InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
+    public FactoryForEntityManagerFactoryWrapper(String unitName, InvocationManager invMgr,
+        ComponentEnvManager compEnvMgr) {
         this.unitName = unitName;
         this.invMgr = invMgr;
         this.compEnvMgr = compEnvMgr;
     }
 
+
+    @Override
     public boolean isCreateResultCacheable() {
         return false;
     }
 
-    public Object create(Context ic)
-        throws NamingException {
 
+    @Override
+    public EntityManagerFactoryWrapper create(Context ic) throws NamingException {
         return new EntityManagerFactoryWrapper(unitName, invMgr, compEnvMgr);
     }
 

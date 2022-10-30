@@ -31,6 +31,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.common.util.ObjectInputOutputStreamFactory;
 import org.glassfish.common.util.ObjectInputOutputStreamFactoryFactory;
 import org.glassfish.internal.api.Globals;
@@ -115,7 +116,7 @@ final class SerializableJNDIContext implements SerializableObjectFactory {
             }
             return Globals.getDefaultHabitat()
                     .<GlassfishNamingManager>getService(GlassfishNamingManager.class)
-                    .restoreJavaCompEnvContext(name);
+                    .restoreJavaCompEnvContext(new SimpleJndiName(name));
         } catch (NamingException namEx) {
             throw new IOException("Unable to create a context named " + name, namEx);
         }

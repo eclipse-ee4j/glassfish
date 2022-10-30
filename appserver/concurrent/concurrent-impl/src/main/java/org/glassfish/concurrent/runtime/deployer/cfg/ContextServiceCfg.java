@@ -45,9 +45,9 @@ public class ContextServiceCfg implements Serializable {
     }
 
 
-    public ContextServiceCfg(ContextService data) {
-        this.propagatedContexts = CfgParser.parseContextInfo(data.getContextInfo(), data.getContextInfoEnabled());
-        this.serviceConfig = new ConcurrentServiceCfg(data.getJndiName(), propagatedContexts);
+    public ContextServiceCfg(ContextService config) {
+        this.propagatedContexts = CfgParser.parseContextInfo(config.getContextInfo(), config.getContextInfoEnabled());
+        this.serviceConfig = new ConcurrentServiceCfg(config.getJndiName(), propagatedContexts);
         this.clearedContexts = new HashSet<>();
         this.unchangedContexts = new HashSet<>();
     }

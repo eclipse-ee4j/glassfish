@@ -33,6 +33,7 @@ import java.util.Properties;
 
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ManagedThreadFactory;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
@@ -192,14 +193,13 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         throw new ResourceException(status.getMessage());
     }
 
-    public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
-            throws Exception {
 
+    public ResourceStatus delete(final Resources resources, final SimpleJndiName jndiName, final String target)
+        throws Exception {
         if (jndiName == null) {
             String msg = localStrings.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
-
         Resource resource = ConnectorsUtil.getResourceByName(resources, ManagedThreadFactory.class, jndiName);
 
         // ensure we already have this resource
@@ -216,7 +216,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
         if (environment.isDas()) {
 
             if ("domain".equals(target)) {
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 0) {
+                if (!resourceUtil.getTargetsReferringResourceRef(jndiName).isEmpty()) {
                     String msg = localStrings.getLocalString("delete.managed.thread.factory.resource-ref.exist", "This managed thread factory [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
@@ -241,7 +241,8 @@ public class ManagedThreadFactoryManager implements ResourceManager {
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ManagedThreadFactory resource = ConnectorsUtil.getResourceByName(resources, ManagedThreadFactory.class, jndiName);
+                    ManagedThreadFactory resource = ConnectorsUtil.getResourceByName(resources,
+                        ManagedThreadFactory.class, jndiName);
                     return param.getResources().remove(resource);
                 }
             }, resources) == null) {

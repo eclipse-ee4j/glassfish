@@ -93,7 +93,7 @@ public class CreateContextService implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
+        HashMap<String, String> attrList = new HashMap<>();
         attrList.put(ResourceConstants.JNDI_NAME, jndiName);
         attrList.put(ConcurrencyTagNames.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.put(ConcurrencyTagNames.CONTEXT_INFO, contextinfo);

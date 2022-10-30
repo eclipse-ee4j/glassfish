@@ -87,7 +87,7 @@ public class ConcurrencyManagedThreadFactoryConfig implements ManagedThreadFacto
 
     @Override
     public String getJndiName() {
-        return descriptor.getJndiName();
+        return descriptor.getName();
     }
 
 

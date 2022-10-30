@@ -32,6 +32,7 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ContextService;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.LogFacade;
@@ -84,7 +85,7 @@ public class ContextServiceDeployer implements ResourceDeployer<ContextService> 
             LOG.log(Level.WARNING, LogFacade.DEPLOY_ERROR_NULL_CONFIG, "ContextService");
             return;
         }
-        String jndiName = resource.getJndiName();
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getJndiName());
         ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         ContextServiceCfg config = new ContextServiceCfg(resource);
         Reference ref = new Reference(jakarta.enterprise.concurrent.ContextService.class.getName(),
@@ -111,8 +112,9 @@ public class ContextServiceDeployer implements ResourceDeployer<ContextService> 
 
     @Override
     public void undeployResource(ContextService resource, String applicationName, String moduleName) throws Exception {
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resource.getJndiName());
-        concurrentRuntime.shutdownContextService(resource.getJndiName());
+        SimpleJndiName simpleJndiName = new SimpleJndiName(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(simpleJndiName, applicationName, moduleName);
+        namingService.unpublishObject(resourceInfo, simpleJndiName);
+        concurrentRuntime.shutdownContextService(simpleJndiName);
     }
 }

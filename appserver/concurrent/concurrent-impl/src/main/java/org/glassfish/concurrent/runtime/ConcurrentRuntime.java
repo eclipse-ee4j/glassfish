@@ -35,10 +35,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.runtime.deployer.cfg.ConcurrentServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
@@ -60,7 +62,9 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.naming.ResourceNamingService;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.deployment.types.StandardContextType.*;
+import static com.sun.enterprise.deployment.types.StandardContextType.Classloader;
+import static com.sun.enterprise.deployment.types.StandardContextType.JNDI;
+import static com.sun.enterprise.deployment.types.StandardContextType.Security;
 import static com.sun.enterprise.deployment.types.StandardContextType.WorkArea;
 import static java.util.Collections.emptySet;
 
@@ -74,10 +78,10 @@ public class ConcurrentRuntime {
     private static final Logger LOG = LogFacade.getLogger();
     private static ConcurrentRuntime singletonInstance;
 
-    private final Map<String, ManagedExecutorServiceImpl> managedExecutorServiceMap = new HashMap<>();
-    private final Map<String, ManagedScheduledExecutorServiceImpl> managedScheduledExecutorServiceMap = new HashMap<>();
-    private final Map<String, ContextServiceImpl> contextServiceMap = new HashMap<>();
-    private final Map<String, ManagedThreadFactoryImpl> managedThreadFactoryMap = new HashMap<>();
+    private final Map<SimpleJndiName, ManagedExecutorServiceImpl> managedExecutorServiceMap = new HashMap<>();
+    private final Map<SimpleJndiName, ManagedScheduledExecutorServiceImpl> managedScheduledExecutorServiceMap = new HashMap<>();
+    private final Map<SimpleJndiName, ContextServiceImpl> contextServiceMap = new HashMap<>();
+    private final Map<SimpleJndiName, ManagedThreadFactoryImpl> managedThreadFactoryMap = new HashMap<>();
 
     private ScheduledExecutorService internalScheduler;
 
@@ -139,7 +143,7 @@ public class ConcurrentRuntime {
 
     public synchronized ManagedExecutorServiceImpl getManagedExecutorService(ManagedExecutorServiceCfg config) {
         LOG.log(Level.FINEST, "getManagedExecutorService(config={0})", config);
-        String jndiName = config.getServiceConfig().getJndiName();
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
         if (managedExecutorServiceMap != null && managedExecutorServiceMap.containsKey(jndiName)) {
             return managedExecutorServiceMap.get(jndiName);
         }
@@ -153,12 +157,12 @@ public class ConcurrentRuntime {
     public synchronized ManagedExecutorServiceImpl createManagedExecutorService(ManagedExecutorServiceCfg config, ContextServiceImpl contextService) {
         LOG.log(Level.FINE, "createManagedExecutorService(config={0}, contextService={1})",
             new Object[] {config, contextService});
-        String jndiName = config.getServiceConfig().getJndiName();
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
         GlassFishManagedThreadFactory managedThreadFactory = new GlassFishManagedThreadFactory(
                 toManagedThreadFactoryName(jndiName),
                 null,
                 config.getThreadPriority());
-        ManagedExecutorServiceImpl mes = new ManagedExecutorServiceImpl(jndiName,
+        ManagedExecutorServiceImpl mes = new ManagedExecutorServiceImpl(jndiName.toString(),
                 managedThreadFactory,
                 config.getHungAfterSeconds() * 1000L, // in millis
                 config.isLongRunningTasks(),
@@ -178,7 +182,7 @@ public class ConcurrentRuntime {
 
     public synchronized ManagedScheduledExecutorServiceImpl getManagedScheduledExecutorService(ManagedScheduledExecutorServiceCfg config) {
         LOG.log(Level.FINE, "getManagedScheduledExecutorService(config={0})", config);
-        String jndiName = config.getServiceConfig().getJndiName();
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
         if (managedScheduledExecutorServiceMap != null && managedScheduledExecutorServiceMap.containsKey(jndiName)) {
             return managedScheduledExecutorServiceMap.get(jndiName);
         }
@@ -194,12 +198,12 @@ public class ConcurrentRuntime {
 
     public ManagedScheduledExecutorServiceImpl createManagedScheduledExecutorService(
         ManagedScheduledExecutorServiceCfg config, ContextServiceImpl contextService) {
-        String jndiName = config.getServiceConfig().getJndiName();
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
         GlassFishManagedThreadFactory managedThreadFactory = new GlassFishManagedThreadFactory(
                 toManagedThreadFactoryName(jndiName),
                 null,
                 config.getThreadPriority());
-        ManagedScheduledExecutorServiceImpl mes = new ManagedScheduledExecutorServiceImpl(jndiName,
+        ManagedScheduledExecutorServiceImpl mes = new ManagedScheduledExecutorServiceImpl(jndiName.toString(),
                 managedThreadFactory,
                 config.getHungAfterSeconds() * 1000L,
                 config.isLongRunningTasks(),
@@ -213,7 +217,7 @@ public class ConcurrentRuntime {
 
     public synchronized ManagedThreadFactoryImpl getManagedThreadFactory(ManagedThreadFactoryCfg config) {
         LOG.log(Level.FINE, "getManagedThreadFactory(config={0})", config);
-        String jndiName = config.getServiceConfig().getJndiName();
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
         if (managedThreadFactoryMap != null && managedThreadFactoryMap.containsKey(jndiName)) {
             return managedThreadFactoryMap.get(jndiName);
         }
@@ -225,13 +229,13 @@ public class ConcurrentRuntime {
 
 
     public GlassFishManagedThreadFactory createManagedThreadFactory(ManagedThreadFactoryCfg config, ContextServiceImpl contextService) {
-        String jndiName = config.getServiceConfig().getJndiName();
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
         return new GlassFishManagedThreadFactory(jndiName, contextService, config.getThreadPriority());
     }
 
 
     public ContextServiceImpl findOrCreateContextService(ContextualResourceDefinition definition, String applicationName, String moduleName) {
-        String jndiName = toContextServiceName(definition.getContext(), definition.getName());
+        SimpleJndiName jndiName = toContextServiceName(definition.getContext(), definition.getJndiName());
         LOG.log(Level.FINEST, "findOrCreateContextService(jndiName={0}, applicationName={1}, moduleName={2})",
             new Object[] {definition, applicationName, moduleName});
         ResourceInfo contextResourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
@@ -244,7 +248,7 @@ public class ConcurrentRuntime {
             return lookup2;
         }
         Set<ConcurrencyContextType> provided = Set.of(Classloader, JNDI, Security, WorkArea);
-        ConcurrentServiceCfg config = new ConcurrentServiceCfg(jndiName, provided, null);
+        ConcurrentServiceCfg config = new ConcurrentServiceCfg(jndiName, provided);
         return contextServiceMap.computeIfAbsent(jndiName, n -> createContextService(jndiName, config, true));
     }
 
@@ -262,13 +266,13 @@ public class ConcurrentRuntime {
         TransactionSetupProvider txSetupProvider = createTxSetupProvider(keepTxUnchanged, clearTx);
         ContextSetupProvider ctxSetupProvider = new ContextSetupProviderImpl(config.getPropagatedContexts(),
             config.getClearedContexts(), config.getUnchangedContexts());
-        String jndiName = config.getServiceConfig().getJndiName();
-        return new ContextServiceImpl(jndiName, ctxSetupProvider, txSetupProvider);
+        SimpleJndiName jndiName = config.getServiceConfig().getJndiName();
+        return new ContextServiceImpl(jndiName.toString(), ctxSetupProvider, txSetupProvider);
     }
 
 
     public synchronized ContextServiceImpl getContextService(ConcurrentServiceCfg config, boolean cleanupTransaction) {
-        String contextServiceJndiName = toContextServiceName(config.getContext(), config.getJndiName());
+        SimpleJndiName contextServiceJndiName = toContextServiceName(config.getContext(), config.getJndiName());
         return contextServiceMap.computeIfAbsent(contextServiceJndiName,
             n -> createContextService(contextServiceJndiName, config, cleanupTransaction));
     }
@@ -279,7 +283,7 @@ public class ConcurrentRuntime {
      *
      * @param jndiName
      */
-    public void shutdownManagedExecutorService(String jndiName) {
+    public void shutdownManagedExecutorService(SimpleJndiName jndiName) {
         ManagedExecutorServiceImpl mes = removeManagedExecutorService(jndiName);
         if (mes != null) {
             mes.shutdownNow();
@@ -292,7 +296,7 @@ public class ConcurrentRuntime {
      *
      * @param jndiName
      */
-    public void shutdownScheduledManagedExecutorService(String jndiName) {
+    public void shutdownScheduledManagedExecutorService(SimpleJndiName jndiName) {
         ManagedScheduledExecutorServiceImpl mses = removeManagedScheduledExecutorService(jndiName);
         if (mses != null) {
             mses.shutdownNow();
@@ -305,7 +309,7 @@ public class ConcurrentRuntime {
      *
      * @param jndiName
      */
-    public void shutdownManagedThreadFactory(String jndiName) {
+    public void shutdownManagedThreadFactory(SimpleJndiName jndiName) {
         ManagedThreadFactoryImpl mtf = removeManagedThreadFactory(jndiName);
         if (mtf != null) {
             mtf.stop();
@@ -318,12 +322,12 @@ public class ConcurrentRuntime {
      *
      * @param jndiName
      */
-    public synchronized void shutdownContextService(String jndiName) {
+    public synchronized void shutdownContextService(SimpleJndiName jndiName) {
         contextServiceMap.remove(jndiName);
     }
 
 
-    private ContextServiceImpl createContextService(String contextServiceJndiName, ConcurrentServiceCfg config,
+    private ContextServiceImpl createContextService(SimpleJndiName contextServiceJndiName, ConcurrentServiceCfg config,
         boolean cleanupTransaction) {
         LOG.log(Level.FINE, "createContextService(contextServiceJndiName={0}, config={1}, cleanupTransaction={2})",
             new Object[] {contextServiceJndiName, config, cleanupTransaction});
@@ -341,7 +345,7 @@ public class ConcurrentRuntime {
         }
         TransactionSetupProvider txSetupProvider = createTxSetupProvider(false, clearTx);
         ContextSetupProvider ctxSetupProvider = new ContextSetupProviderImpl(propagated, cleared, emptySet());
-        return new ContextServiceImpl(contextServiceJndiName, ctxSetupProvider, txSetupProvider);
+        return new ContextServiceImpl(contextServiceJndiName.toString(), ctxSetupProvider, txSetupProvider);
     }
 
 
@@ -349,14 +353,14 @@ public class ConcurrentRuntime {
         if (internalScheduler != null) {
             return;
         }
-        final String name = "Glassfish-Internal";
+        final SimpleJndiName name = new SimpleJndiName("Glassfish-Internal");
         ManagedThreadFactoryImpl managedThreadFactory = new GlassFishManagedThreadFactory(
                 toManagedThreadFactoryName(name),
                 null,
                 Thread.NORM_PRIORITY);
         ConcurrentServiceCfg config = new ConcurrentServiceCfg(toContextServiceName(name), Classloader, null);
         ContextServiceImpl contextService = getContextService(config, false);
-        internalScheduler = new ManagedScheduledExecutorServiceImpl(name,
+        internalScheduler = new ManagedScheduledExecutorServiceImpl(name.toString(),
                 managedThreadFactory,
                 0L,
                 false,
@@ -375,7 +379,7 @@ public class ConcurrentRuntime {
     }
 
 
-    private ContextServiceImpl lookup(GenericResourceInfo contextResourceInfo, String jndiName) {
+    private ContextServiceImpl lookup(GenericResourceInfo contextResourceInfo, SimpleJndiName jndiName) {
         try {
             return (ContextServiceImpl) resourceNamingService.lookup(contextResourceInfo, jndiName);
         } catch (NamingException e) {
@@ -394,34 +398,34 @@ public class ConcurrentRuntime {
     }
 
 
-    private synchronized ManagedExecutorServiceImpl removeManagedExecutorService(String jndiName) {
+    private synchronized ManagedExecutorServiceImpl removeManagedExecutorService(SimpleJndiName jndiName) {
         return managedExecutorServiceMap.remove(jndiName);
     }
 
 
-    private synchronized ManagedScheduledExecutorServiceImpl removeManagedScheduledExecutorService(String jndiName) {
+    private synchronized ManagedScheduledExecutorServiceImpl removeManagedScheduledExecutorService(SimpleJndiName jndiName) {
         return managedScheduledExecutorServiceMap.remove(jndiName);
     }
 
 
-    private synchronized ManagedThreadFactoryImpl removeManagedThreadFactory(String jndiName) {
+    private synchronized ManagedThreadFactoryImpl removeManagedThreadFactory(SimpleJndiName jndiName) {
         return managedThreadFactoryMap.remove(jndiName);
     }
 
 
-    private static String toContextServiceName(String configuredContextJndiName, String parentObjectJndiName) {
+    private static SimpleJndiName toContextServiceName(String configuredContextJndiName, SimpleJndiName parentObjectJndiName) {
         return configuredContextJndiName == null ? toContextServiceName(parentObjectJndiName)
-            : configuredContextJndiName;
+            : new SimpleJndiName(configuredContextJndiName);
     }
 
 
-    private static String toContextServiceName(final String jndiName) {
-        return jndiName + "-ContextService";
+    private static SimpleJndiName toContextServiceName(final SimpleJndiName jndiName) {
+        return new SimpleJndiName(jndiName + "-ContextService");
     }
 
 
-    private static String toManagedThreadFactoryName(String jndiName) {
-        return jndiName + "-ManagedThreadFactory";
+    private static SimpleJndiName toManagedThreadFactoryName(SimpleJndiName jndiName) {
+        return new SimpleJndiName(jndiName + "-ManagedThreadFactory");
     }
 
 
@@ -500,8 +504,8 @@ public class ConcurrentRuntime {
 
         private static final Logger LOG = Logger.getLogger(GlassFishManagedThreadFactory.class.getName());
 
-        GlassFishManagedThreadFactory(String name, ContextServiceImpl contextService, int threadPriority) {
-            super(name, contextService, threadPriority);
+        GlassFishManagedThreadFactory(SimpleJndiName name, ContextServiceImpl contextService, int threadPriority) {
+            super(name.toString(), contextService, threadPriority);
         }
 
 

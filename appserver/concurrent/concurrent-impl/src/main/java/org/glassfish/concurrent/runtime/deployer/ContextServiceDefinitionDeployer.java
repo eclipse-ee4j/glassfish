@@ -32,6 +32,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.LogFacade;
 import org.glassfish.concurrent.runtime.deployer.cfg.ContextServiceCfg;
@@ -141,7 +142,7 @@ public class ContextServiceDefinitionDeployer implements ResourceDeployer {
 
 
     private ResourceInfo toResourceInfo(final ResourceDescriptor descriptor) {
-        String jndiName = deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(),
+        SimpleJndiName jndiName = deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(),
             descriptor.getResourceType());
         ComponentInvocation invocation = invocationManager.getCurrentInvocation();
         return new ResourceInfo(jndiName, invocation.getAppName(), invocation.getModuleName());

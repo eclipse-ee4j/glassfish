@@ -90,7 +90,7 @@ public class ConcurrencyManagedScheduledExecutorServiceConfig implements Managed
 
     @Override
     public String getJndiName() {
-        return descriptor.getJndiName();
+        return descriptor.getName();
     }
 
 

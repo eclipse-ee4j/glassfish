@@ -88,7 +88,7 @@ public class ConcurrencyManagedExecutorServiceConfig implements ManagedExecutorS
 
     @Override
     public String getJndiName() {
-        return descriptor.getJndiName();
+        return descriptor.getJndiName().toString();
     }
 
 

@@ -22,6 +22,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedThreadFactoryCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
@@ -66,7 +67,7 @@ public class ConcurrencyManagedThreadFactoryDeployer
     public void deployResource(ManagedThreadFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         ManagedThreadFactoryDefinitionDescriptor descriptor = resource;
         ManagedThreadFactoryImpl factory = createThreadFactory(applicationName, moduleName, descriptor);
-        String resourceName = toResourceName(descriptor);
+        SimpleJndiName resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
         resourceNamingService.publishObject(resourceInfo, resourceName, factory, true);
     }

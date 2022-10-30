@@ -24,40 +24,53 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Set;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 public final class ConcurrentServiceCfg implements Serializable {
     private static final long serialVersionUID = -9039607497553448223L;
 
-    private final String jndiName;
+    private final SimpleJndiName jndiName;
     private final Set<ConcurrencyContextType> contextInfo;
     private final String context;
 
-    public ConcurrentServiceCfg(String jndiName) {
-        this(jndiName, Collections.emptySet(), null);
+    public ConcurrentServiceCfg(SimpleJndiName jndiName) {
+        this.jndiName = jndiName;
+        this.contextInfo = Collections.emptySet();
+        this.context = null;
     }
 
 
-    public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo) {
+    public ConcurrentServiceCfg(SimpleJndiName jndiName, Set<ConcurrencyContextType> contextInfo) {
         this.jndiName = jndiName;
         this.contextInfo = contextInfo;
         this.context = null;
     }
 
 
+    @Deprecated
+    public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo) {
+        this.jndiName = new SimpleJndiName(jndiName);
+        this.contextInfo = contextInfo;
+        this.context = null;
+    }
+
+
+    @Deprecated
     public ConcurrentServiceCfg(String jndiName, Set<ConcurrencyContextType> contextInfo, String context) {
-        this.jndiName = jndiName;
+        this.jndiName = new SimpleJndiName(jndiName);
         this.contextInfo = contextInfo;
         this.context = context;
     }
 
 
-    public ConcurrentServiceCfg(String jndiName, StandardContextType contextInfo, String context) {
+    public ConcurrentServiceCfg(SimpleJndiName jndiName, StandardContextType contextInfo, String context) {
         this.jndiName = jndiName;
         this.contextInfo = Set.of(contextInfo);
         this.context = context;
     }
 
 
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         return jndiName;
     }
 

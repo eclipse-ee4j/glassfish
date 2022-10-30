@@ -17,7 +17,6 @@
 
 package org.glassfish.concurrent.admin;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
@@ -33,6 +32,7 @@ import java.util.Properties;
 
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ContextService;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
@@ -45,6 +45,7 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
@@ -188,15 +189,16 @@ public class ContextServiceManager implements ResourceManager {
         throw new ResourceException(status.getMessage());
     }
 
-    public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
-            throws Exception {
 
+    public ResourceStatus delete(final Resources resources, final String jndiName, final String target)
+        throws Exception {
         if (jndiName == null) {
             String msg = localStrings.getLocalString("context.service.noJndiName", "No JNDI name defined for context service.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        Resource resource = ConnectorsUtil.getResourceByName(resources, ContextService.class, jndiName);
+        SimpleJndiName simpleJndiName = new SimpleJndiName(jndiName);
+        Resource resource = getResourceByName(resources, ContextService.class, simpleJndiName);
 
         // ensure we already have this resource
         if (resource == null){
@@ -212,17 +214,17 @@ public class ContextServiceManager implements ResourceManager {
         if (environment.isDas()) {
 
             if ("domain".equals(target)) {
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 0) {
+                if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     String msg = localStrings.getLocalString("delete.context.service.resource-ref.exist", "This context service [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
-                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                if (!resourceUtil.isResourceRefInTarget(simpleJndiName, target)) {
                     String msg = localStrings.getLocalString("delete.context.service.no.resource-ref", "This context service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
 
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
+                if (resourceUtil.getTargetsReferringResourceRef(simpleJndiName).size() > 1) {
                     String msg = localStrings.getLocalString("delete.context.service.multiple.resource-refs", "This context service [ {0} ] is referenced in multiple instance/cluster targets, Use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
@@ -231,16 +233,14 @@ public class ContextServiceManager implements ResourceManager {
 
         try {
             // delete resource-ref
-            resourceUtil.deleteResourceRef(jndiName, target);
+            resourceUtil.deleteResourceRef(simpleJndiName, target);
 
             // delete context-service
-            if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ContextService resource = ConnectorsUtil.getResourceByName(resources, ContextService.class, jndiName);
-                    return param.getResources().remove(resource);
-                }
-            }, resources) == null) {
+            SingleConfigCode<Resources> configCode = (SingleConfigCode<Resources>) param -> {
+                ContextService resource1 = getResourceByName(resources, ContextService.class, simpleJndiName);
+                return param.getResources().remove(resource1);
+            };
+            if (ConfigSupport.apply(configCode, resources) == null) {
                 String msg = localStrings.getLocalString("delete.context.service.failed", "Context service {0} deletion failed", jndiName);
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,13 @@
 
 package org.glassfish.weld;
 
-import static java.util.Locale.ENGLISH;
+import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.EjbBundleDescriptor;
+import com.sun.enterprise.deployment.InjectionCapable;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -26,15 +33,13 @@ import java.lang.reflect.Method;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 
-import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.EjbBundleDescriptor;
-import com.sun.enterprise.deployment.InjectionCapable;
-import com.sun.enterprise.deployment.JndiNameEnvironment;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
+import static java.util.Locale.ENGLISH;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 public class InjectionPointHelper {
 
@@ -57,7 +62,6 @@ public class InjectionPointHelper {
             throw new IllegalArgumentException("Application cannot be null.");
         }
 
-        Object result = null;
         Field field = null;
         Method method = null;
         Annotation[] annotations;
@@ -96,43 +100,40 @@ public class InjectionPointHelper {
             }
         }
 
-        if (envAnnotationName != null && envAnnotationName.startsWith("java:global/")) {
-            result = namingManager.getInitialContext().lookup(envAnnotationName);
-        } else {
-            BundleDescriptor matchingBundle = null;
+        if (envAnnotationName != null && envAnnotationName.startsWith(JNDI_CTX_JAVA_GLOBAL)) {
+            return namingManager.getInitialContext().lookup(envAnnotationName);
+        }
+        BundleDescriptor matchingBundle = null;
 
-            for (BundleDescriptor bundle : app.getBundleDescriptors()) {
+        for (BundleDescriptor bundle : app.getBundleDescriptors()) {
 
-                if (bundle instanceof EjbBundleDescriptor || bundle instanceof WebBundleDescriptor) {
+            if (bundle instanceof EjbBundleDescriptor || bundle instanceof WebBundleDescriptor) {
 
-                    JndiNameEnvironment jndiEnv = (JndiNameEnvironment) bundle;
+                JndiNameEnvironment jndiEnv = (JndiNameEnvironment) bundle;
 
-                    // TODO normalize for java:comp/env/ prefix
-                    for (InjectionCapable next : jndiEnv.getInjectableResourcesByClass(declaringClass.getName())) {
-                        if (next.getComponentEnvName().equals(envDependencyName)) {
-                            matchingBundle = bundle;
-                            break;
-                        }
+                // TODO normalize for java:comp/env/ prefix
+                for (InjectionCapable next : jndiEnv.getInjectableResourcesByClass(declaringClass.getName())) {
+                    if (next.getComponentEnvName().toString().equals(envDependencyName)) {
+                        matchingBundle = bundle;
+                        break;
                     }
                 }
-
-                if (matchingBundle != null) {
-                    break;
-                }
             }
 
-            if (matchingBundle == null) {
-                throw new IllegalArgumentException(
-                        "Cannot find matching env dependency for " + member + " in Application " + app.getAppName());
+            if (matchingBundle != null) {
+                break;
             }
-
-            String componentId = compEnvManager.getComponentEnvId((JndiNameEnvironment) matchingBundle);
-            String lookupName = envDependencyName.startsWith("java:") ? envDependencyName : "java:comp/env/" + envDependencyName;
-            result = namingManager.lookup(componentId, lookupName);
         }
 
-        return result;
+        if (matchingBundle == null) {
+            throw new IllegalArgumentException(
+                    "Cannot find matching env dependency for " + member + " in Application " + app.getAppName());
+        }
 
+        String componentId = compEnvManager.getComponentEnvId((JndiNameEnvironment) matchingBundle);
+        SimpleJndiName lookupName = new SimpleJndiName(envDependencyName.startsWith(JNDI_CTX_JAVA) ? envDependencyName
+            : JNDI_CTX_JAVA_COMPONENT_ENV + envDependencyName);
+        return namingManager.lookup(componentId, lookupName);
     }
 
     private String getInjectionMethodPropertyName(Method method) {

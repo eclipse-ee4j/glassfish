@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,11 @@
 
 package org.glassfish.weld.services;
 
-import static jakarta.transaction.Status.STATUS_ACTIVE;
-import static jakarta.transaction.Status.STATUS_COMMITTING;
-import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
-import static jakarta.transaction.Status.STATUS_PREPARED;
-import static jakarta.transaction.Status.STATUS_PREPARING;
-import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
-import static jakarta.transaction.Status.STATUS_UNKNOWN;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -30,15 +29,18 @@ import javax.naming.NamingException;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jboss.weld.transaction.spi.TransactionServices;
 
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-
-import jakarta.transaction.Synchronization;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.UserTransaction;
+import static jakarta.transaction.Status.STATUS_ACTIVE;
+import static jakarta.transaction.Status.STATUS_COMMITTING;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Status.STATUS_PREPARED;
+import static jakarta.transaction.Status.STATUS_PREPARING;
+import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
+import static jakarta.transaction.Status.STATUS_UNKNOWN;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 public class TransactionServicesImpl implements TransactionServices {
 
-    private JavaEETransactionManager transactionManager;
+    private final JavaEETransactionManager transactionManager;
 
     public TransactionServicesImpl(ServiceLocator services) {
         transactionManager = services.getService(JavaEETransactionManager.class);
@@ -78,7 +80,7 @@ public class TransactionServicesImpl implements TransactionServices {
     @Override
     public UserTransaction getUserTransaction() {
         try {
-            return (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+            return (UserTransaction) new InitialContext().lookup(JNDI_CTX_JAVA_COMPONENT + "UserTransaction");
         } catch (NamingException e) {
             return null;
         }

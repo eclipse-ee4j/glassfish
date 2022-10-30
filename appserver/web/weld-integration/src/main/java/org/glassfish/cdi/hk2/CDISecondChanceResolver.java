@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package org.glassfish.cdi.hk2;
 
+import jakarta.enterprise.inject.spi.Bean;
+import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Set;
@@ -29,10 +35,7 @@ import org.glassfish.hk2.api.JustInTimeInjectionResolver;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
-import jakarta.enterprise.inject.spi.Bean;
-import jakarta.enterprise.inject.spi.BeanManager;
-import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * @author jwells
@@ -54,7 +57,7 @@ public class CDISecondChanceResolver implements JustInTimeInjectionResolver {
      */
     private BeanManager getCurrentBeanManager() {
         try {
-            return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
+            return (BeanManager) new InitialContext().lookup(JNDI_CTX_JAVA_COMPONENT + "BeanManager");
         } catch (NamingException ne) {
             return null;
         }

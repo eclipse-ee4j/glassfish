@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,33 +19,34 @@ package org.glassfish.weld.services;
 
 import jakarta.enterprise.inject.spi.AnnotatedField;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
- *
  * @author lukas
  */
 interface WsInjectionHandler {
     WsInjectionHandler NOOP = new WsInjectionHandler() {
         @Override
-        public boolean handles(AnnotatedField annotatedField) {
+        public boolean handles(AnnotatedField<?> annotatedField) {
             return false;
         }
 
         @Override
-        public void validateWebServiceRef(AnnotatedField annotatedField) {
+        public void validateWebServiceRef(AnnotatedField<?> annotatedField) {
             //Should not get here
             throw new UnsupportedOperationException("Not supported.");
         }
 
         @Override
-        public String getJndiName(AnnotatedField annotatedField) {
+        public SimpleJndiName getJndiName(AnnotatedField<?> annotatedField) {
             //Should not get here
             throw new UnsupportedOperationException("Not supported.");
         }
     };
 
-    boolean handles(AnnotatedField annotatedField);
+    boolean handles(AnnotatedField<?> annotatedField);
 
-    void validateWebServiceRef(AnnotatedField annotatedField);
+    void validateWebServiceRef(AnnotatedField<?> annotatedField);
 
-    String getJndiName(AnnotatedField annotatedField);
+    SimpleJndiName getJndiName(AnnotatedField<?> annotatedField);
 }

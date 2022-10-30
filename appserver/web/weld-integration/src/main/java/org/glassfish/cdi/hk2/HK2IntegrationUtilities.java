@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,13 @@
 
 package org.glassfish.cdi.hk2;
 
+import jakarta.enterprise.inject.Default;
+import jakarta.enterprise.inject.spi.Annotated;
+import jakarta.enterprise.inject.spi.AnnotatedField;
+import jakarta.enterprise.inject.spi.AnnotatedParameter;
+import jakarta.enterprise.inject.spi.InjectionPoint;
+import jakarta.inject.Named;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.HashSet;
@@ -29,21 +37,15 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.InjecteeImpl;
 import org.glassfish.hk2.utilities.NamedImpl;
 
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.Annotated;
-import jakarta.enterprise.inject.spi.AnnotatedField;
-import jakarta.enterprise.inject.spi.AnnotatedParameter;
-import jakarta.enterprise.inject.spi.InjectionPoint;
-import jakarta.inject.Named;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 
 /**
  * Integration utilities
  *
  * @author jwells
- *
  */
 public class HK2IntegrationUtilities {
-    private final static String APP_SL_NAME = "java:app/hk2/ServiceLocator";
+    private final static String APP_SL_NAME = JNDI_CTX_JAVA_APP + "hk2/ServiceLocator";
 
     /**
      * This method returns the proper ApplicationServiceLocator to use for CDI integration

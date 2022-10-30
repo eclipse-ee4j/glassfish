@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,6 @@
 
 package org.glassfish.weld;
 
-import java.util.Set;
-
-import javax.naming.NamingException;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.NamedNamingObjectProxy;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
@@ -40,6 +30,19 @@ import jakarta.inject.Named;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
+import java.util.Set;
+
+import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
+import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+
 /**
  * Proxy for jakarta.validation based lookups (java:comp/Validator, java:comp/ValidatorFactory) when CDI enabled
  */
@@ -47,8 +50,8 @@ import jakarta.validation.ValidatorFactory;
 @Named("ValidationNamingProxy")
 public class ValidationNamingProxy implements NamedNamingObjectProxy {
 
-    static final String VALIDATOR_CONTEXT = "java:comp/Validator";
-    static final String VALIDATOR_FACTORY_CONTEXT = "java:comp/ValidatorFactory";
+    static final String VALIDATOR_CONTEXT = JNDI_CTX_JAVA_COMPONENT + "Validator";
+    static final String VALIDATOR_FACTORY_CONTEXT = JNDI_CTX_JAVA_COMPONENT + "ValidatorFactory";
 
     @Inject
     ServiceLocator serviceLocator;

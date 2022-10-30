@@ -25,7 +25,6 @@ import com.sun.enterprise.deployment.WebBundleDescriptor;
 
 import jakarta.inject.Inject;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.NamingException;
@@ -34,9 +33,12 @@ import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
 import org.jboss.weld.manager.BeanManagerImpl;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINEST;
 
 /**
  * Proxy for java:comp/BeanManager lookups
@@ -48,21 +50,19 @@ import org.jvnet.hk2.annotations.Service;
 public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
     private static final Logger LOG = Logger.getLogger(BeanManagerNamingProxy.class.getName());
 
-    static final String BEAN_MANAGER_CONTEXT = "java:comp/BeanManager";
+    static final String BEAN_MANAGER_CONTEXT = SimpleJndiName.JNDI_CTX_JAVA_COMPONENT + "BeanManager";
 
     @Inject
     private ComponentEnvManager compEnvManager;
-
     @Inject
     private InvocationManager invocationManager;
-
     @Inject
     private WeldDeployer weldDeployer;
 
 
     @Override
     public Object handle(String name) throws NamingException {
-        LOG.log(Level.FINEST, "handle(name={0})", name);
+        LOG.log(FINEST, "handle(name={0})", name);
         if (!BEAN_MANAGER_CONTEXT.equals(name)) {
             return null;
         }
@@ -72,19 +72,19 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
             if (componentInvocation == null) {
                 return null;
             }
-            final JndiNameEnvironment componentEnv = compEnvManager
-                .getJndiNameEnvironment(componentInvocation.getComponentId());
+            final String componentId = componentInvocation.getComponentId();
+            final JndiNameEnvironment componentEnv = compEnvManager.getJndiNameEnvironment(componentId);
             if (componentEnv == null) {
-                throw new IllegalStateException("No invocation context found");
+                throw new IllegalStateException("No invocation context found for componentId=" + componentId);
             }
-            final BundleDescriptor bundle = getBundleDescriptor(componentEnv);
-            final BeanManagerImpl beanManager = getBeanManager(bundle);
+            final BundleDescriptor descriptor = getBundleDescriptor(componentEnv);
+            final BeanManagerImpl beanManager = getBeanManager(descriptor);
             if (beanManager == null) {
-                throw new IllegalStateException("Cannot resolve bean manager");
+                throw new IllegalStateException("No bean manager found for descriptor.class=" + descriptor.getClass());
             }
             return beanManager;
         } catch (Throwable t) {
-            NamingException ne = new NamingException("Error retrieving java:comp/BeanManager");
+            NamingException ne = new NamingException("Error retrieving " + BEAN_MANAGER_CONTEXT);
             ne.initCause(t);
             throw ne;
         }
@@ -92,26 +92,26 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
 
 
     private BundleDescriptor getBundleDescriptor(JndiNameEnvironment componentEnv) {
+        LOG.log(FINEST, "getBundleDescriptor(componentEnv.class={0})", componentEnv.getClass());
         if (componentEnv instanceof EjbDescriptor) {
-            return (BundleDescriptor) ((EjbDescriptor) componentEnv).getEjbBundleDescriptor().getModuleDescriptor()
-                .getDescriptor();
+            EjbDescriptor ejbDescriptor = (EjbDescriptor) componentEnv;
+            return (BundleDescriptor) ejbDescriptor.getEjbBundleDescriptor().getModuleDescriptor().getDescriptor();
         } else if (componentEnv instanceof WebBundleDescriptor) {
             return (BundleDescriptor) componentEnv;
         } else {
-            return null;
+            throw new IllegalStateException(
+                "No descriptor found for jndiNameEnvironment.class=" + componentEnv.getClass());
         }
     }
 
 
-    private BeanManagerImpl getBeanManager(BundleDescriptor bundle) {
-        if (bundle == null) {
-            return null;
-        }
-        BeanDeploymentArchive beanDeploymentArchive = weldDeployer.getBeanDeploymentArchiveForBundle(bundle);
+    private BeanManagerImpl getBeanManager(BundleDescriptor descriptor) {
+        LOG.log(FINEST, "getBeanManager(descriptor.class={0})", descriptor.getClass());
+        BeanDeploymentArchive beanDeploymentArchive = weldDeployer.getBeanDeploymentArchiveForBundle(descriptor);
         if (beanDeploymentArchive == null) {
-            return null;
+            throw new IllegalStateException("No archive found for descriptor.class=" + descriptor.getClass());
         }
-        return weldDeployer.getBootstrapForApp(bundle.getApplication()).getManager(beanDeploymentArchive);
+        return weldDeployer.getBootstrapForApp(descriptor.getApplication()).getManager(beanDeploymentArchive);
     }
 
 }

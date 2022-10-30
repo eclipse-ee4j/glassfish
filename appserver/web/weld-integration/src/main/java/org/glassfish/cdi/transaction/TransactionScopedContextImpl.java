@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,13 @@
 
 package org.glassfish.cdi.transaction;
 
-import static jakarta.transaction.Status.STATUS_ACTIVE;
-import static jakarta.transaction.Status.STATUS_COMMITTING;
-import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
-import static jakarta.transaction.Status.STATUS_PREPARED;
-import static jakarta.transaction.Status.STATUS_PREPARING;
-import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
-import static jakarta.transaction.Status.STATUS_UNKNOWN;
-import static java.util.Collections.synchronizedSet;
+import jakarta.enterprise.context.ContextNotActiveException;
+import jakarta.enterprise.context.spi.Context;
+import jakarta.enterprise.context.spi.Contextual;
+import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.PassivationCapable;
+import jakarta.transaction.TransactionScoped;
+import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -33,13 +33,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import jakarta.enterprise.context.ContextNotActiveException;
-import jakarta.enterprise.context.spi.Context;
-import jakarta.enterprise.context.spi.Contextual;
-import jakarta.enterprise.context.spi.CreationalContext;
-import jakarta.enterprise.inject.spi.PassivationCapable;
-import jakarta.transaction.TransactionScoped;
-import jakarta.transaction.TransactionSynchronizationRegistry;
+import static jakarta.transaction.Status.STATUS_ACTIVE;
+import static jakarta.transaction.Status.STATUS_COMMITTING;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Status.STATUS_PREPARED;
+import static jakarta.transaction.Status.STATUS_PREPARING;
+import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
+import static jakarta.transaction.Status.STATUS_UNKNOWN;
+import static java.util.Collections.synchronizedSet;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * The Context implementation for obtaining contextual instances of {@link TransactionScoped} beans.
@@ -61,7 +63,9 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
  * @author <a href="mailto:arjav.desai@oracle.com">Arjav Desai</a>
  */
 public class TransactionScopedContextImpl implements Context {
-    public static final String TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME = "java:comp/TransactionSynchronizationRegistry";
+
+    public static final String TRANSACTION_SYNCHRONIZATION_REGISTRY_JNDI_NAME = JNDI_CTX_JAVA_COMPONENT
+        + "TransactionSynchronizationRegistry";
 
     ConcurrentHashMap<TransactionSynchronizationRegistry, Set<TransactionScopedBean<?>>> beansPerTransaction;
 

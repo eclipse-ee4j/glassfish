@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,25 +17,6 @@
 
 package org.glassfish.weld.services;
 
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import org.glassfish.cdi.CDILoggerInfo;
-import org.glassfish.ejb.api.EjbContainerServices;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.weld.ejb.EjbDescriptorImpl;
-import org.glassfish.weld.ejb.SessionObjectReferenceImpl;
-import org.jboss.weld.ejb.api.SessionObjectReference;
-import org.jboss.weld.ejb.spi.EjbDescriptor;
-import org.jboss.weld.ejb.spi.EjbServices;
-import org.jboss.weld.ejb.spi.InterceptorBindings;
-
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbInterceptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
@@ -51,13 +32,33 @@ import jakarta.interceptor.AroundConstruct;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.AroundTimeout;
 
+import java.lang.reflect.Method;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.cdi.CDILoggerInfo;
+import org.glassfish.ejb.api.EjbContainerServices;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.weld.ejb.EjbDescriptorImpl;
+import org.glassfish.weld.ejb.SessionObjectReferenceImpl;
+import org.jboss.weld.ejb.api.SessionObjectReference;
+import org.jboss.weld.ejb.spi.EjbDescriptor;
+import org.jboss.weld.ejb.spi.EjbServices;
+import org.jboss.weld.ejb.spi.InterceptorBindings;
+
 /**
  * An implementation of th <code>EJBServices</code> Weld SPI. The Weld implementation uses this SPI to resolve EJB and
  * register CDI Interceptors for EJBs.
  */
 public class EjbServicesImpl implements EjbServices {
-    private ServiceLocator services;
-    private Logger logger = CDILoggerInfo.getLogger();
+    private final ServiceLocator services;
+    private final Logger logger = CDILoggerInfo.getLogger();
 
     public EjbServicesImpl(ServiceLocator h) {
         services = h;
@@ -72,37 +73,26 @@ public class EjbServicesImpl implements EjbServices {
      */
     @Override
     public SessionObjectReference resolveEjb(EjbDescriptor<?> ejbDescriptor) {
-
-        SessionObjectReference sessionObj = null;
-
         // All we need to do is create a reference based on one of the beans'
         // client views, so just choose one and get its corresponding portable
         // JNDI name.
-        String globalJndiName = getDefaultGlobalJndiName(ejbDescriptor);
+        SimpleJndiName globalJndiName = getDefaultGlobalJndiName(ejbDescriptor);
         if (globalJndiName == null) {
             throw new IllegalArgumentException(
                     "Not enough type information to resolve ejb for " + " ejb name " + ejbDescriptor.getBeanClass());
         }
         try {
-
             InitialContext ic = new InitialContext();
-
-            Object ejbRef = ic.lookup(globalJndiName);
-
+            Object ejbRef = ic.lookup(globalJndiName.toString());
             EjbContainerServices containerServices = services.getService(EjbContainerServices.class);
-
-            sessionObj = new SessionObjectReferenceImpl(containerServices, ejbRef);
-
+            return new SessionObjectReferenceImpl(containerServices, ejbRef);
         } catch (NamingException ne) {
             throw new IllegalStateException("Error resolving session object reference for ejb name " + ejbDescriptor.getBeanClass()
                     + " and jndi name " + globalJndiName, ne);
         }
-
-        return sessionObj;
-
     }
 
-    private String getDefaultGlobalJndiName(EjbDescriptor<?> ejbDesc) {
+    private SimpleJndiName getDefaultGlobalJndiName(EjbDescriptor<?> ejbDesc) {
 
         EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ((EjbDescriptorImpl<?>) ejbDesc).getEjbDescriptor();
 

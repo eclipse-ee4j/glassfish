@@ -39,7 +39,6 @@ import jakarta.validation.constraints.Pattern;
 
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -54,6 +53,7 @@ import org.glassfish.api.admin.config.Named;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.ReferenceContainer;
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CreationDecorator;
 import org.glassfish.config.support.DeletionDecorator;
 import org.glassfish.hk2.api.PerLookup;
@@ -230,16 +230,16 @@ public interface Server
     String getReference();
 
     @DuckTyped
-    ResourceRef getResourceRef(String name);
+    ResourceRef getResourceRef(SimpleJndiName name);
 
     @DuckTyped
-    boolean isResourceRefExists(String refName);
+    boolean isResourceRefExists(SimpleJndiName refName);
 
     @DuckTyped
-    void deleteResourceRef(String name) throws TransactionFailure;
+    void deleteResourceRef(SimpleJndiName name) throws TransactionFailure;
 
     @DuckTyped
-    void createResourceRef(String enabled, String refName) throws TransactionFailure;
+    void createResourceRef(String enabled, SimpleJndiName refName) throws TransactionFailure;
 
     @DuckTyped
     ApplicationRef getApplicationRef(String appName);
@@ -330,20 +330,20 @@ public interface Server
             return null;
         }
 
-        public static ResourceRef getResourceRef(Server server, String refName) {
+        public static ResourceRef getResourceRef(Server server, SimpleJndiName refName) {
             for (ResourceRef ref : server.getResourceRef()) {
-                if (ref.getRef().equals(refName)) {
+                if (ref.getRef().equals(refName.toString())) {
                     return ref;
                 }
             }
             return null;
         }
 
-        public static boolean isResourceRefExists(Server server, String refName) {
+        public static boolean isResourceRefExists(Server server, SimpleJndiName refName) {
             return getResourceRef(server, refName) != null;
         }
 
-        public static void deleteResourceRef(Server server, String refName) throws TransactionFailure {
+        public static void deleteResourceRef(Server server, SimpleJndiName refName) throws TransactionFailure {
             final ResourceRef ref = getResourceRef(server, refName);
             if (ref != null) {
                 ConfigSupport.apply(new SingleConfigCode<Server>() {
@@ -356,7 +356,7 @@ public interface Server
             }
         }
 
-        public static void createResourceRef(Server server, final String enabled, final String refName) throws TransactionFailure {
+        public static void createResourceRef(Server server, final String enabled, final SimpleJndiName refName) throws TransactionFailure {
 
             ConfigSupport.apply(new SingleConfigCode<Server>() {
 
@@ -365,7 +365,7 @@ public interface Server
 
                     ResourceRef newResourceRef = param.createChild(ResourceRef.class);
                     newResourceRef.setEnabled(enabled);
-                    newResourceRef.setRef(refName);
+                    newResourceRef.setRef(refName.toString());
                     param.getResourceRef().add(newResourceRef);
                     return newResourceRef;
                 }
@@ -562,10 +562,8 @@ public interface Server
                 } else {
                     //check whether all instances in cluster had lb-enabled set to false
                     List<ServerRef> serverRefs = c.getServerRef();
-                    Iterator<ServerRef> serverRefIter = serverRefs.iterator();
                     boolean allLBEnabled = false;
-                    while (serverRefIter.hasNext()) {
-                        ServerRef serverRef = serverRefIter.next();
+                    for (ServerRef serverRef : serverRefs) {
                         allLBEnabled = Boolean.parseBoolean(serverRef.getLbEnabled());
                     }
                     //if there are existing instances in cluster
@@ -729,7 +727,7 @@ public interface Server
                     }
                 }
                 for (ResourceRef rr : cluster.getResourceRef()) {
-                    if (instance.getResourceRef(rr.getRef()) == null) {
+                    if (instance.getResourceRef(SimpleJndiName.of(rr.getRef())) == null) {
                         ResourceRef newRR = instance.createChild(ResourceRef.class);
                         newRR.setRef(rr.getRef());
                         newRR.setEnabled(rr.getEnabled());

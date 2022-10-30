@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,20 @@
 
 package com.sun.enterprise.connectors.jms.system;
 
+import com.sun.appserv.connectors.internal.api.ConnectorConstants;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+
 import jakarta.jms.ConnectionFactory;
+
 import javax.naming.NamingException;
+
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.appserv.connectors.internal.api.ConnectorConstants;
-import com.sun.enterprise.connectors.ConnectorRuntime;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Naming Object Proxy to handle the Default JMS Connection Factory.
@@ -35,7 +42,7 @@ import com.sun.enterprise.connectors.ConnectorRuntime;
 @Service
 @NamespacePrefixes({DefaultJMSConnectionFactory.DEFAULT_CF})
 public class DefaultJMSConnectionFactory implements NamedNamingObjectProxy, DefaultResourceProxy {
-    static final String DEFAULT_CF = "java:comp/DefaultJMSConnectionFactory";
+    static final String DEFAULT_CF = JNDI_CTX_JAVA_COMPONENT + "DefaultJMSConnectionFactory";
     static final String DEFAULT_CF_PHYS = "jms/__defaultConnectionFactory";
     private ConnectionFactory connectionFactory;
     private ConnectionFactory connectionFactoryPM;
@@ -54,7 +61,7 @@ public class DefaultJMSConnectionFactory implements NamedNamingObjectProxy, Defa
             javax.naming.Context ctx = new javax.naming.InitialContext();
             if (isCFPM) {
                 ConnectorRuntime connectorRuntime = ConnectorRuntime.getRuntime();
-                cachedCF = (ConnectionFactory) connectorRuntime.lookupPMResource(DEFAULT_CF_PHYS, false);
+                cachedCF = (ConnectionFactory) connectorRuntime.lookupPMResource(SimpleJndiName.of(DEFAULT_CF_PHYS), false);
                 connectionFactoryPM = cachedCF;
             } else {
                 cachedCF = (ConnectionFactory) ctx.lookup(DEFAULT_CF_PHYS);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,31 +17,32 @@
 
 package org.glassfish.jms.injection;
 
+import jakarta.jms.JMSConnectionFactory;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSPasswordCredential;
+import jakarta.jms.JMSSessionMode;
+
 import java.io.Serializable;
 import java.security.MessageDigest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.internal.api.RelativePathResolver;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import jakarta.jms.JMSConnectionFactory;
-import jakarta.jms.JMSContext;
-import jakarta.jms.JMSPasswordCredential;
-import jakarta.jms.JMSSessionMode;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Serializable object which holds the information about the JMSContext that was specified at the injection point.
  */
 public class JMSContextMetadata implements Serializable {
 
+    static final SimpleJndiName DEFAULT_CONNECTION_FACTORY = new SimpleJndiName(
+        JNDI_CTX_JAVA_COMPONENT + "DefaultJMSConnectionFactory");
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(InjectableJMSContext.JMS_INJECTION_LOGGER);
-    private final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(JMSContextMetadata.class);
-    public final static String DEFAULT_CONNECTION_FACTORY = "java:comp/DefaultJMSConnectionFactory";
 
-    private final String lookup;
+    private final SimpleJndiName lookup;
     private final int sessionMode;
     private final String userName;
     private final String password;
@@ -51,7 +52,7 @@ public class JMSContextMetadata implements Serializable {
         if (jmsConnectionFactoryAnnot == null) {
             lookup = null;
         } else {
-            lookup = jmsConnectionFactoryAnnot.value().trim();
+            lookup = new SimpleJndiName(jmsConnectionFactoryAnnot.value().trim());
         }
 
         if (sessionModeAnnot == null) {
@@ -69,7 +70,7 @@ public class JMSContextMetadata implements Serializable {
         }
     }
 
-    public String getLookup() {
+    public SimpleJndiName getLookup() {
         return lookup;
     }
 
@@ -87,7 +88,7 @@ public class JMSContextMetadata implements Serializable {
 
     @Override
     public String toString() {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("JMSContextMetadata[");
         sb.append("lookup=").append(lookup);
         sb.append(", sessionMode=").append(sessionMode);
@@ -109,11 +110,11 @@ public class JMSContextMetadata implements Serializable {
                 MessageDigest messageDigest = MessageDigest.getInstance("MD5");
                 byte delimer = (byte) '|';
                 messageDigest.update(delimer);
-                String cf = lookup;
+                SimpleJndiName cf = lookup;
                 if (lookup == null) {
                     cf = DEFAULT_CONNECTION_FACTORY;
                 }
-                messageDigest.update(cf.getBytes("ISO-8859-1"));
+                messageDigest.update(cf.toString().getBytes("ISO-8859-1"));
                 messageDigest.update(delimer);
                 messageDigest.update((byte) sessionMode);
                 messageDigest.update(delimer);
@@ -126,9 +127,9 @@ public class JMSContextMetadata implements Serializable {
                 }
                 messageDigest.update(delimer);
                 byte[] result = messageDigest.digest();
-                StringBuffer buff = new StringBuffer();
-                for (int i = 0; i < result.length; i++) {
-                    String byteStr = Integer.toHexString(result[i] & 0xFF);
+                StringBuilder buff = new StringBuilder();
+                for (byte element : result) {
+                    String byteStr = Integer.toHexString(element & 0xFF);
                     if (byteStr.length() < 2) {
                         buff.append('0');
                     }
@@ -154,15 +155,11 @@ public class JMSContextMetadata implements Serializable {
         if (password != null && isPasswordAlias(password)) {
             try {
                 String unalisedPwd = RelativePathResolver.getRealPasswordFromAlias(password);
-                if (unalisedPwd != null && !"".equals(unalisedPwd)) {
+                if (unalisedPwd != null && !unalisedPwd.isEmpty()) {
                     return unalisedPwd;
                 }
             } catch (Exception e) {
-                if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING,
-                            localStrings.getLocalString("decrypt.password.fail", "Failed to unalias password for the reason: {0}."),
-                            e.toString());
-                }
+                logger.log(Level.WARNING, "Failed to unalias password.", e);
             }
         }
 

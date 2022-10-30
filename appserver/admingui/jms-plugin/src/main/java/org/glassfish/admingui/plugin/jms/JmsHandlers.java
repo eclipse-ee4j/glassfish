@@ -27,6 +27,7 @@ import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
+
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,12 +36,15 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+
 import org.glassfish.admingui.common.util.GuiUtil;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.jms.admin.cli.JMSDestination;
@@ -366,7 +370,7 @@ public class JmsHandlers {
         try {
             String poolName = (String) handlerCtx.getInputValue("poolName");
             ConnectorRuntime connectorRuntime = GuiUtil.getHabitat().getService(ConnectorRuntime.class);
-            PoolInfo poolInfo = new PoolInfo(poolName);
+            PoolInfo poolInfo = new PoolInfo(SimpleJndiName.of(poolName));
             connectorRuntime.pingConnectionPool(poolInfo);
             GuiUtil.prepareAlert("success", GuiUtil.getMessage("msg.PingSucceed"), null);
         } catch (Exception ex) {

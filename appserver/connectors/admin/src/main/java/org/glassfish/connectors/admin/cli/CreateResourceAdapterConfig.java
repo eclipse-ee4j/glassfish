@@ -41,6 +41,7 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ResourceAdapterConfig;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
@@ -74,8 +75,8 @@ public class CreateResourceAdapterConfig implements AdminCommand {
     @Param(name=PROPERTY, optional=true, separator=':')
     private Properties properties;
 
-    @Param(name=TARGET, optional=true, obsolete = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(name = TARGET, optional = true, obsolete = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     @Param(name=RAC_THREAD_POOL_ID, optional=true, alias="threadPoolIds")
     private String threadPoolIds;
@@ -99,9 +100,8 @@ public class CreateResourceAdapterConfig implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
+        HashMap<String, String> attrList = new HashMap<>();
         attrList.put(RESOURCE_ADAPTER_CONFIG_NAME, raName);
-        //attrList.put("name", name);
         attrList.put(THREAD_POOL_IDS, threadPoolIds);
         attrList.put(ServerTags.OBJECT_TYPE, objectType);
 
@@ -170,9 +170,10 @@ public class CreateResourceAdapterConfig implements AdminCommand {
     }
 
     private boolean hasDuplicate(Resources resources, ActionReport report) {
-        if(ConnectorsUtil.getResourceByName(resources, ResourceAdapterConfig.class, raName) != null){
+        final SimpleJndiName jndiName = new SimpleJndiName(raName);
+        if(ConnectorsUtil.getResourceByName(resources, ResourceAdapterConfig.class, jndiName) != null){
             String msg = localStrings.getLocalString("create.resource.adapter.config.duplicate",
-                    "Resource adapter config already exists for RAR", raName);
+                    "Resource adapter config already exists for RAR", jndiName);
             report.setMessage(msg);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return true;

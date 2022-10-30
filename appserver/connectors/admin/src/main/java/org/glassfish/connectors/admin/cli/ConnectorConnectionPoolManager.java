@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
@@ -168,22 +169,22 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         ResourceStatus status = new ResourceStatus(ResourceStatus.SUCCESS, "Validation Successful");
         if (poolname == null) {
             String msg = localStrings.getLocalString("create.connector.connection.pool.noJndiName",
-                            "No pool name defined for connector connection pool.");
+                "No pool name defined for connector connection pool.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         // ensure we don't already have one of this name
-        if(ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, poolname) != null){
+        final SimpleJndiName jndiName = new SimpleJndiName(poolname);
+        if (ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, jndiName) != null) {
             String errMsg = localStrings.getLocalString("create.connector.connection.pool.duplicate",
-                    "A resource named {0} already exists.", poolname);
+                "A resource named {0} already exists.", poolname);
             return new ResourceStatus(ResourceStatus.FAILURE, errMsg);
         }
 
-        //no need to validate in remote instance as the validation would have happened in DAS.
-        if(environment.isDas() && requiresNewTransaction){
+        // no need to validate in remote instance as the validation would have happened in DAS.
+        if (environment.isDas() && requiresNewTransaction) {
 
             if (applications == null) {
-                String msg = localStrings.getLocalString("noApplications",
-                        "No applications found.");
+                String msg = localStrings.getLocalString("noApplications", "No applications found.");
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
 
@@ -192,13 +193,12 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
                 if (status.getStatus() == ResourceStatus.FAILURE) {
                     return status;
                 }
-            } catch(ConnectorRuntimeException cre) {
+            } catch (ConnectorRuntimeException cre) {
                 Logger.getLogger(ConnectorConnectionPoolManager.class.getName()).log(Level.SEVERE,
-                        "Could not find connection definitions from ConnectorRuntime for resource adapter "+ raname, cre);
-                String msg = localStrings.getLocalString(
-                      "create.connector.connection.pool.noConnDefs",
-                      "Could not find connection definitions for resource adapter {0}",
-                      raname) + " " + cre.getLocalizedMessage();
+                    "Could not find connection definitions from ConnectorRuntime for resource adapter " + raname, cre);
+                String msg = localStrings.getLocalString("create.connector.connection.pool.noConnDefs",
+                    "Could not find connection definitions for resource adapter {0}", raname) + " "
+                    + cre.getLocalizedMessage();
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
         }

@@ -33,6 +33,7 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ResourceAdapterConfig;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
@@ -56,8 +57,8 @@ public class DeleteResourceAdapterConfig implements AdminCommand {
     @Param(name="raname", primary=true)
     private String raName;
 
-    @Param(optional=true, obsolete = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(optional = true, obsolete = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     @Inject
     private Domain domain;
@@ -80,7 +81,8 @@ public class DeleteResourceAdapterConfig implements AdminCommand {
         }
 
         // ensure we already have this resource
-        if(ConnectorsUtil.getResourceByName(domain.getResources(), ResourceAdapterConfig.class, raName) == null){
+        if (ConnectorsUtil.getResourceByName(domain.getResources(), ResourceAdapterConfig.class,
+            new SimpleJndiName(raName)) == null) {
             report.setMessage(localStrings.getLocalString("delete.resource.adapter.config.notfound",
                     "Resource-Adapter-Config for {0} does not exist.", raName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -93,7 +95,7 @@ public class DeleteResourceAdapterConfig implements AdminCommand {
                 @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
                     ResourceAdapterConfig resource = ConnectorsUtil.getResourceByName(domain.getResources(),
-                        ResourceAdapterConfig.class, raName);
+                        ResourceAdapterConfig.class, new SimpleJndiName(raName));
                     if (resource != null && resource.getResourceAdapterName().equals(raName)) {
                         return param.getResources().remove(resource);
                     }

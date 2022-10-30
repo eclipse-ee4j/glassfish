@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,15 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import java.util.HashMap;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -30,21 +40,21 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import java.util.HashMap;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.*;
 import static org.glassfish.connectors.admin.cli.CLIConstants.DESCRIPTION;
 import static org.glassfish.connectors.admin.cli.CLIConstants.PROPERTY;
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_CLASS_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_CREATE_COMMAND_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_JNDI_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_RA_NAME;
+import static org.glassfish.connectors.admin.cli.CLIConstants.AOR.AOR_RES_TYPE;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ADMIN_OBJECT_CLASS_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_TYPE;
 
 /**
  * Create Admin Object Command
@@ -78,8 +88,8 @@ public class CreateAdminObject implements AdminCommand {
     @Param(name=PROPERTY, optional=true, separator=':')
     private Properties properties;
 
-    @Param(optional=true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     @Param(name=AOR_JNDI_NAME, primary=true)
     private String jndiName;
@@ -96,10 +106,11 @@ public class CreateAdminObject implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
+        HashMap<String, String> attrList = new HashMap<>();
         attrList.put(RES_TYPE, resType);
         attrList.put(ADMIN_OBJECT_CLASS_NAME, className);
         attrList.put(ResourceConstants.ENABLED, enabled.toString());
@@ -132,8 +143,9 @@ public class CreateAdminObject implements AdminCommand {
                  report.setMessage(localStrings.getLocalString("create.admin.object.fail",
                     "Admin object {0} creation failed", jndiName, ""));
             }
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         report.setActionExitCode(ec);
     }

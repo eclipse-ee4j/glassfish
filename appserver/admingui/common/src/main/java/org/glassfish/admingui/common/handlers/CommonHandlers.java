@@ -613,7 +613,7 @@ public class CommonHandlers {
      * <p> This handler is different than JSFT's default navigate handler in
      *     that it forces the request to NOT be a "partial request".  The
      *     effect is that no wrapping of the response will be done.  This is
-     *     normally done in JSF2 in order to work with the jsf.js JS code
+     *     normally done in JSF2 in order to work with the faces.js JS code
      *     that handles the response.  In the Admin Console, we typically do
      *     not use this JS, so this is not desirable behavior.</p>
      *

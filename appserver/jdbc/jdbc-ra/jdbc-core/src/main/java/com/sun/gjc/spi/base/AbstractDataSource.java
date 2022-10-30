@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,6 @@
 
 package com.sun.gjc.spi.base;
 
-import static java.util.logging.Level.WARNING;
-
-import java.io.PrintWriter;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.logging.Logger;
-
-import javax.naming.Reference;
-import javax.sql.DataSource;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.spi.BadConnectionEventListener;
 import com.sun.gjc.spi.ConnectionManagerImplementation;
@@ -38,6 +28,19 @@ import com.sun.logging.LogDomains;
 import jakarta.resource.Referenceable;
 import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ConnectionManager;
+import jakarta.resource.spi.LazyAssociatableConnectionManager;
+import jakarta.resource.spi.LazyEnlistableConnectionManager;
+
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
+import javax.naming.Reference;
+import javax.sql.DataSource;
+
+import static java.util.logging.Level.WARNING;
 
 /**
  * Holds the <code>java.sql.Connection</code> object, which is to be passed to
@@ -88,6 +91,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return <code> Connection </code> object.
      * @throws SQLException In case of an error.
      */
+    @Override
     public Connection getConnection() throws SQLException {
         try {
             ConnectionHolder connection = (ConnectionHolder) connectionManager.allocateConnection(managedConnectionFactoryImpl, null);
@@ -119,6 +123,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return <code> Connection </code> object.
      * @throws SQLException In case of an error.
      */
+    @Override
     public Connection getConnection(String user, String pwd) throws SQLException {
         try {
             ConnectionRequestInfoImpl info = new ConnectionRequestInfoImpl(user, pwd.toCharArray());
@@ -140,6 +145,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return <code>java.sql.Connection</code> implementation of the driver.
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained.
      */
+    @Override
     public Connection getConnection(Connection con) throws SQLException {
 
         Connection driverCon = con;
@@ -159,6 +165,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return <code>java.sql.Connection</code>
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
      */
+    @Override
     public Connection getNonTxConnection() throws SQLException {
         try {
             ConnectionHolder connection =
@@ -184,6 +191,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return <code>java.sql.Connection</code>
      * @throws <code>java.sql.SQLException</code> If connection cannot be obtained
      */
+    @Override
     public Connection getNonTxConnection(String user, String password) throws SQLException {
         try {
             ConnectionRequestInfoImpl cxReqInfo = new ConnectionRequestInfoImpl(user, password.toCharArray());
@@ -205,6 +213,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return login timeout.
      * @throws SQLException If a database error occurs.
      */
+    @Override
     public int getLoginTimeout() throws SQLException {
         return loginTimeout;
     }
@@ -215,6 +224,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @param loginTimeout Login timeout.
      * @throws SQLException If a database error occurs.
      */
+    @Override
     public void setLoginTimeout(int loginTimeout) throws SQLException {
         this.loginTimeout = loginTimeout;
     }
@@ -225,6 +235,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @return <code> PrintWriter </code> object.
      * @throws SQLException If a database error occurs.
      */
+    @Override
     public PrintWriter getLogWriter() throws SQLException {
         return logWriter;
     }
@@ -235,6 +246,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      * @param logWriter object.
      * @throws SQLException If a database error occurs.
      */
+    @Override
     public void setLogWriter(PrintWriter logWriter) throws SQLException {
         this.logWriter = logWriter;
     }
@@ -262,6 +274,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      *
      * @return <code>Reference</code>object.
      */
+    @Override
     public Reference getReference() {
         return reference;
     }
@@ -271,28 +284,27 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      *
      * @param reference <code>Reference</code> object.
      */
+    @Override
     public void setReference(Reference reference) {
         this.reference = reference;
     }
 
     private ConnectionHolder.ConnectionType findConnectionType() {
-        ConnectionHolder.ConnectionType cmType = ConnectionHolder.ConnectionType.STANDARD;
-
-        if (connectionManager instanceof jakarta.resource.spi.LazyAssociatableConnectionManager) {
-            if (!((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager).getJndiName()
-                    .endsWith(ConnectorConstants.PM_JNDI_SUFFIX)) {
-                cmType = ConnectionHolder.ConnectionType.LAZY_ASSOCIATABLE;
+        if (connectionManager instanceof LazyAssociatableConnectionManager) {
+            if (((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager).getJndiName().toString()
+                .endsWith(ConnectorConstants.PM_JNDI_SUFFIX)) {
+                return ConnectionHolder.ConnectionType.STANDARD;
             }
-        } else if (connectionManager instanceof jakarta.resource.spi.LazyEnlistableConnectionManager) {
-            if (!((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager).getJndiName()
-                    .endsWith(ConnectorConstants.PM_JNDI_SUFFIX)
-                    && !((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager).getJndiName()
-                            .endsWith(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
-                cmType = ConnectionHolder.ConnectionType.LAZY_ENLISTABLE;
+        } else if (connectionManager instanceof LazyEnlistableConnectionManager) {
+            String jndiName = ((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager)
+                .getJndiName().toString();
+            if (jndiName.endsWith(ConnectorConstants.PM_JNDI_SUFFIX)
+                || jndiName.endsWith(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
+                return ConnectionHolder.ConnectionType.STANDARD;
             }
         }
 
-        return cmType;
+        return ConnectionHolder.ConnectionType.LAZY_ENLISTABLE;
     }
 
     private void setConnectionType(ConnectionHolder con) {
@@ -302,14 +314,14 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
     private void setConnectionType(ConnectionHolder con, boolean isNonTx) {
         con.setConnectionType(conType_);
         if (conType_ == ConnectionHolder.ConnectionType.LAZY_ASSOCIATABLE
-                && connectionManager instanceof jakarta.resource.spi.LazyAssociatableConnectionManager) {
+                && connectionManager instanceof LazyAssociatableConnectionManager) {
             con.setLazyAssociatableConnectionManager((jakarta.resource.spi.LazyAssociatableConnectionManager) connectionManager);
         } else if (conType_ == ConnectionHolder.ConnectionType.LAZY_ENLISTABLE) {
             if (isNonTx) {
                 // if this is a getNonTxConnection call on the DataSource, we
                 // should not LazyEnlist
                 con.setConnectionType(ConnectionHolder.ConnectionType.STANDARD);
-            } else if (connectionManager instanceof jakarta.resource.spi.LazyEnlistableConnectionManager) {
+            } else if (connectionManager instanceof LazyEnlistableConnectionManager) {
                 con.setLazyEnlistableConnectionManager((jakarta.resource.spi.LazyEnlistableConnectionManager) connectionManager);
             }
         }
@@ -339,6 +351,7 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
      *
      * @param connection <code>java.sql.Connection</code>
      */
+    @Override
     public void markConnectionAsBad(Connection connection) {
         if (connection instanceof ConnectionHolder) {
             ConnectionHolder userConnection = ((ConnectionHolder) connection);

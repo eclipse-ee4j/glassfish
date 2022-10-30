@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package com.sun.gjc.util;
 
+import com.sun.logging.LogDomains;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -24,7 +27,7 @@ import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.logging.LogDomains;
+import org.glassfish.api.naming.SimpleJndiName;
 
 /**
  * Maintains the Sql Tracing Cache used to store SQL statements used by the
@@ -41,18 +44,18 @@ public class SQLTraceCache {
     private int numTopQueriesToReport = 10;
     private long timeToKeepQueries = 60 * 1000;
     private SQLTraceTimerTask sqlTraceTimerTask;
-    private String poolName;
-    private String appName;
-    private String moduleName;
+    private final SimpleJndiName poolName;
+    private final String appName;
+    private final String moduleName;
     private final static Logger _logger = LogDomains.getLogger(SQLTraceCache.class, LogDomains.RSR_LOGGER);
     private static final String LINE_BREAK = "%%%EOL%%%";
 
-    public SQLTraceCache(String poolName, String appName, String moduleName, int maxSize, long timeToKeepQueries) {
+    public SQLTraceCache(SimpleJndiName poolName, String appName, String moduleName, int maxSize, long timeToKeepQueries) {
         this.poolName = poolName;
         this.appName = appName;
         this.moduleName = moduleName;
         this.numTopQueriesToReport = maxSize;
-        list = new ArrayList<SQLTrace>();
+        list = new ArrayList<>();
         this.timeToKeepQueries = timeToKeepQueries * 60 * 1000;
     }
 
@@ -60,7 +63,7 @@ public class SQLTraceCache {
         return list;
     }
 
-    public String getPoolName() {
+    public SimpleJndiName getPoolName() {
         return poolName;
     }
 
@@ -150,9 +153,9 @@ public class SQLTraceCache {
     public void purgeEntries() {
         synchronized (list) {
             Collections.sort(list, Collections.reverseOrder());
-            Iterator i = list.iterator();
+            Iterator<SQLTrace> i = list.iterator();
             while (i.hasNext()) {
-                SQLTrace cacheObj = (SQLTrace) i.next();
+                SQLTrace cacheObj = i.next();
                 if (list.size() > numTopQueriesToReport) {
                     if (_logger.isLoggable(Level.FINEST)) {
                         _logger.finest("removing sql=" + cacheObj.getQueryName());

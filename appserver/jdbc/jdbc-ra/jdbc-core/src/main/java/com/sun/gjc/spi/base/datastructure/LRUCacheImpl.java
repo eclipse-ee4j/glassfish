@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,11 @@
 
 package com.sun.gjc.spi.base.datastructure;
 
+import com.sun.gjc.monitoring.StatementCacheProbeProvider;
+import com.sun.gjc.spi.base.CacheObjectKey;
+import com.sun.gjc.spi.base.PreparedStatementWrapper;
+import com.sun.logging.LogDomains;
+
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -25,11 +31,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
-
-import com.sun.gjc.monitoring.StatementCacheProbeProvider;
-import com.sun.gjc.spi.base.CacheObjectKey;
-import com.sun.gjc.spi.base.PreparedStatementWrapper;
-import com.sun.logging.LogDomains;
 
 /**
  *
@@ -42,20 +43,20 @@ public class LRUCacheImpl implements Cache {
     /**
      * Stores the objects for statement caching
      */
-    private Map<CacheObjectKey, CacheEntry> list;
+    private final Map<CacheObjectKey, CacheEntry> list;
 
     /**
      * Size of the cache
      */
-    private int maxSize;
+    private final int maxSize;
     private StatementCacheProbeProvider probeProvider;
-    private PoolInfo poolInfo;
+    private final PoolInfo poolInfo;
 
 
     public LRUCacheImpl(PoolInfo poolInfo, int maxSize) {
         this.maxSize = maxSize;
         this.poolInfo = poolInfo;
-        list = new LinkedHashMap<CacheObjectKey, CacheEntry>();
+        list = new LinkedHashMap<>();
 
         try {
             probeProvider = new StatementCacheProbeProvider();
@@ -72,6 +73,7 @@ public class LRUCacheImpl implements Cache {
      * @return result object that contains the key with the entry if not null when
      * (1) object not found in cache
      */
+    @Override
     public Object checkAndUpdateCache(CacheObjectKey key) {
         Object result = null;
 
@@ -83,14 +85,14 @@ public class LRUCacheImpl implements Cache {
 
             // TODO-SC Busy cache hits?
             probeProvider.statementCacheHitEvent(
-                poolInfo.getName(),
+                poolInfo.getName().toString(),
                 poolInfo.getApplicationName(),
                 poolInfo.getModuleName());
         } else {
             // Cache miss
             _logger.finest("Cache Miss");
             probeProvider.statementCacheMissEvent(
-                poolInfo.getName(),
+                poolInfo.getName().toString(),
                 poolInfo.getApplicationName(),
                 poolInfo.getModuleName());
         }
@@ -105,6 +107,7 @@ public class LRUCacheImpl implements Cache {
      * @param o entry that is the wrapper of PreparedStatement or CallableStatement
      * @param force If the already existing key is to be overwritten
      */
+    @Override
     public void addToCache(CacheObjectKey key, Object o, boolean force) {
         if (force || !list.containsKey(key)) {
             // overwrite or if not already found in cache
@@ -120,17 +123,20 @@ public class LRUCacheImpl implements Cache {
     /**
      * Clears the statement cache
      */
+    @Override
     public void clearCache() {
         _logger.fine("clearing objects in cache");
         list.clear();
     }
 
+    @Override
     public void flushCache() {
         while (list.size() != 0) {
             purge();
         }
     }
 
+    @Override
     public void purge() {
         Set<Map.Entry<CacheObjectKey, CacheEntry>> entrySet = list.entrySet();
         Iterator entrySetIterator = entrySet.iterator();
@@ -153,6 +159,7 @@ public class LRUCacheImpl implements Cache {
     }
 
     // Used only for purging the bad statements.
+    @Override
     public void purge(Object obj) {
         PreparedStatementWrapper tmpPS = (PreparedStatementWrapper) obj;
         Set<Map.Entry<CacheObjectKey, CacheEntry>> entrySet = list.entrySet();
@@ -185,6 +192,7 @@ public class LRUCacheImpl implements Cache {
      *
      * @return has integer value
      */
+    @Override
     public int getSize() {
         return list.size();
     }
@@ -198,13 +206,14 @@ public class LRUCacheImpl implements Cache {
      * cache.
      */
     public static class CacheEntry {
-        private Object entryObj;
+        private final Object entryObj;
 
         public CacheEntry(Object o) {
             this.entryObj = o;
         }
     }
 
+    @Override
     public boolean isSynchronized() {
         return false;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +18,25 @@
 package org.glassfish.jdbc.admin.cli.internal;
 
 import com.sun.enterprise.config.serverbeans.Resources;
+
+import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.Set;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.jdbcruntime.service.JdbcAdminServiceImpl;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author Jagadish Ramu
@@ -56,14 +64,12 @@ public class GetValidationTableNames implements AdminCommand {
     @Param(name="modulename", optional=true)
     private String moduleName;
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         try {
-            PoolInfo poolInfo = new PoolInfo(poolName, applicationName, moduleName);
+            PoolInfo poolInfo = new PoolInfo(SimpleJndiName.of(poolName), applicationName, moduleName);
             Set<String> validationTableNames = jdbcAdminService.getValidationTableNames(poolInfo);
             Properties extraProperties = new Properties();
             extraProperties.put("validationTableNames", new ArrayList(validationTableNames));

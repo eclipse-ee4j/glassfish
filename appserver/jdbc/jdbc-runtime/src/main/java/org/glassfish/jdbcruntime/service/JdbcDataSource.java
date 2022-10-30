@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,9 @@
 
 package org.glassfish.jdbcruntime.service;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuffix;
-
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.connectors.ConnectorRuntime;
+import com.sun.enterprise.connectors.util.ResourcesUtil;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,38 +28,37 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.connectors.ConnectorRuntime;
-import com.sun.enterprise.connectors.util.ResourcesUtil;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuffix;
 
 public class JdbcDataSource implements DataSource {
-    private ResourceInfo resourceInfo;
+    private final ResourceInfo resourceInfo;
     private PrintWriter logWriter;
     private int loginTimeout;
 
-    public void setResourceInfo(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
+    public JdbcDataSource(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
         validateResource(resourceInfo);
         this.resourceInfo = resourceInfo;
     }
 
-    private void validateResource(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
-        ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
-        String jndiName = resourceInfo.getName();
+    private static void validateResource(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
+        SimpleJndiName jndiName = resourceInfo.getName();
         String suffix = getValidSuffix(jndiName);
-
+        ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
         if (suffix != null) {
             // Typically, resource is created without suffix. Try without suffix.
-            String tmpJndiName = jndiName.substring(0, jndiName.lastIndexOf(suffix));
-            if (resourcesUtil.getResource(tmpJndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName(), JdbcResource.class) != null) {
+            SimpleJndiName tmpJndiName = jndiName.removeSuffix(suffix);
+            if (resourcesUtil.getResource(tmpJndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName(),
+                JdbcResource.class) != null) {
                 return;
             }
         }
 
         if (resourcesUtil.getResource(resourceInfo, JdbcResource.class) == null) {
-            throw new ConnectorRuntimeException("Invalid resource : " + resourceInfo);
+            throw new ConnectorRuntimeException("Invalid resource: " + resourceInfo);
         }
     }
 

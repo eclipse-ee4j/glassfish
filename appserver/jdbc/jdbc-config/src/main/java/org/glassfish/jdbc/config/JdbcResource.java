@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,23 +21,29 @@ import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+
+import jakarta.validation.Payload;
+import jakarta.validation.constraints.NotNull;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
-import org.jvnet.hk2.config.*;
+import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
+import org.glassfish.resourcebase.resources.ResourceTypeOrder;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
-import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
-
-import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.List;
 
 /**
  * JDBC javax.sql.(XA)DataSource resource definition

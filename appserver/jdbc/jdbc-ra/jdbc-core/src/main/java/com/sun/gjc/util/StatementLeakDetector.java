@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,22 +17,22 @@
 
 package com.sun.gjc.util;
 
-import static java.util.logging.Level.WARNING;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.gjc.monitoring.StatementLeakProbeProvider;
+import com.sun.logging.LogDomains;
 
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.gjc.monitoring.StatementLeakProbeProvider;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.WARNING;
 
 /**
  * Statement leak detector that prints the stack trace of the thread when a
@@ -42,26 +43,26 @@ import com.sun.logging.LogDomains;
  * @author Shalini M
  */
 public class StatementLeakDetector {
-    private HashMap<Statement, StackTraceElement[]> statementLeakThreadStackHashMap;
-    private HashMap<Statement, StatementLeakTask> statementLeakTimerTaskHashMap;
-    private PoolInfo poolInfo;
+    private final HashMap<Statement, StackTraceElement[]> statementLeakThreadStackHashMap;
+    private final HashMap<Statement, StatementLeakTask> statementLeakTimerTaskHashMap;
+    private final PoolInfo poolInfo;
     private boolean statementLeakTracing;
     private long statementLeakTimeoutInMillis;
     private boolean statementLeakReclaim;
     // Lock on HashMap to trace statement leaks
     private final Object statementLeakLock;
-    private Map<Statement, StatementLeakListener> listeners;
+    private final Map<Statement, StatementLeakListener> listeners;
     private final static Logger _logger = LogDomains.getLogger(StatementLeakDetector.class, LogDomains.RSR_LOGGER);
     private final static StringManager localStrings = StringManager.getManager(StatementLeakDetector.class);
-    private Timer timer;
+    private final Timer timer;
     private StatementLeakProbeProvider stmtLeakProbeProvider = null;
 
     public StatementLeakDetector(PoolInfo poolInfo, boolean leakTracing, long leakTimeoutInMillis, boolean leakReclaim,
             Timer timer) {
         this.poolInfo = poolInfo;
-        statementLeakThreadStackHashMap = new HashMap<Statement, StackTraceElement[]>();
-        statementLeakTimerTaskHashMap = new HashMap<Statement, StatementLeakTask>();
-        listeners = new HashMap<Statement, StatementLeakListener>();
+        statementLeakThreadStackHashMap = new HashMap<>();
+        statementLeakTimerTaskHashMap = new HashMap<>();
+        listeners = new HashMap<>();
         statementLeakLock = new Object();
         statementLeakTracing = leakTracing;
         statementLeakTimeoutInMillis = leakTimeoutInMillis;
@@ -137,8 +138,8 @@ public class StatementLeakDetector {
             if (statementLeakThreadStackHashMap.containsKey(stmt)) {
                 StackTraceElement[] threadStack = statementLeakThreadStackHashMap.remove(stmt);
                 StatementLeakListener stmtLeakListener = listeners.get(stmt);
-                stmtLeakProbeProvider.potentialStatementLeakEvent(poolInfo.getName(), poolInfo.getApplicationName(),
-                        poolInfo.getModuleName());
+                stmtLeakProbeProvider.potentialStatementLeakEvent(poolInfo.getName().toString(),
+                    poolInfo.getApplicationName(), poolInfo.getModuleName());
                 printStatementLeakTrace(threadStack);
                 statementLeakTimerTaskHashMap.remove(stmt);
                 if (statementLeakReclaim) {
@@ -182,15 +183,13 @@ public class StatementLeakDetector {
      */
     public void clearAllStatementLeakTasks() {
         synchronized (statementLeakLock) {
-            Iterator<Map.Entry<Statement, StatementLeakTask>> entryIterator = statementLeakTimerTaskHashMap.entrySet()
-                    .iterator();
-            while (entryIterator.hasNext()) {
-                Map.Entry<Statement, StatementLeakTask> entry = entryIterator.next();
+            for (Entry<Statement, StatementLeakTask> entry : statementLeakTimerTaskHashMap.entrySet()) {
                 StatementLeakTask statementLeakTask = entry.getValue();
                 statementLeakTask.cancel();
             }
-            if (timer != null)
+            if (timer != null) {
                 timer.purge();
+            }
             statementLeakThreadStackHashMap.clear();
             statementLeakTimerTaskHashMap.clear();
         }
@@ -198,12 +197,13 @@ public class StatementLeakDetector {
 
     private class StatementLeakTask extends TimerTask {
 
-        private Statement statement;
+        private final Statement statement;
 
         StatementLeakTask(Statement stmt) {
             this.statement = stmt;
         }
 
+        @Override
         public void run() {
             potentialStatementLeakFound(statement);
         }

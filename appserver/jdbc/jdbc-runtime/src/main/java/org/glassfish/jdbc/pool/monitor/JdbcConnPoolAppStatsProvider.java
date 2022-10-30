@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,7 @@
 
 package org.glassfish.jdbc.pool.monitor;
 
-import static org.glassfish.external.statistics.impl.StatisticImpl.UNIT_COUNT;
-
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
@@ -29,6 +29,8 @@ import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
+
+import static org.glassfish.external.statistics.impl.StatisticImpl.UNIT_COUNT;
 
 /**
  * StatsProvider object for Jdbc pool monitoring grouped by application names.
@@ -45,7 +47,7 @@ public class JdbcConnPoolAppStatsProvider {
 
     private static final String JDBC_APP_PROBE_LISTENER = "glassfish:jdbc-pool:applications:";
 
-    private RangeStatisticImpl numConnUsed =
+    private final RangeStatisticImpl numConnUsed =
         new RangeStatisticImpl(
             0, 0, 0, "NumConnUsed", UNIT_COUNT,
             "Provides connection usage " +
@@ -55,26 +57,26 @@ public class JdbcConnPoolAppStatsProvider {
             System.currentTimeMillis(),
             System.currentTimeMillis());
 
-    private CountStatisticImpl numConnAcquired =
+    private final CountStatisticImpl numConnAcquired =
         new CountStatisticImpl("NumConnAcquired", UNIT_COUNT,
             "Number of logical " +
             "connections acquired from the pool.");
 
-    private CountStatisticImpl numConnReleased =
+    private final CountStatisticImpl numConnReleased =
         new CountStatisticImpl("NumConnReleased", UNIT_COUNT,
             "Number of logical " +
             "connections released to the pool.");
 
 
-    private String appName;
-    private String poolName;
+    private final String appName;
+    private final SimpleJndiName poolName;
 
     public JdbcConnPoolAppStatsProvider(PoolInfo poolInfo, String appName) {
         this.poolName = poolInfo.getName();
         this.appName = appName;
     }
 
-    public String getPoolName() {
+    public SimpleJndiName getPoolName() {
         return this.poolName;
     }
 

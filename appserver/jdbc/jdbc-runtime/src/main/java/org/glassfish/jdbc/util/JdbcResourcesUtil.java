@@ -20,7 +20,6 @@ package org.glassfish.jdbc.util;
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.connectors.ConnectorRuntime;
@@ -34,6 +33,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -70,24 +70,23 @@ public class JdbcResourcesUtil {
         return runtime;
     }
 
-    public static <T> Resource getResourceByName(Resources resources, Class<T> type, String name) {
-        return resources.getResourceByName(type, name);
-    }
-
-    public static Collection<BindableResource> getResourcesOfPool(Resources resources, String connectionPoolName) {
+    public static Collection<BindableResource> getResourcesOfPool(Resources resources, SimpleJndiName connectionPoolName) {
         Set<BindableResource> resourcesReferringPool = new HashSet<>();
-        ResourcePool pool = (ResourcePool) getResourceByName(resources, ResourcePool.class, connectionPoolName);
+        ResourcePool pool = getResourceByName(resources, ResourcePool.class, connectionPoolName);
         if (pool != null) {
-            Collection<BindableResource> bindableResources = resources.getResources(BindableResource.class);
-            for (BindableResource resource : bindableResources) {
-                if (JdbcResource.class.isAssignableFrom(resource.getClass())) {
-                    if ((((JdbcResource) resource).getPoolName()).equals(connectionPoolName)) {
-                        resourcesReferringPool.add(resource);
-                    }
+            LOG.log(Level.FINE, "Found pool: {0}", pool.getName());
+            Collection<JdbcResource> bindableResources = resources.getResources(JdbcResource.class);
+            for (JdbcResource resource : bindableResources) {
+                if (resource.getPoolName().equals(connectionPoolName.toString())) {
+                    resourcesReferringPool.add(resource);
                 }
             }
         }
         return resourcesReferringPool;
+    }
+
+    public static ResourcePool getResourceByName(Resources resources, Class<ResourcePool> type, SimpleJndiName name) {
+        return resources.getResourceByName(type, name);
     }
 
     /**
@@ -162,7 +161,8 @@ public class JdbcResourcesUtil {
         if (resources != null) {
             resource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, resourceInfo.getName());
             if (resource != null) {
-                pool = ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, resource.getPoolName());
+                SimpleJndiName poolName = new SimpleJndiName(resource.getPoolName());
+                pool = ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName);
             }
         }
         return pool;
@@ -187,14 +187,15 @@ public class JdbcResourcesUtil {
         for (JdbcResource resource : jdbcResources) {
             ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
             // Have to check isReferenced here!
-            if ((resource.getPoolName().equalsIgnoreCase(poolInfo.getName())) && ResourcesUtil.createInstance().isReferenced(resourceInfo)
-                    && ResourcesUtil.createInstance().isEnabled(resource)) {
+            ResourcesUtil util = ResourcesUtil.createInstance();
+            if (resource.getPoolName().equals(poolInfo.getName().toString()) && util.isReferenced(resourceInfo)
+                && util.isEnabled(resource)) {
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("pool " + poolInfo + "resource " + resourceInfo + " referred "
-                            + ResourcesUtil.createInstance().isReferenced(resourceInfo));
+                        + util.isReferenced(resourceInfo));
 
-                    LOG.fine(
-                            "JDBC resource " + resource.getJndiName() + "refers " + poolInfo + "in this server instance and is enabled");
+                    LOG.fine("JDBC resource " + resource.getJndiName() + "refers " + poolInfo
+                        + "in this server instance and is enabled");
                 }
                 return true;
             }

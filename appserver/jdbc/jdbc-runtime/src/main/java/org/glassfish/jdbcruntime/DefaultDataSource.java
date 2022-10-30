@@ -25,6 +25,8 @@ import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+
 /**
  * Naming Object Proxy to handle the Default Data Source. Maps to a
  * pre-configured data source, when binding for a datasource reference is absent
@@ -36,7 +38,7 @@ import org.jvnet.hk2.annotations.Service;
 @NamespacePrefixes(DefaultDataSource.DEFAULT_DATASOURCE)
 public class DefaultDataSource implements NamedNamingObjectProxy, DefaultResourceProxy {
 
-    static final String DEFAULT_DATASOURCE = "java:comp/DefaultDataSource";
+    static final String DEFAULT_DATASOURCE = JNDI_CTX_JAVA_COMPONENT + "DefaultDataSource";
     static final String DEFAULT_DATASOURCE_PHYS = "jdbc/__default";
 
     private DataSource dataSource;

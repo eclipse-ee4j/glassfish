@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,22 +21,30 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.beans.PropertyVetoException;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.mail.config.MailResource;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.resources.mail.config.MailResource;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
-import java.beans.PropertyVetoException;
 
 /**
  * Delete Mail Resource object
@@ -81,6 +89,7 @@ public class DeleteMailResource implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -93,11 +102,11 @@ public class DeleteMailResource implements AdminCommand {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-
+        SimpleJndiName simpleJndiName = SimpleJndiName.of(jndiName);
         if (environment.isDas()) {
 
             if ("domain".equals(target)) {
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 0) {
+                if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     report.setMessage(localStrings.getLocalString("delete.mail.resource.resource-ref.exist",
                             "mail-resource [ {0} ] is referenced in an " +
                                     "instance/cluster target, Use delete-resource-ref on appropriate target",
@@ -106,7 +115,7 @@ public class DeleteMailResource implements AdminCommand {
                     return;
                 }
             } else {
-                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                if (!resourceUtil.isResourceRefInTarget(simpleJndiName, target)) {
                     report.setMessage(localStrings.getLocalString("delete.mail.resource.no.resource-ref",
                             "mail-resource [ {0} ] is not referenced in target [ {1} ]",
                             jndiName, target));
@@ -115,7 +124,7 @@ public class DeleteMailResource implements AdminCommand {
 
                 }
 
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
+                if (resourceUtil.getTargetsReferringResourceRef(simpleJndiName).size() > 1) {
                     report.setMessage(localStrings.getLocalString("delete.mail.resource.multiple.resource-refs",
                             "mail-resource [ {0} ] is referenced in multiple " +
                                     "instance/cluster targets, Use delete-resource-ref on appropriate target",
@@ -128,10 +137,11 @@ public class DeleteMailResource implements AdminCommand {
 
         try {
             // delete resource-ref
-            resourceUtil.deleteResourceRef(jndiName, target);
+            resourceUtil.deleteResourceRef(simpleJndiName, target);
 
             // delete java-mail-resource
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
+                @Override
                 public Object run(Resources param) throws PropertyVetoException,
                         TransactionFailure {
                     MailResource resource = (MailResource)

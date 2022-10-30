@@ -19,6 +19,8 @@ package org.glassfish.resourcebase.resources.api;
 
 import java.io.Serializable;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Represents resource information.
  * A resource may be defined in "java:app" scope or "java:module" scope
@@ -32,7 +34,7 @@ public interface GenericResourceInfo extends Serializable {
      *
      * @return String name
      */
-    String getName();
+    SimpleJndiName getName();
 
     /**
      * Application in which the resource is defined

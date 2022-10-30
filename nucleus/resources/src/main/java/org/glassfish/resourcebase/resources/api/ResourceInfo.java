@@ -19,6 +19,8 @@ package org.glassfish.resourcebase.resources.api;
 
 import java.util.Objects;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Represents resource information (typically, bindable-resource)
  *
@@ -28,21 +30,21 @@ public class ResourceInfo implements GenericResourceInfo {
 
     private static final long serialVersionUID = 8908989934557767621L;
 
-    private final String name;
+    private final SimpleJndiName name;
     private final String applicationName;
     private final String moduleName;
 
-    public ResourceInfo(String name) {
+    public ResourceInfo(SimpleJndiName name) {
         this(name, null, null);
     }
 
 
-    public ResourceInfo(String name, String applicationName) {
+    public ResourceInfo(SimpleJndiName name, String applicationName) {
         this(name, applicationName, null);
     }
 
 
-    public ResourceInfo(String name, String applicationName, String moduleName) {
+    public ResourceInfo(SimpleJndiName name, String applicationName, String moduleName) {
         this.name = name;
         this.applicationName = applicationName;
         this.moduleName = moduleName;
@@ -50,7 +52,7 @@ public class ResourceInfo implements GenericResourceInfo {
 
 
     @Override
-    public String getName() {
+    public SimpleJndiName getName() {
         return name;
     }
 

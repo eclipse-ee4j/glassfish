@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,23 +19,26 @@ package org.glassfish.kernel.bean_validator;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import javax.naming.NamingException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorContext;
 import jakarta.validation.ValidatorFactory;
 
-import org.glassfish.api.naming.NamespacePrefixes;
+import javax.naming.NamingException;
+
 import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 @Service
 @NamespacePrefixes({BeanValidatorNamingProxy.nameForValidator, BeanValidatorNamingProxy.nameForValidatorFactory})
 public class BeanValidatorNamingProxy implements NamedNamingObjectProxy {
 
-    static final String nameForValidator = "java:comp/Validator";
-    static final String nameForValidatorFactory = "java:comp/ValidatorFactory";
+    static final String nameForValidator = JNDI_CTX_JAVA_COMPONENT + "Validator";
+    static final String nameForValidatorFactory = JNDI_CTX_JAVA_COMPONENT + "ValidatorFactory";
 
     private ValidatorFactory validatorFactory;
     private Validator validator;
@@ -42,6 +46,7 @@ public class BeanValidatorNamingProxy implements NamedNamingObjectProxy {
     @Inject @Named("ValidationNamingProxy") @Optional
     private NamedNamingObjectProxy cdiNamingProxy;
 
+    @Override
     public Object handle(String name) throws NamingException {
         Object result = null;
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,24 @@
 
 package org.glassfish.resourcebase.resources.util;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.logging.LogDomains;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Module;
-import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.Resources;
 
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
-import org.glassfish.logging.annotation.LoggerInfo;
+
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.resourcebase.resources.ResourceLoggingConstansts;
+import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 
 /**
@@ -39,9 +44,7 @@ public class ResourceUtil {
 
     @LogMessagesResourceBundle
     public static final String LOGMESSAGE_RESOURCE = "org.glassfish.resourcebase.resources.LogMessages";
-
-    @LoggerInfo(subsystem="RESOURCE", description="Nucleus Resource", publish=true)
-
+    @LoggerInfo(subsystem = "RESOURCE", description = "Nucleus Resource", publish = true)
     public static final String LOGGER = "jakarta.enterprise.resources.util";
     private static final Logger _logger = Logger.getLogger(LOGGER, LOGMESSAGE_RESOURCE);
 
@@ -50,9 +53,32 @@ public class ResourceUtil {
 
     public static BindableResource getBindableResourceByName(Resources resources, String name) {
         Collection<BindableResource> typedResources = resources.getResources(BindableResource.class);
-        if(typedResources != null)
-        for(BindableResource resource : typedResources){
-            if(resource.getJndiName().equals(name)){
+        if (typedResources != null) {
+            for (BindableResource resource : typedResources) {
+                if (resource.getJndiName().equals(name)) {
+                    return resource;
+                }
+            }
+        }
+        return null;
+    }
+
+
+    public static Resource getResourceByName(Class<? extends Resource> clazz, Resources resources, String name) {
+        Collection<? extends Resource> typedResources = resources.getResources(clazz);
+        if (typedResources != null) {
+            for (Resource resource : typedResources) {
+                if (resource.getIdentity().equals(name)) {
+                    return resource;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Resource getResourceByIdentity(Resources resources, String name) {
+        for (Resource resource : resources.getResources()) {
+            if (resource.getIdentity().equals(name)) {
                 return resource;
             }
         }
@@ -60,38 +86,17 @@ public class ResourceUtil {
     }
 
 
-    public static Resource getResourceByName(Class<? extends Resource> clazz, Resources resources,
-        String name) {
-      Collection<? extends Resource> typedResources = resources.getResources(clazz);
-      if (typedResources != null)
-        for (Resource resource : typedResources) {
-          if (resource.getIdentity().equals(name)) {
-            return resource;
-          }
-        }
-      return null;
-    }
-
-    public static Resource getResourceByIdentity(Resources resources, String name) {
-        for (Resource resource : resources.getResources()) {
-          if (resource.getIdentity().equals(name)) {
-            return resource;
-          }
-        }
-        return null;
-    }
-
-    public static ResourceInfo getResourceInfo(BindableResource resource){
-
-        if(resource.getParent() != null && resource.getParent().getParent() instanceof Application){
-            Application application = (Application)resource.getParent().getParent();
-            return new ResourceInfo(resource.getJndiName(), application.getName());
-        }else if(resource.getParent() != null && resource.getParent().getParent() instanceof Module){
-            Module module = (Module)resource.getParent().getParent();
-            Application application = (Application)module.getParent();
-            return new ResourceInfo(resource.getJndiName(), application.getName(), module.getName());
-        }else{
-            return new ResourceInfo(resource.getJndiName());
+    public static ResourceInfo getResourceInfo(BindableResource resource) {
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        if (resource.getParent() != null && resource.getParent().getParent() instanceof Application) {
+            Application application = (Application) resource.getParent().getParent();
+            return new ResourceInfo(jndiName, application.getName());
+        } else if (resource.getParent() != null && resource.getParent().getParent() instanceof Module) {
+            Module module = (Module) resource.getParent().getParent();
+            Application application = (Application) module.getParent();
+            return new ResourceInfo(jndiName, application.getName(), module.getName());
+        } else {
+            return new ResourceInfo(jndiName);
         }
     }
 
@@ -105,59 +110,56 @@ public class ResourceUtil {
      * @return resource name / jndi-name
      */
     public static ResourceInfo getGenericResourceInfo(Resource resource){
-        ResourceInfo resourceInfo = null;
-        String resourceName = resource.getIdentity();
-        resourceInfo = getGenericResourceInfo(resource, resourceName);
-        return resourceInfo;
+        SimpleJndiName resourceName = SimpleJndiName.of(resource.getIdentity());
+        return getGenericResourceInfo(resource, resourceName);
     }
 
-    public static ResourceInfo getGenericResourceInfo(Resource resource, String resourceName){
-        if(resource.getParent() != null && resource.getParent().getParent() instanceof Application){
-            Application application = (Application)resource.getParent().getParent();
+    private static ResourceInfo getGenericResourceInfo(Resource resource, SimpleJndiName resourceName){
+        if (resource.getParent() != null && resource.getParent().getParent() instanceof Application) {
+            Application application = (Application) resource.getParent().getParent();
             return new ResourceInfo(resourceName, application.getName());
-        }else if(resource.getParent() != null && resource.getParent().getParent() instanceof Module){
-            Module module = (Module)resource.getParent().getParent();
-            Application application = (Application)module.getParent();
+        } else if (resource.getParent() != null && resource.getParent().getParent() instanceof Module) {
+            Module module = (Module) resource.getParent().getParent();
+            Application application = (Application) module.getParent();
             return new ResourceInfo(resourceName, application.getName(), module.getName());
-        }else{
+        } else {
             return new ResourceInfo(resourceName);
         }
     }
 
     public static PoolInfo getPoolInfo(ResourcePool resource){
-
-        if(resource.getParent() != null && resource.getParent().getParent() instanceof Application){
-            Application application = (Application)resource.getParent().getParent();
-            return new PoolInfo(resource.getName(), application.getName());
-        }else if(resource.getParent() != null && resource.getParent().getParent() instanceof Module){
-            Module module = (Module)resource.getParent().getParent();
-            Application application = (Application)module.getParent();
-            return new PoolInfo(resource.getName(), application.getName(), module.getName());
-        }else{
-            return new PoolInfo(resource.getName());
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getName());
+        if (resource.getParent() != null && resource.getParent().getParent() instanceof Application) {
+            Application application = (Application) resource.getParent().getParent();
+            return new PoolInfo(jndiName, application.getName());
+        } else if (resource.getParent() != null && resource.getParent().getParent() instanceof Module) {
+            Module module = (Module) resource.getParent().getParent();
+            Application application = (Application) module.getParent();
+            return new PoolInfo(jndiName, application.getName(), module.getName());
+        } else {
+            return new PoolInfo(jndiName);
         }
     }
 
     public static String getActualModuleNameWithExtension(String moduleName) {
         String actualModuleName = moduleName;
-        if(moduleName.endsWith("_war")){
+        if (moduleName.endsWith("_war")) {
             int index = moduleName.lastIndexOf("_war");
             actualModuleName = moduleName.substring(0, index) + ".war";
-        }else if(moduleName.endsWith("_rar")){
+        } else if (moduleName.endsWith("_rar")) {
             int index = moduleName.lastIndexOf("_rar");
             actualModuleName = moduleName.substring(0, index) + ".rar";
-        }else if(moduleName.endsWith("_jar")){
+        } else if (moduleName.endsWith("_jar")) {
             int index = moduleName.lastIndexOf("_jar");
             actualModuleName = moduleName.substring(0, index) + ".jar";
         }
         return actualModuleName;
     }
 
-    //TODO ASR : checking for .jar / .rar / .war / .ear ?
     public static String getActualModuleName(String moduleName){
-        if(moduleName != null){
-            if(moduleName.endsWith(".jar") /*|| moduleName.endsWith(".war") */|| moduleName.endsWith(".rar")){
-                moduleName = moduleName.substring(0,moduleName.length()-4);
+        if (moduleName != null) {
+            if (moduleName.endsWith(".jar") || moduleName.endsWith(".rar")) {
+                moduleName = moduleName.substring(0, moduleName.length() - 4);
             }
         }
         return moduleName;
@@ -169,28 +171,25 @@ public class ResourceUtil {
      * @return instance of the class
      */
     public static Object loadObject(String className) {
-        Object obj = null;
-        Class c;
-
         try {
-            c = Thread.currentThread().getContextClassLoader().loadClass(className);
-            obj = c.newInstance();
+            Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(className);
+            return c.getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             _logger.log(Level.SEVERE, ResourceLoggingConstansts.LOAD_CLASS_FAIL, className);
             _logger.log(Level.SEVERE, ResourceLoggingConstansts.LOAD_CLASS_FAIL_EXCEP, ex.getMessage());
+            return null;
         }
-        return obj;
     }
 
 
     //TODO ASR : instead of explicit APIs, getScope() can return "none" or "app" or "module" enum value ?
     public static boolean isApplicationScopedResource(GenericResourceInfo resourceInfo){
-        return resourceInfo != null && resourceInfo.getApplicationName() != null &&
-                resourceInfo.getName() != null && resourceInfo.getName().startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX);
+        return resourceInfo != null && resourceInfo.getApplicationName() != null && resourceInfo.getName() != null
+            && resourceInfo.getName().isJavaApp();
     }
 
     public static boolean isModuleScopedResource(GenericResourceInfo resourceInfo){
-        return resourceInfo != null && resourceInfo.getApplicationName() != null && resourceInfo.getModuleName() != null &&
-                resourceInfo.getName() != null && resourceInfo.getName().startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX);
+        return resourceInfo != null && resourceInfo.getApplicationName() != null && resourceInfo.getModuleName() != null
+            && resourceInfo.getName() != null && resourceInfo.getName().isJavaModule();
     }
 }

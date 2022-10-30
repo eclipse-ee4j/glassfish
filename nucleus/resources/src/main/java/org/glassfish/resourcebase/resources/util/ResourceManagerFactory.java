@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,61 +35,63 @@ import java.util.List;
 @Singleton
 @Service
 public class ResourceManagerFactory {
-    public final static String METADATA_KEY = "ResourceImpl";
+    public static final String METADATA_KEY = "ResourceImpl";
 
     @Inject
     private ServiceLocator locator;
 
-    public ResourceDeployer getResourceDeployer(Object resource){
-        ServiceHandle<?> deployerHandle = null;
-        for (ServiceHandle<?> handle : locator.getAllServiceHandles(ResourceDeployerInfo.class)) {
-            ActiveDescriptor<?> desc = handle.getActiveDescriptor();
-            if (desc == null) continue;
+    public <T> ResourceDeployer<T> getResourceDeployer(T resource) {
+        ServiceHandle<ResourceDeployerInfo> deployerHandle = null;
+        for (ServiceHandle<ResourceDeployerInfo> handle : locator.getAllServiceHandles(ResourceDeployerInfo.class)) {
+            final ActiveDescriptor<ResourceDeployerInfo> desc = handle.getActiveDescriptor();
+            if (desc == null) {
+                continue;
+            }
 
-            List<String> resourceImpls = desc.getMetadata().get(METADATA_KEY);
-            if (resourceImpls == null || resourceImpls.isEmpty()) continue;
-            String resourceImpl = resourceImpls.get(0);
-
-            if(Proxy.isProxyClass(resource.getClass())){
-                for(Class<?> clz : resource.getClass().getInterfaces()){
-                    if(resourceImpl.equals(clz.getName())){
+            final List<String> resourceImpls = desc.getMetadata().get(METADATA_KEY);
+            if (resourceImpls == null || resourceImpls.isEmpty()) {
+                continue;
+            }
+            final String resourceImpl = resourceImpls.get(0);
+            if (Proxy.isProxyClass(resource.getClass())) {
+                for (Class<?> clz : resource.getClass().getInterfaces()) {
+                    if (resourceImpl.equals(clz.getName())) {
                         deployerHandle = handle;
                         break;
                     }
                 }
 
-                if(deployerHandle != null){
+                if (deployerHandle != null) {
                     break;
                 }
             }
 
-            if(resourceImpl.equals(resource.getClass().getName())){
+            if (resourceImpl.equals(resource.getClass().getName())) {
                 deployerHandle = handle;
                 break;
             }
 
-            //hack : for JdbcConnectionPool impl used by DataSourceDefinition.
-            //check whether the interfaces implemented by the class matches
-            for(Class<?> clz : resource.getClass().getInterfaces()){
-                if(resourceImpl.equals(clz.getName())){
+            // hack : for JdbcConnectionPool impl used by DataSourceDefinition.
+            // check whether the interfaces implemented by the class matches
+            for (Class<?> clz : resource.getClass().getInterfaces()) {
+                if (resourceImpl.equals(clz.getName())) {
                     deployerHandle = handle;
                     break;
                 }
             }
 
-            if(deployerHandle != null){
+            if (deployerHandle != null) {
                 break;
             }
         }
 
-        if (deployerHandle != null){
-            Object deployer = deployerHandle.getService();
-            if(deployer != null && deployer instanceof ResourceDeployer){
-                return (ResourceDeployer) deployer;
+        if (deployerHandle != null) {
+            ResourceDeployer<T> deployer = (ResourceDeployer<T>) deployerHandle.getService();
+            if (deployer != null) {
+                return deployer;
             }
         }
 
         return null;
     }
-
 }

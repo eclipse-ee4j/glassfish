@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,24 +18,21 @@
 package org.glassfish.resourcebase.resources;
 
 import com.sun.enterprise.config.serverbeans.Resource;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import org.jvnet.hk2.annotations.Service;
 
-import java.util.*;
-
 /**
- * Created with IntelliJ IDEA.
- * User: naman
- * Date: 4/12/12
- * Time: 2:27 PM
- * To change this template use File | Settings | File Templates.
+ * @author naman 2012
  */
-
 @Service
 public class ResourceTypeOrderProcessor {
 
     public Collection<Resource> getOrderedResources(Collection<Resource> resources) {
-
-        List resourceList = new ArrayList(resources);
+        ArrayList<Resource> resourceList = new ArrayList<>(resources);
         Collections.sort(resourceList,new ResourceComparator());
         return resourceList;
     }
@@ -43,51 +41,59 @@ public class ResourceTypeOrderProcessor {
 
         @Override
         public int compare(Resource o1, Resource o2) {
-
-            Class o1Class = null;
-            Class o2Class = null;
-            Class[] interfaces = o1.getClass().getInterfaces();
-            if(interfaces != null){
-                for(Class clz : interfaces){
-                    if(Resource.class.isAssignableFrom(clz)){
-                        o1Class =  clz;
+            Class<?> o1Class = null;
+            Class<?> o2Class = null;
+            Class<?>[] interfaces = o1.getClass().getInterfaces();
+            if (interfaces != null) {
+                for (Class<?> clz : interfaces) {
+                    if (Resource.class.isAssignableFrom(clz)) {
+                        o1Class = clz;
                     }
                 }
             }
 
             interfaces = o2.getClass().getInterfaces();
-            if(interfaces != null){
-                for(Class clz : interfaces){
-                    if(Resource.class.isAssignableFrom(clz)){
-                        o2Class =  clz;
+            if (interfaces != null) {
+                for (Class<?> clz : interfaces) {
+                    if (Resource.class.isAssignableFrom(clz)) {
+                        o2Class = clz;
                     }
                 }
             }
 
-            if(!o1Class.equals(o2Class)) {
-                int o1deploymentOrder = 100;
-                int o2deploymentOrder = 100;
-                Class<?>[] allInterfaces = o1.getClass().getInterfaces();
-                for (Class<?> resourceInterface : allInterfaces) {
-                    ResourceTypeOrder resourceTypeOrder = (org.glassfish.resourcebase.resources.ResourceTypeOrder) resourceInterface.getAnnotation(org.glassfish.resourcebase.resources.ResourceTypeOrder.class);
-                    if (resourceTypeOrder != null) {
-                        o1deploymentOrder = resourceTypeOrder.deploymentOrder().getResourceDeploymentOrder();
-                    }
-                }
-                allInterfaces = o2.getClass().getInterfaces();
-                for (Class<?> resourceInterface : allInterfaces) {
-                    ResourceTypeOrder resourceTypeOrder = (ResourceTypeOrder) resourceInterface.getAnnotation(ResourceTypeOrder.class);
-                    if (resourceTypeOrder != null) {
-                        o2deploymentOrder = resourceTypeOrder.deploymentOrder().getResourceDeploymentOrder();
-                    }
-                }
-                return (o2deploymentOrder>o1deploymentOrder ? -1 : (o2deploymentOrder==o1deploymentOrder ? 0 : 1));
+            if (o1Class == null && o2Class == null) {
+                return 0;
+            }
+            if (o1Class == null && o2Class != null) {
+                return -1;
+            }
+            if (o1Class != null && o2Class == null) {
+                return 1;
+            }
 
-            } else {
+            if (o1Class.equals(o2Class)) {
                 int i1 = Integer.parseInt(o1.getDeploymentOrder());
                 int i2 = Integer.parseInt(o2.getDeploymentOrder());
-                return (i2>i1 ? -1 : (i1==i2 ? 0 : 1));
+                return (i2 > i1 ? -1 : (i1 == i2 ? 0 : 1));
             }
+
+            int o1deploymentOrder = 100;
+            int o2deploymentOrder = 100;
+            Class<?>[] allInterfaces = o1.getClass().getInterfaces();
+            for (Class<?> resourceInterface : allInterfaces) {
+                ResourceTypeOrder resourceTypeOrder = resourceInterface.getAnnotation(ResourceTypeOrder.class);
+                if (resourceTypeOrder != null) {
+                    o1deploymentOrder = resourceTypeOrder.deploymentOrder().getResourceDeploymentOrder();
+                }
+            }
+            allInterfaces = o2.getClass().getInterfaces();
+            for (Class<?> resourceInterface : allInterfaces) {
+                ResourceTypeOrder resourceTypeOrder = resourceInterface.getAnnotation(ResourceTypeOrder.class);
+                if (resourceTypeOrder != null) {
+                    o2deploymentOrder = resourceTypeOrder.deploymentOrder().getResourceDeploymentOrder();
+                }
+            }
+            return o2deploymentOrder > o1deploymentOrder ? -1 : o2deploymentOrder == o1deploymentOrder ? 0 : 1;
         }
     }
 

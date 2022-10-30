@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -28,6 +28,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
@@ -36,6 +38,7 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.admin.cli.test.ResourcesJunit5Extension;
 import org.glassfish.resources.config.ExternalJndiResource;
@@ -45,8 +48,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.TransactionFailure;
-
-import jakarta.inject.Inject;
 
 import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
 import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
@@ -227,7 +228,7 @@ public class CreateJndiResourceTest {
             }
         }
         assertTrue(isCreated);
-        ResourceRef ref = server.getResourceRef("sample_jndi_resource");
+        ResourceRef ref = server.getResourceRef(SimpleJndiName.of("sample_jndi_resource"));
         assertNotNull(ref);
         assertEquals("false", ref.getEnabled());
     }

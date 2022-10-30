@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,13 @@
 
 package org.glassfish.appclient.client.acc;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.spi.TransformerException;
+import jakarta.validation.ValidatorFactory;
+
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -28,15 +35,9 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.ProviderContainerContractInfoBase;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.spi.ClassTransformer;
-import jakarta.persistence.spi.TransformerException;
-import jakarta.validation.ValidatorFactory;
 
 /**
  * Implements the internal GlassFish interface which all persistence provider
@@ -50,7 +51,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
     private final Instrumentation inst;
     private final String applicationLocation;
 
-    private final Collection<EntityManagerFactory> emfs = new HashSet<EntityManagerFactory>();
+    private final Collection<EntityManagerFactory> emfs = new HashSet<>();
     /**
      * Creates a new instance of the ACC's implementation of the contract.
      * The ACC uses its agent to register a VM transformer which can then
@@ -127,7 +128,7 @@ public class ProviderContainerContractInfoImpl extends ProviderContainerContract
     }
 
     @Override
-    public String getJTADataSourceOverride() {
+    public SimpleJndiName getJTADataSourceOverride() {
         // Returns whether JTA datasource is overridden. For an appclient it is never the case.
         return null;
     }

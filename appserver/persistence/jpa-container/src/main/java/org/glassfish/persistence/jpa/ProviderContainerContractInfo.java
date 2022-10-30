@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,16 @@
 
 package org.glassfish.persistence.jpa;
 
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.ClassTransformer;
+import jakarta.validation.ValidatorFactory;
+
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
-
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.spi.ClassTransformer;
-import jakarta.validation.ValidatorFactory;
 
 /**
  * This encapsulates information needed to load or unload
@@ -34,7 +36,7 @@ import jakarta.validation.ValidatorFactory;
  */
 public interface ProviderContainerContractInfo {
 
-    String DEFAULT_DS_NAME = "jdbc/__default";
+    SimpleJndiName DEFAULT_DS_NAME = new SimpleJndiName("jdbc/__default");
 
     /**
      *
@@ -68,7 +70,7 @@ public interface ProviderContainerContractInfo {
      * @return DataSource with JNDI name given by <code>dataSourceName</code>
      * @throws javax.naming.NamingException
      */
-    DataSource lookupDataSource(String dataSourceName) throws NamingException;
+    DataSource lookupDataSource(SimpleJndiName dataSourceName) throws NamingException;
 
     /**
      * Looks up Non transactional DataSource with JNDI name given by
@@ -79,7 +81,7 @@ public interface ProviderContainerContractInfo {
      * <code>dataSourceName</code>
      * @throws NamingException
      */
-    DataSource lookupNonTxDataSource(String dataSourceName) throws NamingException;
+    DataSource lookupNonTxDataSource(SimpleJndiName dataSourceName) throws NamingException;
 
     /**
      * get instance of ValidatorFactory for this environment
@@ -112,14 +114,14 @@ public interface ProviderContainerContractInfo {
     /**
      * @return JTA DataSource override if any
      */
-    String getJTADataSourceOverride();
+    SimpleJndiName getJTADataSourceOverride();
 
     /**
      *
      * @return default data source name to be used if user has not defined a data
      * source
      */
-    String getDefaultDataSourceName();
+    SimpleJndiName getDefaultDataSourceName();
 
     /**
      * @return true if weaving is enabled for the current environment false

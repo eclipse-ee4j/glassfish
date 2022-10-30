@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,10 @@
 
 package org.glassfish.persistence.jpa.schemageneration;
 
-import static org.glassfish.persistence.common.DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX;
-import static org.glassfish.persistence.common.DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.logging.LogDomains;
+
+import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,13 +28,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
 
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import com.sun.logging.LogDomains;
-
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import static org.glassfish.persistence.common.DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX;
+import static org.glassfish.persistence.common.DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX;
 
 /**
  * SchemaGenerationProcessor that handles schema generation while running
@@ -143,7 +145,7 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
 
             // For a RESOURCE_LOCAL, managed pu, only non-jta-data-source should be
             // specified.
-            String dataSourceName = (PersistenceUnitTransactionType.JTA == PersistenceUnitTransactionType.valueOf(pud.getTransactionType()))
+            SimpleJndiName dataSourceName = (PersistenceUnitTransactionType.JTA == PersistenceUnitTransactionType.valueOf(pud.getTransactionType()))
                     ? pud.getJtaDataSource()
                     : pud.getNonJtaDataSource();
             helper.setJndiName(dataSourceName, pud.getName());

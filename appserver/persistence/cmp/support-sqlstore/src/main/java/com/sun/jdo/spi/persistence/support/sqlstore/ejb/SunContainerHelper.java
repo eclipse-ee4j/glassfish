@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,59 +15,52 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SunContainerHelper.java
- *
- * Created on March 12, 2003.
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
-import java.util.Iterator;
-import java.util.ResourceBundle;
-
-import jakarta.ejb.EJBObject;
-import jakarta.ejb.EJBLocalObject;
-import jakarta.ejb.EJBContext;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.EntityContext;
-
-import javax.naming.InitialContext;
-
-import com.sun.enterprise.deployment.*;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil; //TODO Dependency on connector-internal-api needs to be removed
-
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.internal.data.ApplicationInfo;
-
+// TODO Dependency on connector-internal-api needs to be removed
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.ejb.Container;
 import com.sun.ejb.containers.EjbContainerUtil;
-import org.glassfish.persistence.ejb.entitybean.container.spi.CascadeDeleteNotifier;
-
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.NameValuePairDescriptor;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.jdo.api.persistence.support.JDOException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
-
-import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
+import com.sun.jdo.spi.persistence.support.sqlstore.impl.PersistenceManagerFactoryImpl;
 import com.sun.jdo.spi.persistence.support.sqlstore.utility.NumericConverter;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
-import org.glassfish.persistence.common.I18NHelper;
 
+import jakarta.ejb.EJBContext;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBLocalObject;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityContext;
+
+import java.util.Iterator;
+import java.util.ResourceBundle;
+
+import javax.naming.InitialContext;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.persistence.common.I18NHelper;
+import org.glassfish.persistence.ejb.entitybean.container.spi.CascadeDeleteNotifier;
 
-/** Implementation for Sun specific CMP and Container interactions as defined
-* by the ContainerHelper interface.
-*
-* IMPORTANT: This class extends SunTransactionHelper class. Any changes to the
-* TransactionHelper implementation must be done in the SunTransactionHelper.
-*
-*/
-public class SunContainerHelper extends SunTransactionHelper implements ContainerHelper
-    {
+/**
+ * Implementation for Sun specific CMP and Container interactions as defined
+ * by the ContainerHelper interface.
+ * IMPORTANT: This class extends SunTransactionHelper class. Any changes to the
+ * TransactionHelper implementation must be done in the SunTransactionHelper.
+ */
+public class SunContainerHelper extends SunTransactionHelper implements ContainerHelper    {
 
     /** I18N message handler */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
@@ -101,6 +95,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * specific.
      * @return a Container helper instance as an Object.
      */
+    @Override
     public Object getContainer(Object info) {
 
         Object[] params = (Object[])info;
@@ -124,6 +119,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param container a Container instance for the request.
      * @return a corresponding EJBObject instance to be used by the client.
      */
+    @Override
     public EJBObject getEJBObject(Object pk, Object container) {
         try {
             return ((Container)container).getEJBObjectForPrimaryKey(pk);
@@ -140,6 +136,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param container a helper instance for the request.
      * @return a corresponding EJBLocalObject instance to be used by the client.
      */
+    @Override
     public EJBLocalObject getEJBLocalObject(Object pk, Object container) {
         try {
             return ((Container)container).getEJBLocalObjectForPrimaryKey(pk);
@@ -160,6 +157,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param context an EJBContext of the calling bean.
      * @return a corresponding EJBLocalObject instance to be used by the client.
      */
+    @Override
     public EJBLocalObject getEJBLocalObject(Object pk, Object container, EJBContext context) {
         EJBLocalObject rc = null;
         try {
@@ -178,6 +176,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param ejb the EJBLocalObject for the bean to be removed.
      * @param container a Container instance for the request.
      */
+    @Override
     public void removeByEJBLocalObject(EJBLocalObject ejb, Object container) {
         try {
             ((Container)container).removeBeanUnchecked(ejb);
@@ -193,6 +192,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param pk the primary key for the bean to be removed.
      * @param container a Container instance for the request.
      */
+    @Override
     public void removeByPK(Object pk, Object container) {
         try {
             ((Container)container).removeBeanUnchecked(pk);
@@ -209,6 +209,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param o the instance to be verified.
      * @param container a Container instance for the request.
      */
+    @Override
     public void assertValidLocalObject(Object o, Object container) {
         ((Container)container).assertValidLocalObject(o);
     }
@@ -221,6 +222,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param o the instance to be verified.
      * @param container a Container instance for the request.
      */
+    @Override
     public void assertValidRemoteObject(Object o, Object container) {
         ((Container)container).assertValidRemoteObject(o);
     }
@@ -234,6 +236,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * @param context the EntityContext of the bean beeing removed.
      */
+    @Override
     public void setCascadeDeleteAfterSuperEJBRemove(EntityContext context) {
         try {
             ((CascadeDeleteNotifier)context).setCascadeDeleteAfterSuperEJBRemove(true);
@@ -250,6 +253,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @see getContainer(Object)
      * @param container a Container instance for the request.
      */
+    @Override
     public void preSelect(Object container) {
         ((Container)container).preSelect();
     }
@@ -262,6 +266,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @see getContainer(Object)
      * @param container a Container instance for the request.
      */
+    @Override
     public PersistenceManagerFactory getPersistenceManagerFactory(Object container) {
         Object rc = null;
         PersistenceManagerFactoryImpl pmf = null;
@@ -269,11 +274,11 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
         ResourceReferenceDescriptor cmpResource = ((Container)container).getEjbDescriptor().
             getEjbBundleDescriptor().getCMPResourceReference();
 
-        String name = cmpResource.getJndiName();
+        SimpleJndiName name = cmpResource.getJndiName();
 
         try {
             InitialContext ic = new InitialContext();
-            rc = ic.lookup(name);
+            rc = ic.lookup(name.toString());
 
             if (rc instanceof PersistenceManagerFactoryImpl) {
                 pmf = (PersistenceManagerFactoryImpl)rc;
@@ -322,6 +327,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * @param container a Container instance for the request
      * @return a valid NumericConverter policy type
      */
+    @Override
     public int getNumericConverterPolicy(Object container) {
         return NumericConverter.DEFAULT_POLICY;
     }
@@ -335,6 +341,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * @param pm PersistenceManager
      */
+    @Override
     public void beginInternalTransaction(PersistenceManager pm) {
         pm.currentTransaction().begin();
     }
@@ -348,6 +355,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * @param pm PersistenceManager
      */
+    @Override
     public void commitInternalTransaction(PersistenceManager pm) {
         pm.currentTransaction().commit();
     }
@@ -361,6 +369,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      *
      * @param pm PersistenceManager
      */
+    @Override
     public void rollbackInternalTransaction(PersistenceManager pm) {
         pm.currentTransaction().rollback();
     }
@@ -374,6 +383,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * Returns null if the calling thread is not associated
      * with a transaction.
      */
+    @Override
     public jakarta.transaction.Transaction suspendCurrentTransaction() {
         jakarta.transaction.Transaction tx = null;
         try {
@@ -394,6 +404,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * returned by #suspendCurrentTransaction() call it will be null in
      * case calling thread was not associated with a transaction.
      */
+    @Override
     public void resumeCurrentTransaction(jakarta.transaction.Transaction tx) {
         try {
             // Resume only real (i.e. not null transaction)

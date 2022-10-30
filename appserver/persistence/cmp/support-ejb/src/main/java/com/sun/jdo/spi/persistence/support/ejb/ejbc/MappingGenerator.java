@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,26 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * MappingGenerator.java
- *
- * Created on Aug 18, 2003
- */
-
 package com.sun.jdo.spi.persistence.support.ejb.ejbc;
+
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
+import com.sun.jdo.api.persistence.mapping.ejb.ConversionException;
+import com.sun.jdo.api.persistence.mapping.ejb.MappingFile;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmpFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.CmrFieldMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.ColumnPair;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.EntityMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping;
+import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMappings;
+import com.sun.jdo.api.persistence.model.Model;
+import com.sun.jdo.api.persistence.model.ModelException;
+import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
+import com.sun.jdo.spi.persistence.generator.database.DatabaseGenerator;
+import com.sun.jdo.spi.persistence.support.ejb.codegen.GeneratorException;
+import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
+import com.sun.jdo.spi.persistence.utility.StringHelper;
+import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -41,27 +55,10 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.jdo.api.persistence.mapping.ejb.AbstractNameMapper;
-import com.sun.jdo.api.persistence.mapping.ejb.ConversionException;
-import com.sun.jdo.api.persistence.mapping.ejb.MappingFile;
-import com.sun.jdo.api.persistence.mapping.ejb.beans.CmpFieldMapping;
-import com.sun.jdo.api.persistence.mapping.ejb.beans.CmrFieldMapping;
-import com.sun.jdo.api.persistence.mapping.ejb.beans.ColumnPair;
-import com.sun.jdo.api.persistence.mapping.ejb.beans.EntityMapping;
-import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMapping;
-import com.sun.jdo.api.persistence.mapping.ejb.beans.SunCmpMappings;
-import com.sun.jdo.api.persistence.model.Model;
-import com.sun.jdo.api.persistence.model.ModelException;
-import com.sun.jdo.api.persistence.model.mapping.MappingClassElement;
-import com.sun.jdo.spi.persistence.generator.database.DatabaseGenerator;
-import com.sun.jdo.spi.persistence.support.ejb.codegen.GeneratorException;
-import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
-import com.sun.jdo.spi.persistence.utility.StringHelper;
-import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.I18NHelper;
@@ -152,9 +149,10 @@ public class MappingGenerator extends
             Schema2BeansException, SQLException, GeneratorException,
             ConversionException {
 
-        SchemaElement schema = null;
-        if (ctx == null)
+        if (ctx == null) {
             isVerifyFlag = true;
+            return null;
+        }
         File cmpMappingFile = getSunCmpMappingFile(inputFilesPath);
         boolean mappedBeans = !ignoreSunDeploymentDescriptors
                 && cmpMappingFile.exists();
@@ -175,6 +173,7 @@ public class MappingGenerator extends
         Results deploymentArguments = getDeploymentArguments(
                 ctx, cmpResource, mustHaveDBVendorName);
         dbVendorName = deploymentArguments.getDatabaseVendorName();
+        SchemaElement schema = null;
         if (mappedBeans) {
             // If sun-cmp-mappings.xml exists and we are doing a deployment,
             // validate some arguments and make sure we have dbschema.
@@ -249,8 +248,7 @@ public class MappingGenerator extends
                             + cmpResource.getJndiName()
                             + ", isJavaToDatabase=" + isJavaToDatabaseFlag); // NOI18N
             }
-        }
-        else {
+        } else {
             // Generate mapping file and dbschema, since either
             // sun-cmp-mappings.xml does not exist (e.g. user didn't yet map)
             // or DeploymentContext is null (e.g. running under auspices of AVK).
@@ -343,16 +341,18 @@ public class MappingGenerator extends
                 try {
                     is.close();
                 } catch(Exception ex) {
-                    if (logger.isLoggable(Logger.FINE))
+                    if (logger.isLoggable(Logger.FINE)) {
                         logger.fine(ex.toString());
+                    }
                 }
             }
             if (iasMapping != null) {
                 try {
                     iasMapping.close();
                 } catch(Exception ex) {
-                    if (logger.isLoggable(Logger.FINE))
+                    if (logger.isLoggable(Logger.FINE)) {
                         logger.fine(ex.toString());
+                    }
                 }
             }
         }
@@ -383,8 +383,9 @@ public class MappingGenerator extends
             String dirs = cmpMappingFile.substring(
                 0, cmpMappingFile.lastIndexOf(File.separatorChar));
             File fileDirs = new File(dirs);
-            if (!fileDirs.exists())
+            if (!fileDirs.exists()) {
                 fileDirs.mkdirs();
+            }
         }
 
         return new File(cmpMappingFile);
@@ -429,8 +430,9 @@ public class MappingGenerator extends
                     sunCmpMapping.close();
                 }
             } catch (IOException ex) {
-                if (logger.isLoggable(Logger.FINE))
+                if (logger.isLoggable(Logger.FINE)) {
                     logger.fine(ex.toString());
+                }
             }
         }
     }
@@ -457,8 +459,9 @@ public class MappingGenerator extends
                     schemaStream.close();
                 }
             } catch (IOException ex) {
-               if (logger.isLoggable(Logger.FINE))
-                    logger.fine(ex.toString());
+               if (logger.isLoggable(Logger.FINE)) {
+                logger.fine(ex.toString());
+            }
             }
         }
     }
@@ -570,8 +573,7 @@ public class MappingGenerator extends
             // cmp-resource, try to get the dbvendorname from the database.
             if (null == dbVendorName && connectToDatabase) {
                 try {
-                    Connection conn = DeploymentHelper.getConnection(
-                            cmpResource.getJndiName());
+                    Connection conn = DeploymentHelper.getConnection(cmpResource.getJndiName());
                     dbVendorName = conn.getMetaData().getDatabaseProductName();
                 } catch (Exception ex) {
                     // Ignore exceptions and use default.
@@ -624,7 +626,7 @@ public class MappingGenerator extends
 
                 // In JavaToDB case we can deploy to the default jdbc-resource.
                 cmpResource = new ResourceReferenceDescriptor();
-                cmpResource.setJndiName("jdbc/__default");
+                cmpResource.setJndiName(new SimpleJndiName("jdbc/__default"));
                 cmpResource.setDatabaseVendorName(DBVendorTypeHelper.DERBY);
                 cmpResource.setCreateTablesAtDeploy(true);
                 cmpResource.setDropTablesAtUndeploy(true);
@@ -717,10 +719,11 @@ public class MappingGenerator extends
                 SchemaElement schemaElement = new SchemaElement(outSchemaImpl);
                 schemaElement.setName(DBIdentifier.create(generatedSchemaName));
 
-                if(dmd.getDatabaseProductName().compareToIgnoreCase("MYSQL") == 0)
+                if(dmd.getDatabaseProductName().compareToIgnoreCase("MYSQL") == 0) {
                     outSchemaImpl.initTables(cp, new LinkedList(tables), new LinkedList(), true);
-                else
+                } else {
                     outSchemaImpl.initTables(cp, new LinkedList(tables), new LinkedList(), false);
+                }
                 outstream = new FileOutputStream(
                         new File(classout,
                         new StringBuffer(generatedSchemaName)
@@ -742,8 +745,9 @@ public class MappingGenerator extends
                         outstream.close();
                     }
                 } catch (IOException ex) {
-                    if (logger.isLoggable(Logger.FINE))
+                    if (logger.isLoggable(Logger.FINE)) {
                         logger.fine(ex.toString());
+                    }
                 }
             }
         }
@@ -758,30 +762,30 @@ public class MappingGenerator extends
      */
     private void addAllTables(SunCmpMapping sunCmpMapping, Set tables) {
         EntityMapping[] beans = sunCmpMapping.getEntityMapping();
-        for (int i = 0; i < beans.length; i++) {
+        for (EntityMapping bean : beans) {
             // Always add the table name.
-            addTableName(beans[i].getTableName(), tables);
+            addTableName(bean.getTableName(), tables);
 
             // Check if there are table names specified in the
             // cmp-field-mapping.
-            CmpFieldMapping[] cmpfields = beans[i].getCmpFieldMapping();
-            for (int j = 0; j < cmpfields.length; j++) {
+            CmpFieldMapping[] cmpfields = bean.getCmpFieldMapping();
+            for (CmpFieldMapping cmpfield : cmpfields) {
                 // There might be more than one column-name for each cmp field.
-                String[] names = cmpfields[j].getColumnName();
-                for (int jj = 0; jj < names.length; jj++) {
-                    addRelatedTableName(names[jj], tables);
+                String[] names = cmpfield.getColumnName();
+                for (String name : names) {
+                    addRelatedTableName(name, tables);
                 }
             }
 
             // Check the table names specified in the cmr-field-mapping.
-            CmrFieldMapping[] cmrfields = beans[i].getCmrFieldMapping();
-            for (int j = 0; j < cmrfields.length; j++) {
+            CmrFieldMapping[] cmrfields = bean.getCmrFieldMapping();
+            for (CmrFieldMapping cmrfield : cmrfields) {
                 // There might be more than one column-pair for each cmr field.
-                ColumnPair[] pairs = cmrfields[j].getColumnPair();
-                for (int jj = 0; jj < pairs.length; jj++) {
-                    String[] names = pairs[jj].getColumnName();
-                    for (int jjj = 0; jjj < names.length; jjj++) {
-                        addRelatedTableName(names[jjj], tables);
+                ColumnPair[] pairs = cmrfield.getColumnPair();
+                for (ColumnPair pair : pairs) {
+                    String[] names = pair.getColumnName();
+                    for (String name : names) {
+                        addRelatedTableName(name, tables);
                     }
                 }
             }

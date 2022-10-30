@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,10 @@
 
 package org.glassfish.persistence.common;
 
-import org.glassfish.persistence.common.database.DBVendorTypeHelper;
-
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.OpsParams;
-import org.glassfish.api.ActionReport;
 import com.sun.logging.LogDomains;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,14 +28,25 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.Statement;
 import java.sql.SQLException;
-import javax.sql.DataSource;
+import java.sql.Statement;
 import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.sql.DataSource;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.deployment.UndeployCommandParameters;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.persistence.common.database.DBVendorTypeHelper;
 
 /**
  *
@@ -205,7 +206,8 @@ public class Java2DBProcessorHelper {
                 }
 
                 String bundleName = key.substring(PROCESSOR_TYPE.length());
-                String jndiName = deploymentContextProps.getProperty(RESOURCE_JNDI_NAME + bundleName);
+                SimpleJndiName jndiName = SimpleJndiName
+                    .of(deploymentContextProps.getProperty(RESOURCE_JNDI_NAME + bundleName));
                 String fileName = null;
                 if (create) {
                     if (getCreateTables(bundleName)) {
@@ -362,8 +364,9 @@ public class Java2DBProcessorHelper {
     /**
      * Sets jndiName
      */
-    public void setJndiName(String jndiName, String bundleName) {
-        deploymentContextProps.setProperty(RESOURCE_JNDI_NAME + bundleName, jndiName);
+    public void setJndiName(SimpleJndiName jndiName, String bundleName) {
+        deploymentContextProps.setProperty(RESOURCE_JNDI_NAME + bundleName,
+            jndiName == null ? null : jndiName.toString());
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("---> " + RESOURCE_JNDI_NAME + bundleName + " " + jndiName);
         }
@@ -524,7 +527,7 @@ public class Java2DBProcessorHelper {
      * @return true if the tables were successfully
      *    created/dropped from the database.
      */
-    public boolean executeDDLStatement(File fileName, String resourceName) {
+    public boolean executeDDLStatement(File fileName, SimpleJndiName resourceName) {
         boolean result = false;
         Connection conn = null;
         Statement sql = null;
@@ -562,7 +565,7 @@ public class Java2DBProcessorHelper {
      * to get a connection to the database.
      * @return true if the statements were successfully in the database.
      */
-    public boolean executeDDLStatement(String fileNamePrefix, String resourceName) {
+    public boolean executeDDLStatement(String fileNamePrefix, SimpleJndiName resourceName) {
         File file = null;
         Connection conn = null;
         try {
@@ -594,7 +597,7 @@ public class Java2DBProcessorHelper {
      * @return a Connection.
      * @throws SQLException if can not get a Connection.
      */
-    private Connection getConnection(String jndiName) throws Exception {
+    private Connection getConnection(SimpleJndiName jndiName) throws Exception {
         // TODO - pass Habitat or ConnectorRuntime as an argument.
         // TODO - remove duplication with DeploymentHelper
 
@@ -611,17 +614,15 @@ public class Java2DBProcessorHelper {
      * @param connName the JNDI name for obtaining a connection
      * @param ex Exception which is cause for inability to connect.
      */
-    private void cannotConnect(String connName, Throwable ex) {
-        logI18NWarnMessage( "Java2DBProcessorHelper.cannotConnect",
-                connName,  null, ex);
+    private void cannotConnect(SimpleJndiName connName, Throwable ex) {
+        logI18NWarnMessage("Java2DBProcessorHelper.cannotConnect", connName.toString(), null, ex);
     }
 
     /**
      * Provide a warning message to the user about inability to read a DDL file.
      */
     private void fileIOError(String regName, Throwable ex) {
-        logI18NWarnMessage("Java2DBProcessorHelper.ioexception",
-                regName,  null, ex);
+        logI18NWarnMessage("Java2DBProcessorHelper.ioexception", regName, null, ex);
     }
 
     /**
@@ -662,20 +663,14 @@ public class Java2DBProcessorHelper {
     /**
      * Get a generic localized message.
      */
-    public String getI18NMessage(
-            String errorCode, String regName,
-            String fileName, Throwable ex) {
-        String msg = null;
-        if(null != ex)
-               msg = I18NHelper.getMessage(
-                    messages, errorCode,  regName,  ex.toString());
-        else if(null != fileName )
-            msg = I18NHelper.getMessage(
-                    messages, errorCode,  regName,  fileName);
-        else
-             msg = I18NHelper.getMessage(messages, errorCode);
-
-        return msg;
+    public String getI18NMessage(String errorCode, String regName, String fileName, Throwable ex) {
+        if (ex != null) {
+            return I18NHelper.getMessage(messages, errorCode, regName, ex.toString());
+        } else if (fileName != null) {
+            return I18NHelper.getMessage(messages, errorCode, regName, fileName);
+        } else {
+            return I18NHelper.getMessage(messages, errorCode);
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +17,6 @@
 
 package org.glassfish.persistence.jpa;
 
-import static org.glassfish.persistence.common.DatabaseConstants.JTA_DATASOURCE_JNDI_NAME_OVERRIDE;
-
-import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.security.ProtectionDomain;
-
-import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.api.deployment.InstrumentableClassLoader;
-import org.glassfish.api.deployment.OpsParams;
-import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.BundleDescriptor;
@@ -38,6 +26,19 @@ import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.TransformerException;
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
+
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.IllegalClassFormatException;
+import java.security.ProtectionDomain;
+
+import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.deployment.InstrumentableClassLoader;
+import org.glassfish.api.deployment.OpsParams;
+import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.deployment.common.RootDeploymentDescriptor;
+
+import static org.glassfish.persistence.common.DatabaseConstants.JTA_DATASOURCE_JNDI_NAME_OVERRIDE;
 
 /**
  * Implementation of ProviderContainerContractInfo while running on server.
@@ -150,7 +151,7 @@ public class ServerProviderContainerContractInfo extends ProviderContainerContra
     }
 
     @Override
-    public String getJTADataSourceOverride() {
-        return deploymentContext.getTransientAppMetaData(JTA_DATASOURCE_JNDI_NAME_OVERRIDE, String.class);
+    public SimpleJndiName getJTADataSourceOverride() {
+        return deploymentContext.getTransientAppMetaData(JTA_DATASOURCE_JNDI_NAME_OVERRIDE, SimpleJndiName.class);
     }
 }

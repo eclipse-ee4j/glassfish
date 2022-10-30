@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,35 +15,36 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * SunTransactionHelper.java
- *
- * Created on March 13, 2003.
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
+
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
+import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
+import com.sun.appserv.jdbc.DataSource;
+import com.sun.ejb.containers.EjbContainerUtil;
+import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
+import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
+
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.Synchronization;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+import jakarta.transaction.TransactionManager;
+import jakarta.transaction.UserTransaction;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import jakarta.transaction.*;
 import javax.naming.InitialContext;
 
-
-import com.sun.appserv.jdbc.DataSource;
-
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEventListener;
-import com.sun.appserv.connectors.internal.spi.ConnectorNamingEvent;
-import com.sun.ejb.containers.EjbContainerUtil;
-
-import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
-import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
-import org.glassfish.persistence.common.I18NHelper;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.persistence.common.I18NHelper;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 
 /** Sun specific implementation for TransactionHelper interface.
@@ -52,10 +54,7 @@ import org.glassfish.internal.api.Globals;
 * any bean's or container beforeCompletion method, but before the corresponding
 * afterCompletion.
 */
-public class SunTransactionHelper extends TransactionHelperImpl
-        implements //ApplicationLoaderEventListener,
-        ConnectorNamingEventListener
-    {
+public class SunTransactionHelper extends TransactionHelperImpl implements ConnectorNamingEventListener {
 
     /** I18N message handler */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
@@ -71,7 +70,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
     /**
      * Array of registered ApplicationLifeCycleEventListener
      */
-    private final List<ApplicationLifeCycleEventListener> applicationLifeCycleEventListeners = new ArrayList<ApplicationLifeCycleEventListener>();
+    private final List<ApplicationLifeCycleEventListener> applicationLifeCycleEventListeners = new ArrayList<>();
 
 
     /** Garantees singleton.
@@ -86,7 +85,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
         ConnectorRuntime connectorRuntime = Globals.getDefaultHabitat().getService(ConnectorRuntime.class);
         connectorRuntime.registerConnectorNamingEventListener(helper);
 
-        pmf_list = new ArrayList<PersistenceManagerFactory>();
+        pmf_list = new ArrayList<>();
 
         ejbContainerUtil = Globals.getDefaultHabitat().getService(EjbContainerUtil.class);
     }
@@ -113,6 +112,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
     }
 
     /** SunTransactionHelper specific code */
+    @Override
     public Transaction getTransaction(){
        try{
             return TransactionManagerFinder.appserverTM.getTransaction();
@@ -124,24 +124,25 @@ public class SunTransactionHelper extends TransactionHelperImpl
     }
 
     /** SunTransactionHelper specific code */
+    @Override
     public UserTransaction getUserTransaction() {
-    try {
-        InitialContext ctx =
-                (InitialContext) Class.forName("javax.naming.InitialContext").newInstance(); //NOI18N
+        try {
+            return (UserTransaction) InitialContext.doLookup(JNDI_CTX_JAVA_COMPONENT + "UserTransaction");
+        } catch (Exception e) {
+            throw new JDOFatalInternalException(e.getMessage(), e);
+        }
+    }
 
-            return (UserTransaction)ctx.lookup("java:comp/UserTransaction"); //NOI18N
-    } catch (Exception e) {
-        throw new JDOFatalInternalException(e.getMessage());
-    }
-    }
 
     /** SunTransactionHelper specific code */
+    @Override
     public void registerSynchronization(Transaction jta, Synchronization sync)
             throws RollbackException, SystemException {
         ejbContainerUtil.registerPMSync(jta, sync);
     }
 
     /** SunTransactionHelper specific code */
+    @Override
     public PersistenceManagerFactory replaceInternalPersistenceManagerFactory(
     PersistenceManagerFactory pmf) {
 
@@ -166,6 +167,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
      * @param info the instance to use for the name generation.
      * @return name prefix as String.
      */
+    @Override
     public String getDDLNamePrefix(Object info) {
         return DeploymentHelper.getDDLNamePrefix(info);
     }
@@ -183,6 +185,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
      * @return a Connection.
      * @throws java.sql.SQLException
      */
+    @Override
     public java.sql.Connection getNonTransactionalConnection(
             Object resource, String username, char[] password)
             throws java.sql.SQLException {
@@ -205,6 +208,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
     }
 
     /** SunTransactionHelper specific code */
+    @Override
     public TransactionManager getLocalTransactionManager() {
         try {
             return TransactionManagerFinder.appserverTM;
@@ -213,9 +217,7 @@ public class SunTransactionHelper extends TransactionHelperImpl
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void registerApplicationLifeCycleEventListener(
             ApplicationLifeCycleEventListener listener) {
         synchronized(applicationLifeCycleEventListeners) {
@@ -224,31 +226,19 @@ public class SunTransactionHelper extends TransactionHelperImpl
     }
     //-------------------ApplicationLifeCycleEventListener Methods --------------//
 
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void notifyApplicationUnloaded(ClassLoader classLoader) {
-        for (Iterator iterator = applicationLifeCycleEventListeners.iterator();
-               iterator.hasNext();) {
-            ApplicationLifeCycleEventListener applicationLifeCycleEventListener =
-                    (ApplicationLifeCycleEventListener) iterator.next();
-            applicationLifeCycleEventListener.notifyApplicationUnloaded(classLoader);
-        }
+        for (Object applicationLifeCycleEventListener2 : applicationLifeCycleEventListeners) {
+        ApplicationLifeCycleEventListener applicationLifeCycleEventListener =
+                (ApplicationLifeCycleEventListener) applicationLifeCycleEventListener2;
+        applicationLifeCycleEventListener.notifyApplicationUnloaded(classLoader);
+      }
     }
 
-//    /**
-//     * @inheritDoc
-//     */
-//    public void handleEjbContainerEvent(EjbContainerEvent event) {
-//        //Ignore EjbContainerEvents
-//    }
-//
-    /**
-     * @inheritDoc
-     */
+    @Override
     public void connectorNamingEventPerformed(ConnectorNamingEvent event){
         if(event.getEventType() == ConnectorNamingEvent.EVENT_OBJECT_REBIND){
-            String dsName = ConnectorsUtil.getPMJndiName(event.getJndiName());
+            SimpleJndiName dsName = ConnectorsUtil.getPMJndiName(event.getJndiName());
             cleanUpResources(dsName);
         } // Ignore all other events.
     }
@@ -257,10 +247,10 @@ public class SunTransactionHelper extends TransactionHelperImpl
      * Removes all entries that correspond to the same connection factory name.
      * @param name the connection factory name.
      */
-    private void cleanUpResources(String name) {
+    private void cleanUpResources(SimpleJndiName name) {
         synchronized(pmf_listSyncObject) {
-            for (Iterator it = pmf_list.iterator(); it.hasNext(); ) {
-                PersistenceManagerFactory pmf = (PersistenceManagerFactory)it.next();
+            for (Iterator<PersistenceManagerFactory> it = pmf_list.iterator(); it.hasNext(); ) {
+                PersistenceManagerFactory pmf = it.next();
                 if (pmf.getConnectionFactoryName().equals(name)) {
                     it.remove();
                 }

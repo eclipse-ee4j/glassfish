@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,19 @@
 
 package org.glassfish.persistence.ejb.entitybean.container;
 
-import java.lang.reflect.Method;
-import jakarta.ejb.*;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-
 import com.sun.ejb.EjbInvocation;
-import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.ejb.containers.BaseContainer;
+import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.ejb.containers.EJBTimerService;
 import com.sun.ejb.containers.EJBTimerServiceWrapper;
+
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.EntityContext;
+import jakarta.ejb.TimerService;
+
+import java.lang.reflect.Method;
+
+import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.persistence.ejb.entitybean.container.spi.CascadeDeleteNotifier;
 
 /**
@@ -127,6 +131,7 @@ public class EntityContextImpl
     /**
      * Implementation of EntityContext method.
      */
+    @Override
     public Object getPrimaryKey() throws IllegalStateException {
         if ( ejbObjectImpl == null && ejbLocalObjectImpl == null ) {
             // There is no ejbObjectImpl/localObject in ejbCreate, ejbFind,
@@ -140,6 +145,7 @@ public class EntityContextImpl
     /**
      * Implementation of EntityContext method, overrides EJBContextImpl method.
      */
+    @Override
     public EJBObject getEJBObject()
         throws IllegalStateException
     {
@@ -155,6 +161,7 @@ public class EntityContextImpl
         return ejbStub;
     }
 
+    @Override
     public TimerService getTimerService() throws IllegalStateException {
         if( state == BeanState.CREATED || inUnsetEntityContext || inFinder() ) {
             throw new IllegalStateException("Operation not allowed");
@@ -164,6 +171,7 @@ public class EntityContextImpl
         return new EJBTimerServiceWrapper(timerService, (EntityContext) this);
     }
 
+    @Override
     protected void checkAccessToCallerSecurity()
         throws IllegalStateException
     {
@@ -181,6 +189,7 @@ public class EntityContextImpl
         }
     }
 
+    @Override
     public void checkTimerServiceMethodAccess()
         throws IllegalStateException
     {
@@ -201,6 +210,7 @@ public class EntityContextImpl
         return cascadeDeleteAfterSuperEJBRemove;
     }
 
+    @Override
     public final void setCascadeDeleteAfterSuperEJBRemove(boolean value) {
         this.cascadeDeleteAfterSuperEJBRemove = value;
     }

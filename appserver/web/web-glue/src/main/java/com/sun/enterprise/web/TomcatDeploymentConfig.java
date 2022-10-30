@@ -91,12 +91,8 @@ public class TomcatDeploymentConfig {
      */
     public static void configureWebModule(WebModule webModule, WebBundleDescriptorImpl webModuleDescriptor)
         throws LifecycleException {
-        logger.log(Level.FINEST, "configureWebModule(webModule={0}, webModuleDescriptor={1})",
-            new Object[] {webModule, webModuleDescriptor});
-        // When context root = "/"
-        if (webModuleDescriptor == null) {
-            return;
-        }
+        logger.log(Level.FINEST, "configureWebModule(webModule={0}, webModuleDescriptor.class={1})",
+            new Object[] {webModule, webModuleDescriptor.getClass()});
         webModule.setDisplayName(webModuleDescriptor.getDisplayName());
         webModule.setDistributable(webModuleDescriptor.isDistributable());
         webModule.setReplaceWelcomeFiles(true);

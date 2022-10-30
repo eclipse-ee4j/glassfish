@@ -210,10 +210,12 @@ public class WebModuleContextConfig extends ContextConfig {
         }
 
         try {
-            TomcatDeploymentConfig.configureWebModule((WebModule) context, webBundleDescriptor);
+            // When context root = "/"
+            if (webBundleDescriptor != null) {
+                TomcatDeploymentConfig.configureWebModule((WebModule) context, webBundleDescriptor);
+            }
             authenticatorConfig();
             managerConfig();
-
             context.setConfigured(true);
         } catch (Throwable t) {
             // clean up naming in case of errors

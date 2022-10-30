@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -20,6 +21,16 @@
 
 package org.apache.catalina.servlets;
 
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -37,20 +48,20 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.security.AccessController;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletConfig;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.UnavailableException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -78,6 +89,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.ext.EntityResolver2;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * <p>The default resource-serving servlet for most web applications,
@@ -235,7 +248,7 @@ public class DefaultServlet
     /**
      * Full range marker.
      */
-    protected static final ArrayList<Range> FULL = new ArrayList<Range>();
+    protected static final ArrayList<Range> FULL = new ArrayList<>();
 
     /**
      * The maximum number of items allowed in Range header.
@@ -279,7 +292,7 @@ public class DefaultServlet
     /**
      * JNDI resources name.
      */
-    protected static final String RESOURCES_JNDI_NAME = "java:/comp/Resources";
+    protected static final String RESOURCES_JNDI_NAME = JNDI_CTX_JAVA_COMPONENT + "Resources";
 
 
     /**
@@ -294,6 +307,7 @@ public class DefaultServlet
     /**
      * Finalize this servlet.
      */
+    @Override
     public void destroy() {
         // NOOP
     }
@@ -302,16 +316,20 @@ public class DefaultServlet
     /**
      * Initialize this servlet.
      */
+    @Override
     public void init() throws ServletException {
         ServletConfig sc = getServletConfig();
-        if (sc.getInitParameter("debug") != null)
+        if (sc.getInitParameter("debug") != null) {
             debug = Integer.parseInt(sc.getInitParameter("debug"));
+        }
 
-        if (sc.getInitParameter("input") != null)
+        if (sc.getInitParameter("input") != null) {
             input = Integer.parseInt(sc.getInitParameter("input"));
+        }
 
-        if (sc.getInitParameter("output") != null)
+        if (sc.getInitParameter("output") != null) {
             output = Integer.parseInt(sc.getInitParameter("output"));
+        }
 
         listings = Boolean.parseBoolean(sc.getInitParameter("listings"));
 
@@ -320,12 +338,14 @@ public class DefaultServlet
             sortedBy = Enum.valueOf(SortedBy.class, sortedByInitParam);
         }
 
-        if (sc.getInitParameter("readonly") != null)
+        if (sc.getInitParameter("readonly") != null) {
             readOnly = Boolean.parseBoolean(sc.getInitParameter("readonly"));
+        }
 
-        if (sc.getInitParameter("sendfileSize") != null)
+        if (sc.getInitParameter("sendfileSize") != null) {
             sendfileSize =
                 Integer.parseInt(sc.getInitParameter("sendfileSize")) * 1024;
+        }
 
         if (sc.getInitParameter("maxHeaderRangeItems") != null) {
             maxHeaderRangeItems =
@@ -339,14 +359,17 @@ public class DefaultServlet
         localXsltFile = sc.getInitParameter("localXsltFile");
         readmeFile = sc.getInitParameter("readmeFile");
 
-        if (sc.getInitParameter("useAcceptRanges") != null)
+        if (sc.getInitParameter("useAcceptRanges") != null) {
             useAcceptRanges = Boolean.parseBoolean(sc.getInitParameter("useAcceptRanges"));
+        }
 
         // Sanity check on the specified buffer sizes
-        if (input < 256)
+        if (input < 256) {
             input = 256;
-        if (output < 256)
+        }
+        if (output < 256) {
             output = 256;
+        }
 
         if (debug > 0) {
             log("DefaultServlet.init:  input buffer size=" + input +
@@ -428,11 +451,13 @@ public class DefaultServlet
         if (request.getAttribute(RequestDispatcher.INCLUDE_REQUEST_URI) != null) {
             String result = (String) request.getAttribute(
                 RequestDispatcher.INCLUDE_PATH_INFO);
-            if (result == null)
+            if (result == null) {
                 result = (String) request.getAttribute(
                     RequestDispatcher.INCLUDE_SERVLET_PATH);
-            if ((result == null) || (result.equals("")))
+            }
+            if ((result == null) || (result.equals(""))) {
                 result = "/";
+            }
             return (result);
         }
 
@@ -460,6 +485,7 @@ public class DefaultServlet
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet-specified error occurs
      */
+    @Override
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
         throws IOException, ServletException {
@@ -479,6 +505,7 @@ public class DefaultServlet
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet-specified error occurs
      */
+    @Override
     protected void doHead(HttpServletRequest request,
                           HttpServletResponse response)
         throws IOException, ServletException {
@@ -498,6 +525,7 @@ public class DefaultServlet
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet-specified error occurs
      */
+    @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
         throws IOException, ServletException {
@@ -514,6 +542,7 @@ public class DefaultServlet
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet-specified error occurs
      */
+    @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
 
@@ -601,8 +630,9 @@ public class DefaultServlet
         Resource oldResource = null;
         try {
             Object obj = resources.lookup(path);
-            if (obj instanceof Resource)
+            if (obj instanceof Resource) {
                 oldResource = (Resource) obj;
+            }
         } catch (NamingException e) {
             // Ignore
         }
@@ -667,6 +697,7 @@ public class DefaultServlet
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet-specified error occurs
      */
+    @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
         throws ServletException, IOException {
 
@@ -745,8 +776,9 @@ public class DefaultServlet
         int leftside = filesize / 1024;
         int rightside = (filesize % 1024) / 103;  // makes 1 digit
         // To avoid 0.0 for non-zero file, we bump to 0.1
-        if (leftside == 0 && rightside == 0 && filesize != 0)
+        if (leftside == 0 && rightside == 0 && filesize != 0) {
             rightside = 1;
+        }
         buf.append(leftside).append(".").append(rightside);
         buf.append(" KB");
 
@@ -771,12 +803,13 @@ public class DefaultServlet
         // Identify the requested resource path
         String path = getRelativePath(request);
         if (debug > 0) {
-            if (content)
+            if (content) {
                 log("DefaultServlet.serveResource:  Serving resource '" +
                     path + "' headers and data");
-            else
+            } else {
                 log("DefaultServlet.serveResource:  Serving resource '" +
                     path + "' headers only");
+            }
         }
 
         CacheEntry cacheEntry = null;
@@ -945,15 +978,17 @@ public class DefaultServlet
 
             // Set the appropriate output headers
             if (contentType != null) {
-                if (debug > 0)
+                if (debug > 0) {
                     log("DefaultServlet.serveFile:  contentType='" +
                         contentType + "'");
+                }
                 response.setContentType(contentType);
             }
             if ((cacheEntry.resource != null) && (contentLength >= 0)) {
-                if (debug > 0)
+                if (debug > 0) {
                     log("DefaultServlet.serveFile:  contentLength=" +
                         contentLength);
+                }
                 if (contentLength < Integer.MAX_VALUE) {
                     response.setContentLength((int) contentLength);
                 } else {
@@ -981,8 +1016,9 @@ public class DefaultServlet
                     // Silent catch
                 }
                 if (ostream != null) {
-                    if (!checkSendfile(request, response, cacheEntry, contentLength, null))
+                    if (!checkSendfile(request, response, cacheEntry, contentLength, null)) {
                         copy(cacheEntry, renderResult, ostream);
+                    }
                 } else {
                     copy(cacheEntry, renderResult, writer);
                 }
@@ -990,8 +1026,9 @@ public class DefaultServlet
 
         } else {
 
-            if ((ranges == null) || (ranges.isEmpty()))
+            if ((ranges == null) || (ranges.isEmpty())) {
                 return;
+            }
 
             if (maxHeaderRangeItems >= 0 && ranges.size() > maxHeaderRangeItems) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -1018,9 +1055,10 @@ public class DefaultServlet
                 }
 
                 if (contentType != null) {
-                    if (debug > 0)
+                    if (debug > 0) {
                         log("DefaultServlet.serveFile:  contentType='" +
                             contentType + "'");
+                    }
                     response.setContentType(contentType);
                 }
 
@@ -1031,8 +1069,9 @@ public class DefaultServlet
                         // Silent catch
                     }
                     if (ostream != null) {
-                        if (!checkSendfile(request, response, cacheEntry, range.end - range.start + 1, range))
+                        if (!checkSendfile(request, response, cacheEntry, range.end - range.start + 1, range)) {
                             copy(cacheEntry, ostream, range);
+                        }
                     } else {
                         copy(cacheEntry, writer, range);
                     }
@@ -1079,8 +1118,9 @@ public class DefaultServlet
         // Retrieving the content-range header (if any is specified
         String rangeHeader = request.getHeader("Content-Range");
 
-        if (rangeHeader == null)
+        if (rangeHeader == null) {
             return null;
+        }
 
         // bytes is the only range unit supported
         if (!rangeHeader.startsWith("bytes")) {
@@ -1156,16 +1196,18 @@ public class DefaultServlet
 
                 // If the ETag the client gave does not match the entity
                 // etag, then the entire entity is returned.
-                if (!eTag.equals(headerValue.trim()))
+                if (!eTag.equals(headerValue.trim())) {
                     return FULL;
+                }
 
             } else {
 
                 // If the timestamp of the entity the client got is older than
                 // the last modification date of the entity, the entire entity
                 // is returned.
-                if (lastModified > (headerValueTime + 1000))
+                if (lastModified > (headerValueTime + 1000)) {
                     return FULL;
+                }
 
             }
 
@@ -1173,14 +1215,16 @@ public class DefaultServlet
 
         long fileLength = resourceAttributes.getContentLength();
 
-        if (fileLength == 0)
+        if (fileLength == 0) {
             return null;
+        }
 
         // Retrieving the range header (if any is specified
         String rangeHeader = request.getHeader("Range");
 
-        if (rangeHeader == null)
+        if (rangeHeader == null) {
             return null;
+        }
         // bytes is the only range unit supported (and I don't see the point
         // of adding new ones).
         if (!rangeHeader.startsWith("bytes")) {
@@ -1194,7 +1238,7 @@ public class DefaultServlet
 
         // Vector which will contain all the ranges which are successfully
         // parsed.
-        ArrayList<Range> result = new ArrayList<Range>();
+        ArrayList<Range> result = new ArrayList<>();
         StringTokenizer commaTokenizer = new StringTokenizer(rangeHeader, ",");
 
         // Parsing the range list
@@ -1233,12 +1277,13 @@ public class DefaultServlet
                 try {
                     currentRange.start = Long.parseLong
                         (rangeDefinition.substring(0, dashPos));
-                    if (dashPos < rangeDefinition.length() - 1)
+                    if (dashPos < rangeDefinition.length() - 1) {
                         currentRange.end = Long.parseLong
                             (rangeDefinition.substring
                              (dashPos + 1, rangeDefinition.length()));
-                    else
+                    } else {
                         currentRange.end = fileLength - 1;
+                    }
                 } catch (NumberFormatException e) {
                     response.addHeader("Content-Range",
                                        "bytes */" + fileLength);
@@ -1353,11 +1398,13 @@ public class DefaultServlet
                 String trimmed = resourceName/*.substring(trim)*/;
                 if (trimmed.equalsIgnoreCase("WEB-INF") ||
                     trimmed.equalsIgnoreCase("META-INF") ||
-                    trimmed.equalsIgnoreCase(localXsltFile))
+                    trimmed.equalsIgnoreCase(localXsltFile)) {
                     continue;
+                }
 
-                if ((cacheEntry.name + trimmed).equals(contextXsltFile))
+                if ((cacheEntry.name + trimmed).equals(contextXsltFile)) {
                     continue;
+                }
 
                 CacheEntry childCacheEntry =
                     proxyDirContext.lookupCache(cacheEntry.name + resourceName);
@@ -1385,8 +1432,9 @@ public class DefaultServlet
 
                 sb.append(">");
                 sb.append(HtmlEntityEncoder.encodeXSS(trimmed));
-                if (childCacheEntry.context != null)
+                if (childCacheEntry.context != null) {
                     sb.append("/");
+                }
                 sb.append("</entry>");
 
             }
@@ -1521,11 +1569,13 @@ public class DefaultServlet
             String dirParent = MessageFormat.format(rb.getString(LogFacade.DIR_PARENT_INFO), parent);
             sb.append(" - <a href=\"");
             sb.append(rewrittenContextPath);
-            if (parent.equals(""))
+            if (parent.equals("")) {
                 parent = "/";
+            }
             sb.append(rewriteUrl(parent));
-            if (!parent.endsWith("/"))
+            if (!parent.endsWith("/")) {
                 sb.append("/");
+            }
             sb.append("\">");
             sb.append("<b>");
             sb.append(dirParent);
@@ -1580,8 +1630,9 @@ public class DefaultServlet
                 String resourceName = ncPair.getName();
                 String trimmed = resourceName/*.substring(trim)*/;
                 if (trimmed.equalsIgnoreCase("WEB-INF") ||
-                    trimmed.equalsIgnoreCase("META-INF"))
+                    trimmed.equalsIgnoreCase("META-INF")) {
                     continue;
+                }
 
                 CacheEntry childCacheEntry =
                     proxyDirContext.lookupCache(cacheEntry.name + resourceName);
@@ -1590,8 +1641,9 @@ public class DefaultServlet
                 }
 
                 sb.append("<tr");
-                if (shade)
+                if (shade) {
                     sb.append(" bgcolor=\"#eeeeee\"");
+                }
                 sb.append(">\r\n");
                 shade = !shade;
 
@@ -1600,19 +1652,22 @@ public class DefaultServlet
                 sb.append(rewrittenContextPath);
                 resourceName = rewriteUrl(name + resourceName);
                 sb.append(resourceName);
-                if (childCacheEntry.context != null)
+                if (childCacheEntry.context != null) {
                     sb.append("/");
+                }
                 sb.append("\"><tt>");
                 sb.append(HtmlEntityEncoder.encodeXSS(trimmed));
-                if (childCacheEntry.context != null)
+                if (childCacheEntry.context != null) {
                     sb.append("/");
+                }
                 sb.append("</tt></a></td>\r\n");
 
                 sb.append("<td align=\"right\"><tt>");
-                if (childCacheEntry.context != null)
+                if (childCacheEntry.context != null) {
                     sb.append("&nbsp;");
-                else
+                } else {
                     sb.append(renderSize(childCacheEntry.attributes.getContentLength()));
+                }
                 sb.append("</tt></td>\r\n");
 
                 sb.append("<td align=\"right\"><tt>");
@@ -1662,8 +1717,9 @@ public class DefaultServlet
 
         long leftSide = size / 1024;
         long rightSide = (size % 1024) / 103;   // Makes 1 digit
-        if ((leftSide == 0) && (rightSide == 0) && (size > 0))
+        if ((leftSide == 0) && (rightSide == 0) && (size > 0)) {
             rightSide = 1;
+        }
 
         return ("" + leftSide + "." + rightSide + " kb");
 
@@ -1689,11 +1745,12 @@ public class DefaultServlet
                     return buffer.toString();
                  }
              } catch(Throwable e) {
-                 ; /* Should only be IOException or NamingException
+                  /* Should only be IOException or NamingException
                     * can be ignored
                     */
-                 if (debug > 10)
+                 if (debug > 10) {
                     log("readme '" + readmeFile + "' not found", e);
+                }
              }
         }
 
@@ -1721,11 +1778,12 @@ public class DefaultServlet
                     }
                 }
              } catch(Throwable e) {
-                 ; /* Should only be IOException or NamingException
+                  /* Should only be IOException or NamingException
                     * can be ignored
                     */
-                if (debug > 10)
+                if (debug > 10) {
                     log("localXsltFile '" + localXsltFile + "' not found", e);
+                }
 
                 return null;
              }
@@ -1742,8 +1800,9 @@ public class DefaultServlet
                 }
             }
 
-            if (debug > 10)
+            if (debug > 10) {
                 log("contextXsltFile '" + contextXsltFile + "' not found");
+            }
         }
 
         /*  Open and read in file in one fell swoop to reduce chance
@@ -1924,8 +1983,9 @@ public class DefaultServlet
 
                 while (!conditionSatisfied && commaTokenizer.hasMoreTokens()) {
                     String currentToken = commaTokenizer.nextToken();
-                    if (currentToken.trim().equals(eTag))
+                    if (currentToken.trim().equals(eTag)) {
                         conditionSatisfied = true;
+                    }
                 }
 
                 // If none of the given ETags match, 412 Precodition failed is
@@ -2009,8 +2069,9 @@ public class DefaultServlet
 
                 while (!conditionSatisfied && commaTokenizer.hasMoreTokens()) {
                     String currentToken = commaTokenizer.nextToken();
-                    if (currentToken.trim().equals(eTag))
+                    if (currentToken.trim().equals(eTag)) {
                         conditionSatisfied = true;
+                    }
                 }
 
             } else {
@@ -2116,8 +2177,9 @@ public class DefaultServlet
         }
 
         // Rethrow any exception that has occurred
-        if (exception != null)
+        if (exception != null) {
             throw exception;
+        }
 
     }
 
@@ -2161,8 +2223,9 @@ public class DefaultServlet
         reader.close();
 
         // Rethrow any exception that has occurred
-        if (exception != null)
+        if (exception != null) {
             throw exception;
+        }
 
     }
 
@@ -2194,8 +2257,9 @@ public class DefaultServlet
         }
 
         // Rethrow any exception that has occurred
-        if (exception != null)
+        if (exception != null) {
             throw exception;
+        }
 
     }
 
@@ -2232,8 +2296,9 @@ public class DefaultServlet
         reader.close();
 
         // Rethrow any exception that has occurred
-        if (exception != null)
+        if (exception != null) {
             throw exception;
+        }
 
     }
 
@@ -2268,8 +2333,9 @@ public class DefaultServlet
                 // Writing MIME header.
                 ostream.println();
                 ostream.println("--" + mimeSeparation);
-                if (contentType != null)
+                if (contentType != null) {
                     ostream.println("Content-Type: " + contentType);
+                }
                 ostream.println("Content-Range: bytes " + currentRange.start
                                + "-" + currentRange.end + "/"
                                + currentRange.length);
@@ -2290,8 +2356,9 @@ public class DefaultServlet
         ostream.print("--" + mimeSeparation + "--");
 
         // Rethrow any exception that has occurred
-        if (exception != null)
+        if (exception != null) {
             throw exception;
+        }
 
     }
 
@@ -2330,8 +2397,9 @@ public class DefaultServlet
             // Writing MIME header.
             writer.println();
             writer.println("--" + mimeSeparation);
-            if (contentType != null)
+            if (contentType != null) {
                 writer.println("Content-Type: " + contentType);
+            }
             writer.println("Content-Range: bytes " + currentRange.start
                            + "-" + currentRange.end + "/"
                            + currentRange.length);
@@ -2348,8 +2416,9 @@ public class DefaultServlet
         writer.print("--" + mimeSeparation + "--");
 
         // Rethrow any exception that has occurred
-        if (exception != null)
+        if (exception != null) {
             throw exception;
+        }
 
     }
 
@@ -2372,8 +2441,9 @@ public class DefaultServlet
         while (true) {
             try {
                 len = istream.read(buffer);
-                if (len == -1)
+                if (len == -1) {
                     break;
+                }
                 ostream.write(buffer, 0, len);
             } catch (IOException e) {
                 exception = e;
@@ -2402,8 +2472,9 @@ public class DefaultServlet
         while (true) {
             try {
                 len = reader.read(buffer);
-                if (len == -1)
+                if (len == -1) {
                     break;
+                }
                 writer.write(buffer, 0, len);
             } catch (IOException e) {
                 exception = e;
@@ -2429,8 +2500,9 @@ public class DefaultServlet
     protected IOException copyRange(InputStream istream,
                                     ServletOutputStream ostream,
                                     long start, long end) {
-        if (debug > 10)
+        if (debug > 10) {
             log("Serving bytes:" + start + "-" + end);
+        }
 
         long skipped = 0;
         try {
@@ -2464,8 +2536,9 @@ public class DefaultServlet
                 exception = e;
                 len = -1;
             }
-            if (len < buffer.length)
+            if (len < buffer.length) {
                 break;
+            }
         }
 
         return exception;
@@ -2519,8 +2592,9 @@ public class DefaultServlet
                 exception = e;
                 len = -1;
             }
-            if (len < buffer.length)
+            if (len < buffer.length) {
                 break;
+            }
         }
 
         return exception;
@@ -2540,8 +2614,9 @@ public class DefaultServlet
          * Validate range.
          */
         public boolean validate() {
-            if (end >= length)
+            if (end >= length) {
                 end = length - 1;
+            }
             return ( (start >= 0) && (end >= 0) && (start <= end)
                      && (length > 0) );
         }
@@ -2566,8 +2641,8 @@ public class DefaultServlet
     private static class LastModifiedComparator
             implements Comparator<NameClassPair> {
 
-        private ProxyDirContext resources;
-        private String dirName;
+        private final ProxyDirContext resources;
+        private final String dirName;
 
         public LastModifiedComparator(ProxyDirContext resources,
                                       String dirName) {
@@ -2575,6 +2650,7 @@ public class DefaultServlet
             this.dirName = dirName;
         }
 
+        @Override
         public int compare(NameClassPair p1, NameClassPair p2) {
 
             CacheEntry ce1 = resources.lookupCache(
@@ -2602,8 +2678,8 @@ public class DefaultServlet
     private static class SizeComparator
             implements Comparator<NameClassPair> {
 
-        private ProxyDirContext resources;
-        private String dirName;
+        private final ProxyDirContext resources;
+        private final String dirName;
 
         public SizeComparator(ProxyDirContext resources,
                               String dirName) {
@@ -2611,6 +2687,7 @@ public class DefaultServlet
             this.dirName = dirName;
         }
 
+        @Override
         public int compare(NameClassPair p1, NameClassPair p2) {
 
             CacheEntry ce1 = resources.lookupCache(
@@ -2635,18 +2712,21 @@ public class DefaultServlet
      */
     private static class SecureEntityResolver implements EntityResolver2  {
 
+        @Override
         public InputSource resolveEntity(String publicId, String systemId)
                 throws SAXException, IOException {
             throw new SAXException(
                     MessageFormat.format(rb.getString(LogFacade.BLOCK_EXTERNAL_ENTITY), publicId, systemId));
         }
 
+        @Override
         public InputSource getExternalSubset(String name, String baseURI)
                 throws SAXException, IOException {
             throw new SAXException(
                     MessageFormat.format(rb.getString(LogFacade.BLOCK_EXTERNAL_SUBSET), name, baseURI));
         }
 
+        @Override
         public InputSource resolveEntity(String name, String publicId,
                 String baseURI, String systemId) throws SAXException,
                 IOException {

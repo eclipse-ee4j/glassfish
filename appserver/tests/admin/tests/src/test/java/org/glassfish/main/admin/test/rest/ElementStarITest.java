@@ -22,6 +22,7 @@ import jakarta.ws.rs.core.Response;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,8 +45,8 @@ public class ElementStarITest extends RestTestBase {
 
     @BeforeEach
     public void before() {
-        instanceName1 = "instance_" + generateRandomString();
-        instanceName2 = "instance_" + generateRandomString();
+        instanceName1 = "instance_" + RandomGenerator.generateRandomString();
+        instanceName2 = "instance_" + RandomGenerator.generateRandomString();
 
         Response response = managementClient.post(URL_CREATE_INSTANCE,
             Map.of("id", instanceName1, "node", "localhost-domain1"));
@@ -66,8 +67,8 @@ public class ElementStarITest extends RestTestBase {
 
     @Test
     public void testApplications() throws URISyntaxException {
-        final String app1 = "app" + generateRandomString();
-        final String app2 = "app" + generateRandomString();
+        final String app1 = "app" + RandomGenerator.generateRandomString();
+        final String app2 = "app" + RandomGenerator.generateRandomString();
 
         deployApp(getWar("test"), app1, app1);
         deployApp(getWar("test"), app2, app2);
@@ -94,7 +95,7 @@ public class ElementStarITest extends RestTestBase {
 
     @Test
     public void testLoadBalancerConfigs() {
-        final String lbName = "lbconfig-" + generateRandomString();
+        final String lbName = "lbconfig-" + RandomGenerator.generateRandomString();
         Response response = managementClient.post("/domain/lb-configs/lb-config/",
             Map.of("id", lbName, "target", instanceName1));
         assertEquals(200, response.getStatus());

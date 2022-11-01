@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.AfterEach;
@@ -35,8 +36,8 @@ public class ResourceRefITest extends RestTestBase {
     private static final String URL_JDBC_RESOURCE = "/domain/resources/jdbc-resource";
     private static final String URL_RESOURCE_REF = "/domain/servers/server/server/resource-ref";
 
-    private final String instanceName = "instance_" + generateRandomString();
-    private final String jdbcResourceName = "jdbc_" + generateRandomString();
+    private final String instanceName = "instance_" + RandomGenerator.generateRandomString();
+    private final String jdbcResourceName = "jdbc_" + RandomGenerator.generateRandomString();
 
     @AfterEach
     public void cleanup() {

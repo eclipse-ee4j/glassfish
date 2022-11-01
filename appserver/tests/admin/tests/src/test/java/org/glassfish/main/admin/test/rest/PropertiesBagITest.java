@@ -27,9 +27,11 @@ import java.util.Map;
 
 import org.codehaus.jettison.json.JSONArray;
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.glassfish.main.admin.test.tool.RandomGenerator.generateRandomString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,10 +74,10 @@ public class PropertiesBagITest extends RestTestBase {
     @Test
     public void propsWithEmptyValues() {
         List<Map<String, String>> properties = new ArrayList<>();
-        final String empty = "empty" + generateRandomNumber();
-        final String foo = "foo" + generateRandomNumber();
-        final String bar = "bar" + generateRandomNumber();
-        final String abc = "abc" + generateRandomNumber();
+        final String empty = "empty" + RandomGenerator.generateRandomNumber();
+        final String foo = "foo" + RandomGenerator.generateRandomNumber();
+        final String bar = "bar" + RandomGenerator.generateRandomNumber();
+        final String abc = "abc" + RandomGenerator.generateRandomNumber();
 
         properties.add(createProperty(empty,""));
         properties.add(createProperty(foo,"foovalue"));
@@ -159,7 +161,7 @@ public class PropertiesBagITest extends RestTestBase {
     @Test
     public void testPropertiesWithDots() {
         List<Map<String, String>> properties = new ArrayList<>();
-        final String key = "some.property.with.dots." + generateRandomNumber();
+        final String key = "some.property.with.dots." + RandomGenerator.generateRandomNumber();
         final String description = "This is the description";
         final String value = generateRandomString();
         properties.add(createProperty(key, value, description));
@@ -276,8 +278,9 @@ public class PropertiesBagITest extends RestTestBase {
 
         List<Map<String, String>> properties = new ArrayList<>();
 
-        for(int i = 0, max = generateRandomNumber(16); i < max; i++) {
-            properties.add(createProperty("property_" + generateRandomString(), generateRandomString(), generateRandomString()));
+        for(int i = 0, max = RandomGenerator.generateRandomNumber(16); i < max; i++) {
+            properties.add(
+                createProperty("property_" + generateRandomString(), generateRandomString(), generateRandomString()));
         }
 
         createProperties(endpoint, properties);

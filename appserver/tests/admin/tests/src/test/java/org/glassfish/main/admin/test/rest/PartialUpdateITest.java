@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +34,7 @@ public class PartialUpdateITest extends RestTestBase {
     @Test
     public void testPartialUpdate() {
         final String endpoint = URL_JDBC_CONNECTION_POOL + "/DerbyPool";
-        final String newDesc = generateRandomString();
+        final String newDesc = RandomGenerator.generateRandomString();
         Map<String, String> origAttrs = getEntityValues(managementClient.get(endpoint));
         Map<String, String> newAttrs = Map.of("description", newDesc);
         Response response = managementClient.post(endpoint, newAttrs);

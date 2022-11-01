@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +50,7 @@ public class JmsITest extends RestTestBase {
     @Test
     public void testJmsConnectionFactories() {
         // Create connection pool
-        final String poolName = "JmsConnectionFactory" + generateRandomString();
+        final String poolName = "JmsConnectionFactory" + RandomGenerator.generateRandomString();
         Map<String, String> ccp_attrs = Map.of("name", poolName, "connectiondefinition",
             "jakarta.jms.ConnectionFactory", "raname", "jmsra");
         Response response = managementClient.post(URL_CONNECTOR_CONNECTION_POOL, ccp_attrs);
@@ -94,7 +95,7 @@ public class JmsITest extends RestTestBase {
 
     @Test
     public void testJmsDestinationResources() {
-        final String jndiName = "jndi/" + generateRandomString();
+        final String jndiName = "jndi/" + RandomGenerator.generateRandomString();
         String encodedJndiName = URLEncoder.encode(jndiName, StandardCharsets.UTF_8);
 
         Map<String, String> attrs = Map.of("id", jndiName, "raname", "jmsra", "restype", "jakarta.jms.Topic");
@@ -112,9 +113,9 @@ public class JmsITest extends RestTestBase {
 
     @Test
     public void testJmsPhysicalDestination() {
-        final String destName = "jmsDest" + generateRandomString();
-        final int maxNumMsgs = generateRandomNumber(500);
-        final int consumerFlowLimit = generateRandomNumber(500);
+        final String destName = "jmsDest" + RandomGenerator.generateRandomString();
+        final int maxNumMsgs = RandomGenerator.generateRandomNumber(500);
+        final int consumerFlowLimit = RandomGenerator.generateRandomNumber(500);
 
         createJmsPhysicalDestination(destName, DEST_TYPE, URL_SEVER_JMS_DEST);
 
@@ -140,7 +141,7 @@ public class JmsITest extends RestTestBase {
     @Disabled("Enable and fix OpenMQ - require more detailed message and probably to fix the cause:"
         + " MQJMSRA_RA4001: getJMXServiceURLList:Exception:Message=Caught exception when contacing portmapper.]]")
     public void testJmsPhysicalDestionationsWithClusters() {
-        final String destName = "jmsDest" + generateRandomString();
+        final String destName = "jmsDest" + RandomGenerator.generateRandomString();
         final String clusterName = createCluster();
         createClusterInstance(clusterName, "in1_" + clusterName);
         startCluster(clusterName);
@@ -175,7 +176,7 @@ public class JmsITest extends RestTestBase {
 
     @Test
     public void testJmsHosts() {
-        final String jmsHostName = "jmshost" + generateRandomString();
+        final String jmsHostName = "jmshost" + RandomGenerator.generateRandomString();
         Map<String, String> newHost = Map.of("id", jmsHostName, "adminPassword", "admin", "port", "7676",
             "adminUserName", "admin", "host", "localhost");
 

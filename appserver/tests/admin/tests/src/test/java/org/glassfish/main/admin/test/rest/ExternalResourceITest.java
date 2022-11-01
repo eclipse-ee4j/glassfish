@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -35,7 +36,7 @@ public class ExternalResourceITest extends RestTestBase {
 
     @Test
     public void createAndDeleteExternalResource() {
-        final String resourceName = "resource_" + generateRandomString();
+        final String resourceName = "resource_" + RandomGenerator.generateRandomString();
         final String jndiName = "jndi/" + resourceName;
         Map<String, String> newResource = Map.of(
             "id", resourceName,

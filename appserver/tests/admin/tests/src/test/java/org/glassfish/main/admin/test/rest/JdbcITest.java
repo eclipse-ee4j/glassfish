@@ -23,6 +23,8 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -45,7 +47,7 @@ public class JdbcITest extends RestTestBase {
 
     @Test
     public void testCreateAndDeletePool() {
-        String poolName = "TestPool" + generateRandomString();
+        String poolName = "TestPool" + RandomGenerator.generateRandomString();
         Map<String, String> params = new HashMap<>();
         params.put("name", poolName);
         params.put("datasourceClassname", "org.apache.derby.jdbc.ClientDataSource");
@@ -65,7 +67,7 @@ public class JdbcITest extends RestTestBase {
 
     @Test
     public void testBackslashValidation() {
-        String poolName = "TestPool\\" + generateRandomString();
+        String poolName = "TestPool\\" + RandomGenerator.generateRandomString();
         String encodedPoolName = URLEncoder.encode(poolName, StandardCharsets.UTF_8);
         Map<String, String> params = new HashMap<>();
         params.put("name", poolName);

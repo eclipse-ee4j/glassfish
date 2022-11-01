@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 
 import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.glassfish.main.admin.test.webapp.HelloServlet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +46,7 @@ public class ApplicationITest extends RestTestBase {
 
     @BeforeEach
     public void initInstanceClient() {
-        appName = "testApp" + generateRandomString();
+        appName = "testApp" + RandomGenerator.generateRandomString();
         client = new DomainAdminRestClient(getBaseInstanceUrl() + "/" + appName);
     }
 
@@ -135,7 +136,7 @@ public class ApplicationITest extends RestTestBase {
 
     @Test
     public void testCreatingAndDeletingApplicationRefs() throws URISyntaxException {
-        final String instanceName = "instance_" + generateRandomString();
+        final String instanceName = "instance_" + RandomGenerator.generateRandomString();
         final String appRefUrl = "/domain/servers/server/" + instanceName + "/application-ref";
 
         Map<String, String> newInstance = Map.of("id", instanceName, "node", "localhost-domain1");
@@ -183,7 +184,7 @@ public class ApplicationITest extends RestTestBase {
 
     @Test
     public void testUndeploySubActionWarnings() throws URISyntaxException {
-        final String serverName = "in" + generateRandomNumber();
+        final String serverName = "in" + RandomGenerator.generateRandomNumber();
         try {
             Response response = managementClient.post("/domain/create-instance",
                 Map.of("id", serverName, "node", "localhost-domain1"));

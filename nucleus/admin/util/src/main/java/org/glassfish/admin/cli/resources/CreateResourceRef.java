@@ -248,7 +248,8 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
             }
         }
 
-        if (isTargetValid != validateTarget(target, targets)) {
+        isTargetValid = validateTarget(target, targets);
+        if (!isTargetValid) {
             return null;
         }
 

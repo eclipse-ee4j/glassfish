@@ -58,6 +58,7 @@ public class ResourceUtil {
     private ConfigBeansUtilities configBeanUtilities;
 
     public void createResourceRef(String name, String enabled, String target) throws TransactionFailure {
+        // FIXME: No, throw exception! And force developers to avoid calling this for domain targets!
         if (target.equals(DOMAIN)) {
             return;
         }

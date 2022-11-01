@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -67,8 +68,8 @@ public class CreateJdbcResource implements AdminCommand {
     @Param(name="property", optional=true, separator=':')
     private Properties properties;
 
-    @Param(optional=true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     @Param(name="jndi_name", primary=true)
     private String jndiName;

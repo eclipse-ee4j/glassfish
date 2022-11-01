@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,17 +17,9 @@
 
 package org.jvnet.hk2.config;
 
-import org.glassfish.hk2.api.ActiveDescriptor;
-import org.glassfish.hk2.api.HK2Loader;
-import org.glassfish.hk2.api.MultiException;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.HK2LoaderImpl;
-import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.jvnet.tiger_types.Types;
-
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.AbstractList;
@@ -40,6 +32,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import org.glassfish.hk2.api.ActiveDescriptor;
+import org.glassfish.hk2.api.HK2Loader;
+import org.glassfish.hk2.api.MultiException;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.HK2LoaderImpl;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.jvnet.tiger_types.Types;
 
 /**
  * Describes the configuration model for a particular class (called "target type" in this class.)
@@ -58,19 +58,19 @@ public final class ConfigModel {
     /**
      * Legal attribute names.
      */
-    final Map<String,AttributeLeaf> attributes = new HashMap<String,AttributeLeaf>();
+    final Map<String,AttributeLeaf> attributes = new HashMap<>();
 
     /**
      * Legal child element names and how they should be handled
      */
-    final Map<String,Property> elements = new HashMap<String,Property>();
+    final Map<String,Property> elements = new HashMap<>();
 
-    final Map<Method,Method> duckMethods = new HashMap<Method, Method>();
+    final Map<Method,Method> duckMethods = new HashMap<>();
 
     /**
      * Cache to map methods to properties
      */
-    final Map<Method,Property> methodCache = new HashMap<Method,Property>();
+    final Map<Method,Property> methodCache = new HashMap<>();
 
     /**
      * Contracts under which the inhabitant should be registered.
@@ -147,7 +147,7 @@ public final class ConfigModel {
      */
     public <T extends ConfigBeanProxy> Class<T> getProxyType() {
         if (targetTypeClass == null) {
-            targetTypeClass = (Class<T>) classLoaderHolder.loadClass(targetTypeName);
+            targetTypeClass = classLoaderHolder.loadClass(targetTypeName);
         }
 
         return targetTypeClass;
@@ -159,7 +159,7 @@ public final class ConfigModel {
      * @return the list of all leaf attribute names.
      */
     public Set<String> getLeafElementNames() {
-        final Set<String> results = new HashSet<String>();
+        final Set<String> results = new HashSet<>();
         for (Map.Entry<String,Property> prop : elements.entrySet()) {
             if (prop.getValue().isLeaf()) {
                 results.add(prop.getKey());
@@ -208,7 +208,7 @@ public final class ConfigModel {
         }
     }
 
-    public Map<String, List<String>>  getMetadata() {
+    public Map<String, List<String>> getMetadata() {
         return injector.getMetadata();
     }
 
@@ -218,7 +218,9 @@ public final class ConfigModel {
     public Method getDuckMethod(Method method) throws ClassNotFoundException, NoSuchMethodException {
         synchronized (duckMethods) {
             Method duckMethod = duckMethods.get(method);
-            if(duckMethod!=null)    return duckMethod;
+            if(duckMethod!=null) {
+                return duckMethod;
+            }
 
             final Class<?> clz = method.getDeclaringClass();
             ClassLoader cl = System.getSecurityManager()==null?clz.getClassLoader():
@@ -310,7 +312,9 @@ public final class ConfigModel {
         // tokenize by finding 'x|X' and 'X|Xx' then insert '-'.
         StringBuilder buf = new StringBuilder(camelCase.length()+5);
         for(String t : Dom.TOKENIZER.split(camelCase)) {
-            if(buf.length()>0)  buf.append('-');
+            if(buf.length()>0) {
+                buf.append('-');
+            }
             buf.append(t.toLowerCase(Locale.ENGLISH));
         }
         return buf.toString();
@@ -318,7 +322,7 @@ public final class ConfigModel {
 
     public abstract static class Property {
 
-        public final List<String> annotations = new ArrayList<String>();
+        public final List<String> annotations = new ArrayList<>();
 
         /**
          * @see #xmlName()
@@ -376,6 +380,7 @@ public final class ConfigModel {
             this.model = model;
         }
 
+        @Override
         public boolean isLeaf() {
             return false;
         }
@@ -394,12 +399,15 @@ public final class ConfigModel {
          * Only handles those types that are valid to the {@link #set(Dom, Object)} method.
          */
         protected final Dom toDom(Object arg) {
-            if(arg==null)
+            if(arg==null) {
                 return null;
-            if(arg instanceof Dom)
+            }
+            if(arg instanceof Dom) {
                 return (Dom)arg;
-            if(arg instanceof ConfigBeanProxy)
+            }
+            if(arg instanceof ConfigBeanProxy) {
                 return Dom.unwrap((ConfigBeanProxy)arg);
+            }
             throw new IllegalArgumentException("Unexpected type "+arg.getClass()+" for "+xmlName);
         }
     }
@@ -409,30 +417,36 @@ public final class ConfigModel {
             super(model, xmlName);
         }
 
+        @Override
         public boolean isCollection() {
             return true;
         }
 
+        @Override
         public Object get(final Dom dom, Type returnType) {
             // TODO: perhaps support more collection types?
 
 
-            if(!(returnType instanceof ParameterizedType))
+            if(!(returnType instanceof ParameterizedType)) {
                 throw new IllegalArgumentException("List needs to be parameterized");
+            }
             final Class itemType = Types.erasure(Types.getTypeArgument(returnType,0));
 
             final List<Dom> v = ("*".equals(xmlName)?dom.domNodeByTypeElements(itemType):dom.nodeElements(xmlName));
 
-            if(itemType==Dom.class)
+            if(itemType==Dom.class) {
                 // TODO: this returns a view, not a live list
                 return v;
+            }
             if(ConfigBeanProxy.class.isAssignableFrom(itemType)) {
                 // return a live list
-                return new AbstractList<Object>() {
+                return new AbstractList<>() {
+                    @Override
                     public Object get(int index) {
                         return v.get(index).createProxy();
                     }
 
+                    @Override
                     public void add(int index, Object element) {
                         // update the master children list, as well as this view 'v'
                         Dom child = Dom.unwrap((ConfigBeanProxy) element);
@@ -440,6 +454,7 @@ public final class ConfigModel {
                         v.add(index,child);
                     }
 
+                    @Override
                     public Object remove(int index) {
                         Dom child = v.get(index);
                         dom.removeChild(child);
@@ -447,6 +462,7 @@ public final class ConfigModel {
                         return child.createProxy();
                     }
 
+                    @Override
                     public Object set(int index, Object element) {
                         Dom child = Dom.unwrap((ConfigBeanProxy) element);
                         String name = "*".equals(xmlName) ? child.model.injector.getName() : xmlName;
@@ -454,6 +470,7 @@ public final class ConfigModel {
                         return v.set(index,child).createProxy();
                     }
 
+                    @Override
                     public int size() {
                         return v.size();
                     }
@@ -463,25 +480,30 @@ public final class ConfigModel {
             // TODO: error check needs to be improved,
             // as itemType might be inconsistent with the actual type
             return new AbstractList() {
+                @Override
                 public Object get(int index) {
                     return v.get(index).get();
                 }
 
+                @Override
                 public int size() {
                     return v.size();
                 }
             };
         }
 
+        @Override
         public void set(Dom dom, Object _arg) {
-            if(!(_arg instanceof List))
+            if(!(_arg instanceof List)) {
                 throw new IllegalArgumentException("Expecting a list but found "+_arg);
+            }
             List arg = (List)_arg;
 
             Dom[] values = new Dom[arg.size()];
             int i=0;
-            for (Object o : arg)
+            for (Object o : arg) {
                 values[i++] = toDom(o);
+            }
 
             dom.setNodeElements(xmlName,values);
         }
@@ -492,31 +514,39 @@ public final class ConfigModel {
             super(model, xmlName);
         }
 
+        @Override
         public boolean isCollection() {
             return false;
         }
 
+        @Override
         public Object get(Dom dom, Type returnType) {
             Dom v = dom.nodeElement(xmlName);
-            if(v==null)     return null;
+            if(v==null) {
+                return null;
+            }
 
-            if(returnType==Dom.class)
+            if(returnType==Dom.class) {
                 return v;
+            }
 
             Class rt = Types.erasure(returnType);
-            if(ConfigBeanProxy.class.isAssignableFrom(rt))
+            if(ConfigBeanProxy.class.isAssignableFrom(rt)) {
                 return v.createProxy();
+            }
 
             throw new IllegalArgumentException("Invalid type "+returnType+" for "+xmlName);
         }
 
+        @Override
         public void set(Dom dom, Object arg) {
             Dom child = toDom(arg);
 
-            if(child==null) // remove
+            if (child == null) { // remove
                 dom.setNodeElements(xmlName);
-            else // replace
-                dom.setNodeElements(xmlName,child);
+            } else { // remove
+                dom.setNodeElements(xmlName, child);
+            }
         }
     }
 
@@ -525,6 +555,7 @@ public final class ConfigModel {
             super(xmlName);
         }
 
+        @Override
         public boolean isLeaf() {
             return true;
         }
@@ -536,10 +567,11 @@ public final class ConfigModel {
          *      Instance of the given 'returnType'
          */
         protected Object convertLeafValue(Dom parent, Class<?> returnType, String v) {
-            if(v==null)
+            if(v==null) {
                 // TODO: default value handling
                 // TODO: if primitive types, report an error
                 return null;
+            }
 
             if(returnType==String.class) {
                 return v;
@@ -556,7 +588,7 @@ public final class ConfigModel {
             throw new IllegalArgumentException("Don't know how to handle "+returnType);
         }
 
-        private static final Set<String> BOOLEAN_TRUE = new HashSet<String>(Arrays.asList("true","yes","on","1"));
+        private static final Set<String> BOOLEAN_TRUE = new HashSet<>(Arrays.asList("true","yes","on","1"));
     }
 
     static class CollectionLeaf extends Leaf {
@@ -564,6 +596,7 @@ public final class ConfigModel {
             super(xmlName);
         }
 
+        @Override
         public boolean isCollection() {
             return true;
         }
@@ -572,41 +605,49 @@ public final class ConfigModel {
             return element.toString();
         }
 
+        @Override
         public Object get(final Dom dom, Type returnType) {
             // TODO: perhaps support more collection types?
             final List<String> v = dom.leafElements(xmlName);
-            if(!(returnType instanceof ParameterizedType))
+            if(!(returnType instanceof ParameterizedType)) {
                 throw new IllegalArgumentException("List needs to be parameterized");
+            }
             final Class itemType = Types.erasure(Types.getTypeArgument(returnType,0));
 
             // return a live list
-            return new AbstractList<Object>() {
+            return new AbstractList<>() {
+                @Override
                 public Object get(int index) {
                     return convertLeafValue(dom, itemType, v.get(index));
                 }
 
+                @Override
                 public void add(int index, Object element) {
                     // update the master children list, as well as this view 'v'
                     dom.addLeafElement(xmlName, elementValue(element));
                     v.add(index, element.toString());
                 }
 
+                @Override
                 public Object remove(int index) {
                     dom.removeLeafElement(xmlName, v.get(index));
                     return v.remove(index);
                 }
 
+                @Override
                 public Object set(int index, Object element) {
                     dom.changeLeafElement(xmlName, v.get(index), elementValue(element));
                     return v.set(index, element.toString());
                 }
 
+                @Override
                 public int size() {
                     return v.size();
                 }
             };
         }
 
+        @Override
         public void set(Dom dom, Object arg) {
             if (arg instanceof List) {
                 String[] strings = new String[((List) arg).size()];
@@ -622,6 +663,7 @@ public final class ConfigModel {
         ReferenceCollectionLeaf(String xmlName) {
             super(xmlName);
         }
+        @Override
         protected Object convertLeafValue(Dom parent, Class<?> returnType, String v) {
             // let's look first the fast way.
             Object candidate = parent.getHabitat().getService(returnType, v);
@@ -656,6 +698,7 @@ public final class ConfigModel {
         /**
          * Is multiple values allowed?
          */
+        @Override
         public boolean isCollection() {
             return false;
         }
@@ -675,6 +718,7 @@ public final class ConfigModel {
          *                   Valid types are (1) primitive and 'leaf' Java types, such as {@link String},
          *                   (2) {@link ConfigBeanProxy}, (3) and its collections.
          */
+        @Override
         public Object get(Dom dom, Type returnType) {
             String v = dom.attribute(xmlName);
             return convertLeafValue(dom, Types.erasure(returnType), v);
@@ -683,6 +727,7 @@ public final class ConfigModel {
         /**
          * Sets the value to {@link Dom}.
          */
+        @Override
         public void set(Dom dom, Object arg) {
             dom.attribute(xmlName, arg==null?null:arg.toString());
         }
@@ -701,10 +746,12 @@ public final class ConfigModel {
         @Override
         public Object get(Dom dom, Type rt) {
             Object value = super.get(dom, rt);
-            if (value == null)
+            if (value == null) {
                 return (dv);
+            }
             return value;
         }
+        @Override
         public String getDefaultValue() {
             return dv;
         }
@@ -752,16 +799,19 @@ public final class ConfigModel {
             super(xmlName);
         }
 
+        @Override
         public boolean isCollection() {
             return false;
         }
 
+        @Override
         public Object get(Dom dom, Type returnType) {
             // leaf types
             String v = dom.leafElement(xmlName);
             return convertLeafValue(dom, Types.erasure(returnType), v);
         }
 
+        @Override
         public void set(Dom dom, Object arg) {
             if(arg==null) {
                 dom.removeLeafElement(xmlName, dom.leafElement(xmlName));
@@ -816,8 +866,9 @@ public final class ConfigModel {
             ActiveDescriptor<? extends ConfigInjector> injector,
             Map<String, List<String>> description,
             ServiceLocator locator) {
-        if(description==null)
+        if(description==null) {
             throw new ConfigurationException("%s doesn't have any metadata",injector.getImplementation());
+        }
 
         document.models.put(injector,this); // register now so that cyclic references are handled correctly.
         this.injector = injector;
@@ -842,8 +893,9 @@ public final class ConfigModel {
                     } else {
                         leaf = new AttributeLeaf(attributeName, dt);
                     }
-                } else
+                } else {
                     leaf = new AttributeLeafWithDefaultValue(attributeName, dt, dv);
+                }
                 attributes.put(attributeName, leaf);
             } else
             if(name.startsWith("<")) {
@@ -852,31 +904,35 @@ public final class ConfigModel {
                    elements.put(elementName,parseValue(elementName,document,e.getValue()));
                 }
             } else
-            if(name.equals(ConfigMetadata.TARGET))
+            if(name.equals(ConfigMetadata.TARGET)) {
                 targetTypeName = value;
-            else
-            if(name.equals(ConfigMetadata.KEYED_AS))
+            } else
+            if(name.equals(ConfigMetadata.KEYED_AS)) {
                 indexTypeName = value;
-            else
-            if(name.equals(ConfigMetadata.KEY))
+            } else
+            if(name.equals(ConfigMetadata.KEY)) {
                 key = value;
+            }
         }
-        if(targetTypeName==null)
+        if(targetTypeName==null) {
             throw new ConfigurationException("%s doesn't have the mandatory '%s' metadata", injector.getImplementation(), ConfigMetadata.TARGET);
-        if(key==null ^ indexTypeName==null)
+        }
+        if(key==null ^ indexTypeName==null) {
             throw new ConfigurationException("%s has inconsistent '%s=%s' and '%s=%s' metadata",
                 injector.getImplementation(),
                 ConfigMetadata.KEY, key, ConfigMetadata.TARGET, indexTypeName);
+        }
         this.targetTypeName = targetTypeName;
         this.keyedAs = indexTypeName;
         this.key = key;
         this.contracts = getMetadataFromDescription(description, ConfigMetadata.TARGET_CONTRACTS);
-        this.symbolSpaces = new HashSet<String>(getMetadataFromDescription(description, "symbolSpaces"));
+        this.symbolSpaces = new HashSet<>(getMetadataFromDescription(description, "symbolSpaces"));
 
         String tagName = null;
         for (String v : getMetadataFromDescription(description, INDEX_KEY)) {
-            if(v.startsWith(ELEMENT_NAME_PREFIX))
+            if(v.startsWith(ELEMENT_NAME_PREFIX)) {
                 tagName = v.substring(ELEMENT_NAME_PREFIX.length());
+            }
         }
         this.tagName = tagName == null ? injector.getName() : tagName;
     }
@@ -893,20 +949,28 @@ public final class ConfigModel {
     public Property findIgnoreCase(String xmlName) {
         // first try the exact match to take our chance
         Property a = attributes.get(xmlName);
-        if(a!=null)     return a;
+        if(a!=null) {
+            return a;
+        }
         a = elements.get(xmlName);
-        if(a!=null)     return a;
+        if(a!=null) {
+            return a;
+        }
 
         // exhaustive search
         a = _findIgnoreCase(xmlName, attributes);
-        if(a!=null)     return a;
+        if(a!=null) {
+            return a;
+        }
         return _findIgnoreCase(xmlName, elements);
     }
 
     private Property _findIgnoreCase(String name, Map<String, ? extends Property> map) {
-        for (Map.Entry<String, ? extends Property> i : map.entrySet())
-            if(i.getKey().equalsIgnoreCase(name))
+        for (Map.Entry<String, ? extends Property> i : map.entrySet()) {
+            if(i.getKey().equalsIgnoreCase(name)) {
                 return i.getValue();
+            }
+        }
         return null;
     }
 
@@ -915,8 +979,9 @@ public final class ConfigModel {
      */
     private Property parseValue(String elementName, DomDocument document, List<String> values) {
         String value = values.size()>0 ? values.get(0) : null;
-        if (value==null)
+        if (value==null) {
             return null;
+        }
 
 
 
@@ -948,8 +1013,9 @@ public final class ConfigModel {
     }
 
     private static String getMetadataFieldKeyedAs(List<String> strings, String name) {
-        if (strings == null || strings.size() == 0 || name == null)
+        if (strings == null || strings.size() == 0 || name == null) {
             return ( null );
+        }
         String dv = null;
         for (String s : strings) {
             if (s.startsWith(name)) {

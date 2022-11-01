@@ -30,6 +30,7 @@ import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.Filter;
+import org.glassfish.hk2.api.InstanceLifecycleListener;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
@@ -54,7 +55,6 @@ import org.jvnet.hk2.config.Populator;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-import org.jvnet.hk2.config.provider.internal.ConfigInstanceListener;
 import org.jvnet.hk2.config.test.example.ConfigModule;
 import org.jvnet.hk2.config.test.example.DummyPopulator;
 import org.jvnet.hk2.config.test.example.EjbContainerAvailability;
@@ -94,7 +94,7 @@ public class ConfigTest {
     private static final ServiceLocator locator = ServiceLocatorFactory.getInstance().create(TEST_NAME);
 
     @BeforeAll
-    public static void before() {
+    public static void beforeAll() {
         final DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         final DynamicConfiguration config = dcs.createDynamicConfiguration();
         new ConfigModule(locator).configure(config);
@@ -359,7 +359,7 @@ public class ConfigTest {
             () -> assertNull(myLocator.getService(ConfigSupport.class)),
             () -> assertNull(myLocator.getService(ConfigurationPopulator.class)),
             () -> assertNull(myLocator.getService(Transactions.class)),
-            () -> assertNull(myLocator.getService(ConfigInstanceListener.class))
+            () -> assertNull(myLocator.getService(InstanceLifecycleListener.class))
         );
 
         // Twice to check idempotence
@@ -370,7 +370,7 @@ public class ConfigTest {
             () -> assertThat(myLocator.getAllServices(ConfigSupport.class), hasSize(1)),
             () -> assertThat(myLocator.getAllServices(ConfigurationPopulator.class), hasSize(1)),
             () -> assertThat(myLocator.getAllServices(Transactions.class), hasSize(1)),
-            () -> assertThat(myLocator.getAllServices(ConfigInstanceListener.class), hasSize(1))
+            () -> assertThat(myLocator.getAllServices(InstanceLifecycleListener.class), hasSize(1))
         );
     }
 

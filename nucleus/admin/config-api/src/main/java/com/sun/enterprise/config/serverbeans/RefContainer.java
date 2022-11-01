@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
 import org.jvnet.hk2.config.Element;
 
 /**
@@ -54,17 +55,27 @@ public interface RefContainer extends ConfigBeanProxy {
      *
      * @return list of {@link ResourceRef#getRef()} retrieved from {@link #getResourceRef()}
      */
-    default List<String> getResourceRefNames() {
-        return getResourceRef().stream().map(ResourceRef::getRef).collect(Collectors.toList());
-    }
-
+    @DuckTyped
+    List<String> getResourceRefNames();
 
     /**
      * Note: This method uses stream to process names, it is not just a getter.
      *
      * @return list of {@link ApplicationRef#getRef()} retrieved from {@link #getApplicationRef()}
      */
-    default List<String> getApplicationRefNames() {
-        return getApplicationRef().stream().map(ApplicationRef::getRef).collect(Collectors.toList());
+    @DuckTyped
+    List<String> getApplicationRefNames();
+
+    public class Duck {
+
+        public static List<String> getResourceRefNames(RefContainer container) {
+            return container.getResourceRef().stream().map(ResourceRef::getRef).collect(Collectors.toList());
+        }
+
+
+        public static List<String> getApplicationRefNames(RefContainer container) {
+            return container.getApplicationRef().stream().map(ApplicationRef::getRef).collect(Collectors.toList());
+        }
+
     }
 }

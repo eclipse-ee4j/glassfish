@@ -30,6 +30,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import jakarta.inject.Inject;
 
 import java.lang.reflect.Proxy;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.ServerEnvironment;
@@ -170,12 +171,11 @@ public class BindableResourcesHelper {
         boolean resourceRefEnabled = false;
         ResourceRef ref = getServer().getResourceRef(SimpleJndiName.of(br.getJndiName()));
         if (ref == null) {
-            LOG.fine("ResourcesUtil :: isResourceReferenceEnabled null ref");
+            LOG.log(Level.FINEST, "ResourceRef {0} was not found.", br.getJndiName());
         } else {
-            resourceRefEnabled = Boolean.valueOf(ref.getEnabled());
+            resourceRefEnabled = Boolean.parseBoolean(ref.getEnabled());
         }
-
-        boolean resourceEnabled = Boolean.valueOf(br.getEnabled());
+        boolean resourceEnabled = Boolean.parseBoolean(br.getEnabled());
         return resourceEnabled && resourceRefEnabled;
     }
 

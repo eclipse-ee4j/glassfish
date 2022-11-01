@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,22 +20,16 @@ package org.glassfish.connectors.admin.cli;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import org.glassfish.api.I18n;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.connectors.config.AdminObjectResource;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceManager;
-import org.glassfish.resourcebase.resources.api.ResourceStatus;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
 
 import jakarta.inject.Inject;
 import jakarta.resource.ResourceException;
+
 import java.beans.PropertyVetoException;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,8 +37,25 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.EMBEDDEDRAR_NAME_DELIMITER;
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import org.glassfish.api.I18n;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.connectors.config.AdminObjectResource;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.api.ResourceStatus;
+import org.glassfish.resources.admin.cli.ResourceManager;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+
+import static org.glassfish.resourcebase.resources.api.ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ADMIN_OBJECT_CLASS_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_TYPE;
 
 /**
  *
@@ -83,13 +94,12 @@ public class AdminObjectManager implements ResourceManager {
     @Inject
     private ServerEnvironment environment;
 
-    public AdminObjectManager() {
-    }
-
+    @Override
     public String getResourceType() {
         return ServerTags.ADMIN_OBJECT_RESOURCE;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
             throws Exception {
         setAttributes(attributes, target);
@@ -100,15 +110,11 @@ public class AdminObjectManager implements ResourceManager {
         }
 
         try {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    return createResource(param, properties);
-                }
-            }, resources);
-
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
-
+            SingleConfigCode<Resources> configCode = param -> createResource(param, properties);
+            ConfigSupport.apply(configCode, resources);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
             Logger.getLogger(AdminObjectManager.class.getName()).log(Level.SEVERE,
                     "Unabled to create administered object", tfe);
@@ -228,8 +234,8 @@ public class AdminObjectManager implements ResourceManager {
              }
 
              int count = 0;
-             for (int i = 0; i < resTypes.length; i++) {
-                 if (resTypes[i].equals(resType)) {
+             for (String resType2 : resTypes) {
+                 if (resType2.equals(resType)) {
                      isValidAdminObject = true;
                      count++;
                  }
@@ -306,6 +312,7 @@ public class AdminObjectManager implements ResourceManager {
 
         return status;
     }
+    @Override
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate) throws Exception{
         setAttributes(attributes, null);
         ResourceStatus status = null;

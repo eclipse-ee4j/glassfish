@@ -22,11 +22,8 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import jakarta.inject.Inject;
 
-import java.beans.PropertyVetoException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 
@@ -61,7 +58,7 @@ public class DeleteAdminObject implements AdminCommand {
     private static final Logger LOG = System.getLogger(DeleteAdminObject.class.getName());
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(DeleteAdminObject.class);
 
-    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name="jndi_name", primary=true)
@@ -136,17 +133,17 @@ public class DeleteAdminObject implements AdminCommand {
 
         try {
             // delete resource-ref
-            resourceUtil.deleteResourceRef(simpleJndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete admin-object-resource
-            if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    Resource resource = ConnectorsUtil.getResourceByName(domain.getResources(),
-                        AdminObjectResource.class, simpleJndiName);
-                    return param.getResources().remove(resource);
-                }
-            }, domain.getResources()) == null) {
+            SingleConfigCode<Resources> configCode = param -> {
+                Resource resource = ConnectorsUtil.getResourceByName(domain.getResources(), AdminObjectResource.class,
+                    simpleJndiName);
+                return param.getResources().remove(resource);
+            };
+            if (ConfigSupport.apply(configCode, domain.getResources()) == null) {
                 report.setMessage(I18N.getLocalString("delete.admin.object.fail",
                                 "Unable to delete administered object {0}", jndiName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);

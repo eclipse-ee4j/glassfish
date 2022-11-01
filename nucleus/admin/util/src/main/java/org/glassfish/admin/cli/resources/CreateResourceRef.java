@@ -28,12 +28,12 @@ import com.sun.enterprise.config.serverbeans.ResourceRef;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.ServerResource;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import jakarta.inject.Inject;
 
 import java.beans.PropertyVetoException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,13 +78,12 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 @I18n("create.resource.ref")
 public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
-
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateResourceRef.class);
+    private static final Logger LOG = System.getLogger(CreateResourceRef.class.getName());
 
     @Param(optional = true, defaultValue = "true")
     private Boolean enabled;
 
-    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name = "reference_name", primary = true)
@@ -99,32 +98,34 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
-    private String commandName = null;
+    private String commandName;
 
-    private CommandTarget targets[];
+    private CommandTarget[] targets;
 
-    private final boolean isTargetValid = false;
+    private boolean isTargetValid;
 
-    private RefContainer refContainer = null;
+    private RefContainer refContainer;
 
     @AccessRequired.To("refer")
-    private Resource resourceOfInterest = null;
+    private Resource resourceOfInterest;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         resourceOfInterest = getResourceByIdentity(refName);
         if (resourceOfInterest == null) {
-            report.setMessage(
-                    localStrings.getLocalString("create.resource.ref.resourceDoesNotExist", "Resource {0} does not exist", refName));
+            report.setMessage(MessageFormat.format("Resource {0} does not exist", refName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
 
         refContainer = chooseRefContainer(context); // also sets isTargetValid
+        LOG.log(Level.DEBUG, "refContainer={0}, refContainer.resourceRefs={1}", refContainer,
+            refContainer.getResourceRefNames());
         if (!isTargetValid) {
-            report.setMessage(localStrings.getLocalString("create.resource.ref.resourceDoesNotHaveValidTarget",
-                    "Resource {0} has Invalid target to create resource-ref on {1}.", refName, target));
+            report.setMessage(MessageFormat.format(
+                "Resource {0} has invalid target {1} to create resource-ref. Valid targets are: {2}.", refName, target,
+                targets));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
@@ -133,9 +134,9 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
     }
 
     @Override
-    public Collection<? extends AccessCheck> getAccessChecks() {
-        final Collection<AccessCheck> accessChecks = new ArrayList<>();
-        accessChecks.add(new AccessCheck(
+    public Collection<AccessCheck<?>> getAccessChecks() {
+        final Collection<AccessCheck<?>> accessChecks = new ArrayList<>();
+        accessChecks.add(new AccessCheck<>(
                 AccessRequired.Util.resourceNameFromConfigBeanType(refContainer, null /* collection name */, ResourceRef.class), "create"));
         return accessChecks;
     }
@@ -151,8 +152,7 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
         final ActionReport report = context.getActionReport();
 
         if (isResourceRefAlreadyPresent()) {
-            report.setMessage(localStrings.getLocalString("create.resource.ref.existsAlready",
-                    "Resource ref {0} already exists for target {1}", refName, target));
+            report.setMessage(MessageFormat.format("Resource ref {0} already exists for target {1}", refName, target));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
@@ -167,11 +167,10 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
                 }
             }
             ActionReport.ExitCode ec = ActionReport.ExitCode.SUCCESS;
-            report.setMessage(
-                    localStrings.getLocalString("create.resource.ref.success", "resource-ref {0} created successfully.", refName));
+            report.setMessage(MessageFormat.format("Resource ref {0} created successfully.", refName));
             report.setActionExitCode(ec);
         } catch (TransactionFailure tfe) {
-            report.setMessage(localStrings.getLocalString("create.resource.ref.failed", "Resource ref {0} creation failed", refName));
+            report.setMessage(MessageFormat.format("Resource ref {0} creation failed", refName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(tfe);
         }
@@ -211,15 +210,14 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
 
         Class<?>[] allInterfaces = resourceOfInterest.getClass().getInterfaces();
         for (Class<?> resourceInterface : allInterfaces) {
-            ResourceConfigCreator resourceConfigCreator = resourceInterface
-                    .getAnnotation(ResourceConfigCreator.class);
+            ResourceConfigCreator resourceConfigCreator = resourceInterface.getAnnotation(ResourceConfigCreator.class);
             if (resourceConfigCreator != null) {
                 commandName = resourceConfigCreator.commandName();
             }
         }
 
         if (commandName == null) {
-            report.setMessage(localStrings.getLocalString("create.resource.ref.failed", "Resource ref {0} creation failed", refName));
+            report.setMessage(MessageFormat.format("Resource ref {0} creation failed", refName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return null;
         }
@@ -282,16 +280,16 @@ public class CreateResourceRef implements AdminCommand, AdminCommandSecurity.Pre
         return null;
     }
 
-    private boolean validateTarget(String target, CommandTarget targets[]) {
+    private boolean validateTarget(String target, CommandTarget[] targets) {
         List<String> validTarget = new ArrayList<>();
 
         for (CommandTarget commandTarget : targets) {
             validTarget.add(commandTarget.name());
         }
 
-        if (target.equals("domain")) {
+        if (target.equals(CommandTarget.TARGET_DOMAIN)) {
             return validTarget.contains(CommandTarget.DOMAIN.name());
-        } else if (target.equals("server")) {
+        } else if (target.equals(CommandTarget.TARGET_SERVER)) {
             return validTarget.contains(CommandTarget.DAS.name());
         } else if (domain.getConfigNamed(target) != null) {
             return validTarget.contains(CommandTarget.CONFIG.name());

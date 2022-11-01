@@ -34,6 +34,7 @@ import java.util.Properties;
 
 import org.glassfish.api.I18n;
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
 import org.glassfish.hk2.api.PerLookup;
@@ -80,9 +81,6 @@ public class ConnectorResourceManager implements ResourceManager {
     @Inject
     private BindableResourcesHelper resourcesHelper;
 
-    public ConnectorResourceManager() {
-    }
-
     @Override
     public String getResourceType() {
         return ServerTags.CONNECTOR_RESOURCE;
@@ -100,16 +98,11 @@ public class ConnectorResourceManager implements ResourceManager {
         }
 
         try {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    return createResource(param, properties);
-                }
-            }, resources);
-
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
-
+            SingleConfigCode<Resources> configCode = param -> createResource(param, properties);
+            ConfigSupport.apply(configCode, resources);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
             String msg = localStrings.getLocalString("create.connector.resource.fail",
                     "Connector resource {0} create failed ", jndiName) +
@@ -190,8 +183,8 @@ public class ConnectorResourceManager implements ResourceManager {
     }
 
     private boolean isConnPoolExists(Resources resources) {
-        final SimpleJndiName jndiName = new SimpleJndiName(poolName);
-        return ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, jndiName) != null;
+        final SimpleJndiName jndiPoolName = new SimpleJndiName(poolName);
+        return ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, jndiPoolName) != null;
     }
 
 

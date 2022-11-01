@@ -22,11 +22,8 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import jakarta.inject.Inject;
 
-import java.beans.PropertyVetoException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 
@@ -73,7 +70,7 @@ public class DeleteConnectorResource implements AdminCommand {
     private static final Logger LOG = System.getLogger(DeleteConnectorResource.class.getName());
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(DeleteConnectorResource.class);
 
-    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name = "connector_resource_name", primary = true)
@@ -125,7 +122,7 @@ public class DeleteConnectorResource implements AdminCommand {
 
         if (environment.isDas()) {
 
-            if ("domain".equals(target)) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     report.setMessage(I18N.getLocalString("delete.connector.resource.resource-ref.exist",
                             "connector-resource [ {0} ] is referenced in an " +
@@ -157,17 +154,17 @@ public class DeleteConnectorResource implements AdminCommand {
 
         try {
             //delete resource-ref
-            resourceUtil.deleteResourceRef(simpleJndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete connector-resource
-            if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ConnectorResource resource = ConnectorsUtil.getResourceByName(domain.getResources(),
-                        ConnectorResource.class, simpleJndiName);
-                    return param.getResources().remove(resource);
-                }
-            }, domain.getResources()) == null) {
+            SingleConfigCode<Resources> configCode = param -> {
+                ConnectorResource resource = ConnectorsUtil.getResourceByName(domain.getResources(),
+                    ConnectorResource.class, simpleJndiName);
+                return param.getResources().remove(resource);
+            };
+            if (ConfigSupport.apply(configCode, domain.getResources()) == null) {
                 report.setMessage(I18N.getLocalString("delete.connector.resource.fail",
                                 "Connector resource {0} delete failed ", jndiName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);

@@ -51,12 +51,12 @@ public class ResourceUtil {
     private static final String RESOURCES_XML_META_INF = "META-INF/glassfish-resources.xml";
     private static final String RESOURCES_XML_WEB_INF = "WEB-INF/glassfish-resources.xml";
 
-    public static BindableResource getBindableResourceByName(Resources resources, String name) {
+    public static <T extends BindableResource> T getBindableResourceByName(Resources resources, String name) {
         Collection<BindableResource> typedResources = resources.getResources(BindableResource.class);
         if (typedResources != null) {
             for (BindableResource resource : typedResources) {
                 if (resource.getJndiName().equals(name)) {
-                    return resource;
+                    return (T) resource;
                 }
             }
         }

@@ -37,6 +37,7 @@ import java.util.Properties;
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
@@ -106,7 +107,9 @@ public class JDBCResourceManager implements ResourceManager {
         try {
             SingleConfigCode<Resources> configCode = resrc -> createResource(resrc, properties);
             ConfigSupport.apply(configCode, resources);
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
             String msg = localStrings.getLocalString("create.jdbc.resource.fail", "JDBC resource {0} create failed ",
                 jndiName) + " " + tfe.getLocalizedMessage();
@@ -225,7 +228,7 @@ public class JDBCResourceManager implements ResourceManager {
         }
 
         if (environment.isDas()) {
-            if ("domain".equals(target)) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(jndiName).isEmpty()) {
                     String msg = localStrings.getLocalString("delete.jdbc.resource.resource-ref.exist",
                             "jdbc-resource [ {0} ] is referenced in an " +
@@ -254,7 +257,9 @@ public class JDBCResourceManager implements ResourceManager {
         try {
 
             // delete resource-ref
-            resourceUtil.deleteResourceRef(jndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(jndiName, target);
+            }
 
             // delete jdbc-resource
             SingleConfigCode<Resources> configCode = param -> {

@@ -20,11 +20,8 @@ package org.glassfish.resources.mail.admin.cli;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
-
-import java.beans.PropertyVetoException;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -68,7 +65,7 @@ public class DeleteMailResource implements AdminCommand {
     final private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DeleteMailResource.class);
 
-    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name = "jndi_name", primary = true)
@@ -105,7 +102,7 @@ public class DeleteMailResource implements AdminCommand {
         SimpleJndiName simpleJndiName = SimpleJndiName.of(jndiName);
         if (environment.isDas()) {
 
-            if ("domain".equals(target)) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     report.setMessage(localStrings.getLocalString("delete.mail.resource.resource-ref.exist",
                             "mail-resource [ {0} ] is referenced in an " +
@@ -137,18 +134,16 @@ public class DeleteMailResource implements AdminCommand {
 
         try {
             // delete resource-ref
-            resourceUtil.deleteResourceRef(simpleJndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete java-mail-resource
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException,
-                        TransactionFailure {
-                    MailResource resource = (MailResource)
-                            ResourceUtil.getBindableResourceByName(domain.getResources(), jndiName);
-                    return param.getResources().remove(resource);
-                }
-            }, domain.getResources());
+            SingleConfigCode<Resources> configCode = param -> {
+                MailResource resource = ResourceUtil.getBindableResourceByName(domain.getResources(), jndiName);
+                return param.getResources().remove(resource);
+            };
+            ConfigSupport.apply(configCode, domain.getResources());
 
             report.setMessage(localStrings.getLocalString(
                     "delete.mail.resource.success",

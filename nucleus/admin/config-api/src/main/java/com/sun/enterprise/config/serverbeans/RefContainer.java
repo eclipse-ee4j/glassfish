@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.enterprise.config.serverbeans;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 import org.jvnet.hk2.config.Element;
-
-import java.util.List;
 
 /**
  * An application or Resource reference container object.
@@ -45,4 +47,24 @@ public interface RefContainer extends ConfigBeanProxy {
      */
     @Element
     List<ApplicationRef> getApplicationRef();
+
+
+    /**
+     * Note: This method uses stream to process names, it is not just a getter.
+     *
+     * @return list of {@link ResourceRef#getRef()} retrieved from {@link #getResourceRef()}
+     */
+    default List<String> getResourceRefNames() {
+        return getResourceRef().stream().map(ResourceRef::getRef).collect(Collectors.toList());
+    }
+
+
+    /**
+     * Note: This method uses stream to process names, it is not just a getter.
+     *
+     * @return list of {@link ApplicationRef#getRef()} retrieved from {@link #getApplicationRef()}
+     */
+    default List<String> getApplicationRefNames() {
+        return getApplicationRef().stream().map(ApplicationRef::getRef).collect(Collectors.toList());
+    }
 }

@@ -22,16 +22,17 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.internal.api.Target;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -42,27 +43,20 @@ import org.jvnet.hk2.config.TransactionFailure;
 @Service
 public class ResourceUtil {
 
-    private static final String DOMAIN = "domain";
+    private static final Logger LOG = System.getLogger(ResourceUtil.class.getName());
 
     @Inject
     private Provider<Target> targetProvider;
-
     @Inject
     private Domain domain;
-
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
-    //to initialize config-bean-utils in mvn test mode.
-    @Inject
-    private ConfigBeansUtilities configBeanUtilities;
-
     public void createResourceRef(String name, String enabled, String target) throws TransactionFailure {
-        // FIXME: No, throw exception! And force developers to avoid calling this for domain targets!
-        if (target.equals(DOMAIN)) {
-            return;
+        LOG.log(Level.DEBUG, "createResourceRef(name={0}, enabled={1}, target={2})", name, enabled, target);
+        if (CommandTarget.TARGET_DOMAIN.equals(target)) {
+            throw new IllegalArgumentException("Target " + target + " is not allowed for creating resource refs!");
         }
-
         SimpleJndiName jndiName = SimpleJndiName.of(name);
         Config config = domain.getConfigNamed(target);
         if (config != null) {
@@ -106,43 +100,43 @@ public class ResourceUtil {
      * @return computed value for <i>enabled</i>
      */
     public String computeEnabledValueForResourceBasedOnTarget(String enabledValue, String target) {
-        String result = enabledValue;
-        boolean enabled = Boolean.valueOf(enabledValue);
-        if(!isNonResourceRefTarget(target) && !enabled ){
-            result = Boolean.toString(!enabled);
+        boolean enabled = Boolean.parseBoolean(enabledValue);
+        if (!isNonResourceRefTarget(target) && !enabled) {
+            return Boolean.toString(!enabled);
         }
-        return result;
+        return enabledValue;
     }
+
 
     /**
      * Determines whether the target is of type "domain" or "config"
      * where resource-ref will not be created.
+     *
      * @param target target-name
      * @return boolean
      */
     private boolean isNonResourceRefTarget(String target){
-        boolean isNonResourceRefTarget = false;
-        if (DOMAIN.equals(target)) {
-            isNonResourceRefTarget = true;
-        } else {
-            if (domain.getConfigNamed(target) != null) {
-                isNonResourceRefTarget = true;
-            }
+        if (CommandTarget.TARGET_DOMAIN.equals(target)) {
+            return true;
         }
-        return isNonResourceRefTarget;
+        if (domain.getConfigNamed(target) != null) {
+            return true;
+        }
+        return false;
     }
 
 
+    /**
+     * @param refName must not be null.
+     */
     public boolean isResourceRefInTarget(SimpleJndiName refName, String target){
         Set<String> targets = getTargetsReferringResourceRef(refName);
-        boolean resourceRefInTarget = false;
         for (String refTarget : targets) {
             if (refTarget.equals(target)) {
-                resourceRefInTarget = true;
-                break;
+                return true;
             }
         }
-        return resourceRefInTarget;
+        return false;
     }
 
 
@@ -157,7 +151,7 @@ public class ResourceUtil {
                 if (server.getCluster() != null) {
                     targets.add(server.getCluster().getName());
                 } else if (server.isDas()) {
-                    targets.add(SystemPropertyConstants.DAS_SERVER_NAME);
+                    targets.add(CommandTarget.TARGET_SERVER);
                 } else if (server.isInstance()) {
                     targets.add(server.getName());
                 }
@@ -168,8 +162,9 @@ public class ResourceUtil {
 
 
     public void deleteResourceRef(SimpleJndiName jndiName, String target) throws TransactionFailure {
-        if (target.equals(DOMAIN)) {
-            return;
+        LOG.log(Level.DEBUG, "deleteResourceRef(jndiName={0}, target={1})", jndiName, target);
+        if (CommandTarget.TARGET_DOMAIN.equals(target)) {
+            throw new IllegalArgumentException("Target " + target + " is not allowed for deleting resource refs!");
         }
         Config config = domain.getConfigNamed(target);
         if (config != null) {

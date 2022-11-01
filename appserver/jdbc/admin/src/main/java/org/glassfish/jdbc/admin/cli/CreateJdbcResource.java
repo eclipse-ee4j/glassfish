@@ -19,23 +19,31 @@ package org.glassfish.jdbc.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
+import jakarta.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceConstants;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import java.util.HashMap;
-import java.util.Properties;
+import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
 
 /**
  * Create JDBC Resource Command
@@ -68,7 +76,7 @@ public class CreateJdbcResource implements AdminCommand {
     @Param(name="property", optional=true, separator=':')
     private Properties properties;
 
-    @Param(optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name="jndi_name", primary=true)
@@ -86,14 +94,15 @@ public class CreateJdbcResource implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
-        HashMap attrList = new HashMap();
-        attrList.put(ResourceConstants.JNDI_NAME, jndiName);
-        attrList.put(ResourceConstants.POOL_NAME, connectionPoolId);
-        attrList.put(ServerTags.DESCRIPTION, description);
-        attrList.put(ResourceConstants.ENABLED, enabled.toString());
+        HashMap<String, String> attrList = new HashMap<>();
+        attrList.put(JNDI_NAME, jndiName);
+        attrList.put(POOL_NAME, connectionPoolId);
+        attrList.put(DESCRIPTION, description);
+        attrList.put(ENABLED, enabled.toString());
         ResourceStatus rs;
 
         try {
@@ -111,8 +120,9 @@ public class CreateJdbcResource implements AdminCommand {
         }
         if (rs.getStatus() == ResourceStatus.FAILURE) {
             ec = ActionReport.ExitCode.FAILURE;
-            if (rs.getException() != null)
+            if (rs.getException() != null) {
                 report.setFailureCause(rs.getException());
+            }
         }
         report.setActionExitCode(ec);
     }

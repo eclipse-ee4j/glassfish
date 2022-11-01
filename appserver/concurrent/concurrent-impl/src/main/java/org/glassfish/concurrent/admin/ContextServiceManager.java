@@ -34,6 +34,7 @@ import org.glassfish.api.I18n;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ContextService;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
@@ -63,8 +64,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.SYSTEM_ALL_REQ
 @ConfiguredBy(Resources.class)
 public class ContextServiceManager implements ResourceManager {
 
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ContextServiceManager.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ContextServiceManager.class);
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
     private String jndiName = null;
@@ -88,34 +88,32 @@ public class ContextServiceManager implements ResourceManager {
         return ServerTags.CONTEXT_SERVICE;
     }
 
-    @Override
-    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
-                                 String target) throws Exception {
 
+    @Override
+    public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties, String target)
+        throws Exception {
         setAttributes(attributes, target);
 
         ResourceStatus validationStatus = isValid(resources, true, target);
-        if(validationStatus.getStatus() == ResourceStatus.FAILURE){
+        if (validationStatus.getStatus() == ResourceStatus.FAILURE) {
             return validationStatus;
         }
 
         try {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    return createResource(param, properties);
-                }
-            }, resources);
-
+            SingleConfigCode<Resources> configCode = param -> createResource(param, properties);
+            ConfigSupport.apply(configCode, resources);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
                 resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("create.context.service.failed", "Context service {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
+            String msg = localStrings.getLocalString("create.context.service.failed",
+                "Context service {0} creation failed", jndiName) + " " + tfe.getLocalizedMessage();
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);
             return status;
         }
-        String msg = localStrings.getLocalString("create.context.service.success", "Context service {0} created successfully", jndiName);
+        String msg = localStrings.getLocalString("create.context.service.success",
+            "Context service {0} created successfully", jndiName);
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
@@ -213,7 +211,7 @@ public class ContextServiceManager implements ResourceManager {
 
         if (environment.isDas()) {
 
-            if ("domain".equals(target)) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     String msg = localStrings.getLocalString("delete.context.service.resource-ref.exist", "This context service [ {0} ] is referenced in an instance/cluster target, use delete-resource-ref on appropriate target", jndiName);
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
@@ -233,7 +231,9 @@ public class ContextServiceManager implements ResourceManager {
 
         try {
             // delete resource-ref
-            resourceUtil.deleteResourceRef(simpleJndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete context-service
             SingleConfigCode<Resources> configCode = (SingleConfigCode<Resources>) param -> {

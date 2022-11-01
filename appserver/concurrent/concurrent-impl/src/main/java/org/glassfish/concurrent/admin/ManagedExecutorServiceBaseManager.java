@@ -36,6 +36,7 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ManagedExecutorService;
 import org.glassfish.concurrent.config.ManagedExecutorServiceBase;
 import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
@@ -114,7 +115,9 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
         try {
             ConfigSupport.apply(param -> createResource(param, properties), resources);
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
             String msg = I18N.getLocalString("create.managed.executor.service.failed",
                 "Managed executor service {0} creation failed", jndiName) + tfe.getLocalizedMessage();
@@ -276,7 +279,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
 
         if (environment.isDas()) {
-            if ("domain".equals(target)) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     String msg = I18N.getLocalString("delete.managed.executor.service.resource-ref.exist",
                         "This managed executor service [ {0} ] is referenced in an instance/cluster target,"
@@ -319,7 +322,9 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
 
         try {
-            resourceUtil.deleteResourceRef(simpleJndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete managed executor service
             SingleConfigCode<Resources> configCode = param -> {

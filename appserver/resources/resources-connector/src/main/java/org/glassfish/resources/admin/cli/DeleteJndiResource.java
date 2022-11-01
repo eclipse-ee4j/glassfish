@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,11 +20,7 @@ package org.glassfish.resources.admin.cli;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-
 import jakarta.inject.Inject;
-
-import java.beans.PropertyVetoException;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -67,7 +63,7 @@ public class DeleteJndiResource implements AdminCommand {
     final private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DeleteJndiResource.class);
 
-    @Param(optional=true, defaultValue= SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name="jndi_name", primary=true)
@@ -103,7 +99,7 @@ public class DeleteJndiResource implements AdminCommand {
         }
 
         if (environment.isDas()) {
-            if ("domain".equals(target)) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
                 if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     report.setMessage(localStrings.getLocalString("delete.jndi.resource.resource-ref.exist",
                             "external-jndi-resource [ {0} ] is referenced in an " +
@@ -134,19 +130,18 @@ public class DeleteJndiResource implements AdminCommand {
         }
 
         try {
-            resourceUtil.deleteResourceRef(simpleJndiName, target);
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ExternalJndiResource resource = domain.getResources().getResourceByName(ExternalJndiResource.class,
-                        simpleJndiName);
-                    if (resource.getJndiName().equals(jndiName)) {
-                        return param.getResources().remove(resource);
-                    }
-                    return null;
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
+            SingleConfigCode<Resources> configCode = param -> {
+                ExternalJndiResource resource = domain.getResources().getResourceByName(ExternalJndiResource.class,
+                    simpleJndiName);
+                if (resource.getJndiName().equals(jndiName)) {
+                    return param.getResources().remove(resource);
                 }
-            }, domain.getResources());
+                return null;
+            };
+            ConfigSupport.apply(configCode, domain.getResources());
 
             report.setMessage(
                 localStrings.getLocalString("delete.jndi.resource.success", "Jndi resource {0} deleted.", jndiName));

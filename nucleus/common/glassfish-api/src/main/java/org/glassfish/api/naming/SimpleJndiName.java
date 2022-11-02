@@ -144,6 +144,30 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
 
 
     /**
+     * Prefix in this case is understood as any string in the form <code>a:b/</code>
+     * or <code>a:</code>
+     * <p>
+     * For JNDI names starting with {@value #JNDI_CTX_CORBA} returns null.
+     *
+     * @return substring containing <code>:</code> and ending by <code>/</code>
+     */
+    public String getPrefix() {
+        if (hasCorbaPrefix()) {
+            return null;
+        }
+        final int colonIndex = jndiName.indexOf(':');
+        if (colonIndex == -1) {
+            return null;
+        }
+        final int slashIndex = jndiName.indexOf('/', colonIndex + 1);
+        if (slashIndex == -1) {
+            return jndiName.substring(0, colonIndex + 1);
+        }
+        return jndiName.substring(0, slashIndex + 1);
+    }
+
+
+    /**
      * @param prefix must not be null.
      * @return true if the JNDI name starts with the parameter.
      */
@@ -175,6 +199,33 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
             return new SimpleJndiName(jndiName.substring(index + prefix.length()));
         }
         return this;
+    }
+
+
+    /**
+     * Returns the JNDI name without the prefix.
+     * If there is no prefix, returns this instance unchanged.
+     * <p>
+     * Prefix in this case is understood as any string in the form <code>a:b/</code>
+     * or <code>a:</code>
+     * <p>
+     * For JNDI names starting with {@value #JNDI_CTX_CORBA} returns this instance unchanged.
+     *
+     * @return new instance with the prefix removed or this instance unchanged, never null.
+     */
+    public SimpleJndiName removePrefix() {
+        if (hasCorbaPrefix()) {
+            return this;
+        }
+        final int colonIndex = jndiName.indexOf(':');
+        if (colonIndex == -1) {
+            return this;
+        }
+        final int slashIndex = jndiName.indexOf('/', colonIndex + 1);
+        if (slashIndex == -1) {
+            return new SimpleJndiName(jndiName.substring(colonIndex + 1));
+        }
+        return new SimpleJndiName(jndiName.substring(slashIndex + 1));
     }
 
 

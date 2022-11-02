@@ -26,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -95,7 +97,18 @@ public class SimpleJndiNameTest {
     @Test
     public void removals() {
         SimpleJndiName jndiName = SimpleJndiName.of("java:module/x/y/z");
+        SimpleJndiName shortName = SimpleJndiName.of("something:somewhere");
+        SimpleJndiName empty = SimpleJndiName.of("");
+        SimpleJndiName corba = SimpleJndiName.of("corbaname:1::3/4");
         assertAll(
+            () -> assertEquals(JNDI_CTX_JAVA_MODULE, jndiName.getPrefix()),
+            () -> assertEquals("something:", shortName.getPrefix()),
+            () -> assertNull(corba.getPrefix()),
+            () -> assertNull(empty.getPrefix()),
+            () -> assertEquals(empty, empty.removePrefix()),
+            () -> assertSame(corba, corba.removePrefix()),
+            () -> assertEquals(SimpleJndiName.of("somewhere"), shortName.removePrefix()),
+            () -> assertEquals(SimpleJndiName.of("x/y/z"), jndiName.removePrefix()),
             () -> assertEquals(SimpleJndiName.of("x/y/z"), jndiName.removePrefix(JNDI_CTX_JAVA_MODULE)),
             () -> assertEquals(jndiName, jndiName.removePrefix("notThere")),
             () -> assertEquals(jndiName, jndiName.removePrefix(null)),

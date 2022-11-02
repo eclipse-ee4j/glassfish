@@ -554,7 +554,8 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     }
 
     public <T> T lookup(SimpleJndiName name) throws NamingException {
-        return lookup(name, (SerialContext) null);
+        final String componentId = getComponentId();
+        return lookup(componentId, name, initialContext);
     }
 
     /**

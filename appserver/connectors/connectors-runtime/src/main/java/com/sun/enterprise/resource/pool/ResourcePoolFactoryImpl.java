@@ -54,17 +54,14 @@ public class ResourcePoolFactoryImpl {
             return new UnpooledResource(poolInfo, env);
         }
 
-        ResourcePool pool = null;
+        final ResourcePool pool;
         if (poolType == PoolType.ASSOCIATE_WITH_THREAD_POOL) {
             pool = new AssocWithThreadResourcePool(poolInfo, env);
         } else {
             pool = new ConnectionPool(poolInfo, env);
         }
 
-        if (_logger.isLoggable(FINE)) {
-            _logger.fine("Created a pool of type : " + poolType);
-        }
-
+        _logger.log(FINE, "Created a pool of type: {0}", poolType);
         return pool;
     }
 }

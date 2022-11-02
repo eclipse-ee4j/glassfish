@@ -17,23 +17,6 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.external.probe.provider.PluginPoint;
-import org.glassfish.external.probe.provider.StatsProviderManager;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -51,6 +34,23 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.external.probe.provider.PluginPoint;
+import org.glassfish.external.probe.provider.StatsProviderManager;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Bootstrap operations of stats provider objects are done by this class.
@@ -88,12 +88,12 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
     private ServiceLocator habitat;
 
     //List of all connector conn pool stats providers that are created and stored
-    private List<ConnectorConnPoolStatsProvider> ccStatsProviders = null;
+    private final List<ConnectorConnPoolStatsProvider> ccStatsProviders;
 
     //Map of all ConnectionPoolEmitterImpl(s) for different pools
-    private Map<PoolInfo, ConnectionPoolEmitterImpl> poolEmitters = null;
-    private Map<PoolInfo, PoolLifeCycleListenerRegistry> poolRegistries = null;
-    private ConnectorRuntime runtime;
+    private final Map<PoolInfo, ConnectionPoolEmitterImpl> poolEmitters;
+    private final Map<PoolInfo, PoolLifeCycleListenerRegistry> poolRegistries;
+    private final ConnectorRuntime runtime;
 
     public ConnectionPoolStatsProviderBootstrap() {
         ccStatsProviders = new ArrayList<>();
@@ -118,11 +118,7 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
 
     @Override
     public void postConstruct() {
-        if(logger.isLoggable(Level.FINEST)) {
-            logger.finest("[Monitor]In the ConnectionPoolStatsProviderBootstrap");
-        }
-
-       //createMonitoringConfig();
+        logger.finest("[Monitor]In the ConnectionPoolStatsProviderBootstrap");
     }
 
     /**
@@ -318,21 +314,17 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      */
     @Override
     public void poolCreated(PoolInfo poolInfo) {
-        if(logger.isLoggable(Level.FINEST)) {
-            logger.finest("Pool created : " + poolInfo);
-        }
-        if(runtime.isServer()) {
+        logger.log(Level.FINEST, "Pool created: {0}", poolInfo);
+        if (runtime.isServer()) {
             ResourcePool pool = runtime.getConnectionPoolConfig(poolInfo);
-            Collection<ConnectionPoolMonitoringExtension> extensions =
-                    habitat.getAllServices(ConnectionPoolMonitoringExtension.class);
-            for(ConnectionPoolMonitoringExtension extension : extensions) {
+            Collection<ConnectionPoolMonitoringExtension> extensions = habitat
+                .getAllServices(ConnectionPoolMonitoringExtension.class);
+            for (ConnectionPoolMonitoringExtension extension : extensions) {
                 extension.registerPool(poolInfo);
             }
             if (pool instanceof ConnectorConnectionPool) {
                 registerCcPool(poolInfo);
-            } /*else if (poolInfo.getName().contains(ConnectorConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)){
-                registerJdbcPool(poolInfo);
-            }*/
+            }
         }
     }
 
@@ -344,13 +336,11 @@ public class ConnectionPoolStatsProviderBootstrap implements PostConstruct,
      */
     @Override
     public void poolDestroyed(PoolInfo poolInfo) {
-        if(logger.isLoggable(Level.FINEST)) {
-            logger.finest("Pool Destroyed : " + poolInfo);
-        }
+        logger.log(Level.FINEST, "Pool destroyed: {0}", poolInfo);
         if (runtime.isServer()) {
-            Collection<ConnectionPoolMonitoringExtension> extensions =
-                    habitat.getAllServices(ConnectionPoolMonitoringExtension.class);
-            for(ConnectionPoolMonitoringExtension extension : extensions) {
+            Collection<ConnectionPoolMonitoringExtension> extensions = habitat
+                .getAllServices(ConnectionPoolMonitoringExtension.class);
+            for (ConnectionPoolMonitoringExtension extension : extensions) {
                 extension.unregisterPool(poolInfo);
             }
             unregisterPool(poolInfo);

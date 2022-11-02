@@ -1011,17 +1011,18 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     @Override
     public ResourcePool getConnectionPoolConfig(PoolInfo poolInfo) {
         ResourcePool pool = ResourcesUtil.createInstance().getPoolConfig(poolInfo);
-        if (pool == null && (isApplicationScopedResource(poolInfo) || isModuleScopedResource(poolInfo))) {
-            // It is possible that the application scoped resources is being deployed
+        if (pool != null) {
+            return pool;
+        }
+        // It is possible that the application scoped resources is being deployed
+        if (isApplicationScopedResource(poolInfo) || isModuleScopedResource(poolInfo)) {
             Resources asc = ResourcesRegistry.getResources(poolInfo.getApplicationName(), poolInfo.getModuleName());
             pool = ConnectorsUtil.getConnectionPoolConfig(poolInfo, asc);
+            if (pool != null) {
+                return pool;
+            }
         }
-
-        if (pool == null) {
-            throw new RuntimeException("No pool by name [ " + poolInfo + " ] found");
-        }
-
-        return pool;
+        throw new RuntimeException("No pool found by " + poolInfo);
     }
 
     @Override

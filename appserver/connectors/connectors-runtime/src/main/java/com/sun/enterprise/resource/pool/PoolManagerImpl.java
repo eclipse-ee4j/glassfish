@@ -64,6 +64,7 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.WARNING;
 import static javax.transaction.xa.XAResource.TMSUCCESS;
 
@@ -126,15 +127,11 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
      */
     private ResourcePool createAndInitPool(final PoolInfo poolInfo, PoolType poolType, Hashtable env) throws PoolingException {
         ResourcePool pool = getPool(poolInfo);
-
         if (pool == null) {
             pool = ResourcePoolFactoryImpl.newInstance(poolInfo, poolType, env);
             addPool(pool);
-            if (LOG.isLoggable(FINE)) {
-                LOG.log(FINE, "Created connection  pool  and added it to PoolManager: " + pool);
-            }
+            LOG.log(INFO, "Created connection  pool and added it to PoolManager: {0}", pool);
         }
-
         return pool;
     }
 
@@ -241,10 +238,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
     }
 
     private void addPool(ResourcePool pool) {
-        if (LOG.isLoggable(FINE)) {
-            LOG.fine("Adding pool " + pool.getPoolInfo() + "to pooltable");
-        }
-
+        LOG.log(FINE, "Adding pool {0} to pooltable", pool.getPoolInfo());
         poolTable.put(pool.getPoolStatus().getPoolInfo(), pool);
     }
 

@@ -55,8 +55,7 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
      *
      * @throws NamingException if poolname lookup fails
      */
-    public static ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo)
-            throws NamingException {
+    public static ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo) throws NamingException {
         // All this to get the default user name and principal
         SimpleJndiName jndiNameForPool = getReservePrefixedJNDINameForPool(poolInfo);
         Context ic = ConnectorRuntime.getRuntime().getNamingManager().getInitialContext();
@@ -80,9 +79,6 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
 
     }
 
-    private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
-        return new SimpleJndiName(prefix + resourceName);
-    }
     public static SimpleJndiName getReservePrefixedJNDINameForPool(PoolInfo poolInfo) {
         SimpleJndiName jndiName = poolInfo.getName().removePrefix();
         SimpleJndiName name = getReservePrefixedJNDIName(POOLS_JNDINAME_PREFIX, jndiName);
@@ -103,11 +99,15 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     }
 
     public static SimpleJndiName getReservePrefixedJNDINameForDescriptor(String moduleName) {
-        return getReservePrefixedJNDIName(ConnectorConstants.DD_PREFIX, moduleName);
+        return getReservePrefixedJNDIName(DD_PREFIX, moduleName);
     }
 
     public static SimpleJndiName getReservePrefixedJNDINameForResource(String moduleName) {
-        return getReservePrefixedJNDIName(ConnectorConstants.RESOURCE_JNDINAME_PREFIX, moduleName);
+        return getReservePrefixedJNDIName(RESOURCE_JNDINAME_PREFIX, moduleName);
+    }
+
+    private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
+        return new SimpleJndiName(prefix + resourceName);
     }
 
     //TODO V3 is this right approach ? (just checking '#') ?

@@ -94,14 +94,9 @@ public class ConnectorConnectionPoolDeployer
         populateConnectorConnectionPool(ccp, connDefName, rarName, props, securityMaps);
         final String defName = resource.getConnectionDefinitionName();
 
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Calling backend to add connectorConnectionPool", resource.getResourceAdapterName());
-        }
         runtime.createConnectorConnectionPool(ccp, defName, resource.getResourceAdapterName(), resource.getProperty(),
             resource.getSecurityMap());
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Added connectorConnectionPool in backend", resource.getResourceAdapterName());
-        }
+        LOG.log(Level.CONFIG, "Added connectorConnectionPool in resource adapter {0}", resource.getResourceAdapterName());
     }
 
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,34 +19,33 @@ package org.glassfish.resources.api;
 
 import com.sun.enterprise.config.serverbeans.Resources;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ResourcesRegistry {
 
-    private static Map<String, Map<String, Resources>> resourceConfigurations =
-            new ConcurrentHashMap<String, Map<String, Resources>>();
+    private static final Map<String, Map<String, Resources>> RESOURCE_CONFIGURATIONS = new ConcurrentHashMap<>();
 
-
-    public static Resources getResources(String appName, String moduleName){
-        Map<String, Resources> allResources = resourceConfigurations.get(appName);
-        if(allResources != null){
+    public static Resources getResources(String appName, String moduleName) {
+        Map<String, Resources> allResources = RESOURCE_CONFIGURATIONS.get(appName);
+        if (allResources != null) {
             return allResources.get(moduleName);
         }
         return null;
     }
 
-    public static Map<String, Resources> getResources(String appName){
-        return resourceConfigurations.get(appName);
+
+    public static Map<String, Resources> getResources(String appName) {
+        return RESOURCE_CONFIGURATIONS.get(appName);
     }
 
-    public static void putResources(String appName, Map<String, Resources> allResources){
-        resourceConfigurations.put(appName, allResources);
+
+    public static void putResources(String appName, Map<String, Resources> allResources) {
+        RESOURCE_CONFIGURATIONS.put(appName, allResources);
     }
 
-    public static Map<String, Resources> remove(String appName){
-        return resourceConfigurations.remove(appName);
-    }
 
+    public static Map<String, Resources> remove(String appName) {
+        return RESOURCE_CONFIGURATIONS.remove(appName);
+    }
 }

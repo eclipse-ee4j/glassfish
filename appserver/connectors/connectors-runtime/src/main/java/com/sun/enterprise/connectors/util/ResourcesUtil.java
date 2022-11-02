@@ -63,16 +63,6 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 
 public class ResourcesUtil {
 
-/*
-    //The thread local ResourcesUtil is used in two cases
-    //1. An event config context is to be used as in case of resource
-    //   deploy/undeploy and enable/disable events.
-    //2. An admin config context to be used for ConnectorRuntime.getConnection(...)
-    //   request
-    static ThreadLocal<ResourcesUtil> localResourcesUtil =
-            new ThreadLocal<ResourcesUtil>();
-
-*/
     static Logger _logger = LogDomains.getLogger(ResourcesUtil.class,LogDomains.RSR_LOGGER);
     static StringManager localStrings = StringManager.getManager(ResourcesUtil.class);
 
@@ -322,7 +312,7 @@ public class ResourcesUtil {
     }
 
     private boolean isRarEnabled(String raName) {
-        if(raName == null || raName.length() == 0) {
+        if(raName == null || raName.isEmpty()) {
             return false;
         }
         Application application = getDomain().getApplications().getApplication(raName);

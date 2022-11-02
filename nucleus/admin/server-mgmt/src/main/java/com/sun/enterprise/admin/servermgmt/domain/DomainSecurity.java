@@ -17,15 +17,18 @@
 
 package com.sun.enterprise.admin.servermgmt.domain;
 
-import com.sun.enterprise.admin.servermgmt.DomainConfig;
-import com.sun.enterprise.admin.servermgmt.MasterPasswordFileManager;
-import com.sun.enterprise.admin.servermgmt.RepositoryException;
-import com.sun.enterprise.security.store.PasswordAdapter;
+import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
+import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
 
 import java.io.File;
 import java.io.IOException;
 
 import org.glassfish.security.common.FileRealmHelper;
+
+import com.sun.enterprise.admin.servermgmt.DomainConfig;
+import com.sun.enterprise.admin.servermgmt.MasterPasswordFileManager;
+import com.sun.enterprise.admin.servermgmt.RepositoryException;
+import com.sun.enterprise.security.store.PasswordAdapter;
 
 public class DomainSecurity extends MasterPasswordFileManager {
 
@@ -71,9 +74,9 @@ public class DomainSecurity extends MasterPasswordFileManager {
      * @throws RepositoryException if any error occurs during keystore creation.
      */
     void createSSLCertificateDatabase(File configDir, DomainConfig config, String masterPassword) throws RepositoryException {
-        createKeyStore(new File(configDir, DomainConstants.KEYSTORE_FILE), config, masterPassword);
-        changeKeystorePassword(DEFAULT_MASTER_PASSWORD, masterPassword, new File(configDir, DomainConstants.TRUSTSTORE_FILE));
-        copyCertificates(configDir, config, masterPassword);
+        createKeyStore(new File(configDir, KEYSTORE_FILE), config, masterPassword);
+        changeKeystorePassword(DEFAULT_MASTER_PASSWORD, masterPassword, new File(configDir, TRUSTSTORE_FILE));
+        copyCertificatesToTrustStore(configDir, config, masterPassword);
     }
 
     /**

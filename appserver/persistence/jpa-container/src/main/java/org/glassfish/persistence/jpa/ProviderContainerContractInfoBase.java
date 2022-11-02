@@ -47,7 +47,8 @@ public abstract class ProviderContainerContractInfoBase implements ProviderConta
     }
 
     public ProviderContainerContractInfoBase(ConnectorRuntime connectorRuntime, DeploymentContext context) {
-        this(connectorRuntime);
+        this.connectorRuntime = connectorRuntime;
+        this.context = context;
     }
 
     @Override

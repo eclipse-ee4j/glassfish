@@ -44,18 +44,22 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -109,6 +113,24 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
     @LogMessageInfo(message = "Skipping resource validation")
     private static final String SKIP_RESOURCE_VALIDATION = "AS-DEPLOYMENT-00028";
 
+    private static final Set<SimpleJndiName> DEFAULT_JNDI_NAMES = Set
+        .of(JNDI_CTX_JAVA_COMPONENT + "DefaultDataSource",
+            JNDI_CTX_JAVA_COMPONENT + "DefaultJMSConnectionFactory",
+            JNDI_CTX_JAVA_COMPONENT + "ORB",
+            JNDI_CTX_JAVA_COMPONENT + "DefaultManagedExecutorService",
+            JNDI_CTX_JAVA_COMPONENT + "DefaultManagedScheduledExecutorService",
+            JNDI_CTX_JAVA_COMPONENT + "DefaultManagedThreadFactory",
+            JNDI_CTX_JAVA_COMPONENT + "DefaultContextService",
+            JNDI_CTX_JAVA_COMPONENT + "UserTransaction",
+            JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry",
+            JNDI_CTX_JAVA_COMPONENT + "BeanManager",
+            JNDI_CTX_JAVA_COMPONENT + "ValidatorFactory",
+            JNDI_CTX_JAVA_COMPONENT + "Validator",
+            JNDI_CTX_JAVA_COMPONENT + "InAppClientContainer",
+            JNDI_CTX_JAVA_MODULE + "ModuleName",
+            JNDI_CTX_JAVA_APP + "AppName")
+        .stream().map(SimpleJndiName::new).collect(Collectors.toUnmodifiableSet());
+
     private String target;
 
     private DeploymentContext dc;
@@ -123,9 +145,11 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ResourceValidator.class);
 
-    @Inject @Named( ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Server server;
 
+    @PostConstruct
     public void postConstruct() {
         events.register(this);
     }
@@ -695,47 +719,47 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
      * @return the converted name with java:global JNDI prefix.
      */
     private SimpleJndiName convertModuleOrAppJNDIName(SimpleJndiName jndiName, JndiNameEnvironment env) {
-        BundleDescriptor bd = null;
-        if( env instanceof EjbDescriptor ) {
-            bd = ((EjbDescriptor)env).getEjbBundleDescriptor();
-        } else if( env instanceof BundleDescriptor ) {
-            bd = (BundleDescriptor) env;
-        }
 
         if (jndiName == null) {
             return null;
         }
 
-        if (bd != null) {
-            String appName = null;
-            if (!application.isVirtual()) {
-                appName = application.getAppName();
-            }
-            String moduleName = bd.getModuleDescriptor().getModuleName();
-            StringBuilder javaGlobalName = new StringBuilder(JNDI_CTX_JAVA_GLOBAL);
-            if (jndiName.isJavaApp()) {
-                if (appName != null) {
-                    javaGlobalName.append(appName);
-                    javaGlobalName.append("/");
-                }
-
-                // Replace java:app/ with the fully-qualified global portion
-                javaGlobalName.append(jndiName.removePrefix(JNDI_CTX_JAVA_APP));
-            } else if (jndiName.isJavaModule()) {
-                if (appName != null) {
-                    javaGlobalName.append(appName);
-                    javaGlobalName.append("/");
-                }
-
-                javaGlobalName.append(moduleName);
-                javaGlobalName.append("/");
-                javaGlobalName.append(jndiName.removePrefix(JNDI_CTX_JAVA_MODULE));
-            } else {
-                return new SimpleJndiName("");
-            }
-            return new SimpleJndiName(javaGlobalName.toString());
+        final BundleDescriptor bd;
+        if (env instanceof EjbDescriptor) {
+            bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
+        } else if (env instanceof BundleDescriptor) {
+            bd = (BundleDescriptor) env;
+        } else {
+            bd = null;
         }
-        return new SimpleJndiName("");
+
+        if (bd == null) {
+            return new SimpleJndiName("");
+        }
+        final String appName = application.isVirtual() ? null : application.getAppName();
+        final String moduleName = bd.getModuleDescriptor().getModuleName();
+        final StringBuilder javaGlobalName = new StringBuilder(JNDI_CTX_JAVA_GLOBAL);
+        if (jndiName.isJavaApp()) {
+            if (appName != null) {
+                javaGlobalName.append(appName);
+                javaGlobalName.append("/");
+            }
+
+            // Replace java:app/ with the fully-qualified global portion
+            javaGlobalName.append(jndiName.removePrefix(JNDI_CTX_JAVA_APP));
+        } else if (jndiName.isJavaModule()) {
+            if (appName != null) {
+                javaGlobalName.append(appName);
+                javaGlobalName.append("/");
+            }
+
+            javaGlobalName.append(moduleName);
+            javaGlobalName.append("/");
+            javaGlobalName.append(jndiName.removePrefix(JNDI_CTX_JAVA_MODULE));
+        } else {
+            return new SimpleJndiName("");
+        }
+        return new SimpleJndiName(javaGlobalName.toString());
     }
 
 
@@ -747,7 +771,8 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             if (!resource.validate) {
                 continue;
             }
-            if ("CFD".equals(resource.getType()) || "AODD".equals(resource.getType())) {
+            if (JavaEEResourceType.CFD.name().equals(resource.getType())
+                || JavaEEResourceType.AODD.name().equals(resource.getType())) {
                 validateRAName(resource);
             } else {
                 validateJNDIRefs(resource, appResources.myNamespace);
@@ -834,8 +859,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
     /**
      * Strategy for validating a given jndi name
      * 1) Check in domain.xml
-     * 2) Check in the resources defined within the app. These have not been binded to the namespace
-     * yet.
+     * 2) Check in the resources defined within the app. These have not been binded to the namespace yet.
      * 3) Check for resources defined by an earlier application.
      * In case a null jndi name is passed, we fail the deployment.
      *
@@ -843,23 +867,22 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
      */
     private void validateJNDIRefs(AppResource resource, JNDINamespace namespace) {
         // In case lookup is not present, check if another resource with the same name exists
-        if (!resource.hasLookup() && !namespace.find(resource.getName(), resource.getEnv())) {
+        if (!resource.hasLookup()) {
+            if (namespace.find(resource.getName(), resource.getEnv())) {
+                return;
+            }
             LOG.log(Level.SEVERE, RESOURCE_REF_JNDI_LOOKUP_FAILED,
                 new Object[] {resource.getName(), null, resource.getType()});
-            throw new DeploymentException(localStrings.getLocalString("enterprise.deployment.util.resource.validation",
-                "JNDI lookup failed for the resource: Name: {0}, Lookup: {1}, Type: {2}", resource.getName(), null,
-                resource.getType()));
+            throw new DeploymentException(
+                MessageFormat.format("JNDI lookup failed for the resource: Name: {0}, Lookup: {1}, Type: {2}",
+                    resource.getName(), null, resource.getType()));
         }
 
-        if (!resource.hasLookup()) {
-            // nothing to validate.
-            return;
-        }
-
+        // hasLookup returned true, so it cannot be null.
         SimpleJndiName jndiName = resource.getJndiName();
         JndiNameEnvironment env = resource.getEnv();
 
-        if (isResourceInDomainXML(jndiName) || isDefaultResource(jndiName)) {
+        if (isResourceInDomainXML(jndiName) || DEFAULT_JNDI_NAMES.contains(jndiName)) {
             return;
         }
 
@@ -885,19 +908,14 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         }
 
         try {
-            if(loadOnCurrentInstance()) {
-                InitialContext ctx = new InitialContext();
-                ctx.lookup(jndiName.toString());
+            if (loadOnCurrentInstance()) {
+                InitialContext.doLookup(jndiName.toString());
             }
         } catch (NamingException e) {
-            LOG.log(Level.SEVERE, RESOURCE_REF_JNDI_LOOKUP_FAILED,
-                    new Object[] {resource.getName(), jndiName, resource.getType()});
-            DeploymentException de = new DeploymentException(localStrings.getLocalString(
-                    "enterprise.deployment.util.resource.validation",
-                    "JNDI lookup failed for the resource: Name: {0}, Lookup: {1}, Type: {2}",
-                    resource.getName(), jndiName, resource.getType()));
-            de.initCause(e);
-            throw de;
+            throw new DeploymentException(
+                MessageFormat.format("JNDI lookup failed for the resource: Name: {0}, Lookup: {1}, Type: {2}",
+                    resource.getName(), jndiName, resource.getType()),
+                e);
         }
     }
 
@@ -921,30 +939,6 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
 
         Cluster cluster = domain.getClusterNamed(target);
         return cluster != null && cluster.isResourceRefExists(jndiName);
-    }
-
-
-    /**
-     * Default resources provided by GF.
-     */
-    private boolean isDefaultResource(SimpleJndiName jndiName) {
-        return jndiName != null
-            && (jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultDataSource")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultJMSConnectionFactory")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "ORB")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedExecutorService")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedScheduledExecutorService")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultManagedThreadFactory")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultContextService")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "UserTransaction")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "BeanManager")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "ValidatorFactory")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "Validator")
-            || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "InAppClientContainer")
-            || jndiName.equals(JNDI_CTX_JAVA_MODULE + "ModuleName")
-            || jndiName.equals(JNDI_CTX_JAVA_APP + "AppName")
-        );
     }
 
     private static class AppResource {
@@ -1057,17 +1051,16 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
             if (appLevelResources != null) {
                 appNamespace.addAll(appLevelResources);
             }
-            for (Map.Entry<String, List<SimpleJndiName>> entry: resources.entrySet()) {
-                if (!entry.getKey().equals(appName)) {
-                    String moduleName = getActualModuleName(entry.getKey());
+            for (Map.Entry<String, List<SimpleJndiName>> resource: resources.entrySet()) {
+                if (!resource.getKey().equals(appName)) {
+                    String moduleName = getActualModuleName(resource.getKey());
                     List<SimpleJndiName> jndiNames = moduleNamespaces.get(moduleName);
                     if (jndiNames == null) {
                         jndiNames = new ArrayList<>();
-                        jndiNames.addAll(entry.getValue());
+                        jndiNames.addAll(resource.getValue());
                         moduleNamespaces.put(moduleName, jndiNames);
-                    }
-                    else {
-                        jndiNames.addAll(entry.getValue());
+                    } else {
+                        jndiNames.addAll(resource.getValue());
                     }
                 }
             }
@@ -1115,6 +1108,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
          * @return True if the jndi name is found in the namespace. False otherwise.
          */
         public boolean find(SimpleJndiName jndiName, JndiNameEnvironment env) {
+            LOG.log(Level.FINE, "find(jndiName={0}, env)", jndiName);
             if (jndiName == null) {
                 return false;
             }
@@ -1124,7 +1118,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 return jndiNames != null && jndiNames.contains(jndiName);
             } else if (jndiName.isJavaModule()) {
                 String moduleName = getActualModuleName(DOLUtils.getModuleName(env));
-                List<?> jndiNames = moduleNamespaces.get(moduleName);
+                List<SimpleJndiName> jndiNames = moduleNamespaces.get(moduleName);
                 return jndiNames != null && jndiNames.contains(jndiName);
             } else if (jndiName.isJavaApp()) {
                 return appNamespace.contains(jndiName);

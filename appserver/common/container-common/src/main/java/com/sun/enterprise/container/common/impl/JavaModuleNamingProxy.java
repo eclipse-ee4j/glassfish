@@ -92,11 +92,11 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
 
     @Override
     public Object handle(String name) throws NamingException {
-        if (name.equals(JAVA_APP_NAME)) {
+        if (JAVA_APP_NAME.equals(name)) {
             return getAppName();
-        } else if (name.equals(JAVA_MODULE_NAME)) {
+        } else if (JAVA_MODULE_NAME.equals(name)) {
             return getModuleName();
-        } else if (name.equals(JAVA_APP_SERVICE_LOCATOR)) {
+        } else if (JAVA_APP_SERVICE_LOCATOR.equals(name)) {
             return getAppServiceLocator();
         } else if (name.startsWith(JNDI_CTX_JAVA_MODULE) || name.startsWith(JNDI_CTX_JAVA_APP)) {
             // Check for any automatically defined portable EJB names under
@@ -145,23 +145,25 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
 
 
     private String getModuleName() throws NamingException {
-        ComponentEnvManager namingMgr = habitat.getService(ComponentEnvManager.class);
-        String moduleName = null;
-        if (namingMgr != null) {
-            JndiNameEnvironment env = namingMgr.getCurrentJndiNameEnvironment();
-            BundleDescriptor bd = null;
-            if (env instanceof EjbDescriptor) {
-                bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
-            } else if (env instanceof BundleDescriptor) {
-                bd = (BundleDescriptor) env;
-            }
-            if (bd != null) {
-                moduleName = bd.getModuleDescriptor().getModuleName();
-            }
+        final ComponentEnvManager namingMgr = habitat.getService(ComponentEnvManager.class);
+        if (namingMgr == null) {
+            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME + ", ComponentEnvManager is null.");
         }
-
+        final JndiNameEnvironment env = namingMgr.getCurrentJndiNameEnvironment();
+        final BundleDescriptor bd;
+        if (env instanceof EjbDescriptor) {
+            bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
+        } else if (env instanceof BundleDescriptor) {
+            bd = (BundleDescriptor) env;
+        } else {
+            bd = null;
+        }
+        if (bd == null) {
+            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME + ", descriptor is null.");
+        }
+        final String moduleName = bd.getModuleDescriptor().getModuleName();
         if (moduleName == null) {
-            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME);
+            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME + ", descriptor's module name is null");
         }
         return moduleName;
     }

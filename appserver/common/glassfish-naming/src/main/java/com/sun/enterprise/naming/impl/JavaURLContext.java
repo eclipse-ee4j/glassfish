@@ -176,7 +176,7 @@ public final class JavaURLContext implements Context, Cloneable {
 
                 Object obj = null;
 
-                if (!fullName.hasPrefix(JNDI_CTX_JAVA_APP_ENV) || !JNDI_CTX_JAVA_APP_ENV.equals(fullName.toString())) {
+                if (!fullName.hasPrefix(JNDI_CTX_JAVA_APP_ENV) || !"java:app/env".equals(fullName.toString())) {
                     try {
                         // Translate the java:app name into the equivalent java:global name so that
                         // the lookup will be resolved by the server.
@@ -227,7 +227,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void bind(String name, Object obj) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -238,7 +238,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void bind(Name name, Object obj) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -249,7 +249,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void rebind(String name, Object obj) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -260,7 +260,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void rebind(Name name, Object obj) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -270,7 +270,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void unbind(String name) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -280,7 +280,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void unbind(Name name) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -289,7 +289,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void rename(String oldname, String newname) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + oldname + " and " + newname);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + oldname + " and " + newname);
     }
 
     /**
@@ -298,7 +298,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void rename(Name oldname, Name newname) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + oldname + " and " + newname);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + oldname + " and " + newname);
     }
 
     /**
@@ -307,7 +307,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void destroySubcontext(String name) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     /**
@@ -316,17 +316,17 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void destroySubcontext(Name name) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     @Override
     public Context createSubcontext(String name) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
     @Override
     public Context createSubcontext(Name name) throws NamingException {
-        throw new NamingException("Ther namespace '" + myName + "' cannot be modified. Called for " + name);
+        throw new NamingException("The namespace '" + myName + "' cannot be modified. Called for " + name);
     }
 
 
@@ -402,8 +402,7 @@ public final class JavaURLContext implements Context, Cloneable {
      * @throws NamingException if there is a naming exception.
      */
     @Override
-    public NamingEnumeration<Binding> listBindings(Name name)
-            throws NamingException {
+    public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
         // Flat namespace; no federation; just call string version
         return listBindings(name.toString());
     }

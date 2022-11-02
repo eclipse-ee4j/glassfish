@@ -257,22 +257,27 @@ public class ConnectorsUtil {
         return name;
     }
 
-    public static ResourcePool getConnectionPoolConfig(PoolInfo poolInfo, Resources allResources){
-        ResourcePool pool = null;
-        for(Resource configuredResource : allResources.getResources()){
-            if(configuredResource instanceof ResourcePool){
-                ResourcePool resourcePool= (ResourcePool)configuredResource;
-                if(resourcePool.getName().equals(poolInfo.getName().toString())){
-                    pool = resourcePool;
-                    break;
+
+    public static ResourcePool getConnectionPoolConfig(PoolInfo poolInfo, Resources allResources) {
+        if (allResources == null || allResources.getResources() == null) {
+            return null;
+        }
+        List<Resource> resources = allResources.getResources();
+        for (Resource configuredResource : resources) {
+            if (configuredResource instanceof ResourcePool) {
+                ResourcePool resourcePool = (ResourcePool) configuredResource;
+                if (resourcePool.getName().equals(poolInfo.getName().toString())) {
+                    return resourcePool;
                 }
             }
         }
-
-        return pool;
+        return null;
     }
 
     public static Collection<Resource> getAllResources(Collection<String> poolNames, Resources allResources) {
+        if (allResources == null || allResources.getResources() == null) {
+            return List.of();
+        }
         List<Resource> connectorResources = new ArrayList<>();
         for (Resource resource : allResources.getResources()) {
             if (resource instanceof ConnectorResource) {

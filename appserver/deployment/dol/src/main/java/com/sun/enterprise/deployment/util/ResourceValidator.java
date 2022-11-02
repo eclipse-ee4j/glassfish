@@ -1049,7 +1049,9 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 return;
             }
             List<SimpleJndiName> appLevelResources = resources.get(appName);
-            appNamespace.addAll(appLevelResources);
+            if (appLevelResources != null) {
+                appNamespace.addAll(appLevelResources);
+            }
             for (Map.Entry<String, List<SimpleJndiName>> entry: resources.entrySet()) {
                 if (!entry.getKey().equals(appName)) {
                     String moduleName = getActualModuleName(entry.getKey());

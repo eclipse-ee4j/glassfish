@@ -17,8 +17,6 @@
 package org.glassfish.api.naming;
 
 import java.io.Serializable;
-import java.util.Objects;
-
 import javax.naming.CompositeName;
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
@@ -58,7 +56,7 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
                     "Non-corba JNDI name is not allowed to contain more than one colon: " + jndiName);
             }
         }
-        this.jndiName = Objects.requireNonNull(jndiName, "jndiName");
+        this.jndiName = jndiName;
     }
 
 

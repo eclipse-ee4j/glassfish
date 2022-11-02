@@ -334,7 +334,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
      */
     private SimpleJndiName extractJNDIName(org.glassfish.resources.api.Resource resource) {
         HashMap attrs = resource.getAttributes();
-        return new SimpleJndiName((String) attrs.get(JNDI_NAME));
+        return SimpleJndiName.of((String) attrs.get(JNDI_NAME));
     }
 
     private boolean hasRAName(org.glassfish.resources.api.Resource resource) {

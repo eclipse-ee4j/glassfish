@@ -83,9 +83,9 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
         return new SimpleJndiName(prefix + resourceName);
     }
-
     public static SimpleJndiName getReservePrefixedJNDINameForPool(PoolInfo poolInfo) {
-        SimpleJndiName name = getReservePrefixedJNDIName(ConnectorConstants.POOLS_JNDINAME_PREFIX, poolInfo.getName());
+        SimpleJndiName jndiName = poolInfo.getName().removePrefix();
+        SimpleJndiName name = getReservePrefixedJNDIName(POOLS_JNDINAME_PREFIX, jndiName);
         return getScopedName(poolInfo, name);
     }
 

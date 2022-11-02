@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,26 @@
 
 package com.sun.enterprise.v3.services.impl;
 
+import java.io.CharConversionException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.concurrent.Callable;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.io.CharConversionException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.glassfish.api.container.Adapter;
 import org.glassfish.api.container.Sniffer;
 import org.glassfish.api.deployment.ApplicationContainer;
 import org.glassfish.api.logging.LogHelper;
 import org.glassfish.grizzly.config.ContextRootInfo;
 import org.glassfish.grizzly.config.GrizzlyListener;
+import org.glassfish.grizzly.http.Note;
 import org.glassfish.grizzly.http.server.AfterServiceListener;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.HttpHandlerChain;
 import org.glassfish.grizzly.http.server.Request;
-import org.glassfish.grizzly.http.Note;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.grizzly.http.server.util.Mapper;
 import org.glassfish.grizzly.http.server.util.MappingData;
@@ -145,15 +146,14 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         } catch (Exception ex) {
             try {
                 if (LOGGER.isLoggable(Level.WARNING)) {
-                    LogHelper.log(LOGGER, Level.WARNING, KernelLoggerInfo.exceptionMapper, ex,
-                            request.getRequest().getRequestURIRef().getDecodedRequestURIBC());
+                    final Object url = request.getRequest() == null ? null
+                        : request.getRequest().getRequestURIRef().getDecodedRequestURIBC();
+                    LogHelper.log(LOGGER, Level.WARNING, KernelLoggerInfo.exceptionMapper, ex, url);
                 }
 
                 response.sendError(500);
             } catch (Exception ex2) {
-                if (LOGGER.isLoggable(Level.WARNING)) {
-                    LOGGER.log(Level.WARNING, KernelLoggerInfo.exceptionMapper2, ex2);
-                }
+                LOGGER.log(Level.WARNING, KernelLoggerInfo.exceptionMapper2, ex2);
                 if (ex2 instanceof CharConversionException) {
                     response.sendError(500);
                 }

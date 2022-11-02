@@ -851,10 +851,15 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 resource.getType()));
         }
 
+        if (!resource.hasLookup()) {
+            // nothing to validate.
+            return;
+        }
+
         SimpleJndiName jndiName = resource.getJndiName();
         JndiNameEnvironment env = resource.getEnv();
 
-        if (isResourceInDomainXML(jndiName) || isDefaultResource(jndiName.toString())) {
+        if (isResourceInDomainXML(jndiName) || isDefaultResource(jndiName)) {
             return;
         }
 
@@ -922,7 +927,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
     /**
      * Default resources provided by GF.
      */
-    private boolean isDefaultResource(String jndiName) {
+    private boolean isDefaultResource(SimpleJndiName jndiName) {
         return jndiName != null
             && (jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultDataSource")
             || jndiName.equals(JNDI_CTX_JAVA_COMPONENT + "DefaultJMSConnectionFactory")

@@ -193,6 +193,7 @@ public class KeystoreManager {
                 "-validity", "3650",
                 "-keypass", masterPassword,
                 "-storepass", masterPassword,
+                "-storetype", "JKS",
                 SKID_EXTENSION_SYSTEM_PROPERTY };
 
         new KeytoolExecutor(keytoolCmd, 60).execute("keystoreNotCreated", keystore);

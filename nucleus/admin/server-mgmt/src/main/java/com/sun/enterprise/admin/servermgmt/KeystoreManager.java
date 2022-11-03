@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,34 @@
 
 package com.sun.enterprise.admin.servermgmt;
 
-import com.sun.enterprise.admin.servermgmt.domain.DomainConstants;
-import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
-import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
-import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.universal.process.ProcessUtils;
-import com.sun.enterprise.util.*;
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.net.NetUtils;
+import static com.sun.enterprise.admin.servermgmt.SLogger.BAD_DELETE_TEMP_CERT_FILE;
+import static com.sun.enterprise.admin.servermgmt.SLogger.UNHANDLED_EXCEPTION;
+import static com.sun.enterprise.admin.servermgmt.SLogger.getLogger;
+import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.KEYSTORE_FILE;
+import static com.sun.enterprise.admin.servermgmt.domain.DomainConstants.TRUSTSTORE_FILE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.KeyStore;
-import java.util.*;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.sun.enterprise.admin.servermgmt.SLogger.*;
+import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
+import com.sun.enterprise.universal.glassfish.ASenvPropertyReader;
+import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.universal.process.ProcessUtils;
+import com.sun.enterprise.util.ExecException;
+import com.sun.enterprise.util.OS;
+import com.sun.enterprise.util.ProcessExecutor;
+import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.enterprise.util.net.NetUtils;
 
 /**
  * @author kebbs
@@ -50,22 +61,28 @@ public class KeystoreManager {
     private static final String SKID_EXTENSION_SYSTEM_PROPERTY = "-J-Dsun.security.internal.keytool.skid";
     private static final String INSTANCE_CN_SUFFIX = "-instance";
 
+    private static final StringManager _strMgr = StringManager.getManager(KeystoreManager.class);
+    protected PEFileLayout _fileLayout;
+
+
     static {
         // Byron Nevins, July 2011
         String nonFinalKeyTool = KEYTOOL_EXE_NAME; // at the end we set the final
         String propName = SystemPropertyConstants.JAVA_ROOT_PROPERTY;
         String javaroot = new ASenvPropertyReader().getProps().get(propName);
-        File k = new File(new File(javaroot, "bin"), KEYTOOL_EXE_NAME);
+        File keyToolBin = new File(new File(javaroot, "bin"), KEYTOOL_EXE_NAME);
 
-        if (k.canExecute())
-            nonFinalKeyTool = SmartFile.sanitize(k.getPath());
-        else {
-            // can't find it in a JDK.  Maybe it is in the PATH?
-            k = ProcessUtils.getExe(KEYTOOL_EXE_NAME);
+        if (keyToolBin.canExecute()) {
+            nonFinalKeyTool = SmartFile.sanitize(keyToolBin.getPath());
+        } else {
+            // Can't find it in a JDK. Maybe it is in the PATH?
+            keyToolBin = ProcessUtils.getExe(KEYTOOL_EXE_NAME);
 
-            if (k != null && k.canExecute())
-                nonFinalKeyTool = k.getPath();
+            if (keyToolBin != null && keyToolBin.canExecute()) {
+                nonFinalKeyTool = keyToolBin.getPath();
+            }
         }
+
         KEYTOOL_CMD = nonFinalKeyTool;
     }
 
@@ -83,8 +100,8 @@ public class KeystoreManager {
             addKeytoolCommand();
         }
 
-        //We must override this message so that the stdout appears in the exec exception.
-        //Keytool seems to output errors to stdout.
+        // We must override this message so that the stdout appears in the exec exception.
+        // Keytool seems to output errors to stdout.
         @Override
         protected String getExceptionMessage() {
             return getLatestOutput(mOutFile) + " " + getFileBuffer(mErrFile);
@@ -113,8 +130,7 @@ public class KeystoreManager {
         }
     }
 
-    protected PEFileLayout _fileLayout = null;
-    private static final StringManager _strMgr = StringManager.getManager(KeystoreManager.class);
+
 
     /**
      * Creates a new instance of RepositoryManager
@@ -132,17 +148,17 @@ public class KeystoreManager {
             }
         }
         /*
-         * Use the suffix, if provided, in creating the DN (by augmenting
-         * the CN).
+         * Use the suffix, if provided, in creating the DN (by augmenting the CN).
          */
         String x509DistinguishedName = CERTIFICATE_DN_PREFIX + cn + (CNSuffix != null ? CNSuffix : "") + CERTIFICATE_DN_SUFFIX;
-        return x509DistinguishedName; //must be of form "CN=..., OU=..."
+        return x509DistinguishedName; // must be of form "CN=..., OU=..."
     }
 
     protected PEFileLayout getFileLayout(RepositoryConfig config) {
         if (_fileLayout == null) {
             _fileLayout = new PEFileLayout(config);
         }
+
         return _fileLayout;
     }
 
@@ -154,128 +170,78 @@ public class KeystoreManager {
      * @throws RepositoryException
      */
     protected void createKeyStore(File keystore, RepositoryConfig config, String masterPassword) throws RepositoryException {
-        //Generate a new self signed certificate with s1as as the alias
-        //Create the default self signed cert
+        // Generate a new self signed certificate with s1as as the alias
+        // Create the default self signed cert
         final String dasCertDN = getDASCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", dasCertDN));
         addSelfSignedCertToKeyStore(keystore, CERTIFICATE_ALIAS, masterPassword, dasCertDN);
 
+        // Generate a new self signed certificate with glassfish-instance as the alias
         // Create the default self-signed cert for instances to use for SSL auth.
         final String instanceCertDN = getInstanceCertDN(config);
         System.out.println(_strMgr.getString("CertificateDN", instanceCertDN));
         addSelfSignedCertToKeyStore(keystore, INSTANCE_SECURE_ADMIN_ALIAS, masterPassword, instanceCertDN);
     }
 
-    private void addSelfSignedCertToKeyStore(final File keystore, final String alias, final String masterPassword, final String dn)
-            throws RepositoryException {
-        final String[] keytoolCmd = { "-genkey", "-keyalg", "RSA", "-keystore", keystore.getAbsolutePath(), "-alias", alias, "-dname", dn,
-                "-validity", "3650", "-keypass", masterPassword, "-storepass", masterPassword, SKID_EXTENSION_SYSTEM_PROPERTY };
+    private void addSelfSignedCertToKeyStore(final File keystore, final String alias, final String masterPassword, final String dn) throws RepositoryException {
+        final String[] keytoolCmd = {
+                "-genkey",
+                "-keyalg", "RSA",
+                "-keystore", keystore.getAbsolutePath(),
+                "-alias", alias,
+                "-dname", dn,
+                "-validity", "3650",
+                "-keypass", masterPassword,
+                "-storepass", masterPassword,
+                "-storetype", "JKS",
+                SKID_EXTENSION_SYSTEM_PROPERTY };
 
-        KeytoolExecutor p = new KeytoolExecutor(keytoolCmd, 60);
-        p.execute("keystoreNotCreated", keystore);
+        new KeytoolExecutor(keytoolCmd, 60).execute("keystoreNotCreated", keystore);
     }
-    /*
-     protected void addToAsadminTrustStore(
-     RepositoryConfig config, File certFile) throws RepositoryException
-     {
-     boolean newTruststore = false;
-     final PEFileLayout layout = getFileLayout(config);
-     //import the newly created certificate into the asadmin truststore
-     final File asadminTruststore = AsadminTruststore.getAsadminTruststore();
 
-     if (!asadminTruststore.exists()) {
-     newTruststore = true;
-     }
-
-     //The keystore alias name is the repository name. We want to avoid alias
-     //name conflicts since multiple domains are likely to live on the same
-     //machine.
-     String aliasName = layout.getRepositoryDir().getAbsolutePath();
-
-     //first delete the alias in case it already exists. This can happen for
-     //example if a domain is created, deleted, and re-created again.
-     String[] keytoolCmd = new String[] {
-     "-delete",
-     "-keystore", asadminTruststore.getAbsolutePath(),
-     "-alias", aliasName,
-     };
-
-     final String[] input = {AsadminTruststore.getAsadminTruststorePassword(),
-     AsadminTruststore.getAsadminTruststorePassword()}; // twice in case we are creating
-     KeytoolExecutor p = new KeytoolExecutor(keytoolCmd, 30, input);
-     try {
-     p.execute("trustStoreNotCreated", asadminTruststore);
-     } catch (RepositoryException ex) {
-     //ignore all exceptions. The alias most likely does not exist.
-     }
-
-     keytoolCmd = new String[] {
-     "-import",
-     "-noprompt",
-     "-keystore", asadminTruststore.getAbsolutePath(),
-     "-alias", aliasName, //alias is the domain name
-     "-file", certFile.getAbsolutePath(),
-     };
-
-     p = new KeytoolExecutor(keytoolCmd, 30, input);
-     p.execute("trustStoreNotCreated", asadminTruststore);
-
-     //If this is a newly created truststore, lock it down.
-     if (newTruststore) {
-     try {
-     chmod("600", asadminTruststore);
-     } catch (IOException ex) {
-     throw new RepositoryException(_strMgr.getString(
-     "trustStoreNotCreated", asadminTruststore), ex);
-     }
-     }
-     }
-     */
-
-    protected void copyCertificates(File configRoot, DomainConfig config, String masterPassword) throws DomainException {
+    protected void copyCertificatesToTrustStore(File configRoot, DomainConfig config, String masterPassword) throws DomainException {
         try {
-            copyCert(configRoot, CERTIFICATE_ALIAS, masterPassword);
-            copyCert(configRoot, INSTANCE_SECURE_ADMIN_ALIAS, masterPassword);
+            copyCertificateFromKeyStoreToTrustStore(configRoot, CERTIFICATE_ALIAS, masterPassword);
+            copyCertificateFromKeyStoreToTrustStore(configRoot, INSTANCE_SECURE_ADMIN_ALIAS, masterPassword);
         } catch (RepositoryException re) {
-            String msg = _strMgr.getString("SomeProblemWithKeytool", re.getMessage());
-            throw new DomainException(msg);
-
+            throw new DomainException(_strMgr.getString("SomeProblemWithKeytool", re.getMessage()));
         }
     }
 
-    private void copyCert(final File configRoot, final String alias, final String masterPassword) throws RepositoryException {
-        File keystore = new File(configRoot, DomainConstants.KEYSTORE_FILE);
-        File truststore = new File(configRoot, DomainConstants.TRUSTSTORE_FILE);
+    private void copyCertificateFromKeyStoreToTrustStore(final File configRoot, final String alias, final String masterPassword) throws RepositoryException {
+        File keystore = new File(configRoot, KEYSTORE_FILE);
+        File truststore = new File(configRoot, TRUSTSTORE_FILE);
         File certFile = null;
         String[] input = { masterPassword };
         String[] keytoolCmd = null;
-        KeytoolExecutor p = null;
+        KeytoolExecutor keytoolExecutor = null;
 
         try {
-            //export the newly created certificate from the keystore
+            // Export the newly created certificate from the keystore
             certFile = new File(configRoot, alias + ".cer");
-            keytoolCmd = new String[] { "-export", "-keystore", keystore.getAbsolutePath(), "-alias", alias, "-file",
-                    certFile.getAbsolutePath(), };
+            keytoolCmd = new String[] {
+                    "-export",
+                    "-keystore", keystore.getAbsolutePath(),
+                    "-alias", alias,
+                    "-file", certFile.getAbsolutePath(), };
 
-            p = new KeytoolExecutor(keytoolCmd, 30, input);
-            p.execute("trustStoreNotCreated", truststore);
+            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, input);
+            keytoolExecutor.execute("trustStoreNotCreated", truststore);
 
-            //import the newly created certificate into the truststore
-            keytoolCmd = new String[] { "-import", "-noprompt", "-keystore", truststore.getAbsolutePath(), "-alias", alias, "-file",
-                    certFile.getAbsolutePath(), };
+            // Import the newly created certificate into the truststore
+            keytoolCmd = new String[] {
+                    "-import", "-noprompt",
+                    "-keystore", truststore.getAbsolutePath(),
+                    "-alias", alias,
+                    "-file", certFile.getAbsolutePath(), };
 
-            p = new KeytoolExecutor(keytoolCmd, 30, input);
-            p.execute("trustStoreNotCreated", truststore);
-
-            //import the newly created certificate into the asadmin truststore
-            /* commented out till asadmintruststore can be added back */
-            //addToAsadminTrustStore(config, certFile);
+            keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, input);
+            keytoolExecutor.execute("trustStoreNotCreated", truststore);
 
         } finally {
             if (certFile != null) {
-                final boolean isCertFileDeleted = certFile.delete();
-                if (!isCertFileDeleted) {
-                    getLogger().log(Level.WARNING, BAD_DELETE_TEMP_CERT_FILE, certFile.getAbsolutePath());
+                if (!certFile.delete()) {
+                    getLogger().log(WARNING, BAD_DELETE_TEMP_CERT_FILE, certFile.getAbsolutePath());
                 }
             }
         }
@@ -291,11 +257,13 @@ public class KeystoreManager {
      */
     protected void changeKeystorePassword(String oldPassword, String newPassword, File keystore) throws RepositoryException {
         if (!oldPassword.equals(newPassword)) {
-            //change truststore password from the default
-            String[] keytoolCmd = { "-storepasswd", "-keystore", keystore.getAbsolutePath(), };
+            // Change truststore password from the default
+            String[] keytoolCmd = {
+                    "-storepasswd",
+                    "-keystore", keystore.getAbsolutePath(), };
 
-            KeytoolExecutor p = new KeytoolExecutor(keytoolCmd, 30, new String[] { oldPassword, newPassword, newPassword });
-            p.execute("keyStorePasswordNotChanged", keystore);
+            KeytoolExecutor keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] { oldPassword, newPassword, newPassword });
+            keytoolExecutor.execute("keyStorePasswordNotChanged", keystore);
         }
     }
 
@@ -312,20 +280,20 @@ public class KeystoreManager {
      * @param newKeyPassword the new password for the s1as alias
      * @throws RepositoryException
      */
-    protected void changeS1ASAliasPassword(RepositoryConfig config, String storePassword, String oldKeyPassword, String newKeyPassword)
-            throws RepositoryException {
+    protected void changeS1ASAliasPassword(RepositoryConfig config, String storePassword, String oldKeyPassword, String newKeyPassword) throws RepositoryException {
         if (!storePassword.equals(oldKeyPassword) && !oldKeyPassword.equals(newKeyPassword)) {
             final PEFileLayout layout = getFileLayout(config);
             final File keystore = layout.getKeyStore();
-            //First see if the alias exists. The user could have deleted it. Any failure in the
-            //command indicates that the alias does not exist, so we return without error.
+
+            // First see if the alias exists. The user could have deleted it. Any failure in the
+            // command indicates that the alias does not exist, so we return without error.
             String keyStoreType = System.getProperty("javax.net.ssl.keyStoreType");
             if (keyStoreType == null) {
                 keyStoreType = KeyStore.getDefaultType();
             }
 
-            //add code to change all the aliases that exist rather then change s1as only
-            List<String> aliases = new ArrayList<String>();
+            // Add code to change all the aliases that exist rather then change s1as only
+            List<String> aliases = new ArrayList<>();
             FileInputStream is = null;
             try {
                 KeyStore keyStore = KeyStore.getInstance(keyStoreType);
@@ -342,26 +310,33 @@ public class KeystoreManager {
                     try {
                         is.close();
                     } catch (IOException ex) {
-                        getLogger().log(Level.SEVERE, UNHANDLED_EXCEPTION, ex);
+                        getLogger().log(SEVERE, UNHANDLED_EXCEPTION, ex);
                     }
                 }
             }
 
-            String[] keytoolCmd = { "-list", "-keystore", keystore.getAbsolutePath(), "-alias", CERTIFICATE_ALIAS, };
-            KeytoolExecutor p = new KeytoolExecutor(keytoolCmd, 30, new String[] { storePassword });
+            String[] keytoolCmd = {
+                    "-list",
+                    "-keystore", keystore.getAbsolutePath(),
+                    "-alias", CERTIFICATE_ALIAS, };
+
+            KeytoolExecutor keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] { storePassword });
             try {
-                p.execute("s1asKeyPasswordNotChanged", keystore);
+                keytoolExecutor.execute("s1asKeyPasswordNotChanged", keystore);
             } catch (RepositoryException ex) {
                 return;
             }
 
-            //change truststore password from the default
+            // Change truststore password from the default
             for (String alias : aliases) {
-                keytoolCmd = new String[] { "-keypasswd", "-keystore", keystore.getAbsolutePath(), "-alias", alias, };
-                p = new KeytoolExecutor(keytoolCmd, 30, new String[] { storePassword, oldKeyPassword, newKeyPassword, newKeyPassword });
-                p.execute("s1asKeyPasswordNotChanged", keystore);
-            }
+                keytoolCmd = new String[] {
+                        "-keypasswd",
+                        "-keystore", keystore.getAbsolutePath(),
+                        "-alias", alias, };
 
+                keytoolExecutor = new KeytoolExecutor(keytoolCmd, 30, new String[] { storePassword, oldKeyPassword, newKeyPassword, newKeyPassword });
+                keytoolExecutor.execute("s1asKeyPasswordNotChanged", keystore);
+            }
         }
     }
 
@@ -375,48 +350,51 @@ public class KeystoreManager {
      * @param oldKeyPassword
      * @param newKeyPassword
      */
-    protected void changeSSLCertificateDatabasePassword(RepositoryConfig config, String oldPassword, String newPassword)
-            throws RepositoryException {
+    protected void changeSSLCertificateDatabasePassword(RepositoryConfig config, String oldPassword, String newPassword) throws RepositoryException {
         final PEFileLayout layout = getFileLayout(config);
         File keystore = layout.getKeyStore();
         File truststore = layout.getTrustStore();
 
         if (keystore.exists()) {
-            //Change the password on the keystore
+            // Change the password on the keystore
             changeKeystorePassword(oldPassword, newPassword, keystore);
-            //Change the s1as alias password in the keystore...The assumption
-            //here is that the keystore password is not the same as the key password. This is
-            //due to the fact that the keystore password should first be changed followed next
-            //by the key password. The end result is that the keystore and s1as key both have
-            //the same passwords. This function will tolerate deletion of the s1as alias, but
-            //it will not tolerate changing the s1as key from something other than the
-            //database password.
+
+            // Change the s1as alias password in the keystore...
+            //
+            // The assumption here is that the keystore password is not the same as the key password.
+            // This is due to the fact that the keystore password should first be changed followed next
+            // by the key password. The end result is that the keystore and s1as key both have
+            // the same passwords. This function will tolerate deletion of the s1as alias, but
+            // it will not tolerate changing the s1as key from something other than the
+            // database password.
             try {
                 changeS1ASAliasPassword(config, newPassword, oldPassword, newPassword);
             } catch (Exception ex) {
-                //For now we eat all exceptions and dump to the log if the password
-                //alias could not be changed.
-                getLogger().log(Level.SEVERE, UNHANDLED_EXCEPTION, ex);
+                // For now we eat all exceptions and dump to the log if the password
+                // alias could not be changed.
+                getLogger().log(SEVERE, UNHANDLED_EXCEPTION, ex);
             }
         }
 
         if (truststore.exists()) {
-            //Change the password on the truststore
+            // Change the password on the truststore
             changeKeystorePassword(oldPassword, newPassword, truststore);
         }
     }
 
     protected void chmod(String args, File file) throws IOException {
         if (OS.isUNIX()) {
-            //args and file should never be null.
-            if (args == null || file == null)
+            // args and file should never be null.
+            if (args == null || file == null) {
                 throw new IOException(_strMgr.getString("nullArg"));
-            if (!file.exists())
+            }
+            if (!file.exists()) {
                 throw new IOException(_strMgr.getString("fileNotFound"));
+            }
 
             // " +" regular expression for 1 or more spaces
             final String[] argsString = args.split(" +");
-            List<String> cmdList = new ArrayList<String>();
+            List<String> cmdList = new ArrayList<>();
             cmdList.add("/bin/chmod");
             cmdList.addAll(Arrays.asList(argsString));
             cmdList.add(file.getAbsolutePath());
@@ -434,14 +412,16 @@ public class KeystoreManager {
 
     private static String getCNFromCfg(RepositoryConfig cfg) {
         String option = (String) cfg.get(DomainConfig.KEYTOOLOPTIONS);
-        if (option == null || option.length() == 0)
+        if (option == null || option.length() == 0) {
             return null;
+        }
+
         String value = getCNFromOption(option);
         if (value == null || value.length() == 0) {
             return null;
-        } else {
-            return value;
         }
+
+        return value;
     }
 
     /**
@@ -453,7 +433,7 @@ public class KeystoreManager {
      * @return
      */
     private static String getValueFromOptionForName(String option, String name, boolean ignoreNameCase) {
-        //option is not null at this point
+        // Option is not null at this point
         Pattern p = Pattern.compile(":");
         String[] pairs = p.split(option);
         for (String pair : pairs) {
@@ -461,10 +441,12 @@ public class KeystoreManager {
             String[] nv = p.split(pair);
             String n = nv[0].trim();
             String v = nv[1].trim();
-            boolean found = (ignoreNameCase == true) ? n.equalsIgnoreCase(name) : n.equals(name);
-            if (found)
+            boolean found = ignoreNameCase ? n.equalsIgnoreCase(name) : n.equals(name);
+            if (found) {
                 return v;
+            }
         }
+
         return null;
     }
 

@@ -17,15 +17,10 @@
 
 package com.sun.enterprise.glassfish.bootstrap;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * Tag Main to get the manifest file
  */
 public class ASMain {
-
-    private static final Logger LOG = Logger.getLogger(ASMain.class.getName());
 
     /**
      * Most of the code in this file has been moved to MainHelper
@@ -35,7 +30,7 @@ public class ASMain {
         try {
             GlassFishMain.main(args);
         } catch (Throwable t) {
-            LOG.log(Level.SEVERE, "Error starting GlassFish", t);
+            t.printStackTrace();
             throw t;
         }
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -178,7 +179,7 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
             } catch (MalformedURLException ex) {
                 throw new IllegalArgumentException("Unable to parse REST URL: (" + restURL + ")", ex);
             }
-            session.setAttribute(REST_SERVER_NAME, savedClientSubject);
+            session.setAttribute(REST_SERVER_NAME, url.getHost());
             session.setAttribute(REST_SERVER_PORT, url.getPort());
         }
 

@@ -1,5 +1,5 @@
 <!--
-
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -27,7 +27,7 @@
 <sun:html id="html1">
 <sun:head title="$resource{i18n.restart.pageTitle}" parseOnLoad="false">
     <sun:link url="/resource/css/css_ns6up.css" />
-    <h:outputScript name="jsf.js" library="jakarta.faces" target="body" />
+    <h:outputScript name="faces.js" library="jakarta.faces" target="body" />
     <sun:script>
 	<f:verbatim>
 	    function triggerRestart() {
@@ -37,7 +37,7 @@
 		    render: '@none'
 		};
 		options[button.id] = button.id;
-		jsf.ajax.request(button, null, options);
+		faces.ajax.request(button, null, options);
 	    }
 	</f:verbatim>
     </sun:script>

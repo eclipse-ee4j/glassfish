@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,10 +17,11 @@
 
 -->
 
-<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+<faces-config
+        xmlns="https://jakarta.ee/xml/ns/jakartaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
-        version="1.2">
+        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+        version="4.0">
 
     <application>
         <locale-config>
@@ -56,21 +57,6 @@
         </renderer>
     </render-kit>
 -->
-
-<!--
-    <managed-bean>
-        <description></description>
-        <managed-bean-name>DropDown</managed-bean-name>
-        <managed-bean-class>com.sun.enterprise.tools.admingui.jsf.backingbean.DropDown</managed-bean-class>
-        <managed-bean-scope>session</managed-bean-scope>
-    </managed-bean>
--->
-    <managed-bean>
-        <description></description>
-        <managed-bean-name>JavaHelpBean</managed-bean-name>
-        <managed-bean-class>com.sun.webui.jsf.bean.HelpBackingBean</managed-bean-class>
-        <managed-bean-scope>request</managed-bean-scope>
-    </managed-bean>
 
     <render-kit>
         <!--

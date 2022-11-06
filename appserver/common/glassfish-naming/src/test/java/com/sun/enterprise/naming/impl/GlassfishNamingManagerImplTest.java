@@ -135,6 +135,23 @@ public class GlassfishNamingManagerImplTest {
 
 
     @Test
+    public void bindToComponentNamespace() throws Exception {
+        GlassfishNamingManagerImpl manager = new GlassfishNamingManagerImpl(ctx);
+        InvocationManager invocationManager = new InvocationManagerImpl();
+        manager.setInvocationManager(invocationManager);
+        ComponentInvocation invocation = new ComponentInvocation("componentIdTest", EJB_INVOCATION, null, "appTest",
+            "modTest");
+        invocationManager.preInvoke(invocation);
+
+        List<JNDIBinding> bindings = List.of(new Binding("java:comp/env/mmm/MMM", "BindingModuleValue"),
+            new Binding("java:app/aaa/AAA", "BindingAppValue"));
+        manager.bindToComponentNamespace("appTest", "modTest", "componentIdTest", true, bindings);
+        assertEquals("BindingModuleValue", manager.lookup(SimpleJndiName.of("java:comp/env/mmm/MMM")));
+        assertEquals("BindingAppValue", manager.lookup(SimpleJndiName.of("java:app/aaa/AAA")));
+    }
+
+
+    @Test
     public void initializeRemoteNamingSupport() throws Exception {
         ORB orb = createMock(ORB.class);
         NamingContext orbNamingContext = createMock(NamingContext.class);
@@ -215,9 +232,9 @@ public class GlassfishNamingManagerImplTest {
             }
         };
         List<Binding> bindings = new ArrayList<>();
-        bindings.add(new Binding("conf/area", intFactory));
+        bindings.add(new Binding("java:comp/env/conf/area", intFactory));
         String valueSantaClara = "Santa Clara";
-        bindings.add(new Binding("conf/location", valueSantaClara));
+        bindings.add(new Binding("java:comp/env/conf/location", valueSantaClara));
 
         nm.bindToComponentNamespace("app1", "mod1", "comp1", false, bindings);
 
@@ -243,9 +260,9 @@ public class GlassfishNamingManagerImplTest {
             }
         };
         List<Binding> bindings2 = new ArrayList<>();
-        bindings2.add(new Binding("conf/area", floatFactory));
+        bindings2.add(new Binding("java:comp/env/conf/area", floatFactory));
         String valueSantaClara14 = "Santa Clara[14]";
-        bindings2.add(new Binding("conf/location", valueSantaClara14));
+        bindings2.add(new Binding("java:comp/env/conf/location", valueSantaClara14));
 
         nm.bindToComponentNamespace("app1", "mod1", "comp2", false, bindings2);
 
@@ -265,7 +282,7 @@ public class GlassfishNamingManagerImplTest {
         Object value;
 
         public Binding(String logicalName, Object value) {
-            this.logicalName = new SimpleJndiName("java:comp/env/" + logicalName);
+            this.logicalName = SimpleJndiName.of(logicalName);
             this.value = value;
         }
 

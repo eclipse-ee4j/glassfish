@@ -404,9 +404,11 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         }
 
         for (JNDIBinding binding : bindings) {
-            SimpleJndiName logicalJndiName = binding.getName();
-            if (treatComponentAsModule && logicalJndiName.isJavaComponent()) {
-                logicalJndiName = toJavaModuleJndiName(logicalJndiName);
+            final SimpleJndiName logicalJndiName;
+            if (treatComponentAsModule && binding.getName().isJavaComponent()) {
+                logicalJndiName = binding.getName().changePrefix(JNDI_CTX_JAVA_MODULE);
+            } else {
+                logicalJndiName = binding.getName();
             }
 
             final JavaNamespace namespace;
@@ -430,16 +432,6 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
                 bindToNamespace(namespace, logicalJndiName, binding.getValue());
             }
         }
-    }
-
-    private SimpleJndiName toJavaModuleJndiName(SimpleJndiName javaComponentJndiName) {
-        SimpleJndiName tail = javaComponentJndiName.removePrefix(JNDI_CTX_JAVA_COMPONENT);
-        return new SimpleJndiName(JNDI_CTX_JAVA_MODULE + tail);
-    }
-
-    private SimpleJndiName toJavaComponentJndiName(SimpleJndiName javaModuleJndiName) {
-        SimpleJndiName tail = javaModuleJndiName.removePrefix(JNDI_CTX_JAVA_MODULE);
-        return new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + tail);
     }
 
 
@@ -587,7 +579,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
         final SimpleJndiName logicalJndiName;
         if (replaceName) {
-            logicalJndiName = toJavaModuleJndiName(name);
+            logicalJndiName = name.changePrefix(JNDI_CTX_JAVA_MODULE);
         } else {
             logicalJndiName = name;
         }
@@ -637,7 +629,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
         final SimpleJndiName logicalJndiName;
         if (replaceName) {
-            logicalJndiName = toJavaModuleJndiName(name);
+            logicalJndiName = name.changePrefix(JNDI_CTX_JAVA_MODULE);
         } else {
             logicalJndiName = name;
         }
@@ -668,7 +660,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             // The search string itself is excluded from the returned list
             if (key.hasPrefix(logicalNameWithSlash) && key.toString().indexOf('/', logicalNameWithSlash.length()) == -1
                 && !key.toString().equals(logicalNameWithSlash)) {
-                SimpleJndiName toAdd = replaceName ? toJavaComponentJndiName(key) : key;
+                SimpleJndiName toAdd = replaceName ? key.changePrefix(JNDI_CTX_JAVA_COMPONENT) : key;
                 list.add(toAdd);
             }
         }

@@ -145,7 +145,7 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
 
     /**
      * Prefix in this case is understood as any string in the form <code>a:b/</code>
-     * or <code>a:</code>
+     * or <code>a:</code> or <code>x://</code>
      * <p>
      * For JNDI names starting with {@value #JNDI_CTX_CORBA} returns null.
      *
@@ -162,6 +162,10 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
         final int slashIndex = jndiName.indexOf('/', colonIndex + 1);
         if (slashIndex == -1) {
             return jndiName.substring(0, colonIndex + 1);
+        }
+        if (jndiName.charAt(slashIndex + 1) == '/') {
+            // if the JNDI name is in the URL form, like http://host:80
+            return jndiName.substring(0, slashIndex + 2);
         }
         return jndiName.substring(0, slashIndex + 1);
     }
@@ -207,7 +211,7 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
      * If there is no prefix, returns this instance unchanged.
      * <p>
      * Prefix in this case is understood as any string in the form <code>a:b/</code>
-     * or <code>a:</code>
+     * or <code>a:</code> or <code>x://</code>
      * <p>
      * For JNDI names starting with {@value #JNDI_CTX_CORBA} returns this instance unchanged.
      *
@@ -225,7 +229,42 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
         if (slashIndex == -1) {
             return new SimpleJndiName(jndiName.substring(colonIndex + 1));
         }
+        if (jndiName.charAt(slashIndex + 1) == '/') {
+            // if the JNDI name is in the URL form, like http://host:80
+            return new SimpleJndiName(jndiName.substring(slashIndex + 2));
+        }
         return new SimpleJndiName(jndiName.substring(slashIndex + 1));
+    }
+
+
+    /**
+     * Changes the simple JNDI name prefix.
+     * <p>
+     * Prefix in this case is understood as any string in the form <code>a:b/</code>
+     * or <code>a:</code> or <code>x://</code>
+     * <p>
+     * For JNDI names starting with {@value #JNDI_CTX_CORBA} returns this instance unchanged.
+     * <p>
+     * If there is no prefix, just sets the new prefix.
+     * If the name is a Corba name doesn't do anything.
+     * If the name has <code>java:ccc/</code> prefix or is an URL
+     * (protocol://xxx:8888/...), sets the new prefix instead of the <code>java:ccc/</code> or the
+     * <code>protocol://</code>
+     *
+     * @param newPrefix must end with the colon or slash.
+     * @return new instance, never null.
+     */
+    public SimpleJndiName changePrefix(final String newPrefix) {
+        if (hasCorbaPrefix()) {
+            return this;
+        }
+        final char lastChar = newPrefix.charAt(newPrefix.length() - 1);
+        if (lastChar != ':' && lastChar != '/') {
+            throw new IllegalArgumentException(
+                "The new prefix doesn't end with colon nor slash character: " + newPrefix);
+        }
+        SimpleJndiName noPrefix = removePrefix();
+        return new SimpleJndiName(newPrefix + noPrefix);
     }
 
 

@@ -32,6 +32,7 @@ import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.emptyArray;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -82,10 +83,10 @@ public class ComponentDefinitionTest {
     public void testComponentDefinitionTest() {
         ComponentDefinition component = new ComponentDefinition(ComponentDefinitionTest.class);
         assertAll(
-            () -> assertThat(component.getFields(), emptyArray()),
+            () -> assertThat(component.getFields(), arrayWithSize(1)),
             () -> assertThat(component.getConstructors(), arrayWithSize(1)),
             () -> assertThat(component.getConstructors()[0].getName(), equalTo(ComponentDefinitionTest.class.getName())),
-            () -> assertThat(getMethodNames(component), arrayWithSize(equalTo(36)))
+            () -> assertThat(getMethodNames(component), arrayWithSize(equalTo(37)))
         );
     }
 
@@ -139,6 +140,19 @@ public class ComponentDefinitionTest {
             () -> assertThat(component1.getConstructors(), arrayWithSize(3)),
             () -> assertThat(Arrays.toString(methodNames), methodNames, arrayWithSize(equalTo(48)))
         );
+    }
+
+
+    @Test
+    public void testExclusionOfClassWithNoCanonicalName() {
+        // getCanonicalName():
+        // ...
+        // Returns null if the underlying class does not have a canonical name
+        // (i.e., if it is a local or anonymous class ...).
+        class Local {};
+        assert Local.class.getCanonicalName() == null; // This is test-testing assertion
+
+        assertThat(ComponentDefinition.isExcludedFromAnnotationProcessing(Local.class), is(false));
     }
 
 

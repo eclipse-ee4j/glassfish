@@ -135,7 +135,7 @@ public class ComponentDefinition implements ComponentInfo {
      *
      * @return true if the class should not be processed
      */
-    private boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
+    static boolean isExcludedFromAnnotationProcessing(Class<?> clazz) {
         if (clazz.getPackage() == null) {
             return false;
         }

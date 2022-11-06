@@ -35,8 +35,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.AccessController;
-import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Enumeration;
 import java.util.EventListener;
 import java.util.HashMap;
@@ -826,19 +826,11 @@ public final class ApplicationContextFacade
      *                   will be invoked
      * @param params The arguments passed to the called method.
      */
-    private <T> T executeMethod(final Method method,
-                                 final ApplicationContext context,
-                                 final Object[] params)
-            throws IllegalAccessException,
-                   InvocationTargetException {
-
+    private <T> T executeMethod(final Method method, final ApplicationContext context, final Object[] params)
+        throws PrivilegedActionException, IllegalAccessException, InvocationTargetException {
         if (Globals.IS_SECURITY_ENABLED) {
-            PrivilegedAction<T> action = () -> {
-                try {
-                    return (T) method.invoke(context, params);
-                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-                    throw new IllegalStateException(e);
-                }
+            PrivilegedExceptionAction<T> action = () -> {
+                return (T) method.invoke(context, params);
             };
             return AccessController.doPrivileged(action);
         }

@@ -49,6 +49,13 @@ public class ServletContainerInitializerUtil {
     private static final Logger log = LogFacade.getLogger();
 
     private static final ResourceBundle rb = log.getResourceBundle();
+    
+    public static interface LogContext {
+
+        public default Level getNonCriticalClassloadingErrorLogLevel() {
+            return Level.WARNING;
+        }
+    }
 
     /**
      * Given a class loader, check for ServletContainerInitializer
@@ -201,7 +208,7 @@ public class ServletContainerInitializerUtil {
             Iterable<ServletContainerInitializer> initializers,
             Map<Class<?>, List<Class<? extends ServletContainerInitializer>>> interestList,
             Types types,
-            ClassLoader cl) {
+            ClassLoader cl, LogContext logContext) {
 
         if (interestList == null) {
             return null;
@@ -304,9 +311,9 @@ public class ServletContainerInitializerUtil {
                     }
                 }
 
-                initializerList = checkAgainstInterestList(classInfo, interestList, initializerList, cl);
+                initializerList = checkAgainstInterestList(classInfo, interestList, initializerList, cl, logContext);
             } else {
-                initializerList = checkAgainstInterestList(types, interestList, initializerList, cl);
+                initializerList = checkAgainstInterestList(types, interestList, initializerList, cl, logContext);
             }
         }
 
@@ -396,7 +403,7 @@ public class ServletContainerInitializerUtil {
                                 Types classInfo,
                                 Map<Class<?>, List<Class<? extends ServletContainerInitializer>>> interestList,
                                 Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList,
-                                ClassLoader cl) {
+                                ClassLoader cl, LogContext logContext) {
 
         if (classInfo==null) {
             return initializerList;
@@ -421,8 +428,8 @@ public class ServletContainerInitializerUtil {
                         try {
                             resultSet.add(cl.loadClass(ae.getName()));
                         } catch (Throwable t) {
-                            if (log.isLoggable(Level.WARNING)) {
-                                log.log(Level.WARNING,
+                            if (log.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
+                                log.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
                                     LogFacade.CLASS_LOADING_ERROR,
                                     new Object[] {ae.getName(), t.toString()});
                             }
@@ -440,8 +447,8 @@ public class ServletContainerInitializerUtil {
                     try {
                         resultSet.add(cl.loadClass(classModel.getName()));
                     } catch (Throwable t) {
-                        if (log.isLoggable(Level.WARNING)) {
-                            log.log(Level.WARNING,
+                        if (log.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
+                            log.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
                                 LogFacade.CLASS_LOADING_ERROR,
                                 new Object[] {classModel.getName(), t.toString()});
                         }
@@ -479,7 +486,7 @@ public class ServletContainerInitializerUtil {
                                 ClassDependencyBuilder classInfo,
                                 Map<Class<?>, List<Class<? extends ServletContainerInitializer>>> interestList,
                                 Map<Class<? extends ServletContainerInitializer>, Set<Class<?>>> initializerList,
-                                ClassLoader cl) {
+                                ClassLoader cl, LogContext logContext) {
         for(Map.Entry<Class<?>, List<Class<? extends ServletContainerInitializer>>> e :
                 interestList.entrySet()) {
 
@@ -495,8 +502,8 @@ public class ServletContainerInitializerUtil {
                     Class aClass = cl.loadClass(className);
                     resultSet.add(aClass);
                 } catch (Throwable t) {
-                    if (log.isLoggable(Level.WARNING)) {
-                        log.log(Level.WARNING,
+                    if (log.isLoggable(logContext.getNonCriticalClassloadingErrorLogLevel())) {
+                        log.log(logContext.getNonCriticalClassloadingErrorLogLevel(),
                             LogFacade.CLASS_LOADING_ERROR,
                             new Object[] {className, t.toString()});
                     }

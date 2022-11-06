@@ -373,6 +373,9 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         for (ModuleDescriptor<BundleDescriptor> md : holder.app.getModules()) {
             String moduleUri = md.getArchiveUri();
             try (ReadableArchive sub = archive.getSubArchive(moduleUri)) {
+                if (sub == null) {
+                    throw new IllegalArgumentException(strings.get("noSubModuleArchiveFound", moduleUri));
+                }
                 if (sub instanceof InputJarArchive) {
                     throw new IllegalArgumentException(strings.get("wrongArchType", moduleUri));
                 }

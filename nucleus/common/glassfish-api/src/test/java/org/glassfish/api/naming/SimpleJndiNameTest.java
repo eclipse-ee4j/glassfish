@@ -40,7 +40,8 @@ public class SimpleJndiNameTest {
     public void constructorValidations() {
         assertAll(
             () -> assertThrows(NullPointerException.class, () -> new SimpleJndiName(null)),
-            () -> assertThrows(IllegalArgumentException.class, () -> new SimpleJndiName("x:y:z")),
+            () -> assertThrows(IllegalArgumentException.class, () -> new SimpleJndiName("java:x:y:z")),
+            () -> assertDoesNotThrow(() -> new SimpleJndiName("http://validJndiName:7777/something/somewhere")),
             () -> assertDoesNotThrow(() -> new SimpleJndiName(""))
         );
     }

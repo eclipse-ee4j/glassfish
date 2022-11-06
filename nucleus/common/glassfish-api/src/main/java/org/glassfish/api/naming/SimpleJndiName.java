@@ -49,11 +49,11 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
      *            not contain more than one colon.
      */
     public SimpleJndiName(final String jndiName) {
-        if (!jndiName.startsWith(JNDI_CTX_CORBA)) {
+        if (jndiName.startsWith(JNDI_CTX_JAVA)) {
             int firstColon = jndiName.indexOf(':');
             if (firstColon >= 0 && firstColon != jndiName.lastIndexOf(':')) {
                 throw new IllegalArgumentException(
-                    "Non-corba JNDI name is not allowed to contain more than one colon: " + jndiName);
+                    "The " + JNDI_CTX_JAVA + " JNDI name is not allowed to contain more than one colon: " + jndiName);
             }
         }
         this.jndiName = jndiName;

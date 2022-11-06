@@ -142,11 +142,7 @@ public class ComponentDefinition implements ComponentInfo {
         if (clazz.getPackage().getName().startsWith("java.lang")) {
             return true;
         }
-        if (clazz.getCanonicalName() == null) {
-            return false;
-        } else {
-            return EXCLUDED_FROM_ANNOTATION_PROCESSING.contains(clazz.getCanonicalName());
-        }
+        return EXCLUDED_FROM_ANNOTATION_PROCESSING.contains(clazz.getCanonicalName());
     }
 
 

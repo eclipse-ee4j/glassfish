@@ -180,7 +180,7 @@ public final class JavaURLContext implements Context, Cloneable {
                     try {
                         // Translate the java:app name into the equivalent java:global name so that
                         // the lookup will be resolved by the server.
-                        obj = ic.lookup(JNDI_CTX_JAVA_GLOBAL + appName + "/" + fullName.removePrefix(JNDI_CTX_JAVA_APP));
+                        obj = ic.lookup(JNDI_CTX_JAVA_GLOBAL + appName + "/" + fullName.removePrefix());
                     } catch (NamingException e) {
                         logger.log(Level.FINE, "Trying global version of java:app ejb lookup", e);
                     }

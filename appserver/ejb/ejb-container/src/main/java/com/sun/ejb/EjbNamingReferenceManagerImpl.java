@@ -99,8 +99,7 @@ public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager 
             SimpleJndiName remoteJndiName = ejbRefDesc.getJndiName();
 
             String appName = (String) context.lookup(JNDI_CTX_JAVA_APP + "AppName");
-            String newPrefix = JNDI_CTX_JAVA_GLOBAL + appName + "/";
-            String globalLookup = newPrefix + remoteJndiName.removePrefix(JNDI_CTX_JAVA_APP);
+            String globalLookup = remoteJndiName.changePrefix(JNDI_CTX_JAVA_GLOBAL + appName + '/').toString();
             jndiObj = context.lookup(globalLookup);
             resolved = true;
         } else {

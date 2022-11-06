@@ -80,8 +80,8 @@ import org.jvnet.hk2.annotations.Service;
 
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP_ENV;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
 
@@ -313,11 +313,11 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
 
         if (appName != null) {
             javaGlobalPrefix.append(appName);
-            javaGlobalPrefix.append("/");
+            javaGlobalPrefix.append('/');
         }
 
         javaGlobalPrefix.append(modName);
-        javaGlobalPrefix.append("/");
+        javaGlobalPrefix.append('/');
         javaGlobalPrefix.append(ejbName);
 
         return new SimpleJndiName(javaGlobalPrefix.toString());
@@ -547,8 +547,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 // Intentionally or not, this resolves the java:app mapped names
                 // Seems suspicious as the corresponding java:global case is handled in the getRemoteEjbJndiName function call
                 String appName = DOLUtils.getApplicationName(application);
-                String newPrefix = JNDI_CTX_JAVA_GLOBAL + appName + "/";
-                jndiName = new SimpleJndiName(newPrefix + ejbRefJndiName.removePrefix(JNDI_CTX_JAVA_APP));
+                jndiName = ejbRefJndiName.changePrefix(JNDI_CTX_JAVA_GLOBAL + appName + '/');
                 validationRequired = true;
             } else {
                 SimpleJndiName remoteJndiName = getRemoteEjbJndiName(ejbRef);
@@ -686,29 +685,12 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
      * @return The logical JNDI name which has a java: prefix
      */
     private SimpleJndiName getLogicalJNDIName(SimpleJndiName rawName, JndiNameEnvironment env) {
-        SimpleJndiName logicalJndiName = rawNameToLogicalJndiName(rawName);
+        SimpleJndiName jndiName = rawName.hasJavaPrefix() ? rawName : rawName.changePrefix(JNDI_CTX_JAVA_COMPONENT_ENV);
         boolean treatComponentAsModule = DOLUtils.getTreatComponentAsModule(env);
-        if (treatComponentAsModule && logicalJndiName.isJavaComponent()) {
-            return logicalCompJndiNameToModule(logicalJndiName);
+        if (treatComponentAsModule && jndiName.isJavaComponent()) {
+            return jndiName.changePrefix(JNDI_CTX_JAVA_MODULE);
         }
-        return logicalJndiName;
-    }
-
-
-    /**
-     * Convert name from java:comp/xxx to java:module/xxx.
-     */
-    private SimpleJndiName logicalCompJndiNameToModule(SimpleJndiName logicalCompName) {
-        SimpleJndiName tail = logicalCompName.removePrefix(JNDI_CTX_JAVA_COMPONENT);
-        return new SimpleJndiName(JNDI_CTX_JAVA_MODULE + tail);
-    }
-
-
-    /**
-     * Attach default prefix - java:comp/env/.
-     */
-    private SimpleJndiName rawNameToLogicalJndiName(SimpleJndiName rawName) {
-        return rawName.hasJavaPrefix() ? rawName : new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT_ENV + rawName);
+        return jndiName;
     }
 
 
@@ -742,7 +724,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         if (jndiName.isJavaApp()) {
             if (appName != null) {
                 javaGlobalName.append(appName);
-                javaGlobalName.append("/");
+                javaGlobalName.append('/');
             }
 
             // Replace java:app/ with the fully-qualified global portion
@@ -750,11 +732,11 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
         } else if (jndiName.isJavaModule()) {
             if (appName != null) {
                 javaGlobalName.append(appName);
-                javaGlobalName.append("/");
+                javaGlobalName.append('/');
             }
 
             javaGlobalName.append(moduleName);
-            javaGlobalName.append("/");
+            javaGlobalName.append('/');
             javaGlobalName.append(jndiName.removePrefix(JNDI_CTX_JAVA_MODULE));
         } else {
             return new SimpleJndiName("");
@@ -987,7 +969,6 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
 
     private static class AppResources {
         List<AppResource> myResources;
-
         JNDINamespace myNamespace;
 
         private AppResources() {

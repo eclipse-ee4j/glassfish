@@ -396,7 +396,7 @@ public class SerialContext implements Context {
     }
 
 
-    private Object lookup(String name, int level ) throws NamingException {
+    private Object lookup(String name, int level) throws NamingException {
         // Before any lookup bind any NamedNamingObjectProxy
         // Skip if in plain Java SE client
         // FIXME this should really be moved somewhere else

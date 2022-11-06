@@ -63,7 +63,7 @@ public class TransientContext implements Context, Serializable {
     // Issue 7067: lots of lookup failures in a heavily concurrent client.
     // So add a read/write lock, which allows unlimited concurrent readers,
     // and only imposes a global lock on relatively infrequent updates.
-    private static final ReadWriteLock lock = new ReentrantReadWriteLock() ;
+    private static final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public TransientContext() {
     }
@@ -132,22 +132,20 @@ public class TransientContext implements Context, Serializable {
                 if (bindings.containsKey(name)) {
                     throw new NameAlreadyBoundException("Subcontext " + name + " already present");
                 }
-
-                TransientContext ctx = null;
-                ctx = new TransientContext();
+                TransientContext ctx = new TransientContext();
                 bindings.put(name, ctx);
                 return ctx;
             }
             String suffix = n.getSuffix(1).toString();
-            Context retCtx, ctx; // the created context
+            Context ctx;
             try {
                 ctx = resolveContext(n.get(0));
             } catch (NameNotFoundException e) {
                 ctx = new TransientContext();
             }
-            retCtx = ctx.createSubcontext(suffix);
+            Context subCtx = ctx.createSubcontext(suffix);
             bindings.put(n.get(0), ctx);
-            return retCtx;
+            return subCtx;
         } finally {
             lock.writeLock().unlock();
         }
@@ -257,11 +255,12 @@ public class TransientContext implements Context, Serializable {
                 doBindOrRebind(n.toString(), obj, false);
             } else {
                 String suffix = n.getSuffix(1).toString();
+                String subCtxName = n.get(0);
                 Context ctx;
                 try {
-                    ctx = resolveContext(n.get(0));
+                    ctx = resolveContext(subCtxName);
                 } catch (NameNotFoundException e) {
-                    ctx = createSubcontext(n.get(0));
+                    ctx = createSubcontext(subCtxName);
                 }
                 ctx.bind(suffix, obj);
             }

@@ -56,6 +56,7 @@ public class JndiNamingObjectFactory implements NamingObjectFactory {
         try {
             // FIXME: race conditions?
             ic.addToEnvironment(GlassfishNamingManager.LOGICAL_NAME, name);
+            // FIXME: always false.
             if (cacheResult) {
                 result = value.get();
                 if (result == null) {

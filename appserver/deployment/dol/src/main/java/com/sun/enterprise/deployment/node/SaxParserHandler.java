@@ -412,7 +412,7 @@ public class SaxParserHandler extends DefaultHandler {
         }
 
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer("start of element " + uri + " with local name "+ localName + " and " + qName);
+            LOG.finer("start of element with uri=" + uri + ", localName=" + localName + " and qName=" + qName);
         }
         XMLNode<?> node = null;
         elementData = new StringBuffer();
@@ -475,8 +475,8 @@ public class SaxParserHandler extends DefaultHandler {
         }
 
         if (LOG.isLoggable(Level.FINER)) {
-            LOG.finer(
-                "End of element " + uri + " local name " + localName + " and " + qName + " value " + elementData);
+            LOG.finer("End of element with uri=" + uri + ", localName=" + localName + ", qName=" + qName + " and value="
+                + elementData);
         }
         if (nodes.isEmpty()) {
             // no more nodes to pop

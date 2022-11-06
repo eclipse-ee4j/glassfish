@@ -98,32 +98,34 @@ public class SimpleJndiNameTest {
 
     @Test
     public void removals() {
-        SimpleJndiName jndiName = SimpleJndiName.of("java:module/x/y/z");
+        SimpleJndiName modName = SimpleJndiName.of("java:module/x/y/z");
         SimpleJndiName weirdPrefixName = SimpleJndiName.of("something:somewhere");
         SimpleJndiName empty = SimpleJndiName.of("");
         SimpleJndiName corba = SimpleJndiName.of("corbaname:1::3/4");
         SimpleJndiName http = SimpleJndiName.of("http://host:80/x/z");
         assertAll(
-            () -> assertEquals(JNDI_CTX_JAVA_MODULE, jndiName.getPrefix()),
+            () -> assertEquals(JNDI_CTX_JAVA_MODULE, modName.getPrefix()),
             () -> assertEquals("something:", weirdPrefixName.getPrefix()),
             () -> assertEquals("http://", http.getPrefix()),
             () -> assertNull(corba.getPrefix()),
             () -> assertNull(empty.getPrefix()),
             () -> assertEquals(SimpleJndiName.of("somewhere"), weirdPrefixName.removePrefix()),
-            () -> assertEquals(SimpleJndiName.of("x/y/z"), jndiName.removePrefix()),
+            () -> assertEquals(SimpleJndiName.of("x/y/z"), modName.removePrefix()),
             () -> assertEquals(SimpleJndiName.of("host:80/x/z"), http.removePrefix()),
             () -> assertSame(corba, corba.removePrefix()),
             () -> assertEquals(empty, empty.removePrefix()),
-            () -> assertEquals(SimpleJndiName.of("x/y/z"), jndiName.removePrefix(JNDI_CTX_JAVA_MODULE)),
-            () -> assertEquals(jndiName, jndiName.removePrefix("notThere")),
-            () -> assertEquals(jndiName, jndiName.removePrefix(null)),
+            () -> assertEquals(SimpleJndiName.of("x/y/z"), modName.removePrefix(JNDI_CTX_JAVA_MODULE)),
+            () -> assertEquals(modName, modName.removePrefix("notThere")),
+            () -> assertEquals(modName, modName.removePrefix(null)),
             () -> assertEquals(SimpleJndiName.of("host:80/x/z"), http.removePrefix("http://")),
-            () -> assertEquals(SimpleJndiName.of("java:module/x/"), jndiName.removeSuffix("y/z")),
-            () -> assertEquals(jndiName, jndiName.removeSuffix("notThere")),
-            () -> assertEquals(jndiName, jndiName.removeSuffix(null)),
-            () -> assertEquals(SimpleJndiName.of("java:comp/env/x/y/z"), jndiName.changePrefix(JNDI_CTX_JAVA_COMPONENT_ENV)),
+            () -> assertEquals(SimpleJndiName.of("java:module/x/"), modName.removeSuffix("y/z")),
+            () -> assertEquals(modName, modName.removeSuffix("notThere")),
+            () -> assertEquals(modName, modName.removeSuffix(null)),
+            () -> assertEquals(SimpleJndiName.of("java:comp/env/x/y/z"), modName.changePrefix(JNDI_CTX_JAVA_COMPONENT_ENV)),
             () -> assertEquals(SimpleJndiName.of("java:somewhere"), weirdPrefixName.changePrefix("java:")),
-            () -> assertEquals(SimpleJndiName.of("x:x/y/z"), jndiName.changePrefix("x:")),
+            () -> assertEquals(SimpleJndiName.of("x:x/y/z"), modName.changePrefix("x:")),
+            () -> assertEquals(SimpleJndiName.of(JNDI_CTX_JAVA_MODULE),
+                SimpleJndiName.of("java:comp").changePrefix(JNDI_CTX_JAVA_MODULE)),
             () -> assertThrows(IllegalArgumentException.class, () -> http.changePrefix("java:module")),
             () -> assertThrows(IllegalArgumentException.class, () -> http.changePrefix("java:module/")),
             () -> assertSame(corba, corba.changePrefix("xxx:")),

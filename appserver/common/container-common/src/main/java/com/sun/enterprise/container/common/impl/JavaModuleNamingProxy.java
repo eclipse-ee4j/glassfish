@@ -187,21 +187,18 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
 
             if (namingMgr != null) {
                 JndiNameEnvironment env = namingMgr.getCurrentJndiNameEnvironment();
-                BundleDescriptor bd = null;
+                final BundleDescriptor bd;
                 if (env instanceof EjbDescriptor) {
                     bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
                 } else if (env instanceof BundleDescriptor) {
                     bd = (BundleDescriptor) env;
+                } else {
+                    bd = null;
                 }
 
                 if (bd != null) {
-                    Application app = bd.getApplication();
-                    String appName = null;
-                    if (!app.isVirtual()) {
-                        appName = app.getAppName();
-                    }
-
-                    String moduleName = bd.getModuleDescriptor().getModuleName();
+                    final Application app = bd.getApplication();
+                    final String appName = app.isVirtual() ? null : app.getAppName();
                     StringBuilder javaGlobalName = new StringBuilder(32).append(JNDI_CTX_JAVA_GLOBAL);
                     if (name.startsWith(JNDI_CTX_JAVA_APP)) {
 
@@ -231,7 +228,7 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
                             javaGlobalName.append('/');
                         }
 
-                        javaGlobalName.append(moduleName);
+                        javaGlobalName.append(bd.getModuleDescriptor().getModuleName());
                         javaGlobalName.append('/');
 
                         // Replace java:module/ with the fully-qualified global portion

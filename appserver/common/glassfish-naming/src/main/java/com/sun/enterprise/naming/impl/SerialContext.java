@@ -442,10 +442,9 @@ public class SerialContext implements Context {
                 return new SerialContext(name, myEnv, services);
             }
 
-            Object retObj = getObjectInstance(name, obj);
-            return retObj;
+            return getObjectInstance(name, obj);
         } catch (NamingException nnfe) {
-            NamingException ne = new NamingException("Lookup failed for '" + name + "' in " + this);
+            NamingException ne = new NamingException("Lookup failed for " + name + " in " + this);
             ne.initCause(nnfe);
             throw ne;
         } catch (Exception ex) {
@@ -464,7 +463,7 @@ public class SerialContext implements Context {
                     && nextLevel < MAX_LEVEL) {
                 clearProvider();
                 logger.fine("Resetting provider to NULL. Will get new obj ref for provider since previous obj ref was stale...");
-                return lookup(name, nextLevel );
+                return lookup(name, nextLevel);
             }
             throw createCommunicationException("Lookup failed.", ex);
         } finally {

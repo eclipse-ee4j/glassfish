@@ -1397,18 +1397,15 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected SimpleJndiName getJavaGlobalJndiNamePrefix() {
         final Application app = ejbDescriptor.getApplication();
-        final String appName = app.isVirtual() ? null : ejbDescriptor.getApplication().getAppName();
-        final EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
-        String modName = ejbBundle.getModuleDescriptor().getModuleName();
-        String ejbName = ejbDescriptor.getName();
+        final String appName = app.isVirtual() ? null : app.getAppName();
         StringBuilder javaGlobalPrefix = new StringBuilder().append(JNDI_CTX_JAVA_GLOBAL);
         if (appName != null) {
             javaGlobalPrefix.append(appName);
             javaGlobalPrefix.append('/');
         }
-        javaGlobalPrefix.append(modName);
+        javaGlobalPrefix.append(ejbDescriptor.getEjbBundleDescriptor().getModuleDescriptor().getModuleName());
         javaGlobalPrefix.append('/');
-        javaGlobalPrefix.append(ejbName);
+        javaGlobalPrefix.append(ejbDescriptor.getName());
         return new SimpleJndiName(javaGlobalPrefix.toString());
     }
 

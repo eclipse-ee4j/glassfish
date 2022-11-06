@@ -63,8 +63,11 @@ import static java.lang.System.Logger.Level.WARNING;
 import static java.util.Objects.requireNonNull;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP_NS_ID;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_NS_ID;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE_NS_ID;
 
 
 /**
@@ -470,11 +473,11 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         // for each component of name, put an entry into namespace
         String partialName;
         if (jndiName.isJavaComponent()) {
-            partialName = "java:comp";
+            partialName = JNDI_CTX_JAVA_COMPONENT_NS_ID;
         } else if (jndiName.isJavaModule()) {
-            partialName = "java:module";
+            partialName = JNDI_CTX_JAVA_MODULE_NS_ID;
         } else if (jndiName.isJavaApp()) {
-            partialName = "java:app";
+            partialName = JNDI_CTX_JAVA_APP_NS_ID;
         } else {
             throw new NamingException("Invalid environment namespace name: " + jndiName);
         }
@@ -577,17 +580,17 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         LOG.log(DEBUG, "lookup(componentId={0}, name={1}, ctx={2})", componentId, name, ctx);
         ComponentIdInfo info = componentIdInfo.get(componentId);
         boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
-        final SimpleJndiName logicalJndiName;
+        final SimpleJndiName replacedName;
         if (replaceName) {
-            logicalJndiName = name.changePrefix(JNDI_CTX_JAVA_MODULE);
+            replacedName = name.changePrefix(JNDI_CTX_JAVA_MODULE);
         } else {
-            logicalJndiName = name;
+            replacedName = name;
         }
 
-        Map<SimpleJndiName, Object> namespace = getNamespace(componentId, logicalJndiName);
-        Object obj = namespace.get(logicalJndiName);
+        Map<SimpleJndiName, Object> namespace = getNamespace(componentId, replacedName);
+        Object obj = namespace.get(replacedName);
         if (obj == null) {
-            throw new NameNotFoundException("No object bound to name " + name + " in namespace " + namespace);
+            throw new NameNotFoundException("No object bound to name " + replacedName + " in namespace " + namespace);
         }
         if (obj instanceof NamingObjectProxy) {
             NamingObjectProxy namingProxy = (NamingObjectProxy) obj;

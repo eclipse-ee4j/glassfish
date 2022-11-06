@@ -299,26 +299,16 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
     }
 
     private SimpleJndiName getJavaGlobalJndiNamePrefix(EjbDescriptor ejbDescriptor) {
-
-        String appName = null;
-        Application app = ejbDescriptor.getApplication();
-        if (!app.isVirtual()) {
-            appName = ejbDescriptor.getApplication().getAppName();
-        }
-
-        EjbBundleDescriptor ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
-        String modName = ejbBundle.getModuleDescriptor().getModuleName();
-        String ejbName = ejbDescriptor.getName();
+        final Application app = ejbDescriptor.getApplication();
+        final String appName = app.isVirtual() ? null : app.getAppName();
         StringBuilder javaGlobalPrefix = new StringBuilder(JNDI_CTX_JAVA_GLOBAL);
-
         if (appName != null) {
             javaGlobalPrefix.append(appName);
             javaGlobalPrefix.append('/');
         }
-
-        javaGlobalPrefix.append(modName);
+        javaGlobalPrefix.append(ejbDescriptor.getEjbBundleDescriptor().getModuleDescriptor().getModuleName());
         javaGlobalPrefix.append('/');
-        javaGlobalPrefix.append(ejbName);
+        javaGlobalPrefix.append(ejbDescriptor.getName());
 
         return new SimpleJndiName(javaGlobalPrefix.toString());
     }
@@ -726,8 +716,6 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
                 javaGlobalName.append(appName);
                 javaGlobalName.append('/');
             }
-
-            // Replace java:app/ with the fully-qualified global portion
             javaGlobalName.append(jndiName.removePrefix(JNDI_CTX_JAVA_APP));
         } else if (jndiName.isJavaModule()) {
             if (appName != null) {

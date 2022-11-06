@@ -323,13 +323,13 @@ public final class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescrip
         String appName = app.isVirtual() ? null : enclosingBundle.getApplication().getAppName();
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
 
-        StringBuilder javaGlobalPrefix = new StringBuilder().append(JNDI_CTX_JAVA_GLOBAL);
+        StringBuilder javaGlobalPrefix = new StringBuilder(64).append(JNDI_CTX_JAVA_GLOBAL);
         if (appName != null) {
             javaGlobalPrefix.append(appName);
-            javaGlobalPrefix.append("/");
+            javaGlobalPrefix.append('/');
         }
         javaGlobalPrefix.append(modName);
-        javaGlobalPrefix.append("/");
+        javaGlobalPrefix.append('/');
 
 
         // If the managed bean is named, use the name for the final component
@@ -351,7 +351,7 @@ public final class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescrip
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
         StringBuilder javaAppPrefix = new StringBuilder().append(JNDI_CTX_JAVA_APP);
         javaAppPrefix.append(modName);
-        javaAppPrefix.append("/");
+        javaAppPrefix.append('/');
 
         // If the managed bean is named, use the name for the final component
         // of the managed bean global name.  Otherwise, use a derived internal

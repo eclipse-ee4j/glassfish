@@ -32,13 +32,21 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
 
     public static final String JNDI_CTX_CORBA = "corbaname:";
     public static final String JNDI_CTX_JAVA = "java:";
-    public static final String JNDI_CTX_JAVA_APP = JNDI_CTX_JAVA + "app/";
+
+    public static final String JNDI_CTX_JAVA_APP_NS_ID = JNDI_CTX_JAVA + "app";
+    public static final String JNDI_CTX_JAVA_APP = JNDI_CTX_JAVA_APP_NS_ID + '/';
     public static final String JNDI_CTX_JAVA_APP_ENV = JNDI_CTX_JAVA_APP + "env/";
-    public static final String JNDI_CTX_JAVA_COMPONENT = JNDI_CTX_JAVA + "comp/";
+
+    public static final String JNDI_CTX_JAVA_COMPONENT_NS_ID = JNDI_CTX_JAVA + "comp";
+    public static final String JNDI_CTX_JAVA_COMPONENT = JNDI_CTX_JAVA_COMPONENT_NS_ID + '/';
     public static final String JNDI_CTX_JAVA_COMPONENT_ENV = JNDI_CTX_JAVA_COMPONENT + "env/";
-    public static final String JNDI_CTX_JAVA_MODULE = JNDI_CTX_JAVA + "module/";
+
+    public static final String JNDI_CTX_JAVA_MODULE_NS_ID = JNDI_CTX_JAVA + "module";
+    public static final String JNDI_CTX_JAVA_MODULE = JNDI_CTX_JAVA_MODULE_NS_ID + '/';
     public static final String JNDI_CTX_JAVA_MODULE_ENV = JNDI_CTX_JAVA_MODULE + "env/";
-    public static final String JNDI_CTX_JAVA_GLOBAL = JNDI_CTX_JAVA + "global/";
+
+    public static final String JNDI_CTX_JAVA_GLOBAL_NS_ID = JNDI_CTX_JAVA + "global";
+    public static final String JNDI_CTX_JAVA_GLOBAL = JNDI_CTX_JAVA_GLOBAL_NS_ID + '/';
 
     private final String jndiName;
 
@@ -77,34 +85,34 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
 
 
     /**
-     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_GLOBAL} without the trailing slash.
+     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_GLOBAL_NS_ID}.
      */
     public boolean isJavaGlobal() {
-        return jndiName.startsWith("java:global");
+        return jndiName.startsWith(JNDI_CTX_JAVA_GLOBAL_NS_ID);
     }
 
 
     /**
-     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_APP} without the trailing slash.
+     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_APP_NS_ID}.
      */
     public boolean isJavaApp() {
-        return jndiName.startsWith("java:app");
+        return jndiName.startsWith(JNDI_CTX_JAVA_APP_NS_ID);
     }
 
 
     /**
-     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_MODULE} without the trailing slash.
+     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_MODULE_NS_ID}.
      */
     public boolean isJavaModule() {
-        return jndiName.startsWith("java:module");
+        return jndiName.startsWith(JNDI_CTX_JAVA_MODULE_NS_ID);
     }
 
 
     /**
-     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_COMPONENT} without the trailing slash.
+     * @return true if the JNDI name starts with {@value #JNDI_CTX_JAVA_COMPONENT_NS_ID}.
      */
     public boolean isJavaComponent() {
-        return jndiName.startsWith("java:comp");
+        return jndiName.startsWith(JNDI_CTX_JAVA_COMPONENT_NS_ID);
     }
 
 
@@ -161,6 +169,9 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
         }
         final int slashIndex = jndiName.indexOf('/', colonIndex + 1);
         if (slashIndex == -1) {
+            if (isKnownNamespaceId()) {
+                return jndiName;
+            }
             return jndiName.substring(0, colonIndex + 1);
         }
         if (jndiName.charAt(slashIndex + 1) == '/') {
@@ -227,6 +238,9 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
         }
         final int slashIndex = jndiName.indexOf('/', colonIndex + 1);
         if (slashIndex == -1) {
+            if (isKnownNamespaceId()) {
+                return new SimpleJndiName("");
+            }
             return new SimpleJndiName(jndiName.substring(colonIndex + 1));
         }
         if (jndiName.charAt(slashIndex + 1) == '/') {
@@ -301,6 +315,12 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
      */
     public Name toName() throws InvalidNameException {
         return new CompositeName(jndiName);
+    }
+
+
+    private boolean isKnownNamespaceId() {
+        return jndiName.equals(JNDI_CTX_JAVA_GLOBAL_NS_ID) || jndiName.equals(JNDI_CTX_JAVA_APP_NS_ID)
+            || jndiName.equals(JNDI_CTX_JAVA_MODULE_NS_ID) || jndiName.equals(JNDI_CTX_JAVA_COMPONENT_NS_ID);
     }
 
 

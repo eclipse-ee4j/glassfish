@@ -48,7 +48,7 @@ public abstract class RootDeploymentDescriptor extends Descriptor {
     /**
      * each module is uniquely identified with a moduleID
      */
-    protected String moduleID;
+    private String moduleID;
 
     /**
      * version of the specification loaded by this descriptor

@@ -35,10 +35,13 @@ import com.sun.xml.ws.resources.ModelerMessages;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 import jakarta.inject.Inject;
+import jakarta.xml.ws.RespectBinding;
 import jakarta.xml.ws.RespectBindingFeature;
 import jakarta.xml.ws.WebServiceException;
 import jakarta.xml.ws.WebServiceFeature;
+import jakarta.xml.ws.soap.Addressing;
 import jakarta.xml.ws.soap.AddressingFeature;
+import jakarta.xml.ws.soap.MTOM;
 import jakarta.xml.ws.soap.MTOMFeature;
 import jakarta.xml.ws.spi.WebServiceFeatureAnnotation;
 
@@ -61,10 +64,15 @@ import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.xml.namespace.QName;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 
 /**
@@ -78,11 +86,11 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 public class WebServiceReferenceManagerImpl implements WebServiceReferenceManager {
+    private static final Logger LOG = LogUtils.getLogger();
 
     @Inject
     private ServerEnvironment serverEnv;
 
-    protected Logger logger = LogUtils.getLogger();
 
     @Override
     public Object getWSContextObject() {
@@ -180,22 +188,21 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
 
 
                 // check if this is a post 1.1 web service
-                if(jakarta.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass)) {
+                if (jakarta.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass)) {
                     // This is a JAXWS based webservice client;
                     // process handlers and mtom setting
                     // moved test for handlers into wsUtil, in case
                     // we have to add system handler
 
-                    jakarta.xml.ws.Service service =
-                            (injValue != null ?
-                                    (jakarta.xml.ws.Service) injValue : jaxwsDelegate);
+                    jakarta.xml.ws.Service service = injValue == null ? jaxwsDelegate
+                        : (jakarta.xml.ws.Service) injValue;
 
                     if (service != null) {
                         // Now configure client side handlers
                         wsUtil.configureJAXWSClientHandlers(service, desc);
                     }
                     // the requested resource is not the service but one of its port.
-                    if (injValue!=null && desc.getInjectionTargetType()!=null) {
+                    if (injValue != null && desc.getInjectionTargetType() != null) {
                         Class requestedPortType = service.getClass().getClassLoader().loadClass(desc.getInjectionTargetType());
                         ArrayList<WebServiceFeature> wsFeatures = getWebServiceFeatures(desc);
                         if (wsFeatures.size() >0) {
@@ -213,12 +220,12 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
                 returnObj = injValue;
             }
         } catch(PrivilegedActionException pae) {
-            logger.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
+            LOG.log(WARNING, LogUtils.EXCEPTION_THROWN, pae);
             NamingException ne = new NamingException();
             ne.initCause(pae.getCause());
             throw ne;
         } catch(Exception e) {
-            logger.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, e);
+            LOG.log(WARNING, LogUtils.EXCEPTION_THROWN, e);
             NamingException ne = new NamingException();
             ne.initCause(e);
             throw ne;
@@ -229,71 +236,27 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         return returnObj;
     }
 
-    private Object initiateInstance(Class svcClass, ServiceReferenceDescriptor desc)
-            throws Exception {
 
-        //TODO BM if JBI needs this reenable it
-        /*com.sun.enterprise.webservice.ServiceRefDescUtil descUtil =
-           new com.sun.enterprise.webservice.ServiceRefDescUtil();
-        descUtil.preServiceCreate(desc);*/
+    private Object initiateInstance(Class<?> svcClass, ServiceReferenceDescriptor desc) throws Exception {
         WsUtil wsu = new WsUtil();
         URL wsdlFile = wsu.privilegedGetServiceRefWsdl(desc);
-        /* TODO BM resolve catalog
-        // Check if there is a catalog for this web service client
-        // If so resolve the catalog entry
-        String genXmlDir;
-        if(desc.getBundleDescriptor().getApplication() != null) {
-            genXmlDir = desc.getBundleDescriptor().getApplication().getGeneratedXMLDirectory();
-            if(!desc.getBundleDescriptor().getApplication().isVirtual()) {
-                String subDirName = desc.getBundleDescriptor().getModuleDescriptor().getArchiveUri();
-                genXmlDir += (File.separator+subDirName.replaceAll("\\.",  "_"));
-            }
-        } else {
-            // this is the case of an appclient being run as class file from command line
-            genXmlDir = desc.getBundleDescriptor().getModuleDescriptor().getArchiveUri();
-        }
-        File catalogFile = new File(genXmlDir,
-                desc.getBundleDescriptor().getDeploymentDescriptorDir() +
-                    File.separator + "jax-ws-catalog.xml");
-
-        if(catalogFile.exists()) {
-            wsdlFile = wsu.resolveCatalog(catalogFile, desc.getWsdlFileUri(), null);
-        }   */
-
-
-        Object obj = null ;
-
-        java.lang.reflect.Constructor cons = svcClass.getConstructor
-                (new Class[]{java.net.URL.class,
-                        javax.xml.namespace.QName.class});
+        Constructor<?> cons = svcClass.getConstructor(new Class[] {URL.class, QName.class});
         try {
-            obj =
-                    cons.newInstance(wsdlFile, desc.getServiceName());
-        } catch (Exception e) {
-            /*
-             * If WSDL URL is not accessible over http, trying to get an instance via
-             * reflection results in InvocationTargetException. If InvocationTargetException
-             * is thrown,then catch the exception and generate wsdl in generated xml directory
-             * of the application being deployed.
-             */
-            if (e instanceof InvocationTargetException) {
-                URL optionalWsdlURL = generateWsdlFile(desc);
-                if (optionalWsdlURL == null) {
-                    throw e;
-                }
-                obj = cons.newInstance(optionalWsdlURL, desc.getServiceName());
+            return cons.newInstance(wsdlFile, desc.getServiceName());
+        } catch (InvocationTargetException e) {
+            LOG.log(Level.CONFIG,
+                "Service constructor failed, now we will try to generate the WSDL on our own, if it is possible.", e);
+            // If WSDL URL is not accessible over http, trying to get an instance via
+            // reflection results in InvocationTargetException.
+            // If InvocationTargetException is thrown,then catch the exception and generate wsdl
+            // in generated xml directory of the application being deployed.
+            URL optionalWsdlURL = generateWsdlFile(desc);
+            if (optionalWsdlURL == null) {
+                throw e;
             }
+            return cons.newInstance(optionalWsdlURL, desc.getServiceName());
         }
-
-
-
-        /*TODO BM if jbi needs this reenable it
-        descUtil.postServiceCreate();
-        */
-        return obj;
-
     }
-
 
 
     /**
@@ -347,12 +310,15 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
          */
 
         if (optionalWsdl.exists()) {
+            LOG.log(FINEST, "The file already exists, so I am returning it: {0}", optionalWsdl);
             return optionalWsdl.toURI().toURL();
         }
 
         createParentDirs(optionalWsdl);
         ServletAdapter targetEndpoint = getServletAdapter(desc);
         if (targetEndpoint == null) {
+            LOG.log(WARNING,
+                "Target endpoint's servlet adapter wasn't found, I cannot generate the wsdl, returning null.");
             return null;
         }
         ServiceDefinition serviceDefinition = targetEndpoint.getServiceDefinition();
@@ -365,20 +331,16 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         }
 
         if (wsdlDocument == null) {
+            LOG.log(FINEST, "Service definition document wasn't found, I cannot generate the wsdl, returning null.");
             return null;
         }
 
-        OutputStream outputStream = null;
-        try {
-            outputStream = new BufferedOutputStream(new FileOutputStream(optionalWsdl));
+        LOG.log(INFO, "Generating the WSDL: {0}", optionalWsdl);
+        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(optionalWsdl))) {
             PortAddressResolver portAddressResolver = targetEndpoint
-                    .getPortAddressResolver(getBaseAddress(desc.getWsdlFileUrl()));
+                .getPortAddressResolver(getBaseAddress(desc.getWsdlFileUrl()));
             DocumentAddressResolver resolver = targetEndpoint.getDocumentAddressResolver(portAddressResolver);
             wsdlDocument.writeTo(portAddressResolver, resolver, outputStream);
-        } finally {
-            if (outputStream != null) {
-                outputStream.close();
-            }
         }
 
         return optionalWsdl.toURI().toURL();
@@ -393,28 +355,22 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
      */
     private ServletAdapter getServletAdapter(ServiceReferenceDescriptor desc) {
 
-        WebBundleDescriptor webBundle = null;
-
         /*
          * If flow has reached to this part of the code,then in all likelihood,
          * the wsdl is available under the context root of the a web application
          * and hence the BundleDescriptor being referred in ServiceReferenceDescriptor
          * is an instance of WebBundleDescriptor.
          */
-
-        if (desc.getBundleDescriptor() instanceof WebBundleDescriptor) {
-
-            webBundle = ((WebBundleDescriptor) desc.getBundleDescriptor());
-
-        } else {
+        if (!(desc.getBundleDescriptor() instanceof WebBundleDescriptor)) {
 
             /*
              * If above assumption is not true, then make one last attempt to fetch
              * all required params from the wsdl url stored in ServiceReferenceDescriptor.
              */
-
             return getServletAdapterBasedOnWsdlUrl(desc);
         }
+
+        WebBundleDescriptor webBundle = ((WebBundleDescriptor) desc.getBundleDescriptor());
 
         /*
          * Get WebServicesDescriptor from WebBundleDescriptorImpl, Since we are
@@ -422,10 +378,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
          * reference to WebService in question. WebServicesDescriptor is never null as it
          * is being initialized at class level in BundleDescriptor.
          */
-
         WebServicesDescriptor wsDesc = webBundle.getWebServices();
-
-        assert wsDesc != null;
 
         /*
          * WebService name is being fetched by invoking getServiceLocalPart()
@@ -435,9 +388,6 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
          * processAWsRef call (line 339). WebServiceClient annotation have name param pointing
          * to webservice in question.
          */
-
-        assert desc.getServiceLocalPart() != null;
-
         WebService webService = wsDesc.getWebServiceByName(desc.getServiceLocalPart());
 
         /*
@@ -449,8 +399,6 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         }
 
         String contextRoot = webBundle.getContextRoot();
-        String webSevicePath = null;
-        String publishingContext = null;
         /*
          * Iterate over all associated WebServiceEndPoints for this WebService
          * and break when condition specified in if block is met. This is the same
@@ -463,10 +411,12 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
                     && desc.getServiceNamespaceUri().equals(endpoint.getWsdlService().getNamespaceURI())) {
                 String endPointAddressURI = endpoint.getEndpointAddressUri();
                 if (endPointAddressURI == null || endPointAddressURI.isEmpty()) {
+                    LOG.log(Level.FINEST, "The endpoint address uri is null or empty, returning null.");
                     return null;
                 }
-                webSevicePath = endPointAddressURI.startsWith("/") ? endPointAddressURI : ("/" + endPointAddressURI);
-                publishingContext = "/" + endpoint.getPublishingUri() + "/" + webService.getWsdlFileUri();
+                String webSevicePath = endPointAddressURI.startsWith("/") ? endPointAddressURI
+                    : ("/" + endPointAddressURI);
+                String publishingContext = "/" + endpoint.getPublishingUri() + "/" + webService.getWsdlFileUri();
                 Adapter<?> adapter = JAXWSAdapterRegistry.getInstance()
                         .getAdapter(contextRoot, webSevicePath, publishingContext);
                 return adapter instanceof ServletAdapter ? (ServletAdapter) adapter : null;
@@ -488,8 +438,8 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
      */
     private ServletAdapter getServletAdapterBasedOnWsdlUrl(ServiceReferenceDescriptor desc) {
 
-        if (logger.isLoggable(Level.INFO)) {
-            logger.log(Level.INFO, LogUtils.SERVLET_ADAPTER_BASED_ON_WSDL_URL,
+        if (LOG.isLoggable(INFO)) {
+            LOG.log(INFO, LogUtils.SERVLET_ADAPTER_BASED_ON_WSDL_URL,
                     new Object[]{desc.getServiceLocalPart(), desc.getWsdlFileUrl()});
         }
 
@@ -538,41 +488,35 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
     }
 
     private void mkDirs(File f) {
-        if (!f.mkdirs() && logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, LogUtils.DIR_EXISTS, f);
+        if (!f.mkdirs() && LOG.isLoggable(Level.FINE)) {
+            LOG.log(Level.FINE, LogUtils.DIR_EXISTS, f);
         }
     }
 
 
-
-
+    /**
+     * JAXWS 2.2 enables {@link MTOM}, {@link Addressing}, {@link RespectBinding} on WebServiceRef
+     * If these are present use the Service(url,wsdl,features) constructor
+     */
     private ArrayList<WebServiceFeature> getWebServiceFeatures(ServiceReferenceDescriptor desc) {
-         /**
-         * JAXWS 2.2 enables @MTOM, @Addressing @RespectBinding
-         * on WebServiceRef
-         * If these are present use the
-         * Service(url,wsdl,features) constructor
-         */
-        ArrayList<WebServiceFeature> wsFeatures = new ArrayList<>();
-        if (desc.isMtomEnabled()) {
-            wsFeatures.add( new MTOMFeature(true,desc.getMtomThreshold()))   ;
-        }
-        com.sun.enterprise.deployment.Addressing add = desc.getAddressing();
-        if (add != null) {
-            wsFeatures.add( new AddressingFeature(
-                    add.isEnabled(),add.isRequired(),getResponse(add.getResponses())))   ;
-        }
-        com.sun.enterprise.deployment.RespectBinding rb = desc.getRespectBinding();
-        if (rb != null) {
-            wsFeatures.add( new RespectBindingFeature(rb.isEnabled()))   ;
-        }
-        Map<Class<? extends Annotation>, Annotation> otherAnnotations =
-            desc.getOtherAnnotations();
-        for (Annotation element : otherAnnotations.values()) {
-            wsFeatures.add(getWebServiceFeatureBean(element));
-        }
+         ArrayList<WebServiceFeature> wsFeatures = new ArrayList<>();
+         if (desc.isMtomEnabled()) {
+             wsFeatures.add(new MTOMFeature(true, desc.getMtomThreshold()));
+         }
+         com.sun.enterprise.deployment.Addressing add = desc.getAddressing();
+         if (add != null) {
+             wsFeatures.add(new AddressingFeature(add.isEnabled(), add.isRequired(), getResponse(add.getResponses())));
+         }
+         com.sun.enterprise.deployment.RespectBinding rb = desc.getRespectBinding();
+         if (rb != null) {
+             wsFeatures.add(new RespectBindingFeature(rb.isEnabled()));
+         }
+         Map<Class<? extends Annotation>, Annotation> otherAnnotations = desc.getOtherAnnotations();
+         for (Annotation annotation : otherAnnotations.values()) {
+             wsFeatures.add(getWebServiceFeatureBean(annotation));
+         }
 
-        return wsFeatures;
+         return wsFeatures;
     }
 
     private AddressingFeature.Responses getResponse(String s) {

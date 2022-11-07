@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,6 @@
 
 package com.sun.enterprise.connectors.inbound;
 
-import java.lang.reflect.Method;
-import java.security.AccessController;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jakarta.resource.spi.ActivationSpec;
-import jakarta.resource.spi.ResourceAdapter;
-import jakarta.resource.spi.UnavailableException;
-import jakarta.resource.spi.endpoint.MessageEndpoint;
-import jakarta.resource.spi.endpoint.MessageEndpointFactory;
-import javax.transaction.xa.XAResource;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -46,6 +33,22 @@ import com.sun.enterprise.deployment.MessageListener;
 import com.sun.enterprise.resource.ResourceHandle;
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
+
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.ResourceAdapter;
+import jakarta.resource.spi.UnavailableException;
+import jakarta.resource.spi.endpoint.MessageEndpoint;
+import jakarta.resource.spi.endpoint.MessageEndpointFactory;
+
+import java.lang.reflect.Method;
+import java.security.AccessController;
+import java.util.List;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.transaction.xa.XAResource;
+
 import org.glassfish.ejb.api.MessageBeanListener;
 import org.glassfish.ejb.api.MessageBeanProtocolManager;
 import org.glassfish.ejb.spi.MessageBeanClient;
@@ -60,8 +63,7 @@ import org.glassfish.server.ServerEnvironmentImpl;
  *
  * @author Qingqing Ouyang
  */
-public final class ConnectorMessageBeanClient
-        implements MessageBeanClient, MessageEndpointFactory {
+public final class ConnectorMessageBeanClient implements MessageBeanClient, MessageEndpointFactory {
 
     private String activationName;
 
@@ -267,16 +269,12 @@ public final class ConnectorMessageBeanClient
             msgListenerType = "jakarta.jms.MessageListener";
         }
 
-        Iterator<MessageListener> i = desc.getInboundResourceAdapter().getMessageListeners().iterator();
-
-        MessageListener msgListener = null;
-        while (i.hasNext()) {
-            msgListener = i.next();
+        for (MessageListener msgListener : desc.getInboundResourceAdapter().getMessageListeners()) {
             if (msgListenerType.equals(msgListener.getMessageListenerType())) {
-                break;
+                return msgListener;
             }
         }
-        return msgListener;
+        return null;
     }
 
     private ActiveInboundResourceAdapter getActiveResourceAdapter(String resourceAdapterMid) throws Exception {

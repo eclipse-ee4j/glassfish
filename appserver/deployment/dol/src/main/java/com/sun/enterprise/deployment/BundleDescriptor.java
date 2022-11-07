@@ -593,17 +593,23 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      */
     @Override
     public String getModuleID() {
-        if (moduleID == null) {
-            moduleID = getModuleDescriptor().getArchiveUri();
+        if (super.getModuleID() == null) {
+            setModuleID(getModuleDescriptor().getArchiveUri());
         }
         if (getModuleDescriptor().isStandalone()) {
-            return moduleID;
+            return super.getModuleID();
         }
         if (application != null && !application.isVirtual()) {
             return application.getRegistrationName() + "#" + getModuleDescriptor().getArchiveUri();
         }
-        return moduleID;
+        return super.getModuleID();
     }
+
+
+    public String getRawModuleID() {
+        return super.getModuleID();
+    }
+
 
     /**
      * @return the deployment descriptor directory location inside
@@ -905,7 +911,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     }
 
     public void setKeepState(String keepStateVal) {
-        this.keepState = Boolean.valueOf(keepStateVal);
+        this.keepState = Boolean.parseBoolean(keepStateVal);
     }
 
     /**
@@ -924,7 +930,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * @param value the full attribute
      */
     public void setFullAttribute(String value) {
-        fullAttribute = Boolean.valueOf(value);
+        fullAttribute = Boolean.parseBoolean(value);
     }
 
     /**

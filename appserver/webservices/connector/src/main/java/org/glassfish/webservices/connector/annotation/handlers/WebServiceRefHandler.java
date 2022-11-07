@@ -268,6 +268,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
                 aRef.setLookupName(new SimpleJndiName(annotation.lookup()));
             }
 
+            // FIXME: EXPLAIN, there is no such class on the classpath ...?!
             aRef.setInjectResourceType("jakarta.jws.WebServiceRef");
 
             if (target != null) {

@@ -703,26 +703,22 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     private <T> T lookupFromNamespace(SimpleJndiName name, Map<SimpleJndiName, Object> namespace, Hashtable<?, ?> env)
         throws NamingException {
-        Object o = namespace.get(name);
-        if (o == null) {
+        final Object objectOrProxyOrRef = namespace.get(name);
+        if (objectOrProxyOrRef == null) {
             throw new NameNotFoundException("No object bound to name " + name);
         }
-        if (o instanceof NamingObjectProxy) {
-            NamingObjectProxy namingProxy = (NamingObjectProxy) o;
-            InitialContext ic = initialContext;
-            if (env != null) {
-                ic = new InitialContext(env);
-            }
-            return namingProxy.create(ic);
-        } else if (o instanceof Reference) {
+        if (objectOrProxyOrRef instanceof NamingObjectProxy) {
+            NamingObjectProxy namingProxy = (NamingObjectProxy) objectOrProxyOrRef;
+            return namingProxy.create(env == null ? initialContext : new InitialContext(env));
+        } else if (objectOrProxyOrRef instanceof Reference) {
             try {
-                return getObjectInstance(name, o, env);
+                return getObjectInstance(name, objectOrProxyOrRef, env);
             } catch (Exception e) {
                 LOG.log(DEBUG, () -> "Unable to get Object instance from Reference for name [" + name + "]. "
-                    + "Hence returning the Reference object " + o, e);
+                    + "Hence returning the Reference object " + objectOrProxyOrRef, e);
             }
         }
-        return (T) o;
+        return (T) objectOrProxyOrRef;
     }
 
     private static class AppModuleKey implements Serializable {

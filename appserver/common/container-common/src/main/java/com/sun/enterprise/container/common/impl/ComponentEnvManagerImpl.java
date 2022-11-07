@@ -489,10 +489,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 final Object value;
                 if (environmentProperty.hasLookupName()) {
                     value = namingUtils.createLazyNamingObjectFactory(name, environmentProperty.getLookupName(), true);
-                } else if (!environmentProperty.getMappedName().isEmpty()) {
-                    value = namingUtils.createLazyNamingObjectFactory(name, environmentProperty.getMappedName(), true);
-                } else {
+                } else if (environmentProperty.getMappedName().isEmpty()) {
                     value = namingUtils.createSimpleNamingObjectFactory(name, environmentProperty.getValueObject(null));
+                } else {
+                    value = namingUtils.createLazyNamingObjectFactory(name, environmentProperty.getMappedName(), true);
                 }
                 jndiBindings.add(new CompEnvBinding(name, value));
             }
@@ -863,25 +863,22 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
         @Override
         public <T> T create(Context ctx) throws NamingException {
-            Object result = null;
 
+            final T result;
             webServiceRefManager = locator.getService(WebServiceReferenceManager.class);
-            if (webServiceRefManager != null) {
-                result = webServiceRefManager.resolveWSReference(serviceRef, ctx);
+            if (webServiceRefManager == null) {
+                LOG.log(SEVERE, "Cannot find the WebServiceReferenceManager to proceed with @WebServiceRef."
+                    + " Please confirm if webservices module is installed ");
+                result = null;
             } else {
-                // A potential cause for this is this is a web.zip and the corresponding
-                // metro needs to be dowloaded from UC
-                LOG.log(SEVERE, "Cannot find the following class to proceed with @WebServiceRef" + webServiceRefManager
-                        + "Please confirm if webservices module is installed ");
+                result = (T) webServiceRefManager.resolveWSReference(serviceRef, ctx);
             }
 
             if (result == null) {
                 throw new NameNotFoundException("Can not resolve webservice context of type " + serviceRef.getName());
             }
-
-            return (T) result;
+            return result;
         }
-
     }
 
     private class EjbReferenceProxy implements NamingObjectProxy {

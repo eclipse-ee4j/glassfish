@@ -47,6 +47,7 @@ public class EjbBundleDescriptorImplTest {
         EjbBundleDescriptorImpl descriptor = new EjbBundleDescriptorImpl();
         descriptor.setDisplayName("ejb-bundle-display-name");
         descriptor.setName("ejb-bundle-name");
+        descriptor.setModuleID("ejb-bundle-module-id");
         descriptor.setDisableNonportableJndiNames("true");
 
         EjbReferenceDescriptor reference = new EjbReferenceDescriptor();
@@ -75,7 +76,9 @@ public class EjbBundleDescriptorImplTest {
             () -> assertFalse(descriptor.hasPermissionedRoles()),
             () -> assertFalse(descriptor.hasRelationships()),
             () -> assertFalse(descriptor.hasWebServiceClients()),
-            () -> assertFalse(descriptor.hasWebServices())
+            () -> assertFalse(descriptor.hasWebServices()),
+            () -> assertSame(descriptor.getName(), descriptor.getModuleID()),
+            () -> assertSame(descriptor.getName(), descriptor.getRawModuleID())
         );
 
         assertAll("bidirectional link between EjbReferenceDescriptor and EjbBundleDescriptorImpl",

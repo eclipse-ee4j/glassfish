@@ -53,7 +53,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -686,9 +685,6 @@ public class Application extends CommonResourceBundleDescriptor
      */
     public void setArchiveName(String archiveName) {
         this.archiveName = archiveName;
-        if (appName == null && archiveName != null) {
-            appName = DeploymentUtils.getDefaultEEName(archiveName);
-        }
     }
 
     @Override
@@ -853,9 +849,9 @@ public class Application extends CommonResourceBundleDescriptor
      */
     @Override
     public void setName(String name) {
-        name = name.replace('/', '-');
-        name = name.replace('\\', '-'); // for deploying from NT to solaris & vice versa. This will
+        // for deploying from NT to solaris & vice versa. This will
         // need to be cleaned when we clean up the backend for registering apps
+        name = name.replace('/', '-').replace('\\', '-');
         super.setName(name);
         if (this.getRoleMapper() != null) {
             this.getRoleMapper().setName(name);
@@ -1477,7 +1473,7 @@ public class Application extends CommonResourceBundleDescriptor
         if (appName != null) {
             return appName;
         }
-        return moduleID;
+        return getRawModuleID();
     }
 
 
@@ -1605,6 +1601,6 @@ public class Application extends CommonResourceBundleDescriptor
      * @param keepStateResolved
      */
     public void setKeepStateResolved(String keepStateResolved) {
-        this.keepStateResolved = Boolean.valueOf(keepStateResolved);
+        this.keepStateResolved = Boolean.parseBoolean(keepStateResolved);
     }
 }

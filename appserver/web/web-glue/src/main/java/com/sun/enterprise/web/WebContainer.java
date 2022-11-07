@@ -335,7 +335,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      */
     static {
         if (System.getProperty(DOL_DEPLOYMENT) != null) {
-            useDOLforDeployment = Boolean.valueOf(System.getProperty(DOL_DEPLOYMENT));
+            useDOLforDeployment = Boolean.parseBoolean(System.getProperty(DOL_DEPLOYMENT));
         }
     }
 
@@ -802,7 +802,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
         /*
          * Create Connector. Connector is SSL-enabled if 'security-enabled' attribute in <http-listener> element is set to TRUE.
          */
-        boolean isSecure = Boolean.valueOf(listener.findHttpProtocol().getSecurityEnabled());
+        boolean isSecure = Boolean.parseBoolean(listener.findHttpProtocol().getSecurityEnabled());
         if (isSecure && defaultRedirectPort == -1) {
             defaultRedirectPort = port;
         }
@@ -872,7 +872,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             }
         } else {
             port = Integer.parseInt(listener.getPort());
-            isSecure = Boolean.valueOf(listener.findHttpProtocol().getSecurityEnabled());
+            isSecure = Boolean.parseBoolean(listener.findHttpProtocol().getSecurityEnabled());
             address = listener.getAddress();
         }
 
@@ -1199,7 +1199,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
         List<String> listenerNames = new ArrayList<>();
         for (NetworkListener listener : listeners) {
-            if (Boolean.valueOf(listener.getEnabled())) {
+            if (Boolean.parseBoolean(listener.getEnabled())) {
                 listenerNames.add(listener.getName());
                 if (logger.isLoggable(FINE)) {
                     logger.log(FINE, LogFacade.VIRTUAL_SERVER_SET_LISTENER_NAME);

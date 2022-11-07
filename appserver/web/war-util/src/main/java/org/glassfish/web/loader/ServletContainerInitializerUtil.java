@@ -49,7 +49,7 @@ public class ServletContainerInitializerUtil {
     private static final Logger log = LogFacade.getLogger();
 
     private static final ResourceBundle rb = log.getResourceBundle();
-    
+
     public static interface LogContext {
 
         public default Level getNonCriticalClassloadingErrorLogLevel() {

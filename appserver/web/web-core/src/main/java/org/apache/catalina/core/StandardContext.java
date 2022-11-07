@@ -807,7 +807,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     protected boolean showArchivedRealPathEnabled = true;
 
     protected int servletReloadCheckSecs = 1;
-    
+
     // Fine tune log levels for ServletContainerInitializerUtil to avoid spurious or too verbose logging
     protected ServletContainerInitializerUtil.LogContext logContext
             = new ServletContainerInitializerUtil.LogContext() {
@@ -5291,7 +5291,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     protected Types getTypes() {
         return null;
     }
-    
+
     protected boolean isStandaloneModule() {
         return true;
     }

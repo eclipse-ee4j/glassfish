@@ -1164,7 +1164,7 @@ public class WebModule extends PwcWebModule implements Context {
     boolean isStandalone() {
         return isStandalone;
     }
-    
+
     protected boolean isStandaloneModule() {
         return isStandalone;
     }

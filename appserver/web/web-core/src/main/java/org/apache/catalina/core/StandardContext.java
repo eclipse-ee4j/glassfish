@@ -225,6 +225,8 @@ import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.http.HttpUpgradeHandler;
+import java.util.logging.Level;
+import org.glassfish.web.loader.ServletContainerInitializerUtil;
 
 /**
  * Standard implementation of the <b>Context</b> interface. Each child container must be a Wrapper implementation to
@@ -806,6 +808,13 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
 
     protected int servletReloadCheckSecs = 1;
 
+    // Fine tune log levels for ServletContainerInitializerUtil to avoid spurious or too verbose logging
+    protected ServletContainerInitializerUtil.LogContext logContext
+            = new ServletContainerInitializerUtil.LogContext() {
+                public Level getNonCriticalClassloadingErrorLogLevel() {
+                    return isStandaloneModule() ? Level.WARNING : Level.FINE;
+                }
+            };
 
     // ----------------------------------------------------- Context Properties
 
@@ -5283,6 +5292,10 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         return null;
     }
 
+    protected boolean isStandaloneModule() {
+        return true;
+    }
+
     protected void callServletContainerInitializers() throws LifecycleException {
         Iterator<ServletContainerInitializer> initIterator = servletContainerInitializers.iterator();
         List<ServletContainerInitializer> loadedServletContainerInitializers = new ArrayList<>();
@@ -5297,7 +5310,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         // Get the list of ServletContainerInitializers and the classes
         // they are interested in
         var interestList = getInterestList(loadedServletContainerInitializers);
-        var initializerList = getInitializerList(loadedServletContainerInitializers, interestList, getTypes(), getClassLoader());
+        var initializerList = getInitializerList(loadedServletContainerInitializers, interestList, getTypes(), getClassLoader(), logContext);
 
         if (initializerList == null) {
             return;

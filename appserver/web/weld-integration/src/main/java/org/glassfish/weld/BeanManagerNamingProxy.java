@@ -91,10 +91,7 @@ public class BeanManagerNamingProxy implements NamedNamingObjectProxy {
             LOG.log(DEBUG, e.getMessage(), e);
             throw e;
         } catch (Throwable t) {
-            BeanManagerException e = new BeanManagerException(t);
-            // it is here as a trace because some clients swallow exceptions.
-            LOG.log(DEBUG, e.getMessage(), e);
-            throw e;
+            throw new BeanManagerException(t);
         }
     }
 

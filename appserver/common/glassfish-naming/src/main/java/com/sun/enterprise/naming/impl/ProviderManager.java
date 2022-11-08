@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,31 +35,34 @@ import java.rmi.RemoteException;
  *
  * @author Sheetal Vartak
  */
-
-public class ProviderManager {
+public final class ProviderManager {
 
     private static ProviderManager providerManager;
 
-    private TransientContext rootContext = new TransientContext();
+    private final TransientContext rootContext = new TransientContext();
 
     private SerialContextProvider localProvider;
 
-    // Set lazily once initRemoteProvider is called.  Only available
-    // in server.
+    // Set lazily once initRemoteProvider is called.
+    // Only available in server.
     private ORB orb;
 
-    private ProviderManager() {}
+    private ProviderManager() {
+    }
+
 
     public synchronized static ProviderManager getProviderManager() {
-        if (providerManager  == null ) {
+        if (providerManager == null) {
             providerManager = new ProviderManager();
         }
         return providerManager;
     }
 
+
     public TransientContext getTransientContext() {
         return rootContext;
     }
+
 
     public synchronized SerialContextProvider getLocalProvider() {
         if (localProvider == null) {
@@ -67,10 +71,12 @@ public class ProviderManager {
         return localProvider;
     }
 
+
     public Remote initRemoteProvider(ORB orb) throws RemoteException {
         this.orb = orb;
         return RemoteSerialContextProviderImpl.initSerialContextProvider(orb, rootContext);
     }
+
 
     ORB getORB() {
         return orb;

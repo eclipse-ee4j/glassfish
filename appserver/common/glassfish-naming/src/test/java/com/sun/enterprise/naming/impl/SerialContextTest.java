@@ -17,6 +17,7 @@
 package com.sun.enterprise.naming.impl;
 
 import com.sun.enterprise.naming.impl.test.ServerExtension;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.glassfish.internal.api.Globals;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,6 +51,15 @@ public class SerialContextTest {
     @BeforeAll
     public static void init() throws Exception {
         ctx = new SerialContext(null, Globals.getStaticBaseServiceLocator());
+    }
+
+
+    @AfterAll
+    public static void closeCtx() throws Exception {
+        if (ctx != null) {
+            ctx.close();
+        }
+        ProviderManager.getProviderManager().getTransientContext().close();
     }
 
 
@@ -81,5 +92,6 @@ public class SerialContextTest {
             () -> assertSame(fakeDS, ctx.lookup(jndiName)),
             () -> assertThat(names, hasItems("jdbc:derby:"))
         );
+        ctx.unbind(jndiName);
     }
 }

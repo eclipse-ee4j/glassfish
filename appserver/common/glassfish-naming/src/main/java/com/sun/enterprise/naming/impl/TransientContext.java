@@ -55,6 +55,8 @@ import static com.sun.enterprise.naming.util.LogFacade.logger;
  */
 public class TransientContext implements Context, Serializable {
 
+    private static final long serialVersionUID = -674500209229911786L;
+
     private static NameParser myParser = new SerialNameParser();
 
     private Hashtable<Object, Object> myEnv;
@@ -64,9 +66,6 @@ public class TransientContext implements Context, Serializable {
     // So add a read/write lock, which allows unlimited concurrent readers,
     // and only imposes a global lock on relatively infrequent updates.
     private static final ReadWriteLock lock = new ReentrantReadWriteLock();
-
-    public TransientContext() {
-    }
 
 
     /**
@@ -694,11 +693,13 @@ public class TransientContext implements Context, Serializable {
     }
 
     /**
-     * Invalidate the current environment.
+     * Resets the environemnt to null and clears all bindings.
+     * However the {@link TransientContext} instance can be used again.
      */
     @Override
     public void close() throws NamingException {
         myEnv = null;
+        bindings.clear();
     }
 
     /**
@@ -720,7 +721,7 @@ public class TransientContext implements Context, Serializable {
         }
     }
 
-    // Class for enumerating name/class pairs
+    /** Class for enumerating name/class pairs */
     static class RepNames implements NamingEnumeration<NameClassPair> {
 
         private final Map<String, String> nameToClassName = new HashMap<>();
@@ -769,7 +770,7 @@ public class TransientContext implements Context, Serializable {
         }
     }
 
-    // Class for enumerating bmesindings
+    /** Class for enumerating bmesindings */
     static class RepBindings implements NamingEnumeration<Binding> {
         Enumeration<String> names;
         Hashtable<String, Object> bindings;

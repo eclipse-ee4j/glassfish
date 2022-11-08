@@ -475,7 +475,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             sb.append('/').append(tok);
             final SimpleJndiName nsJndiName = new SimpleJndiName(sb.toString());
             if (namespace.get(nsJndiName) == null) {
-                namespace.put(nsJndiName, new JavaURLContext(nsJndiName, null));
+                namespace.put(nsJndiName, new JavaURLContext(nsJndiName));
             }
         }
     }
@@ -527,7 +527,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     @Override
     public Context restoreJavaCompEnvContext(SimpleJndiName contextName) throws NamingException {
         if (contextName.hasJavaPrefix()) {
-            return new JavaURLContext(contextName, null);
+            return new JavaURLContext(contextName);
         }
         throw new NamingException("Invalid context name [" + contextName + "]. Name must start with java:");
     }
@@ -583,14 +583,14 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             // of a replaced java:comp, create a new equivalent javaURLContext
             // and return that.
             if (replaceName) {
-                obj = new JavaURLContext(name, null);
+                obj = new JavaURLContext(name);
             }
 
             if (obj instanceof JavaURLContext) {
                 if (ctx instanceof SerialContext) {
                     return (T) new JavaURLContext((JavaURLContext) obj, (SerialContext) ctx);
                 }
-                return (T) new JavaURLContext((JavaURLContext) obj, null);
+                return (T) new JavaURLContext((JavaURLContext) obj);
             }
         }
         return (T) obj;

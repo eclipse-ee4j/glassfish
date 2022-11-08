@@ -23,8 +23,6 @@ import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -36,6 +34,7 @@ import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.invocation.InvocationManagerImpl;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.SimpleJndiName;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,8 +63,16 @@ public class GlassfishNamingManagerImplTest {
 
     @BeforeAll
     public static void testCreateNewInitialContext() throws Exception {
-        Properties props = new Properties();
-        ctx = new InitialContext(props);
+        ctx = new InitialContext();
+    }
+
+
+    @AfterAll
+    public static void closeCtx() throws Exception {
+        if (ctx != null) {
+            ctx.close();
+        }
+        ProviderManager.getProviderManager().getTransientContext().close();
     }
 
 

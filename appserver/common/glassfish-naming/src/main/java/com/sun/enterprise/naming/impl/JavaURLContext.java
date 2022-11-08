@@ -60,6 +60,7 @@ public final class JavaURLContext implements Context, Cloneable {
 
     private final SimpleJndiName myName;
     private final Hashtable<Object, Object> myEnv;
+    // FIXME: Should not be here, causes cyclic dependency directly between these two classes.
     private final SerialContext serialContext;
 
 
@@ -71,47 +72,43 @@ public final class JavaURLContext implements Context, Cloneable {
      * Create a context with the specified environment.
      */
     public JavaURLContext(SimpleJndiName name) {
-        this.myEnv = getMyEnv(null);
         this.myName = Objects.requireNonNull(name, "name");
-        this.serialContext = null;
-    }
-
-
-    /**
-     * Create a context with the specified environment.
-     */
-    public JavaURLContext(Hashtable<Object, Object> environment) {
-        this.myEnv = getMyEnv(environment);
-        this.myName = new SimpleJndiName("");
+        this.myEnv = getMyEnv(null);
         this.serialContext = null;
     }
 
 
     /**
      * Create a context with the specified name+environment.
-     * Called only from GlassfishNamingManager.
      */
     public JavaURLContext(SimpleJndiName name, Hashtable<Object, Object> environment) {
-        this.myEnv = getMyEnv(environment);
         this.myName = Objects.requireNonNull(name, "name");
+        this.myEnv = getMyEnv(environment);
         this.serialContext = null;
     }
 
 
-    /**
-     * this constructor is called from SerialContext class
-     */
     public JavaURLContext(Hashtable<Object, Object> environment, SerialContext serialContext) {
-        this.myEnv = getMyEnv(environment);
         this.myName = new SimpleJndiName("");
+        this.myEnv = getMyEnv(environment);
         this.serialContext = serialContext;
     }
 
 
-    public JavaURLContext(JavaURLContext ctx, SerialContext sctx) {
+    /**
+     * Create a context with the same name and env.
+     */
+    public JavaURLContext(JavaURLContext ctx) {
         this.myName = ctx.myName;
         this.myEnv = ctx.myEnv;
-        this.serialContext = sctx;
+        this.serialContext = null;
+    }
+
+
+    public JavaURLContext(JavaURLContext ctx, SerialContext serialContext) {
+        this.myName = ctx.myName;
+        this.myEnv = ctx.myEnv;
+        this.serialContext = serialContext;
     }
 
 
@@ -471,7 +468,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public void close() throws NamingException {
-        myEnv.clear();
+        this.myEnv.clear();
     }
 
     /**

@@ -38,8 +38,7 @@ public class SerialContextProviderImpl implements SerialContextProvider {
         } catch (NamingException ne) {
             throw ne;
         } catch (Exception e) {
-            RemoteException re = new RemoteException("", e);
-            throw re;
+            throw new RemoteException("Lookup failed for " + name, e);
         }
     }
 

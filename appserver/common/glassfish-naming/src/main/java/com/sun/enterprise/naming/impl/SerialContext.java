@@ -76,7 +76,7 @@ public class SerialContext implements Context {
     @LogMessageInfo(message = "Exception during name lookup : {0}",
     cause = "App Server may not be running at port intended, or possible Network Error.",
     action = "Check to see if the AppServer is up and running on the port intended. The problem could be because of incorrect port. Check to see if you can access the host on which the AppServer running.")
-    public static final String EXCEPTION_DURING_LOOKUP = "AS-NAMING-00002";
+    private static final String EXCEPTION_DURING_LOOKUP = "AS-NAMING-00002";
 
     // Maximum number of recursive calls to lookup on comm error
     // Maximum number of recursive calls to lookup on comm error
@@ -304,7 +304,7 @@ public class SerialContext implements Context {
     private ORB getORB() {
         if (orb == null) {
             ORBLocator orbHelper = services.getService(ORBLocator.class);
-            orb = orbHelper.getORB() ;
+            orb = orbHelper.getORB();
         }
         return orb;
     }
@@ -981,7 +981,8 @@ public class SerialContext implements Context {
      */
     @Override
     public void close() throws NamingException {
-        myEnv = null;
+        this.myEnv.clear();
+        this.javaUrlContext.close();
     }
 
 

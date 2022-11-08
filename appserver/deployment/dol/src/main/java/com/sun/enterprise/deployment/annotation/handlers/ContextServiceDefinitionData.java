@@ -23,7 +23,7 @@ import java.util.Set;
 
 import org.glassfish.api.naming.SimpleJndiName;
 
-import static com.sun.enterprise.universal.collections.JavaLangUtils.nonNull;
+import static com.sun.enterprise.universal.JavaLangUtils.nonNull;
 
 /**
  * @author David Matejcek

@@ -26,7 +26,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.enterprise.universal.collections.JavaLangUtils.nonNull;
+import static com.sun.enterprise.universal.JavaLangUtils.nonNull;
 
 
 /**

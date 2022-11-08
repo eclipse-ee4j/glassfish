@@ -17,11 +17,13 @@
 package com.sun.enterprise.naming.impl;
 
 import com.sun.enterprise.naming.impl.test.ServerExtension;
-
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.glassfish.internal.api.Globals;
@@ -32,6 +34,7 @@ import org.omg.CORBA.LocalObject;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -62,5 +65,21 @@ public class SerialContextTest {
         assertSame(localObject, ctx.lookup("corbaname:localobject"));
         assertThat(Collections.list(ctx.list("")).stream()
             .map(NameClassPair::getName).collect(Collectors.toList()), hasItems("corbaname:localobject"));
+    }
+
+
+    @Test
+    public void jdbc() throws Exception {
+        Map<String, String> fakeDS = Map.of();
+        String jndiName = "jdbc:derby://localhost:1527/derbyDB;create=true";
+        ctx.bind(jndiName, fakeDS);
+        assertSame(fakeDS, ctx.lookup(jndiName));
+        NamingEnumeration<NameClassPair> enumeration = ctx.list("");
+        List<String> names = Collections.list(enumeration).stream().map(NameClassPair::getName)
+            .collect(Collectors.toList());
+        assertAll(
+            () -> assertSame(fakeDS, ctx.lookup(jndiName)),
+            () -> assertThat(names, hasItems("jdbc:derby:"))
+        );
     }
 }

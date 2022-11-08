@@ -35,7 +35,7 @@ public class StandardTagLibraryITest {
     private TckRunner tck;
 
     /**
-     * Usual time: ? minutes
+     * Usual time: 29 minutes
      */
     @Test
     public void jstl() throws Exception {

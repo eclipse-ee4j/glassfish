@@ -17,9 +17,10 @@
 
 package com.sun.enterprise.naming.impl;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Hashtable;
 import java.util.Objects;
-import java.util.logging.Level;
 
 import javax.naming.Binding;
 import javax.naming.CompositeName;
@@ -39,7 +40,6 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 
-import static com.sun.enterprise.naming.util.LogFacade.logger;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP_ENV;
@@ -54,6 +54,8 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE_ENV;
  * object in that component's local namespace.
  */
 public final class JavaURLContext implements Context, Cloneable {
+    private static final Logger LOG = System.getLogger(JavaURLContext.class.getName());
+
     private static GlassfishNamingManagerImpl namingManager;
 
     private final SimpleJndiName myName;
@@ -121,6 +123,7 @@ public final class JavaURLContext implements Context, Cloneable {
      */
     @Override
     public Object lookup(String name) throws NamingException {
+        LOG.log(Level.TRACE, "lookup(name={0}); this={1}", name, this);
         if (name.isEmpty()) {
 
             // javadocs for Context.lookup: If name is empty, returns a new
@@ -130,80 +133,46 @@ public final class JavaURLContext implements Context, Cloneable {
             return new JavaURLContext(myName, myEnv);
         }
 
-        final SimpleJndiName fullName;
-        if (myName.isEmpty()) {
-            fullName = new SimpleJndiName(name);
-        } else if (myName.toString().equals(JNDI_CTX_JAVA)) {
-            fullName = new SimpleJndiName(myName + name);
-        } else {
-            fullName = new SimpleJndiName(myName + "/" + name);
+        // Preconstructed exception collecting all tries which ended with an exception.
+        final NamingException e = new NameNotFoundException("No object bound for " + name);
+        final SimpleJndiName fullName = toFullName(name);
+        LOG.log(Level.DEBUG, "Computed fullname={0} for name={1}", fullName, name);
+        if (fullName == null) {
+            // if this fails, there is no reason trying another.
+            throw e;
         }
-
-        try {
-            Object obj = null;
-            // If we know for sure it's an entry within an environment namespace
-            if (isLookingUpEnv(fullName)) {
-                // refers to a dependency defined by the application
-                obj = namingManager.lookup(fullName, serialContext);
-            } else {
-                // It's either an application-defined dependency in a java:
-                // namespace or a special EE platform object.
-                // Check for EE platform objects first to prevent overriding.
-                obj = NamedNamingObjectManager.tryNamedProxies(fullName);
-                if (obj == null) {
-                    obj = namingManager.lookup(fullName, serialContext);
-                }
-            }
-
-            if (obj == null) {
-                throw new NamingException("No object found for " + name);
-            }
-
-            return obj;
-        } catch (NamingException ex) {
-
-            ServiceLocator services = Globals.getDefaultHabitat();
-            ProcessEnvironment processEnv = services.getService(ProcessEnvironment.class);
-            if (fullName.isJavaApp() && processEnv.getProcessType() == ProcessType.ACC) {
-
-                // This could either be an attempt by an app client to access a portable
-                // remote session bean JNDI name via the java:app namespace or a lookup of
-                // an application-defined java:app environment dependency.  Try them in
-                // that order.
-
-                Context ic = namingManager.getInitialContext();
-                String appName = (String) namingManager.getInitialContext().lookup(JNDI_CTX_JAVA_APP + "AppName");
-
-                Object obj = null;
-
-                if (!fullName.hasPrefix(JNDI_CTX_JAVA_APP_ENV) || !"java:app/env".equals(fullName.toString())) {
-                    try {
-                        // Translate the java:app name into the equivalent java:global name so that
-                        // the lookup will be resolved by the server.
-                        obj = ic.lookup(JNDI_CTX_JAVA_GLOBAL + appName + "/" + fullName.removePrefix());
-                    } catch (NamingException e) {
-                        logger.log(Level.FINE, "Trying global version of java:app ejb lookup", e);
-                    }
-                }
-
-                if (obj == null) {
-                    ComponentNamingUtil util = services.getService(ComponentNamingUtil.class);
-                    SimpleJndiName internalGlobalJavaAppName = util.composeInternalGlobalJavaAppName(appName, fullName);
-                    obj = ic.lookup(internalGlobalJavaAppName.toString());
-                }
-
-                if (obj == null) {
-                    throw new NamingException("No object found for " + name);
-                }
-
+        {
+            Object obj = tryNamingManager(fullName, e);
+            if (obj != null) {
                 return obj;
-
             }
-
-            throw ex;
-        } catch (Exception ex) {
-            throw (NamingException) (new NameNotFoundException("No object bound for " + fullName)).initCause(ex);
         }
+        final ServiceLocator services = Globals.getDefaultHabitat();
+        final ProcessEnvironment processEnv = services.getService(ProcessEnvironment.class);
+        if (fullName.isJavaApp() && processEnv.getProcessType() == ProcessType.ACC) {
+            // This could either be an attempt by an app client to access a portable
+            // remote session bean JNDI name via the java:app namespace or a lookup of
+            // an application-defined java:app environment dependency.  Try them in
+            // that order.
+            final Context context = namingManager.getInitialContext();
+            String appName = (String) context.lookup(JNDI_CTX_JAVA_APP + "AppName");
+            if (!fullName.hasPrefix(JNDI_CTX_JAVA_APP_ENV) || !"java:app/env".equals(fullName.toString())) {
+                // Translate the java:app name into the equivalent java:global name so that
+                // the lookup will be resolved by the server.
+                String globalName = JNDI_CTX_JAVA_GLOBAL + appName + '/' + fullName.removePrefix();
+                Object obj = lookupOrCollectException(globalName, e, context::lookup);
+                if (obj != null) {
+                    return obj;
+                }
+            }
+            ComponentNamingUtil util = services.getService(ComponentNamingUtil.class);
+            SimpleJndiName internalGlobalJavaAppName = util.composeInternalGlobalJavaAppName(appName, fullName);
+            Object obj = lookupOrCollectException(internalGlobalJavaAppName.toString(), e, context::lookup);
+            if (obj != null) {
+                return obj;
+            }
+        }
+        throw e;
     }
 
 
@@ -530,13 +499,43 @@ public final class JavaURLContext implements Context, Cloneable {
     }
 
 
-    private boolean isLookingUpEnv(SimpleJndiName jndiName) {
-        final String fullName = jndiName.toString();
-        if (fullName.startsWith(JNDI_CTX_JAVA_COMPONENT_ENV) || fullName.startsWith(JNDI_CTX_JAVA_MODULE_ENV)
-            || fullName.startsWith(JNDI_CTX_JAVA_APP_ENV)) {
+    private SimpleJndiName toFullName(String name) {
+        if (!name.startsWith(JNDI_CTX_JAVA) && name.indexOf(':') != -1) {
+            // this is probably some generic JNDI name like jdbc:derby: or http://... etc.,
+            // not compatible with java contexts.
+            return null;
+        }
+        if (myName.isEmpty()) {
+            return new SimpleJndiName(name);
+        } else if (myName.toString().equals(JNDI_CTX_JAVA)) {
+            return new SimpleJndiName(myName + name);
+        } else {
+            return new SimpleJndiName(myName + "/" + name);
+        }
+    }
+
+
+    private Object tryNamingManager(final SimpleJndiName fullName, NamingException collector) throws NamingException {
+        // If we know for sure it's an entry within an environment namespace it might be a proxy.
+        if (!isAnyJavaEnvJndiName(fullName)) {
+            Object obj = lookupOrCollectException(fullName, collector, NamedNamingObjectManager::tryNamedProxies);
+            if (obj != null) {
+                return obj;
+            }
+        }
+        return lookupOrCollectException(fullName, collector, n -> namingManager.lookup(n, serialContext));
+    }
+
+
+    private static boolean isAnyJavaEnvJndiName(SimpleJndiName jndiName) {
+        if (jndiName == null || jndiName.isEmpty()) {
+            return false;
+        }
+        if (jndiName.hasPrefix(JNDI_CTX_JAVA_COMPONENT_ENV) || jndiName.hasPrefix(JNDI_CTX_JAVA_MODULE_ENV)
+            || jndiName.hasPrefix(JNDI_CTX_JAVA_APP_ENV)) {
             return true;
-        } else if ("java:comp/env".equals(fullName) || "java:module/env".equals(fullName)
-            || "java:app/env".equals(fullName)) {
+        } else if (jndiName.toString().equals("java:comp/env") || jndiName.toString().equals("java:module/env")
+            || jndiName.toString().equals("java:app/env")) {
             return true;
         }
         return false;
@@ -546,5 +545,22 @@ public final class JavaURLContext implements Context, Cloneable {
     @SuppressWarnings("unchecked")
     private static Hashtable<Object, Object> getMyEnv(Hashtable<Object, Object> environment) {
         return environment == null ? new Hashtable<>() : (Hashtable<Object, Object>) environment.clone();
+    }
+
+
+    private static <N> Object lookupOrCollectException(final N jndiName, final NamingException collector,
+        final NamingFunction<N> lookup) {
+        try {
+            return lookup.applyName(jndiName);
+        } catch (NamingException e) {
+            collector.addSuppressed(e);
+            return null;
+        }
+    }
+
+
+    @FunctionalInterface
+    private interface NamingFunction<N> {
+        Object applyName(N jndiName) throws NamingException;
     }
 }

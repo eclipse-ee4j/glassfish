@@ -40,7 +40,7 @@ import static org.glassfish.api.naming.GlassfishNamingManager.NAMESPACE_METADATA
 /**
  * @author Mahesh Kannan
  */
-public final class NamedNamingObjectManager {
+final class NamedNamingObjectManager {
 
     private static final AtomicReference<ServiceLocator> locatorReference = new AtomicReference<>();
     private static final Map<String, NamedNamingObjectProxy> proxies = new HashMap<>();
@@ -63,13 +63,13 @@ public final class NamedNamingObjectManager {
     }
 
 
-    public static Object tryNamedProxies(SimpleJndiName name) throws NamingException {
+    static Object tryNamedProxies(SimpleJndiName name) throws NamingException {
         logger.log(Level.FINEST, "tryNamedProxies(name={0})", name);
         NamedNamingObjectProxy proxy = getCachedProxy(name);
         if (proxy != null) {
             if (logger.isLoggable(Level.FINE)) {
                 logger.logp(Level.FINE, "NamedNamingObjectManager", "tryNamedProxies",
-                    "found cached proxy [{0}] for [{1}]", new Object[] {proxy, name});
+                    "Found cached proxy [{0}] for [{1}]", new Object[] {proxy, name});
             }
             return proxy.handle(name.toString());
         }

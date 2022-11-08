@@ -57,12 +57,12 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
      *            not contain more than one colon.
      */
     public SimpleJndiName(final String jndiName) {
-        if (jndiName.startsWith(JNDI_CTX_JAVA)) {
-            int firstColon = jndiName.indexOf(':');
-            if (firstColon >= 0 && firstColon != jndiName.lastIndexOf(':')) {
-                throw new IllegalArgumentException(
-                    "The " + JNDI_CTX_JAVA + " JNDI name is not allowed to contain more than one colon: " + jndiName);
-            }
+        if (!isValidJndiName(jndiName)) {
+            IllegalArgumentException e = new IllegalArgumentException(
+                "Invalid JNDI name: '" + jndiName + "'. The JNDI name must not be null. The '" + JNDI_CTX_JAVA
+                    + "' JNDI name is not allowed to contain more than one colon.");
+            e.printStackTrace();
+            throw e;
         }
         this.jndiName = jndiName;
     }
@@ -321,6 +321,24 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
     private boolean isKnownNamespaceId() {
         return jndiName.equals(JNDI_CTX_JAVA_GLOBAL_NS_ID) || jndiName.equals(JNDI_CTX_JAVA_APP_NS_ID)
             || jndiName.equals(JNDI_CTX_JAVA_MODULE_NS_ID) || jndiName.equals(JNDI_CTX_JAVA_COMPONENT_NS_ID);
+    }
+
+
+    /**
+     * Returns true if the parameter is not null and doesn't start with the {@value #JNDI_CTX_JAVA},
+     * or if it does, it must contain just one colon character.
+     *
+     * @param jndiName any string or null
+     * @return true if the jndiName can be used in the constructor.
+     */
+    public static boolean isValidJndiName(final String jndiName) {
+        if (jndiName == null) {
+            return false;
+        }
+        if (jndiName.startsWith(JNDI_CTX_JAVA)) {
+            return jndiName.indexOf(':') == jndiName.lastIndexOf(':');
+        }
+        return true;
     }
 
 

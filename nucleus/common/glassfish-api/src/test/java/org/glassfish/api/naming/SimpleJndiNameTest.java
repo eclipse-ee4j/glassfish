@@ -40,7 +40,7 @@ public class SimpleJndiNameTest {
     @Test
     public void constructorValidations() {
         assertAll(
-            () -> assertThrows(NullPointerException.class, () -> new SimpleJndiName(null)),
+            () -> assertThrows(IllegalArgumentException.class, () -> new SimpleJndiName(null)),
             () -> assertThrows(IllegalArgumentException.class, () -> new SimpleJndiName("java:x:y:z")),
             () -> assertDoesNotThrow(() -> new SimpleJndiName("http://validJndiName:7777/something/somewhere")),
             () -> assertDoesNotThrow(() -> new SimpleJndiName(""))
@@ -149,10 +149,23 @@ public class SimpleJndiNameTest {
             () -> assertFalse(jndiName.isJavaGlobal()),
             () -> assertFalse(jndiName.isJavaComponent()),
             () -> assertFalse(jndiName.isJavaModule()),
+            () -> assertNull(jndiName.getPrefix()),
             () -> assertEquals(jndiNameString, jndiName.toString()),
             () -> assertEquals(new CompositeName(jndiNameString), jndiName.toName()),
             () -> assertEquals(0, new SimpleJndiName(jndiNameString).compareTo(jndiName)),
             () -> assertFalse(jndiName.isEmpty())
+        );
+    }
+
+
+
+
+    @Test
+    public void generic() {
+        SimpleJndiName jdbc = SimpleJndiName.of("jdbc:derby://localhost:1527/derbyDB;create=true");
+        assertAll(
+            () -> assertFalse(jdbc.isEmpty()),
+            () -> assertEquals("jdbc:derby://", jdbc.getPrefix())
         );
     }
 }

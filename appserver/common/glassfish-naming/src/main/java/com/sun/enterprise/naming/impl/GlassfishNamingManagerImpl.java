@@ -96,7 +96,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     private InvocationManager invMgr;
 
-    // FIXME: cosContext has nothing to do with the rest of the class.
+    // FIXME: cosContext has nothing to do with the rest of the class. It could be pushed to own class.
     private Context cosContext;
 
     /**
@@ -350,24 +350,14 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     }
 
 
-    private JavaNamespace getNamespace(String componentId, SimpleJndiName logicalJndiName) throws NamingException {
-        LOG.log(TRACE, "getNamespace(componentId={0}, logicalJndiName={1})", componentId, logicalJndiName);
-        ComponentIdInfo info = componentIdInfo.get(componentId);
-        if (info == null) {
-            return getComponentNamespace(componentId);
-        }
-        return getNamespace(info.appName, info.moduleName, componentId, logicalJndiName);
-    }
-
-
-    private JavaNamespace getNamespace(String appName, String moduleName, String componentId,
-        SimpleJndiName logicalJndiName) throws NamingException {
+    private JavaNamespace getNamespace(ComponentIdInfo info, SimpleJndiName logicalJndiName) throws NamingException {
+        LOG.log(TRACE, "getNamespace(info, logicalJndiName={0})", logicalJndiName);
         if (logicalJndiName.isJavaModule()) {
-            return getModuleNamespace(new AppModuleKey(appName, moduleName));
+            return getModuleNamespace(new AppModuleKey(info.appName, info.moduleName));
         } else if (logicalJndiName.isJavaApp()) {
-            return getAppNamespace(appName);
+            return getAppNamespace(info.appName);
         } else {
-            return getComponentNamespace(componentId);
+            return getComponentNamespace(info.componentId);
         }
     }
 
@@ -375,17 +365,14 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     /**
      * This method binds them in a java:namespace.
      */
-    private void bindToNamespace(JavaNamespace namespace, SimpleJndiName logicalJndiName, Object value)
-        throws NamingException {
-        LOG.log(DEBUG, "bindToNamespace(namespace={0}, logicalJndiName={1}, value={2})", namespace.name, logicalJndiName, value);
-        if (namespace.put(logicalJndiName, value) != null) {
-            LOG.log(WARNING, "Naming binding already exists for {0} in namespace {1}", logicalJndiName, namespace);
+    private void bindToNamespace(JavaNamespace namespace, SimpleJndiName jndiName, Object value,
+        boolean warnDuplicities) throws NamingException {
+        LOG.log(DEBUG, "bindToNamespace(namespace={0}, jndiName={1}, value={2})", namespace.name, jndiName, value);
+        if (namespace.put(jndiName, value) != null) {
+            LOG.log(warnDuplicities ? WARNING : TRACE, "Binding already exists for {0} in namespace {1}", jndiName,
+                namespace);
         }
-        bindIntermediateContexts(namespace, logicalJndiName);
-    }
-
-    private boolean existsInNamespace(Map<SimpleJndiName, ?> namespace, SimpleJndiName logicalJndiName) {
-        return namespace.containsKey(logicalJndiName);
+        bindIntermediateContexts(namespace, jndiName);
     }
 
     @Override
@@ -430,10 +417,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
                     moduleName, componentId);
                 return;
             }
-            // FIXME: it is checked inside again, but with warning.
-            if (!existsInNamespace(namespace, logicalJndiName)) {
-                bindToNamespace(namespace, logicalJndiName, binding.getValue());
-            }
+            bindToNamespace(namespace, logicalJndiName, binding.getValue(), false);
         }
     }
 
@@ -448,7 +432,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         for (JNDIBinding binding : bindings) {
             SimpleJndiName logicalJndiName = binding.getName();
             if (logicalJndiName.isJavaModule()) {
-                bindToNamespace(namespace, logicalJndiName, binding.getValue());
+                bindToNamespace(namespace, logicalJndiName, binding.getValue(), true);
             }
         }
     }
@@ -461,7 +445,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         for (JNDIBinding binding : bindings) {
             SimpleJndiName logicalJndiName = binding.getName();
             if (logicalJndiName.isJavaApp()) {
-                bindToNamespace(namespace, logicalJndiName, binding.getValue());
+                bindToNamespace(namespace, logicalJndiName, binding.getValue(), true);
             }
         }
     }
@@ -582,16 +566,10 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             // generic jndi names
             return (T) initialContext.lookup(name.toName());
         }
-        ComponentIdInfo info = componentIdInfo.get(componentId);
-        boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
-        final SimpleJndiName replacedName;
-        if (replaceName) {
-            replacedName = name.changePrefix(JNDI_CTX_JAVA_MODULE);
-        } else {
-            replacedName = name;
-        }
-
-        Map<SimpleJndiName, Object> namespace = getNamespace(componentId, replacedName);
+        final ComponentIdInfo info = componentIdInfo.get(componentId);
+        final boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
+        final SimpleJndiName replacedName = replaceName ? name.changePrefix(JNDI_CTX_JAVA_MODULE) : name;
+        JavaNamespace namespace = info == null ? getComponentNamespace(componentId) : getNamespace(info, replacedName);
         Object obj = namespace.get(replacedName);
         if (obj == null) {
             throw new NameNotFoundException("No object bound to name " + replacedName + " in namespace " + namespace);
@@ -641,7 +619,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             logicalJndiName = name;
         }
 
-        JavaNamespace namespace = getNamespace(componentId, logicalJndiName);
+        JavaNamespace namespace = info == null ? getComponentNamespace(componentId) : getNamespace(info, logicalJndiName);
         Object obj = namespace.get(logicalJndiName);
         if (obj == null) {
             throw new NameNotFoundException("No object bound to name " + name + " in namespace " + namespace);

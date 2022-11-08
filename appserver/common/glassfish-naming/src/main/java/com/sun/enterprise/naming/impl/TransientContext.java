@@ -328,21 +328,18 @@ public class TransientContext implements Context, Serializable {
     public void rebind(String name, Object obj) throws NamingException {
         lock.writeLock().lock();
         try {
-            Name n = new CompositeName(name);
-            if (n.size() < 1) {
+            Name jndiName = new CompositeName(name);
+            if (jndiName.size() < 1) {
                 throw new InvalidNameException("Cannot bind empty name");
             }
-            if (n.size() == 1) { // bottom
-                doBindOrRebind(n.toString(), obj, true);
+            if (jndiName.size() == 1) { // bottom
+                doBindOrRebind(jndiName.toString(), obj, true);
             } else {
-                String suffix = n.getSuffix(1).toString();
-                Context ctx = null;
+                String suffix = jndiName.getSuffix(1).toString();
                 try {
-                    ctx = resolveContext(n.get(0));
-                    ctx.rebind(suffix, obj);
+                    resolveContext(jndiName.get(0)).rebind(suffix, obj);
                 } catch (NameNotFoundException e) {
-                    ctx = createSubcontext(n.get(0));
-                    ctx.rebind(suffix, obj);
+                    createSubcontext(jndiName.get(0)).rebind(suffix, obj);
                 }
             }
         } finally {

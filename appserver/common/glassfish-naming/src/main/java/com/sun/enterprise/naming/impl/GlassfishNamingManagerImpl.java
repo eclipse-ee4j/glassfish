@@ -578,6 +578,10 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     private <T> T lookup(String componentId, SimpleJndiName name, Context ctx) throws NamingException {
         LOG.log(DEBUG, "lookup(componentId={0}, name={1}, ctx={2})", componentId, name, ctx);
+        if (!name.hasJavaPrefix() && name.contains(":")) {
+            // generic jndi names
+            return (T) initialContext.lookup(name.toName());
+        }
         ComponentIdInfo info = componentIdInfo.get(componentId);
         boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
         final SimpleJndiName replacedName;

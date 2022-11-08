@@ -28,6 +28,7 @@ import java.util.Properties;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -104,6 +105,14 @@ public class GlassfishNamingManagerImplTest {
 
         JavaURLContext java2 = manager.lookup("component1234", SimpleJndiName.of("java:"));
         assertThat(java2.toString(), endsWith("java:]"));
+
+        SimpleJndiName jdbcJndiName = SimpleJndiName.of("jdbc:derby://localhost:1527/derbyDB;create=true");
+        // class instead of an instance for simplicity.
+        manager.publishObject(jdbcJndiName, DataSource.class, true);
+        assertAll(
+            () -> assertEquals(DataSource.class, ctx.lookup(jdbcJndiName.toName())),
+            () -> assertEquals(DataSource.class, manager.lookup(jdbcJndiName))
+        );
 
         assertThrows(NamingException.class,
             () -> manager.lookupFromAppNamespace("GFNamingMgrTest", SimpleJndiName.of("doesNotExist"), null));

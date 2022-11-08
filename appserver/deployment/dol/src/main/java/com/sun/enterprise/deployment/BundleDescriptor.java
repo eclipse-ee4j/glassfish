@@ -113,7 +113,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Sets the application to which I belong.
      */
-    public void setApplication(Application application) {
+    public final void setApplication(Application application) {
         this.application = application;
         for (List<? extends RootDeploymentDescriptor> extensionsByType : extensions.values()) {
             for (RootDeploymentDescriptor extension : extensionsByType) {
@@ -158,7 +158,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * The application to which I belong, or none if I am standalone.
      */
-    public Application getApplication() {
+    public final Application getApplication() {
         return application;
     }
 

@@ -127,6 +127,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import javax.management.MBeanRegistrationException;
 import javax.management.MalformedObjectNameException;
@@ -197,6 +198,7 @@ import org.glassfish.grizzly.http.server.util.MappingData;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.MessageBytes;
 import org.glassfish.hk2.classmodel.reflect.Types;
+import org.glassfish.web.loader.ServletContainerInitializerUtil;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.glassfish.web.valve.GlassFishValve;
 
@@ -225,8 +227,6 @@ import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionIdListener;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.http.HttpUpgradeHandler;
-import java.util.logging.Level;
-import org.glassfish.web.loader.ServletContainerInitializerUtil;
 
 /**
  * Standard implementation of the <b>Context</b> interface. Each child container must be a Wrapper implementation to
@@ -6797,6 +6797,14 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             // ignore
         }
         return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Return all the security roles
+     * @return all the security roles
+     */
+    public List<String> getSecurityRoles() {
+        return securityRoles;
     }
 
     /**

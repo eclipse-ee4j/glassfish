@@ -80,7 +80,7 @@ public final class JavaURLContext implements Context, Cloneable {
     /**
      * Create a context with the specified environment.
      */
-    public JavaURLContext(Hashtable<Object, Object> environment) throws NamingException {
+    public JavaURLContext(Hashtable<Object, Object> environment) {
         this.myEnv = getMyEnv(environment);
         this.myName = new SimpleJndiName("");
         this.serialContext = null;
@@ -91,7 +91,7 @@ public final class JavaURLContext implements Context, Cloneable {
      * Create a context with the specified name+environment.
      * Called only from GlassfishNamingManager.
      */
-    public JavaURLContext(SimpleJndiName name, Hashtable<Object, Object> environment) throws NamingException {
+    public JavaURLContext(SimpleJndiName name, Hashtable<Object, Object> environment) {
         this.myEnv = getMyEnv(environment);
         this.myName = Objects.requireNonNull(name, "name");
         this.serialContext = null;
@@ -101,7 +101,7 @@ public final class JavaURLContext implements Context, Cloneable {
     /**
      * this constructor is called from SerialContext class
      */
-    public JavaURLContext(Hashtable<Object, Object> environment, SerialContext serialContext) throws NamingException {
+    public JavaURLContext(Hashtable<Object, Object> environment, SerialContext serialContext) {
         this.myEnv = getMyEnv(environment);
         this.myName = new SimpleJndiName("");
         this.serialContext = serialContext;

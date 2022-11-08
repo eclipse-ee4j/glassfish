@@ -197,7 +197,7 @@ public class SerialContext implements Context {
      * All name arguments to operations are prepended by the component id.
      * Initializes the object reference to the remote provider object.
      */
-    public SerialContext(String name, Hashtable<Object, Object> environment, ServiceLocator h) throws NamingException {
+    public SerialContext(String name, Hashtable<Object, Object> environment, ServiceLocator h) {
         services = h;
         myEnv = environment == null ? new Hashtable<>() : (Hashtable<Object, Object>) environment.clone();
 

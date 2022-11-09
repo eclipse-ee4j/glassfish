@@ -15,7 +15,7 @@ GlassFish 7 version is going to provide Jakarta EE 10 and a lot of improvements 
 
 The final version of GlassFish 7 is not released yet but the latest milestone version already provides all the above features.
 
-You can download the latest Eclipse GlassFish 7 milestone version in the [Eclipse Foundation Download portal](https://download.eclipse.org/ee4j/glassfish/).
+You can download the latest Eclipse GlassFish development milestone or nightly version in the [Eclipse Foundation Download portal](https://download.eclipse.org/ee4j/glassfish/).
 
 NOTE: The latest milestone version doesn't provide Admin Console (GUI for administering the server). This will be fixed in the final version of GlassFish 7.
 

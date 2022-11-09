@@ -154,6 +154,12 @@
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.2</microprofile.config-api.version>
         <helidon-config.version>3.0.2</helidon-config.version>
+        
+        <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
+        <microprofile-jwt-auth-api.version>2.0</microprofile-jwt-auth-api.version>
+        <omnifaces-jwt-auth.version>2.0.1</omnifaces-jwt-auth.version>
+        
+        
 
         <!-- Admin console components -->
 
@@ -644,16 +650,29 @@
                 <artifactId>schema2beans</artifactId>
                 <version>${schema2beans.version}</version>
             </dependency>
-
+            
+            <!-- MicroProfile Config -->
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>${microprofile.config-api.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.helidon.microprofile.config</groupId>
                 <artifactId>helidon-microprofile-config</artifactId>
                 <version>${helidon-config.version}</version>
             </dependency>
+            
+            <!-- MicroProfile JWT -->
             <dependency>
-                <groupId>org.eclipse.microprofile.config</groupId>
-                <artifactId>microprofile-config-api</artifactId>
-                <version>${microprofile.config-api.version}</version>
+                <groupId>org.eclipse.microprofile.jwt</groupId>
+                <artifactId>microprofile-jwt-auth-api</artifactId>
+                <version>${microprofile-jwt-auth-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.omnifaces</groupId>
+                <artifactId>microprofile-jwt-auth</artifactId>
+                <version>${omnifaces-jwt-auth.version}</version>
             </dependency>
 
             <!-- Other -->

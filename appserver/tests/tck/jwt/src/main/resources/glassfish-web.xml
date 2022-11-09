@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<!DOCTYPE glassfish-web-app PUBLIC "-//GlassFish.org//DTD GlassFish Application Server 3.1 Servlet 3.0//EN" "http://glassfish.org/dtds/glassfish-web-app_3_0-1.dtd">
+<glassfish-web-app error-url="">
+
+    <!-- 
+        org.eclipse.microprofile.jwt.tck.config.PublicKeyAsJWKLocationURLTest.testKeyAsLocationUrl fetches a key from a deployed resource.
+        
+        By default it gets this key from http://localhost:8080/jwks/endp/publicKey4kAsJWKS?kid=publicKey4k
+        
+        We can configure the base URL via system property "mp.jwt.tck.jwks.baseURL", but it's not super easy to configure this neatly
+        with the current war file as context root on the server. The easier approach is therefor to set the context root to something
+        constant, as below. "/" happens to be the default assumed context root by the tests as well.
+        
+     -->
+    <context-root>/</context-root>
+
+    <!-- Mapping as required by one test -->
+    <security-role-mapping>
+        <role-name>Group1MappedRole</role-name>
+        <group-name>group1</group-name>
+    </security-role-mapping>
+
+    <!-- Default one to one mapping stops when one role is mapped. Must therefor manually define all others:  -->
+    <security-role-mapping>
+        <role-name>Echoer</role-name>
+        <group-name>Echoer</group-name>
+    </security-role-mapping>
+    
+    <security-role-mapping>
+        <role-name>Tester</role-name>
+        <group-name>Tester</group-name>
+    </security-role-mapping>
+    
+    <security-role-mapping>
+        <role-name>Token2Role</role-name>
+        <group-name>Token2Role</group-name>
+    </security-role-mapping>
+    
+    <security-role-mapping>
+        <role-name>group1</role-name>
+        <group-name>group1</group-name>
+    </security-role-mapping>
+    
+</glassfish-web-app>

@@ -157,7 +157,7 @@
         
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.0</microprofile-jwt-auth-api.version>
-        <omnifaces-jwt-auth.version>2.0.1-SNAPSHOT</omnifaces-jwt-auth.version>
+        <omnifaces-jwt-auth.version>2.0.1</omnifaces-jwt-auth.version>
         
         
 

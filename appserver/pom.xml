@@ -97,7 +97,7 @@
         <!-- Jakarta Security + Authentication/Authorization -->
         <soteria.version>3.0.0</soteria.version>
         <exousia.version>2.1.0</exousia.version>
-        <nimbus.version>9.25.4</nimbus.version>
+        <nimbus.version>9.25.6</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
         <!-- Jakarta Messaging -->
@@ -149,7 +149,7 @@
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>2.1.0</jakarta.mvc-api.version>
-        <krazo.version>3.0.0</krazo.version>
+        <krazo.version>3.0.1</krazo.version>
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.2</microprofile.config-api.version>

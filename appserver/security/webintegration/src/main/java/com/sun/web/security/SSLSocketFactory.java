@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,16 +32,12 @@ import javax.net.ssl.SSLServerSocket;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 
-import org.glassfish.hk2.api.ServiceLocator;
+import org.apache.catalina.net.ServerSocketFactory;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.SharedSecureRandomImpl;
 
-//V3:Commented import com.sun.enterprise.ServerConfiguration;
-//V3:Commented import com.sun.web.server.*;
-//V3:Commented import com.sun.enterprise.server.J2EEServer;
 import com.sun.enterprise.security.ssl.J2EEKeyManager;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.logging.LogDomains;
 
 /**
@@ -50,14 +47,11 @@ import com.sun.logging.LogDomains;
  * @author Vivek Nagar
  * @author Harpreet Singh
  */
-// TODO: this should become a HK2 component
-public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFactory {
+public class SSLSocketFactory implements ServerSocketFactory {
 
     static Logger _logger = LogDomains.getLogger(SSLSocketFactory.class, LogDomains.WEB_LOGGER);
 
     private static final boolean clientAuth = false;
-
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SSLSocketFactory.class);
 
     private SSLContext context;
     private javax.net.ssl.SSLServerSocketFactory factory;
@@ -68,7 +62,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
     // XXX initStoresAtStartup may call more than once, should clean up later
     // copied from SSLUtils : V3 to break dependency of this SSLUtils on this Class.
-    private static boolean initialized = false;
+    private static boolean initialized;
 
     /**
      * Create the SSL socket factory. Initialize the key managers and trust managers which are passed to the SSL context.
@@ -104,18 +98,8 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
     public ServerSocket createSocket(int port) throws IOException {
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port);
         init(socket);
-        return socket;
-    }
 
-    /**
-     * Specify whether the server will require client authentication.
-     *
-     * @param socket the SSL server socket.
-     */
-    private void init(SSLServerSocket socket) {
-        // Some initialization goes here.....
-        // socket.setEnabledCipherSuites(cipherSuites);
-        socket.setNeedClientAuth(clientAuth);
+        return socket;
     }
 
     /**
@@ -128,6 +112,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
     public ServerSocket createSocket(int port, int backlog) throws IOException {
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port, backlog);
         init(socket);
+
         return socket;
     }
 
@@ -141,6 +126,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
     public ServerSocket createSocket(int port, int backlog, InetAddress ifAddress) throws IOException {
         SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port, backlog, ifAddress);
         init(socket);
+
         return socket;
     }
 
@@ -155,8 +141,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
             return;
         }
 
-        ServiceLocator habitat = Globals.getDefaultHabitat();
-        SSLUtils sslUtils = habitat.getService(SSLUtils.class);
+        SSLUtils sslUtils = Globals.getDefaultHabitat().getService(SSLUtils.class);
 
         keyManagers = sslUtils.getKeyManagers();
         trustManagers = sslUtils.getTrustManagers();
@@ -171,8 +156,18 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
                 keyManagers[i] = new J2EEKeyManager((X509KeyManager) keyManagers[i], keyAlias);
             }
         }
+
         sslContext.init(keyManagers, sslUtils.getTrustManagers(), null);
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         initialized = true;
+    }
+
+    /**
+     * Specify whether the server will require client authentication.
+     *
+     * @param socket the SSL server socket.
+     */
+    private void init(SSLServerSocket socket) {
+        socket.setNeedClientAuth(clientAuth);
     }
 }

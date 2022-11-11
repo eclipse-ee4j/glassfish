@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,7 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import java.util.logging.Level;
+import static java.util.logging.Level.FINE;
 
 import javax.security.auth.login.LoginException;
 
@@ -48,17 +49,16 @@ public class FileLoginModule extends PasswordLoginModule {
         }
         FileRealm fileRealm = (FileRealm) _currentRealm;
 
-        String[] grpList = fileRealm.authenticate(_username, getPasswordChar());
+        String[] groups = fileRealm.authenticate(_username, getPasswordChar());
 
-        if (grpList == null) { // JAAS behavior
-            String msg = sm.getString("filelm.faillogin", _username);
-            throw new LoginException(msg);
+        if (groups == null) { // JAAS behavior
+            throw new LoginException(sm.getString("filelm.faillogin", _username));
         }
 
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "File login succeeded for: " + _username);
+        if (_logger.isLoggable(FINE)) {
+            _logger.log(FINE, "File login succeeded for: " + _username);
         }
 
-        commitAuthentication(_username, getPasswordChar(), _currentRealm, grpList);
+        commitAuthentication(_username, getPasswordChar(), _currentRealm, groups);
     }
 }

@@ -17,15 +17,13 @@
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
-import com.sun.enterprise.glassfish.bootstrap.GlassFishImpl;
-import com.sun.enterprise.glassfish.bootstrap.GlassfishUrlClassLoader;
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.BootException;
-import com.sun.enterprise.module.bootstrap.Main;
-import com.sun.enterprise.module.bootstrap.ModuleStartup;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.FelixPrettyPrinter;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME;
+import static com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI_PROP_NAME;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.logging.Level.FINEST;
+import static org.glassfish.embeddable.GlassFish.Status.DISPOSED;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +36,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -54,7 +51,15 @@ import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.sun.enterprise.glassfish.bootstrap.GlassFishImpl;
+import com.sun.enterprise.glassfish.bootstrap.GlassfishUrlClassLoader;
+import com.sun.enterprise.glassfish.bootstrap.MainHelper;
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.bootstrap.BootException;
+import com.sun.enterprise.module.bootstrap.Main;
+import com.sun.enterprise.module.bootstrap.ModuleStartup;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.FelixPrettyPrinter;
 
 /**
  * Implementation of GlassFishRuntime in an OSGi environment.
@@ -72,7 +77,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
     // This can be achieved by modelling this as a GlassFishRuntimeDecorator taking StaticGlassFishRuntime
     // as the decorated object.
 
-    private final List<GlassFish> gfs = new ArrayList<>();
+    private final List<GlassFish> glassFishes = new ArrayList<>();
     private final BundleContext context;
 
     public EmbeddedOSGiGlassFishRuntime(BundleContext context) {
@@ -103,22 +108,29 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             final ServiceLocator serviceLocator = hk2Main.createServiceLocator(mr, startupContext, null, null);
             final ModuleStartup gfKernel = hk2Main.findStartupService(mr, serviceLocator, null, startupContext);
             final GlassFish glassFish = createGlassFish(gfKernel, serviceLocator, gfProps.getProperties());
-            gfs.add(glassFish);
+            glassFishes.add(glassFish);
 
             return glassFish;
         } catch (BootException | InterruptedException ex) {
             throw new GlassFishException(ex);
-        } catch (MultiException ex) {
-            final String bundleMessage = findBundleMessage(ex);
-            if (bundleMessage == null) {
-                throw new GlassFishException("GlassFish failed to start.", ex);
+        } catch (Throwable t) {
+            MultiException multiException = findMultiException(t);
+            if (multiException == null) {
+                throw new GlassFishException("GlassFish failed to start.", t);
             }
+
+            final String bundleMessage = findBundleMessage(multiException);
+            if (bundleMessage == null) {
+                throw new GlassFishException("GlassFish failed to start.", t);
+            }
+
             try {
                 final String prettyMessage = FelixPrettyPrinter.prettyPrintExceptionMessage(bundleMessage);
                 List<Integer> bundleIDs = FelixPrettyPrinter.findBundleIds(prettyMessage);
                 if (bundleIDs.isEmpty()) {
-                    throw new GlassFishException(prettyMessage, ex);
+                    throw new GlassFishException(prettyMessage, t);
                 }
+
                 final StringBuilder bundleBuilder = new StringBuilder(1024);
                 bundleBuilder.append(prettyMessage);
                 for (Integer bundleId : bundleIDs) {
@@ -130,11 +142,11 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
                         bundleBuilder.append('\n');
                     }
                 }
-                throw new GlassFishException(bundleBuilder.toString(), ex);
+                throw new GlassFishException(bundleBuilder.toString(), t);
             } catch (GlassFishException ee) {
                 throw ee;
             } catch (Throwable ee) {
-                GlassFishException e = new GlassFishException(bundleMessage, ex);
+                GlassFishException e = new GlassFishException(bundleMessage, t);
                 e.addSuppressed(ee);
                 throw e;
             }
@@ -144,20 +156,41 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
     @Override
     public synchronized void shutdown() throws GlassFishException {
-        // make a copy to avoid ConcurrentModificationException
-        for (GlassFish gf : new ArrayList<>(gfs)) {
-            if (gf.getStatus() != GlassFish.Status.DISPOSED) {
+        // Make a copy to avoid ConcurrentModificationException
+        for (GlassFish glassFish : new ArrayList<>(glassFishes)) {
+            if (glassFish.getStatus() != DISPOSED) {
                 try {
-                    gf.dispose();
+                    glassFish.dispose();
                 } catch (GlassFishException e) {
                     e.printStackTrace();
                 }
             }
         }
-        gfs.clear();
+
+        glassFishes.clear();
         shutdownInternal();
     }
 
+    private MultiException findMultiException(Throwable t) {
+        Throwable currentThrowable = t;
+
+        while (currentThrowable != null) {
+            if (currentThrowable instanceof MultiException) {
+                return (MultiException) currentThrowable;
+            }
+
+            for (Throwable suppressed : currentThrowable.getSuppressed()) {
+                MultiException multiException = findMultiException(suppressed);
+                if (multiException != null) {
+                    return multiException;
+                }
+            }
+
+            currentThrowable = currentThrowable.getCause();
+        }
+
+        return null;
+    }
 
     private String findBundleMessage(MultiException ex) {
         for (final Throwable error : ex.getErrors()) {
@@ -167,6 +200,7 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
                     return message;
                 }
             }
+
             Throwable currentThrowable = error;
             while (currentThrowable != null) {
                 if (currentThrowable instanceof BundleException) {
@@ -193,21 +227,22 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
 
     private void setEnv(Properties properties) {
-        final String installRootValue = properties.getProperty(com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME);
+        final String installRootValue = properties.getProperty(INSTALL_ROOT_PROP_NAME);
         if (installRootValue != null && !installRootValue.isEmpty()) {
             File installRoot = new File(installRootValue);
-            System.setProperty(com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
+            System.setProperty(INSTALL_ROOT_PROP_NAME, installRoot.getAbsolutePath());
             final Properties asenv = MainHelper.parseAsEnv(installRoot);
             for (String s : asenv.stringPropertyNames()) {
                 System.setProperty(s, asenv.getProperty(s));
             }
-            System.setProperty(com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
+            System.setProperty(INSTALL_ROOT_URI_PROP_NAME, installRoot.toURI().toString());
         }
-        final String instanceRootValue = properties.getProperty(com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME);
+
+        final String instanceRootValue = properties.getProperty(INSTANCE_ROOT_PROP_NAME);
         if (instanceRootValue != null && !instanceRootValue.isEmpty()) {
             File instanceRoot = new File(instanceRootValue);
-            System.setProperty(com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
-            System.setProperty(com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
+            System.setProperty(INSTANCE_ROOT_PROP_NAME, instanceRoot.getAbsolutePath());
+            System.setProperty(INSTANCE_ROOT_URI_PROP_NAME, instanceRoot.toURI().toString());
         }
     }
 
@@ -218,9 +253,10 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
 
 
     private void logClassLoaders(final ModulesRegistry moduleRegistry) {
-        if (!LOG.isLoggable(Level.FINEST)) {
+        if (!LOG.isLoggable(FINEST)) {
             return;
         }
+
         logCL(LOG, "currentThread.contextClassLoader:       ", Thread.currentThread().getContextClassLoader());
         logCL(LOG, "this.class.classLoader:                 ", getClass().getClassLoader());
         logCL(LOG, "this.class.classLoader.parent:          ", getClass().getClassLoader().getParent());
@@ -235,14 +271,16 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
     }
 
 
-    private String toString(final ClassLoader cl) {
-        if (cl instanceof GlassfishUrlClassLoader) {
-            return cl.toString();
+    private String toString(final ClassLoader classLoader) {
+        if (classLoader instanceof GlassfishUrlClassLoader) {
+            return classLoader.toString();
         }
-        if (cl instanceof URLClassLoader) {
-            URLClassLoader ucl = URLClassLoader.class.cast(cl);
+
+        if (classLoader instanceof URLClassLoader) {
+            URLClassLoader ucl = URLClassLoader.class.cast(classLoader);
             return ucl + ": " + Arrays.stream(ucl.getURLs()).collect(Collectors.toList());
         }
-        return cl.toString();
+
+        return classLoader.toString();
     }
 }

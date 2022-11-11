@@ -27,6 +27,11 @@ public class ASMain {
      * and ASMainOSGi
      */
     public static void main(final String[] args) throws Exception {
-        GlassFishMain.main(args);
+        try {
+            GlassFishMain.main(args);
+        } catch (Throwable t) {
+            t.printStackTrace();
+            throw t;
+        }
     }
 }

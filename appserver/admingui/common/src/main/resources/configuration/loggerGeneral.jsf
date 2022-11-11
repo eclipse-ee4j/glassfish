@@ -87,7 +87,7 @@
             <sun:checkbox id="writeSystemLogEnabled" selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.SyslogHandler.enabled']}" selectedValue="true" />
         </sun:property>
 
-        <sun:property id="logtoFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" helpText="$resource{i18nc.log.LogtoFileHelp}">
+        <sun:property id="logtoFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogtoFile}" helpText="$resource{i18nc.log.LogtoFileHelp}">
             <sun:checkbox selected="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.enabled']}"  selectedValue="true" />
         </sun:property>
 
@@ -119,7 +119,7 @@
                         availableList={ "tid", "timeMillis", "levelValue" },
                         selectedCommaString="#{pageSession.logAttributes['org.glassfish.main.jul.handler.GlassFishLogHandler.formatter.excludedFields']}",
                         availableListResult="#{pageSession.excludeFieldsOptions}",
-                        selectedOptions="#{pageSession.excludeFields}"
+                        selectedOptions="#{pageSession.excludedFields}"
                         addEmptyFirstChoice="true");
                 />
             </sun:listbox>

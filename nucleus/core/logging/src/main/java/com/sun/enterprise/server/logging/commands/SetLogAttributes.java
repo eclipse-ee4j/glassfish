@@ -68,6 +68,8 @@ import org.glassfish.main.jul.handler.GlassFishLogHandlerProperty;
 import org.glassfish.main.jul.handler.HandlerConfigurationHelper;
 import org.glassfish.main.jul.handler.SimpleLogHandler;
 import org.glassfish.main.jul.handler.SimpleLogHandler.SimpleLogHandlerProperty;
+import org.glassfish.main.jul.handler.SyslogHandler;
+import org.glassfish.main.jul.handler.SyslogHandlerProperty;
 import org.jvnet.hk2.annotations.Service;
 
 
@@ -110,6 +112,8 @@ public class SetLogAttributes implements AdminCommand {
             .forEach(p -> properties.add(p.getPropertyFullName(GlassFishLogHandler.class)));
         Arrays.stream(SimpleLogHandlerProperty.values())
             .forEach(p -> properties.add(p.getPropertyFullName(SimpleLogHandler.class)));
+        Arrays.stream(SyslogHandlerProperty.values())
+            .forEach(p -> properties.add(p.getPropertyFullName(SyslogHandler.class)));
 
         // all formatters and their own properties
         Arrays.stream(UniformFormatterProperty.values())

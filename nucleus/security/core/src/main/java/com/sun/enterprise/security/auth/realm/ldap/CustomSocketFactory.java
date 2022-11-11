@@ -70,6 +70,11 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     }
 
     @Override
+    public Socket createSocket() throws IOException {
+        return socketFactory.createSocket();
+    }
+
+    @Override
     public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
         return socketFactory.createSocket(host, port);
     }

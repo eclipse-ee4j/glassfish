@@ -19,6 +19,13 @@
  * Common utility
  */
 
+require(['webui/suntheme/field']);
+require(['webui/suntheme/dropDown']);
+require(['webui/suntheme/upload']);
+require(['webui/suntheme/jumpDropDown']);
+require(['webui/suntheme/hyperlink']);
+require(['webui/suntheme/props']);
+
 function checkPSWInCommon(secureAdminEnabled, id1, id2, alert1, alert2, confirmMessage) {
 	var ps1 = document.getElementById(id1); 
 	var ps2 =  document.getElementById(id2); 
@@ -119,18 +126,20 @@ function getField(theForm, fieldName) {
 // FIXME: suntheme should not be used -- prevents theme from changing
 function getTextElement(componentName) {
 
+	var el;
+
 	require(['webui/suntheme/field'], function (field) {		
 		if(field === "undefined"){
 			return  document.getElementById(componentName);
 		}
 		
 	    var el = field.getInputElement(componentName);
-	    if (el == null) {
-	        el = document.getElementById(componentName); // This may get too deep inside WS, but it should work as a fall back
-	    }
-	    return el; 
 	});	
 
+        if (el == null) {
+            el = document.getElementById(componentName); // This may get too deep inside WS, but it should work as a fall back
+        }
+        return el; 
 }
 
 function getSelectElement(componentName) {

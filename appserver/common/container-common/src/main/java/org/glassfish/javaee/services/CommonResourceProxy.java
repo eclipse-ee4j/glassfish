@@ -22,6 +22,7 @@ import com.sun.enterprise.deployment.ResourceDescriptor;
 import jakarta.inject.Inject;
 
 import java.io.Serializable;
+import java.lang.System.Logger;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -36,6 +37,7 @@ import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * @author naman 2012
@@ -43,6 +45,7 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResou
 @Service
 @PerLookup
 public class CommonResourceProxy implements NamingObjectProxy.InitializationNamingObjectProxy, Serializable {
+    private static final Logger LOG = System.getLogger(CommonResourceProxy.class.getName());
 
     @Inject
     protected transient ServiceLocator serviceLocator;
@@ -50,9 +53,11 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
     protected SimpleJndiName actualResourceName;
 
     @Override
-    public synchronized <T> T create(Context ic) throws NamingException {
+    public synchronized <T> T create(Context context) throws NamingException {
         if (actualResourceName == null) {
             actualResourceName = deriveResourceName(desc.getResourceId(), desc.getJndiName(), desc.getResourceType());
+            LOG.log(DEBUG, "Deploying resource for actualResourceName={0} and descriptor.jndiName={1}",
+                actualResourceName, desc.getJndiName());
             try {
                 if (serviceLocator == null) {
                     serviceLocator = Globals.getDefaultHabitat();
@@ -69,7 +74,7 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
             }
         }
 
-        return (T) ic.lookup(actualResourceName.toString());
+        return (T) context.lookup(actualResourceName.toString());
     }
 
 
@@ -81,5 +86,12 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
 
     public synchronized void setDescriptor(ResourceDescriptor desc) {
         this.desc = desc;
+    }
+
+
+    @Override
+    public String toString() {
+        return super.toString() + "[actualResourceName=" + actualResourceName + ", desc.jndiName="
+            + (desc == null ? null : desc.getJndiName()) + ']';
     }
 }

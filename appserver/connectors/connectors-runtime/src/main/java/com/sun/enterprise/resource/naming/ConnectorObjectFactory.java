@@ -86,9 +86,6 @@ public class ConnectorObjectFactory implements ObjectFactory {
             try {
                 getRuntime().createActiveResourceAdapter(connectorDescriptor, moduleName, null);
             } catch (ConnectorRuntimeException e) {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "Failed to look up ConnectorDescriptor from JNDI", moduleName);
-                }
                 NamingException ne = new NamingException("Failed to look up ConnectorDescriptor from JNDI");
                 ne.setRootCause(e);
                 throw ne;
@@ -164,10 +161,7 @@ public class ConnectorObjectFactory implements ObjectFactory {
                 }
             }
 
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "Connection Factory: " + cf);
-            }
-
+            LOG.log(Level.FINE, "Connection Factory: {0}", cf);
             return cf;
         } catch (Exception e) {
             throw new RuntimeException(e);

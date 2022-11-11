@@ -24,6 +24,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.beans.PropertyVetoException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -51,7 +53,8 @@ import static org.glassfish.deployment.common.JavaEEResourceType.CFDPOOL;
 @ResourceDeployerInfo(ConnectionFactoryDefinitionDescriptor.class)
 public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer<ConnectionFactoryDefinitionDescriptor> {
 
-    static final String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
+    private static final Logger LOG = System.getLogger(ConnectionFactoryDefinitionDeployer.class.getName());
+    private static final String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
 
     @Inject
     private Provider<org.glassfish.resourcebase.resources.util.ResourceManagerFactory> resourceManagerFactoryProvider;
@@ -66,6 +69,8 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer<Con
     public void deployResource(ConnectionFactoryDefinitionDescriptor resource) throws Exception {
         SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), CFDPOOL);
         SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
+
+        LOG.log(Level.INFO, "Deploying resource [{0}] with pool [{1}].", new Object[] {resourceName, poolName});
         ConnectorConnectionPool connectorCp = new MyConnectorConnectionPool(resource, poolName);
         getDeployer(connectorCp).deployResource(connectorCp);
         ConnectorResource connectorResource = new MyConnectorResource(poolName, resourceName);
@@ -100,6 +105,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer<Con
     public void undeployResource(ConnectionFactoryDefinitionDescriptor resource) throws Exception {
         SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), CFDPOOL);
         SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
+        LOG.log(Level.INFO, "Undeploying resource [{0}] with pool [{1}].", new Object[] {resourceName, poolName});
         ConnectorResource connectorResource = new MyConnectorResource(poolName, resourceName);
         getDeployer(connectorResource).undeployResource(connectorResource);
         ConnectorConnectionPool connectorCp = new MyConnectorConnectionPool(resource, poolName);

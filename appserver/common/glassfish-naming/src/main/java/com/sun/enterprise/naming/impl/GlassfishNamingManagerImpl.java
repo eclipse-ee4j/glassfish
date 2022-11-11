@@ -239,7 +239,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
     /**
      * Create any sub-contexts in name that don't already exist.
      *
-     * @param name    Name containing sub-contexts to create
+     * @param name Name containing sub-contexts to create
      * @param rootCtx in which sub-contexts should be created
      * @throws Exception
      */
@@ -332,6 +332,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
 
     private JavaNamespace getAppNamespace(String appName) throws NamingException {
+        LOG.log(TRACE, "getAppNamespace(appName={0})", appName);
         if (appName == null) {
             throw new NamingException("Null appName");
         }
@@ -453,7 +454,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     private void bindIntermediateContexts(JavaNamespace namespace, SimpleJndiName jndiName)
         throws NamingException {
-        LOG.log(TRACE, "bindIntermediateContexts(namespace={0}, jndiName={1})", namespace.name, jndiName);
+        LOG.log(TRACE, "bindIntermediateContexts(namespace.name={0}, jndiName={1})", namespace.name, jndiName);
         // for each component of name, put an entry into namespace
         String partialName;
         if (jndiName.isJavaComponent()) {
@@ -567,10 +568,12 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             return (T) initialContext.lookup(name.toName());
         }
         final ComponentIdInfo info = componentIdInfo.get(componentId);
+        LOG.log(TRACE, "Found componentIdInfo={0}", info);
         final boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
         final SimpleJndiName replacedName = replaceName ? name.changePrefix(JNDI_CTX_JAVA_MODULE) : name;
         JavaNamespace namespace = info == null ? getComponentNamespace(componentId) : getNamespace(info, replacedName);
         Object obj = namespace.get(replacedName);
+        LOG.log(TRACE, "For {0} found object={1} in namespace.name={2}", replacedName, obj, namespace.name);
         if (obj == null) {
             throw new NameNotFoundException("No object bound to name " + replacedName + " in namespace " + namespace);
         }
@@ -756,8 +759,8 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
         @Override
         public String toString() {
-            return "appName=" + appName + ", module=" + moduleName + ", componentId=" + componentId
-                + ", treatComponentAsModule=" + treatComponentAsModule;
+            return "ComponentIdInfo[appName=" + appName + ", module=" + moduleName + ", componentId=" + componentId
+                + ", treatComponentAsModule=" + treatComponentAsModule + ']';
         }
     }
 

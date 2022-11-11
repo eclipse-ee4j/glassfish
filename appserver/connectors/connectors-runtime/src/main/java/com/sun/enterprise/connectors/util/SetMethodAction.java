@@ -17,20 +17,19 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.logging.LogDomains;
+
 import java.lang.reflect.Method;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.logging.LogDomains;
 
 /**
  * Executes setter methods on java beans.
@@ -40,7 +39,6 @@ import com.sun.logging.LogDomains;
 public final class SetMethodAction<P extends EnvironmentProperty> implements PrivilegedExceptionAction<Void> {
 
     private static final Logger LOG = LogDomains.getLogger(SetMethodAction.class, LogDomains.RSR_LOGGER);
-    private static final Locale I18N = Locale.getDefault();
 
     private final Object bean;
     private final Set<P> props;
@@ -130,7 +128,7 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         }
 
         String propname = prop.getName();
-        if (propname.toLowerCase(I18N).contains("password")) {
+        if (propname.toLowerCase().contains("password")) {
             return "********";
         }
 
@@ -243,6 +241,6 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
      * correct accessor and mutator method names for a give property.
      */
     private String getCamelCasedPropertyName(String propertyName) {
-        return propertyName.substring(0, 1).toUpperCase(I18N) + propertyName.substring(1);
+        return propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
 }

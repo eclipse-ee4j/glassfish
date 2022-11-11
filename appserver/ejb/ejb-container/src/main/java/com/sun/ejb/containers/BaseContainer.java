@@ -513,7 +513,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         this.containerInfo = createContainerInfo(type, ejbDesc);
         this.debugDescription = super.toString() + "[ejbName=" + ejbDescriptor.getName() + ", containerId="
             + ejbDescriptor.getUniqueId() + ']';
-        _logger.log(Level.INFO, "Initializing {0} ...", this.debugDescription);
+        _logger.log(Level.FINE, "Initializing {0} ...", this.debugDescription);
         try {
             invocationManager = ejbContainerUtilImpl.getInvocationManager();
             injectionManager = ejbContainerUtilImpl.getInjectionManager();

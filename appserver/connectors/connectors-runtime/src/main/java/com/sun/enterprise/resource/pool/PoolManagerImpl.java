@@ -54,6 +54,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -130,7 +131,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         if (pool == null) {
             pool = ResourcePoolFactoryImpl.newInstance(poolInfo, poolType, env);
             addPool(pool);
-            LOG.log(INFO, "Created connection  pool and added it to PoolManager: {0}", pool);
+            LOG.log(INFO, "Created connection pool and added it to PoolManager: {0}", pool);
         }
         return pool;
     }
@@ -421,9 +422,7 @@ public class PoolManagerImpl extends AbstractPoolManager implements ComponentInv
         if (pool != null) {
             pool.cancelResizerTask();
             pool.emptyPool();
-            if (LOG.isLoggable(FINE)) {
-                LOG.fine("Removing pool " + pool + " from pooltable");
-            }
+            LOG.log(Level.CONFIG, "Removing pool {0} from pooltable", pool);
 
             poolTable.remove(poolInfo);
             if (listener != null) {

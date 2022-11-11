@@ -19,6 +19,8 @@ package com.sun.enterprise.naming.util;
 
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.naming.Context;
@@ -30,6 +32,7 @@ import org.jvnet.hk2.annotations.Service;
 
 @Service
 public class JndiNamingObjectFactory implements NamingObjectFactory {
+    private static final Logger LOG = System.getLogger(JndiNamingObjectFactory.class.getName());
 
     private final SimpleJndiName name;
     private final SimpleJndiName jndiName;
@@ -52,11 +55,11 @@ public class JndiNamingObjectFactory implements NamingObjectFactory {
 
     @Override
     public <T> T create(Context ic) throws NamingException {
+        LOG.log(Level.TRACE, "create(ic={0}); jndiName={1}, cacheResult={2}", ic, jndiName, cacheResult);
         Object result = null;
         try {
             // FIXME: race conditions?
             ic.addToEnvironment(GlassfishNamingManager.LOGICAL_NAME, name);
-            // FIXME: always false.
             if (cacheResult) {
                 result = value.get();
                 if (result == null) {

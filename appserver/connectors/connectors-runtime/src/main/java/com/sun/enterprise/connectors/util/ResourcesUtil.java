@@ -476,14 +476,14 @@ public class ResourcesUtil {
                 getResources(ConnectorResource.class);
         for (ConnectorResource resource : connectorResources) {
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("poolname " + resource.getPoolName() + "resource " + resource.getJndiName());
+                _logger.fine("poolname " + resource.getPoolName() + " resource " + resource.getJndiName());
             }
             ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
             if (resource.getPoolName().equalsIgnoreCase(poolInfo.getName().toString()) && isReferenced(resourceInfo)
                 && isEnabled(resource)) {
                 if(_logger.isLoggable(Level.FINE)) {
-                    _logger.fine("Connector resource "  + resource.getJndiName() + "refers "
-                        + poolInfo + "in this server instance and is enabled");
+                    _logger.fine("Connector resource "  + resource.getJndiName() + " refers "
+                        + poolInfo + " in this server instance and is enabled");
                 }
                 return true;
             }

@@ -125,22 +125,9 @@ public class ConnectorConnectionPoolDeployer
 
 
     private void actualUndeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
-                                        PoolInfo poolInfo) throws ConnectorRuntimeException {
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Calling backend to delete ConnectorConnectionPool", domainCcp);
-        }
+        PoolInfo poolInfo) throws ConnectorRuntimeException {
         runtime.deleteConnectorConnectionPool(poolInfo);
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Deleted ConnectorConnectionPool in backend", domainCcp);
-        }
-
-        /*//unregister the managed object
-        if (QUEUE_CF.equals(defName) || TOPIC_CF.equals(defName)) {
-            //registers the jsr77 object for the mail resource deployed
-            final ManagementObjectManager mgr =
-                getAppServerSwitchObject().getManagementObjectManager();
-            mgr.unregisterJMSResource(domainCcp.getName());
-        }*/
+        LOG.log(Level.FINE, "Deleted ConnectorConnectionPool in backend: {0}", domainCcp);
     }
 
 

@@ -91,14 +91,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws ConnectorRuntimeException When creation of pool fails.
      */
     public void createConnectorConnectionPool(ConnectorConnectionPool connectorPoolObj)
-            throws ConnectorRuntimeException {
+        throws ConnectorRuntimeException {
 
-        if(connectorPoolObj == null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Wrong parameters for pool creation ");
-            }
-            String i18nMsg = I18N.getString("ccp_adm.wrong_params_for_create");
-            throw new ConnectorRuntimeException(i18nMsg);
+        if (connectorPoolObj == null) {
+            throw new ConnectorRuntimeException(I18N.getString("ccp_adm.wrong_params_for_create"));
         }
         PoolInfo poolInfo = connectorPoolObj.getPoolInfo();
         SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
@@ -378,10 +374,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             //END CR 6597868
             mcf = obtainManagedConnectionFactory(poolInfo, new Hashtable<>());
         } catch (ConnectorRuntimeException re) {
-            logFine("getUnpooledConnection :: obtainManagedConnectionFactory "
-                + "threw exception. So doing checkAndLoadPoolResource");
+            _logger.fine("getUnpooledConnection:: obtainManagedConnectionFactory threw exception."
+                + " So doing checkAndLoadPoolResource ...");
             if (checkAndLoadPool(poolInfo)) {
-                logFine("getUnpooledConnection:: checkAndLoadPoolResource is true");
+                _logger.fine("getUnpooledConnection:: checkAndLoadPoolResource is true");
                 try {
 
                     //deploy the pool resource if not already done
@@ -390,20 +386,21 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                     //but in EE, if the pool we are trying to access is in a
                     //remote instance, the pool will not have been created
                     if (!isConnectorConnectionPoolDeployed(poolInfo)) {
-                        logFine("getUnpooledConnection :: isConnectorConnectionPoolDeployed is false");
+                        _logger.fine("getUnpooledConnection :: isConnectorConnectionPoolDeployed is false");
                         try {
                             poolToDeploy = ConnectorsUtil.getResourceByName(runtime.getResources(poolInfo), ResourcePool.class, poolInfo.getName());
                             runtime.getResourceDeployer(poolToDeploy).deployResource(poolToDeploy);
-                            logFine("getUnpooledConnection :: force deployed the ConnectionPool : " + poolInfo);
+                            _logger.log(Level.FINE, "getUnpooledConnection:: force deployed the ConnectionPool: {0}",
+                                poolInfo);
                             needToUndeployPool = true;
                         } catch (Exception e) {
                             _logger.log(Level.SEVERE, "jdbc.could_not_do_actual_deploy for : ", poolInfo);
                             throw new ResourceException(e);
                         }
                     }
-                    logFine("getUnpooledConnection :: Now calling obtainManagedConnectionFactory again");
+                    _logger.fine("getUnpooledConnection :: Now calling obtainManagedConnectionFactory again");
                     mcf = obtainManagedConnectionFactory(poolInfo);
-                    logFine("getUnpooledConnection:: done obtainManagedConnectionFactory again");
+                    _logger.fine("getUnpooledConnection:: done obtainManagedConnectionFactory again");
 
                 } catch (ConnectorRuntimeException creAgain) {
                     String l10nMsg = I18N.getString(
@@ -449,15 +446,13 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         //it here
         if (needToUndeployPool) {
             if (poolToDeploy != null) {
-                logFine("getUnpooledConnection :: need to force undeploy pool");
+                _logger.fine("getUnpooledConnection :: need to force undeploy pool");
                 try {
                     runtime.getResourceDeployer(poolToDeploy).undeployResource(poolToDeploy);
                 } catch (Exception e) {
-                    if(_logger.isLoggable(Level.FINE)) {
-                        _logger.fine("getUnpooledConnection: error undeploying pool");
-                    }
+                    _logger.log(Level.FINE, "getUnpooledConnection: error undeploying pool", e);
                 }
-                logFine("getUnpooledConnection :: done.. force undeploy of pool");
+                _logger.fine("getUnpooledConnection :: done.. force undeploy of pool");
             }
         }
         //Add our dummy ConnectionEventListener impl.
@@ -521,9 +516,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      *
      * @throws NamingException if poolname lookup fails
      */
-    private ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo,
-                                                          ManagedConnectionFactory mcf, Hashtable env)
-            throws NamingException {
+    private ResourcePrincipalDescriptor getDefaultResourcePrincipal(PoolInfo poolInfo, ManagedConnectionFactory mcf,
+        Hashtable env) throws NamingException {
         String userName = null;
         String password = null;
         // All this to get the default user name and principal
@@ -573,9 +567,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             _runtime.getResourceNamingService().unpublishObject(poolInfo, jndiNameForPool);
             _runtime.getResourceNamingService().publishObject(poolInfo, jndiNameForPool, origCcp, true);
         } catch (NamingException e) {
-            ConnectorRuntimeException ex =
-                    new ConnectorRuntimeException(e.getMessage());
-            throw(ConnectorRuntimeException) ex.initCause(e);
+            ConnectorRuntimeException ex = new ConnectorRuntimeException(e.getMessage());
+            throw (ConnectorRuntimeException) ex.initCause(e);
         }
     }
 
@@ -675,24 +668,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             mcfs = activeResourceAdapter.createManagedConnectionFactories(conPool, null);
         } catch (NamingException ne) {
             String i18nMsg = I18N.getString("pingpool.name_not_bound", poolInfo);
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
-            cre.initCause(ne);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "rardeployment.jndi_lookup_failed", poolInfo);
-                _logger.log(Level.FINE, "", cre);
-            }
-            // _logger.log(Level.SEVERE,"",cre);
-            throw cre;
+            throw new ConnectorRuntimeException(i18nMsg, ne);
         } catch (NullPointerException ne) {
             String i18nMsg = I18N.getString("ccp_adm.failed_to_register_mcf", poolInfo);
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
-            cre.initCause(ne);
-            _logger.log(Level.SEVERE, "mcf_add_toregistry_failed", poolInfo);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "", cre);
-            }
-            // _logger.log(Level.SEVERE,"",cre);
-            throw cre;
+            throw new ConnectorRuntimeException(i18nMsg, ne);
         }
         for (ManagedConnectionFactory mcf : mcfs) {
             validateMCF(mcf, raName);
@@ -721,6 +700,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      */
     public ManagedConnectionFactory obtainManagedConnectionFactory(PoolInfo poolInfo, Hashtable env)
             throws ConnectorRuntimeException {
+        _logger.log(Level.FINE, "obtainManagedConnectionFactory(poolInfo={0}, env)", poolInfo);
         try {
             if (_registry.isMCFCreated(poolInfo)) {
                 return _registry.getManagedConnectionFactory(poolInfo);
@@ -796,7 +776,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
 
                 PoolMetaData pmd = new PoolMetaData(poolInfo, mcf, s, txSupport, prin,
                         isPM, isNonTx, lazyEnlistable, runtimeSecurityMap, lazyAssoc);
-                logFine(pmd.toString());
+                _logger.log(Level.FINE, "Adding metadata: {0}", pmd);
                 _registry.addManagedConnectionFactory(poolInfo, pmd);
             }
 
@@ -806,23 +786,10 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             return mcf;
         } catch (NamingException ne) {
             String i18nMsg = I18N.getString("pingpool.name_not_bound", poolInfo);
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
-            cre.initCause(ne);
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "rardeployment.jndi_lookup_failed", poolInfo);
-                _logger.log(Level.FINE, "", cre);
-            }
-            throw cre;
-        }
-        catch (NullPointerException ne) {
+            throw new ConnectorRuntimeException(i18nMsg, ne);
+        } catch (NullPointerException ne) {
             String i18nMsg = I18N.getString("ccp_adm.failed_to_register_mcf", poolInfo);
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(i18nMsg);
-            cre.initCause(ne);
-            _logger.log(Level.SEVERE, "mcf_add_toregistry_failed", poolInfo);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "", cre);
-            }
-            throw cre;
+            throw new ConnectorRuntimeException(i18nMsg, ne);
         }
     }
 
@@ -852,14 +819,6 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
     }
 
 
-    private void logFine(String msg) {
-        if (msg != null) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.fine(msg);
-            }
-        }
-    }
-
     /**
      * create an empty connection pool
      *
@@ -868,6 +827,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
      * @throws ConnectorRuntimeException
      */
     private void createAndAddPool(PoolInfo poolInfo, PoolType pt, Hashtable env) throws ConnectorRuntimeException {
+        _logger.log(Level.FINE, "createAndAddPool(poolInfo={0}, pt, env)", poolInfo);
         PoolManager poolMgr = _runtime.getPoolManager();
         try {
             poolMgr.createEmptyConnectionPool(poolInfo, pt, env);
@@ -915,7 +875,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         if (ccp == null) {
             throw new ConnectorRuntimeException("No pool to reconfigure, new pool object is null");
         }
-        logFine("new ccp :\n" + ccp);
+        _logger.log(Level.FINE, "new ccp :\n{0}", ccp);
 
         //see if the new ConnectorConnectionPool is different from
         //the original one and update relevant properties
@@ -930,11 +890,11 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         if (origCcp == null) {
             throw new ConnectorRuntimeException("No pool to reconfigure, original pool object is null");
         }
-        logFine("original ccp :\n" + origCcp.toString());
+        _logger.log(Level.FINE, "original ccp :\n{0}", origCcp);
 
         ConnectionPoolReconfigHelper.ReconfigAction action = ConnectionPoolReconfigHelper.compare(origCcp, ccp,
                 excludedProps);
-        logFine("pool reconfig action == " + action);
+        _logger.log(Level.FINE, "pool reconfig action == {0}", action);
         if (action == ConnectionPoolReconfigHelper.ReconfigAction.UPDATE_MCF_AND_ATTRIBUTES) {
             updateMCFAndPoolAttributes(ccp);
         } else if (action == ConnectionPoolReconfigHelper.ReconfigAction.RECREATE_POOL) {
@@ -1016,7 +976,7 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         pmd.setIsNonTx(ccp.isNonTransactional());
         pmd.setAuthCredentialsDefinedInPool(ccp.getAuthCredentialsDefinedInPool());
 
-        logFine("Pool properties reconfiguration done");
+        _logger.fine("Pool properties reconfiguration done");
     }
 
 

@@ -21,17 +21,17 @@ import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.deployment.JMSConnectionFactoryDefinitionDescriptor;
-import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
 import java.beans.PropertyVetoException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
@@ -53,11 +53,11 @@ import static org.glassfish.deployment.common.JavaEEResourceType.JMSCFDDPOOL;
 @ResourceDeployerInfo(JMSConnectionFactoryDefinitionDescriptor.class)
 public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<JMSConnectionFactoryDefinitionDescriptor> {
 
+    private static final Logger LOG = System.getLogger(JMSConnectionFactoryDefinitionDeployer.class.getName());
+    static final String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
+
     @Inject
     private Provider<ResourceManagerFactory> resourceManagerFactoryProvider;
-
-    private static Logger _logger = LogDomains.getLogger(JMSConnectionFactoryDefinitionDeployer.class, LogDomains.RSR_LOGGER);
-    final static String PROPERTY_PREFIX = "org.glassfish.connector-connection-pool.";
 
     @Override
     public void deployResource(JMSConnectionFactoryDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
@@ -66,6 +66,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
     @Override
     public void deployResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
+        LOG.log(Level.DEBUG, "deployResource(resource.name={0})", resource.getName());
         SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), JMSCFDDPOOL);
         SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
         ConnectorConnectionPool connectorCp = new MyJMSConnectionFactoryConnectionPool(resource, poolName);
@@ -101,6 +102,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
 
     @Override
     public void undeployResource(JMSConnectionFactoryDefinitionDescriptor resource) throws Exception {
+        LOG.log(Level.DEBUG, "undeployResource(resource.name={0})", resource.getName());
         SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), JMSCFDDPOOL);
         SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
         ConnectorResource connectorResource = new MyJMSConnectionFactoryResource(poolName, resourceName);

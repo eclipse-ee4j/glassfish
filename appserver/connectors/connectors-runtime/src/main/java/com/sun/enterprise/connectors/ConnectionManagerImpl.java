@@ -226,10 +226,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         if (resourcePrincipalDescriptor == null) {
             resourcePrincipalDescriptor = resourceReferenceDescriptor.getResourcePrincipal();
             if (resourcePrincipalDescriptor == null) {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.log(Level.FINE, "default-resource-principal not specified for " + jndiNameToUse
-                        + ". Defaulting to user/password specified in the pool");
-                }
+                LOG.log(Level.FINE, "default-resource-principal not specified for {0}"
+                    + ". Defaulting to user/password specified in the pool", jndiNameToUse);
                 resourcePrincipalDescriptor = defaultResourcePrincipalDescriptor;
             } else if (!resourcePrincipalDescriptor.equals(defaultResourcePrincipalDescriptor)) {
                 ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);

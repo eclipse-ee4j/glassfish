@@ -141,19 +141,14 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
             }
             */
             if (ne instanceof NameNotFoundException) {
-                if(_logger.isLoggable(Level.FINE)) {
+                if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, "rardeployment.connectorresource_removal_from_jndi_error", resourceInfo);
                     _logger.log(Level.FINE, "", ne);
                 }
                 return;
             }
-            ConnectorRuntimeException cre = new ConnectorRuntimeException
-                    ("Failed to delete connector resource from jndi");
-            cre.initCause(ne);
-            _logger.log(Level.SEVERE, "rardeployment.connectorresource_removal_from_jndi_error", resourceInfo);
-            _logger.log(Level.SEVERE, "", cre);
-            throw cre;
-        }finally{
+            throw new ConnectorRuntimeException("Failed to delete connector resource from jndi", ne);
+        } finally {
             _registry.removeResourceInfo(resourceInfo);
         }
     }

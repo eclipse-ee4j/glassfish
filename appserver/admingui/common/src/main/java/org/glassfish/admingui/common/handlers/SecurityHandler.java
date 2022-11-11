@@ -327,13 +327,16 @@ public class SecurityHandler {
             String realmName = (String) handlerCtx.getInputValue("Realm");
             String configName = (String) handlerCtx.getInputValue("configName");
             String grouplist = (String)handlerCtx.getInputValue("GroupList");
-            password = ((String)handlerCtx.getInputValue("Password")).toCharArray();
+            String passwordInput = (String)handlerCtx.getInputValue("Password");
+            if (passwordInput == null) {
+                password = "".toCharArray();
+            } else {
+                password = passwordInput.toCharArray();
+                passwordInput = null;
+            }
             String userid = (String)handlerCtx.getInputValue("UserId");
             String createNew = (String)handlerCtx.getInputValue("CreateNew");
 
-            if (password == null) {
-                password = "".toCharArray();
-            }
             // before save user synchronize realm, for the case if keyfile is changed
             String tmpEP = GuiUtil.getSessionValue("REST_URL") + "/configs/config/"
                                                     + configName + "/synchronize-realm-from-config";

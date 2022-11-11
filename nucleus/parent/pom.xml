@@ -103,7 +103,7 @@
 
         <!-- Jakarta REST -->
         <jakarta.rest-api.version>3.1.0</jakarta.rest-api.version>
-        <jersey.version>3.1.0-M8</jersey.version>
+        <jersey.version>3.1.0</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
@@ -147,8 +147,8 @@
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.13.4</jackson.version>
-        <jackson-databind.version>2.13.4.1</jackson-databind.version>
+        <jackson.version>2.14.0</jackson.version>
+        <jackson-databind.version>2.14.0</jackson-databind.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.1</jettison.version>

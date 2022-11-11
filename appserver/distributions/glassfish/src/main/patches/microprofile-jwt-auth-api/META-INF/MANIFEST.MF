@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-Description: MicroProfile Parent POM
+Bundle-License: Apache License, Version 2.0
+Bundle-SymbolicName: org.eclipse.microprofile.jwt
+Bnd-LastModified: 1637150061577
+Bundle-ManifestVersion: 2
+Bundle-DocURL: https://github.com/eclipse/microprofile-jwt-auth/microp
+ rofile-jwt-auth-api
+Bundle-Vendor: Eclipse Foundation
+Import-Package: jakarta.enterprise.util;version="[3.0,5)",jakarta.inje
+ ct;version="[2.0,3)",jakarta.json;version="[2.0,3)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.8))"
+Bundle-Developers: starksm64;name="Scott M Stark";organization="Red Ha
+ t Inc.";organizationUrl="https://redhat.com",dblevins;name="David Ble
+ vins";organization=Tomitribe;organizationUrl="https://tomitribe.com",
+ sberyozkin;name="Sergey Beryozkin1";organization="Red Hat Inc.";organ
+ izationUrl="https://redhat.com",radcortez;name="Roberto Cortez";organ
+ ization="Red Hat Inc.";organizationUrl="https://redhat.com",rdebussch
+ er;name="Rudy De Busscher";organization=Payara;organizationUrl="https
+ ://www.payara.fish/",ayoho;name="Adam Yoho";organization=IBM;organiza
+ tionUrl="https://www.ibm.com",teddyjtorres;name="Teddy Torres";organi
+ zation=IBM;organizationUrl="https://www.ibm.com"
+Tool: Bnd-5.2.0.202010142003
+Export-Package: org.eclipse.microprofile.auth;version="1.0",org.eclips
+ e.microprofile.jwt;version="2.0";uses:="jakarta.enterprise.util,jakar
+ ta.inject",org.eclipse.microprofile.jwt.config;version="2.0.0"
+Bundle-Name: MicroProfile JWT Auth Bundle
+Bundle-Version: 2.0.0
+Bundle-SCM: url="https://github.com/eclipse/microprofile-jwt-auth/micr
+ oprofile-jwt-auth-api",connection="scm:git:https://github.com/eclipse
+ /microprofile-jwt-auth.git/microprofile-jwt-auth-api",developer-conne
+ ction="scm:git:git@github.com:eclipse/microprofile-jwt-auth.git/micro
+ profile-jwt-auth-api",tag="2.0"
+Build-Jdk-Spec: 1.8
+Created-By: 1.8.0_292 (AdoptOpenJDK)
+

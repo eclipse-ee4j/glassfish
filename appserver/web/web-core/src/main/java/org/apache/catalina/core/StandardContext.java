@@ -127,6 +127,7 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 import javax.management.MBeanRegistrationException;
 import javax.management.MalformedObjectNameException;
@@ -197,6 +198,7 @@ import org.glassfish.grizzly.http.server.util.MappingData;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.MessageBytes;
 import org.glassfish.hk2.classmodel.reflect.Types;
+import org.glassfish.web.loader.ServletContainerInitializerUtil;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.glassfish.web.valve.GlassFishValve;
 
@@ -806,6 +808,13 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
 
     protected int servletReloadCheckSecs = 1;
 
+    // Fine tune log levels for ServletContainerInitializerUtil to avoid spurious or too verbose logging
+    protected ServletContainerInitializerUtil.LogContext logContext
+            = new ServletContainerInitializerUtil.LogContext() {
+                public Level getNonCriticalClassloadingErrorLogLevel() {
+                    return isStandaloneModule() ? Level.WARNING : Level.FINE;
+                }
+            };
 
     // ----------------------------------------------------- Context Properties
 
@@ -5283,6 +5292,10 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         return null;
     }
 
+    protected boolean isStandaloneModule() {
+        return true;
+    }
+
     protected void callServletContainerInitializers() throws LifecycleException {
         Iterator<ServletContainerInitializer> initIterator = servletContainerInitializers.iterator();
         List<ServletContainerInitializer> loadedServletContainerInitializers = new ArrayList<>();
@@ -5297,7 +5310,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         // Get the list of ServletContainerInitializers and the classes
         // they are interested in
         var interestList = getInterestList(loadedServletContainerInitializers);
-        var initializerList = getInitializerList(loadedServletContainerInitializers, interestList, getTypes(), getClassLoader());
+        var initializerList = getInitializerList(loadedServletContainerInitializers, interestList, getTypes(), getClassLoader(), logContext);
 
         if (initializerList == null) {
             return;
@@ -6784,6 +6797,14 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
             // ignore
         }
         return Collections.unmodifiableSet(set);
+    }
+
+    /**
+     * Return all the security roles
+     * @return all the security roles
+     */
+    public List<String> getSecurityRoles() {
+        return securityRoles;
     }
 
     /**

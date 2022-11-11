@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,8 @@
  */
 
 package com.sun.enterprise.security.auth.login;
+
+import static com.sun.enterprise.util.Utility.isEmpty;
 
 import javax.security.auth.login.LoginException;
 
@@ -61,21 +64,20 @@ public class LDAPLoginModule extends PasswordLoginModule {
         }
         _ldapRealm = (LDAPRealm) _currentRealm;
 
-        // enforce that password cannot be empty.
+        // Enforce that password cannot be empty.
         // ldap may grant login on empty password!
-        if (getPasswordChar() == null || getPasswordChar().length == 0) {
-            String msg = sm.getString("ldaplm.emptypassword", _username);
-            throw new LoginException(msg);
+        if (isEmpty(getPasswordChar())) {
+            throw new LoginException(sm.getString("ldaplm.emptypassword", _username));
         }
 
         String mode = _currentRealm.getProperty(LDAPRealm.PARAM_MODE);
 
-        if (LDAPRealm.MODE_FIND_BIND.equals(mode)) {
-            String[] grpList = _ldapRealm.findAndBind(_username, getPasswordChar());
-            commitAuthentication(_username, getPasswordChar(), _currentRealm, grpList);
-        } else {
-            String msg = sm.getString("ldaplm.badmode", mode);
-            throw new LoginException(msg);
+        if (!LDAPRealm.MODE_FIND_BIND.equals(mode)) {
+            throw new LoginException(sm.getString("ldaplm.badmode", mode));
         }
+
+        String[] groups = _ldapRealm.findAndBind(_username, getPasswordChar());
+
+        commitAuthentication(_username, getPasswordChar(), _currentRealm, groups);
     }
 }

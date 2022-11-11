@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,12 +17,14 @@
 
 package com.sun.enterprise.security.auth.realm.ldap;
 
+import static com.sun.enterprise.security.SecurityLoggerInfo.securityExceptionError;
+import static java.util.logging.Level.WARNING;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Comparator;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.SocketFactory;
@@ -44,55 +47,46 @@ import com.sun.enterprise.util.i18n.StringManager;
  *
  */
 public class CustomSocketFactory extends SocketFactory implements Comparator<SocketFactory> {
-    private SocketFactory socketFactory;
 
     public static final String SSL = "SSL";
+
     protected static final Logger _logger = SecurityLoggerInfo.getLogger();
     protected static final StringManager sm = StringManager.getManager(CustomSocketFactory.class);
+
     private static final CustomSocketFactory customSocketFactory = new CustomSocketFactory();
 
+    private SocketFactory socketFactory;
+
     public CustomSocketFactory() {
-        SSLUtils sslUtils = Globals.getDefaultHabitat().getService(SSLUtils.class);
-        SSLContext sc = null;
+        SSLUtils sslUtils = Globals.get(SSLUtils.class);
+
         try {
-            sc = SSLContext.getInstance(SSL);
-            sc.init(sslUtils.getKeyManagers(), sslUtils.getTrustManagers(), SharedSecureRandom.get());
-            socketFactory = sc.getSocketFactory();
+            SSLContext sslContext = SSLContext.getInstance(SSL);
+            sslContext.init(sslUtils.getKeyManagers(), sslUtils.getTrustManagers(), SharedSecureRandom.get());
+            socketFactory = sslContext.getSocketFactory();
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, SecurityLoggerInfo.securityExceptionError, ex);
+            _logger.log(WARNING, securityExceptionError, ex);
         }
     }
 
-    /**
-     * @see javax.net.SocketFactory#createSocket(java.lang.String, int)
-     */
     @Override
-    public Socket createSocket(String arg0, int arg1) throws IOException, UnknownHostException {
-        return socketFactory.createSocket(arg0, arg1);
+    public Socket createSocket(String host, int port) throws IOException, UnknownHostException {
+        return socketFactory.createSocket(host, port);
     }
 
-    /**
-     * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int)
-     */
     @Override
-    public Socket createSocket(InetAddress arg0, int arg1) throws IOException {
-        return socketFactory.createSocket(arg0, arg1);
+    public Socket createSocket(InetAddress host, int port) throws IOException {
+        return socketFactory.createSocket(host, port);
     }
 
-    /**
-     * @see javax.net.SocketFactory#createSocket(java.lang.String, int, java.net.InetAddress, int)
-     */
     @Override
-    public Socket createSocket(String arg0, int arg1, InetAddress arg2, int arg3) throws IOException, UnknownHostException {
-        return socketFactory.createSocket(arg0, arg1, arg2, arg3);
+    public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException, UnknownHostException {
+        return socketFactory.createSocket(host, port, localHost, localPort);
     }
 
-    /**
-     * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int, java.net.InetAddress, int)
-     */
     @Override
-    public Socket createSocket(InetAddress arg0, int arg1, InetAddress arg2, int arg3) throws IOException {
-        return socketFactory.createSocket(arg0, arg1, arg2, arg3);
+    public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+        return socketFactory.createSocket(address, port, localAddress, localPort);
     }
 
     @Override

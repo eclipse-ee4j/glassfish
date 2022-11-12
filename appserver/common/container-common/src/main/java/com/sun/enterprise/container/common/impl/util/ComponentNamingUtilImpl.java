@@ -24,8 +24,14 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class ComponentNamingUtilImpl implements ComponentNamingUtil {
 
+    private static final String INTERNAL_CLIENT_PREFIX = "__internal_java_app_for_app_client__";
+
     @Override
-    public SimpleJndiName composeInternalGlobalJavaAppName(String appName, SimpleJndiName origJavaAppName) {
-        return new SimpleJndiName("__internal_java_app_for_app_client__" + appName + "__" + origJavaAppName);
+    public SimpleJndiName composeInternalGlobalJavaAppName(String appName, SimpleJndiName jndiName) {
+        // FIXME dmatej added and commented out
+//        if (jndiName.hasJavaPrefix()) {
+//            return new SimpleJndiName(INTERNAL_CLIENT_PREFIX + appName + "__" + jndiName.removePrefix());
+//        }
+        return new SimpleJndiName(INTERNAL_CLIENT_PREFIX + appName + "__" + jndiName);
     }
 }

@@ -223,6 +223,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                     componentEnvId,
                     getTreatComponentAsModule(jndiEnvironment),
                     bindings);
+            // FIXME: Depends on some side effects of preceding calls.
+            componentEnvId = getComponentEnvId(jndiEnvironment);
         }
 
         if (!(jndiEnvironment instanceof ApplicationClientDescriptor)) {
@@ -353,6 +355,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 }
             }
 
+            // FIXME: Alert, it modifies the descriptor as a side effect!!! What are consequences?
             descriptor.setResourceId(getResourceId(jndiEnv, descriptor));
 
             CommonResourceProxy proxy = locator.getService(CommonResourceProxy.class);

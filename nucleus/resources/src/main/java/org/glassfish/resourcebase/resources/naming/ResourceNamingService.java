@@ -124,6 +124,8 @@ public final class ResourceNamingService {
             bindAppScopedNameForAppclient(object, jndiName, applicationName);
         } else {
             namingManager.publishObject(jndiName, object, true);
+            // java namespaces don't support rebind and resources are bound to the app lifecycle.
+//            namingManager.publishObject(removeJavaEnvPrefix(jndiName), object, true);
         }
     }
 
@@ -149,6 +151,8 @@ public final class ResourceNamingService {
             unbindAppScopedNameForAppclient(jndiName, applicationName);
         } else {
             namingManager.unpublishObject(jndiName);
+            // java namespaces don't support rebind and resources are bound to the app lifecycle.
+//            namingManager.unpublishObject(removeJavaEnvPrefix(jndiName));
         }
     }
 
@@ -179,10 +183,14 @@ public final class ResourceNamingService {
             return (T) namingManager.lookup(internalGlobalJndiName);
         } else if (env == null || env.isEmpty()) {
             return (T) namingManager.lookup(jndiName);
+//            return (T) namingManager.lookup(removeJavaEnvPrefix(jndiName));
         } else {
             // probably some remote context, corba.
             return (T) new InitialContext(env).lookup(jndiName.toString());
         }
     }
 
+//    private static SimpleJndiName removeJavaEnvPrefix(final SimpleJndiName jndiName) {
+//        return jndiName.removePrefix().removePrefix("env/");
+//    }
 }

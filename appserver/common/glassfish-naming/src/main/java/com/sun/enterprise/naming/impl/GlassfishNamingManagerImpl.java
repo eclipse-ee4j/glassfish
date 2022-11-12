@@ -533,7 +533,16 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         throw new NamingException("Invalid context name [" + contextName + "]. Name must start with java:");
     }
 
+
+    // FIXME: resolve where to search by the name.
+    @Override
     public <T> T lookup(SimpleJndiName name) throws NamingException {
+        return (T) initialContext.lookup(name.toName());
+    }
+
+
+// FIXME: Wrong name, added dmatej, chooses where to search in.
+    public <T> T lookupFromComponentNamespace(SimpleJndiName name) throws NamingException {
         final String componentId = getComponentId();
         return lookup(componentId, name, initialContext);
     }
@@ -548,9 +557,9 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         // initialContext is used as ic in case of PE while
         // serialContext is used as ic in case of EE/SE
         // Get the component id and namespace to lookup
-        final Context ic = serialContext == null ? initialContext : serialContext;
+        final Context context = serialContext == null ? initialContext : serialContext;
         final String componentId = getComponentId();
-        return lookup(componentId, name, ic);
+        return lookup(componentId, name, context);
     }
 
     /**
@@ -563,10 +572,11 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     private <T> T lookup(String componentId, SimpleJndiName name, Context ctx) throws NamingException {
         LOG.log(DEBUG, "lookup(componentId={0}, name={1}, ctx={2})", componentId, name, ctx);
-        if (!name.hasJavaPrefix() && name.contains(":")) {
-            // generic jndi names
-            return (T) initialContext.lookup(name.toName());
-        }
+// FIXME: added and commented out dmatej
+//        if (!name.hasJavaPrefix() && name.contains(":")) {
+//            // generic jndi names
+//            return (T) initialContext.lookup(name.toName());
+//        }
         final ComponentIdInfo info = componentIdInfo.get(componentId);
         LOG.log(TRACE, "Found componentIdInfo={0}", info);
         final boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
@@ -792,7 +802,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             }
             try {
                 SimpleJndiName name = names.next();
-                Object obj = nm.lookup(name);
+                Object obj = nm.lookupFromComponentNamespace(name);
                 @SuppressWarnings("unchecked")
                 T next = producesNamesOnly
                     ? (T) (new NameClassPair(name.toString(), getClass().getName()))

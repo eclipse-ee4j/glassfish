@@ -58,11 +58,14 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
      */
     public SimpleJndiName(final String jndiName) {
         if (!isValidJndiName(jndiName)) {
-            IllegalArgumentException e = new IllegalArgumentException(
-                "Invalid JNDI name: '" + jndiName + "'. The JNDI name must not be null. The '" + JNDI_CTX_JAVA
-                    + "' JNDI name is not allowed to contain more than one colon.");
-            e.printStackTrace();
-            throw e;
+            throw new IllegalArgumentException(
+                "Invalid JNDI name: '" + jndiName + "'. The JNDI name must not be null.");
+            // FIXME dmatej added and commented out
+//            IllegalArgumentException e = new IllegalArgumentException(
+//                "Invalid JNDI name: '" + jndiName + "'. The JNDI name must not be null. The '" + JNDI_CTX_JAVA
+//                    + "' JNDI name is not allowed to contain more than one colon and the prefix cannot be found"
+//                    + " in the middle of an unprefixed JNDI name.");
+//            throw e;
         }
         this.jndiName = jndiName;
     }
@@ -209,9 +212,8 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
         if (prefix == null) {
             return this;
         }
-        int index = jndiName.indexOf(prefix);
-        if (index >= 0) {
-            return new SimpleJndiName(jndiName.substring(index + prefix.length()));
+        if (jndiName.startsWith(prefix)) {
+            return new SimpleJndiName(jndiName.substring(prefix.length()));
         }
         return this;
     }
@@ -267,8 +269,9 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
      *
      * @param newPrefix must end with the colon or slash.
      * @return new instance, never null.
+     * @throws IllegalArgumentException if it is not possible to create valid JNDI name with the new prefix
      */
-    public SimpleJndiName changePrefix(final String newPrefix) {
+    public SimpleJndiName changePrefix(final String newPrefix) throws IllegalArgumentException {
         if (hasCorbaPrefix()) {
             return this;
         }
@@ -335,9 +338,16 @@ public class SimpleJndiName implements Serializable, Comparable<SimpleJndiName> 
         if (jndiName == null) {
             return false;
         }
-        if (jndiName.startsWith(JNDI_CTX_JAVA)) {
-            return jndiName.indexOf(':') == jndiName.lastIndexOf(':');
-        }
+        // FIXME dmatej added and commented out
+//        if (jndiName.startsWith(JNDI_CTX_JAVA)) {
+//            return jndiName.indexOf(':') == jndiName.lastIndexOf(':');
+//        }
+//        if (jndiName.indexOf(':') > 10 && jndiName.contains(JNDI_CTX_JAVA)) {
+//            // The java: prefix in the middle of the name is not allowed.
+//            // It is quite common mistake when names are concatenated.
+//            // However for JNDI names of other type it is possible (http://, corbaname:, ...)
+//            return false;
+//        }
         return true;
     }
 

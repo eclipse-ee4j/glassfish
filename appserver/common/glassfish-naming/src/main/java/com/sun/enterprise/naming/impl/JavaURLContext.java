@@ -61,6 +61,7 @@ public final class JavaURLContext implements Context, Cloneable {
     private final SimpleJndiName myName;
     private final Hashtable<Object, Object> myEnv;
     // FIXME: Should not be here, causes cyclic dependency directly between these two classes.
+    //        When something goes wrong, tryNamingManager can result in StackOverflowError
     private final SerialContext serialContext;
 
 
@@ -139,7 +140,17 @@ public final class JavaURLContext implements Context, Cloneable {
             throw e;
         }
         {
-            Object obj = tryNamingManager(fullName, e);
+            // If we know for sure it's an entry within an environment namespace it might be a proxy.
+            if (!isAnyJavaEnvJndiName(fullName)) {
+                // FIXME: if we move those java: prefixes in the middle of resource names,
+                //        this block will become unreachable!
+                Object obj = lookupOrCollectException(SimpleJndiName.of(name), e,
+                    NamedNamingObjectManager::tryNamedProxies);
+                if (obj != null) {
+                    return obj;
+                }
+            }
+            Object obj = lookupOrCollectException(fullName, e, n -> namingManager.lookup(n, serialContext));
             if (obj != null) {
                 return obj;
             }
@@ -497,7 +508,7 @@ public final class JavaURLContext implements Context, Cloneable {
 
 
     private SimpleJndiName toFullName(String name) {
-        if (!name.startsWith(JNDI_CTX_JAVA) && name.indexOf(':') != -1) {
+        if (!SimpleJndiName.isValidJndiName(name)) {
             // this is probably some generic JNDI name like jdbc:derby: or http://... etc.,
             // not compatible with java contexts.
             return null;
@@ -509,18 +520,6 @@ public final class JavaURLContext implements Context, Cloneable {
         } else {
             return new SimpleJndiName(myName + "/" + name);
         }
-    }
-
-
-    private Object tryNamingManager(final SimpleJndiName fullName, NamingException collector) throws NamingException {
-        // If we know for sure it's an entry within an environment namespace it might be a proxy.
-        if (!isAnyJavaEnvJndiName(fullName)) {
-            Object obj = lookupOrCollectException(fullName, collector, NamedNamingObjectManager::tryNamedProxies);
-            if (obj != null) {
-                return obj;
-            }
-        }
-        return lookupOrCollectException(fullName, collector, n -> namingManager.lookup(n, serialContext));
     }
 
 

@@ -614,16 +614,33 @@ public class ConnectorsUtil {
             }
         }
 
+        final String prefix;
         if (compId == null || compId.isEmpty()) {
             prefix = prefixPart1 + prefixPart2;
         } else {
-            prefix = prefixPart1 + prefixPart2 + compId + "/";
+            prefix = prefixPart1 + prefixPart2 + compId + '/';
         }
-        return getReservePrefixedJNDIName(prefix, resourceName);
+        return addResourceNamePrefix(prefix, resourceName);
     }
 
 
-    private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
+    public static SimpleJndiName addResourceNamePrefix(String prefix, SimpleJndiName resourceName) {
+        // FIXME: dmatej breaks connectors_group_3, to be continued.
+//        if (resourceName.contains(prefix)) {
+//            LOG.log(Level.WARNING,
+//                "The name {0} already contained prefix {1}."
+//                    + " It may be a coincidence or you already added the prefix. I am returning the original name.",
+//                new Object[] {resourceName, prefix});
+//            LOG.log(Level.FINEST, "", new IllegalArgumentException("Stacktrace to find which method asked for this."));
+//            return resourceName;
+//        }
+//        if (resourceName.hasJavaPrefix()) {
+//            String javaCtxPrefix = resourceName.getPrefix();
+//            SimpleJndiName jndiEnv = resourceName.removePrefix(javaCtxPrefix);
+//            SimpleJndiName jndiSimple = jndiEnv.removePrefix("env/");
+//            String javaCtxEnvPrefix = jndiEnv == jndiSimple ? javaCtxPrefix.toString() : (javaCtxPrefix + "env/");
+//            return new SimpleJndiName(javaCtxEnvPrefix + prefix + jndiSimple);
+//        }
         return new SimpleJndiName(prefix + resourceName);
     }
 

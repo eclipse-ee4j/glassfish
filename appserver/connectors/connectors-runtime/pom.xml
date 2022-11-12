@@ -161,6 +161,11 @@
              <groupId>jakarta.enterprise.concurrent</groupId>
              <artifactId>jakarta.enterprise.concurrent-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

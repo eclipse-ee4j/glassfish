@@ -72,7 +72,7 @@ import static com.sun.enterprise.naming.util.LogFacade.logger;
  * <p/>
  * <b>NOT THREAD SAFE: mutable instance variables</b>
  */
-public class SerialContext implements Context {
+public final class SerialContext implements Context {
     @LogMessageInfo(message = "Exception during name lookup : {0}",
     cause = "App Server may not be running at port intended, or possible Network Error.",
     action = "Check to see if the AppServer is up and running on the port intended. The problem could be because of incorrect port. Check to see if you can access the host on which the AppServer running.")
@@ -150,45 +150,12 @@ public class SerialContext implements Context {
         stickyContext.get().clear() ;
     }
 
-    /** Store the sticky context as a threadlocal variable (bug 5050591).
-    * Count is needed to know how many times the lookup method is being called
-    * from within the user code's ic.lookup().
-    * e.g. JMS resource lookups (via ConnectorObjectFactory)
-    */
-    private static class ThreadLocalIC {
-        private Context ctx = null ;
-        private int count = 0;
-
-        Context getContext() {
-            return ctx ;
-        }
-
-        void grab( Context context ) {
-            if (ctx == null) {
-                ctx = context ;
-            }
-
-            count++ ;
-        }
-
-        void release() {
-            if (count > 0) {
-                count-- ;
-                if (count == 0) {
-                    ctx = null ;
-                }
-            } else {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, "SerialContext: attempt to release StickyContext without grab");
-                }
-                ctx = null;
-            }
-        }
-
-        void clear() {
-            ctx = null ;
-            count = 0 ;
-        }
+    /**
+     * This constructor uses an empty string as a name.
+     * Initializes the object reference to the remote provider object.
+     */
+    public SerialContext(Hashtable<Object, Object> env, ServiceLocator services) throws NamingException {
+        this("", env, services);
     }
 
 
@@ -272,115 +239,10 @@ public class SerialContext implements Context {
         }
     }
 
-    /**
-     * This constructor uses an empty string as a name.
-     * Initializes the object reference to the remote provider object.
-     */
-    public SerialContext(Hashtable<Object, Object> env, ServiceLocator services) throws NamingException {
-        this("", env, services);
-    }
 
-    private SerialContextProvider getProvider() throws NamingException {
-        SerialContextProvider returnValue = provider;
-
-        if (provider == null) {
-            try {
-                if (intraServerLookups) {
-                    returnValue = ProviderManager.getProviderManager().getLocalProvider();
-                } else {
-                    returnValue = getRemoteProvider();
-                }
-            } catch (Exception e) {
-                clearSticky() ;
-                NamingException ne = new NamingException("Unable to acquire SerialContextProvider for " + this);
-                ne.initCause(e);
-                throw ne;
-            }
-        }
-
-        return returnValue;
-    }
-
-    private ORB getORB() {
-        if (orb == null) {
-            ORBLocator orbHelper = services.getService(ORBLocator.class);
-            orb = orbHelper.getORB();
-        }
-        return orb;
-    }
-
-
-    private ProviderCacheKey getProviderCacheKey() {
-        final ORB myORB = getORB();
-        String eplist = null;
-        if (myEnv != null) {
-            eplist = (String) myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY);
-        }
-
-        if (eplist != null) {
-            return new ProviderCacheKey(eplist);
-        } else if (targetHost == null) {
-            return new ProviderCacheKey(myORB);
-        } else {
-            return new ProviderCacheKey(targetHost, targetPort);
-        }
-    }
-
-    private void clearProvider() {
-        ProviderCacheKey key = getProviderCacheKey() ;
-        synchronized(SerialContext.class) {
-            providerCache.remove( key ) ;
-        }
-        provider = null ;
-    }
-
-    private SerialContextProvider getRemoteProvider() throws Exception {
-        if (provider == null) {
-            ProviderCacheKey key = getProviderCacheKey() ;
-
-            SerialContextProvider cachedProvider;
-            synchronized(SerialContext.class) {
-                cachedProvider = providerCache.get(key);
-            }
-
-            if (cachedProvider == null) {
-                // Don't hold lock during this call: remote invocation
-                SerialContextProvider newProvider = key.getNameService() ;
-
-                synchronized(SerialContext.class) {
-                    cachedProvider = providerCache.get(key);
-                    if (cachedProvider == null)  {
-                        providerCache.put(key, newProvider);
-                        provider = newProvider;
-                    } else {
-                        provider = cachedProvider;
-                    }
-                }
-            } else {
-                provider = cachedProvider;
-            }
-
-        }
-
-        return provider;
-    }
-
-    /**
-     * The getNameInNamespace API is not supported in this context.
-     *
-     * @throws NamingException if there is a naming exception.
-     */
     @Override
     public String getNameInNamespace() throws NamingException {
         return myName;
-    }
-
-    /**
-     * method to check if the name to look up starts with "java:"
-     */
-    private boolean isjavaURL(String name) {
-        SimpleJndiName jndiName = SimpleJndiName.of(name);
-        return jndiName.hasJavaPrefix() && !jndiName.isJavaGlobal();
     }
 
 
@@ -395,165 +257,6 @@ public class SerialContext implements Context {
         return lookup(name, 0);
     }
 
-
-    private Object lookup(String name, int level) throws NamingException {
-        // Before any lookup bind any NamedNamingObjectProxy
-        // Skip if in plain Java SE client
-        // FIXME this should really be moved somewhere else
-        NamedNamingObjectManager.checkAndLoadProxies(services);
-
-        /**
-         * In case a user is creating an IC with env passed in constructor; env
-         * specifies endpoints in some form in that case, the sticky IC should
-         * be stored as a thread local variable.
-         *
-         */
-        final boolean useSticky = myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY) != null ;
-
-        if (useSticky) {
-            grabSticky();
-        }
-
-        try {
-            if (name.isEmpty()) {
-                // Asking to look up this context itself. Create and return
-                // a new instance with its own independent environment.
-                return new SerialContext(myName, myEnv, services);
-            }
-
-            name = getRelativeName(name);
-
-            if (isjavaURL(name)) {
-                //it is possible that the object bound in a java url ("java:") is
-                //reference object.
-                Object o = javaUrlContext.lookup(name);
-                if(o instanceof Reference){
-                    o = getObjectInstance(name, o);
-                }
-                return o;
-            }
-            SerialContextProvider prvdr = getProvider() ;
-            Object obj = prvdr.lookup(name);
-            if (obj instanceof NamingObjectProxy) {
-                return ((NamingObjectProxy) obj).create(this);
-            }
-
-            if (obj instanceof Context) {
-                return new SerialContext(name, myEnv, services);
-            }
-
-            return getObjectInstance(name, obj);
-        } catch (NamingException nnfe) {
-            NamingException ne = new NamingException("Lookup failed for " + name + " in " + this);
-            ne.initCause(nnfe);
-            throw ne;
-        } catch (Exception ex) {
-            // Issue 14732: make this FINE, as a cluster configuration change
-            // can send us here in a normal retry scenario.
-            logger.log(Level.FINE, EXCEPTION_DURING_LOOKUP, name);
-            logger.log(Level.FINE, "", ex);
-
-            final int nextLevel = level + 1 ;
-
-            // temp fix for 6320008
-            // this should be removed once we change the transient NS
-            // implementation to persistent
-            if (ex instanceof java.rmi.MarshalException
-                    && ex.getCause() instanceof org.omg.CORBA.COMM_FAILURE
-                    && nextLevel < MAX_LEVEL) {
-                clearProvider();
-                logger.fine("Resetting provider to NULL. Will get new obj ref for provider since previous obj ref was stale...");
-                return lookup(name, nextLevel);
-            }
-            throw createCommunicationException("Lookup failed.", ex);
-        } finally {
-            if (useSticky) {
-                releaseSticky();
-            }
-        }
-    }
-
-
-    private Object getObjectInstance(String name, Object obj) throws Exception {
-        Object retObj = NamingManager.getObjectInstance(obj, new CompositeName(name), null, myEnv);
-
-        if (retObj == obj) {
-            // NamingManager.getObjectInstance() returns the same object
-            // when it can't find the factory class. Since NamingManager
-            // uses Thread's context class loader to locate factory classes,
-            // it may not be able to locate the various GlassFish factories
-            // when lookup is performed outside of a Jakarta EE context like
-            // inside an OSGi bundle's activator.
-            // So, let's see if using CommonClassLoader helps or not.
-            // We will only try with CommonClassLoader when the passed object
-            // reference has a factory class name set.
-
-            ClassLoader tccl = Thread.currentThread().getContextClassLoader();
-            if (tccl != commonCL) {
-                Reference ref = getReference(obj);
-                if (ref != null) {
-                    logger.logp(Level.FINE, "SerialContext", "getObjectInstance",
-                        "Trying with CommonClassLoader for name {0} ", name);
-                    ObjectFactory factory = getObjectFactory(ref, commonCL);
-                    if (factory != null) {
-                        retObj = factory.getObjectInstance(ref, new CompositeName(name), null, myEnv);
-                    }
-                    if (retObj != obj) {
-                        logger.logp(Level.FINE, "SerialContext", "getObjectInstance", "Found with CommonClassLoader");
-                    }
-                }
-            }
-        }
-        return retObj;
-    }
-
-    /**
-     * This method tries to check if the passed object is a Reference or
-     * Refenciable. If it is a Reference, it just casts it to a Reference and
-     * returns, else if it is a Referenceable, it tries to get a Reference from
-     * the Referenceable and returns that, otherwise, it returns null.
-     *
-     * @param obj
-     * @return
-     * @throws NamingException
-     */
-    private Reference getReference(Object obj) throws NamingException
-    {
-        Reference ref = null;
-        if (obj instanceof Reference) {
-            ref = (Reference) obj;
-        } else if (obj instanceof Referenceable) {
-            ref = ((Referenceable)(obj)).getReference();
-        }
-
-        return ref;
-    }
-
-    /**
-     * It tries to load the factory class for the given reference using the
-     * given class loader and return an instance of the same. Returns null
-     * if it can't load the class.
-     *
-     * @param ref
-     * @param cl
-     * @return
-     * @throws IllegalAccessException
-     * @throws InstantiationException
-     */
-    private ObjectFactory getObjectFactory(Reference ref, ClassLoader cl)
-        throws IllegalAccessException, InstantiationException {
-        String factoryName = ref.getFactoryClassName();
-        if (factoryName != null) {
-            try {
-                Class<ObjectFactory> c = (Class<ObjectFactory>) Class.forName(factoryName, false, cl);
-                return c.getDeclaredConstructor().newInstance();
-            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
-                logger.log(Level.CONFIG, "Factory could not be created: {0}", factoryName);
-            }
-        }
-        return null;
-    }
-
     /**
      * Lookup the specifed name in the context. Returns the resolved object.
      *
@@ -563,7 +266,7 @@ public class SerialContext implements Context {
     @Override
     public Object lookup(Name name) throws NamingException {
         // Flat namespace; no federation; just call string version
-        return lookup(name.toString());
+        return lookup(name.toString(), 0);
     }
 
     /**
@@ -575,9 +278,9 @@ public class SerialContext implements Context {
      */
     @Override
     public void bind(String name, Object obj) throws NamingException {
-
         name = getRelativeName(name);
         if (isjavaURL(name)) {
+            // FIXME: bind just throws an exception.
             javaUrlContext.bind(name, obj);
         } else {
             try {
@@ -613,6 +316,7 @@ public class SerialContext implements Context {
 
         name = getRelativeName(name);
         if (isjavaURL(name)) {
+            // FIXME: rebind just throws an exception.
             javaUrlContext.rebind(name, obj);
         } else {
             try {
@@ -921,10 +625,8 @@ public class SerialContext implements Context {
     }
 
     @Override
-    public String composeName(String name, String prefix)
-            throws NamingException {
-        Name result = composeName(new CompositeName(name), new CompositeName(
-                prefix));
+    public String composeName(String name, String prefix) throws NamingException {
+        Name result = composeName(new CompositeName(name), new CompositeName(prefix));
         return result.toString();
     }
 
@@ -974,6 +676,16 @@ public class SerialContext implements Context {
         return myEnv;
     }
 
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName()).append('[');
+        sb.append("myEnv=").append(myEnv).append(']');
+        return sb.toString();
+    }
+
+
     /**
      * Set the environment for the current context to null when close is called.
      *
@@ -983,6 +695,261 @@ public class SerialContext implements Context {
     public void close() throws NamingException {
         this.myEnv.clear();
         this.javaUrlContext.close();
+    }
+
+
+    private SerialContextProvider getProvider() throws NamingException {
+        SerialContextProvider returnValue = provider;
+
+        if (provider == null) {
+            try {
+                if (intraServerLookups) {
+                    returnValue = ProviderManager.getProviderManager().getLocalProvider();
+                } else {
+                    returnValue = getRemoteProvider();
+                }
+            } catch (Exception e) {
+                clearSticky() ;
+                NamingException ne = new NamingException("Unable to acquire SerialContextProvider for " + this);
+                ne.initCause(e);
+                throw ne;
+            }
+        }
+
+        return returnValue;
+    }
+
+    private ORB getORB() {
+        if (orb == null) {
+            ORBLocator orbHelper = services.getService(ORBLocator.class);
+            orb = orbHelper.getORB();
+        }
+        return orb;
+    }
+
+
+    private ProviderCacheKey getProviderCacheKey() {
+        final ORB myORB = getORB();
+        String eplist = null;
+        if (myEnv != null) {
+            eplist = (String) myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY);
+        }
+
+        if (eplist != null) {
+            return new ProviderCacheKey(eplist);
+        } else if (targetHost == null) {
+            return new ProviderCacheKey(myORB);
+        } else {
+            return new ProviderCacheKey(targetHost, targetPort);
+        }
+    }
+
+    private void clearProvider() {
+        ProviderCacheKey key = getProviderCacheKey() ;
+        synchronized(SerialContext.class) {
+            providerCache.remove( key ) ;
+        }
+        provider = null ;
+    }
+
+    private SerialContextProvider getRemoteProvider() throws Exception {
+        if (provider == null) {
+            ProviderCacheKey key = getProviderCacheKey() ;
+
+            SerialContextProvider cachedProvider;
+            synchronized(SerialContext.class) {
+                cachedProvider = providerCache.get(key);
+            }
+
+            if (cachedProvider == null) {
+                // Don't hold lock during this call: remote invocation
+                SerialContextProvider newProvider = key.getNameService() ;
+
+                synchronized(SerialContext.class) {
+                    cachedProvider = providerCache.get(key);
+                    if (cachedProvider == null)  {
+                        providerCache.put(key, newProvider);
+                        provider = newProvider;
+                    } else {
+                        provider = cachedProvider;
+                    }
+                }
+            } else {
+                provider = cachedProvider;
+            }
+
+        }
+
+        return provider;
+    }
+
+
+    private Object lookup(String name, int level) throws NamingException {
+        logger.log(Level.FINEST, "lookup(name={0} level={1})", new Object[] {name, level});
+        // Before any lookup bind any NamedNamingObjectProxy
+        // Skip if in plain Java SE client
+        // FIXME this should really be moved somewhere else
+        NamedNamingObjectManager.checkAndLoadProxies(services);
+
+        /**
+         * In case a user is creating an IC with env passed in constructor; env
+         * specifies endpoints in some form in that case, the sticky IC should
+         * be stored as a thread local variable.
+         *
+         */
+        final boolean useSticky = myEnv.get(NamingClusterInfo.IIOP_URL_PROPERTY) != null ;
+
+        if (useSticky) {
+            grabSticky();
+        }
+
+        try {
+            if (name.isEmpty()) {
+                // Asking to look up this context itself. Create and return
+                // a new instance with its own independent environment.
+                return new SerialContext(myName, myEnv, services);
+            }
+
+            name = getRelativeName(name);
+
+            if (isjavaURL(name)) {
+                //it is possible that the object bound in a java url ("java:") is
+                //reference object.
+                Object o = javaUrlContext.lookup(name);
+                if (o instanceof Reference) {
+                    o = getObjectInstance(name, o);
+                }
+                return o;
+            }
+            SerialContextProvider prvdr = getProvider();
+            Object obj = prvdr.lookup(name);
+            if (obj instanceof NamingObjectProxy) {
+                return ((NamingObjectProxy) obj).create(this);
+            }
+
+            if (obj instanceof Context) {
+                return new SerialContext(name, myEnv, services);
+            }
+
+            return getObjectInstance(name, obj);
+        } catch (NamingException nnfe) {
+            NamingException ne = new NamingException("Lookup failed for " + name + " in " + this);
+            ne.initCause(nnfe);
+            throw ne;
+        } catch (Exception ex) {
+            // Issue 14732: make this FINE, as a cluster configuration change
+            // can send us here in a normal retry scenario.
+            logger.log(Level.FINE, EXCEPTION_DURING_LOOKUP, name);
+            logger.log(Level.FINE, "", ex);
+
+            final int nextLevel = level + 1 ;
+
+            // temp fix for 6320008
+            // this should be removed once we change the transient NS
+            // implementation to persistent
+            if (ex instanceof java.rmi.MarshalException
+                    && ex.getCause() instanceof org.omg.CORBA.COMM_FAILURE
+                    && nextLevel < MAX_LEVEL) {
+                clearProvider();
+                logger.fine("Resetting provider to NULL. Will get new obj ref for provider since previous obj ref was stale...");
+                return lookup(name, nextLevel);
+            }
+            throw createCommunicationException("Lookup failed.", ex);
+        } finally {
+            if (useSticky) {
+                releaseSticky();
+            }
+        }
+    }
+
+
+    /**
+     * @return true if the name starts with <code>java:</code> but not <code>java:global</code>
+     */
+    private boolean isjavaURL(String name) {
+        SimpleJndiName jndiName = SimpleJndiName.of(name);
+        return jndiName.hasJavaPrefix() && !jndiName.isJavaGlobal();
+    }
+
+
+    private Object getObjectInstance(String name, Object obj) throws Exception {
+        logger.log(Level.FINE, "getObjectInstance(name={0}, obj={1})", new Object[] {name, obj});
+        Object retObj = NamingManager.getObjectInstance(obj, new CompositeName(name), null, myEnv);
+
+        if (retObj == obj) {
+            // NamingManager.getObjectInstance() returns the same object
+            // when it can't find the factory class. Since NamingManager
+            // uses Thread's context class loader to locate factory classes,
+            // it may not be able to locate the various GlassFish factories
+            // when lookup is performed outside of a Jakarta EE context like
+            // inside an OSGi bundle's activator.
+            // So, let's see if using CommonClassLoader helps or not.
+            // We will only try with CommonClassLoader when the passed object
+            // reference has a factory class name set.
+
+            ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+            if (tccl != commonCL) {
+                Reference ref = getReference(obj);
+                if (ref != null) {
+                    logger.logp(Level.FINE, "SerialContext", "getObjectInstance",
+                        "Trying with CommonClassLoader for name {0} ", name);
+                    ObjectFactory factory = getObjectFactory(ref, commonCL);
+                    if (factory != null) {
+                        retObj = factory.getObjectInstance(ref, new CompositeName(name), null, myEnv);
+                    }
+                    if (retObj != obj) {
+                        logger.logp(Level.FINE, "SerialContext", "getObjectInstance", "Found with CommonClassLoader");
+                    }
+                }
+            }
+        }
+        return retObj;
+    }
+
+    /**
+     * This method tries to check if the passed object is a Reference or
+     * Refenciable. If it is a Reference, it just casts it to a Reference and
+     * returns, else if it is a Referenceable, it tries to get a Reference from
+     * the Referenceable and returns that, otherwise, it returns null.
+     *
+     * @param obj
+     * @return
+     * @throws NamingException
+     */
+    private Reference getReference(Object obj) throws NamingException {
+        Reference ref = null;
+        if (obj instanceof Reference) {
+            ref = (Reference) obj;
+        } else if (obj instanceof Referenceable) {
+            ref = ((Referenceable)(obj)).getReference();
+        }
+
+        return ref;
+    }
+
+    /**
+     * It tries to load the factory class for the given reference using the
+     * given class loader and return an instance of the same. Returns null
+     * if it can't load the class.
+     *
+     * @param ref
+     * @param cl
+     * @return
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    private ObjectFactory getObjectFactory(Reference ref, ClassLoader cl)
+        throws IllegalAccessException, InstantiationException {
+        String factoryName = ref.getFactoryClassName();
+        if (factoryName != null) {
+            try {
+                Class<ObjectFactory> c = (Class<ObjectFactory>) Class.forName(factoryName, false, cl);
+                return c.getDeclaredConstructor().newInstance();
+            } catch (ClassNotFoundException | InvocationTargetException | NoSuchMethodException e) {
+                logger.log(Level.CONFIG, "Factory could not be created: {0}", factoryName);
+            }
+        }
+        return null;
     }
 
 
@@ -998,10 +965,54 @@ public class SerialContext implements Context {
         return myName.isEmpty() ? name : myName + "/" + name;
     }
 
+
+    /**
+     * Store the sticky context as a threadlocal variable (bug 5050591).
+     * Count is needed to know how many times the lookup method is being called
+     * from within the user code's ic.lookup().
+     * e.g. JMS resource lookups (via ConnectorObjectFactory)
+     */
+    private static class ThreadLocalIC {
+
+        private Context ctx = null ;
+        private int count = 0;
+
+        Context getContext() {
+            return ctx ;
+        }
+
+        void grab(Context context) {
+            if (ctx == null) {
+                ctx = context ;
+            }
+
+            count++ ;
+        }
+
+        void release() {
+            if (count > 0) {
+                count-- ;
+                if (count == 0) {
+                    ctx = null ;
+                }
+            } else {
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.log(Level.FINE, "SerialContext: attempt to release StickyContext without grab");
+                }
+                ctx = null;
+            }
+        }
+
+        void clear() {
+            ctx = null ;
+            count = 0 ;
+        }
+    }
+
+
     // Class for enumerating name/class pairs
     static class RepNames<T> implements NamingEnumeration<T> {
         Hashtable bindings;
-
         Enumeration names;
 
         RepNames(Hashtable bindings) {
@@ -1079,14 +1090,6 @@ public class SerialContext implements Context {
         public void close() {
             //no-op since no steps needed to free up resources
         }
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getClass().getSimpleName()).append('[');
-        sb.append("myEnv=").append(myEnv).append(']');
-        return sb.toString();
     }
 
     private class ProviderCacheKey {

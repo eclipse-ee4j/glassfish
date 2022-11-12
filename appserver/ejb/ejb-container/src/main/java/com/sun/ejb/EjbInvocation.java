@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,6 @@
 
 package com.sun.ejb;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.rmi.UnmarshalException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.naming.NameNotFoundException;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.ResourceHandler;
-import org.glassfish.ejb.api.EJBInvocation;
-
-/* HARRY : JACC Changes */
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.ejb.containers.EJBLocalRemoteObject;
@@ -48,13 +36,25 @@ import jakarta.transaction.Transaction;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.ws.WebServiceContext;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.rmi.UnmarshalException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.naming.NameNotFoundException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.ResourceHandler;
+import org.glassfish.ejb.api.EJBInvocation;
+
 /**
- * The EjbInvocation object contains state associated with an invocation on an EJB or EJBHome (local/remote).
- *
+ * The EjbInvocation object contains state associated with an invocation on an EJB or EJBHome
+ * (local/remote).
  * <p>
- * It is usually created by generated code in *ObjectImpl and *HomeImpl classes. It is passed as a parameter to
- * Container.preInvoke() * and postInvoke(), which are called by the EJB(Local)Object/EJB(Local)Home before and after an
- * invocation.
+ * It is usually created by generated code in *ObjectImpl and *HomeImpl classes. It is passed as
+ * a parameter to Container.preInvoke() * and postInvoke(), which are called by
+ * the EJB(Local)Object/EJB(Local)Home before and after an invocation.
  */
 public class EjbInvocation extends ComponentInvocation
     implements InvocationContext, TransactionOperationsManager, EJBInvocation, InterceptorManager.AroundInvokeContext {
@@ -496,10 +496,11 @@ public class EjbInvocation extends ComponentInvocation
     @Override
     public Map<String, Object> getContextData() {
         if (this.contextData == null) {
-            if (webServiceContext != null)
+            if (webServiceContext != null) {
                 this.contextData = webServiceContext.getMessageContext();
-            else
+            } else {
                 this.contextData = new HashMap<String, Object>();
+            }
         }
         return contextData;
     }

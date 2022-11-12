@@ -44,13 +44,12 @@ public class EjbSecurityComponentInvocationHandler implements RegisteredComponen
     @Inject
     private InvocationManager invocationManager;
 
-    private ComponentInvocationHandler ejbSecurityCompInvHandler = new ComponentInvocationHandler() {
+    private final ComponentInvocationHandler ejbSecurityCompInvHandler = new ComponentInvocationHandler() {
 
         @Override
         public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv)
             throws InvocationException {
             if (invType == EJB_INVOCATION) {
-                assert (newInv instanceof EjbInvocation);
                 try {
                     if (!newInv.isPreInvokeDone()) {
                         ((EjbInvocation) newInv).getEjbSecurityManager().preInvoke(newInv);
@@ -76,11 +75,11 @@ public class EjbSecurityComponentInvocationHandler implements RegisteredComponen
         public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
             throws InvocationException {
             if (invType == EJB_INVOCATION) {
-                assert (curInv instanceof EjbInvocation);
                 try {
                     ((EjbInvocation) curInv).getEjbSecurityManager().postInvoke(curInv);
                 } catch (Exception ex) {
-                    _logger.log(SEVERE, "ejb.security_postinvoke_exception", ex);
+                    _logger.log(SEVERE,
+                        "Exception while running postInvoke for invType=" + invType + " and invocation=" + curInv, ex);
                     ((EjbInvocation) curInv).exception = ex;
                 }
             }

@@ -39,11 +39,6 @@ public class PoolInfo implements GenericResourceInfo {
     }
 
 
-    public PoolInfo(SimpleJndiName name, String applicationName) {
-        this(name, applicationName, null);
-    }
-
-
     public PoolInfo(SimpleJndiName name, String applicationName, String moduleName) {
         this.name = name;
         this.applicationName = applicationName;

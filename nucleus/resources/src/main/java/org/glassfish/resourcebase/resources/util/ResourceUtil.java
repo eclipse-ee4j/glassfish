@@ -131,13 +131,13 @@ public class ResourceUtil {
         SimpleJndiName jndiName = SimpleJndiName.of(resource.getName());
         if (resource.getParent() != null && resource.getParent().getParent() instanceof Application) {
             Application application = (Application) resource.getParent().getParent();
-            return new PoolInfo(jndiName, application.getName());
+            return new PoolInfo(jndiName, application.getName(), null);
         } else if (resource.getParent() != null && resource.getParent().getParent() instanceof Module) {
             Module module = (Module) resource.getParent().getParent();
             Application application = (Application) module.getParent();
             return new PoolInfo(jndiName, application.getName(), module.getName());
         } else {
-            return new PoolInfo(jndiName);
+            return new PoolInfo(jndiName, null, null);
         }
     }
 
@@ -156,6 +156,9 @@ public class ResourceUtil {
         return actualModuleName;
     }
 
+    /**
+     * @return moduleName without .rar or .jar suffix
+     */
     public static String getActualModuleName(String moduleName){
         if (moduleName != null) {
             if (moduleName.endsWith(".jar") || moduleName.endsWith(".rar")) {

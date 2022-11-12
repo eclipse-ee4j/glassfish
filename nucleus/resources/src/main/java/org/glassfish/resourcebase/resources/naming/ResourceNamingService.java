@@ -19,11 +19,11 @@ package org.glassfish.resourcebase.resources.naming;
 
 import jakarta.inject.Inject;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
@@ -34,10 +34,7 @@ import org.glassfish.api.naming.ComponentNamingUtil;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.SimpleJndiName;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.resourcebase.resources.api.GenericResourceInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Service;
 
@@ -50,12 +47,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public final class ResourceNamingService {
 
-    @LogMessagesResourceBundle
-    public static final String LOGMESSAGE_RESOURCE = "org.glassfish.resourcebase.resources.LogMessages";
-
-    @LoggerInfo(subsystem = "RESOURCE", description = "Nucleus Resource", publish = true)
-    public static final String LOGGER = "jakarta.enterprise.resources.naming";
-    private static final Logger LOG = Logger.getLogger(LOGGER, LOGMESSAGE_RESOURCE);
+    private static final Logger LOG = System.getLogger(ResourceNamingService.class.getName());
 
     // TODO ASR introduce contract for this service and refactor this service to connector-runtime ?
     @Inject
@@ -67,15 +59,22 @@ public final class ResourceNamingService {
     @Inject
     private ProcessEnvironment processEnvironment;
 
+    public void publishObject(GenericResourceInfo resourceInfo, Object object, boolean rebind) throws NamingException {
+        publishObject(resourceInfo, resourceInfo.getName(), object, rebind);
+    }
+
     public void publishObject(final GenericResourceInfo resourceInfo, final SimpleJndiName jndiName,
         final Object object, final boolean rebind) throws NamingException {
         String applicationName = resourceInfo.getApplicationName();
         String moduleName = ResourceUtil.getActualModuleName(resourceInfo.getModuleName());
-
-        if (applicationName != null && moduleName != null && resourceInfo.getName().isJavaModule()) {
+        SimpleJndiName resJndiName = resourceInfo.getName();
+        LOG.log(Level.DEBUG, "publishObject: applicationName={0}, moduleName={1}, jndiName={2}, resourceJndiName={3}",
+            applicationName, moduleName, jndiName, resJndiName);
+        if (applicationName != null && moduleName != null && resJndiName.isJavaModule()) {
 
             Object alreadyBoundObject = null;
             if (rebind) {
+                // FIXME: It would be better to implement rebind in JavaNamespace
                 try {
                     namingManager.unbindModuleObject(applicationName, moduleName, jndiName);
                 } catch (NameNotFoundException e) {
@@ -99,10 +98,8 @@ public final class ResourceNamingService {
             JNDIBinding bindings = new ModuleScopedResourceBinding(jndiName, object);
             List<JNDIBinding> list = new ArrayList<>();
             list.add(bindings);
-            LOG.log(Level.FINE, "applicationName={0}, moduleName={1}, jndiName={2}",
-                new Object[] {applicationName, moduleName, jndiName});
             namingManager.bindToModuleNamespace(applicationName, moduleName, list);
-        } else if (applicationName != null && (jndiName.isJavaApp() || jndiName.isJavaModule())) {
+        } else if (applicationName != null && resJndiName.isJavaApp()) {
             Object alreadyBoundObject = null;
             if (rebind) {
                 try {
@@ -117,22 +114,17 @@ public final class ResourceNamingService {
                     // ignore
                 }
                 if (alreadyBoundObject != null) {
-                    throw new NamingException("Object already bound for jndiName " + "[ " + jndiName + " ] of application's namespace ["
-                            + applicationName + "]");
+                    throw new NamingException("Object already bound for jndiName " + "[ " + jndiName
+                        + " ] of application's namespace [" + applicationName + "]");
                 }
             }
 
-            JNDIBinding bindings = new ApplicationScopedResourceBinding(jndiName, object);
-            namingManager.bindToAppNamespace(applicationName, List.of(bindings));
+            JNDIBinding binding = new ApplicationScopedResourceBinding(jndiName, object);
+            namingManager.bindToAppNamespace(applicationName, List.of(binding));
             bindAppScopedNameForAppclient(object, jndiName, applicationName);
         } else {
             namingManager.publishObject(jndiName, object, true);
         }
-    }
-
-    public void publishObject(ResourceInfo resourceInfo, Object object, boolean rebind) throws NamingException {
-        SimpleJndiName jndiName = resourceInfo.getName();
-        publishObject(resourceInfo, jndiName, object, rebind);
     }
 
     private void bindAppScopedNameForAppclient(Object object, SimpleJndiName jndiName, String applicationName) throws NamingException {
@@ -140,13 +132,19 @@ public final class ResourceNamingService {
         namingManager.publishObject(name, object, true);
     }
 
+    public void unpublishObject(GenericResourceInfo resourceInfo) throws NamingException {
+        unpublishObject(resourceInfo, resourceInfo.getName());
+    }
+
     public void unpublishObject(GenericResourceInfo resourceInfo, SimpleJndiName jndiName) throws NamingException {
         String applicationName = resourceInfo.getApplicationName();
         String moduleName = ResourceUtil.getActualModuleName(resourceInfo.getModuleName());
-
-        if (!resourceInfo.getName().isJavaGlobal() && applicationName != null && moduleName != null) {
+        SimpleJndiName resJndiName = resourceInfo.getName();
+        LOG.log(Level.DEBUG, "unpublishObject: applicationName={0}, moduleName={1}, jndiName={2}, resourceJndiName={3}",
+            applicationName, moduleName, jndiName, resJndiName);
+        if (applicationName != null && moduleName != null && resJndiName.isJavaModule()) {
             namingManager.unbindModuleObject(applicationName, moduleName, jndiName);
-        } else if (!resourceInfo.getName().isJavaGlobal() && applicationName != null) {
+        } else if (applicationName != null && resJndiName.isJavaApp()) {
             namingManager.unbindAppObject(applicationName, jndiName);
             unbindAppScopedNameForAppclient(jndiName, applicationName);
         } else {
@@ -155,33 +153,36 @@ public final class ResourceNamingService {
     }
 
     private void unbindAppScopedNameForAppclient(SimpleJndiName jndiName, String applicationName) throws NamingException {
-        SimpleJndiName internalGlobalJavaAppName = componentNamingUtil.composeInternalGlobalJavaAppName(applicationName, jndiName);
-        namingManager.unpublishObject(internalGlobalJavaAppName);
+        SimpleJndiName internalGlobalJndiName = componentNamingUtil.composeInternalGlobalJavaAppName(applicationName, jndiName);
+        namingManager.unpublishObject(internalGlobalJndiName);
     }
 
-    public <T> T lookup(GenericResourceInfo resourceInfo, SimpleJndiName name) throws NamingException {
-        return lookup(resourceInfo, name, null);
+    public <T> T lookup(GenericResourceInfo resourceInfo, SimpleJndiName jndiName) throws NamingException {
+        return lookup(resourceInfo, jndiName, null);
     }
 
-    public <T> T lookup(GenericResourceInfo resourceInfo, SimpleJndiName name, Hashtable env) throws NamingException {
+    public <T> T lookup(GenericResourceInfo resourceInfo, SimpleJndiName jndiName, Hashtable env) throws NamingException {
         String applicationName = resourceInfo.getApplicationName();
         String moduleName = ResourceUtil.getActualModuleName(resourceInfo.getModuleName());
-        SimpleJndiName jndiName = resourceInfo.getName();
-        if (applicationName != null && moduleName != null && (jndiName.isJavaApp() || jndiName.isJavaModule())) {
-            return namingManager.lookupFromModuleNamespace(applicationName, moduleName, name, env);
-        }
-        if (applicationName != null && (jndiName.isJavaApp() || jndiName.isJavaModule())) {
+        SimpleJndiName resJndiName = resourceInfo.getName();
+        LOG.log(Level.DEBUG, "lookup: applicationName={0}, moduleName={1}, jndiName={2}, resourceJndiName={3}",
+            applicationName, moduleName, jndiName, resJndiName);
+        if (applicationName != null && moduleName != null && resJndiName.isJavaModule()) {
+            return namingManager.lookupFromModuleNamespace(applicationName, moduleName, jndiName, env);
+        } else if (applicationName != null && resJndiName.isJavaApp()) {
             if (processEnvironment.getProcessType().isServer() || processEnvironment.getProcessType().isEmbedded()) {
-                return namingManager.lookupFromAppNamespace(applicationName, name, env);
+                return namingManager.lookupFromAppNamespace(applicationName, jndiName, env);
             }
-            SimpleJndiName internalGlobalJavaAppName = componentNamingUtil.composeInternalGlobalJavaAppName(applicationName, name);
-            LOG.log(Level.FINEST, "appclient lookup: {0}", internalGlobalJavaAppName);
-            return (T) namingManager.getInitialContext().lookup(internalGlobalJavaAppName.toString());
+            SimpleJndiName internalGlobalJndiName = componentNamingUtil
+                .composeInternalGlobalJavaAppName(applicationName, jndiName);
+            LOG.log(Level.DEBUG, "internalGlobalJndiName={0}", internalGlobalJndiName);
+            return (T) namingManager.lookup(internalGlobalJndiName);
+        } else if (env == null || env.isEmpty()) {
+            return (T) namingManager.lookup(jndiName);
+        } else {
+            // probably some remote context, corba.
+            return (T) new InitialContext(env).lookup(jndiName.toString());
         }
-        if (env == null) {
-            return (T) namingManager.getInitialContext().lookup(name.toString());
-        }
-        return (T) new InitialContext(env).lookup(name.toString());
     }
 
 }

@@ -47,9 +47,9 @@ public class ResourceProxy implements NamingObjectProxy.InitializationNamingObje
     @Inject
     private org.glassfish.resourcebase.resources.naming.ResourceNamingService namingService;
 
-    private Resource resource = null;
-    private Object result = null;
-    private org.glassfish.resourcebase.resources.api.ResourceInfo resourceInfo = null;
+    private Resource resource;
+    private Object result;
+    private ResourceInfo resourceInfo;
 
     @Override
     public <T> T create(Context ic) throws NamingException {
@@ -84,11 +84,11 @@ public class ResourceProxy implements NamingObjectProxy.InitializationNamingObje
      * Name by which the proxy (or the resource) will be bound in JNDI
      * @param resourceInfo resource-info
      */
-    public void setResourceInfo(org.glassfish.resourcebase.resources.api.ResourceInfo resourceInfo) {
+    public void setResourceInfo(ResourceInfo resourceInfo) {
         this.resourceInfo = resourceInfo;
     }
 
-    protected void throwResourceNotFoundException(Exception e, org.glassfish.resourcebase.resources.api.ResourceInfo resourceInfo) throws NamingException {
+    protected void throwResourceNotFoundException(Exception e, ResourceInfo resourceInfo) throws NamingException {
         NamingException ne = new NamingException("Unable to lookup resource : " + resourceInfo);
         ne.initCause(e);
         throw ne;

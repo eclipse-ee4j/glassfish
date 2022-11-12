@@ -45,7 +45,19 @@ public interface GlassfishNamingManager {
     Context getInitialContext();
 
     /**
+     * Lookup a naming entry
+     *
+     * @param name name of the object
+     * @return Object found by the name
+     * @throws NamingException when unable to find the object
+     */
+    <T> T lookup(SimpleJndiName name) throws NamingException;
+
+
+    /**
      * Lookup a naming entry for a particular componentId
+     *
+     * @throws NamingException when unable to find the object
      */
     <T> T lookup(String componentId, SimpleJndiName name) throws NamingException;
 
@@ -222,5 +234,4 @@ public interface GlassfishNamingManager {
      * @return RemoteSerialProvider object instance
      */
     Remote initializeRemoteNamingSupport(ORB orb) throws NamingException;
-
 }

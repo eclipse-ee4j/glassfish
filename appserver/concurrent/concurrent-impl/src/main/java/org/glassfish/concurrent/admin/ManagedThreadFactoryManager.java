@@ -46,7 +46,6 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
@@ -197,7 +196,7 @@ public class ManagedThreadFactoryManager implements ResourceManager {
             String msg = localStrings.getLocalString("managed.thread.factory.noJndiName", "No JNDI name defined for managed thread factory.");
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
-        Resource resource = getResourceByName(resources, ManagedThreadFactory.class, jndiName);
+        Resource resource = resources.getResourceByName(ManagedThreadFactory.class, jndiName);
 
         // ensure we already have this resource
         if (resource == null){

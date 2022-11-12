@@ -17,7 +17,6 @@
 
 package org.glassfish.jms.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
@@ -114,8 +113,7 @@ public class DeleteJMSResource implements AdminCommand {
         ActionReport subReport = report.addSubActionsReport();
 
         ConnectorResource cresource = null;
-        Resource res = ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorResource.class,
-            SimpleJndiName.of(jndiName));
+        Resource res = domain.getResources().getResourceByName(ConnectorResource.class, SimpleJndiName.of(jndiName));
         if (res instanceof ConnectorResource) {
             cresource = (ConnectorResource) res;
         }

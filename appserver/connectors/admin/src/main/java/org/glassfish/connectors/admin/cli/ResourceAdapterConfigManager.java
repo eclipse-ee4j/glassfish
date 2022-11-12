@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
@@ -112,7 +111,7 @@ public class ResourceAdapterConfigManager implements ResourceManager {
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
         // ensure we don't already have one of this name
-        if (ConnectorsUtil.getResourceByName(resources, ResourceAdapterConfig.class, new SimpleJndiName(raName)) != null) {
+        if (resources.getResourceByName(ResourceAdapterConfig.class, new SimpleJndiName(raName)) != null) {
             String msg = localStrings.getLocalString("create.resource.adapter.config.duplicate",
                     "Resource adapter config already exists for RAR", raName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);

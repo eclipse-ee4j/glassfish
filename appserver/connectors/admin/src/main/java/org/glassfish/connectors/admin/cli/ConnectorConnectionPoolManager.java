@@ -174,7 +174,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         }
         // ensure we don't already have one of this name
         final SimpleJndiName jndiName = new SimpleJndiName(poolname);
-        if (ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, jndiName) != null) {
+        if (resources.getResourceByName(ConnectorConnectionPool.class, jndiName) != null) {
             String errMsg = localStrings.getLocalString("create.connector.connection.pool.duplicate",
                 "A resource named {0} already exists.", poolname);
             return new ResourceStatus(ResourceStatus.FAILURE, errMsg);

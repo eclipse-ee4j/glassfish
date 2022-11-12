@@ -171,7 +171,7 @@ public class CreateResourceAdapterConfig implements AdminCommand {
 
     private boolean hasDuplicate(Resources resources, ActionReport report) {
         final SimpleJndiName jndiName = new SimpleJndiName(raName);
-        if(ConnectorsUtil.getResourceByName(resources, ResourceAdapterConfig.class, jndiName) != null){
+        if (resources.getResourceByName(ResourceAdapterConfig.class, jndiName) != null) {
             String msg = localStrings.getLocalString("create.resource.adapter.config.duplicate",
                     "Resource adapter config already exists for RAR", jndiName);
             report.setMessage(msg);

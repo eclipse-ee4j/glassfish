@@ -1099,7 +1099,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             } else {
                 String disableInServer = ejbContainerUtilImpl.getEjbContainer()
                         .getPropertyValue(RuntimeTagNames.DISABLE_NONPORTABLE_JNDI_NAMES);
-                disableNonPortableJndiName = Boolean.valueOf(disableInServer);
+                disableNonPortableJndiName = Boolean.parseBoolean(disableInServer);
             }
 
             final SimpleJndiName glassfishSpecificJndiName;

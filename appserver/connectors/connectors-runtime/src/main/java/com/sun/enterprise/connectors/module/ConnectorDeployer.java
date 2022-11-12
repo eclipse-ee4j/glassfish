@@ -192,7 +192,6 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
                 }
 
                 //don't add the class-finder to the chain if its embedded .rar
-
                 if (!(isEmbedded)) {
                     ccf = (ConnectorClassFinder) context.getClassLoader();
                     clh.getConnectorClassLoader(null).addDelegate(ccf);

@@ -191,6 +191,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     @Override
     public void publishCosNamingObject(SimpleJndiName name, Object obj, boolean rebind) throws NamingException {
+        LOG.log(DEBUG, "publishCosNamingObject(name={0}, obj={1}, rebind={2})", name, obj, rebind);
         Name nameObj = name.toName();
 
         // Create any COS naming sub-contexts in name
@@ -214,27 +215,32 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
     }
 
+
+    @Override
+    public void unpublishObject(Name name) throws NamingException {
+        LOG.log(DEBUG, "unpublishObject(name={0})", name);
+        initialContext.unbind(name);
+    }
+
+
     @Override
     public void unpublishObject(SimpleJndiName name) throws NamingException {
+        LOG.log(DEBUG, "unpublishObject(name={0})", name);
         initialContext.unbind(name.toName());
     }
 
 
     @Override
     public void unpublishCosNamingObject(SimpleJndiName name) throws NamingException {
+        LOG.log(DEBUG, "unpublishCosNamingObject(name={0})", name);
         try {
             getCosContext().unbind(name.toName());
         } catch (NamingException cne) {
             LOG.log(WARNING, "Error during CosNaming.unbind for name: " + name, cne);
         }
-        initialContext.unbind(name.toName());
+        initialContext.unbind(name.toString());
     }
 
-
-    @Override
-    public void unpublishObject(Name name) throws NamingException {
-        this.unpublishObject(SimpleJndiName.of(name));
-    }
 
     /**
      * Create any sub-contexts in name that don't already exist.
@@ -250,9 +256,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         for (int subCtxIndex = 0; subCtxIndex < numSubContexts; subCtxIndex++) {
             String subCtxName = name.get(subCtxIndex);
             try {
-
-                Object obj = currentCtx.lookup(subCtxName);
-
+                final Object obj = currentCtx.lookup(subCtxName);
                 if (obj == null) {
                     // Doesn't exist so create it.
                     currentCtx = currentCtx.createSubcontext(subCtxName);
@@ -263,12 +267,11 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
                     // Context name clashes with existing object.
                     throw new NameAlreadyBoundException(subCtxName);
                 }
-            }
-            catch (NameNotFoundException e) {
+            } catch (NameNotFoundException e) {
                 // Doesn't exist so create it.
                 currentCtx = currentCtx.createSubcontext(subCtxName);
             }
-        } // End for -- each sub-context
+        }
     }
 
 
@@ -324,6 +327,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
 
     private <T> T getObjectInstance(SimpleJndiName name, Object obj, Hashtable<?, ?> env) throws Exception {
+        LOG.log(DEBUG, "getObjectInstance(name={0}, obj, env={1})", name, env);
         if (env == null) {
             env = new Hashtable<>();
         }
@@ -367,14 +371,22 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
      * This method binds them in a java:namespace.
      */
     private void bindToNamespace(JavaNamespace namespace, SimpleJndiName jndiName, Object value,
-        boolean warnDuplicities) throws NamingException {
-        LOG.log(DEBUG, "bindToNamespace(namespace={0}, jndiName={1}, value={2})", namespace.name, jndiName, value);
-        if (namespace.put(jndiName, value) != null) {
-            LOG.log(warnDuplicities ? WARNING : TRACE, "Binding already exists for {0} in namespace {1}", jndiName,
-                namespace);
+        boolean force) throws NamingException {
+        LOG.log(DEBUG, "bindToNamespace(namespace.name={0}, jndiName={1}, value={2}, force={3})", namespace.name,
+            jndiName, value, force);
+
+        if (force) {
+            if (namespace.put(jndiName, value) != null) {
+                LOG.log(WARNING, "Replaced existing binding for ''{0}'' in namespace ''{1}''", jndiName, namespace.name);
+            }
+        } else if (namespace.putIfAbsent(jndiName, value) != null) {
+            LOG.log(TRACE, "The namespace already contains binding for ''{0}'' in namespace ''{1}'', ignoring request.",
+                jndiName, namespace.name);
+            return;
         }
         bindIntermediateContexts(namespace, jndiName);
     }
+
 
     @Override
     public void bindToComponentNamespace(String appName, String moduleName, String componentId,
@@ -390,7 +402,6 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             info.moduleName = moduleName;
             info.componentId = componentId;
             info.treatComponentAsModule = treatComponentAsModule;
-
             componentIdInfo.put(componentId, info);
         }
 
@@ -704,7 +715,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         }
         if (objectOrProxyOrRef instanceof NamingObjectProxy) {
             NamingObjectProxy namingProxy = (NamingObjectProxy) objectOrProxyOrRef;
-            return namingProxy.create(env == null ? initialContext : new InitialContext(env));
+            return namingProxy.create(env == null || env.isEmpty() ? initialContext : new InitialContext(env));
         } else if (objectOrProxyOrRef instanceof Reference) {
             try {
                 return getObjectInstance(name, objectOrProxyOrRef, env);

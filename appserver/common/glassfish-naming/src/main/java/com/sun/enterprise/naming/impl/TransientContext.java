@@ -191,14 +191,14 @@ public class TransientContext implements Context, Serializable {
      */
     @Override
     public Object lookup(String name) throws NamingException {
-        lock.readLock().lock() ;
+        lock.readLock().lock();
         try {
             Name n = new CompositeName(name);
             if (n.size() < 1) {
                 throw new InvalidNameException("Cannot bind empty name");
             }
-
-            if (n.size() == 1) { // bottom
+            if (n.size() == 1) {
+                // bottom
                 return doLookup(n.toString());
             }
             String suffix = n.getSuffix(1).toString();

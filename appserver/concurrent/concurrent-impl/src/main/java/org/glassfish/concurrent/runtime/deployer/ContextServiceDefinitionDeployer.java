@@ -51,7 +51,7 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResou
  */
 @Service
 @ResourceDeployerInfo(ContextServiceDefinitionDescriptor.class)
-public class ContextServiceDefinitionDeployer implements ResourceDeployer {
+public class ContextServiceDefinitionDeployer implements ResourceDeployer<ContextServiceDefinitionDescriptor> {
 
     private static final Logger LOG = LogFacade.getLogger();
 
@@ -63,56 +63,52 @@ public class ContextServiceDefinitionDeployer implements ResourceDeployer {
     private InvocationManager invocationManager;
 
     @Override
-    public void deployResource(Object resource) throws Exception {
-        ContextServiceDefinitionDescriptor descriptor = (ContextServiceDefinitionDescriptor) resource;
-        ResourceInfo resourceInfo = toResourceInfo(descriptor);
-        ContextService contextService = createContextService(descriptor.getData());
-        namingService.publishObject(resourceInfo, resourceInfo.getName(), contextService, true);
+    public void deployResource(ContextServiceDefinitionDescriptor resource) throws Exception {
+        ResourceInfo resourceInfo = toResourceInfo(resource);
+        ContextService contextService = createContextService(resource.getData());
+        namingService.publishObject(resourceInfo, contextService, true);
     }
 
 
     @Override
-    public void deployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ContextServiceDefinitionDescriptor descriptor = (ContextServiceDefinitionDescriptor) resource;
-        ResourceInfo resourceInfo = toResourceInfo(descriptor);
-        ContextService contextService = createContextService(descriptor.getData());
-        namingService.publishObject(resourceInfo, resourceInfo.getName(), contextService, true);
+    public void deployResource(ContextServiceDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
+        ResourceInfo resourceInfo = toResourceInfo(resource);
+        ContextService contextService = createContextService(resource.getData());
+        namingService.publishObject(resourceInfo, contextService, true);
     }
 
 
     @Override
-    public void undeployResource(Object resource) throws Exception {
-        ContextServiceDefinitionDescriptor descriptor = (ContextServiceDefinitionDescriptor) resource;
-        ResourceInfo resourceInfo = toResourceInfo(descriptor);
-        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
+    public void undeployResource(ContextServiceDefinitionDescriptor resource) throws Exception {
+        ResourceInfo resourceInfo = toResourceInfo(resource);
+        namingService.unpublishObject(resourceInfo);
         runtime.shutdownContextService(resourceInfo.getName());
     }
 
 
     @Override
-    public void undeployResource(Object resource, String applicationName, String moduleName) throws Exception {
-        ContextServiceDefinitionDescriptor descriptor = (ContextServiceDefinitionDescriptor) resource;
-        ResourceInfo resourceInfo = toResourceInfo(descriptor);
-        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
+    public void undeployResource(ContextServiceDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
+        ResourceInfo resourceInfo = toResourceInfo(resource);
+        namingService.unpublishObject(resourceInfo);
         runtime.shutdownContextService(resourceInfo.getName());
     }
 
 
     @Override
-    public void redeployResource(Object resource) throws Exception {
+    public void redeployResource(ContextServiceDefinitionDescriptor resource) throws Exception {
         undeployResource(resource);
         deployResource(resource);
     }
 
 
     @Override
-    public void enableResource(Object resource) throws Exception {
+    public void enableResource(ContextServiceDefinitionDescriptor resource) throws Exception {
         deployResource(resource);
     }
 
 
     @Override
-    public void disableResource(Object resource) throws Exception {
+    public void disableResource(ContextServiceDefinitionDescriptor resource) throws Exception {
         undeployResource(resource);
     }
 

@@ -48,7 +48,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourcesOfPool;
 
 /**
@@ -99,7 +98,7 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
 
         final SimpleJndiName jndiName = new SimpleJndiName(poolname);
         // ensure we already have this resource
-        if (getResourceByName(domain.getResources(), ConnectorConnectionPool.class, jndiName) == null) {
+        if (domain.getResources().getResourceByName(ConnectorConnectionPool.class, jndiName) == null) {
             report.setMessage(I18N.getLocalString("delete.connector.connection.pool.notfound",
                 "A connector connection pool named {0} does not exist.", poolname));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -121,7 +120,7 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
 
             // delete connector connection pool
             SingleConfigCode<Resources> configCode = param -> {
-                ConnectorConnectionPool cp = getResourceByName(domain.getResources(), ConnectorConnectionPool.class, jndiName);
+                ConnectorConnectionPool cp = domain.getResources().getResourceByName(ConnectorConnectionPool.class, jndiName);
                 if (cp == null) {
                     return null;
                 }

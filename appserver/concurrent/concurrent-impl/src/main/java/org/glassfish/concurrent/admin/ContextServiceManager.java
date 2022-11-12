@@ -46,7 +46,6 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_DEFAULT_VALUE;
 import static com.sun.enterprise.deployment.xml.ConcurrencyTagNames.CONTEXT_INFO_ENABLED;
@@ -196,10 +195,10 @@ public class ContextServiceManager implements ResourceManager {
         }
 
         SimpleJndiName simpleJndiName = new SimpleJndiName(jndiName);
-        Resource resource = getResourceByName(resources, ContextService.class, simpleJndiName);
+        Resource resource = resources.getResourceByName(ContextService.class, simpleJndiName);
 
         // ensure we already have this resource
-        if (resource == null){
+        if (resource == null) {
             String msg = localStrings.getLocalString("delete.context.service.notfound", "A context service named {0} does not exist.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
@@ -237,7 +236,7 @@ public class ContextServiceManager implements ResourceManager {
 
             // delete context-service
             SingleConfigCode<Resources> configCode = (SingleConfigCode<Resources>) param -> {
-                ContextService resource1 = getResourceByName(resources, ContextService.class, simpleJndiName);
+                ContextService resource1 = resources.getResourceByName(ContextService.class, simpleJndiName);
                 return param.getResources().remove(resource1);
             };
             if (ConfigSupport.apply(configCode, resources) == null) {

@@ -64,9 +64,8 @@ public class ConcurrencyManagedExecutorDeployer extends ConcurrencyDeployer<Mana
     public void deployResource(ManagedExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         ManagedExecutorDefinitionDescriptor descriptor = resource;
         ManagedExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
-        SimpleJndiName resourceName = toResourceName(descriptor);
-        ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        namingService.publishObject(resourceInfo, resourceName, service, true);
+        ResourceInfo resourceInfo = new ResourceInfo(toResourceName(descriptor), applicationName, moduleName);
+        namingService.publishObject(resourceInfo, service, true);
     }
 
 
@@ -77,8 +76,8 @@ public class ConcurrencyManagedExecutorDeployer extends ConcurrencyDeployer<Mana
         String moduleName = invocationManager.getCurrentInvocation().getModuleName();
         SimpleJndiName resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
-        runtime.shutdownContextService(resourceInfo.getName());
+        namingService.unpublishObject(resourceInfo);
+        runtime.shutdownContextService(resourceName);
     }
 
 
@@ -87,8 +86,8 @@ public class ConcurrencyManagedExecutorDeployer extends ConcurrencyDeployer<Mana
         ManagedExecutorDefinitionDescriptor descriptor = resource;
         SimpleJndiName resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
-        runtime.shutdownContextService(resourceInfo.getName());
+        namingService.unpublishObject(resourceInfo);
+        runtime.shutdownContextService(resourceName);
     }
 
 

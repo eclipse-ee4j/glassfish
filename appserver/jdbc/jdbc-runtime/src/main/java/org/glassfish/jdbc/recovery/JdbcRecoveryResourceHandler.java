@@ -60,6 +60,7 @@ import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.jdbc.util.JdbcResourcesUtil;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.glassfish.security.common.UserNameAndPassword;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
@@ -231,7 +232,7 @@ public class JdbcRecoveryResourceHandler implements RecoveryResourceHandler {
                 _logger.finest(" using pool : " + jdbcConnectionPool.getName());
             }
 
-            PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(jdbcConnectionPool);
+            PoolInfo poolInfo = ResourceUtil.getPoolInfo(jdbcConnectionPool);
             try {
 
                 String[] dbUserPassword = getdbUserPasswordOfJdbcConnectionPool(jdbcConnectionPool);

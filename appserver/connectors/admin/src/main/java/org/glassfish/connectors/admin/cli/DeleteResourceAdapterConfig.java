@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -81,8 +80,7 @@ public class DeleteResourceAdapterConfig implements AdminCommand {
         }
 
         // ensure we already have this resource
-        if (ConnectorsUtil.getResourceByName(domain.getResources(), ResourceAdapterConfig.class,
-            new SimpleJndiName(raName)) == null) {
+        if (domain.getResources().getResourceByName(ResourceAdapterConfig.class, new SimpleJndiName(raName)) == null) {
             report.setMessage(localStrings.getLocalString("delete.resource.adapter.config.notfound",
                     "Resource-Adapter-Config for {0} does not exist.", raName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -94,8 +92,8 @@ public class DeleteResourceAdapterConfig implements AdminCommand {
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ResourceAdapterConfig resource = ConnectorsUtil.getResourceByName(domain.getResources(),
-                        ResourceAdapterConfig.class, new SimpleJndiName(raName));
+                    ResourceAdapterConfig resource = domain.getResources()
+                        .getResourceByName(ResourceAdapterConfig.class, new SimpleJndiName(raName));
                     if (resource != null && resource.getResourceAdapterName().equals(raName)) {
                         return param.getResources().remove(resource);
                     }

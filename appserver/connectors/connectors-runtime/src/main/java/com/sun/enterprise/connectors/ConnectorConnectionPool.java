@@ -798,14 +798,8 @@ public class ConnectorConnectionPool implements Serializable {
         this.dynamicReconfigWaitTimeout = dynamicReconfigWaitTimeout;
     }
 
-    public PoolInfo getPoolInfo(){
-        if(applicationName != null && moduleName != null){
-            return new PoolInfo(name, applicationName, moduleName);
-        }else if(applicationName != null){
-            return new PoolInfo(name, applicationName);
-        }else{
-            return new PoolInfo(name);
-        }
-    }
 
+    public PoolInfo getPoolInfo() {
+        return new PoolInfo(name, applicationName, moduleName);
+    }
 }

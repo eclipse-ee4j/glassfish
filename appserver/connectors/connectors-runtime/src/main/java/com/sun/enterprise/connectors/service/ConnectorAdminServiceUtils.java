@@ -80,8 +80,7 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     }
 
     public static SimpleJndiName getReservePrefixedJNDINameForPool(PoolInfo poolInfo) {
-        SimpleJndiName jndiName = poolInfo.getName().removePrefix();
-        SimpleJndiName name = getReservePrefixedJNDIName(POOLS_JNDINAME_PREFIX, jndiName);
+        SimpleJndiName name = new SimpleJndiName(POOLS_JNDINAME_PREFIX + poolInfo.getName());
         return getScopedName(poolInfo, name);
     }
 
@@ -99,24 +98,19 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     }
 
     public static SimpleJndiName getReservePrefixedJNDINameForDescriptor(String moduleName) {
-        return getReservePrefixedJNDIName(DD_PREFIX, moduleName);
+        return new SimpleJndiName(DD_PREFIX + moduleName);
     }
 
     public static SimpleJndiName getReservePrefixedJNDINameForResource(String moduleName) {
-        return getReservePrefixedJNDIName(RESOURCE_JNDINAME_PREFIX, moduleName);
+        return new SimpleJndiName(RESOURCE_JNDINAME_PREFIX + moduleName);
     }
 
-    private static SimpleJndiName getReservePrefixedJNDIName(String prefix, Comparable<?> resourceName) {
-        return new SimpleJndiName(prefix + resourceName);
-    }
-
-    //TODO V3 is this right approach ? (just checking '#') ?
     public static boolean isEmbeddedConnectorModule(String moduleName) {
         return moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER) != -1;
     }
 
 
-    public static String getApplicationName(String moduleName) {
+    public static String toApplicationName(String moduleName) {
         if (isEmbeddedConnectorModule(moduleName)) {
             int idx = moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
             return moduleName.substring(0, idx);
@@ -125,15 +119,15 @@ public class ConnectorAdminServiceUtils implements ConnectorConstants {
     }
 
 
-    public static String getConnectorModuleName(String moduleName) {
+    public static String toRarFileName(String moduleName) {
         if (isEmbeddedConnectorModule(moduleName)) {
             int idx = moduleName.indexOf(ResourceConstants.EMBEDDEDRAR_NAME_DELIMITER);
-            return moduleName.substring(idx + 1);
+            return moduleName.substring(idx + 1) + ".rar";
         }
-        return moduleName;
+        return moduleName + ".rar";
     }
 
     public static boolean isJMSRA(String moduleName) {
-        return moduleName.equalsIgnoreCase(ConnectorConstants.DEFAULT_JMS_ADAPTER);
+        return ConnectorConstants.DEFAULT_JMS_ADAPTER.equalsIgnoreCase(moduleName);
     }
 }

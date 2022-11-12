@@ -41,7 +41,8 @@ public class JMSCFResourcePMProxy extends CommonResourceProxy {
                 if (ic.lookup(desc.getJndiName().toString()) != null) {
                     wasDeployed = true;
                 }
-            } catch (NamingException ne) {}
+            } catch (NamingException ne) {
+            }
 
             if (!wasDeployed) {
                 try {

@@ -19,7 +19,6 @@ package org.glassfish.connectors.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -107,13 +106,13 @@ public class FlushConnectionPool implements AdminCommand {
         }
 
         boolean poolingEnabled = false;
-        ResourcePool pool = ConnectorsUtil.getResourceByName(resources, ResourcePool.class, jndiName);
-        if(pool instanceof ConnectorConnectionPool){
-            ConnectorConnectionPool ccp = (ConnectorConnectionPool)pool;
-            poolingEnabled = Boolean.valueOf(ccp.getPooling());
-        }else{
-            JdbcConnectionPool ccp = (JdbcConnectionPool)pool;
-            poolingEnabled = Boolean.valueOf(ccp.getPooling());
+        ResourcePool pool = resources.getResourceByName(ResourcePool.class, jndiName);
+        if (pool instanceof ConnectorConnectionPool) {
+            ConnectorConnectionPool ccp = (ConnectorConnectionPool) pool;
+            poolingEnabled = Boolean.parseBoolean(ccp.getPooling());
+        } else {
+            JdbcConnectionPool ccp = (JdbcConnectionPool) pool;
+            poolingEnabled = Boolean.parseBoolean(ccp.getPooling());
         }
 
         if(!poolingEnabled){

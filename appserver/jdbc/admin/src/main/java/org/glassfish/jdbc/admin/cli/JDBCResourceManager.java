@@ -17,7 +17,6 @@
 
 package org.glassfish.jdbc.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.config.serverbeans.Resources;
@@ -136,7 +135,7 @@ public class JDBCResourceManager implements ResourceManager {
             return status;
         }
 
-        if (ConnectorsUtil.getResourceByName(resources, ResourcePool.class, SimpleJndiName.of(poolName)) == null) {
+        if (resources.getResourceByName(ResourcePool.class, SimpleJndiName.of(poolName)) == null) {
             String msg = localStrings.getLocalString("create.jdbc.resource.connPoolNotFound",
                 "Attribute value (pool-name = {0}) is not found in list of jdbc connection pools.", poolName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
@@ -212,13 +211,13 @@ public class JDBCResourceManager implements ResourceManager {
         }
 
         // ensure we already have this resource
-        if (ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jndiName) == null) {
+        final JdbcResource jdbcResource = resources.getResourceByName(JdbcResource.class, jndiName);
+        if (jdbcResource == null) {
             String msg = localStrings.getLocalString("delete.jdbc.resource.notfound",
                 "A JDBC resource named {0} does not exist.", jndiName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        final JdbcResource jdbcResource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jndiName);
         // ensure we are not deleting resource of the type system-all-req
         if (ResourceConstants.SYSTEM_ALL_REQ.equals(jdbcResource.getObjectType())) {
             String msg = localStrings.getLocalString("delete.jdbc.resource.system-all-req.object-type",
@@ -262,9 +261,7 @@ public class JDBCResourceManager implements ResourceManager {
             }
 
             // delete jdbc-resource
-            SingleConfigCode<Resources> configCode = param -> {
-                return param.getResources().remove(jdbcResource);
-            };
+            SingleConfigCode<Resources> configCode = param -> param.getResources().remove(jdbcResource);
             if (ConfigSupport.apply(configCode, resources) == null) {
                 String msg = localStrings.getLocalString("jdbc.resource.deletionFailed",
                     "JDBC resource {0} delete failed ", jndiName);

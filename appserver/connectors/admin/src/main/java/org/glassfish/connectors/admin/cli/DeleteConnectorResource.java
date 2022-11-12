@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
@@ -105,7 +104,7 @@ public class DeleteConnectorResource implements AdminCommand {
 
         // ensure we already have this resource
         SimpleJndiName simpleJndiName = new SimpleJndiName(jndiName);
-        Resource r = ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorResource.class, simpleJndiName);
+        Resource r = domain.getResources().getResourceByName(ConnectorResource.class, simpleJndiName);
         if (r == null) {
             report.setMessage(I18N.getLocalString("delete.connector.resource.notfound",
                     "A connector resource named {0} does not exist.", jndiName));
@@ -160,8 +159,8 @@ public class DeleteConnectorResource implements AdminCommand {
 
             // delete connector-resource
             SingleConfigCode<Resources> configCode = param -> {
-                ConnectorResource resource = ConnectorsUtil.getResourceByName(domain.getResources(),
-                    ConnectorResource.class, simpleJndiName);
+                ConnectorResource resource = domain.getResources().getResourceByName(ConnectorResource.class,
+                    simpleJndiName);
                 return param.getResources().remove(resource);
             };
             if (ConfigSupport.apply(configCode, domain.getResources()) == null) {

@@ -119,7 +119,7 @@ public class ConnectorObjectFactory implements ObjectFactory {
             mgr.setRarName(moduleName);
 
             SimpleJndiName logicalName = (SimpleJndiName) env.get(GlassfishNamingManager.LOGICAL_NAME);
-            if(logicalName != null){
+            if (logicalName != null) {
                 mgr.setLogicalName(logicalName);
             }
 
@@ -137,7 +137,7 @@ public class ConnectorObjectFactory implements ObjectFactory {
                     Resources resources = getRuntime().getResources(poolInfo);
                     ResourcePool resourcePool = null;
                     if (resources != null) {
-                        resourcePool = ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolInfo.getName());
+                        resourcePool = resources.getResourceByName(ResourcePool.class, poolInfo.getName());
                         if (resourcePool != null) {
                             ResourceDeployer deployer = getRuntime().getResourceDeployer(resourcePool);
                             if (deployer != null && deployer.supportsDynamicReconfiguration() &&

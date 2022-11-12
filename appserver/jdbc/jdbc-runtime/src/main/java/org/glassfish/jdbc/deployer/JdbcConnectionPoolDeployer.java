@@ -67,6 +67,7 @@ import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
@@ -139,7 +140,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
 
     @Override
     public void deployResource(JdbcConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         actualDeployResource(resource, poolInfo);
     }
 
@@ -174,14 +175,14 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
 
     @Override
     public synchronized void undeployResource(JdbcConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         actualUndeployResource(poolInfo);
     }
 
 
     @Override
     public synchronized void redeployResource(JdbcConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
 
         // Only if pool has already been deployed in this server-instance
         // reconfig this pool
@@ -549,7 +550,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
         if (property == null) {
             return defaultValue;
         }
-        return Boolean.valueOf(property);
+        return Boolean.parseBoolean(property);
     }
 
     private ConnectorConnectionPool createConnectorConnectionPool(JdbcConnectionPool adminPool, PoolInfo poolInfo) throws ConnectorRuntimeException {
@@ -608,22 +609,22 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
         connectorConnectionPool.setMaxWaitTimeInMillis(adminPool.getMaxWaitTimeInMillis());
         connectorConnectionPool.setPoolResizeQuantity(adminPool.getPoolResizeQuantity());
         connectorConnectionPool.setIdleTimeoutInSeconds(adminPool.getIdleTimeoutInSeconds());
-        connectorConnectionPool.setFailAllConnections(Boolean.valueOf(adminPool.getFailAllConnections()));
-        connectorConnectionPool.setConnectionValidationRequired(Boolean.valueOf(adminPool.getIsConnectionValidationRequired()));
-        connectorConnectionPool.setNonTransactional(Boolean.valueOf(adminPool.getNonTransactionalConnections()));
-        connectorConnectionPool.setNonComponent(Boolean.valueOf(adminPool.getAllowNonComponentCallers()));
-        connectorConnectionPool.setPingDuringPoolCreation(Boolean.valueOf(adminPool.getPing()));
+        connectorConnectionPool.setFailAllConnections(Boolean.parseBoolean(adminPool.getFailAllConnections()));
+        connectorConnectionPool.setConnectionValidationRequired(Boolean.parseBoolean(adminPool.getIsConnectionValidationRequired()));
+        connectorConnectionPool.setNonTransactional(Boolean.parseBoolean(adminPool.getNonTransactionalConnections()));
+        connectorConnectionPool.setNonComponent(Boolean.parseBoolean(adminPool.getAllowNonComponentCallers()));
+        connectorConnectionPool.setPingDuringPoolCreation(Boolean.parseBoolean(adminPool.getPing()));
 
         // These are default properties of all Jdbc pools
         // So set them here first and then figure out from the parsing routine
         // if they need to be reset
-        connectorConnectionPool.setMatchConnections(Boolean.valueOf(adminPool.getMatchConnections()));
-        connectorConnectionPool.setAssociateWithThread(Boolean.valueOf(adminPool.getAssociateWithThread()));
+        connectorConnectionPool.setMatchConnections(Boolean.parseBoolean(adminPool.getMatchConnections()));
+        connectorConnectionPool.setAssociateWithThread(Boolean.parseBoolean(adminPool.getAssociateWithThread()));
         connectorConnectionPool.setConnectionLeakTracingTimeout(adminPool.getConnectionLeakTimeoutInSeconds());
-        connectorConnectionPool.setConnectionReclaim(Boolean.valueOf(adminPool.getConnectionLeakReclaim()));
+        connectorConnectionPool.setConnectionReclaim(Boolean.parseBoolean(adminPool.getConnectionLeakReclaim()));
 
-        boolean lazyConnectionEnlistment = Boolean.valueOf(adminPool.getLazyConnectionEnlistment());
-        boolean lazyConnectionAssociation = Boolean.valueOf(adminPool.getLazyConnectionAssociation());
+        boolean lazyConnectionEnlistment = Boolean.parseBoolean(adminPool.getLazyConnectionEnlistment());
+        boolean lazyConnectionAssociation = Boolean.parseBoolean(adminPool.getLazyConnectionAssociation());
 
         // lazy-connection-enlistment need to be ON for lazy-connection-association to
         // work.
@@ -640,11 +641,11 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
             connectorConnectionPool.setLazyConnectionEnlist(lazyConnectionEnlistment);
         }
 
-        boolean pooling = Boolean.valueOf(adminPool.getPooling());
+        boolean pooling = Boolean.parseBoolean(adminPool.getPooling());
 
         if (!pooling) {
             // Throw exception if assoc with thread is set to true.
-            if (Boolean.valueOf(adminPool.getAssociateWithThread())) {
+            if (Boolean.parseBoolean(adminPool.getAssociateWithThread())) {
                 LOG.log(SEVERE, "conn_pool_obj_utils.pooling_disabled_assocwiththread_invalid_combination", poolName);
                 throw new RuntimeException(STRINGS.getString("cpou.pooling_disabled_assocwiththread_invalid_combination", poolName));
             }
@@ -652,13 +653,13 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
             // Below are useful in pooled environment only.
             // Throw warning for connection validation/validate-atmost-once/
             // match-connections/max-connection-usage-count/idele-timeout
-            if (Boolean.valueOf(adminPool.getIsConnectionValidationRequired())) {
+            if (Boolean.parseBoolean(adminPool.getIsConnectionValidationRequired())) {
                 LOG.log(WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination", poolName);
             }
             if (Integer.parseInt(adminPool.getValidateAtmostOncePeriodInSeconds()) > 0) {
                 LOG.log(WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination", poolName);
             }
-            if (Boolean.valueOf(adminPool.getMatchConnections())) {
+            if (Boolean.parseBoolean(adminPool.getMatchConnections())) {
                 LOG.log(WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination", poolName);
             }
             if (Integer.parseInt(adminPool.getMaxConnectionUsageCount()) > 0) {

@@ -20,7 +20,6 @@ package com.sun.enterprise.resource.deployer;
 
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.ConnectorRuntime;
@@ -48,6 +47,7 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.SecurityMap;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
 
@@ -102,7 +102,7 @@ public class ConnectorConnectionPoolDeployer
 
     @Override
     public void deployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         deployResource(resource, poolInfo.getApplicationName(), poolInfo.getModuleName());
     }
 
@@ -119,7 +119,7 @@ public class ConnectorConnectionPoolDeployer
     @Override
     public synchronized void undeployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource)
         throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         actualUndeployResource(resource, poolInfo);
     }
 
@@ -140,7 +140,7 @@ public class ConnectorConnectionPoolDeployer
 
         //Since 8.1 PE/SE/EE, only if pool has already been deployed in this
         //server-instance earlier, reconfig this pool
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         if (!runtime.isConnectorConnectionPoolDeployed(poolInfo)) {
             if(LOG.isLoggable(Level.FINE)) {
                 LOG.fine("The connector connection pool " + poolInfo
@@ -209,12 +209,12 @@ public class ConnectorConnectionPoolDeployer
         ccp.setMaxWaitTimeInMillis(domainCcp.getMaxWaitTimeInMillis());
         ccp.setPoolResizeQuantity(domainCcp.getPoolResizeQuantity());
         ccp.setIdleTimeoutInSeconds(domainCcp.getIdleTimeoutInSeconds());
-        ccp.setFailAllConnections(Boolean.valueOf(domainCcp.getFailAllConnections()));
+        ccp.setFailAllConnections(Boolean.parseBoolean(domainCcp.getFailAllConnections()));
         ccp.setAuthCredentialsDefinedInPool(
                 isAuthCredentialsDefinedInPool(domainCcp));
         //The line below will change for 9.0. We will get this from
         //the domain.xml
-        ccp.setConnectionValidationRequired(Boolean.valueOf(domainCcp.getIsConnectionValidationRequired()));
+        ccp.setConnectionValidationRequired(Boolean.parseBoolean(domainCcp.getIsConnectionValidationRequired()));
 
         String txSupport = domainCcp.getTransactionSupport();
         int txSupportIntVal = parseTransactionSupportString(txSupport);
@@ -252,15 +252,15 @@ public class ConnectorConnectionPoolDeployer
         ccp.setNonComponent(false);
         ccp.setNonTransactional(false);
         ccp.setConnectionLeakTracingTimeout(domainCcp.getConnectionLeakTimeoutInSeconds());
-        ccp.setConnectionReclaim(Boolean.valueOf(domainCcp.getConnectionLeakReclaim()));
+        ccp.setConnectionReclaim(Boolean.parseBoolean(domainCcp.getConnectionLeakReclaim()));
 
-        ccp.setMatchConnections(Boolean.valueOf(domainCcp.getMatchConnections()));
-        ccp.setAssociateWithThread(Boolean.valueOf(domainCcp.getAssociateWithThread()));
-        ccp.setPooling(Boolean.valueOf(domainCcp.getPooling()));
-        ccp.setPingDuringPoolCreation(Boolean.valueOf(domainCcp.getPing()));
+        ccp.setMatchConnections(Boolean.parseBoolean(domainCcp.getMatchConnections()));
+        ccp.setAssociateWithThread(Boolean.parseBoolean(domainCcp.getAssociateWithThread()));
+        ccp.setPooling(Boolean.parseBoolean(domainCcp.getPooling()));
+        ccp.setPingDuringPoolCreation(Boolean.parseBoolean(domainCcp.getPing()));
 
-        boolean lazyConnectionEnlistment = Boolean.valueOf(domainCcp.getLazyConnectionEnlistment());
-        boolean lazyConnectionAssociation = Boolean.valueOf(domainCcp.getLazyConnectionAssociation());
+        boolean lazyConnectionEnlistment = Boolean.parseBoolean(domainCcp.getLazyConnectionEnlistment());
+        boolean lazyConnectionAssociation = Boolean.parseBoolean(domainCcp.getLazyConnectionAssociation());
 
         if (lazyConnectionAssociation) {
             if (lazyConnectionEnlistment) {
@@ -278,12 +278,12 @@ public class ConnectorConnectionPoolDeployer
             ccp.setLazyConnectionAssoc(lazyConnectionAssociation);
             ccp.setLazyConnectionEnlist(lazyConnectionEnlistment);
         }
-        boolean pooling = Boolean.valueOf(domainCcp.getPooling());
+        boolean pooling = Boolean.parseBoolean(domainCcp.getPooling());
 
         //TODO: should this be added to the beginning of this method?
         if(!pooling) {
             //Throw exception if assoc with thread is set to true.
-            if(Boolean.valueOf(domainCcp.getAssociateWithThread())) {
+            if(Boolean.parseBoolean(domainCcp.getAssociateWithThread())) {
                 LOG.log(Level.SEVERE, "conn_pool_obj_utils.pooling_disabled_assocwiththread_invalid_combination",
                         domainCcp.getName());
                 String i18nMsg = MESSAGES.getString(
@@ -294,7 +294,7 @@ public class ConnectorConnectionPoolDeployer
             //Below are useful in pooled environment only.
             //Throw warning for connection validation/validate-atmost-once/
             //match-connections/max-connection-usage-count/idele-timeout
-            if(Boolean.valueOf(domainCcp.getIsConnectionValidationRequired())) {
+            if(Boolean.parseBoolean(domainCcp.getIsConnectionValidationRequired())) {
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination",
                         domainCcp.getName());
             }
@@ -302,7 +302,7 @@ public class ConnectorConnectionPoolDeployer
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination",
                         domainCcp.getName());
             }
-            if(Boolean.valueOf(domainCcp.getMatchConnections())) {
+            if(Boolean.parseBoolean(domainCcp.getMatchConnections())) {
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination",
                         domainCcp.getName());
             }
@@ -456,7 +456,7 @@ public class ConnectorConnectionPoolDeployer
             return defaultVal;
         }
 
-        return Boolean.valueOf((String) prop);
+        return Boolean.parseBoolean((String) prop);
     }
 
     private boolean isAuthCredentialsDefinedInPool(

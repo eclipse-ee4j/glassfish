@@ -17,27 +17,6 @@
 
 package com.sun.enterprise.resource.recovery;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.security.auth.Subject;
-import javax.transaction.xa.XAResource;
-
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.connectors.config.ConnectorResource;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.security.common.UserNameAndPassword;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsClassLoaderUtil;
@@ -69,6 +48,28 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.security.PasswordCredential;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.security.auth.Subject;
+import javax.transaction.xa.XAResource;
+
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.security.common.UserNameAndPassword;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * Recovery handler for connector resources
@@ -223,7 +224,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
 
         for (ConnectorConnectionPool connPool : connPools) {
 
-            PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(connPool);
+            PoolInfo poolInfo = ResourceUtil.getPoolInfo(connPool);
 
             try {
                 String[] dbUserPassword = getdbUserPasswordOfConnectorConnectionPool(connPool);
@@ -249,8 +250,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
                     dbUser = dbUserPassword[0];
                 }
                 final UserNameAndPassword principal = new UserNameAndPassword(dbUser, dbPassword);
-                String rarName = connPool.getResourceAdapterName();
-                if (ConnectorAdminServiceUtils.isJMSRA(rarName)) {
+                if (ConnectorAdminServiceUtils.isJMSRA(connPool.getResourceAdapterName())) {
                     LOG.log(Level.FINE, "Performing recovery for JMS RA, poolName {0}", poolInfo);
                     ManagedConnectionFactory[] mcfs = crt.obtainManagedConnectionFactories(poolInfo);
                     LOG.log(Level.INFO, "JMS resource recovery has created CFs = {0}", mcfs.length);
@@ -371,7 +371,7 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
             }
         }
 
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(connectorConnectionPool);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(connectorConnectionPool);
         String rarName = connectorConnectionPool.getResourceAdapterName();
         String connectionDefName = connectorConnectionPool.getConnectionDefinitionName();
         ConnectorRegistry connectorRegistry = ConnectorRegistry.getInstance();

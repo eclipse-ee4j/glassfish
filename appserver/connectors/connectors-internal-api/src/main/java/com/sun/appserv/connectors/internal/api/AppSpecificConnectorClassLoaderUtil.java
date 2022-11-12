@@ -239,7 +239,7 @@ public class AppSpecificConnectorClassLoaderUtil {
             ApplicationInfo appInfo = appRegistry.get(app.getName());
             res = getModuleScopedResource(jndiName, moduleName, BindableResource.class, appInfo);
         } else {
-            res = ConnectorsUtil.getResourceByName(getResources(), BindableResource.class, jndiName);
+            res = getResources().getResourceByName(BindableResource.class, jndiName);
         }
         //embedded ra's resources may not be created yet as they can be created only after .ear deploy
         //  (and .ear may refer to these resources in DD)
@@ -254,7 +254,7 @@ public class AppSpecificConnectorClassLoaderUtil {
                 } else if (jndiName.isJavaModule()) {
                     pool = getModuleScopedResource(poolName, moduleName, ResourcePool.class, appInfo);
                 } else {
-                    pool = ConnectorsUtil.getResourceByName(getResources(), ResourcePool.class, poolName);
+                    pool = getResources().getResourceByName(ResourcePool.class, poolName);
                 }
                 if (ConnectorConnectionPool.class.isAssignableFrom(pool.getClass())) {
                     String raName = ((ConnectorConnectionPool) pool).getResourceAdapterName();

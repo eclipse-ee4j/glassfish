@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Applications;
@@ -99,7 +98,7 @@ public class ConnectionPoolUtil {
             setResourceNotFoundErrorMessage(report, poolName);
             return false;
         }
-        if (ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolName) == null) {
+        if (resources.getResourceByName(ResourcePool.class, poolName) == null) {
             setResourceNotFoundErrorMessage(report, poolName);
             return false;
         }

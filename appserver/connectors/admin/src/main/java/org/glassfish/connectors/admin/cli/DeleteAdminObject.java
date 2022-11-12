@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
@@ -139,8 +138,7 @@ public class DeleteAdminObject implements AdminCommand {
 
             // delete admin-object-resource
             SingleConfigCode<Resources> configCode = param -> {
-                Resource resource = ConnectorsUtil.getResourceByName(domain.getResources(), AdminObjectResource.class,
-                    simpleJndiName);
+                Resource resource = domain.getResources().getResourceByName(AdminObjectResource.class, simpleJndiName);
                 return param.getResources().remove(resource);
             };
             if (ConfigSupport.apply(configCode, domain.getResources()) == null) {
@@ -163,6 +161,6 @@ public class DeleteAdminObject implements AdminCommand {
     }
 
     private boolean isResourceExists(Resources resources, SimpleJndiName simpleJndiName) {
-        return ConnectorsUtil.getResourceByName(resources, AdminObjectResource.class, simpleJndiName) != null;
+        return resources.getResourceByName(AdminObjectResource.class, simpleJndiName) != null;
     }
 }

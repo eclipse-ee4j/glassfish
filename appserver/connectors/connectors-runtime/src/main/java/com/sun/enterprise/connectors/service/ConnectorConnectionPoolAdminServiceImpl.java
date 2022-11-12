@@ -18,7 +18,6 @@
 package com.sun.enterprise.connectors.service;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.connectors.ActiveResourceAdapter;
@@ -99,7 +98,6 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
         PoolInfo poolInfo = connectorPoolObj.getPoolInfo();
         SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
         try {
-
             _runtime.getResourceNamingService().publishObject(poolInfo, jndiNameForPool, connectorPoolObj, true);
             ManagedConnectionFactory mcf = obtainManagedConnectionFactory(poolInfo);
             if (mcf == null) {
@@ -110,7 +108,6 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                 _logger.log(Level.SEVERE, "", cre);
                 throw cre;
             }
-
         } catch (NamingException ex) {
 
             String i18nMsg = I18N.getString("ccp_adm.failed_to_publish_in_jndi", poolInfo);
@@ -388,7 +385,8 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
                     if (!isConnectorConnectionPoolDeployed(poolInfo)) {
                         _logger.fine("getUnpooledConnection :: isConnectorConnectionPoolDeployed is false");
                         try {
-                            poolToDeploy = ConnectorsUtil.getResourceByName(runtime.getResources(poolInfo), ResourcePool.class, poolInfo.getName());
+                            poolToDeploy = runtime.getResources(poolInfo).getResourceByName(ResourcePool.class,
+                                poolInfo.getName());
                             runtime.getResourceDeployer(poolToDeploy).deployResource(poolToDeploy);
                             _logger.log(Level.FINE, "getUnpooledConnection:: force deployed the ConnectionPool: {0}",
                                 poolInfo);

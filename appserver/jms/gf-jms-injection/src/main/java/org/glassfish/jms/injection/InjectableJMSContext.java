@@ -243,8 +243,8 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
 
                 boolean isPMName = jndiName.hasSuffix("__pm");
                 if (isPMName) {
-                    int l = jndiName.toString().length();
-                    jndiName = new SimpleJndiName(jndiName.toString().substring(0, l - 4));
+                    int length = jndiName.toString().length();
+                    jndiName = new SimpleJndiName(jndiName.toString().substring(0, length - 4));
                 }
                 cachedCF = (ConnectionFactory) initialContext.lookup(jndiName.toString());
 

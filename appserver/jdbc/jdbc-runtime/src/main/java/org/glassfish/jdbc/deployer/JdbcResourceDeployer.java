@@ -43,7 +43,6 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceInfo;
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuffix;
 
@@ -181,7 +180,7 @@ public class JdbcResourceDeployer implements ResourceDeployer<JdbcResource> {
                 LOG.fine(() -> "Deleting JDBC pool [" + poolName + " ] as there are no more "
                     + "resource-refs to the pool in this server instance");
 
-                JdbcConnectionPool jcp = getResourceByName(resources, JdbcConnectionPool.class, poolName);
+                JdbcConnectionPool jcp = resources.getResourceByName(JdbcConnectionPool.class, poolName);
 
                 // Delete/Undeploy Pool
                 runtime.getResourceDeployer(jcp).undeployResource(jcp);

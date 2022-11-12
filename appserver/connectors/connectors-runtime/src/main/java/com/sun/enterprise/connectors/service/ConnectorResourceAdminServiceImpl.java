@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.naming.RefAddr;
+import javax.naming.Reference;
 import javax.naming.StringRefAddr;
 
 import org.glassfish.api.naming.SimpleJndiName;
@@ -49,11 +50,6 @@ import com.sun.enterprise.connectors.naming.ConnectorResourceNamingEventNotifier
 public class ConnectorResourceAdminServiceImpl extends ConnectorService {
 
     private final ResourceNamingService namingService = _runtime.getResourceNamingService();
-    /**
-     * Default constructor
-     */
-    public ConnectorResourceAdminServiceImpl() {
-    }
 
     /**
      * Creates the connector resource on a given connection pool
@@ -63,63 +59,45 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
      * @param resourceType Resource type Unused.
      * @throws ConnectorRuntimeException If the resouce creation fails.
      */
-    public void createConnectorResource(ResourceInfo resourceInfo, PoolInfo poolInfo,
-                                        String resourceType) throws ConnectorRuntimeException {
+    public void createConnectorResource(ResourceInfo resourceInfo, PoolInfo poolInfo, String resourceType)
+        throws ConnectorRuntimeException {
+        ConnectorConnectionPool ccp = null;
+        SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
+        try {
+            ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
+        } catch (NamingException ne) {
+            _logger.log(Level.WARNING,
+                "Probably the pool {0} is not yet initialized (lazy-loading), trying to check ...", poolInfo);
+            try {
+                checkAndLoadPool(poolInfo);
+                ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
+            } catch (NamingException e) {
+                _logger.log(Level.SEVERE, "Second lookup failed for {0}: {1}", new Object[] {poolInfo, e});
+                throw new ConnectorRuntimeException(
+                    "Second lookup failed again for pool name " + jndiNameForPool + " or " + poolInfo, ne);
+            }
+        }
+
+        ConnectorDescriptorInfo cdi = ccp.getConnectorDescriptorInfo();
+        Reference ref = new Reference(cdi.getConnectionFactoryClass(),
+            "com.sun.enterprise.resource.naming.ConnectorObjectFactory", null);
+        RefAddr addr = new SerializableObjectRefAddr(PoolInfo.class.getName(), poolInfo);
+        ref.add(addr);
+        addr = new StringRefAddr("rarName", cdi.getRarName());
+        ref.add(addr);
+        RefAddr resAddr = new SerializableObjectRefAddr(ResourceInfo.class.getName(), resourceInfo);
+        ref.add(resAddr);
 
         try {
-            ConnectorConnectionPool ccp = null;
-            SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
-            try {
-                ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
-            } catch (NamingException ne) {
-                //Probably the pool is not yet initialized (lazy-loading), try doing a lookup
-                try {
-                    checkAndLoadPool(poolInfo);
-                    ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
-                } catch (NamingException e) {
-                    Object params[] = new Object[]{poolInfo, e};
-                    _logger.log(Level.SEVERE, "unable.to.lookup.pool", params);
-                }
-            }
-
-            if(ccp == null){
-                ccp = (ConnectorConnectionPool) namingService.lookup(poolInfo, jndiNameForPool);
-            }
-            ConnectorDescriptorInfo cdi = ccp.getConnectorDescriptorInfo();
-
-            javax.naming.Reference ref=new  javax.naming.Reference(
-                   cdi.getConnectionFactoryClass(),
-                   "com.sun.enterprise.resource.naming.ConnectorObjectFactory",
-                   null);
-            RefAddr addr = new SerializableObjectRefAddr(PoolInfo.class.getName(), poolInfo);
-            ref.add(addr);
-            addr = new StringRefAddr("rarName", cdi.getRarName() );
-            ref.add(addr);
-            RefAddr resAddr = new SerializableObjectRefAddr(ResourceInfo.class.getName(), resourceInfo);
-            ref.add(resAddr);
-
-            try{
-                namingService.publishObject(resourceInfo, ref, true);
-                _registry.addResourceInfo(resourceInfo);
-            }catch(NamingException ne){
-                ConnectorRuntimeException cre = new ConnectorRuntimeException(ne.getMessage());
-                cre.initCause(ne);
-                Object[] params = new Object[]{resourceInfo, cre};
-                _logger.log(Level.SEVERE, "rardeployment.resource_jndi_bind_failure", params);
-                throw cre;
-            }
-
-            //To notify that a connector resource rebind has happened.
-            ConnectorResourceNamingEventNotifier.getInstance().notifyListeners(
-                new ConnectorNamingEvent(resourceInfo.getName(), ConnectorNamingEvent.EVENT_OBJECT_REBIND));
-
+            namingService.publishObject(resourceInfo, ref, true);
+            _registry.addResourceInfo(resourceInfo);
         } catch (NamingException ne) {
-            ConnectorRuntimeException cre = new ConnectorRuntimeException(ne.getMessage());
-            cre.initCause(ne);
-            Object[] params = new Object[]{resourceInfo, cre};
-            _logger.log(Level.SEVERE, "rardeployment.jndi_lookup_failed", params);
-            throw cre;
+            throw new ConnectorRuntimeException("Failed to publish connection factory for " + poolInfo, ne);
         }
+
+        // To notify that a connector resource rebind has happened.
+        ConnectorResourceNamingEventNotifier.getInstance().notifyListeners(
+            new ConnectorNamingEvent(resourceInfo.getName(), ConnectorNamingEvent.EVENT_OBJECT_REBIND));
     }
 
     /**
@@ -128,18 +106,10 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
      * @param resourceInfo JNDI name of the resource to delete.
      * @throws ConnectorRuntimeException if connector resource deletion fails.
      */
-    public void deleteConnectorResource(ResourceInfo resourceInfo)
-            throws ConnectorRuntimeException {
-
+    public void deleteConnectorResource(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
         try {
-            namingService.unpublishObject(resourceInfo, resourceInfo.getName());
+            namingService.unpublishObject(resourceInfo);
         } catch (NamingException ne) {
-            /* TODO for System RAR (not needed as proxy will always be present ?)
-            ResourcesUtil resUtil = ResourcesUtil.createInstance();
-            if (resUtil.resourceBelongsToSystemRar(jndiName)) {
-                return;
-            }
-            */
             if (ne instanceof NameNotFoundException) {
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, "rardeployment.connectorresource_removal_from_jndi_error", resourceInfo);

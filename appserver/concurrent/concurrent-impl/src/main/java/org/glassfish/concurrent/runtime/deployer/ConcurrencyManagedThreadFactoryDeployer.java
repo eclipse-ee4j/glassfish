@@ -69,7 +69,7 @@ public class ConcurrencyManagedThreadFactoryDeployer
         ManagedThreadFactoryImpl factory = createThreadFactory(applicationName, moduleName, descriptor);
         SimpleJndiName resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        resourceNamingService.publishObject(resourceInfo, resourceName, factory, true);
+        resourceNamingService.publishObject(resourceInfo, factory, true);
     }
 
 

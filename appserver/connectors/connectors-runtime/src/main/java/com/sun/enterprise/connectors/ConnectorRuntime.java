@@ -488,18 +488,19 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
 
     @Override
     public <T> T lookupPMResource(ResourceInfo resourceInfo, boolean force) throws NamingException{
+        final ResourceInfo ri;
+        if (resourceInfo.getName().hasSuffix(PM_JNDI_SUFFIX)) {
+            ri = resourceInfo;
+        } else {
+            SimpleJndiName jndiName = SimpleJndiName.of(resourceInfo.getName() + PM_JNDI_SUFFIX);
+            ri = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+        }
         try {
-            String jndiName = resourceInfo.getName().toString();
-            if (jndiName.endsWith(PM_JNDI_SUFFIX)) {
-                return connectorResourceAdmService.lookup(resourceInfo);
-            }
-            ResourceInfo pmResourceInfo = new ResourceInfo(new SimpleJndiName(jndiName + PM_JNDI_SUFFIX),
-                resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-            return connectorResourceAdmService.lookup(pmResourceInfo);
+            return connectorResourceAdmService.lookup(ri);
         } catch (NamingException ne) {
             if (force && isDAS()) {
-                _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", resourceInfo);
-                return lookupDataSourceInDAS(resourceInfo);
+                _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", ri);
+                return lookupDataSourceInDAS(ri);
             }
             throw ne;
         }
@@ -519,14 +520,15 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
 
     @Override
     public <T> T lookupNonTxResource(ResourceInfo resourceInfo, boolean force) throws NamingException {
+        final ResourceInfo ri;
+        if (resourceInfo.getName().hasSuffix(NON_TX_JNDI_SUFFIX)) {
+            ri = resourceInfo;
+        } else {
+            SimpleJndiName jndiName = SimpleJndiName.of(resourceInfo.getName() + NON_TX_JNDI_SUFFIX);
+            ri = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+        }
         try {
-            String jndiName = resourceInfo.getName().toString();
-            if (jndiName.endsWith(NON_TX_JNDI_SUFFIX)) {
-                return connectorResourceAdmService.lookup(resourceInfo);
-            }
-            ResourceInfo tmpInfo = new ResourceInfo(new SimpleJndiName(jndiName + NON_TX_JNDI_SUFFIX),
-                resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-            return connectorResourceAdmService.lookup(tmpInfo);
+            return connectorResourceAdmService.lookup(resourceInfo);
         } catch (NamingException ne) {
             if (force && isDAS()) {
                 _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", resourceInfo);

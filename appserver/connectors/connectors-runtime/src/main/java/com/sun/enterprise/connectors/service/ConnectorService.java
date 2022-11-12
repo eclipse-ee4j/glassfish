@@ -70,7 +70,7 @@ public class ConnectorService implements ConnectorConstants {
     }
 
     public ResourcesUtil getResourcesUtil(){
-        if(resourcesUtil == null){
+        if (resourcesUtil == null) {
             resourcesUtil = ResourcesUtil.createInstance();
         }
         return resourcesUtil;
@@ -85,8 +85,7 @@ public class ConnectorService implements ConnectorConstants {
      * @return generated connection poolname
      */
     // TODO V3 can the default pool name generation be fully done by connector-admin-service-utils ?
-    public SimpleJndiName getDefaultPoolName(String moduleName,
-                                     String connectionDefName) {
+    public SimpleJndiName getDefaultPoolName(String moduleName, String connectionDefName) {
         return new SimpleJndiName(moduleName + POOLNAME_APPENDER + connectionDefName);
     }
 
@@ -99,10 +98,8 @@ public class ConnectorService implements ConnectorConstants {
      * @return generated default connector resource name
      */
     // TODO V3 can the default resource name generation be fully done by connector-admin-service-utils ?
-    public SimpleJndiName getDefaultResourceName(String moduleName,
-                                         String connectionDefName) {
-        //Construct the default resource name as
-        // <JNDIName_of_RA>#<connectionDefnName>
+    public SimpleJndiName getDefaultResourceName(String moduleName, String connectionDefName) {
+        // Construct the default resource name as <JNDIName_of_RA>#<connectionDefnName>
         SimpleJndiName resourceJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForResource(moduleName);
         return new SimpleJndiName(resourceJNDIName + RESOURCENAME_APPENDER + connectionDefName);
     }
@@ -168,9 +165,8 @@ public class ConnectorService implements ConnectorConstants {
 
     public void createActiveResourceAdapterForEmbeddedRar(String rarModuleName) throws ConnectorRuntimeException {
         ConnectorDescriptor cdesc = loadConnectorDescriptorForEmbeddedRAR(rarModuleName);
-        String appName = ConnectorAdminServiceUtils.getApplicationName(rarModuleName);
-        String rarFileName = ConnectorAdminServiceUtils
-                        .getConnectorModuleName(rarModuleName) + ".rar";
+        String appName = ConnectorAdminServiceUtils.toApplicationName(rarModuleName);
+        String rarFileName = ConnectorAdminServiceUtils.toRarFileName(rarModuleName);
         String loc = getResourcesUtil().getApplicationDeployLocation(appName);
         loc = loc + File.separator + FileUtils.makeFriendlyFilename(rarFileName);
 
@@ -271,8 +267,8 @@ public class ConnectorService implements ConnectorConstants {
         // At present it is applicable to only JDBC resource adapters
         // Later other resource adapters also become applicable.
         if (rarName.equals(ConnectorConstants.JDBCDATASOURCE_RA_NAME)
-                || rarName.equals(ConnectorConstants.JDBCCONNECTIONPOOLDATASOURCE_RA_NAME) ||
-                rarName.equals(ConnectorConstants.JDBCXA_RA_NAME)) {
+            || rarName.equals(ConnectorConstants.JDBCCONNECTIONPOOLDATASOURCE_RA_NAME)
+            || rarName.equals(ConnectorConstants.JDBCXA_RA_NAME)) {
 
             PoolManager poolMgr = _runtime.getPoolManager();
             boolean result = poolMgr.switchOnMatching(poolInfo);
@@ -287,50 +283,30 @@ public class ConnectorService implements ConnectorConstants {
     }
 
     public boolean checkAndLoadPool(PoolInfo poolInfo) {
-        boolean status = false;
         try {
             ResourcePool pool = _runtime.getConnectionPoolConfig(poolInfo);
-            //DeferredResourceConfig defResConfig = resutil.getDeferredPoolConfig(poolName);
-            DeferredResourceConfig defResConfig =
-                    getResourcesUtil().getDeferredResourceConfig(null, pool, null, null);
-            status = loadResourcesAndItsRar(defResConfig);
+            DeferredResourceConfig defResConfig = getResourcesUtil().getDeferredResourceConfig(null, pool, null, null);
+            return loadResourcesAndItsRar(defResConfig);
         } catch (ConnectorRuntimeException cre) {
             Object params[] = new Object[]{poolInfo, cre};
             _logger.log(Level.WARNING, "unable.to.load.connection.pool", params);
+            return false;
         }
-        return status;
     }
 
-/*
-    public boolean checkAndLoadJdbcPool(String poolName) {
-        boolean status = false;
-        try {
-            ResourcesUtil resutil = ResourcesUtil.createInstance();
-            JdbcConnectionPool pool = _runtime.getJdbcConnectionPoolConfig(poolName);
-            DeferredResourceConfig defResConfig =
-                    resutil.getDeferredResourceConfig(null, pool, ConnectorConstants.RES_TYPE_JDBC, null);
 
-            status = loadResourcesAndItsRar(defResConfig);
-        } catch (ConnectorRuntimeException cre) {
-            _logger.log(Level.WARNING, "unable to load Jdbc Connection Pool [ " + poolName + " ]", cre);
-        }
-        return status;
-    }
-*/
-
-    public void ifSystemRarLoad(String rarName)
-                           throws ConnectorRuntimeException {
-        if(ConnectorsUtil.belongsToSystemRA(rarName)){
+    public void ifSystemRarLoad(String rarName) throws ConnectorRuntimeException {
+        if (ConnectorsUtil.belongsToSystemRA(rarName)) {
             loadDeferredResourceAdapter(rarName);
         }
     }
 
-    //TODO V3 with annotations, is it right a approach to load the descriptor using Archivist ?
+    // TODO V3 with annotations, is it right a approach to load the descriptor using Archivist ?
     private ConnectorDescriptor loadConnectorDescriptorForEmbeddedRAR(String rarName) throws ConnectorRuntimeException {
         //If the RAR is embedded try loading the descriptor directly
         //using the applicationarchivist
         ResourcesUtil resutil = ResourcesUtil.createInstance();
-        String rarFileName = ConnectorAdminServiceUtils.getConnectorModuleName(rarName) + ".rar";
+        String rarFileName = ConnectorAdminServiceUtils.toRarFileName(rarName);
         return resutil.getConnectorDescriptorFromUri(rarName, rarFileName);
     }
 

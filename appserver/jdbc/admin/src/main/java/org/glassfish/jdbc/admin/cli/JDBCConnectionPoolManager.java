@@ -17,7 +17,6 @@
 
 package org.glassfish.jdbc.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Resource;
@@ -28,9 +27,6 @@ import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.ResourceException;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-
 import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -344,7 +340,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    JdbcConnectionPool cp = ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName);
+                    JdbcConnectionPool cp = resources.getResourceByName(JdbcConnectionPool.class, poolName);
                     return param.getResources().remove(cp);
                 }
             }, resources) == null) {
@@ -368,7 +364,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     }
 
     private boolean isResourceExists(Resources resources, SimpleJndiName poolName) {
-        return ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName) != null;
+        return resources.getResourceByName(JdbcConnectionPool.class, poolName) != null;
     }
 
 

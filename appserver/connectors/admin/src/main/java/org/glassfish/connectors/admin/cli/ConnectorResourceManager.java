@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
@@ -184,7 +183,7 @@ public class ConnectorResourceManager implements ResourceManager {
 
     private boolean isConnPoolExists(Resources resources) {
         final SimpleJndiName jndiPoolName = new SimpleJndiName(poolName);
-        return ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, jndiPoolName) != null;
+        return resources.getResourceByName(ConnectorConnectionPool.class, jndiPoolName) != null;
     }
 
 

@@ -36,8 +36,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
-
 /**
  * @author Mitesh Meswani
  */
@@ -51,7 +49,7 @@ public class PersistenceManagerFactoryResourceMigrator implements ConfigurationU
         Collection<PersistenceManagerFactoryResource> pmfResources = resources.getResources(PersistenceManagerFactoryResource.class);
         for (final PersistenceManagerFactoryResource pmfResource : pmfResources) {
             final SimpleJndiName jdbcResourceName = SimpleJndiName.of(pmfResource.getJdbcResourceJndiName());
-            final JdbcResource jdbcResource = getResourceByName(resources, JdbcResource.class, jdbcResourceName);
+            final JdbcResource jdbcResource = resources.getResourceByName(JdbcResource.class, jdbcResourceName);
 
             try {
                 ConfigSupport.apply(new SingleConfigCode<Resources>() {

@@ -438,6 +438,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     protected void createDefaultConnectorConnectionPools(boolean useSunRA)
             throws ConnectorRuntimeException {
         for (ConnectionDefDescriptor descriptor : connectionDefs_) {
+            // example: connection-factory-definition-embedraApp#cfd-ra#jakarta.resource.cci.ConnectionFactory
             SimpleJndiName poolName = connectorRuntime_.getDefaultPoolName(moduleName_, descriptor.getConnectionFactoryIntf());
             PoolInfo poolInfo = new PoolInfo(poolName);
 
@@ -447,8 +448,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             connectorDescriptorInfo.setResourceAdapterClassName(desc_.getResourceAdapterClass());
             ConnectorConnectionPool connectorPoolObj;
 
-            // if useSunRA is true, then create connectorPoolObject using settings
-            // from sunRAXML
+            // if useSunRA is true, then create connectorPoolObject using settings from sunRAXML
             if (useSunRA) {
                 connectorPoolObj = ConnectionPoolObjectsUtils.createSunRaConnectorPoolObject(poolInfo, desc_, moduleName_);
             } else {

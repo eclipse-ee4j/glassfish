@@ -192,8 +192,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
         if (authorization.equals(APPLICATION_AUTHORIZATION)) {
             if (cxRequestInfo == null) {
-                String msg = I18N.getString("con_mgr.null_userpass");
-                throw new ResourceException(msg);
+                throw new ResourceException(I18N.getString("con_mgr.null_userpass"));
             }
             ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
 
@@ -425,10 +424,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                         // check for the enabled status and existence using non-prefixed resource-name
 
                         if (suffix != null) {
-                            String prefixedName = resourceInfo.getName().toString();
-                            SimpleJndiName nonPrefixedName = new SimpleJndiName(
-                                prefixedName.substring(0, prefixedName.lastIndexOf(suffix)));
-                            ResourceInfo toFind = new ResourceInfo(nonPrefixedName, resourceInfo.getApplicationName(),
+                            SimpleJndiName jndiName = resourceInfo.getName().removeSuffix(suffix);
+                            ResourceInfo toFind = new ResourceInfo(jndiName, resourceInfo.getApplicationName(),
                                 resourceInfo.getModuleName());
                             resourceConfiguration = resourcesUtil.getResource(toFind, BindableResource.class);
                         }

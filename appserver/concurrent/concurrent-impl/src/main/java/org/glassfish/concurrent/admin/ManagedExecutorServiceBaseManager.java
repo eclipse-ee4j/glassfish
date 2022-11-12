@@ -46,7 +46,6 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_EXECUTOR_SERVICE;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE;
@@ -254,9 +253,9 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         final Resource resource;
         SimpleJndiName simpleJndiName = new SimpleJndiName(jndiName);
         if (MANAGED_EXECUTOR_SERVICE.equals(getResourceType())) {
-            resource = getResourceByName(resources, ManagedExecutorService.class, simpleJndiName);
+            resource = resources.getResourceByName(ManagedExecutorService.class, simpleJndiName);
         } else if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
-            resource = getResourceByName(resources, ManagedScheduledExecutorService.class, simpleJndiName);
+            resource = resources.getResourceByName(ManagedScheduledExecutorService.class, simpleJndiName);
         } else {
             resource = null;
         }
@@ -330,9 +329,9 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
             SingleConfigCode<Resources> configCode = param -> {
                 ManagedExecutorServiceBase removedResource = null;
                 if (MANAGED_EXECUTOR_SERVICE.equals(getResourceType())) {
-                    removedResource = getResourceByName(resources, ManagedExecutorService.class, simpleJndiName);
+                    removedResource = resources.getResourceByName(ManagedExecutorService.class, simpleJndiName);
                 } else {
-                    removedResource = getResourceByName(resources, ManagedScheduledExecutorService.class, simpleJndiName);
+                    removedResource = resources.getResourceByName(ManagedScheduledExecutorService.class, simpleJndiName);
                 }
                 return param.getResources().remove(removedResource);
             };

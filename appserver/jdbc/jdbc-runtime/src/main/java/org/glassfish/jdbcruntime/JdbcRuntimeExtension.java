@@ -129,13 +129,10 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
      */
     @Override
     public PoolInfo getPoolNameFromResourceJndiName(ResourceInfo resourceInfo) {
-        PoolInfo poolInfo = null;
-        JdbcResource jdbcResource = null;
         SimpleJndiName jndiName = resourceInfo.getName();
-
         ResourceInfo actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-        jdbcResource = ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
-                actualResourceInfo.getName());
+        JdbcResource jdbcResource = runtime.getResources(actualResourceInfo).getResourceByName(JdbcResource.class,
+            actualResourceInfo.getName());
         if (jdbcResource == null) {
             String suffix = ConnectorsUtil.getValidSuffix(jndiName);
             if (suffix != null) {
@@ -143,8 +140,8 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
                 actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
             }
         }
-        jdbcResource = ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
-                actualResourceInfo.getName());
+        jdbcResource = runtime.getResources(actualResourceInfo).getResourceByName(JdbcResource.class,
+            actualResourceInfo.getName());
 
         if (jdbcResource != null) {
             if (LOG.isLoggable(Level.FINE)) {
@@ -154,10 +151,9 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
         }
         if (jdbcResource != null) {
             SimpleJndiName poolName = new SimpleJndiName(jdbcResource.getPoolName());
-            poolInfo = new PoolInfo(poolName, actualResourceInfo.getApplicationName(),
-                actualResourceInfo.getModuleName());
+            return new PoolInfo(poolName, actualResourceInfo.getApplicationName(), actualResourceInfo.getModuleName());
         }
-        return poolInfo;
+        return null;
     }
 
     /**

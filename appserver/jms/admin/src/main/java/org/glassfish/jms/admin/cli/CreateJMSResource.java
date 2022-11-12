@@ -17,7 +17,6 @@
 
 package org.glassfish.jms.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
@@ -35,6 +34,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -161,9 +161,9 @@ public class CreateJMSResource implements AdminCommand {
         if (force) {
             final Resource res;
             if (resourceType.equals(TOPIC) || resourceType.equals(QUEUE)) {
-                res = ConnectorsUtil.getResourceByName(domain.getResources(), AdminObjectResource.class, simpleJndiName);
+                res = domain.getResources().getResourceByName(AdminObjectResource.class, simpleJndiName);
             } else {
-                res = ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorResource.class, simpleJndiName);
+                res = domain.getResources().getResourceByName(ConnectorResource.class, simpleJndiName);
             }
 
             if (res != null) {
@@ -202,8 +202,8 @@ public class CreateJMSResource implements AdminCommand {
         ActionReport subReport = report.addSubActionsReport();
 
         if (resourceType.equals(TOPIC_CF) || resourceType.equals(QUEUE_CF) || resourceType.equals(UNIFIED_CF)) {
-            ConnectorConnectionPool cpool = ConnectorsUtil.getResourceByName(domain.getResources(),
-                ConnectorConnectionPool.class, SimpleJndiName.of(jndiNameForConnectionPool));
+            ConnectorConnectionPool cpool = domain.getResources().getResourceByName(ConnectorConnectionPool.class,
+                SimpleJndiName.of(jndiNameForConnectionPool));
 
             boolean createdPool = false;
             // If pool is already existing, do not try to create it again

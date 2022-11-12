@@ -104,6 +104,7 @@ public class ConnectorRegistry {
         _logger.log(Level.FINE, "Initialized the connector registry");
     }
 
+
     /**
      * Adds the object implementing ActiveResourceAdapter
      * interface to the registry.
@@ -163,7 +164,7 @@ public class ConnectorRegistry {
      * @param resourceInfo Resource being deployed.
      */
     public void addResourceInfo(ResourceInfo resourceInfo){
-        if(resourceInfo != null){
+        if (resourceInfo != null) {
             synchronized (resourceInfos){
                 resourceInfos.add(resourceInfo);
             }
@@ -178,8 +179,8 @@ public class ConnectorRegistry {
      */
     public boolean removeResourceInfo(ResourceInfo resourceInfo){
         boolean removed = false;
-        if(resourceInfo != null){
-            synchronized (resourceInfos){
+        if (resourceInfo != null) {
+            synchronized (resourceInfos) {
                 removed = resourceInfos.remove(resourceInfo);
             }
             resourceInfoVersion.remove(resourceInfo);
@@ -193,11 +194,10 @@ public class ConnectorRegistry {
      * @return boolean indicating whether the resource is deployed.
      */
     public boolean isResourceDeployed(ResourceInfo resourceInfo){
-        boolean isDeployed = false;
-        if(resourceInfo != null){
-            isDeployed = resourceInfos.contains(resourceInfo);
+        if (resourceInfo != null) {
+            return resourceInfos.contains(resourceInfo);
         }
-        return isDeployed;
+        return false;
     }
 
     /**
@@ -205,8 +205,8 @@ public class ConnectorRegistry {
      * @param poolInfo Pool being deployed.
      */
     public void addTransparentDynamicReconfigPool(PoolInfo poolInfo){
-        if(poolInfo != null){
-            synchronized (transparentDynamicReconfigPools){
+        if (poolInfo != null) {
+            synchronized (transparentDynamicReconfigPools) {
                 transparentDynamicReconfigPools.add(poolInfo);
             }
         }
@@ -218,13 +218,12 @@ public class ConnectorRegistry {
      * @return boolean indicating whether the pool exists and removed.
      */
     public boolean removeTransparentDynamicReconfigPool(PoolInfo poolInfo){
-        boolean removed = false;
-        if(poolInfo != null){
-            synchronized (transparentDynamicReconfigPools){
-                removed = transparentDynamicReconfigPools.remove(poolInfo);
+        if (poolInfo != null) {
+            synchronized (transparentDynamicReconfigPools) {
+                return transparentDynamicReconfigPools.remove(poolInfo);
             }
         }
-        return removed;
+        return false;
     }
 
     /**
@@ -233,11 +232,10 @@ public class ConnectorRegistry {
      * @return boolean false if pool is not deployed
      */
     public boolean isTransparentDynamicReconfigPool(PoolInfo poolInfo){
-        boolean isDeployed = false;
         if(poolInfo != null){
-            isDeployed = transparentDynamicReconfigPools.contains(poolInfo);
+            return transparentDynamicReconfigPools.contains(poolInfo);
         }
-        return isDeployed;
+        return false;
     }
 
     /**
@@ -530,7 +528,7 @@ public class ConnectorRegistry {
      * @return All active resource adapters in the connector runtime
      */
     public ActiveResourceAdapter[] getAllActiveResourceAdapters() {
-        ActiveResourceAdapter araArray[]  = new ActiveResourceAdapter[this.resourceAdapters.size()];
+        ActiveResourceAdapter[] araArray = new ActiveResourceAdapter[this.resourceAdapters.size()];
         return this.resourceAdapters.values().toArray(araArray);
     }
 
@@ -568,13 +566,12 @@ public class ConnectorRegistry {
      * @param messageListener message-listener class-name
      * @return List of resource-adapters
      */
-    public List<String> getConnectorsSupportingMessageListener(String messageListener){
-
+    public List<String> getConnectorsSupportingMessageListener(String messageListener) {
         List<String> rars = new ArrayList<>();
-        for(ActiveResourceAdapter ara : resourceAdapters.values()){
+        for (ActiveResourceAdapter ara : resourceAdapters.values()) {
             ConnectorDescriptor desc = ara.getDescriptor();
-            if(desc.getInBoundDefined()){
-                if(desc.getInboundResourceAdapter().getMessageListener(messageListener) != null){
+            if (desc.getInBoundDefined()) {
+                if (desc.getInboundResourceAdapter().getMessageListener(messageListener) != null) {
                     rars.add(ara.getModuleName());
                 }
             }

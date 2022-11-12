@@ -93,9 +93,9 @@ import static com.sun.enterprise.deployment.util.DOLUtils.getModuleName;
 import static com.sun.enterprise.deployment.util.DOLUtils.getTreatComponentAsModule;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
-import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
 import static org.glassfish.deployment.common.JavaEEResourceType.CFD;
 import static org.glassfish.deployment.common.JavaEEResourceType.CSDD;
@@ -709,7 +709,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         // If no java: prefix is specified, default to component scope.
         String rawName = descriptor.getName();
         LOG.log(Level.FINEST, "toLogicalJndiName(descriptor); rawName={0}", rawName);
-        return new SimpleJndiName(rawName.startsWith(JNDI_CTX_JAVA) ? rawName : JNDI_CTX_JAVA_COMPONENT_ENV + rawName);
+        return new SimpleJndiName(rawName.startsWith(JNDI_CTX_JAVA) ? rawName : (JNDI_CTX_JAVA_COMPONENT_ENV + rawName));
     }
 
     /**
@@ -871,7 +871,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             webServiceRefManager = locator.getService(WebServiceReferenceManager.class);
             if (webServiceRefManager == null) {
                 LOG.log(SEVERE, "Cannot find the WebServiceReferenceManager to proceed with @WebServiceRef."
-                    + " Please confirm if webservices module is installed ");
+                    + " Please check if webservices module is installed ");
                 result = null;
             } else {
                 result = (T) webServiceRefManager.resolveWSReference(serviceRef, ctx);

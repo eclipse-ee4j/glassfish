@@ -26,6 +26,7 @@ import com.sun.enterprise.deployment.InjectionCapable;
 import com.sun.enterprise.deployment.InjectionInfo;
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.JndiNameEnvironment;
+
 import jakarta.annotation.ManagedBean;
 import jakarta.inject.Inject;
 
@@ -484,7 +485,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                 }
 
                 final Object value = componentId == null
-                    ? glassfishNamingManager.getInitialContext().lookup(lookupName.toString())
+                    ? glassfishNamingManager.lookup(lookupName)
                     : glassfishNamingManager.lookup(componentId, lookupName);
 
                 // there still could be 2 injection on the same class, better

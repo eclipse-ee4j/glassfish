@@ -26,8 +26,6 @@ import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.sql.DataSource;
-
 import org.easymock.EasyMock;
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
@@ -107,7 +105,7 @@ public class GlassfishNamingManagerImplTest {
 
         assertThat(Collections.list(manager.list(SimpleJndiName.of("java:"))), hasSize(0));
 
-        JavaURLContext java = manager.lookup(SimpleJndiName.of("java:"));
+        JavaURLContext java = manager.lookupFromComponentNamespace(SimpleJndiName.of("java:"));
         assertThat(java.toString(), endsWith("java:]"));
 
         JavaURLContext java2 = manager.lookup("component1234", SimpleJndiName.of("java:"));
@@ -163,8 +161,8 @@ public class GlassfishNamingManagerImplTest {
         List<JNDIBinding> bindings = List.of(new Binding("java:comp/env/mmm/MMM", "BindingModuleValue"),
             new Binding("java:app/aaa/AAA", "BindingAppValue"));
         manager.bindToComponentNamespace("appTest", "modTest", "componentIdTest", true, bindings);
-        assertEquals("BindingModuleValue", manager.lookup(SimpleJndiName.of("java:comp/env/mmm/MMM")));
-        assertEquals("BindingAppValue", manager.lookup(SimpleJndiName.of("java:app/aaa/AAA")));
+        assertEquals("BindingModuleValue", manager.lookupFromComponentNamespace(SimpleJndiName.of("java:comp/env/mmm/MMM")));
+        assertEquals("BindingAppValue", manager.lookupFromComponentNamespace(SimpleJndiName.of("java:app/aaa/AAA")));
     }
 
 

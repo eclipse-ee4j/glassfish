@@ -115,16 +115,15 @@ public class ResourcesUtil {
     }
 
     private Application getApplicationByName(String name){
-        Application application = null;
         List<Application> apps = getApplications().getApplications();
         for(Application app : apps){
             if(app.getName().equals(name)){
-                application = app;
-                break;
+                return app;
             }
         }
-        return application;
+        return null;
     }
+
     /**
      * Gets the deployment location for a J2EE application.
      * @param appName application name
@@ -209,11 +208,11 @@ public class ResourcesUtil {
         if(application == null){
             return false;
         }
-        boolean appEnabled = Boolean.valueOf(application.getEnabled());
+        boolean appEnabled = Boolean.parseBoolean(application.getEnabled());
         ApplicationRef appRef = getServer().getApplicationRef(application.getName());
         boolean appRefEnabled = false;
         if(appRef != null ){
-            appRefEnabled = Boolean.valueOf(appRef.getEnabled());
+            appRefEnabled = Boolean.parseBoolean(appRef.getEnabled());
         }
         return appEnabled && appRefEnabled;
     }
@@ -240,7 +239,7 @@ public class ResourcesUtil {
         } else if (resource instanceof BindableResource) {
             BindableResource bindableResource = (BindableResource) resource;
             if (bindableResource.getJndiName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)) {
-                return Boolean.valueOf(bindableResource.getEnabled());
+                return Boolean.parseBoolean(bindableResource.getEnabled());
             }
             ResourceRef resRef = getServer().getResourceRef(SimpleJndiName.of(bindableResource.getJndiName()));
             return isEnabled(bindableResource) && resRef != null && parseBoolean(resRef.getEnabled());
@@ -286,8 +285,8 @@ public class ResourcesUtil {
         if(br instanceof ConnectorResource) {
             ConnectorResource cr = (ConnectorResource) br;
             SimpleJndiName poolName = new SimpleJndiName(cr.getPoolName());
-            ConnectorConnectionPool ccp = ConnectorsUtil.getResourceByName(getResources(resourceInfo),
-                ConnectorConnectionPool.class, poolName);
+            ConnectorConnectionPool ccp = getResources(resourceInfo).getResourceByName(ConnectorConnectionPool.class,
+                poolName);
             if (ccp == null) {
                 return false;
             }
@@ -497,8 +496,8 @@ public class ResourcesUtil {
     public ResourcePool getPoolConfig(PoolInfo poolInfo){
         Resources resources = getResources(poolInfo);
         ResourcePool pool = null;
-        if(resources != null){
-            pool = ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolInfo.getName());
+        if (resources != null) {
+            pool = resources.getResourceByName(ResourcePool.class, poolInfo.getName());
         }
         return pool;
     }
@@ -508,10 +507,10 @@ public class ResourcesUtil {
         ConnectorConnectionPool pool = null;
         Resources resources = getResources(resourceInfo);
         if (resources != null) {
-            resource = ConnectorsUtil.getResourceByName(resources, ConnectorResource.class, resourceInfo.getName());
+            resource = resources.getResourceByName(ConnectorResource.class, resourceInfo.getName());
             if (resource != null) {
                 SimpleJndiName poolName = new SimpleJndiName(resource.getPoolName());
-                pool = ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, poolName);
+                pool = resources.getResourceByName(ConnectorConnectionPool.class, poolName);
             }
         }
         return pool;
@@ -539,10 +538,10 @@ public class ResourcesUtil {
         } else {
             resources = getResources(resourceInfo);
         }
-        T resource = null;
         if (resources != null) {
-            resource = ConnectorsUtil.getResourceByName(resources, resourceType, jndiName);
-        } else if (ConnectorsUtil.isApplicationScopedResource(resourceInfo)
+            return resources.getResourceByName(resourceType, jndiName);
+        }
+        if (ConnectorsUtil.isApplicationScopedResource(resourceInfo)
             || ConnectorsUtil.isModuleScopedResource(resourceInfo)) {
             // it is possible that "application" is being deployed (eg: during deployment "prepare"
             // or application "start")
@@ -554,10 +553,10 @@ public class ResourcesUtil {
 
             resources = ResourcesRegistry.getResources(appName, moduleName);
             if (resources != null) {
-                resource = ConnectorsUtil.getResourceByName(resources, resourceType, jndiName);
+                return resources.getResourceByName(resourceType, jndiName);
             }
         }
-        return resource;
+        return null;
     }
 
     public <T extends Resource> T getResource(SimpleJndiName jndiName, String appName, String moduleName, Class<T> resourceType) {

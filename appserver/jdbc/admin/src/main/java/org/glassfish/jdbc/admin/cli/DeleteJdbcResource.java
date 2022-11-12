@@ -64,6 +64,11 @@ public class DeleteJdbcResource implements AdminCommand {
     @Param(name = "jdbc_resource_name", primary = true)
     private String jndiName;
 
+    // FIXME: unused, when removing, do the same in Create* and all asadmin commands used in tests
+    @Deprecated
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
+    private String target;
+
     @Inject
     private Domain domain;
 

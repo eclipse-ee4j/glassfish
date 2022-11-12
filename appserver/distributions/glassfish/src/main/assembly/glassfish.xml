@@ -334,6 +334,7 @@
                 <exclude>jakartaee.jar</exclude>
                 <exclude>appserv-rt.jar</exclude>
                 <exclude>descriptors.jar</exclude>
+                <exclude>templates.jar</exclude>
                 <exclude>sun-as-jsr88-dm.jar</exclude>
                 <exclude>gf-client.jar</exclude>
                 <exclude>mejb.jar</exclude>

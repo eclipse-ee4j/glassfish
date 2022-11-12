@@ -27,7 +27,6 @@
     </parent>
 
     <artifactId>templates</artifactId>
-    <packaging>distribution-fragment</packaging>
 
     <name>JDBC Templates</name>
 </project>

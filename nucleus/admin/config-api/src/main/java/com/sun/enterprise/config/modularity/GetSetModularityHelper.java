@@ -63,10 +63,6 @@ public class GetSetModularityHelper {
         return null;
     }
 
-    public Class getClassFor(String serviceName) {
-        return configModularityUtils.getClassFor(serviceName);
-    }
-
     /**
      * @param string the entire . separated string
      * @param position starts with one

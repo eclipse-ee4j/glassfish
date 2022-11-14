@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -17,7 +18,11 @@
 
 -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version="6.0">
+
     <context-param>
         <param-name>com.sun.jsftemplating.DEBUG</param-name>
         <param-value>false</param-value>
@@ -49,6 +54,10 @@
     <context-param>
         <param-name>jakarta.faces.validator.DISABLE_DEFAULT_BEAN_VALIDATOR</param-name>
         <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>jakarta.faces.PARTIAL_STATE_SAVING</param-name>
+        <param-value>false</param-value>
     </context-param>
 
     <filter>

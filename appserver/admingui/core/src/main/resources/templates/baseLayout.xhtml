@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -41,7 +42,7 @@
             getPreference(default="#{false}", root="glassfish/layout", key="hideRight", value="#{sessionScope.hideRight}");
         </ui:event>
         <sun:head id="head" title="#{guiTitle}" javaScript="true" debug="false" parseOnLoad="false">
-            <h:outputScript name="jsf.js" library="jakarta.faces" target="head" />
+            <h:outputScript name="faces.js" library="jakarta.faces" target="head" />
         <f:verbatim>
             <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/yui/reset-fonts-grids.css"/>
             <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/yui/assets/skins/sam/resize.css"/>

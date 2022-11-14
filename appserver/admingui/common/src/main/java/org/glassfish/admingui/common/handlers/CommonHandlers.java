@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +39,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.sun.jsftemplating.el.PageSessionResolver;
 import org.glassfish.admingui.common.tree.FilterTreeEvent;
 import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.MiscUtil;
@@ -612,7 +614,7 @@ public class CommonHandlers {
      * <p> This handler is different than JSFT's default navigate handler in
      *     that it forces the request to NOT be a "partial request".  The
      *     effect is that no wrapping of the response will be done.  This is
-     *     normally done in JSF2 in order to work with the jsf.js JS code
+     *     normally done in JSF2 in order to work with the faces.js JS code
      *     that handles the response.  In the Admin Console, we typically do
      *     not use this JS, so this is not desirable behavior.</p>
      *
@@ -825,9 +827,9 @@ public class CommonHandlers {
     private static String handleBareAttribute(FacesContext ctx, String url) {
         // Get Page Session...
         UIViewRoot root = ctx.getViewRoot();
-        Map<String, Serializable> pageSession = null; // PageSessionResolver.getPageSession(ctx, root);
+        Map<String, Serializable> pageSession = PageSessionResolver.getPageSession(ctx, root);
         if (pageSession == null) {
-            pageSession = createPageSession(ctx, root); // PageSessionResolver.createPageSession(ctx, root);
+            pageSession = PageSessionResolver.createPageSession(ctx, root);
         }
         String request = ctx.getExternalContext().getRequestParameterMap().get("bare");
         if (request != null) {
@@ -849,26 +851,6 @@ public class CommonHandlers {
             }
         }
         return url;
-    }
-
-    /**
-     * <p>
-     * This method will create a new "page session" <code>Map</code>. It will overwrite any existing "page session"
-     * <code>Map</code>, so be careful.
-     * </p>
-     */
-    public static Map<String, Serializable> createPageSession(FacesContext ctx, UIViewRoot root) {
-        if (root == null) {
-            root = ctx.getViewRoot();
-        }
-        // Create it...
-        Map<String, Serializable> map = new HashMap<>(4);
-
-        // Store it...
-        root.getAttributes().put("_ps", map);
-
-        // Return it...
-        return map;
     }
 
     /**

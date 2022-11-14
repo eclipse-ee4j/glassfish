@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,13 @@
 /*
  * Common utility
  */
+
+require(['webui/suntheme/field']);
+require(['webui/suntheme/dropDown']);
+require(['webui/suntheme/upload']);
+require(['webui/suntheme/jumpDropDown']);
+require(['webui/suntheme/hyperlink']);
+require(['webui/suntheme/props']);
 
 function checkPSWInCommon(secureAdminEnabled, id1, id2, alert1, alert2, confirmMessage) {
 	var ps1 = document.getElementById(id1); 
@@ -118,18 +126,20 @@ function getField(theForm, fieldName) {
 // FIXME: suntheme should not be used -- prevents theme from changing
 function getTextElement(componentName) {
 
+	var el;
+
 	require(['webui/suntheme/field'], function (field) {		
 		if(field === "undefined"){
 			return  document.getElementById(componentName);
 		}
 		
 	    var el = field.getInputElement(componentName);
-	    if (el == null) {
-	        el = document.getElementById(componentName); // This may get too deep inside WS, but it should work as a fall back
-	    }
-	    return el; 
 	});	
 
+        if (el == null) {
+            el = document.getElementById(componentName); // This may get too deep inside WS, but it should work as a fall back
+        }
+        return el; 
 }
 
 function getSelectElement(componentName) {
@@ -585,7 +595,7 @@ admingui.nav = {
     requestTreeUpdate: function(source, event, nodeId, params, previousState) {
         // Ping header to make sure header stays "fresh"
         admingui.ajax.pingHeader();
-        jsf.ajax.request(source, event, {
+        faces.ajax.request(source, event, {
             execute: "treeForm treeForm:update",
             render: nodeId + " " + nodeId + "_children",
             onevent: function(data) {
@@ -1086,7 +1096,7 @@ admingui.help = {
 
         // launch the request
         // Note: in help window, don't ping -- only 1 JSF page
-        jsf.ajax.request(tabElement, null, props);
+        faces.ajax.request(tabElement, null, props);
 
         //
         // Use DOM to show/hide the proper tree
@@ -2297,7 +2307,7 @@ admingui.ajax = {
         }
         // Ping header to make sure header stays "fresh"
         admingui.ajax.pingHeader();
-        jsf.ajax.request(component, null, params);
+        faces.ajax.request(component, null, params);
     },
 
     defaultGetCallback: function(xmlReq, target, url) {
@@ -2373,7 +2383,7 @@ admingui.ajax = {
                             result = node.textContent;
                         }
                         if (node.getAttribute('id') === 'jakarta.faces.ViewState') {
-                            // NOTE: see jsf.ajax.doUpdate for more info....
+                            // NOTE: see faces.ajax.doUpdate for more info....
                             viewState = node.firstChild;
                         }
                     }
@@ -2585,7 +2595,7 @@ admingui.ajax = {
         if (typeof(async) === 'undefined') {
             async = true;
         }
-        if (!(typeof(jsf) === 'undefined') && !(typeof(jsf.ajax) === 'undefined')) {
+        if (!(typeof(faces) === 'undefined') && !(typeof(faces.ajax) === 'undefined')) {
             // Warp user's function to make easier to use
             var func = function(data) {
                 if (data.status === 'success') {
@@ -2608,7 +2618,7 @@ admingui.ajax = {
                 alert("'execButton' not found!  Unable to submit JSF2 Ajax Request!");
             } else {
                 // Don't ping b/c this is from the header and therefor is a ping
-                jsf.ajax.request(src, null,
+                faces.ajax.request(src, null,
                 {
                     execute: 'execButton',
                     render: 'execResp',
@@ -2648,7 +2658,7 @@ admingui.ajax = {
                 execute: '@none',
                 render: '@none'
             };
-            jsf.ajax.request(src, null, options);
+            faces.ajax.request(src, null, options);
         }
     }
 }

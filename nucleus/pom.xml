@@ -75,6 +75,7 @@
         <module>diagnostics</module>
         <module>resources</module>
         <module>featuresets</module>
+        <module>xmlbind-annotations</module>
     </modules>
 
     <scm>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -132,7 +133,17 @@
                     <archive>
                         <manifestEntries>
                             <Glassfish-require-services>org.glassfish.api.admingui.ConsoleProvider</Glassfish-require-services>
-                            <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
+                            <HK2-Import-Bundles>
+                                org.glassfish.main.admingui.console-common,
+                                org.glassfish.hk2.hk2,
+                                org.glassfish.main.admingui.console-plugin-service,
+                                jakarta.servlet-api,
+                                jakarta.servlet.jsp-api,
+                                jakarta.el-api,
+                                org.glassfish.expressly,
+                                org.glassfish.jsftemplating,
+                                org.glassfish.main.admingui.dataprovider
+                            </HK2-Import-Bundles>
                         </manifestEntries>
                     </archive>
                 </configuration>

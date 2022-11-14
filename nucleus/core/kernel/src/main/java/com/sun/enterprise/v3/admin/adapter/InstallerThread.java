@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -125,9 +126,12 @@ final class InstallerThread extends Thread {
                 singleModule.setName(app.getName());
                 Engine webe = singleModule.createChild(Engine.class);
                 webe.setSniffer("web");
+                Engine weldEngine = singleModule.createChild(Engine.class);
+                weldEngine.setSniffer("weld");
                 Engine sece = singleModule.createChild(Engine.class);
                 sece.setSniffer("security");
                 singleModule.getEngines().add(webe);
+                singleModule.getEngines().add(weldEngine);
                 singleModule.getEngines().add(sece);
                 Server s = (Server) proxies[1];
                 List<ApplicationRef> arefs = s.getApplicationRef();

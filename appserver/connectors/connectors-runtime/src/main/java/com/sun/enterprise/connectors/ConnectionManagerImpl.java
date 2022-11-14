@@ -383,6 +383,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
     }
 
     private void validateResourceAndPool() throws ResourceException {
+        ResourceInfo resInfo = this.resourceInfo;
         ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
 
         ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
@@ -394,62 +395,62 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         // Only for cases where resource/ is not available, we look further and determine whether
         // resource/resource-ref are disabled.
 
-        if (!registry.isResourceDeployed(resourceInfo)) {
-            LOG.log(Level.FINEST,"resourceInfo not found in connector-registry: {0}", resourceInfo);
+        if (!registry.isResourceDeployed(resInfo)) {
+            LOG.log(Level.FINEST,"resourceInfo not found in connector-registry: {0}", resInfo);
             boolean isDefaultResource = false;
             boolean isSunRAResource = false;
             ConnectorDescriptor descriptor = registry.getDescriptor(rarName);
             if (descriptor != null) {
-                isDefaultResource = descriptor.getDefaultResourcesNames().contains(resourceInfo.getName());
+                isDefaultResource = descriptor.getDefaultResourcesNames().contains(resInfo.getName());
                 if (descriptor.getSunDescriptor() != null) {
                     ResourceAdapter rar = descriptor.getSunDescriptor().getResourceAdapter();
                     if (rar != null) {
-                        String sunRAJndiName = (String) rar.getValue(ResourceAdapter.JNDI_NAME);
-                        isSunRAResource = resourceInfo.getName().equals(sunRAJndiName);
+                        SimpleJndiName sunRAJndiName = rar.getValue(ResourceAdapter.JNDI_NAME);
+                        isSunRAResource = resInfo.getName().equals(sunRAJndiName);
                     }
                 }
             }
 
             if ((runtime.isServer() || runtime.isEmbedded())
-                && (!resourceInfo.getName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)
+                && (!resInfo.getName().contains(ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX)
                     && !isDefaultResource && !isSunRAResource)) {
                 // performance optimization so that resource configuration is not retrieved from
                 // resources config bean each time.
                 if (resourceConfiguration == null) {
-                    resourceConfiguration = resourcesUtil.getResource(resourceInfo, BindableResource.class);
+                    resourceConfiguration = resourcesUtil.getResource(resInfo, BindableResource.class);
                     if (resourceConfiguration == null) {
-                        String suffix = ConnectorsUtil.getValidSuffix(resourceInfo.getName());
+                        String suffix = ConnectorsUtil.getValidSuffix(resInfo.getName());
 
                         // It is possible that the resource is a __PM or __NONTX suffixed resource used by JPA/EJB Container
                         // check for the enabled status and existence using non-prefixed resource-name
 
                         if (suffix != null) {
-                            SimpleJndiName jndiName = resourceInfo.getName().removeSuffix(suffix);
-                            ResourceInfo toFind = new ResourceInfo(jndiName, resourceInfo.getApplicationName(),
-                                resourceInfo.getModuleName());
-                            resourceConfiguration = resourcesUtil.getResource(toFind, BindableResource.class);
+                            SimpleJndiName nonPrefixedName = resInfo.getName().removeSuffix(suffix);
+                            resInfo = new ResourceInfo(nonPrefixedName, resInfo.getApplicationName(),
+                                resInfo.getModuleName());
+                            resourceConfiguration = resourcesUtil.getResource(resInfo, BindableResource.class);
                         }
                     }
                 } else {
                     // We cache the resourceConfiguration for performance optimization.
                     // make sure that appropriate (actual) resourceInfo is used for validation.
-                    String suffix = ConnectorsUtil.getValidSuffix(resourceInfo.getName());
+                    String suffix = ConnectorsUtil.getValidSuffix(resInfo.getName());
 
                     // It is possible that the resource is a __PM or __NONTX suffixed resource used by JPA/EJB Container
                     // check for the enabled status and existence using non-prefixed resource-name
                     if (suffix != null) {
-                        SimpleJndiName nonPrefixedName = resourceInfo.getName().removeSuffix(suffix);
-                        resourceInfo = new ResourceInfo(nonPrefixedName, resourceInfo.getApplicationName(),
-                                resourceInfo.getModuleName());
+                        SimpleJndiName nonPrefixedName = resInfo.getName().removeSuffix(suffix);
+                        resInfo = new ResourceInfo(nonPrefixedName, resInfo.getApplicationName(),
+                                resInfo.getModuleName());
                     }
                 }
 
                 if (resourceConfiguration == null) {
-                    throw new ResourceException("No such resource: " + resourceInfo);
+                    throw new ResourceException("No such resource: " + resInfo);
                 }
 
-                if (!resourcesUtil.isEnabled(resourceConfiguration, resourceInfo)) {
-                    throw new ResourceException(resourceInfo + " is not enabled");
+                if (!resourcesUtil.isEnabled(resourceConfiguration, resInfo)) {
+                    throw new ResourceException(resInfo + " is not enabled");
                 }
             }
         }

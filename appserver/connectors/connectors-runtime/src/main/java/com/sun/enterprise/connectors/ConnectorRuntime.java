@@ -528,11 +528,11 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
             ri = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
         }
         try {
-            return connectorResourceAdmService.lookup(resourceInfo);
+            return connectorResourceAdmService.lookup(ri);
         } catch (NamingException ne) {
             if (force && isDAS()) {
-                _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", resourceInfo);
-                return lookupDataSourceInDAS(resourceInfo);
+                _logger.log(Level.FINE, "jdbc.unable_to_lookup_resource", ri);
+                return lookupDataSourceInDAS(ri);
             }
             throw ne;
         }

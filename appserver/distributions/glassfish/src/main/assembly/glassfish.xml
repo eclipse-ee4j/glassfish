@@ -138,14 +138,6 @@
             <outputDirectory>${install.dir.name}/glassfish/lib/install/applications</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${temp.dir}/templates/glassfish/lib/install/databases/dbvendormapping</directory>
-            <outputDirectory>${install.dir.name}/glassfish/lib/install/databases/dbvendormapping</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>${temp.dir}/templates/glassfish/lib/install/templates/resources/jdbc</directory>
-            <outputDirectory>${install.dir.name}/glassfish/lib/install/templates/resources/jdbc</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>${temp.dir}/descriptors/glassfish/lib/install/templates/resources/custom</directory>
             <outputDirectory>${install.dir.name}/glassfish/lib/install/templates/resources/custom</outputDirectory>
         </fileSet>
@@ -343,4 +335,18 @@
             <outputDirectory>${install.dir.name}/glassfish/modules</outputDirectory>
         </fileSet>
     </fileSets>
+    <dependencySets>
+       <dependencySet>
+           <includes>
+               <include>org.glassfish.main.jdbc:templates</include>
+           </includes>
+           <unpack>true</unpack>
+           <unpackOptions>
+               <excludes>
+                   <exclude>META-INF/**</exclude>
+               </excludes>
+           </unpackOptions>
+           <outputDirectory>${install.dir.name}</outputDirectory>
+       </dependencySet>
+   </dependencySets>
 </assembly>

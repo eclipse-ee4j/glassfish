@@ -60,12 +60,13 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
     private static final SimpleJndiName USER_TX_NO_JAVA_COMP = new SimpleJndiName("UserTransaction");
 
     @Inject
-    ServiceLocator habitat;
+    ServiceLocator loader;
 
     @Inject
     Events events;
 
-    @Inject @Optional
+    @Inject
+    @Optional
     GlassfishNamingManager nm;
 
 
@@ -91,13 +92,13 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
                 nm.publishObject(USER_TX_NO_JAVA_COMP, new NamingObjectProxy.InitializationNamingObjectProxy() {
                     @Override
                     public Object create(Context ic) throws NamingException {
-                        ActiveDescriptor<?> descriptor = habitat.getBestDescriptor(
+                        ActiveDescriptor<?> descriptor = loader.getBestDescriptor(
                                 BuilderHelper.createContractFilter("jakarta.transaction.UserTransaction"));
                         if (descriptor == null) {
                             return null;
                         }
 
-                        return habitat.getServiceHandle(descriptor).getService();
+                        return loader.getServiceHandle(descriptor).getService();
                     }
                 }, false);
             } catch (NamingException e) {
@@ -120,12 +121,12 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
     public void onReady() {
         LOG.fine("ON TM READY STARTED");
 
-        TransactionService txnService = habitat.getService(TransactionService.class);
+        TransactionService txnService = loader.getService(TransactionService.class);
         if (txnService != null) {
-            boolean isAutomaticRecovery = Boolean.valueOf(txnService.getAutomaticRecovery());
+            boolean isAutomaticRecovery = Boolean.parseBoolean(txnService.getAutomaticRecovery());
             if (isAutomaticRecovery) {
                 LOG.fine("ON TM RECOVERY START");
-                tm = habitat.getService(JavaEETransactionManager.class);
+                tm = loader.getService(JavaEETransactionManager.class);
                 tm.initRecovery(false);
                 LOG.fine("ON TM RECOVERY END");
             }
@@ -137,10 +138,9 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
     public void onShutdown() {
         // Cleanup if TM was loaded
         if (tm == null) {
-            ServiceHandle<JavaEETransactionManager> inhabitant =
-                    habitat.getServiceHandle(JavaEETransactionManager.class);
-            if (inhabitant != null && inhabitant.isActive()) {
-                tm = inhabitant.getService();
+            ServiceHandle<JavaEETransactionManager> handle = loader.getServiceHandle(JavaEETransactionManager.class);
+            if (handle != null && handle.isActive()) {
+                tm = handle.getService();
             }
         }
         if (tm != null) {
@@ -148,7 +148,5 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
             tm.shutdown();
             LOG.fine("ON TM SHUTDOWN FINISHED");
         }
-
     }
-
 }

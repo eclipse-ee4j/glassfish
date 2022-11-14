@@ -40,6 +40,8 @@ import java.util.logging.Logger;
 import javax.naming.Reference;
 import javax.sql.DataSource;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 import static java.util.logging.Level.WARNING;
 
 /**
@@ -291,15 +293,15 @@ public abstract class AbstractDataSource implements DataSource, Serializable, co
 
     private ConnectionHolder.ConnectionType findConnectionType() {
         if (connectionManager instanceof LazyAssociatableConnectionManager) {
-            if (((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager).getJndiName().toString()
-                .endsWith(ConnectorConstants.PM_JNDI_SUFFIX)) {
+            if (((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager).getJndiName()
+                .hasSuffix(ConnectorConstants.PM_JNDI_SUFFIX)) {
                 return ConnectionHolder.ConnectionType.STANDARD;
             }
         } else if (connectionManager instanceof LazyEnlistableConnectionManager) {
-            String jndiName = ((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager)
-                .getJndiName().toString();
-            if (jndiName.endsWith(ConnectorConstants.PM_JNDI_SUFFIX)
-                || jndiName.endsWith(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
+            SimpleJndiName jndiName = ((com.sun.appserv.connectors.internal.spi.ConnectionManager) connectionManager)
+                .getJndiName();
+            if (jndiName.hasSuffix(ConnectorConstants.PM_JNDI_SUFFIX)
+                || jndiName.hasSuffix(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
                 return ConnectionHolder.ConnectionType.STANDARD;
             }
         }

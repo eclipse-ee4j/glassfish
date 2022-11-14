@@ -197,13 +197,23 @@ public abstract class RuntimeDescriptor extends Descriptor {
     }
 
 
-    // attribute stored at the descriptor level are treated like elements
-    public void setAttributeValue(String attributeName, String value) {
+    /**
+     * @deprecated Attributes are stored at the descriptor level are treated like elements.
+     *             You can directly used the {@link #setValue(String, Object)} method.
+     * @param attributeName
+     * @param value
+     */
+    @Deprecated
+    public final void setAttributeValue(String attributeName, Object value) {
         setValue(attributeName, value);
     }
 
 
-    public String getAttributeValue(String attributeName) {
+    /**
+     * @deprecated same as {@link #getValue(String)}
+     */
+    @Deprecated
+    public final String getAttributeValue(String attributeName) {
         return getValue(attributeName);
     }
 

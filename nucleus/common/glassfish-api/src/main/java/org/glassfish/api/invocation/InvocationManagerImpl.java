@@ -127,10 +127,10 @@ public class InvocationManagerImpl implements InvocationManager {
     }
 
     @Override
-    public <T extends ComponentInvocation> void preInvoke(T inv) throws InvocationException {
-        LOG.log(DEBUG, "preInvoke(inv={0})", inv);
+    public <T extends ComponentInvocation> void preInvoke(T invocation) throws InvocationException {
+        LOG.log(DEBUG, "preInvoke(invocation={0})", invocation);
         InvocationArray<ComponentInvocation> invocations = frames.get();
-        if (inv.getInvocationType() == ComponentInvocationType.SERVICE_STARTUP) {
+        if (invocation.getInvocationType() == ComponentInvocationType.SERVICE_STARTUP) {
             invocations.setInvocationAttribute(ComponentInvocationType.SERVICE_STARTUP);
             return;
         }
@@ -139,33 +139,33 @@ public class InvocationManagerImpl implements InvocationManager {
         ComponentInvocation prevInv = beforeSize == 0 ? null : invocations.get(beforeSize - 1);
 
         // if ejb call EJBSecurityManager, for servlet call RealmAdapter
-        ComponentInvocationType invType = inv.getInvocationType();
+        ComponentInvocationType invType = invocation.getInvocationType();
 
         if (invHandlers != null) {
             for (ComponentInvocationHandler handler : invHandlers) {
-                handler.beforePreInvoke(invType, prevInv, inv);
+                handler.beforePreInvoke(invType, prevInv, invocation);
             }
         }
 
         List<RegisteredComponentInvocationHandler> setCIH = regCompInvHandlerMap.get(invType);
         if (setCIH != null) {
             for (RegisteredComponentInvocationHandler element : setCIH) {
-                element.getComponentInvocationHandler().beforePreInvoke(invType, prevInv, inv);
+                element.getComponentInvocationHandler().beforePreInvoke(invType, prevInv, invocation);
             }
         }
 
         // push this invocation on the stack
-        invocations.add(inv);
+        invocations.add(invocation);
 
         if (invHandlers != null) {
             for (ComponentInvocationHandler handler : invHandlers) {
-                handler.afterPreInvoke(invType, prevInv, inv);
+                handler.afterPreInvoke(invType, prevInv, invocation);
             }
         }
 
         if (setCIH != null) {
             for (RegisteredComponentInvocationHandler element : setCIH) {
-                element.getComponentInvocationHandler().afterPreInvoke(invType, prevInv, inv);
+                element.getComponentInvocationHandler().afterPreInvoke(invType, prevInv, invocation);
             }
         }
 

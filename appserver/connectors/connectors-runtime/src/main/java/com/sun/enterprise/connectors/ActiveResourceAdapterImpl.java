@@ -152,7 +152,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             if (desc_.getSunDescriptor() != null && desc_.getSunDescriptor().getResourceAdapter() != null) {
 
                 // sun-ra.xml exists
-                String jndiName = desc_.getSunDescriptor().getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
+                SimpleJndiName jndiName = desc_.getSunDescriptor().getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
                 if (jndiName == null || jndiName.isEmpty()) {
                     // jndiName is empty, do not create duplicate pools, use setting in sun-ra.xml
                     createDefaultConnectorConnectionPools(true);
@@ -200,14 +200,10 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
                     desc_.getSunDescriptor().getResourceAdapter() != null) {
 
                 // sun-ra.xml exists
-                String jndiName = (String) desc_.getSunDescriptor().
-                        getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
+                SimpleJndiName jndiName = desc_.getSunDescriptor().getResourceAdapter()
+                    .getValue(ResourceAdapter.JNDI_NAME);
 
-                if (jndiName == null || jndiName.equals("")) {
-                    // jndiName is empty, sunRA pool not created, so don't need to delete
-
-                } else {
-                    // jndiName is not empty, need to delete pool
+                if (jndiName != null && !jndiName.isEmpty()) {
                     deleteSunRAConnectionPool();
                 }
             }
@@ -490,8 +486,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             _logger.log(Level.FINE, "Created SUN-RA connection pool:", poolInfo);
         }
 
-        SimpleJndiName jndiName = new SimpleJndiName(
-            (String) desc_.getSunDescriptor().getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME));
+        SimpleJndiName jndiName = desc_.getSunDescriptor().getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
         ResourceInfo resourceInfo = new ResourceInfo(jndiName);
         connectorRuntime_.createConnectorResource(resourceInfo, poolInfo, null);
         if(_logger.isLoggable(Level.FINE)) {

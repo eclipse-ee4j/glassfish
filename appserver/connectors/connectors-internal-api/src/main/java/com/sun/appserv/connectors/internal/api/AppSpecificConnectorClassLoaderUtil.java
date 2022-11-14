@@ -284,9 +284,9 @@ public class AppSpecificConnectorClassLoaderUtil {
                         for (ConnectorDescriptor desc : rarDescriptors) {
                             SunConnector sunraDesc = desc.getSunDescriptor();
                             if (sunraDesc != null) {
-                                String sunRAJndiName = (String) sunraDesc.getResourceAdapter().
-                                        getValue(ResourceAdapter.JNDI_NAME);
-                                if (jndiName.toString().equals(sunRAJndiName)) {
+                                SimpleJndiName sunRAJndiName = sunraDesc.getResourceAdapter()
+                                    .getValue(ResourceAdapter.JNDI_NAME);
+                                if (jndiName.equals(sunRAJndiName)) {
                                     app.addResourceAdapter(desc.getName());
                                     found = true;
                                     break;

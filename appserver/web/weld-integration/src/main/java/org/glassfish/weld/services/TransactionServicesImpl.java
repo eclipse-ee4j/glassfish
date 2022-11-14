@@ -80,7 +80,7 @@ public class TransactionServicesImpl implements TransactionServices {
     @Override
     public UserTransaction getUserTransaction() {
         try {
-            return (UserTransaction) new InitialContext().lookup(JNDI_CTX_JAVA_COMPONENT + "UserTransaction");
+            return InitialContext.doLookup(JNDI_CTX_JAVA_COMPONENT + "UserTransaction");
         } catch (NamingException e) {
             return null;
         }

@@ -144,19 +144,19 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
     public <T> T lookup(ResourceInfo resourceInfo) throws NamingException {
         _logger.log(Level.FINEST, "lookup(resourceInfo={0})", resourceInfo);
         // To pass suffix that will be used by connector runtime during lookup
-        SimpleJndiName jndiName = resourceInfo.getName();
-        String suffix = ConnectorsUtil.getValidSuffix(jndiName);
+        final String suffix = ConnectorsUtil.getValidSuffix(resourceInfo.getName());
+        final SimpleJndiName jndiName;
         final Hashtable<Object, Object> env;
         if (suffix == null) {
             env = null;
+            jndiName = resourceInfo.getName();
         } else {
             env = new Hashtable<>();
             env.put(ConnectorConstants.JNDI_SUFFIX_PROPERTY, suffix);
-            jndiName = jndiName.removeSuffix(suffix);
+            jndiName = resourceInfo.getName().removeSuffix(suffix);
         }
         ResourceInfo actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(),
                 resourceInfo.getModuleName());
         return namingService.lookup(actualResourceInfo, actualResourceInfo.getName(), env);
     }
-
 }

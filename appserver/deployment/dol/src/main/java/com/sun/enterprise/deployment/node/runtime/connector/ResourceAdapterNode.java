@@ -26,6 +26,7 @@ import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -80,7 +81,7 @@ public class ResourceAdapterNode extends RuntimeDescriptorNode<RuntimeDescriptor
             throw new RuntimeException("Trying to set values on a null descriptor");
         }
         if (attributeName.getQName().equals(RuntimeTagNames.JNDI_NAME)) {
-            descriptor.setAttributeValue(ResourceAdapter.JNDI_NAME, value);
+            descriptor.setAttributeValue(ResourceAdapter.JNDI_NAME, SimpleJndiName.of(value));
             return true;
         }
         if (attributeName.getQName().equals(RuntimeTagNames.MAX_POOL_SIZE)) {
@@ -114,7 +115,7 @@ public class ResourceAdapterNode extends RuntimeDescriptorNode<RuntimeDescriptor
     public Node writeDescriptor(Node parent, String nodeName, ResourceAdapter descriptor) {
         Element raNode = (Element) super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(raNode, TagNames.DESCRIPTION, descriptor.getDescription());
-        setAttribute(raNode, RuntimeTagNames.JNDI_NAME, (String) descriptor.getValue(ResourceAdapter.JNDI_NAME));
+        setAttribute(raNode, RuntimeTagNames.JNDI_NAME, descriptor.getValue(ResourceAdapter.JNDI_NAME));
         setAttribute(raNode, RuntimeTagNames.MAX_POOL_SIZE,
             (String) descriptor.getValue(ResourceAdapter.MAX_POOL_SIZE));
         setAttribute(raNode, RuntimeTagNames.STEADY_POOL_SIZE,

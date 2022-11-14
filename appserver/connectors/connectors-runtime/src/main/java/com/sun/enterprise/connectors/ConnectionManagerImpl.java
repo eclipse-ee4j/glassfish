@@ -159,6 +159,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
     public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo,
         SimpleJndiName jndiNameToUse, Object connection) throws ResourceException {
+        LOG.log(Level.FINEST, "allocateConnection(mcf={0}, cxRequestInfo={1}, jndiNameToUse={2}, connection={3})",
+            new Object[] {mcf, cxRequestInfo, jndiNameToUse, connection});
         validateResourceAndPool();
         PoolManager poolmgr = ConnectorRuntime.getRuntime().getPoolManager();
         boolean resourceShareable = true;
@@ -175,9 +177,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
         //TODO V3 refactor all the 3 cases viz, no res-ref, app-auth, cont-auth.
         if (resourceReferenceDescriptor == null) {
-            if (LOG.isLoggable(Level.FINE)) {
-                LOG.log(Level.FINE, "poolmgr.no_resource_reference", jndiNameToUse);
-            }
+            LOG.log(Level.FINE, "poolmgr.no_resource_reference", jndiNameToUse);
 
             return internalGetConnection(
                     mcf,

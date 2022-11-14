@@ -228,6 +228,7 @@ public class ConnectorsUtil {
      * @return boolean whether the suffix is valid or not
      */
     public static boolean isValidJndiSuffix(String suffix) {
+        LOG.log(Level.FINEST, "isValidJndiSuffix(suffix={0})", suffix);
         if (suffix != null) {
             for (String validSuffix : JNDI_SUFFIX_VALUES) {
                 if (validSuffix.equals(suffix)) {

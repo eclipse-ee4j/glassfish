@@ -142,6 +142,7 @@ public class ConnectorResourceAdminServiceImpl extends ConnectorService {
      * @throws NamingException - when unable to get the object form jndi
      */
     public <T> T lookup(ResourceInfo resourceInfo) throws NamingException {
+        _logger.log(Level.FINEST, "lookup(resourceInfo={0})", resourceInfo);
         // To pass suffix that will be used by connector runtime during lookup
         SimpleJndiName jndiName = resourceInfo.getName();
         String suffix = ConnectorsUtil.getValidSuffix(jndiName);

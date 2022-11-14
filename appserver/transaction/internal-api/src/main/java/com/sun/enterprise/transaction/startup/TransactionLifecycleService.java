@@ -23,6 +23,7 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.naming.Context;
@@ -100,7 +101,7 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
                     }
                 }, false);
             } catch (NamingException e) {
-                LOG.warning("Can't bind \"UserTransaction\" in JNDI");
+                LOG.log(Level.SEVERE, "Can't bind \"UserTransaction\" in JNDI", e);
             }
         }
     }
@@ -111,7 +112,7 @@ public class TransactionLifecycleService implements PostConstruct, PreDestroy {
             try {
                 nm.unpublishObject(USER_TX_NO_JAVA_COMP);
             } catch (NamingException e) {
-                LOG.warning("Can't unbind \"UserTransaction\" in JNDI");
+                LOG.log(Level.SEVERE, "Can't unbind \"UserTransaction\" in JNDI", e);
             }
         }
     }

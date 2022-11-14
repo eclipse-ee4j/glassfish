@@ -173,6 +173,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     @Override
     public JndiNameEnvironment getJndiNameEnvironment(String componentId) {
+        LOG.log(Level.FINEST, "getJndiNameEnvironment(componentId={0})", componentId);
         if (componentId == null) {
             return null;
         }

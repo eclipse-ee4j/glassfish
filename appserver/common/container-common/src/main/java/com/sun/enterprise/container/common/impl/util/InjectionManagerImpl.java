@@ -179,7 +179,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     @Override
     public void invokeInstancePreDestroy(Object instance, boolean validate) throws InjectionException {
         ComponentInvocation currentInvocation = invocationManager.getCurrentInvocation();
-        LOG.log(DEBUG, "invokeInstancePreDestroy(instance={0}, validate={1}); invocation={1}", instance, validate,
+        LOG.log(DEBUG, "invokeInstancePreDestroy(instance={0}, validate={1}); invocation={2}", instance, validate,
             currentInvocation);
         // if ComponentInv is null and validate is true, throw InjectionException;
         // if component JndiNameEnvironment is null and validate is true, throw InjectionException;
@@ -221,6 +221,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      */
     @Override
     public <T> T createManagedObject(Class<T> clazz) throws InjectionException {
+        LOG.log(DEBUG, "createManagedObject(clazz={0})", clazz);
         T managedObject = null;
 
         try {
@@ -275,6 +276,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      */
     @Override
     public <T> T createManagedObject(Class<T> clazz, boolean invokePostConstruct) throws InjectionException {
+        LOG.log(DEBUG, "createManagedObject(clazz={0}, invokePostConstruct={1})", clazz, invokePostConstruct);
         T managedObject = null;
 
         try {
@@ -334,6 +336,7 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      */
     @Override
     public void destroyManagedObject(Object managedObject, boolean validate) throws InjectionException {
+        LOG.log(DEBUG, "destroyManagedObject(managedObject={0}, validate={1})", managedObject, validate);
         Class<?> managedObjectClass = managedObject.getClass();
 
         ManagedBean managedBeanAnn = managedObjectClass.getAnnotation(ManagedBean.class);
@@ -440,15 +443,15 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     /**
      * @param instance Target instance for postConstruct, or null if class-based.
      */
-    private void invokePostConstruct(final Class clazz, final Object instance, JndiNameEnvironment envDescriptor)
+    private void invokePostConstruct(final Class<?> clazz, final Object instance, JndiNameEnvironment envDescriptor)
             throws InjectionException {
         LinkedList<Method> postConstructMethods = new LinkedList<>();
 
-        Class nextClass = clazz;
+        Class<?> nextClass = clazz;
 
         // Process each class in the inheritance hierarchy, starting with
         // the most derived class and ignoring java.lang.Object.
-        while ((nextClass != Object.class) && (nextClass != null)) {
+        while (nextClass != Object.class && nextClass != null) {
 
             InjectionInfo injInfo = envDescriptor.getInjectionInfoByClass(nextClass);
 
@@ -474,6 +477,8 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
      */
     private void _inject(final Class<?> clazz, final Object instance, String componentId, List<InjectionCapable> injectableResources)
             throws InjectionException {
+        LOG.log(TRACE, "_inject(clazz={0}, instance={1}, componentId={2}, injectableResources.size={0})", clazz,
+            instance, componentId, injectableResources.size());
 
         for (InjectionCapable next : injectableResources) {
 
@@ -530,22 +535,22 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                         }
                     } else if (target.isMethodInjectable()) {
 
-                        final Method m = getMethod(next, target, clazz);
+                        final Method method = getMethod(next, target, clazz);
 
-                        if (Modifier.isStatic(m.getModifiers()) && (instance != null)) {
+                        if (Modifier.isStatic(method.getModifiers()) && (instance != null)) {
                             throw new InjectionException(
                                 "Illegal use of static method on class that only supports instance-based injection: "
-                                    + m);
+                                    + method);
                         }
 
-                        if (instance == null && !Modifier.isStatic(m.getModifiers())) {
+                        if (instance == null && !Modifier.isStatic(method.getModifiers())) {
                             throw new InjectionException(MessageFormat.format(
-                                "Injected method: {0} on Application Client class: {1} must be declared static", m,
+                                "Injected method: {0} on Application Client class: {1} must be declared static", method,
                                 clazz));
                         }
 
                         LOG.log(DEBUG, "Injecting dependency with logical name: {0} into method: {1} on class: {2}",
-                            next.getComponentEnvName(), m, clazz);
+                            next.getComponentEnvName(), method, clazz);
 
                         if (System.getSecurityManager() != null) {
                             // Wrap actual value insertion in doPrivileged to
@@ -553,12 +558,12 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
                             java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
                                 @Override
                                 public java.lang.Object run() throws Exception {
-                                    m.invoke(instance, new Object[] { value });
+                                    method.invoke(instance, value);
                                     return null;
                                 }
                             });
                         } else {
-                            m.invoke(instance, new Object[] { value });
+                            method.invoke(instance, value);
                         }
 
                     }
@@ -573,12 +578,10 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
     }
 
     private void invokeLifecycleMethod(final Method lifecycleMethod, final Object instance) throws InjectionException {
+        LOG.log(DEBUG, "Calling lifecycle method: {0} on class: {1}", lifecycleMethod,
+            lifecycleMethod.getDeclaringClass());
 
         try {
-
-            LOG.log(DEBUG, "Calling lifecycle method: {0} on class: {1}", lifecycleMethod,
-                lifecycleMethod.getDeclaringClass());
-
             // Wrap actual value insertion in doPrivileged to
             // allow for private/protected field access.
             java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
@@ -598,9 +601,6 @@ public class InjectionManagerImpl implements InjectionManager, PostConstruct {
             ie.initCause(cause);
             throw ie;
         }
-
-        return;
-
     }
 
     private Field getField(InjectionTarget target, Class resourceClass) throws Exception {

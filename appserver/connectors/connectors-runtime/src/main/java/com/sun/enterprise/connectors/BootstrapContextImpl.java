@@ -17,13 +17,6 @@
 
 package com.sun.enterprise.connectors;
 
-import java.io.Serializable;
-import java.util.Timer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.WorkContextHandler;
 import com.sun.logging.LogDomains;
@@ -34,6 +27,15 @@ import jakarta.resource.spi.work.WorkContext;
 import jakarta.resource.spi.work.WorkManager;
 import jakarta.transaction.TransactionSynchronizationRegistry;
 
+import java.io.Serializable;
+import java.util.Timer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+
+import org.glassfish.api.naming.SimpleJndiName;
+
 
 /**
  * BootstrapContext implementation.
@@ -42,11 +44,11 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
  */
 public final class BootstrapContextImpl implements BootstrapContext, Serializable {
 
-    public static final int MAX_INSTANCE_LENGTH=24;
+    public static final int MAX_INSTANCE_LENGTH = 24;
     private static final long serialVersionUID = -8449694716854376406L;
     private transient WorkManager wm;
     private XATerminator xa;
-    private String moduleName;
+    private final String moduleName;
     private String threadPoolId;
     private ClassLoader rarCL;
 
@@ -75,8 +77,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
      * @throws ConnectorRuntimeException If there is a failure in
      *         retrieving WorkManager.
      */
-    public BootstrapContextImpl (String poolId, String moduleName, ClassLoader rarCL)
-                                 throws ConnectorRuntimeException{
+    public BootstrapContextImpl(String poolId, String moduleName, ClassLoader rarCL) throws ConnectorRuntimeException {
         this.threadPoolId = poolId;
         this.moduleName = moduleName;
         this.rarCL = rarCL;
@@ -114,7 +115,8 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
     public TransactionSynchronizationRegistry getTransactionSynchronizationRegistry() {
         try{
             InitialContext ic = new InitialContext();
-            return (TransactionSynchronizationRegistry)ic.lookup("java:comp/TransactionSynchronizationRegistry");
+            return (TransactionSynchronizationRegistry) ic
+                .lookup(SimpleJndiName.JNDI_CTX_JAVA_COMPONENT + "TransactionSynchronizationRegistry");
         }catch(Exception e){
             logger.log(Level.WARNING, "tx.sync.registry.lookup.failed", e);
             RuntimeException re = new RuntimeException("Transaction Synchronization Registry Unavailable");

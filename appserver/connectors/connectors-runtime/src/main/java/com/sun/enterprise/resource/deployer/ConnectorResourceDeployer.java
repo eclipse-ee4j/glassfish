@@ -17,23 +17,7 @@
 
 package com.sun.enterprise.resource.deployer;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceInfo;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuffix;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.ConnectorConnectionPool;
-import org.glassfish.connectors.config.ConnectorResource;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.connectors.ConnectorRuntime;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
@@ -41,6 +25,21 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.connectors.config.ConnectorConnectionPool;
+import org.glassfish.connectors.config.ConnectorResource;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceInfo;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuffix;
 
 /**
  * @author Srikanth P
@@ -59,8 +58,8 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
     public synchronized void deployResource(ConnectorResource resource, String applicationName, String moduleName) throws Exception {
         // DeployResource is not synchronized as there is only one caller
         // ResourceProxy which is synchronized
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
-        PoolInfo poolInfo = new PoolInfo(resource.getPoolName(), applicationName, moduleName);
+        ResourceInfo resourceInfo = new ResourceInfo(new SimpleJndiName(resource.getJndiName()), applicationName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(new SimpleJndiName(resource.getPoolName()), applicationName, moduleName);
         createConnectorResource(resource, resourceInfo, poolInfo);
     }
 
@@ -69,37 +68,31 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
     public void deployResource(ConnectorResource resource) throws Exception {
         // DeployResource is not synchronized as there is only one caller
         // ResourceProxy which is synchronized
-        String poolName = resource.getPoolName();
-        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
+        SimpleJndiName poolName = new SimpleJndiName(resource.getPoolName());
+        ResourceInfo resourceInfo = getResourceInfo(resource);
         PoolInfo poolInfo = new PoolInfo(poolName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
         createConnectorResource(resource, resourceInfo, poolInfo);
     }
 
     private void createConnectorResource(ConnectorResource connectorResource, ResourceInfo resourceInfo, PoolInfo poolInfo) throws ConnectorRuntimeException {
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Calling backend to add connector resource", resourceInfo);
-        }
+        _logger.log(Level.FINE, "Calling backend to add connector resource: {0}", resourceInfo);
 
         runtime.createConnectorResource(resourceInfo, poolInfo, null);
-        String jndiName = resourceInfo.getName();
-
+        SimpleJndiName jndiName = resourceInfo.getName();
         // In-case the resource is explicitly created with a suffix (__nontx or __PM), no need to create one
         if (getValidSuffix(jndiName) == null) {
-            ResourceInfo pmResourceInfo = new ResourceInfo(getPMJndiName(jndiName),
-                    resourceInfo.getApplicationName(), resourceInfo.getModuleName());
+            ResourceInfo pmResourceInfo = new ResourceInfo(getPMJndiName(jndiName), resourceInfo.getApplicationName(),
+                resourceInfo.getModuleName());
             runtime.createConnectorResource(pmResourceInfo, poolInfo, null);
         }
-
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Added connector resource in backend", resourceInfo);
-        }
-
+        _logger.log(Level.FINE, "Added connector resource in backend: {0}", resourceInfo);
     }
 
 
     @Override
     public void undeployResource(ConnectorResource resource, String applicationName, String moduleName) throws Exception {
-        deleteConnectorResource(resource, new ResourceInfo(resource.getJndiName(), applicationName, moduleName));
+        ResourceInfo resourceInfo = new ResourceInfo(new SimpleJndiName(resource.getJndiName()), applicationName, moduleName);
+        deleteConnectorResource(resource, resourceInfo);
     }
 
 
@@ -111,21 +104,17 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
     private void deleteConnectorResource(ConnectorResource connectorResource, ResourceInfo resourceInfo) throws Exception {
 
         runtime.deleteConnectorResource(resourceInfo);
-
         // In-case the resource is explicitly created with a suffix (__nontx or __PM), no need to delete one
         if (getValidSuffix(resourceInfo.getName()) == null) {
-            ResourceInfo pmResourceInfo =
-                new ResourceInfo(
-                    getPMJndiName(resourceInfo.getName()),
-                    resourceInfo.getApplicationName(),
+            SimpleJndiName pmJndiName = getPMJndiName(resourceInfo.getName());
+            ResourceInfo pmResourceInfo = new ResourceInfo(pmJndiName, resourceInfo.getApplicationName(),
                     resourceInfo.getModuleName());
 
             runtime.deleteConnectorResource(pmResourceInfo);
         }
 
-        // If no more resource-ref to the pool
-        // of this resource in this server instance, remove pool from connector
-        // runtime
+        // If no more resource-ref to the pool of this resource in this server instance, remove pool
+        // from connector runtime
         checkAndDeletePool(connectorResource);
     }
 
@@ -157,8 +146,8 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
      * @since 8.1 pe/se/ee
      */
     private void checkAndDeletePool(ConnectorResource connectorResource) throws Exception {
-        String poolName = connectorResource.getPoolName();
-        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(connectorResource);
+        SimpleJndiName poolName = new SimpleJndiName(connectorResource.getPoolName());
+        ResourceInfo resourceInfo = getResourceInfo(connectorResource);
         PoolInfo poolInfo = new PoolInfo(poolName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
         Resources resources = (Resources) connectorResource.getParent();
 
@@ -172,9 +161,8 @@ public class ConnectorResourceDeployer extends AbstractConnectorResourceDeployer
                                 "resource-refs to the pool in this server instance");
                     }
 
-                    ConnectorConnectionPool connectorConnectionPool = getResourceByName(resources, ConnectorConnectionPool.class, poolName);
-                    // Delete/Undeploy Pool
-                    runtime.getResourceDeployer(connectorConnectionPool).undeployResource(connectorConnectionPool);
+                    ConnectorConnectionPool pool = resources.getResourceByName(ConnectorConnectionPool.class, poolName);
+                    runtime.getResourceDeployer(pool).undeployResource(pool);
                 }
             } catch (Exception ce) {
                 _logger.warning(ce.getMessage());

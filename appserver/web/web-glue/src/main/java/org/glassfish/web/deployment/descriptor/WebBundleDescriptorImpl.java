@@ -1697,8 +1697,7 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             EnvironmentProperty envProp = _getEnvironmentPropertyByName(enve.getName());
             if (envProp != null) {
                 combineInjectionTargets(envProp, enve);
-                EnvironmentProperty envP = enve;
-                if (!envProp.hasInjectionTargetFromXml() && (!envProp.isSetValueCalled()) && envP.isSetValueCalled()) {
+                if (enve.isSetValueCalled() && !envProp.isSetValueCalled() && !envProp.hasInjectionTargetFromXml()) {
                     envProp.setValue(enve.getValue());
                 }
             } else {
@@ -1706,9 +1705,8 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
                     throw new IllegalArgumentException(localStrings.getLocalString(
                         "web.deployment.exceptionconflictenventry",
                         "There are more than one environment entries defined in web fragments with the same name, but not overrided in web.xml"));
-                } else {
-                    addEnvironmentEntry(enve);
                 }
+                addEnvironmentEntry(enve);
             }
         }
     }

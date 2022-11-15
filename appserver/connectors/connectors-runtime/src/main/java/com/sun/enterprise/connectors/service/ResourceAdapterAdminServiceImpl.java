@@ -17,26 +17,6 @@
 
 package com.sun.enterprise.connectors.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-
-import javax.naming.NamingException;
-
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.deployment.common.ModuleDescriptor;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resource;
@@ -53,6 +33,29 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterAssociation;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+
+import javax.naming.NamingException;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.deployment.common.ModuleDescriptor;
+import org.jvnet.hk2.config.types.Property;
+
+import static com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor;
+
 
 /**
  * This is resource adapter admin service. It creates, deletes Resource adapter
@@ -62,7 +65,7 @@ import jakarta.resource.spi.ResourceAdapterAssociation;
  */
 public class ResourceAdapterAdminServiceImpl extends ConnectorService {
 
-    private ExecutorService execService =
+    private final ExecutorService execService =
     Executors.newCachedThreadPool(new ThreadFactory() {
            @Override
         public Thread newThread(Runnable r) {
@@ -111,10 +114,8 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
         if(ConnectorRuntime.getRuntime().isServer()){
             try {
 
-                String descriptorJNDIName = ConnectorAdminServiceUtils.
-                        getReservePrefixedJNDINameForDescriptor(moduleName);
-
-                _runtime.getNamingManager().getInitialContext().unbind(descriptorJNDIName);
+                SimpleJndiName descriptorJNDIName = getReservePrefixedJNDINameForDescriptor(moduleName);
+                _runtime.getNamingManager().getInitialContext().unbind(descriptorJNDIName.toString());
 
                 if(_logger.isLoggable(Level.FINEST)){
                     _logger.finest("ResourceAdapterAdminServiceImpl :: destroyActiveRA "
@@ -215,7 +216,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
                     //Update RAConfig in Connector Descriptor and bind in JNDI
                     //so that ACC clients could use RAConfig
                     updateRAConfigInDescriptor(connectorDescriptor, moduleName);
-                    String descriptorJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor(moduleName);
+                    SimpleJndiName descriptorJNDIName = getReservePrefixedJNDINameForDescriptor(moduleName);
                     if(_logger.isLoggable(Level.FINE)) {
                         _logger.fine("ResourceAdapterAdminServiceImpl :: createActiveRA "
                             + moduleName + " at " + moduleDir
@@ -372,22 +373,6 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
         }
         if (acr != null) {
             sendStopToResourceAdapter(acr);
-
-/*
-            // remove the system rar from class loader chain.
-            if(ConnectorsUtil.belongsToSystemRA(moduleName)) {
-                ConnectorClassFinder ccf =
-                        (ConnectorClassFinder)ConnectorRegistry.getInstance().
-                                getActiveResourceAdapter(moduleName).getClassLoader();
-                ConnectorRuntime connectorRuntime = ConnectorRuntime.getRuntime();
-                DelegatingClassLoader ccl = connectorRuntime.getConnectorClassLoader();
-                boolean systemRarCLRemoved = ccl.removeDelegate(ccf);
-                if(_logger.isLoggable(Level.FINE)){
-                    _logger.log(Level.FINE, "System RAR [ "+moduleName+" ] removed from " +
-                        "classloader chain : " + systemRarCLRemoved);
-                }
-            }
-*/
             _registry.removeLockObject(moduleName);
             return _registry.removeActiveResourceAdapter(moduleName);
         }
@@ -535,13 +520,6 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
                 runtime.getGlobalResourceManager().deployResources(resources);
             }
         }
-     /*   //No need to deploy the .rar, it may be a case where rar is not deployed yet
-        //Also, when the rar is started, RA-Config is anyway used
-        else {
-            ConnectorApplication app = _registry.getConnectorApplication(moduleName);
-            createActiveResourceAdapter(moduleDir, moduleName, app.getClassLoader());
-            _registry.getConnectorApplication(moduleName).deployResources();
-        }*/
     }
 
     /**
@@ -549,9 +527,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
      *
      * @param resourceAdapterToStop ra to stop
      */
-    private void sendStopToResourceAdapter(ActiveResourceAdapter
-            resourceAdapterToStop) {
-
+    private void sendStopToResourceAdapter(ActiveResourceAdapter resourceAdapterToStop) {
         Runnable rast = new RAShutdownTask(resourceAdapterToStop);
         String raName =  resourceAdapterToStop.getModuleName();
 
@@ -599,7 +575,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     }
 
     private static class RAShutdownTask implements Runnable {
-        private ActiveResourceAdapter ra;
+        private final ActiveResourceAdapter ra;
 
         public RAShutdownTask(ActiveResourceAdapter ratoBeShutDown) {
             this.ra = ratoBeShutDown;
@@ -615,7 +591,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     }
 
     private class RAShutdownHandler implements Runnable {
-        private String moduleName;
+        private final String moduleName;
 
         public RAShutdownHandler(String moduleName){
             this.moduleName = moduleName;

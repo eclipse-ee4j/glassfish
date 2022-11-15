@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,9 @@ package com.sun.jdo.spi.persistence.support.ejb.ejbc;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.jdo.spi.persistence.support.sqlstore.ejb.DeploymentHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
+
 import org.glassfish.api.deployment.DeploymentContext;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
@@ -34,9 +37,9 @@ public class CMPProcessor {
 
     private static Logger logger = LogHelperEJBCompiler.getLogger();
 
-    private Java2DBProcessorHelper helper = null;
+    private Java2DBProcessorHelper helper;
 
-    private DeploymentContext ctx;
+    private final DeploymentContext ctx;
 
     /**
      * Creates a new instance of CMPProcessor
@@ -55,15 +58,14 @@ public class CMPProcessor {
         ResourceReferenceDescriptor cmpResource = bundle.getCMPResourceReference();
 
         // If this bundle's beans are not created by Java2DB, there is nothing to do.
-        if (!DeploymentHelper.isJavaToDatabase(
-                cmpResource.getSchemaGeneratorProperties())) {
+        if (!DeploymentHelper.isJavaToDatabase(cmpResource.getSchemaGeneratorProperties())) {
             return;
         }
 
         helper = new Java2DBProcessorHelper(ctx);
         helper.init();
 
-        String resourceName = cmpResource.getJndiName();
+        SimpleJndiName resourceName = cmpResource.getJndiName();
         helper.setProcessorType("CMP", bundle.getName()); // NOI18N
         helper.setJndiName(resourceName, bundle.getName());
 
@@ -74,10 +76,7 @@ public class CMPProcessor {
 
         boolean userDropTables = cmpResource.isDropTablesAtUndeploy();
 
-        if (logger.isLoggable(logger.FINE)) {
-            logger.fine("ejb.CMPProcessor.createanddroptables", //NOI18N
-                new Object[] {new Boolean(createTables), new Boolean(userDropTables)});
-        }
+        logger.fine("ejb.CMPProcessor.createanddroptables", new Object[] {createTables, userDropTables});
 
         if (!createTables && !userDropTables) {
             // Nothing to do.
@@ -88,7 +87,7 @@ public class CMPProcessor {
         helper.setDropTablesValue(userDropTables, bundle.getName());
 
         constructJdbcFileNames(bundle);
-        if (logger.isLoggable(logger.FINE)) {
+        if (logger.isLoggable(Logger.FINE)) {
             logger.fine("ejb.CMPProcessor.createanddropfilenames",
                 helper.getCreateJdbcFileName(bundle.getName()),
                 helper.getDropJdbcFileName(bundle.getName()));
@@ -120,11 +119,8 @@ public class CMPProcessor {
      */
     private void  constructJdbcFileNames(EjbBundleDescriptorImpl ejbBundle) {
         String filePrefix = DeploymentHelper.getDDLNamePrefix(ejbBundle);
-
-        helper.setCreateJdbcFileName(filePrefix + DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX,
-                ejbBundle.getName());
-        helper.setDropJdbcFileName(filePrefix + DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX,
-                ejbBundle.getName());
+        helper.setCreateJdbcFileName(filePrefix + DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX, ejbBundle.getName());
+        helper.setDropJdbcFileName(filePrefix + DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX, ejbBundle.getName());
     }
 
 }

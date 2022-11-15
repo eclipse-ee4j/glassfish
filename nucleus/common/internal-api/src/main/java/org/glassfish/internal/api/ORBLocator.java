@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,8 @@
 
 package org.glassfish.internal.api;
 
-import org.omg.CORBA.*;
-import org.jvnet.hk2.annotations.*;
+import org.jvnet.hk2.annotations.Contract;
+import org.omg.CORBA.ORB;
 
 /**
  * Contract for ORB provider.
@@ -26,47 +27,40 @@ import org.jvnet.hk2.annotations.*;
  */
 @Contract
 public interface ORBLocator {
-    public static final String JNDI_CORBA_ORB_PROPERTY =
-        "java.naming.corba.orb";
-    public static final String JNDI_PROVIDER_URL_PROPERTY =
-        "java.naming.provider.url";
-    public static final String OMG_ORB_INIT_HOST_PROPERTY =
-        "org.omg.CORBA.ORBInitialHost";
-    public static final String OMG_ORB_INIT_PORT_PROPERTY =
-        "org.omg.CORBA.ORBInitialPort";
+
+    String JNDI_CORBA_ORB_PROPERTY = "java.naming.corba.orb";
+    String JNDI_PROVIDER_URL_PROPERTY = "java.naming.provider.url";
+    String OMG_ORB_INIT_HOST_PROPERTY = "org.omg.CORBA.ORBInitialHost";
+    String OMG_ORB_INIT_PORT_PROPERTY = "org.omg.CORBA.ORBInitialPort";
 
     // Same as ORBConstants.FOLB_CLIENT_GROUP_INFO_SERVICE,
     // but we can't reference ORBConstants from the naming bundle!
-    public static final String FOLB_CLIENT_GROUP_INFO_SERVICE =
-        "FolbClientGroupInfoService" ;
+    String FOLB_CLIENT_GROUP_INFO_SERVICE = "FolbClientGroupInfoService";
 
-    public static final String DEFAULT_ORB_INIT_HOST = "localhost";
-    public static final String DEFAULT_ORB_INIT_PORT = "3700";
-
+    String DEFAULT_ORB_INIT_HOST = "localhost";
+    String DEFAULT_ORB_INIT_PORT = "3700";
 
     // This property is true if SSL is required to be used by
     // non-EJB CORBA objects in the server.
-    public static final String ORB_SSL_SERVER_REQUIRED =
-            "com.sun.CSIV2.ssl.server.required";
+    String ORB_SSL_SERVER_REQUIRED = "com.sun.CSIV2.ssl.server.required";
     //
     // This property is true if client authentication is required by
     // non-EJB CORBA objects in the server.
-    public static final String ORB_CLIENT_AUTH_REQUIRED =
-            "com.sun.CSIV2.client.auth.required";
+    String ORB_CLIENT_AUTH_REQUIRED = "com.sun.CSIV2.client.auth.required";
 
-     // This property is true (in appclient Main)
+    // This property is true (in appclient Main)
     // if SSL is required to be used by clients.
-    public static final String ORB_SSL_CLIENT_REQUIRED =
-            "com.sun.CSIV2.ssl.client.required";
+    String ORB_SSL_CLIENT_REQUIRED = "com.sun.CSIV2.ssl.client.required";
 
     /**
-     * Get or create the default orb.  This can be called for any process type.  However,
+     * Get or create the default orb. This can be called for any process type. However,
      * protocol manager and CosNaming initialization only take place for the Server.
+     *
      * @return an initialized ORB instance
      */
-    public ORB getORB();
+    ORB getORB();
 
-    public int getORBPort(ORB orb);
+    int getORBPort(ORB orb);
 
-    public String getORBHost(ORB orb);
+    String getORBHost(ORB orb);
 }

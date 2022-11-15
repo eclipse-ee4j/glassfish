@@ -54,8 +54,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -96,8 +99,11 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
 
     private static final Logger LOG = DOLUtils.getDefaultLogger();
     protected static final LocalStringManagerImpl I18N_NODE = new LocalStringManagerImpl(DeploymentDescriptorNode.class);
-
     private static final String QNAME_SEPARATOR = ":";
+
+    private static final Map<Class<?>, Function<String, Object>> ALLOWED_DESCRIPTOR_INFO_CONVERSIONS = Map.of(
+        String.class, String::valueOf, SimpleJndiName.class, SimpleJndiName::of, int.class, Integer::valueOf,
+        long.class, Long::valueOf, boolean.class, Boolean::valueOf);
 
     protected final ServiceLocator serviceLocator = Globals.getDefaultHabitat();
 
@@ -444,10 +450,10 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
             }
             try {
                 T descriptor = getDescriptor();
-                if (descriptor != null) {
-                    setDescriptorInfo(descriptor, dispatchTable.get(element.getQName()), value);
-                } else {
+                if (descriptor == null) {
                     LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {element.getQName(), value});
+                } else {
+                    setDescriptorInfo(descriptor, dispatchTable.get(element.getQName()), value);
                 }
                 return;
             } catch (InvocationTargetException e) {
@@ -483,42 +489,34 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
         return table;
     }
 
+
     /**
      * call a setter method on a descriptor with a new value
      *
      * @param target the descriptor to use
      * @param methodName the setter method to invoke
      * @param value the new value for the field in the descriptor
+     * @deprecated guessing element type
      */
+    @Deprecated
     private void setDescriptorInfo(Object target, String methodName, String value) throws ReflectiveOperationException {
-        if (LOG.isLoggable(FINE)) {
-            LOG.fine("in " + target.getClass() + "  method  " + methodName + " with  " + value);
-        }
+        LOG.log(Level.FINE, "setDescriptorInfo(target.class={0}, methodName={1}, value={2})",
+            new Object[] {target.getClass(), methodName, value});
 
-        try {
-            Method toInvoke = target.getClass().getMethod(methodName, new Class[] {String.class});
-            toInvoke.invoke(target, new Object[] {value});
-        } catch (NoSuchMethodException e1) {
+        ReflectiveOperationException e = new ReflectiveOperationException("Could not find compatible setter.");
+        for (Entry<Class<?>, Function<String, Object>> entry : ALLOWED_DESCRIPTOR_INFO_CONVERSIONS.entrySet()) {
             try {
-                // Try with int as a parameter
-                Method toInvoke = target.getClass().getMethod(methodName, new Class[] {int.class});
-                toInvoke.invoke(target, new Object[] {Integer.valueOf(value)});
+                Method toInvoke = target.getClass().getMethod(methodName, entry.getKey());
+                toInvoke.invoke(target, entry.getValue().apply(value));
+                // If the call succeeded, we are done.
+                return;
             } catch (NumberFormatException nfe) {
-                LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {getXMLPath(), nfe.toString()});
-            } catch (NoSuchMethodException e2) {
-                // Try with long as a parameter
-                try {
-                    Method toInvoke = target.getClass().getMethod(methodName, new Class[] {long.class});
-                    toInvoke.invoke(target, new Object[] {Long.valueOf(value)});
-                } catch (NumberFormatException e) {
-                    LOG.log(WARNING, INVALID_DESC_MAPPING, new Object[] {getXMLPath(), e.toString()});
-                } catch (NoSuchMethodException e3) {
-                    // Try with boolean as a parameter
-                    Method toInvoke = target.getClass().getMethod(methodName, new Class[] {boolean.class});
-                    toInvoke.invoke(target, new Object[] {Boolean.valueOf(value)});
-                }
+                e.addSuppressed(nfe);
+            } catch (NoSuchMethodException nsme) {
+                e.addSuppressed(nsme);
             }
         }
+        throw e;
     }
 
     /**

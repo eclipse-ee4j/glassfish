@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,30 +18,44 @@
 package org.glassfish.resourcebase.resources.naming;
 
 import org.glassfish.api.naming.JNDIBinding;
+import org.glassfish.api.naming.SimpleJndiName;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
 
 /**
- * resource binding for module scoped resources
- * @author Jagadish Ramu
+ * Resource binding for module scoped resources
  *
+ * @author Jagadish Ramu
  */
 public class ModuleScopedResourceBinding implements JNDIBinding {
 
-    private String name;
-    private Object value;
-    public ModuleScopedResourceBinding(String name, Object value){
-        if(!(name.contains(ResourceNamingService.JAVA_MODULE_SCOPE_PREFIX)
-                /*|| name.contains(ResourceNamingService.JAVA_GLOBAL_SCOPE_PREFIX)*/)){
-            name = ResourceNamingService.JAVA_MODULE_SCOPE_PREFIX + name;
+    private final SimpleJndiName name;
+    private final Object value;
+
+    public ModuleScopedResourceBinding(SimpleJndiName name, Object value) {
+        if (name.isJavaModule()) {
+            this.name = name;
+        } else {
+            this.name = new SimpleJndiName(JNDI_CTX_JAVA_MODULE + name);
         }
-        this.name = name;
         this.value = value;
     }
-    public String getName() {
+
+
+    @Override
+    public SimpleJndiName getName() {
         return name;
     }
 
+
+    @Override
     public Object getValue() {
         return value;
+    }
+
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[name=" + name + ", value=" + value + "]";
     }
 }

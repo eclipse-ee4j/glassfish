@@ -95,7 +95,7 @@
         <jakarta.interceptor-api.version>2.1.0</jakarta.interceptor-api.version>
 
         <!-- Jakarta Security + Authentication/Authorization -->
-        <soteria.version>3.0.0</soteria.version>
+        <soteria.version>3.0.1</soteria.version>
         <exousia.version>2.1.0</exousia.version>
         <nimbus.version>9.25.6</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
@@ -154,12 +154,12 @@
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.0.2</microprofile.config-api.version>
         <helidon-config.version>3.0.2</helidon-config.version>
-        
+
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.0</microprofile-jwt-auth-api.version>
         <omnifaces-jwt-auth.version>2.0.1</omnifaces-jwt-auth.version>
-        
-        
+
+
 
         <!-- Admin console components -->
 
@@ -650,7 +650,7 @@
                 <artifactId>schema2beans</artifactId>
                 <version>${schema2beans.version}</version>
             </dependency>
-            
+
             <!-- MicroProfile Config -->
             <dependency>
                 <groupId>org.eclipse.microprofile.config</groupId>
@@ -662,7 +662,7 @@
                 <artifactId>helidon-microprofile-config</artifactId>
                 <version>${helidon-config.version}</version>
             </dependency>
-            
+
             <!-- MicroProfile JWT -->
             <dependency>
                 <groupId>org.eclipse.microprofile.jwt</groupId>

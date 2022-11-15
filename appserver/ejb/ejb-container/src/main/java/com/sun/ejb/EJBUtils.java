@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021-2022 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -48,6 +48,8 @@ import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.rmi.PortableRemoteObject;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 import static java.util.logging.Level.FINE;
 
 /**
@@ -69,19 +71,11 @@ public class EJBUtils {
     // be created during deployment time instead of dynamically.  Note that
     // this property does *not* cover RMI-IIOP stub generation.
     // See IASEJBC.java for more details.
-    private static final String EJB_USE_STATIC_CODEGEN_PROP =
-        "com.sun.ejb.UseStaticCodegen";
+    private static final String EJB_USE_STATIC_CODEGEN_PROP = "com.sun.ejb.UseStaticCodegen";
 
-    private static final String REMOTE30_HOME_JNDI_SUFFIX =
-        "__3_x_Internal_RemoteBusinessHome__";
+    private static final String REMOTE30_HOME_JNDI_SUFFIX = "__3_x_Internal_RemoteBusinessHome__";
 
-    private static Boolean ejbUseStaticCodegen_ = null;
-
-    // Initial portion of a corba interoperable naming syntax jndi name.
-    private static final String CORBA_INS_PREFIX = "corbaname:";
-
-    // Prefix of portable global JNDI namespace
-    private static final String JAVA_GLOBAL_PREFIX = "java:global/";
+    private static Boolean ejbUseStaticCodegen_;
 
     // Separator between simple and fully-qualified portable ejb global JNDI names
     private static final String PORTABLE_JNDI_NAME_SEP = "!";
@@ -98,18 +92,15 @@ public class EJBUtils {
      * It has boolean replaceObject control, whether to call replaceObject
      * or not
      */
-    public static final byte[] serializeObject(Object obj,
-                                               boolean replaceObject)
-        throws IOException
-    {
+    public static final byte[] serializeObject(Object obj, boolean replaceObject) throws IOException {
         return EjbContainerUtilImpl.getInstance().getJavaEEIOUtils().serializeObject(obj, replaceObject);
     }
 
-    public static final byte[] serializeObject(Object obj)
-        throws IOException
-    {
+
+    public static final byte[] serializeObject(Object obj) throws IOException {
         return EjbContainerUtilImpl.getInstance().getJavaEEIOUtils().serializeObject(obj, true);
     }
+
 
     /**
      * Utility method for deserializing EJBs, primary keys and
@@ -117,53 +108,45 @@ public class EJBUtils {
      * EJB references,
      * Local refs, JNDI Contexts etc which are not Serializable.
      */
-    public static final Object deserializeObject(byte[] data,
-            ClassLoader loader, boolean resolveObject)
-        throws Exception
-    {
+    public static final Object deserializeObject(byte[] data, ClassLoader loader, boolean resolveObject)
+        throws Exception {
         return EjbContainerUtilImpl.getInstance().getJavaEEIOUtils().deserializeObject(data, resolveObject, loader);
     }
 
-    public static final Object deserializeObject(byte[] data,
-                                                 ClassLoader loader)
-        throws Exception
-    {
+
+    public static final Object deserializeObject(byte[] data, ClassLoader loader) throws Exception {
         return EjbContainerUtilImpl.getInstance().getJavaEEIOUtils().deserializeObject(data, true, loader);
     }
 
+
     public static boolean useStaticCodegen() {
         synchronized (EJBUtils.class) {
-            if( ejbUseStaticCodegen_ == null ) {
+            if (ejbUseStaticCodegen_ == null) {
                 String ejbStaticCodegenProp = null;
-                if(System.getSecurityManager() == null) {
-                    ejbStaticCodegenProp =
-                        System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
+                if (System.getSecurityManager() == null) {
+                    ejbStaticCodegenProp = System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
                 } else {
-                    ejbStaticCodegenProp = (String)
-                    java.security.AccessController.doPrivileged
-                            (new java.security.PrivilegedAction() {
-                        @Override
-                        public java.lang.Object run() {
-                            return
-                                System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
-                        }});
+                    ejbStaticCodegenProp = (String) java.security.AccessController
+                        .doPrivileged(new java.security.PrivilegedAction() {
+
+                            @Override
+                            public java.lang.Object run() {
+                                return System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
+                            }
+                        });
                 }
 
-                boolean useStaticCodegen =
-                    ( (ejbStaticCodegenProp != null) &&
-                      ejbStaticCodegenProp.equalsIgnoreCase("true"));
+                boolean useStaticCodegen = ((ejbStaticCodegenProp != null)
+                    && ejbStaticCodegenProp.equalsIgnoreCase("true"));
 
                 ejbUseStaticCodegen_ = useStaticCodegen;
 
-                _logger.log(FINE, "EJB Static codegen is " +
-                            (useStaticCodegen ? "ENABLED" : "DISABLED") +
-                            " ejbUseStaticCodegenProp = " +
-                            ejbStaticCodegenProp);
+                _logger.log(FINE, "EJB Static codegen is " + (useStaticCodegen ? "ENABLED" : "DISABLED")
+                    + " ejbUseStaticCodegenProp = " + ejbStaticCodegenProp);
             }
         }
 
         return ejbUseStaticCodegen_.booleanValue();
-
     }
 
 
@@ -202,35 +185,28 @@ public class EJBUtils {
      * jndi-name equality logic.
      *
      */
-    public static String getRemoteEjbJndiName(EjbReferenceDescriptor refDesc) {
-
-        String intf = refDesc.isEJB30ClientView() ?
-                refDesc.getEjbInterface() : refDesc.getHomeClassName();
-
-        return getRemoteEjbJndiName(refDesc.isEJB30ClientView(),
-                                    intf,
-                                    refDesc.getJndiName());
+    public static SimpleJndiName getRemoteEjbJndiName(EjbReferenceDescriptor refDesc) {
+        String intf = refDesc.isEJB30ClientView() ? refDesc.getEjbInterface() : refDesc.getHomeClassName();
+        return getRemoteEjbJndiName(refDesc.isEJB30ClientView(), intf, refDesc.getJndiName());
     }
 
-    public static String getRemote30HomeJndiName(String jndiName) {
-        return jndiName + REMOTE30_HOME_JNDI_SUFFIX;
+    public static SimpleJndiName getRemote30HomeJndiName(SimpleJndiName jndiName) {
+        return new SimpleJndiName(jndiName + REMOTE30_HOME_JNDI_SUFFIX);
     }
 
-    public static String getRemoteEjbJndiName(boolean businessView,
-                                              String interfaceName,
-                                              String jndiName) {
 
-        String returnValue = jndiName;
+    public static SimpleJndiName getRemoteEjbJndiName(boolean businessView, String interfaceName,
+        SimpleJndiName jndiName) {
+        SimpleJndiName returnValue = jndiName;
 
         String portableFullyQualifiedPortion = PORTABLE_JNDI_NAME_SEP + interfaceName;
         String glassfishFullyQualifiedPortion = GLASSFISH_JNDI_NAME_SEP + interfaceName;
 
-        if( businessView ) {
-            if( jndiName.startsWith(CORBA_INS_PREFIX) ) {
-
+        if (businessView) {
+            if (jndiName.hasCorbaPrefix()) {
 
                 // In the case of a corba interoperable naming string, we
-                // need to lookup the internal remote home.  We can't rely
+                // need to lookup the internal remote home. We can't rely
                 // on our SerialContext Reference object (RemoteBusinessObjectFactory)
                 // to do the home lookup because we have to directly access
                 // the CosNaming service.
@@ -242,38 +218,33 @@ public class EJBUtils {
                 // Separate <jndi-name> portion from "corbaname:iiop:...#<jndi-name>
                 // We need to do this since we also use "#" in some glassfish-specific
                 // JNDI names
-                int indexOfCorbaNameSep = jndiName.indexOf("#");
-                String jndiNameMinusCorbaNamePortion = jndiName.substring(indexOfCorbaNameSep + 1);
+                int indexOfCorbaNameSep = jndiName.toString().indexOf("#");
+                SimpleJndiName jndiNameMinusCorbaNamePortion = new SimpleJndiName(
+                    jndiName.toString().substring(indexOfCorbaNameSep + 1));
 
                 // Make sure any of the resulting jndi names still have corbaname: prefix intact
-                String newJndiName = jndiName;
+                SimpleJndiName newJndiName = jndiName;
 
-                if( jndiNameMinusCorbaNamePortion.startsWith(JAVA_GLOBAL_PREFIX) ){
-
+                if (jndiNameMinusCorbaNamePortion.isJavaGlobal()) {
                     newJndiName = stripFullyQualifiedJndiName(jndiName, portableFullyQualifiedPortion);
-
-                } else if( jndiNameMinusCorbaNamePortion.endsWith(glassfishFullyQualifiedPortion ) ){
-
+                } else if (jndiNameMinusCorbaNamePortion.hasSuffix(glassfishFullyQualifiedPortion)) {
                     newJndiName = stripFullyQualifiedJndiName(jndiName, glassfishFullyQualifiedPortion);
-
                 }
 
                 returnValue = getRemote30HomeJndiName(newJndiName);
 
             } else {
                 // Convert to fully-qualified names
-                if( jndiName.startsWith(JAVA_GLOBAL_PREFIX)) {
+                if (jndiName.isJavaGlobal()) {
                     returnValue = checkFullyQualifiedJndiName(jndiName, portableFullyQualifiedPortion);
                 } else {
                     returnValue = checkFullyQualifiedJndiName(jndiName, glassfishFullyQualifiedPortion);
                 }
             }
         } else {
-
             // EJB 2.x Remote  Home
-
             // Only in the portable global case, convert to a fully-qualified name
-            if( jndiName.startsWith(JAVA_GLOBAL_PREFIX)) {
+            if (jndiName.isJavaGlobal()) {
                 returnValue = checkFullyQualifiedJndiName(jndiName, portableFullyQualifiedPortion);
             }
         }
@@ -281,21 +252,15 @@ public class EJBUtils {
         return returnValue;
     }
 
-    private static String checkFullyQualifiedJndiName(String origJndiName, String fullyQualifiedPortion) {
-        String returnValue = origJndiName;
-        if( !origJndiName.endsWith(fullyQualifiedPortion) ) {
-            returnValue = origJndiName + fullyQualifiedPortion;
+    private static SimpleJndiName checkFullyQualifiedJndiName(SimpleJndiName origJndiName, String fullyQualifiedPortion) {
+        if (origJndiName.hasSuffix(fullyQualifiedPortion)) {
+            return origJndiName;
         }
-        return returnValue;
+        return new SimpleJndiName(origJndiName + fullyQualifiedPortion);
     }
 
-    private static String stripFullyQualifiedJndiName(String origJndiName, String fullyQualifiedPortion) {
-        String returnValue = origJndiName;
-        if( origJndiName.endsWith(fullyQualifiedPortion) ) {
-            int portionLength = fullyQualifiedPortion.length();
-            returnValue = origJndiName.substring(0, origJndiName.length() - portionLength );
-        }
-        return returnValue;
+    private static SimpleJndiName stripFullyQualifiedJndiName(SimpleJndiName origJndiName, String fullyQualifiedPortion) {
+        return origJndiName.removeSuffix(fullyQualifiedPortion);
     }
 
 

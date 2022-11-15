@@ -24,6 +24,7 @@ import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
 import static org.apache.catalina.ContainerEvent.AFTER_FILTER_DESTROYED;
 import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
 import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 import static org.glassfish.web.LogFacade.EXCEPTION_DURING_DESTROY_MANAGED_OBJECT;
 import static org.glassfish.web.LogFacade.EXCEPTION_DURING_HANDLE_EVENT;
 import static org.glassfish.web.LogFacade.EXCEPTION_GETTING_VALIDATOR_FACTORY;
@@ -59,8 +60,8 @@ public final class WebContainerListener implements ContainerListener {
     private static final Logger _logger = LogFacade.getLogger();
     private static final ResourceBundle rb = _logger.getResourceBundle();
 
-    private static Set<String> beforeEvents = new HashSet<String>();
-    private static Set<String> afterEvents = new HashSet<String>();
+    private static Set<String> beforeEvents = new HashSet<>();
+    private static Set<String> afterEvents = new HashSet<>();
 
     static {
 
@@ -126,9 +127,9 @@ public final class WebContainerListener implements ContainerListener {
         afterEvents.add(ContainerEvent.AFTER_LOGOUT);
     }
 
-    private InvocationManager invocationManager;
-    private InjectionManager injectionManager;
-    private NamedNamingObjectProxy validationNamingProxy;
+    private final InvocationManager invocationManager;
+    private final InjectionManager injectionManager;
+    private final NamedNamingObjectProxy validationNamingProxy;
 
     public WebContainerListener(InvocationManager invocationMgr, InjectionManager injectionMgr, NamedNamingObjectProxy validationNamingProxy) {
         this.invocationManager = invocationMgr;
@@ -153,7 +154,8 @@ public final class WebContainerListener implements ContainerListener {
                     try {
                         // Must close the validator factory
                         if (validationNamingProxy != null) {
-                            Object validatorFactory = validationNamingProxy.handle("java:comp/ValidatorFactory");
+                            Object validatorFactory = validationNamingProxy
+                                .handle(JNDI_CTX_JAVA_COMPONENT + "ValidatorFactory");
                             if (validatorFactory != null) {
                                 ((ValidatorFactory) validatorFactory).close();
                             }

@@ -58,7 +58,7 @@ public class MailResource extends JavaEEResourceBase implements MailResourceIntf
     //unused implementation ie., com.sun.enterprise.deployment.MailConfiguration uses this, but is unused in-turn.
     @Override
     public String getName() {
-        return getResourceInfo().getName();
+        return getResourceInfo().getName().toString();
     }
 
     @Override

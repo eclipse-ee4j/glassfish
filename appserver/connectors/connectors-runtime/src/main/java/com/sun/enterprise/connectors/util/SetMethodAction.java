@@ -17,20 +17,19 @@
 
 package com.sun.enterprise.connectors.util;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.logging.LogDomains;
+
 import java.lang.reflect.Method;
 import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.deployment.common.Descriptor;
-
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.logging.LogDomains;
 
 /**
  * Executes setter methods on java beans.
@@ -39,12 +38,11 @@ import com.sun.logging.LogDomains;
  */
 public final class SetMethodAction<P extends EnvironmentProperty> implements PrivilegedExceptionAction<Void> {
 
+    private static final Logger LOG = LogDomains.getLogger(SetMethodAction.class, LogDomains.RSR_LOGGER);
+
     private final Object bean;
     private final Set<P> props;
     private Method[] methods;
-
-    private static final Logger logger = LogDomains.getLogger(SetMethodAction.class, LogDomains.RSR_LOGGER);
-    private final static Locale locale = Locale.getDefault();
 
     /**
      * Accepts java bean object and properties to be set.
@@ -71,38 +69,37 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
             final Method method = getSetter(propName, type);
             if (method == null) {
                 // log WARNING, deployment can continue.
-                logger.log(Level.WARNING, "rardeployment.no_setter_method",
-                    new Object[] {prop.getName(), bean.getClass().getName()});
+                LOG.log(Level.WARNING, "rardeployment.no_setter_method",
+                    new Object[] {prop.getName(), type, bean.getClass()});
                 continue;
             }
 
+            Object resolvedValueObject = prop.getResolvedValueObject(type);
             try {
-                if (logger.isLoggable(Level.FINER)) {
-                    logger.log(Level.FINER,
-                        "Invoking" + method + " on " + bean.getClass().getName() + " with value ["
-                            + prop.getResolvedValueObject().getClass() + "  , " + getFilteredPropValue(prop)
-                            + " ] ");
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Invoking " + method + " on " + bean.getClass().getName() + " with value ["
+                        + resolvedValueObject.getClass() + ", " + getFilteredPropValue(prop) + "]");
                 }
-                method.invoke(bean, prop.getResolvedValueObject());
+                method.invoke(bean, resolvedValueObject);
             } catch (final IllegalArgumentException ia) {
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE,
-                        "IllegalArgumentException while trying to set " + prop.getName() + " and value "
-                            + getFilteredPropValue(prop),
-                        ia + " on an instance of " + bean.getClass()
-                            + " -- trying again with the type from bean");
-                }
+                LOG.log(Level.WARNING,
+                    "IllegalArgumentException while trying to set " + prop.getName() + " and value "
+                        + getFilteredPropValue(prop),
+                    ia + " on an instance of " + bean.getClass() + " -- trying again with the type from bean");
                 final boolean origBoundsChecking = Descriptor.isBoundsChecking();
+                if (!origBoundsChecking) {
+                    throw ia;
+                }
                 try {
                     Descriptor.setBoundsChecking(false);
                     prop.setType(type.getName());
-                    if (logger.isLoggable(Level.FINE)) {
-                        logger.log(Level.FINE,
-                            "2nd try :: Invoking" + method + " on " + bean.getClass().getName() + " with value ["
-                                + prop.getResolvedValueObject().getClass() + "  , " + getFilteredPropValue(prop)
-                                + " ] ");
+                    if (LOG.isLoggable(Level.FINE)) {
+                        LOG.log(Level.FINE,
+                            "2nd try without bounds checking: Invoking " + method + " on " + bean.getClass().getName()
+                                + " with value [" + resolvedValueObject.getClass() + ", " + getFilteredPropValue(prop)
+                                + "]");
                     }
-                    method.invoke(bean, prop.getResolvedValueObject());
+                    method.invoke(bean, resolvedValueObject);
                 } catch (final Exception e) {
                     throw createException(e, prop);
                 } finally {
@@ -118,13 +115,9 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
 
 
     private ConnectorRuntimeException createException(Exception ex, EnvironmentProperty prop) {
-        logger.log(Level.WARNING, "rardeployment.exception_on_invoke_setter",
-            new Object[] {prop.getName(), getFilteredPropValue(prop), ex.getMessage()});
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE,
-                "Exception while trying to set " + prop.getName() + " and value " + getFilteredPropValue(prop),
-                ex + " on an instance of " + bean.getClass());
-        }
+        final String filteredPropValue = getFilteredPropValue(prop);
+        LOG.log(Level.WARNING, "RAR7096: Exception while trying to set the value {0} on property {1} of {2}: {3}",
+            new Object[] {filteredPropValue, prop.getName(), bean.getClass(), ex});
         return new ConnectorRuntimeException(ex.getMessage(), ex);
     }
 
@@ -135,7 +128,7 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         }
 
         String propname = prop.getName();
-        if (propname.toLowerCase(locale).contains("password")) {
+        if (propname.toLowerCase().contains("password")) {
             return "********";
         }
 
@@ -150,33 +143,25 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
         // Get all setter methods for property
         String setterMethodName = "set" + getCamelCasedPropertyName(propertyName);
         Method[] setterMethods = findMethod(setterMethodName);
-        Method method = null;
         if (setterMethods.length == 1) {
             // Only one setter method for this property
-            method = setterMethods[0];
-        } else {
-            // When more than one setter for the property, do type
-            // checking to determine property
-            // This check is very important, because the resource
-            // adapter java-bean's methods might be overridden and calling
-            // set over the wrong method will result in an exception
-            for (Method setterMethod : setterMethods) {
-                Class<?>[] paramTypes = setterMethod.getParameterTypes();
-                if (paramTypes.length > 0) {
-                    if (paramTypes[0].equals(parameterType) && paramTypes.length == 1) {
-                        if (logger.isLoggable(Level.FINER)) {
-                            logger.log(Level.FINER,
-                                "Method [ " + setterMethod + " ] matches with the right arg type");
-                        }
-                        method = setterMethod;
-                    }
+            return setterMethods[0];
+        }
+        // When more than one setter for the property, do type
+        // checking to determine property
+        // This check is very important, because the resource
+        // adapter java-bean's methods might be overridden and calling
+        // set over the wrong method will result in an exception
+        for (Method setterMethod : setterMethods) {
+            Class<?>[] paramTypes = setterMethod.getParameterTypes();
+            if (paramTypes.length > 0) {
+                if (paramTypes[0].equals(parameterType) && paramTypes.length == 1) {
+                    LOG.log(Level.FINER, "Method [{0}] matches with the right arg type", setterMethod);
+                    return setterMethod;
                 }
             }
         }
-        if (method == null) {
-            logger.log(Level.WARNING, "no.such.method", new Object[] {setterMethodName, bean.getClass().getName()});
-        }
-        return method;
+        return null;
     }
 
 
@@ -197,9 +182,7 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
             return accessorMeth.getReturnType();
         }
         // not having a getter is not a WARNING.
-        if (logger.isLoggable(Level.FINE)) {
-            logger.log(Level.FINE, "method.name.nogetterforproperty", new Object[] {prop.getName(), bean.getClass()});
-        }
+        LOG.log(Level.FINE, "method.name.nogetterforproperty", new Object[] {prop.getName(), bean.getClass()});
         // If there were no getter, use the EnvironmentProperty's property type
         return Class.forName(prop.getType());
     }
@@ -258,6 +241,6 @@ public final class SetMethodAction<P extends EnvironmentProperty> implements Pri
      * correct accessor and mutator method names for a give property.
      */
     private String getCamelCasedPropertyName(String propertyName) {
-        return propertyName.substring(0, 1).toUpperCase(locale) + propertyName.substring(1);
+        return propertyName.substring(0, 1).toUpperCase() + propertyName.substring(1);
     }
 }

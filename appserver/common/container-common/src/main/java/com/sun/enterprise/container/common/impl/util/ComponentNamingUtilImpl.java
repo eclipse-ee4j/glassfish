@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,21 @@
 
 package com.sun.enterprise.container.common.impl.util;
 
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.api.naming.ComponentNamingUtil;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
-public class ComponentNamingUtilImpl
-    implements ComponentNamingUtil {
+public class ComponentNamingUtilImpl implements ComponentNamingUtil {
 
-    public String composeInternalGlobalJavaAppName(String appName, String origJavaAppName) {
+    private static final String INTERNAL_CLIENT_PREFIX = "__internal_java_app_for_app_client__";
 
-
-        String internalGlobalJavaAppName = "__internal_java_app_for_app_client__" +
-                appName + "__" + origJavaAppName;
-
-        return internalGlobalJavaAppName;
-
+    @Override
+    public SimpleJndiName composeInternalGlobalJavaAppName(String appName, SimpleJndiName jndiName) {
+        // FIXME dmatej added and commented out
+//        if (jndiName.hasJavaPrefix()) {
+//            return new SimpleJndiName(INTERNAL_CLIENT_PREFIX + appName + "__" + jndiName.removePrefix());
+//        }
+        return new SimpleJndiName(INTERNAL_CLIENT_PREFIX + appName + "__" + jndiName);
     }
 }

@@ -59,20 +59,10 @@ public class WebService extends Descriptor {
     //
     // Runtime info
     //
-
     // Optional file URL to which final wsdl should be published.
     // This represents a directory on the file system from which deployment
     // is initiated. URL schemes other than file: are legal but ignored.
     private URL publishUrl;
-
-    public String getType() {
-        return type;
-    }
-
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     /** type JAX-WS or JAX-RPC */
     private String type;
@@ -84,26 +74,6 @@ public class WebService extends Descriptor {
      */
     public WebService() {
         this("");
-    }
-
-
-    /**
-     * If this returns non-null value, then it is verified that all the endpoints are of the same
-     * type.
-     */
-    public Boolean isJaxWSBased() {
-        return isJaxWSBased;
-    }
-
-
-    /**
-     * This is called after verifying that all the endpoints are of the same type,
-     * either JAX-WS or JAX-RPC
-     *
-     * @param isJaxWSBased
-     */
-    public void setJaxWSBased(boolean isJaxWSBased) {
-        this.isJaxWSBased = isJaxWSBased;
     }
 
 
@@ -136,6 +106,42 @@ public class WebService extends Descriptor {
         endpoints = new HashMap<>();
     }
 
+    // getName is not deprecated here.
+    @Override
+    @SuppressWarnings("removal")
+    public final String getName() {
+        return super.getName();
+    }
+
+
+    public String getType() {
+        return type;
+    }
+
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+
+    /**
+     * If this returns non-null value, then it is verified that all the endpoints are of the same
+     * type.
+     */
+    public Boolean isJaxWSBased() {
+        return isJaxWSBased;
+    }
+
+
+    /**
+     * This is called after verifying that all the endpoints are of the same type,
+     * either JAX-WS or JAX-RPC
+     *
+     * @param isJaxWSBased
+     */
+    public void setJaxWSBased(boolean isJaxWSBased) {
+        this.isJaxWSBased = isJaxWSBased;
+    }
 
     public void setWebServicesDescriptor(WebServicesDescriptor webServices) {
         webServicesDesc = webServices;

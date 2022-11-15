@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
@@ -52,11 +53,10 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResou
 @ResourceDeployerInfo(AdministeredObjectDefinitionDescriptor.class)
 public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<AdministeredObjectDefinitionDescriptor> {
 
+    private static final Logger LOG = LogDomains.getLogger(AdministeredObjectDefinitionDeployer.class, LogDomains.RSR_LOGGER);
+
     @Inject
     private Provider<ResourceManagerFactory> resourceManagerFactoryProvider;
-
-    private static Logger _logger = LogDomains.getLogger(AdministeredObjectDefinitionDeployer.class, LogDomains.RSR_LOGGER);
-    final static String PROPERTY_PREFIX = "org.glassfish.admin-object.";
 
     @Override
     public void deployResource(AdministeredObjectDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
@@ -65,17 +65,9 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
 
     @Override
     public void deployResource(AdministeredObjectDefinitionDescriptor resource) throws Exception {
-
-        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
-
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "AdministeredObjectDefinitionDeployer.deployResource() : resource-name ["+resourceName+"]");
-        }
-
-        //deploy resource
-        MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(resource, resourceName);
+        SimpleJndiName jndiName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
+        MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(resource, jndiName);
         getDeployer(adminObjectResource).deployResource(adminObjectResource);
-
     }
 
 
@@ -104,17 +96,9 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
 
     @Override
     public void undeployResource(AdministeredObjectDefinitionDescriptor resource) throws Exception {
-
-        final AdministeredObjectDefinitionDescriptor desc = resource;
-
-        String resourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
-
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "AdministeredObjectDefinitionDeployer.undeployResource() : resource-name ["+resourceName+"]");
-        }
-
-        //undeploy resource
-        MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(desc, resourceName);
+        SimpleJndiName jndiName = deriveResourceName(resource.getResourceId(), resource.getJndiName(), resource.getResourceType());
+        LOG.log(Level.FINE, "AdministeredObjectDefinitionDeployer.undeployResource() : resource-name [{0}]", jndiName);
+        MyAdministeredObjectResource adminObjectResource = new MyAdministeredObjectResource(resource, jndiName);
         getDeployer(adminObjectResource).undeployResource(adminObjectResource);
 
     }
@@ -206,9 +190,9 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
     class MyAdministeredObjectResource extends FakeConfigBean implements AdminObjectResource {
 
         private final AdministeredObjectDefinitionDescriptor desc;
-        private final String name;
+        private final SimpleJndiName name;
 
-        public MyAdministeredObjectResource(AdministeredObjectDefinitionDescriptor desc, String name) {
+        public MyAdministeredObjectResource(AdministeredObjectDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }
@@ -225,7 +209,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
 
         @Override
         public String getIdentity() {
-            return name;
+            return name.toString();
         }
 
         @Override
@@ -250,7 +234,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
 
         @Override
         public String getJndiName() {
-            return name;
+            return name.toString();
         }
 
         @Override
@@ -294,7 +278,8 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
             List<Property> administeredObjectProperties = new ArrayList<>();
             for (Entry<Object, Object> entry : p.entrySet()) {
                 String key = (String) entry.getKey();
-                if(key.startsWith(PROPERTY_PREFIX)){
+                if (key.startsWith("org.glassfish.admin-object.")) {
+                    // FIXME: comment reason!
                     continue;
                 }
                 String value = (String) entry.getValue();
@@ -356,5 +341,9 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Override
+        public String toString() {
+            return super.toString() + "[identity=" + getIdentity() + ']';
+        }
     }
 }

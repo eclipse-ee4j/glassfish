@@ -22,6 +22,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedScheduledExecutorServiceCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
@@ -67,9 +68,8 @@ public class ConcurrencyManagedScheduledExecutorDeployer
     public void deployResource(ManagedScheduledExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         ManagedScheduledExecutorDefinitionDescriptor descriptor = resource;
         ManagedScheduledExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
-        String resourceName = toResourceName(descriptor);
-        ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        resourceNamingService.publishObject(resourceInfo, resourceName, service, true);
+        ResourceInfo resourceInfo = new ResourceInfo(toResourceName(descriptor), applicationName, moduleName);
+        resourceNamingService.publishObject(resourceInfo, service, true);
     }
 
 

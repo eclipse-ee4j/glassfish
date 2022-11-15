@@ -48,6 +48,7 @@ import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
 import org.glassfish.api.jdbc.objects.TxIsolationLevel;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -74,8 +75,6 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.deployment.common.JavaEEResourceType.DSDPOOL;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_APP_SCOPE_PREFIX;
-import static org.glassfish.resourcebase.resources.api.ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX;
 
 /**
  * @author Jagadish Ramu
@@ -100,14 +99,9 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
     @Override
     public void deployResource(DataSourceDefinitionDescriptor resource) throws Exception {
-
-        String poolName = deriveResourceName(resource.getResourceId(), resource.getName(), DSDPOOL);
-        String resourceName = deriveResourceName(resource.getResourceId(), resource.getName(), resource.getResourceType());
-
-        LOG.log(FINE, () ->
-            "DataSourceDefinitionDeployer.deployResource() : pool-name [" + poolName + "], " +
-             " resource-name [" + resourceName + "]");
-
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getName());
+        SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), jndiName, DSDPOOL);
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), jndiName, resource.getResourceType());
         JdbcConnectionPool jdbcConnectionPool = new MyJdbcConnectionPool(resource, poolName);
         getDeployer(jdbcConnectionPool).deployResource(jdbcConnectionPool);
         JdbcResource jdbcResource = new MyJdbcResource(poolName, resourceName);
@@ -253,12 +247,12 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
             ResourceNamingService resourceNamingService = resourceNamingServiceProvider.get();
             proxy.setDescriptor(dataSourceDefinitionDescriptor);
 
-            String dsdName = dataSourceDefinitionDescriptor.getName();
-            if (dsdName.startsWith(JAVA_APP_SCOPE_PREFIX)) {
+            SimpleJndiName dsdName = SimpleJndiName.of(dataSourceDefinitionDescriptor.getName());
+            if (dsdName.isJavaApp()) {
                 dataSourceDefinitionDescriptor.setResourceId(appName);
             }
 
-            if (dsdName.startsWith(JAVA_GLOBAL_SCOPE_PREFIX) || dsdName.startsWith(JAVA_APP_SCOPE_PREFIX)) {
+            if (dsdName.isJavaGlobal() || dsdName.isJavaApp()) {
                 ResourceInfo resourceInfo = new ResourceInfo(dsdName, appName, null);
                 try {
                     resourceNamingService.publishObject(resourceInfo, proxy, true);
@@ -277,17 +271,9 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
     @Override
     public void undeployResource(DataSourceDefinitionDescriptor resource) throws Exception {
-        final DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor = resource;
-
-        String poolName = deriveResourceName(
-                dataSourceDefinitionDescriptor.getResourceId(),
-                dataSourceDefinitionDescriptor.getName(),
-                DSDPOOL);
-
-        String resourceName = deriveResourceName(
-                dataSourceDefinitionDescriptor.getResourceId(),
-                dataSourceDefinitionDescriptor.getName(),
-                dataSourceDefinitionDescriptor.getResourceType());
+        SimpleJndiName simpleJndiName = new SimpleJndiName(resource.getName());
+        SimpleJndiName poolName = deriveResourceName(resource.getResourceId(), simpleJndiName, DSDPOOL);
+        SimpleJndiName resourceName = deriveResourceName(resource.getResourceId(), simpleJndiName, resource.getResourceType());
 
         LOG.log(FINE, () ->
             "DataSourceDefinitionDeployer.undeployResource() : pool-name [" + poolName + "], " +
@@ -298,10 +284,10 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
         getDeployer(jdbcResource).undeployResource(jdbcResource);
 
         // Undeploy pool
-        JdbcConnectionPool jdbcCp = new MyJdbcConnectionPool(dataSourceDefinitionDescriptor, poolName);
+        JdbcConnectionPool jdbcCp = new MyJdbcConnectionPool(resource, poolName);
         getDeployer(jdbcCp).undeployResource(jdbcCp);
 
-        dataSourceDefinitionDescriptor.setDeployed(false);
+        resource.setDeployed(false);
     }
 
     @Override
@@ -389,22 +375,22 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
     class MyJdbcResource extends FakeConfigBean implements JdbcResource {
 
-        private String poolName;
-        private String jndiName;
+        private SimpleJndiName poolName;
+        private SimpleJndiName jndiName;
 
-        MyJdbcResource(String poolName, String jndiName) {
+        MyJdbcResource(SimpleJndiName poolName, SimpleJndiName jndiName) {
             this.poolName = poolName;
             this.jndiName = jndiName;
         }
 
         @Override
         public String getPoolName() {
-            return poolName;
+            return poolName.toString();
         }
 
         @Override
         public void setPoolName(String value) throws PropertyVetoException {
-            this.poolName = value;
+            this.poolName = new SimpleJndiName(value);
         }
 
         @Override
@@ -418,7 +404,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
         @Override
         public String getIdentity() {
-            return jndiName;
+            return jndiName.toString();
         }
 
         @Override
@@ -464,12 +450,12 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
         @Override
         public String getJndiName() {
-            return jndiName;
+            return jndiName.toString();
         }
 
         @Override
         public void setJndiName(String value) throws PropertyVetoException {
-            this.jndiName = value;
+            this.jndiName = new SimpleJndiName(value);
         }
 
         @Override
@@ -506,9 +492,9 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
     class MyJdbcConnectionPool extends FakeConfigBean implements JdbcConnectionPool {
 
         private final DataSourceDefinitionDescriptor dataSourceDefinitionDescriptor;
-        private final String name;
+        private final SimpleJndiName name;
 
-        public MyJdbcConnectionPool(DataSourceDefinitionDescriptor desc, String name) {
+        public MyJdbcConnectionPool(DataSourceDefinitionDescriptor desc, SimpleJndiName name) {
             this.dataSourceDefinitionDescriptor = desc;
             this.name = name;
         }
@@ -570,7 +556,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
         @Override
         public String getIdentity() {
-            return name;
+            return name.toString();
         }
 
         @Override
@@ -971,7 +957,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer<DataSource
 
         @Override
         public String getName() {
-            return name;
+            return name.toString();
         }
 
         @Override

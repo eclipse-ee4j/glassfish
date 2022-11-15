@@ -31,13 +31,13 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.jdbc.deployer.DataSourceDefinitionDeployer;
@@ -111,13 +111,11 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
      * mitigate this need.
      *
      * @param resourceInfo the jndi name of the resource
-     * @return DataSource representing the resource.
+     * @return JdbcDataSource representing the resource.
      */
     @Override
-    public Object lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
-        JdbcDataSource myDS = new JdbcDataSource();
-        myDS.setResourceInfo(resourceInfo);
-        return myDS;
+    public JdbcDataSource lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException {
+        return new JdbcDataSource(resourceInfo);
     }
 
     /**
@@ -131,23 +129,19 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
      */
     @Override
     public PoolInfo getPoolNameFromResourceJndiName(ResourceInfo resourceInfo) {
-        PoolInfo poolInfo = null;
-        JdbcResource jdbcResource = null;
-        String jndiName = resourceInfo.getName();
-
+        SimpleJndiName jndiName = resourceInfo.getName();
         ResourceInfo actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
-        ConnectorRuntime runtime = ConnectorRuntime.getRuntime();
-        jdbcResource = ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
-                actualResourceInfo.getName());
+        JdbcResource jdbcResource = runtime.getResources(actualResourceInfo).getResourceByName(JdbcResource.class,
+            actualResourceInfo.getName());
         if (jdbcResource == null) {
             String suffix = ConnectorsUtil.getValidSuffix(jndiName);
             if (suffix != null) {
-                jndiName = jndiName.substring(0, jndiName.lastIndexOf(suffix));
+                jndiName = jndiName.removeSuffix(suffix);
                 actualResourceInfo = new ResourceInfo(jndiName, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
             }
         }
-        jdbcResource = ConnectorsUtil.getResourceByName(runtime.getResources(actualResourceInfo), JdbcResource.class,
-                actualResourceInfo.getName());
+        jdbcResource = runtime.getResources(actualResourceInfo).getResourceByName(JdbcResource.class,
+            actualResourceInfo.getName());
 
         if (jdbcResource != null) {
             if (LOG.isLoggable(Level.FINE)) {
@@ -156,10 +150,10 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
             }
         }
         if (jdbcResource != null) {
-            poolInfo = new PoolInfo(jdbcResource.getPoolName(), actualResourceInfo.getApplicationName(),
-                    actualResourceInfo.getModuleName());
+            SimpleJndiName poolName = new SimpleJndiName(jdbcResource.getPoolName());
+            return new PoolInfo(poolName, actualResourceInfo.getApplicationName(), actualResourceInfo.getModuleName());
         }
-        return poolInfo;
+        return null;
     }
 
     /**
@@ -178,20 +172,15 @@ public class JdbcRuntimeExtension implements ConnectorRuntimeExtension {
         for (JdbcResource resource : jdbcResources) {
             ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
             // Have to check isReferenced here!
-            if ((resource.getPoolName().equalsIgnoreCase(poolInfo.getName())) && ResourcesUtil.createInstance().isReferenced(resourceInfo)
-                    && ResourcesUtil.createInstance().isEnabled(resource)) {
-                if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("pool " + poolInfo + "resource " + resourceInfo + " referred is referenced by this server");
-
-                    LOG.fine(
-                            "JDBC resource " + resource.getJndiName() + "refers " + poolInfo + "in this server instance and is enabled");
-                }
+            ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
+            if (resource.getPoolName().equals(poolInfo.getName().toString())
+                && resourcesUtil.isReferenced(resourceInfo) && resourcesUtil.isEnabled(resource)) {
+                LOG.log(Level.CONFIG, "JDBC pool {0} is referred by resource {1} and is enabled on this server",
+                    new Object[] {poolInfo, resourceInfo});
                 return true;
             }
         }
-        if (LOG.isLoggable(Level.FINE)) {
-            LOG.fine("No JDBC resource refers [ " + poolInfo + " ] in this server instance");
-        }
+        LOG.log(Level.FINE, "No JDBC resource refers [{0}] in this server instance", poolInfo);
         return false;
     }
 

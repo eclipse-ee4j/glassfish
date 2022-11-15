@@ -21,6 +21,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -34,7 +35,7 @@ public class ClusterITest extends RestTestBase {
 
     @Test
     public void testClusterCreationAndDeletion() {
-        final String clusterName = "cluster_" + generateRandomString();
+        final String clusterName = "cluster_" + RandomGenerator.generateRandomString();
         createCluster(clusterName);
 
         Map<String, String> entity = getEntityValues(managementClient.get(URL_CLUSTER + "/" + clusterName));
@@ -45,7 +46,7 @@ public class ClusterITest extends RestTestBase {
 
     @Test
     public void testListLifecycleModules() {
-        final String clusterName = "cluster_" + generateRandomString();
+        final String clusterName = "cluster_" + RandomGenerator.generateRandomString();
         Response response = managementClient.post(URL_CLUSTER, Map.of("id", clusterName));
         assertThat(response.getStatus(), equalTo(200));
 

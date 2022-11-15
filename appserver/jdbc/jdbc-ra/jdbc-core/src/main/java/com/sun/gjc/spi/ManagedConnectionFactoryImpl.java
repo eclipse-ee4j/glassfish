@@ -68,6 +68,7 @@ import javax.sql.PooledConnection;
 import org.glassfish.api.jdbc.ConnectionValidation;
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.objects.TxIsolationLevel;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -425,7 +426,7 @@ public abstract class ManagedConnectionFactoryImpl
      */
     protected void isValidByMetaData(Connection connection) throws ResourceException {
         if (connection == null) {
-            throw new ResourceException("The connection is not valid as " + "the connection is null");
+            throw new ResourceException("The connection is not valid as the connection is null");
         }
 
         try {
@@ -446,7 +447,7 @@ public abstract class ManagedConnectionFactoryImpl
      */
     protected void isValidByTableQuery(Connection connection, String tableName) throws ResourceException {
         if (connection == null) {
-            throw new ResourceException("The connection is not valid as " + "the connection is null");
+            throw new ResourceException("The connection is not valid as the connection is null");
         }
 
         PreparedStatement preparedStatement = null;
@@ -1046,12 +1047,12 @@ public abstract class ManagedConnectionFactoryImpl
         spec.setDetail(DataSourceSpec.MODULENAME, value);
     }
 
-    public String getPoolName() {
-        return spec.getDetail(DataSourceSpec.POOLNAME);
+    public SimpleJndiName getPoolName() {
+        return SimpleJndiName.of(spec.getDetail(DataSourceSpec.POOLNAME));
     }
 
-    public void setPoolName(String value) {
-        spec.setDetail(DataSourceSpec.POOLNAME, value);
+    public void setPoolName(SimpleJndiName value) {
+        spec.setDetail(DataSourceSpec.POOLNAME, value == null ? null : value.toString());
     }
 
     public String getStatementCacheType() {

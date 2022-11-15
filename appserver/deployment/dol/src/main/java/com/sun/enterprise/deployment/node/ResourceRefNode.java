@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.enterprise.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
 import org.w3c.dom.Node;
 
 /**
@@ -34,21 +36,22 @@ public class ResourceRefNode  extends DeploymentDescriptorNode<ResourceReference
     private ResourceReferenceDescriptor descriptor;
 
     public ResourceRefNode() {
-        super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
-                                InjectionTargetNode.class, "addInjectionTarget");
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), InjectionTargetNode.class,
+            "addInjectionTarget");
     }
 
     @Override
     public ResourceReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new ResourceReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new ResourceReferenceDescriptor();
+        }
         return descriptor;
     }
 
     @Override
-    protected Map getDispatchTable() {
+    protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
-        Map table = super.getDispatchTable();
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.RESOURCE_REFERENCE_NAME, "setName");
         table.put(TagNames.RESOURCE_TYPE, "setType");
         table.put(TagNames.RESOURCE_AUTHORIZATION, "setAuthorization");

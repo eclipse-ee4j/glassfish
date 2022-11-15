@@ -62,7 +62,7 @@ public class ComponentInvocation implements Cloneable {
 
     // true if transaction commit or rollback is
     // happening for this invocation context
-    private boolean transactionCompleting = false;
+    private boolean transactionCompleting;
 
     // security context coming in a call
     // security context changes on a runas call - on a run as call

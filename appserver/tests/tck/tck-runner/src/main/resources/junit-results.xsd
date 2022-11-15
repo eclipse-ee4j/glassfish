@@ -40,7 +40,7 @@ Note that this XSD file reflects just TCK results and should not be used to pars
             <xsd:attribute name="disabled" type="xsd:int" use="required" />
             <xsd:attribute name="skipped" type="xsd:int" use="required" />
             <xsd:attribute name="time" type="xsd:int" use="required" />
-            <xsd:attribute name="timestamp" type="xsd:dateTime" use="required" />
+            <xsd:attribute name="timestamp" type="xsd:string" use="required" />
         </xsd:complexType>
     </xsd:element>
 

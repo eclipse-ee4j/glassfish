@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package com.sun.enterprise.container.common.impl;
 
 import jakarta.inject.Inject;
+
 import javax.naming.NamingException;
 
 import org.glassfish.api.admin.ProcessEnvironment;
@@ -24,10 +26,12 @@ import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+
 @Service
 @NamespacePrefixes({ JavaCompNamingProxy.IN_APPCLIENT_CONTAINER })
 public final class JavaCompNamingProxy implements NamedNamingObjectProxy {
-    static final String IN_APPCLIENT_CONTAINER = "java:comp/InAppClientContainer";
+    static final String IN_APPCLIENT_CONTAINER = JNDI_CTX_JAVA_COMPONENT + "InAppClientContainer";
     @Inject
     private ProcessEnvironment processEnv;
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,13 @@
 
 package org.glassfish.config.support;
 
-import com.sun.enterprise.config.serverbeans.*;
-
-import java.util.List;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * CommandTarget is an enumeration of valid configuration target for a command execution
- *
  */
 public enum CommandTarget implements TargetValidator {
 
@@ -33,8 +32,8 @@ public enum CommandTarget implements TargetValidator {
      */
     DOMAIN {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            return target.equals("domain");
+        public boolean isValid(ServiceLocator locator, String target) {
+            return target.equals(TARGET_DOMAIN);
         }
 
         @Override
@@ -47,8 +46,8 @@ public enum CommandTarget implements TargetValidator {
      */
     DAS {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            return target.equals("server");
+        public boolean isValid(ServiceLocator locator, String target) {
+            return target.equals(TARGET_SERVER);
         }
 
         @Override
@@ -61,8 +60,8 @@ public enum CommandTarget implements TargetValidator {
      */
     CLUSTERED_INSTANCE {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            Domain domain = habitat.getService(Domain.class);
+        public boolean isValid(ServiceLocator locator, String target) {
+            Domain domain = locator.getService(Domain.class);
             return (domain.getClusterForInstance(target) != null);
         }
 
@@ -76,8 +75,8 @@ public enum CommandTarget implements TargetValidator {
      */
     STANDALONE_INSTANCE {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            Domain domain = habitat.getService(Domain.class);
+        public boolean isValid(ServiceLocator locator, String target) {
+            Domain domain = locator.getService(Domain.class);
             return (domain.getServerNamed(target) != null);
         }
 
@@ -91,8 +90,8 @@ public enum CommandTarget implements TargetValidator {
      */
     CONFIG {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            Domain domain = habitat.getService(Domain.class);
+        public boolean isValid(ServiceLocator locator, String target) {
+            Domain domain = locator.getService(Domain.class);
             return domain.getConfigNamed(target) != null;
         }
 
@@ -106,8 +105,8 @@ public enum CommandTarget implements TargetValidator {
      */
     CLUSTER {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            Domain domain = habitat.getService(Domain.class);
+        public boolean isValid(ServiceLocator locator, String target) {
+            Domain domain = locator.getService(Domain.class);
             return domain.getClusterNamed(target) != null;
         }
 
@@ -121,8 +120,8 @@ public enum CommandTarget implements TargetValidator {
      */
     NODE {
         @Override
-        public boolean isValid(ServiceLocator habitat, String target) {
-            Domain domain = habitat.getService(Domain.class);
+        public boolean isValid(ServiceLocator locator, String target) {
+            Domain domain = locator.getService(Domain.class);
             return domain.getNodeNamed(target) != null;
         }
 
@@ -132,10 +131,14 @@ public enum CommandTarget implements TargetValidator {
         }
     };
 
+    public static final String TARGET_DOMAIN = "domain";
+    public static final String TARGET_SERVER = SystemPropertyConstants.DAS_SERVER_NAME;
+
     @Override
-    public boolean isValid(ServiceLocator habitat, String target) {
+    public boolean isValid(ServiceLocator locator, String target) {
         return false;
     }
+
 
     @Override
     public String getDescription() {

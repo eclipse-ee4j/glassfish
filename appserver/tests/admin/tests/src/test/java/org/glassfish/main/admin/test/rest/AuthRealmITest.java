@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -89,7 +90,7 @@ public class AuthRealmITest extends RestTestBase {
 
     @Test
     public void testUserManagement() {
-        final String userName = "user" + generateRandomString();
+        final String userName = "user" + RandomGenerator.generateRandomString();
         {
             Response response = managementClient.post(URL_CREATE_USER, Map.of("id", userName, "AS_ADMIN_USERPASSWORD", "password"));
             assertEquals(200, response.getStatus());

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,28 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import org.glassfish.api.naming.NamingObjectProxy;
-import org.jvnet.hk2.annotations.Service;
-
-import org.glassfish.hk2.api.PerLookup;
+import com.sun.enterprise.deployment.ConnectorDescriptor;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
-import com.sun.enterprise.deployment.ConnectorDescriptor;
+import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 @PerLookup
-
 public class ConnectorDescriptorProxy implements NamingObjectProxy.InitializationNamingObjectProxy{
     @Inject
     private Provider<ConnectorRuntime> connectorRuntimeProvider;
 
     private ConnectorDescriptor desc;
     private String rarName;
-    private String jndiName;
+    private SimpleJndiName jndiName;
 
     public void setRarName(String rarName){
         this.rarName = rarName;
@@ -47,11 +48,11 @@ public class ConnectorDescriptorProxy implements NamingObjectProxy.Initializatio
         return rarName;
     }
 
-    public void setJndiName(String jndiName){
+    public void setJndiName(SimpleJndiName jndiName){
         this.jndiName = jndiName;
     }
 
-    public String getJndiName(){
+    public SimpleJndiName getJndiName(){
         return jndiName;
     }
 
@@ -59,7 +60,8 @@ public class ConnectorDescriptorProxy implements NamingObjectProxy.Initializatio
         return connectorRuntimeProvider.get();
     }
 
-    public synchronized Object create(Context ic) throws NamingException {
+    @Override
+    public synchronized ConnectorDescriptor create(Context ic) throws NamingException {
         //this is a per-lookup object and once we have the descriptor,
         //we remove the proxy and bind the descriptor with same jndi-name
         //hence block synchronization is fine as it blocks only callers
@@ -67,7 +69,7 @@ public class ConnectorDescriptorProxy implements NamingObjectProxy.Initializatio
         if(desc == null) {
             try {
                 desc = getConnectorRuntime().getConnectorDescriptor(rarName);
-                ic.rebind(jndiName, desc);
+                ic.rebind(jndiName.toString(), desc);
             } catch (ConnectorRuntimeException e) {
                 NamingException ne = new NamingException(e.getMessage());
                 ne.initCause(e);

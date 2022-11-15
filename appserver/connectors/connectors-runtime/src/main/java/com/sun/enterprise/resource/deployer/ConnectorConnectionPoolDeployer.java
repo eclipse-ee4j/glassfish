@@ -18,24 +18,8 @@
 package com.sun.enterprise.resource.deployer;
 
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.connectors.config.SecurityMap;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.connectors.ConnectorConnectionPool;
 import com.sun.enterprise.connectors.ConnectorDescriptorInfo;
 import com.sun.enterprise.connectors.ConnectorRuntime;
@@ -49,6 +33,23 @@ import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.connectors.config.SecurityMap;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 
 /**
@@ -82,7 +83,8 @@ public class ConnectorConnectionPoolDeployer
             return;
         }
 
-        PoolInfo poolInfo = new PoolInfo(resource.getName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getName());
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         final ConnectorConnectionPool ccp = getConnectorConnectionPool(resource, poolInfo);
         String rarName = resource.getResourceAdapterName();
         String connDefName = resource.getConnectionDefinitionName();
@@ -92,39 +94,15 @@ public class ConnectorConnectionPoolDeployer
         populateConnectorConnectionPool(ccp, connDefName, rarName, props, securityMaps);
         final String defName = resource.getConnectionDefinitionName();
 
-        /*if (domainCcp.isEnabled()) {
-            if (UNIVERSAL_CF.equals(defName) || QUEUE_CF.equals(defName) || TOPIC_CF.equals(defName)) {
-            //registers the jsr77 object for the mail resource deployed
-            final ManagementObjectManager mgr =
-                getAppServerSwitchObject().getManagementObjectManager();
-            mgr.registerJMSResource(domainCcp.getName(), defName, null, null,
-                    getPropNamesAsStrArr(domainCcp.getElementProperty()),
-                    getPropValuesAsStrArr(domainCcp.getElementProperty()));
-            }
-
-        } else {
-                _logger.log(Level.INFO, "core.resource_disabled",
-                        new Object[] {domainCcp.getName(),
-                        IASJ2EEResourceFactoryImpl.CONNECTOR_CONN_POOL_TYPE});
-        }*/
-
-
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Calling backend to add connectorConnectionPool", resource.getResourceAdapterName());
-        }
-        runtime.createConnectorConnectionPool(ccp, defName, resource.getResourceAdapterName(),
-                resource.getProperty(), resource.getSecurityMap());
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Added connectorConnectionPool in backend",
-                resource.getResourceAdapterName());
-        }
-
+        runtime.createConnectorConnectionPool(ccp, defName, resource.getResourceAdapterName(), resource.getProperty(),
+            resource.getSecurityMap());
+        LOG.log(Level.CONFIG, "Added connectorConnectionPool in resource adapter {0}", resource.getResourceAdapterName());
     }
 
 
     @Override
     public void deployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         deployResource(resource, poolInfo.getApplicationName(), poolInfo.getModuleName());
     }
 
@@ -132,7 +110,8 @@ public class ConnectorConnectionPoolDeployer
     @Override
     public void undeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
         String applicationName, String moduleName) throws Exception {
-        PoolInfo poolInfo = new PoolInfo(domainCcp.getName(), applicationName, moduleName);
+        SimpleJndiName jndiName = SimpleJndiName.of(domainCcp.getName());
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         actualUndeployResource(domainCcp, poolInfo);
     }
 
@@ -140,28 +119,15 @@ public class ConnectorConnectionPoolDeployer
     @Override
     public synchronized void undeployResource(org.glassfish.connectors.config.ConnectorConnectionPool resource)
         throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         actualUndeployResource(resource, poolInfo);
     }
 
 
     private void actualUndeployResource(org.glassfish.connectors.config.ConnectorConnectionPool domainCcp,
-                                        PoolInfo poolInfo) throws ConnectorRuntimeException {
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Calling backend to delete ConnectorConnectionPool", domainCcp);
-        }
+        PoolInfo poolInfo) throws ConnectorRuntimeException {
         runtime.deleteConnectorConnectionPool(poolInfo);
-        if(LOG.isLoggable(Level.FINE)) {
-            LOG.log(Level.FINE, "Deleted ConnectorConnectionPool in backend", domainCcp);
-        }
-
-        /*//unregister the managed object
-        if (QUEUE_CF.equals(defName) || TOPIC_CF.equals(defName)) {
-            //registers the jsr77 object for the mail resource deployed
-            final ManagementObjectManager mgr =
-                getAppServerSwitchObject().getManagementObjectManager();
-            mgr.unregisterJMSResource(domainCcp.getName());
-        }*/
+        LOG.log(Level.FINE, "Deleted ConnectorConnectionPool in backend: {0}", domainCcp);
     }
 
 
@@ -174,7 +140,7 @@ public class ConnectorConnectionPoolDeployer
 
         //Since 8.1 PE/SE/EE, only if pool has already been deployed in this
         //server-instance earlier, reconfig this pool
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         if (!runtime.isConnectorConnectionPoolDeployed(poolInfo)) {
             if(LOG.isLoggable(Level.FINE)) {
                 LOG.fine("The connector connection pool " + poolInfo
@@ -243,12 +209,12 @@ public class ConnectorConnectionPoolDeployer
         ccp.setMaxWaitTimeInMillis(domainCcp.getMaxWaitTimeInMillis());
         ccp.setPoolResizeQuantity(domainCcp.getPoolResizeQuantity());
         ccp.setIdleTimeoutInSeconds(domainCcp.getIdleTimeoutInSeconds());
-        ccp.setFailAllConnections(Boolean.valueOf(domainCcp.getFailAllConnections()));
+        ccp.setFailAllConnections(Boolean.parseBoolean(domainCcp.getFailAllConnections()));
         ccp.setAuthCredentialsDefinedInPool(
                 isAuthCredentialsDefinedInPool(domainCcp));
         //The line below will change for 9.0. We will get this from
         //the domain.xml
-        ccp.setConnectionValidationRequired(Boolean.valueOf(domainCcp.getIsConnectionValidationRequired()));
+        ccp.setConnectionValidationRequired(Boolean.parseBoolean(domainCcp.getIsConnectionValidationRequired()));
 
         String txSupport = domainCcp.getTransactionSupport();
         int txSupportIntVal = parseTransactionSupportString(txSupport);
@@ -267,15 +233,14 @@ public class ConnectorConnectionPoolDeployer
         //The tx support is valid if it is less-than/equal-to
         //the value specified in the ra.xml
         if (!ConnectionPoolObjectsUtils.isTxSupportConfigurationSane(txSupportIntVal,
-                domainCcp.getResourceAdapterName())) {
+            domainCcp.getResourceAdapterName())) {
 
             String i18nMsg = MESSAGES.getString("ccp_deployer.incorrect_tx_support");
             ConnectorRuntimeException cre = new
                     ConnectorRuntimeException(i18nMsg);
 
-            LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support",
-                    ccp.getName());
-            throw cre;
+                    LOG.log(Level.SEVERE, "rardeployment.incorrect_tx_support", ccp.getName());
+                    throw cre;
         }
         if (LOG.isLoggable(Level.FINE)) {
             LOG.fine("setting txSupportVal to " + txSupportIntVal +
@@ -287,15 +252,15 @@ public class ConnectorConnectionPoolDeployer
         ccp.setNonComponent(false);
         ccp.setNonTransactional(false);
         ccp.setConnectionLeakTracingTimeout(domainCcp.getConnectionLeakTimeoutInSeconds());
-        ccp.setConnectionReclaim(Boolean.valueOf(domainCcp.getConnectionLeakReclaim()));
+        ccp.setConnectionReclaim(Boolean.parseBoolean(domainCcp.getConnectionLeakReclaim()));
 
-        ccp.setMatchConnections(Boolean.valueOf(domainCcp.getMatchConnections()));
-        ccp.setAssociateWithThread(Boolean.valueOf(domainCcp.getAssociateWithThread()));
-        ccp.setPooling(Boolean.valueOf(domainCcp.getPooling()));
-        ccp.setPingDuringPoolCreation(Boolean.valueOf(domainCcp.getPing()));
+        ccp.setMatchConnections(Boolean.parseBoolean(domainCcp.getMatchConnections()));
+        ccp.setAssociateWithThread(Boolean.parseBoolean(domainCcp.getAssociateWithThread()));
+        ccp.setPooling(Boolean.parseBoolean(domainCcp.getPooling()));
+        ccp.setPingDuringPoolCreation(Boolean.parseBoolean(domainCcp.getPing()));
 
-        boolean lazyConnectionEnlistment = Boolean.valueOf(domainCcp.getLazyConnectionEnlistment());
-        boolean lazyConnectionAssociation = Boolean.valueOf(domainCcp.getLazyConnectionAssociation());
+        boolean lazyConnectionEnlistment = Boolean.parseBoolean(domainCcp.getLazyConnectionEnlistment());
+        boolean lazyConnectionAssociation = Boolean.parseBoolean(domainCcp.getLazyConnectionAssociation());
 
         if (lazyConnectionAssociation) {
             if (lazyConnectionEnlistment) {
@@ -313,12 +278,12 @@ public class ConnectorConnectionPoolDeployer
             ccp.setLazyConnectionAssoc(lazyConnectionAssociation);
             ccp.setLazyConnectionEnlist(lazyConnectionEnlistment);
         }
-        boolean pooling = Boolean.valueOf(domainCcp.getPooling());
+        boolean pooling = Boolean.parseBoolean(domainCcp.getPooling());
 
         //TODO: should this be added to the beginning of this method?
         if(!pooling) {
             //Throw exception if assoc with thread is set to true.
-            if(Boolean.valueOf(domainCcp.getAssociateWithThread())) {
+            if(Boolean.parseBoolean(domainCcp.getAssociateWithThread())) {
                 LOG.log(Level.SEVERE, "conn_pool_obj_utils.pooling_disabled_assocwiththread_invalid_combination",
                         domainCcp.getName());
                 String i18nMsg = MESSAGES.getString(
@@ -329,7 +294,7 @@ public class ConnectorConnectionPoolDeployer
             //Below are useful in pooled environment only.
             //Throw warning for connection validation/validate-atmost-once/
             //match-connections/max-connection-usage-count/idele-timeout
-            if(Boolean.valueOf(domainCcp.getIsConnectionValidationRequired())) {
+            if(Boolean.parseBoolean(domainCcp.getIsConnectionValidationRequired())) {
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination",
                         domainCcp.getName());
             }
@@ -337,7 +302,7 @@ public class ConnectorConnectionPoolDeployer
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination",
                         domainCcp.getName());
             }
-            if(Boolean.valueOf(domainCcp.getMatchConnections())) {
+            if(Boolean.parseBoolean(domainCcp.getMatchConnections())) {
                 LOG.log(Level.WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination",
                         domainCcp.getName());
             }
@@ -491,7 +456,7 @@ public class ConnectorConnectionPoolDeployer
             return defaultVal;
         }
 
-        return Boolean.valueOf((String) prop);
+        return Boolean.parseBoolean((String) prop);
     }
 
     private boolean isAuthCredentialsDefinedInPool(

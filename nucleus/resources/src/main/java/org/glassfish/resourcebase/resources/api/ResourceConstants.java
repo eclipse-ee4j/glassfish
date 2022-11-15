@@ -104,13 +104,6 @@ public interface ResourceConstants {
     String JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX = "__jms_destination_definition/";
     String ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX="__administered_object_definition/";
 
-    String JAVA_SCOPE_PREFIX = "java:";
-    String JAVA_APP_SCOPE_PREFIX = "java:app/";
-    String JAVA_COMP_SCOPE_PREFIX = "java:comp/";
-    String JAVA_MODULE_SCOPE_PREFIX = "java:module/";
-    String JAVA_GLOBAL_SCOPE_PREFIX = "java:global/";
-    String JAVA_COMP_ENV_SCOPE_PREFIX = "java:comp/env/";
-
     public enum TriState {
         TRUE, FALSE, UNKNOWN
     }

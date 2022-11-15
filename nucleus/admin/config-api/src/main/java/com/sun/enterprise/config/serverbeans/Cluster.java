@@ -52,6 +52,7 @@ import org.glassfish.api.admin.config.Named;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.api.admin.config.PropertyDesc;
 import org.glassfish.api.admin.config.ReferenceContainer;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CreationDecorator;
 import org.glassfish.config.support.DeletionDecorator;
 import org.glassfish.hk2.api.PerLookup;
@@ -368,16 +369,16 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
     ApplicationRef getApplicationRef(String appName);
 
     @DuckTyped
-    ResourceRef getResourceRef(String refName);
+    ResourceRef getResourceRef(SimpleJndiName refName);
 
     @DuckTyped
-    boolean isResourceRefExists(String refName);
+    boolean isResourceRefExists(SimpleJndiName refName);
 
     @DuckTyped
-    void createResourceRef(String enabled, String refName) throws TransactionFailure;
+    void createResourceRef(String enabled, SimpleJndiName refName) throws TransactionFailure;
 
     @DuckTyped
-    void deleteResourceRef(String refName) throws TransactionFailure;
+    void deleteResourceRef(SimpleJndiName refName) throws TransactionFailure;
 
     @DuckTyped
     <T extends ClusterExtension> List<T> getExtensionsByType(Class<T> type);
@@ -445,20 +446,20 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             return null;
         }
 
-        public static ResourceRef getResourceRef(Cluster cluster, String refName) {
+        public static ResourceRef getResourceRef(Cluster cluster, SimpleJndiName refName) {
             for (ResourceRef ref : cluster.getResourceRef()) {
-                if (ref.getRef().equals(refName)) {
+                if (ref.getRef().equals(refName.toString())) {
                     return ref;
                 }
             }
             return null;
         }
 
-        public static boolean isResourceRefExists(Cluster cluster, String refName) {
+        public static boolean isResourceRefExists(Cluster cluster, SimpleJndiName refName) {
             return getResourceRef(cluster, refName) != null;
         }
 
-        public static void deleteResourceRef(Cluster cluster, String refName) throws TransactionFailure {
+        public static void deleteResourceRef(Cluster cluster, SimpleJndiName refName) throws TransactionFailure {
             final ResourceRef ref = getResourceRef(cluster, refName);
             if (ref != null) {
                 ConfigSupport.apply(new SingleConfigCode<Cluster>() {
@@ -471,7 +472,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
             }
         }
 
-        public static void createResourceRef(Cluster cluster, final String enabled, final String refName) throws TransactionFailure {
+        public static void createResourceRef(Cluster cluster, final String enabled, final SimpleJndiName refName) throws TransactionFailure {
 
             ConfigSupport.apply(new SingleConfigCode<Cluster>() {
 
@@ -480,7 +481,7 @@ public interface Cluster extends ConfigBeanProxy, PropertyBag, Named, SystemProp
 
                     ResourceRef newResourceRef = param.createChild(ResourceRef.class);
                     newResourceRef.setEnabled(enabled);
-                    newResourceRef.setRef(refName);
+                    newResourceRef.setRef(refName.toString());
                     param.getResourceRef().add(newResourceRef);
                     return newResourceRef;
                 }

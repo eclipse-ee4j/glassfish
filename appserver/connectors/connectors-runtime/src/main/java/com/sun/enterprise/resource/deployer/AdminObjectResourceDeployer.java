@@ -22,6 +22,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
@@ -52,40 +53,20 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
 
     @Override
     public synchronized void deployResource(AdminObjectResource resource, String applicationName, String moduleName) throws Exception {
-        final AdminObjectResource aor = resource;
-        String jndiName = aor.getJndiName();
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
         ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
-        createAdminObjectResource(aor, resourceInfo);
+        createAdminObjectResource(resource, resourceInfo);
     }
 
 
     @Override
     public synchronized void deployResource(AdminObjectResource resource) throws Exception {
-
-        final AdminObjectResource aor = resource;
-        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(aor);
-        createAdminObjectResource(aor, resourceInfo);
+        ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(resource);
+        createAdminObjectResource(resource, resourceInfo);
     }
 
     private void createAdminObjectResource(AdminObjectResource aor, ResourceInfo resourceInfo)
             throws ConnectorRuntimeException {
-        /* TODO Not needed any more ?
-
-                        if (aor.isEnabled()) {
-                            //registers the jsr77 object for the admin object resource deployed
-                            final ManagementObjectManager mgr =
-                                getAppServerSwitchObject().getManagementObjectManager();
-                            mgr.registerAdminObjectResource(jndiName,
-                                aor.getResAdapter(), aor.getResType(),
-                                getPropNamesAsStrArr(aor.getElementProperty()),
-                                getPropValuesAsStrArr(aor.getElementProperty()));
-                        } else {
-                                LOG.log(Level.INFO, "core.resource_disabled",
-                                        new Object[] {jndiName,
-                                        IASJ2EEResourceFactoryImpl.JMS_RES_TYPE});
-                        }
-                */
-
         LOG.log(Level.FINE, "Calling backend to add adminObject: {0}", resourceInfo);
         runtime.addAdminObject(null, aor.getResAdapter(), resourceInfo,
                 aor.getResType(), aor.getClassName(), transformProps(aor.getProperty()));
@@ -95,15 +76,14 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
 
     @Override
     public void undeployResource(AdminObjectResource resource, String applicationName, String moduleName) throws Exception {
-        final AdminObjectResource aor = resource;
-        ResourceInfo resourceInfo = new ResourceInfo(aor.getJndiName(), applicationName, moduleName);
-        deleteAdminObjectResource(aor, resourceInfo);
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        deleteAdminObjectResource(resource, resourceInfo);
     }
 
 
     @Override
-    public synchronized void undeployResource(AdminObjectResource resource)
-            throws Exception {
+    public synchronized void undeployResource(AdminObjectResource resource) throws Exception {
         final AdminObjectResource aor = resource;
         ResourceInfo resourceInfo = ConnectorsUtil.getResourceInfo(aor);
         deleteAdminObjectResource(aor, resourceInfo);
@@ -114,13 +94,6 @@ public class AdminObjectResourceDeployer extends AbstractConnectorResourceDeploy
         LOG.log(Level.FINE, "Calling backend to delete adminObject: {0}", resourceInfo);
         runtime.deleteAdminObject(resourceInfo);
         LOG.log(Level.FINE, "Deleted adminObject in backend: {0}", resourceInfo);
-
-        //unregister the managed object
-        /* TODO Not needed any more ?
-            final ManagementObjectManager mgr =
-                    getAppServerSwitchObject().getManagementObjectManager();
-            mgr.unregisterAdminObjectResource(aor.getJndiName(), aor.getResType());
-        */
     }
 
 

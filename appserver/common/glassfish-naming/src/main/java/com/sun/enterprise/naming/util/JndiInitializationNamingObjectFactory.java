@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +18,15 @@
 package com.sun.enterprise.naming.util;
 
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
-import org.glassfish.api.naming.NamingObjectProxy;
-import org.jvnet.hk2.annotations.Service;
+
+import java.io.Serializable;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
-import java.io.*;
+
+import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * <p>A naming object factory that is used by resource-references
@@ -38,51 +42,51 @@ import java.io.*;
  *
  */
 @Service
-public class JndiInitializationNamingObjectFactory implements NamingObjectFactory,
-        NamingObjectProxy.InitializationNamingObjectProxy, Serializable{
+public class JndiInitializationNamingObjectFactory
+    implements NamingObjectFactory, NamingObjectProxy.InitializationNamingObjectProxy, Serializable {
 
-    private String name;
-    private String jndiName;
+    private SimpleJndiName name;
+    private SimpleJndiName jndiName;
     private boolean cacheResult;
 
-    private transient JndiNamingObjectFactory jndiNamingObjectFactory ;
+    private transient JndiNamingObjectFactory jndiNamingObjectFactory;
 
     public JndiInitializationNamingObjectFactory() {
-        //need a no-org constructor since it's serializable.
+        // need a no-org constructor since it's serializable.
     }
 
-    public JndiInitializationNamingObjectFactory(String name, String jndiName, boolean cacheResult) {
+
+    public JndiInitializationNamingObjectFactory(SimpleJndiName name, SimpleJndiName jndiName, boolean cacheResult) {
         this.name = name;
         this.jndiName = jndiName;
         this.cacheResult = cacheResult;
-        //couldn't make JndiInitializationNamingObjectFactory simply extend JndiNaminObjectFactory
-        //since serialization/de-serialization requires no-arg constructor for super classes too.
+        // couldn't make JndiInitializationNamingObjectFactory simply extend JndiNaminObjectFactory
+        // since serialization/de-serialization requires no-arg constructor for super classes too.
         jndiNamingObjectFactory = new JndiNamingObjectFactory(name, jndiName, cacheResult);
     }
 
-    /**
-     * @inheritDoc
-     */
+
+    @Override
     public boolean isCreateResultCacheable() {
         return getJndiNamingObjectFactory().isCreateResultCacheable();
     }
 
+
     /**
      * re-construct JndiNamingObjectFactory in case it is null (due to de-serialization)
+     *
      * @return JndiNamingObjectFactory
      */
     private JndiNamingObjectFactory getJndiNamingObjectFactory() {
-
-        if(jndiNamingObjectFactory == null){
+        if (jndiNamingObjectFactory == null) {
             jndiNamingObjectFactory = new JndiNamingObjectFactory(name, jndiName, cacheResult);
         }
         return jndiNamingObjectFactory;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public Object create(Context ic) throws NamingException {
-        return  getJndiNamingObjectFactory().create(ic);
+
+    @Override
+    public <T> T create(Context ic) throws NamingException {
+        return getJndiNamingObjectFactory().create(ic);
     }
 }

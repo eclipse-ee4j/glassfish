@@ -20,12 +20,14 @@ package com.sun.enterprise.deployment;
 import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * An object representing a link to another ejb.
  *
  * @author Jerome Dochez
  */
-public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbReference, NamedDescriptor {
+public final class EjbReferenceDescriptor extends EnvironmentProperty implements EjbReference, NamedDescriptor {
 
     private static final long serialVersionUID = 1L;
     private static final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
@@ -60,7 +62,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      * resolved, so this is the safest approach to avoiding backward
      * compatibility issues.
      */
-    private String lookupName;
+    private SimpleJndiName lookupName;
 
     /**
      * constructs an local or remote ejb reference to the given ejb descriptor,
@@ -83,10 +85,6 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     public EjbReferenceDescriptor() {
     }
 
-    /**
-     * Set the referring bundle, i.e. the bundle within which this
-     * EJB reference is declared.
-     */
     @Override
     public void setReferringBundleDescriptor(BundleDescriptor referringBundle) {
         this.referringBundle = referringBundle;
@@ -134,21 +132,7 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
     }
 
     /**
-     * Sets the jndi name of the bean type which I am referring.
-     */
-    @Override
-    public void setJndiName(String jndiName) {
-        this.setValue(jndiName);
-    }
-
-    @Override
-    public boolean hasJndiName() {
-        String name = getJndiName();
-        return name != null && !name.isEmpty();
-    }
-
-    /**
-     * return true if I know the name of the ejb to which I refer.
+     * @return true if I know the name of the ejb to which I refer.
      */
     public boolean isLinked() {
         return ejbLink != null;
@@ -180,15 +164,29 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
      * return the jndi name of the bean to which I refer.
      */
     @Override
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         String jndiName = this.getValue();
-        if (isLocal()) {
+        if (isLocal() || (jndiName != null && !jndiName.isEmpty())) {
             // mapped-name has no meaning for the local ejb view. ejb-link
             // should be used to resolve any ambiguities about the target
             // local ejb.
-            return jndiName;
+            return SimpleJndiName.of(jndiName);
         }
-        return jndiName != null && !jndiName.isEmpty() ? jndiName : getMappedName();
+        return getMappedName();
+    }
+
+    /**
+     * Sets the jndi name of the bean type which I am referring.
+     */
+    @Override
+    public void setJndiName(SimpleJndiName jndiName) {
+        this.setValue(jndiName == null ? null : jndiName.toString());
+    }
+
+    @Override
+    public boolean hasJndiName() {
+        SimpleJndiName name = getJndiName();
+        return name != null && !name.isEmpty();
     }
 
     /**
@@ -202,17 +200,19 @@ public class EjbReferenceDescriptor extends EnvironmentProperty implements EjbRe
         if (isLocal()) {
             return super.getValue();
         }
-        return ejbDescriptor.getJndiName();
+        SimpleJndiName jndiName = ejbDescriptor.getJndiName();
+        return jndiName == null ? null : jndiName.toString();
     }
 
     @Override
-    public void setLookupName(String l) {
+    public void setLookupName(SimpleJndiName l) {
         lookupName = l;
     }
 
     @Override
-    public String getLookupName() {
-        return lookupName == null ? "" : lookupName;
+    public SimpleJndiName getLookupName() {
+        // FIXME: no empty string
+        return lookupName == null ? new SimpleJndiName("") : lookupName;
     }
 
     @Override

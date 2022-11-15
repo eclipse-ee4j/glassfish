@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.deployment;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 
 import jakarta.persistence.SharedCacheMode;
@@ -42,8 +43,8 @@ public class PersistenceUnitDescriptor extends Descriptor {
     private String transactionType = "JTA";
     private String description;
     private String provider;
-    private String jtaDataSource;
-    private String nonJtaDataSource;
+    private SimpleJndiName jtaDataSource;
+    private SimpleJndiName nonJtaDataSource;
 
     private final List<String> mappingFiles = new ArrayList<>();
     private final List<String> jarFiles = new ArrayList<>();
@@ -65,6 +66,10 @@ public class PersistenceUnitDescriptor extends Descriptor {
                 + ", it cannot be set to " + parent.getModuleID());
         }
         this.parent = parent;
+    }
+
+    public final SimpleJndiName getJndiName() {
+        return SimpleJndiName.of(getName());
     }
 
     // NOW let's implement some methods specific to this descriptor
@@ -109,20 +114,20 @@ public class PersistenceUnitDescriptor extends Descriptor {
         this.provider = value;
     }
 
-    public String getJtaDataSource() {
+    public SimpleJndiName getJtaDataSource() {
         return jtaDataSource;
     }
 
-    public void setJtaDataSource(String value) {
+    public void setJtaDataSource(SimpleJndiName value) {
         this.jtaDataSource = value;
 
     }
 
-    public String getNonJtaDataSource() {
+    public SimpleJndiName getNonJtaDataSource() {
         return nonJtaDataSource;
     }
 
-    public void setNonJtaDataSource(String value) {
+    public void setNonJtaDataSource(SimpleJndiName value) {
         this.nonJtaDataSource = value;
 
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,20 +18,32 @@
 package org.glassfish.connectors.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RestParam;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
-import com.sun.enterprise.config.serverbeans.Module;
-
-import jakarta.inject.Inject;
 
 /**
  * Ping Connection Pool Command
@@ -80,8 +93,12 @@ public class PingConnectionPool implements AdminCommand {
     @Inject
     private Applications applications;
 
-    @Param(optional = true, alias = "targetName", obsolete = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
+    @Param(
+        optional = true,
+        alias = "targetName",
+        obsolete = true,
+        defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -89,33 +106,36 @@ public class PingConnectionPool implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         boolean status = false;
         Resources resources = domain.getResources();
-        String scope = "";
-        if(moduleName != null){
-            if(!poolUtil.isValidModule(applicationName, moduleName, poolName, report)){
-                return ;
+        final String scope;
+        if (moduleName != null) {
+            if (!poolUtil.isValidModule(applicationName, moduleName, poolName, report)) {
+                return;
             }
             Application application = applications.getApplication(applicationName);
             Module module = application.getModule(moduleName);
             resources = module.getResources();
-            scope = "java:module/";
-        }else if(applicationName != null){
-            if(!poolUtil.isValidApplication(applicationName, poolName, report)){
+            scope = SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+        } else if (applicationName != null) {
+            if (!poolUtil.isValidApplication(applicationName, poolName, report)) {
                 return;
             }
             Application application = applications.getApplication(applicationName);
             resources = application.getResources();
-            scope = "java:app/";
+            scope = SimpleJndiName.JNDI_CTX_JAVA_APP;
+        } else {
+            scope = "";
         }
 
-        if(!poolUtil.isValidPool(resources, poolName, scope, report)){
+        SimpleJndiName jndiName = new SimpleJndiName(poolName);
+        if (!poolUtil.isValidPool(resources, jndiName, scope, report)) {
             return;
         }
-
-        PoolInfo poolInfo = new PoolInfo(poolName, applicationName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         try {
             status = connRuntime.pingConnectionPool(poolInfo);
             if (status) {

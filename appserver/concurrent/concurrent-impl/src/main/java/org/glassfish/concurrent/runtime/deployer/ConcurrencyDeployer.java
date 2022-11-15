@@ -28,6 +28,7 @@ import java.util.Collection;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
@@ -83,7 +84,7 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
 
     /**
      * Create {@link ResourceInfo} instance.
-     * Resource name is resolved by {@link ConnectorsUtil#deriveResourceName(String, String, JavaEEResourceType)}
+     * Resource name is resolved by {@link ConnectorsUtil#deriveResourceName(String, SimpleJndiName, JavaEEResourceType)}
      *
      * @param descriptor
      * @param applicatioName
@@ -97,7 +98,7 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
 
     /**
      * Create {@link ResourceInfo} instance.
-     * Resource name is resolved by {@link ConnectorsUtil#deriveResourceName(String, String, JavaEEResourceType)}
+     * Resource name is resolved by {@link ConnectorsUtil#deriveResourceName(String, SimpleJndiName, JavaEEResourceType)}
      *
      * @param descriptor
      * @return {@link ResourceInfo}
@@ -109,13 +110,13 @@ public abstract class ConcurrencyDeployer<D extends ResourceDescriptor> implemen
 
 
     /**
-     * Calls {@link ConnectorsUtil#deriveResourceName(String, String, JavaEEResourceType)} using
+     * Calls {@link ConnectorsUtil#deriveResourceName(String, SimpleJndiName, JavaEEResourceType)} using
      * descriptor attributes
      *
      * @param descriptor
      * @return JNDI name
      */
-    protected String toResourceName(D descriptor) {
+    protected SimpleJndiName toResourceName(D descriptor) {
         return deriveResourceName(descriptor.getResourceId(), descriptor.getJndiName(), descriptor.getResourceType());
     }
 }

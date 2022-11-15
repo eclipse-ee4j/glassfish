@@ -21,6 +21,7 @@ import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
 import jakarta.inject.Inject;
 
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.deployer.cfg.ManagedExecutorServiceCfg;
 import org.glassfish.enterprise.concurrent.ContextServiceImpl;
@@ -63,9 +64,8 @@ public class ConcurrencyManagedExecutorDeployer extends ConcurrencyDeployer<Mana
     public void deployResource(ManagedExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         ManagedExecutorDefinitionDescriptor descriptor = resource;
         ManagedExecutorServiceImpl service = createExecutorService(applicationName, moduleName, descriptor);
-        String resourceName = toResourceName(descriptor);
-        ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        namingService.publishObject(resourceInfo, resourceName, service, true);
+        ResourceInfo resourceInfo = new ResourceInfo(toResourceName(descriptor), applicationName, moduleName);
+        namingService.publishObject(resourceInfo, service, true);
     }
 
 
@@ -74,20 +74,20 @@ public class ConcurrencyManagedExecutorDeployer extends ConcurrencyDeployer<Mana
         ManagedExecutorDefinitionDescriptor descriptor = resource;
         String applicationName = invocationManager.getCurrentInvocation().getAppName();
         String moduleName = invocationManager.getCurrentInvocation().getModuleName();
-        String resourceName = toResourceName(descriptor);
+        SimpleJndiName resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
-        runtime.shutdownContextService(resourceInfo.getName());
+        namingService.unpublishObject(resourceInfo);
+        runtime.shutdownContextService(resourceName);
     }
 
 
     @Override
     public void undeployResource(ManagedExecutorDefinitionDescriptor resource, String applicationName, String moduleName) throws Exception {
         ManagedExecutorDefinitionDescriptor descriptor = resource;
-        String resourceName = toResourceName(descriptor);
+        SimpleJndiName resourceName = toResourceName(descriptor);
         ResourceInfo resourceInfo = new ResourceInfo(resourceName, applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
-        runtime.shutdownContextService(resourceInfo.getName());
+        namingService.unpublishObject(resourceInfo);
+        runtime.shutdownContextService(resourceName);
     }
 
 

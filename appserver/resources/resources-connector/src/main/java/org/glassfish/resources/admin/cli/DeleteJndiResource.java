@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,23 +20,27 @@ package org.glassfish.resources.admin.cli;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
+import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resources.config.ExternalJndiResource;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
-
-import jakarta.inject.Inject;
-import java.beans.PropertyVetoException;
 
 /**
  * Delete Jndi Resource object
@@ -59,7 +63,7 @@ public class DeleteJndiResource implements AdminCommand {
     final private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DeleteJndiResource.class);
 
-    @Param(optional=true, defaultValue= SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
     @Param(name="jndi_name", primary=true)
@@ -80,12 +84,13 @@ public class DeleteJndiResource implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
-
+        SimpleJndiName simpleJndiName = SimpleJndiName.of(jndiName);
         // ensure we already have this resource
-        if (!doesResourceExist(domain.getResources(), jndiName)) {
+        if (!doesResourceExist(domain.getResources(), simpleJndiName)) {
             report.setMessage(localStrings.getLocalString(
                     "delete.jndi.resource.notfound",
                     "A jndi resource named {0} does not exist.", jndiName));
@@ -94,8 +99,8 @@ public class DeleteJndiResource implements AdminCommand {
         }
 
         if (environment.isDas()) {
-            if ("domain".equals(target)) {
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 0) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
+                if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     report.setMessage(localStrings.getLocalString("delete.jndi.resource.resource-ref.exist",
                             "external-jndi-resource [ {0} ] is referenced in an " +
                                     "instance/cluster target, Use delete-resource-ref on appropriate target",
@@ -104,7 +109,7 @@ public class DeleteJndiResource implements AdminCommand {
                     return;
                 }
             } else {
-                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                if (!resourceUtil.isResourceRefInTarget(simpleJndiName, target)) {
                     report.setMessage(localStrings.getLocalString("delete.jndi.resource.no.resource-ref",
                             "external-jndi-resource [ {0} ] is not referenced in target [ {1} ]",
                             jndiName, target));
@@ -113,7 +118,7 @@ public class DeleteJndiResource implements AdminCommand {
 
                 }
 
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
+                if (resourceUtil.getTargetsReferringResourceRef(simpleJndiName).size() > 1) {
                     report.setMessage(localStrings.getLocalString("delete.jndi.resource.multiple.resource-refs",
                             "external-jndi-resource [ {0} ] is referenced in multiple " +
                                     "instance/cluster targets, Use delete-resource-ref on appropriate target",
@@ -125,40 +130,32 @@ public class DeleteJndiResource implements AdminCommand {
         }
 
         try {
-
-            // delete resource-ref
-            resourceUtil.deleteResourceRef(jndiName, target);
-
-            // delete external-jndi-resource
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                public Object run(Resources param) throws PropertyVetoException,
-                        TransactionFailure {
-                    ExternalJndiResource resource = (ExternalJndiResource)
-                            domain.getResources().getResourceByName(ExternalJndiResource.class, jndiName);
-                    if (resource.getJndiName().equals(jndiName)) {
-                        return param.getResources().remove(resource);
-                    }
-                    return null;
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
+            SingleConfigCode<Resources> configCode = param -> {
+                ExternalJndiResource resource = domain.getResources().getResourceByName(ExternalJndiResource.class,
+                    simpleJndiName);
+                if (resource.getJndiName().equals(jndiName)) {
+                    return param.getResources().remove(resource);
                 }
-            }, domain.getResources());
+                return null;
+            };
+            ConfigSupport.apply(configCode, domain.getResources());
 
-            report.setMessage(localStrings.getLocalString("" +
-                    "delete.jndi.resource.success",
-                    "Jndi resource {0} deleted.", jndiName));
+            report.setMessage(
+                localStrings.getLocalString("delete.jndi.resource.success", "Jndi resource {0} deleted.", jndiName));
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         } catch (TransactionFailure tfe) {
-            report.setMessage(localStrings.getLocalString("" +
-                    "delete.jndi.resource.fail",
-                    "Unable to delete jndi resource {0}.", jndiName) + " "
-                    + tfe.getLocalizedMessage());
+            report.setMessage(localStrings.getLocalString("delete.jndi.resource.fail",
+                "Unable to delete jndi resource {0}.", jndiName) + " " + tfe.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(tfe);
         }
 
     }
 
-    private boolean doesResourceExist(Resources resources, String jndiName) {
+    private boolean doesResourceExist(Resources resources, SimpleJndiName jndiName) {
         return resources.getResourceByName(ExternalJndiResource.class, jndiName) != null;
     }
 }

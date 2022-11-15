@@ -17,7 +17,6 @@
 
 package org.glassfish.jms.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.ResourceRef;
@@ -46,6 +45,7 @@ import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.naming.DefaultResourceProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.connectors.config.AdminObjectResource;
@@ -126,8 +126,8 @@ public class ListJMSResources implements AdminCommand {
 
             for (Object c : connectorResources) {
                 ConnectorResource cr = (ConnectorResource) c;
-                ConnectorConnectionPool cp = ConnectorsUtil.getResourceByName(domain.getResources(),
-                    ConnectorConnectionPool.class, cr.getPoolName());
+                ConnectorConnectionPool cp = domain.getResources().getResourceByName(ConnectorConnectionPool.class,
+                    SimpleJndiName.of(cr.getPoolName()));
 
                 if (cp  != null && JMSRA.equals(cp.getResourceAdapterName())){
                     Map<String,String> m = new HashMap<>();
@@ -149,12 +149,14 @@ public class ListJMSResources implements AdminCommand {
                 case UNIFIED_CF:
                     for (Object c : connectorResources) {
                        ConnectorResource cr = (ConnectorResource)c;
-                       ConnectorConnectionPool cp = ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorConnectionPool.class, cr.getPoolName());
-                       if(cp != null && resourceType.equals(cp.getConnectionDefinitionName()) && JMSRA.equals(cp.getResourceAdapterName())) {
-                            Map<String,String> m = new HashMap<>();
-                            m.put("name", cr.getJndiName());
-                            list.add(m);
-                        }
+                       ConnectorConnectionPool cp = domain.getResources()
+                           .getResourceByName(ConnectorConnectionPool.class, SimpleJndiName.of(cr.getPoolName()));
+                       if (cp != null && resourceType.equals(cp.getConnectionDefinitionName())
+                           && JMSRA.equals(cp.getResourceAdapterName())) {
+                           Map<String, String> m = new HashMap<>();
+                           m.put("name", cr.getJndiName());
+                           list.add(m);
+                       }
                     }
                     break;
                 case TOPIC:

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,14 +17,17 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
+import jakarta.enterprise.concurrent.ContextService;
+import jakarta.inject.Inject;
+
+import javax.naming.NamingException;
+
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.enterprise.concurrent.ContextService;
-import jakarta.inject.Inject;
-import javax.naming.NamingException;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Naming Object Proxy to handle the Default ContextService.
@@ -34,7 +38,7 @@ import javax.naming.NamingException;
 @NamespacePrefixes({DefaultContextService.DEFAULT_CONTEXT_SERVICE})
 public class DefaultContextService implements NamedNamingObjectProxy, DefaultResourceProxy {
 
-    static final String DEFAULT_CONTEXT_SERVICE = "java:comp/DefaultContextService";
+    static final String DEFAULT_CONTEXT_SERVICE = JNDI_CTX_JAVA_COMPONENT + "DefaultContextService";
     static final String DEFAULT_CONTEXT_SERVICE_PHYS = "concurrent/__defaultContextService";
     private ContextService contextService;
 

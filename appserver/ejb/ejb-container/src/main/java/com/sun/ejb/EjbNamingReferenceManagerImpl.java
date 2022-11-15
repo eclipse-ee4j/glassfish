@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,33 +18,34 @@
 package com.sun.ejb;
 
 import com.sun.ejb.containers.EJBContextImpl;
-import com.sun.ejb.containers.EJBTimerServiceWrapper;
 import com.sun.ejb.containers.EJBTimerService;
+import com.sun.ejb.containers.EJBTimerServiceWrapper;
 import com.sun.enterprise.container.common.spi.EjbNamingReferenceManager;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Provider;
-import javax.naming.Context;
 import com.sun.enterprise.util.Utility;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
 
-import javax.naming.NamingException;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP_ENV;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * @author Mahesh Kannan
  */
-
 @Service
-public class EjbNamingReferenceManagerImpl
-    implements EjbNamingReferenceManager {
-
-    private static final String CORBANAME = "corbaname:";
+public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager {
 
     @Inject
     InvocationManager invMgr;
@@ -63,7 +65,7 @@ public class EjbNamingReferenceManagerImpl
             // local ejb dependencies if there's a lookup string, use that.
             // Otherwise, the ejb will be resolved by EJBUtils.
             if( ejbRefDesc.hasLookupName()) {
-                jndiObj = context.lookup(ejbRefDesc.getLookupName());
+                jndiObj = context.lookup(ejbRefDesc.getLookupName().toString());
                 resolved = true;
             }
         } else if (!ejbRefDesc.hasJndiName() && ejbRefDesc.hasLookupName()) {
@@ -75,41 +77,35 @@ public class EjbNamingReferenceManagerImpl
             // and it also has a lookup-name, then we need to set the EAR class
             // loader to the thread.  Issue 17376.
             try {
-                jndiObj = context.lookup(ejbRefDesc.getLookupName());
+                jndiObj = context.lookup(ejbRefDesc.getLookupName().toString());
             } catch (NamingException e) {
                 ClassLoader oldLoader = null;
                 try {
-                    oldLoader = Utility.setContextClassLoader(
-                            ejbRefDesc.getReferringBundleDescriptor().getClassLoader());
-                    jndiObj = context.lookup(ejbRefDesc.getLookupName());
+                    oldLoader = Utility
+                        .setContextClassLoader(ejbRefDesc.getReferringBundleDescriptor().getClassLoader());
+                    jndiObj = context.lookup(ejbRefDesc.getLookupName().toString());
                 } finally {
                     Utility.setContextClassLoader(oldLoader);
                 }
             }
             resolved = true;
-        } else if( ejbRefDesc.hasJndiName() &&
-                   ejbRefDesc.getJndiName().startsWith("java:app/") &&
-                   !ejbRefDesc.getJndiName().startsWith("java:app/env/")) {
+        } else if (ejbRefDesc.hasJndiName() && ejbRefDesc.getJndiName().isJavaApp()
+            && !ejbRefDesc.getJndiName().hasPrefix(JNDI_CTX_JAVA_APP_ENV)) {
 
             // This could be an @EJB dependency in an appclient whose target name
             // is a portable java:app ejb name.  Try the global version.  If that
             // doesn't work, the javaURLContext logic should be able to figure it
             // out.
-            String remoteJndiName = ejbRefDesc.getJndiName();
+            SimpleJndiName remoteJndiName = ejbRefDesc.getJndiName();
 
-            String appName = (String) context.lookup("java:app/AppName");
-            String newPrefix = "java:global/" + appName + "/";
-
-            int javaAppLength = "java:app/".length();
-            String globalLookup = newPrefix + remoteJndiName.substring(javaAppLength);
-
+            String appName = (String) context.lookup(JNDI_CTX_JAVA_APP + "AppName");
+            String globalLookup = remoteJndiName.changePrefix(JNDI_CTX_JAVA_GLOBAL + appName + '/').toString();
             jndiObj = context.lookup(globalLookup);
             resolved = true;
-
         } else {
 
             // Get actual jndi-name from ejb module.
-            String remoteJndiName = EJBUtils.getRemoteEjbJndiName(ejbRefDesc);
+            SimpleJndiName remoteJndiName = EJBUtils.getRemoteEjbJndiName(ejbRefDesc);
 
             // We could be resolving an ejb-ref as part of a remote lookup thread.  In that
             // case the context class loader won't be set appropriately on the thread
@@ -150,13 +146,12 @@ public class EjbNamingReferenceManagerImpl
                  * NOTE : we might need some additional logic to handle cross-server
                  * MEJB resolution for cluster support post V3 FCS.
                  */
-                if (remoteJndiName.startsWith(CORBANAME)) {
+                if (remoteJndiName.hasCorbaPrefix()) {
                     GlassFishORBHelper orbHelper = glassFishORBHelperProvider.get();
-
                     ORB orb = orbHelper.getORB();
-                    jndiObj = (Object) orb.string_to_object(remoteJndiName);
+                    jndiObj = orb.string_to_object(remoteJndiName.toString());
                 } else {
-                    jndiObj = context.lookup(remoteJndiName);
+                    jndiObj = context.lookup(remoteJndiName.toString());
                 }
 
             } catch(Exception e) {
@@ -176,6 +171,7 @@ public class EjbNamingReferenceManagerImpl
         return resolved ? jndiObj : EJBUtils.resolveEjbRefObject(ejbRefDesc, jndiObj);
     }
 
+    @Override
     public boolean isEjbReferenceCacheable(EjbReferenceDescriptor ejbRefDesc) {
         // Ejb-ref is only eligible for caching if it refers to the legacy
         // Home view and it is resolved to an ejb within the same application.
@@ -187,6 +183,7 @@ public class EjbNamingReferenceManagerImpl
     }
 
 
+    @Override
     public Object getEJBContextObject(String contextType) {
 
         ComponentInvocation currentInv = invMgr.getCurrentInvocation();
@@ -204,18 +201,13 @@ public class EjbNamingReferenceManagerImpl
 
         Object returnObject = ejbInv.context;
 
-        if( contextType.equals("jakarta.ejb.TimerService") ) {
-            if (EJBTimerService.getEJBTimerService() == null ) {
-                throw new IllegalStateException("EJB Timer Service not " +
-                                                "available");
+        if (contextType.equals("jakarta.ejb.TimerService")) {
+            if (EJBTimerService.getEJBTimerService() == null) {
+                throw new IllegalStateException("EJB Timer Service not available");
             }
-            returnObject = new EJBTimerServiceWrapper
-                (EJBTimerService.getEJBTimerService(), (EJBContextImpl) ejbInv.context);
+            returnObject = new EJBTimerServiceWrapper(EJBTimerService.getEJBTimerService(),
+                (EJBContextImpl) ejbInv.context);
         }
-
-
         return returnObject;
     }
-
-
 }

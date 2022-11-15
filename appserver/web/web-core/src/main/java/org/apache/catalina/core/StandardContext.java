@@ -18,83 +18,31 @@
 
 package org.apache.catalina.core;
 
-import static com.sun.enterprise.util.Utility.isAllNull;
-import static com.sun.enterprise.util.Utility.isEmpty;
-import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
-import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
-import static java.text.MessageFormat.format;
-import static java.util.Collections.synchronizedList;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static java.util.logging.Level.WARNING;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZER_ON_STARTUP;
-import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_DESTROYED;
-import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZER_ON_STARTUP;
-import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_DESTROYED;
-import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_INITIALIZED;
-import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
-import static org.apache.catalina.Globals.ALTERNATE_RESOURCES_ATTR;
-import static org.apache.catalina.Globals.ALT_DD_ATTR;
-import static org.apache.catalina.Globals.FACES_INITIALIZER;
-import static org.apache.catalina.Globals.META_INF_RESOURCES;
-import static org.apache.catalina.Globals.RESOURCES_ATTR;
-import static org.apache.catalina.LogFacade.BIND_THREAD_EXCEPTION;
-import static org.apache.catalina.LogFacade.CONTAINER_ALREADY_STARTED_EXCEPTION;
-import static org.apache.catalina.LogFacade.CONTAINER_NOT_STARTED_EXCEPTION;
-import static org.apache.catalina.LogFacade.DEPENDENCY_CHECK_EXCEPTION;
-import static org.apache.catalina.LogFacade.DUPLICATE_SERVLET_MAPPING_EXCEPTION;
-import static org.apache.catalina.LogFacade.ERROR_PAGE_LOCATION_EXCEPTION;
-import static org.apache.catalina.LogFacade.ERROR_PAGE_REQUIRED_EXCEPTION;
-import static org.apache.catalina.LogFacade.FILTER_MAPPING_INVALID_URL_EXCEPTION;
-import static org.apache.catalina.LogFacade.FILTER_MAPPING_NAME_EXCEPTION;
-import static org.apache.catalina.LogFacade.FILTER_WITHOUT_ANY_CLASS;
-import static org.apache.catalina.LogFacade.INIT_RESOURCES_EXCEPTION;
-import static org.apache.catalina.LogFacade.INVALID_ERROR_PAGE_CODE_EXCEPTION;
-import static org.apache.catalina.LogFacade.INVOKING_SERVLET_CONTAINER_INIT_EXCEPTION;
-import static org.apache.catalina.LogFacade.JSP_FILE_FINE;
-import static org.apache.catalina.LogFacade.LISTENER_STOP_EXCEPTION;
-import static org.apache.catalina.LogFacade.LOGIN_CONFIG_ERROR_PAGE_EXCEPTION;
-import static org.apache.catalina.LogFacade.LOGIN_CONFIG_LOGIN_PAGE_EXCEPTION;
-import static org.apache.catalina.LogFacade.LOGIN_CONFIG_REQUIRED_EXCEPTION;
-import static org.apache.catalina.LogFacade.MISS_PATH_OR_URL_PATTERN_EXCEPTION;
-import static org.apache.catalina.LogFacade.NO_WRAPPER_EXCEPTION;
-import static org.apache.catalina.LogFacade.NULL_EMPTY_FILTER_NAME_EXCEPTION;
-import static org.apache.catalina.LogFacade.NULL_EMPTY_SERVLET_NAME_EXCEPTION;
-import static org.apache.catalina.LogFacade.NULL_FILTER_INSTANCE_EXCEPTION;
-import static org.apache.catalina.LogFacade.NULL_SERVLET_INSTANCE_EXCEPTION;
-import static org.apache.catalina.LogFacade.RELOADING_STARTED;
-import static org.apache.catalina.LogFacade.REQUEST_DESTROY_EXCEPTION;
-import static org.apache.catalina.LogFacade.REQUEST_INIT_EXCEPTION;
-import static org.apache.catalina.LogFacade.RESETTING_CONTEXT_EXCEPTION;
-import static org.apache.catalina.LogFacade.RESOURCES_STARTED;
-import static org.apache.catalina.LogFacade.SECURITY_CONSTRAINT_PATTERN_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_CONTEXT_ALREADY_INIT_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_LOAD_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_MAPPING_INVALID_URL_EXCEPTION;
-import static org.apache.catalina.LogFacade.SERVLET_MAPPING_UNKNOWN_NAME_EXCEPTION;
-import static org.apache.catalina.LogFacade.STARTING_CONTEXT_EXCEPTION;
-import static org.apache.catalina.LogFacade.STARTING_RESOURCES_EXCEPTION;
-import static org.apache.catalina.LogFacade.STARTING_RESOURCE_EXCEPTION_MESSAGE;
-import static org.apache.catalina.LogFacade.STARTUP_CONTEXT_FAILED_EXCEPTION;
-import static org.apache.catalina.LogFacade.STOPPING_CONTEXT_EXCEPTION;
-import static org.apache.catalina.LogFacade.STOPPING_RESOURCES_EXCEPTION;
-import static org.apache.catalina.LogFacade.WRAPPER_ERROR_EXCEPTION;
-import static org.apache.catalina.core.Constants.DEFAULT_SERVLET_NAME;
-import static org.apache.catalina.core.Constants.JSP_SERVLET_NAME;
-import static org.apache.catalina.startup.Constants.WebDtdPublicId_22;
-import static org.apache.catalina.util.RequestUtil.urlDecode;
-import static org.apache.naming.resources.ProxyDirContext.CONTEXT;
-import static org.apache.naming.resources.ProxyDirContext.HOST;
-import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
-import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContainerInitializer;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextAttributeListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletRequestAttributeListener;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.http.HttpServletMapping;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionAttributeListener;
+import jakarta.servlet.http.HttpSessionIdListener;
+import jakarta.servlet.http.HttpSessionListener;
+import jakarta.servlet.http.HttpUpgradeHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -103,6 +51,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.AccessController;
@@ -202,31 +151,43 @@ import org.glassfish.web.loader.ServletContainerInitializerUtil;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.glassfish.web.valve.GlassFishValve;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.FilterRegistration;
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.Servlet;
-import jakarta.servlet.ServletContainerInitializer;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletContextAttributeListener;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRegistration;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletRequestAttributeListener;
-import jakarta.servlet.ServletRequestEvent;
-import jakarta.servlet.ServletRequestListener;
-import jakarta.servlet.SessionCookieConfig;
-import jakarta.servlet.SessionTrackingMode;
-import jakarta.servlet.descriptor.JspConfigDescriptor;
-import jakarta.servlet.http.HttpServletMapping;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionAttributeListener;
-import jakarta.servlet.http.HttpSessionIdListener;
-import jakarta.servlet.http.HttpSessionListener;
-import jakarta.servlet.http.HttpUpgradeHandler;
+import static com.sun.enterprise.util.Utility.isAllNull;
+import static com.sun.enterprise.util.Utility.isEmpty;
+import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
+import static java.text.MessageFormat.format;
+import static java.util.Collections.synchronizedList;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_DESTROYED;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.AFTER_CONTEXT_INITIALIZER_ON_STARTUP;
+import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_DESTROYED;
+import static org.apache.catalina.ContainerEvent.AFTER_REQUEST_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_DESTROYED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.BEFORE_CONTEXT_INITIALIZER_ON_STARTUP;
+import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_DESTROYED;
+import static org.apache.catalina.ContainerEvent.BEFORE_REQUEST_INITIALIZED;
+import static org.apache.catalina.ContainerEvent.PRE_DESTROY;
+import static org.apache.catalina.Globals.ALTERNATE_RESOURCES_ATTR;
+import static org.apache.catalina.Globals.ALT_DD_ATTR;
+import static org.apache.catalina.Globals.FACES_INITIALIZER;
+import static org.apache.catalina.Globals.META_INF_RESOURCES;
+import static org.apache.catalina.Globals.RESOURCES_ATTR;
+import static org.apache.catalina.LogFacade.*;
+import static org.apache.catalina.core.Constants.DEFAULT_SERVLET_NAME;
+import static org.apache.catalina.core.Constants.JSP_SERVLET_NAME;
+import static org.apache.catalina.startup.Constants.WebDtdPublicId_22;
+import static org.apache.catalina.util.RequestUtil.urlDecode;
+import static org.apache.naming.resources.ProxyDirContext.CONTEXT;
+import static org.apache.naming.resources.ProxyDirContext.HOST;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
+import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
 
 /**
  * Standard implementation of the <b>Context</b> interface. Each child container must be a Wrapper implementation to
@@ -4011,9 +3972,8 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     public void removeSecurityRoles() {
         // Inform interested listeners
         if (notifyContainerListeners) {
-            Iterator<String> i = securityRoles.iterator();
-            while (i.hasNext()) {
-                fireContainerEvent("removeSecurityRole", i.next());
+            for (String securityRole : securityRoles) {
+                fireContainerEvent("removeSecurityRole", securityRole);
             }
         }
 
@@ -4063,10 +4023,9 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     public int[] findStatusPages() {
         synchronized (statusPages) {
             int results[] = new int[statusPages.size()];
-            Iterator<Integer> elements = statusPages.keySet().iterator();
             int i = 0;
-            while (elements.hasNext()) {
-                results[i++] = elements.next();
+            for (Integer element : statusPages.keySet()) {
+                results[i++] = element;
             }
             return results;
         }
@@ -4186,9 +4145,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     @Override
     public void removeApplicationParameter(String name) {
         ApplicationParameter match = null;
-        Iterator<ApplicationParameter> i = applicationParameters.iterator();
-        while (i.hasNext()) {
-            ApplicationParameter applicationParameter = i.next();
+        for (ApplicationParameter applicationParameter : applicationParameters) {
             // Make sure this parameter is currently present
             if (name.equals(applicationParameter.getName())) {
                 match = applicationParameter;
@@ -4320,9 +4277,8 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     public void removeFilterMaps() {
         // Inform interested listeners
         if (notifyContainerListeners) {
-            Iterator<FilterMap> i = filterMaps.iterator();
-            while (i.hasNext()) {
-                fireContainerEvent("removeFilterMap", i.next());
+            for (FilterMap filterMap : filterMaps) {
+                fireContainerEvent("removeFilterMap", filterMap);
             }
         }
 
@@ -4534,9 +4490,8 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         synchronized (watchedResources) {
             // Inform interested listeners
             if (notifyContainerListeners) {
-                Iterator<String> i = watchedResources.iterator();
-                while (i.hasNext()) {
-                    fireContainerEvent("removeWatchedResource", i.next());
+                for (String element : watchedResources) {
+                    fireContainerEvent("removeWatchedResource", element);
                 }
             }
             watchedResources.clear();
@@ -5297,11 +5252,10 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     }
 
     protected void callServletContainerInitializers() throws LifecycleException {
-        Iterator<ServletContainerInitializer> initIterator = servletContainerInitializers.iterator();
         List<ServletContainerInitializer> loadedServletContainerInitializers = new ArrayList<>();
-        while (initIterator.hasNext()) {
+        for (ServletContainerInitializer servletContainerInitializer : servletContainerInitializers) {
             try {
-                loadedServletContainerInitializers.add(initIterator.next());
+                loadedServletContainerInitializers.add(servletContainerInitializer);
             } catch (ServiceConfigurationError e) {
                 log.log(SEVERE, "", e);
             }
@@ -6657,20 +6611,20 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
      * as relative to the current context root.
      */
     @Override
-    public java.net.URL getResource(String path) throws MalformedURLException {
-
-        if (path == null || !path.startsWith("/")) {
+    public URL getResource(String path) throws MalformedURLException {
+        log.log(FINEST, "getResource(path={0})", path);
+        if (path == null || path.isEmpty() || path.charAt(0) != '/') {
             String msg = format(rb.getString(LogFacade.INCORRECT_PATH), path);
             throw new MalformedURLException(msg);
         }
 
         path = RequestUtil.normalize(path);
         if (path == null) {
-            return (null);
+            return null;
         }
 
         String libPath = "/WEB-INF/lib/";
-        if ((path.startsWith(libPath)) && (path.endsWith(".jar"))) {
+        if (path.startsWith(libPath) && path.endsWith(".jar")) {
             File jarFile = null;
             if (isFilesystemBased()) {
                 jarFile = new File(getBasePath(docBase), path);
@@ -6678,46 +6632,36 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
                 jarFile = new File(getWorkPath(), path);
             }
             if (jarFile.exists()) {
-                return jarFile.toURL();
-            } else {
-                return null;
+                return jarFile.toURI().toURL();
             }
+            return null;
 
+        }
+        final DirContext resources;
+        if (alternateDocBases == null || alternateDocBases.isEmpty()) {
+            resources = context.getResources();
         } else {
-
-            DirContext resources = null;
-            if (alternateDocBases == null || alternateDocBases.size() == 0) {
-                resources = context.getResources();
+            AlternateDocBase match = AlternateDocBase.findMatch(path, alternateDocBases);
+            if (match != null) {
+                resources = ContextsAdapterUtility.unwrap(match.getResources());
             } else {
-                AlternateDocBase match = AlternateDocBase.findMatch(path, alternateDocBases);
-                if (match != null) {
-                    resources = ContextsAdapterUtility.unwrap(match.getResources());
-                } else {
-                    // None of the url patterns for alternate doc bases matched
-                    resources = getResources();
-                }
-            }
-
-            if (resources != null) {
-                String fullPath = getName() + path;
-                String hostName = getParent().getName();
-                try {
-                    resources.lookup(path);
-                    return new java.net.URL
-                    /*
-                     * SJSAS 6318494 ("jndi", null, 0, getJNDIUri(hostName, fullPath),
-                     */
-                    // START SJAS 6318494
-                    ("jndi", "", 0, getJNDIUri(hostName, fullPath),
-                            // END SJSAS 6318494
-                            new DirContextURLStreamHandler(resources));
-                } catch (Exception e) {
-                    // do nothing
-                }
+                // None of the url patterns for alternate doc bases matched
+                resources = getResources();
             }
         }
 
-        return (null);
+        if (resources != null) {
+            String fullPath = getName() + path;
+            String hostName = getParent().getName();
+            try {
+                resources.lookup(path);
+                return new URL("jndi", "", 0, getJNDIUri(hostName, fullPath),
+                    new DirContextURLStreamHandler(resources));
+            } catch (Exception e) {
+                // do nothing
+            }
+        }
+        return null;
     }
 
     /**

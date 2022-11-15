@@ -17,7 +17,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.utility;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Resources;
 
 import jakarta.inject.Inject;
@@ -28,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.PersistenceManagerFactoryResource;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.jdbc.config.JdbcResource;
@@ -48,9 +48,8 @@ public class PersistenceManagerFactoryResourceMigrator implements ConfigurationU
     public void postConstruct() {
         Collection<PersistenceManagerFactoryResource> pmfResources = resources.getResources(PersistenceManagerFactoryResource.class);
         for (final PersistenceManagerFactoryResource pmfResource : pmfResources) {
-            String jdbcResourceName = pmfResource.getJdbcResourceJndiName();
-
-            final JdbcResource jdbcResource = ConnectorsUtil.getResourceByName(resources, JdbcResource.class, jdbcResourceName);
+            final SimpleJndiName jdbcResourceName = SimpleJndiName.of(pmfResource.getJdbcResourceJndiName());
+            final JdbcResource jdbcResource = resources.getResourceByName(JdbcResource.class, jdbcResourceName);
 
             try {
                 ConfigSupport.apply(new SingleConfigCode<Resources>() {

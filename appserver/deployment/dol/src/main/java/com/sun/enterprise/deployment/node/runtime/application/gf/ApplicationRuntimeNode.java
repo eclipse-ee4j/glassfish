@@ -30,7 +30,6 @@ import com.sun.enterprise.deployment.node.runtime.RuntimeBundleNode;
 import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
 import com.sun.enterprise.deployment.node.runtime.ServiceRefNode;
 import com.sun.enterprise.deployment.node.runtime.common.SecurityRoleMappingNode;
-import com.sun.enterprise.deployment.runtime.common.GroupNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.PrincipalNameDescriptor;
 import com.sun.enterprise.deployment.runtime.common.SecurityRoleMapping;
 import com.sun.enterprise.deployment.util.DOLUtils;
@@ -167,6 +166,7 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
             DOLUtils.getDefaultLogger().finer("Ignoring unique id");
             return;
         } else if (element.getQName().equals(RuntimeTagNames.ARCHIVE_NAME)) {
+            descriptor.setAppName(value);
             descriptor.setArchiveName(value);
         } else if (element.getQName().equals(RuntimeTagNames.COMPATIBILITY)) {
             descriptor.setCompatibility(value);

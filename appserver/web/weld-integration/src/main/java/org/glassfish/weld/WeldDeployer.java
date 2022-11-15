@@ -36,7 +36,6 @@ import jakarta.servlet.ServletRequestListener;
 import jakarta.servlet.http.HttpSessionListener;
 import jakarta.servlet.jsp.tagext.JspTag;
 
-import java.lang.Runtime.Version;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -47,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeployCommandParameters;
@@ -93,6 +93,7 @@ import org.jboss.weld.transaction.spi.TransactionServices;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.cdi.CDILoggerInfo.ADDING_INJECTION_SERVICES;
 import static org.glassfish.cdi.CDILoggerInfo.JMS_MESSAGElISTENER_AVAILABLE;
@@ -276,9 +277,8 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 }
             }
 
-            BundleDescriptor bundle = webBundleDescriptor != null ? webBundleDescriptor : ejbBundle;
+            BundleDescriptor bundle = webBundleDescriptor == null ? ejbBundle : webBundleDescriptor;
             if (bundle != null) {
-
                 if (!beanDeploymentArchive.getBeansXml().getBeanDiscoveryMode().equals(BeanDiscoveryMode.NONE)) {
                     // Register EE injection manager at the bean deployment archive level.
                     // We use the generic InjectionService service to handle all EE-style
@@ -311,7 +311,10 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                         }
                     }
                 }
-
+                LOG.log(Level.CONFIG,
+                    "Adding pair bundle.class={0}, bundle.name={1} and archive.class={2}, archive.id={3}",
+                    new Object[] {bundle.getClass(), bundle.getName(), beanDeploymentArchive.getClass(),
+                        beanDeploymentArchive.getId()});
                 bundleToBeanDeploymentArchive.put(bundle, beanDeploymentArchive);
             }
         }
@@ -351,12 +354,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 // Get Current TCL
                 ClassLoader oldTCL = Thread.currentThread().getContextClassLoader();
 
-                invocationManager.pushAppEnvironment(new ApplicationEnvironment() {
-                    @Override
-                    public String getName() {
-                        return appInfo.getName();
-                    }
-                });
+                invocationManager.pushAppEnvironment(new WeldApplicationEnvironment(appInfo));
 
                 try {
                     bootstrap.startExtensions(deploymentImpl.getExtensions());
@@ -375,53 +373,12 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
                         EjbSupport originalEjbSupport = rootServices.get(EjbSupport.class);
                         if (originalEjbSupport != null) {
-
                             // We need to create a proxy instead of a simple wrapper, since EjbSupport
                             // references the type "EnhancedAnnotatedType", which the Weld OSGi bundle doesn't
                             // export.
+                            WeldInvocationHandler handler = new WeldInvocationHandler(deploymentImpl, originalEjbSupport, bootstrap);
                             EjbSupport proxyEjbSupport = (EjbSupport) Proxy.newProxyInstance(EjbSupport.class.getClassLoader(),
-                                    new Class[] { EjbSupport.class }, new InvocationHandler() {
-
-                                        @Override
-                                        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                                            if (method.getName().equals("isEjb")) {
-
-                                                    EjbSupport targetEjbSupport = getTargetEjbSupport((Class<?>) args[0]);
-
-                                                    // Unlikely to be null, but let's check to be sure.
-                                                    if (targetEjbSupport != null) {
-                                                        return method.invoke(targetEjbSupport, args);
-                                                    }
-
-                                            } else if (method.getName().equals("createSessionBeanAttributes")) {
-                                                Object enhancedAnnotated = args[0];
-
-                                                Class<?> beanClass = (Class<?>)
-                                                        enhancedAnnotated.getClass()
-                                                                         .getMethod("getJavaClass")
-                                                                         .invoke(enhancedAnnotated);
-
-                                                EjbSupport targetEjbSupport = getTargetEjbSupport(beanClass);
-                                                if (targetEjbSupport != null) {
-                                                    return method.invoke(targetEjbSupport, args);
-                                                }
-                                            }
-
-                                            return method.invoke(originalEjbSupport, args);
-                                       }
-
-                                    private EjbSupport getTargetEjbSupport(Class<?> beanClass) {
-                                        BeanDeploymentArchive ejbArchive = deploymentImpl.getBeanDeploymentArchive(beanClass);
-                                        if (ejbArchive == null) {
-                                            return null;
-                                        }
-
-                                        BeanManagerImpl ejbBeanManager = lookupBeanManager(beanClass, bootstrap.getManager(ejbArchive));
-
-                                        return ejbBeanManager.getServices().get(EjbSupport.class);
-                                    }
-                            });
-
+                                    new Class[] { EjbSupport.class }, handler);
                             rootServices.add(EjbSupport.class, proxyEjbSupport);
                         }
                     }
@@ -481,13 +438,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             try {
                 WeldBootstrap bootstrap = appInfo.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
                 if (bootstrap != null) {
-                    invocationManager.pushAppEnvironment(new ApplicationEnvironment() {
-                        @Override
-                        public String getName() {
-                            return appInfo.getName();
-                        }
-                    });
-
+                    invocationManager.pushAppEnvironment(new WeldApplicationEnvironment(appInfo));
                     try {
                         doBootstrapShutdown(appInfo);
                     } catch (Exception e) {
@@ -593,9 +544,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 // events (see GLASSFISH-16730)
                 if (isFullProfile) {
                     if (messageListenerClass.isAssignableFrom(bdaClazz)) {
-                        if (LOG.isLoggable(FINE)) {
-                            LOG.log(FINE, MDB_PIT_EVENT, new Object[] { bdaClazz });
-                        }
+                        LOG.log(FINE, MDB_PIT_EVENT, bdaClazz);
                         firePITEvent(bootstrap, bda, bdaClazz);
                     }
                 }
@@ -617,6 +566,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     public BeanDeploymentArchive getBeanDeploymentArchiveForBundle(BundleDescriptor bundle) {
+        LOG.log(FINEST, "getBeanDeploymentArchiveForBundle(bundle.class={0})", bundle.getClass());
         return bundleToBeanDeploymentArchive.get(bundle);
     }
 
@@ -625,6 +575,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     }
 
     public WeldBootstrap getBootstrapForApp(Application app) {
+        LOG.log(FINEST, "getBootstrapForApp(app.name={0})", app.getName());
         return appToBootstrap.get(app);
     }
 
@@ -670,18 +621,15 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         if (ejbBundle != null) {
             return ejbBundle;
         }
-
         WebBundleDescriptor webBundleDescriptor = context.getModuleMetaData(WebBundleDescriptor.class);
         if (webBundleDescriptor == null) {
             return null;
         }
-
         Collection<EjbBundleDescriptor> ejbBundles = webBundleDescriptor.getExtensionsDescriptors(EjbBundleDescriptor.class);
         if (ejbBundles.iterator().hasNext()) {
-            ejbBundle = ejbBundles.iterator().next();
+            return ejbBundles.iterator().next();
         }
-
-        return ejbBundle;
+        return null;
     }
 
     /**
@@ -701,4 +649,64 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         beanDeploymentArchive.getServices().add(InjectionServices.class, new NonModuleInjectionServices(injectionManager));
     }
 
+
+    private static class WeldInvocationHandler implements InvocationHandler {
+        private final DeploymentImpl deploymentImpl;
+        private final EjbSupport originalEjbSupport;
+        private final WeldBootstrap bootstrap;
+
+        private WeldInvocationHandler(DeploymentImpl deploymentImpl, EjbSupport originalEjbSupport,
+            WeldBootstrap bootstrap) {
+            this.deploymentImpl = deploymentImpl;
+            this.originalEjbSupport = originalEjbSupport;
+            this.bootstrap = bootstrap;
+        }
+
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+            if (method.getName().equals("isEjb")) {
+                EjbSupport targetEjbSupport = getTargetEjbSupport((Class<?>) args[0]);
+                // Unlikely to be null, but let's check to be sure.
+                if (targetEjbSupport != null) {
+                    return method.invoke(targetEjbSupport, args);
+                }
+            } else if (method.getName().equals("createSessionBeanAttributes")) {
+                Object enhancedAnnotated = args[0];
+
+                Class<?> beanClass = (Class<?>) enhancedAnnotated.getClass().getMethod("getJavaClass")
+                    .invoke(enhancedAnnotated);
+
+                EjbSupport targetEjbSupport = getTargetEjbSupport(beanClass);
+                if (targetEjbSupport != null) {
+                    return method.invoke(targetEjbSupport, args);
+                }
+            }
+            return method.invoke(originalEjbSupport, args);
+        }
+
+
+        private EjbSupport getTargetEjbSupport(Class<?> beanClass) {
+            BeanDeploymentArchive ejbArchive = deploymentImpl.getBeanDeploymentArchive(beanClass);
+            if (ejbArchive == null) {
+                return null;
+            }
+            BeanManagerImpl ejbBeanManager = lookupBeanManager(beanClass, bootstrap.getManager(ejbArchive));
+            return ejbBeanManager.getServices().get(EjbSupport.class);
+        }
+    }
+
+    private static class WeldApplicationEnvironment implements ApplicationEnvironment {
+        private final ApplicationInfo appInfo;
+
+        private WeldApplicationEnvironment(ApplicationInfo appInfo) {
+            this.appInfo = appInfo;
+        }
+
+
+        @Override
+        public String getName() {
+            return appInfo.getName();
+        }
+    }
 }

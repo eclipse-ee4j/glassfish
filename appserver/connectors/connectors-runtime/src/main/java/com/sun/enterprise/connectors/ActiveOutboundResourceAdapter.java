@@ -17,23 +17,6 @@
 
 package com.sun.enterprise.connectors;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.naming.Reference;
-
-import org.glassfish.connectors.config.ResourceAdapterConfig;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.types.Property;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.WorkContextHandler;
@@ -54,6 +37,23 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterAssociation;
 import jakarta.resource.spi.ResourceAdapterInternalException;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
+
+import org.glassfish.connectors.config.ResourceAdapterConfig;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.types.Property;
 
 /**
  * This class represents a live outbound resource adapter (1.5 compliant) i.e.
@@ -78,9 +78,6 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
     private final StringManager localStrings = StringManager.getManager(ActiveOutboundResourceAdapter.class);
 
     protected BootstrapContext bootStrapContextImpl;
-
-    public ActiveOutboundResourceAdapter() {
-    }
 
 
     /**
@@ -179,8 +176,8 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
     @Override
     public boolean handles(ConnectorDescriptor cd, String moduleName) {
         boolean adminObjectsDefined = false;
-        Set adminObjects = cd.getAdminObjects();
-        if (adminObjects != null && adminObjects.size() > 0) {
+        Set<AdminObject> adminObjects = cd.getAdminObjects();
+        if (adminObjects != null && !adminObjects.isEmpty()) {
             adminObjectsDefined = true;
         }
 

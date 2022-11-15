@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,6 @@
 
 package com.sun.appserv.connectors.internal;
 
-import java.beans.PropertyChangeEvent;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import jakarta.inject.Inject;
-import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
-import javax.naming.NamingException;
-
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.admin.CommandRunner;
-import org.glassfish.api.admin.ParameterMap;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.Changed;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.ConfigListener;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.NotProcessed;
-import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorDescriptorProxy;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
@@ -56,7 +29,37 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
+
+import java.beans.PropertyChangeEvent;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.InternalSystemAdministrator;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 
 /**
@@ -115,7 +118,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
 
     private void bindConnectorDescriptorProxies(String rarName) {
         //these proxies are needed as appclient container may lookup descriptors
-        String jndiName = ConnectorsUtil.getReservePrefixedJNDINameForDescriptor(rarName);
+        SimpleJndiName jndiName = ConnectorsUtil.getReservePrefixedJNDINameForDescriptor(rarName);
         ConnectorDescriptorProxy proxy = connectorDescriptorProxyProvider.get();
         proxy.setJndiName(jndiName);
         proxy.setRarName(rarName);
@@ -148,6 +151,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
         return true; // to be safe
     }
 
+    @Override
     public void resourceManagerLifecycleEvent(EVENT event){
         if(EVENT.STARTUP.equals(event)){
             resourceManagerStarted();
@@ -176,6 +180,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
         }
     }
 
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
             return ConfigSupport.sortAndDispatch(events, new ConfigChangeHandler(), logger);
     }
@@ -192,6 +197,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
          * @param changedType     type of the configuration object
          * @param changedInstance changed instance.
          */
+        @Override
         public <T extends ConfigBeanProxy> NotProcessed changed(Changed.TYPE type, Class<T> changedType,
                                                                 T changedInstance) {
             NotProcessed np = null;
@@ -251,7 +257,7 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
                                 ParameterMap params = new ParameterMap();
                                 params.add("appname",poolInfo.getApplicationName());
                                 params.add("modulename",poolInfo.getModuleName());
-                                params.add("DEFAULT", poolInfo.getName());
+                                params.add("DEFAULT", poolInfo.getName().toString());
                                 invocation.parameters(params).execute();
                                 if(report.getActionExitCode() == ActionReport.ExitCode.SUCCESS){
                                     logger.log(Level.INFO, "app-scoped.ping.connection.pool.success", poolInfo);

@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.glassfish.admin.rest.client.utils.MarshallingUtils.buildMapFromDocument;
@@ -52,15 +53,9 @@ public class SystemPropertiesITest extends RestTestBase {
 
     @Test
     public void createSystemProperties() {
-        final String prop1 = "property" + generateRandomString();
-        final String prop2 = "property" + generateRandomString();
-        Map<String, String> payload = new HashMap<>() {
-
-            {
-                put(prop1, "value1");
-                put(prop2, "value2");
-            }
-        };
+        final String prop1 = "property" + RandomGenerator.generateRandomString();
+        final String prop2 = "property" + RandomGenerator.generateRandomString();
+        Map<String, String> payload = Map.of(prop1, "value1", prop2, "value2");
         Response response = managementClient.post(URL_DAS_SYSTEM_PROPERTIES, payload);
         assertEquals(200, response.getStatus());
         response = managementClient.get(URL_DAS_SYSTEM_PROPERTIES);
@@ -86,7 +81,7 @@ public class SystemPropertiesITest extends RestTestBase {
 
     @Test
     public void createPropertiesWithColons() {
-        final String prop1 = "property" + generateRandomString();
+        final String prop1 = "property" + RandomGenerator.generateRandomString();
         Map<String, String> payload = new HashMap<>() {{
             put(prop1, "http://localhost:4848");
         }};
@@ -113,15 +108,15 @@ public class SystemPropertiesITest extends RestTestBase {
 
     @Test
     public void testNotResolvingDasSystemProperties() {
-        final String prop1 = "property" + generateRandomString();
+        final String prop1 = "property" + RandomGenerator.generateRandomString();
         createAndTestConfigProperty(prop1, PROP_VALUE, "server-config");
         createAndTestInstanceOverride(prop1, PROP_VALUE, PROP_VALUE+"-instace", "server");
     }
 
     @Test
     public void testNotResolvingDasInstanceProperties() {
-        final String instanceName = "in" + generateRandomNumber();
-        final String propertyName = "property" + generateRandomString();
+        final String instanceName = "in" + RandomGenerator.generateRandomNumber();
+        final String propertyName = "property" + RandomGenerator.generateRandomString();
 
         Response response = managementClient.post(URL_CREATE_INSTANCE, Map.of("id", instanceName, "node", "localhost-domain1"));
         assertEquals(200, response.getStatus());
@@ -132,9 +127,9 @@ public class SystemPropertiesITest extends RestTestBase {
 
     @Test
     public void testNotResolvingClusterProperties() {
-        final String propertyName = "property" + generateRandomString();
-        final String clusterName = "cluster_" + generateRandomNumber();
-        final String instanceName = clusterName + "_instance_" + generateRandomNumber();
+        final String propertyName = "property" + RandomGenerator.generateRandomString();
+        final String clusterName = "cluster_" + RandomGenerator.generateRandomNumber();
+        final String instanceName = clusterName + "_instance_" + RandomGenerator.generateRandomNumber();
         createCluster(clusterName);
         createClusterInstance(clusterName, instanceName);
 

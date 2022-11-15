@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,16 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
+import jakarta.inject.Inject;
+
+import javax.naming.NamingException;
+
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import javax.naming.NamingException;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Naming Object Proxy to handle the Default ManagedScheduledExecutorService.
@@ -33,7 +37,7 @@ import javax.naming.NamingException;
 @NamespacePrefixes({DefaultManagedScheduledExecutorService.DEFAULT_MANAGED_SCHEDULED_EXECUTOR_SERVICE})
 public class DefaultManagedScheduledExecutorService implements NamedNamingObjectProxy, DefaultResourceProxy {
 
-    static final String DEFAULT_MANAGED_SCHEDULED_EXECUTOR_SERVICE = "java:comp/DefaultManagedScheduledExecutorService";
+    static final String DEFAULT_MANAGED_SCHEDULED_EXECUTOR_SERVICE = JNDI_CTX_JAVA_COMPONENT + "DefaultManagedScheduledExecutorService";
     static final String DEFAULT_MANAGED_SCHEDULED_EXECUTOR_SERVICE_PHYS = "concurrent/__defaultManagedScheduledExecutorService";
 
     // Ensure that config for this object has been created

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,24 +21,37 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.resource.ResourceException;
+
+import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Properties;
+
 import org.glassfish.api.I18n;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
-import org.glassfish.resources.mail.config.MailResource;
 import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.glassfish.resources.mail.config.MailResource;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import jakarta.inject.Inject;
-import jakarta.resource.ResourceException;
-import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Properties;
-
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_DEBUG;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_FROM_ADDRESS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_HOST;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_STORE_PROTO;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_STORE_PROTO_CLASS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_TRANS_PROTO;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_TRANS_PROTO_CLASS;
+import static org.glassfish.resources.admin.cli.ResourceConstants.MAIL_USER;
 
 
 @Service(name = ServerTags.MAIL_RESOURCE)
@@ -67,10 +81,12 @@ public class MailResourceManager implements org.glassfish.resources.admin.cli.Re
     @Inject
     private BindableResourcesHelper resourcesHelper;
 
+    @Override
     public String getResourceType() {
         return ServerTags.MAIL_RESOURCE;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
         setAttributes(attributes, target);
@@ -90,18 +106,15 @@ public class MailResourceManager implements org.glassfish.resources.admin.cli.Re
         }
 
         try {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                public Object run(Resources param) throws PropertyVetoException,
-                        TransactionFailure {
-                    MailResource newResource = createConfigBean(param, properties);
-                    param.getResources().add(newResource);
-                    return newResource;
-                }
-            }, resources);
-
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
-
+            SingleConfigCode<Resources> configCode = param -> {
+                MailResource newResource = createConfigBean(param, properties);
+                param.getResources().add(newResource);
+                return newResource;
+            };
+            ConfigSupport.apply(configCode, resources);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
             String msg = localStrings.getLocalString(
                     "create.mail.resource.success",
                     "Mail Resource {0} created.", jndiName);
@@ -163,7 +176,7 @@ public class MailResourceManager implements org.glassfish.resources.admin.cli.Re
             newResource.setDescription(description);
         }
         if (props != null) {
-            for (java.util.Map.Entry e : props.entrySet()) {
+            for (Entry<?, ?> e : props.entrySet()) {
                 Property prop = newResource.createChild(Property.class);
                 prop.setName((String) e.getKey());
                 prop.setValue((String) e.getValue());
@@ -192,6 +205,7 @@ public class MailResourceManager implements org.glassfish.resources.admin.cli.Re
         description = (String) attributes.get(DESCRIPTION);
     }
 
+    @Override
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
             throws Exception {
         setAttributes(attributes, null);

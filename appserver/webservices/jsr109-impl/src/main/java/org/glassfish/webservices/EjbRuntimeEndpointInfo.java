@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,11 @@
 
 package org.glassfish.webservices;
 
-import com.sun.enterprise.deployment.*;
+import com.sun.enterprise.deployment.Addressing;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.InjectionTarget;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.api.WSBinding;
@@ -26,26 +31,29 @@ import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.ServletAdapterList;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.ejb.api.EJBInvocation;
-import org.glassfish.ejb.api.EjbEndpointFacade;
-import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.internal.data.ApplicationRegistry;
 
 import jakarta.xml.ws.WebServiceContext;
 import jakarta.xml.ws.WebServiceFeature;
 import jakarta.xml.ws.soap.AddressingFeature;
 import jakarta.xml.ws.soap.MTOMFeature;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.ejb.api.EJBInvocation;
+import org.glassfish.ejb.api.EjbEndpointFacade;
+import org.glassfish.internal.data.ApplicationInfo;
+import org.glassfish.internal.data.ApplicationRegistry;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
 
 /**
@@ -114,14 +122,10 @@ public class EjbRuntimeEndpointInfo {
 
 
                         EjbDescriptor ejbDesc = endpoint.getEjbComponentImpl();
-                        Iterator<ResourceReferenceDescriptor> it = ejbDesc.getResourceReferenceDescriptors().iterator();
-                        while(it.hasNext()) {
-                            ResourceReferenceDescriptor r = it.next();
+                        for (ResourceReferenceDescriptor r : ejbDesc.getResourceReferenceDescriptors()) {
                             if(r.isWebServiceContext()) {
-                                Iterator<InjectionTarget> iter = r.getInjectionTargets().iterator();
                                 boolean matchingClassFound = false;
-                                while(iter.hasNext()) {
-                                    InjectionTarget target = iter.next();
+                                for (InjectionTarget target : r.getInjectionTargets()) {
                                     if(ejbDesc.getEjbClassName().equals(target.getClassName())) {
                                         matchingClassFound = true;
                                         break;
@@ -132,7 +136,8 @@ public class EjbRuntimeEndpointInfo {
                                 }
                                 try {
                                     javax.naming.InitialContext ic = new javax.naming.InitialContext();
-                                    wsCtxt = (WebServiceContextImpl) ic.lookup("java:comp/env/" + r.getName());
+                                    wsCtxt = (WebServiceContextImpl) ic
+                                        .lookup(JNDI_CTX_JAVA_COMPONENT_ENV + r.getName());
                                 } catch (Throwable t) {
                                     if (logger.isLoggable(Level.FINE)) {
                                         logger.log(Level.FINE, LogUtils.ERROR_EREI, t.getCause());
@@ -212,7 +217,7 @@ public class EjbRuntimeEndpointInfo {
                     boolean mtomEnabled = wsu.getMtom(endpoint);
                     WSBinding binding = null;
 
-                    ArrayList<WebServiceFeature> wsFeatures = new ArrayList<WebServiceFeature>();
+                    ArrayList<WebServiceFeature> wsFeatures = new ArrayList<>();
                     // Only if MTOm is enabled create the Binding with the MTOMFeature
                     if (mtomEnabled) {
                         int mtomThreshold = endpoint.getMtomThreshold() != null ? Integer.parseInt(endpoint.getMtomThreshold()):0;
@@ -269,8 +274,9 @@ public class EjbRuntimeEndpointInfo {
                         adapterList = new ServletAdapterList();
                     }
                     Object obj = adapterList.createAdapter(endpoint.getName(), urlPattern, wsep);
-                    if (obj instanceof ServletAdapter)
+                    if (obj instanceof ServletAdapter) {
                         adapter = ServletAdapter.class.cast(obj);
+                    }
                     handlersConfigured=true;
                 } catch (Throwable t) {
                         LogHelper.log(logger, Level.SEVERE,
@@ -298,14 +304,11 @@ public class EjbRuntimeEndpointInfo {
         WebServiceContextImpl wsc = null;
 
         EjbDescriptor bundle = endpoint.getEjbComponentImpl();
-        Iterator<ResourceReferenceDescriptor> it = bundle.getResourceReferenceDescriptors().iterator();
-
-        while(it.hasNext()) {
-            ResourceReferenceDescriptor r = it.next();
+        for (ResourceReferenceDescriptor r : bundle.getResourceReferenceDescriptors()) {
             if(r.isWebServiceContext()) {
                 try {
                     javax.naming.InitialContext ic = new javax.naming.InitialContext();
-                    wsc = (WebServiceContextImpl) ic.lookup("java:comp/env/" + r.getName());
+                    wsc = (WebServiceContextImpl) ic.lookup(JNDI_CTX_JAVA_COMPONENT_ENV + r.getName());
                 } catch (Throwable t) {
                     if (logger.isLoggable(Level.FINE)) {
                         logger.log(Level.FINE, LogUtils.EXCEPTION_THROWN, t);
@@ -365,8 +368,10 @@ public class EjbRuntimeEndpointInfo {
 
     private AddressingFeature.Responses getResponse(String s) {
         if (s != null) {
-            return AddressingFeature.Responses.valueOf(AddressingFeature.Responses.class,s);
-        } else return AddressingFeature.Responses.ALL;
+            return Enum.valueOf(AddressingFeature.Responses.class,s);
+        } else {
+            return AddressingFeature.Responses.ALL;
+        }
 
     }
 

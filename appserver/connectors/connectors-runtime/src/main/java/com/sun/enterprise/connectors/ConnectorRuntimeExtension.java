@@ -17,6 +17,10 @@
 
 package com.sun.enterprise.connectors;
 
+import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.deployment.Application;
+
 import java.util.Collection;
 
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -24,14 +28,9 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.deployment.Application;
-
 /**
  * @author Shalini M
  */
-
 @Contract
 public interface ConnectorRuntimeExtension {
 
@@ -42,16 +41,14 @@ public interface ConnectorRuntimeExtension {
      */
     Collection<Resource> getAllSystemRAResourcesAndPools();
 
-
     void registerDataSourceDefinitions(Application application);
 
     void unRegisterDataSourceDefinitions(Application application);
 
-    Object lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException;
+    <T> T lookupDataSourceInDAS(ResourceInfo resourceInfo) throws ConnectorRuntimeException;
 
-    DeferredResourceConfig getDeferredResourceConfig(Object resource,
-                                                            Object pool, String resType, String raName)
-            throws ConnectorRuntimeException;
+    DeferredResourceConfig getDeferredResourceConfig(Object resource, Object pool, String resType, String raName)
+        throws ConnectorRuntimeException;
 
     String getResourceType(ConfigBeanProxy cb);
 

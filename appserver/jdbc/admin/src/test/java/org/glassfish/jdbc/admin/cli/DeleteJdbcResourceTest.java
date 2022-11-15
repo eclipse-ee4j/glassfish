@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,6 +27,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import jakarta.inject.Inject;
+
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
@@ -45,8 +47,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -165,7 +165,6 @@ public class DeleteJdbcResourceTest {
     @Test
     public void testExecuteSuccessTargetServer() {
         // Set operand
-        parameters.add("target", "server");
         parameters.add("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command

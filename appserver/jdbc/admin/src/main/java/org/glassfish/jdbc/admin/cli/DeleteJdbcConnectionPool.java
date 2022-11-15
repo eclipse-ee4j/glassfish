@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,12 @@ import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -28,14 +34,11 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Delete JDBC Connection Pool Command
@@ -55,9 +58,6 @@ public class DeleteJdbcConnectionPool implements AdminCommand {
     @Param(name="jdbc_connection_pool_id", primary=true)
     private String poolName;
 
-    @Param(optional=true, obsolete = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-
     @Inject
     private Domain domain;
 
@@ -73,13 +73,17 @@ public class DeleteJdbcConnectionPool implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         try {
             JDBCConnectionPoolManager jdbcConnMgr = new JDBCConnectionPoolManager();
-            ResourceStatus rs = jdbcConnMgr.delete(servers, clusters, domain.getResources(), cascade.toString(), poolName);
-            if (rs.getMessage() != null) report.setMessage(rs.getMessage());
+            final SimpleJndiName jndiName = SimpleJndiName.of(poolName);
+            ResourceStatus rs = jdbcConnMgr.delete(servers, clusters, domain.getResources(), cascade.toString(), jndiName);
+            if (rs.getMessage() != null) {
+                report.setMessage(rs.getMessage());
+            }
             if (rs.getStatus() == ResourceStatus.SUCCESS) {
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             } else {

@@ -59,6 +59,13 @@ public class ProcessEnvironment {
         return type;
     }
 
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + '[' + getProcessType() + ']';
+    }
+
+
     /**
      * Enumeration of the supported process types Server is the application server ACC is the application client Other is a
      * standalone java.

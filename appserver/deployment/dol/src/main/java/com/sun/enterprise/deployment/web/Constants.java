@@ -72,17 +72,6 @@ public final class Constants {
     public static final String ENVIRONMENT_VALUE = "env-entry-value";
     public static final String ENVIRONMENT_TYPE = "env-entry-type";
 
-
-    public static final String RESOURCE_REFERENCE = "resource-ref";
-    public static final String RESOURCE_REFERENCE_NAME = "res-ref-name";
-    public static final String RESOURCE_TYPE = "res-type";
-    public static final String RESOURCE_AUTHORIZATION = "res-auth";
-
-
-    public static final String RESOURCE_ENV_REFERENCE = "resource-env-ref";
-    public static final String RESOURCE_ENV_REFERENCE_NAME = "resource-env-ref-name";
-    public static final String RESOURCE_ENV_REFERENCE_TYPE = "resource-env-ref-type";
-
     public static final String SECURITY_ROLE = "security-role";
     public static final String ROLE_NAME = "role-name";
     public static final String NAME = "name";

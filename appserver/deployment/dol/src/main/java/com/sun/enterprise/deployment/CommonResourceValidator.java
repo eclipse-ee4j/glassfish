@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package com.sun.enterprise.deployment;
 
 import java.util.Vector;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
@@ -26,13 +28,12 @@ import org.glassfish.deployment.common.Descriptor;
 public class CommonResourceValidator {
 
     private Descriptor descriptor;
-    private String jndiName;
+    private final SimpleJndiName jndiName;
     private Vector<String> scope;
 
-
-    public CommonResourceValidator(Descriptor descriptor,String jndiName, Vector<String> scope) {
+    public CommonResourceValidator(Descriptor descriptor, SimpleJndiName jndiName, Vector<String> scope) {
         this.setDescriptor(descriptor);
-        this.setJndiName(jndiName);
+        this.jndiName = jndiName;
         this.setScope(scope);
     }
 
@@ -44,12 +45,8 @@ public class CommonResourceValidator {
         this.descriptor = descriptor;
     }
 
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         return jndiName;
-    }
-
-    public void setJndiName(String jndiName) {
-        this.jndiName = jndiName;
     }
 
     public Vector<String> getScope() {

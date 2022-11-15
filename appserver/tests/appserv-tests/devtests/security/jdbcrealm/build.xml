@@ -257,7 +257,7 @@
   <target name="create-jdbcrealm-resource" depends="init-common">
     <exec executable="${ASADMIN}">
       <arg line="create-jdbc-resource" />
-      <arg line="${as.props} --target=${appserver.instance.name}" />
+      <arg line="${as.props}" />
       <arg line="--connectionpoolid ${db.poolname}" />
       <arg line="${db.jndiname}" />
     </exec>
@@ -266,7 +266,7 @@
   <target name="delete-jdbcrealm-resource" depends="init-common">
     <exec executable="${ASADMIN}">
       <arg line="delete-jdbc-resource" />
-      <arg line="${as.props} --target=${appserver.instance.name}" />
+      <arg line="${as.props}" />
       <arg line="${db.jndiname}" />
     </exec>
   </target>
@@ -286,7 +286,7 @@
   <target name="delete-jdbcrealm-connection-pool" depends="init-common">
     <exec executable="${ASADMIN}">
       <arg line="delete-jdbc-connection-pool" />
-      <arg line="${as.props} --target=${appserver.instance.name}" />
+      <arg line="${as.props}" />
       <arg line="${db.poolname}" />
     </exec>
   </target>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,32 +18,34 @@
 package com.sun.enterprise.naming.util;
 
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
-import org.jvnet.hk2.annotations.Service;
 
 import javax.naming.Context;
 
+import org.glassfish.api.naming.SimpleJndiName;
+import org.jvnet.hk2.annotations.Service;
+
 @Service
-public class SimpleNamingObjectFactory
-    implements NamingObjectFactory {
+public class SimpleNamingObjectFactory<T> implements NamingObjectFactory {
 
-    private String name;
+    private final SimpleJndiName name;
+    private final T value;
 
-    private Object value;
-
-    public SimpleNamingObjectFactory(String name, Object value) {
+    public SimpleNamingObjectFactory(SimpleJndiName name, T value) {
         this.name = name;
         this.value = value;
     }
 
+    @Override
     public boolean isCreateResultCacheable() {
         return true;
     }
 
-    public String getName() {
+    public SimpleJndiName getName() {
         return name;
     }
 
-    public Object create(Context ic) {
+    @Override
+    public T create(Context ic) {
         return value;
     }
 }

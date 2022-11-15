@@ -32,6 +32,7 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ManagedThreadFactory;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.LogFacade;
@@ -72,8 +73,7 @@ public class ManagedThreadFactoryDeployer implements ResourceDeployer<ManagedThr
 
     @Override
     public void deployResource(ManagedThreadFactory resource) throws Exception {
-        ManagedThreadFactory factory = resource;
-        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(factory);
+        ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
         deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
     }
 
@@ -84,7 +84,7 @@ public class ManagedThreadFactoryDeployer implements ResourceDeployer<ManagedThr
             LOG.log(Level.WARNING, LogFacade.DEPLOY_ERROR_NULL_CONFIG, "ManagedThreadFactory");
             return;
         }
-        String jndiName = resource.getJndiName();
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getJndiName());
         ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         ManagedThreadFactoryCfg config = new ManagedThreadFactoryCfg(resource);
         Reference ref = new Reference(
@@ -114,10 +114,9 @@ public class ManagedThreadFactoryDeployer implements ResourceDeployer<ManagedThr
 
     @Override
     public void undeployResource(ManagedThreadFactory resource, String applicationName, String moduleName) throws Exception {
-        ManagedThreadFactory factory = resource;
-        ResourceInfo resourceInfo = new ResourceInfo(factory.getJndiName(), applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, factory.getJndiName());
-        // stop the runtime object
-        concurrentRuntime.shutdownManagedThreadFactory(factory.getJndiName());
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        namingService.unpublishObject(resourceInfo, jndiName);
+        concurrentRuntime.shutdownManagedThreadFactory(jndiName);
     }
 }

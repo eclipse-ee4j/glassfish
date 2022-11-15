@@ -17,11 +17,6 @@
 
 package com.sun.enterprise.resource.pool;
 
-import java.util.Hashtable;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.jvnet.hk2.annotations.Contract;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants.PoolType;
 import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.appserv.connectors.internal.api.TransactedPoolManager;
@@ -37,6 +32,12 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.ManagedConnection;
 import jakarta.resource.spi.RetryableUnavailableException;
 import jakarta.transaction.Transaction;
+
+import java.util.Hashtable;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * PoolManager manages jdbc and connector connection pool
@@ -107,7 +108,7 @@ public interface PoolManager extends TransactedPoolManager {
      */
     Object getResource(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info) throws PoolingException, RetryableUnavailableException;
 
-    ResourceReferenceDescriptor getResourceReference(String jndiName, String logicalName);
+    ResourceReferenceDescriptor getResourceReference(SimpleJndiName jndiName, SimpleJndiName logicalName);
 
     void killAllPools();
 

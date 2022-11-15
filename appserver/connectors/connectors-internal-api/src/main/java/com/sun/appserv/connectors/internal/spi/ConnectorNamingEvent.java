@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package com.sun.appserv.connectors.internal.spi;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Class representing Connector Naming Event.<br>
  * Can be used to represent different states. Eg: Object-Bind, Object-Rebind, Object-Remove
@@ -23,21 +26,21 @@ package com.sun.appserv.connectors.internal.spi;
  */
 public class ConnectorNamingEvent{
 
-    private String jndiName; //name of the object
-    private int eventType;
+    private final SimpleJndiName jndiName; //name of the object
+    private final int eventType;
     public static final int EVENT_OBJECT_REBIND = 0;
 
 
-    public ConnectorNamingEvent(String jndiName, int eventType){
-        this.jndiName=jndiName;
-        this.eventType= eventType;
+    public ConnectorNamingEvent(SimpleJndiName jndiName, int eventType) {
+        this.jndiName = jndiName;
+        this.eventType = eventType;
     }
 
     /**
      * To get JndiName of the object
      * @return   jndiName
      */
-    public String getJndiName(){
+    public SimpleJndiName getJndiName(){
         return jndiName;
     }
 
@@ -53,6 +56,7 @@ public class ConnectorNamingEvent{
      * Returns the state of the object
      * @return  String
      */
+    @Override
     public String toString(){
         StringBuffer objectState = new StringBuffer(  "ConnectorNamingEvent : " +
                 "{"+ jndiName +", " + getEventName(eventType) + "}" );

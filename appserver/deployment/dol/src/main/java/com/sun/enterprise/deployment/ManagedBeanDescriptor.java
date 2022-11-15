@@ -31,14 +31,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 import static com.sun.enterprise.deployment.MethodDescriptor.EJB_BEAN;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * Descriptor representing a Jakarta EE Managed Bean.
  *
  * @author Kenneth Saks
  */
-public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
+public final class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
     private static final long serialVersionUID = 1L;
 
@@ -307,7 +311,10 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     }
 
 
-    public String getGlobalJndiName() {
+    /**
+     * @return can be null or {@link SimpleJndiName}
+     */
+    public SimpleJndiName getGlobalJndiName() {
         if (enclosingBundle == null) {
             return null;
         }
@@ -316,13 +323,13 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
         String appName = app.isVirtual() ? null : enclosingBundle.getApplication().getAppName();
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
 
-        StringBuilder javaGlobalPrefix = new StringBuilder("java:global/");
+        StringBuilder javaGlobalPrefix = new StringBuilder(64).append(JNDI_CTX_JAVA_GLOBAL);
         if (appName != null) {
             javaGlobalPrefix.append(appName);
-            javaGlobalPrefix.append("/");
+            javaGlobalPrefix.append('/');
         }
         javaGlobalPrefix.append(modName);
-        javaGlobalPrefix.append("/");
+        javaGlobalPrefix.append('/');
 
 
         // If the managed bean is named, use the name for the final component
@@ -332,18 +339,19 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         String componentName = isNamed() ? name : "___internal_managed_bean_" + beanClassName;
         javaGlobalPrefix.append(componentName);
-        return javaGlobalPrefix.toString();
+        return new SimpleJndiName(javaGlobalPrefix.toString());
     }
 
-    public String getAppJndiName() {
+
+    public SimpleJndiName getAppJndiName() {
         if (enclosingBundle == null) {
             return null;
         }
 
         String modName = enclosingBundle.getModuleDescriptor().getModuleName();
-        StringBuilder javaAppPrefix = new StringBuilder("java:app/");
+        StringBuilder javaAppPrefix = new StringBuilder().append(JNDI_CTX_JAVA_APP);
         javaAppPrefix.append(modName);
-        javaAppPrefix.append("/");
+        javaAppPrefix.append('/');
 
         // If the managed bean is named, use the name for the final component
         // of the managed bean global name.  Otherwise, use a derived internal
@@ -352,7 +360,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
 
         String componentName = isNamed() ? name : "___internal_managed_bean_" + beanClassName;
         javaAppPrefix.append(componentName);
-        return javaAppPrefix.toString();
+        return new SimpleJndiName(javaAppPrefix.toString());
 
     }
 
@@ -376,9 +384,7 @@ public class ManagedBeanDescriptor extends JndiEnvironmentRefsGroupDescriptor {
     public List<InjectionCapable> getInjectableResourcesByClass(String className) {
         List<InjectionCapable> injectables = new LinkedList<>();
         for (EnvironmentProperty envEntry : getEnvironmentProperties()) {
-            // Only env-entries that have been assigned a value are
-            // eligible for injection.
-            if (envEntry.hasAValue()) {
+            if (envEntry.hasContent()) {
                 injectables.add(envEntry);
             }
         }

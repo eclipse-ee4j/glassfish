@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,15 @@
 
 package com.sun.enterprise.config.serverbeans;
 
-import org.jvnet.hk2.config.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.*;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 
 /**
  * Applications can lookup resources registered in the server. These can be through portable JNDI names (eg:
@@ -69,23 +76,18 @@ public interface Resources extends ConfigBeanProxy {
      * Any sub type(s) of resource is allowed.
      */
     @Element("*")
-    public List<Resource> getResources();
+    List<Resource> getResources();
 
     @DuckTyped
-    public <T> Collection<T> getResources(Class<T> type);
+    <T> Collection<T> getResources(Class<T> type);
 
     @DuckTyped
-    public <T> Resource getResourceByName(Class<T> type, String name);
-
-    /*
-    @DuckTyped
-    public Collection<BindableResource> getResourcesOfPool(String connectionPoolName);
-    */
+    <T extends Resource> T getResourceByName(Class<T> type, SimpleJndiName name);
 
     public class Duck {
 
         public static <T> Collection<T> getResources(Resources resources, Class<T> type) {
-            Collection<T> filteredResources = new ArrayList<T>();
+            Collection<T> filteredResources = new ArrayList<>();
             for (Resource resource : resources.getResources()) {
                 if (type.isInstance(resource)) {
                     filteredResources.add(type.cast(resource));
@@ -94,13 +96,11 @@ public interface Resources extends ConfigBeanProxy {
             return filteredResources;
         }
 
-        public static <T> Resource getResourceByName(Resources resources, Class<T> type, String name) {
-            Resource foundRes = null;
-            Iterator itr = resources.getResources(type).iterator();
-            while (itr.hasNext()) {
-                Resource res = (Resource) (itr.next());
+        public static <T extends Resource> T getResourceByName(Resources resources, Class<T> type, SimpleJndiName name) {
+            T foundRes = null;
+            for (T res : resources.getResources(type)) {
                 String resourceName = res.getIdentity();
-                if (name.equals(resourceName)) {
+                if (name.toString().equals(resourceName)) {
                     foundRes = res;
                     break;
                 }
@@ -109,11 +109,10 @@ public interface Resources extends ConfigBeanProxy {
             // eg: its possible that the requested resource is "ConnectorResource",
             // and matching resource is "JdbcResource" as we filter based on
             // the generic type (in this case BindableResource) and not on exact type.
-            if (type != null && foundRes != null && type.isAssignableFrom(foundRes.getClass())) {
-                return foundRes;
-            } else {
+            if (type == null || foundRes == null || !type.isAssignableFrom(foundRes.getClass())) {
                 return null;
             }
+            return foundRes;
         }
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,15 @@
 
 package com.sun.ejb.containers;
 
-import org.glassfish.api.naming.NamespacePrefixes;
-import org.glassfish.api.naming.NamedNamingObjectProxy;
-import org.glassfish.api.invocation.ComponentInvocation;
-
 import com.sun.ejb.EjbInvocation;
 
-import org.jvnet.hk2.annotations.Service;
-
 import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Proxy for accessing EJBContext objects when requested by lookup or injection.
@@ -35,37 +36,32 @@ import javax.naming.NamingException;
  */
 @Service
 @NamespacePrefixes(EJBContextNamingProxy.EJB_CONTEXT)
-public class EJBContextNamingProxy
-        implements NamedNamingObjectProxy {
+public class EJBContextNamingProxy implements NamedNamingObjectProxy {
 
-    static final String EJB_CONTEXT
-            = "java:comp/EJBContext";
+    static final String EJB_CONTEXT = SimpleJndiName.JNDI_CTX_JAVA_COMPONENT + "EJBContext";
 
+    @Override
     public Object handle(String name) throws NamingException {
-
         if (EJB_CONTEXT.equals(name)) {
             return getEJBContextObject();
         }
         return null;
     }
 
-    private Object getEJBContextObject() {
 
+    private Object getEJBContextObject() {
         // Cannot store EjbContainerUtilImpl.getInstance() in an instance
         // variable because it shouldn't be accessed before EJB container
         // is initialized.
         // NamedNamingObjectProxy is initialized on the first lookup.
 
-        ComponentInvocation currentInv =
-                EjbContainerUtilImpl.getInstance().getCurrentInvocation();
+        ComponentInvocation currentInv = EjbContainerUtilImpl.getInstance().getCurrentInvocation();
 
-        if(currentInv == null) {
+        if (currentInv == null) {
             throw new IllegalStateException("no current invocation");
-        } else if (currentInv.getInvocationType() !=
-                   ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) {
-            throw new IllegalStateException
-                    ("Illegal invocation type for EJB Context : "
-                     + currentInv.getInvocationType());
+        } else if (currentInv.getInvocationType() != ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) {
+            throw new IllegalStateException(
+                "Illegal invocation type for EJB Context : " + currentInv.getInvocationType());
         }
 
         return ((EjbInvocation) currentInv).context;

@@ -45,6 +45,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
         webServices = new HashSet<>();
     }
 
+
     /**
      * @return the default version of the deployment descriptor
      * loaded by this descriptor
@@ -74,7 +75,7 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
     public WebService getWebServiceByName(String webServiceName) {
         for (WebService webService : webServices) {
-            if (webService.getDisplayName().equals(webServiceName)) {
+            if (webService.getName().equals(webServiceName)) {
                 return webService;
             }
         }

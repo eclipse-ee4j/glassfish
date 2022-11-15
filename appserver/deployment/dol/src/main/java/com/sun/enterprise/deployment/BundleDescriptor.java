@@ -113,7 +113,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Sets the application to which I belong.
      */
-    public void setApplication(Application application) {
+    public final void setApplication(Application application) {
         this.application = application;
         for (List<? extends RootDeploymentDescriptor> extensionsByType : extensions.values()) {
             for (RootDeploymentDescriptor extension : extensionsByType) {
@@ -158,7 +158,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * The application to which I belong, or none if I am standalone.
      */
-    public Application getApplication() {
+    public final Application getApplication() {
         return application;
     }
 
@@ -496,12 +496,10 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
         Collection<InjectionCapable> allEnvProps = new HashSet<>();
 
         for (EnvironmentProperty envEntry : jndiNameEnv.getEnvironmentProperties()) {
-            // Only env-entries that have been assigned a value are
-            // eligible for injection.
             // If the jndiNameEnv is an EjbBundleDescriptor then we have to account for this because
             // there can be injection points on classes inside the ejb jar but not accounted for
             // in the deployment descriptor.
-            if (envEntry.hasAValue() || (jndiNameEnv instanceof EjbBundleDescriptor)) {
+            if (envEntry.hasContent() || jndiNameEnv instanceof EjbBundleDescriptor) {
                 allEnvProps.add(envEntry);
             }
         }
@@ -595,17 +593,23 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      */
     @Override
     public String getModuleID() {
-        if (moduleID == null) {
-            moduleID = getModuleDescriptor().getArchiveUri();
+        if (super.getModuleID() == null) {
+            setModuleID(getModuleDescriptor().getArchiveUri());
         }
         if (getModuleDescriptor().isStandalone()) {
-            return moduleID;
+            return super.getModuleID();
         }
         if (application != null && !application.isVirtual()) {
             return application.getRegistrationName() + "#" + getModuleDescriptor().getArchiveUri();
         }
-        return moduleID;
+        return super.getModuleID();
     }
+
+
+    public String getRawModuleID() {
+        return super.getModuleID();
+    }
+
 
     /**
      * @return the deployment descriptor directory location inside
@@ -907,7 +911,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     }
 
     public void setKeepState(String keepStateVal) {
-        this.keepState = Boolean.valueOf(keepStateVal);
+        this.keepState = Boolean.parseBoolean(keepStateVal);
     }
 
     /**
@@ -926,7 +930,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * @param value the full attribute
      */
     public void setFullAttribute(String value) {
-        fullAttribute = Boolean.valueOf(value);
+        fullAttribute = Boolean.parseBoolean(value);
     }
 
     /**

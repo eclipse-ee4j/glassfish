@@ -35,7 +35,7 @@ public class WebservicesITest {
     private TckRunner tck;
 
     /**
-     * Usual time: 90 minutes
+     * Usual time: 50 minutes
      */
     @Test
     public void webservices12() throws Exception {
@@ -44,7 +44,7 @@ public class WebservicesITest {
 
 
     /**
-     * Usual time: 20 minutes
+     * Usual time: 14 minutes
      */
     @Test
     public void webservices13() throws Exception {

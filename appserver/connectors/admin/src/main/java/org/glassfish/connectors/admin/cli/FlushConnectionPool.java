@@ -19,7 +19,6 @@ package org.glassfish.connectors.admin.cli;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -37,11 +36,11 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 
 @Service(name = "flush-connection-pool")
@@ -91,28 +90,29 @@ public class FlushConnectionPool implements AdminCommand {
             Application application = applications.getApplication(applicationName);
             Module module = application.getModule(moduleName);
             resources = module.getResources();
-            scope = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX;
+            scope = SimpleJndiName.JNDI_CTX_JAVA_MODULE;
         }else if(applicationName != null){
             if(!poolUtil.isValidApplication(applicationName, poolName, report)){
                 return;
             }
             Application application = applications.getApplication(applicationName);
             resources = application.getResources();
-            scope = ResourceConstants.JAVA_APP_SCOPE_PREFIX;
+            scope = SimpleJndiName.JNDI_CTX_JAVA_APP;
         }
 
-        if(!poolUtil.isValidPool(resources, poolName, scope, report)){
+        SimpleJndiName jndiName = new SimpleJndiName(poolName);
+        if (!poolUtil.isValidPool(resources, jndiName, scope, report)) {
             return;
         }
 
         boolean poolingEnabled = false;
-        ResourcePool pool = ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolName);
-        if(pool instanceof ConnectorConnectionPool){
-            ConnectorConnectionPool ccp = (ConnectorConnectionPool)pool;
-            poolingEnabled = Boolean.valueOf(ccp.getPooling());
-        }else{
-            JdbcConnectionPool ccp = (JdbcConnectionPool)pool;
-            poolingEnabled = Boolean.valueOf(ccp.getPooling());
+        ResourcePool pool = resources.getResourceByName(ResourcePool.class, jndiName);
+        if (pool instanceof ConnectorConnectionPool) {
+            ConnectorConnectionPool ccp = (ConnectorConnectionPool) pool;
+            poolingEnabled = Boolean.parseBoolean(ccp.getPooling());
+        } else {
+            JdbcConnectionPool ccp = (JdbcConnectionPool) pool;
+            poolingEnabled = Boolean.parseBoolean(ccp.getPooling());
         }
 
         if(!poolingEnabled){
@@ -124,7 +124,7 @@ public class FlushConnectionPool implements AdminCommand {
         }
 
         try {
-            PoolInfo poolInfo = new PoolInfo(poolName, applicationName, moduleName);
+            PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
             _runtime.flushConnectionPool(poolInfo);
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         } catch (ConnectorRuntimeException e) {

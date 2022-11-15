@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,8 @@
 
 package com.sun.enterprise.resource.pool.monitor;
 
+import org.glassfish.api.naming.SimpleJndiName;
+
 /**
  * Listen to events related to jdbc/connector connection pool monitoring
  * grouped by applications.
@@ -26,14 +29,14 @@ package com.sun.enterprise.resource.pool.monitor;
  */
 public class ConnectionPoolAppEmitterImpl {
 
-    private String appName = null;
-    private String poolName = null;
-    private ConnectionPoolAppProbeProvider poolAppProbeProvider;
+    private final String appName;
+    private final String poolName;
+    private final ConnectionPoolAppProbeProvider poolAppProbeProvider;
 
-    public ConnectionPoolAppEmitterImpl(String poolName, String appName,
+    public ConnectionPoolAppEmitterImpl(SimpleJndiName poolName, String appName,
             ConnectionPoolAppProbeProvider provider) {
         this.appName = appName;
-        this.poolName = poolName;
+        this.poolName = poolName.toString();
         this.poolAppProbeProvider = provider;
     }
 

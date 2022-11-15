@@ -563,74 +563,53 @@ public class WsUtil {
     /**
      * Accessing wsdl URL might involve file system access, so wrap operation in a doPrivileged block.
      */
-    public URL privilegedGetServiceRefWsdl(ServiceReferenceDescriptor desc) throws Exception {
-        URL wsdlFileURL;
+    public URL privilegedGetServiceRefWsdl(final ServiceReferenceDescriptor serviceRef) throws Exception {
         try {
-            final ServiceReferenceDescriptor serviceRef = desc;
-            wsdlFileURL = (URL) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                @Override
-                public java.lang.Object run() throws Exception {
-                    URL retVal;
-                    if (serviceRef.hasWsdlOverride()) {
-                        retVal = serviceRef.getWsdlOverride();
-                    } else {
-                        // Upon server restart, wsdlfileURL can be null
-                        // check that and return value from wsdlFileURI
-                        if (serviceRef.getWsdlFileUrl() != null) {
-                            retVal = serviceRef.getWsdlFileUrl();
-                        } else {
-                            if (serviceRef.getWsdlFileUri().startsWith("http")) {
-                                retVal = new URL(serviceRef.getWsdlFileUri());
-                            } else {
-                                if ((serviceRef.getWsdlFileUri().startsWith("WEB-INF") || serviceRef.getWsdlFileUri().startsWith("META-INF"))) {
+            PrivilegedExceptionAction<URL> action = () -> {
+                if (serviceRef.hasWsdlOverride()) {
+                    return serviceRef.getWsdlOverride();
+                }
+                // Upon server restart, wsdlfileURL can be null
+                // check that and return value from wsdlFileURI
+                if (serviceRef.getWsdlFileUrl() != null) {
+                    return serviceRef.getWsdlFileUrl();
+                }
+                final String wsdlFileUri = serviceRef.getWsdlFileUri();
+                if (wsdlFileUri.startsWith("http")) {
+                    return new URL(wsdlFileUri);
+                }
+                if (wsdlFileUri.startsWith("WEB-INF") || wsdlFileUri.startsWith("META-INF")) {
+                    // This can be the case when the toURL fails
+                    // because in its implementation it looks for user.dir
+                    // which sometimes can vary based on where vm is launched
+                    // so in this case resolve from application path
+                    ServerEnvironment se = WebServiceContractImpl.getInstance().getServerEnvironment();
 
-                                    // This can be the case when the toURL fails
-                                    // because in its implementation it looks for user.dir
-                                    // which sometimes can vary based on where vm is launched
-                                    // so in this case
-                                    // resolve from application path
-                                    WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance();
-                                    ServerEnvironment se = wscImpl.getServerEnvironment();
-
-                                    // First look in the root of the deployment
-                                    File appFile = new File(se.getApplicationRepositoryPath(), serviceRef.getBundleDescriptor().getApplication().getAppName());
-                                    if (appFile.exists()) {
-                                        File wsdlFile = new File(appFile, serviceRef.getWsdlFileUri());
-                                        retVal = wsdlFile.toURI().toURL();
-                                        if (!wsdlFile.exists()) {
-                                            // try the module path for example when we are in an EAR file
-                                            wsdlFile = new File(serviceRef.getBundleDescriptor().getModuleDescriptor().getArchiveUri(), serviceRef.getWsdlFileUri());
-                                            if (!wsdlFile.exists()) {
-                                                // finally try to load via classloader
-                                                retVal = Thread.currentThread().getContextClassLoader().getResource(serviceRef.getWsdlFileUri());
-                                            } else {
-                                                retVal = wsdlFile.toURI().toURL();
-                                            }
-                                        }
-                                    } else {
-                                        // Fix for 6853656 and 6868695
-                                        // In case of appclients the wsdl will be in the classpath
-                                        // This will work for launches using the appclient command and
-                                        // for Java Web Start launches
-
-                                        retVal = Thread.currentThread().getContextClassLoader().getResource(serviceRef.getWsdlFileUri());
-                                    }
-                                } else {
-                                    retVal = new File(serviceRef.getWsdlFileUri()).toURI().toURL();
-                                }
-                            }
+                    // First look in the root of the deployment
+                    String appName = serviceRef.getBundleDescriptor().getApplication().getAppName();
+                    File appFile = new File(se.getApplicationRepositoryPath(), appName);
+                    if (appFile.exists()) {
+                        File wsdlFile = new File(appFile, wsdlFileUri);
+                        if (wsdlFile.exists()) {
+                            return wsdlFile.toURI().toURL();
+                        }
+                        // try the module path for example when we are in an EAR file
+                        wsdlFile = new File(serviceRef.getBundleDescriptor().getRawModuleID(), wsdlFileUri);
+                        if (wsdlFile.exists()) {
+                            return wsdlFile.toURI().toURL();
                         }
                     }
-                    return retVal;
+                    return Thread.currentThread().getContextClassLoader().getResource(wsdlFileUri);
                 }
-            });
+                return new File(wsdlFileUri).toURI().toURL();
+            };
+            return AccessController.doPrivileged(action);
         } catch (PrivilegedActionException pae) {
             LOG.log(Level.WARNING, LogUtils.EXCEPTION_THROWN, pae);
             Exception e = new Exception();
             e.initCause(pae.getCause());
             throw e;
         }
-        return wsdlFileURL;
     }
 
     /**

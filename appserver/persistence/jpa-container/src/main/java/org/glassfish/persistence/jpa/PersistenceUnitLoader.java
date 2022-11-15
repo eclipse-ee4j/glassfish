@@ -27,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessor;
 import org.glassfish.persistence.jpa.schemageneration.SchemaGenerationProcessorFactory;
@@ -100,7 +101,7 @@ public class PersistenceUnitLoader {
     /**
      * Conduit to talk with container
      */
-    private ProviderContainerContractInfo providerContainerContractInfo;
+    private final ProviderContainerContractInfo providerContainerContractInfo;
 
     private EntityManagerFactory entityManagerFactory;
 
@@ -203,7 +204,7 @@ public class PersistenceUnitLoader {
             schemaGenerationOverrides = schemaGenerationProcessor.getOverridesForSuppressingSchemaGeneration();
         }
 
-        Map<String, Object> overRides = new HashMap<String, Object>(integrationProperties);
+        Map<String, Object> overRides = new HashMap<>(integrationProperties);
         if (schemaGenerationOverrides != null) {
             overRides.putAll(schemaGenerationOverrides);
         }
@@ -240,7 +241,7 @@ public class PersistenceUnitLoader {
      * with it
      */
     private void checkForDataSourceOverride(PersistenceUnitDescriptor persistenceUnitDescriptor) {
-        String jtaDataSourceOverride = providerContainerContractInfo.getJTADataSourceOverride();
+        SimpleJndiName jtaDataSourceOverride = providerContainerContractInfo.getJTADataSourceOverride();
         if (jtaDataSourceOverride != null) {
             persistenceUnitDescriptor.setJtaDataSource(jtaDataSourceOverride);
         }
@@ -248,14 +249,14 @@ public class PersistenceUnitLoader {
 
     /** Calculate and set the default data source in given <code>pud</code> **/
     private void calculateDefaultDataSource(PersistenceUnitDescriptor persistenceUnitDescriptor) {
-        String jtaDataSourceName =
+        SimpleJndiName jtaDataSourceName =
             calculateJtaDataSourceName(
                 persistenceUnitDescriptor.getTransactionType(),
                 persistenceUnitDescriptor.getJtaDataSource(),
                 persistenceUnitDescriptor.getNonJtaDataSource(),
                 persistenceUnitDescriptor.getName());
 
-        String nonJtaDataSourceName =
+        SimpleJndiName nonJtaDataSourceName =
             calculateNonJtaDataSourceName(
                 persistenceUnitDescriptor.getJtaDataSource(),
                 persistenceUnitDescriptor.getNonJtaDataSource());
@@ -267,8 +268,8 @@ public class PersistenceUnitLoader {
     /**
      * @return DataSource Name to be used as JTA data source.
      */
-    private String calculateJtaDataSourceName(String transactionType, String userSuppliedJTADSName, String userSuppliedNonJTADSName,
-            String puName) {
+    private SimpleJndiName calculateJtaDataSourceName(String transactionType, SimpleJndiName userSuppliedJTADSName,
+        SimpleJndiName userSuppliedNonJTADSName, String puName) {
         /*
          * Use DEFAULT_DS_NAME iff user has not specified both jta-ds-name and
          * non-jta-ds-name; and user has specified transaction-type as JTA. See Gf issue
@@ -282,7 +283,7 @@ public class PersistenceUnitLoader {
             return null; // this is a non-jta-data-source
         }
 
-        String dataSourceName;
+        SimpleJndiName dataSourceName;
         if (!isNullOrEmpty(userSuppliedJTADSName)) {
             dataSourceName = userSuppliedJTADSName; // use user supplied jta-ds-name
         } else if (isNullOrEmpty(userSuppliedNonJTADSName)) {
@@ -301,7 +302,7 @@ public class PersistenceUnitLoader {
         return dataSourceName;
     }
 
-    private String calculateNonJtaDataSourceName(String userSuppliedJTADSName, String userSuppliedNonJTADSName) {
+    private SimpleJndiName calculateNonJtaDataSourceName(SimpleJndiName userSuppliedJTADSName, SimpleJndiName userSuppliedNonJTADSName) {
         /*
          * If non-JTA name is *not* provided - use the JTA DS name (if supplied) If
          * non-JTA name is provided - use non-JTA DS name (this is done for ease of use,
@@ -310,7 +311,7 @@ public class PersistenceUnitLoader {
          * already configured as non-transactional has no side effects.) If neither
          * non-JTA nor JTA name is provided use DEFAULT_DS_NAME.
          */
-        String dataSourceName;
+        SimpleJndiName dataSourceName;
         if (!isNullOrEmpty(userSuppliedNonJTADSName)) {
             dataSourceName = userSuppliedNonJTADSName;
         } else {
@@ -327,8 +328,8 @@ public class PersistenceUnitLoader {
         return dataSourceName;
     }
 
-    static boolean isNullOrEmpty(String s) {
-        return s == null || s.length() == 0;
+    private static boolean isNullOrEmpty(SimpleJndiName s) {
+        return s == null || s.isEmpty();
     }
 
     /**

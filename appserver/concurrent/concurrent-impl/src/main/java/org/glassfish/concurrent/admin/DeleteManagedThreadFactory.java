@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,9 @@ package org.glassfish.concurrent.admin;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -26,13 +30,12 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.jvnet.hk2.annotations.Service;
-
-import jakarta.inject.Inject;
 
 /**
  * Delete Managed Thread Factory Command
@@ -47,7 +50,7 @@ public class DeleteManagedThreadFactory implements AdminCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteManagedThreadFactory.class);
 
-    @Param(optional=true)
+    @Param(optional = true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(name="managed_thread_factory_name", primary=true)
@@ -65,11 +68,12 @@ public class DeleteManagedThreadFactory implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
         try {
-            ResourceStatus rs = managedThreadFactoryMgr.delete(domain.getResources(), jndiName, target);
+            ResourceStatus rs = managedThreadFactoryMgr.delete(domain.getResources(), SimpleJndiName.of(jndiName), target);
             if(rs.getMessage() != null){
                 report.setMessage(rs.getMessage());
             }
@@ -77,8 +81,9 @@ public class DeleteManagedThreadFactory implements AdminCommand {
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             } else {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                if (rs.getException() != null)
+                if (rs.getException() != null) {
                     report.setFailureCause(rs.getException());
+                }
             }
         } catch(Exception e) {
             report.setMessage(localStrings.getLocalString("delete.managed.thread.factory.failed", "Managed thread factory {0} deletion failed", jndiName));

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,10 @@
 
 package com.sun.gjc.monitoring;
 
+import com.sun.gjc.util.SQLTrace;
+import com.sun.gjc.util.SQLTraceCache;
+
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
@@ -29,9 +34,6 @@ import org.glassfish.gmbal.ManagedAttribute;
 import org.glassfish.gmbal.ManagedObject;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
-import com.sun.gjc.util.SQLTrace;
-import com.sun.gjc.util.SQLTraceCache;
-
 /**
  * Provides the monitoring data for JDBC RA module
  *
@@ -42,29 +44,29 @@ import com.sun.gjc.util.SQLTraceCache;
 @Description("JDBC RA Statistics")
 public class JdbcStatsProvider {
 
-    private StringStatisticImpl freqUsedSqlQueries = new StringStatisticImpl(
+    private final StringStatisticImpl freqUsedSqlQueries = new StringStatisticImpl(
             "FreqUsedSqlQueries", "List",
             "Most frequently used sql queries");
 
-    private CountStatisticImpl numStatementCacheHit = new CountStatisticImpl(
+    private final CountStatisticImpl numStatementCacheHit = new CountStatisticImpl(
             "NumStatementCacheHit", StatisticImpl.UNIT_COUNT,
             "The total number of Statement Cache hits.");
 
-    private CountStatisticImpl numStatementCacheMiss = new CountStatisticImpl(
+    private final CountStatisticImpl numStatementCacheMiss = new CountStatisticImpl(
             "NumStatementCacheMiss", StatisticImpl.UNIT_COUNT,
             "The total number of Statement Cache misses.");
 
-    private CountStatisticImpl numPotentialStatementLeak = new CountStatisticImpl(
+    private final CountStatisticImpl numPotentialStatementLeak = new CountStatisticImpl(
             "NumPotentialStatementLeak", StatisticImpl.UNIT_COUNT,
             "The total number of potential Statement leaks");
 
-    private PoolInfo poolInfo;
+    private final PoolInfo poolInfo;
     private SQLTraceCache sqlTraceCache;
 
-    public JdbcStatsProvider(String poolName, String appName, String moduleName, int sqlTraceCacheSize,
-            long timeToKeepQueries) {
+    public JdbcStatsProvider(SimpleJndiName poolName, String appName, String moduleName, int sqlTraceCacheSize,
+        long timeToKeepQueries) {
         poolInfo = new PoolInfo(poolName, appName, moduleName);
-        if(sqlTraceCacheSize > 0) {
+        if (sqlTraceCacheSize > 0) {
             this.sqlTraceCache = new SQLTraceCache(poolName, appName, moduleName, sqlTraceCacheSize, timeToKeepQueries);
         }
     }
@@ -79,7 +81,7 @@ public class JdbcStatsProvider {
                                        @ProbeParam("moduleName") String moduleName
                                        ) {
 
-        PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(SimpleJndiName.of(poolName), appName, moduleName);
         if(this.poolInfo.equals(poolInfo)){
             numStatementCacheHit.increment();
         }
@@ -95,7 +97,7 @@ public class JdbcStatsProvider {
                                         @ProbeParam("moduleName") String moduleName
                                         ) {
 
-        PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(SimpleJndiName.of(poolName), appName, moduleName);
         if(this.poolInfo.equals(poolInfo)){
             numStatementCacheMiss.increment();
         }
@@ -117,7 +119,7 @@ public class JdbcStatsProvider {
                                    @ProbeParam("moduleName") String moduleName,
                                    @ProbeParam("sql") String sql) {
 
-        PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(SimpleJndiName.of(poolName), appName, moduleName);
         if(this.poolInfo.equals(poolInfo)){
             if(sqlTraceCache != null) {
                 if (sql != null) {
@@ -139,7 +141,7 @@ public class JdbcStatsProvider {
                                    @ProbeParam("appName") String appName,
                                    @ProbeParam("moduleName") String moduleName) {
 
-        PoolInfo poolInfo = new PoolInfo(poolName, appName, moduleName);
+        PoolInfo poolInfo = new PoolInfo(SimpleJndiName.of(poolName), appName, moduleName);
         if(this.poolInfo.equals(poolInfo)){
             numPotentialStatementLeak.increment();
         }

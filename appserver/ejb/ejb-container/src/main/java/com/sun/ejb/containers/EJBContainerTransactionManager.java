@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2015, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,32 +17,34 @@
 
 package com.sun.ejb.containers;
 
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.ejb.Container;
+import com.sun.ejb.EjbInvocation;
+import com.sun.enterprise.deployment.MethodDescriptor;
+import com.sun.enterprise.transaction.api.JavaEETransaction;
+import com.sun.enterprise.transaction.api.JavaEETransactionManager;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.ejb.EJBException;
 import jakarta.ejb.NoSuchEntityException;
 import jakarta.ejb.NoSuchObjectLocalException;
-import jakarta.ejb.TransactionRolledbackLocalException;
 import jakarta.ejb.TransactionRequiredLocalException;
+import jakarta.ejb.TransactionRolledbackLocalException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.UserTransaction;
 
-import com.sun.ejb.Container;
-import com.sun.ejb.EjbInvocation;
-import com.sun.enterprise.deployment.MethodDescriptor;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.ejb.deployment.descriptor.ContainerTransaction;
 import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbExtraDescriptors;
 
-import com.sun.enterprise.transaction.api.JavaEETransaction;
-import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import com.sun.enterprise.util.LocalStringManagerImpl;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Container support for handling transactions
@@ -55,13 +58,13 @@ public class EJBContainerTransactionManager {
     private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(EJBContainerTransactionManager.class);
 
-    private static final String USER_TX = "java:comp/UserTransaction";
+    private static final String USER_TX = JNDI_CTX_JAVA_COMPONENT + "UserTransaction";
 
-    private EjbContainerUtil ejbContainerUtilImpl = EjbContainerUtilImpl.getInstance();
+    private final EjbContainerUtil ejbContainerUtilImpl = EjbContainerUtilImpl.getInstance();
 
-    private JavaEETransactionManager transactionManager;
-    private BaseContainer container;
-    private EjbDescriptor ejbDescriptor;
+    private final JavaEETransactionManager transactionManager;
+    private final BaseContainer container;
+    private final EjbDescriptor ejbDescriptor;
     private int cmtTimeoutInSeconds = 120;
 
     /**
@@ -87,31 +90,31 @@ public class EJBContainerTransactionManager {
     int findTxAttr(MethodDescriptor md) {
         int txAttr = -1;
 
-        if ( container.isBeanManagedTran ) {
+        if (container.isBeanManagedTran) {
             return Container.TX_BEAN_MANAGED;
         }
 
         ContainerTransaction ct = ejbDescriptor.getContainerTransactionFor(md);
 
-        if ( ct != null ) {
+        if (ct != null) {
             String attr = ct.getTransactionAttribute();
-            if ( attr.equals(ContainerTransaction.NOT_SUPPORTED) )
+            if (attr.equals(ContainerTransaction.NOT_SUPPORTED)) {
                 txAttr = Container.TX_NOT_SUPPORTED;
-            else if ( attr.equals(ContainerTransaction.SUPPORTS) )
+            } else if (attr.equals(ContainerTransaction.SUPPORTS)) {
                 txAttr = Container.TX_SUPPORTS;
-            else if ( attr.equals(ContainerTransaction.REQUIRED) )
+            } else if (attr.equals(ContainerTransaction.REQUIRED)) {
                 txAttr = Container.TX_REQUIRED;
-            else if ( attr.equals(ContainerTransaction.REQUIRES_NEW) )
+            } else if (attr.equals(ContainerTransaction.REQUIRES_NEW)) {
                 txAttr = Container.TX_REQUIRES_NEW;
-            else if ( attr.equals(ContainerTransaction.MANDATORY) )
+            } else if (attr.equals(ContainerTransaction.MANDATORY)) {
                 txAttr = Container.TX_MANDATORY;
-            else if ( attr.equals(ContainerTransaction.NEVER) )
+            } else if (attr.equals(ContainerTransaction.NEVER)) {
                 txAttr = Container.TX_NEVER;
+            }
         }
 
-        if ( txAttr == -1 ) {
-            throw new EJBException("Transaction Attribute not found for method "
-                + md.prettyPrint());
+        if (txAttr == -1) {
+            throw new EJBException("Transaction Attribute not found for method " + md.prettyPrint());
         }
 
         container.validateTxAttr(md, txAttr);
@@ -619,31 +622,30 @@ public class EJBContainerTransactionManager {
     }
 
     // Can be called by the container - do not make it private
-    Throwable checkExceptionClientTx(EJBContextImpl context, Throwable exception)
-             throws Exception {
-        if ( exception instanceof BaseContainer.PreInvokeException ) {
+    Throwable checkExceptionClientTx(EJBContextImpl context, Throwable exception) throws Exception {
+        if (exception instanceof BaseContainer.PreInvokeException) {
             // A PreInvokeException was thrown, so bean was not invoked
-            return ((BaseContainer.PreInvokeException)exception).exception;
+            return ((BaseContainer.PreInvokeException) exception).exception;
         }
 
         // If PreInvokeException wasn't thrown, EJB was invoked with client's Tx
         Throwable newException = exception;
-        if ( container.isSystemUncheckedException(exception) ) {
+        if (container.isSystemUncheckedException(exception)) {
             // Table 15, EJB2.0
             try {
                 container.forceDestroyBean(context);
             } finally {
                 transactionManager.setRollbackOnly();
             }
-            if ( exception instanceof Exception ) {
-                newException = new TransactionRolledbackLocalException(
-                    "Exception thrown from bean", (Exception)exception);
+            if (exception instanceof Exception) {
+                newException = new TransactionRolledbackLocalException("Exception thrown from bean",
+                    (Exception) exception);
             } else {
                 newException = new TransactionRolledbackLocalException(
-                    "Exception thrown from bean: "+exception.toString());
+                    "Exception thrown from bean: " + exception.toString());
                 newException.initCause(exception);
             }
-        } else if( isAppExceptionRequiringRollback(exception ) ) {
+        } else if (isAppExceptionRequiringRollback(exception)) {
             transactionManager.setRollbackOnly();
         }
 
@@ -651,70 +653,66 @@ public class EJBContainerTransactionManager {
      }
 
     // this is the counterpart of startNewTx
-    private Throwable completeNewTx(EJBContextImpl context, Throwable exception,
-            int status) throws Exception {
+    private Throwable completeNewTx(EJBContextImpl context, Throwable exception, int status) throws Exception {
         Throwable newException = exception;
-        if ( exception instanceof BaseContainer.PreInvokeException )
-            newException = ((BaseContainer.PreInvokeException)exception).exception;
+        if (exception instanceof BaseContainer.PreInvokeException) {
+            newException = ((BaseContainer.PreInvokeException) exception).exception;
+        }
 
-        if ( status == Status.STATUS_NO_TRANSACTION ) {
+        if (status == Status.STATUS_NO_TRANSACTION) {
             // no tx was started, probably an exception was thrown
             // before tm.begin() was called
             return newException;
         }
 
-        if ( container.isStatefulSession && (context instanceof SessionContextImpl)) {
+        if (container.isStatefulSession && (context instanceof SessionContextImpl)) {
             ((SessionContextImpl) context).setTxCompleting(true);
         }
 
         // A new tx was started, so we must commit/rollback
-        if ( newException != null && container.isSystemUncheckedException(newException) ) {
+        if (newException != null && container.isSystemUncheckedException(newException)) {
             // EJB2.0 section 18.3.1, Table 15
             // Rollback the Tx we started
             destroyBeanAndRollback(context, null);
-            newException = processSystemException(newException);
+            return processSystemException(newException);
         }
-        else {
-            try {
-                if ( status == Status.STATUS_MARKED_ROLLBACK ) {
-                    // EJB2.0 section 18.3.1, Table 15, and 18.3.6:
-                    // rollback tx, no exception
-                    if (transactionManager.isTimedOut()) {
-                        _logger.log(Level.WARNING, "ejb.tx_timeout", new Object[] {
-                            transactionManager.getTransaction(), ejbDescriptor.getName()});
-                    }
+        try {
+            if (status == Status.STATUS_MARKED_ROLLBACK) {
+                // EJB2.0 section 18.3.1, Table 15, and 18.3.6:
+                // rollback tx, no exception
+                if (transactionManager.isTimedOut()) {
+                    _logger.log(Level.WARNING, "ejb.tx_timeout",
+                        new Object[] {transactionManager.getTransaction(), ejbDescriptor.getName()});
+                }
+                transactionManager.rollback();
+            } else {
+                if (newException != null && isAppExceptionRequiringRollback(newException)) {
                     transactionManager.rollback();
+                } else {
+                    // Note: if exception is an application exception
+                    // we do a commit as in EJB2.0 Section 18.3.1,
+                    // Table 15. Commit the Tx we started
+                    transactionManager.commit();
                 }
-                else {
-                    if( (newException != null) &&
-                            isAppExceptionRequiringRollback(newException) ) {
-                        transactionManager.rollback();
-                    } else {
-                        // Note: if exception is an application exception
-                        // we do a commit as in EJB2.0 Section 18.3.1,
-                        // Table 15. Commit the Tx we started
-                        transactionManager.commit();
-                    }
-                }
-            } catch (RollbackException ex) {
-                _logger.log(Level.FINE, "ejb.transaction_abort_exception", ex);
-                // EJB2.0 section 18.3.6
-                newException = new EJBException("Transaction aborted", ex);
-            } catch ( Exception ex ) {
-                _logger.log(Level.FINE, "ejb.cmt_exception", ex);
-                // Commit or rollback failed.
-                // EJB2.0 section 18.3.6
-                newException = new EJBException("Unable to complete" +
-                    " container-managed transaction.", ex);
             }
+            return newException;
+        } catch (RollbackException ex) {
+            _logger.log(Level.FINE, "ejb.transaction_abort_exception", ex);
+            // EJB2.0 section 18.3.6
+            return new EJBException("Transaction aborted", ex);
+        } catch (Exception ex) {
+            _logger.log(Level.FINE, "ejb.cmt_exception", ex);
+            // Commit or rollback failed.
+            // EJB2.0 section 18.3.6
+            return new EJBException("Unable to complete" + " container-managed transaction.", ex);
         }
-        return newException;
     }
 
     private Throwable processSystemException(Throwable sysEx) {
         Throwable newException;
-        if ( sysEx instanceof EJBException)
+        if ( sysEx instanceof EJBException) {
             return sysEx;
+        }
 
         // EJB2.0 section 18.3.4
         if ( sysEx instanceof NoSuchEntityException ) { // for EntityBeans only

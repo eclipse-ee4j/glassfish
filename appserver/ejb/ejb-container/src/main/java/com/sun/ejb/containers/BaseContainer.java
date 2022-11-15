@@ -17,59 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
-import java.rmi.AccessException;
-import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
-import java.util.concurrent.Future;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.StringRefAddr;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
-import org.glassfish.deployment.common.DeploymentException;
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.ejb.LogFacade;
-import org.glassfish.ejb.api.EjbEndpointFacade;
-import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
-import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
-import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
-import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
-import org.glassfish.ejb.spi.EjbContainerInterceptor;
-import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.enterprise.iiop.api.ProtocolManager;
-import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
-import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
-import org.glassfish.flashlight.provider.ProbeProviderFactory;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.logging.annotation.LogMessageInfo;
-
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.Container;
 import com.sun.ejb.EJBUtils;
@@ -145,6 +92,66 @@ import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.UserTransaction;
+
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Proxy;
+import java.rmi.AccessException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.security.AccessController;
+import java.security.PrivilegedExceptionAction;
+import java.text.MessageFormat;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Vector;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.NamingException;
+import javax.naming.Reference;
+import javax.naming.StringRefAddr;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.deployment.common.DeploymentException;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.ejb.LogFacade;
+import org.glassfish.ejb.api.EjbEndpointFacade;
+import org.glassfish.ejb.deployment.descriptor.EjbApplicationExceptionInfo;
+import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
+import org.glassfish.ejb.deployment.descriptor.EjbInitInfo;
+import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
+import org.glassfish.ejb.deployment.descriptor.ScheduledTimerDescriptor;
+import org.glassfish.ejb.spi.EjbContainerInterceptor;
+import org.glassfish.ejb.spi.WSEjbEndpointRegistry;
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.enterprise.iiop.api.ProtocolManager;
+import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
+import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
+import org.glassfish.flashlight.provider.ProbeProviderFactory;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.logging.annotation.LogMessageInfo;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * This class implements part of the com.sun.ejb.Container interface. It implements the container's side of the
@@ -303,7 +310,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     private Collection<EjbContainerInterceptor> interceptors;
 
     /*****************************************
-     * Data members for Remote views *
+     * Data members for Remote views         *
      *****************************************/
 
     // True if bean has a RemoteHome/Remote view
@@ -432,7 +439,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     protected EjbCacheProbeProvider cacheProbeNotifier;
     protected EjbCacheStatsProvider cacheProbeListener;
 
-    private final String _debugDescription;
+    private final String debugDescription;
 
     protected CallFlowInfo callFlowInfo;
 
@@ -464,13 +471,10 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     protected EjbOptionalIntfGenerator optIntfClassLoader;
 
-    private final Set<String> publishedPortableGlobalJndiNames = new HashSet<>();
-
-    private final Set<String> publishedNonPortableGlobalJndiNames = new HashSet<>();
-
-    private final Set<String> publishedInternalGlobalJndiNames = new HashSet<>();
-
-    private final Map<String, JndiInfo> jndiInfoMap = new HashMap<>();
+    private final Set<SimpleJndiName> publishedPortableGlobalJndiNames = new HashSet<>();
+    private final Set<SimpleJndiName> publishedNonPortableGlobalJndiNames = new HashSet<>();
+    private final Set<SimpleJndiName> publishedInternalGlobalJndiNames = new HashSet<>();
+    private final Map<SimpleJndiName, JndiInfo> jndiInfoMap = new HashMap<>();
 
     private String optIntfClassName;
 
@@ -507,7 +511,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         this.loader = loader;
         this.securityManager = sm;
         this.containerInfo = createContainerInfo(type, ejbDesc);
-
+        this.debugDescription = super.toString() + "[ejbName=" + ejbDescriptor.getName() + ", containerId="
+            + ejbDescriptor.getUniqueId() + ']';
+        _logger.log(Level.FINE, "Initializing {0} ...", this.debugDescription);
         try {
             invocationManager = ejbContainerUtilImpl.getInvocationManager();
             injectionManager = ejbContainerUtilImpl.getInjectionManager();
@@ -681,7 +687,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                                         ejbClass.getName(), schd.getTimeoutMethod().getFormattedString()));
                     }
 
-                    _logger.log(Level.FINE, "... processing {0}", method);
                     processEjbTimeoutMethod(method);
 
                     List<ScheduledTimerDescriptor> list = schedules.get(method);
@@ -735,9 +740,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             _logger.log(Level.FINE, "", ex);
             throw ex;
         }
-
-        _debugDescription = "ejbName: " + ejbDescriptor.getName() + "; containerId: " + ejbDescriptor.getUniqueId();
-        _logger.log(Level.FINE, "Instantiated container for: " + _debugDescription);
+        _logger.log(Level.FINE, "Successfuly initialized: {0}", debugDescription);
     }
 
     protected ProtocolManager getProtocolManager() {
@@ -790,7 +793,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     @Override
     public String toString() {
-        return _debugDescription;
+        return debugDescription;
     }
 
     @Override
@@ -993,7 +996,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             if (System.getSecurityManager() == null) {
                 currentThread.setContextClassLoader(myClassLoader);
             } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                AccessController.doPrivileged(new java.security.PrivilegedAction() {
                     @Override
                     public java.lang.Object run() {
                         currentThread.setContextClassLoader(myClassLoader);
@@ -1013,7 +1016,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             if (System.getSecurityManager() == null) {
                 currentThread.setContextClassLoader(previousClassLoader);
             } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                AccessController.doPrivileged(new java.security.PrivilegedAction() {
                     @Override
                     public java.lang.Object run() {
                         currentThread.setContextClassLoader(previousClassLoader);
@@ -1086,7 +1089,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
         final Map<String, Object> intfsForPortableJndi = new HashMap<>();
         // Root of portable global JNDI name for this bean
-        final String javaGlobalName = getJavaGlobalJndiNamePrefix();
+        final SimpleJndiName javaGlobalName = getJavaGlobalJndiNamePrefix();
+        _logger.log(Level.FINEST, "javaGlobalName={0}", javaGlobalName);
         if (isRemote) {
             boolean disableNonPortableJndiName = false;
             Boolean disableInDD = ejbDescriptor.getEjbBundleDescriptor().getDisableNonportableJndiNames();
@@ -1095,16 +1099,16 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             } else {
                 String disableInServer = ejbContainerUtilImpl.getEjbContainer()
                         .getPropertyValue(RuntimeTagNames.DISABLE_NONPORTABLE_JNDI_NAMES);
-                disableNonPortableJndiName = Boolean.valueOf(disableInServer);
+                disableNonPortableJndiName = Boolean.parseBoolean(disableInServer);
             }
 
-            final String glassfishSpecificJndiName;
+            final SimpleJndiName glassfishSpecificJndiName;
             if (disableNonPortableJndiName) {
                 glassfishSpecificJndiName = null;
             } else {
                 // This is either the default glassfish-specific (non-portable)
                 // global JNDI name or the one specified via mappedName(), glassfish-ejb-jar.xml, etc.
-                final String jndiName = ejbDescriptor.getJndiName();
+                final SimpleJndiName jndiName = ejbDescriptor.getJndiName();
                 // If the explicitly specified name is the same as the portable name,
                 // don't register any of the glassfish-specific names to prevent clashes.
                 if (jndiName == null || jndiName.isEmpty() || jndiName.equals(javaGlobalName)) {
@@ -1113,6 +1117,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     glassfishSpecificJndiName = jndiName;
                 }
             }
+            _logger.log(Level.FINEST, "glassfishSpecificJndiName={0}", glassfishSpecificJndiName);
+
 
             if (hasRemoteHomeView) {
                 this.ejbHomeImpl = instantiateEJBHomeImpl();
@@ -1184,12 +1190,13 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                 // Internal jndi name under which remote business home is registered for
                 // glassfish-specific remote business JNDI names
-                final String remoteBusinessHomeJndiName;
+                final SimpleJndiName remoteBusinessHomeJndiName;
                 if (glassfishSpecificJndiName == null) {
                     remoteBusinessHomeJndiName = null;
                 } else {
                     remoteBusinessHomeJndiName = EJBUtils.getRemote30HomeJndiName(glassfishSpecificJndiName);
                 }
+                _logger.log(Level.FINEST, "remoteBusinessHomeJndiName={0}", remoteBusinessHomeJndiName);
 
                 // Convenience location for common case of 3.0 session bean with only
                 // 1 remote business interface and no adapted remote home. Allows a
@@ -1198,7 +1205,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 // at <jndi-name>#<business_interface_name>. This is needed for the
                 // case where the bean has an adapted remote home and/or multiple business
                 // interfaces.
-                final String simpleRemoteBusinessJndiName;
+                final SimpleJndiName simpleRemoteBusinessJndiName;
                 if (glassfishSpecificJndiName == null || hasRemoteHomeView || remoteBusinessIntfInfo.size() != 1) {
                     simpleRemoteBusinessJndiName = null;
                 } else {
@@ -1209,7 +1216,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 // support the portable global JNDI names for business interfaces.
                 // There won't necessarily be a glassfish-specific name specified so
                 // it's cleaner to just always use a separate ones.
-                final String internalHomeJndiNameForPortableRemoteNames = EJBUtils.getRemote30HomeJndiName(javaGlobalName);
+                final SimpleJndiName internalHomeJndiNameForPortableRemoteNames = EJBUtils.getRemote30HomeJndiName(javaGlobalName);
+                _logger.log(Level.FINEST, "internalHomeJndiNameForPortableRemoteNames={0}", internalHomeJndiNameForPortableRemoteNames);
                 final EJBObjectImpl dummyEJBObjectImpl = instantiateRemoteBusinessObjectImpl();
                 for (RemoteBusinessIntfInfo next : remoteBusinessIntfInfo.values()) {
 
@@ -1219,7 +1227,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                         next.jndiName = EJBUtils.getRemoteEjbJndiName(true, next.remoteBusinessIntf.getName(), glassfishSpecificJndiName);
 
                         Reference remoteBusRef = new Reference(next.remoteBusinessIntf.getName(),
-                            new StringRefAddr("url", remoteBusinessHomeJndiName),
+                            new StringRefAddr("url", remoteBusinessHomeJndiName == null ? null : remoteBusinessHomeJndiName.toString()),
                             RemoteBusinessObjectFactory.class.getName(), null);
 
                         // Glassfish-specific JNDI name for fully-qualified 3.0 Remote business interface.
@@ -1229,7 +1237,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
                     if (simpleRemoteBusinessJndiName != null) {
                         Reference remoteBusRef = new Reference(next.remoteBusinessIntf.getName(),
-                            new StringRefAddr("url", remoteBusinessHomeJndiName),
+                            new StringRefAddr("url", remoteBusinessHomeJndiName == null ? null : remoteBusinessHomeJndiName.toString()),
                             RemoteBusinessObjectFactory.class.getName(), null);
 
                         // Glassfish-specific JNDI name for simple 3.0 Remote business interface lookup.
@@ -1239,7 +1247,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     }
 
                     Reference remoteBusRef = new Reference(next.remoteBusinessIntf.getName(),
-                        new StringRefAddr("url", internalHomeJndiNameForPortableRemoteNames),
+                        new StringRefAddr("url", internalHomeJndiNameForPortableRemoteNames.toString()),
                         RemoteBusinessObjectFactory.class.getName(), null);
 
                     // Always register portable JNDI name for each remote business view
@@ -1325,7 +1333,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         for (Map.Entry<String, Object> entry : intfsForPortableJndi.entrySet()) {
             String intf = entry.getKey();
 
-            String fullyQualifiedJavaGlobalName = javaGlobalName + "!" + intf;
+            SimpleJndiName fullyQualifiedJavaGlobalName = new SimpleJndiName(javaGlobalName + "!" + intf);
             Object namingProxy = entry.getValue();
             boolean local = (namingProxy instanceof JavaGlobalJndiNamingObjectProxy);
 
@@ -1342,7 +1350,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
         }
 
-        for (Map.Entry<String, JndiInfo> entry : jndiInfoMap.entrySet()) {
+        for (Entry<SimpleJndiName, JndiInfo> entry : jndiInfoMap.entrySet()) {
             JndiInfo jndiInfo = entry.getValue();
             try {
                 jndiInfo.publish(this.namingManager);
@@ -1364,7 +1372,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         }
 
         if (!publishedPortableGlobalJndiNames.isEmpty()) {
-            _logger.log(Level.INFO, PORTABLE_JNDI_NAMES, new Object[] { this.ejbDescriptor.getName(), publishedPortableGlobalJndiNames });
+            _logger.log(Level.INFO, PORTABLE_JNDI_NAMES,
+                new Object[] {this.ejbDescriptor.getName(), publishedPortableGlobalJndiNames});
         }
 
         if (!publishedNonPortableGlobalJndiNames.isEmpty()) {
@@ -1386,38 +1395,24 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         metadata = new EJBMetaDataImpl(ejbHomeStub, homeIntf, remoteIntf, isSession, isStatelessSession);
     }
 
-    protected String getJavaGlobalJndiNamePrefix() {
-
-        String appName = null;
-
-        Application app = ejbDescriptor.getApplication();
-        if (!app.isVirtual()) {
-            appName = ejbDescriptor.getApplication().getAppName();
-        }
-
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
-        String modName = ejbBundle.getModuleDescriptor().getModuleName();
-
-        String ejbName = ejbDescriptor.getName();
-
-        StringBuffer javaGlobalPrefix = new StringBuffer("java:global/");
-
+    protected SimpleJndiName getJavaGlobalJndiNamePrefix() {
+        final Application app = ejbDescriptor.getApplication();
+        final String appName = app.isVirtual() ? null : app.getAppName();
+        StringBuilder javaGlobalPrefix = new StringBuilder().append(JNDI_CTX_JAVA_GLOBAL);
         if (appName != null) {
             javaGlobalPrefix.append(appName);
-            javaGlobalPrefix.append("/");
+            javaGlobalPrefix.append('/');
         }
-
-        javaGlobalPrefix.append(modName);
-        javaGlobalPrefix.append("/");
-        javaGlobalPrefix.append(ejbName);
-
-        return javaGlobalPrefix.toString();
+        javaGlobalPrefix.append(ejbDescriptor.getEjbBundleDescriptor().getModuleDescriptor().getModuleName());
+        javaGlobalPrefix.append('/');
+        javaGlobalPrefix.append(ejbDescriptor.getName());
+        return new SimpleJndiName(javaGlobalPrefix.toString());
     }
 
     // This method is used to create the ejb after the around_construct interceptor chain has completed.
     public void createEjbInstanceForInterceptors(Object[] params, EJBContextImpl ctx) throws Exception {
-        Object instance;
-        EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
+        final Object instance;
+        final EjbBundleDescriptorImpl ejbBundle = ejbDescriptor.getEjbBundleDescriptor();
         if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
             // EJB creation for CDI is handled in CDIServiceImpl not here.
             instance = ctx.getCDIInjectionContext().createEjbAfterAroundConstruct();
@@ -1425,7 +1420,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             // This is only for non-cdi case.
             instance = _constructEJBInstance();
         }
-
         ctx.setEJB(instance);
     }
 
@@ -1442,7 +1436,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             ejbInv = createEjbInvocation(null, ctx);
             invocationManager.preInvoke(ejbInv);
 
-            if ((cdiService != null) && cdiService.isCDIEnabled(ejbBundle)) {
+            if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
                 // In CDI we need this for the interceptors to store dependent CDI contexts. We can't assign the
                 // other info as the ejb has not been created yet.
                 cdiCtx = cdiService.createEmptyCDIInjectionContext();
@@ -1452,7 +1446,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             // Interceptors must be created before the ejb so they're available for around construct.
             createEjbInterceptors(ctx, cdiCtx);
 
-            if ((cdiService != null) && cdiService.isCDIEnabled(ejbBundle)) {
+            if (cdiService != null && cdiService.isCDIEnabled(ejbBundle)) {
                 HashMap<Class, Object> ejbInfo = new HashMap<>();
                 ejbInfo.put(BaseContainer.class, this);
                 ejbInfo.put(EJBContextImpl.class, ctx);
@@ -1595,7 +1589,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             if (System.getSecurityManager() == null) {
                 currentThread.setContextClassLoader(getClassLoader());
             } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                AccessController.doPrivileged(new java.security.PrivilegedAction() {
 
                     @Override
                     public java.lang.Object run() {
@@ -1626,7 +1620,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                 if (System.getSecurityManager() == null) {
                     Thread.currentThread().setContextClassLoader(bc.previousClassLoader);
                 } else {
-                    java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                    AccessController.doPrivileged(new java.security.PrivilegedAction() {
                         @Override
                         public java.lang.Object run() {
                             Thread.currentThread().setContextClassLoader(bc.previousClassLoader);
@@ -1938,33 +1932,30 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      * Check timeout method and set it accessable
      */
     private void processEjbTimeoutMethod(Method method) throws Exception {
-        Class[] params = method.getParameterTypes();
-        if ((params.length == 0 || (params.length == 1 && params[0] == jakarta.ejb.Timer.class)) && (method.getReturnType() == Void.TYPE)) {
+        _logger.log(Level.FINEST, "processEjbTimeoutMethod(method={0})", method);
+        Class<?>[] params = method.getParameterTypes();
+        if (method.getReturnType() != Void.TYPE ||
+            (params.length != 0 && (params.length != 1 || params[0] != jakarta.ejb.Timer.class))
+        ) {
+            throw new EJBException(MessageFormat
+                .format("Invalid @Timeout or @Schedule signature for: {0} @Timeout or @Schedule method must return void"
+                    + " and be a no-arg method or take a single jakarta.ejb.Timer param", method));
+        }
+        isTimedObject_ = true;
 
-            isTimedObject_ = true;
-
-            final Method ejbTimeoutAccessible = method;
-            // Since timeout method can have any kind of access
-            // setAccessible to true.
-            if (System.getSecurityManager() == null) {
+        final Method ejbTimeoutAccessible = method;
+        if (System.getSecurityManager() == null) {
+            if (!ejbTimeoutAccessible.isAccessible()) {
+                ejbTimeoutAccessible.setAccessible(true);
+            }
+        } else {
+            PrivilegedExceptionAction<Void> action = () -> {
                 if (!ejbTimeoutAccessible.isAccessible()) {
                     ejbTimeoutAccessible.setAccessible(true);
                 }
-            } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-                    @Override
-                    public java.lang.Object run() throws Exception {
-                        if (!ejbTimeoutAccessible.isAccessible()) {
-                            ejbTimeoutAccessible.setAccessible(true);
-                        }
-                        return null;
-                    }
-                });
-            }
-        } else {
-            throw new EJBException(localStrings.getLocalString("ejb.invalid_timeout_method",
-                    "Invalid @Timeout or @Schedule signature for: {0} @Timeout or @Schedule method must return void and be a no-arg method or take a single jakarta.ejb.Timer param",
-                    method));
+                return null;
+            };
+            AccessController.doPrivileged(action);
         }
     }
 
@@ -3783,14 +3774,13 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         final ClassLoader previousClassLoader = currentThread.getContextClassLoader();
 
         // Unpublish all portable and non-portable JNDI names
-        for (Map.Entry<String, JndiInfo> entry : jndiInfoMap.entrySet()) {
+        for (Map.Entry<SimpleJndiName, JndiInfo> entry : jndiInfoMap.entrySet()) {
             JndiInfo jndiInfo = entry.getValue();
-
             try {
                 jndiInfo.unpublish(this.namingManager);
             } catch (Exception e) {
-                _logger.log(Level.FINE, "Error while unbinding JNDI name " + jndiInfo.name + " for EJB : " + this.ejbDescriptor.getName(),
-                        e);
+                _logger.log(Level.FINE, "Error while unbinding JNDI name " + jndiInfo.name + " for EJB.name: "
+                    + this.ejbDescriptor.getName(), e);
             }
         }
 
@@ -3798,7 +3788,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             if (System.getSecurityManager() == null) {
                 currentThread.setContextClassLoader(loader);
             } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                AccessController.doPrivileged(new java.security.PrivilegedAction() {
                     @Override
                     public java.lang.Object run() {
                         currentThread.setContextClassLoader(loader);
@@ -3872,7 +3862,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             if (System.getSecurityManager() == null) {
                 currentThread.setContextClassLoader(previousClassLoader);
             } else {
-                java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                AccessController.doPrivileged(new java.security.PrivilegedAction() {
                     @Override
                     public java.lang.Object run() {
                         currentThread.setContextClassLoader(previousClassLoader);
@@ -4320,26 +4310,33 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
     }
 
     private static class JndiInfo {
+        SimpleJndiName name;
+        Object object;
+        boolean cosNaming;
+        boolean portable;
+        boolean internal;
+        boolean publishedSuccessfully;
 
-        private JndiInfo(String name, Object object) {
+
+        private JndiInfo(SimpleJndiName name, Object object) {
             this.name = name;
             this.object = object;
         }
 
-        static JndiInfo newPortableLocal(String name, Object obj) {
+        static JndiInfo newPortableLocal(SimpleJndiName name, Object obj) {
             JndiInfo jndiInfo = new JndiInfo(name, obj);
             jndiInfo.portable = true;
             return jndiInfo;
         }
 
-        static JndiInfo newPortableRemote(String name, Object obj) {
+        static JndiInfo newPortableRemote(SimpleJndiName name, Object obj) {
             JndiInfo jndiInfo = new JndiInfo(name, obj);
             jndiInfo.portable = true;
             jndiInfo.cosNaming = isCosNamingObject(obj);
             return jndiInfo;
         }
 
-        static JndiInfo newNonPortableRemote(String name, Object obj) {
+        static JndiInfo newNonPortableRemote(SimpleJndiName name, Object obj) {
             JndiInfo jndiInfo = new JndiInfo(name, obj);
             jndiInfo.portable = false;
             jndiInfo.cosNaming = isCosNamingObject(obj);
@@ -4386,14 +4383,6 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         private static boolean isCosNamingObject(Object obj) {
             return ((obj instanceof Remote) || (obj instanceof org.omg.CORBA.Object));
         }
-
-        String name;
-        Object object;
-        boolean cosNaming;
-        boolean portable;
-        boolean internal;
-        boolean publishedSuccessfully;
-
     }
 
     /**
@@ -4519,7 +4508,7 @@ final class CallFlowInfoImpl implements CallFlowInfo {
 final class RemoteBusinessIntfInfo {
     Class generatedRemoteIntf;
     Class remoteBusinessIntf;
-    String jndiName;
+    SimpleJndiName jndiName;
     RemoteReferenceFactory referenceFactory;
     Class proxyClass;
 }

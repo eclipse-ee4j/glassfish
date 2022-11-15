@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,17 +17,17 @@
 
 package org.glassfish.resourcebase.resources.api;
 
-import org.glassfish.hk2.api.Metadata;
-
 import jakarta.inject.Qualifier;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import org.glassfish.hk2.api.Metadata;
+
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- *
  * @author Jagadish Ramu
  */
 @Qualifier

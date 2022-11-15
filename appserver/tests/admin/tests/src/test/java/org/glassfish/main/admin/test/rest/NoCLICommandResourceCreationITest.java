@@ -23,6 +23,7 @@ import jakarta.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_XML;
@@ -38,8 +39,8 @@ public class NoCLICommandResourceCreationITest extends RestTestBase {
 
     @Test
     public void testPropertyCreation() {
-        final String propertyKey = "propertyName" + generateRandomString();
-        String propertyValue = generateRandomString();
+        final String propertyKey = "propertyName" + RandomGenerator.generateRandomString();
+        String propertyValue = RandomGenerator.generateRandomString();
 
         //Create a property
         Map<String, String> param = new HashMap<>();
@@ -58,7 +59,7 @@ public class NoCLICommandResourceCreationITest extends RestTestBase {
         assertEquals(propertyValue, entity.get("value"));
 
         // Verify property update
-        propertyValue = generateRandomString();
+        propertyValue = RandomGenerator.generateRandomString();
         param.put("value", propertyValue);
         response = managementClient.put(URL_SERVER_PROPERTY, Entity.entity(getXmlForProperties(param), APPLICATION_XML));
         assertEquals(200, response.getStatus());

@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -28,10 +27,9 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 
 import jakarta.inject.Inject;
 
-import java.beans.PropertyVetoException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
@@ -40,6 +38,7 @@ import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.PerLookup;
@@ -48,6 +47,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourcesOfPool;
 
 /**
  * Delete Connector Connection Pool Command
@@ -58,17 +59,16 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 @I18n("delete.connector.connection.pool")
 public class DeleteConnectorConnectionPool implements AdminCommand {
+    private static final Logger LOG = System.getLogger(DeleteConnectorConnectionPool.class.getName());
+    private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(DeleteConnectorConnectionPool.class);
 
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(DeleteConnectorConnectionPool.class);
+    @Param(optional = true, obsolete = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
+    private String target;
 
-    @Param(optional=true, obsolete = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-
-    @Param(optional=true, defaultValue="false")
+    @Param(optional = true, defaultValue = "false")
     private Boolean cascade;
 
-    @Param(name="poolname", primary=true)
+    @Param(name = "poolname", primary = true)
     private String poolname;
 
     @Inject
@@ -76,7 +76,6 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
 
     @Inject
     private IterableProvider<Server> servers;
-
     @Inject
     private IterableProvider<Cluster> clusters;
 
@@ -88,32 +87,30 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
      */
     @Override
     public void execute(AdminCommandContext context) {
+        LOG.log(Level.DEBUG, "execute(context={0}); poolname={1}, target={2}", context, poolname, target);
         final ActionReport report = context.getActionReport();
-
         if (poolname == null) {
-            report.setMessage(localStrings.getLocalString("delete.connector.connection.pool.noJndiName",
+            report.setMessage(I18N.getLocalString("delete.connector.connection.pool.noJndiName",
                             "No id defined for connector connection pool."));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
 
+        final SimpleJndiName jndiName = new SimpleJndiName(poolname);
         // ensure we already have this resource
-        if(ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorConnectionPool.class, poolname) == null){
-            report.setMessage(localStrings.getLocalString("delete.connector.connection.pool.notfound",
-                    "A connector connection pool named {0} does not exist.", poolname));
+        if (domain.getResources().getResourceByName(ConnectorConnectionPool.class, jndiName) == null) {
+            report.setMessage(I18N.getLocalString("delete.connector.connection.pool.notfound",
+                "A connector connection pool named {0} does not exist.", poolname));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
 
         try {
-
             // if cascade=true delete all the resources associated with this pool
             // if cascade=false don't delete this connection pool if a resource is referencing it
-            Object obj = deleteAssociatedResources(servers, clusters, domain.getResources(),
-                    cascade, poolname);
-            if (obj instanceof Integer &&
-                    (Integer) obj == ResourceStatus.FAILURE) {
-                report.setMessage(localStrings.getLocalString(
+            int obj = deleteAssociatedResources(servers, clusters, domain.getResources(), cascade, jndiName);
+            if (obj == ResourceStatus.FAILURE) {
+                report.setMessage(I18N.getLocalString(
                     "delete.connector.connection.pool.pool_in_use",
                     "Some connector resources are referencing connection pool {0}. Use 'cascade' " +
                             "option to delete them as well.", poolname));
@@ -122,84 +119,75 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
             }
 
             // delete connector connection pool
-            if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    ConnectorConnectionPool cp = ConnectorsUtil.getResourceByName(domain.getResources(),
-                        ConnectorConnectionPool.class, poolname);
-                    if (cp != null) {
-                        return param.getResources().remove(cp);
-                    }
-                    // not found
+            SingleConfigCode<Resources> configCode = param -> {
+                ConnectorConnectionPool cp = domain.getResources().getResourceByName(ConnectorConnectionPool.class, jndiName);
+                if (cp == null) {
                     return null;
                 }
-            }, domain.getResources()) == null) {
-                report.setMessage(localStrings.getLocalString("delete.connector.connection.pool.notfound",
+                return param.getResources().remove(cp);
+            };
+            if (ConfigSupport.apply(configCode, domain.getResources()) == null) {
+                report.setMessage(I18N.getLocalString("delete.connector.connection.pool.notfound",
                                 "A connector connection pool named {0} does not exist.", poolname));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
 
-        } catch(TransactionFailure tfe) {
-            Logger.getLogger(DeleteConnectorConnectionPool.class.getName()).log(Level.SEVERE,
-                    "Something went wrong in delete-connector-connection-pool", tfe);
-            report.setMessage(tfe.getMessage() != null ? tfe.getLocalizedMessage() :
-                localStrings.getLocalString("delete.connector.connection.pool.fail",
-                            "Connector connection pool {0} delete failed ", poolname));
+        } catch (TransactionFailure tfe) {
+            LOG.log(Level.ERROR, "Something went wrong in delete-connector-connection-pool", tfe);
+            report.setMessage(tfe.getMessage() != null ? tfe.getLocalizedMessage()
+                : I18N.getLocalString("delete.connector.connection.pool.fail",
+                    "Connector connection pool {0} delete failed ", poolname));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(tfe);
         }
 
-        report.setMessage(localStrings.getLocalString("delete.connector.connection.pool.success",
+        report.setMessage(I18N.getLocalString("delete.connector.connection.pool.success",
                 "Connector connection pool {0} deleted successfully", poolname));
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 
-    //TODO duplicate code in JDBCConnectionPoolManager
-    private Object deleteAssociatedResources(final Iterable<Server> servers, final Iterable<Cluster> clusters, Resources resources,
-                                           final boolean cascade, final String poolName) throws TransactionFailure {
+    private int deleteAssociatedResources(final Iterable<Server> servers, final Iterable<Cluster> clusters,
+        Resources resources, final boolean cascade, final SimpleJndiName poolName) throws TransactionFailure {
         if (cascade) {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-                @Override
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    Collection<BindableResource> referringResources = ConnectorsUtil.getResourcesOfPool(param, poolName);
-                    for (BindableResource referringResource : referringResources) {
-                        // delete resource-refs
-                        deleteServerResourceRefs(servers, referringResource.getJndiName());
-                        deleteClusterResourceRefs(clusters, referringResource.getJndiName());
-
-                        // remove the resource
-                        param.getResources().remove(referringResource);
-                    }
-                    return true; //no-op
+            SingleConfigCode<Resources> configCode = param -> {
+                Collection<BindableResource> referringResources = getResourcesOfPool(param, poolName);
+                for (BindableResource referringResource : referringResources) {
+                    // delete resource-refs
+                    SimpleJndiName jndiName = SimpleJndiName.of(referringResource.getJndiName());
+                    LOG.log(Level.INFO, "Deleting referring resource: {0}", jndiName);
+                    deleteServerResourceRefs(servers, jndiName);
+                    deleteClusterResourceRefs(clusters, jndiName);
+                    param.getResources().remove(referringResource);
                 }
-            }, resources);
-        }else{
-            Collection<BindableResource> referringResources = ConnectorsUtil.getResourcesOfPool(resources, poolName);
-            if(referringResources.size() > 0){
+                return true; // no-op
+            };
+            ConfigSupport.apply(configCode, resources);
+        } else {
+            Collection<BindableResource> referringResources = getResourcesOfPool(resources, poolName);
+            if (!referringResources.isEmpty()) {
                 return ResourceStatus.FAILURE;
             }
         }
-        return true; //no-op
+        return ResourceStatus.SUCCESS;
     }
 
-    //TODO duplicate code in JDBCConnectionPoolManager
-    private void deleteServerResourceRefs(Iterable<Server> servers, final String refName)
-            throws TransactionFailure {
-        if(servers != null){
+
+    // TODO duplicate code in JDBCConnectionPoolManager
+    private void deleteServerResourceRefs(Iterable<Server> servers, final SimpleJndiName refName) throws TransactionFailure {
+        if (servers != null) {
             for (Server server : servers) {
                 server.deleteResourceRef(refName);
             }
         }
     }
 
-    private void deleteClusterResourceRefs(Iterable<Cluster>clusters, final String refName)
-            throws TransactionFailure {
-        if(clusters != null){
+
+    private void deleteClusterResourceRefs(Iterable<Cluster> clusters, final SimpleJndiName refName) throws TransactionFailure {
+        if (clusters != null) {
             for (Cluster cluster : clusters) {
                 cluster.deleteResourceRef(refName);
             }
         }
     }
-
 }

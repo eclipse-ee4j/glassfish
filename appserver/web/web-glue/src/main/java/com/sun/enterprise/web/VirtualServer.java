@@ -691,12 +691,9 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                     webModuleConfig.setDescriptor(webBundleDescriptor);
                     webModuleConfig.setLocation(docroot);
                     webModuleConfig.setParentLoader(EmbeddedWebContainer.class.getClassLoader());
-                    WebappClassLoader cloader = AccessController.doPrivileged(new PrivilegedAction<WebappClassLoader>() {
-                        @Override
-                        public WebappClassLoader run() {
-                            return new WebappClassLoader(EmbeddedWebContainer.class.getClassLoader());
-                        }
-                    });
+                    PrivilegedAction<WebappClassLoader> action = () -> new WebappClassLoader(
+                        EmbeddedWebContainer.class.getClassLoader());
+                    WebappClassLoader cloader = AccessController.doPrivileged(action);
                     webModuleConfig.setAppClassLoader(cloader);
 
                 }
@@ -848,7 +845,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
                 } else if (propName.startsWith("listener_")) {
                     addListener(propValue);
                 } else if (propName.equals("securePagesWithPragma")) {
-                    setSecurePagesWithPragma(Boolean.valueOf(propValue));
+                    setSecurePagesWithPragma(Boolean.parseBoolean(propValue));
                 }
             }
         }

@@ -69,6 +69,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.JavaEEResourceType;
@@ -109,7 +110,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     // for service endpoint interface.
     private String webServiceEndpointInterfaceName;
 
-    private String jndiName = "";
+    private SimpleJndiName jndiName = SimpleJndiName.of("");
     private String mappedName = "";
 
     // Is set to true if this bean exposes a no-interface view
@@ -396,18 +397,18 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     }
 
     @Override
-    public String getJndiName() {
+    public SimpleJndiName getJndiName() {
         if (this.jndiName == null) {
-            this.jndiName = "";
+            this.jndiName = new SimpleJndiName("");
         }
-        return jndiName.isEmpty() ? getMappedName() : jndiName;
+        return jndiName.isEmpty() ? new SimpleJndiName(getMappedName()) : jndiName;
     }
 
     @Override
-    public void setJndiName(String jndiName) {
+    public void setJndiName(SimpleJndiName jndiName) {
         this.jndiName = jndiName;
         if (this.getName().isEmpty()) {
-            super.setName(jndiName);
+            super.setName(jndiName == null ? null : jndiName.toString());
         }
     }
 

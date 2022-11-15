@@ -28,6 +28,8 @@ import org.glassfish.api.naming.NamespacePrefixes;
 import org.glassfish.concurrent.config.ManagedThreadFactory.ManagedThreadFactoryConfigActivator;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+
 /**
  * Naming Object Proxy to handle the Default ManagedThreadFactory.
  * Maps to a pre-configured managed thread factory, when binding for
@@ -37,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 @NamespacePrefixes({DefaultManagedThreadFactory.DEFAULT_MANAGED_THREAD_FACTORY})
 public class DefaultManagedThreadFactory implements NamedNamingObjectProxy, DefaultResourceProxy {
 
-    static final String DEFAULT_MANAGED_THREAD_FACTORY = "java:comp/DefaultManagedThreadFactory";
+    static final String DEFAULT_MANAGED_THREAD_FACTORY = JNDI_CTX_JAVA_COMPONENT + "DefaultManagedThreadFactory";
     private static final String DEFAULT_MANAGED_THREAD_FACTORY_PHYS = "concurrent/__defaultManagedThreadFactory";
 
     @Inject

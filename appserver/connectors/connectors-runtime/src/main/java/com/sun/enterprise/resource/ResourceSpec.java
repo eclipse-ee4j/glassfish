@@ -17,17 +17,18 @@
 
 package com.sun.enterprise.resource;
 
-import java.io.Serializable;
-
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.enterprise.connectors.PoolMetaData;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * ResourceSpec is used as a key to locate the correct resource pool
  */
-
 public class ResourceSpec implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,8 +37,8 @@ public class ResourceSpec implements Serializable {
     static public final int JNDI_NAME = 1;
     static public final int JMS = 2;
 
-    private String resourceId;
-    private int resourceIdType;
+    private final SimpleJndiName resourceId;
+    private final int resourceIdType;
 
     private boolean pmResource;
     private boolean nonTxResource;
@@ -49,33 +50,29 @@ public class ResourceSpec implements Serializable {
 
     private PoolInfo poolInfo;
 
-    public ResourceSpec(String resourceId, int resourceIdType) {
-        if (resourceId == null) {
-            throw new NullPointerException();
-        }
-
+    public ResourceSpec(SimpleJndiName resourceId, int resourceIdType) {
+        Objects.requireNonNull(resourceId, "resourceId");
         this.resourceId = resourceId;
         this.resourceIdType = resourceIdType;
 
-        if (resourceId.endsWith(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
+        if (resourceId.hasSuffix(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
             nonTxResource = true;
         }
-
-        if (resourceId.endsWith(ConnectorConstants.PM_JNDI_SUFFIX)) {
+        if (resourceId.hasSuffix(ConnectorConstants.PM_JNDI_SUFFIX)) {
             pmResource = true;
         }
-
     }
 
-    public ResourceSpec(String resourceId, int resourceIdType, PoolMetaData poolMetaData) {
-        this(resourceId, resourceIdType);
+    public ResourceSpec(SimpleJndiName resourceId, int resourceIdType, PoolMetaData poolMetaData) {
+        Objects.requireNonNull(resourceId, "resourceId");
+        this.resourceId = resourceId;
+        this.resourceIdType = resourceIdType;
 
-        if (poolMetaData.isPM()) {
-            pmResource = true;
-        }
-
-        if (poolMetaData.isNonTx()) {
+        if (poolMetaData.isNonTx() || resourceId.hasSuffix(ConnectorConstants.NON_TX_JNDI_SUFFIX)) {
             nonTxResource = true;
+        }
+        if (poolMetaData.isPM() || resourceId.hasSuffix(ConnectorConstants.PM_JNDI_SUFFIX)) {
+            pmResource = true;
         }
 
         if (poolMetaData.isLazyEnlistable() && !nonTxResource && !pmResource) {
@@ -115,13 +112,10 @@ public class ResourceSpec implements Serializable {
             ResourceSpec obj = (ResourceSpec) other;
             if (poolInfo == null) {
                 return (resourceId.equals(obj.resourceId) && resourceIdType == obj.resourceIdType);
-            } else {
-                return (poolInfo.equals(obj.poolInfo));
-
             }
-        } else {
-            return false;
+            return (poolInfo.equals(obj.poolInfo));
         }
+        return false;
     }
 
     /**
@@ -133,13 +127,12 @@ public class ResourceSpec implements Serializable {
     public int hashCode() {
         if (poolInfo == null) {
             return resourceId.hashCode() + resourceIdType;
-        } else {
-            return poolInfo.hashCode();
         }
+        return poolInfo.hashCode();
     }
 
     public String getResourceId() {
-        return resourceId;
+        return resourceId.toString();
     }
 
     public boolean isPM() {

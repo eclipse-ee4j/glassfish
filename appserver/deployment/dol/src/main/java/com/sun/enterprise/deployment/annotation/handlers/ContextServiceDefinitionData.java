@@ -21,7 +21,9 @@ import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
 
-import static com.sun.enterprise.universal.collections.JavaLangUtils.nonNull;
+import org.glassfish.api.naming.SimpleJndiName;
+
+import static com.sun.enterprise.universal.JavaLangUtils.nonNull;
 
 /**
  * @author David Matejcek
@@ -30,18 +32,18 @@ public class ContextServiceDefinitionData implements Serializable {
 
     private static final long serialVersionUID = -6964391431010485710L;
 
-    private String name;
+    private SimpleJndiName name;
     private Set<String> cleared = new HashSet<>();
     private Set<String> propagated = new HashSet<>();
     private Set<String> unchanged = new HashSet<>();
     private Properties properties = new Properties();
 
-    public String getName() {
+    public SimpleJndiName getName() {
         return name;
     }
 
 
-    public void setName(String name) {
+    public void setName(SimpleJndiName name) {
         this.name = name;
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +18,16 @@
 package org.glassfish.resourcebase.resources.api;
 
 import com.sun.enterprise.config.serverbeans.Resource;
-import org.glassfish.api.naming.NamingObjectProxy;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.annotations.Service;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -45,27 +47,28 @@ public class ResourceProxy implements NamingObjectProxy.InitializationNamingObje
     @Inject
     private org.glassfish.resourcebase.resources.naming.ResourceNamingService namingService;
 
-    private Resource resource = null;
-    private Object result = null;
-    private org.glassfish.resourcebase.resources.api.ResourceInfo resourceInfo = null;
+    private Resource resource;
+    private Object result;
+    private ResourceInfo resourceInfo;
 
-    public Object create(Context ic) throws NamingException {
+    @Override
+    public <T> T create(Context ic) throws NamingException {
         //this is a per-lookup object and once we have the resource,
         //we remove the proxy and bind the resource (ref) with same jndi-name
         //hence block synchronization is fine as it blocks only callers
         //of this particular resource and also only for first time (initialization)
-        synchronized(this){
-            try{
-                if(result == null){
-                    getResourceDeployer(resource).deployResource(resource, resourceInfo.getApplicationName(),
-                            resourceInfo.getModuleName());
+        synchronized (this) {
+            try {
+                if (result == null) {
+                    ResourceDeployer<Resource> deployer = getResourceDeployer(resource);
+                    deployer.deployResource(resource, resourceInfo.getApplicationName(), resourceInfo.getModuleName());
                 }
                 result = namingService.lookup(resourceInfo, resourceInfo.getName(), ic.getEnvironment());
-            }catch(Exception e){
+            } catch (Exception e) {
                 throwResourceNotFoundException(e, resourceInfo);
             }
         }
-        return result;
+        return (T) result;
     }
 
     /**
@@ -81,11 +84,11 @@ public class ResourceProxy implements NamingObjectProxy.InitializationNamingObje
      * Name by which the proxy (or the resource) will be bound in JNDI
      * @param resourceInfo resource-info
      */
-    public void setResourceInfo(org.glassfish.resourcebase.resources.api.ResourceInfo resourceInfo) {
+    public void setResourceInfo(ResourceInfo resourceInfo) {
         this.resourceInfo = resourceInfo;
     }
 
-    protected Object throwResourceNotFoundException(Exception e, org.glassfish.resourcebase.resources.api.ResourceInfo resourceInfo) throws NamingException {
+    protected void throwResourceNotFoundException(Exception e, ResourceInfo resourceInfo) throws NamingException {
         NamingException ne = new NamingException("Unable to lookup resource : " + resourceInfo);
         ne.initCause(e);
         throw ne;
@@ -97,7 +100,7 @@ public class ResourceProxy implements NamingObjectProxy.InitializationNamingObje
      * @param resource resource instance
      * @return ResourceDeployer
      */
-    protected org.glassfish.resourcebase.resources.api.ResourceDeployer getResourceDeployer(Object resource){
+    protected <T> ResourceDeployer<T> getResourceDeployer(T resource){
         return resourceManagerFactoryProvider.get().getResourceDeployer(resource);
     }
 }

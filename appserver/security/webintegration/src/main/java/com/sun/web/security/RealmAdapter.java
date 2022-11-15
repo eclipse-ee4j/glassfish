@@ -70,7 +70,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -1006,9 +1005,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             rvalue = principalSet.contains(defaultPrincipal);
         }
         if (rvalue) {
-            Iterator<Principal> it = principalSet.iterator();
-            while (it.hasNext()) {
-                if (!it.next().equals(defaultPrincipal)) {
+            for (Principal element : principalSet) {
+                if (!element.equals(defaultPrincipal)) {
                     return false;
                 }
             }
@@ -1417,7 +1415,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         if (map.containsKey(propName)) {
             Object value = map.get(propName);
             if (value != null && value instanceof String) {
-                return Boolean.valueOf((String) value);
+                return Boolean.parseBoolean((String) value);
             }
         }
         return false;

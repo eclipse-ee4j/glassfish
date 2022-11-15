@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LoggerInfo;
@@ -222,7 +223,7 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
         }
 
         if (cachedCF == null) {
-            String jndiName;
+            SimpleJndiName jndiName;
             if (metadata.getLookup() == null) {
                 // Use platform default connection factory
                 jndiName = JMSContextMetadata.DEFAULT_CONNECTION_FACTORY;
@@ -240,18 +241,18 @@ public class InjectableJMSContext extends ForwardingJMSContext implements Serial
 
             try {
 
-                boolean isPMName = jndiName.endsWith("__pm");
+                boolean isPMName = jndiName.hasSuffix("__pm");
                 if (isPMName) {
-                    int l = jndiName.length();
-                    jndiName = jndiName.substring(0, l - 4);
+                    int length = jndiName.toString().length();
+                    jndiName = new SimpleJndiName(jndiName.toString().substring(0, length - 4));
                 }
-                cachedCF = (ConnectionFactory) initialContext.lookup(jndiName);
+                cachedCF = (ConnectionFactory) initialContext.lookup(jndiName.toString());
 
                 if (isInTransaction && (usePMResourceInTransaction || isPMName)) {
                     // append __PM to jndi name to work around GLASSFISH-19872
                     // it needs double jndi lookup for __PM resource
                     jndiName = ConnectorsUtil.getPMJndiName(jndiName);
-                    cachedCF = (ConnectionFactory) initialContext.lookup(jndiName);
+                    cachedCF = (ConnectionFactory) initialContext.lookup(jndiName.toString());
                     usePMResource = true;
                 }
             } catch (NamingException ne) {

@@ -17,11 +17,11 @@
 
 package com.sun.enterprise.naming.impl;
 
-import com.sun.enterprise.naming.util.LogFacade;
-
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.io.Serializable;
+import java.lang.System.Logger;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -31,11 +31,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.naming.Binding;
-import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.Name;
@@ -48,16 +45,29 @@ import javax.naming.NamingException;
 import javax.naming.NotContextException;
 import javax.naming.Reference;
 import javax.naming.StringRefAddr;
+import javax.naming.spi.NamingManager;
 
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.InvocationManager;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
 import org.omg.CORBA.ORB;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
+import static java.util.Objects.requireNonNull;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP_NS_ID;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_NS_ID;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE_NS_ID;
 
 
 /**
@@ -69,57 +79,52 @@ import org.omg.CORBA.ORB;
 @Singleton
 public final class GlassfishNamingManagerImpl implements GlassfishNamingManager {
 
-    @LogMessageInfo(message = "Error during CosNaming.unbind for name {0}: {1}")
-    public static final String ERROR_COSNAMING_UNBIND = "AS-NAMING-00004";
-
-    @LogMessageInfo(message = "Naming binding already exists for {0} in namespace {1}")
-    public static final String NAMING_ALREADY_EXISTS = "AS-NAMING-00005";
-
     public static final String IIOPOBJECT_FACTORY = "com.sun.enterprise.naming.util.IIOPObjectFactory";
-
-    private static final int JAVA_COMP_LENGTH = "java:comp".length();
-    private static final int JAVA_MODULE_LENGTH = "java:module".length();
-
-    private static final Logger LOG = LogFacade.logger;
+    private static final Logger LOG = System.getLogger(GlassfishNamingManagerImpl.class.getName());
 
     @Inject
     private ServiceLocator habitat;
 
-    //@Inject
-    volatile InvocationManager invMgr;
-
     private final InitialContext initialContext;
-    private Context cosContext;
 
     private final NameParser nameParser = new SerialNameParser();
 
-    private final Map componentNamespaces;
-    private final Map<String, Map> appNamespaces;
-    private final Map<AppModuleKey, Map> moduleNamespaces;
+    private final NamespacesMap<String> componentNamespaces;
+    private final NamespacesMap<String> appNamespaces;
+    private final NamespacesMap<AppModuleKey> moduleNamespaces;
     private final Map<String, ComponentIdInfo> componentIdInfo;
 
+    private InvocationManager invMgr;
 
+    // FIXME: cosContext has nothing to do with the rest of the class. It could be pushed to own class.
+    private Context cosContext;
+
+    /**
+     * Create the naming manager. Creates a new initial context.
+     *
+     * @throws NamingException if the creation of the {@link InitialContext} instance failed.
+     */
     public GlassfishNamingManagerImpl() throws NamingException {
         this(new InitialContext());
     }
 
-    //Used only for Junit Testing
-    void setInvocationManager(final InvocationManager invMgr) {
-        this.invMgr = invMgr;
-    }
 
     /**
-     * Create the naming manager. Creates a new initial context.
+     * Create the naming manager.
      */
-    public GlassfishNamingManagerImpl(InitialContext ic)
-            throws NamingException {
-        initialContext = ic;
-        componentNamespaces = new Hashtable();
-        appNamespaces = new HashMap<>();
-        moduleNamespaces = new HashMap<>();
-        componentIdInfo = new HashMap<>();
-
+    public GlassfishNamingManagerImpl(InitialContext initialContext) {
+        this.initialContext = initialContext;
+        this.componentNamespaces = new NamespacesMap<>(SimpleJndiName.JNDI_CTX_JAVA_COMPONENT);
+        this.appNamespaces = new NamespacesMap<>(JNDI_CTX_JAVA_APP);
+        this.moduleNamespaces = new NamespacesMap<>(SimpleJndiName.JNDI_CTX_JAVA_MODULE);
+        this.componentIdInfo = new HashMap<>();
         JavaURLContext.setNamingManager(this);
+    }
+
+
+    // Used only for unit testing
+    void setInvocationManager(final InvocationManager invMgr) {
+        this.invMgr = invMgr;
     }
 
 
@@ -143,7 +148,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         try {
             // Now that we have an ORB, initialize the CosNaming service
             // and set it on the server's naming service.
-            Hashtable cosNamingEnv = new Hashtable();
+            Hashtable<Object, Object> cosNamingEnv = new Hashtable<>();
             cosNamingEnv.put("java.naming.factory.initial", "org.glassfish.jndi.cosnaming.CNCtxFactory");
             cosNamingEnv.put("java.naming.corba.orb", orb);
             cosContext = new InitialContext(cosNamingEnv);
@@ -161,36 +166,21 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         return remoteProvider;
     }
 
+
     private Context getCosContext() {
-        return cosContext;
+        return requireNonNull(cosContext, "cosContext was not initialized by initializeRemoteNamingSupport method");
     }
 
-    /**
-     * Publish a name in the naming service.
-     *
-     * @param name   Name that the object is bound as.
-     * @param obj    Object that needs to be bound.
-     * @param rebind flag
-     * @throws javax.naming.NamingException if there is a naming exception.
-     */
+
     @Override
-    public void publishObject(String name, Object obj, boolean rebind) throws NamingException {
-        Name nameobj = new CompositeName(name);
-        publishObject(nameobj, obj, rebind);
+    public void publishObject(SimpleJndiName name, Object obj, boolean rebind) throws NamingException {
+        publishObject(name.toName(), obj, rebind);
     }
 
 
-    /**
-     * Publish a name in the naming service.
-     *
-     * @param name Name that the object is bound as.
-     * @param obj Object that needs to be bound.
-     * @param rebind flag
-     * @throws javax.naming.NamingException if there is a naming exception.
-     */
     @Override
     public void publishObject(Name name, Object obj, boolean rebind) throws NamingException {
-        LOG.log(Level.CONFIG, "publishObject(name={0}, obj={1}, rebind={2})", new Object[] {name, obj, rebind});
+        LOG.log(DEBUG, "publishObject(name={0}, obj={1}, rebind={2})", name, obj, rebind);
         if (rebind) {
             initialContext.rebind(name, obj);
         } else {
@@ -200,20 +190,18 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
 
     @Override
-    public void publishCosNamingObject(String name, Object obj, boolean rebind)
-            throws NamingException {
-
-
-        Name nameObj = new CompositeName(name);
+    public void publishCosNamingObject(SimpleJndiName name, Object obj, boolean rebind) throws NamingException {
+        LOG.log(DEBUG, "publishCosNamingObject(name={0}, obj={1}, rebind={2})", name, obj, rebind);
+        Name nameObj = name.toName();
 
         // Create any COS naming sub-contexts in name
         // that don't already exist.
         createSubContexts(nameObj, getCosContext());
 
         if (rebind) {
-            getCosContext().rebind(name, obj);
+            getCosContext().rebind(nameObj, obj);
         } else {
-            getCosContext().bind(name, obj);
+            getCosContext().bind(nameObj, obj);
         }
 
         // Bind a reference to it in the SerialContext using
@@ -221,55 +209,43 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         // to lookup the object using the same JNDI name.
         // It is also used from bindObjects while populating ejb-refs in
         // the java:comp namespace.
-        Object serialObj = new Reference("reference",
-                    new StringRefAddr("url", name),
-                    IIOPOBJECT_FACTORY, null);
-
+        StringRefAddr addr = new StringRefAddr("url", name.toString());
+        Object serialObj = new Reference("reference", addr, IIOPOBJECT_FACTORY, null);
         publishObject(name, serialObj, rebind);
 
     }
 
-    @Override
-    public void unpublishObject(String name)
-            throws NamingException {
 
-
-        initialContext.unbind(name);
-    }
-
-    /**
-     * Remove an object from the naming service.
-     *
-     * @param name Name that the object is bound as.
-     * @throws Exception
-     */
-    @Override
-    public void unpublishCosNamingObject(String name)
-            throws NamingException {
-        try {
-            getCosContext().unbind(name);
-        } catch(NamingException cne) {
-           LOG.log(Level.WARNING, ERROR_COSNAMING_UNBIND, new Object[] {name, cne});
-        }
-        initialContext.unbind(name);
-    }
-
-
-    /**
-     * Remove an object from the naming service.
-     *
-     * @param name Name that the object is bound as.
-     * @throws Exception
-     */
     @Override
     public void unpublishObject(Name name) throws NamingException {
-        this.unpublishObject(name.toString());
+        LOG.log(DEBUG, "unpublishObject(name={0})", name);
+        initialContext.unbind(name);
     }
+
+
+    @Override
+    public void unpublishObject(SimpleJndiName name) throws NamingException {
+        LOG.log(DEBUG, "unpublishObject(name={0})", name);
+        initialContext.unbind(name.toName());
+    }
+
+
+    @Override
+    public void unpublishCosNamingObject(SimpleJndiName name) throws NamingException {
+        LOG.log(DEBUG, "unpublishCosNamingObject(name={0})", name);
+        try {
+            getCosContext().unbind(name.toName());
+        } catch (NamingException cne) {
+            LOG.log(WARNING, "Error during CosNaming.unbind for name: " + name, cne);
+        }
+        initialContext.unbind(name.toString());
+    }
+
 
     /**
      * Create any sub-contexts in name that don't already exist.
      *
-     * @param name    Name containing sub-contexts to create
+     * @param name Name containing sub-contexts to create
      * @param rootCtx in which sub-contexts should be created
      * @throws Exception
      */
@@ -280,9 +256,7 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         for (int subCtxIndex = 0; subCtxIndex < numSubContexts; subCtxIndex++) {
             String subCtxName = name.get(subCtxIndex);
             try {
-
-                Object obj = currentCtx.lookup(subCtxName);
-
+                final Object obj = currentCtx.lookup(subCtxName);
                 if (obj == null) {
                     // Doesn't exist so create it.
                     currentCtx = currentCtx.createSubcontext(subCtxName);
@@ -293,217 +267,133 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
                     // Context name clashes with existing object.
                     throw new NameAlreadyBoundException(subCtxName);
                 }
-            }
-            catch (NameNotFoundException e) {
+            } catch (NameNotFoundException e) {
                 // Doesn't exist so create it.
                 currentCtx = currentCtx.createSubcontext(subCtxName);
             }
-        } // End for -- each sub-context
+        }
     }
 
-    private Map getComponentNamespace(String componentId)
-            throws NamingException {
+
+    private JavaNamespace getComponentNamespace(String componentId) {
         // Note: HashMap is not synchronized. The namespace is populated
         // at deployment time by a single thread, and then on there are
         // no structural modifications (i.e. no keys added/removed).
         // So the namespace doesnt need to be synchronized.
-        Map namespace = (Map) componentNamespaces.get(componentId);
+        JavaNamespace namespace = componentNamespaces.get(componentId);
         if (namespace == null) {
-            namespace = new HashMap();
+            namespace = new JavaNamespace(componentId, "comp");
             componentNamespaces.put(componentId, namespace);
-
-            // put entries for java:, java:comp and java:comp/env
-            JavaURLContext jc = new JavaURLContext("java:", null);
-            namespace.put("java:", jc);
-            namespace.put("java:/", jc);
-            JavaURLContext jcc = new JavaURLContext("java:comp", null);
-
-            namespace.put("java:comp", jcc);
-            namespace.put("java:comp/", jcc);
-            JavaURLContext jccEnv = new JavaURLContext("java:comp/env", null);
-            namespace.put("java:comp/env", jccEnv);
-            namespace.put("java:comp/env/", jccEnv);
         }
 
         return namespace;
     }
 
-    private Map getModuleNamespace(AppModuleKey appModuleKey)
-            throws NamingException {
 
-         if( (appModuleKey.getAppName() == null) ||
-             (appModuleKey.getModuleName() == null) ) {
-             throw new NamingException("Invalid appModuleKey " + appModuleKey);
-         }
+    private JavaNamespace getModuleNamespace(AppModuleKey appModuleKey) throws NamingException {
+        if (appModuleKey.getAppName() == null || appModuleKey.getModuleName() == null) {
+            throw new NamingException("Invalid appModuleKey " + appModuleKey);
+        }
 
         // Note: HashMap is not synchronized. The namespace is populated
         // at deployment time by a single thread, and then on there are
         // no structural modifications (i.e. no keys added/removed).
         // So the namespace doesnt need to be synchronized.
-        Map namespace = moduleNamespaces.get(appModuleKey);
+        JavaNamespace namespace = moduleNamespaces.get(appModuleKey);
         if (namespace == null) {
-            namespace = new Hashtable();
+            namespace = new JavaNamespace(appModuleKey.toString(), "module");
             moduleNamespaces.put(appModuleKey, namespace);
-
-            // put entries for java:, java:comp and java:comp/env
-            JavaURLContext jc = new JavaURLContext("java:", null);
-            namespace.put("java:", jc);
-            namespace.put("java:/", jc);
-
-            JavaURLContext jMod = new JavaURLContext("java:module", null);
-            namespace.put("java:module", jMod);
-            namespace.put("java:module/", jMod);
-            JavaURLContext jModEnv = new JavaURLContext("java:module/env", null);
-            namespace.put("java:module/env", jModEnv);
-            namespace.put("java:module/env/", jModEnv);
-
         }
 
         return namespace;
     }
 
-    private Object lookupFromNamespace(String name, Map namespace, Hashtable env) throws NamingException {
-        Object o = namespace.get(name);
-        if (o == null) {
-            throw new NameNotFoundException("No object bound to name " + name);
-        }
-        if (o instanceof NamingObjectProxy) {
-            NamingObjectProxy namingProxy = (NamingObjectProxy) o;
-            InitialContext ic = initialContext;
-            if (env != null) {
-                ic = new InitialContext(env);
-            }
-            return namingProxy.create(ic);
-        } else if (o instanceof Reference) {
-            try {
-                return getObjectInstance(name, o, env);
-            } catch (Exception e) {
-                if (LOG.isLoggable(Level.FINEST)) {
-                    LOG.log(Level.FINEST, "Unable to get Object instance from Reference for name [" + name + "]. "
-                        + "Hence returning the Reference object ", e);
-                }
-            }
-        }
-        return o;
-    }
-
     @Override
-    public Object lookupFromAppNamespace(String appName, String name, Hashtable env) throws NamingException {
-        LOG.log(Level.FINEST, "lookupFromAppNamespace(appName={0}, name={1}, env)", new Object[] {appName, name});
-        Map namespace = getAppNamespace(appName);
+    public <T> T lookupFromAppNamespace(String appName, SimpleJndiName name, Hashtable<?, ?> env) throws NamingException {
+        LOG.log(TRACE, "lookupFromAppNamespace(appName={0}, name={1}, env)", appName, name);
+        Map<SimpleJndiName, Object> namespace = getAppNamespace(appName);
         return lookupFromNamespace(name, namespace, env);
     }
 
     @Override
-    public Object lookupFromModuleNamespace(String appName, String moduleName, String name, Hashtable env)
-            throws NamingException {
-        LOG.log(Level.FINEST, "lookupFromModuleNamespace(appName={0}, moduleName={1}, name={2}, env)",
-            new Object[] {appName, moduleName, name});
+    public <T> T lookupFromModuleNamespace(String appName, String moduleName, SimpleJndiName name, Hashtable<?, ?> env)
+        throws NamingException {
+        LOG.log(TRACE, "lookupFromModuleNamespace(appName={0}, moduleName={1}, name={2}, env)", appName, moduleName,
+            name);
         AppModuleKey appModuleKey = new AppModuleKey(appName, moduleName);
-        Map namespace = getModuleNamespace(appModuleKey);
+        Map<SimpleJndiName, Object> namespace = getModuleNamespace(appModuleKey);
         return lookupFromNamespace(name, namespace, env);
     }
 
-    private Object getObjectInstance(String name, Object obj, Hashtable env) throws Exception {
 
-        if(env == null){
-            env = new Hashtable();
+    private <T> T getObjectInstance(SimpleJndiName name, Object obj, Hashtable<?, ?> env) throws Exception {
+        LOG.log(DEBUG, "getObjectInstance(name={0}, obj, env={1})", name, env);
+        if (env == null) {
+            env = new Hashtable<>();
         }
-        return javax.naming.spi.NamingManager.getObjectInstance(obj, new CompositeName(name), null, env);
+        return (T) NamingManager.getObjectInstance(obj, name.toName(), null, env);
     }
 
-     private Map getAppNamespace(String appName)
-            throws NamingException {
 
-         if( appName == null ) {
-             throw new NamingException("Null appName");
-         }
+    private JavaNamespace getAppNamespace(String appName) throws NamingException {
+        LOG.log(TRACE, "getAppNamespace(appName={0})", appName);
+        if (appName == null) {
+            throw new NamingException("Null appName");
+        }
 
         // Note: HashMap is not synchronized. The namespace is populated
         // at deployment time by a single thread, and then on there are
         // no structural modifications (i.e. no keys added/removed).
         // So the namespace doesnt need to be synchronized.
-        Map namespace = appNamespaces.get(appName);
+        JavaNamespace namespace = appNamespaces.get(appName);
         if (namespace == null) {
-            namespace = new Hashtable();
+            namespace = new JavaNamespace(appName, "app");
             appNamespaces.put(appName, namespace);
-
-            // put entries for java:, java:comp and java:comp/env
-            JavaURLContext jc = new JavaURLContext("java:", null);
-            namespace.put("java:", jc);
-            namespace.put("java:/", jc);
-
-                 JavaURLContext jApp = new JavaURLContext("java:app", null);
-            namespace.put("java:app", jApp);
-            namespace.put("java:app/", jApp);
-            JavaURLContext jAppEnv = new JavaURLContext("java:app/env", null);
-            namespace.put("java:app/env", jAppEnv);
-            namespace.put("java:app/env/", jAppEnv);
-
         }
 
         return namespace;
     }
 
 
-    private Map getNamespace(String componentId, String logicalJndiName) throws NamingException {
-
-        ComponentIdInfo info = componentIdInfo.get(componentId);
-
-        return (info != null) ?  getNamespace(info.appName, info.moduleName, componentId, logicalJndiName) :
-                getComponentNamespace(componentId);
-    }
-
-    private Map getNamespace(String appName, String moduleName,
-                             String componentId, String logicalJndiName) throws NamingException {
-        Map namespace;
-        if( logicalJndiName.startsWith("java:comp") ) {
-            namespace = getComponentNamespace(componentId);
-        } else if ( logicalJndiName.startsWith("java:module")) {
-            namespace = getModuleNamespace(new AppModuleKey(appName, moduleName));
-        } else if ( logicalJndiName.startsWith("java:app")) {
-            namespace = getAppNamespace(appName);
-        }  else {
-            // return component namespace
-            namespace = getComponentNamespace(componentId);
+    private JavaNamespace getNamespace(ComponentIdInfo info, SimpleJndiName logicalJndiName) throws NamingException {
+        LOG.log(TRACE, "getNamespace(info, logicalJndiName={0})", logicalJndiName);
+        if (logicalJndiName.isJavaModule()) {
+            return getModuleNamespace(new AppModuleKey(info.appName, info.moduleName));
+        } else if (logicalJndiName.isJavaApp()) {
+            return getAppNamespace(info.appName);
+        } else {
+            return getComponentNamespace(info.componentId);
         }
-
-        return namespace;
     }
 
 
     /**
      * This method binds them in a java:namespace.
      */
+    private void bindToNamespace(JavaNamespace namespace, SimpleJndiName jndiName, Object value,
+        boolean force) throws NamingException {
+        LOG.log(DEBUG, "bindToNamespace(namespace.name={0}, jndiName={1}, value={2}, force={3})", namespace.name,
+            jndiName, value, force);
 
-    private void bindToNamespace(Map namespace, String logicalJndiName, Object value) throws NamingException {
-        LOG.log(Level.CONFIG, "bindToNamespace(namespace, logicalJndiName={0}, value={1})",
-            new Object[] {logicalJndiName, value});
-
-        if (namespace.put(logicalJndiName, value) != null) {
-            LOG.log(Level.WARNING, NAMING_ALREADY_EXISTS, new Object[] {logicalJndiName, namespace});
+        if (force) {
+            if (namespace.put(jndiName, value) != null) {
+                LOG.log(WARNING, "Replaced existing binding for ''{0}'' in namespace ''{1}''", jndiName, namespace.name);
+            }
+        } else if (namespace.putIfAbsent(jndiName, value) != null) {
+            LOG.log(TRACE, "The namespace already contains binding for ''{0}'' in namespace ''{1}'', ignoring request.",
+                jndiName, namespace.name);
+            return;
         }
-
-        bindIntermediateContexts(namespace, logicalJndiName);
+        bindIntermediateContexts(namespace, jndiName);
     }
 
-    private boolean existsInNamespace(Map namespace, String logicalJndiName) {
-        return namespace.containsKey(logicalJndiName);
-    }
 
-    /**
-     * This method enumerates the env properties, ejb and resource references
-     * etc for a J2EE component and binds them in the component's java:comp
-     * namespace.
-     */
     @Override
-    public void bindToComponentNamespace(String appName, String moduleName,
-                                         String componentId,  boolean treatComponentAsModule,
-                                         Collection<? extends JNDIBinding> bindings)
-            throws NamingException {
-        LOG.log(Level.FINE,
+    public void bindToComponentNamespace(String appName, String moduleName, String componentId,
+        boolean treatComponentAsModule, Collection<? extends JNDIBinding> bindings) throws NamingException {
+        LOG.log(DEBUG,
             "bindToComponentNamespace(appName={0}, moduleName={1}, componentId={2}, treatComponentAsModule={3}, bindings={4})",
-            new Object[] {appName, moduleName, componentId, treatComponentAsModule, bindings});
+            appName, moduleName, componentId, treatComponentAsModule, bindings);
 
         // These are null in rare cases, e.g. default web app.
         if (appName != null && moduleName != null) {
@@ -512,136 +402,133 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
             info.moduleName = moduleName;
             info.componentId = componentId;
             info.treatComponentAsModule = treatComponentAsModule;
-
             componentIdInfo.put(componentId, info);
         }
 
         for (JNDIBinding binding : bindings) {
-            String logicalJndiName = binding.getName();
-            Map namespace = null;
-            if (treatComponentAsModule && logicalJndiName.startsWith("java:comp")) {
-                logicalJndiName = logicalCompJndiNameToModule(logicalJndiName);
+            final SimpleJndiName logicalJndiName;
+            if (treatComponentAsModule && binding.getName().isJavaComponent()) {
+                logicalJndiName = binding.getName().changePrefix(JNDI_CTX_JAVA_MODULE);
+            } else {
+                logicalJndiName = binding.getName();
             }
 
-            if (logicalJndiName.startsWith("java:comp")) {
+            final JavaNamespace namespace;
+            if (logicalJndiName.isJavaComponent()) {
                 namespace = getComponentNamespace(componentId);
-            } else if (logicalJndiName.startsWith("java:module")) {
+            } else if (logicalJndiName.isJavaModule()) {
                 namespace = getModuleNamespace(new AppModuleKey(appName, moduleName));
-            } else if (logicalJndiName.startsWith("java:app")) {
+            } else if (logicalJndiName.isJavaApp()) {
                 namespace = getAppNamespace(appName);
+            } else {
+                namespace = null;
             }
 
-            if (namespace != null) {
-                if (!existsInNamespace(namespace, logicalJndiName)) {
-                    bindToNamespace(namespace, logicalJndiName, binding.getValue());
-                }
+            if (namespace == null) {
+                LOG.log(WARNING, "No namespace found for appName={0}, moduleName={1}, componentId={2}", appName,
+                    moduleName, componentId);
+                return;
             }
+            bindToNamespace(namespace, logicalJndiName, binding.getValue(), false);
         }
-    }
-
-    private String logicalCompJndiNameToModule(String logicalCompName) {
-        String tail = logicalCompName.substring(JAVA_COMP_LENGTH);
-        return "java:module" + tail;
-    }
-
-    private String logicalModuleJndiNameToComp(String logicalModuleName) {
-        String tail = logicalModuleName.substring(JAVA_MODULE_LENGTH);
-        return "java:comp" + tail;
     }
 
 
     @Override
     public void bindToModuleNamespace(String appName, String moduleName, Collection<? extends JNDIBinding> bindings)
-            throws NamingException {
+        throws NamingException {
+        LOG.log(TRACE, "bindToModuleNamespace(appName={0}, moduleName={1}, bindings={2})", appName, moduleName,
+            bindings);
         AppModuleKey appModuleKey = new AppModuleKey(appName, moduleName);
-        Map namespace = getModuleNamespace(appModuleKey);
+        JavaNamespace namespace = getModuleNamespace(appModuleKey);
         for (JNDIBinding binding : bindings) {
-          String logicalJndiName = binding.getName();
-            if ( logicalJndiName.startsWith("java:module")) {
-              bindToNamespace(namespace, binding.getName(), binding.getValue());
+            SimpleJndiName logicalJndiName = binding.getName();
+            if (logicalJndiName.isJavaModule()) {
+                bindToNamespace(namespace, logicalJndiName, binding.getValue(), true);
             }
         }
     }
+
 
     @Override
     public void bindToAppNamespace(String appName, Collection<? extends JNDIBinding> bindings) throws NamingException {
-        Map namespace = getAppNamespace(appName);
+        LOG.log(TRACE, "bindToAppNamespace(appName={0}, bindings={1})", appName, bindings);
+        JavaNamespace namespace = getAppNamespace(appName);
         for (JNDIBinding binding : bindings) {
-            String logicalJndiName = binding.getName();
-            if (logicalJndiName.startsWith("java:app")) {
-                bindToNamespace(namespace, binding.getName(), binding.getValue());
+            SimpleJndiName logicalJndiName = binding.getName();
+            if (logicalJndiName.isJavaApp()) {
+                bindToNamespace(namespace, logicalJndiName, binding.getValue(), true);
             }
         }
     }
 
 
-    private void bindIntermediateContexts(Map namespace, String name) throws NamingException {
-        LOG.log(Level.FINEST, "bindIntermediateContexts(namespace, name={0})", name);
+    private void bindIntermediateContexts(JavaNamespace namespace, SimpleJndiName jndiName)
+        throws NamingException {
+        LOG.log(TRACE, "bindIntermediateContexts(namespace.name={0}, jndiName={1})", namespace.name, jndiName);
         // for each component of name, put an entry into namespace
         String partialName;
-        if (name.startsWith("java:comp/")) {
-            partialName = "java:comp";
-        } else if (name.startsWith("java:module/")) {
-            partialName = "java:module";
-        } else if (name.startsWith("java:app/")) {
-            partialName = "java:app";
+        if (jndiName.isJavaComponent()) {
+            partialName = JNDI_CTX_JAVA_COMPONENT_NS_ID;
+        } else if (jndiName.isJavaModule()) {
+            partialName = JNDI_CTX_JAVA_MODULE_NS_ID;
+        } else if (jndiName.isJavaApp()) {
+            partialName = JNDI_CTX_JAVA_APP_NS_ID;
         } else {
-            throw new NamingException("Invalid environment namespace name : " + name);
+            throw new NamingException("Invalid environment namespace name: " + jndiName);
         }
 
-        name = name.substring((partialName + "/").length());
+        String name = jndiName.toString().substring(partialName.length() + 1);
         StringTokenizer toks = new StringTokenizer(name, "/", false);
         StringBuilder sb = new StringBuilder();
         sb.append(partialName);
         while (toks.hasMoreTokens()) {
             String tok = toks.nextToken();
-            sb.append("/").append(tok);
-            partialName = sb.toString();
-            if (namespace.get(partialName) == null) {
-                namespace.put(partialName, new JavaURLContext(partialName, null));
+            sb.append('/').append(tok);
+            final SimpleJndiName nsJndiName = new SimpleJndiName(sb.toString());
+            if (namespace.get(nsJndiName) == null) {
+                namespace.put(nsJndiName, new JavaURLContext(nsJndiName));
             }
         }
     }
 
 
-    /**
-     * This method enumerates the env properties, ejb and resource references
-     * and unbinds them from the java:comp namespace.
-     */
     @Override
     public void unbindComponentObjects(String componentId) throws NamingException {
-        LOG.log(Level.FINE, "unbindComponentObjects(componentId={0})", componentId);
-        componentNamespaces.remove(componentId); // remove local namespace cache
+        LOG.log(DEBUG, "unbindComponentObjects(componentId={0})", componentId);
+        // remove local namespace cache
+        componentNamespaces.remove(componentId);
         componentIdInfo.remove(componentId);
     }
 
     @Override
     public void unbindAppObjects(String appName) throws NamingException {
-        LOG.log(Level.FINE, "unbindAppObjects(appName={0})", appName);
+        LOG.log(DEBUG, "unbindAppObjects(appName={0})", appName);
         appNamespaces.remove(appName);
-        Iterator moduleEntries = moduleNamespaces.entrySet().iterator();
-        while( moduleEntries.hasNext() ) {
-            Map.Entry entry = (Map.Entry) moduleEntries.next();
-
-            if( ((AppModuleKey) entry.getKey()).getAppName().equals(appName)) {
-                moduleEntries.remove();
+        Iterator<AppModuleKey> keys = moduleNamespaces.keySet().iterator();
+        while (keys.hasNext()) {
+            AppModuleKey key = keys.next();
+            if (key.getAppName().equals(appName)) {
+                keys.remove();
             }
         }
     }
 
     @Override
-    public void unbindAppObject(String appName, String name) throws NamingException {
-        Map<String, Map> namespaces = appNamespaces.get(appName);
-        if(namespaces != null){
+    public void unbindAppObject(String appName, SimpleJndiName name) throws NamingException {
+        LOG.log(DEBUG, "unbindAppObject(appName={0}, name={1})", appName, name);
+        Map<SimpleJndiName, Object> namespaces = appNamespaces.get(appName);
+        if (namespaces != null) {
             namespaces.remove(name);
         }
     }
 
     @Override
-    public void unbindModuleObject(String appName, String moduleName, String name) throws NamingException {
+    public void unbindModuleObject(String appName, String moduleName, SimpleJndiName name) throws NamingException {
+        LOG.log(DEBUG, "unbindModuleObject(appName={0}, moduleName={1}, name={2})", appName, moduleName, name);
         AppModuleKey appModuleKey = new AppModuleKey(appName, moduleName);
-        Map<String, Map> namespaces = moduleNamespaces.get(appModuleKey);
-        if(namespaces != null){
+        Map<SimpleJndiName, Object> namespaces = moduleNamespaces.get(appModuleKey);
+        if (namespaces != null) {
             namespaces.remove(name);
         }
     }
@@ -650,18 +537,25 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
      * Recreate a context for java:comp/env or one of its sub-contexts given the context name.
      */
     @Override
-    public Context restoreJavaCompEnvContext(String contextName)
-            throws NamingException {
-        if (!contextName.startsWith("java:")) {
-            throw new NamingException("Invalid context name [" + contextName
-                    + "]. Name must start with java:");
+    public Context restoreJavaCompEnvContext(SimpleJndiName contextName) throws NamingException {
+        if (contextName.hasJavaPrefix()) {
+            return new JavaURLContext(contextName);
         }
-
-        return new JavaURLContext(contextName, null);
+        throw new NamingException("Invalid context name [" + contextName + "]. Name must start with java:");
     }
 
-    public Object lookup(String name) throws NamingException {
-        return lookup(name, (SerialContext) null);
+
+    // FIXME: resolve where to search by the name.
+    @Override
+    public <T> T lookup(SimpleJndiName name) throws NamingException {
+        return (T) initialContext.lookup(name.toName());
+    }
+
+
+// FIXME: Wrong name, added dmatej, chooses where to search in.
+    public <T> T lookupFromComponentNamespace(SimpleJndiName name) throws NamingException {
+        final String componentId = getComponentId();
+        return lookup(componentId, name, initialContext);
     }
 
     /**
@@ -670,105 +564,89 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
      * stickiness is preserved. Called from javaURLContext.lookup, for java:comp
      * names.
      */
-    public Object lookup(String name, SerialContext serialContext)
-            throws NamingException {
-        Context ic;
-
-        if (serialContext != null) {
-            ic = serialContext;
-        } else {
-            ic = initialContext;
-        }
-
+    public <T> T lookup(SimpleJndiName name, SerialContext serialContext) throws NamingException {
         // initialContext is used as ic in case of PE while
         // serialContext is used as ic in case of EE/SE
-
         // Get the component id and namespace to lookup
-        String componentId = getComponentId();
-        return lookup(componentId, name, ic);
+        final Context context = serialContext == null ? initialContext : serialContext;
+        final String componentId = getComponentId();
+        return lookup(componentId, name, context);
     }
 
     /**
      * Lookup object for a particular componentId and name.
      */
     @Override
-    public Object lookup(String componentId, String name) throws NamingException {
+    public <T> T lookup(String componentId, SimpleJndiName name) throws NamingException {
         return lookup(componentId, name, initialContext);
     }
 
-    private Object lookup(String componentId, String name, Context ctx) throws NamingException {
-        LOG.log(Level.FINEST, "lookup(componentId={0}, name={1}, ctx={2})", new Object[] {componentId, name, ctx});
-        ComponentIdInfo info = componentIdInfo.get(componentId);
-        String logicalJndiName = name;
-        boolean replaceName = (info != null) && (info.treatComponentAsModule)
-                && name.startsWith("java:comp");
-        if( replaceName ) {
-            logicalJndiName = logicalCompJndiNameToModule(name);
-        }
-
-        Map namespace = getNamespace(componentId, logicalJndiName);
-
-        Object obj = namespace.get(logicalJndiName);
-
+    private <T> T lookup(String componentId, SimpleJndiName name, Context ctx) throws NamingException {
+        LOG.log(DEBUG, "lookup(componentId={0}, name={1}, ctx={2})", componentId, name, ctx);
+// FIXME: added and commented out dmatej
+//        if (!name.hasJavaPrefix() && name.contains(":")) {
+//            // generic jndi names
+//            return (T) initialContext.lookup(name.toName());
+//        }
+        final ComponentIdInfo info = componentIdInfo.get(componentId);
+        LOG.log(TRACE, "Found componentIdInfo={0}", info);
+        final boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
+        final SimpleJndiName replacedName = replaceName ? name.changePrefix(JNDI_CTX_JAVA_MODULE) : name;
+        JavaNamespace namespace = info == null ? getComponentNamespace(componentId) : getNamespace(info, replacedName);
+        Object obj = namespace.get(replacedName);
+        LOG.log(TRACE, "For {0} found object={1} in namespace.name={2}", replacedName, obj, namespace.name);
         if (obj == null) {
-            throw new NameNotFoundException("No object bound to name " + name);
+            throw new NameNotFoundException("No object bound to name " + replacedName + " in namespace " + namespace);
         }
-
         if (obj instanceof NamingObjectProxy) {
             NamingObjectProxy namingProxy = (NamingObjectProxy) obj;
-            obj = namingProxy.create(ctx);
-        } else if( obj instanceof Context ) {
+            return namingProxy.create(ctx);
+        } else if (obj instanceof Context) {
             // Need to preserve the original prefix so that further operations
             // on the context maintain the correct external view. In the case
             // of a replaced java:comp, create a new equivalent javaURLContext
             // and return that.
-            if( replaceName ) {
-                obj = new JavaURLContext(name, null);
+            if (replaceName) {
+                obj = new JavaURLContext(name);
             }
 
             if (obj instanceof JavaURLContext) {
                 if (ctx instanceof SerialContext) {
-                    obj = new JavaURLContext( (JavaURLContext)obj,
-                        (SerialContext)ctx ) ;
-                } else {
-                    obj = new JavaURLContext( (JavaURLContext)obj, null ) ;
+                    return (T) new JavaURLContext((JavaURLContext) obj, (SerialContext) ctx);
                 }
+                return (T) new JavaURLContext((JavaURLContext) obj);
             }
         }
-
-        return obj;
+        return (T) obj;
     }
 
 
-    public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
-        ArrayList list = listNames(name);
+    public NamingEnumeration<NameClassPair> list(SimpleJndiName name) throws NamingException {
+        ArrayList<SimpleJndiName> list = listNames(name);
         return new BindingsIterator<>(this, list.iterator(), true);
     }
 
-    public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
-        ArrayList list = listNames(name);
+    public NamingEnumeration<Binding> listBindings(SimpleJndiName name) throws NamingException {
+        ArrayList<SimpleJndiName> list = listNames(name);
         return new BindingsIterator<>(this, list.iterator(), false);
     }
 
-    private ArrayList listNames(String name) throws NamingException {
+    private ArrayList<SimpleJndiName> listNames(SimpleJndiName name) throws NamingException {
         // Get the component id and namespace to lookup
         String componentId = getComponentId();
-
         ComponentIdInfo info = componentIdInfo.get(componentId);
-        String logicalJndiName = name;
-
-        boolean replaceName =  (info != null) && (info.treatComponentAsModule)
-                && name.startsWith("java:comp");
-        if( replaceName ) {
-            logicalJndiName = logicalCompJndiNameToModule(name);
+        boolean replaceName = info != null && info.treatComponentAsModule && name.isJavaComponent();
+        final SimpleJndiName logicalJndiName;
+        if (replaceName) {
+            logicalJndiName = name.changePrefix(JNDI_CTX_JAVA_MODULE);
+        } else {
+            logicalJndiName = name;
         }
 
-        Map namespace = getNamespace(componentId, logicalJndiName);
-
+        JavaNamespace namespace = info == null ? getComponentNamespace(componentId) : getNamespace(info, logicalJndiName);
         Object obj = namespace.get(logicalJndiName);
-
         if (obj == null) {
-            throw new NameNotFoundException("No object bound to name " + name);
+            throw new NameNotFoundException("No object bound to name " + name + " in namespace " + namespace);
         }
 
         if (!(obj instanceof JavaURLContext)) {
@@ -778,22 +656,20 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         // This iterates over all names in entire component namespace,
         // so its a little inefficient. The alternative is to store
         // a list of bindings in each javaURLContext instance.
-        ArrayList list = new ArrayList();
-        Iterator itr = namespace.keySet().iterator();
-        if (!logicalJndiName.endsWith("/")) {
-            logicalJndiName = logicalJndiName + "/";
+        ArrayList<SimpleJndiName> list = new ArrayList<>();
+        final String logicalNameWithSlash;
+        if (logicalJndiName.hasSuffix("/")) {
+            logicalNameWithSlash = logicalJndiName.toString();
+        } else {
+            logicalNameWithSlash = logicalJndiName + "/";
         }
-        while (itr.hasNext()) {
-            String key = (String) itr.next();
-            // Check if key begins with name and has only 1 component extra
-            // (i.e. no more slashes)
-            // Make sure keys reflect the original prefix in the case of comp->module
-            // replacement
+        for (SimpleJndiName key : namespace.keySet()) {
+            // Check if key begins with name and has only 1 component extra (i.e. no more slashes)
+            // Make sure keys reflect the original prefix in the case of comp->module replacement
             // The search string itself is excluded from the returned list
-            if (key.startsWith(logicalJndiName) &&
-                key.indexOf('/', logicalJndiName.length()) == -1 &&
-                !key.equals(logicalJndiName)) {
-                String toAdd = replaceName ? logicalModuleJndiNameToComp(key) : key;
+            if (key.hasPrefix(logicalNameWithSlash) && key.toString().indexOf('/', logicalNameWithSlash.length()) == -1
+                && !key.toString().equals(logicalNameWithSlash)) {
+                SimpleJndiName toAdd = replaceName ? key.changePrefix(JNDI_CTX_JAVA_COMPONENT) : key;
                 list.add(toAdd);
             }
         }
@@ -806,13 +682,11 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
      * @return the component id as a string.
      */
     private String getComponentId() throws NamingException {
-        String id;
-
-        ComponentInvocation ci;
-        if (invMgr==null) {
-            ci= habitat.<InvocationManager>getService(InvocationManager.class).getCurrentInvocation();
+        final ComponentInvocation ci;
+        if (invMgr == null) {
+            ci = habitat.<InvocationManager> getService(InvocationManager.class).getCurrentInvocation();
         } else {
-            ci= invMgr.getCurrentInvocation();
+            ci = invMgr.getCurrentInvocation();
         }
 
         if (ci == null) {
@@ -820,54 +694,81 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         }
 
         try {
-            id = ci.getComponentId();
+            String id = ci.getComponentId();
             if (id == null) {
                 throw new NamingException("Invocation exception: ComponentId is null");
             }
+            return id;
         } catch (Throwable th) {
             NamingException ine = new NamingException("Invocation exception: " + th);
             ine.initCause(th);
             throw ine;
         }
-
-        return id;
     }
 
-    private static class AppModuleKey {
 
+    private <T> T lookupFromNamespace(SimpleJndiName name, Map<SimpleJndiName, Object> namespace, Hashtable<?, ?> env)
+        throws NamingException {
+        final Object objectOrProxyOrRef = namespace.get(name);
+        if (objectOrProxyOrRef == null) {
+            throw new NameNotFoundException("No object bound to name " + name);
+        }
+        if (objectOrProxyOrRef instanceof NamingObjectProxy) {
+            NamingObjectProxy namingProxy = (NamingObjectProxy) objectOrProxyOrRef;
+            return namingProxy.create(env == null || env.isEmpty() ? initialContext : new InitialContext(env));
+        } else if (objectOrProxyOrRef instanceof Reference) {
+            try {
+                return getObjectInstance(name, objectOrProxyOrRef, env);
+            } catch (Exception e) {
+                LOG.log(DEBUG, () -> "Unable to get Object instance from Reference for name [" + name + "]. "
+                    + "Hence returning the Reference object " + objectOrProxyOrRef, e);
+            }
+        }
+        return (T) objectOrProxyOrRef;
+    }
+
+    private static class AppModuleKey implements Serializable {
+
+        private static final long serialVersionUID = -6080646413719869870L;
         private final String app;
         private final String module;
 
         public AppModuleKey(String appName, String moduleName) {
-
             app = appName;
             module = moduleName;
-
         }
+
+
+        public String getAppName() {
+            return app;
+        }
+
+
+        public String getModuleName() {
+            return module;
+        }
+
 
         @Override
         public boolean equals(Object o) {
-            boolean equal = false;
-            if( (o != null) && (o instanceof AppModuleKey) ) {
+            if (o != null && o instanceof AppModuleKey) {
                 AppModuleKey other = (AppModuleKey) o;
-                if( app.equals(other.app) && module.equals(other.module) ) {
-                    equal = true;
-                }
+                return app.equals(other.app) && module.equals(other.module);
             }
-            return equal;
+            return false;
         }
+
 
         @Override
         public int hashCode() {
             return app.hashCode();
         }
 
-        public String getAppName() { return app; }
-        public String getModuleName() { return module; }
 
         @Override
-        public String toString()
-            { return "appName = " + app + " , module = " + module; }
+        public String toString() {
+            return app + '/' + module;
+        }
     }
 
     private static class ComponentIdInfo {
@@ -877,19 +778,19 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         String componentId;
         boolean treatComponentAsModule;
 
-         @Override
-        public String toString()
-            { return "appName = " + appName + " , module = " + moduleName +
-                    " , componentId = " + componentId
-                    + ", treatComponentAsModule = " + treatComponentAsModule; }
+        @Override
+        public String toString() {
+            return "ComponentIdInfo[appName=" + appName + ", module=" + moduleName + ", componentId=" + componentId
+                + ", treatComponentAsModule=" + treatComponentAsModule + ']';
+        }
     }
 
     private static class BindingsIterator<T> implements NamingEnumeration<T> {
         private final GlassfishNamingManagerImpl nm;
-        private final Iterator names;
+        private final Iterator<SimpleJndiName> names;
         private final boolean producesNamesOnly;
 
-        BindingsIterator(GlassfishNamingManagerImpl nm, Iterator names, boolean producesNamesOnly) {
+        BindingsIterator(GlassfishNamingManagerImpl nm, Iterator<SimpleJndiName> names, boolean producesNamesOnly) {
             this.nm = nm;
             this.names = names;
             this.producesNamesOnly = producesNamesOnly;
@@ -907,20 +808,21 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
 
         @Override
         public T nextElement() {
-            if (names.hasNext()) {
-                try {
-                    String name = (String) names.next();
-                    Object obj = nm.lookup(name);
-                    return producesNamesOnly ?
-                            (T) (new NameClassPair(name, getClass().getName())) :
-                            (T) (new Binding(name, obj));
-                } catch (RuntimeException ex) {
-                    throw ex;
-                } catch (Exception ex) {
-                    throw new RuntimeException(ex);
-                }
-            } else {
+            if (!names.hasNext()) {
                 return null;
+            }
+            try {
+                SimpleJndiName name = names.next();
+                Object obj = nm.lookupFromComponentNamespace(name);
+                @SuppressWarnings("unchecked")
+                T next = producesNamesOnly
+                    ? (T) (new NameClassPair(name.toString(), getClass().getName()))
+                    : (T) (new Binding(name.toString(), obj));
+                return next;
+            } catch (RuntimeException ex) {
+                throw ex;
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
             }
         }
 
@@ -932,6 +834,52 @@ public final class GlassfishNamingManagerImpl implements GlassfishNamingManager 
         @Override
         public void close() {
             //no-op since no steps needed to free up resources
+        }
+    }
+
+    // FIXME: no synchronization or concurrency, is it alright?
+    private static class NamespacesMap<K extends Serializable> extends HashMap<K, JavaNamespace> {
+        private static final long serialVersionUID = 7921214769289453089L;
+        private final String name;
+
+        private NamespacesMap(String name) {
+            this.name = name;
+        }
+
+
+        @Override
+        public String toString() {
+            return "NamespacesMap[name=" + name + ", keys=" + keySet() + ']';
+        }
+    }
+
+
+    private static class JavaNamespace extends HashMap<SimpleJndiName, Object> {
+        private static final long serialVersionUID = 8493699306782159175L;
+        private final String name;
+
+        private JavaNamespace(String name, String subContextName) {
+            this.name = name;
+
+            SimpleJndiName javaJndi = new SimpleJndiName(JNDI_CTX_JAVA);
+            JavaURLContext javaContext = new JavaURLContext(javaJndi);
+            put(javaJndi, javaContext);
+            put(new SimpleJndiName(javaJndi + "/"), javaContext);
+
+            JavaURLContext subContext = new JavaURLContext(new SimpleJndiName(javaJndi + subContextName));
+            put(subContext.getName(), subContext);
+            SimpleJndiName subContextJndi = new SimpleJndiName(subContext.getName() + "/");
+            put(subContextJndi, subContext);
+
+            JavaURLContext envContext = new JavaURLContext(new SimpleJndiName(subContextJndi + "env"));
+            put(envContext.getName(), envContext);
+            put(new SimpleJndiName(envContext.getName() + "/"), envContext);
+        }
+
+
+        @Override
+        public String toString() {
+            return "JavaNamespace[name=" + name + ", keys=" + keySet() + ']';
         }
     }
 }

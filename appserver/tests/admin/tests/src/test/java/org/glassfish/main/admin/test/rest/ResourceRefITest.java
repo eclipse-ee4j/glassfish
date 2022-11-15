@@ -19,9 +19,9 @@ package org.glassfish.main.admin.test.rest;
 
 import jakarta.ws.rs.core.Response;
 
-import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.junit.jupiter.api.AfterEach;
@@ -36,8 +36,8 @@ public class ResourceRefITest extends RestTestBase {
     private static final String URL_JDBC_RESOURCE = "/domain/resources/jdbc-resource";
     private static final String URL_RESOURCE_REF = "/domain/servers/server/server/resource-ref";
 
-    private final String instanceName = "instance_" + generateRandomString();
-    private final String jdbcResourceName = "jdbc_" + generateRandomString();
+    private final String instanceName = "instance_" + RandomGenerator.generateRandomString();
+    private final String jdbcResourceName = "jdbc_" + RandomGenerator.generateRandomString();
 
     @AfterEach
     public void cleanup() {
@@ -48,28 +48,29 @@ public class ResourceRefITest extends RestTestBase {
     }
 
 
+    /**
+     * <ol>
+     * <li>Creates resource on the additional instance
+     * <li>Then creates a resource reference referring that on the server instance.
+     * <li>Then deletes the resource reference from the additional instance.
+     * <li>Then deletes the resource from the domain.
+     * <li>Then deletes the additional instance.
+     * </ol>
+     *
+     * @throws Exception
+     */
     @Test
-    public void testCreatingResourceRef() {
-        Map<String, String> newInstance = new HashMap<>() {{
-            put("id", instanceName);
-            put("node", "localhost-domain1");
-        }};
-        Map<String, String> jdbcResource = new HashMap<>() {{
-            put("id", jdbcResourceName);
-            put("connectionpoolid", "DerbyPool");
-            put("target", instanceName);
-        }};
-        Map<String, String> resourceRef = new HashMap<>() {{
-            put("id", jdbcResourceName);
-            put("target", "server");
-        }};
-
+    public void testCreatingResourceRef() throws Exception {
+        Map<String, String> newInstance = Map.of("id", instanceName, "node", "localhost-domain1");
         Response response = managementClient.post(URL_CREATE_INSTANCE, newInstance);
         assertEquals(200, response.getStatus());
 
+        Map<String, String> jdbcResource = Map.of("id", jdbcResourceName, "connectionpoolid", "DerbyPool",
+            "target", instanceName);
         response = managementClient.post(URL_JDBC_RESOURCE, jdbcResource);
         assertEquals(200, response.getStatus());
 
+        Map<String, String> resourceRef = Map.of("id", jdbcResourceName, "target", "server");
         response = managementClient.post(URL_RESOURCE_REF, resourceRef);
         assertEquals(200, response.getStatus());
         response = managementClient.delete(

@@ -45,6 +45,7 @@ import java.util.logging.Level;
 
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.jvnet.hk2.annotations.Service;
 
@@ -243,7 +244,7 @@ public class JdbcAdminServiceImpl extends ConnectorService {
         String databaseName = null;
         ConnectorConnectionPool connectorConnectionPool = null;
         try {
-            String jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
+            SimpleJndiName jndiNameForPool = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForPool(poolInfo);
             connectorConnectionPool = (ConnectorConnectionPool) _runtime.getResourceNamingService().lookup(poolInfo, jndiNameForPool, null);
         } catch (NamingException ne) {
             throw ne;

@@ -383,8 +383,7 @@ public class TypeUtil {
                         continue;
                     } else if (gpm1[i] instanceof ParameterizedType || gpm2[i] instanceof ParameterizedType) {
 
-                        // See issue 15595 (ClassFormatError: Duplicate method name thrown in
-                        // deployment)
+                        // See issue 15595 (ClassFormatError: Duplicate method name thrown in deployment)
                         // For ParameterizedType params, compare their non-generics parameter types.
                         same = m1.getParameterTypes()[i].equals(m2.getParameterTypes()[i]);
                         if (!same) {

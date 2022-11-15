@@ -21,6 +21,7 @@ import com.sun.enterprise.deployment.annotation.handlers.ContextServiceDefinitio
 import java.util.Properties;
 import java.util.Set;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.JavaEEResourceType;
 
 
@@ -47,13 +48,13 @@ public class ContextServiceDefinitionDescriptor extends ResourceDescriptor {
 
     @Override
     public String getName() {
-        return this.data.getName();
+        return this.data.getName().toString();
     }
 
 
     @Override
     public void setName(String name) {
-        this.data.setName(name);
+        this.data.setName(new SimpleJndiName(name));
     }
 
 

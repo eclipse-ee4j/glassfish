@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,14 +14,25 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.deployment.interfaces;
+package org.glassfish.main.admin.test.tool;
+
+import com.sun.enterprise.config.serverbeans.BindableResource;
+
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.matchesPattern;
+
 
 /**
- *
- * @author Jeorme Dochez
+ * @author David Matejcek
  */
-public interface PropertyManagerFactory {
+class RandomGeneratorTest {
 
-    public PropertyManager getPropertyManager();
-
+    @Test
+    void generateRandomString() {
+        for (int i = 0; i < 1000; i++) {
+            assertThat(RandomGenerator.generateRandomString(), matchesPattern(BindableResource.PATTERN_JNDI));
+        }
+    }
 }

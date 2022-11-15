@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,11 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.io.IOException;
 
+import org.jvnet.hk2.annotations.Contract;
+
+// FIXME: Seems dead, unused.
 @Contract
 public interface JavaEEObjectStreamHandler {
 
@@ -30,8 +32,7 @@ public interface JavaEEObjectStreamHandler {
      * @return
      * @throws IOException
      */
-    public Object replaceObject(Object obj)
-        throws IOException;
+    Object replaceObject(Object obj) throws IOException;
 
     /**
      * Called during de-serialization
@@ -40,7 +41,6 @@ public interface JavaEEObjectStreamHandler {
      * @return
      * @throws IOException
      */
-    public Object resolveObject(Object obj)
-        throws IOException;
+    Object resolveObject(Object obj) throws IOException;
 
 }

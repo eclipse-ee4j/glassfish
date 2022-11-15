@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,44 @@
 
 package org.glassfish.resources.listener;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.logging.LogDomains;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.hk2.runlevel.RunLevel;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Module;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.PostStartupRunLevel;
-import org.glassfish.resourcebase.resources.api.ResourceDeployer;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.resourcebase.resources.api.ResourcesBinder;
-import org.glassfish.resourcebase.resources.ResourceTypeOrderProcessor;
-import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
-import org.glassfish.resourcebase.resources.util.ResourceUtil;
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.*;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
+
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.hk2.runlevel.RunLevel;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.PostStartupRunLevel;
+import org.glassfish.resourcebase.resources.ResourceTypeOrderProcessor;
+import org.glassfish.resourcebase.resources.api.ResourceDeployer;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.api.ResourcesBinder;
+import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.ObservableBean;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 /**
  * Resource manager to bind various application or module scoped resources during
@@ -68,6 +82,7 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
     @Inject
     private ResourceTypeOrderProcessor resourceTypeOrderProcessor;
 
+    @Override
     public void postConstruct() {
         Collection<Application> apps = applications.getApplications();
         if(apps != null){
@@ -138,8 +153,8 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
 
                 if (resource instanceof BindableResource) {
                     BindableResource bindableResource = (BindableResource) resource;
-                    ResourceInfo resourceInfo =
-                            new ResourceInfo(bindableResource.getJndiName(), applicationName, moduleName);
+                    SimpleJndiName jndiName = SimpleJndiName.of(bindableResource.getJndiName());
+                    ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
                     resourcesBinder.deployResource(resourceInfo, resource);
                 } else if (resource instanceof ResourcePool) {
                     // ignore, as they are loaded lazily
@@ -160,6 +175,7 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
     /**
      * Do cleanup of system-resource-adapter, resources, pools
      */
+    @Override
     public void preDestroy() {
     }
 
@@ -227,7 +243,7 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
         if(_logger.isLoggable(Level.FINEST)){
             debug("adding listener : " + instance);
         }
-        bean = (ObservableBean) ConfigSupport.getImpl((ConfigBeanProxy)instance);
+        bean = (ObservableBean) ConfigSupport.getImpl(instance);
         bean.addListener(this);
     }
 
@@ -253,7 +269,7 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
     private void removeListenerFromResource(Resource instance) {
         ObservableBean bean = null;
         debug("removing listener : " + instance);
-        bean = (ObservableBean) ConfigSupport.getImpl((ConfigBeanProxy)instance);
+        bean = (ObservableBean) ConfigSupport.getImpl(instance);
         bean.removeListener(this);
     }
 
@@ -278,6 +294,7 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
      *
      * @param events list of changes
      */
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         return ConfigSupport.sortAndDispatch(events, new ConfigChangeHandler(), _logger);
     }
@@ -294,6 +311,7 @@ public class ApplicationScopedResourcesManager implements PostConstruct, PreDest
          * @param changedType     type of the configuration object
          * @param changedInstance changed instance.
          */
+        @Override
         public <T extends ConfigBeanProxy> NotProcessed changed(Changed.TYPE type, Class<T> changedType,
                                                                 T changedInstance) {
             NotProcessed np ;

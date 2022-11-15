@@ -34,6 +34,7 @@ import java.util.logging.Logger;
 
 import javax.naming.Reference;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
@@ -94,15 +95,9 @@ public class MailResourceDeployer extends GlobalResourceDeployer implements Reso
         if (resource == null) {
             LOG.log(Level.INFO, "Error in resource deploy.");
         } else {
-            ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
-            //registers the jsr77 object for the mail resource deployed
-            /* TODO Not needed any more ?
-            /*ManagementObjectManager mgr =
-                getAppServerSwitchObject().getManagementObjectManager();
-            mgr.registerMailResource(mailRes.getJndiName());*/
-
+            SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+            ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
             installResource(resource, resourceInfo);
-
         }
     }
 
@@ -111,15 +106,16 @@ public class MailResourceDeployer extends GlobalResourceDeployer implements Reso
     public synchronized void undeployResource(MailResource resource) throws Exception {
         // converts the config data to j2ee resource
         ResourceInfo resourceInfo = ResourceUtil.getResourceInfo(resource);
-        namingService.unpublishObject(resourceInfo, resource.getJndiName());
+        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
     }
 
 
     @Override
     public void undeployResource(MailResource resource, String applicationName, String moduleName) throws Exception {
         // converts the config data to j2ee resource
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resource.getJndiName());
+        SimpleJndiName jndiName = SimpleJndiName.of(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        namingService.unpublishObject(resourceInfo, resourceInfo.getName());
     }
 
 

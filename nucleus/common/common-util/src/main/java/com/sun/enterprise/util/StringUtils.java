@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,16 @@
 
 package com.sun.enterprise.util;
 
-/* WBN Valentine's Day, 2000 -- place for handy String utils.
- */
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
 import java.sql.SQLException;
-import java.text.StringCharacterIterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class StringUtils {
     public static final String NEWLINE = System.getProperty("line.separator");
@@ -45,7 +49,7 @@ public class StringUtils {
 
     ////////////////////////////////////////////////////////////////////////////
     public static boolean ok(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -263,8 +267,8 @@ public class StringUtils {
 
         // first -- to line things up nicely -- find the longest key...
         int keyWidth = 0;
-        for (Iterator it = entries.iterator(); it.hasNext();) {
-            Map.Entry me = (Map.Entry) it.next();
+        for (Object entry : entries) {
+            Map.Entry me = (Map.Entry) entry;
             String key = (String) me.getKey();
             int len = key.length();
 
@@ -276,8 +280,8 @@ public class StringUtils {
         ++keyWidth;
 
         // now make the strings...
-        for (Iterator it = entries.iterator(); it.hasNext();) {
-            Map.Entry me = (Map.Entry) it.next();
+        for (Object entry : entries) {
+            Map.Entry me = (Map.Entry) entry;
             String key = (String) me.getKey();
             String val = (String) me.getValue();
 
@@ -341,8 +345,8 @@ public class StringUtils {
             String[] s2 = StringUtils.toLines(ss[k]);
             System.out.println("String #" + k + ", Number of Lines:  " + s2.length);
 
-            for (int i = 0; i < s2.length; i++) {
-                System.out.println(s2[i]);
+            for (String element : s2) {
+                System.out.println(element);
             }
         }
     }
@@ -350,8 +354,8 @@ public class StringUtils {
     public static void testUpperCase() {
         String[] test = new String[]{"xyz", "HITHERE", "123aa", "aSSS", "yothere"};//NOI18N
 
-        for (int i = 0; i < test.length; i++) {
-            System.out.println(test[i] + " >>> " + upperCaseFirstLetter(test[i]));//NOI18N
+        for (String element : test) {
+            System.out.println(element + " >>> " + upperCaseFirstLetter(element));//NOI18N
         }
     }
 
@@ -514,11 +518,13 @@ public class StringUtils {
     }
 
     public static final String stripToken(String s) {
-        if (isToken(s))
+        if (isToken(s)) {
             // NO possible wrong assumptions here -- see isToken()
             return s.substring(2, s.length() - 1);
-        else
+        }
+        else {
             return s;   // GIGO
+        }
     }
 
     /**
@@ -559,8 +565,9 @@ public class StringUtils {
      * @return The String resulting from removing the enclosing quotes
      */
     public static String removeEnclosingQuotes(String s) {
-        if (s == null)
+        if (s == null) {
             return null;
+        }
 
         if (isDoubleQuoted(s) || isSingleQuoted(s)) {
             return s.substring(1, s.length() - 1);
@@ -587,8 +594,9 @@ public class StringUtils {
         if (!ok(path)
                 || !needsQuoting(path)
                 || isDoubleQuoted(path)
-                || isSingleQuoted(path))
+                || isSingleQuoted(path)) {
             return path;
+        }
         // needs quoting!
         StringBuilder sb = new StringBuilder();
         sb.append(quoteChar);

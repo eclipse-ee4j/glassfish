@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,19 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * DeploymentHelper.java
- *
- * Created on September 30, 2003.
- */
-
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import javax.sql.DataSource;
 
 import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
 import com.sun.jdo.api.persistence.support.JDOFatalUserException;
@@ -34,6 +23,14 @@ import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperPersistenceManager;
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+import java.util.ResourceBundle;
+
+import javax.sql.DataSource;
+
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.persistence.common.DatabaseConstants;
@@ -44,10 +41,8 @@ import org.glassfish.persistence.common.Java2DBProcessorHelper;
  * This class is used for static method invocations to avoid unnecessary
  * registration requirements to use EJBHelper and/or CMPHelper from
  * deploytool, verifier, or any other stand-alone client.
- *
  */
-public class DeploymentHelper
-    {
+public class DeploymentHelper {
 
     /** I18N message handler */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
@@ -81,7 +76,9 @@ public class DeploymentHelper
             String value = prop.getProperty(DatabaseConstants.JAVA_TO_DB_FLAG);
             if (! StringHelper.isEmpty(value)) {
                  if (logger.isLoggable(Logger.FINE))
-                     logger.fine(DatabaseConstants.JAVA_TO_DB_FLAG + " property is set."); // NOI18N
+                 {
+                    logger.fine(DatabaseConstants.JAVA_TO_DB_FLAG + " property is set."); // NOI18N
+                }
                  return Boolean.valueOf(value).booleanValue();
             }
         }
@@ -100,8 +97,8 @@ public class DeploymentHelper
      * cannot get a connection based on the name.
      * @throws SQLException if can not get a Connection.
      */
-    public static Connection getConnection(String name) throws SQLException {
-        if (logger.isLoggable(logger.FINE)) {
+    public static Connection getConnection(SimpleJndiName name) throws SQLException {
+        if (logger.isLoggable(Logger.FINE)) {
             logger.fine("ejb.DeploymentHelper.getconnection", name); //NOI18N
         }
 
@@ -113,25 +110,23 @@ public class DeploymentHelper
             ConnectorRuntime connectorRuntime = habitat.getService(ConnectorRuntime.class);
             ds = DataSource.class.cast(connectorRuntime.lookupNonTxResource(name, true));
         } catch (Exception e) {
-            throw new JDOFatalUserException(
-                I18NHelper.getMessage(messages,
-                        "ejb.jndi.lookupfailed", name)); //NOI18N
+            throw new JDOFatalUserException(I18NHelper.getMessage(messages, "ejb.jndi.lookupfailed", name));
         }
         return ds.getConnection();
     }
 
-    /** Create a RuntimeException for unexpected instance returned
+
+    /**
+     * Create a RuntimeException for unexpected instance returned
      * from JNDI lookup.
      *
      * @param name the JNDI name that had been looked up.
      * @param value the value returned from the JNDI lookup.
-     * @throws JDOFatalUserException.
+     * @throws JDOFatalUserException
      */
-    private static void handleUnexpectedInstance(String name, Object value) {
+    private static void handleUnexpectedInstance(String name, Object value) throws JDOFatalUserException {
         RuntimeException e = new JDOFatalUserException(
-                I18NHelper.getMessage(messages,
-                        "ejb.jndi.unexpectedinstance", //NOI18N
-                        name, value.getClass().getName()));
+            I18NHelper.getMessage(messages, "ejb.jndi.unexpectedinstance", name, value.getClass().getName()));
         logger.severe(e.toString());
 
         throw e;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,18 @@
 
 package org.glassfish.resources.api;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import static org.glassfish.resources.admin.cli.ResourceConstants.CONNECTION_POOL_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RESOURCE_ADAPTER_CONFIG_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.RES_ADAPTER_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.WORK_SECURITY_MAP_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.WORK_SECURITY_MAP_RA_NAME;
 
 /**
  * Class which represents the Resource.
@@ -55,9 +65,9 @@ public class Resource {
                 CONNECTOR_CONNECTION_POOL
             ));
 
-    private String resType;
-    private HashMap attrList = new HashMap();
-    private Properties props = new Properties();
+    private final String resType;
+    private final HashMap attrList = new HashMap();
+    private final Properties props = new Properties();
     private String sDescription = null;
 
     public Resource(String type) {
@@ -67,13 +77,6 @@ public class Resource {
     public String getType() {
         return resType;
     }
-
-//Commented from 9.1 as it is not used
-/*
-    public void setType(String type) {
-        resType = type;
-    }
-*/
 
     public HashMap getAttributes() {
         return attrList;
@@ -115,8 +118,12 @@ public class Resource {
     //Used to figure out duplicates in a List<Resource>
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if ( !(obj instanceof Resource) ) return false;
+        if (this == obj) {
+            return true;
+        }
+        if ( !(obj instanceof Resource) ) {
+            return false;
+        }
         Resource r = (Resource)obj;
         return r.getType().equals(this.getType()) &&
                 //No need to compare description for equality
@@ -144,8 +151,9 @@ public class Resource {
         if (hasSameIdentity(r)) {
             //If the two resources are not equal, then there is
             //conflict
-            if (!r.equals(this))
+            if (!r.equals(this)) {
                 return true;
+            }
         }
         return false;
     }
@@ -214,19 +222,20 @@ public class Resource {
 
     @Override
     public String toString(){
-
-        String rType = getType();
-        String identity = "";
-        if (rType.equals(CUSTOM_RESOURCE)|| rType.equals(EXTERNAL_JNDI_RESOURCE)
-             || rType.equals(JDBC_RESOURCE)|| rType.equals(PERSISTENCE_MANAGER_FACTORY_RESOURCE)
-             || rType.equals(CONNECTOR_RESOURCE)|| rType.equals(ADMIN_OBJECT_RESOURCE) || rType.equals(MAIL_RESOURCE)) {
-            identity =  getAttribute(this, JNDI_NAME);
-        }else if (rType.equals(JDBC_CONNECTION_POOL) || rType.equals(CONNECTOR_CONNECTION_POOL)) {
-            identity =  getAttribute(this, CONNECTION_POOL_NAME);
-        }else if (rType.equals(RESOURCE_ADAPTER_CONFIG)) {
-            identity =  getAttribute(this, RESOURCE_ADAPTER_CONFIG_NAME);
-        }else if(rType.equals(CONNECTOR_WORK_SECURITY_MAP)){
+        final String rType = getType();
+        final String identity;
+        if (rType.equals(CUSTOM_RESOURCE) || rType.equals(EXTERNAL_JNDI_RESOURCE) || rType.equals(JDBC_RESOURCE)
+            || rType.equals(PERSISTENCE_MANAGER_FACTORY_RESOURCE) || rType.equals(CONNECTOR_RESOURCE)
+            || rType.equals(ADMIN_OBJECT_RESOURCE) || rType.equals(MAIL_RESOURCE)) {
+            identity = getAttribute(this, JNDI_NAME);
+        } else if (rType.equals(JDBC_CONNECTION_POOL) || rType.equals(CONNECTOR_CONNECTION_POOL)) {
+            identity = getAttribute(this, CONNECTION_POOL_NAME);
+        } else if (rType.equals(RESOURCE_ADAPTER_CONFIG)) {
+            identity = getAttribute(this, RESOURCE_ADAPTER_CONFIG_NAME);
+        } else if (rType.equals(CONNECTOR_WORK_SECURITY_MAP)) {
             identity = getAttribute(this, WORK_SECURITY_MAP_NAME);
+        } else {
+            identity = "";
         }
 
         return identity + " of type " + resType;

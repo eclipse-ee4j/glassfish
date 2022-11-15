@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,9 @@
 
 package com.sun.gjc.util;
 
-import static java.util.logging.Level.FINEST;
+import com.sun.gjc.monitoring.JdbcRAConstants;
+import com.sun.gjc.monitoring.SQLTraceProbeProvider;
+import com.sun.logging.LogDomains;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +27,9 @@ import java.util.logging.Logger;
 
 import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.SQLTraceRecord;
+import org.glassfish.api.naming.SimpleJndiName;
 
-import com.sun.gjc.monitoring.JdbcRAConstants;
-import com.sun.gjc.monitoring.SQLTraceProbeProvider;
-import com.sun.logging.LogDomains;
+import static java.util.logging.Level.FINEST;
 
 /**
  * Implementation of SQLTraceListener to listen to events related to a sql
@@ -42,16 +44,16 @@ public class SQLTraceDelegator implements SQLTraceListener {
 
     // List of listeners
     protected List<SQLTraceListener> sqlTraceListenersList;
-    private String poolName;
-    private String appName;
-    private String moduleName;
+    private final SimpleJndiName poolName;
+    private final String appName;
+    private final String moduleName;
     private SQLTraceProbeProvider probeProvider = null;
 
     public SQLTraceProbeProvider getProbeProvider() {
         return probeProvider;
     }
 
-    public SQLTraceDelegator(String poolName, String appName, String moduleName) {
+    public SQLTraceDelegator(SimpleJndiName poolName, String appName, String moduleName) {
         this.poolName = poolName;
         this.appName = appName;
         this.moduleName = moduleName;
@@ -66,11 +68,12 @@ public class SQLTraceDelegator implements SQLTraceListener {
      */
     public void registerSQLTraceListener(SQLTraceListener listener) {
         if (sqlTraceListenersList == null) {
-            sqlTraceListenersList = new ArrayList<SQLTraceListener>();
+            sqlTraceListenersList = new ArrayList<>();
         }
         sqlTraceListenersList.add(listener);
     }
 
+    @Override
     public void sqlTrace(SQLTraceRecord record) {
         if (sqlTraceListenersList != null) {
             for (SQLTraceListener listener : sqlTraceListenersList) {
@@ -90,7 +93,7 @@ public class SQLTraceDelegator implements SQLTraceListener {
         }
 
         if (record != null) {
-            record.setPoolName(poolName);
+            record.setPoolName(poolName.toString());
             String methodName = record.getMethodName();
             // Check if the method name is one in which sql query is used
             if (isMethodValidForCaching(methodName)) {
@@ -104,7 +107,7 @@ public class SQLTraceDelegator implements SQLTraceListener {
                         break;
                     }
                     if (sqlQuery != null) {
-                        probeProvider.traceSQLEvent(poolName, appName, moduleName, sqlQuery);
+                        probeProvider.traceSQLEvent(poolName.toString(), appName, moduleName, sqlQuery);
                     }
                 }
             }

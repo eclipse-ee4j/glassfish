@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,11 +17,12 @@
 
 package com.sun.enterprise.deployment.node;
 
-import java.util.Map;
-
 import com.sun.enterprise.deployment.InjectionTarget;
 import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import com.sun.enterprise.deployment.xml.TagNames;
+
+import java.util.Map;
+
 import org.w3c.dom.Node;
 
 /**
@@ -28,7 +30,6 @@ import org.w3c.dom.Node;
  * xml tag
  *
  * @author  Kenneth Saks
- * @version
  */
 public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageDestinationReferenceDescriptor> {
 
@@ -36,18 +37,17 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
 
     public MessageDestinationRefNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
-                                InjectionTargetNode.class, "addInjectionTarget");
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), InjectionTargetNode.class,
+            "addInjectionTarget");
     }
 
     @Override
-    protected Map getDispatchTable() {
-        Map table = super.getDispatchTable();
+    protected Map<String, String> getDispatchTable() {
+        Map<String, String> table = super.getDispatchTable();
         table.put(TagNames.MESSAGE_DESTINATION_REFERENCE_NAME, "setName");
         table.put(TagNames.MESSAGE_DESTINATION_TYPE, "setDestinationType");
         table.put(TagNames.MESSAGE_DESTINATION_USAGE, "setUsage");
-        table.put(TagNames.MESSAGE_DESTINATION_LINK,
-                  "setMessageDestinationLinkName");
+        table.put(TagNames.MESSAGE_DESTINATION_LINK, "setMessageDestinationLinkName");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
         return table;
@@ -55,40 +55,33 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
 
     @Override
     public MessageDestinationReferenceDescriptor getDescriptor() {
-        if (descriptor == null) descriptor = new MessageDestinationReferenceDescriptor();
+        if (descriptor == null) {
+            descriptor = new MessageDestinationReferenceDescriptor();
+        }
         return descriptor;
     }
 
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName,
-                                MessageDestinationReferenceDescriptor desc) {
 
+    @Override
+    public Node writeDescriptor(Node parent, String nodeName, MessageDestinationReferenceDescriptor desc) {
         Node msgDestRefNode = appendChild(parent, nodeName);
 
         writeLocalizedDescriptions(msgDestRefNode, desc);
 
-        appendTextChild(msgDestRefNode,
-                        TagNames.MESSAGE_DESTINATION_REFERENCE_NAME,
-                        desc.getName());
-        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_TYPE,
-                        desc.getDestinationType());
-        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_USAGE,
-                        desc.getUsage());
-        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_LINK,
-                            desc.getMessageDestinationLinkName());
-        appendTextChild(msgDestRefNode, TagNames.MAPPED_NAME,
-            desc.getMappedName());
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_REFERENCE_NAME, desc.getName());
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_TYPE, desc.getDestinationType());
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_USAGE, desc.getUsage());
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_LINK, desc.getMessageDestinationLinkName());
+        appendTextChild(msgDestRefNode, TagNames.MAPPED_NAME, desc.getMappedName());
 
-        if( desc.isInjectable() ) {
+        if (desc.isInjectable()) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
             for (InjectionTarget target : desc.getInjectionTargets()) {
                 ijNode.writeDescriptor(msgDestRefNode, TagNames.INJECTION_TARGET, target);
             }
         }
 
-        appendTextChild(msgDestRefNode, TagNames.LOOKUP_NAME,
-            desc.getLookupName());
-
+        appendTextChild(msgDestRefNode, TagNames.LOOKUP_NAME, desc.getLookupName());
         return msgDestRefNode;
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,9 +17,19 @@
 
 package org.glassfish.persistence.jpa;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
+import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.BundleDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
+import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
+import com.sun.enterprise.deployment.util.DOLUtils;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +46,7 @@ import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.deployment.common.SimpleDeployer;
@@ -47,19 +59,9 @@ import org.glassfish.persistence.common.Java2DBProcessorHelper;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.appserv.connectors.internal.api.ConnectorRuntime;
-import com.sun.enterprise.deployment.Application;
-import com.sun.enterprise.deployment.BundleDescriptor;
-import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
-import com.sun.enterprise.deployment.PersistenceUnitsDescriptor;
-import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.logging.LogDomains;
-
-import jakarta.inject.Inject;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceException;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static org.glassfish.internal.deployment.Deployment.APPLICATION_PREPARED;
 
 /**
  * Deployer for JPA applications
@@ -267,7 +269,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         // Iterate through all the bundles for the app and collect pu references in
         // referencedPus
         boolean hasScopedResource = false;
-        final List<PersistenceUnitDescriptor> referencedPus = new ArrayList<PersistenceUnitDescriptor>();
+        final List<PersistenceUnitDescriptor> referencedPus = new ArrayList<>();
         for (BundleDescriptor bundle : bundles) {
             Collection<? extends PersistenceUnitDescriptor> pusReferencedFromBundle = bundle.findReferencedPUs();
             for (PersistenceUnitDescriptor pud : pusReferencedFromBundle) {
@@ -329,8 +331,8 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
      */
     private boolean hasScopedResource(PersistenceUnitDescriptor persistenceUnitDescriptor) {
         boolean hasScopedResource = false;
-        String jtaDataSource = persistenceUnitDescriptor.getJtaDataSource();
-        if (jtaDataSource != null && jtaDataSource.startsWith("java:")) {
+        SimpleJndiName jtaDataSource = persistenceUnitDescriptor.getJtaDataSource();
+        if (jtaDataSource != null && jtaDataSource.hasJavaPrefix()) {
             hasScopedResource = true;
         }
 
@@ -508,7 +510,7 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                         List<EntityManagerFactory> emfsCreatedForThisApp = appInfo.getTransientAppMetaData(EMF_KEY, List.class);
                         if (emfsCreatedForThisApp == null) {
                             // First EMF for this app, initialize
-                            emfsCreatedForThisApp = new ArrayList<EntityManagerFactory>();
+                            emfsCreatedForThisApp = new ArrayList<>();
                             appInfo.addTransientAppMetaData(EMF_KEY, emfsCreatedForThisApp);
                         }
                         emfsCreatedForThisApp.add(persistenceUnitLoader.getEMF());

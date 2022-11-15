@@ -32,9 +32,11 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ManagedExecutorService;
 import org.glassfish.concurrent.config.ManagedExecutorServiceBase;
 import org.glassfish.concurrent.config.ManagedScheduledExecutorService;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
@@ -44,7 +46,6 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getResourceByName;
 import static com.sun.enterprise.config.serverbeans.ServerTags.DESCRIPTION;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_EXECUTOR_SERVICE;
 import static com.sun.enterprise.config.serverbeans.ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE;
@@ -113,7 +114,9 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
         try {
             ConfigSupport.apply(param -> createResource(param, properties), resources);
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
             String msg = I18N.getLocalString("create.managed.executor.service.failed",
                 "Managed executor service {0} creation failed", jndiName) + tfe.getLocalizedMessage();
@@ -247,11 +250,14 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
-        Resource resource = null;
+        final Resource resource;
+        SimpleJndiName simpleJndiName = new SimpleJndiName(jndiName);
         if (MANAGED_EXECUTOR_SERVICE.equals(getResourceType())) {
-            resource = getResourceByName(resources, ManagedExecutorService.class, jndiName);
+            resource = resources.getResourceByName(ManagedExecutorService.class, simpleJndiName);
         } else if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
-            resource = getResourceByName(resources, ManagedScheduledExecutorService.class, jndiName);
+            resource = resources.getResourceByName(ManagedScheduledExecutorService.class, simpleJndiName);
+        } else {
+            resource = null;
         }
 
         // ensure we already have this resource
@@ -272,8 +278,8 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
 
         if (environment.isDas()) {
-            if ("domain".equals(target)) {
-                if (!resourceUtil.getTargetsReferringResourceRef(jndiName).isEmpty()) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
+                if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     String msg = I18N.getLocalString("delete.managed.executor.service.resource-ref.exist",
                         "This managed executor service [ {0} ] is referenced in an instance/cluster target,"
                             + " use delete-resource-ref on appropriate target",
@@ -287,7 +293,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
             } else {
-                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                if (!resourceUtil.isResourceRefInTarget(simpleJndiName, target)) {
                     String msg = I18N.getLocalString("delete.managed.executor.service.no.resource-ref",
                         "This managed executor service [ {0} ] is not referenced in target [ {1} ]", jndiName, target);
                     if (MANAGED_SCHEDULED_EXECUTOR_SERVICE.equals(getResourceType())) {
@@ -298,7 +304,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
                     return new ResourceStatus(ResourceStatus.FAILURE, msg);
                 }
 
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
+                if (resourceUtil.getTargetsReferringResourceRef(simpleJndiName).size() > 1) {
                     String msg = I18N.getLocalString("delete.managed.executor.service.multiple.resource-refs",
                         "This managed executor service [ {0} ] is referenced in multiple instance/cluster targets,"
                             + " Use delete-resource-ref on appropriate target",
@@ -315,15 +321,17 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }
 
         try {
-            resourceUtil.deleteResourceRef(jndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete managed executor service
             SingleConfigCode<Resources> configCode = param -> {
                 ManagedExecutorServiceBase removedResource = null;
                 if (MANAGED_EXECUTOR_SERVICE.equals(getResourceType())) {
-                    removedResource = getResourceByName(resources, ManagedExecutorService.class, jndiName);
+                    removedResource = resources.getResourceByName(ManagedExecutorService.class, simpleJndiName);
                 } else {
-                    removedResource = getResourceByName(resources, ManagedScheduledExecutorService.class, jndiName);
+                    removedResource = resources.getResourceByName(ManagedScheduledExecutorService.class, simpleJndiName);
                 }
                 return param.getResources().remove(removedResource);
             };

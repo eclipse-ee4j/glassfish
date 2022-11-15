@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,34 +17,39 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.inject.Inject;
+import jakarta.resource.ResourceException;
+
+import java.beans.PropertyVetoException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.glassfish.api.I18n;
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.config.support.CommandTarget;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resources.admin.cli.ResourceManager;
 import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
 import org.glassfish.resourcebase.resources.util.BindableResourcesHelper;
+import org.glassfish.resources.admin.cli.ResourceManager;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-import jakarta.inject.Inject;
-import jakarta.resource.ResourceException;
-import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import static org.glassfish.resources.admin.cli.ResourceConstants.*;
+import static org.glassfish.resources.admin.cli.ResourceConstants.ENABLED;
+import static org.glassfish.resources.admin.cli.ResourceConstants.JNDI_NAME;
+import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
 
 /**
  * @author Jennifer Chou, Jagadish Ramu
@@ -74,13 +80,12 @@ public class ConnectorResourceManager implements ResourceManager {
     @Inject
     private BindableResourcesHelper resourcesHelper;
 
-    public ConnectorResourceManager() {
-    }
-
+    @Override
     public String getResourceType() {
         return ServerTags.CONNECTOR_RESOURCE;
     }
 
+    @Override
     public ResourceStatus create(Resources resources, HashMap attributes, final Properties properties,
                                  String target) throws Exception {
 
@@ -92,15 +97,11 @@ public class ConnectorResourceManager implements ResourceManager {
         }
 
         try {
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    return createResource(param, properties);
-                }
-            }, resources);
-
-            resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
-
+            SingleConfigCode<Resources> configCode = param -> createResource(param, properties);
+            ConfigSupport.apply(configCode, resources);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.createResourceRef(jndiName, enabledValueForTarget, target);
+            }
         } catch (TransactionFailure tfe) {
             String msg = localStrings.getLocalString("create.connector.resource.fail",
                     "Connector resource {0} create failed ", jndiName) +
@@ -129,7 +130,7 @@ public class ConnectorResourceManager implements ResourceManager {
             return status;
         }
 
-        if (!isConnPoolExists(resources, poolName)) {
+        if (!isConnPoolExists(resources)) {
             String msg = localStrings.getLocalString("create.connector.resource.connPoolNotFound",
                     "Attribute value (pool-name = {0}) is not found in list of connector connection pools.", poolName);
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
@@ -180,23 +181,25 @@ public class ConnectorResourceManager implements ResourceManager {
         objectType = (String) attributes.get(ServerTags.OBJECT_TYPE);
     }
 
-    private boolean isConnPoolExists(Resources resources, String poolName) {
-        return ConnectorsUtil.getResourceByName(resources, ConnectorConnectionPool.class, poolName) != null;
+    private boolean isConnPoolExists(Resources resources) {
+        final SimpleJndiName jndiPoolName = new SimpleJndiName(poolName);
+        return resources.getResourceByName(ConnectorConnectionPool.class, jndiPoolName) != null;
     }
 
+
+    @Override
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
-            throws Exception {
+        throws Exception {
         setAttributes(attributes, null);
         ResourceStatus status = null;
-        if(!validate){
-            status = new ResourceStatus(ResourceStatus.SUCCESS,"");
-        }else{
+        if (!validate) {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
+        } else {
             status = isValid(resources, false, null);
         }
-        if(status.getStatus() == ResourceStatus.SUCCESS){
+        if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        }else{
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage());
     }
 }

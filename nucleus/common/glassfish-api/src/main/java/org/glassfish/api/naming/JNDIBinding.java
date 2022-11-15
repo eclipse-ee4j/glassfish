@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +31,7 @@ public interface JNDIBinding {
      *
      * @return the logical name in the component namespace
      */
-    String getName();
+    SimpleJndiName getName();
 
     /**
      * Returns the value to be bound against the logical name

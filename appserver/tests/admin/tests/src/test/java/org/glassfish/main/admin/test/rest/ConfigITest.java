@@ -20,6 +20,7 @@ package org.glassfish.main.admin.test.rest;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.Response;
 
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -32,7 +33,7 @@ public class ConfigITest extends RestTestBase {
 
     @Test
     public void testConfigCopy() {
-        String configName = "config-" + generateRandomString();
+        String configName = "config-" + RandomGenerator.generateRandomString();
         MultivaluedHashMap<String, String> formData = new MultivaluedHashMap<>();
         formData.add("id", "default-config");
         formData.add("id", configName);

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,7 +67,7 @@ public class JvmOptionsITest extends RestTestBase {
 
     @BeforeEach
     public void createConfig() {
-        testConfigName = "config-" + generateRandomString();
+        testConfigName = "config-" + RandomGenerator.generateRandomString();
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<>() {{
             add("id", "default-config");
             add("id", testConfigName);
@@ -93,7 +94,7 @@ public class JvmOptionsITest extends RestTestBase {
 
     @Test
     public void createAndDeleteOptions() {
-        final String option1Name = "-Doption" + generateRandomString();
+        final String option1Name = "-Doption" + RandomGenerator.generateRandomString();
         Map<String, String> newOptions = Map.of(option1Name, "someValue");
 
         Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
@@ -111,7 +112,7 @@ public class JvmOptionsITest extends RestTestBase {
 
     @Test
     public void createAndDeleteOptionsWithBackslashes() {
-        final String optionName = "-Dfile" + generateRandomString();
+        final String optionName = "-Dfile" + RandomGenerator.generateRandomString();
         final String optionValue = "C:\\ABC\\DEF\\";
         Map<String, String> newOptions = Map.of(optionName, escape(optionValue));
 
@@ -130,8 +131,8 @@ public class JvmOptionsITest extends RestTestBase {
 
     @Test
     public void createAndDeleteOptionsWithoutValues() {
-        final String option1Name = "-Doption" + generateRandomString();
-        final String option2Name = "-Doption" + generateRandomString();
+        final String option1Name = "-Doption" + RandomGenerator.generateRandomString();
+        final String option2Name = "-Doption" + RandomGenerator.generateRandomString();
         Map<String, String> newOptions = Map.of(option1Name, "", option2Name, "");
         Response response = managementClient.post(testConfigJvmOptionsUrl, newOptions);
         assertEquals(200, response.getStatus());
@@ -149,7 +150,7 @@ public class JvmOptionsITest extends RestTestBase {
 
     @Test
     public void testIsolatedOptionsCreationOnNewConfig() {
-        final String optionName = "-Doption" + generateRandomString();
+        final String optionName = "-Doption" + RandomGenerator.generateRandomString();
         Map<String, String> newOptions = Map.of(optionName, "", "target", testConfigName);
 
         // Test new config to make sure option is there
@@ -167,8 +168,8 @@ public class JvmOptionsITest extends RestTestBase {
 
     @Test
     public void testProfilerJvmOptions() {
-        final String profilerName = "profiler" + generateRandomString();
-        final String optionName = "-Doption" + generateRandomString();
+        final String profilerName = "profiler" + RandomGenerator.generateRandomString();
+        final String optionName = "-Doption" + RandomGenerator.generateRandomString();
         Map<String, String> attrs = Map.of("name", profilerName, "target", testConfigName);
         Map<String, String> newOptions = Map.of(optionName, "");
         deleteProfiler(testConfigUrl + "/java-config/profiler/delete-profiler", testConfigName, false);

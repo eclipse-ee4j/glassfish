@@ -31,10 +31,18 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ComponentEnvManager {
 
-    // Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
+    // FIXME: doesn't it?
+    /**
+     * @param componentId can be null, then method returns null.
+     * @deprecated Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
+     */
+    @Deprecated
     JndiNameEnvironment getJndiNameEnvironment(String componentId);
 
-    // Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
+    /**
+     * @deprecated Remove once WebContainer sets JndiNameEnvironment on every "new ComponentInvocation()"
+     */
+    @Deprecated
     JndiNameEnvironment getCurrentJndiNameEnvironment();
 
     String getComponentEnvId(JndiNameEnvironment env);

@@ -17,8 +17,19 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
-import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourcePool;
+import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.deploy.shared.FileArchive;
+import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
+import com.sun.enterprise.deployment.EnvironmentProperty;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.logging.LogDomains;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,6 +59,7 @@ import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ApplicationName;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
@@ -68,19 +80,8 @@ import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
-import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourcePool;
-import com.sun.enterprise.config.serverbeans.ResourcePoolReference;
-import com.sun.enterprise.config.serverbeans.Resources;
-import com.sun.enterprise.deploy.shared.FileArchive;
-import com.sun.enterprise.deployment.EjbDescriptor;
-import com.sun.enterprise.deployment.EjbMessageBeanDescriptor;
-import com.sun.enterprise.deployment.EnvironmentProperty;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.logging.LogDomains;
+import static com.sun.appserv.connectors.internal.api.ConnectorConstants.JNDI_SUFFIX_VALUES;
+import static com.sun.enterprise.util.SystemPropertyConstants.SLASH;
 
 /**
  * Util class for connector related classes
@@ -188,17 +189,18 @@ public class ConnectorsUtil {
                 }
             }
         }
-
         return location;
     }
 
+
     /**
-     *  Return the system PM name for the JNDI name
-     * @param  jndiName jndi name
-     * @return String jndi name for PM resource
-     **/
-    public  static String getPMJndiName( String jndiName )  {
-        return jndiName + ConnectorConstants.PM_JNDI_SUFFIX;
+     * Return the system PM name for the JNDI name
+     *
+     * @param jndiName jndi name
+     * @return String non-prefixed jndi name for PM resource
+     */
+    public static SimpleJndiName getPMJndiName(SimpleJndiName jndiName) {
+        return new SimpleJndiName(jndiName + ConnectorConstants.PM_JNDI_SUFFIX);
     }
 
     /**
@@ -206,10 +208,10 @@ public class ConnectorsUtil {
      * @param name jndi name
      * @return suffix, if found
      */
-    public static String getValidSuffix(String name) {
+    public static String getValidSuffix(SimpleJndiName name) {
         if (name != null) {
-            for (String validSuffix : JNDI_SUFFIX_VALUES) {
-                if (name.endsWith(validSuffix)) {
+            for (String validSuffix : ConnectorConstants.JNDI_SUFFIX_VALUES) {
+                if (name.hasSuffix(validSuffix)) {
                     return validSuffix;
                 }
             }
@@ -226,6 +228,7 @@ public class ConnectorsUtil {
      * @return boolean whether the suffix is valid or not
      */
     public static boolean isValidJndiSuffix(String suffix) {
+        LOG.log(Level.FINEST, "isValidJndiSuffix(suffix={0})", suffix);
         if (suffix != null) {
             for (String validSuffix : JNDI_SUFFIX_VALUES) {
                 if (validSuffix.equals(suffix)) {
@@ -237,37 +240,45 @@ public class ConnectorsUtil {
         return false;
     }
 
+
     /**
-     * Given the name of the resource and its jndi env, derive the complete jndi name. (eg; with __PM / __nontx)
+     * Given the name of the resource and its jndi env, derive the complete jndi name.
+     * (eg; with __PM / __nontx)
+     *
      * @param name name of the resource
      * @param env env
      * @return derived name
      */
-    public static String deriveJndiName(String name, Hashtable env) {
+    public static SimpleJndiName deriveJndiName(SimpleJndiName name, Hashtable<Object, Object> env) {
         String suffix = (String) env.get(ConnectorConstants.JNDI_SUFFIX_PROPERTY);
         if (isValidJndiSuffix(suffix)) {
-            return name + suffix;
+            return new SimpleJndiName(name + suffix);
         }
 
         return name;
     }
 
-    public static ResourcePool getConnectionPoolConfig(PoolInfo poolInfo, Resources allResources){
-        ResourcePool pool = null;
-        for(Resource configuredResource : allResources.getResources()){
-            if(configuredResource instanceof ResourcePool){
-                ResourcePool resourcePool= (ResourcePool)configuredResource;
-                if(resourcePool.getName().equals(poolInfo.getName())){
-                    pool = resourcePool;
-                    break;
+
+    public static ResourcePool getConnectionPoolConfig(PoolInfo poolInfo, Resources allResources) {
+        if (allResources == null || allResources.getResources() == null) {
+            return null;
+        }
+        List<Resource> resources = allResources.getResources();
+        for (Resource configuredResource : resources) {
+            if (configuredResource instanceof ResourcePool) {
+                ResourcePool resourcePool = (ResourcePool) configuredResource;
+                if (resourcePool.getName().equals(poolInfo.getName().toString())) {
+                    return resourcePool;
                 }
             }
         }
-
-        return pool;
+        return null;
     }
 
     public static Collection<Resource> getAllResources(Collection<String> poolNames, Resources allResources) {
+        if (allResources == null || allResources.getResources() == null) {
+            return List.of();
+        }
         List<Resource> connectorResources = new ArrayList<>();
         for (Resource resource : allResources.getResources()) {
             if (resource instanceof ConnectorResource) {
@@ -540,81 +551,97 @@ public class ConnectorsUtil {
     }
 
 
-    public static String deriveResourceName(String compId, String name, JavaEEResourceType resType) {
-        return getReservePrefixedJNDINameForResource(compId, name, resType);
-
-    }
-
-    public static String getReservePrefixedJNDINameForResource(String compId, String resourceName, JavaEEResourceType resType) {
-        LOG.log(Level.FINEST, "getReservePrefixedJNDINameForResource(compId={0}, resourceName={1}, resType={2})",
+    /**
+     * @param compId can be null
+     * @param resourceName must not be null
+     * @param resType must not be null
+     * @return prefixed {@link SimpleJndiName} respecting GlassFish internal rules.
+     */
+    public static SimpleJndiName deriveResourceName(String compId, SimpleJndiName resourceName, JavaEEResourceType resType) {
+        LOG.log(Level.FINEST, "deriveResourceName(compId={0}, resourceName={1}, resType={2})",
             new Object[] {compId, resourceName, resType});
-        String prefix = null;
-        String prefixPart1 = null;
-        String prefixPart2 = null;
 
-        if (resType != null) {
-            switch (resType) {
-                case DSD :
-                    prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case MSD :
-                    prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.MAILSESSION_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case CFD :
-                    prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case DSDPOOL:
-                    prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case CFDPOOL:
-                    prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case JMSCFDD:
-                    prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case JMSCFDDPOOL:
-                    prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case JMSDD:
-                    prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case AODD:
-                    prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX;
-                    break;
-                case MEDD:
-                case MSEDD:
-                case MTFDD:
-                    prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
-                    prefixPart2 = "";
-                    break;
-                case CSDD:
-                    prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
-                    prefixPart2 = ResourceConstants.CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX;
-                    break;
-
-            }
+        final String prefixPart1;
+        final String prefixPart2;
+        switch (resType) {
+            case DSD:
+                prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case MSD:
+                prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.MAILSESSION_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case CFD:
+                prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case DSDPOOL:
+                prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.DATASOURCE_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case CFDPOOL:
+                prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case JMSCFDD:
+                prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case JMSCFDDPOOL:
+                prefixPart1 = ConnectorConstants.POOLS_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.JMS_CONNECTION_FACTORY_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case JMSDD:
+                prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case AODD:
+                prefixPart1 = ConnectorConstants.RESOURCE_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX;
+                break;
+            case MEDD:
+            case MSEDD:
+            case MTFDD:
+                prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
+                prefixPart2 = "";
+                break;
+            case CSDD:
+                prefixPart1 = ConnectorConstants.CONCURRENT_JNDINAME_PREFIX;
+                prefixPart2 = ResourceConstants.CONCURRENT_CONTEXT_SERVICE_DEFINITION_JNDINAME_PREFIX;
+                break;
+            default:
+                throw new IllegalArgumentException("The resource type " + resType + " is not supported!");
         }
 
+        final String prefix;
         if (compId == null || compId.isEmpty()) {
             prefix = prefixPart1 + prefixPart2;
         } else {
-            prefix = prefixPart1 + prefixPart2 + compId + "/";
+            prefix = prefixPart1 + prefixPart2 + compId + '/';
         }
-        return getReservePrefixedJNDIName(prefix, resourceName);
+        return addResourceNamePrefix(prefix, resourceName);
     }
 
 
-    private static String getReservePrefixedJNDIName(String prefix, String resourceName) {
-        return prefix + resourceName;
+    public static SimpleJndiName addResourceNamePrefix(String prefix, SimpleJndiName resourceName) {
+        // FIXME: dmatej breaks connectors_group_3, to be continued.
+//        if (resourceName.contains(prefix)) {
+//            LOG.log(Level.WARNING,
+//                "The name {0} already contained prefix {1}."
+//                    + " It may be a coincidence or you already added the prefix. I am returning the original name.",
+//                new Object[] {resourceName, prefix});
+//            LOG.log(Level.FINEST, "", new IllegalArgumentException("Stacktrace to find which method asked for this."));
+//            return resourceName;
+//        }
+//        if (resourceName.hasJavaPrefix()) {
+//            String javaCtxPrefix = resourceName.getPrefix();
+//            SimpleJndiName jndiEnv = resourceName.removePrefix(javaCtxPrefix);
+//            SimpleJndiName jndiSimple = jndiEnv.removePrefix("env/");
+//            String javaCtxEnvPrefix = jndiEnv == jndiSimple ? javaCtxPrefix.toString() : (javaCtxPrefix + "env/");
+//            return new SimpleJndiName(javaCtxEnvPrefix + prefix + jndiSimple);
+//        }
+        return new SimpleJndiName(prefix + resourceName);
     }
 
 
@@ -716,8 +743,8 @@ public class ConnectorsUtil {
         return libURIs;
     }
 
-    public static String getReservePrefixedJNDINameForDescriptor(String moduleName) {
-        return getReservePrefixedJNDIName(ConnectorConstants.DD_PREFIX, moduleName);
+    public static SimpleJndiName getReservePrefixedJNDINameForDescriptor(String moduleName) {
+        return new SimpleJndiName(ConnectorConstants.DD_PREFIX + moduleName);
     }
 
     public static boolean isStandAloneRA(String moduleName){
@@ -848,9 +875,6 @@ public class ConnectorsUtil {
             LOG.log(Level.SEVERE, "exception while closing archive [ " + jarFile + " ]", e);
         }
     }
-    public static PoolInfo getPoolInfo(ResourcePool resource){
-        return ResourceUtil.getPoolInfo(resource);
-    }
 
     public static ResourceInfo getResourceInfo(BindableResource resource){
         return ResourceUtil.getResourceInfo(resource);
@@ -877,16 +901,18 @@ public class ConnectorsUtil {
         return ResourceUtil.isModuleScopedResource(resourceInfo);
     }
 
-    public static String escapeResourceNameForMonitoring(String name){
-        return name.replaceAll("/", SLASH);
+    public static String escapeResourceNameForMonitoring(SimpleJndiName name){
+        return name.toString().replaceAll("/", SLASH);
     }
 
     public static String getPoolMonitoringSubTreeRoot(PoolInfo poolInfo, boolean escapeSlashes) {
         String resourcesPrefix = "resources/";
-        String suffix = poolInfo.getName();
 
+        final String suffix;
         if (escapeSlashes) {
-            suffix = escapeResourceNameForMonitoring(suffix);
+            suffix = escapeResourceNameForMonitoring(poolInfo.getName());
+        } else {
+            suffix = poolInfo.getName().toString();
         }
 
         String subTreeRoot = resourcesPrefix + suffix;
@@ -919,24 +945,20 @@ public class ConnectorsUtil {
     }
 
 
-    public static Collection<BindableResource> getResourcesOfPool(Resources resources, String connectionPoolName) {
+    public static Collection<BindableResource> getResourcesOfPool(Resources resources, SimpleJndiName connectionPoolName) {
         Set<BindableResource> resourcesReferringPool = new HashSet<>();
-        ResourcePool pool = getResourceByName(resources, ResourcePool.class, connectionPoolName);
+        ResourcePool pool = resources.getResourceByName(ResourcePool.class, connectionPoolName);
         if (pool != null) {
             Collection<BindableResource> bindableResources = resources.getResources(BindableResource.class);
             for (BindableResource resource : bindableResources) {
                 if (ResourcePoolReference.class.isAssignableFrom(resource.getClass())) {
-                    if ((((ResourcePoolReference) resource).getPoolName()).equals(connectionPoolName)) {
+                    if (((ResourcePoolReference) resource).getPoolName().equals(connectionPoolName.toString())) {
                         resourcesReferringPool.add(resource);
                     }
                 }
             }
         }
         return resourcesReferringPool;
-    }
-
-    public static <T extends Resource> T getResourceByName(Resources resources, Class<T> type, String name) {
-        return (T) resources.getResourceByName(type, name);
     }
 
 

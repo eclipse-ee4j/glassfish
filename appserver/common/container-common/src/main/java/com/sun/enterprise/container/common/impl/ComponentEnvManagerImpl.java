@@ -76,6 +76,7 @@ import org.glassfish.api.naming.ComponentNamingUtil;
 import org.glassfish.api.naming.GlassfishNamingManager;
 import org.glassfish.api.naming.JNDIBinding;
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -92,6 +93,9 @@ import static com.sun.enterprise.deployment.util.DOLUtils.getModuleName;
 import static com.sun.enterprise.deployment.util.DOLUtils.getTreatComponentAsModule;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 import static org.glassfish.deployment.common.JavaEEResourceType.AODD;
 import static org.glassfish.deployment.common.JavaEEResourceType.CFD;
 import static org.glassfish.deployment.common.JavaEEResourceType.CSDD;
@@ -106,18 +110,10 @@ import static org.glassfish.deployment.common.JavaEEResourceType.MTFDD;
 @Service
 public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
-    private static final String JAVA_COLON = "java:";
-    private static final String JAVA_COMP_ENV_STRING = "java:comp/env/";
-    private static final String JAVA_COMP_PREFIX = "java:comp/";
-    private static final String JAVA_MODULE_PREFIX = "java:module/";
-    private static final String JAVA_APP_PREFIX = "java:app/";
-    private static final String JAVA_GLOBAL_PREFIX = "java:global/";
+    private static final Logger LOG = Logger.getLogger(ComponentEnvManagerImpl.class.getName());
 
     @Inject
     private ServiceLocator locator;
-
-    @Inject
-    private Logger _logger;
 
     @Inject
     GlassfishNamingManager namingManager;
@@ -126,15 +122,15 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     ComponentNamingUtil componentNamingUtil;
 
     @Inject
-    transient private CallFlowAgent callFlowAgent;
+    private transient CallFlowAgent callFlowAgent;
 
     @Inject
-    transient private TransactionManager transactionManager;
+    private transient TransactionManager transactionManager;
 
     @Inject
     private ProcessEnvironment processEnvironment;
 
-    // TODO: container-common shouldn't depend on EJB stuff, right?
+    // FIXME: container-common shouldn't depend on EJB stuff, right?
     // this seems like the abstraction design failure.
     @Inject
     private NamingUtils namingUtils;
@@ -144,9 +140,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     private final ConcurrentMap<String, RefCountJndiNameEnvironment> compId2Env = new ConcurrentHashMap<>();
 
-    /*
-     * Keep track of number of components using the same component ID so that we can match register calls with unregister
-     * calls. EJBs in war files will use the same component ID as the web bundle.
+    /**
+     * Keep track of number of components using the same component ID so that we can match register
+     * calls with unregister calls.
+     * EJBs in war files will use the same component ID as the web bundle.
      */
     private static class RefCountJndiNameEnvironment {
         public RefCountJndiNameEnvironment(JndiNameEnvironment env) {
@@ -159,9 +156,9 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     public void register(String componentId, JndiNameEnvironment env) {
-        RefCountJndiNameEnvironment refCountJndiNameEnvironment =
-            compId2Env.putIfAbsent(componentId, new RefCountJndiNameEnvironment(env));
-
+        LOG.log(Level.FINEST, "register(componentId={0}, env.class={1})", new Object[] {componentId, env.getClass()});
+        RefCountJndiNameEnvironment refCountJndiNameEnvironment = compId2Env.putIfAbsent(componentId,
+            new RefCountJndiNameEnvironment(env));
         if (refCountJndiNameEnvironment != null) {
             refCountJndiNameEnvironment.refcnt.incrementAndGet();
         }
@@ -176,39 +173,25 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     @Override
     public JndiNameEnvironment getJndiNameEnvironment(String componentId) {
-        RefCountJndiNameEnvironment refCountJndiEnvironment = null;
-        if (componentId != null) {
-            refCountJndiEnvironment = compId2Env.get(componentId);
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.finest(
-                    "ComponentEnvManagerImpl: getJndiNameEnvironment " + componentId + " is "
-                        + (refCountJndiEnvironment == null ? "NULL"
-                            : refCountJndiEnvironment.env.getClass().toString()));
-            }
+        LOG.log(Level.FINEST, "getJndiNameEnvironment(componentId={0})", componentId);
+        if (componentId == null) {
+            return null;
         }
-
+        RefCountJndiNameEnvironment refCountJndiEnvironment = compId2Env.get(componentId);
         return refCountJndiEnvironment == null ? null : refCountJndiEnvironment.env;
     }
 
     @Override
     public JndiNameEnvironment getCurrentJndiNameEnvironment() {
-        JndiNameEnvironment desc = null;
         ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-            if (inv.componentId != null) {
-                desc = getJndiNameEnvironment(inv.componentId);
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.finest("ComponentEnvManagerImpl: getCurrentJndiNameEnvironment " + inv.componentId + " is "
-                        + desc.getClass());
-                }
-            }
+        if (inv == null) {
+            return null;
         }
-
-        return desc;
+        return getJndiNameEnvironment(inv.componentId);
     }
 
     @Override
-    public String bindToComponentNamespace(JndiNameEnvironment jndiEnvironment) throws NamingException {
+    public String bindToComponentNamespace(final JndiNameEnvironment jndiEnvironment) throws NamingException {
         String componentEnvId = getComponentEnvId(jndiEnvironment);
 
         Collection<JNDIBinding> bindings = new ArrayList<>();
@@ -234,7 +217,6 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
             namingManager.bindToAppNamespace(getApplicationName(jndiEnvironment), bindings);
         } else {
-
             // Bind dependencies to the namespace for this component
             namingManager.bindToComponentNamespace(
                     getApplicationName(jndiEnvironment),
@@ -242,7 +224,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                     componentEnvId,
                     getTreatComponentAsModule(jndiEnvironment),
                     bindings);
-
+            // FIXME: Depends on some side effects of preceding calls.
             componentEnvId = getComponentEnvId(jndiEnvironment);
         }
 
@@ -273,7 +255,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         // internal portion of the global namespace based on the application name. This
         // will allow app client access to application-wide objects within the server.
         Application app = getApplicationFromEnv(jndiEnvironment);
-        if (!(jndiEnvironment instanceof ApplicationClientDescriptor) && app.getBundleDescriptors(ApplicationClientDescriptor.class).size() > 0) {
+        if (!(jndiEnvironment instanceof ApplicationClientDescriptor)
+            && !app.getBundleDescriptors(ApplicationClientDescriptor.class).isEmpty()) {
             for (JNDIBinding binding : bindings) {
                 if (dependencyAppliesToScope(binding.getName(), ScopeType.APP)) {
                     namingManager.publishObject(
@@ -285,9 +268,6 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         if (componentEnvId != null) {
-            if (_logger.isLoggable(Level.FINEST)) {
-                _logger.finest("ComponentEnvManagerImpl: register " + componentEnvId + " is " + jndiEnvironment.getClass());
-            }
             register(componentEnvId, jndiEnvironment);
         }
 
@@ -319,44 +299,39 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         if (dependencyAppliesToScope(desc, ScopeType.COMPONENT)) {
             return getApplicationName(env) + "/" + getModuleName(env) + "/" + getComponentEnvId(env);
         }
-
         if (dependencyAppliesToScope(desc, ScopeType.MODULE)) {
             return getApplicationName(env) + "/" + getModuleName(env);
         }
-
         if (dependencyAppliesToScope(desc, ScopeType.APP)) {
             return getApplicationName(env);
         }
-
         return "";
-
     }
 
-    private void addAllDescriptorBindings(JndiNameEnvironment JndiEnvironment, ScopeType scope, Collection<JNDIBinding> jndiBindings) {
+    private void addAllDescriptorBindings(JndiNameEnvironment jndiEnv, ScopeType scope, Collection<JNDIBinding> jndiBindings) {
         Set<ResourceDescriptor> allDescriptors = new HashSet<>();
-        Set<ResourceDescriptor> dataSourceDefinitions = JndiEnvironment.getResourceDescriptors(DSD);
-        Set<ResourceDescriptor> messagingConnectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(JMSCFDD);
-        Set<ResourceDescriptor> mailSessionDefinitions = JndiEnvironment.getResourceDescriptors(MSD);
-        Set<ResourceDescriptor> messagingDestinationDefinitions = JndiEnvironment.getResourceDescriptors(JMSDD);
+        Set<ResourceDescriptor> dataSourceDefinitions = jndiEnv.getResourceDescriptors(DSD);
+        Set<ResourceDescriptor> messagingConnectionFactoryDefinitions = jndiEnv.getResourceDescriptors(JMSCFDD);
+        Set<ResourceDescriptor> mailSessionDefinitions = jndiEnv.getResourceDescriptors(MSD);
+        Set<ResourceDescriptor> messagingDestinationDefinitions = jndiEnv.getResourceDescriptors(JMSDD);
 
-        Set<ResourceDescriptor> managedExecutorDefinitions = JndiEnvironment.getResourceDescriptors(MEDD);
-        Set<ResourceDescriptor> managedScheduledDefinitions = JndiEnvironment.getResourceDescriptors(MSEDD);
-        Set<ResourceDescriptor> managedThreadfactoryDefintions = JndiEnvironment.getResourceDescriptors(MTFDD);
-        Set<ResourceDescriptor> contextServiceDefinitions = JndiEnvironment.getResourceDescriptors(CSDD);
+        Set<ResourceDescriptor> managedExecutorDefinitions = jndiEnv.getResourceDescriptors(MEDD);
+        Set<ResourceDescriptor> managedScheduledDefinitions = jndiEnv.getResourceDescriptors(MSEDD);
+        Set<ResourceDescriptor> managedThreadfactoryDefintions = jndiEnv.getResourceDescriptors(MTFDD);
+        Set<ResourceDescriptor> contextServiceDefinitions = jndiEnv.getResourceDescriptors(CSDD);
 
-
-        if (!(JndiEnvironment instanceof ApplicationClientDescriptor)) {
-            Set<ResourceDescriptor> connectionFactoryDefinitions = JndiEnvironment.getResourceDescriptors(CFD);
-            allDescriptors.addAll(connectionFactoryDefinitions);
+        if (jndiEnv instanceof ApplicationClientDescriptor) {
+            LOG.fine("No support for connection-factory in client module.");
         } else {
-            _logger.fine("Do not support connection-factory in client module.");
+            Set<ResourceDescriptor> connectionFactoryDefinitions = jndiEnv.getResourceDescriptors(CFD);
+            allDescriptors.addAll(connectionFactoryDefinitions);
         }
 
-        if (!(JndiEnvironment instanceof ApplicationClientDescriptor)) {
-            Set<ResourceDescriptor> administeredObjectDefinitions = JndiEnvironment.getResourceDescriptors(AODD);
-            allDescriptors.addAll(administeredObjectDefinitions);
+        if (jndiEnv instanceof ApplicationClientDescriptor) {
+            LOG.fine("No support for administered-object in client module.");
         } else {
-            _logger.fine("Do not support administered-object in client module.");
+            Set<ResourceDescriptor> administeredObjectDefinitions = jndiEnv.getResourceDescriptors(AODD);
+            allDescriptors.addAll(administeredObjectDefinitions);
         }
 
         allDescriptors.addAll(dataSourceDefinitions);
@@ -375,24 +350,24 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 continue;
             }
 
-            if (descriptor.getResourceType().equals(DSD)) {
+            if (descriptor.getResourceType() == DSD) {
                 if (descriptor instanceof DataSourceDefinitionDescriptor && ((DataSourceDefinitionDescriptor) descriptor).isDeployed()) {
                     continue;
                 }
             }
 
-            String resourceId = getResourceId(JndiEnvironment, descriptor);
-            descriptor.setResourceId(resourceId);
+            // FIXME: Alert, it modifies the descriptor as a side effect!!! What are consequences?
+            descriptor.setResourceId(getResourceId(jndiEnv, descriptor));
 
             CommonResourceProxy proxy = locator.getService(CommonResourceProxy.class);
             proxy.setDescriptor(descriptor);
 
-            String logicalJndiName = descriptorToLogicalJndiName(descriptor);
+            SimpleJndiName logicalJndiName = toLogicalJndiName(descriptor);
             CompEnvBinding envBinding = new CompEnvBinding(logicalJndiName, proxy);
             jndiBindings.add(envBinding);
 
             // Add another proxy with __PM suffix
-            if (descriptor.getResourceType().equals(JavaEEResourceType.JMSCFDD)) {
+            if (descriptor.getResourceType() == JavaEEResourceType.JMSCFDD) {
                 CommonResourceProxy jmscfProxy = locator.getService(JMSCFResourcePMProxy.class);
                 jmscfProxy.setDescriptor(descriptor);
                 CompEnvBinding jmscfEnvBinding = new CompEnvBinding(getPMJndiName(logicalJndiName), jmscfProxy);
@@ -498,11 +473,11 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
     private boolean undepoyResource(Descriptor descriptor) {
         try {
-            ResourceDeployer deployer = getResourceDeployer(descriptor);
+            ResourceDeployer<Descriptor> deployer = getResourceDeployer(descriptor);
             deployer.undeployResource(descriptor);
             return true;
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "Unable to undeploy Descriptor [ " + descriptor.getName() + " ] ", e);
+            LOG.log(Level.WARNING, "Unable to undeploy Descriptor [ " + descriptor.getName() + " ] ", e);
             return false;
         }
     }
@@ -510,22 +485,18 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     private void addEnvironmentProperties(ScopeType scope, Iterator<EnvironmentProperty> envItr, Collection<JNDIBinding> jndiBindings) {
         while (envItr.hasNext()) {
             EnvironmentProperty environmentProperty = envItr.next();
-
             if (!dependencyAppliesToScope(environmentProperty, scope)) {
                 continue;
             }
-
-            // Only env-entries that have been assigned a value are
-            // eligible for look up
-            if (environmentProperty.hasAValue()) {
-                String name = descriptorToLogicalJndiName(environmentProperty);
-                Object value;
+            if (environmentProperty.hasContent()) {
+                SimpleJndiName name = toLogicalJndiName(environmentProperty);
+                final Object value;
                 if (environmentProperty.hasLookupName()) {
                     value = namingUtils.createLazyNamingObjectFactory(name, environmentProperty.getLookupName(), true);
-                } else if (environmentProperty.getMappedName().length() > 0) {
-                    value = namingUtils.createLazyNamingObjectFactory(name, environmentProperty.getMappedName(), true);
+                } else if (environmentProperty.getMappedName().isEmpty()) {
+                    value = namingUtils.createSimpleNamingObjectFactory(name, environmentProperty.getValueObject(null));
                 } else {
-                    value = namingUtils.createSimpleNamingObjectFactory(name, environmentProperty.getValueObject());
+                    value = namingUtils.createLazyNamingObjectFactory(name, environmentProperty.getMappedName(), true);
                 }
                 jndiBindings.add(new CompEnvBinding(name, value));
             }
@@ -542,29 +513,25 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
             resourceRef.checkType();
 
-            String name = descriptorToLogicalJndiName(resourceRef);
+            SimpleJndiName name = toLogicalJndiName(resourceRef);
             Object value = null;
-            String physicalJndiName = resourceRef.getJndiName();
+            SimpleJndiName physicalJndiName = resourceRef.getJndiName();
 
             // the jndi-name of URL resource can be either the actual URL value,
             // or another jndi-name that can be looked up
             if (resourceRef.isURLResource()) {
-                if (physicalJndiName.startsWith(JAVA_GLOBAL_PREFIX) ||
-                    physicalJndiName.startsWith(JAVA_APP_PREFIX) ||
-                    physicalJndiName.startsWith(JAVA_MODULE_PREFIX) ||
-                    physicalJndiName.startsWith(JAVA_COMP_PREFIX)) {
+                if (physicalJndiName.isJavaGlobal() || physicalJndiName.isJavaApp() || physicalJndiName.isJavaModule()
+                    || physicalJndiName.isJavaComponent()) {
                     // for jndi-name or lookup-name like "java:module/env/url/testUrl"
                     value = namingUtils.createLazyNamingObjectFactory(name, physicalJndiName, false);
                 } else {
                     try {
                         // For jndi-name like "http://localhost:8080/index.html"
-                        value = namingUtils.createCloningNamingObjectFactory(
-                                    name,
-                                    namingUtils.createSimpleNamingObjectFactory(name, new URL(physicalJndiName)));
+                        value = namingUtils.createCloningNamingObjectFactory(name,
+                            namingUtils.createSimpleNamingObjectFactory(name, new URL(physicalJndiName.toString())));
                     } catch (MalformedURLException e) {
                         // For jndi-name or lookup-name like "url/testUrl"
-                        value = namingUtils.createLazyNamingObjectFactory(
-                                    name, physicalJndiName, false);
+                        value = namingUtils.createLazyNamingObjectFactory(name, physicalJndiName, false);
                     }
                 }
             } else if (resourceRef.isORB()) {
@@ -575,12 +542,12 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 if (wsRefMgr != null) {
                     value = wsRefMgr.getWSContextObject();
                 } else {
-                    _logger.log(SEVERE, "Cannot find the following class to proceed with @Resource WebServiceContext" + wsRefMgr
-                            + "Please confirm if webservices module is installed ");
+                    LOG.log(SEVERE, "Cannot find the following class to proceed with @Resource WebServiceContext"
+                        + wsRefMgr + "Please confirm if webservices module is installed ");
                 }
 
-            } else if (resourceRef.isJDBCResource() || resourceRef.isJMSConnectionFactory() || resourceRef.isMailResource()
-                    || resourceRef.isResourceConnectionFactory()) {
+            } else if (resourceRef.isJDBCResource() || resourceRef.isJMSConnectionFactory()
+                || resourceRef.isMailResource() || resourceRef.isResourceConnectionFactory()) {
                 value = namingUtils.createLazyInitializationNamingObjectFactory(name, physicalJndiName, false);
             } else {
                 value = namingUtils.createLazyNamingObjectFactory(name, physicalJndiName, false);
@@ -591,103 +558,89 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
     }
 
-    private void addJNDIBindings(JndiNameEnvironment env, ScopeType scope, Collection<JNDIBinding> jndiBindings) {
+
+    private void addJNDIBindings(final JndiNameEnvironment env, final ScopeType scope,
+        final Collection<JNDIBinding> jndiBindings) {
         // Create objects to be bound for each env dependency. Only add bindings that
         // match the given scope.
 
         addEnvironmentProperties(scope, env.getEnvironmentProperties().iterator(), jndiBindings);
 
-        for (ResourceEnvReferenceDescriptor next : env.getResourceEnvReferenceDescriptors()) {
-            if (!dependencyAppliesToScope(next, scope)) {
+        for (ResourceEnvReferenceDescriptor descriptor : env.getResourceEnvReferenceDescriptors()) {
+            if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
-            next.checkType();
-            jndiBindings.add(getCompEnvBinding(next));
+            descriptor.checkType();
+            jndiBindings.add(getCompEnvBinding(descriptor));
         }
 
         addAllDescriptorBindings(env, scope, jndiBindings);
 
-        for (EjbReferenceDescriptor next : env.getEjbReferenceDescriptors()) {
-            if (!dependencyAppliesToScope(next, scope)) {
+        for (EjbReferenceDescriptor descriptor : env.getEjbReferenceDescriptors()) {
+            if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
-            String name = descriptorToLogicalJndiName(next);
-            EjbReferenceProxy proxy = new EjbReferenceProxy(next);
+            SimpleJndiName name = toLogicalJndiName(descriptor);
+            EjbReferenceProxy proxy = new EjbReferenceProxy(descriptor);
             jndiBindings.add(new CompEnvBinding(name, proxy));
         }
 
-        for (MessageDestinationReferenceDescriptor next : env.getMessageDestinationReferenceDescriptors()) {
-            if (!dependencyAppliesToScope(next, scope)) {
+        for (MessageDestinationReferenceDescriptor descriptor : env.getMessageDestinationReferenceDescriptors()) {
+            if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
-            jndiBindings.add(getCompEnvBinding(next));
+            jndiBindings.add(getCompEnvBinding(descriptor));
         }
 
         addResourceReferences(scope, env.getResourceReferenceDescriptors().iterator(), jndiBindings);
 
-        for (EntityManagerFactoryReferenceDescriptor next : env.getEntityManagerFactoryReferenceDescriptors()) {
+        for (EntityManagerFactoryReferenceDescriptor descriptor : env.getEntityManagerFactoryReferenceDescriptors()) {
 
-            if (!dependencyAppliesToScope(next, scope)) {
+            if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
 
-            String name = descriptorToLogicalJndiName(next);
-            Object value = new FactoryForEntityManagerFactoryWrapper(next.getUnitName(), invocationManager, this);
+            SimpleJndiName name = toLogicalJndiName(descriptor);
+            Object value = new FactoryForEntityManagerFactoryWrapper(descriptor.getUnitName(), invocationManager, this);
             jndiBindings.add(new CompEnvBinding(name, value));
         }
 
-        for (ServiceReferenceDescriptor serviceReferenceDescriptor : env.getServiceReferenceDescriptors()) {
-            ServiceReferenceDescriptor next = serviceReferenceDescriptor;
-
-            if (!dependencyAppliesToScope(next, scope)) {
+        for (ServiceReferenceDescriptor descriptor : env.getServiceReferenceDescriptors()) {
+            if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
 
-            if (next.getMappedName() != null) {
-                next.setName(next.getMappedName());
+            if (descriptor.getMappedName() != null) {
+                descriptor.setName(descriptor.getMappedName().toString());
             }
 
-            String name = descriptorToLogicalJndiName(next);
-            WebServiceRefProxy value = new WebServiceRefProxy(next);
+            SimpleJndiName name = toLogicalJndiName(descriptor);
+            WebServiceRefProxy value = new WebServiceRefProxy(descriptor);
             jndiBindings.add(new CompEnvBinding(name, value));
-            // Set WSDL File URL here if it null (happens during server restart)
-            /*
-             * if((next.getWsdlFileUrl() == null) && (next.getWsdlFileUri() != null)) { try {
-             * if(next.getWsdlFileUri().startsWith("http")) { // HTTP URLs set as is next.setWsdlFileUrl(new
-             * URL(next.getWsdlFileUri())); } else if((new File(next.getWsdlFileUri())).isAbsolute()) { // Absolute WSDL file paths
-             * set as is next.setWsdlFileUrl((new File(next.getWsdlFileUri())).toURL()); } else {
-             *
-             * WebServiceContractImpl wscImpl = WebServiceContractImpl.getInstance(); ServerEnvironment servEnv =
-             * wscImpl.getServerEnvironmentImpl(); String deployedDir = servEnv.getApplicationRepositoryPath().getAbsolutePath();
-             * if(deployedDir != null) { File fileURL; if(next.getBundleDescriptor().getApplication().isVirtual()) { fileURL = new
-             * File(deployedDir+File.separator+next.getWsdlFileUri()); } else { fileURL = new File(deployedDir+File.separator+
-             * next.getBundleDescriptor().getModuleDescriptor().getArchiveUri().replaceAll("\\.", "_") + File.separator
-             * +next.getWsdlFileUri()); } next.setWsdlFileUrl(fileURL.toURL()); } } } } catch (Throwable mex) { throw new
-             * NamingException(mex.getLocalizedMessage()); }
-             */
         }
 
-        for (EntityManagerReferenceDescriptor next : env.getEntityManagerReferenceDescriptors()) {
-            if (!dependencyAppliesToScope(next, scope)) {
+        for (EntityManagerReferenceDescriptor descriptor : env.getEntityManagerReferenceDescriptors()) {
+            if (!dependencyAppliesToScope(descriptor, scope)) {
                 continue;
             }
-            String name = descriptorToLogicalJndiName(next);
-            FactoryForEntityManagerWrapper value = new FactoryForEntityManagerWrapper(next, this);
+            SimpleJndiName name = toLogicalJndiName(descriptor);
+            FactoryForEntityManagerWrapper value = new FactoryForEntityManagerWrapper(descriptor, this);
             jndiBindings.add(new CompEnvBinding(name, value));
         }
     }
 
     private CompEnvBinding getCompEnvBinding(final ResourceEnvReferenceDescriptor next) {
-        final String name = descriptorToLogicalJndiName(next);
+        final SimpleJndiName name = toLogicalJndiName(next);
         final Object value;
         if (next.isEJBContext()) {
             value = new EjbContextProxy(next.getRefType());
         } else if (next.isValidator()) {
-            value = new ValidatorProxy(_logger);
+            value = new ValidatorProxy(LOG);
         } else if (next.isValidatorFactory()) {
-            value = new ValidatorFactoryProxy(_logger);
+            value = new ValidatorFactoryProxy(LOG);
         } else if (next.isCDIBeanManager()) {
-            value = namingUtils.createLazyNamingObjectFactory(name, "java:comp/BeanManager", false);
+            value = namingUtils.createLazyNamingObjectFactory(name,
+                new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT + "BeanManager"), false);
         } else if (next.isManagedBean()) {
             ManagedBeanDescriptor managedBeanDesc = next.getManagedBeanDescriptor();
             if (processEnvironment.getProcessType().isServer()) {
@@ -708,7 +661,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 }
 
                 @Override
-                public Object create(Context ic) throws NamingException {
+                public <T> T create(Context ic) throws NamingException {
                     return delegate.create(ic);
                 }
             };
@@ -718,47 +671,46 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     private CompEnvBinding getCompEnvBinding(MessageDestinationReferenceDescriptor messageDestinationRef) {
-        final String name = descriptorToLogicalJndiName(messageDestinationRef);
-        final String physicalJndiName;
+        final SimpleJndiName name = toLogicalJndiName(messageDestinationRef);
+        final SimpleJndiName physicalJndiName;
         if (messageDestinationRef.isLinkedToMessageDestination()) {
             physicalJndiName = messageDestinationRef.getMessageDestination().getJndiName();
         } else {
             physicalJndiName = messageDestinationRef.getJndiName();
         }
-
-        return new CompEnvBinding(
-                name,
-                namingUtils.createLazyNamingObjectFactory(name, physicalJndiName, true));
+        return new CompEnvBinding(name, namingUtils.createLazyNamingObjectFactory(name, physicalJndiName, true));
     }
 
     private boolean dependencyAppliesToScope(Descriptor descriptor, ScopeType scope) {
-        return dependencyAppliesToScope(descriptor.getName(), scope);
+        return dependencyAppliesToScope(new SimpleJndiName(descriptor.getName()), scope);
     }
 
-    private boolean dependencyAppliesToScope(String name, ScopeType scope) {
+    private boolean dependencyAppliesToScope(SimpleJndiName name, ScopeType scope) {
+        LOG.log(Level.FINEST, "dependencyAppliesToScope(name={0}, scope={1})", new Object[] {name, scope});
         switch (scope) {
             case COMPONENT:
                 // Env names without an explicit java: prefix default to java:comp
-                return name.startsWith(JAVA_COMP_PREFIX) || !name.startsWith(JAVA_COLON);
+                return name.isJavaComponent() || !name.hasJavaPrefix();
             case MODULE:
-                return name.startsWith(JAVA_MODULE_PREFIX);
+                return name.isJavaModule();
             case APP:
-                return name.startsWith(JAVA_APP_PREFIX);
+                return name.isJavaApp();
             case GLOBAL:
-                return name.startsWith(JAVA_GLOBAL_PREFIX);
+                return name.isJavaGlobal();
             default:
                 return false;
         }
     }
 
     /**
-     * Generate the name of an environment dependency in the java: namespace. This is the lookup string used by a component
-     * to access the dependency.
+     * Generate the name of an environment dependency in the java: namespace.
+     * This is the lookup string used by a component to access the dependency.
      */
-    private String descriptorToLogicalJndiName(Descriptor descriptor) {
+    private SimpleJndiName toLogicalJndiName(Descriptor descriptor) {
         // If no java: prefix is specified, default to component scope.
         String rawName = descriptor.getName();
-        return rawName.startsWith(JAVA_COLON) ? rawName : JAVA_COMP_ENV_STRING + rawName;
+        LOG.log(Level.FINEST, "toLogicalJndiName(descriptor); rawName={0}", rawName);
+        return new SimpleJndiName(rawName.startsWith(JNDI_CTX_JAVA) ? rawName : (JNDI_CTX_JAVA_COMPONENT_ENV + rawName));
     }
 
     /**
@@ -767,9 +719,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     @Override
     public String getComponentEnvId(JndiNameEnvironment env) {
         String componentEnvId = DOLUtils.getComponentEnvId(env);
-
-        _logger.log(FINE, () -> getApplicationName(env) + "Component Id: " + componentEnvId);
-
+        if (LOG.isLoggable(FINE)) {
+            LOG.log(FINE, "ApplicationName={0}, ComponentId={1}",
+                new Object[] {getApplicationName(env), componentEnvId});
+        }
         return componentEnvId;
     }
 
@@ -813,7 +766,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         @Override
-        public Object create(Context ctx) throws NamingException {
+        public <T> T create(Context ctx) throws NamingException {
             Object result = null;
 
             if (ejbNamingRefManager == null) {
@@ -828,7 +781,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 throw new NameNotFoundException("Can not resolve EJB context of type " + contextType);
             }
 
-            return result;
+            return (T) result;
         }
 
     }
@@ -837,14 +790,14 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
         private volatile ValidatorFactory validatorFactory;
         private volatile Validator validator;
-        private final Logger _logger;
+        private final Logger logger;
 
         private ValidatorProxy(Logger logger) {
-            this._logger = logger;
+            this.logger = logger;
         }
 
         @Override
-        public Object create(Context ctx) throws NamingException {
+        public Validator create(Context ctx) throws NamingException {
             String exceptionMessage = "Can not obtain reference to Validator instance ";
 
             // Phase 1, obtain a reference to the Validator
@@ -854,8 +807,8 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
 
                 // no validatorFactory
                 if (validatorFactory == null) {
-                    ValidatorFactoryProxy factoryProxy = new ValidatorFactoryProxy(_logger);
-                    validatorFactory = (ValidatorFactory) factoryProxy.create(ctx);
+                    ValidatorFactoryProxy factoryProxy = new ValidatorFactoryProxy(logger);
+                    validatorFactory = factoryProxy.create(ctx);
                 }
 
                 // Use the ValidatorFactory to create a Validator
@@ -875,7 +828,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     private static class ValidatorFactoryProxy implements NamingObjectProxy {
-        private static final String nameForValidatorFactory = "java:comp/ValidatorFactory";
+        private static final String nameForValidatorFactory = JNDI_CTX_JAVA_COMPONENT + "ValidatorFactory";
         private volatile ValidatorFactory validatorFactory;
         private final Logger _logger;
 
@@ -884,7 +837,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         @Override
-        public Object create(Context ctx) throws NamingException {
+        public ValidatorFactory create(Context ctx) throws NamingException {
 
             // create the ValidatorFactory using the spec.
             if (validatorFactory == null) {
@@ -913,26 +866,23 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         @Override
-        public Object create(Context ctx) throws NamingException {
-            Object result = null;
+        public <T> T create(Context ctx) throws NamingException {
 
+            final T result;
             webServiceRefManager = locator.getService(WebServiceReferenceManager.class);
-            if (webServiceRefManager != null) {
-                result = webServiceRefManager.resolveWSReference(serviceRef, ctx);
+            if (webServiceRefManager == null) {
+                LOG.log(SEVERE, "Cannot find the WebServiceReferenceManager to proceed with @WebServiceRef."
+                    + " Please check if webservices module is installed ");
+                result = null;
             } else {
-                // A potential cause for this is this is a web.zip and the corresponding
-                // metro needs to be dowloaded from UC
-                _logger.log(SEVERE, "Cannot find the following class to proceed with @WebServiceRef" + webServiceRefManager
-                        + "Please confirm if webservices module is installed ");
+                result = (T) webServiceRefManager.resolveWSReference(serviceRef, ctx);
             }
 
             if (result == null) {
                 throw new NameNotFoundException("Can not resolve webservice context of type " + serviceRef.getName());
             }
-
             return result;
         }
-
     }
 
     private class EjbReferenceProxy implements NamingObjectProxy {
@@ -954,7 +904,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
         }
 
         @Override
-        public Object create(Context ctx) throws NamingException {
+        public <T> T create(Context ctx) throws NamingException {
 
             Object result = null;
             if (ejbRefMgr == null) {
@@ -967,11 +917,11 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             }
 
             if (ejbRefMgr != null) {
-                if ((cacheable != null) && (cacheable.booleanValue() == true)) {
-                    if (cachedResult != null) {
-                        result = cachedResult;
-                    } else {
+                if (cacheable != null && cacheable.booleanValue()) {
+                    if (cachedResult == null) {
                         result = cachedResult = ejbRefMgr.resolveEjbReference(ejbRef, ctx);
+                    } else {
+                        result = cachedResult;
                     }
                 } else {
                     result = ejbRefMgr.resolveEjbReference(ejbRef, ctx);
@@ -982,22 +932,22 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
                 throw new NameNotFoundException("Can not resolve ejb reference " + ejbRef.getName() + " : " + ejbRef);
             }
 
-            return result;
+            return (T) result;
         }
     }
 
     private static class CompEnvBinding implements JNDIBinding {
 
-        private final String name;
+        private final SimpleJndiName name;
         private final Object value;
 
-        CompEnvBinding(String name, Object value) {
+        CompEnvBinding(SimpleJndiName name, Object value) {
             this.name = name;
             this.value = value;
         }
 
         @Override
-        public String getName() {
+        public SimpleJndiName getName() {
             return name;
         }
 
@@ -1006,12 +956,10 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             return value;
         }
 
-
         @Override
         public String toString() {
-            return super.toString() + "[name=" + name + ", value=" + value + "]";
+            return getClass().getSimpleName() + "[name=" + name + ", value=" + value + "]";
         }
-
     }
 
     private enum ScopeType {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,15 +17,17 @@
 
 package com.sun.ejb.containers;
 
-import org.glassfish.api.naming.NamespacePrefixes;
-import org.glassfish.api.naming.NamedNamingObjectProxy;
-import org.glassfish.api.invocation.ComponentInvocation;
-
 import com.sun.ejb.EjbInvocation;
 
+import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.naming.NamedNamingObjectProxy;
+import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.naming.NamingException;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
 
 /**
  * Proxy for creating TimerService instances when requested by lookup or injection.
@@ -35,12 +38,11 @@ import javax.naming.NamingException;
  */
 @Service
 @NamespacePrefixes(TimerServiceNamingProxy.EJB_TIMER_SERVICE)
-public class TimerServiceNamingProxy
-        implements NamedNamingObjectProxy {
+public class TimerServiceNamingProxy implements NamedNamingObjectProxy {
 
-    static final String EJB_TIMER_SERVICE
-            = "java:comp/TimerService";
+    static final String EJB_TIMER_SERVICE = SimpleJndiName.JNDI_CTX_JAVA_COMPONENT + "TimerService";
 
+    @Override
     public Object handle(String name) throws NamingException {
 
         if (EJB_TIMER_SERVICE.equals(name)) {
@@ -49,32 +51,27 @@ public class TimerServiceNamingProxy
         return null;
     }
 
-    private Object getTimerServiceWrapper() {
 
+    private Object getTimerServiceWrapper() {
         // Cannot store EjbContainerUtilImpl.getInstance() in an instance
         // variable because it shouldn't be accessed before EJB container
         // is initialized.
         // NamedNamingObjectProxy is initialized on the first lookup.
 
-        ComponentInvocation currentInv =
-                EjbContainerUtilImpl.getInstance().getCurrentInvocation();
+        ComponentInvocation currentInv = EjbContainerUtilImpl.getInstance().getCurrentInvocation();
 
-        if(currentInv == null) {
+        if (currentInv == null) {
             throw new IllegalStateException("no current invocation");
-        } else if (currentInv.getInvocationType() !=
-                   ComponentInvocation.ComponentInvocationType.EJB_INVOCATION) {
-            throw new IllegalStateException
-                    ("Illegal invocation type for EJB Context : "
-                     + currentInv.getInvocationType());
+        } else if (currentInv.getInvocationType() != EJB_INVOCATION) {
+            throw new IllegalStateException(
+                "Illegal invocation type for EJB Context: " + currentInv.getInvocationType());
         }
 
         EJBTimerService ejbTimerService = EJBTimerService.getEJBTimerService();
-        if( ejbTimerService == null ) {
-            throw new IllegalStateException("EJB Timer Service not " +
-                                            "available");
+        if (ejbTimerService == null) {
+            throw new IllegalStateException("EJB Timer Service not available");
         }
 
-        return new EJBTimerServiceWrapper
-                (ejbTimerService, (EJBContextImpl) ((EjbInvocation) currentInv).context);
+        return new EJBTimerServiceWrapper(ejbTimerService, (EJBContextImpl) ((EjbInvocation) currentInv).context);
     }
 }

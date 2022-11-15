@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,24 +19,52 @@ package org.glassfish.resources.admin.cli;
 
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.i18n.StringManager;
-import org.glassfish.api.I18n;
-import org.glassfish.resources.api.Resource;
-import org.w3c.dom.*;
-import org.xml.sax.*;
-import org.xml.sax.ext.LexicalHandler;
 
-import javax.xml.parsers.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.glassfish.api.I18n;
+import org.glassfish.resources.api.Resource;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.ext.LexicalHandler;
+
+import static org.glassfish.api.naming.SimpleJndiName.*;
 import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 
 //i18n import
@@ -49,8 +78,8 @@ public class ResourcesXMLParser implements EntityResolver {
 
     private File resourceFile = null;
     private Document document;
-    private List<org.glassfish.resources.api.Resource> vResources;
-    private Map<Resource, Node> resourceMap = new HashMap<Resource, Node>();
+    private final List<org.glassfish.resources.api.Resource> vResources;
+    private final Map<Resource, Node> resourceMap = new HashMap<>();
 
     private boolean isDoctypePresent = false;
     /* list of resources that needs to be created prior to module deployment. This
@@ -72,21 +101,9 @@ public class ResourcesXMLParser implements EntityResolver {
 
     private static final String SUN_RESOURCES = "sun-resources";
 
-    public static final String JAVA_APP_SCOPE_PREFIX = "java:app/";
-    public static final String JAVA_COMP_SCOPE_PREFIX = "java:comp/";
-    public static final String JAVA_MODULE_SCOPE_PREFIX = "java:module/";
-    public static final String JAVA_GLOBAL_SCOPE_PREFIX = "java:global/";
-
-    /**
-     * List of naming scopes
-     */
-    public static final List<String> namingScopes = Collections.unmodifiableList(
-            Arrays.asList(
-                JAVA_APP_SCOPE_PREFIX,
-                JAVA_COMP_SCOPE_PREFIX,
-                JAVA_MODULE_SCOPE_PREFIX,
-                JAVA_GLOBAL_SCOPE_PREFIX
-            ));
+    /** List of naming scopes */
+    private static final List<String> JNDI_SCOPES = List.of(JNDI_CTX_JAVA_APP, JNDI_CTX_JAVA_COMPONENT,
+        JNDI_CTX_JAVA_MODULE, JNDI_CTX_JAVA_GLOBAL);
 
     private static final String publicID_sjsas90 = "Sun Microsystems, Inc.//DTD Application Server 9.0 Resource Definitions";
     private static final String publicID_ges30 = "Sun Microsystems, Inc.//DTD GlassFish Application Server 3.0 Resource Definitions";
@@ -114,7 +131,7 @@ public class ResourcesXMLParser implements EntityResolver {
     public ResourcesXMLParser(File resourceFile) throws Exception {
         this.resourceFile = resourceFile;
         initProperties();
-        vResources = new ArrayList<Resource>();
+        vResources = new ArrayList<>();
         String scope = "";
         generateResourceObjects(scope);
     }
@@ -123,7 +140,7 @@ public class ResourcesXMLParser implements EntityResolver {
     public ResourcesXMLParser(File resourceFile, String scope) throws Exception {
         this.resourceFile = resourceFile;
         initProperties();
-        vResources = new ArrayList<Resource>();
+        vResources = new ArrayList<>();
         generateResourceObjects(scope);
     }
 
@@ -192,7 +209,6 @@ public class ResourcesXMLParser implements EntityResolver {
      */
     private void initProperties() throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        BufferedInputStream bis = null;
         FileInputStream fis = null;
         try {
             AddResourcesErrorHandler  errorHandler = new AddResourcesErrorHandler();
@@ -359,8 +375,8 @@ public class ResourcesXMLParser implements EntityResolver {
      */
     private static List<org.glassfish.resources.api.Resource> getResourcesOfType(List<Resource> resources,
                                             int type, boolean isResourceCreation, boolean ignoreDuplicates) {
-        List<Resource> nonConnectorResources = new ArrayList<org.glassfish.resources.api.Resource>();
-        List<org.glassfish.resources.api.Resource> connectorResources = new ArrayList<org.glassfish.resources.api.Resource>();
+        List<Resource> nonConnectorResources = new ArrayList<>();
+        List<org.glassfish.resources.api.Resource> connectorResources = new ArrayList<>();
 
         for (Resource res : resources) {
             if (isConnectorResource(res)) {
@@ -411,11 +427,11 @@ public class ResourcesXMLParser implements EntityResolver {
      * @return The sorted list.
      */
     private static List<Resource> sortConnectorResources(List<org.glassfish.resources.api.Resource> connectorResources) {
-        List<org.glassfish.resources.api.Resource> raconfigs = new ArrayList<Resource>();
-        List<Resource> ccps = new ArrayList<org.glassfish.resources.api.Resource>();
-        List<org.glassfish.resources.api.Resource> others = new ArrayList<org.glassfish.resources.api.Resource>();
+        List<org.glassfish.resources.api.Resource> raconfigs = new ArrayList<>();
+        List<Resource> ccps = new ArrayList<>();
+        List<org.glassfish.resources.api.Resource> others = new ArrayList<>();
 
-        List<Resource> finalSortedConnectorList = new ArrayList<Resource>();
+        List<Resource> finalSortedConnectorList = new ArrayList<>();
 
         for (Resource resource : connectorResources) {
             if (resource.getType().equals(org.glassfish.resources.api.Resource.RESOURCE_ADAPTER_CONFIG)){
@@ -442,11 +458,11 @@ public class ResourcesXMLParser implements EntityResolver {
      * @return The sorted list.
      */
     private static List<org.glassfish.resources.api.Resource> sortNonConnectorResources(List<org.glassfish.resources.api.Resource> nonConnectorResources) {
-        List<org.glassfish.resources.api.Resource> jdbccps = new ArrayList<Resource>();
-        List<org.glassfish.resources.api.Resource> pmfs = new ArrayList<Resource>();
-        List<org.glassfish.resources.api.Resource> others = new ArrayList<Resource>();
+        List<org.glassfish.resources.api.Resource> jdbccps = new ArrayList<>();
+        List<org.glassfish.resources.api.Resource> pmfs = new ArrayList<>();
+        List<org.glassfish.resources.api.Resource> others = new ArrayList<>();
 
-        List<org.glassfish.resources.api.Resource> finalSortedNonConnectorList = new ArrayList<org.glassfish.resources.api.Resource>();
+        List<org.glassfish.resources.api.Resource> finalSortedNonConnectorList = new ArrayList<>();
 
         for (Resource resource : nonConnectorResources) {
             if(resource.getType().equals(org.glassfish.resources.api.Resource.JDBC_CONNECTION_POOL)) {
@@ -485,11 +501,11 @@ public class ResourcesXMLParser implements EntityResolver {
     }
 
     private String getScopedName(String name, String scope) throws Exception{
-        if (namingScopes.contains(scope)) {
-            if(name != null){
-                for(String namingScope : namingScopes){
-                    Object args[] = new Object[]{name, namingScope, scope};
-                    if(name.startsWith(namingScope) && !namingScope.equals(scope)){
+        if (JNDI_SCOPES.contains(scope)) {
+            if (name != null) {
+                for (String namingScope : JNDI_SCOPES) {
+                    if (name.startsWith(namingScope) && !namingScope.equals(scope)) {
+                        Object args[] = new Object[] {name, namingScope, scope};
                         String msg = localStrings.getStringWithDefault( "invalid.scope.defined.for.resource",
                                                                 "Resource [ {0} ] is not allowed to specify the scope " +
                                                                         "[ {1} ]. Acceptable scope for this resource" +
@@ -1440,20 +1456,24 @@ public class ResourcesXMLParser implements EntityResolver {
 
     final static class AddResourcesErrorHandler implements ErrorHandler {
 
+        @Override
         public void error(SAXParseException e) throws org.xml.sax.SAXException {
             throw e;
         }
 
+        @Override
         public void fatalError(SAXParseException e) throws org.xml.sax.SAXException {
             throw e;
         }
 
+        @Override
         public void warning(SAXParseException e) throws org.xml.sax.SAXException {
             throw e;
         }
     }
 
 
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) throws SAXException {
         InputSource is = null;
         String dtdFileName = DTD_1_5;
@@ -1461,9 +1481,9 @@ public class ResourcesXMLParser implements EntityResolver {
         boolean foundMatchingDTD = false;
 
         if (systemId != null) {
-            for (int i = 0; i < systemIDs.size(); i++) {
-                if (systemId.contains(systemIDs.get(i))) {
-                    dtdFileName = systemIDs.get(i);
+            for (String systemID2 : systemIDs) {
+                if (systemId.contains(systemID2)) {
+                    dtdFileName = systemID2;
                     foundMatchingDTD = true;
                     break;
                 }
@@ -1520,25 +1540,32 @@ public class ResourcesXMLParser implements EntityResolver {
     }
 
     class MyLexicalHandler implements LexicalHandler{
+        @Override
         public void startDTD(String name, String publicId, String systemId) throws SAXException {
             isDoctypePresent = true;
         }
 
+        @Override
         public void endDTD() throws SAXException {
         }
 
+        @Override
         public void startEntity(String name) throws SAXException {
         }
 
+        @Override
         public void endEntity(String name) throws SAXException {
         }
 
+        @Override
         public void startCDATA() throws SAXException {
         }
 
+        @Override
         public void endCDATA() throws SAXException {
         }
 
+        @Override
         public void comment(char[] ch, int start, int length) throws SAXException {
         }
 

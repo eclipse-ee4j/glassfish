@@ -60,6 +60,7 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveHandler;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.Descriptor;
@@ -809,8 +810,12 @@ public class DOLUtils {
         return false;
     }
 
+
     /**
-     * Generate a unique id name for each J2EE component.
+     * Generate a unique id name for each JEE component.
+     *
+     * @param env can be null, then method returns null too.
+     * @return componentId
      */
     public static String getComponentEnvId(JndiNameEnvironment env) {
         if (env instanceof EjbDescriptor) {
@@ -819,7 +824,7 @@ public class DOLUtils {
 
             // Make jndi name flat so it won't result in the creation of
             // a bunch of sub-contexts.
-            String flattedJndiName = ejbEnv.getJndiName().replace('/', '.');
+            String flattedJndiName = ejbEnv.getJndiName().toString().replace('/', '.');
 
             EjbBundleDescriptor ejbBundle = ejbEnv.getEjbBundleDescriptor();
             Descriptor d = ejbBundle.getModuleDescriptor().getDescriptor();
@@ -839,7 +844,8 @@ public class DOLUtils {
             ApplicationClientDescriptor appEnv = (ApplicationClientDescriptor) env;
             return "client" + ID_SEPARATOR + appEnv.getName() + ID_SEPARATOR + appEnv.getMainClassName();
         } else if (env instanceof ManagedBeanDescriptor) {
-            return ((ManagedBeanDescriptor) env).getGlobalJndiName();
+            SimpleJndiName jndiName = ((ManagedBeanDescriptor) env).getGlobalJndiName();
+            return jndiName == null ? null : jndiName.toString();
         } else if (env instanceof EjbBundleDescriptor) {
             EjbBundleDescriptor ejbBundle = (EjbBundleDescriptor) env;
             return "__ejbBundle__" + ID_SEPARATOR + ejbBundle.getApplication().getName() + ID_SEPARATOR

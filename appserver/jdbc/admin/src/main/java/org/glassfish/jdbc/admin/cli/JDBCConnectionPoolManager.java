@@ -17,7 +17,6 @@
 
 package org.glassfish.jdbc.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Resource;
@@ -28,7 +27,6 @@ import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.resource.ResourceException;
-
 import java.beans.PropertyVetoException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +34,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.glassfish.api.I18n;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.jdbc.util.JdbcResourcesUtil;
 import org.glassfish.resourcebase.resources.api.ResourceStatus;
@@ -308,7 +307,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     }
 
     public ResourceStatus delete(Iterable<Server> servers, Iterable<Cluster> clusters, final Resources resources, final String cascade,
-                                 final String poolName) throws Exception {
+                                 final SimpleJndiName poolName) throws Exception {
 
         if (poolName == null) {
             String msg = localStrings.getLocalString("jdbcConnPool.resource.noJndiName",
@@ -341,7 +340,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 @Override
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                    JdbcConnectionPool cp = ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName);
+                    JdbcConnectionPool cp = resources.getResourceByName(JdbcConnectionPool.class, poolName);
                     return param.getResources().remove(cp);
                 }
             }, resources) == null) {
@@ -364,12 +363,13 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         return new ResourceStatus(ResourceStatus.SUCCESS, msg);
     }
 
-    private boolean isResourceExists(Resources resources, String poolName) {
-        return ConnectorsUtil.getResourceByName(resources, JdbcConnectionPool.class, poolName) != null;
+    private boolean isResourceExists(Resources resources, SimpleJndiName poolName) {
+        return resources.getResourceByName(JdbcConnectionPool.class, poolName) != null;
     }
 
-    private Object deleteAssociatedResources(final Iterable<Server> servers, final Iterable<Cluster> clusters, Resources resources,
-                                           final boolean cascade, final String poolName) throws TransactionFailure {
+
+    private Object deleteAssociatedResources(final Iterable<Server> servers, final Iterable<Cluster> clusters,
+        Resources resources, final boolean cascade, final SimpleJndiName poolName) throws TransactionFailure {
         if (cascade) {
             ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 @Override
@@ -377,8 +377,9 @@ public class JDBCConnectionPoolManager implements ResourceManager {
                     Collection<BindableResource> referringResources = JdbcResourcesUtil.getResourcesOfPool(param, poolName);
                     for (BindableResource referringResource : referringResources) {
                         // delete resource-refs
-                        deleteServerResourceRefs(servers, referringResource.getJndiName());
-                        deleteClusterResourceRefs(clusters, referringResource.getJndiName());
+                        SimpleJndiName jndiName = SimpleJndiName.of(referringResource.getJndiName());
+                        deleteServerResourceRefs(servers, jndiName);
+                        deleteClusterResourceRefs(clusters, jndiName);
                         // remove the resource
                         param.getResources().remove(referringResource);
                     }
@@ -394,7 +395,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         return true; //no-op
     }
 
-    private void deleteServerResourceRefs(Iterable<Server> servers, final String refName)
+    private void deleteServerResourceRefs(Iterable<Server> servers, final SimpleJndiName refName)
             throws TransactionFailure {
         if(servers != null){
             for (Server server : servers) {
@@ -403,7 +404,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
         }
     }
 
-    private void deleteClusterResourceRefs(Iterable<Cluster> clusters, final String refName)
+    private void deleteClusterResourceRefs(Iterable<Cluster> clusters, final SimpleJndiName refName)
             throws TransactionFailure {
         if(clusters != null){
             for (Cluster cluster : clusters) {
@@ -416,16 +417,15 @@ public class JDBCConnectionPoolManager implements ResourceManager {
     public Resource createConfigBean(Resources resources, HashMap attributes, Properties properties, boolean validate)
             throws Exception {
         setAttributes(attributes);
-        ResourceStatus status = null;
-        if(!validate){
-            status = new ResourceStatus(ResourceStatus.SUCCESS,"");
-        }else{
+        final ResourceStatus status;
+        if (validate) {
             status = isValid(resources);
+        } else {
+            status = new ResourceStatus(ResourceStatus.SUCCESS, "");
         }
-        if(status.getStatus() == ResourceStatus.SUCCESS){
+        if (status.getStatus() == ResourceStatus.SUCCESS) {
             return createConfigBean(resources, properties);
-        }else{
-            throw new ResourceException(status.getMessage());
         }
+        throw new ResourceException(status.getMessage());
     }
 }

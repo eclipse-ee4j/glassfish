@@ -36,6 +36,4 @@ public abstract class ConnectionPoolAppProbeProvider {
 
     public void connectionReleasedEvent(String poolName, String appName) {
     }
-
-
 }

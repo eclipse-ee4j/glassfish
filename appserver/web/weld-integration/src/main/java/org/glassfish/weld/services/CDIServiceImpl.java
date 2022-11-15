@@ -17,39 +17,6 @@
 
 package org.glassfish.weld.services;
 
-import static java.util.logging.Level.FINE;
-import static org.glassfish.cdi.CDILoggerInfo.GET_BDA_FOR_BEAN_CLASS_SEARCH;
-import static org.glassfish.cdi.CDILoggerInfo.SUB_BDA_CONTAINS_BEAN_CLASS_NAME;
-import static org.glassfish.cdi.CDILoggerInfo.TOP_LEVEL_BDA_CONTAINS_BEAN_CLASS_NAME;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.hk2.api.Rank;
-import org.glassfish.logging.annotation.LogMessagesResourceBundle;
-import org.glassfish.logging.annotation.LoggerInfo;
-import org.glassfish.weld.BeanDeploymentArchiveImpl;
-import org.glassfish.weld.WeldDeployer;
-import org.glassfish.weld.connector.WeldUtils;
-import org.jboss.weld.bootstrap.WeldBootstrap;
-import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
-import org.jboss.weld.contexts.WeldCreationalContext;
-import org.jboss.weld.manager.api.WeldInjectionTarget;
-import org.jboss.weld.manager.api.WeldManager;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.containers.EJBContextImpl;
 import com.sun.enterprise.container.common.spi.CDIService;
@@ -80,6 +47,40 @@ import jakarta.enterprise.inject.spi.Interceptor;
 import jakarta.inject.Inject;
 import jakarta.inject.Scope;
 import jakarta.servlet.ServletContext;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.Rank;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
+import org.glassfish.weld.BeanDeploymentArchiveImpl;
+import org.glassfish.weld.WeldDeployer;
+import org.glassfish.weld.connector.WeldUtils;
+import org.jboss.weld.bootstrap.WeldBootstrap;
+import org.jboss.weld.bootstrap.spi.BeanDeploymentArchive;
+import org.jboss.weld.contexts.WeldCreationalContext;
+import org.jboss.weld.manager.api.WeldInjectionTarget;
+import org.jboss.weld.manager.api.WeldManager;
+import org.jvnet.hk2.annotations.Service;
+
+import static java.util.logging.Level.FINE;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.cdi.CDILoggerInfo.GET_BDA_FOR_BEAN_CLASS_SEARCH;
+import static org.glassfish.cdi.CDILoggerInfo.SUB_BDA_CONTAINS_BEAN_CLASS_NAME;
+import static org.glassfish.cdi.CDILoggerInfo.TOP_LEVEL_BDA_CONTAINS_BEAN_CLASS_NAME;
 
 @Service
 @Rank(10)
@@ -162,7 +163,7 @@ public class CDIServiceImpl implements CDIService {
     @Override
     public void setELResolver(ServletContext servletContext) throws NamingException {
         InitialContext context = new InitialContext();
-        BeanManager beanManager = (BeanManager) context.lookup("java:comp/BeanManager");
+        BeanManager beanManager = (BeanManager) context.lookup(JNDI_CTX_JAVA_COMPONENT + "BeanManager");
         if (beanManager != null) {
             servletContext.setAttribute("org.glassfish.jsp.beanManagerELResolver", beanManager.getELResolver());
         }
@@ -543,7 +544,7 @@ public class CDIServiceImpl implements CDIService {
         CreationalContext creationalContext;
         T instance;
 
-        private List<CDIInjectionContext> dependentContexts = new ArrayList<>();
+        private final List<CDIInjectionContext> dependentContexts = new ArrayList<>();
         private CDIAroundConstructCallback cdiAroundConstructCallback;
 
         public CDIInjectionContextImpl() {

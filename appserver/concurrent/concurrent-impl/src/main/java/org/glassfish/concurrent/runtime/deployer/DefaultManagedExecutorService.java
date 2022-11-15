@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,13 +17,18 @@
 
 package org.glassfish.concurrent.runtime.deployer;
 
+import jakarta.inject.Inject;
+
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.glassfish.api.naming.DefaultResourceProxy;
 import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
+import org.glassfish.concurrent.config.ManagedExecutorService.ManagedExecutorServiceConfigActivator;
 import org.jvnet.hk2.annotations.Service;
 
-import jakarta.inject.Inject;
-import javax.naming.NamingException;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 /**
  * Naming Object Proxy to handle the Default ManagedExecutorService.
@@ -33,16 +39,16 @@ import javax.naming.NamingException;
 @NamespacePrefixes({DefaultManagedExecutorService.DEFAULT_MANAGED_EXECUTOR_SERVICE})
 public class DefaultManagedExecutorService implements NamedNamingObjectProxy, DefaultResourceProxy {
 
-    static final String DEFAULT_MANAGED_EXECUTOR_SERVICE = "java:comp/DefaultManagedExecutorService";
+    static final String DEFAULT_MANAGED_EXECUTOR_SERVICE = JNDI_CTX_JAVA_COMPONENT + "DefaultManagedExecutorService";
     static final String DEFAULT_MANAGED_EXECUTOR_SERVICE_PHYS = "concurrent/__defaultManagedExecutorService";
 
     // Ensure that config for this object has been created
-    @Inject org.glassfish.concurrent.config.ManagedExecutorService.ManagedExecutorServiceConfigActivator config;
+    @Inject
+    private ManagedExecutorServiceConfigActivator config;
 
     @Override
     public Object handle(String name) throws NamingException {
-        javax.naming.Context ctx = new javax.naming.InitialContext();
-        return ctx.lookup(DEFAULT_MANAGED_EXECUTOR_SERVICE_PHYS);
+        return InitialContext.doLookup(DEFAULT_MANAGED_EXECUTOR_SERVICE_PHYS);
     }
 
     @Override

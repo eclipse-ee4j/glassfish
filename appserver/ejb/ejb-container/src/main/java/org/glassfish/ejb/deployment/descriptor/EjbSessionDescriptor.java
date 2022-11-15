@@ -36,10 +36,13 @@ import java.util.Set;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.AnnotationTypesProvider;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
 
 /**
  * Objects of this kind represent the deployment information describing a single
@@ -673,7 +676,7 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
      * client view (Remote, Local, or no-interface).
      */
     @Override
-    public String getPortableJndiName(String clientViewType) {
+    public SimpleJndiName getPortableJndiName(String clientViewType) {
         final Application app = getEjbBundleDescriptor().getApplication();
         final String appName;
         if (app.isVirtual()) {
@@ -682,7 +685,7 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
             appName = app.getAppName();
         }
 
-        StringBuilder javaGlobalPrefix = new StringBuilder("java:global/");
+        StringBuilder javaGlobalPrefix = new StringBuilder(JNDI_CTX_JAVA_GLOBAL);
 
         if (appName != null) {
             javaGlobalPrefix.append(appName);
@@ -697,7 +700,7 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
         javaGlobalPrefix.append('!');
         javaGlobalPrefix.append(clientViewType);
 
-        return javaGlobalPrefix.toString();
+        return new SimpleJndiName(javaGlobalPrefix.toString());
     }
 
     public static class AccessTimeoutHolder {

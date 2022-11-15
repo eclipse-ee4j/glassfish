@@ -36,6 +36,7 @@ import org.glassfish.resourcebase.resources.api.ResourceInfo;
 
 import com.sun.enterprise.connectors.authentication.RuntimeSecurityMap;
 import com.sun.enterprise.connectors.module.ConnectorApplication;
+import com.sun.enterprise.connectors.util.SecurityMapUtils;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.logging.LogDomains;
 
@@ -83,9 +84,6 @@ public class ConnectorRegistry {
      * @return ConnectorRegistry instance which is a singleton
      */
     public static ConnectorRegistry getInstance() {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("returning the connector registry");
-        }
         return connectorRegistryInstance;
     }
 
@@ -93,7 +91,6 @@ public class ConnectorRegistry {
      * Protected constructor.
      * It is protected as it follows singleton pattern.
      */
-
     protected ConnectorRegistry() {
         resourceAdapters = Collections.synchronizedMap(new HashMap<String, ActiveResourceAdapter>());
         factories = Collections.synchronizedMap(new HashMap<PoolInfo, PoolMetaData>());
@@ -104,28 +101,22 @@ public class ConnectorRegistry {
         resourceInfos = new HashSet<>();
         transparentDynamicReconfigPools = new HashSet<>();
         locks = new HashMap<>();
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "initialized the connector registry");
-        }
+        _logger.log(Level.FINE, "Initialized the connector registry");
     }
+
 
     /**
      * Adds the object implementing ActiveResourceAdapter
      * interface to the registry.
      *
      * @param rarModuleName RarName which is the key
-     * @param rar           ActiveResourceAdapter instance which is the value.
+     * @param rar ActiveResourceAdapter instance which is the value.
      */
-
-    public void addActiveResourceAdapter(String rarModuleName,
-                                         ActiveResourceAdapter rar) {
+    public void addActiveResourceAdapter(String rarModuleName, ActiveResourceAdapter rar) {
         resourceAdapters.put(rarModuleName, rar);
-        if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,
-                    "Added the active resource adapter to connector registry",
-                    rarModuleName);
-        }
+        _logger.log(Level.FINE, "Added the active resource adapter {0} to connector registry", rarModuleName);
     }
+
 
     /**
      * get the version counter of  a resource info
@@ -137,9 +128,8 @@ public class ConnectorRegistry {
         if (version == null) {
            // resource is no longer valid
            return -1L;
-        } else {
-            return version.get();
         }
+        return version.get();
     }
 
     /**
@@ -174,7 +164,7 @@ public class ConnectorRegistry {
      * @param resourceInfo Resource being deployed.
      */
     public void addResourceInfo(ResourceInfo resourceInfo){
-        if(resourceInfo != null){
+        if (resourceInfo != null) {
             synchronized (resourceInfos){
                 resourceInfos.add(resourceInfo);
             }
@@ -189,8 +179,8 @@ public class ConnectorRegistry {
      */
     public boolean removeResourceInfo(ResourceInfo resourceInfo){
         boolean removed = false;
-        if(resourceInfo != null){
-            synchronized (resourceInfos){
+        if (resourceInfo != null) {
+            synchronized (resourceInfos) {
                 removed = resourceInfos.remove(resourceInfo);
             }
             resourceInfoVersion.remove(resourceInfo);
@@ -204,11 +194,10 @@ public class ConnectorRegistry {
      * @return boolean indicating whether the resource is deployed.
      */
     public boolean isResourceDeployed(ResourceInfo resourceInfo){
-        boolean isDeployed = false;
-        if(resourceInfo != null){
-            isDeployed = resourceInfos.contains(resourceInfo);
+        if (resourceInfo != null) {
+            return resourceInfos.contains(resourceInfo);
         }
-        return isDeployed;
+        return false;
     }
 
     /**
@@ -216,8 +205,8 @@ public class ConnectorRegistry {
      * @param poolInfo Pool being deployed.
      */
     public void addTransparentDynamicReconfigPool(PoolInfo poolInfo){
-        if(poolInfo != null){
-            synchronized (transparentDynamicReconfigPools){
+        if (poolInfo != null) {
+            synchronized (transparentDynamicReconfigPools) {
                 transparentDynamicReconfigPools.add(poolInfo);
             }
         }
@@ -229,13 +218,12 @@ public class ConnectorRegistry {
      * @return boolean indicating whether the pool exists and removed.
      */
     public boolean removeTransparentDynamicReconfigPool(PoolInfo poolInfo){
-        boolean removed = false;
-        if(poolInfo != null){
-            synchronized (transparentDynamicReconfigPools){
-                removed = transparentDynamicReconfigPools.remove(poolInfo);
+        if (poolInfo != null) {
+            synchronized (transparentDynamicReconfigPools) {
+                return transparentDynamicReconfigPools.remove(poolInfo);
             }
         }
-        return removed;
+        return false;
     }
 
     /**
@@ -244,11 +232,10 @@ public class ConnectorRegistry {
      * @return boolean false if pool is not deployed
      */
     public boolean isTransparentDynamicReconfigPool(PoolInfo poolInfo){
-        boolean isDeployed = false;
         if(poolInfo != null){
-            isDeployed = transparentDynamicReconfigPools.contains(poolInfo);
+            return transparentDynamicReconfigPools.contains(poolInfo);
         }
-        return isDeployed;
+        return false;
     }
 
     /**
@@ -261,24 +248,16 @@ public class ConnectorRegistry {
      * @return true if successfully removed
      *         false if deletion fails.
      */
-
     public boolean removeActiveResourceAdapter(String rarModuleName) {
         Object o = resourceAdapters.remove(rarModuleName);
-
         if (o == null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("Failed to remove the resource adapter from connector registry" +
-                    rarModuleName);
-            }
+            _logger.log(Level.FINE, "Failed to remove the resource adapter {0} from connector registry.", rarModuleName);
             return false;
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("removed the active resource adapter from connector registry" +
-                    rarModuleName);
-            }
-            return true;
         }
+        _logger.log(Level.FINE, "Removed the active resource adapter {0} from connector registry", rarModuleName);
+        return true;
     }
+
 
     /**
      * Retrieves the object implementing ActiveResourceAdapter interface
@@ -287,23 +266,12 @@ public class ConnectorRegistry {
      * @param rarModuleName Rar name. It is the key
      * @return object implementing ActiveResourceAdapter interface
      */
-
-    public ActiveResourceAdapter getActiveResourceAdapter(
-            String rarModuleName) {
-        if (rarModuleName != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine(
-                    "returning/found the resource adapter from connector registry " +
-                            rarModuleName);
-            }
-            return resourceAdapters.get(rarModuleName);
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine(
-                    "resource-adapter not found in connector registry. Returning null");
-            }
+    public ActiveResourceAdapter getActiveResourceAdapter(String rarModuleName) {
+        _logger.log(Level.FINEST, "getActiveResourceAdapter(rarModuleName={0})", rarModuleName);
+        if (rarModuleName == null) {
             return null;
         }
+        return resourceAdapters.get(rarModuleName);
     }
 
     /**
@@ -355,9 +323,7 @@ public class ConnectorRegistry {
      */
     public void addBeanValidator(String rarModuleName, Validator validator){
         beanValidators.put(rarModuleName, validator);
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Added the bean validator for RAR [ "+rarModuleName+" ] to connector registry");
-        }
+        _logger.log(Level.FINE, "Added the bean validator for RAR [{0}] to connector registry", rarModuleName);
     }
 
     /**
@@ -368,19 +334,11 @@ public class ConnectorRegistry {
      * @return bean validator
      */
     public Validator getBeanValidator(String rarModuleName){
-        if (rarModuleName != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine(
-                    "returning/found the validator for RAR [ "+rarModuleName+" ] from connector registry");
-            }
-            return beanValidators.get(rarModuleName);
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine(
-                    "bean validator for RAR not found in connector registry.Returning null");
-            }
+        _logger.log(Level.FINE, "getBeanValidator(rarModuleName={0})", rarModuleName);
+        if (rarModuleName == null) {
             return null;
         }
+        return beanValidators.get(rarModuleName);
     }
 
     /**
@@ -394,19 +352,16 @@ public class ConnectorRegistry {
      *         false if deletion fails.
      */
     public boolean removeBeanValidator(String rarModuleName) {
+        _logger.log(Level.FINE, "removeBeanValidator(rarModuleName={0})", rarModuleName);
         Object o = beanValidators.remove(rarModuleName);
-
         if (o == null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("Failed to remove the bean validator for RAR [ "+rarModuleName+" ] from connector registry");
-            }
+            _logger.log(Level.FINE, "Failed to remove the bean validator for RAR [{0}] from connector registry",
+                rarModuleName);
             return false;
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("removed the active bean validator for RAR [ "+rarModuleName +" ] from connector registry");
-            }
-            return true;
         }
+        _logger.log(Level.FINE, "Removed the active bean validator for RAR [{0}] from connector registry",
+            rarModuleName);
+        return true;
     }
 
     /**
@@ -417,14 +372,8 @@ public class ConnectorRegistry {
      * @return true if the MCF is found.
      *         false if MCF is not found
      */
-
-
     public boolean isMCFCreated(PoolInfo poolInfo) {
-        boolean created = factories.containsKey(poolInfo);
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("isMCFCreated " + poolInfo + " - " + created);
-        }
-        return created;
+        return factories.containsKey(poolInfo);
     }
 
 
@@ -435,20 +384,14 @@ public class ConnectorRegistry {
      * @return true if successfully removed.
      *         false if removal fails.
      */
-
     public boolean removeManagedConnectionFactory(PoolInfo poolInfo) {
+        _logger.log(Level.FINE, "removeManagedConnectionFactory(poolInfo={0})", poolInfo);
         if (factories.remove(poolInfo) == null) {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                        "Failed to remove the MCF from connector registry.", poolInfo);
-            }
+            _logger.log(Level.FINE, "Failed to remove the MCF from connector registry for {0}.", poolInfo);
             return false;
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("removeMCF " + poolInfo + " - " + !factories.containsKey(poolInfo));
-            }
-            return true;
         }
+        _logger.log(Level.FINE, "Removed MCF from connector registry for {0}.", poolInfo);
+        return true;
     }
 
     /**
@@ -457,13 +400,11 @@ public class ConnectorRegistry {
      * @param poolInfo Name of the pool
      * @param pmd      MCF instance to be added.
      */
-    public void addManagedConnectionFactory(PoolInfo poolInfo,
-                                            PoolMetaData pmd) {
+    public void addManagedConnectionFactory(PoolInfo poolInfo, PoolMetaData pmd) {
         factories.put(poolInfo, pmd);
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("Added MCF to connector registry for: " + poolInfo);
-        }
+        _logger.log(Level.FINE, "Added MCF to connector registry for {0}", poolInfo);
     }
+
 
     /**
      * Retrieve MCF instance pertaining to the poolName from the registry.
@@ -471,21 +412,13 @@ public class ConnectorRegistry {
      * @param poolInfo Name of the pool
      * @return factory MCF instance retrieved.
      */
-
-
-    public ManagedConnectionFactory getManagedConnectionFactory(
-            PoolInfo poolInfo) {
+    public ManagedConnectionFactory getManagedConnectionFactory(PoolInfo poolInfo) {
+        _logger.log(Level.FINE, "getManagedConnectionFactory(poolInfo={0})", poolInfo);
         if (poolInfo != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "Returning the MCF from connector registry.", poolInfo);
-            }
-
             PoolMetaData pmd = factories.get(poolInfo);
             if (pmd != null) {
                 return pmd.getMCF();
             }
-
         }
         return null;
     }
@@ -498,12 +431,8 @@ public class ConnectorRegistry {
      * @return true if rar is registered
      *         false if rar is not registered.
      */
-
     public boolean isRegistered(String rarModuleName) {
-        if(_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE,
-                "Checking for MCF presence in connector registry.", rarModuleName);
-        }
+        _logger.log(Level.FINE, "isRegistered(rarModuleName={0})", rarModuleName);
         return resourceAdapters.containsKey(rarModuleName);
     }
 
@@ -515,46 +444,34 @@ public class ConnectorRegistry {
      */
 
     public ConnectorDescriptor getDescriptor(String rarModuleName) {
+        _logger.log(Level.FINE, "getDescriptor(rarModuleName={0})", rarModuleName);
         ActiveResourceAdapter ar = null;
         if (rarModuleName != null) {
             ar = resourceAdapters.get(rarModuleName);
         }
-        if (ar != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "Found/returing Connector descriptor in connector registry.",
-                    rarModuleName);
-            }
-            return ar.getDescriptor();
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "Couldnot find Connector descriptor in connector registry.",
-                    rarModuleName);
-            }
+        if (ar == null) {
+            _logger.log(Level.FINE, "Could not find Connector descriptor in connector registry for {0}", rarModuleName);
             return null;
         }
+        return ar.getDescriptor();
     }
 
-    /** Gets the runtime equivalent of policies enforced by the Security Maps
-     *  pertaining to a pool from the Pool's Meta Data.
-     *  @param poolInfo pool information
-     *  @return runtimeSecurityMap in the form of HashMap of
-     *   HashMaps (user and groups).
-     *  @see SecurityMapUtils.processSecurityMaps( SecurityMap[])
+
+    /**
+     * Gets the runtime equivalent of policies enforced by the Security Maps
+     * pertaining to a pool from the Pool's Meta Data.
+     *
+     * @param poolInfo pool information
+     * @return runtimeSecurityMap in the form of HashMap of HashMaps (user and groups).
+     * @see SecurityMapUtils#processSecurityMaps
      */
-
-
     public RuntimeSecurityMap getRuntimeSecurityMap(PoolInfo poolInfo) {
-        if(poolInfo != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Returing the security map from connector registry.", poolInfo);
-            }
-            PoolMetaData pmd = factories.get(poolInfo);
-            return pmd.getRuntimeSecurityMap();
-        } else {
+        _logger.log(Level.FINE, "getRuntimeSecurityMap(poolInfo={0})", poolInfo);
+        if (poolInfo == null) {
             return null;
         }
+        PoolMetaData pmd = factories.get(poolInfo);
+        return pmd.getRuntimeSecurityMap();
     }
 
     /**
@@ -564,17 +481,12 @@ public class ConnectorRegistry {
      * @param rarName Name of the rar
      * @return ResourceAdapter configuration object
      */
-
     public ResourceAdapterConfig getResourceAdapterConfig(String rarName) {
-        if (rarName != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "Returing the resourceadapter Config from registry.", rarName);
-            }
-            return resourceAdapterConfig.get(rarName);
-        } else {
+        _logger.log(Level.FINE, "getResourceAdapterConfig(rarName={0})", rarName);
+        if (rarName == null) {
             return null;
         }
+        return resourceAdapterConfig.get(rarName);
     }
 
     /**
@@ -585,17 +497,13 @@ public class ConnectorRegistry {
      * @param raConfig ResourceAdapter configuration object
      */
 
-    public void addResourceAdapterConfig(String rarName,
-                                         ResourceAdapterConfig raConfig) {
+    public void addResourceAdapterConfig(String rarName, ResourceAdapterConfig raConfig) {
         if (rarName != null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "Adding the resourceAdapter Config to connector registry.",
-                    rarName);
-            }
+            _logger.log(Level.FINE, "Adding the resourceAdapter Config to connector registry for {0}", rarName);
             resourceAdapterConfig.put(rarName, raConfig);
         }
     }
+
 
     /**
      * Remove the resource adapter config properties object from registry
@@ -604,23 +512,14 @@ public class ConnectorRegistry {
      * @return true if successfully deleted
      *         false if deletion fails
      */
-
     public boolean removeResourceAdapterConfig(String rarName) {
+        _logger.log(Level.FINE, "removeResourceAdapterConfig(rarName={0})", rarName);
         if (resourceAdapterConfig.remove(rarName) == null) {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "failed to remove the resourceAdapter config from registry.",
-                    rarName);
-            }
+            _logger.log(Level.FINE, "Failed to remove the resourceAdapter config from registry for {0}.", rarName);
             return false;
-        } else {
-            if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,
-                    "Removed the resourceAdapter config map from registry.",
-                    rarName);
-            }
-            return true;
         }
+        _logger.log(Level.FINE, "Removed the resourceAdapter config map from registry for {0}.", rarName);
+        return true;
     }
 
     /**
@@ -629,7 +528,7 @@ public class ConnectorRegistry {
      * @return All active resource adapters in the connector runtime
      */
     public ActiveResourceAdapter[] getAllActiveResourceAdapters() {
-        ActiveResourceAdapter araArray[]  = new ActiveResourceAdapter[this.resourceAdapters.size()];
+        ActiveResourceAdapter[] araArray = new ActiveResourceAdapter[this.resourceAdapters.size()];
         return this.resourceAdapters.values().toArray(araArray);
     }
 
@@ -667,13 +566,12 @@ public class ConnectorRegistry {
      * @param messageListener message-listener class-name
      * @return List of resource-adapters
      */
-    public List<String> getConnectorsSupportingMessageListener(String messageListener){
-
+    public List<String> getConnectorsSupportingMessageListener(String messageListener) {
         List<String> rars = new ArrayList<>();
-        for(ActiveResourceAdapter ara : resourceAdapters.values()){
+        for (ActiveResourceAdapter ara : resourceAdapters.values()) {
             ConnectorDescriptor desc = ara.getDescriptor();
-            if(desc.getInBoundDefined()){
-                if(desc.getInboundResourceAdapter().getMessageListener(messageListener) != null){
+            if (desc.getInBoundDefined()) {
+                if (desc.getInboundResourceAdapter().getMessageListener(messageListener) != null) {
                     rars.add(ara.getModuleName());
                 }
             }

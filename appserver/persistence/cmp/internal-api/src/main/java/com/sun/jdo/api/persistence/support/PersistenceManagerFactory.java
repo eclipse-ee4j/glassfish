@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,26 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * PersistenceManagerFactory.java
- *
- * Created on February 25, 2000
- */
-
 package com.sun.jdo.api.persistence.support;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Properties;
 
-/**
- *
- * @author  Craig Russell
- * @version 0.1
- */
+import org.glassfish.api.naming.SimpleJndiName;
 
-public interface PersistenceManagerFactory extends java.io.Serializable
-{
-  /**
+/**
+ * @author  Craig Russell 2000
+ */
+public interface PersistenceManagerFactory extends Serializable {
+
+    /**
    * Sets JDBC driver name
    * @param driverName    JDBC driver name
    */
@@ -214,13 +209,13 @@ public interface PersistenceManagerFactory extends java.io.Serializable
    * Sets ConnectionFactory name
    * @param connectionFactoryName     ConnectionFactory name
    */
-  void setConnectionFactoryName (String connectionFactoryName);
+  void setConnectionFactoryName(SimpleJndiName connectionFactoryName);
 
   /**
    * Returns ConnectionFactory name
    * @return      ConnectionFactoryName
    */
-  String getConnectionFactoryName ();
+  SimpleJndiName getConnectionFactoryName ();
 
   /**
    * Sets Identifier. An Identifier is a string that user can use to identify

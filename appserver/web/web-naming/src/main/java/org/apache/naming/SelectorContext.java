@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -23,10 +24,17 @@ import java.util.ResourceBundle;
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.Name;
+import javax.naming.NameAlreadyBoundException;
 import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.NotContextException;
+import javax.naming.OperationNotSupportedException;
+import javax.naming.directory.InvalidAttributesException;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
 
 /**
  * Catalina JNDI Context implementation.
@@ -34,25 +42,9 @@ import javax.naming.NamingException;
  * @author Remy Maucherat
  * @version $Revision: 1.3 $ $Date: 2005/12/08 01:29:05 $
  */
-
 public class SelectorContext implements Context {
 
-
-    // -------------------------------------------------------------- Constants
-
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
-
-    /**
-     * Namespace URL.
-     */
-    public static final String prefix = "java:";
-
-
-    /**
-     * Namespace URL length.
-     */
-    public static final int prefixLength = prefix.length();
-
 
     /**
      * Initial context prefix.
@@ -60,7 +52,16 @@ public class SelectorContext implements Context {
     public static final String IC_PREFIX = "IC_";
 
 
-    // ----------------------------------------------------------- Constructors
+    /**
+     * Environment.
+     */
+    protected Hashtable<String, Object> env;
+
+
+    /**
+     * Request for an initial context.
+     */
+    protected boolean initialContext;
 
 
     /**
@@ -80,27 +81,6 @@ public class SelectorContext implements Context {
     }
 
 
-    // ----------------------------------------------------- Instance Variables
-
-
-    /**
-     * Environment.
-     */
-    protected Hashtable<String, Object> env;
-
-
-    /**
-     * Request for an initial context.
-     */
-    protected boolean initialContext = false;
-
-
-    // --------------------------------------------------------- Public Methods
-
-
-    // -------------------------------------------------------- Context Methods
-
-
     /**
      * Retrieves the named object. If name is empty, returns a new instance
      * of this context (which represents the same naming context as this
@@ -111,8 +91,8 @@ public class SelectorContext implements Context {
      * @return the object bound to name
      * @exception NamingException if a naming exception is encountered
      */
-    public Object lookup(Name name)
-        throws NamingException {
+    @Override
+    public Object lookup(Name name) throws NamingException {
         // Strip the URL header
         // Find the appropriate NamingContext according to the current bindings
         // Execute the lookup on that context
@@ -127,8 +107,8 @@ public class SelectorContext implements Context {
      * @return the object bound to name
      * @exception NamingException if a naming exception is encountered
      */
-    public Object lookup(String name)
-        throws NamingException {
+    @Override
+    public Object lookup(String name) throws NamingException {
         // Strip the URL header
         // Find the appropriate NamingContext according to the current bindings
         // Execute the lookup on that context
@@ -145,11 +125,11 @@ public class SelectorContext implements Context {
      * @param obj the object to bind; possibly null
      * @exception NameAlreadyBoundException if name is already bound
      * @exception InvalidAttributesException if object did not supply all
-     * mandatory attributes
+     *                mandatory attributes
      * @exception NamingException if a naming exception is encountered
      */
-    public void bind(Name name, Object obj)
-        throws NamingException {
+    @Override
+    public void bind(Name name, Object obj) throws NamingException {
         getBoundContext().bind(parseName(name), obj);
     }
 
@@ -161,11 +141,11 @@ public class SelectorContext implements Context {
      * @param obj the object to bind; possibly null
      * @exception NameAlreadyBoundException if name is already bound
      * @exception InvalidAttributesException if object did not supply all
-     * mandatory attributes
+     *                mandatory attributes
      * @exception NamingException if a naming exception is encountered
      */
-    public void bind(String name, Object obj)
-        throws NamingException {
+    @Override
+    public void bind(String name, Object obj) throws NamingException {
         getBoundContext().bind(parseName(name), obj);
     }
 
@@ -182,11 +162,11 @@ public class SelectorContext implements Context {
      * @param name the name to bind; may not be empty
      * @param obj the object to bind; possibly null
      * @exception InvalidAttributesException if object did not supply all
-     * mandatory attributes
+     *                mandatory attributes
      * @exception NamingException if a naming exception is encountered
      */
-    public void rebind(Name name, Object obj)
-        throws NamingException {
+    @Override
+    public void rebind(Name name, Object obj) throws NamingException {
         getBoundContext().rebind(parseName(name), obj);
     }
 
@@ -197,11 +177,11 @@ public class SelectorContext implements Context {
      * @param name the name to bind; may not be empty
      * @param obj the object to bind; possibly null
      * @exception InvalidAttributesException if object did not supply all
-     * mandatory attributes
+     *                mandatory attributes
      * @exception NamingException if a naming exception is encountered
      */
-    public void rebind(String name, Object obj)
-        throws NamingException {
+    @Override
+    public void rebind(String name, Object obj) throws NamingException {
         getBoundContext().rebind(parseName(name), obj);
     }
 
@@ -217,11 +197,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name to bind; may not be empty
      * @exception NameNotFoundException if an intermediate context does not
-     * exist
+     *                exist
      * @exception NamingException if a naming exception is encountered
      */
-    public void unbind(Name name)
-        throws NamingException {
+    @Override
+    public void unbind(Name name) throws NamingException {
         getBoundContext().unbind(parseName(name));
     }
 
@@ -231,11 +211,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name to bind; may not be empty
      * @exception NameNotFoundException if an intermediate context does not
-     * exist
+     *                exist
      * @exception NamingException if a naming exception is encountered
      */
-    public void unbind(String name)
-        throws NamingException {
+    @Override
+    public void unbind(String name) throws NamingException {
         getBoundContext().unbind(parseName(name));
     }
 
@@ -251,8 +231,8 @@ public class SelectorContext implements Context {
      * @exception NameAlreadyBoundException if newName is already bound
      * @exception NamingException if a naming exception is encountered
      */
-    public void rename(Name oldName, Name newName)
-        throws NamingException {
+    @Override
+    public void rename(Name oldName, Name newName) throws NamingException {
         getBoundContext().rename(parseName(oldName), parseName(newName));
     }
 
@@ -266,8 +246,8 @@ public class SelectorContext implements Context {
      * @exception NameAlreadyBoundException if newName is already bound
      * @exception NamingException if a naming exception is encountered
      */
-    public void rename(String oldName, String newName)
-        throws NamingException {
+    @Override
+    public void rename(String oldName, String newName) throws NamingException {
         getBoundContext().rename(parseName(oldName), parseName(newName));
     }
 
@@ -282,11 +262,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context to list
      * @return an enumeration of the names and class names of the bindings in
-     * this context. Each element of the enumeration is of type NameClassPair.
+     *         this context. Each element of the enumeration is of type NameClassPair.
      * @exception NamingException if a naming exception is encountered
      */
-    public NamingEnumeration<NameClassPair> list(Name name)
-        throws NamingException {
+    @Override
+    public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
         return getBoundContext().list(parseName(name));
     }
 
@@ -297,11 +277,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context to list
      * @return an enumeration of the names and class names of the bindings in
-     * this context. Each element of the enumeration is of type NameClassPair.
+     *         this context. Each element of the enumeration is of type NameClassPair.
      * @exception NamingException if a naming exception is encountered
      */
-    public NamingEnumeration<NameClassPair> list(String name)
-        throws NamingException {
+    @Override
+    public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
         return getBoundContext().list(parseName(name));
     }
 
@@ -316,11 +296,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context to list
      * @return an enumeration of the bindings in this context.
-     * Each element of the enumeration is of type Binding.
+     *         Each element of the enumeration is of type Binding.
      * @exception NamingException if a naming exception is encountered
      */
-    public NamingEnumeration<Binding> listBindings(Name name)
-        throws NamingException {
+    @Override
+    public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
         return getBoundContext().listBindings(parseName(name));
     }
 
@@ -331,11 +311,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context to list
      * @return an enumeration of the bindings in this context.
-     * Each element of the enumeration is of type Binding.
+     *         Each element of the enumeration is of type Binding.
      * @exception NamingException if a naming exception is encountered
      */
-    public NamingEnumeration<Binding> listBindings(String name)
-        throws NamingException {
+    @Override
+    public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
         return getBoundContext().listBindings(parseName(name));
     }
 
@@ -348,7 +328,6 @@ public class SelectorContext implements Context {
      * This method is idempotent. It succeeds even if the terminal atomic
      * name is not bound in the target context, but throws
      * NameNotFoundException if any of the intermediate contexts do not exist.
-     *
      * In a federated naming system, a context from one naming system may be
      * bound to a name in another. One can subsequently look up and perform
      * operations on the foreign context using a composite name. However, an
@@ -361,12 +340,12 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context to be destroyed; may not be empty
      * @exception NameNotFoundException if an intermediate context does not
-     * exist
+     *                exist
      * @exception NotContextException if the name is bound but does not name
-     * a context, or does not name a context of the appropriate type
+     *                a context, or does not name a context of the appropriate type
      */
-    public void destroySubcontext(Name name)
-        throws NamingException {
+    @Override
+    public void destroySubcontext(Name name) throws NamingException {
         getBoundContext().destroySubcontext(parseName(name));
     }
 
@@ -376,12 +355,12 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context to be destroyed; may not be empty
      * @exception NameNotFoundException if an intermediate context does not
-     * exist
+     *                exist
      * @exception NotContextException if the name is bound but does not name
-     * a context, or does not name a context of the appropriate type
+     *                a context, or does not name a context of the appropriate type
      */
-    public void destroySubcontext(String name)
-        throws NamingException {
+    @Override
+    public void destroySubcontext(String name) throws NamingException {
         getBoundContext().destroySubcontext(parseName(name));
     }
 
@@ -396,11 +375,11 @@ public class SelectorContext implements Context {
      * @return the newly created context
      * @exception NameAlreadyBoundException if name is already bound
      * @exception InvalidAttributesException if creation of the subcontext
-     * requires specification of mandatory attributes
+     *                requires specification of mandatory attributes
      * @exception NamingException if a naming exception is encountered
      */
-    public Context createSubcontext(Name name)
-        throws NamingException {
+    @Override
+    public Context createSubcontext(Name name) throws NamingException {
         return getBoundContext().createSubcontext(parseName(name));
     }
 
@@ -412,11 +391,11 @@ public class SelectorContext implements Context {
      * @return the newly created context
      * @exception NameAlreadyBoundException if name is already bound
      * @exception InvalidAttributesException if creation of the subcontext
-     * requires specification of mandatory attributes
+     *                requires specification of mandatory attributes
      * @exception NamingException if a naming exception is encountered
      */
-    public Context createSubcontext(String name)
-        throws NamingException {
+    @Override
+    public Context createSubcontext(String name) throws NamingException {
         return getBoundContext().createSubcontext(parseName(name));
     }
 
@@ -428,11 +407,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the object to look up
      * @return the object bound to name, not following the terminal link
-     * (if any).
+     *         (if any).
      * @exception NamingException if a naming exception is encountered
      */
-    public Object lookupLink(Name name)
-        throws NamingException {
+    @Override
+    public Object lookupLink(Name name) throws NamingException {
         return getBoundContext().lookupLink(parseName(name));
     }
 
@@ -443,11 +422,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the object to look up
      * @return the object bound to name, not following the terminal link
-     * (if any).
+     *         (if any).
      * @exception NamingException if a naming exception is encountered
      */
-    public Object lookupLink(String name)
-        throws NamingException {
+    @Override
+    public Object lookupLink(String name) throws NamingException {
         return getBoundContext().lookupLink(parseName(name));
     }
 
@@ -463,11 +442,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context from which to get the parser
      * @return a name parser that can parse compound names into their atomic
-     * components
+     *         components
      * @exception NamingException if a naming exception is encountered
      */
-    public NameParser getNameParser(Name name)
-        throws NamingException {
+    @Override
+    public NameParser getNameParser(Name name) throws NamingException {
         return getBoundContext().getNameParser(parseName(name));
     }
 
@@ -477,11 +456,11 @@ public class SelectorContext implements Context {
      *
      * @param name the name of the context from which to get the parser
      * @return a name parser that can parse compound names into their atomic
-     * components
+     *         components
      * @exception NamingException if a naming exception is encountered
      */
-    public NameParser getNameParser(String name)
-        throws NamingException {
+    @Override
+    public NameParser getNameParser(String name) throws NamingException {
         return getBoundContext().getNameParser(parseName(name));
     }
 
@@ -501,10 +480,10 @@ public class SelectorContext implements Context {
      * @return the composition of prefix and name
      * @exception NamingException if a naming exception is encountered
      */
-    public Name composeName(Name name, Name prefix)
-        throws NamingException {
-    prefix = (Name) prefix.clone();
-    return prefix.addAll(name);
+    @Override
+    public Name composeName(Name name, Name prefix) throws NamingException {
+        prefix = (Name) prefix.clone();
+        return prefix.addAll(name);
     }
 
 
@@ -516,8 +495,8 @@ public class SelectorContext implements Context {
      * @return the composition of prefix and name
      * @exception NamingException if a naming exception is encountered
      */
-    public String composeName(String name, String prefix)
-        throws NamingException {
+    @Override
+    public String composeName(String name, String prefix) throws NamingException {
         return prefix + "/" + name;
     }
 
@@ -527,12 +506,12 @@ public class SelectorContext implements Context {
      * the property already exists, its value is overwritten.
      *
      * @param propName the name of the environment property to add; may not
-     * be null
+     *            be null
      * @param propVal the value of the property to add; may not be null
      * @exception NamingException if a naming exception is encountered
      */
-    public Object addToEnvironment(String propName, Object propVal)
-        throws NamingException {
+    @Override
+    public Object addToEnvironment(String propName, Object propVal) throws NamingException {
         return getBoundContext().addToEnvironment(propName, propVal);
     }
 
@@ -541,11 +520,11 @@ public class SelectorContext implements Context {
      * Removes an environment property from the environment of this context.
      *
      * @param propName the name of the environment property to remove;
-     * may not be null
+     *            may not be null
      * @exception NamingException if a naming exception is encountered
      */
-    public Object removeFromEnvironment(String propName)
-        throws NamingException {
+    @Override
+    public Object removeFromEnvironment(String propName) throws NamingException {
         return getBoundContext().removeFromEnvironment(propName);
     }
 
@@ -560,8 +539,8 @@ public class SelectorContext implements Context {
      * @return the environment of this context; never null
      * @exception NamingException if a naming exception is encountered
      */
-    public Hashtable<?,?> getEnvironment()
-        throws NamingException {
+    @Override
+    public Hashtable<?, ?> getEnvironment() throws NamingException {
         return getBoundContext().getEnvironment();
     }
 
@@ -576,8 +555,8 @@ public class SelectorContext implements Context {
      *
      * @exception NamingException if a naming exception is encountered
      */
-    public void close()
-        throws NamingException {
+    @Override
+    public void close() throws NamingException {
         getBoundContext().close();
     }
 
@@ -599,11 +578,10 @@ public class SelectorContext implements Context {
      * not have the notion of a full name
      * @exception NamingException if a naming exception is encountered
      */
-    public String getNameInNamespace()
-        throws NamingException {
-        return prefix;
+    @Override
+    public String getNameInNamespace() throws NamingException {
+        return JNDI_CTX_JAVA;
     }
-
 
     // ------------------------------------------------------ Protected Methods
 
@@ -627,14 +605,11 @@ public class SelectorContext implements Context {
                 ContextBindings.bindContext(ICName, initialContext);
             }
             return initialContext;
-        } else {
-            if (ContextBindings.isThreadBound()) {
-                return ContextBindings.getThread();
-            } else {
-                return ContextBindings.getClassLoader();
-            }
         }
-
+        if (ContextBindings.isThreadBound()) {
+            return ContextBindings.getThread();
+        }
+        return ContextBindings.getClassLoader();
     }
 
 
@@ -646,15 +621,13 @@ public class SelectorContext implements Context {
      * naming context has been bound to this thread
      */
     protected String parseName(String name) throws NamingException {
-        if ((!initialContext) && (name.startsWith(prefix))) {
-            return (name.substring(prefixLength));
-        } else {
-            if (initialContext) {
-                return (name);
-            } else {
-                throw new NamingException(rb.getString(LogFacade.NO_JAVA_URL));
-            }
+        if (!initialContext && name.startsWith(JNDI_CTX_JAVA)) {
+            return name.substring(JNDI_CTX_JAVA.length());
         }
+        if (initialContext) {
+            return name;
+        }
+        throw new NamingException(rb.getString(LogFacade.NO_JAVA_URL));
     }
 
 
@@ -666,15 +639,13 @@ public class SelectorContext implements Context {
      * naming context has been bound to this thread
      */
     protected Name parseName(Name name) throws NamingException {
-        if ((!initialContext) && (!name.isEmpty()) && (name.get(0).equals(prefix))) {
-            return (name.getSuffix(1));
-        } else {
-            if (initialContext) {
-                return (name);
-            } else {
-                throw new NamingException(rb.getString(LogFacade.NO_JAVA_URL));
-            }
+        if (!initialContext && !name.isEmpty() && name.get(0).equals(JNDI_CTX_JAVA)) {
+            return name.getSuffix(1);
         }
+        if (initialContext) {
+            return name;
+        }
+        throw new NamingException(rb.getString(LogFacade.NO_JAVA_URL));
 
     }
 }

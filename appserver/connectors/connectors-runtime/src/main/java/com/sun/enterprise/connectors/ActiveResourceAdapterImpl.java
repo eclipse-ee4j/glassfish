@@ -17,15 +17,6 @@
 
 package com.sun.enterprise.connectors;
 
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.resourcebase.resources.api.PoolInfo;
-import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.jvnet.hk2.annotations.Service;
-
 import com.sun.appserv.connectors.internal.api.ConnectorConstants;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
@@ -43,6 +34,16 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
 import jakarta.resource.spi.ManagedConnectionFactory;
+
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.api.PoolInfo;
+import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.jvnet.hk2.annotations.Service;
 
 
 /**
@@ -151,10 +152,8 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             if (desc_.getSunDescriptor() != null && desc_.getSunDescriptor().getResourceAdapter() != null) {
 
                 // sun-ra.xml exists
-                String jndiName = (String) desc_.getSunDescriptor().
-                        getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
-
-                if (jndiName == null || jndiName.equals("")) {
+                SimpleJndiName jndiName = desc_.getSunDescriptor().getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
+                if (jndiName == null || jndiName.isEmpty()) {
                     // jndiName is empty, do not create duplicate pools, use setting in sun-ra.xml
                     createDefaultConnectorConnectionPools(true);
                 } else {
@@ -201,14 +200,10 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
                     desc_.getSunDescriptor().getResourceAdapter() != null) {
 
                 // sun-ra.xml exists
-                String jndiName = (String) desc_.getSunDescriptor().
-                        getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
+                SimpleJndiName jndiName = desc_.getSunDescriptor().getResourceAdapter()
+                    .getValue(ResourceAdapter.JNDI_NAME);
 
-                if (jndiName == null || jndiName.equals("")) {
-                    // jndiName is empty, sunRA pool not created, so don't need to delete
-
-                } else {
-                    // jndiName is not empty, need to delete pool
+                if (jndiName != null && !jndiName.isEmpty()) {
                     deleteSunRAConnectionPool();
                 }
             }
@@ -225,7 +220,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     protected void deleteDefaultConnectorConnectionPools() {
         for (ConnectionDefDescriptor aConnectionDefs_ : connectionDefs_) {
             String connectionDefName = aConnectionDefs_.getConnectionFactoryIntf();
-            String resourceJndiName = connectorRuntime_.getDefaultPoolName(moduleName_, connectionDefName);
+            SimpleJndiName resourceJndiName = connectorRuntime_.getDefaultPoolName(moduleName_, connectionDefName);
             try {
                 PoolInfo poolInfo = new PoolInfo(resourceJndiName);
                 connectorRuntime_.deleteConnectorConnectionPool(poolInfo);
@@ -241,7 +236,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     protected void deleteDefaultConnectorResources() {
         for (ConnectionDefDescriptor aConnectionDefs_ : connectionDefs_) {
             String connectionDefName = aConnectionDefs_.getConnectionFactoryIntf();
-            String resourceJndiName = connectorRuntime_.getDefaultResourceName(moduleName_, connectionDefName);
+            SimpleJndiName resourceJndiName = connectorRuntime_.getDefaultResourceName(moduleName_, connectionDefName);
             try {
                 ResourceInfo resourceInfo = new ResourceInfo(resourceJndiName);
                 connectorRuntime_.deleteConnectorResource(resourceInfo);
@@ -389,17 +384,17 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
         }
     }
 
-    protected ManagedConnectionFactory instantiateMCF(String mcfClass, ClassLoader loader)
-            throws Exception {
-        ManagedConnectionFactory mcf = null;
 
+    protected ManagedConnectionFactory instantiateMCF(String mcfClass, ClassLoader loader) throws Exception {
+        ManagedConnectionFactory mcf = null;
         if (jcl_ != null) {
-            mcf = (ManagedConnectionFactory) jcl_.loadClass(mcfClass).newInstance();
+            mcf = (ManagedConnectionFactory) jcl_.loadClass(mcfClass).getDeclaredConstructor().newInstance();
         } else if (loader != null) {
-            mcf = (ManagedConnectionFactory) loader.loadClass(mcfClass).newInstance();
+            mcf = (ManagedConnectionFactory) loader.loadClass(mcfClass).getDeclaredConstructor().newInstance();
         } else {
-            //mcf = (ManagedConnectionFactory) Class.forName(mcfClass).newInstance();
-            mcf = (ManagedConnectionFactory)Thread.currentThread().getContextClassLoader().loadClass(mcfClass).newInstance();
+            // mcf = (ManagedConnectionFactory) Class.forName(mcfClass).newInstance();
+            mcf = (ManagedConnectionFactory) Thread.currentThread().getContextClassLoader().loadClass(mcfClass)
+                .getDeclaredConstructor().newInstance();
         }
         setLogWriter(mcf);
         return mcf;
@@ -416,8 +411,8 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
         for (ConnectionDefDescriptor descriptor : connectionDefs_) {
 
             String connectionDefName = descriptor.getConnectionFactoryIntf();
-            String resourceName = connectorRuntime_.getDefaultResourceName(moduleName_, connectionDefName);
-            String poolName = connectorRuntime_.getDefaultPoolName(moduleName_, connectionDefName);
+            SimpleJndiName resourceName = connectorRuntime_.getDefaultResourceName(moduleName_, connectionDefName);
+            SimpleJndiName poolName = connectorRuntime_.getDefaultPoolName(moduleName_, connectionDefName);
 
             PoolInfo poolInfo = new PoolInfo(poolName);
             ResourceInfo resourceInfo = new ResourceInfo(resourceName);
@@ -439,7 +434,8 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
     protected void createDefaultConnectorConnectionPools(boolean useSunRA)
             throws ConnectorRuntimeException {
         for (ConnectionDefDescriptor descriptor : connectionDefs_) {
-            String poolName = connectorRuntime_.getDefaultPoolName(moduleName_, descriptor.getConnectionFactoryIntf());
+            // example: connection-factory-definition-embedraApp#cfd-ra#jakarta.resource.cci.ConnectionFactory
+            SimpleJndiName poolName = connectorRuntime_.getDefaultPoolName(moduleName_, descriptor.getConnectionFactoryIntf());
             PoolInfo poolInfo = new PoolInfo(poolName);
 
             ConnectorDescriptorInfo connectorDescriptorInfo = ConnectorDDTransformUtils
@@ -448,8 +444,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             connectorDescriptorInfo.setResourceAdapterClassName(desc_.getResourceAdapterClass());
             ConnectorConnectionPool connectorPoolObj;
 
-            // if useSunRA is true, then create connectorPoolObject using settings
-            // from sunRAXML
+            // if useSunRA is true, then create connectorPoolObject using settings from sunRAXML
             if (useSunRA) {
                 connectorPoolObj = ConnectionPoolObjectsUtils.createSunRaConnectorPoolObject(poolInfo, desc_, moduleName_);
             } else {
@@ -472,10 +467,10 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      */
     private void createSunRAConnectionPool() throws ConnectorRuntimeException {
 
-        String defaultPoolName = connectorRuntime_.getDefaultPoolName(
+        SimpleJndiName defaultPoolName = connectorRuntime_.getDefaultPoolName(
                 moduleName_, connectionDefs_[0].getConnectionFactoryIntf());
 
-        String sunRAPoolName = defaultPoolName + ConnectorConstants.SUN_RA_POOL;
+        SimpleJndiName sunRAPoolName = new SimpleJndiName(defaultPoolName + ConnectorConstants.SUN_RA_POOL);
         PoolInfo poolInfo = new PoolInfo(sunRAPoolName);
 
         ConnectorDescriptorInfo connectorDescriptorInfo =
@@ -491,8 +486,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             _logger.log(Level.FINE, "Created SUN-RA connection pool:", poolInfo);
         }
 
-        String jndiName = (String) desc_.getSunDescriptor().
-                getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
+        SimpleJndiName jndiName = desc_.getSunDescriptor().getResourceAdapter().getValue(ResourceAdapter.JNDI_NAME);
         ResourceInfo resourceInfo = new ResourceInfo(jndiName);
         connectorRuntime_.createConnectorResource(resourceInfo, poolInfo, null);
         if(_logger.isLoggable(Level.FINE)) {
@@ -507,10 +501,10 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
      */
     private void deleteSunRAConnectionPool() {
 
-        String defaultPoolName = connectorRuntime_.getDefaultPoolName(
-                moduleName_, connectionDefs_[0].getConnectionFactoryIntf());
+        SimpleJndiName defaultPoolName = connectorRuntime_.getDefaultPoolName(moduleName_,
+            connectionDefs_[0].getConnectionFactoryIntf());
 
-        String sunRAPoolName = defaultPoolName + ConnectorConstants.SUN_RA_POOL;
+        SimpleJndiName sunRAPoolName = new SimpleJndiName(defaultPoolName + ConnectorConstants.SUN_RA_POOL);
         PoolInfo poolInfo = new PoolInfo(sunRAPoolName);
         try {
             connectorRuntime_.deleteConnectorConnectionPool(poolInfo);

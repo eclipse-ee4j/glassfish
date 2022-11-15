@@ -26,18 +26,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigInteger;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
 import org.glassfish.main.admin.test.tool.DomainAdminRestClient;
+import org.glassfish.main.admin.test.tool.RandomGenerator;
 import org.glassfish.main.admin.test.webapp.HelloServlet;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -125,7 +123,7 @@ public class RestTestBase {
     }
 
     public String createCluster() {
-        final String clusterName = "cluster_" + generateRandomString();
+        final String clusterName = "cluster_" + RandomGenerator.generateRandomString();
         createCluster(clusterName);
         return clusterName;
     }
@@ -175,7 +173,7 @@ public class RestTestBase {
         assertEquals(404, response.getStatus());
     }
 
-    /*
+    /**
      * Arguments contextRoot and name can be null, then they are not set in the deploy command
      */
     public Map<String, String> deployApp(final File archive, final String contextRoot, final String name) {
@@ -205,21 +203,6 @@ public class RestTestBase {
         Response response = managementClient.delete(URL_APPLICATION_DEPLOY + "/" + appName);
         assertThat(response.getStatus(), equalTo(200));
         return response;
-    }
-
-    protected static String generateRandomString() {
-        SecureRandom random = new SecureRandom();
-        return new BigInteger(130, random).toString(16);
-    }
-
-    protected static int generateRandomNumber() {
-        Random r = new Random();
-        return Math.abs(r.nextInt()) + 1;
-    }
-
-    protected int generateRandomNumber(int max) {
-        Random r = new Random();
-        return Math.abs(r.nextInt(max - 1)) + 1;
     }
 
     protected static String getBaseAdminUrl() {

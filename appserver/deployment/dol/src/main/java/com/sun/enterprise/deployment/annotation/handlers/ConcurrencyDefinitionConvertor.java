@@ -72,7 +72,7 @@ abstract class ConcurrencyDefinitionConvertor<D extends ContextualResourceDefini
 
     private boolean isSameDefinition(D data, ResourceDescriptor descriptor) {
         return descriptorClass.isInstance(descriptor) && Objects
-            .equals(getJavaComponentJndiName(descriptor.getJndiName()), getJavaComponentJndiName(data.getName()));
+            .equals(getJavaComponentJndiName(descriptor.getJndiName().toString()), getJavaComponentJndiName(data.getName()));
     }
 
 }

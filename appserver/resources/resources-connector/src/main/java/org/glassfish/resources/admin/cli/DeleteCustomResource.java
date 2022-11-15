@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,22 +20,28 @@ package org.glassfish.resources.admin.cli;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
 import org.glassfish.resources.config.CustomResource;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.glassfish.resourcebase.resources.admin.cli.ResourceUtil;
-import jakarta.inject.Inject;
-import java.beans.PropertyVetoException;
 
 /**
  * Delete Custom Resource object
@@ -58,10 +64,10 @@ public class DeleteCustomResource implements AdminCommand {
     final private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DeleteCustomResource.class);
 
-    @Param(optional=true, defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
+    @Param(optional = true, defaultValue = CommandTarget.TARGET_SERVER)
     private String target;
 
-    @Param(name="jndi_name", primary=true)
+    @Param(name = "jndi_name", primary = true)
     private String jndiName;
 
     @Inject
@@ -79,12 +85,14 @@ public class DeleteCustomResource implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
 
         // ensure we already have this resource
-        if(domain.getResources().getResourceByName(CustomResource.class, jndiName) == null){
+        SimpleJndiName simpleJndiName = SimpleJndiName.of(jndiName);
+        if(domain.getResources().getResourceByName(CustomResource.class, simpleJndiName) == null){
             report.setMessage(localStrings.getLocalString(
                     "delete.custom.resource.notfound",
                     "A custom resource named {0} does not exist.", jndiName));
@@ -94,8 +102,8 @@ public class DeleteCustomResource implements AdminCommand {
 
         if (environment.isDas()) {
 
-            if ("domain".equals(target)) {
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 0) {
+            if (CommandTarget.TARGET_DOMAIN.equals(target)) {
+                if (!resourceUtil.getTargetsReferringResourceRef(simpleJndiName).isEmpty()) {
                     report.setMessage(localStrings.getLocalString("delete.custom.resource.resource-ref.exist",
                             "custom-resource [ {0} ] is referenced in an " +
                                     "instance/cluster target, Use delete-resource-ref on appropriate target",
@@ -104,7 +112,7 @@ public class DeleteCustomResource implements AdminCommand {
                     return;
                 }
             } else {
-                if (!resourceUtil.isResourceRefInTarget(jndiName, target)) {
+                if (!resourceUtil.isResourceRefInTarget(simpleJndiName, target)) {
                     report.setMessage(localStrings.getLocalString("delete.custom.resource.no.resource-ref",
                             "custom-resource [ {0} ] is not referenced in target [ {1} ]",
                             jndiName, target));
@@ -113,7 +121,7 @@ public class DeleteCustomResource implements AdminCommand {
 
                 }
 
-                if (resourceUtil.getTargetsReferringResourceRef(jndiName).size() > 1) {
+                if (resourceUtil.getTargetsReferringResourceRef(simpleJndiName).size() > 1) {
                     report.setMessage(localStrings.getLocalString("delete.custom.resource.multiple.resource-refs",
                             "custom-resource [ {0} ] is referenced in multiple " +
                                     "instance/cluster targets, Use delete-resource-ref on appropriate target",
@@ -126,21 +134,19 @@ public class DeleteCustomResource implements AdminCommand {
 
         try {
             // delete resource-ref
-            resourceUtil.deleteResourceRef(jndiName, target);
+            if (!CommandTarget.TARGET_DOMAIN.equals(target)) {
+                resourceUtil.deleteResourceRef(simpleJndiName, target);
+            }
 
             // delete custom-resource
-            ConfigSupport.apply(new SingleConfigCode<Resources>() {
-
-                public Object run(Resources param) throws PropertyVetoException,
-                        TransactionFailure {
-                    CustomResource resource = (CustomResource)
-                            domain.getResources().getResourceByName(CustomResource.class, jndiName);
-                        if (resource != null && resource.getJndiName().equals(jndiName)) {
-                            return param.getResources().remove(resource);
-                        }
-                    return null;
+            SingleConfigCode<Resources> configCode = param -> {
+                CustomResource resource = domain.getResources().getResourceByName(CustomResource.class, simpleJndiName);
+                if (resource != null && resource.getJndiName().equals(jndiName)) {
+                    return param.getResources().remove(resource);
                 }
-            }, domain.getResources());
+                return null;
+            };
+            ConfigSupport.apply(configCode, domain.getResources());
 
             report.setMessage(localStrings.getLocalString("delete.custom.resource.success",
                     "Custom resource {0} deleted", jndiName));

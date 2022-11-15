@@ -85,10 +85,13 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.naming.NamingException;
+
 import org.glassfish.admin.mbeanserver.JMXStartupService;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.logging.LogHelper;
 import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
@@ -105,10 +108,11 @@ import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.grizzly.LazyServiceInitializer;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
+
+import static com.sun.enterprise.connectors.service.ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor;
 
 /**
  * Represents an active JMS resource adapter. This does
@@ -338,14 +342,9 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         if (connectorRuntime.isServer()) {
             // Check whether MQ has started up or not.
             try {
-               // if (!JmsProviderLifecycle.shouldUseMQRAForLifecycleControl()) {
-                 //   JmsProviderLifecycle.checkProviderStartup();
-                //} else {
-                    setLifecycleProperties();
-                //}
+                setLifecycleProperties();
             } catch (Exception e) {
-                ConnectorRuntimeException cre = new ConnectorRuntimeException(e.getMessage());
-                throw (ConnectorRuntimeException) cre.initCause(e);
+                throw new ConnectorRuntimeException(e.getMessage(), e);
             }
 
             setMdbContainerProperties();
@@ -373,7 +372,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                 }
                 if (grizzlyService != null) {
                     synchronized (grizzlyListeners) {
-                        if (grizzlyListeners.size() > 0) {
+                        if (!grizzlyListeners.isEmpty()) {
                             String[] listeners = grizzlyListeners.toArray(new String[grizzlyListeners.size()]);
                             for (String listenerName : listeners) {
                                 try {
@@ -414,7 +413,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                 if (grizzlyService != null) {
                     List<JmsHost> jmsHosts = jmsService.getJmsHost();
                     for (JmsHost oneHost : jmsHosts) {
-                        if (Boolean.valueOf(oneHost.getLazyInit()) && !doBind) {
+                        if (Boolean.parseBoolean(oneHost.getLazyInit()) && !doBind) {
                             String jmsHost = null;
                             if (oneHost.getHost() != null && "localhost".equals(oneHost.getHost())) {
                                 jmsHost = "0.0.0.0";
@@ -452,19 +451,11 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     JmsService jmsService = server.getConfig().getExtensionByType(JmsService.class);
                     initializeLazyListener(jmsService);
                 }
-                //System.setProperty("imq.jmsra.direct.clustered", "true");
-                AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-
-                    @Override
-                    public Object run() throws ResourceAdapterInternalException {
-                        // set the JMSRA system property to enable XA JOINS
-                        // disabling this due to issue - 8727
-                        // System.setProperty(XA_JOIN_ALLOWED, "true");
-                        resourceadapter_.start(bootStrapContextImpl);
-                        return null;
-                    }
-                });
-                //setResourceAdapter(resourceadapter_);
+                PrivilegedExceptionAction<Void> action = () -> {
+                    resourceadapter_.start(bootStrapContextImpl);
+                    return null;
+                };
+                AccessController.doPrivileged(action);
             } else {
                 resourceadapter_.start(bootStrapContextImpl);
             }
@@ -581,14 +572,14 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                 ConnectorDescriptor cd = getDescriptor();
                 String clusterName = getMQClusterName();
                 ConnectorConfigProperty envProp1 = new ConnectorConfigProperty(
-                    CLUSTERID, clusterName, "Cluster Id", "java.lang.String");
+                    CLUSTERID, clusterName, "Cluster Id", String.class.getName());
                 setProperty(cd, envProp1);
 
                 if (brokerInstanceName == null) {
                     brokerInstanceName = getBrokerInstanceName(jmsService);
                 }
                 ConnectorConfigProperty envProp2 = new ConnectorConfigProperty(
-                    BROKERID, brokerInstanceName, "Broker Id", "java.lang.String");
+                    BROKERID, brokerInstanceName, "Broker Id", String.class.getName());
                 setProperty(cd, envProp2);
 
                 // Only if JMS availability is true - Enhanced Broker Cluster only.
@@ -596,7 +587,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     // Set HARequired as true - irrespective of whether it is REMOTE or
                     // LOCAL
                     ConnectorConfigProperty envProp3 = new ConnectorConfigProperty(
-                        HAREQUIRED, "true", "HA Required", "java.lang.String");
+                        HAREQUIRED, "true", "HA Required", String.class.getName());
                     setProperty(cd, envProp3);
 
                     /*
@@ -617,7 +608,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     String nodeHostName = domain.getNodeNamed(server.getNodeRef()).getNodeHost();
                     if (nodeHostName != null) {
                         ConnectorConfigProperty envProp5 = new ConnectorConfigProperty(
-                            BROKERBINDADDRESS, nodeHostName, "Broker Bind Address", "java.lang.String");
+                            BROKERBINDADDRESS, nodeHostName, "Broker Bind Address", String.class.getName());
                         setProperty(cd, envProp5);
                     }
                     loadDBProperties(as.getExtensionByType(JmsAvailability.class), ClusterMode.ENHANCED);
@@ -629,89 +620,6 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     }
                     loadDBProperties(jmsAvailability, ClusterMode.CONVENTIONAL_OF_PEER_BROKERS);
                 }
-
-                /*
-                ConnectorConfigProperty  envProp4 = new ConnectorConfigProperty  (
-                                DBTYPE , DBTYPE_HADB,"DBType",
-                                "java.lang.String");
-                setProperty(cd, envProp4);
-
-
-
-                * The broker has a property to control whether
-                * it starts in HA mode or not and that's represented on
-                * the RA by BrokerEnableHA.
-                * On the MQ Client connection side it is HARequired -
-                * this does not control the broker, it just is a client
-                * side requirement.
-                * So for AS EE, if BrokerType is LOCAL or EMBEDDED,
-                * and AS HA is enabled for JMS then both these must be
-                * set to true.
-
-                ConnectorConfigProperty  envProp5 = new ConnectorConfigProperty  (
-                            BROKERENABLEHA , "true",
-                            "BrokerEnableHA flag","java.lang.Boolean");
-                setProperty(cd, envProp5);
-
-                String nodeHostName = domain.getNodeNamed(server.getNode()).getNodeHost();
-                if (nodeHostName != null)  {
-                  ConnectorConfigProperty  envProp6 = new ConnectorConfigProperty  (
-                              BROKERBINDADDRESS , nodeHostName,
-                              "Broker Bind Address","java.lang.String");
-                  setProperty(cd, envProp6);
-                }
-                //get pool name
-                String poolJNDIName = as.getJmsAvailability().getMqStorePoolName();
-                //If no MQ store pool name is specified, use default poolname
-                //XXX: default pool name is jdbc/hastore but asadmin
-                //configure-ha-cluster creates a resource called
-                //"jdbc/<asclustername>-hastore" which needs to be used.
-                if (poolJNDIName == null || poolJNDIName =="" ) {
-                  //get Web container's HA store's pool name
-                  poolJNDIName = as.getWebContainerAvailability().
-                                    getHttpSessionStorePoolName();
-                  logFine("HTTP Session store pool jndi name " +
-                             "is " + poolJNDIName);
-                }
-                //XXX: request HADB team mq-store-pool name to be
-                //populated as part of configure-ha-cluster
-
-                JdbcConnectionPool jdbcConPool = getJDBCConnectionPoolInfo(
-                                                    poolJNDIName);
-                //DBProps: compute values from pool object
-                String userName = getPropertyFromPool(jdbcConPool, DUSERNAME);
-                logFine("HA username is " + userName);
-
-                String password = getPropertyFromPool(jdbcConPool, DPASSWORD);
-                logFine("HA Password is " + password);
-
-                String driverClass = jdbcConPool.getDatasourceClassname();
-                logFine("HA driverclass" + driverClass);
-
-                dbProps = new Properties();
-                dbProps.setProperty(DB_HADB_USER, userName);
-                dbProps.setProperty(DB_HADB_PASSWORD, password);
-                dbProps.setProperty(DB_HADB_DRIVERCLASS, driverClass);
-
-                //DSProps: compute values from pool object
-                String serverList = getPropertyFromPool(jdbcConPool, DSERVERLIST);
-                logFine("HADB server list is " + serverList);
-                dsProps = new Properties();
-
-                if (serverList != null) {
-                    dsProps.setProperty(DS_HADB_SERVERLIST, serverList);
-                } else {
-                    _logger.warning("ajra.incorrect_hadb_server_list");
-                }
-
-                //set all other properties in dsProps as well.
-                Properties p = getDSPropertiesFromThePool(jdbcConPool);
-                Iterator iterator = p.keySet().iterator();
-                while (iterator.hasNext()) {
-                    String key = (String) iterator.next();
-                    String val = (String)p.get(key);
-                    dsProps.setProperty(key, val);
-                }*/
             } else {
                 // Conventional cluster with master broker.
                 if ("jdbc".equals(as.getExtensionByType(JmsAvailability.class).getMessageStoreType())) {
@@ -726,16 +634,6 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     }
 
     private void loadDBProperties(JmsAvailability jmsAvailability, ClusterMode clusterMode) {
-        /*imq.cluster.nomasterbroker=[true|false] default false
-                imq.cluster.sharecc.persist.jdbc.dbVendor
-                imq.cluster.sharecc.persist.jdbc.<dbVendor>.user
-                imq.cluster.sharecc.persist.jdbc.<dbVendor>.property.<propname>=<propval>
-                imq.cluster.sharecc.persist.jdbc.<dbVendor>.table.MQSHARECC45=<table-schema>
-
-                These broker properties, including imq.cluster.clusterid, must be set to
-                same values in all broker instances in the conventional cluster
-
-                */
         String prefix = null;
         if (ClusterMode.CONVENTIONAL_WITH_MASTER_BROKER == clusterMode) {
             prefix = ENHANCED_CLUSTER_DB_PREFIX;
@@ -976,16 +874,6 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                 }
                 dbProps.putAll(jmsServiceProp);
             }
-            /*
-           String jmsPropertiesStr =  null ;
-           if(jmsServiceProp.size() > 0)
-           {
-           try{
-               StringWriter writer = new StringWriter();
-               jmsServiceProp.store(writer, "Properties defined in JMSService and JMSHost");
-               jmsPropertiesStr =  writer.toString();
-           }catch(Exception e){}//todo: log error;
-           } */
             String brokerHomeDir = getBrokerHomeDir();
             String brokerLibDir = getBrokerLibDir();
             if (brokerInstanceName == null) {
@@ -994,81 +882,59 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
             long brokerTimeOut = getBrokerTimeOut(getJmsService());
 
-            //Need to set the following properties
-            //BrokerType, BrokerInstanceName, BrokerPort,
-            //BrokerArgs, BrokerHomeDir, BrokerVarDir, BrokerStartTimeout
-            //adminUserName, adminPassword
             ConnectorDescriptor cd = getDescriptor();
-            /*if(jmsPropertiesStr != null){
-                    ConnectorConfigProperty  envProp = new ConnectorConfigProperty  (
-                        "BrokerProps", jmsPropertiesStr, "Broker Props", "java.lang.String");
-                    setProperty(cd, envProp);
-            }  */
             ConnectorConfigProperty  envProp1 = new ConnectorConfigProperty  (
-                    BROKERTYPE, brokerType, "Broker Type", "java.lang.String");
+                    BROKERTYPE, brokerType, "Broker Type", String.class.getName());
             setProperty(cd, envProp1);
             ConnectorConfigProperty  envProp2 = new ConnectorConfigProperty  (
                     BROKERINSTANCENAME, brokerInstanceName ,
-                    "Broker Instance Name", "java.lang.String");
+                    "Broker Instance Name", String.class.getName());
             setProperty(cd, envProp2);
             ConnectorConfigProperty  envProp3 = new ConnectorConfigProperty  (
                     BROKERPORT , brokerPort ,
-                    "Broker Port", "java.lang.String");
+                    "Broker Port", "java.lang.Integer");
             setProperty(cd, envProp3);
             ConnectorConfigProperty  envProp4 = new ConnectorConfigProperty  (
                     BROKERARGS , brokerArgs ,
-                    "Broker Args", "java.lang.String");
+                    "Broker Args", String.class.getName());
             setProperty(cd, envProp4);
             ConnectorConfigProperty  envProp5 = new ConnectorConfigProperty  (
                     BROKERHOMEDIR , brokerHomeDir ,
-                    "Broker Home Dir", "java.lang.String");
+                    "Broker Home Dir", String.class.getName());
             setProperty(cd, envProp5);
             ConnectorConfigProperty  envProp14 = new ConnectorConfigProperty  (
                     BROKERLIBDIR , brokerLibDir ,
-                    "Broker Lib Dir", "java.lang.String");
+                    "Broker Lib Dir", String.class.getName());
             setProperty(cd, envProp14);
             ConnectorConfigProperty  envProp6 = new ConnectorConfigProperty  (
                     BROKERJAVADIR , java_home ,
-                    "Broker Java Dir", "java.lang.String");
+                    "Broker Java Dir", String.class.getName());
                     setProperty(cd, envProp6);
             ConnectorConfigProperty  envProp7 = new ConnectorConfigProperty  (
                     BROKERVARDIR , brokerVarDir ,
-                    "Broker Var Dir", "java.lang.String");
+                    "Broker Var Dir", String.class.getName());
             setProperty(cd, envProp7);
             ConnectorConfigProperty  envProp8 = new ConnectorConfigProperty  (
                     BROKERSTARTTIMEOUT , "" + brokerTimeOut ,
-                    "Broker Start Timeout", "java.lang.String");
+                    "Broker Start Timeout", "java.lang.Integer");
             setProperty(cd, envProp8);
             ConnectorConfigProperty  envProp9 = new ConnectorConfigProperty  (
                     ADMINUSERNAME , adminUserName,
-                    "Broker admin username", "java.lang.String");
+                    "Broker admin username", String.class.getName());
             setProperty(cd, envProp9);
             ConnectorConfigProperty  envProp10 = new ConnectorConfigProperty  (
                     ADMINPASSWORD , adminPassword ,
-                    "Broker admin password", "java.lang.String");
+                    "Broker admin password", String.class.getName());
             setProperty(cd, envProp10);
             ConnectorConfigProperty  envProp11 = new ConnectorConfigProperty  (
                     USERNAME , username,
-                    "Broker username", "java.lang.String");
+                    "Broker username", String.class.getName());
             setProperty(cd, envProp11);
             ConnectorConfigProperty  envProp12 = new ConnectorConfigProperty  (
                     PASSWORD , password,
-                    "Broker password", "java.lang.String");
+                    "Broker password", String.class.getName());
             setProperty(cd, envProp12);
-
-           /* //set adminpassfile
-            if (!getJmsService().getType().equals(REMOTE)) {
-                String adminPassFilePath = getAdminPassFilePath(adminPassword);
-                if (adminPassFilePath != null) {
-                    ConnectorConfigProperty  envProp13 = new ConnectorConfigProperty  (
-                            ADMINPASSFILE , adminPassFilePath ,
-                            "Broker admin password", "java.lang.String");
-                    setProperty(cd, envProp13);
-                }
-            }*/
         }
-        //Optional
-        //BrokerBindAddress, RmiRegistryPort
     }
 
 
@@ -1116,13 +982,9 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         String domainName = null;
         if (isClustered()) {
             Server server = domain.getServerNamed(asInstance);
-
             domainName = server.getCluster().getName();
-            /*ClusterHelper.getClusterForInstance(
-                            ApplicationServer.getServerContext().getConfigContext(),
-                            asInstance).getName();*/
         } else {
-            domainName = serverenv.getDomainName();//ServerManager.instance().getDomainName();
+            domainName = serverenv.getDomainName();
         }
         String s = getBrokerInstanceName(domainName, asInstance, js);
         if (_logger.isLoggable(Level.FINE)) {
@@ -1273,7 +1135,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                  */
                 String val = getGroupName();
                 ConnectorConfigProperty envProp = new ConnectorConfigProperty(
-                    GROUPNAME, val, "Group Name", "java.lang.String");
+                    GROUPNAME, val, "Group Name", String.class.getName());
                 setProperty(cd, envProp);
                 if (_logger.isLoggable(Level.FINE)) {
                     logFine("CLUSTERED instance - setting groupname as" + val);
@@ -1294,15 +1156,14 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     // Do not set master broker for remote broker.
                     // The RA might ignore it if we set, but we have to be certain from our end.
                      return;
-                } else {
-                    if (!isDBEnabled()) {
-                        String masterbrkr = getMasterBroker();
-                        ConnectorConfigProperty envProp2 = new ConnectorConfigProperty(
-                            MASTERBROKER, masterbrkr, "Master  Broker", "java.lang.String");
-                        setProperty(cd, envProp2);
-                        if (_logger.isLoggable(Level.FINE)) {
-                            logFine("MASTERBROKER - setting master broker val" + masterbrkr);
-                        }
+                }
+                if (!isDBEnabled()) {
+                    String masterbrkr = getMasterBroker();
+                    ConnectorConfigProperty envProp2 = new ConnectorConfigProperty(
+                        MASTERBROKER, masterbrkr, "Master  Broker", String.class.getName());
+                    setProperty(cd, envProp2);
+                    if (_logger.isLoggable(Level.FINE)) {
+                        logFine("MASTERBROKER - setting master broker val" + masterbrkr);
                     }
                 }
             } else {
@@ -1343,16 +1204,14 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
      * @throws ConnectorRuntimeException
      */
     private void setAppClientRABeanProperties() throws ConnectorRuntimeException {
-        if (_logger.isLoggable(Level.FINE)) {
-            logFine("In Appclient container!!!");
-        }
+        logFine("In Appclient container!!!");
         ConnectorDescriptor cd = super.getDescriptor();
         ConnectorConfigProperty envProp1 = new ConnectorConfigProperty(
-            BROKERTYPE, REMOTE, "Broker Type", "java.lang.String");
+            BROKERTYPE, REMOTE, "Broker Type", String.class.getName());
         setProperty(cd, envProp1);
 
         ConnectorConfigProperty envProp2 = new ConnectorConfigProperty(
-            GROUPNAME, "", "Group Name", "java.lang.String");
+            GROUPNAME, "", "Group Name", String.class.getName());
         cd.removeConfigProperty(envProp2);
         ConnectorConfigProperty envProp3 = new ConnectorConfigProperty(
             CLUSTERCONTAINER, "false", "Cluster flag", "java.lang.Boolean");
@@ -1386,11 +1245,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         Domain domain = Globals.get(Domain.class);
         Server server = domain.getServerNamed(instanceName);
 
-        return server.getCluster() != null? server.getCluster().getName(): null;
-
-                /*ClusterHelper.getClusterForInstance(this.serverContxt.
-                       .getConfigContext(),
-                        serverContxt.getInstanceName()).getName();*/
+        return server.getCluster() == null ? null : server.getCluster().getName();
     }
 
     /**
@@ -1576,7 +1431,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     new Object[]{val});
         }
         ConnectorConfigProperty  envProp1 = new ConnectorConfigProperty(
-           CONNECTION_URL, val, val, "java.lang.String");
+           CONNECTION_URL, val, val, String.class.getName());
         setProperty(cd, envProp1);
     }
 
@@ -1613,7 +1468,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
         val = ""+jmsraUtil.getAddressListBehaviour();
         ConnectorConfigProperty envProp5 = new ConnectorConfigProperty(
-            ADRLIST_BEHAVIOUR, val, val, "java.lang.String");
+            ADRLIST_BEHAVIOUR, val, val, String.class.getName());
         setProperty(cd, envProp5);
 
         val = ""+jmsraUtil.getAddressListIterations();
@@ -1713,7 +1568,6 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             //Finally if DAS and configured port doesn't work, return DAS'
             //RMI registry port as a fallback option.
 
-            //if (ResourcesUtil.isDAS()) {
             if (isDAS()) {
                 return DASRMIPORT;
             }
@@ -1723,13 +1577,6 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
     private boolean isDAS() {
         return SystemPropertyConstants.DAS_SERVER_NAME.equals(getServerContext().getInstanceName());
-       /*List serversList =  getServers().getServer();
-       for (int i =0; i < serversList.size(); i++){
-           Server aserver = (Server) serversList.get(i);
-           if (getServerContext().getInstanceName().equals(aserver.getName()))
-                return (aserver.getNode() == null);
-       } */
-        //return false;
     }
 
     private String getConfiguredRmiRegistryHost() throws Exception {
@@ -1766,7 +1613,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
     private boolean isASRmiRegistryPortAvailable(JmsRaUtil jmsraUtil) {
          if (_logger.isLoggable(Level.FINE)) {
-            logFine("isASRmiRegistryPortAvailable - JMSService Type:" + jmsraUtil.getJMSServiceType());
+            logFine("isASRmiRegistryPortAvailable - JMSService Type: " + jmsraUtil.getJMSServiceType());
         }
          //If JMSServiceType is LOCAL or REMOTE, then we need not ask the MQ RA to use the
          //AS RMI Registry. So the check below is not necessary.
@@ -1826,11 +1673,9 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
     private void rebindDescriptor() throws ConnectorRuntimeException {
         try {
-            String descriptorJNDIName = ConnectorAdminServiceUtils.getReservePrefixedJNDINameForDescriptor(super.getModuleName());
-            //GlassfishNamingManager nm = connectorRuntime.getNamingManager();
+            SimpleJndiName descriptorJNDIName = getReservePrefixedJNDINameForDescriptor(super.getModuleName());
             nm.publishObject(descriptorJNDIName, super.getDescriptor(), true);
-        //com.sun.enterprise.Switch.getSwitch().getNamingManager().        publishObject( descriptorJNDIName, super.getDescriptor(), true);
-        } catch (javax.naming.NamingException ne) {
+        } catch (NamingException ne) {
             ConnectorRuntimeException cre = new ConnectorRuntimeException (ne.getMessage());
             throw (ConnectorRuntimeException) cre.initCause(ne);
         }
@@ -1858,9 +1703,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         } else {
             String addlist = null;
             Set<ConnectorConfigProperty> s = cpr.getConnectorDescriptorInfo().getMCFConfigProperties();
-            Iterator<ConnectorConfigProperty> tmpit = s.iterator();
-            while (tmpit.hasNext()) {
-                ConnectorConfigProperty prop = tmpit.next();
+            for (ConnectorConfigProperty prop : s) {
                 String propName = prop.getName();
                 if (propName.equalsIgnoreCase("imqAddressList") || propName.equalsIgnoreCase("Addresslist")) {
                     addlist = prop.getValue();
@@ -1876,9 +1719,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             while (tokenizer.hasMoreTokens()) {
                 String brokerurl = tokenizer.nextToken();
                 ManagedConnectionFactory mcf = super.createManagedConnectionFactory(cpr, loader);
-                Iterator<ConnectorConfigProperty> it = s.iterator();
-                while (it.hasNext()) {
-                    ConnectorConfigProperty prop = it.next();
+                for (ConnectorConfigProperty prop : s) {
                     String propName = prop.getName();
                     String propValue = prop.getValue();
                     if (propName.startsWith("imq") && !"".equals(propValue)) {
@@ -1888,7 +1729,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                             if (propName.trim().equalsIgnoreCase("imqAddressList")) {
                                 meth.invoke(mcf, new Object[] {prop.getName(), brokerurl});
                             } else {
-                                meth.invoke(mcf, new Object[] {prop.getName(), prop.getValueObject()});
+                                meth.invoke(mcf, new Object[] {prop.getName(), prop.getValueObject(String.class)});
                             }
                         } catch (NoSuchMethodException ex) {
                             if (_logger.isLoggable(Level.WARNING)) {
@@ -1902,7 +1743,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     }
                 }
                 ConnectorConfigProperty addressProp3 = new ConnectorConfigProperty(ADDRESSLIST, brokerurl,
-                    "Address List", "java.lang.String");
+                    "Address List", String.class.getName());
                 // todo: need to remove log statement
                 if (_logger.isLoggable(Level.INFO)) {
                     _logger.log(Level.INFO, JMSLoggerInfo.ADDRESSLIST, new Object[] {brokerurl});
@@ -1954,9 +1795,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         ManagedConnectionFactory mcf = super.createManagedConnectionFactory(cpr, loader);
         if (mcf != null) {
             Set<ConnectorConfigProperty> s = cpr.getConnectorDescriptorInfo().getMCFConfigProperties();
-            Iterator<ConnectorConfigProperty> it = s.iterator();
-            while (it.hasNext()) {
-                ConnectorConfigProperty prop = it.next();
+            for (ConnectorConfigProperty prop : s) {
                 String propName = prop.getName();
 
                 // If the property has started with imq, then it should go to
@@ -1965,7 +1804,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     try {
                         Method meth = mcf.getClass().getMethod(SETTER,
                             new Class[] {java.lang.String.class, java.lang.String.class});
-                        meth.invoke(mcf, new Object[] {prop.getName(), prop.getValueObject()});
+                        meth.invoke(mcf, new Object[] {prop.getName(), prop.getValueObject(String.class)});
                     } catch (NoSuchMethodException ex) {
                         if (_logger.isLoggable(Level.WARNING)) {
                             _logger.log(Level.WARNING, JMSLoggerInfo.NO_SUCH_METHOD,
@@ -2012,6 +1851,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         return mcf;
     }
 
+
     /**
      * This is the most appropriate time (??) to update the runtime
      * info of a 1.3 MDB into 1.4 MDB.  <p>
@@ -2028,36 +1868,27 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
      *    JNDI name.
      */
     @Override
-    public void updateMDBRuntimeInfo(EjbMessageBeanDescriptor descriptor_, BeanPoolDescriptor poolDescriptor)
+    public void updateMDBRuntimeInfo(EjbMessageBeanDescriptor ejbDescriptor, BeanPoolDescriptor poolDescriptor)
         throws ConnectorRuntimeException {
-        String jndiName = descriptor_.getJndiName();
-        if (jndiName == null || "".equals(jndiName)) {
-            MessageDestinationDescriptor destDescriptor = descriptor_.getMessageDestination();
-            if (destDescriptor != null) {
-                jndiName = destDescriptor.getJndiName();
-            }
-        }
+        final SimpleJndiName jndiName = getJndiName(ejbDescriptor);
+        String destinationLookup = ejbDescriptor.getActivationConfigValue("destinationLookup");
+        String destinationProp = ejbDescriptor.getActivationConfigValue("destination");
 
-        String destinationLookup = descriptor_.getActivationConfigValue("destinationLookup");
-        String destinationProp = descriptor_.getActivationConfigValue("destination");
-
-        if (destinationLookup == null &&  destinationProp == null && (jndiName == null || "".equals(jndiName))) {
-            if (_logger.isLoggable(Level.SEVERE)) {
-                _logger.log(Level.SEVERE, JMSLoggerInfo.ERROR_IN_DD);
-            }
+        if (destinationLookup == null &&  destinationProp == null && (jndiName == null || jndiName.isEmpty())) {
+            _logger.log(Level.SEVERE, JMSLoggerInfo.ERROR_IN_DD);
             String msg = sm.getString("ajra.error_in_dd");
             throw new ConnectorRuntimeException(msg);
         }
 
         String resourceAdapterMid = ConnectorConstants.DEFAULT_JMS_ADAPTER;
 
-        descriptor_.setResourceAdapterMid(resourceAdapterMid);
+        ejbDescriptor.setResourceAdapterMid(resourceAdapterMid);
 
         if (destinationLookup == null && destinationProp == null) {
-            String appName = descriptor_.getApplication().getAppName();
-            String moduleName = ConnectorsUtil.getModuleName(descriptor_);
+            String appName = ejbDescriptor.getApplication().getAppName();
+            String moduleName = ConnectorsUtil.getModuleName(ejbDescriptor);
 
-            JMSDestinationDefinitionDescriptor destination = getJMSDestinationFromDescriptor(jndiName, descriptor_);
+            JMSDestinationDefinitionDescriptor destination = getJMSDestinationFromDescriptor(jndiName, ejbDescriptor);
             String destName = null;
             if (isValidDestination(destination)) {
                 destName = destination.getDestinationName();
@@ -2066,24 +1897,24 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             }
 
             //1.3 jndi-name ==> 1.4 setDestination
-            descriptor_.putRuntimeActivationConfigProperty(new EnvironmentProperty(DESTINATION, destName, null));
+            ejbDescriptor.putRuntimeActivationConfigProperty(new EnvironmentProperty(DESTINATION, destName, null));
 
             //1.3 (standard) destination-type == 1.4 setDestinationType
             //XXX Do we really need this???
-            if (descriptor_.getDestinationType() != null && !"".equals(descriptor_.getDestinationType())) {
-                descriptor_.putRuntimeActivationConfigProperty(
-                    new EnvironmentProperty(DESTINATION_TYPE, descriptor_.getDestinationType(), null));
+            if (ejbDescriptor.getDestinationType() != null && !"".equals(ejbDescriptor.getDestinationType())) {
+                ejbDescriptor.putRuntimeActivationConfigProperty(
+                    new EnvironmentProperty(DESTINATION_TYPE, ejbDescriptor.getDestinationType(), null));
                 if (_logger.isLoggable(Level.INFO)) {
                     _logger.log(Level.INFO, JMSLoggerInfo.ENDPOINT_DEST_NAME,
-                            new Object[]{descriptor_.getDestinationType(), jndiName, descriptor_.getName()});
+                            new Object[]{ejbDescriptor.getDestinationType(), jndiName, ejbDescriptor.getName()});
                 }
             } else if (isValidDestination(destination)
                 && ConnectorConstants.DEFAULT_JMS_ADAPTER.equals(destination.getResourceAdapter())) {
-                descriptor_.putRuntimeActivationConfigProperty(
+                ejbDescriptor.putRuntimeActivationConfigProperty(
                     new EnvironmentProperty(DESTINATION_TYPE, destination.getInterfaceName(), null));
                 if (_logger.isLoggable(Level.INFO)) {
                     _logger.log(Level.INFO, JMSLoggerInfo.ENDPOINT_DEST_NAME,
-                            new Object[]{destination.getInterfaceName(), destination.getName(), descriptor_.getName()});
+                            new Object[]{destination.getInterfaceName(), destination.getName(), ejbDescriptor.getName()});
                 }
             } else {
                 /*
@@ -2097,14 +1928,14 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                  * the properties as defined by the MDB.
                  */
                 try {
-                    AdminObjectResource aor = (AdminObjectResource) ResourcesUtil.createInstance().getResource(jndiName,
-                        appName, moduleName, AdminObjectResource.class);
+                    AdminObjectResource aor = ResourcesUtil.createInstance().getResource(jndiName, appName, moduleName,
+                        AdminObjectResource.class);
                     if (aor != null && ConnectorConstants.DEFAULT_JMS_ADAPTER.equals(aor.getResAdapter())) {
-                        descriptor_.putRuntimeActivationConfigProperty(
+                        ejbDescriptor.putRuntimeActivationConfigProperty(
                             new EnvironmentProperty(DESTINATION_TYPE, aor.getResType(), null));
                         if (_logger.isLoggable(Level.INFO)) {
                             _logger.log(Level.INFO, JMSLoggerInfo.ENDPOINT_DEST_NAME,
-                                new Object[] {aor.getResType(), aor.getJndiName(), descriptor_.getName()});
+                                new Object[] {aor.getResType(), aor.getJndiName(), ejbDescriptor.getName()});
                         }
                     }
                 } catch (Exception e) {
@@ -2114,31 +1945,32 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
 
         //1.3 durable-subscription-name == 1.4 setSubscriptionName
-        descriptor_.putRuntimeActivationConfigProperty(
-            new EnvironmentProperty(SUBSCRIPTION_NAME, descriptor_.getDurableSubscriptionName(), null));
+        ejbDescriptor.putRuntimeActivationConfigProperty(
+            new EnvironmentProperty(SUBSCRIPTION_NAME, ejbDescriptor.getDurableSubscriptionName(), null));
 
-        String mdbCF = null;
+        String mdbCF;
         try {
-            mdbCF = descriptor_.getMdbConnectionFactoryJndiName();
+            mdbCF = ejbDescriptor.getMdbConnectionFactoryJndiName();
         } catch (NullPointerException ne) {
             // Dont process connection factory.
+            mdbCF = null;
         }
 
-        if (mdbCF != null && !"".equals(mdbCF)) {
-            setValuesFromConfiguration(mdbCF, descriptor_);
+        if (mdbCF != null && !mdbCF.isEmpty()) {
+            setValuesFromConfiguration(mdbCF, ejbDescriptor);
         }
 
         // a null object is passes as a PoolDescriptor during recovery.
         // See com/sun/enterprise/resource/ResourceInstaller
 
         if (poolDescriptor != null) {
-            descriptor_.putRuntimeActivationConfigProperty(
+            ejbDescriptor.putRuntimeActivationConfigProperty(
                 new EnvironmentProperty(MAXPOOLSIZE, "" + poolDescriptor.getMaxPoolSize(), "", "java.lang.Integer"));
-            descriptor_.putRuntimeActivationConfigProperty(
+            ejbDescriptor.putRuntimeActivationConfigProperty(
                 new EnvironmentProperty(MINPOOLSIZE, "" + poolDescriptor.getSteadyPoolSize(), "", "java.lang.Integer"));
-            descriptor_.putRuntimeActivationConfigProperty(new EnvironmentProperty(RESIZECOUNT,
+            ejbDescriptor.putRuntimeActivationConfigProperty(new EnvironmentProperty(RESIZECOUNT,
                 "" + poolDescriptor.getPoolResizeQuantity(), "", "java.lang.Integer"));
-            descriptor_.putRuntimeActivationConfigProperty(new EnvironmentProperty(RESIZETIMEOUT,
+            ejbDescriptor.putRuntimeActivationConfigProperty(new EnvironmentProperty(RESIZETIMEOUT,
                 "" + poolDescriptor.getPoolIdleTimeoutInSeconds(), "", "java.lang.Integer"));
 
             // The runtime activation config property holds all the
@@ -2151,9 +1983,9 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             // We have to check for both cases here because it has been
             // documented as "endpointExceptionRedeliveryAttempts" but
             // used in the code as "EndpointExceptionRedeliveryAttempts"
-            if ((descriptor_.getActivationConfigValue(REDELIVERYCOUNT) == null)
-                && (descriptor_.getActivationConfigValue(LOWERCASE_REDELIVERYCOUNT) == null)) {
-                descriptor_.putRuntimeActivationConfigProperty(
+            if ((ejbDescriptor.getActivationConfigValue(REDELIVERYCOUNT) == null)
+                && (ejbDescriptor.getActivationConfigValue(LOWERCASE_REDELIVERYCOUNT) == null)) {
+                ejbDescriptor.putRuntimeActivationConfigProperty(
                     new EnvironmentProperty(
                         REDELIVERYCOUNT, "" + MdbContainerProps.getMaxRuntimeExceptions(), "", "java.lang.Integer"));
             }
@@ -2166,7 +1998,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                 logFine("Are we in a Clustered contained ? " + clustered);
             }
             if (clustered) {
-                setClusterActivationSpecProperties(descriptor_);
+                setClusterActivationSpecProperties(ejbDescriptor);
             }
         } catch (Exception e) {
             ConnectorRuntimeException crex = new ConnectorRuntimeException(e.getMessage());
@@ -2183,7 +2015,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         // Set MDB Identifier in a clustered instance.
         descriptor_.putRuntimeActivationConfigProperty(
             new EnvironmentProperty(
-                MDBIDENTIFIER, "" + getMDBIdentifier(descriptor_), "MDB Identifier", "java.lang.String"));
+                MDBIDENTIFIER, "" + getMDBIdentifier(descriptor_), "MDB Identifier", String.class.getName()));
         if (_logger.isLoggable(Level.FINE)) {
             logFine("CLUSTERED instance - setting MDB identifier as" + getMDBIdentifier(descriptor_));
         }
@@ -2201,24 +2033,18 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     }
 
 
-    private String getPhysicalDestinationFromConfiguration(String logicalDest, String appName, String moduleName)
+    private String getPhysicalDestinationFromConfiguration(SimpleJndiName logicalDest, String appName, String moduleName)
         throws ConnectorRuntimeException {
         Property ep = null;
         try {
-            // ServerContext sc = ApplicationServer.getServerContext();
-            // ConfigContext ctx = sc.getConfigContext();
-            // Resources rbeans = ServerBeansFactory.getDomainBean(ctx).getResources();
-            AdminObjectResource res = null;
-            res = (AdminObjectResource) ResourcesUtil.createInstance().getResource(logicalDest, appName, moduleName,
+            AdminObjectResource res = ResourcesUtil.createInstance().getResource(logicalDest, appName, moduleName,
                 AdminObjectResource.class);
-            // AdminObjectResource res = (AdminObjectResource)
-            // allResources.getAdminObjectResourceByJndiName(logicalDest);
             if (res == null) {
                 String msg = sm.getString("ajra.err_getting_dest", logicalDest);
                 throw new ConnectorRuntimeException(msg);
             }
 
-            ep = res.getProperty(PHYSICAL_DESTINATION); // getElementPropertyByName(PHYSICAL_DESTINATION);
+            ep = res.getProperty(PHYSICAL_DESTINATION);
         } catch (Exception ce) {
             String msg = sm.getString("ajra.err_getting_dest", logicalDest);
             ConnectorRuntimeException cre = new ConnectorRuntimeException(msg);
@@ -2235,24 +2061,24 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     }
 
 
-    private JMSDestinationDefinitionDescriptor getJMSDestinationFromDescriptor(String jndiName, EjbMessageBeanDescriptor ejbMessageBeanDescriptor) {
+    private JMSDestinationDefinitionDescriptor getJMSDestinationFromDescriptor(SimpleJndiName jndiName,
+        EjbMessageBeanDescriptor ejbMessageBeanDescriptor) {
         JMSDestinationDefinitionDescriptor destination = null;
-        if (jndiName.startsWith(ResourceConstants.JAVA_COMP_SCOPE_PREFIX)
-               || !jndiName.startsWith(ResourceConstants.JAVA_SCOPE_PREFIX)) {
+        if (jndiName.isJavaComponent() || !jndiName.hasJavaPrefix()) {
             if (isEjbInWar(ejbMessageBeanDescriptor)) {
                 destination = getJMSDestination(jndiName, ejbMessageBeanDescriptor.getEjbBundleDescriptor().getModuleDescriptor());
             } else {
                 destination = getJMSDestination(jndiName, ejbMessageBeanDescriptor);
             }
-        } else if (jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)) {
+        } else if (jndiName.isJavaModule()) {
             if (isEjbInWar(ejbMessageBeanDescriptor)) {
                 destination = getJMSDestination(jndiName, ejbMessageBeanDescriptor.getEjbBundleDescriptor().getModuleDescriptor());
             } else {
                 destination = getJMSDestination(jndiName, ejbMessageBeanDescriptor.getEjbBundleDescriptor());
             }
-        } else if (jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX)) {
+        } else if (jndiName.isJavaApp()) {
             destination = getJMSDestination(jndiName, ejbMessageBeanDescriptor.getApplication());
-        } else if (jndiName.startsWith(ResourceConstants.JAVA_GLOBAL_SCOPE_PREFIX)) {
+        } else if (jndiName.isJavaGlobal()) {
             destination = getJMSDestination(jndiName, ejbMessageBeanDescriptor.getApplication());
             if (!isValidDestination(destination)) {
                 destination = getJMSDestination(jndiName);
@@ -2283,14 +2109,14 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     /**
      * Get JMS destination resource from component
      */
-    private JMSDestinationDefinitionDescriptor getJMSDestination(String logicalDestination, EjbMessageBeanDescriptor ejbMessageBeanDescriptor) {
+    private JMSDestinationDefinitionDescriptor getJMSDestination(SimpleJndiName logicalDestination, EjbMessageBeanDescriptor ejbMessageBeanDescriptor) {
         return getJMSDestination(logicalDestination, ejbMessageBeanDescriptor.getResourceDescriptors(JavaEEResourceType.JMSDD));
     }
 
     /**
      * Get JMS destination resource from ejb module
      */
-    private JMSDestinationDefinitionDescriptor getJMSDestination(String logicalDestination, EjbBundleDescriptor ejbBundleDescriptor) {
+    private JMSDestinationDefinitionDescriptor getJMSDestination(SimpleJndiName logicalDestination, EjbBundleDescriptor ejbBundleDescriptor) {
         JMSDestinationDefinitionDescriptor destination =
                 getJMSDestination(logicalDestination, ejbBundleDescriptor.getResourceDescriptors(JavaEEResourceType.JMSDD));
         if (isValidDestination(destination)) {
@@ -2311,7 +2137,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     /**
      * Get JMS destination resource from web module
      */
-    private JMSDestinationDefinitionDescriptor getJMSDestination(String logicalDestination, ModuleDescriptor moduleDescriptor) {
+    private JMSDestinationDefinitionDescriptor getJMSDestination(SimpleJndiName logicalDestination, ModuleDescriptor moduleDescriptor) {
         WebBundleDescriptor webBundleDescriptor = (WebBundleDescriptor) moduleDescriptor.getDescriptor();
         JMSDestinationDefinitionDescriptor destination =
                 getJMSDestination(logicalDestination, webBundleDescriptor.getResourceDescriptors(JavaEEResourceType.JMSDD));
@@ -2333,7 +2159,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     /**
      * Get JMS destination resource from application
      */
-    private JMSDestinationDefinitionDescriptor getJMSDestination(String logicalDestination, Application application) {
+    private JMSDestinationDefinitionDescriptor getJMSDestination(SimpleJndiName logicalDestination, Application application) {
         if (application == null) {
             return null;
         }
@@ -2374,7 +2200,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     /**
      * Get JMS destination resource from deployed applications
      */
-    private JMSDestinationDefinitionDescriptor getJMSDestination(String logicalDestination) {
+    private JMSDestinationDefinitionDescriptor getJMSDestination(SimpleJndiName logicalDestination) {
         Domain domain = Globals.get(Domain.class);
         Applications applications = domain.getApplications();
         for (com.sun.enterprise.config.serverbeans.Application app : applications.getApplications()) {
@@ -2393,10 +2219,10 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     /**
      * Get JMS destination resource from descriptor set
      */
-    private JMSDestinationDefinitionDescriptor getJMSDestination(String jndiName, Set<? extends Descriptor> descriptors) {
+    private JMSDestinationDefinitionDescriptor getJMSDestination(SimpleJndiName jndiName, Set<? extends Descriptor> descriptors) {
         for (Descriptor descriptor : descriptors) {
             if (descriptor instanceof JMSDestinationDefinitionDescriptor) {
-                if (jndiName.equals(((JMSDestinationDefinitionDescriptor) descriptor).getName())) {
+                if (jndiName.toString().equals(((JMSDestinationDefinitionDescriptor) descriptor).getName())) {
                     return (JMSDestinationDefinitionDescriptor) descriptor;
                 }
             }
@@ -2409,22 +2235,19 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         //todo: need to enable
         List <Property> ep = null;
         try {
-            /*Resources rbeans = getAllResources();//ServerBeansFactory.getDomainBean(ctx).getResources();
-            ConnectorResource res = (ConnectorResource)
-                             rbeans.getResourceByName(ConnectorResource.class, cfName);*/
             String appName = descriptor_.getApplication().getAppName();
             String moduleName = ConnectorsUtil.getModuleName(descriptor_);
-            ConnectorResource res = (ConnectorResource)
-                    ResourcesUtil.createInstance().getResource(cfName, appName, moduleName, ConnectorResource.class);
+            ResourcesUtil resourcesUtil = ResourcesUtil.createInstance();
+            ConnectorResource res = resourcesUtil.getResource(new SimpleJndiName(cfName), appName, moduleName,
+                ConnectorResource.class);
 
             if (res == null) {
                 String msg = sm.getString("ajra.mdb_cf_not_created", cfName);
                 throw new ConnectorRuntimeException(msg);
             }
 
-            ConnectorConnectionPool ccp = (ConnectorConnectionPool)
-                ResourcesUtil.createInstance().getResource(res.getPoolName(), appName, moduleName, ConnectorConnectionPool.class);
-            //rbeans.getResourceByName(ConnectorConnectionPool.class, res.getPoolName());
+            ConnectorConnectionPool ccp = resourcesUtil.getResource(new SimpleJndiName(res.getPoolName()), appName,
+                moduleName, ConnectorConnectionPool.class);
 
             ep = ccp.getProperty();
         } catch(Exception ce) {
@@ -2445,7 +2268,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                 name = ADDRESSLIST;
             }
             String val = prop.getValue();
-            if (val == null || val.equals("")) {
+            if (val == null || val.isEmpty()) {
                 continue;
             }
             descriptor_.putRuntimeActivationConfigProperty(new EnvironmentProperty(name, val, null));
@@ -2549,5 +2372,18 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     new Object[] {brokerList, ex.getMessage()});
             }
         }
+    }
+
+
+    private SimpleJndiName getJndiName(EjbMessageBeanDescriptor ejbDescriptor) {
+        final SimpleJndiName jndiName = ejbDescriptor.getJndiName();
+        if (jndiName != null && !jndiName.isEmpty()) {
+            return jndiName;
+        }
+        MessageDestinationDescriptor destDescriptor = ejbDescriptor.getMessageDestination();
+        if (destDescriptor != null) {
+            return destDescriptor.getJndiName();
+        }
+        return jndiName;
     }
 }

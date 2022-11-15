@@ -37,17 +37,17 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 
 import org.glassfish.apf.AnnotationHandlerFor;
 import org.glassfish.apf.AnnotationInfo;
 import org.glassfish.apf.AnnotationProcessorException;
 import org.glassfish.apf.HandlerProcessingResult;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.deployment.types.EnvironmentPropertyValueTypes.MAPPING;
 import static com.sun.enterprise.util.StringUtils.ok;
 
 /**
@@ -63,53 +63,6 @@ public class ResourceHandler extends AbstractResourceHandler {
     @Inject
     private Provider<WSDolSupport> wSDolSupportProvider;
 
-    // Map of all @Resource types that map to env-entries and their
-    // corresponding types.
-    // XXX - this needs to be synchronized with the list in
-    // com.sun.enterprise.deployment.EnvironmentProperty
-    private static final Map<Class<?>, Class<?>> envEntryTypes;
-
-    static {
-        envEntryTypes = new HashMap<>();
-
-        envEntryTypes.put(String.class, String.class);
-
-        envEntryTypes.put(Class.class, Class.class);
-
-        envEntryTypes.put(Character.class, Character.class);
-        envEntryTypes.put(Character.TYPE, Character.class);
-        envEntryTypes.put(char.class, Character.class);
-
-        envEntryTypes.put(Byte.class, Byte.class);
-        envEntryTypes.put(Byte.TYPE, Byte.class);
-        envEntryTypes.put(byte.class, Byte.class);
-
-        envEntryTypes.put(Short.class, Short.class);
-        envEntryTypes.put(Short.TYPE, Short.class);
-        envEntryTypes.put(short.class, Short.class);
-
-        envEntryTypes.put(Integer.class, Integer.class);
-        envEntryTypes.put(Integer.TYPE, Integer.class);
-        envEntryTypes.put(int.class, Integer.class);
-
-        envEntryTypes.put(Long.class, Long.class);
-        envEntryTypes.put(Long.TYPE, Long.class);
-        envEntryTypes.put(long.class, Long.class);
-
-        envEntryTypes.put(Boolean.class, Boolean.class);
-        envEntryTypes.put(Boolean.TYPE, Boolean.class);
-        envEntryTypes.put(boolean.class, Boolean.class);
-
-        envEntryTypes.put(Double.class, Double.class);
-        envEntryTypes.put(Double.TYPE, Double.class);
-        envEntryTypes.put(double.class, Double.class);
-
-        envEntryTypes.put(Float.class, Float.class);
-        envEntryTypes.put(Float.TYPE, Float.class);
-        envEntryTypes.put(float.class, Float.class);
-
-        envEntryTypes.put(Number.class, Number.class);
-    }
 
     public ResourceHandler() {
     }
@@ -193,9 +146,7 @@ public class ResourceHandler extends AbstractResourceHandler {
          * unchanged. Really onlt need to do this for simple env-entries,
          * but it shouldn't hurt to do it for everything.
          */
-        if (envEntryTypes.containsKey(resourceType)) {
-            resourceType = envEntryTypes.get(resourceType);
-        }
+        resourceType = MAPPING.getOrDefault(resourceType, resourceType);
 
         EnvironmentProperty[] descriptors = getDescriptors(resourceType, logicalName, rcContexts, resourceAn);
         for (EnvironmentProperty desc : descriptors) {
@@ -218,11 +169,11 @@ public class ResourceHandler extends AbstractResourceHandler {
             }
 
             // merge lookup-name and mapped-name
-            if (!desc.hasLookupName() && !desc.isSetValueCalled() && ok(getResourceLookupValue(resourceAn, ainfo))) {
-                desc.setLookupName(getResourceLookupValue(resourceAn, ainfo));
+            if (!desc.hasLookupName() && !desc.isSetValueCalled() && ok(resourceAn.lookup())) {
+                desc.setLookupName(SimpleJndiName.of(resourceAn.lookup()));
             }
-            if (!ok(desc.getMappedName()) && ok(resourceAn.mappedName())) {
-                desc.setMappedName(resourceAn.mappedName());
+            if ((desc.getMappedName() == null || desc.getMappedName().isEmpty()) && ok(resourceAn.mappedName())) {
+                desc.setMappedName(SimpleJndiName.of(resourceAn.mappedName()));
             }
 
             // merge authentication-type and shareable
@@ -273,7 +224,7 @@ public class ResourceHandler extends AbstractResourceHandler {
         }
         if (resourceType.getName().equals("jakarta.jms.Queue") || resourceType.getName().equals("jakarta.jms.Topic")) {
             return getMessageDestinationReferenceDescriptors(logicalName, rcContexts);
-        } else if (envEntryTypes.containsKey(resourceType) || resourceType.isEnum()) {
+        } else if (MAPPING.containsKey(resourceType) || resourceType.isEnum()) {
             return getEnvironmentPropertyDescriptors(logicalName, rcContexts, resourceAn);
         } else if (resourceType == javax.sql.DataSource.class
             || resourceType.getName().equals("jakarta.jms.ConnectionFactory")
@@ -398,31 +349,5 @@ public class ResourceHandler extends AbstractResourceHandler {
         }
 
         return envEntries.toArray(new EnvironmentProperty[envEntries.size()]);
-    }
-
-
-    /**
-     * Return the value of the "lookup" element of the @Resource annotation.
-     * This method handles the case where the Resource class is an older
-     * version before the lookup element was added; in that case access to
-     * the lookup element will cause a NoSuchMethodError, which is caught
-     * and ignored (with a warning message).
-     *
-     * @return the value of the lookup element
-     */
-    private String getResourceLookupValue(Resource annotation, AnnotationInfo ainfo) {
-        try {
-            return annotation.lookup();
-        } catch (NoSuchMethodError nsme) {
-            // Probably means an older version of Resource is being picked up from somewhere.
-            // Don't treat this as a fatal error.
-            try {
-                log(Level.WARNING, ainfo,
-                    I18N.getLocalString("enterprise.deployment.annotation.handlers.wrongresourceclass",
-                        "Incorrect @Resource annotation class definition - " + "missing lookup attribute"));
-            } catch (AnnotationProcessorException ex) {
-            }
-        }
-        return "";
     }
 }

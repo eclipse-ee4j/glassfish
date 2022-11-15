@@ -18,6 +18,7 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.runtime.application.wls.ApplicationParam;
+import com.sun.enterprise.deployment.types.EnvironmentPropertyValueTypes;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.ContextParameter;
 import com.sun.enterprise.deployment.web.InitializationParameter;
@@ -27,6 +28,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.internal.api.RelativePathResolver;
 
@@ -39,6 +41,8 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     ApplicationParam, WebDescriptor, InjectionCapable {
 
     private static final long serialVersionUID = 1L;
+    static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EnvironmentProperty.class);
+
     private String value;
     private String type;
     private Object valueObject;
@@ -47,31 +51,8 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     // list of injection targes
     private Set<InjectionTarget> injectionTargets;
 
-    private static Class<?>[] allowedTypes = {
-        int.class,
-        boolean.class,
-        double.class,
-        float.class,
-        long.class,
-        short.class,
-        byte.class,
-        char.class,
-        java.lang.String.class,
-        java.lang.Boolean.class,
-        java.lang.Integer.class,
-        java.lang.Double.class,
-        java.lang.Byte.class,
-        java.lang.Short.class,
-        java.lang.Long.class,
-        java.lang.Float.class,
-        java.lang.Character.class,
-        java.lang.Class.class,
-    };
-
-    static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EnvironmentProperty.class);
-
-    protected String mappedName;
-    protected String lookupName;
+    protected SimpleJndiName mappedName;
+    protected SimpleJndiName lookupName;
 
     /**
      * Construct an environment property if type String and empty string value and no description.
@@ -98,7 +79,14 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
         super(name, description);
         this.value = value;
         checkType(type);
-        this.type = type;
+        this.type = convertPrimitiveTypes(type);
+    }
+
+
+    // in this class it is not deprecated.
+    @Override
+    public String getName() {
+        return super.getName();
     }
 
 
@@ -115,7 +103,9 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     /**
-     * Returns a resolved value of this environment property
+     * Resolves value written as ${} string using system properties.
+     *
+     * @return a resolved value of this environment property.
      */
     public String getResolvedValue() {
         return RelativePathResolver.resolvePath(getValue());
@@ -123,16 +113,18 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
 
     /**
-     * Returns the typed value object of this environment property. Throws an
-     * IllegalArgumentException if bounds checking is
-     * true and the value cannot be
-     * reconciled with the given type.
+     * Resolves value written as ${} string using system properties, then parses it using
+     * {@link #getValueType()}.
+     *
+     * @return the typed value object of this environment property.
+     * @throws IllegalArgumentException if bounds checking is true and the value cannot be
+     *             reconciled with the given type.
      */
-    public Object getResolvedValueObject() {
+    public final <T> T getResolvedValueObject(final Class<T> expectedType) {
         if (this.valueObject == null) {
             this.valueObject = "";
         }
-        return getObjectFromString(this.getResolvedValue(), this.getValueType());
+        return getObjectFromString(this.getResolvedValue(), expectedType);
     }
 
 
@@ -141,63 +133,62 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      * if the type is not allowed.
      */
     private void checkType(String type) {
-        if (type != null) {
-            Class<?> typeClass = null;
-            // is it loadable ?
-            try {
-                typeClass = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
-            } catch (Throwable t) {
-                if (Descriptor.isBoundsChecking()) {
-                    throw new IllegalArgumentException(
-                        localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedpropertytype",
-                            "{0} is not an allowed property value type", new Object[] {type}));
-                }
-                return;
-            }
-            boolean allowedType = false;
-            for (Class<?> allowedType2 : allowedTypes) {
-                if (allowedType2.equals(typeClass)) {
-                    allowedType = true;
-                    break;
-                }
-            }
-            if (typeClass != null && typeClass.isEnum()) {
-                allowedType = true;
-            }
-
-            if (Descriptor.isBoundsChecking() && !allowedType) {
+        if (type == null) {
+            return;
+        }
+        Class<?> typeClass = null;
+        // is it loadable ?
+        try {
+            typeClass = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
+        } catch (Throwable t) {
+            if (Descriptor.isBoundsChecking()) {
                 throw new IllegalArgumentException(
-                    localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedprprtytype",
+                    localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedpropertytype",
                         "{0} is not an allowed property value type", new Object[] {type}));
             }
+            return;
+        }
+        boolean allowedType = false;
+        for (Class<?> clazz : EnvironmentPropertyValueTypes.ALLOWED_TYPES) {
+            if (clazz.equals(typeClass)) {
+                allowedType = true;
+                break;
+            }
+        }
+        if (typeClass != null && typeClass.isEnum()) {
+            allowedType = true;
+        }
+
+        if (Descriptor.isBoundsChecking() && !allowedType) {
+            throw new IllegalArgumentException(
+                localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedprprtytype",
+                    "{0} is not an allowed property value type", new Object[] {type}));
         }
     }
 
 
     /**
+     * @param expectedType if null, uses {@link #getValueType()}
      * @return the typed value object of this environment property.
      * Throws an IllegalArgumentException if bounds checking is true and the value cannot be
      * reconciled with the given type.
      */
-    public Object getValueObject() {
-        if (this.valueObject == null) {
-            this.valueObject = "";
-        }
-        return getObjectFromString(this.getValue(), this.getValueType());
+    public <T> T getValueObject(Class<T> expectedType) {
+        return getObjectFromString(this.getValue(), expectedType);
     }
 
 
     /**
      * @return value type of this environment property.
      */
-    public Class<?> getValueType() {
+    private Class<?> getValueType() {
         if (this.type == null) {
             return String.class;
         }
         try {
             return Class.forName(this.type, true, Thread.currentThread().getContextClassLoader());
         } catch (Throwable t) {
-            return null;
+            throw new IllegalStateException("The type is not reachable for the current classloader: " + type, t);
         }
     }
 
@@ -209,14 +200,13 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      */
     public void setType(String type) {
         checkType(type);
-        this.type = type;
+        this.type = convertPrimitiveTypes(type);
     }
 
     private String convertPrimitiveTypes(String type) {
         if (type == null) {
             return type;
         }
-
         if (type.equals("int")) {
             return "java.lang.Integer";
         } else if (type.equals("boolean")) {
@@ -242,31 +232,31 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      * @return value type of this environment property as a classname.
      */
     public String getType() {
-        if (type == null && Descriptor.isBoundsChecking()) {
+        if (type == null) {
             return String.class.getName();
         }
-        type = convertPrimitiveTypes(type);
         return type;
     }
 
 
-    public void setMappedName(String mName) {
+    public void setMappedName(SimpleJndiName mName) {
         mappedName = mName;
     }
 
 
-    public String getMappedName() {
-        return (mappedName != null) ? mappedName : "";
+    public SimpleJndiName getMappedName() {
+        return mappedName == null ? new SimpleJndiName("") : mappedName;
     }
 
 
-    public void setLookupName(String lName) {
+    public void setLookupName(SimpleJndiName lName) {
         lookupName = lName;
     }
 
 
-    public String getLookupName() {
-        return lookupName == null ? "" : lookupName;
+    public SimpleJndiName getLookupName() {
+        // FIXME: kill empty strings
+        return lookupName == null ? new SimpleJndiName("") : lookupName;
     }
 
 
@@ -281,18 +271,25 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     @Override
     public void setValue(String value) {
         this.value = value;
-        this.setValueCalled = true;
-
+        // String may be empty, but at the moment of this call the type is probably not set yet.
+        // That's why we monitor the setter call. Null means "not set", that's alright.
+        this.setValueCalled = value != null;
     }
 
 
+    /**
+     * @return true if the {@link #setValue(String)} was called with non-null value.
+     */
     public boolean isSetValueCalled() {
         return setValueCalled;
     }
 
 
-    public boolean hasAValue() {
-        return (setValueCalled || hasLookupName() || !getMappedName().isEmpty());
+    /**
+     * @return true if value, lookupName or mappedName was set.
+     */
+    public boolean hasContent() {
+        return setValueCalled || !getLookupName().isEmpty() || !getMappedName().isEmpty();
     }
 
 
@@ -322,49 +319,53 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
      */
     @Override
     public void print(StringBuffer toStringBuffer) {
-        toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
+        toStringBuffer.append(getClass().getSimpleName()).append("[name=").append(getName());
+        toStringBuffer.append(", type=").append(getType()).append(", value=").append(getValue());
+        toStringBuffer.append(", lookupName=").append(getLookupName());
+        toStringBuffer.append(", mappedName=").append(getMappedName());
         printInjectableResourceInfo(toStringBuffer);
-        toStringBuffer.append("@").append(this.getType()).append("@").append(this.getValue()).append("@").append("@");
-        toStringBuffer.append(super.getDescription());
+        toStringBuffer.append(", description=").append(getDescription()).append(']');
     }
 
-
-    private Object getObjectFromString(String string, Class type) {
-        if (type == null && !Descriptor.isBoundsChecking()) {
-            Object obj = getValueObjectUsingAllowedTypes(string);
-            if (obj != null) {
-                return obj;
-            }
+    private <T> T getObjectFromString(String string, Class<T> type) {
+        if (type == null) {
+            type = (Class<T>) getValueType();
         }
-        if (string == null || (string.isEmpty() && !type.equals(String.class))) {
+        T obj = getParsedPrimitiveValue(string, type);
+        if (obj != null) {
+            return obj;
+        }
+        if (string == null || (string.isEmpty() && !String.class.equals(type))) {
             return null;
         }
         try {
             if (String.class.equals(type)) {
-                return string;
+                return (T) string;
             } else if (Boolean.class.equals(type)) {
-                return Boolean.valueOf(string);
+                return (T) Boolean.valueOf(string);
             } else if (Integer.class.equals(type)) {
-                return Integer.valueOf(string);
+                return (T) Integer.valueOf(string);
             } else if (Double.class.equals(type)) {
-                return Double.valueOf(string);
+                return (T) Double.valueOf(string);
             } else if (Float.class.equals(type)) {
-                return Float.valueOf(string);
+                return (T) Float.valueOf(string);
             } else if (Short.class.equals(type)) {
-                return Short.valueOf(string);
+                return (T) Short.valueOf(string);
             } else if (Byte.class.equals(type)) {
-                return Byte.valueOf(string);
+                return (T) Byte.valueOf(string);
             } else if (Long.class.equals(type)) {
-                return Long.valueOf(string);
+                return (T) Long.valueOf(string);
             } else if (Character.class.equals(type)) {
                 if (string.length() == 1) {
-                    return Character.valueOf(string.charAt(0));
+                    return (T) Character.valueOf(string.charAt(0));
                 }
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException("String cannot be converted to Character: " + string);
+            } else if (SimpleJndiName.class.equals(type)) {
+                return (T) SimpleJndiName.of(string);
             } else if (Class.class.equals(type)) {
-                return Class.forName(string, true, Thread.currentThread().getContextClassLoader());
+                return (T) Class.forName(string, true, Thread.currentThread().getContextClassLoader());
             } else if (type != null && type.isEnum()) {
-                return Enum.valueOf(type, string);
+                return (T) Enum.valueOf((Class) type, string);
             }
         } catch (Throwable t) {
             throw new IllegalArgumentException(
@@ -377,47 +378,47 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     }
 
 
-    private Object getValueObjectUsingAllowedTypes(String string) throws IllegalArgumentException {
-        if (this.type.equals(int.class.getName())) {
-            return Integer.valueOf(string);
-        } else if (this.type.equals(long.class.getName())) {
-            return Long.valueOf(string);
-        } else if (this.type.equals(short.class.getName())) {
-            return Short.valueOf(string);
-        } else if (this.type.equals(boolean.class.getName())) {
-            return Boolean.valueOf(string);
-        } else if (this.type.equals(float.class.getName())) {
-            return Float.valueOf(string);
-        } else if (this.type.equals(double.class.getName())) {
-            return Double.valueOf(string);
-        } else if (this.type.equals(byte.class.getName())) {
-            return Byte.valueOf(string);
-        } else if (this.type.equals(char.class.getName())) {
-            if (string.length() != 1) {
-                throw new IllegalArgumentException();
-            } else {
-                return Character.valueOf(string.charAt(0));
+    /**
+     * @return parsed primitive or String
+     */
+    private <T> T getParsedPrimitiveValue(String string, Class<T> type) throws IllegalArgumentException {
+        if (type == null) {
+            throw new NullPointerException("type must not be null! String value was " + string);
+        }
+        if (type.equals(int.class)) {
+            return (T) Integer.valueOf(string);
+        } else if (type.equals(long.class)) {
+            return (T) Long.valueOf(string);
+        } else if (type.equals(short.class)) {
+            return (T) Short.valueOf(string);
+        } else if (type.equals(boolean.class)) {
+            return (T) Boolean.valueOf(string);
+        } else if (type.equals(float.class)) {
+            return (T) Float.valueOf(string);
+        } else if (type.equals(double.class)) {
+            return (T) Double.valueOf(string);
+        } else if (type.equals(byte.class)) {
+            return (T) Byte.valueOf(string);
+        } else if (type.equals(char.class)) {
+            if (string.length() == 1) {
+                return (T) Character.valueOf(string.charAt(0));
             }
+            throw new IllegalArgumentException(type + ": " + string);
         }
         return null;
     }
 
+
     public boolean isConflict(EnvironmentProperty other) {
-        return (getName().equals(other.getName())) &&
-            (!(
-                DOLUtils.equals(getType(), other.getType()) &&
-                getValue().equals(other.getValue())
-                ) ||
-            isConflictResourceGroup(other));
+        return getName().equals(other.getName())
+            && (!(DOLUtils.equals(getType(), other.getType()) && getValue().equals(other.getValue()))
+                || isConflictResourceGroup(other));
     }
 
     protected boolean isConflictResourceGroup(EnvironmentProperty other) {
         return !getLookupName().equals(other.getLookupName()) || !getMappedName().equals(other.getMappedName());
     }
 
-    //
-    // InjectableResource implementation
-    //
     @Override
     public void addInjectionTarget(InjectionTarget target) {
         if (injectionTargets==null) {
@@ -453,8 +454,8 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     }
 
     @Override
-    public String getComponentEnvName() {
-        return getName();
+    public final SimpleJndiName getComponentEnvName() {
+        return new SimpleJndiName(getName());
     }
 
     @Override
@@ -468,21 +469,24 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     }
 
 
-    public StringBuffer printInjectableResourceInfo(StringBuffer toStringBuffer) {
+    private StringBuffer printInjectableResourceInfo(StringBuffer toStringBuffer) {
+        toStringBuffer.append(", injectableTargets={");
         if (isInjectable()) {
+            boolean first = true;
             for (InjectionTarget target : getInjectionTargets()) {
-                if (target.isFieldInjectable()) {
-                    toStringBuffer.append("Field-Injectable Resource. Class name = ").append(target.getClassName())
-                        .append(" Field name=").append(target.getFieldName());
+                if (first) {
+                    first = false;
                 } else {
-                    toStringBuffer.append("Method-Injectable Resource. Class name =").append(target.getClassName())
-                        .append(" Method =").append(target.getMethodName());
+                    toStringBuffer.append(", ");
+                }
+                toStringBuffer.append(target.getClassName()).append('.');
+                if (target.isFieldInjectable()) {
+                    toStringBuffer.append(target.getFieldName());
+                } else {
+                    toStringBuffer.append(target.getMethodName()).append("(...)");
                 }
             }
-        } else {
-            toStringBuffer.append("Non-Injectable Resource");
         }
-
-        return toStringBuffer;
+        return toStringBuffer.append('}');
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,24 @@
 
 package org.glassfish.webservices;
 
-import com.sun.xml.ws.api.server.ResourceInjector;
-import com.sun.xml.ws.api.server.WSWebServiceContext;
-import com.sun.enterprise.deployment.WebServiceEndpoint;
-import com.sun.enterprise.deployment.WebBundleDescriptor;
-import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
-import com.sun.enterprise.deployment.InjectionTarget;
-
 import com.sun.enterprise.container.common.spi.util.InjectionException;
 import com.sun.enterprise.container.common.spi.util.InjectionManager;
-
-import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.sun.enterprise.deployment.InjectionTarget;
+import com.sun.enterprise.deployment.ResourceReferenceDescriptor;
+import com.sun.enterprise.deployment.WebBundleDescriptor;
+import com.sun.enterprise.deployment.WebServiceEndpoint;
+import com.sun.xml.ws.api.server.ResourceInjector;
+import com.sun.xml.ws.api.server.WSWebServiceContext;
 
 import jakarta.xml.ws.WebServiceException;
 
-import org.glassfish.api.invocation.InvocationManager;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
 
 /**
@@ -42,9 +43,9 @@ import org.glassfish.api.invocation.ComponentInvocation;
 
 public class ResourceInjectorImpl extends ResourceInjector {
 
-    private WebServiceEndpoint endpoint;
-    private ComponentInvocation inv;
-    private InvocationManager invMgr;
+    private final WebServiceEndpoint endpoint;
+    private final ComponentInvocation inv;
+    private final InvocationManager invMgr;
     private static final Logger logger = LogUtils.getLogger();
 
     public ResourceInjectorImpl(WebServiceEndpoint ep) {
@@ -56,6 +57,7 @@ public class ResourceInjectorImpl extends ResourceInjector {
 
     }
 
+    @Override
     public void inject(WSWebServiceContext context, Object instance)
                     throws WebServiceException {
 
@@ -71,14 +73,10 @@ public class ResourceInjectorImpl extends ResourceInjector {
             // that has to be used
             WebServiceContextImpl wsc = null;
             WebBundleDescriptor bundle = (WebBundleDescriptor)endpoint.getBundleDescriptor();
-            Iterator<ResourceReferenceDescriptor> it = bundle.getResourceReferenceDescriptors().iterator();
-            while(it.hasNext()) {
-                ResourceReferenceDescriptor r = it.next();
+            for (ResourceReferenceDescriptor r : bundle.getResourceReferenceDescriptors()) {
                 if(r.isWebServiceContext()) {
-                    Iterator<InjectionTarget> iter = r.getInjectionTargets().iterator();
                     boolean matchingClassFound = false;
-                    while(iter.hasNext()) {
-                        InjectionTarget target = iter.next();
+                    for (InjectionTarget target : r.getInjectionTargets()) {
                         if(endpoint.getServletImplClass().equals(target.getClassName())) {
                             matchingClassFound = true;
                             break;
@@ -89,7 +87,7 @@ public class ResourceInjectorImpl extends ResourceInjector {
                     }
                     try {
                         javax.naming.InitialContext ic = new javax.naming.InitialContext();
-                        wsc = (WebServiceContextImpl) ic.lookup("java:comp/env/" + r.getName());
+                        wsc = (WebServiceContextImpl) ic.lookup(JNDI_CTX_JAVA_COMPONENT_ENV + r.getName());
                     } catch (Throwable t) {
                         // Do something here
                         if (logger.isLoggable(Level.FINE)) {

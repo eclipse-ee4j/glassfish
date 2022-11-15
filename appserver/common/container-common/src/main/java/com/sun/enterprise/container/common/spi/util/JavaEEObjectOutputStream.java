@@ -25,18 +25,18 @@ import java.util.Collection;
 /**
  * @author Mahesh Kannan
  */
-public class JavaEEObjectOutputStream
-    extends ObjectOutputStream {
+//FIXME: Seems dead, unused.
+public class JavaEEObjectOutputStream extends ObjectOutputStream {
 
     Collection<JavaEEObjectStreamHandler> handlers;
 
     public JavaEEObjectOutputStream(OutputStream oos, boolean replaceObject,
-                                    Collection<JavaEEObjectStreamHandler> handlers)
-        throws IOException {
+        Collection<JavaEEObjectStreamHandler> handlers) throws IOException {
         super(oos);
         super.enableReplaceObject(replaceObject);
         this.handlers = handlers;
     }
+
 
     @Override
     protected Object replaceObject(Object obj) throws IOException {

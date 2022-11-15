@@ -26,8 +26,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import com.sun.enterprise.container.common.spi.ManagedBeanManager;
 import com.sun.enterprise.deployment.ManagedBeanDescriptor;
 
-/**
- */
 public class ManagedBeanNamingProxy implements NamingObjectProxy {
 
     private final ServiceLocator serviceLocator;
@@ -39,10 +37,10 @@ public class ManagedBeanNamingProxy implements NamingObjectProxy {
     }
 
     @Override
-    public Object create(Context ic) throws javax.naming.NamingException {
+    public <T> T create(Context ic) throws javax.naming.NamingException {
         try {
             // Create managed bean instance
-            return serviceLocator.getService(ManagedBeanManager.class)
+            return (T) serviceLocator.getService(ManagedBeanManager.class)
                                  .createManagedBean(
                                      managedBeanDescriptor,
                                      Thread.currentThread()

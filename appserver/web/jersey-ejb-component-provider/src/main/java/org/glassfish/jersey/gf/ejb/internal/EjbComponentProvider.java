@@ -63,6 +63,7 @@ import org.glassfish.jersey.server.model.Invocable;
 import org.glassfish.jersey.server.spi.ComponentProvider;
 import org.glassfish.jersey.server.spi.internal.ResourceMethodInvocationHandlerProvider;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
 import static org.glassfish.jersey.gf.ejb.internal.EjbClassUtilities.getRemoteAndLocalIfaces;
 
 /**
@@ -75,7 +76,7 @@ import static org.glassfish.jersey.gf.ejb.internal.EjbClassUtilities.getRemoteAn
 public final class EjbComponentProvider implements ComponentProvider, ResourceMethodInvocationHandlerProvider {
 
     private static final Logger LOG = Logger.getLogger(EjbComponentProvider.class.getName());
-    private static final String JNDI_JAVA_APP_NAME = EjbSupplier.JNDI_PREFIX_JAVA_APP + "AppName";
+    private static final String JNDI_JAVA_APP_NAME = JNDI_CTX_JAVA_APP + "AppName";
 
     /**Annotations to determine EJB components. */
     private static final Set<String> EJB_ANNOTATIONS = Stream.of(Stateful.class, Stateless.class, Singleton.class)

@@ -97,9 +97,9 @@ public class JavaWebStartInfo implements ConfigListener {
 
     private AppClientServerApplication acServerApp;
 
-    private Set<Content> myContent = null;
+    private Set<Content> myContent;
 
-    private DeploymentContext dc = null;
+    private DeploymentContext dc;
 
     private TokenHelper tHelper;
 
@@ -108,8 +108,8 @@ public class JavaWebStartInfo implements ConfigListener {
 
     @LoggerInfo(subsystem="SERVER", description="Appclient Server-side Logger", publish=true)
     public static final String APPCLIENT_SERVER_MAIN_LOGGER = "jakarta.enterprise.system.container.appclient";
-    private static final Logger logger =
-          Logger.getLogger(APPCLIENT_SERVER_MAIN_LOGGER, APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+    private static final Logger LOG = Logger.getLogger(APPCLIENT_SERVER_MAIN_LOGGER,
+        APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     @LogMessageInfo(
             message = "Java Web Start services started for the app client {0} (contextRoot: {1})",
@@ -349,7 +349,7 @@ public class JavaWebStartInfo implements ConfigListener {
             c.start();
         }
 
-        logger.log(Level.INFO, JWS_STARTED,
+        LOG.log(Level.INFO, JWS_STARTED,
             new Object[] {acServerApp.moduleExpression(),
             JWSAdapterManager.userFriendlyContextRoot(acServerApp)});
     }
@@ -367,7 +367,7 @@ public class JavaWebStartInfo implements ConfigListener {
                 acServerApp.deployedAppName(),
                 (acDesc.isStandalone() ? null : acDesc.getModuleName()),
                 acServerApp);
-        logger.log(Level.INFO, JWS_STOPPED,
+        LOG.log(Level.INFO, JWS_STOPPED,
                 acServerApp.moduleExpression());
     }
 
@@ -406,14 +406,12 @@ public class JavaWebStartInfo implements ConfigListener {
     }
 
     private boolean isJWSRunnable() {
-        if ( ! isJWSEligible) {
-            logger.log(Level.INFO, JWS_INELIGIBLE,
-                    acServerApp.moduleExpression());
+        if (!isJWSEligible) {
+            LOG.log(Level.INFO, JWS_INELIGIBLE, acServerApp.moduleExpression());
         }
 
-        if ( ! isJWSEnabled()) {
-            logger.log(Level.INFO, JWS_DISABLED,
-                    acServerApp.moduleExpression());
+        if (!isJWSEnabled()) {
+            LOG.log(Level.INFO, JWS_DISABLED, acServerApp.moduleExpression());
         }
         return isJWSEligible && isJWSEnabled();
     }
@@ -603,7 +601,7 @@ public class JavaWebStartInfo implements ConfigListener {
             final StaticContent newContent,
             final String uriStringForLookup) {
         content.put(uriStringForLookup, newContent);
-        logger.log(Level.FINE, "Recording static content: URI for lookup = {0}; content = {1}",
+        LOG.log(Level.FINE, "Recording static content: URI for lookup = {0}; content = {1}",
                 new Object[]{uriStringForLookup, newContent.toString()});
     }
 
@@ -747,9 +745,9 @@ public class JavaWebStartInfo implements ConfigListener {
                 templateText, tHelper.tokens());
         content.put(uriStringForContent, newDynamicContent(processedTemplate,
                 JNLP_MIME_TYPE, isMain));
-        logger.log(Level.FINE, "Adding dyn content {0}{1}{2}",
+        LOG.log(Level.FINE, "Adding dyn content {0}{1}{2}",
                 new Object[]{uriStringForContent,
-                    System.getProperty("line.separator"), logger.isLoggable(Level.FINER) ? processedTemplate : ""});
+                    System.getProperty("line.separator"), LOG.isLoggable(Level.FINER) ? processedTemplate : ""});
     }
 
     private static DynamicContent newDynamicContent(final String template,
@@ -976,7 +974,7 @@ public class JavaWebStartInfo implements ConfigListener {
     private static void mkdirs(final File dir) {
         if ( ! dir.exists()) {
             if ( ! dir.mkdirs()) {
-                final String msg = logger.getResourceBundle().getString("enterprise.deployment.appclient.errormkdirs");
+                final String msg = LOG.getResourceBundle().getString("enterprise.deployment.appclient.errormkdirs");
                 throw new RuntimeException(MessageFormat.format(msg, dir.getAbsolutePath()));
             }
         }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,45 +20,48 @@ package com.sun.enterprise.naming.util;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import com.sun.enterprise.naming.spi.NamingUtils;
 
-import org.jvnet.hk2.annotations.Service;
-
 import javax.naming.Context;
 import javax.naming.NamingException;
 
+import org.glassfish.api.naming.SimpleJndiName;
+import org.jvnet.hk2.annotations.Service;
+
 @Service
-public class CloningNamingObjectFactory
-        implements NamingObjectFactory {
+public class CloningNamingObjectFactory<T> implements NamingObjectFactory {
 
-    private static NamingUtils namingUtils = new NamingUtilsImpl();
+    private static final NamingUtils UTILS = new NamingUtilsImpl();
 
-    private String name;
+    private final SimpleJndiName name;
+    private final T value;
+    private final NamingObjectFactory delegate;
 
-    private Object value;
-
-    private NamingObjectFactory delegate;
-
-    public CloningNamingObjectFactory(String name, Object value) {
+    public CloningNamingObjectFactory(SimpleJndiName name, T value) {
         this.name = name;
         this.value = value;
+        this.delegate = null;
     }
 
-    public CloningNamingObjectFactory(String name, NamingObjectFactory delegate) {
+
+    public CloningNamingObjectFactory(SimpleJndiName name, NamingObjectFactory delegate) {
         this.name = name;
+        this.value = null;
         this.delegate = delegate;
     }
 
+
+    @Override
     public boolean isCreateResultCacheable() {
         return false;
     }
 
-    public String getName() {
+
+    public SimpleJndiName getName() {
         return name;
     }
 
-    public Object create(Context ic)
-            throws NamingException {
-        return (delegate != null)
-                ? namingUtils.makeCopyOfObject(delegate.create(ic))
-                : namingUtils.makeCopyOfObject(value);
+
+    @Override
+    public T create(Context ic) throws NamingException {
+        return delegate == null ? UTILS.makeCopyOfObject(value) : UTILS.makeCopyOfObject(delegate.create(ic));
     }
 }

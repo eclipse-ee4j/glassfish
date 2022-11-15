@@ -44,22 +44,24 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_GLOBAL;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
+
 
 @Service
 @NamespacePrefixes({
-    JavaModuleNamingProxy.JAVA_APP_CONTEXT,
+    JNDI_CTX_JAVA_APP,
+    JNDI_CTX_JAVA_MODULE,
     JavaModuleNamingProxy.JAVA_APP_NAME,
-    JavaModuleNamingProxy.JAVA_MODULE_CONTEXT,
     JavaModuleNamingProxy.JAVA_MODULE_NAME,
     JavaModuleNamingProxy.JAVA_APP_SERVICE_LOCATOR
 })
 public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstruct {
 
-    static final String JAVA_MODULE_CONTEXT = "java:module/";
-    static final String JAVA_APP_CONTEXT = "java:app/";
-    static final String JAVA_APP_NAME = "java:app/AppName";
-    static final String JAVA_MODULE_NAME = "java:module/ModuleName";
-    static final String JAVA_APP_SERVICE_LOCATOR = "java:app/hk2/ServiceLocator";
+    static final String JAVA_APP_NAME = JNDI_CTX_JAVA_APP + "AppName";
+    static final String JAVA_MODULE_NAME = JNDI_CTX_JAVA_MODULE + "ModuleName";
+    static final String JAVA_APP_SERVICE_LOCATOR = JNDI_CTX_JAVA_APP + "hk2/ServiceLocator";
 
     private static final Logger LOG = LogDomains.getLogger(JavaModuleNamingProxy.class, LogDomains.JNDI_LOGGER, false);
 
@@ -90,13 +92,13 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
 
     @Override
     public Object handle(String name) throws NamingException {
-        if (name.equals(JAVA_APP_NAME)) {
+        if (JAVA_APP_NAME.equals(name)) {
             return getAppName();
-        } else if (name.equals(JAVA_MODULE_NAME)) {
+        } else if (JAVA_MODULE_NAME.equals(name)) {
             return getModuleName();
-        } else if (name.equals(JAVA_APP_SERVICE_LOCATOR)) {
+        } else if (JAVA_APP_SERVICE_LOCATOR.equals(name)) {
             return getAppServiceLocator();
-        } else if (name.startsWith(JAVA_MODULE_CONTEXT) || name.startsWith(JAVA_APP_CONTEXT)) {
+        } else if (name.startsWith(JNDI_CTX_JAVA_MODULE) || name.startsWith(JNDI_CTX_JAVA_APP)) {
             // Check for any automatically defined portable EJB names under
             // java:module/ or java:app/.
 
@@ -143,23 +145,25 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
 
 
     private String getModuleName() throws NamingException {
-        ComponentEnvManager namingMgr = habitat.getService(ComponentEnvManager.class);
-        String moduleName = null;
-        if (namingMgr != null) {
-            JndiNameEnvironment env = namingMgr.getCurrentJndiNameEnvironment();
-            BundleDescriptor bd = null;
-            if (env instanceof EjbDescriptor) {
-                bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
-            } else if (env instanceof BundleDescriptor) {
-                bd = (BundleDescriptor) env;
-            }
-            if (bd != null) {
-                moduleName = bd.getModuleDescriptor().getModuleName();
-            }
+        final ComponentEnvManager namingMgr = habitat.getService(ComponentEnvManager.class);
+        if (namingMgr == null) {
+            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME + ", ComponentEnvManager is null.");
         }
-
+        final JndiNameEnvironment env = namingMgr.getCurrentJndiNameEnvironment();
+        final BundleDescriptor bd;
+        if (env instanceof EjbDescriptor) {
+            bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
+        } else if (env instanceof BundleDescriptor) {
+            bd = (BundleDescriptor) env;
+        } else {
+            bd = null;
+        }
+        if (bd == null) {
+            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME + ", descriptor is null.");
+        }
+        final String moduleName = bd.getModuleDescriptor().getModuleName();
         if (moduleName == null) {
-            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME);
+            throw new NamingException("Could not resolve " + JAVA_MODULE_NAME + ", descriptor's module name is null");
         }
         return moduleName;
     }
@@ -183,23 +187,20 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
 
             if (namingMgr != null) {
                 JndiNameEnvironment env = namingMgr.getCurrentJndiNameEnvironment();
-                BundleDescriptor bd = null;
+                final BundleDescriptor bd;
                 if (env instanceof EjbDescriptor) {
                     bd = ((EjbDescriptor) env).getEjbBundleDescriptor();
                 } else if (env instanceof BundleDescriptor) {
                     bd = (BundleDescriptor) env;
+                } else {
+                    bd = null;
                 }
 
                 if (bd != null) {
-                    Application app = bd.getApplication();
-                    String appName = null;
-                    if (!app.isVirtual()) {
-                        appName = app.getAppName();
-                    }
-
-                    String moduleName = bd.getModuleDescriptor().getModuleName();
-                    StringBuilder javaGlobalName = new StringBuilder("java:global/");
-                    if (name.startsWith(JAVA_APP_CONTEXT)) {
+                    final Application app = bd.getApplication();
+                    final String appName = app.isVirtual() ? null : app.getAppName();
+                    StringBuilder javaGlobalName = new StringBuilder(32).append(JNDI_CTX_JAVA_GLOBAL);
+                    if (name.startsWith(JNDI_CTX_JAVA_APP)) {
 
                         // For portable EJB names relative to java:app, module
                         // name is already contained in the lookup string.  We just
@@ -214,7 +215,7 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
                         }
 
                         // Replace java:app/ with the fully-qualified global portion
-                        javaGlobalName.append(name.substring(JAVA_APP_CONTEXT.length()));
+                        javaGlobalName.append(name.substring(JNDI_CTX_JAVA_APP.length()));
 
                     } else {
 
@@ -227,11 +228,11 @@ public class JavaModuleNamingProxy implements NamedNamingObjectProxy, PostConstr
                             javaGlobalName.append('/');
                         }
 
-                        javaGlobalName.append(moduleName);
+                        javaGlobalName.append(bd.getModuleDescriptor().getModuleName());
                         javaGlobalName.append('/');
 
                         // Replace java:module/ with the fully-qualified global portion
-                        javaGlobalName.append(name.substring(JAVA_MODULE_CONTEXT.length()));
+                        javaGlobalName.append(name.substring(JNDI_CTX_JAVA_MODULE.length()));
                     }
 
                     newName = javaGlobalName.toString();

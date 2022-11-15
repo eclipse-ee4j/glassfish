@@ -17,19 +17,6 @@
 
 package com.sun.appserv.connectors.internal.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Provider;
-
 import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -52,7 +39,22 @@ import com.sun.enterprise.deployment.runtime.connector.ResourceAdapter;
 import com.sun.enterprise.deployment.runtime.connector.SunConnector;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Provider;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.connectors.config.AdminObjectResource;
 import org.glassfish.connectors.config.ConnectorConnectionPool;
 import org.glassfish.connectors.config.ConnectorResource;
@@ -64,9 +66,11 @@ import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.resourcebase.resources.api.ResourceConstants;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_APP;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_MODULE;
 
 @Service
 public class AppSpecificConnectorClassLoaderUtil {
@@ -204,56 +208,53 @@ public class AppSpecificConnectorClassLoaderUtil {
         return new HashSet<>();
     }
 
-    private void processDescriptorForRAReferences(com.sun.enterprise.deployment.Application app,
-                                                  String moduleName, JndiNameEnvironment jndiEnv) {
+
+    private void processDescriptorForRAReferences(com.sun.enterprise.deployment.Application app, String moduleName,
+        JndiNameEnvironment jndiEnv) {
         // resource-ref
-        for (Object resourceRef : jndiEnv.getResourceReferenceDescriptors()) {
-            ResourceReferenceDescriptor resRefDesc = (ResourceReferenceDescriptor) resourceRef;
-            String jndiName = resRefDesc.getJndiName();
-            //ignore refs where jndi-name is not available
-            if(jndiName != null){
-                detectResourceInRA(app, moduleName, jndiName);
+        for (ResourceReferenceDescriptor resourceRef : jndiEnv.getResourceReferenceDescriptors()) {
+            // ignore refs where jndi-name is not available
+            if (resourceRef.getJndiName() != null) {
+                detectResourceInRA(app, moduleName, resourceRef.getJndiName());
             }
         }
 
         // resource-env-ref
-        for (Object resourceEnvRef : jndiEnv.getResourceEnvReferenceDescriptors()) {
-            ResourceEnvReferenceDescriptor resourceEnvRefDesc = (ResourceEnvReferenceDescriptor) resourceEnvRef;
-            String jndiName = resourceEnvRefDesc.getJndiName();
-            //ignore refs where jndi-name is not available
-            if(jndiName != null){
-                detectResourceInRA(app, moduleName, jndiName);
+        for (ResourceEnvReferenceDescriptor resourceEnvRef : jndiEnv.getResourceEnvReferenceDescriptors()) {
+            // ignore refs where jndi-name is not available
+            if (resourceEnvRef.getJndiName() != null) {
+                detectResourceInRA(app, moduleName, resourceEnvRef.getJndiName());
             }
         }
     }
 
-    private void detectResourceInRA(Application app, String moduleName, String jndiName) {
+    private void detectResourceInRA(Application app, String moduleName, SimpleJndiName jndiName) {
         //domain.xml
         Resource res = null;
 
-        if(jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*|| jndiName.startsWith("java:global/")*/  ){
+        if (jndiName.isJavaApp()) {
             ApplicationInfo appInfo = appRegistry.get(app.getName());
             res = getApplicationScopedResource(jndiName, BindableResource.class, appInfo);
-        }else if(jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
+        } else if (jndiName.isJavaModule()) {
             ApplicationInfo appInfo = appRegistry.get(app.getName());
             res = getModuleScopedResource(jndiName, moduleName, BindableResource.class, appInfo);
-        }else{
-            res = ConnectorsUtil.getResourceByName(getResources(), BindableResource.class, jndiName);
+        } else {
+            res = getResources().getResourceByName(BindableResource.class, jndiName);
         }
         //embedded ra's resources may not be created yet as they can be created only after .ear deploy
         //  (and .ear may refer to these resources in DD)
         if (res != null) {
             if (ConnectorResource.class.isAssignableFrom(res.getClass())) {
                 ConnectorResource connResource = (ConnectorResource)res;
-                String poolName = connResource.getPoolName();
+                SimpleJndiName poolName = new SimpleJndiName(connResource.getPoolName());
                 Resource pool ;
                 ApplicationInfo appInfo = appRegistry.get(app.getName());
-                if(jndiName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*|| jndiName.startsWith("java:global/")*/){
+                if (jndiName.isJavaApp()) {
                     pool = getApplicationScopedResource(poolName, ResourcePool.class, appInfo);
-                } else if(jndiName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX)){
+                } else if (jndiName.isJavaModule()) {
                     pool = getModuleScopedResource(poolName, moduleName, ResourcePool.class, appInfo);
-                } else{
-                    pool = ConnectorsUtil.getResourceByName(getResources(), ResourcePool.class, poolName);
+                } else {
+                    pool = getResources().getResourceByName(ResourcePool.class, poolName);
                 }
                 if (ConnectorConnectionPool.class.isAssignableFrom(pool.getClass())) {
                     String raName = ((ConnectorConnectionPool) pool).getResourceAdapterName();
@@ -270,11 +271,8 @@ public class AppSpecificConnectorClassLoaderUtil {
             // find all the standalone connector modules
             List<com.sun.enterprise.config.serverbeans.Application> applications =
                     getApplications().getApplicationsWithSnifferType(com.sun.enterprise.config.serverbeans.ServerTags.CONNECTOR, true);
-            Iterator itr = applications.iterator();
-            while (itr.hasNext()) {
-                com.sun.enterprise.config.serverbeans.Application application =
-                        (com.sun.enterprise.config.serverbeans.Application) itr.next();
-                        String appName = application.getName();
+            for (com.sun.enterprise.config.serverbeans.Application application : applications) {
+                String appName = application.getName();
                         ApplicationInfo appInfo = appRegistry.get(appName);
                         // appInfo is null if application is not enabled or
                         // not referred in this instance.
@@ -286,8 +284,8 @@ public class AppSpecificConnectorClassLoaderUtil {
                         for (ConnectorDescriptor desc : rarDescriptors) {
                             SunConnector sunraDesc = desc.getSunDescriptor();
                             if (sunraDesc != null) {
-                                String sunRAJndiName = (String) sunraDesc.getResourceAdapter().
-                                        getValue(ResourceAdapter.JNDI_NAME);
+                                SimpleJndiName sunRAJndiName = sunraDesc.getResourceAdapter()
+                                    .getValue(ResourceAdapter.JNDI_NAME);
                                 if (jndiName.equals(sunRAJndiName)) {
                                     app.addResourceAdapter(desc.getName());
                                     found = true;
@@ -305,14 +303,12 @@ public class AppSpecificConnectorClassLoaderUtil {
             }
 
             if (!found) {
-                if(DOLUtils.getDefaultLogger().isLoggable(Level.FINEST)) {
-                    DOLUtils.getDefaultLogger().log(Level.FINEST, "could not find resource by name : " + jndiName);
-                }
+                DOLUtils.getDefaultLogger().log(Level.FINEST, "Could not find resource by name: {0}", jndiName);
             }
         }
     }
 
-    private <T> Resource getApplicationScopedResource(String name, Class<T> type, ApplicationInfo appInfo){
+    private <T> Resource getApplicationScopedResource(SimpleJndiName poolName, Class<T> class1, ApplicationInfo appInfo){
         Resource foundRes = null;
         if(appInfo != null){
 
@@ -325,15 +321,13 @@ public class AppSpecificConnectorClassLoaderUtil {
             }
             if(resources != null){
 
-            boolean bindableResource = BindableResource.class.isAssignableFrom(type);
-            boolean poolResource = ResourcePool.class.isAssignableFrom(type);
-            boolean workSecurityMap = WorkSecurityMap.class.isAssignableFrom(type);
-            boolean rac = ResourceAdapterConfig.class.isAssignableFrom(type);
+            boolean bindableResource = BindableResource.class.isAssignableFrom(class1);
+            boolean poolResource = ResourcePool.class.isAssignableFrom(class1);
+            boolean workSecurityMap = WorkSecurityMap.class.isAssignableFrom(class1);
+            boolean rac = ResourceAdapterConfig.class.isAssignableFrom(class1);
 
-            Iterator itr = resources.getResources().iterator();
-                while(itr.hasNext()){
+            for (Resource res : resources.getResources()) {
                     String resourceName = null;
-                    Resource res = (Resource)itr.next();
                     if(bindableResource && res instanceof BindableResource){
                         resourceName = ((BindableResource)res).getJndiName();
                     } else if(poolResource && res instanceof ResourcePool){
@@ -343,16 +337,14 @@ public class AppSpecificConnectorClassLoaderUtil {
                     } else if(workSecurityMap && res instanceof WorkSecurityMap){
                         resourceName = ((WorkSecurityMap)res).getName();
                     }
-                    if(resourceName != null){
-                        if(!(resourceName.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*||
-                                resourceName.startsWith(ConnectorConstants.JAVA_GLOBAL_SCOPE_PREFIX)*/)){
-                            resourceName = ResourceConstants.JAVA_APP_SCOPE_PREFIX + resourceName;
+                    if (resourceName != null) {
+                        if (!resourceName.startsWith(JNDI_CTX_JAVA_APP)) {
+                            resourceName = JNDI_CTX_JAVA_APP + resourceName;
                         }
-                        if(!(name.startsWith(ResourceConstants.JAVA_APP_SCOPE_PREFIX) /*||
-                         name.startsWith(ConnectorConstants.JAVA_GLOBAL_SCOPE_PREFIX)*/)){
-                            name = ResourceConstants.JAVA_APP_SCOPE_PREFIX + name;
+                        if (!poolName.isJavaApp()) {
+                            poolName = new SimpleJndiName(JNDI_CTX_JAVA_APP + poolName);
                         }
-                        if(name.equals(resourceName)){
+                        if (poolName.toString().equals(resourceName)) {
                             foundRes = res;
                             break;
                         }
@@ -363,7 +355,7 @@ public class AppSpecificConnectorClassLoaderUtil {
         return foundRes;
     }
 
-    private <T> Resource getModuleScopedResource(String name, String moduleName, Class<T> type, ApplicationInfo appInfo){
+    private <T> Resource getModuleScopedResource(SimpleJndiName name, String moduleName, Class<T> type, ApplicationInfo appInfo){
         Resource foundRes = null;
         if(appInfo != null){
 
@@ -391,10 +383,8 @@ public class AppSpecificConnectorClassLoaderUtil {
             boolean workSecurityMap = WorkSecurityMap.class.isAssignableFrom(type);
             boolean rac = ResourceAdapterConfig.class.isAssignableFrom(type);
 
-            Iterator itr = resources.getResources().iterator();
-            while(itr.hasNext()){
+            for (Resource res : resources.getResources()) {
                 String resourceName = null;
-                Resource res = (Resource)itr.next();
                 if(bindableResource && res instanceof BindableResource){
                     resourceName = ((BindableResource)res).getJndiName();
                 } else if(poolResource && res instanceof ResourcePool){
@@ -404,14 +394,14 @@ public class AppSpecificConnectorClassLoaderUtil {
                 } else if(workSecurityMap && res instanceof WorkSecurityMap){
                     resourceName = ((WorkSecurityMap)res).getName();
                 }
-                if(resourceName != null){
-                    if(!(resourceName.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX) /*|| resourceName.startsWith("java:global/")*/)){
-                        resourceName = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + resourceName;
+                if (resourceName != null) {
+                    if (!resourceName.startsWith(JNDI_CTX_JAVA_MODULE)) {
+                        resourceName = JNDI_CTX_JAVA_MODULE + resourceName;
                     }
-                    if(!(name.startsWith(ResourceConstants.JAVA_MODULE_SCOPE_PREFIX) /*|| name.startsWith("java:global/")*/)){
-                        name = ResourceConstants.JAVA_MODULE_SCOPE_PREFIX + name;
+                    if (!name.isJavaModule()) {
+                        name = new SimpleJndiName(JNDI_CTX_JAVA_MODULE + name);
                     }
-                    if(name.equals(resourceName)){
+                    if (name.toString().equals(resourceName)) {
                         foundRes = res;
                         break;
                     }

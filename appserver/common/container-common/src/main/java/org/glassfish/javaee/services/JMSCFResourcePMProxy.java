@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2022 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +17,15 @@
 
 package org.glassfish.javaee.services;
 
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
-import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
-
 import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
+
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getPMJndiName;
 
 @Service
 @PerLookup
@@ -34,11 +34,11 @@ public class JMSCFResourcePMProxy extends CommonResourceProxy {
     private static final long serialVersionUID = 1L;
 
     @Override
-    public synchronized Object create(Context context) throws NamingException {
+    public synchronized <T> T create(Context ic) throws NamingException {
         if (actualResourceName == null) {
             boolean wasDeployed = false;
             try {
-                if (context.lookup(desc.getName()) != null) {
+                if (ic.lookup(desc.getJndiName().toString()) != null) {
                     wasDeployed = true;
                 }
             } catch (NamingException ne) {
@@ -49,25 +49,21 @@ public class JMSCFResourcePMProxy extends CommonResourceProxy {
                     if (serviceLocator == null) {
                         serviceLocator = Globals.getDefaultHabitat();
                         if (serviceLocator == null) {
-                            throw new NamingException("Unable to create resource " + "[" + desc.getName() + " ] as serviceLocator is null");
+                            throw new NamingException("Unable to create resource " + "[" + desc.getJndiName()
+                                + " ] as serviceLocator is null");
                         }
                     }
                     getResourceDeployer(desc).deployResource(desc);
                 } catch (Exception e) {
-                    NamingException ne = new NamingException("Unable to create resource [" + desc.getName() + " ]");
+                    NamingException ne = new NamingException("Unable to create resource [" + desc.getJndiName() + " ]");
                     ne.initCause(e);
                     throw ne;
                 }
             }
-
-            // Append __PM suffix to jndi name
-            actualResourceName =
-                deriveResourceName(
-                    desc.getResourceId(),
-                    getPMJndiName(desc.getName()),
-                    desc.getResourceType());
+            // append __PM suffix to jndi name
+            actualResourceName = deriveResourceName(desc.getResourceId(), getPMJndiName(desc.getJndiName()),
+                desc.getResourceType());
         }
-
-        return context.lookup(actualResourceName);
+        return (T) ic.lookup(actualResourceName.toString());
     }
 }

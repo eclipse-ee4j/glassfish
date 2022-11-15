@@ -224,7 +224,7 @@ public class Descriptor extends DynamicAttributesDescriptor {
      * @param language the language
      * @return the localized display name for the passed language
      */
-    public String getLocalizedDisplayName(String language) {
+    public final String getLocalizedDisplayName(String language) {
         if (displayNames == null) {
             return "";
         }

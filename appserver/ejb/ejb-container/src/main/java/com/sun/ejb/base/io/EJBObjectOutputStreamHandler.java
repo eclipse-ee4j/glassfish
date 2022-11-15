@@ -39,6 +39,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.internal.api.Globals;
@@ -139,7 +140,7 @@ public class EJBObjectOutputStreamHandler implements GlassFishOutputStreamHandle
 
 final class SerializableJNDIContext implements SerializableObjectFactory {
 
-    private String name;
+    private SimpleJndiName name;
 
     SerializableJNDIContext(Context ctx) throws IOException {
         try {
@@ -150,7 +151,8 @@ final class SerializableJNDIContext implements SerializableObjectFactory {
             // as references to the the contexts java: and java:comp. All
             // other contexts will either not serialize correctly or will
             // throw an exception during deserialization.
-            this.name = ctx.getNameInNamespace();
+            String nsName = ctx.getNameInNamespace();
+            this.name = nsName.isEmpty() ? null : new SimpleJndiName(nsName);
         } catch (NamingException ex) {
             throw new IOException(ex);
         }
@@ -160,7 +162,7 @@ final class SerializableJNDIContext implements SerializableObjectFactory {
     @Override
     public Object createObject() throws IOException {
         try {
-            if (name == null || name.isEmpty()) {
+            if (name == null) {
                 return new InitialContext();
             }
             return Globals.getDefaultHabitat().<GlassfishNamingManager> getService(GlassfishNamingManager.class)
@@ -169,7 +171,6 @@ final class SerializableJNDIContext implements SerializableObjectFactory {
             throw new IOException(e);
         }
     }
-
 }
 
 

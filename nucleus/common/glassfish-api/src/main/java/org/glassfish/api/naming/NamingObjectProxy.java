@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,9 +31,7 @@ import org.jvnet.hk2.annotations.Contract;
  * can obtain the same cacheed object. Or the implementation can choose to return different object every time.
  *
  * @author Mahesh Kannan
- *
  */
-
 @Contract
 public interface NamingObjectProxy {
 
@@ -41,7 +40,7 @@ public interface NamingObjectProxy {
      *
      * @return an object
      */
-    Object create(Context ic) throws NamingException;
+    <T> T create(Context ic) throws NamingException;
 
     /**
      * Special Naming Object proxy whose first create() call replaces itself in naming service.

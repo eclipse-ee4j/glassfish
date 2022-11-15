@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,7 @@ import com.sun.enterprise.deployment.*;
 import org.glassfish.deployment.common.Descriptor;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.api.naming.SimpleJndiName;
 import com.sun.enterprise.deploy.shared.ArchiveFactory;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
@@ -90,9 +92,9 @@ public class OverrideTest {
 
             for (ResourceReferenceDescriptor resRef : resRefDescs) {
                 String refName = resRef.getName();
-                String jndiName = resRef.getJndiName();
-                String mappedName = resRef.getMappedName();
-                String lookupName = resRef.getLookupName();
+                SimpleJndiName jndiName = resRef.getJndiName();
+                SimpleJndiName mappedName = resRef.getMappedName();
+                SimpleJndiName lookupName = resRef.getLookupName();
                 String description = resRef.getDescription();
                 String auth = resRef.getAuthorization();
                 String scope = resRef.getSharingScope();

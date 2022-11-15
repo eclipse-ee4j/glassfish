@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.w3c.dom.Node;
 
 /**
@@ -102,11 +103,12 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReferenceDescriptor>
      * @param ejbRef the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, EjbReferenceDescriptor ejbRef) {
         Node ejbRefNode = appendChild(parent, nodeName);
         appendTextChild(ejbRefNode, TagNames.EJB_REFERENCE_NAME, ejbRef.getName());
 
-        String jndiName = ejbRef.getJndiName();
+        SimpleJndiName jndiName = ejbRef.getJndiName();
         EjbDescriptor ejbReferee = ejbRef.getEjbDescriptor();
 
         // If this is an intra-app remote ejb dependency, write out the portable jndi name

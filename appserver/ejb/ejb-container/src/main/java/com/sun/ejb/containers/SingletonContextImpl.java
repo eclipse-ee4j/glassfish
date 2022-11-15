@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,34 @@
 
 package com.sun.ejb.containers;
 
-
 import jakarta.ejb.TimerService;
-import jakarta.transaction.TransactionManager;
 import jakarta.transaction.Status;
-import javax.naming.InitialContext;
+import jakarta.transaction.TransactionManager;
+
 import java.util.logging.Level;
+
+import javax.naming.InitialContext;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
 /**
  * Implementation of EJBContext for Singleton SessionBeans
  *
  * @author Mahesh Kannan
  */
-
-public final class SingletonContextImpl
-        extends AbstractSessionContextImpl {
-
+public final class SingletonContextImpl extends AbstractSessionContextImpl {
 
     SingletonContextImpl(Object ejb, BaseContainer container) {
         super(ejb, container);
         try {
             initialContext = new InitialContext();
-        } catch(Exception ex) {
-            _logger.log(Level.FINE, "Exception in creating InitialContext",
-                ex);
+        } catch (Exception ex) {
+            _logger.log(Level.FINE, "Exception in creating InitialContext", ex);
         }
 
     }
+
 
     @Override
     public TimerService getTimerService() throws IllegalStateException {
@@ -58,17 +60,15 @@ public final class SingletonContextImpl
 
     }
 
+
     @Override
-    public void setRollbackOnly()
-        throws IllegalStateException
-    {
+    public void setRollbackOnly() throws IllegalStateException {
         if (instanceKey == null) {
             throw new IllegalStateException("Singleton setRollbackOnly not allowed");
         }
 
-        if ( container.isBeanManagedTran ) {
-            throw new IllegalStateException(
-                "Illegal operation for bean-managed transactions");
+        if (container.isBeanManagedTran) {
+            throw new IllegalStateException("Illegal operation for bean-managed transactions");
         }
 
         doGetSetRollbackTxAttrCheck();
@@ -76,7 +76,7 @@ public final class SingletonContextImpl
         TransactionManager tm = EjbContainerUtilImpl.getInstance().getTransactionManager();
 
         try {
-            if ( tm.getStatus() == Status.STATUS_NO_TRANSACTION ) {
+            if (tm.getStatus() == Status.STATUS_NO_TRANSACTION) {
                 // EJB might be in a non-business method (for SessionBeans)
                 // or afterCompletion.
                 // OR this was a NotSupported/Never/Supports
@@ -95,18 +95,15 @@ public final class SingletonContextImpl
         }
     }
 
+
     @Override
-    public boolean getRollbackOnly()
-        throws IllegalStateException
-    {
+    public boolean getRollbackOnly() throws IllegalStateException {
         if (instanceKey == null) {
             throw new IllegalStateException("Singleton getRollbackOnly not allowed");
         }
 
-
-        if ( container.isBeanManagedTran ) {
-            throw new IllegalStateException(
-                "Illegal operation for bean-managed transactions");
+        if (container.isBeanManagedTran) {
+            throw new IllegalStateException("Illegal operation for bean-managed transactions");
         }
 
         doGetSetRollbackTxAttrCheck();
@@ -115,14 +112,13 @@ public final class SingletonContextImpl
 
         try {
             int status = tm.getStatus();
-            if ( status == Status.STATUS_NO_TRANSACTION ) {
+            if (status == Status.STATUS_NO_TRANSACTION) {
                 // EJB which was invoked without a global transaction.
                 throw new IllegalStateException("No transaction context.");
             }
 
-            return ( status == Status.STATUS_MARKED_ROLLBACK ||
-                     status == Status.STATUS_ROLLEDBACK      ||
-                     status == Status.STATUS_ROLLING_BACK );
+            return status == Status.STATUS_MARKED_ROLLBACK || status == Status.STATUS_ROLLEDBACK
+                || status == Status.STATUS_ROLLING_BACK;
 
         } catch (Exception ex) {
             IllegalStateException illEx = new IllegalStateException(ex.toString());
@@ -131,37 +127,31 @@ public final class SingletonContextImpl
         }
     }
 
+
     @Override
-    public void checkTimerServiceMethodAccess()
-        throws IllegalStateException
-    {
-        if ( instanceKey == null ) {
-            throw new IllegalStateException
-            ("EJB Timer method calls cannot be called in this context");
+    public void checkTimerServiceMethodAccess() throws IllegalStateException {
+        if (instanceKey == null) {
+            throw new IllegalStateException("EJB Timer method calls cannot be called in this context");
         }
     }
+
 
     @Override
     public synchronized Object lookup(String name) {
-        Object o = null;
-
-        if( name == null ) {
+        if (name == null) {
             throw new IllegalArgumentException("Argument is null");
         }
-        if( initialContext == null ) {
+        if (initialContext == null) {
             throw new IllegalArgumentException("InitialContext is null");
         }
         try {
-            // if name starts with java: use it as is.  Otherwise, treat it
+            // if name starts with java: use it as is. Otherwise, treat it
             // as relative to the private component namespace.
-            String lookupString = name.startsWith("java:") ?
-                    name : "java:comp/env/" + name;
+            String lookupString = name.startsWith(JNDI_CTX_JAVA) ? name : JNDI_CTX_JAVA_COMPONENT_ENV + name;
 
-            o = initialContext.lookup(lookupString);
-        } catch(Exception e) {
+            return initialContext.lookup(lookupString);
+        } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
-        return o;
     }
-
 }

@@ -22,11 +22,13 @@ import com.sun.enterprise.deployment.ResourceDescriptor;
 import jakarta.inject.Inject;
 
 import java.io.Serializable;
+import java.lang.System.Logger;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
 
 import org.glassfish.api.naming.NamingObjectProxy;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
@@ -35,6 +37,7 @@ import org.glassfish.resourcebase.resources.util.ResourceManagerFactory;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResourceName;
+import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * @author naman 2012
@@ -42,33 +45,36 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.deriveResou
 @Service
 @PerLookup
 public class CommonResourceProxy implements NamingObjectProxy.InitializationNamingObjectProxy, Serializable {
+    private static final Logger LOG = System.getLogger(CommonResourceProxy.class.getName());
 
     @Inject
     protected transient ServiceLocator serviceLocator;
     protected ResourceDescriptor desc;
-    protected String actualResourceName;
+    protected SimpleJndiName actualResourceName;
 
     @Override
-    public synchronized Object create(Context ic) throws NamingException {
+    public synchronized <T> T create(Context context) throws NamingException {
         if (actualResourceName == null) {
-            actualResourceName = deriveResourceName(desc.getResourceId(), desc.getName(), desc.getResourceType());
+            actualResourceName = deriveResourceName(desc.getResourceId(), desc.getJndiName(), desc.getResourceType());
+            LOG.log(DEBUG, "Deploying resource for actualResourceName={0} and descriptor.jndiName={1}",
+                actualResourceName, desc.getJndiName());
             try {
                 if (serviceLocator == null) {
                     serviceLocator = Globals.getDefaultHabitat();
                     if (serviceLocator == null) {
                         throw new NamingException(
-                            "Unable to create resource " + "[" + desc.getName() + " ] as habitat is null");
+                            "Unable to create resource " + "[" + desc.getJndiName() + " ] as habitat is null");
                     }
                 }
                 getResourceDeployer(desc).deployResource(desc);
             } catch (Exception e) {
-                NamingException ne = new NamingException("Unable to create resource [" + desc.getName() + " ]");
+                NamingException ne = new NamingException("Unable to create resource [" + desc.getJndiName() + " ]");
                 ne.initCause(e);
                 throw ne;
             }
         }
 
-        return ic.lookup(actualResourceName);
+        return (T) context.lookup(actualResourceName.toString());
     }
 
 
@@ -80,5 +86,12 @@ public class CommonResourceProxy implements NamingObjectProxy.InitializationNami
 
     public synchronized void setDescriptor(ResourceDescriptor desc) {
         this.desc = desc;
+    }
+
+
+    @Override
+    public String toString() {
+        return super.toString() + "[actualResourceName=" + actualResourceName + ", desc.jndiName="
+            + (desc == null ? null : desc.getJndiName()) + ']';
     }
 }

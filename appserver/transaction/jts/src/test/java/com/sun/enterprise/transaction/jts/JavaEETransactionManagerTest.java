@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -35,6 +35,7 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -1037,7 +1038,7 @@ public class JavaEETransactionManagerTest {
         private static PoolManagerImpl poolMgr = new PoolManagerImpl();
 
         public TestResourceHandle(XAResource resource) {
-            super(null,new ResourceSpec("testResource",0) ,null,null);
+            super(null,new ResourceSpec(new SimpleJndiName("testResource"),0) ,null,null);
             this.resource = resource;
         }
 

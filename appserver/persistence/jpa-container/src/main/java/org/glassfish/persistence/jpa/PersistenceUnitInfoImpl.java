@@ -38,13 +38,13 @@ import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
 
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.deployment.common.DeploymentUtils.getRelativeEmbeddedModulePath;
-import static org.glassfish.persistence.jpa.PersistenceUnitLoader.isNullOrEmpty;
 
 /**
  * This class implements {@link PersistenceUnitInfo} interface.
@@ -73,16 +73,13 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         this.persistenceUnitDescriptor = persistenceUnitDescriptor;
         this.providerContainerContractInfo = providerContainerContractInfo;
         jarFiles = _getJarFiles();
-        String jtaDataSourceName = persistenceUnitDescriptor.getJtaDataSource();
-        String nonJtaDataSourceName = persistenceUnitDescriptor.getNonJtaDataSource();
-
+        SimpleJndiName jtaDataSourceName = persistenceUnitDescriptor.getJtaDataSource();
+        SimpleJndiName nonJtaDataSourceName = persistenceUnitDescriptor.getNonJtaDataSource();
         try {
-            jtaDataSource = jtaDataSourceName == null ?
-                null :
-                providerContainerContractInfo.lookupDataSource(jtaDataSourceName);
-            nonJtaDataSource = nonJtaDataSourceName == null ?
-                null :
-                providerContainerContractInfo.lookupNonTxDataSource(nonJtaDataSourceName);
+            jtaDataSource = jtaDataSourceName == null ? null
+                : providerContainerContractInfo.lookupDataSource(jtaDataSourceName);
+            nonJtaDataSource = nonJtaDataSourceName == null ? null
+                : providerContainerContractInfo.lookupNonTxDataSource(nonJtaDataSourceName);
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
@@ -319,7 +316,7 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
 
     public static String getPersistenceProviderClassNameForPuDesc(PersistenceUnitDescriptor persistenceUnitDescriptor) {
         String provider = persistenceUnitDescriptor.getProvider();
-        if (isNullOrEmpty(provider)) {
+        if (provider == null || provider.isEmpty()) {
             provider = getDefaultprovider();
         }
 

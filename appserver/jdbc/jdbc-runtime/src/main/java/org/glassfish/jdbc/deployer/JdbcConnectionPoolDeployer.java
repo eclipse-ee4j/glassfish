@@ -59,6 +59,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.glassfish.jdbc.util.JdbcResourcesUtil;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
@@ -66,6 +67,7 @@ import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
+import org.glassfish.resourcebase.resources.util.ResourceUtil;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.types.Property;
@@ -138,7 +140,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
 
     @Override
     public void deployResource(JdbcConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         actualDeployResource(resource, poolInfo);
     }
 
@@ -156,7 +158,8 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
         // JDBC connection pool creation. The actualDeployResource method
         // below is invoked by JdbcResourceDeployer when a resource-ref for a
         // resource that is pointed to this pool is added to a server instance
-        PoolInfo poolInfo = new PoolInfo(resource.getName(), applicationName, moduleName);
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getName());
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         actualDeployResource(resource, poolInfo);
     }
 
@@ -164,21 +167,22 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
     @Override
     public void undeployResource(JdbcConnectionPool resource, String applicationName, String moduleName)
         throws Exception {
-        PoolInfo poolInfo = new PoolInfo(resource.getName(), applicationName, moduleName);
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getName());
+        PoolInfo poolInfo = new PoolInfo(jndiName, applicationName, moduleName);
         actualUndeployResource(poolInfo);
     }
 
 
     @Override
     public synchronized void undeployResource(JdbcConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
         actualUndeployResource(poolInfo);
     }
 
 
     @Override
     public synchronized void redeployResource(JdbcConnectionPool resource) throws Exception {
-        PoolInfo poolInfo = ConnectorsUtil.getPoolInfo(resource);
+        PoolInfo poolInfo = ResourceUtil.getPoolInfo(resource);
 
         // Only if pool has already been deployed in this server-instance
         // reconfig this pool
@@ -316,12 +320,12 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
                 configProperties.add(new ConnectorConfigProperty("ClassName",
                         adminPool.getDriverClassname() == null ? "" : adminPool.getDriverClassname(),
                         "The driver class name",
-                        "java.lang.String"));
+                        String.class.getName()));
             } else {
                 configProperties.add(new ConnectorConfigProperty("ClassName",
                         adminPool.getDatasourceClassname() == null ? "" : adminPool.getDatasourceClassname(),
                         "The datasource class name",
-                        "java.lang.String"));
+                        String.class.getName()));
             }
         } else {
             // When resType is null, one of these classnames would be specified
@@ -329,74 +333,74 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
                 configProperties.add(new ConnectorConfigProperty("ClassName",
                         adminPool.getDriverClassname() == null ? "" : adminPool.getDriverClassname(),
                         "The driver class name",
-                        "java.lang.String"));
+                        String.class.getName()));
             } else if (adminPool.getDatasourceClassname() != null) {
                 configProperties.add(new ConnectorConfigProperty("ClassName",
                         adminPool.getDatasourceClassname() == null ? "" : adminPool.getDatasourceClassname(),
                         "The datasource class name",
-                        "java.lang.String"));
+                        String.class.getName()));
             }
         }
         configProperties.add(new ConnectorConfigProperty("ConnectionValidationRequired", adminPool.getIsConnectionValidationRequired() + "",
-                "Is connection validation required", "java.lang.String"));
+                "Is connection validation required", String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("ValidationMethod",
                 adminPool.getConnectionValidationMethod() == null ? "" : adminPool.getConnectionValidationMethod(),
-                "How the connection is validated", "java.lang.String"));
+                "How the connection is validated", String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("ValidationTableName",
                 adminPool.getValidationTableName() == null ? "" : adminPool.getValidationTableName(), "Validation Table name",
-                "java.lang.String"));
+                String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("ValidationClassName",
                 adminPool.getValidationClassname() == null ? "" : adminPool.getValidationClassname(), "Validation Class name",
-                "java.lang.String"));
+                String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("TransactionIsolation",
                 adminPool.getTransactionIsolationLevel() == null ? "" : adminPool.getTransactionIsolationLevel(),
-                "Transaction Isolatin Level", "java.lang.String"));
+                "Transaction Isolatin Level", String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("GuaranteeIsolationLevel", adminPool.getIsIsolationLevelGuaranteed() + "",
-                "Transaction Isolation Guarantee", "java.lang.String"));
+                "Transaction Isolation Guarantee", String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("StatementWrapping", adminPool.getWrapJdbcObjects() + "", "Statement Wrapping",
-                "java.lang.String"));
+                String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("StatementTimeout", adminPool.getStatementTimeoutInSeconds() + "", "Statement Timeout",
-                "java.lang.String"));
+                String.class.getName()));
 
         PoolInfo poolInfo = connectorConnectionPool.getPoolInfo();
 
         configProperties.add(new ConnectorConfigProperty("PoolMonitoringSubTreeRoot",
-                ConnectorsUtil.getPoolMonitoringSubTreeRoot(poolInfo, true) + "", "Pool Monitoring Sub Tree Root", "java.lang.String"));
+                ConnectorsUtil.getPoolMonitoringSubTreeRoot(poolInfo, true) + "", "Pool Monitoring Sub Tree Root", String.class.getName()));
 
-        configProperties.add(new ConnectorConfigProperty("PoolName", poolInfo.getName() + "", "Pool Name", "java.lang.String"));
+        configProperties.add(new ConnectorConfigProperty("PoolName", poolInfo.getName() + "", "Pool Name", SimpleJndiName.class.getName()));
 
         if (poolInfo.getApplicationName() != null) {
             configProperties.add(new ConnectorConfigProperty("ApplicationName", poolInfo.getApplicationName() + "", "Application Name",
-                    "java.lang.String"));
+                    String.class.getName()));
         }
 
         if (poolInfo.getModuleName() != null) {
-            configProperties.add(new ConnectorConfigProperty("ModuleName", poolInfo.getModuleName() + "", "Module name", "java.lang.String"));
+            configProperties.add(new ConnectorConfigProperty("ModuleName", poolInfo.getModuleName() + "", "Module name", String.class.getName()));
         }
 
         configProperties.add(new ConnectorConfigProperty("StatementCacheSize", adminPool.getStatementCacheSize() + "", "Statement Cache Size",
-                "java.lang.String"));
+                String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("StatementCacheType", adminPool.getStatementCacheType() + "", "Statement Cache Type",
-                "java.lang.String"));
+                String.class.getName()));
 
-        configProperties.add(new ConnectorConfigProperty("InitSql", adminPool.getInitSql() + "", "InitSql", "java.lang.String"));
+        configProperties.add(new ConnectorConfigProperty("InitSql", adminPool.getInitSql() + "", "InitSql", String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("SqlTraceListeners", adminPool.getSqlTraceListeners() + "", "Sql Trace Listeners",
-                "java.lang.String"));
+                String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("StatementLeakTimeoutInSeconds", adminPool.getStatementLeakTimeoutInSeconds() + "",
-                "Statement Leak Timeout in seconds", "java.lang.String"));
+                "Statement Leak Timeout in seconds", String.class.getName()));
 
         configProperties.add(new ConnectorConfigProperty("StatementLeakReclaim", adminPool.getStatementLeakReclaim() + "", "Statement Leak Reclaim",
-                "java.lang.String"));
+                String.class.getName()));
 
         // Dump user defined poperties into the list
         Set<ConnectionDefDescriptor> connectionDefs = connectorDescriptor.getOutboundResourceAdapter().getConnectionDefs();
@@ -473,13 +477,13 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
                     LOG.log(Level.FINEST, "DATASTRUCTUREPARAMETERS");
 
                 } else if ("USERNAME".equals(name.toUpperCase(Locale.getDefault())) || "USER".equals(name.toUpperCase(LOCALE))) {
-                    configProperties.add(new ConnectorConfigProperty("User", adminPoolProperty.getValue(), "user name", "java.lang.String"));
+                    configProperties.add(new ConnectorConfigProperty("User", adminPoolProperty.getValue(), "user name", String.class.getName()));
 
                 } else if ("PASSWORD".equals(name.toUpperCase(LOCALE))) {
-                    configProperties.add(new ConnectorConfigProperty("Password", adminPoolProperty.getValue(), "Password", "java.lang.String"));
+                    configProperties.add(new ConnectorConfigProperty("Password", adminPoolProperty.getValue(), "Password", String.class.getName()));
 
                 } else if ("JDBC30DATASOURCE".equals(name.toUpperCase(LOCALE))) {
-                    configProperties.add(new ConnectorConfigProperty("JDBC30DataSource", adminPoolProperty.getValue(), "JDBC30DataSource", "java.lang.String"));
+                    configProperties.add(new ConnectorConfigProperty("JDBC30DataSource", adminPoolProperty.getValue(), "JDBC30DataSource", String.class.getName()));
 
                 } else if ("PREFER-VALIDATE-OVER-RECREATE".equals(name.toUpperCase(Locale.getDefault()))) {
                     String value = adminPoolProperty.getValue();
@@ -489,20 +493,20 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
                 } else if ("STATEMENT-CACHE-TYPE".equals(name.toUpperCase(Locale.getDefault()))) {
                     if (adminPool.getStatementCacheType() != null) {
                         configProperties.add(
-                                new ConnectorConfigProperty("StatementCacheType", adminPoolProperty.getValue(), "StatementCacheType", "java.lang.String"));
+                                new ConnectorConfigProperty("StatementCacheType", adminPoolProperty.getValue(), "StatementCacheType", String.class.getName()));
                     }
 
                 } else if ("NUMBER-OF-TOP-QUERIES-TO-REPORT".equals(name.toUpperCase(Locale.getDefault()))) {
                     configProperties.add(new ConnectorConfigProperty("NumberOfTopQueriesToReport", adminPoolProperty.getValue(), "NumberOfTopQueriesToReport",
-                            "java.lang.String"));
+                            String.class.getName()));
 
                 } else if ("TIME-TO-KEEP-QUERIES-IN-MINUTES".equals(name.toUpperCase(Locale.getDefault()))) {
                     configProperties.add(new ConnectorConfigProperty("TimeToKeepQueriesInMinutes", adminPoolProperty.getValue(), "TimeToKeepQueriesInMinutes",
-                            "java.lang.String"));
+                            String.class.getName()));
 
                 } else if (mcfConPropKeys.containsKey(name.toUpperCase(Locale.getDefault()))) {
                     configProperties.add(new ConnectorConfigProperty(mcfConPropKeys.get(name.toUpperCase(Locale.getDefault())),
-                            adminPoolProperty.getValue() == null ? "" : adminPoolProperty.getValue(), "Some property", "java.lang.String"));
+                            adminPoolProperty.getValue() == null ? "" : adminPoolProperty.getValue(), "Some property", String.class.getName()));
                 } else {
                     driverProperties = driverProperties + "set" + escape(name) + "#" + escape(adminPoolProperty.getValue()) + "##";
                 }
@@ -513,12 +517,12 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
                     new ConnectorConfigProperty(
                         "DriverProperties", driverProperties,
                         "some proprietarty properties",
-                        "java.lang.String"));
+                        String.class.getName()));
             }
         }
 
-        configProperties.add(new ConnectorConfigProperty("Delimiter", "#", "delim", "java.lang.String"));
-        configProperties.add(new ConnectorConfigProperty("EscapeCharacter", "\\", "escapeCharacter", "java.lang.String"));
+        configProperties.add(new ConnectorConfigProperty("Delimiter", "#", "delim", String.class.getName()));
+        configProperties.add(new ConnectorConfigProperty("EscapeCharacter", "\\", "escapeCharacter", String.class.getName()));
 
         // Create an array of EnvironmentProperties from above list
         ConnectorConfigProperty[] environmentProperties = new ConnectorConfigProperty[configProperties.size()];
@@ -546,7 +550,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
         if (property == null) {
             return defaultValue;
         }
-        return Boolean.valueOf(property);
+        return Boolean.parseBoolean(property);
     }
 
     private ConnectorConnectionPool createConnectorConnectionPool(JdbcConnectionPool adminPool, PoolInfo poolInfo) throws ConnectorRuntimeException {
@@ -598,29 +602,29 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
     }
 
     private void setConnectorConnectionPoolAttributes(ConnectorConnectionPool connectorConnectionPool, JdbcConnectionPool adminPool) {
-        String poolName = connectorConnectionPool.getName();
+        SimpleJndiName poolName = connectorConnectionPool.getName();
 
         connectorConnectionPool.setMaxPoolSize(adminPool.getMaxPoolSize());
         connectorConnectionPool.setSteadyPoolSize(adminPool.getSteadyPoolSize());
         connectorConnectionPool.setMaxWaitTimeInMillis(adminPool.getMaxWaitTimeInMillis());
         connectorConnectionPool.setPoolResizeQuantity(adminPool.getPoolResizeQuantity());
         connectorConnectionPool.setIdleTimeoutInSeconds(adminPool.getIdleTimeoutInSeconds());
-        connectorConnectionPool.setFailAllConnections(Boolean.valueOf(adminPool.getFailAllConnections()));
-        connectorConnectionPool.setConnectionValidationRequired(Boolean.valueOf(adminPool.getIsConnectionValidationRequired()));
-        connectorConnectionPool.setNonTransactional(Boolean.valueOf(adminPool.getNonTransactionalConnections()));
-        connectorConnectionPool.setNonComponent(Boolean.valueOf(adminPool.getAllowNonComponentCallers()));
-        connectorConnectionPool.setPingDuringPoolCreation(Boolean.valueOf(adminPool.getPing()));
+        connectorConnectionPool.setFailAllConnections(Boolean.parseBoolean(adminPool.getFailAllConnections()));
+        connectorConnectionPool.setConnectionValidationRequired(Boolean.parseBoolean(adminPool.getIsConnectionValidationRequired()));
+        connectorConnectionPool.setNonTransactional(Boolean.parseBoolean(adminPool.getNonTransactionalConnections()));
+        connectorConnectionPool.setNonComponent(Boolean.parseBoolean(adminPool.getAllowNonComponentCallers()));
+        connectorConnectionPool.setPingDuringPoolCreation(Boolean.parseBoolean(adminPool.getPing()));
 
         // These are default properties of all Jdbc pools
         // So set them here first and then figure out from the parsing routine
         // if they need to be reset
-        connectorConnectionPool.setMatchConnections(Boolean.valueOf(adminPool.getMatchConnections()));
-        connectorConnectionPool.setAssociateWithThread(Boolean.valueOf(adminPool.getAssociateWithThread()));
+        connectorConnectionPool.setMatchConnections(Boolean.parseBoolean(adminPool.getMatchConnections()));
+        connectorConnectionPool.setAssociateWithThread(Boolean.parseBoolean(adminPool.getAssociateWithThread()));
         connectorConnectionPool.setConnectionLeakTracingTimeout(adminPool.getConnectionLeakTimeoutInSeconds());
-        connectorConnectionPool.setConnectionReclaim(Boolean.valueOf(adminPool.getConnectionLeakReclaim()));
+        connectorConnectionPool.setConnectionReclaim(Boolean.parseBoolean(adminPool.getConnectionLeakReclaim()));
 
-        boolean lazyConnectionEnlistment = Boolean.valueOf(adminPool.getLazyConnectionEnlistment());
-        boolean lazyConnectionAssociation = Boolean.valueOf(adminPool.getLazyConnectionAssociation());
+        boolean lazyConnectionEnlistment = Boolean.parseBoolean(adminPool.getLazyConnectionEnlistment());
+        boolean lazyConnectionAssociation = Boolean.parseBoolean(adminPool.getLazyConnectionAssociation());
 
         // lazy-connection-enlistment need to be ON for lazy-connection-association to
         // work.
@@ -637,11 +641,11 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
             connectorConnectionPool.setLazyConnectionEnlist(lazyConnectionEnlistment);
         }
 
-        boolean pooling = Boolean.valueOf(adminPool.getPooling());
+        boolean pooling = Boolean.parseBoolean(adminPool.getPooling());
 
         if (!pooling) {
             // Throw exception if assoc with thread is set to true.
-            if (Boolean.valueOf(adminPool.getAssociateWithThread())) {
+            if (Boolean.parseBoolean(adminPool.getAssociateWithThread())) {
                 LOG.log(SEVERE, "conn_pool_obj_utils.pooling_disabled_assocwiththread_invalid_combination", poolName);
                 throw new RuntimeException(STRINGS.getString("cpou.pooling_disabled_assocwiththread_invalid_combination", poolName));
             }
@@ -649,13 +653,13 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer<JdbcConnecti
             // Below are useful in pooled environment only.
             // Throw warning for connection validation/validate-atmost-once/
             // match-connections/max-connection-usage-count/idele-timeout
-            if (Boolean.valueOf(adminPool.getIsConnectionValidationRequired())) {
+            if (Boolean.parseBoolean(adminPool.getIsConnectionValidationRequired())) {
                 LOG.log(WARNING, "conn_pool_obj_utils.pooling_disabled_conn_validation_invalid_combination", poolName);
             }
             if (Integer.parseInt(adminPool.getValidateAtmostOncePeriodInSeconds()) > 0) {
                 LOG.log(WARNING, "conn_pool_obj_utils.pooling_disabled_validate_atmost_once_invalid_combination", poolName);
             }
-            if (Boolean.valueOf(adminPool.getMatchConnections())) {
+            if (Boolean.parseBoolean(adminPool.getMatchConnections())) {
                 LOG.log(WARNING, "conn_pool_obj_utils.pooling_disabled_match_connections_invalid_combination", poolName);
             }
             if (Integer.parseInt(adminPool.getMaxConnectionUsageCount()) > 0) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +16,6 @@
  */
 
 package org.glassfish.resources.naming;
-
 
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -103,7 +103,7 @@ public class JndiProxyObjectFactory implements ObjectFactory {
             throw new NamingException("JndiProxyObjectFactory: no resourceInfo context info");
         }
 
-        ProxyRefAddr contextAddr = (ProxyRefAddr) ref.get(resourceInfo.getName());
+        ProxyRefAddr contextAddr = (ProxyRefAddr) ref.get(resourceInfo.getName().toString());
         Hashtable env = null;
         if (contextAddr == null || jndiFactoryClass == null || (env = (Hashtable) (contextAddr.getContent())) == null) {
             throw new NamingException("JndiProxyObjectFactory: no info in the " +
@@ -135,13 +135,12 @@ public class JndiProxyObjectFactory implements ObjectFactory {
             context = loadInitialContext(jndiFactoryClass, env);
             if (context == null) {
                 throw new NamingException ("JndiProxyObjectFactory no InitialContext" + jndiFactoryClass);
-            } else {
-                contextMap.put(resourceInfo, context);
-                try {
-                    retObj = context.lookup(jndiLookupName);
-                } catch (NameNotFoundException e) {
-                    throw new ExternalNameNotFoundException(e);
-                }
+            }
+            contextMap.put(resourceInfo, context);
+            try {
+                retObj = context.lookup(jndiLookupName);
+            } catch (NameNotFoundException e) {
+                throw new ExternalNameNotFoundException(e);
             }
         }
         return retObj;

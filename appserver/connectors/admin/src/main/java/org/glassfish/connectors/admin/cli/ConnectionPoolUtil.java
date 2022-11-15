@@ -17,7 +17,6 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.appserv.connectors.internal.api.ConnectorsUtil;
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Applications;
@@ -33,6 +32,7 @@ import jakarta.inject.Singleton;
 
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
@@ -93,12 +93,12 @@ public class ConnectionPoolUtil {
         return true;
     }
 
-    public boolean isValidPool(Resources resources, String poolName, String prefix, ActionReport report) {
+    public boolean isValidPool(Resources resources, SimpleJndiName poolName, String prefix, ActionReport report) {
         if (resources == null) {
             setResourceNotFoundErrorMessage(report, poolName);
             return false;
         }
-        if (ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolName) == null) {
+        if (resources.getResourceByName(ResourcePool.class, poolName) == null) {
             setResourceNotFoundErrorMessage(report, poolName);
             return false;
         }
@@ -136,7 +136,7 @@ public class ConnectionPoolUtil {
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
     }
 
-    private void setResourceNotFoundErrorMessage(ActionReport report, String poolName){
+    private void setResourceNotFoundErrorMessage(ActionReport report, SimpleJndiName poolName){
         report.setMessage(I18N.getLocalString(
                 "pool.util.pool.does.not-exist",
                 "Pool {0} does not exist.", poolName));

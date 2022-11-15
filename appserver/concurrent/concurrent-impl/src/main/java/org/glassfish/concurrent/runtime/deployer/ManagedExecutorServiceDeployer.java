@@ -32,6 +32,7 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 
 import org.glassfish.api.logging.LogHelper;
+import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.concurrent.config.ManagedExecutorService;
 import org.glassfish.concurrent.runtime.ConcurrentRuntime;
 import org.glassfish.concurrent.runtime.LogFacade;
@@ -85,8 +86,8 @@ public class ManagedExecutorServiceDeployer implements ResourceDeployer<ManagedE
             return;
         }
 
-        String jndiName = resource.getJndiName();
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
         ManagedExecutorServiceCfg config = new ManagedExecutorServiceCfg(resource);
 
         Reference ref= new Reference(
@@ -118,8 +119,9 @@ public class ManagedExecutorServiceDeployer implements ResourceDeployer<ManagedE
     @Override
     public void undeployResource(ManagedExecutorService resource, String applicationName,
         String moduleName) throws Exception {
-        ResourceInfo resourceInfo = new ResourceInfo(resource.getJndiName(), applicationName, moduleName);
-        namingService.unpublishObject(resourceInfo, resource.getJndiName());
-        concurrentRuntime.shutdownManagedExecutorService(resource.getJndiName());
+        SimpleJndiName jndiName = new SimpleJndiName(resource.getJndiName());
+        ResourceInfo resourceInfo = new ResourceInfo(jndiName, applicationName, moduleName);
+        namingService.unpublishObject(resourceInfo, jndiName);
+        concurrentRuntime.shutdownManagedExecutorService(jndiName);
     }
 }

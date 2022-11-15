@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,18 +16,6 @@
  */
 
 package org.glassfish.weld.services;
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-
-import org.glassfish.ejb.api.EjbContainerServices;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.weld.DeploymentImpl;
-import org.glassfish.weld.connector.WeldUtils;
-import org.jboss.weld.injection.spi.InjectionContext;
-import org.jboss.weld.injection.spi.InjectionServices;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.container.common.spi.util.InjectionException;
@@ -52,14 +41,30 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+import org.glassfish.api.naming.SimpleJndiName;
+import org.glassfish.ejb.api.EjbContainerServices;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.weld.DeploymentImpl;
+import org.glassfish.weld.connector.WeldUtils;
+import org.jboss.weld.injection.spi.InjectionContext;
+import org.jboss.weld.injection.spi.InjectionServices;
+
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
+import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
+
 public class InjectionServicesImpl implements InjectionServices {
 
-    private InjectionManager injectionManager;
+    private final InjectionManager injectionManager;
 
     // Associated bundle context
-    private BundleDescriptor bundleContext;
+    private final BundleDescriptor bundleContext;
 
-    private DeploymentImpl deployment;
+    private final DeploymentImpl deployment;
 
     private WsInjectionHandler wsHandler;
 
@@ -93,8 +98,8 @@ public class InjectionServicesImpl implements InjectionServices {
 
             JndiNameEnvironment injectionEnv = (JndiNameEnvironment) bundleContext;
 
-            AnnotatedType annotatedType = injectionContext.getAnnotatedType();
-            Class targetClass = annotatedType.getJavaClass();
+            AnnotatedType<T> annotatedType = injectionContext.getAnnotatedType();
+            Class<T> targetClass = annotatedType.getJavaClass();
             String targetClassName = targetClass.getName();
             Object target = injectionContext.getTarget();
 
@@ -130,16 +135,18 @@ public class InjectionServicesImpl implements InjectionServices {
                 }
 
                 if (mbDesc != null) {
-                    injectionManager.injectInstance(target, mbDesc.getGlobalJndiName(), false);
+                    SimpleJndiName componentId = mbDesc.getGlobalJndiName();
+                    injectionManager.injectInstance(target, componentId, false);
                 } else if (injectionEnv instanceof EjbBundleDescriptor) {
 
                     // CDI-style managed bean that doesn't have @ManagedBean annotation but
                     // is injected within the context of an ejb.  Need to explicitly
                     // set the environment of the ejb bundle.
+                    SimpleJndiName componentId = SimpleJndiName.of(compEnvManager.getComponentEnvId(injectionEnv));
                     if (target == null) {
-                        injectionManager.injectClass(targetClass, compEnvManager.getComponentEnvId(injectionEnv), false);
+                        injectionManager.injectClass(targetClass, componentId, false);
                     } else {
-                        injectionManager.injectInstance(target, compEnvManager.getComponentEnvId(injectionEnv), false);
+                        injectionManager.injectInstance(target, componentId, false);
                     }
                 } else {
                     if (target == null) {
@@ -168,7 +175,7 @@ public class InjectionServicesImpl implements InjectionServices {
         }
 
         // We are only validating producer fields of resources.  See spec section 3.7.1
-        Class annotatedClass = annotatedType.getJavaClass();
+        Class<T> annotatedClass = annotatedType.getJavaClass();
         JndiNameEnvironment jndiNameEnvironment = (JndiNameEnvironment) bundleContext;
 
         InjectionInfo injectionInfo = jndiNameEnvironment.getInjectionInfoByClass(annotatedClass);
@@ -192,16 +199,17 @@ public class InjectionServicesImpl implements InjectionServices {
 
     }
 
-    private void validateEjbProducer(Class annotatedClass, AnnotatedField annotatedField, List<InjectionCapable> injectionResources) {
+
+    private <T> void validateEjbProducer(Class<T> annotatedClass, AnnotatedField<?> annotatedField,
+        List<InjectionCapable> injectionResources) {
         EJB ejbAnnotation = annotatedField.getAnnotation(EJB.class);
         if (ejbAnnotation != null) {
-            String lookupName = getLookupName(annotatedClass, annotatedField, injectionResources);
-
+            SimpleJndiName lookupName = getLookupName(annotatedClass, annotatedField, injectionResources);
             EjbDescriptor foundEjb = null;
             Collection<EjbDescriptor> ejbs = deployment.getDeployedEjbs();
             for (EjbDescriptor oneEjb : ejbs) {
-                String jndiName = oneEjb.getJndiName();
-                if (lookupName.contains(jndiName)) {
+                SimpleJndiName jndiName = oneEjb.getJndiName();
+                if (lookupName.contains(jndiName.toString())) {
                     foundEjb = oneEjb;
                     break;
                 }
@@ -209,7 +217,7 @@ public class InjectionServicesImpl implements InjectionServices {
             if (foundEjb != null) {
                 String className = foundEjb.getEjbImplClassName();
                 try {
-                    Class clazz = Class.forName(className, false, annotatedClass.getClassLoader());
+                    Class<?> clazz = Class.forName(className, false, annotatedClass.getClassLoader());
                     validateResourceClass(annotatedField, clazz);
                 } catch (ClassNotFoundException ignore) {
                 }
@@ -217,11 +225,13 @@ public class InjectionServicesImpl implements InjectionServices {
         }
     }
 
-    private void validateResourceProducer(Class annotatedClass, AnnotatedField annotatedField, List<InjectionCapable> injectionResources) {
+
+    private void validateResourceProducer(Class<?> annotatedClass, AnnotatedField annotatedField,
+        List<InjectionCapable> injectionResources) {
         Resource resourceAnnotation = annotatedField.getAnnotation(Resource.class);
         if (resourceAnnotation != null) {
-            String lookupName = getLookupName(annotatedClass, annotatedField, injectionResources);
-            if (lookupName.equals("java:comp/BeanManager")) {
+            SimpleJndiName lookupName = getLookupName(annotatedClass, annotatedField, injectionResources);
+            if (lookupName.toString().equals(JNDI_CTX_JAVA_COMPONENT + "BeanManager")) {
                 validateResourceClass(annotatedField, BeanManager.class);
             } else {
                 boolean done = false;
@@ -232,7 +242,7 @@ public class InjectionServicesImpl implements InjectionServices {
                                     && target.getFieldName().equals(annotatedField.getJavaMember().getName())) {
                                 String type = injectionCapable.getInjectResourceType();
                                 try {
-                                    Class clazz = Class.forName(type, false, annotatedClass.getClassLoader());
+                                    Class<?> clazz = Class.forName(type, false, annotatedClass.getClassLoader());
                                     validateResourceClass(annotatedField, clazz);
                                 } catch (ClassNotFoundException ignore) {
                                 } finally {
@@ -251,37 +261,40 @@ public class InjectionServicesImpl implements InjectionServices {
 
     private void validateResourceClass(AnnotatedField annotatedField, Class resourceClass) {
         if (!annotatedField.getJavaMember().getType().isAssignableFrom(resourceClass)) {
-            throwProducerDefinitionExeption(annotatedField.getJavaMember().getName(), annotatedField.getJavaMember().getType().getName(),
-                    resourceClass.getName());
+            throwProducerDefinitionExeption(annotatedField.getJavaMember().getName(),
+                annotatedField.getJavaMember().getType().getName(), resourceClass.getName());
         }
     }
 
     private void throwProducerDefinitionExeption(String annotatedFieldName, String annotatedFieldType, String resourceClassName) {
-        throw new DefinitionException("The type of the injection point " + annotatedFieldName + " is " + annotatedFieldType
+        throw new DefinitionException(
+            "The type of the injection point " + annotatedFieldName + " is " + annotatedFieldType
                 + ".  The type of the physical resource is " + resourceClassName + " They are incompatible. ");
     }
 
-    private String getComponentEnvName(Class annotatedClass, String fieldName, List<InjectionCapable> injectionResources) {
+
+    private SimpleJndiName getComponentEnvName(Class annotatedClass, String fieldName,
+        List<InjectionCapable> injectionResources) {
         for (InjectionCapable injectionCapable : injectionResources) {
             for (com.sun.enterprise.deployment.InjectionTarget target : injectionCapable.getInjectionTargets()) {
                 if (target.isFieldInjectable()) { // make sure it's a field and not a method
                     if (annotatedClass.getName().equals(target.getClassName()) && target.getFieldName().equals(fieldName)) {
-                        String name = injectionCapable.getComponentEnvName();
-                        if (!name.startsWith("java:")) {
-                            name = "java:comp/env/" + name;
+                        SimpleJndiName name = injectionCapable.getComponentEnvName();
+                        if (!name.hasJavaPrefix()) {
+                            name = new SimpleJndiName(JNDI_CTX_JAVA_COMPONENT_ENV + name);
                         }
-
                         return name;
                     }
                 }
             }
         }
-
         return null;
     }
 
-    private String getLookupName(Class annotatedClass, AnnotatedField annotatedField, List<InjectionCapable> injectionResources) {
-        String lookupName = null;
+
+    private SimpleJndiName getLookupName(Class annotatedClass, AnnotatedField annotatedField,
+        List<InjectionCapable> injectionResources) {
+        SimpleJndiName lookupName = null;
         if (annotatedField.isAnnotationPresent(Resource.class)) {
             Resource resource = annotatedField.getAnnotation(Resource.class);
             lookupName = getJndiName(resource.lookup(), resource.mappedName(), resource.name());
@@ -298,22 +311,21 @@ public class InjectionServicesImpl implements InjectionServices {
             lookupName = getJndiName(persistenceContext.unitName(), null, persistenceContext.name());
         }
 
-        if (lookupName == null || lookupName.trim().length() == 0) {
+        if (lookupName == null || lookupName.isEmpty()) {
             lookupName = getComponentEnvName(annotatedClass, annotatedField.getJavaMember().getName(), injectionResources);
         }
         return lookupName;
     }
 
-    static String getJndiName(String lookup, String mappedName, String name) {
+    static SimpleJndiName getJndiName(String lookup, String mappedName, String name) {
         String jndiName = lookup;
-        if (jndiName == null || jndiName.length() == 0) {
+        if (jndiName == null || jndiName.isEmpty()) {
             jndiName = mappedName;
-            if (jndiName == null || jndiName.length() == 0) {
+            if (jndiName == null || jndiName.isEmpty()) {
                 jndiName = name;
             }
         }
-
-        return jndiName;
+        return jndiName == null ? null : new SimpleJndiName(jndiName.trim());
     }
 
     private WsInjectionHandler getWsHandler() {
@@ -321,8 +333,8 @@ public class InjectionServicesImpl implements InjectionServices {
             try {
                 //TODO: define this properly so that the ServiceLocator can be used instead
                 // and (optional) dependency on webservices-apis can be dropped
-                wsHandler = (WsInjectionHandler) Class.forName("org.glassfish.weld.services.WsInjectionHandlerImpl").getConstructor()
-                        .newInstance();
+                wsHandler = (WsInjectionHandler) Class.forName("org.glassfish.weld.services.WsInjectionHandlerImpl")
+                    .getConstructor().newInstance();
             } catch (ReflectiveOperationException | SecurityException t) {
                 // not loaded due to missing jakarta.xml.ws packages => likely web profile
                 // let's use noop handler

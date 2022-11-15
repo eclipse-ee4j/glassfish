@@ -194,6 +194,319 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             }
             return dottedNameForResourceName.toString().replace('.', '/');
         }
+
+        private class ExecutionContext {
+            String pattern = SetOperation.this.pattern;
+            String attrName = SetOperation.this.attrName;
+            String prefix;
+            boolean lookAtSubNodes;
+            boolean applyOverrideRules;
+
+            private Map<Dom, String> findDottedNames(TreeNode[] parentNodes, String pattern) {
+                Map<Dom, String> dottedNames = new HashMap<Dom, String>();
+                this.applyOverrideRules = false;
+                if (lookAtSubNodes) {
+                    for (TreeNode parentNode : parentNodes) {
+                        dottedNames.putAll(getAllDottedNodes(parentNode.node));
+                    }
+                    this.applyOverrideRules = true;
+                } else {
+                    for (TreeNode parentNode : parentNodes) {
+                        dottedNames.put(parentNode.node, pattern);
+                    }
+                }
+                return dottedNames;
+            }
+
+            private void resetPattern(TreeNode[] parentNodes, String somePattern) {
+                this.pattern = somePattern;
+                this.lookAtSubNodes = true;
+                if (parentNodes[0].relativeName.length() == 0
+                        || parentNodes[0].relativeName.equals("domain")) {
+                    // handle the case where the pattern references an attribute of the top-level node
+                    this.prefix = "";
+                    // pattern is already set properly
+                    this.lookAtSubNodes = false;
+                } else if (!pattern.startsWith(parentNodes[0].relativeName)) {
+                    this.prefix = pattern.substring(0, pattern.indexOf(parentNodes[0].relativeName));
+                    this.pattern = parentNodes[0].relativeName;
+                } else {
+                    this.prefix = "";
+                    this.pattern = parentNodes[0].relativeName;
+                }
+            }
+
+            private boolean setAsPropertyObject(Map<Dom, String> dottedNames, AdminCommandContext context, String targetName) throws TransactionFailure {
+                this.pattern = getParentFromDottedPattern(pattern);
+                TreeNode[] parentNodes = getAliasedParent(domain, pattern);
+                this.pattern = parentNodes[0].relativeName;
+                Map<Dom, String> matchingNodes = getMatchingNodes(dottedNames, pattern);
+                Dom parentNode = null;
+                if (matchingNodes.isEmpty()) {
+                    parentNode = createMissingNodes(dottedNames, pattern);
+                } else {
+                    // need to find the right parent.
+                    for (Map.Entry<Dom, String> node : matchingNodes.entrySet()) {
+                        if (node.getValue().equals(pattern)) {
+                            parentNode = node.getKey();
+                        }
+                    }
+                }
+                if (parentNode == null) {
+                    //fail(context, "No configuration found for " + targetName);
+                    fail(context, localStrings.getLocalString("admin.set.configuration.notfound", "No configuration found for {0}", targetName));
+                    return false;
+                }
+
+                if (value == null || value.length() == 0) {
+                    // setting to the empty string means to remove the property, so don't create it
+                    success(context, targetName, value);
+                    return true;
+                }
+                // create and set the property
+                Map<String, String> attributes = new HashMap<String, String>();
+                attributes.put("value", value);
+                attributes.put("name", attrName);
+                try {
+                    if (!(parentNode instanceof ConfigBean)) {
+                        final ClassCastException cce = new ClassCastException(parentNode.getClass().getName());
+                        fail(context, localStrings.getLocalString("admin.set.attribute.change.failure",
+                                "Could not change the attributes: {0}",
+                                cce.getMessage(), cce));
+                        return false;
+                    }
+                    ConfigSupport.createAndSet((ConfigBean) parentNode, Property.class, attributes);
+                    success(context, targetName, value);
+                    runLegacyChecks(context);
+                    if (targetService.isThisDAS() && !replicateSetCommand(context, targetName, value)) {
+                        return false;
+                    }
+                    return true;
+                } catch (TransactionFailure transactionFailure) {
+                    //fail(context, "Could not change the attributes: " +
+                    //    transactionFailure.getMessage(), transactionFailure);
+                    fail(context, localStrings.getLocalString("admin.set.attribute.change.failure", "Could not change the attributes: {0}",
+                            transactionFailure.getMessage()), transactionFailure);
+                    return false;
+                }
+
+            }
+
+            private Dom createMissingNodes(Map<Dom, String> dottedNames, String dottedPattern) throws TransactionFailure {
+                String parentPattern = getParentFromDottedPattern(dottedPattern);
+                if (parentPattern == null) {
+                    return null;
+                }
+                TreeNode[] parentNodes = getAliasedParent(domain, parentPattern);
+                parentPattern = parentNodes[0].relativeName;
+                String leafName = getLeafFromDottedPattern(dottedPattern);
+                Map<Dom, String> parentMatchingNodes = getMatchingNodes(dottedNames, parentPattern);
+                Dom parentNode = null;
+                if (parentMatchingNodes.isEmpty()) {
+                    parentNode = createMissingNodes(dottedNames, parentPattern);
+                    if (parentNode == null) {
+                        return null;
+                    }
+                } else {
+                    // need to find the right parent.
+                    for (Map.Entry<Dom, String> node : parentMatchingNodes.entrySet()) {
+                        if (node.getValue().equals(parentPattern)) {
+                            parentNode = node.getKey();
+                        }
+                    }
+                }
+
+                if (!(parentNode instanceof ConfigBean)) {
+                    return null;
+                }
+
+                final ConfigBean newNode = ConfigSupport.createAndSet((ConfigBean) parentNode,
+                        modularityHelper.getClassFor(leafName), Collections.emptyMap());
+                return newNode;
+            }
+        }
+
+        public boolean execute(AdminCommandContext context) {
+
+            ExecutionContext ctx = new ExecutionContext();
+
+            // now
+            // first let's get the parent for this pattern.
+            TreeNode[] parentNodes = getAliasedParent(domain, ctx.pattern);
+
+            // reset the pattern.
+            ctx.resetPattern(parentNodes, ctx.pattern);
+            String targetName = ctx.prefix + ctx.pattern;
+
+            if (modularityHelper != null) {
+                synchronized (utils) {
+                    boolean oldv = utils.isCommandInvocation();
+                    utils.setCommandInvocation(true);
+                    modularityHelper.getLocationForDottedName(targetName);
+                    utils.setCommandInvocation(oldv);
+                }
+            }
+
+            Map<Dom, String> dottedNames = ctx.findDottedNames(parentNodes, ctx.pattern);
+            Map<Dom, String> matchingNodes = getMatchingNodes(dottedNames, ctx.pattern);
+
+            if (matchingNodes.isEmpty()) {
+                try {
+                    // it's possible they are trying to create a property object.. lets check this.
+                    // strip out the property name
+                    String parentPattern = getParentFromDottedPattern(this.target);
+                    if (parentPattern.endsWith("property")) {
+                        ctx.pattern = parentPattern;
+                        return ctx.setAsPropertyObject(dottedNames, context, targetName);
+                    }
+
+                // attempt to create missing nodes and search for a matching node again
+                    ctx.createMissingNodes(dottedNames, this.pattern);
+                } catch (TransactionFailure ex) {
+                    fail(context, localStrings.getLocalString("admin.set.badelement", "Cannot change the element: {0}",
+                            ex.getMessage()), ex);
+                    return false;
+                }
+                dottedNames = ctx.findDottedNames(parentNodes, this.pattern);
+                matchingNodes = getMatchingNodes(dottedNames, this.pattern);
+            }
+
+            Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+
+            boolean setElementSuccess = false;
+            boolean delPropertySuccess = false;
+            boolean delProperty = false;
+            Map<String, String> attrChanges = new HashMap<String, String>();
+            if (isProperty) {
+                ctx.attrName = "value";
+                if ((value == null) || (value.length() == 0)) {
+                    delProperty = true;
+                }
+                attrChanges.put(ctx.attrName, value);
+            }
+
+            List<Map.Entry> mNodes = new ArrayList(matchingNodes.entrySet());
+            if (ctx.applyOverrideRules) {
+                mNodes = applyOverrideRules(mNodes);
+            }
+            for (Map.Entry<Dom, String> node : mNodes) {
+                final Dom targetNode = node.getKey();
+
+                for (String name : targetNode.model.getAttributeNames()) {
+                    String finalDottedName = node.getValue() + "." + name;
+                    if (matches(finalDottedName, ctx.pattern)) {
+                        if (ctx.attrName.equals(name)
+                                || ctx.attrName.replace('_', '-').equals(name.replace('_', '-'))) {
+                            if (isDeprecatedAttr(targetNode, name)) {
+                                warning(context, localStrings.getLocalString("admin.set.deprecated",
+                                        "Warning: The attribute {0} is deprecated.", finalDottedName));
+                            }
+
+                            if (!isProperty) {
+                                targetName = ctx.prefix + finalDottedName;
+
+                                if (value != null && value.length() > 0) {
+                                    attrChanges.put(name, value);
+                                } else {
+                                    attrChanges.put(name, null);
+                                }
+                            } else {
+                                targetName = ctx.prefix + node.getValue();
+                            }
+
+                            if (delProperty) {
+                                // delete property element
+                                String str = node.getValue();
+                                if (trueLastIndexOf(str, '.') != -1) {
+                                    str = str.substring(trueLastIndexOf(str, '.') + 1);
+                                }
+                                try {
+                                    if (str != null) {
+                                        ConfigSupport.deleteChild((ConfigBean) targetNode.parent(), (ConfigBean) targetNode);
+                                        delPropertySuccess = true;
+                                    }
+                                } catch (IllegalArgumentException ie) {
+                                    fail(context, localStrings.getLocalString("admin.set.delete.property.failure", "Could not delete the property: {0}",
+                                            ie.getMessage()), ie);
+                                    return false;
+                                } catch (TransactionFailure transactionFailure) {
+                                    fail(context, localStrings.getLocalString("admin.set.attribute.change.failure", "Could not change the attributes: {0}",
+                                            transactionFailure.getMessage()), transactionFailure);
+                                    return false;
+                                }
+                            } else {
+                                changes.put((ConfigBean) node.getKey(), attrChanges);
+                            }
+
+                        }
+                    }
+                }
+
+                for (String name : targetNode.model.getLeafElementNames()) {
+                    String finalDottedName = node.getValue() + "." + name;
+                    if (matches(finalDottedName, ctx.pattern)) {
+                        if (ctx.attrName.equals(name)
+                                || ctx.attrName.replace('_', '-').equals(name.replace('_', '-'))) {
+                            if (isDeprecatedAttr(targetNode, name)) {
+                                warning(context, localStrings.getLocalString("admin.set.elementdeprecated",
+                                        "Warning: The element {0} is deprecated.", finalDottedName));
+                            }
+                            try {
+                                setLeafElement((ConfigBean) targetNode, name, value);
+                            } catch (TransactionFailure ex) {
+                                fail(context, localStrings.getLocalString("admin.set.badelement", "Cannot change the element: {0}",
+                                        ex.getMessage()), ex);
+                                return false;
+                            }
+                            setElementSuccess = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!changes.isEmpty()) {
+                try {
+                    config.apply(changes);
+                    success(context, targetName, value);
+                    runLegacyChecks(context);
+                } catch (TransactionFailure transactionFailure) {
+                    //fail(context, "Could not change the attributes: " +
+                    //        transactionFailure.getMessage(), transactionFailure);
+                    fail(context, localStrings.getLocalString("admin.set.attribute.change.failure", "Could not change the attributes: {0}",
+                            transactionFailure.getMessage()), transactionFailure);
+                    return false;
+                }
+
+            } else if (delPropertySuccess || setElementSuccess) {
+                success(context, targetName, value);
+            } else {
+                fail(context, localStrings.getLocalString("admin.set.configuration.notfound", "No configuration found for {0}", targetName));
+                return false;
+            }
+            if (targetService.isThisDAS() && !replicateSetCommand(context, targetName, value)) {
+                return false;
+            }
+            return true;
+        }
+
+        private String getParentFromDottedPattern(String dottedPattern) {
+            final int index = trueLastIndexOf(dottedPattern, '.');
+            if (index >= 0) {
+                return dottedPattern.substring(0, index);
+            } else {
+                return null;
+            }
+        }
+
+        private String getLeafFromDottedPattern(String dottedPattern) {
+            final int index = trueLastIndexOf(dottedPattern, '.');
+            if (index >= 0) {
+                return dottedPattern.substring(trueLastIndexOf(dottedPattern, '.') + 1);
+            } else {
+                return dottedPattern;
+            }
+        }
+
     }
 
     /**

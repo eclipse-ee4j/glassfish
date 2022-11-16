@@ -266,6 +266,14 @@ public class RestTestBase {
         return new HashMap<>();
     }
 
+    @SuppressWarnings("unchecked")
+    protected Map<String, Object> getExtraProperties(Response response) {
+        Map<String, Object> responseEntity = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));
+        if (responseEntity == null) {
+            return null;
+        }
+        return (Map<String, Object>) responseEntity.get("extraProperties");
+    }
 
     protected List<Map<String, String>> getProperties(Response response) {
         Map responseMap = MarshallingUtils.buildMapFromDocument(response.readEntity(String.class));

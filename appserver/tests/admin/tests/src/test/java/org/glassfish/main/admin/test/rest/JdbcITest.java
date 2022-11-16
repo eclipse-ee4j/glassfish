@@ -22,21 +22,32 @@ import jakarta.ws.rs.core.Response;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.glassfish.main.admin.test.tool.RandomGenerator;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author jasonlee
  */
 public class JdbcITest extends RestTestBase {
+
+    private static final String URL_DATABASE_VENDOR_NAMES = "/domain/resources/get-database-vendor-names";
+
+    private static final String URL_JDBC_DRIVER_CLASS_NAMES = "/domain/resources/get-jdbc-driver-class-names";
+
+    private static final String DATABASE_VENDOR_ORACLE = "ORACLE";
 
     @Test
     public void testReadingPoolEntity() {
@@ -105,5 +116,66 @@ public class JdbcITest extends RestTestBase {
             "org.apache.derby.jdbc.ClientDataSource");
         Response response = managementClient.post(URL_JDBC_CONNECTION_POOL, params);
         assertEquals(500, response.getStatus());
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetDatabaseVendorNames() {
+        Response response = managementClient.get(URL_DATABASE_VENDOR_NAMES);
+        assertEquals(200, response.getStatus());
+
+        Map<String, Object> extraProperties = getExtraProperties(response);
+        assertNotNull(extraProperties);
+
+        List<String> vendorNames = (List<String>) extraProperties.get("vendorNames");
+        assertThat(vendorNames, not(empty()));
+    }
+
+    @Test
+    public void testGetJdbcDriverClassNames() {
+        List<String> driverClassNames = getJdbcResourceClassNames("java.sql.Driver");
+
+        assertNotNull(driverClassNames);
+        assertThat(driverClassNames, not(empty()));
+    }
+
+    @Test
+    public void testGetDataSourceClassNames() {
+        List<String> dataSourceClassNames = getJdbcResourceClassNames("javax.sql.DataSource");
+
+        assertNotNull(dataSourceClassNames);
+        assertThat(dataSourceClassNames, not(empty()));
+    }
+
+    @Test
+    public void testGetXADataSourceClassNames() {
+        List<String> dataSourceClassNames = getJdbcResourceClassNames("javax.sql.XADataSource");
+
+        assertNotNull(dataSourceClassNames);
+        assertThat(dataSourceClassNames, not(empty()));
+    }
+
+    @Test
+    public void testGetConnectionPoolDataSourceClassNames() {
+        List<String> dataSourceClassNames = getJdbcResourceClassNames("javax.sql.ConnectionPoolDataSource");
+
+        assertNotNull(dataSourceClassNames);
+        assertThat(dataSourceClassNames, not(empty()));
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> getJdbcResourceClassNames(String resourceType) {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("dbVendor", DATABASE_VENDOR_ORACLE);
+        queryParams.put("restype", resourceType);
+        queryParams.put("introspect", "false");
+
+        Response response = managementClient.get(URL_JDBC_DRIVER_CLASS_NAMES, queryParams);
+
+        Map<String, Object> extraProperties = getExtraProperties(response);
+        if (extraProperties == null) {
+            return null;
+        }
+        return (List<String>) extraProperties.get("driverClassNames");
     }
 }

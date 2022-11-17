@@ -125,10 +125,18 @@ public class TckConfiguration {
 
 
     /**
+     * Resolves to the first value set:
+     * <ol>
+     * <li>System property ant.home (set in command line or Maven profile)
+     * <li>Environment property ANT_HOME (set in bash environment and resolved via pom.xml)
+     * <li>Default /usr/share/ant
+     * </ol>
+     *
      * @return Ant home directory (note: 1.9.14 recommended)
      */
     public File getAntDirectory() {
-        return new File(cfg.getProperty("ant.directory"));
+        final String antHome = cfg.getProperty("ant.directory");
+        return new File(antHome == null || antHome.isEmpty() || antHome.startsWith("$") ? "/usr/share/ant" : antHome);
     }
 
 

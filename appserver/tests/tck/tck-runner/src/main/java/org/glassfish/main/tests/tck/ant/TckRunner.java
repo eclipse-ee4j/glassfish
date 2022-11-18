@@ -203,8 +203,11 @@ public class TckRunner {
         env.put("HARNESS_DEBUG", String.valueOf(cfg.isHarnessLoggingEnabled()));
         env.put("AS_DEBUG", String.valueOf(cfg.isAsadminLoggingEnabled()));
 
-        env.put("PATH", cfg.getJdkDirectory().getAbsolutePath() + "/bin:" + cfg.getAntDirectory().getAbsolutePath()
-            + "/bin/:/usr/bin");
+        env.put("PATH", String.join(":",
+            cfg.getJdkDirectory().getAbsolutePath() + "/bin",
+            cfg.getAntDirectory().getAbsolutePath() + "/bin",
+            "/usr/bin",
+            "/bin"));
         env.put("CTS_HOME", cfg.getTargetDir().getAbsolutePath());
         env.put("TS_HOME", cfg.getJakartaeeDir().getAbsolutePath());
         env.put("GF_BUNDLE_ZIP", this.glassfishZip.getAbsolutePath());

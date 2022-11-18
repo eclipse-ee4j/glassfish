@@ -22,10 +22,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.eclipse.ee4j</groupId>
+        <groupId>org.glassfish.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.8-M2</version>
-        <relativePath>../ee4j</relativePath>
+        <version>1.0.8-M1</version>
+        <relativePath>../../../ee4j</relativePath>
     </parent>
 
     <groupId>org.glassfish.quicklook</groupId>

@@ -32,7 +32,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -46,6 +45,9 @@ import static org.hamcrest.Matchers.arrayWithSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * test the set command
@@ -66,8 +68,17 @@ public class ConfigAttributeSetTest implements ConfigListener {
         adminSubject = mockGenerator.createAsadminSubject();
     }
 
-    @Test
-    public void simpleAttributeSetTest() {
+    @ParameterizedTest(name = "{index}: Test setting {0}")
+    @CsvSource({
+        "a direct property,"
+        + "configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.port,"
+        + "8090",
+        "an aliased property,"
+        + "server.network-config.network-listeners.network-listener.http-listener-1.port,"
+        + "8090"
+            
+    })
+    public void setListenerPortNumber(String testDescription, String propertyName, String propertyValue) {
         CommandRunnerImpl runner = locator.getService(CommandRunnerImpl.class);
         assertNotNull(runner);
 
@@ -81,6 +92,8 @@ public class ConfigAttributeSetTest implements ConfigListener {
             }
         }
         assertNotNull(listener);
+        
+        String oldPortValue = listener.getPort();
 
         // Let's register a listener
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(listener);
@@ -88,8 +101,7 @@ public class ConfigAttributeSetTest implements ConfigListener {
 
         // parameters to the command
         ParameterMap parameters = new ParameterMap();
-        parameters.set("DEFAULT",
-            "configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.port=8090");
+        parameters.set("DEFAULT", propertyName + "=" + propertyValue);
         // execute the set command.
         PlainTextActionReporter reporter = new PlainTextActionReporter();
         CommandInvocation invocation = runner.getCommandInvocation("set", reporter, adminSubject).parameters(parameters);
@@ -103,13 +115,13 @@ public class ConfigAttributeSetTest implements ConfigListener {
 
         // check the result.
         String port = listener.getPort();
-        assertEquals("8090", port);
+        assertEquals(propertyValue, port);
 
         // check we recevied the event
         assertNotNull(event);
         assertAll(
-            () -> assertEquals("8080", event.getOldValue()),
-            () -> assertEquals("8090", event.getNewValue()),
+            () -> assertEquals(oldPortValue, event.getOldValue()),
+            () -> assertEquals(propertyValue, event.getNewValue()),
             () -> assertEquals("port", event.getPropertyName())
         );
 

@@ -23,7 +23,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.8-M1</version>
-        <relativePath>../ee4j/pom.xml</relativePath>
+        <relativePath>../ee4j</relativePath>
     </parent>
     <version>7.0.0-SNAPSHOT</version>
     <groupId>org.glassfish.docs</groupId>

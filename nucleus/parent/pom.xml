@@ -25,7 +25,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.8-M1</version>
-        <relativePath>../../ee4j/pom.xml</relativePath>
+        <relativePath>../../ee4j</relativePath>
     </parent>
 
     <groupId>org.glassfish.main</groupId>
@@ -129,7 +129,7 @@
         <glassfish-management-api.version>3.2.3</glassfish-management-api.version>
         <pfl.version>4.1.2</pfl.version>
         <gmbal.version>4.0.3</gmbal.version>
-        <shoal.version>3.0.0-M1</shoal.version>
+        <shoal.version>3.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.15</command-security-plugin.version>

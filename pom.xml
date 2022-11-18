@@ -24,7 +24,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.8-M1</version>
-        <relativePath>ee4j/pom.xml</relativePath>
+        <relativePath>ee4j</relativePath>
     </parent>
 
     <groupId>org.glassfish.main</groupId>
@@ -104,6 +104,7 @@
                 </property>
             </activation>
             <modules>
+                <module>ee4j</module>
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
@@ -121,6 +122,7 @@
                 </property>
             </activation>
             <modules>
+                <module>ee4j</module>
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>
@@ -129,6 +131,7 @@
         <profile>
             <id>set-version-id</id>
             <modules>
+                <module>ee4j</module>
                 <module>qa</module>
                 <module>nucleus</module>
                 <module>appserver</module>

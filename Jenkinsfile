@@ -150,7 +150,7 @@ pipeline {
           mvn clean install -Pfastest,staging -T4C
           ./gfbuild.sh archive_bundles
           mvn clean
-          tar -c -C ${WORKSPACE}/appserver/tests ee4j common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
+          tar -c -C ${WORKSPACE}/appserver/tests common_test.sh gftest.sh appserv-tests quicklook | gzip --fast > ${WORKSPACE}/bundles/appserv_tests.tar.gz
           ls -la ${WORKSPACE}/bundles
         '''
         archiveArtifacts artifacts: 'bundles/*.zip'

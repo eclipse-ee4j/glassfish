@@ -40,17 +40,23 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import jakarta.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
+import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.grizzly.config.dom.Protocols;
+import org.glassfish.grizzly.config.dom.Ssl;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.arrayWithSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * test the set command
@@ -64,7 +70,6 @@ public class ConfigAttributeSetTest {
     private ServiceLocator locator;
     @Inject
     private MockGenerator mockGenerator;
-    private PropertyChangeEvent event;
     private Subject adminSubject;
 
     @BeforeEach
@@ -88,9 +93,15 @@ public class ConfigAttributeSetTest {
         + "PROPERTY,"
         + "server.network-config.network-listeners.network-listener.http-listener-1.property.a,"
         + "b"
+        ,
+        "an attribute on an undefined node,"
+        + "CERT_NICKNAME,"
+        + "configs.config.server-config.network-config.protocols.protocol.http-listener-1.ssl.cert-nickname,"
+        + "s1as"
 
     })
-    public void setListenerAttribute(String testDescription, ListenerAttributeType attributeType, String propertyName, String propertyValue) {
+    public void setListenerAttribute(String testDescription, ListenerAttributeType attributeType, String propertyName, String propertyValue)
+            throws InterruptedException, TimeoutException, ExecutionException {
         CommandRunnerImpl runner = locator.getService(CommandRunnerImpl.class);
         assertNotNull(runner);
 
@@ -105,12 +116,10 @@ public class ConfigAttributeSetTest {
         }
         assertNotNull(listener);
 
-        String oldAttributeValue = attributeType.getAttributeValue(listener);
+        String oldAttributeValue = attributeType.getAttributeValue(listener, locator);
 
         // Let's register a listener
-        ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(listener);
-        final PropertyChangeListener beanListener = new PropertyChangeListener(attributeType.getEventPropertyName());
-        bean.addListener(beanListener);
+        final PropertyChangeFuture beanEvents = attributeType.addEventListener(listener, locator);
 
         try {
             // parameters to the command
@@ -128,10 +137,11 @@ public class ConfigAttributeSetTest {
             locator.<Transactions>getService(Transactions.class).waitForDrain();
 
             // check the result.
-            String newAttributeValue = attributeType.getAttributeValue(listener);
+            String newAttributeValue = attributeType.getAttributeValue(listener, locator);
             assertEquals(propertyValue, newAttributeValue);
 
-            // check we recevied the event
+            PropertyChangeEvent event = waitForTheEvent(beanEvents, attributeType);
+
             assertNotNull(event);
             assertAll(
                     () -> assertEquals(oldAttributeValue, event.getOldValue()),
@@ -139,7 +149,7 @@ public class ConfigAttributeSetTest {
                     () -> assertEquals(attributeType.getEventPropertyName(), event.getPropertyName())
             );
         } finally {
-            bean.removeListener(beanListener);
+            attributeType.removeEventListener(beanEvents, listener, locator);
         }
 
     }
@@ -147,7 +157,7 @@ public class ConfigAttributeSetTest {
     private enum ListenerAttributeType {
         PORT {
             @Override
-            String getAttributeValue(NetworkListener listener) {
+            String getAttributeValue(NetworkListener listener, ServiceLocator locator) {
                 return listener.getPort();
             }
 
@@ -159,7 +169,7 @@ public class ConfigAttributeSetTest {
         },
         PROPERTY {
             @Override
-            String getAttributeValue(NetworkListener listener) {
+            String getAttributeValue(NetworkListener listener, ServiceLocator locator) {
                 return listener.getPropertyValue("a");
             }
 
@@ -168,29 +178,94 @@ public class ConfigAttributeSetTest {
                 return "value";
             }
 
+        },
+        CERT_NICKNAME {
+            @Override
+            String getAttributeValue(NetworkListener listener, ServiceLocator locator) {
+                Ssl ssl = getProtocolNode(listener, locator).getSsl();
+                return ssl != null ? ssl.getCertNickname() : null;
+            }
+
+            @Override
+            String getEventPropertyName() {
+                return "cert-nickname";
+            }
+
+            @Override
+            PropertyChangeFuture addEventListener(NetworkListener listener, ServiceLocator locator) {
+                ObservableBean protocolBean = (ObservableBean) ConfigSupport.getImpl(getProtocolNode(listener, locator));
+                final PropertyChangeFuture protocolEvents = new PropertyChangeFuture();
+                final PropertyChangeFuture sslEvents = new PropertyChangeFuture();
+                sslEvents.previousFuture = protocolEvents;
+                protocolBean.addListener(protocolEvents);
+                protocolEvents.thenAccept(events -> {
+                    assertThat(events,arrayWithSize(1));
+                    PropertyChangeEvent event = events[0];
+                    ObservableBean sslBean = (ObservableBean) (event.getNewValue());
+                    sslBean.addListener(sslEvents);
+                }).exceptionally(e -> {
+                    e.printStackTrace();
+                    return null;
+                });
+                return sslEvents;
+            }
+
+            @Override
+            void removeEventListener(PropertyChangeFuture beanEvents, NetworkListener listener, ServiceLocator locator) {
+                final Protocol protocolNode = getProtocolNode(listener, locator);
+                ObservableBean protocolBean = (ObservableBean) ConfigSupport.getImpl(protocolNode);
+                protocolBean.removeListener(beanEvents.previousFuture);
+                ObservableBean sslBean = (ObservableBean) ConfigSupport.getImpl(protocolNode.getSsl());
+                sslBean.removeListener(beanEvents);
+            }
+
+            private Protocol getProtocolNode(NetworkListener listener, ServiceLocator locator) {
+                return locator.getService(Protocols.class).findProtocol(listener.getProtocol());
+            }
+
         };
 
-        abstract String getAttributeValue(NetworkListener listener);
+        abstract String getAttributeValue(NetworkListener listener, ServiceLocator locator);
 
         abstract String getEventPropertyName();
+
+        boolean isForEvent(PropertyChangeEvent event) {
+            return this.getEventPropertyName().equals(event.getPropertyName());
+        }
+
+        PropertyChangeFuture addEventListener(NetworkListener listener, ServiceLocator locator) {
+            ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(listener);
+            final PropertyChangeFuture beanEvents = new PropertyChangeFuture();
+            bean.addListener(beanEvents);
+            return beanEvents;
+        }
+
+        void removeEventListener(PropertyChangeFuture beanEvents, NetworkListener listener, ServiceLocator locator) {
+            ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(listener);
+            bean.removeListener(beanEvents);
+        }
     }
 
-    private class PropertyChangeListener implements ConfigListener {
-        
-        private String propertyName;
+    private static class PropertyChangeFuture extends CompletableFuture<PropertyChangeEvent[]> implements ConfigListener {
 
-        public PropertyChangeListener(String propertyName) {
-            this.propertyName = propertyName;
-        }
+        PropertyChangeFuture previousFuture = null;
         
         @Override
         public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
-            List<PropertyChangeEvent> events = Arrays.stream(propertyChangeEvents)
-                    .filter(event -> propertyName.equals(event.getPropertyName()))
-                    .collect(Collectors.toList());
-            assertThat(events, hasSize(1));
-            event = events.get(0);
+            this.complete(propertyChangeEvents);
             return null;
         }
     }
+
+    private PropertyChangeEvent waitForTheEvent(final PropertyChangeFuture beanEvents, ListenerAttributeType attributeType) throws ExecutionException, InterruptedException, TimeoutException {
+        // check we recevied the event
+        List<PropertyChangeEvent> events = Arrays.stream(
+                beanEvents.get(10, TimeUnit.SECONDS))
+                .filter(attributeType::isForEvent)
+                .collect(Collectors.toList());
+        assertThat(events, hasSize(1));
+        PropertyChangeEvent event = events.get(0);
+        return event;
+    }
+
 }

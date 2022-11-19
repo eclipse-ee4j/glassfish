@@ -191,30 +191,38 @@ public class ConfigAttributeSetTest {
                 return "cert-nickname";
             }
 
+            /*
+                Add event listener which is triggered when the new Ssl node is added to the protocol.
+                This listener registers another listener which is then triggered when the Ssl attribute is added.
+                It wouldn't work to listen to the Ssl attribute directly because the Ssl node isn't
+                present in the beginning and there's no node to bind the listener to.
+            */
             @Override
             PropertyChangeFuture addEventListener(NetworkListener listener, ServiceLocator locator) {
                 ObservableBean protocolBean = (ObservableBean) ConfigSupport.getImpl(getProtocolNode(listener, locator));
                 final PropertyChangeFuture protocolEvents = new PropertyChangeFuture();
                 final PropertyChangeFuture sslEvents = new PropertyChangeFuture();
-                sslEvents.previousFuture = protocolEvents;
                 protocolBean.addListener(protocolEvents);
                 protocolEvents.thenAccept(events -> {
+                    protocolBean.removeListener(protocolEvents);
                     assertThat(events,arrayWithSize(1));
                     PropertyChangeEvent event = events[0];
                     ObservableBean sslBean = (ObservableBean) (event.getNewValue());
                     sslBean.addListener(sslEvents);
                 }).exceptionally(e -> {
                     e.printStackTrace();
+                    sslEvents.completeExceptionally(e);
                     return null;
                 });
                 return sslEvents;
             }
 
+            /*
+                Remove the listener on the new Ssl node
+            */
             @Override
             void removeEventListener(PropertyChangeFuture beanEvents, NetworkListener listener, ServiceLocator locator) {
                 final Protocol protocolNode = getProtocolNode(listener, locator);
-                ObservableBean protocolBean = (ObservableBean) ConfigSupport.getImpl(protocolNode);
-                protocolBean.removeListener(beanEvents.previousFuture);
                 ObservableBean sslBean = (ObservableBean) ConfigSupport.getImpl(protocolNode.getSsl());
                 sslBean.removeListener(beanEvents);
             }
@@ -248,8 +256,6 @@ public class ConfigAttributeSetTest {
 
     private static class PropertyChangeFuture extends CompletableFuture<PropertyChangeEvent[]> implements ConfigListener {
 
-        PropertyChangeFuture previousFuture = null;
-        
         @Override
         public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
             this.complete(propertyChangeEvents);

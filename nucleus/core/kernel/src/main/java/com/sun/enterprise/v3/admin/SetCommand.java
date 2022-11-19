@@ -60,10 +60,12 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.api.admin.AccessRequired.AccessCheck;
@@ -151,7 +153,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
     @Override
     public void execute(AdminCommandContext context) {
         for (SetOperation op : setOperations) {
-            if (!set(context, op)) {
+            if (!op.execute(context)) {
                 return;
             }
         }
@@ -161,7 +163,8 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
      * Captures information about each set operation conveyed on a single
      * command invocation.
      */
-    private static class SetOperation {
+    private class SetOperation {
+
         private final String target;
         private final String value;
         private final String pattern;
@@ -179,7 +182,8 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
 
         /**
          * Returns the name of the resource being affected by this set operation.
-         * @return
+         *
+         * @return Name of the resource affected
          */
         private String getResourceName() {
             StringBuilder dottedNameForResourceName = new StringBuilder();
@@ -195,7 +199,6 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             return dottedNameForResourceName.toString().replace('.', '/');
         }
 
-        // Methods and variables used within a call to the execute method
         private class ExecutionContext {
             String pattern = SetOperation.this.pattern;
             String attrName = SetOperation.this.attrName;
@@ -556,240 +559,6 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
         return true;
     }
 
-    private boolean set(AdminCommandContext context, SetOperation op) {
-
-        String pattern = op.pattern;
-        String value = op.value;
-        String target = op.target;
-        String attrName = op.attrName;
-        boolean isProperty = op.isProperty;
-
-        // now
-        // first let's get the parent for this pattern.
-        TreeNode[] parentNodes = getAliasedParent(domain, pattern);
-
-        // reset the pattern.
-        String prefix;
-        boolean lookAtSubNodes = true;
-        if (parentNodes[0].relativeName.length() == 0 ||
-                parentNodes[0].relativeName.equals("domain")) {
-            // handle the case where the pattern references an attribute of the top-level node
-            prefix = "";
-            // pattern is already set properly
-            lookAtSubNodes = false;
-        }
-        else if(!pattern.startsWith(parentNodes[0].relativeName)) {
-            prefix = pattern.substring(0, pattern.indexOf(parentNodes[0].relativeName));
-            pattern = parentNodes[0].relativeName;
-        }
-        else {
-            prefix = "";
-            pattern = parentNodes[0].relativeName;
-        }
-        String targetName = prefix + pattern;
-
-        if (modularityHelper != null) {
-            synchronized (utils) {
-                boolean oldv = utils.isCommandInvocation();
-                utils.setCommandInvocation(true);
-                modularityHelper.getLocationForDottedName(targetName);
-                utils.setCommandInvocation(oldv);
-            }
-        }
-
-        Map<Dom, String> matchingNodes;
-        boolean applyOverrideRules = false;
-        Map<Dom, String> dottedNames = new HashMap<Dom, String>();
-        if (lookAtSubNodes) {
-            for (TreeNode parentNode : parentNodes) {
-                dottedNames.putAll(getAllDottedNodes(parentNode.node));
-            }
-            matchingNodes = getMatchingNodes(dottedNames, pattern);
-            applyOverrideRules = true;
-        } else {
-            matchingNodes = new HashMap<Dom, String>();
-            for (TreeNode parentNode : parentNodes) {
-                matchingNodes.put(parentNode.node, pattern);
-            }
-        }
-
-        if (matchingNodes.isEmpty()) {
-            // it's possible they are trying to create a property object.. lets check this.
-            // strip out the property name
-            pattern = target.substring(0, trueLastIndexOf(target, '.'));
-            if (pattern.endsWith("property")) {
-                pattern = pattern.substring(0, trueLastIndexOf(pattern, '.'));
-                parentNodes = getAliasedParent(domain, pattern);
-                pattern = parentNodes[0].relativeName;
-                matchingNodes = getMatchingNodes(dottedNames, pattern);
-                if (matchingNodes.isEmpty()) {
-                    //fail(context, "No configuration found for " + targetName);
-                    fail(context, localStrings.getLocalString("admin.set.configuration.notfound", "No configuration found for {0}", targetName));
-                    return false;
-                }
-                // need to find the right parent.
-                Dom parentNode = null;
-                for (Map.Entry<Dom, String> node : matchingNodes.entrySet()) {
-                    if (node.getValue().equals(pattern)) {
-                        parentNode = node.getKey();
-                    }
-                }
-                if (parentNode == null) {
-                    //fail(context, "No configuration found for " + targetName);
-                    fail(context, localStrings.getLocalString("admin.set.configuration.notfound", "No configuration found for {0}", targetName));
-                    return false;
-                }
-
-                if (value == null || value.length() == 0) {
-                    // setting to the empty string means to remove the property, so don't create it
-                    success(context, targetName, value);
-                    return true;
-                }
-                // create and set the property
-                Map<String, String> attributes = new HashMap<String, String>();
-                attributes.put("value", value);
-                attributes.put("name", attrName);
-                try {
-                    if ( ! (parentNode instanceof ConfigBean)) {
-                        final ClassCastException cce = new ClassCastException(parentNode.getClass().getName());
-                        fail(context, localStrings.getLocalString("admin.set.attribute.change.failure",
-                                "Could not change the attributes: {0}",
-                                cce.getMessage(), cce));
-                        return false;
-                    }
-                    ConfigSupport.createAndSet((ConfigBean) parentNode, Property.class, attributes);
-                    success(context, targetName, value);
-                    runLegacyChecks(context);
-                    if (targetService.isThisDAS() && !replicateSetCommand(context, targetName, value))
-                        return false;
-                    return true;
-                } catch (TransactionFailure transactionFailure) {
-                    //fail(context, "Could not change the attributes: " +
-                    //    transactionFailure.getMessage(), transactionFailure);
-                    fail(context, localStrings.getLocalString("admin.set.attribute.change.failure", "Could not change the attributes: {0}",
-                            transactionFailure.getMessage()), transactionFailure);
-                    return false;
-                }
-            }
-        }
-
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-
-        boolean setElementSuccess = false;
-        boolean delPropertySuccess = false;
-        boolean delProperty = false;
-        Map<String, String> attrChanges = new HashMap<String, String>();
-        if (isProperty) {
-            attrName = "value";
-            if ((value == null) || (value.length() == 0)) {
-                delProperty = true;
-            }
-            attrChanges.put(attrName, value);
-        }
-
-        List<Map.Entry> mNodes = new ArrayList(matchingNodes.entrySet());
-        if (applyOverrideRules) {
-            mNodes = applyOverrideRules(mNodes);
-        }
-        for (Map.Entry<Dom, String> node : mNodes) {
-            final Dom targetNode = node.getKey();
-
-            for (String name : targetNode.model.getAttributeNames()) {
-                String finalDottedName = node.getValue() + "." + name;
-                if (matches(finalDottedName, pattern)) {
-                    if (attrName.equals(name) ||
-                            attrName.replace('_', '-').equals(name.replace('_', '-')))  {
-                        if (isDeprecatedAttr(targetNode, name)) {
-                           warning(context, localStrings.getLocalString("admin.set.deprecated",
-                                   "Warning: The attribute {0} is deprecated.", finalDottedName));
-                        }
-
-                        if (!isProperty) {
-                            targetName = prefix + finalDottedName;
-
-                            if (value != null && value.length() > 0) {
-                                attrChanges.put(name, value);
-                            } else {
-                                attrChanges.put(name, null);
-                            }
-                        } else {
-                            targetName = prefix + node.getValue();
-                        }
-
-                        if (delProperty) {
-                            // delete property element
-                            String str = node.getValue();
-                            if (trueLastIndexOf(str, '.') != -1) {
-                                str = str.substring(trueLastIndexOf(str, '.') + 1);
-                            }
-                            try {
-                                if (str != null) {
-                                    ConfigSupport.deleteChild((ConfigBean) targetNode.parent(), (ConfigBean) targetNode);
-                                    delPropertySuccess = true;
-                                }
-                            } catch (IllegalArgumentException ie) {
-                                fail(context, localStrings.getLocalString("admin.set.delete.property.failure", "Could not delete the property: {0}",
-                                        ie.getMessage()), ie);
-                                return false;
-                            } catch (TransactionFailure transactionFailure) {
-                                fail(context, localStrings.getLocalString("admin.set.attribute.change.failure", "Could not change the attributes: {0}",
-                                        transactionFailure.getMessage()), transactionFailure);
-                                return false;
-                            }
-                        } else {
-                            changes.put((ConfigBean) node.getKey(), attrChanges);
-                        }
-
-                    }
-                }
-            }
-
-            for (String name : targetNode.model.getLeafElementNames()) {
-                String finalDottedName = node.getValue() + "." + name;
-                if (matches(finalDottedName, pattern)) {
-                    if (attrName.equals(name) ||
-                            attrName.replace('_', '-').equals(name.replace('_', '-')))  {
-                        if (isDeprecatedAttr(targetNode, name)) {
-                           warning(context, localStrings.getLocalString("admin.set.elementdeprecated",
-                                   "Warning: The element {0} is deprecated.", finalDottedName));
-                        }
-                        try {
-                            setLeafElement((ConfigBean)targetNode, name, value);
-                        } catch (TransactionFailure ex) {
-                            fail(context, localStrings.getLocalString("admin.set.badelement", "Cannot change the element: {0}",
-                                    ex.getMessage()), ex);
-                            return false;
-                        }
-                        setElementSuccess = true;
-                        break;
-                    }
-                }
-            }
-        }
-        if (!changes.isEmpty()) {
-            try {
-                config.apply(changes);
-                success(context, targetName, value);
-                runLegacyChecks(context);
-            } catch (TransactionFailure transactionFailure) {
-                //fail(context, "Could not change the attributes: " +
-                //        transactionFailure.getMessage(), transactionFailure);
-                fail(context, localStrings.getLocalString("admin.set.attribute.change.failure", "Could not change the attributes: {0}",
-                        transactionFailure.getMessage()), transactionFailure);
-                return false;
-            }
-
-        } else if (delPropertySuccess || setElementSuccess) {
-            success(context, targetName, value);
-        } else {
-            fail(context, localStrings.getLocalString("admin.set.configuration.notfound", "No configuration found for {0}", targetName));
-            return false;
-        }
-        if (targetService.isThisDAS() && !replicateSetCommand(context, targetName, value))
-            return false;
-        return true;
-    }
-
     public static void setLeafElement (
                 final ConfigBean node,
                 final String elementName,
@@ -956,7 +725,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
      *
      * @param target string to search
      * @param ch     a character
-     * @return index index of last unescaped occurrence of specified character
+     * @return index of last unescaped occurrence of specified character
      *         or -1 if there are no unescaped occurrences of this character.
      */
     private static int trueLastIndexOf(String target, char ch) {

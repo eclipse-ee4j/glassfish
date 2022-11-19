@@ -195,6 +195,7 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
             return dottedNameForResourceName.toString().replace('.', '/');
         }
 
+        // Methods and variables used within a call to the execute method
         private class ExecutionContext {
             String pattern = SetOperation.this.pattern;
             String attrName = SetOperation.this.attrName;
@@ -354,21 +355,21 @@ public class SetCommand extends V2DottedNameSupport implements AdminCommand, Pos
                 try {
                     // it's possible they are trying to create a property object.. lets check this.
                     // strip out the property name
-                    String parentPattern = getParentFromDottedPattern(this.target);
+                    String parentPattern = getParentFromDottedPattern(target);
                     if (parentPattern.endsWith("property")) {
                         ctx.pattern = parentPattern;
                         return ctx.setAsPropertyObject(dottedNames, context, targetName);
                     }
 
                 // attempt to create missing nodes and search for a matching node again
-                    ctx.createMissingNodes(dottedNames, this.pattern);
+                    ctx.createMissingNodes(dottedNames, ctx.pattern);
                 } catch (TransactionFailure ex) {
                     fail(context, localStrings.getLocalString("admin.set.badelement", "Cannot change the element: {0}",
                             ex.getMessage()), ex);
                     return false;
                 }
-                dottedNames = ctx.findDottedNames(parentNodes, this.pattern);
-                matchingNodes = getMatchingNodes(dottedNames, this.pattern);
+                dottedNames = ctx.findDottedNames(parentNodes, ctx.pattern);
+                matchingNodes = getMatchingNodes(dottedNames, ctx.pattern);
             }
 
             Map<ConfigBean, Map<String, String>> changes = new HashMap<>();

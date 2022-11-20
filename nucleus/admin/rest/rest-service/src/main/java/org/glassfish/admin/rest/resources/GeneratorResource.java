@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,15 +18,17 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import java.util.logging.Level;
+
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Context;
+
+import java.util.logging.Level;
+
 import org.glassfish.admin.rest.RestLogging;
 import org.glassfish.admin.rest.adapter.LocatorBridge;
-
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
 import org.glassfish.admin.rest.generator.TextResourcesGenerator;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -40,32 +43,29 @@ import org.jvnet.hk2.config.DomDocument;
 @Path("/generator/")
 public class GeneratorResource {
 
-    private static final String DEFAULT_OUTPUT_DIR = System.getProperty("user.home") + "/tmp/glassfish";
     @Context
-    protected ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
     @GET
     @Produces({ "text/plain" })
     public String get(@QueryParam("outputDir") String outputDir) {
         if (outputDir == null) {
-            outputDir = DEFAULT_OUTPUT_DIR;
+            return "Please provide the outputDir query parameter.";
         }
-        String retVal = "Code Generation done at : " + outputDir;
-
         try {
-            LocatorBridge locatorBridge = habitat.getService(LocatorBridge.class);
+            LocatorBridge locatorBridge = serviceLocator.getService(LocatorBridge.class);
             Dom dom = Dom.unwrap(locatorBridge.getRemoteLocator().<Domain>getService(Domain.class));
-            DomDocument document = dom.document;
+            DomDocument<?> document = dom.document;
             ConfigModel rootModel = dom.document.getRoot().model;
 
-            ResourcesGenerator resourcesGenerator = new TextResourcesGenerator(outputDir, habitat);
+            ResourcesGenerator resourcesGenerator = new TextResourcesGenerator(outputDir, serviceLocator);
             resourcesGenerator.generateSingle(rootModel, document);
             resourcesGenerator.endGeneration();
+            return "Code Generation done at: " + outputDir;
         } catch (Exception ex) {
             RestLogging.restLogger.log(Level.SEVERE, null, ex);
-            retVal = "Exception encountered during generation process: " + ex.toString()
-                    + "\nPlease look at server.log for more information.";
+            return "Exception encountered during generation process: " + ex
+                + "\nPlease look at server.log for more information.";
         }
-        return retVal;
     }
 }

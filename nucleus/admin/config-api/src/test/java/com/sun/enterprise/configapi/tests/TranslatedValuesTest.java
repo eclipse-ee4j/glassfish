@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,7 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
-
+import java.nio.file.Files;
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.AfterAll;
@@ -32,8 +32,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import jakarta.inject.Inject;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -46,17 +46,21 @@ public class TranslatedValuesTest {
 
     @Inject
     private ServiceLocator locator;
+    private static String javaRoot;
 
     @BeforeAll
-    public static void initSysProps() {
+    public static void initSysProps() throws Exception {
+        javaRoot = Files.createTempDirectory(TranslatedValuesTest.class.getSimpleName()).toString();
         System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, "cafebabe");
-        System.setProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY, System.getProperty("user.home"));
+        System.setProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY, javaRoot);
     }
+
 
     @AfterAll
     public static void reset() {
-        System.clearProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
         System.clearProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY);
+        System.clearProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+        new File(javaRoot).delete();
     }
 
 
@@ -70,8 +74,7 @@ public class TranslatedValuesTest {
     @Test
     public void testJavaRoot() {
         JavaConfig config = locator.getService(JavaConfig.class);
-        String javaRoot = config.getJavaHome();
-        assertThat(javaRoot, stringContainsInOrder(File.separator));
+        String javaHome = config.getJavaHome();
+        assertThat(javaHome, equalTo(javaRoot));
     }
-
 }

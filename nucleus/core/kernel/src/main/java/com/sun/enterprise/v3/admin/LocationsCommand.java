@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,7 +67,7 @@ public class LocationsCommand implements AdminCommand {
         report.setMessage(env.getInstanceRoot().getAbsolutePath().replace('\\', '/'));
         MessagePart mp = report.getTopMessagePart();
         mp.addProperty("Base-Root", StartupContextUtil.getInstallRoot(env.getStartupContext()).getAbsolutePath());
-        mp.addProperty("Domain-Root", env.getDomainRoot().getAbsolutePath());
+        mp.addProperty("Domain-Root", env.getInstanceRoot().getAbsolutePath());
         mp.addProperty("Instance-Root", env.getInstanceRoot().getAbsolutePath());
         mp.addProperty("Config-Dir", env.getConfigDirPath().getAbsolutePath());
         mp.addProperty("Uptime", ""+getUptime());
@@ -78,8 +79,9 @@ public class LocationsCommand implements AdminCommand {
         RuntimeMXBean mxbean = ManagementFactory.getRuntimeMXBean();
         long totalTime_ms = -1;
 
-        if (mxbean != null)
+        if (mxbean != null) {
             totalTime_ms = mxbean.getUptime();
+        }
 
         if (totalTime_ms <= 0) {
             long start = env.getStartupContext().getCreationTime();

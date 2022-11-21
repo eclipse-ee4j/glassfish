@@ -310,7 +310,7 @@ public class LogFilter {
                 String logFileName = logFileDetailsForInstance.substring(logFileDetailsForInstance.lastIndexOf(File.separator) + 1, logFileDetailsForInstance.length());
                 File instanceFile = null;
                 instanceFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer, domain, LOGGER,
-                    targetServerName, env.getDomainRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
+                    targetServerName, env.getInstanceRoot().getAbsolutePath(), logFileName, logFileDetailsForInstance);
 
                 return instanceFile.getAbsolutePath();
             }
@@ -400,7 +400,7 @@ public class LogFilter {
                 try {
                     // this code is used when the node is not local.
                     instanceLogFile = new LogFilterForInstance().downloadGivenInstanceLogFile(habitat, targetServer,
-                        domain, LOGGER, instanceName, env.getDomainRoot().getAbsolutePath(), logFileName, instanceLogFileName);
+                        domain, LOGGER, instanceName, env.getInstanceRoot().getAbsolutePath(), logFileName, instanceLogFileName);
                 } catch (Exception e) {
                     LOGGER.log(Level.SEVERE, LogFacade.ERROR_EXECUTING_LOG_QUERY, e);
                     return new AttributeList();

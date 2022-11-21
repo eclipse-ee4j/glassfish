@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,24 +17,25 @@
 
 package com.sun.enterprise.v3.server;
 
-import org.glassfish.server.ServerEnvironmentImpl;
-import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.glassfish.bootstrap.StartupContextUtil;
-import org.glassfish.internal.api.ClassLoaderHierarchy;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.naming.GlassfishNamingManager;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+
 import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-
 import jakarta.inject.Singleton;
 
-import javax.naming.InitialContext;
 import java.io.File;
 import java.util.Map;
+
+import javax.naming.InitialContext;
+
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.api.naming.GlassfishNamingManager;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ClassLoaderHierarchy;
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.server.ServerEnvironmentImpl;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is the Server Context object.
@@ -57,8 +59,9 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
     String[] args;
 
     /** Creates a new instance of ServerContextImpl */
+    @Override
     public void postConstruct() {
-        this.instanceRoot = env.getDomainRoot();
+        this.instanceRoot = env.getInstanceRoot();
         this.args = new String[startupContext.getArguments().size()*2];
         int i=0;
         for (Map.Entry<Object, Object> entry : startupContext.getArguments().entrySet()) {
@@ -71,50 +74,61 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
         return instanceRoot;
     }
 
+    @Override
     public String[] getCmdLineArgs() {
         return args;
     }
 
+    @Override
     public File getInstallRoot() {
         return StartupContextUtil.getInstallRoot(startupContext);
     }
 
+    @Override
     public String getInstanceName() {
         return env.getInstanceName();
     }
 
+    @Override
     public String getServerConfigURL() {
         File domainXML = new File(instanceRoot, ServerEnvironmentImpl.kConfigDirName);
         domainXML = new File(domainXML, ServerEnvironmentImpl.kConfigXMLFileName);
         return domainXML.toURI().toString();
     }
 
+    @Override
     public com.sun.enterprise.config.serverbeans.Server getConfigBean() {
         return services.getService(com.sun.enterprise.config.serverbeans.Server.class);
     }
 
+    @Override
     public InitialContext getInitialContext() {
         GlassfishNamingManager gfNamingManager =
             services.getService(GlassfishNamingManager.class);
         return (InitialContext)gfNamingManager.getInitialContext();
     }
 
+    @Override
     public ClassLoader getCommonClassLoader() {
         return services.<CommonClassLoaderServiceImpl>getService(CommonClassLoaderServiceImpl.class).getCommonClassLoader();
     }
 
+    @Override
     public ClassLoader getSharedClassLoader() {
         return services.<ClassLoaderHierarchy>getService(ClassLoaderHierarchy.class).getConnectorClassLoader(null);
     }
 
+    @Override
     public ClassLoader getLifecycleParentClassLoader() {
         return services.<ClassLoaderHierarchy>getService(ClassLoaderHierarchy.class).getConnectorClassLoader(null);
     }
 
+    @Override
     public InvocationManager getInvocationManager() {
         return services.getService(InvocationManager.class);
     }
 
+    @Override
     public String getDefaultDomainName() {
         return "glassfish-web";
     }
@@ -122,6 +136,7 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
      * Returns the default services for this instance
      * @return default services
      */
+    @Override
     public ServiceLocator getDefaultServices() {
         return services;
 

@@ -698,7 +698,7 @@ public final class PEAccessLogValve
                 dir = new File(logRoot, accessLog);
             } else {
                 ServerEnvironment env = services.getService(ServerEnvironment.class);
-                dir = new File(env.getDomainRoot(), accessLog);
+                dir = new File(env.getInstanceRoot(), accessLog);
             }
         }
 
@@ -777,9 +777,9 @@ public final class PEAccessLogValve
 
         // rotation-enabled
         if (accessLogConfig == null) {
-            setRotatable(Boolean.valueOf(ConfigBeansUtilities.getDefaultRotationEnabled()));
+            setRotatable(Boolean.parseBoolean(ConfigBeansUtilities.getDefaultRotationEnabled()));
         } else {
-            setRotatable(Boolean.valueOf(accessLogConfig.getRotationEnabled()));
+            setRotatable(Boolean.parseBoolean(accessLogConfig.getRotationEnabled()));
         }
         // rotation-interval
         interval = 0;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,9 @@ package com.sun.enterprise.v3.server;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.util.SystemPropertyConstants;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -33,7 +37,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.inject.Inject;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.kernel.KernelLoggerInfo;
@@ -89,7 +93,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
 
     private void createCommonClassLoader() {
         List<File> cpElements = new ArrayList<>();
-        File domainDir = env.getDomainRoot();
+        File domainDir = env.getInstanceRoot();
         // I am forced to use System.getProperty, as there is no API that makes
         // the installRoot available. Sad, but true. Check dev forum on this.
         final String installRoot = System.getProperty(

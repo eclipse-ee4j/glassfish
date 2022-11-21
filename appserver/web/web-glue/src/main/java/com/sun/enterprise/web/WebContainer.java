@@ -1,5 +1,4 @@
 /*
- *
  * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
@@ -430,8 +429,8 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             _embedded.setFileLoggerHandlerFactory(fileLoggerHandlerFactory);
             _embedded.setWebContainerFeatureFactory(webContainerFeatureFactory);
 
-            _embedded.setCatalinaHome(instance.getDomainRoot().getAbsolutePath());
-            _embedded.setCatalinaBase(instance.getDomainRoot().getAbsolutePath());
+            _embedded.setCatalinaHome(instance.getInstanceRoot().getAbsolutePath());
+            _embedded.setCatalinaBase(instance.getInstanceRoot().getAbsolutePath());
             _embedded.setUseNaming(false);
             if (_debug > 1) {
                 _embedded.setDebug(_debug);

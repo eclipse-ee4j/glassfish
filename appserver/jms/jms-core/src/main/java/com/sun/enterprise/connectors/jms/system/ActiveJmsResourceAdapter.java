@@ -1035,7 +1035,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
                     suffix = p.getValue();
                 }
                 if (name.equals("append-version") &&
-                    Boolean.valueOf(p.getValue()).booleanValue()) {
+                    Boolean.parseBoolean(p.getValue())) {
                     suffix = Version.getMajorVersion() + "_" +
                         Version.getMinorVersion();
                 }
@@ -1074,7 +1074,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
      }
 
      private String getMQVarDir(){
-         String asInstanceRoot = getServerEnvironment().getDomainRoot().getPath();
+         String asInstanceRoot = getServerEnvironment().getInstanceRoot().getPath();
          String mqInstanceDir = asInstanceRoot + java.io.File.separator + MQ_DIR_NAME;
          return mqInstanceDir;
      }
@@ -1102,8 +1102,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             String IMQ_INSTALL_SUBDIR = java.io.File.separator + ".." + java.io.File.separator + ".." + java.io.File.separator + "imq";
                 //java.io.File.separator + "bin"; hack until MQ RA changes
             //XXX: This doesn't work in clustered instances.
-            brokerHomeDir = getServerEnvironment().getDomainRoot()//ApplicationServer.getServerContext().getInstallRoot()
-                                + IMQ_INSTALL_SUBDIR;
+            brokerHomeDir = getServerEnvironment().getInstanceRoot() + IMQ_INSTALL_SUBDIR;
         } else {
             //hack until MQ RA changes
             brokerHomeDir = brokerHomeDir + java.io.File.separator + ".." ;
@@ -1391,12 +1390,12 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         setProperty(cd, envProp4);
 
         String integrationMode = getJmsService().getType();
-        boolean lazyInit = Boolean.valueOf(getJmsHost().getLazyInit());
+        boolean lazyInit = Boolean.parseBoolean(getJmsHost().getLazyInit());
         val = "true";
         if (EMBEDDED.equals(integrationMode) && lazyInit) {
             val = "false";
         }
-        doBind = Boolean.valueOf(val);
+        doBind = Boolean.parseBoolean(val);
         ConnectorConfigProperty envProp5 = new ConnectorConfigProperty(MQ_PORTMAPPER_BIND, val, val, "java.lang.Boolean");
         setProperty(cd, envProp5);
 
@@ -1477,7 +1476,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         setProperty(cd, envProp6);
 
         boolean useExternal = shouldUseExternalRmiRegistry(jmsraUtil);
-        val = Boolean.valueOf(useExternal).toString();
+        val = Boolean.toString(useExternal);
         ConnectorConfigProperty envProp7 = new ConnectorConfigProperty(
             USEEXTERNALRMIREGISTRY, val, val, "java.lang.Boolean");
         setProperty(cd, envProp7);

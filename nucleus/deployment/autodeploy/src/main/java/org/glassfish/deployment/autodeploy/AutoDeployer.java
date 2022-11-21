@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,38 +15,33 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * AutoDeployer.java
- *
- *
- * Created on February 19, 2003, 10:21 AM
- */
-
 package org.glassfish.deployment.autodeploy;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.io.File;
 
+import java.io.File;
 import java.net.URI;
 import java.util.Arrays;
-import java.util.logging.Logger;
-import java.util.logging.LogRecord;
-import java.util.logging.Level;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.hk2.api.ServiceLocator;
-
 import org.glassfish.logging.annotation.LogMessageInfo;
-import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Handles the logic of deploying the module/app to the required destination.</br>
  * The destination is specified on the constructor and can be modified by
  * calling setTarget().  The specific directory scanner can be set using
  * setDirectoryScanner, default is AutoDeployDirectoryScanner
+ * <p>
+ * Created on February 19, 2003, 10:21 AM
+ *
  * @author vikas
  * @author tjquinn
  */
@@ -65,7 +61,7 @@ public class AutoDeployer {
 
     private boolean cancelDeployment =false;
 
-    private AtomicBoolean inProgress = new AtomicBoolean(false);
+    private final AtomicBoolean inProgress = new AtomicBoolean(false);
 
     private ServiceLocator habitat;
 
@@ -269,7 +265,7 @@ public class AutoDeployer {
     private synchronized File domainRoot() {
         if (domainRoot == null) {
             ServerEnvironment serverEnv = habitat.getService(ServerEnvironment.class);
-            domainRoot = serverEnv.getDomainRoot();
+            domainRoot = serverEnv.getInstanceRoot();
         }
         return domainRoot;
     }

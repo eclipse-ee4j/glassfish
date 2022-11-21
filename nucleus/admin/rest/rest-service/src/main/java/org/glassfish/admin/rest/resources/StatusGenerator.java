@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,12 @@
 package org.glassfish.admin.rest.resources;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
@@ -31,22 +38,18 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 import java.util.logging.Level;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.MediaType;
+
 import org.glassfish.admin.rest.RestLogging;
-import org.glassfish.admin.rest.RestService;
-import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.generator.ClassWriter;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData;
 import org.glassfish.admin.rest.generator.CommandResourceMetaData.ParameterMetaData;
-
 import org.glassfish.admin.rest.generator.ResourcesGenerator;
 import org.glassfish.admin.rest.generator.ResourcesGeneratorBase;
+import org.glassfish.admin.rest.utils.Util;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.CommandModel.ParamModel;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestRedirect;
@@ -65,18 +68,19 @@ import org.jvnet.hk2.config.DomDocument;
 public class StatusGenerator extends AbstractResource {
 
     protected StringBuilder status = new StringBuilder();
-    private Set<String> commandsUsed = new TreeSet<String>();
-    private Set<String> allCommands = new TreeSet<String>();
-    private Set<String> restRedirectCommands = new TreeSet<String>();
-    private Map<String, String> commandsToResources = new TreeMap<String, String>();
-    private Map<String, String> resourcesToDeleteCommands = new TreeMap<String, String>();
-    private Properties propsI18N = new SortedProperties();
+    private final Set<String> commandsUsed = new TreeSet<>();
+    private final Set<String> allCommands = new TreeSet<>();
+    private final Set<String> restRedirectCommands = new TreeSet<>();
+    private final Map<String, String> commandsToResources = new TreeMap<>();
+    private final Map<String, String> resourcesToDeleteCommands = new TreeMap<>();
+    private final Properties propsI18N = new SortedProperties();
 
     static private class SortedProperties extends Properties {
 
+        @Override
         public Enumeration keys() {
             Enumeration keysEnum = super.keys();
-            Vector<String> keyList = new Vector<String>();
+            Vector<String> keyList = new Vector<>();
             while (keysEnum.hasMoreElements()) {
                 keyList.add((String) keysEnum.nextElement());
             }
@@ -277,7 +281,7 @@ public class StatusGenerator extends AbstractResource {
 
     class NOOPClassWriter implements ClassWriter {
 
-        private String className;
+        private final String className;
 
         public NOOPClassWriter(String className, String baseClassName, String resourcePath) {
             this.className = className;
@@ -452,10 +456,9 @@ public class StatusGenerator extends AbstractResource {
                 Collection<CommandModel.ParamModel> params;
                 params = getParamMetaData(command);
 
-                Iterator<CommandModel.ParamModel> iterator = params.iterator();
                 CommandModel.ParamModel paramModel;
-                while (iterator.hasNext()) {
-                    paramModel = iterator.next();
+                for (ParamModel param : params) {
+                    paramModel = param;
                     //   Param param = paramModel.getParam();
                     if (paramModel.getName().equals("target")) {
                         return true;

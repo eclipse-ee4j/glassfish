@@ -38,10 +38,6 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
     @Inject
     private ServiceLocator serviceLocator;
 
-    public String getName() {
-        return "Embedded";
-    }
-
 
     @Override
     public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {

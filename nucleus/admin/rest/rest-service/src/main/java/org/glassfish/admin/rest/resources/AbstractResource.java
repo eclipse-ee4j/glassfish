@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.logging.Logger;
 import jakarta.inject.Inject;
 import javax.security.auth.Subject;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.SecurityContext;
 import jakarta.ws.rs.core.UriInfo;
@@ -35,17 +34,17 @@ import org.glassfish.security.services.common.SubjectUtil;
  * @author jdlee
  */
 public abstract class AbstractResource {
-    @Context
+    @Inject
     protected HttpHeaders requestHeaders;
-    @Context
+    @Inject
     protected UriInfo uriInfo;
     @Inject
     protected Ref<Subject> subjectRef;
     @Inject
     protected LocatorBridge locatorBridge;
-    @Context
+    @Inject
     protected SecurityContext securityContext;
-    @Context
+    @Inject
     protected ServiceLocator serviceLocator;
 
     private String authenticatedUser;

@@ -51,7 +51,7 @@ import org.jvnet.hk2.annotations.Service;
 @ManagedJob
 public class ProgressPayloadCommand implements AdminCommand {
 
-    private final static Logger logger = LogDomains.getLogger(ProgressPayloadCommand.class, LogDomains.ADMIN_LOGGER);
+    private static final Logger LOG = Logger.getLogger(ProgressPayloadCommand.class.getName());
 
     @Param(name = "down", multiple = false, primary = true, optional = true)
     String down;
@@ -88,7 +88,7 @@ public class ProgressPayloadCommand implements AdminCommand {
                         out.attachFile("application/octet-stream", URI.create(canonicalPath), f.getName(), f);
                     }
                 } catch (IOException ex) {
-                    report.failure(logger, "Can not append " + f.getAbsolutePath());
+                    report.failure(LOG, "Can not append " + f.getAbsolutePath());
                 }
             }
         }

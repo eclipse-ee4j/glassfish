@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Mitesh Meswani
  */
-public class NoCLICommandResourceCreationITest extends RestTestBase {
+public class ServerPropertyITest extends RestTestBase {
     private static final String URL_SERVER_PROPERTY = "/domain/servers/server/server/property";
 
 

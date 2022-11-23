@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,12 +18,14 @@
 package org.glassfish.admin.rest.provider;
 
 import java.util.Collection;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.WebApplicationException;
-import jakarta.ws.rs.core.Response;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.Constants;
+
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.core.Response;
 
 /**
  *
@@ -36,8 +39,8 @@ public class CollectionWriter extends BaseProvider<Collection> {
 
     @Override
     public String getContent(Collection proxy) {
-        JSONArray array = new JSONArray(proxy);
         try {
+            JSONArray array = new JSONArray(proxy);
             return array.toString(getFormattingIndentLevel());
         } catch (JSONException ex) {
             throw new WebApplicationException(ex, Response.Status.INTERNAL_SERVER_ERROR);

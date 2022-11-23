@@ -147,11 +147,11 @@
         <antlr.version>2.7.8</antlr.version>
         <ant.version>1.10.12</ant.version>
         <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.14.0</jackson.version>
-        <jackson-databind.version>2.14.0</jackson-databind.version>
+        <jackson.version>2.14.1</jackson.version>
+        <jackson-databind.version>2.14.1</jackson-databind.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.5.1</jettison.version>
+        <jettison.version>1.5.2</jettison.version>
         <mimepull.version>1.10.0</mimepull.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
@@ -159,7 +159,7 @@
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
         <junit.version>5.9.1</junit.version>
-        <jmh.version>1.35</jmh.version>
+        <jmh.version>1.36</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -540,7 +540,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.configadmin</artifactId>
-                <version>1.9.24</version>
+                <version>1.9.26</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -910,7 +910,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>3.1.2</version>
+                    <version>3.2.0</version>
                     <configuration>
                         <configLocation>org/glassfish/qa/config/checkstyle/checkstyle.xml</configLocation>
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
@@ -936,7 +936,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.3.4</version>
+                            <version>10.4</version>
                         </dependency>
                     </dependencies>
                     <executions>

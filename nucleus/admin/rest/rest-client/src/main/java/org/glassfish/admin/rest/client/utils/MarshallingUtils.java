@@ -28,12 +28,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -150,7 +152,11 @@ public class MarshallingUtils {
         JSONArray list = new JSONArray();
 
         for (Map<String, String> property : properties) {
-            list.put(property);
+            try {
+                list.put(property);
+            } catch (JSONException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         return list.toString();

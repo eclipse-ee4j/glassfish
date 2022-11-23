@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -90,12 +90,6 @@ public class AdminLoggerInfo {
 
     @LogMessageInfo(message = "Error searching for a default admin user", cause = "An unexpected exception occurred wihle searching for the default admin user.", action = "Check the server logs and contact Oracle support", publish = true, level = "WARNING")
     public final static String mAdminUserSearchError = LOGMSG_PREFIX + "-00015";
-
-    @LogMessageInfo(message = "Cannot read admin cache file for {0}", cause = "An error occured while reading the admin command model cache file.", action = "Check the server logs and contact Oracle support", publish = true, level = "WARNING")
-    public final static String mCannotReadCache = LOGMSG_PREFIX + "-00016";
-
-    @LogMessageInfo(message = "Cannot write data to cache file for {0}", cause = "An error occured while writing the admin command model cache file.", action = "Check the server logs and contact Oracle support", publish = true, level = "WARNING")
-    public final static String mCannotWriteCache = LOGMSG_PREFIX + "-00017";
 
     @LogMessageInfo(message = "Unexpected exception from command event listener.", cause = "An error occured while calling registered listener.", action = "Check the server logs and contact Oracle support", publish = true, level = "WARNING")
     public final static String mExceptionFromEventListener = LOGMSG_PREFIX + "-00018";

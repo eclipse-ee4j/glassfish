@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * {@link AdminCahce} based on file system.<br/>
+ * {@link AdminCache} based on file system.<br/>
  * <i>Singleton</i>
  *
  * @author mmares
@@ -35,15 +36,16 @@ public class AdminCacheFileStore implements AdminCache {
     private static final String DEFAULT_FILENAME = "#default#.cache";
     private static final AdminCacheFileStore instance = new AdminCacheFileStore();
 
-    private static final Logger logger = AdminLoggerInfo.getLogger();
+    private static final Logger LOG = AdminLoggerInfo.getLogger();
 
-    private AdminCacheUtils adminCahceUtils = AdminCacheUtils.getInstance();
+    private final AdminCacheUtils adminCahceUtils = AdminCacheUtils.getInstance();
 
     private AdminCacheFileStore() {
     }
 
     @Override
     public <A> A get(String key, Class<A> clazz) {
+        LOG.log(Level.FINEST, "get(key={0}, clazz={1})", new Object[] {key, clazz});
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
@@ -54,27 +56,14 @@ public class AdminCacheFileStore implements AdminCache {
         if (provider == null) {
             return null;
         }
-        // @todo Java SE 7 - use try with resources
-        InputStream is = null;
-        try {
-            is = getInputStream(key);
+        try (InputStream is = getInputStream(key)) {
             return (A) provider.toInstance(is, clazz);
         } catch (FileNotFoundException ex) {
             return null;
         } catch (IOException ex) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, AdminLoggerInfo.mCannotReadCache, new Object[] { key });
-            }
+            LOG.log(Level.WARNING, "Cannot read admin cache file for " + key, ex);
             return null;
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (Exception ex) {
-                }
-            }
         }
-
     }
 
     private InputStream getInputStream(String key) throws IOException {
@@ -94,8 +83,9 @@ public class AdminCacheFileStore implements AdminCache {
         if (idx > 0) {
             dir = new File(dir, key.substring(0, idx));
 
-            if (!FileUtils.mkdirsMaybe(dir))
+            if (!FileUtils.mkdirsMaybe(dir)) {
                 throw new IOException("Can't create directory: " + dir);
+            }
             key = key.substring(idx + 1);
             if (key.isEmpty()) {
                 key = DEFAULT_FILENAME;
@@ -106,6 +96,7 @@ public class AdminCacheFileStore implements AdminCache {
 
     @Override
     public synchronized void put(String key, Object data) {
+        LOG.log(Level.FINEST, "put(key, data={0})", new Object[] {key, data});
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
@@ -122,34 +113,29 @@ public class AdminCacheFileStore implements AdminCache {
         File cacheFile;
         try {
             cacheFile = getCacheFile(key);
-        } catch (IOException ex) {
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Cannot write data to cache file for " +  key, e);
             return;
         }
-        // @todo Java SE 7 - use try with resources
-        OutputStream os = null;
+
+        final File tempFile;
         try {
-            File tempFile = File.createTempFile("temp", "cache", cacheFile.getParentFile());
-            os = new BufferedOutputStream(new FileOutputStream(tempFile));
-            provider.writeToStream(data, os);
-            os.close();
-
-            if (!FileUtils.deleteFileMaybe(cacheFile) || !tempFile.renameTo(cacheFile)) {
-                if (logger.isLoggable(Level.WARNING)) {
-                    logger.log(Level.WARNING, AdminLoggerInfo.mCannotWriteCache, new Object[] { cacheFile.getPath() });
-                }
-                if (!FileUtils.deleteFileMaybe(tempFile)) {
-                    logger.log(Level.FINE, "can't delete file: {0}", tempFile);
-                }
-
-            }
+            tempFile = File.createTempFile("temp", "cache", cacheFile.getParentFile());
         } catch (IOException e) {
-            if (logger.isLoggable(Level.WARNING)) {
-                logger.log(Level.WARNING, AdminLoggerInfo.mCannotWriteCache, new Object[] { cacheFile.getPath() });
-            }
-        } finally {
-            try {
-                os.close();
-            } catch (Exception ex) {
+            LOG.log(Level.WARNING, "Cannot create a temp file for future cache file " +  cacheFile, e);
+            return;
+        }
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(tempFile))) {
+            provider.writeToStream(data, os);
+        } catch (IOException e) {
+            LOG.log(Level.WARNING, "Cannot write data to temp file " +  tempFile, e);
+            return;
+        }
+
+        if (!FileUtils.deleteFileMaybe(cacheFile) || !tempFile.renameTo(cacheFile)) {
+            LOG.log(Level.WARNING, "Cannot delete or rename to cache file " +  cacheFile);
+            if (!FileUtils.deleteFileMaybe(tempFile)) {
+                LOG.log(Level.FINE, "Can't delete file {0}", tempFile);
             }
         }
     }

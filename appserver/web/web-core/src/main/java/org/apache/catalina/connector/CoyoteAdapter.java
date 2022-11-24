@@ -329,6 +329,13 @@ public class CoyoteAdapter extends HttpHandler {
             return false;
         }
 
+        // Normalize Decoded URI
+        if (!normalize(decodedURI)) {
+            res.setStatus(400);
+            res.setDetailMessage(("Invalid URI"));
+            return false;
+        }
+
         if (compatWithTomcat || !v3Enabled) {
 
             // Set the remote principal
@@ -490,19 +497,19 @@ public class CoyoteAdapter extends HttpHandler {
      * This method normalizes "\", "//", "/./" and "/../". This method will return false when trying to go above the root,
      * or if the URI contains a null byte.
      *
-     * @param uriMB URI to be normalized
+     * @param uriDataChunk URI to be normalized
      */
-    public static boolean normalize(MessageBytes uriMB) {
-        int type = uriMB.getType();
-        if (type == MessageBytes.T_CHARS) {
-            return normalizeChars(uriMB);
+    public static boolean normalize(DataChunk uriDataChunk) {
+        DataChunk.Type type = uriDataChunk.getType();
+        if (type == DataChunk.Type.Chars) {
+            return normalizeChars(uriDataChunk);
         }
 
-        return normalizeBytes(uriMB);
+        return normalizeBytes(uriDataChunk);
     }
 
-    private static boolean normalizeBytes(MessageBytes uriMB) {
-        ByteChunk uriBC = uriMB.getByteChunk();
+    private static boolean normalizeBytes(DataChunk uriDataChunk) {
+        ByteChunk uriBC = uriDataChunk.getByteChunk();
         byte[] b = uriBC.getBytes();
         int start = uriBC.getStart();
         int end = uriBC.getEnd();
@@ -606,8 +613,8 @@ public class CoyoteAdapter extends HttpHandler {
         return true;
     }
 
-    private static boolean normalizeChars(MessageBytes uriMessageBytes) {
-        CharChunk uriCharChunk = uriMessageBytes.getCharChunk();
+    private static boolean normalizeChars(DataChunk uriDataChunk) {
+        CharChunk uriCharChunk = uriDataChunk.getCharChunk();
         char[] c = uriCharChunk.getChars();
         int start = uriCharChunk.getStart();
         int end = uriCharChunk.getEnd();

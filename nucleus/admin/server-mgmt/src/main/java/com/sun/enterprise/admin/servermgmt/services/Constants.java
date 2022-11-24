@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,10 +66,4 @@ class Constants {
     static final String ETC = "/etc";
     static final String INITD = "/etc/init.d";
     static final String REGEXP_PATTERN_BEGIN = "[KS][0-9][0-9]?";
-
-    static final boolean LINUX_HACK;
-
-    static {
-        LINUX_HACK = System.getProperty("user.name").indexOf("nevins") >= 0 && Boolean.parseBoolean(System.getenv("LINUX_HACK"));
-    }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,14 +21,6 @@ import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.cli.ProgramOptions;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
-import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import java.security.KeyStore;
-import org.glassfish.api.ActionReport;
-
-import org.glassfish.api.admin.CommandException;
 import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.io.SmartFile;
@@ -36,8 +29,19 @@ import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.security.KeyStore;
+import java.util.List;
 import java.util.logging.Level;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.CommandException;
 
 /**
  * A class that's supposed to capture all the behavior common to operation on a "local" server. It's getting fairly
@@ -90,10 +94,11 @@ public abstract class LocalServerCommand extends CLICommand {
             MiniXmlParser parser = new MiniXmlParser(getDomainXml(), serverName);
             List<HostAndPort> addrSet = parser.getAdminAddresses();
 
-            if (addrSet.size() > 0)
+            if (addrSet.size() > 0) {
                 return addrSet.get(0);
-            else
+            } else {
                 throw new CommandException(strings.get("NoAdminPort"));
+            }
         } catch (MiniXmlParserException ex) {
             throw new CommandException(strings.get("NoAdminPortEx", ex), ex);
         }
@@ -122,8 +127,9 @@ public abstract class LocalServerCommand extends CLICommand {
         if (ok(pw)) {
             programOpts.setPassword(pw != null ? pw.toCharArray() : null, ProgramOptions.PasswordLocation.LOCAL_PASSWORD);
             logger.finer("Using local password");
-        } else
+        } else {
             logger.finer("Not using local password");
+        }
     }
 
     protected final void unsetLocalPassword() {
@@ -131,8 +137,9 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     protected final void resetServerDirs() throws IOException {
-        if (serverDirs == null)
+        if (serverDirs == null) {
             throw new RuntimeException(Strings.get("NoServerDirs"));
+        }
 
         serverDirs = serverDirs.refresh();
     }
@@ -142,8 +149,9 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     protected final File getDomainXml() {
-        if (serverDirs == null)
+        if (serverDirs == null) {
             throw new RuntimeException(Strings.get("NoServerDirs"));
+        }
 
         return serverDirs.getDomainXml();
     }
@@ -157,7 +165,9 @@ public abstract class LocalServerCommand extends CLICommand {
     protected final String readFromMasterPasswordFile() {
         File mpf = getMasterPasswordFile();
         if (mpf == null)
+         {
             return null; // no master password  saved
+        }
         try {
             PasswordAdapter pw = new PasswordAdapter(mpf.getAbsolutePath(), "master-password".toCharArray()); // fixed key
             return pw.getPasswordForAlias("master-password");
@@ -185,13 +195,15 @@ public abstract class LocalServerCommand extends CLICommand {
             ks.load(fis, mpv.toCharArray());
             return true;
         } catch (Exception e) {
-            if (logger.isLoggable(Level.FINER))
+            if (logger.isLoggable(Level.FINER)) {
                 logger.finer(e.getMessage());
+            }
             return false;
         } finally {
             try {
-                if (fis != null)
+                if (fis != null) {
                     fis.close();
+                }
             } catch (IOException ioe) {
                 // ignore, I know ...
             }
@@ -216,8 +228,9 @@ public abstract class LocalServerCommand extends CLICommand {
                 }
             }
         } else { // the passwordfile contains AS_ADMIN_MASTERPASSWORD, use it
-            if (!verifyMasterPassword(mpv))
+            if (!verifyMasterPassword(mpv)) {
                 mpv = retry(RETRIES);
+            }
         }
         long t1 = now();
         logger.log(Level.FINER, "Time spent in master password extraction: {0} msec", (t1 - t0)); //TODO
@@ -230,8 +243,9 @@ public abstract class LocalServerCommand extends CLICommand {
      * @return true if it's the DAS at this domain directory
      */
     protected final boolean isThisServer(File ourDir, String directoryKey) {
-        if (!ok(directoryKey))
+        if (!ok(directoryKey)) {
             throw new NullPointerException();
+        }
 
         ourDir = getUniquePath(ourDir);
         logger.log(Level.FINER, "Check if server is at location {0}", ourDir);
@@ -305,15 +319,17 @@ public abstract class LocalServerCommand extends CLICommand {
     protected boolean isRunning() {
         int pp = getPrevPid();
 
-        if (pp < 0)
+        if (pp < 0) {
             return isRunningByCheckingForPidFile();
+        }
 
         Boolean b = ProcessUtils.isProcessRunning(pp);
 
-        if (b == null) // this means it couldn't find out!
+        if (b == null) { // this means it couldn't find out!
             return isRunningUsingJps();
-        else
+        } else { // this means it couldn't find out!
             return b.booleanValue();
+        }
     }
 
     /**
@@ -333,8 +349,9 @@ public abstract class LocalServerCommand extends CLICommand {
 
         while (now() < end) {
             try {
-                if (isLocal())
+                if (isLocal()) {
                     resetLocalPassword();
+                }
 
                 int newServerPid = getServerPid();
 
@@ -351,14 +368,12 @@ public abstract class LocalServerCommand extends CLICommand {
         throw new CommandException(strings.get("restartDomain.noGFStart"));
     }
 
-    // todo move prevpid to ServerDirs ???
     protected final int getPrevPid() {
         try {
             File prevPidFile = new File(getServerDirs().getPidFile().getPath() + ".prev");
-
-            if (!prevPidFile.canRead())
+            if (!prevPidFile.canRead()) {
                 return -1;
-
+            }
             String pids = FileUtils.readSmallFile(prevPidFile).trim();
             return Integer.parseInt(pids);
         } catch (Exception ex) {
@@ -374,8 +389,9 @@ public abstract class LocalServerCommand extends CLICommand {
     private boolean isRunningUsingJps() {
         int pp = getPrevPid();
 
-        if (pp < 0)
+        if (pp < 0) {
             return isRunningByCheckingForPidFile();
+        }
 
         return Jps.isPid(pp);
     }
@@ -388,9 +404,10 @@ public abstract class LocalServerCommand extends CLICommand {
 
         if (pf != null) {
             return pf.exists();
-        } else
+        } else {
             return isRunning(programOpts.getHost(), // remote case
                     programOpts.getPort());
+        }
     }
 
     /**
@@ -422,8 +439,9 @@ public abstract class LocalServerCommand extends CLICommand {
         if (report != null) {
             String val = report.findProperty("restartable_value");
 
-            if (ok(val) && val.equals("false"))
+            if (ok(val) && val.equals("false")) {
                 return false;
+            }
         }
         return true;
     }
@@ -444,23 +462,27 @@ public abstract class LocalServerCommand extends CLICommand {
     }
 
     private File getJKS() {
-        if (serverDirs == null)
+        if (serverDirs == null) {
             return null;
+        }
 
         File mp = new File(new File(serverDirs.getServerDir(), "config"), "cacerts.jks");
-        if (!mp.canRead())
+        if (!mp.canRead()) {
             return null;
+        }
         return mp;
     }
 
     protected File getMasterPasswordFile() {
 
-        if (serverDirs == null)
+        if (serverDirs == null) {
             return null;
+        }
 
         File mp = new File(serverDirs.getServerDir(), "master-password");
-        if (!mp.canRead())
+        if (!mp.canRead()) {
             return null;
+        }
 
         return mp;
     }
@@ -473,15 +495,19 @@ public abstract class LocalServerCommand extends CLICommand {
             String prompt = strings.get("mp.prompt", (times - i));
             char[] mpvArr = super.readPassword(prompt);
             mpv = mpvArr != null ? new String(mpvArr) : null;
-            if (mpv == null)
+            if (mpv == null) {
                 throw new CommandException(strings.get("no.console"));
+            }
             // ignore retries :)
-            if (verifyMasterPassword(mpv))
+            if (verifyMasterPassword(mpv)) {
                 return mpv;
+            }
             if (i < (times - 1))
+             {
                 logger.info(strings.get("retry.mp"));
             // make them pay for typos?
             //Thread.currentThread().sleep((i+1)*10000);
+            }
         }
         throw new CommandException(strings.get("mp.giveup", times));
     }

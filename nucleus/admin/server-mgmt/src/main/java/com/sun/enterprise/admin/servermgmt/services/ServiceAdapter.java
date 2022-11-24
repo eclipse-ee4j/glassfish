@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@ import java.util.*;
 import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
 
 /**
- *
  * @author bnevins
  */
 public abstract class ServiceAdapter implements Service {
@@ -92,12 +92,13 @@ public abstract class ServiceAdapter implements Service {
         getTokenMap().put(FQSN_TN, info.fqsn);
         getTokenMap().put(OS_USER_TN, info.osUser);
 
-        if (OS.isWindowsForSure() && !LINUX_HACK) {
+        if (OS.isWindowsForSure()) {
             // Windows doesn't respond well to slashes in the name!!
             getTokenMap().put(SERVICE_NAME_TN, info.serviceName);
             getTokenMap().put(ENTITY_NAME_TN, serverName);
-        } else
+        } else {
             getTokenMap().put(SERVICE_NAME_TN, info.smfFullServiceName);
+        }
 
         getTokenMap().put(AS_ADMIN_PATH_TN, info.asadminScript.getPath().replace('\\', '/'));
         getTokenMap().put(DATE_CREATED_TN, info.date.toString());
@@ -111,16 +112,18 @@ public abstract class ServiceAdapter implements Service {
         // password file
         // note: you do NOT want to give a "--user" arg -- it can only appear
         // if there is a password file too
-        if (info.passwordFile == null)
+        if (info.passwordFile == null) {
             return " ";
+        }
 
         // 2. --
         String user = info.appserverUser; // might be null
 
         StringBuilder sb = new StringBuilder();
 
-        if (StringUtils.ok(user))
+        if (StringUtils.ok(user)) {
             sb.append(" --user ").append(user);
+        }
 
         sb.append(" --passwordfile ").append(info.passwordFile.getPath()).append(" ");
 
@@ -128,13 +131,15 @@ public abstract class ServiceAdapter implements Service {
     }
 
     void trace(String s) {
-        if (info.trace)
+        if (info.trace) {
             System.out.println(TRACE_PREPEND + s);
+        }
     }
 
     void dryRun(String s) {
-        if (info.dryRun)
+        if (info.dryRun) {
             System.out.println(DRYRUN_PREPEND + s);
+        }
     }
 
     final Map<String, String> getTokenMap() {
@@ -148,16 +153,19 @@ public abstract class ServiceAdapter implements Service {
     private void setAsadminCredentials() {
 
         // it is allowed to have no passwordfile specified in V3
-        if (info.passwordFile == null)
+        if (info.passwordFile == null) {
             return;
+        }
 
         // But if they DID specify it -- it must be kosher...
 
-        if (!info.passwordFile.isFile())
+        if (!info.passwordFile.isFile()) {
             throw new IllegalArgumentException(Strings.get("windows.services.passwordFileNotA", info.passwordFile));
+        }
 
-        if (!info.passwordFile.canRead())
+        if (!info.passwordFile.canRead()) {
             throw new IllegalArgumentException(Strings.get("windows.services.passwordFileNotReadable", info.passwordFile));
+        }
 
         Properties p = getProperties(info.passwordFile);
 
@@ -175,8 +183,9 @@ public abstract class ServiceAdapter implements Service {
         // In summary - before this change if --user was specified then that username was
         // completely ignored.  Now it is used.
         //
-        if (StringUtils.ok(userFromPasswordFile))
+        if (StringUtils.ok(userFromPasswordFile)) {
             info.setAppServerUser(p.getProperty("AS_ADMIN_USER"));
+        }
     }
 
     private Properties getProperties(File f) {
@@ -200,6 +209,6 @@ public abstract class ServiceAdapter implements Service {
         }
     }
 
-    private final Map<String, String> tokenMap = new HashMap<String, String>();
+    private final Map<String, String> tokenMap = new HashMap<>();
     final PlatformServicesInfo info;
 }

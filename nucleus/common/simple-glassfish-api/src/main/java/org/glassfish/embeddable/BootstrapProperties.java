@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,15 +21,23 @@ import java.util.Properties;
 
 /**
  * Encapsulates the set of properties required to bootstrap GlassFishRuntime.
- * <p/>
- * <p/>Eg.., GlassFishRuntime.bootstrap(new BootstrapProperties());
+ *
+ * <pre>
+ * ...
+ * GlassFishRuntime runtime = GlassFishRuntime.bootstrap(new BootstrapProperties());
+ * GlassFish glassfish = runtime.newGlassFish(glassFishProperties);
+ * ...
+ * </pre>
  *
  * @author bhavanishankar@dev.java.net
  * @author Prasad.Subramanian@Sun.COM
  */
 public class BootstrapProperties {
 
-    private Properties properties;
+    /** Key for specifying which installation root the GlassFish should run with. */
+    private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
+
+    private final Properties properties;
 
     /**
      * Create BootstrapProperties with default properties.
@@ -67,6 +76,24 @@ public class BootstrapProperties {
     }
 
     /**
+     * Optionally set the installation root using which the GlassFish should run.
+     *
+     * @param installRoot Location of installation root.
+     */
+    public void setInstallRoot(String installRoot) {
+        properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot);
+    }
+
+    /**
+     * Get the location installation root set using {@link #setInstallRoot}
+     *
+     * @return Location of installation root set using {@link #setInstallRoot}
+     */
+    public String getInstallRoot() {
+        return properties.getProperty(INSTALL_ROOT_PROP_NAME);
+    }
+
+    /**
      * Set any custom bootstrap property. May be required for the plugged in
      * {@link org.glassfish.embeddable.spi.RuntimeBuilder} (if any)
      *
@@ -87,25 +114,8 @@ public class BootstrapProperties {
         return properties.getProperty(key);
     }
 
-    /**
-     * Optionally set the installation root using which the GlassFish should run.
-     *
-     * @param installRoot Location of installation root.
-     * @return This object after setting the installation root.
-     */
-    public void setInstallRoot(String installRoot) {
-        properties.setProperty(INSTALL_ROOT_PROP_NAME, installRoot);
+    @Override
+    public String toString() {
+        return super.toString() + "[" + properties + "]";
     }
-
-    /**
-     * Get the location installation root set using {@link #setInstallRoot}
-     *
-     * @return Location of installation root set using {@link #setInstallRoot}
-     */
-    public String getInstallRoot() {
-        return properties.getProperty(INSTALL_ROOT_PROP_NAME);
-    }
-
-    // Key for specifying which installation root the GlassFish should run with.
-    private static final String INSTALL_ROOT_PROP_NAME = "com.sun.aas.installRoot";
 }

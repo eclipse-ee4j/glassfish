@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,16 +17,18 @@
 
 package org.glassfish.uberjar;
 
-import org.glassfish.embeddable.BootstrapProperties;
-import org.glassfish.embeddable.GlassFish;
-import org.glassfish.embeddable.GlassFishRuntime;
+import com.sun.enterprise.glassfish.bootstrap.Constants;
+import com.sun.enterprise.glassfish.bootstrap.Constants.Platform;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.glassfish.embeddable.BootstrapProperties;
+import org.glassfish.embeddable.GlassFish;
 import org.glassfish.embeddable.GlassFishProperties;
+import org.glassfish.embeddable.GlassFishRuntime;
 
 /**
  *
@@ -33,7 +36,6 @@ import org.glassfish.embeddable.GlassFishProperties;
  *
  * @author bhavanishankar@dev.java.net
  */
-
 public class UberJarMain {
 
     private static Logger logger = Logger.getLogger("embedded-glassfish");
@@ -73,11 +75,12 @@ public class UberJarMain {
 
     private void privilegedStart() throws Exception {
         AccessController.doPrivileged(new PrivilegedAction<Void>() {
+            @Override
             public Void run() {
                 try {
                     Properties props = new Properties();
-                    props.setProperty(BootstrapProperties.PLATFORM_PROPERTY_KEY,
-                            System.getProperty(BootstrapProperties.PLATFORM_PROPERTY_KEY, BootstrapProperties.Platform.Felix.toString()));
+                    props.setProperty(Constants.PLATFORM_PROPERTY_KEY,
+                            System.getProperty(Constants.PLATFORM_PROPERTY_KEY, Platform.Felix.name()));
 
                     long startTime = System.currentTimeMillis();
 

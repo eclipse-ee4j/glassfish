@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,9 +50,9 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
  * <p/>
- * {@link Constants.Platform#Felix},
- * {@link Constants.Platform#Equinox},
- * and {@link Constants.Platform#Knopflerfish}.
+ * {@link com.sun.enterprise.glassfish.bootstrap.Constants.Platform#Felix},
+ * {@link com.sun.enterprise.glassfish.bootstrap.Constants.Platform#Equinox},
+ * and {@link com.sun.enterprise.glassfish.bootstrap.Constants.Platform#Knopflerfish}.
  * <p/>
  * <p/>It can't handle GenericOSGi platform,
  * because it reads framework configuration from a framework specific file when it calls

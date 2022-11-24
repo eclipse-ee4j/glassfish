@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2023 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,8 @@ package org.glassfish.kernel.embedded;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.v3.server.GFDomainXml;
+
+import org.glassfish.embeddable.GlassFishProperties;
 import org.glassfish.server.ServerEnvironmentImpl;
 import jakarta.inject.Inject;
 
@@ -43,8 +46,7 @@ public class EmbeddedDomainXml extends GFDomainXml {
     }
 
     static URL getDomainXml(StartupContext startupContext) throws IOException {
-        String configFileURI = startupContext.getArguments().getProperty(
-                "org.glassfish.embeddable.configFileURI");
+        String configFileURI = startupContext.getArguments().getProperty(GlassFishProperties.CONFIG_FILE_URI_PROP_NAME);
         if (configFileURI != null) { // user specified domain.xml
             return URI.create(configFileURI).toURL();
         }

@@ -270,7 +270,6 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
      * @param archive the archive for the application
      */
     public Application processDeploymentMetaData(ReadableArchive archive) throws Exception {
-        FileArchive expandedArchive = null;
         File tmpFile = null;
         ExtendedDeploymentContext context = null;
         Logger logger = Logger.getAnonymousLogger();
@@ -303,9 +302,10 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
                 if (!tmpDir.exists() && !tmpDir.mkdirs()) {
                   throw new IOException("Unable to create directory " + tmpDir.getAbsolutePath());
                 }
-                expandedArchive = (FileArchive)archiveFactory.createArchive(tmpDir);
-                archiveHandler.expand(archive, expandedArchive, context);
-                context.setSource(expandedArchive);
+                try (FileArchive expandedArchive = (FileArchive)archiveFactory.createArchive(tmpDir)) {
+                    archiveHandler.expand(archive, expandedArchive, context);
+                    context.setSource(expandedArchive);
+                }
             }
 
             context.setPhase(DeploymentContextImpl.Phase.PREPARE);
@@ -325,13 +325,6 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
             }
             if (context != null) {
                 context.postDeployClean(true);
-            }
-            if (expandedArchive != null) {
-                try {
-                    expandedArchive.close();
-                } catch (Exception e) {
-                    // ignore
-                }
             }
             if (tmpFile != null && tmpFile.exists()) {
                 try {

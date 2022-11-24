@@ -75,9 +75,9 @@ public class ModuleExploder {
                     if (!out.getParentFile().exists()) {
                         out.getParentFile().mkdirs();
                     }
-                    InputStream is = new BufferedInputStream(jarFile.getInputStream(entry));
-                    FileOutputStream fos = FileUtils.openFileOutputStream(out);
-                    FileUtils.copy(is, fos, entry.getSize());
+                    try (InputStream is = jarFile.getInputStream(entry)) {
+                        FileUtils.copy(is, out, entry.getSize());
+                    }
                 }
             }
         } catch(Throwable e) {

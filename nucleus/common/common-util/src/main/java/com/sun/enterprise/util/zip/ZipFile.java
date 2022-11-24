@@ -1,6 +1,6 @@
 /*
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,12 +22,21 @@ package com.sun.enterprise.util.zip;
 
 import com.sun.enterprise.util.CULoggerInfo;
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
-import java.util.*;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.zip.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 ///////////////////////////////////////////////////////////////////////////////
 public class ZipFile {
@@ -76,7 +85,7 @@ public class ZipFile {
      */
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public ArrayList<String> explode() throws ZipFileException {
-        files = new ArrayList<String>();
+        files = new ArrayList<>();
         ZipInputStream zin = null;
         BufferedOutputStream bos = null;
 
@@ -185,15 +194,12 @@ public class ZipFile {
 
             ZipEntry jarEntry = earFile.getEntry(jarEntryName);
             if (jarEntry == null) {
-                throw new ZipFileException(jarEntryName
-                        + " not found in " + earFile.getName());
+                throw new ZipFileException(jarEntryName + " not found in " + earFile.getName());
             }
 
-            InputStream is = earFile.getInputStream(jarEntry);
-            FileOutputStream fos = new FileOutputStream(jarFile);
-            // the FileUtils.copy will buffer the streams,
-            // so we won't buffer them here.
-            FileUtils.copy(is, fos, jarEntry.getSize());
+            try (InputStream is = earFile.getInputStream(jarEntry)) {
+                FileUtils.copy(is, jarFile, jarEntry.getSize());
+            }
         } catch (IOException e) {
             throw new ZipFileException(e);
         }
@@ -333,7 +339,7 @@ public class ZipFile {
     private static final int BUFFER_SIZE = 0x10000; //64k
     private File explodeDir = null;
     private ArrayList<String> files = null;
-    private byte[] buffer = new byte[BUFFER_SIZE];
+    private final byte[] buffer = new byte[BUFFER_SIZE];
     private ZipInputStream zipStream = null;
     private static final Logger _utillogger = CULoggerInfo.getLogger();
     private File zipFile = null;

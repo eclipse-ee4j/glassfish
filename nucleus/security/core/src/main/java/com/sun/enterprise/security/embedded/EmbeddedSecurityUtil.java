@@ -22,7 +22,6 @@ import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.EmbeddedSecurity;
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Singleton;
 
@@ -30,6 +29,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,7 +52,6 @@ import org.jvnet.hk2.config.types.Property;
  *
  * @author Nithya Subramanian
  */
-
 @Service
 @Singleton
 public class EmbeddedSecurityUtil implements EmbeddedSecurity {
@@ -111,7 +110,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
             //Copy files into new directory
             for (String fileName : fileNames) {
-                FileUtils.copyFile(new File(fileName), new File(toConfigDir, parseFileName(fileName)));
+                Files.copy(new File(fileName).toPath(), new File(toConfigDir, parseFileName(fileName)).toPath());
             }
         } catch (IOException e) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.ioError, e);

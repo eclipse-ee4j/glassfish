@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,15 @@ package com.sun.enterprise.admin.remote.reader;
 import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.api.admin.AdminCommandState;
@@ -33,7 +37,7 @@ import org.glassfish.api.admin.AdminCommandState;
  *
  * @author mmares
  */
-public class AdminCommandStateJsonProprietaryReader implements ProprietaryReader<AdminCommandState> {
+public final class AdminCommandStateJsonProprietaryReader implements ProprietaryReader<AdminCommandState> {
 
     static class LoggerRef {
         private static final Logger logger = AdminLoggerInfo.getLogger();
@@ -51,8 +55,12 @@ public class AdminCommandStateJsonProprietaryReader implements ProprietaryReader
     @Override
     public AdminCommandState readFrom(final InputStream is, final String contentType) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtils.copy(is, baos, 0);
-        String str = baos.toString("UTF-8");
+        try {
+            FileUtils.copy(is, baos);
+        } finally {
+            is.close();
+        }
+        String str = baos.toString(StandardCharsets.UTF_8);
         try {
             JSONObject json = new JSONObject(str);
             return readAdminCommandState(json);

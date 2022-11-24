@@ -30,7 +30,6 @@ import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.util.TracerVisitor;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.shared.ArchivistUtils;
 
 import jakarta.inject.Inject;
 
@@ -69,6 +68,7 @@ import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.deployment.common.DeploymentProperties;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.DescriptorVisitor;
@@ -829,9 +829,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
 
         // manifest file
         if (manifest != null) {
-            OutputStream os = out.putNextEntry(JarFile.MANIFEST_NAME);
-            manifest.write(new DataOutputStream(os));
-            out.closeEntry();
+            try (OutputStream os = new DataOutputStream(out.putNextEntry(JarFile.MANIFEST_NAME))) {
+                manifest.write(os);
+            }
         }
     }
 
@@ -862,9 +862,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
     public void writeStandardDeploymentDescriptors(WritableArchive out) throws IOException {
 
         getStandardDDFile().setArchiveType(getModuleType());
-        OutputStream os = out.putNextEntry(getDeploymentDescriptorPath());
-        standardDD.write(getDescriptor(), os);
-        out.closeEntry();
+        try (OutputStream os = out.putNextEntry(getDeploymentDescriptorPath())) {
+            standardDD.write(getDescriptor(), os);
+        }
     }
 
     /**
@@ -889,10 +889,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
         }
         for (ConfigurationDeploymentDescriptorFile ddFile : confDDFilesToWrite) {
             ddFile.setArchiveType(getModuleType());
-            OutputStream os = out.putNextEntry(
-                ddFile.getDeploymentDescriptorPath());
-            ddFile.write(desc, os);
-            out.closeEntry();
+            try (OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
+                ddFile.write(desc, os);
+            }
         }
     }
 
@@ -1300,21 +1299,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
      */
     protected static void addFileToArchive(WritableArchive archive, String filePath, String entryName)
         throws IOException {
-        FileInputStream is = null;
-        try {
-            is =  new FileInputStream(new File(filePath));
-            OutputStream os = archive.putNextEntry(entryName);
-            ArchivistUtils.copyWithoutClose(is, os);
-        } finally {
-            try {
-                if (is!=null) {
-                    is.close();
-                }
-            } catch(IOException e) {
-                archive.closeEntry();
-                throw e;
-            }
-            archive.closeEntry();
+        try (FileInputStream is = new FileInputStream(new File(filePath));
+            WritableArchiveEntry os = archive.putNextEntry(entryName)) {
+            FileUtils.copy(is, os);
         }
     }
 
@@ -1334,11 +1321,11 @@ public abstract class Archivist<T extends BundleDescriptor> {
                 if (ignored == null || !ignored.contains(anEntry)) {
                     try (InputStream is = in.getEntry(anEntry)) {
                         if (is != null) {
-                            OutputStream os = out.putNextEntry(anEntry);
-                            ArchivistUtils.copyWithoutClose(is, os);
+                            try (WritableArchiveEntry os = out.putNextEntry(anEntry)) {
+                                FileUtils.copy(is, os);
+                            }
                         }
                     }
-                    out.closeEntry();
                 }
             }
         }
@@ -1545,9 +1532,9 @@ public abstract class Archivist<T extends BundleDescriptor> {
         if (overwriteManifest) {
             Manifest m = source.getManifest();
             if (m != null) {
-                OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME);
-                m.write(os);
-                target.closeEntry();
+                try (WritableArchiveEntry os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
+                    m.write(os);
+                }
             }
         }
     }
@@ -1555,28 +1542,14 @@ public abstract class Archivist<T extends BundleDescriptor> {
 
     // only copy the entry if the destination archive does not have this entry
     public void copyAnEntry(ReadableArchive in, WritableArchive out, String entryName) throws IOException {
-        InputStream is = null;
-        InputStream is2 = null;
-        ReadableArchive in2 = archiveFactory.openArchive(out.getURI());
-        try {
-            is = in.getEntry(entryName);
-            is2 = in2.getEntry(entryName);
+        try (ReadableArchive in2 = archiveFactory.openArchive(out.getURI());
+            InputStream is = in.getEntry(entryName);
+            InputStream is2 = in2.getEntry(entryName)) {
             if (is != null && is2 == null) {
-                OutputStream os = out.putNextEntry(entryName);
-                ArchivistUtils.copyWithoutClose(is, os);
+                try (WritableArchiveEntry os = out.putNextEntry(entryName)) {
+                    FileUtils.copy(is, os);
+                }
             }
-        } finally {
-            /*
-             *Close any streams that were opened.
-             */
-            in2.close();
-            if (is != null) {
-                is.close();
-            }
-            if (is2 != null) {
-                is2.close();
-            }
-            out.closeEntry();
         }
     }
 

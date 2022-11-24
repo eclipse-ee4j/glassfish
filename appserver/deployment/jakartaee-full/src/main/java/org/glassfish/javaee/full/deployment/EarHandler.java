@@ -170,7 +170,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             for (ModuleDescriptor<?> md : holder.app.getModules()) {
                 String moduleUri = md.getArchiveUri();
                 ReadableArchive subArchive = null;
-                WritableArchive subTarget = null;
                 ReadableArchive subArchiveToExpand = null;
                 try {
                     subArchive = source2.getSubArchive(moduleUri);
@@ -185,8 +184,10 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                         subHandler = deployment.getArchiveHandler(subArchive);
                     }
                     context.getModuleArchiveHandlers().put(moduleUri, subHandler);
-                    if (subHandler != null) {
-                        subTarget = target.createSubArchive(FileUtils.makeFriendlyFilenameExtension(moduleUri));
+                    if (subHandler == null) {
+                        return;
+                    }
+                    try (WritableArchive subTarget = target.createSubArchive(FileUtils.makeFriendlyFilenameExtension(moduleUri))) {
                         /*
                          * A subarchive might be packaged as a subdirectory (instead of a nested JAR) in an EAR. If so and if it has the
                          * same name as the directory into which we'll expand the submodule, make sure it is also of the correct archive
@@ -204,16 +205,11 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                              */
                             if (!areSameStorageType(subTarget, subArchive)) {
                                 final String msg = MessageFormat.format(
-                                        _logger.getResourceBundle().getString("enterprise.deployment.backend.badSubModPackaging"),
-                                        subArchive.getURI().toASCIIString(), subArchive.getClass().getName());
+                                    _logger.getResourceBundle().getString("enterprise.deployment.backend.badSubModPackaging"),
+                                    subArchive.getURI().toASCIIString(), subArchive.getClass().getName());
                                 throw new RuntimeException(msg);
                             }
                         }
-// Keep the original submodule file because the app client deployer needs it.
-                        /*
-                         * // delete the original module file File origSubArchiveFile = new File( target.getURI().getSchemeSpecificPart(),
-                         * moduleUri); origSubArchiveFile.delete();
-                         */
                     }
                 } catch (IOException ioe) {
                     _logger.log(Level.FINE, "Exception while processing " + moduleUri, ioe);
@@ -221,9 +217,6 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     try {
                         if (subArchive != null) {
                             subArchive.close();
-                        }
-                        if (subTarget != null) {
-                            subTarget.close();
                         }
                         if (subArchiveToExpand != null) {
                             subArchiveToExpand.close();

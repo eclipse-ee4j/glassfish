@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,12 +21,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 
 /**
- *
  * @author martinmares
  */
-public class StringProprietaryReader implements ProprietaryReader<String> {
+public final class StringProprietaryReader implements ProprietaryReader<String> {
 
     @Override
     public boolean isReadable(Class<?> type, String mimetype) {
@@ -39,12 +40,16 @@ public class StringProprietaryReader implements ProprietaryReader<String> {
     @Override
     public String readFrom(final InputStream is, final String contentType) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buff = new byte[512];
-        int count;
-        while ((count = is.read(buff)) > 0) {
-            baos.write(buff, 0, count);
+        try {
+            byte[] buff = new byte[512];
+            int count;
+            while ((count = is.read(buff)) > 0) {
+                baos.write(buff, 0, count);
+            }
+        } finally {
+            is.close();
         }
-        return baos.toString("UTF-8");
+        return baos.toString(StandardCharsets.UTF_8);
     }
 
 }

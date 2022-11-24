@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,7 @@ package org.glassfish.admin.payload;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.Payload.Part;
@@ -76,7 +79,7 @@ public abstract class PayloadFilesManager {
     private final ActionReport report;
     private final ActionReportHandler reportHandler;
 
-    protected final Map<File,Long> dirTimestamps = new HashMap<File,Long>();
+    protected final Map<File,Long> dirTimestamps = new HashMap<>();
 
     private PayloadFilesManager(
             final File targetDir,
@@ -431,22 +434,18 @@ public abstract class PayloadFilesManager {
     }
 
     private void consumePartBody(final Part part) throws FileNotFoundException, IOException {
-        InputStream is = null;
-        try {
-            is = part.getInputStream();
+        try (InputStream is = part.getInputStream()) {
             byte[] buffer = new byte[1024 * 64];
             while (is.read(buffer) != -1) {
-            }
-        } finally {
-            if (is != null) {
-                is.close();
             }
         }
     }
 
     private void processReport(final Payload.Part part) throws Exception {
         if (reportHandler != null) {
-            reportHandler.handleReport(part.getInputStream());
+            try (InputStream inputStream = part.getInputStream()) {
+                reportHandler.handleReport(inputStream);
+            }
         } else {
             consumePartBody(part);
         }
@@ -581,7 +580,7 @@ public abstract class PayloadFilesManager {
             return Collections.EMPTY_MAP;
         }
 
-        final Map<File,Properties> result = new LinkedHashMap<File,Properties>();
+        final Map<File,Properties> result = new LinkedHashMap<>();
 
         boolean isReportProcessed = false;
         Part possibleUnrecognizedReportPart = null;
@@ -620,11 +619,11 @@ public abstract class PayloadFilesManager {
     public List<File> processParts(
             final Payload.Inbound inboundPayload) throws Exception {
 
-        return new ArrayList<File>(processPartsExtended(inboundPayload).keySet());
+        return new ArrayList<>(processPartsExtended(inboundPayload).keySet());
     }
 
-    public static interface ActionReportHandler {
-        public void handleReport(final InputStream reportStream) throws Exception;
+    public interface ActionReportHandler {
+        void handleReport(final InputStream reportStream) throws Exception;
     }
 
     protected abstract void postProcessParts();
@@ -766,7 +765,7 @@ public abstract class PayloadFilesManager {
          * Creates a new instance of the enum
          * @param type
          */
-        private DataRequestType(final String type) {
+        DataRequestType(final String type) {
             dataRequestType = type;
         }
 

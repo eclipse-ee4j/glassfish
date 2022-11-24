@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,21 +18,25 @@
 package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.config.serverbeans.Nodes;
-import java.util.List;
-import java.util.ArrayList;
-import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.cluster.RemoteType;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import jakarta.inject.Inject;
-
-
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.component.*;
-
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.cluster.ssh.util.SSHUtil;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * Remote AdminCommand to create and ssh node.  This command is run only on DAS.
@@ -116,7 +121,10 @@ public class CreateNodeSshCommand extends CreateRemoteNodeCommand {
     @Override
     protected final void populateCommandArgs(List<String> args) {
         if (sshkeyfile == null) {
-            sshkeyfile = SSHUtil.getExistingKeyFile();
+            File file = SSHUtil.getExistingKeyFile();
+            if (file != null) {
+                sshkeyfile = file.getAbsolutePath();
+            }
         }
 
         if (sshkeyfile != null) {
@@ -136,7 +144,7 @@ public class CreateNodeSshCommand extends CreateRemoteNodeCommand {
      */
     @Override
     protected List<String> getPasswords() {
-        List list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         NodeUtils nUtils = new NodeUtils(habitat, logger);
         list.add("AS_ADMIN_SSHPASSWORD=" + nUtils.sshL.expandPasswordAlias(remotePassword));
 

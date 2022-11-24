@@ -80,20 +80,18 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
         if (sshkeyfile == null) {
             //if user hasn't specified a key file check if key exists in
             //default location
-            String existingKey = SSHUtil.getExistingKeyFile();
+            File existingKey = SSHUtil.getExistingKeyFile();
             if (existingKey == null) {
                 promptPass = true;
+            } else {
+                sshkeyfile = existingKey.getAbsolutePath();
             }
-            else {
-                sshkeyfile = existingKey;
-            }
-        }
-        else {
+        } else {
             validateKey(sshkeyfile);
         }
 
         //we need the key passphrase if key is encrypted
-        if (sshkeyfile != null && SSHUtil.isEncryptedKey(sshkeyfile)) {
+        if (sshkeyfile != null && SSHUtil.isEncryptedKey(new File(sshkeyfile))) {
             sshkeypassphrase = getSSHPassphrase(true);
         }
     }
@@ -126,7 +124,8 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
         boolean prompt = promptPass;
         for (String host : hosts) {
-            sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, getSshKeyFile(), sshkeypassphrase, logger);
+            File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
+            sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
 
             if (getSshKeyFile() != null && !sshLauncher.checkConnection()) {
                 //key auth failed, so use password auth
@@ -135,13 +134,14 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
             if (prompt) {
                 String sshpass = null;
-                if (sshPasswords.containsKey(host))
+                if (sshPasswords.containsKey(host)) {
                     sshpass = String.valueOf(sshPasswords.get(host));
-                else
+                } else {
                     sshpass = getSSHPassword(host);
+                }
 
                 //re-initialize
-                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpass, getSshKeyFile(), sshkeypassphrase, logger);
+                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpass, keyFile, sshkeypassphrase, logger);
                 prompt = false;
             }
 
@@ -355,9 +355,10 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
         boolean prompt = promptPass;
         for (String host : hosts) {
-            sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, getSshKeyFile(), sshkeypassphrase, logger);
+            File keyFile = getSshKeyFile() == null ? null : new File(getSshKeyFile());
+            sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
 
-            if (getSshKeyFile() != null && !sshLauncher.checkConnection()) {
+            if (keyFile != null && !sshLauncher.checkConnection()) {
                 //key auth failed, so use password auth
                 prompt = true;
             }
@@ -366,7 +367,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                 String sshpass = getSSHPassword(host);
                 sshPasswords.put(host, sshpass.toCharArray());
                 //re-initialize
-                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpass, getSshKeyFile(), sshkeypassphrase, logger);
+                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpass, keyFile, sshkeypassphrase, logger);
                 prompt = false;
             }
 

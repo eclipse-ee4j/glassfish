@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,20 +17,21 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
+import jakarta.inject.Inject;
+
+import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.cluster.ssh.util.SSHUtil;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- *
  * @author Byron Nevins
  */
 @Service(name = "uninstall-node-ssh")
@@ -63,36 +65,34 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
     protected void validate() throws CommandException {
         super.validate();
         if (sshkeyfile == null) {
-            //if user hasn't specified a key file check if key exists in
-            //default location
-            String existingKey = SSHUtil.getExistingKeyFile();
+            // if user hasn't specified a key file check if key exists in
+            // default location
+            File existingKey = SSHUtil.getExistingKeyFile();
             if (existingKey == null) {
                 promptPass = true;
+            } else {
+                sshkeyfile = existingKey.getAbsolutePath();
             }
-            else {
-                sshkeyfile = existingKey;
-            }
-        }
-        else {
+        } else {
             validateKey(sshkeyfile);
         }
 
-        //we need the key passphrase if key is encrypted
-        if (sshkeyfile != null && SSHUtil.isEncryptedKey(sshkeyfile)) {
+        // we need the key passphrase if key is encrypted
+        if (sshkeyfile != null && SSHUtil.isEncryptedKey(new File(sshkeyfile))) {
             sshkeypassphrase = getSSHPassphrase(true);
         }
     }
 
     @Override
     void deleteFromHosts() throws CommandException {
-        SFTPClient sftpClient = null;
         try {
             List<String> files = getListOfInstallFiles(getInstallDir());
 
             for (String host : hosts) {
-                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, sshkeyfile, sshkeypassphrase, logger);
+                File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
+                sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
 
-                if (sshkeyfile != null && !sshLauncher.checkConnection()) {
+                if (keyFile != null && !sshLauncher.checkConnection()) {
                     //key auth failed, so use password auth
                     promptPass = true;
                 }
@@ -100,32 +100,23 @@ public class UninstallNodeSshCommand extends UninstallNodeBaseCommand {
                 if (promptPass) {
                     sshpassword = getSSHPassword(host);
                     //re-initialize
-                    sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, sshkeyfile, sshkeypassphrase, logger);
+                    sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, keyFile, sshkeypassphrase, logger);
                 }
 
-                sftpClient = sshLauncher.getSFTPClient();
-
-                if (!sftpClient.exists(getInstallDir())) {
-                    throw new IOException(getInstallDir() + " Directory does not exist");
+                try (SFTPClient sftpClient = sshLauncher.getSFTPClient()) {
+                    if (!sftpClient.exists(getInstallDir())) {
+                        throw new IOException(getInstallDir() + " Directory does not exist");
+                    }
+                    deleteRemoteFiles(sftpClient, files, getInstallDir(), getForce());
+                    if (isRemoteDirectoryEmpty(sftpClient, getInstallDir())) {
+                        sftpClient.getSftpChannel().rmdir(getInstallDir());
+                    }
                 }
-
-                deleteRemoteFiles(sftpClient, files, getInstallDir(), getForce());
-
-                if (isRemoteDirectoryEmpty(sftpClient, getInstallDir())) {
-                    sftpClient.getSftpChannel().rmdir(getInstallDir());
-                }
-                sftpClient.close();
             }
-        }
-        catch (CommandException ce) {
+        } catch (CommandException ce) {
             throw ce;
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             throw new CommandException(ex);
-        } finally {
-            if (sftpClient != null) {
-                sftpClient.close();
-            }
         }
     }
 }

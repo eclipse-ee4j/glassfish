@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.api.deployment.archive;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 
 import org.jvnet.hk2.annotations.Contract;
@@ -31,7 +31,7 @@ import org.jvnet.hk2.annotations.Contract;
 public interface WritableArchive extends Archive {
 
     /**
-     * creates a new abstract archive with the given path
+     * Creates a new abstract archive with the given path
      *
      * @param uri the path to create the archive
      */
@@ -41,22 +41,17 @@ public interface WritableArchive extends Archive {
      * Close a previously returned sub archive
      *
      * @param subArchive output stream to close
-     * @link Archive.getSubArchive}
+     * @see WritableArchive#createSubArchive(String)
      */
     void closeEntry(WritableArchive subArchive) throws IOException;
 
     /**
-     * Create a new entry in the archive
+     * Create a new entry in the archive. Caller is responsible for closing the entry.
      *
      * @param name the entry name
-     * @returns an @see java.io.OutputStream for a new entry in this current abstract archive.
+     * @return an {@link WritableArchiveEntry} for a new entry in this current abstract archive.
      */
-    OutputStream putNextEntry(String name) throws java.io.IOException;
-
-    /**
-     * closes the current entry
-     */
-    void closeEntry() throws IOException;
+    WritableArchiveEntry putNextEntry(String name) throws IOException;
 
     /**
      * Returns an instance of this archive abstraction for an embedded archive within this archive.

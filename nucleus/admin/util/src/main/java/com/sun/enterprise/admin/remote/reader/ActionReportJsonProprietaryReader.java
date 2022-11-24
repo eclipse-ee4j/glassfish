@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,8 +19,12 @@ package com.sun.enterprise.admin.remote.reader;
 
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,6 +33,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -39,7 +45,7 @@ import org.glassfish.api.ActionReport.MessagePart;
  *
  * @author mmares
  */
-public class ActionReportJsonProprietaryReader implements ProprietaryReader<ActionReport> {
+public final class ActionReportJsonProprietaryReader implements ProprietaryReader<ActionReport> {
 
     static class LoggerRef {
         private static final Logger logger = AdminLoggerInfo.getLogger();
@@ -57,11 +63,14 @@ public class ActionReportJsonProprietaryReader implements ProprietaryReader<Acti
     @Override
     public ActionReport readFrom(final InputStream is, final String contentType) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        FileUtils.copy(is, baos, 0);
-        String str = baos.toString("UTF-8");
+        try {
+            FileUtils.copy(is, baos);
+        } finally {
+            is.close();
+        }
+        String str = baos.toString(StandardCharsets.UTF_8);
         try {
             JSONObject json = new JSONObject(str);
-            //JSONObject jsonObject = json.getJSONObject("action-report");
             CliActionReport result = new CliActionReport();
             fillActionReport(result, json);
             return result;

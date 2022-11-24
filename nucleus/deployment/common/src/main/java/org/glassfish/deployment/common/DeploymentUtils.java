@@ -24,7 +24,6 @@ import static com.sun.enterprise.util.io.FileUtils.safeIsDirectory;
 import static java.util.jar.JarFile.MANIFEST_NAME;
 import static java.util.logging.Level.WARNING;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +47,7 @@ import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.ArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.loader.util.ASClassLoaderUtil;
 import org.glassfish.logging.annotation.LogMessageInfo;
@@ -110,7 +110,7 @@ public class DeploymentUtils {
             throw new IllegalArgumentException(msg);
         }
 
-        final List<URI> uris = new ArrayList<URI>();
+        final List<URI> uris = new ArrayList<>();
         scanDirectory(directory.toURI(), directory, uris);
 
         /*
@@ -310,24 +310,18 @@ public class DeploymentUtils {
         Enumeration<String> e = source.entries();
         while (e.hasMoreElements()) {
             String entryName = e.nextElement();
-            InputStream is = new BufferedInputStream(source.getEntry(entryName));
-            OutputStream os = null;
-            try {
-                os = target.putNextEntry(entryName);
-                FileUtils.copy(is, os, source.getEntrySize(entryName));
-            } finally {
-                if (os != null) {
-                    target.closeEntry();
-                }
-                is.close();
+            try (InputStream is = source.getEntry(entryName);
+                WritableArchiveEntry os = target.putNextEntry(entryName)) {
+                FileUtils.copy(is, os);
             }
         }
 
         // Last is manifest if exists
         Manifest manifest = source.getManifest();
         if (manifest != null) {
-            manifest.write(target.putNextEntry(MANIFEST_NAME));
-            target.closeEntry();
+            try (OutputStream entry = target.putNextEntry(MANIFEST_NAME)) {
+                manifest.write(entry);
+            }
         }
     }
 
@@ -384,7 +378,7 @@ public class DeploymentUtils {
     }
 
     public static List<URI> getExternalLibraries(ReadableArchive archive) {
-        List<URI> externalLibURIs = new ArrayList<URI>();
+        List<URI> externalLibURIs = new ArrayList<>();
         try {
             List<URL> manifestURLs = getManifestLibraries(archive);
             URI archiveURI = archive.getURI();

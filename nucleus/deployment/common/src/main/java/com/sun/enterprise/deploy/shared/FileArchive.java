@@ -17,8 +17,12 @@
 
 package com.sun.enterprise.deploy.shared;
 
+import com.sun.enterprise.deployment.deploy.shared.Util;
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -28,7 +32,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.nio.file.Files;
@@ -44,18 +47,14 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
+import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.deployment.deploy.shared.Util;
-import com.sun.enterprise.util.io.FileUtils;
-
-import jakarta.inject.Inject;
 
 /**
  * This implementation of the Archive interface maps to a directory/file structure.
@@ -87,7 +86,7 @@ import jakarta.inject.Inject;
 @PerLookup
 public class FileArchive extends AbstractReadableArchive implements WritableArchive {
 
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
+    private static final Logger deplLogger = DeploymentContextImpl.deplLogger;
 
     @LogMessageInfo(message = "Attempt to list files in {0} failed, perhaps because that is not a valid directory or because file permissions do not allow GlassFish to access it", level = "WARNING")
     private static final String FILE_LIST_FAILURE = "NCLS-DEPLOYMENT-00022";
@@ -98,14 +97,11 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     private final static Level DEBUG_LEVEL = Level.FINE;
 
     @Inject
-    ArchiveFactory archiveFactory;
+    private ArchiveFactory archiveFactory;
 
     // the archive abstraction directory.
-    File archive;
-    URI uri;
-
-    // the currently opened entry
-    OutputStream os;
+    private File archive;
+    private URI uri;
 
     /*
      * tracks stale files in the archive and filters the archive's contents to exclude stale entries
@@ -241,7 +237,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public Collection<String> getDirectories() throws IOException {
-        List<String> results = new ArrayList<String>();
+        List<String> results = new ArrayList<>();
         if (archive != null) {
             for (File file : archive.listFiles()) {
                 if (file.isDirectory() && isEntryValid(file)) {
@@ -258,7 +254,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * not count their entries as part of this archive
      */
     public Enumeration entries(Enumeration embeddedArchives) {
-        List<String> nameList = new ArrayList<String>();
+        List<String> nameList = new ArrayList<>();
         List massagedNames = new ArrayList();
         while (embeddedArchives.hasMoreElements()) {
             String subArchiveName = (String) embeddedArchives.nextElement();
@@ -279,7 +275,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     public Enumeration<String> entries(String prefix) {
         prefix = prefix.replace('/', File.separatorChar);
         File file = new File(archive, prefix);
-        List<String> namesList = new ArrayList<String>();
+        List<String> namesList = new ArrayList<>();
         getListOfFiles(file, namesList, null);
         return Collections.enumeration(namesList);
     }
@@ -454,26 +450,10 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         return FileUtils.renameFile(archive, new File(name));
     }
 
-    /**
-     * Closes the current entry
-     */
-    @Override
-    public void closeEntry() throws IOException {
-        if (os != null) {
-            os.flush();
-            os.close();
-            os = null;
-        }
-    }
 
-    /**
-     * @returns an @see java.io.OutputStream for a new entry in this current abstract archive.
-     * @param name the entry name
-     */
     @Override
-    public OutputStream putNextEntry(String name) throws java.io.IOException {
+    public WritableArchiveEntry putNextEntry(String name) throws java.io.IOException {
         name = name.replace('/', File.separatorChar);
-
         File newFile = new File(archive, name);
         if (newFile.exists()) {
             if (!deleteEntry(name, false /* isLogging */) && uri != null) {
@@ -491,8 +471,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             }
         }
         staleFileManager().recordValidEntry(newFile);
-        os = new BufferedOutputStream(new FileOutputStream(newFile));
-        return os;
+        return new WritableArchiveEntry(null, new FileOutputStream(newFile));
     }
 
     /**
@@ -654,14 +633,14 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
          */
         if (!Files.isSymbolicLink(directory.toPath())) {
             File[] entries = directory.listFiles();
-            for (int i = 0; i < entries.length; i++) {
-                if (entries[i].isDirectory()) {
-                    allDeletesSucceeded &= deleteDir(entries[i]);
+            for (File entry : entries) {
+                if (entry.isDirectory()) {
+                    allDeletesSucceeded &= deleteDir(entry);
                 } else {
-                    if (!entries[i].equals(StaleFileManager.Util.markerFile(archive))) {
-                        final boolean fileDeleteOK = FileUtils.deleteFileWithWaitLoop(entries[i]);
+                    if (!entry.equals(StaleFileManager.Util.markerFile(archive))) {
+                        final boolean fileDeleteOK = FileUtils.deleteFileWithWaitLoop(entry);
                         if (fileDeleteOK) {
-                            myStaleFileManager().recordDeletedEntry(entries[i]);
+                            myStaleFileManager().recordDeletedEntry(entry);
                         }
                         allDeletesSucceeded &= fileDeleteOK;
                     }
@@ -690,8 +669,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * @param logger logger to which to report inability to get the list of files from the directory
      */
     void getListOfFiles(File directory, List<String> files, List embeddedArchives, final Logger logger) {
-        if (archive == null || directory == null || !directory.isDirectory())
+        if (archive == null || directory == null || !directory.isDirectory()) {
             return;
+        }
         final File[] fileList = directory.listFiles();
         if (fileList == null) {
             deplLogger.log(Level.WARNING, FILE_LIST_FAILURE, directory.getAbsolutePath());
@@ -733,7 +713,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     /**
      * API which FileArchive methods should use for dealing with the StaleFileManager implementation.
      */
-    public static interface StaleFileManager {
+    public interface StaleFileManager {
 
         /**
          * Returns whether the specified file is valid - that is, is dated after the archive was created.
@@ -823,13 +803,13 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
              * @return Iterator over the contained files
              */
             private static Iterator<File> findFiles(final File dir) {
-                return new Iterator<File>() {
+                return new Iterator<>() {
 
                     private final List<File> fileList;
                     private final ListIterator<File> fileListIt;
 
                     {
-                        fileList = new ArrayList<File>(Arrays.asList(dir.listFiles(new MarkerExcluderFileFilter())));
+                        fileList = new ArrayList<>(Arrays.asList(dir.listFiles(new MarkerExcluderFileFilter())));
                         fileListIt = fileList.listIterator();
                     }
 
@@ -953,7 +933,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
          * @throws IOException in case of errors reading the marker file
          */
         private static Collection<String> readStaleEntryNames(final File markerFile) throws FileNotFoundException, IOException {
-            final Collection<String> result = new ArrayList<String>();
+            final Collection<String> result = new ArrayList<>();
             if (!markerFile.exists()) {
                 return result;
             }

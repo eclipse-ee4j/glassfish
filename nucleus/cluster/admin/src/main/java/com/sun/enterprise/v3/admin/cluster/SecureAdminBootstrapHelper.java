@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,20 +19,20 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
-import com.sun.enterprise.util.cluster.RemoteType;
 import com.sun.enterprise.config.serverbeans.Node;
-import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.util.cluster.RemoteType;
+
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
+import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.sftp.SFTPClient;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -397,7 +398,7 @@ public abstract class SecureAdminBootstrapHelper {
             for (String relativePathToFile : SECURE_ADMIN_FILE_REL_URIS_TO_COPY) {
                 final File origin = new File(existingInstanceDirURI.resolve(relativePathToFile));
                 final File dest = new File(newInstanceDirURI.resolve(relativePathToFile));
-                FileUtils.copyFile(origin, dest);
+                Files.copy(origin.toPath(), dest.toPath());
             }
         }
 

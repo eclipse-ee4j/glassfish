@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,16 @@ package org.glassfish.deployment.common;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -35,13 +45,14 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
-import org.glassfish.internal.deployment.ExtendedDeploymentContext;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.deployment.versioning.VersioningUtils;
-
+import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
@@ -68,7 +79,7 @@ public class ClientJarWriter {
     private final ExtendedDeploymentContext deploymentContext;
     private final String name;
 
-    private Map<URI,JarFile> jarFiles = new HashMap<URI,JarFile>();
+    private final Map<URI,JarFile> jarFiles = new HashMap<>();
 
     public ClientJarWriter(final ExtendedDeploymentContext deploymentContext) {
         this.deploymentContext = deploymentContext;
@@ -137,7 +148,7 @@ public class ClientJarWriter {
          * need to add the manifest to it if a manifst is not already in the collection.
          * The client artifacts manager returns an unalterable collection.
          */
-        final Collection<Artifacts.FullAndPartURIs> artifacts = new ArrayList<Artifacts.FullAndPartURIs>(clientArtifactsManager.artifacts());
+        final Collection<Artifacts.FullAndPartURIs> artifacts = new ArrayList<>(clientArtifactsManager.artifacts());
 
         OutputJarArchive generatedClientJAR = new OutputJarArchive();
         try {
@@ -233,7 +244,7 @@ public class ClientJarWriter {
     private void copyArtifactsToClientJAR(
             final WritableArchive generatedClientJARArchive,
             final Collection<Artifacts.FullAndPartURIs> artifacts) throws IOException {
-        final Set<String> pathsWrittenToJAR = new HashSet<String>();
+        final Set<String> pathsWrittenToJAR = new HashSet<>();
         StringBuilder copiedFiles = (deplLogger.isLoggable(Level.FINER)) ? new StringBuilder() : null;
         for (Artifacts.FullAndPartURIs artifact : artifacts) {
             /*
@@ -244,53 +255,28 @@ public class ClientJarWriter {
             int previousSlash = artPath.indexOf('/');
             while (previousSlash != -1) {
                 String partialAncestorPath = artPath.substring(0, previousSlash + 1);
-                if ( ! pathsWrittenToJAR.contains(partialAncestorPath)) {
-                    generatedClientJARArchive.putNextEntry(partialAncestorPath);
-                    generatedClientJARArchive.closeEntry();
+                if (!pathsWrittenToJAR.contains(partialAncestorPath)) {
+                    try (WritableArchiveEntry entry = generatedClientJARArchive.putNextEntry(partialAncestorPath)) {
+                        // just an empty entry
+                    }
                     pathsWrittenToJAR.add(partialAncestorPath);
                 }
                 previousSlash = artPath.indexOf('/', previousSlash + 1);
             }
 
-            OutputStream os = generatedClientJARArchive.putNextEntry(artifact.getPart().toASCIIString());
-            InputStream is = null;
-            try {
-                final URI fullURI = artifact.getFull();
-                final String scheme = fullURI.getScheme();
-                if (scheme.equals("file")) {
-                    is = new BufferedInputStream(new FileInputStream(new File(artifact.getFull())));
-                } else if (scheme.equals("jar")) {
-                    final String ssp = fullURI.getSchemeSpecificPart();
-                    URI jarURI = new URI(ssp.substring(0, ssp.indexOf("!/")));
-                    JarFile jf = jarFiles.get(jarURI);
-                    if (jf == null) {
-                        jf = new JarFile(new File(jarURI));
-                        jarFiles.put(jarURI, jf);
-                    }
-                    final String entryName = ssp.substring(ssp.indexOf("!/") + 2);
-                    final JarEntry jarEntry = jf.getJarEntry(entryName);
-                    is = jf.getInputStream(jarEntry);
-                } else {
-                    throw new IllegalArgumentException(scheme + " != [file,jar]");
-                }
+            try (WritableArchiveEntry os = generatedClientJARArchive.putNextEntry(artifact.getPart().toASCIIString());
+                InputStream is = openInputStream(artifact)) {
                 DeploymentUtils.copyStream(is, os);
                 if (copiedFiles != null) {
-                    copiedFiles.append(LINE_SEP).
-                            append("  ").
-                            append(artifact.getFull().toASCIIString()).
-                            append(" -> ").
-                            append(artifact.getPart().toASCIIString());
+                    copiedFiles.append(LINE_SEP).append("  ").append(artifact.getFull().toASCIIString()).append(" -> ")
+                        .append(artifact.getPart().toASCIIString());
                 }
             } catch (Exception ex) {
                 deplLogger.log(Level.WARNING, EXCEPTION_CAUGHT, ex.getLocalizedMessage());
             } finally {
-                if (is != null) {
-                    is.close();
-                }
-                generatedClientJARArchive.closeEntry();
                 if (artifact.isTemporary()) {
                     final File artifactFile = new File(artifact.getFull());
-                    if ( ! artifactFile.delete()) {
+                    if (!artifactFile.delete()) {
                         artifactFile.deleteOnExit();
                     }
                 }
@@ -301,4 +287,26 @@ public class ClientJarWriter {
         }
     }
 
+
+    private InputStream openInputStream(Artifacts.FullAndPartURIs artifact)
+        throws FileNotFoundException, URISyntaxException, IOException {
+        final URI fullURI = artifact.getFull();
+        final String scheme = fullURI.getScheme();
+        if (scheme.equals("file")) {
+            return new BufferedInputStream(new FileInputStream(new File(artifact.getFull())));
+        } else if (scheme.equals("jar")) {
+            final String ssp = fullURI.getSchemeSpecificPart();
+            URI jarURI = new URI(ssp.substring(0, ssp.indexOf("!/")));
+            JarFile jf = jarFiles.get(jarURI);
+            if (jf == null) {
+                jf = new JarFile(new File(jarURI));
+                jarFiles.put(jarURI, jf);
+            }
+            final String entryName = ssp.substring(ssp.indexOf("!/") + 2);
+            final JarEntry jarEntry = jf.getJarEntry(entryName);
+            return jf.getInputStream(jarEntry);
+        } else {
+            throw new IllegalArgumentException(scheme + " != [file,jar]");
+        }
+    }
 }

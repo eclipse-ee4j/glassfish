@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,12 +20,14 @@ package com.sun.enterprise.admin.remote.reader;
 import com.sun.enterprise.admin.remote.ParamsWithPayload;
 import com.sun.enterprise.admin.remote.RestPayloadImpl;
 import com.sun.enterprise.util.StringUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Properties;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ParameterMap;
 import org.jvnet.mimepull.MIMEConfig;
@@ -35,7 +38,7 @@ import org.jvnet.mimepull.MIMEPart;
  *
  * @author martinmares
  */
-public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
+public final class MultipartProprietaryReader implements ProprietaryReader<ParamsWithPayload> {
 
     private final ActionReportJsonProprietaryReader actionReportReader;
 
@@ -69,50 +72,54 @@ public class MultipartProprietaryReader implements ProprietaryReader<ParamsWithP
         if (!StringUtils.ok(boundary)) {
             throw new IOException("ContentType does not define boundary");
         }
-        final MIMEMessage mimeMessage = new MIMEMessage(is, boundary, new MIMEConfig());
-        //Parse
-        for (MIMEPart mimePart : mimeMessage.getAttachments()) {
-            String cd = getFirst(mimePart.getHeader("Content-Disposition"));
-            if (!StringUtils.ok(cd)) {
-                cd = "file";
-            }
-            cd = cd.trim();
-            Properties cdParams = parseHeaderParams(cd);
-            //3 types of content disposition
-            if (cd.startsWith("form-data")) {
-                //COMMAND PARAMETER
-                if (!StringUtils.ok(cdParams.getProperty("name"))) {
-                    throw new IOException("Form-data Content-Disposition does not contains name parameter.");
+        try (MIMEMessage mimeMessage = new MIMEMessage(is, boundary, new MIMEConfig())) {
+            // Parse
+            for (MIMEPart mimePart : mimeMessage.getAttachments()) {
+                String cd = getFirst(mimePart.getHeader("Content-Disposition"));
+                if (!StringUtils.ok(cd)) {
+                    cd = "file";
                 }
-                if (parameters == null) {
-                    parameters = new ParameterMap();
-                }
-                parameters.add(cdParams.getProperty("name"), stream2String(mimePart.readOnce()));
-            } else if (mimePart.getContentType() != null && mimePart.getContentType().startsWith("application/json")) {
-                //ACTION REPORT
-                actionReport = actionReportReader.readFrom(mimePart.readOnce(), "application/json");
-            } else {
-                //PAYLOAD
-                String name = "noname";
-                if (cdParams.containsKey("name")) {
-                    name = cdParams.getProperty("name");
-                    name = new String(name.getBytes("ISO8859-1"), "UTF-8");
-                } else if (cdParams.containsKey("filename")) {
-                    name = cdParams.getProperty("filename");
-                }
-                if (payload == null) {
-                    payload = new RestPayloadImpl.Inbound();
-                }
-                String ct = mimePart.getContentType();
-                if (!StringUtils.ok(ct) || ct.trim().startsWith("text/plain")) {
-                    payload.add(name, stream2String(mimePart.readOnce()), mimePart.getAllHeaders());
+                cd = cd.trim();
+                Properties cdParams = parseHeaderParams(cd);
+                // 3 types of content disposition
+                if (cd.startsWith("form-data")) {
+                    // COMMAND PARAMETER
+                    if (!StringUtils.ok(cdParams.getProperty("name"))) {
+                        throw new IOException("Form-data Content-Disposition does not contains name parameter.");
+                    }
+                    if (parameters == null) {
+                        parameters = new ParameterMap();
+                    }
+                    parameters.add(cdParams.getProperty("name"), stream2String(mimePart.readOnce()));
+                } else if (mimePart.getContentType() != null
+                    && mimePart.getContentType().startsWith("application/json")) {
+                    // ACTION REPORT
+                    actionReport = actionReportReader.readFrom(mimePart.readOnce(), "application/json");
                 } else {
-                    payload.add(name, mimePart.read(), ct, mimePart.getAllHeaders());
+                    // PAYLOAD
+                    String name = "noname";
+                    if (cdParams.containsKey("name")) {
+                        name = cdParams.getProperty("name");
+                        name = new String(name.getBytes("ISO8859-1"), "UTF-8");
+                    } else if (cdParams.containsKey("filename")) {
+                        name = cdParams.getProperty("filename");
+                    }
+                    if (payload == null) {
+                        payload = new RestPayloadImpl.Inbound();
+                    }
+                    String ct = mimePart.getContentType();
+                    if (!StringUtils.ok(ct) || ct.trim().startsWith("text/plain")) {
+                        payload.add(name, stream2String(mimePart.readOnce()), mimePart.getAllHeaders());
+                    } else {
+                        payload.add(name, mimePart.read(), ct, mimePart.getAllHeaders());
+                    }
                 }
             }
+            // Result
+            return new ParamsWithPayload(payload, parameters, actionReport);
+        } finally {
+            is.close();
         }
-        //Result
-        return new ParamsWithPayload(payload, parameters, actionReport);
     }
 
     /**

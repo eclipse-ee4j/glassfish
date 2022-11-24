@@ -205,9 +205,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
     public void writeStandardDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, WritableArchive out) throws IOException {
 
         getStandardDDFile(descriptor).setArchiveType(main.getModuleType());
-        OutputStream os = out.putNextEntry(standardDD.getDeploymentDescriptorPath());
-        standardDD.write(descriptor, os);
-        out.closeEntry();
+        try (OutputStream os = out.putNextEntry(standardDD.getDeploymentDescriptorPath())) {
+            standardDD.write(descriptor, os);
+        }
     }
 
     /**
@@ -228,9 +228,9 @@ public abstract class ExtensionsArchivist<T extends RootDeploymentDescriptor>  {
         }
         for (ConfigurationDeploymentDescriptorFile<BundleDescriptor> ddFile : confDDFilesToWrite) {
             ddFile.setArchiveType(main.getModuleType());
-            OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath());
-            ddFile.write(descriptor, os);
-            out.closeEntry();
+            try (OutputStream os = out.putNextEntry(ddFile.getDeploymentDescriptorPath())) {
+                ddFile.write(descriptor, os);
+            }
         }
     }
 

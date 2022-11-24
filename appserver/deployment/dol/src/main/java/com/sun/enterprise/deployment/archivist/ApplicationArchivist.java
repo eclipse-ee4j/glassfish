@@ -32,14 +32,11 @@ import com.sun.enterprise.deployment.util.ApplicationValidator;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.util.shared.ArchivistUtils;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -122,50 +119,41 @@ public class ApplicationArchivist extends Archivist<Application> {
             Archivist<BundleDescriptor> subArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
             subArchivist.initializeContext(this);
             subArchivist.setModuleDescriptor(aModule);
+            String archiveUri = aModule.getArchiveUri();
             if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-                DOLUtils.getDefaultLogger().fine("Write " + aModule.getArchiveUri() + " with " + subArchivist);
+                DOLUtils.getDefaultLogger().fine("Write " + archiveUri + " with " + subArchivist);
             }
 
             // Create a new jar file inside the application .ear
-            WritableArchive internalJar = out.createSubArchive(aModule.getArchiveUri());
+            final WritableArchive internalJar = out.createSubArchive(archiveUri);
 
             // we need to copy the old archive to a temp file so
             // the save method can copy its original contents from
-
             File tmpFile = null;
-            BufferedOutputStream bos = null;
-            try (InputStream is = in.getEntry(aModule.getArchiveUri())) {
+            try (InputStream is = in.getEntry(archiveUri)) {
                 if (in instanceof WritableArchive) {
                     subArchivist.setArchiveUri(internalJar.getURI().getSchemeSpecificPart());
                 } else {
                     tmpFile = getTempFile(path);
-                    bos = new BufferedOutputStream(new FileOutputStream(tmpFile));
-                    ArchivistUtils.copy(is, bos);
+                    FileUtils.copy(is, tmpFile, in.getEntrySize(archiveUri));
 
                     // configure archivist
                     subArchivist.setArchiveUri(tmpFile.getAbsolutePath());
                 }
                 subArchivist.writeContents(internalJar);
-                out.closeEntry(internalJar);
             } finally {
+                out.closeEntry(internalJar);
                 if (tmpFile != null) {
                     boolean ok = tmpFile.delete();
                     if (!ok) {
                         logger.log(Level.WARNING, localStrings.getLocalString("enterprise.deployment.cantDelete",
-                            "Error deleting file {0}", new Object[] {tmpFile.getAbsolutePath()}));
-                    }
-                }
-                if (bos != null) {
-                    try {
-                        bos.close();
-                    } catch (IOException ioe) {
-                        // ignore
+                            "Error deleting file {0}", tmpFile));
                     }
                 }
             }
 
             // no need to copy the bundle from the original jar file
-            filesToSkip.add(aModule.getArchiveUri());
+            filesToSkip.add(archiveUri);
         }
 
         // now write the old contents and new descriptors

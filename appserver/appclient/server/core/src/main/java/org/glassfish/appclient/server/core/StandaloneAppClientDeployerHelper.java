@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,9 +20,8 @@ package org.glassfish.appclient.server.core;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.archivist.AppClientArchivist;
-import com.sun.enterprise.deployment.deploy.shared.JarArchive;
 import com.sun.enterprise.deployment.deploy.shared.OutputJarArchive;
-import com.sun.logging.LogDomains;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +38,7 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -138,19 +139,12 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     private void copyToArchive(final File inputFile, final OutputJarArchive outputArchive, final String pathInJar) throws IOException {
-        final OutputStream os = outputArchive.putNextEntry(pathInJar);
-        final InputStream is = new BufferedInputStream(new FileInputStream(inputFile));
-        final byte[] buffer = new byte[512];
-        int bytesRead;
-        try {
+        try (OutputStream os = outputArchive.putNextEntry(pathInJar);
+            InputStream is = new BufferedInputStream(new FileInputStream(inputFile))) {
+            final byte[] buffer = new byte[512];
+            int bytesRead;
             while ((bytesRead = is.read(buffer)) != -1) {
                 os.write(buffer, 0, bytesRead);
-            }
-        } finally {
-            try {
-                os.flush();
-            } finally {
-                is.close();
             }
         }
     }
@@ -292,7 +286,7 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
              * 1. the original app client JAR,
              * 2. the facade JAR
              */
-            Set<FullAndPartURIs> downloads = new HashSet<FullAndPartURIs>();
+            Set<FullAndPartURIs> downloads = new HashSet<>();
             downloads.add(new Artifacts.FullAndPartURIs(
                     appClientServerURI(dc()),
                     appClientUserURI(dc())));
@@ -337,28 +331,25 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
         return appClientUserURI(dc()).toASCIIString();
     }
     protected void copyOriginalAppClientJAR(final DeploymentContext dc) throws IOException {
-        ReadableArchive originalSource = ((ExtendedDeploymentContext) dc).getOriginalSource();
-        originalSource.open(originalSource.getURI());
-        OutputJarArchive target = new OutputJarArchive();
-        target.create(appClientServerURI(dc));
-        /*
-         * Copy the manifest explicitly because ReadableArchive.entries()
-         * excludes the manifest.
-         */
-        Manifest originalManifest = originalSource.getManifest();
-        OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME);
-        originalManifest.write(os);
-        target.closeEntry();
-        copyArchive(originalSource, target, Collections.EMPTY_SET);
-        target.close();
-        originalSource.close();
+        try (ReadableArchive originalSource = ((ExtendedDeploymentContext) dc).getOriginalSource()) {
+            originalSource.open(originalSource.getURI());
+            try (OutputJarArchive target = new OutputJarArchive()) {
+                target.create(appClientServerURI(dc));
+                /*
+                 * Copy the manifest explicitly because ReadableArchive.entries()
+                 * excludes the manifest.
+                 */
+                Manifest originalManifest = originalSource.getManifest();
+                try (OutputStream os = target.putNextEntry(JarFile.MANIFEST_NAME)) {
+                    originalManifest.write(os);
+                }
+                copyArchive(originalSource, target, Collections.EMPTY_SET);
+            }
+        }
     }
 
     @Override
     protected String PUScanTargets() {
         return null;
     }
-
-
-
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,21 +19,28 @@ package com.sun.enterprise.v3.admin.cluster;
 
 import com.sun.enterprise.universal.glassfish.TokenResolver;
 import com.sun.enterprise.util.StringUtils;
+
+import jakarta.inject.Inject;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandLock;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.cluster.ssh.launcher.SSHLauncher;
 import org.glassfish.cluster.ssh.util.SSHUtil;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is a remote command implementation of setup-ssh local command
@@ -72,48 +80,47 @@ public class SetupSshCommand implements AdminCommand {
 
         if (!StringUtils.ok(sshpassword)) {
             throw new CommandException(Strings.get("setup.ssh.null.sshpass"));
-        } else {
-            // obtain real password
-            realPass = sshL.expandPasswordAlias(sshpassword);
+        }
+        // obtain real password
+        realPass = sshL.expandPasswordAlias(sshpassword);
 
-            if (realPass == null) {
-                throw new CommandException(Strings.get("setup.ssh.unalias.error", sshpassword));
-            }
+        if (realPass == null) {
+            throw new CommandException(Strings.get("setup.ssh.unalias.error", sshpassword));
         }
 
         if (sshkeyfile == null) {
             //if user hasn't specified a key file and there is no key file at default
             //location, then generate one
-            String existingKey = SSHUtil.getExistingKeyFile();
+            File existingKey = SSHUtil.getExistingKeyFile();
             if (existingKey == null) {
-                sshkeyfile = SSHUtil.getDefaultKeyFile();
+                sshkeyfile = SSHUtil.getDefaultKeyFile().getAbsolutePath();
                 if (!generatekey) {
                     throw new CommandException(Strings.get("setup.ssh.no.keyfile"));
                 }
-            }
-            else {
-                sshkeyfile = existingKey;
-                if (SSHUtil.isEncryptedKey(sshkeyfile)) {
+            } else {
+                sshkeyfile = existingKey.getAbsolutePath();
+                if (SSHUtil.isEncryptedKey(existingKey)) {
                     sshkeypassphrase = getSSHPassphrase();
                 }
             }
-        }
-        else {
-            if (!isAbsolutePath(sshkeyfile)) {
-                throw new CommandException(Strings.get("setup.ssh.invalid.path", sshkeyfile));
+        } else {
+            File keyFile = new File(sshkeyfile);
+            if (!keyFile.isAbsolute()) {
+                throw new CommandException(Strings.get("setup.ssh.invalid.path", keyFile));
             }
 
-            SSHUtil.validateKeyFile(sshkeyfile);
-            if (SSHUtil.isEncryptedKey(sshkeyfile)) {
+            SSHUtil.validateKeyFile(keyFile);
+            if (SSHUtil.isEncryptedKey(keyFile)) {
                 sshkeypassphrase = getSSHPassphrase();
             }
         }
 
         if (sshpublickeyfile != null) {
-            if (!isAbsolutePath(sshpublickeyfile)) {
-                throw new CommandException(Strings.get("setup.ssh.invalid.path", sshpublickeyfile));
+            File keyFile = new File(sshpublickeyfile);
+            if (!keyFile.isAbsolute()) {
+                throw new CommandException(Strings.get("setup.ssh.invalid.path", keyFile));
             }
-            SSHUtil.validateKeyFile(sshpublickeyfile);
+            SSHUtil.validateKeyFile(keyFile);
         }
     }
 
@@ -135,8 +142,9 @@ public class SetupSshCommand implements AdminCommand {
         }
 
         for (String node : hosts) {
-            sshL.init(user, node, port, realPass, sshkeyfile, sshkeypassphrase, logger);
-            if (generatekey ) {
+            File keyFile = sshkeyfile == null ? null : new File(sshkeyfile);
+            sshL.init(user, node, port, realPass, keyFile, sshkeypassphrase, logger);
+            if (generatekey) {
                 if (sshkeyfile != null || SSHUtil.getExistingKeyFile() != null) {
                     if (sshL.checkConnection()) {
                         logger.info(Strings.get("setup.ssh.already.configured", user, node));
@@ -168,13 +176,6 @@ public class SetupSshCommand implements AdminCommand {
         }
     }
 
-    private boolean isAbsolutePath(String path) {
-        boolean ret = false;
-        File f = new File(path);
-        if (f.isAbsolute())
-            ret = true;
-        return ret;
-    }
 
     /**
      * Get SSH key passphrase. Obtain real passphrase in case it is an alias.

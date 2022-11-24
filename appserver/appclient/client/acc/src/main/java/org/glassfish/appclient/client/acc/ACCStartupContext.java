@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +19,8 @@ package org.glassfish.appclient.client.acc;
 
 import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -70,11 +73,9 @@ public class ACCStartupContext extends StartupContext {
             throw new RuntimeException(ex);
         }
         if (jarURI.getScheme().startsWith("http")) {
-            /*
-             * We do not really rely on the root directory during Java
-             * Web Start launches but we must return something.
-             */
-            return new File(System.getProperty("user.home"));
+            // We do not really rely on the root directory during Java
+            // Web Start launches but we must return something.
+            return FileUtils.USER_HOME;
         }
         File jarFile = new File(jarURI);
         File dirFile = jarFile.getParentFile().getParentFile();

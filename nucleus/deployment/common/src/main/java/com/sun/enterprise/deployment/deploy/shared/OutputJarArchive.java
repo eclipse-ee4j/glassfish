@@ -21,7 +21,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -35,6 +34,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import org.glassfish.api.deployment.archive.WritableArchive;
+import org.glassfish.api.deployment.archive.WritableArchiveEntry;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
@@ -52,7 +52,7 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
     private URI uri;
 
     // the file we are currently mapped to (if open for writing)
-    protected ZipOutputStream jos;
+    private ZipOutputStream jos;
 
     private Manifest manifest;
 
@@ -75,8 +75,6 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
     @Override
     public void close() throws IOException {
         if (jos != null) {
-            jos.flush();
-            jos.finish();
             jos.close();
             jos = null;
         }
@@ -103,9 +101,7 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
                 Logger.getAnonymousLogger().log(Level.WARNING, "Error in deleting file " + file.getAbsolutePath());
             }
         }
-        FileOutputStream fos = new FileOutputStream(file);
-        BufferedOutputStream bos = new BufferedOutputStream(fos);
-        jos = new ZipOutputStream(bos);
+        jos = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(file)));
     }
 
     /**
@@ -146,23 +142,22 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
 
     @Override
     public WritableArchive createSubArchive(String name) throws IOException {
-        OutputStream os = putNextEntry(name);
-        ZipOutputStream jos = new ZipOutputStream(os);
-        OutputJarArchive ja = new OutputJarArchive();
+        ZipOutputStream zip = new ZipOutputStream(putNextEntry(name));
+        OutputJarArchive jar = new OutputJarArchive();
         try {
-            ja.uri = new URI("jar", name, null);
-        } catch(URISyntaxException e) {
-
+            jar.uri = new URI("jar", name, null);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Could not create a subarchive for name " + name, e);
         }
-        ja.jos = jos;
-        return ja;
+        jar.jos = zip;
+        return jar;
     }
 
     /**
      * Close a previously returned sub archive
      *
      * @param subArchive output stream to close
-     * @link Archive.getSubArchive}
+     * @see WritableArchive#createSubArchive(String)
      */
     @Override
     public void closeEntry(WritableArchive subArchive) throws IOException {
@@ -180,25 +175,12 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
      * current abstract archive.
      */
     @Override
-    public OutputStream putNextEntry(String name) throws java.io.IOException {
+    public WritableArchiveEntry putNextEntry(String name) throws java.io.IOException {
         if (jos != null) {
             ZipEntry ze = new ZipEntry(name);
             jos.putNextEntry(ze);
             entries.add(name);
         }
-        return jos;
+        return new WritableArchiveEntry(jos, jos);
     }
-
-
-    /**
-     * closes the current entry
-     */
-    @Override
-    public void closeEntry() throws IOException {
-        if (jos != null) {
-            jos.flush();
-            jos.closeEntry();
-        }
-    }
-
 }

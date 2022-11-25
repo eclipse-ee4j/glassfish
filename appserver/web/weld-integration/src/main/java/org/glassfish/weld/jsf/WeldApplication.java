@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2022 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,39 +23,36 @@ import javax.naming.NamingException;
 import org.glassfish.wasp.runtime.JspApplicationContextImpl;
 import org.glassfish.weld.util.Util;
 
-import jakarta.el.ELContextListener;
+import jakarta.el.ELManager;
 import jakarta.el.ExpressionFactory;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.faces.application.Application;
 import jakarta.faces.application.ApplicationWrapper;
 import jakarta.faces.context.FacesContext;
 import jakarta.servlet.ServletContext;
-import jakarta.servlet.jsp.JspApplicationContext;
 import jakarta.servlet.jsp.JspFactory;
 
 public class WeldApplication extends ApplicationWrapper {
 
-    private final Application application;
     private ExpressionFactory expressionFactory;
 
     public WeldApplication(Application application) {
-        this.application = application;
+        super(application);
 
         BeanManager beanManager = getBeanManager();
         if (beanManager != null) {
-            application.addELContextListener(Util.<ELContextListener>newInstance("org.jboss.weld.module.web.el.WeldELContextListener"));
+            application.addELContextListener(Util.newInstance("org.jboss.weld.module.web.el.WeldELContextListener"));
             application.addELResolver(beanManager.getELResolver());
 
-            JspApplicationContext jspAppContext = JspFactory.getDefaultFactory()
-                    .getJspApplicationContext((ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext());
-            expressionFactory = beanManager.wrapExpressionFactory(jspAppContext.getExpressionFactory());
-            ((JspApplicationContextImpl) jspAppContext).setExpressionFactory(this.expressionFactory);
-        }
-    }
+            expressionFactory = beanManager.wrapExpressionFactory(ELManager.getExpressionFactory());
 
-    @Override
-    public Application getWrapped() {
-        return this.application;
+            JspApplicationContextImpl jspAppContext = (JspApplicationContextImpl)
+                JspFactory.getDefaultFactory()
+                          .getJspApplicationContext((ServletContext)
+                              FacesContext.getCurrentInstance().getExternalContext().getContext());
+
+            jspAppContext.setExpressionFactory(expressionFactory);
+        }
     }
 
     @Override
@@ -74,10 +71,9 @@ public class WeldApplication extends ApplicationWrapper {
 
     private BeanManager getBeanManager() {
         try {
-            return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
+            return InitialContext.doLookup("java:comp/BeanManager");
         } catch (NamingException e) {
             return null;
         }
-
     }
 }

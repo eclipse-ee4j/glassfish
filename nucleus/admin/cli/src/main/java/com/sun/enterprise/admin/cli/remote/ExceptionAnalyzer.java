@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,17 +28,17 @@ import java.util.List;
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  * @since GlassFish v3 Prelude
  */
-
 final class ExceptionAnalyzer {
 
     private final Exception exc;
     private final List<Throwable> chain;
 
     ExceptionAnalyzer(Exception e) {
-        if (e == null)
+        if (e == null) {
             throw new IllegalArgumentException("null arg");
+        }
         this.exc = e;
-        this.chain = new ArrayList<Throwable>();
+        this.chain = new ArrayList<>();
         chain.add(exc);
         build();
     }

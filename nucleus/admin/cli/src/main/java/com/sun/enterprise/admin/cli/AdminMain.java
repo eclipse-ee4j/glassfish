@@ -76,20 +76,13 @@ public class AdminMain {
             throw new IllegalStateException("GlassFishLogManager is not set as the default LogManager!");
         }
     }
-
-    private String classPath;
-    private String className;
-    private String command;
-    private ProgramOptions po;
-    private CLIContainer cliContainer;
-    private final Environment env = new Environment();
-    private Logger logger;
-    private final static int SUCCESS = 0;
-    private final static int ERROR = 1;
-    private final static int CONNECTION_ERROR = 2;
-    private final static int INVALID_COMMAND_ERROR = 3;
-    private final static int WARNING = 4;
-    private final static String ADMIN_CLI_LOGGER = "com.sun.enterprise.admin.cli";
+    private static final Environment env = new Environment();
+    private static final int SUCCESS = 0;
+    private static final int ERROR = 1;
+    private static final int CONNECTION_ERROR = 2;
+    private static final int INVALID_COMMAND_ERROR = 3;
+    private static final int WARNING = 4;
+    private static final String ADMIN_CLI_LOGGER = "com.sun.enterprise.admin.cli";
 
     private static final String[] SYS_PROPERTIES_TO_SET_FROM_ASENV = {
         SystemPropertyConstants.INSTALL_ROOT_PROPERTY,
@@ -107,6 +100,13 @@ public class AdminMain {
             }
         }
     }
+
+    private String classPath;
+    private String className;
+    private String command;
+    private ProgramOptions po;
+    private CLIContainer cliContainer;
+    private Logger logger;
 
     /**
      * Get the class loader that is used to load local commands.
@@ -173,6 +173,7 @@ public class AdminMain {
             if (!isLoggable(logRecord)) {
                 return;
             }
+            @SuppressWarnings("resource")
             final PrintStream ps = logRecord.getLevel() == SEVERE ? System.err : System.out;
             ps.print(getFormatter().format(logRecord));
             ps.flush();
@@ -181,11 +182,29 @@ public class AdminMain {
 
 
     private static class CLILoggerFormatter extends SimpleFormatter {
+        private static final boolean TRACE = env.trace();
 
         @Override
         public synchronized String format(LogRecord record) {
             // this formatter adds blank lines between records
-            return formatMessage(record) + System.lineSeparator();
+            if (record.getThrown() == null) {
+                return formatMessage(record) + System.lineSeparator();
+            }
+            // Some messages use exception as a parameter.
+            // If we don't print stacktraces, the cause would be lost.
+            final Object[] parameters;
+            if (record.getParameters() == null) {
+                parameters = new Object[] {record.getThrown()};
+            } else {
+                parameters = new Object[record.getParameters().length + 1];
+                System.arraycopy(record.getParameters(), 0, parameters, 0, parameters.length - 1);
+                parameters[parameters.length - 1] = record.getThrown();
+            }
+            record.setParameters(parameters);
+            if (TRACE) {
+                return super.format(record) + System.lineSeparator();
+            }
+            return formatMessage(record) + " " + record.getThrown().getLocalizedMessage() + System.lineSeparator();
         }
     }
 

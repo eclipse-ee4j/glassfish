@@ -34,6 +34,7 @@ import static org.apache.catalina.connector.Constants.USE_CUSTOM_STATUS_MSG_IN_H
 import static org.glassfish.internal.api.Globals.getDefaultHabitat;
 
 import java.io.CharConversionException;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -59,7 +60,6 @@ import org.glassfish.grizzly.http.server.util.MappingData;
 import org.glassfish.grizzly.http.util.ByteChunk;
 import org.glassfish.grizzly.http.util.CharChunk;
 import org.glassfish.grizzly.http.util.DataChunk;
-import org.glassfish.grizzly.http.util.MessageBytes;
 import org.glassfish.web.valve.GlassFishValve;
 import org.glassfish.web.valve.ServletContainerInterceptor;
 
@@ -330,9 +330,11 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         // Normalize Decoded URI
-        if (!normalize(decodedURI)) {
-            res.setStatus(400);
-            res.setDetailMessage(("Invalid URI"));
+        try {
+            normalize(decodedURI);
+        } catch (IOException ioException) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URI");
+            response.setDetailMessage(ioException.getMessage());
             return false;
         }
 
@@ -499,16 +501,17 @@ public class CoyoteAdapter extends HttpHandler {
      *
      * @param uriDataChunk URI to be normalized
      */
-    public static boolean normalize(DataChunk uriDataChunk) {
+    public static boolean normalize(DataChunk uriDataChunk) throws IOException {
         DataChunk.Type type = uriDataChunk.getType();
         if (type == DataChunk.Type.Chars) {
-            return normalizeChars(uriDataChunk);
+            normalizeChars(uriDataChunk);
+	    return;
         }
 
         return normalizeBytes(uriDataChunk);
     }
 
-    private static boolean normalizeBytes(DataChunk uriDataChunk) {
+    private static boolean normalizeBytes(DataChunk uriDataChunk) throws IOException {
         ByteChunk uriBC = uriDataChunk.getByteChunk();
         byte[] b = uriBC.getBytes();
         int start = uriBC.getStart();
@@ -516,12 +519,12 @@ public class CoyoteAdapter extends HttpHandler {
 
         // An empty URL is not acceptable
         if (start == end) {
-            return false;
+            throw new IOException("Empty URL");
         }
 
         // URL * is acceptable
         if ((end - start == 1) && b[start] == (byte) '*') {
-            return true;
+            return;
         }
 
         int pos = 0;
@@ -534,17 +537,17 @@ public class CoyoteAdapter extends HttpHandler {
                 if (ALLOW_BACKSLASH) {
                     b[pos] = (byte) '/';
                 } else {
-                    return false;
+                    throw new IOException("Backslashes not allowed");
                 }
             }
             if (b[pos] == (byte) 0) {
-                return false;
+                throw new IOException("Null byte found during request normalization");
             }
         }
 
         // The URL must start with '/'
         if (b[start] != (byte) '/') {
-            return false;
+            throw new IOException("Request must start with /");
         }
 
         // Replace "//" with "/"
@@ -594,7 +597,7 @@ public class CoyoteAdapter extends HttpHandler {
             }
             // Prevent from going outside our context
             if (index == 0) {
-                return false;
+                throw new IOException("Request traversed outside of allowed context");
             }
             int index2 = -1;
             for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos--) {
@@ -609,11 +612,9 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         uriBC.setBytes(b, start, end);
-
-        return true;
     }
 
-    private static boolean normalizeChars(DataChunk uriDataChunk) {
+    private static boolean normalizeChars(DataChunk uriDataChunk) throws IOException {
         CharChunk uriCharChunk = uriDataChunk.getCharChunk();
         char[] c = uriCharChunk.getChars();
         int start = uriCharChunk.getStart();
@@ -621,7 +622,7 @@ public class CoyoteAdapter extends HttpHandler {
 
         // URL * is acceptable
         if ((end - start == 1) && c[start] == '*') {
-            return true;
+            return;
         }
 
         int pos = 0;
@@ -634,17 +635,17 @@ public class CoyoteAdapter extends HttpHandler {
                 if (ALLOW_BACKSLASH) {
                     c[pos] = '/';
                 } else {
-                    return false;
+                    throw new IOException("Backslashes not allowed");
                 }
             }
             if (c[pos] == (char) 0) {
-                return false;
+                throw new IOException("Null byte found during request normalization");
             }
         }
 
         // The URL must start with '/'
         if (c[start] != '/') {
-            return false;
+            throw new IOException("Request must start with /");
         }
 
         // Replace "//" with "/"
@@ -694,10 +695,10 @@ public class CoyoteAdapter extends HttpHandler {
             }
             // Prevent from going outside our context
             if (index == 0) {
-                return false;
+                throw new IOException("Request traversed outside of allowed context");
             }
             int index2 = -1;
-            for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos--) {
+            for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos --) {
                 if (c[pos] == '/') {
                     index2 = pos;
                 }
@@ -709,8 +710,6 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         uriCharChunk.setChars(c, start, end);
-
-        return true;
     }
 
     // ------------------------------------------------------ Protected Methods

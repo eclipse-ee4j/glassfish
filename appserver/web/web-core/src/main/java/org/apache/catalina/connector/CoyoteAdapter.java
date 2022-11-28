@@ -496,10 +496,10 @@ public class CoyoteAdapter extends HttpHandler {
     /**
      * Normalize URI.
      * <p>
-     * This method normalizes "\", "//", "/./" and "/../". This method will return false when trying to go above the root,
+     * This method normalizes "\", "//", "/./" and "/../". This method will throw an error when trying to go above the root,
      * or if the URI contains a null byte.
      *
-     * @param uriDataChunk URI to be normalized
+     * @param uriDataChunk URI DataChunk to be normalized
      */
     public static boolean normalize(DataChunk uriDataChunk) throws IOException {
         DataChunk.Type type = uriDataChunk.getType();

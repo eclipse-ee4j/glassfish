@@ -186,6 +186,7 @@ import static org.apache.catalina.startup.Constants.WebDtdPublicId_22;
 import static org.apache.catalina.util.RequestUtil.urlDecode;
 import static org.apache.naming.resources.ProxyDirContext.CONTEXT;
 import static org.apache.naming.resources.ProxyDirContext.HOST;
+import org.apache.naming.resources.UrlResource;
 import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInitializerList;
 import static org.glassfish.web.loader.ServletContainerInitializerUtil.getInterestList;
 
@@ -6651,10 +6652,14 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
         }
 
         if (resources != null) {
-            String fullPath = getName() + path;
-            String hostName = getParent().getName();
             try {
-                resources.lookup(path);
+                Object resource = resources.lookup(path);
+                if (resource instanceof UrlResource) {
+                    UrlResource urlResource = (UrlResource)resource;
+                    return urlResource.getUrl();
+                }
+                String fullPath = getName() + path;
+                String hostName = getParent().getName();
                 return new URL("jndi", "", 0, getJNDIUri(hostName, fullPath),
                     new DirContextURLStreamHandler(resources));
             } catch (Exception e) {

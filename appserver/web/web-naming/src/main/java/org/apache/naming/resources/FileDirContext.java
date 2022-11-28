@@ -26,6 +26,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import javax.naming.Binding;
 import javax.naming.NameClassPair;
@@ -991,7 +993,7 @@ public class FileDirContext extends BaseDirContext {
      * This specialized resource implementation avoids opening the InputStream
      * to the file right away (which would put a lock on the file).
      */
-    protected static class FileResource extends Resource {
+    protected static class FileResource extends Resource implements UrlResource {
 
 
         // -------------------------------------------------------- Constructor
@@ -1027,6 +1029,11 @@ public class FileDirContext extends BaseDirContext {
                 return fin;
             }
             return super.streamContent();
+        }
+
+        @Override
+        public URL getUrl() throws MalformedURLException {
+            return file.toURI().toURL();
         }
 
 

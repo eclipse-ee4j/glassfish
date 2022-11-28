@@ -16,14 +16,6 @@
 
 package org.glassfish.main.admin.test;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.AsadminResult;
@@ -31,10 +23,23 @@ import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
 import org.hamcrest.io.FileMatchers;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.LineNumberReader;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static org.apache.commons.lang3.StringUtils.replaceChars;
 import static org.apache.commons.lang3.StringUtils.substringBefore;
 import static org.glassfish.main.admin.test.tool.AsadminResultMatcher.asadminOK;
 import static org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment.getDomain1Directory;
+import static org.glassfish.tests.utils.junit.matcher.DirectoryMatchers.hasEntryCount;
 import static org.glassfish.tests.utils.junit.matcher.TextFileMatchers.hasLineCount;
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -42,6 +47,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.containsInRelativeOrder;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -138,9 +144,14 @@ public class AsadminLoggingITest {
         File loggingProperties = new File(getDomain1Directory().resolve("config").toFile(), "logging.properties");
         assertThat(loggingProperties, hasLineCount(greaterThan(50L)));
 
-        List<String> lines = Files.lines(loggingProperties.toPath()).collect(Collectors.toList());
+        List<String> lines;
+        try (Stream<String> lineStream = Files.lines(loggingProperties.toPath())) {
+            lines = lineStream.collect(Collectors.toList());
+        }
+
         List<String> keys = lines.stream().filter(line -> !line.startsWith("#"))
             .map(line -> line.replaceFirst("=.*", "")).collect(Collectors.toList());
+
         assertAll(
             () -> assertThat(keys.get(0), equalTo(".level")),
             () -> assertThat(keys.get(keys.size() - 1), equalTo("systemRootLogger.level")),
@@ -160,15 +171,26 @@ public class AsadminLoggingITest {
 
 
     @Test
-    public void rotateLog() {
-        File serverLogFile = new File(getDomain1Directory().resolve("logs").toFile(), "server.log");
+    public void rotateLog() throws Exception {
+        File serverLogDirectory = getDomain1Directory().resolve("logs").toFile();
+        File serverLogFile = new File(serverLogDirectory, "server.log");
+
         assertThat(serverLogFile, hasLineCount(greaterThan(50L)));
+
+        long logEntryCount = Objects.requireNonNull(serverLogDirectory.list()).length;
+
+        long logLineCount;
+        try (LineNumberReader reader = new LineNumberReader(new FileReader(serverLogFile))) {
+            logLineCount = reader.lines().count();
+        }
+
         AsadminResult result = ASADMIN.exec("rotate-log");
         assertThat(result, asadminOK());
+
         assertAll(
             () -> assertThat(serverLogFile, FileMatchers.anExistingFile()),
-            () -> assertThat(serverLogFile, hasLineCount(0L))
+            () -> assertThat(serverLogFile, hasLineCount(lessThan(logLineCount))),
+            () -> assertThat(serverLogDirectory, hasEntryCount(logEntryCount + 1))
         );
     }
-
 }

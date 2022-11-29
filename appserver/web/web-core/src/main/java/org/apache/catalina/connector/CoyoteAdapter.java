@@ -43,6 +43,7 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.Container;
 import org.apache.catalina.Context;
 import org.apache.catalina.Globals;
@@ -333,8 +334,8 @@ public class CoyoteAdapter extends HttpHandler {
         try {
             normalize(decodedURI);
         } catch (IOException ioException) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URI");
-            response.setDetailMessage(ioException.getMessage());
+            catalinaResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URI");
+            catalinaResponse.setDetailMessage(ioException.getMessage());
             return false;
         }
 
@@ -501,17 +502,17 @@ public class CoyoteAdapter extends HttpHandler {
      *
      * @param uriDataChunk URI DataChunk to be normalized
      */
-    public static boolean normalize(DataChunk uriDataChunk) throws IOException {
+    public static void normalize(DataChunk uriDataChunk) throws IOException {
         DataChunk.Type type = uriDataChunk.getType();
         if (type == DataChunk.Type.Chars) {
             normalizeChars(uriDataChunk);
-	    return;
+	        return;
         }
 
-        return normalizeBytes(uriDataChunk);
+        normalizeBytes(uriDataChunk);
     }
 
-    private static boolean normalizeBytes(DataChunk uriDataChunk) throws IOException {
+    private static void normalizeBytes(DataChunk uriDataChunk) throws IOException {
         ByteChunk uriBC = uriDataChunk.getByteChunk();
         byte[] b = uriBC.getBytes();
         int start = uriBC.getStart();
@@ -614,7 +615,7 @@ public class CoyoteAdapter extends HttpHandler {
         uriBC.setBytes(b, start, end);
     }
 
-    private static boolean normalizeChars(DataChunk uriDataChunk) throws IOException {
+    private static void normalizeChars(DataChunk uriDataChunk) throws IOException {
         CharChunk uriCharChunk = uriDataChunk.getCharChunk();
         char[] c = uriCharChunk.getChars();
         int start = uriCharChunk.getStart();

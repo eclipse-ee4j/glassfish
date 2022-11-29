@@ -506,7 +506,7 @@ public class CoyoteAdapter extends HttpHandler {
         DataChunk.Type type = uriDataChunk.getType();
         if (type == DataChunk.Type.Chars) {
             normalizeChars(uriDataChunk);
-	        return;
+            return;
         }
 
         normalizeBytes(uriDataChunk);

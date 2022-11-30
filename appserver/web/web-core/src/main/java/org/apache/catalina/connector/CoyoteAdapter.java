@@ -699,7 +699,7 @@ public class CoyoteAdapter extends HttpHandler {
                 throw new IOException("Request traversed outside of allowed context");
             }
             int index2 = -1;
-            for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos --) {
+            for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos--) {
                 if (c[pos] == '/') {
                     index2 = pos;
                 }

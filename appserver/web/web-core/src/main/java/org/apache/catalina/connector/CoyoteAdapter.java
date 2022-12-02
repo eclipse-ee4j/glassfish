@@ -332,7 +332,7 @@ public class CoyoteAdapter extends HttpHandler {
 
         // Normalize Decoded URI
         if (!normalize(decodedURI, catalinaResponse)) {
-            catalinaResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URI");
+            catalinaResponse.sendError(SC_BAD_REQUEST, catalinaResponse.getDetailMessage());
             return false;
         }
 
@@ -517,7 +517,7 @@ public class CoyoteAdapter extends HttpHandler {
 
         // An empty URL is not acceptable
         if (start == end) {
-            response.setDetailMessage("Empty URL");
+            response.setDetailMessage("Invalid URI: Empty URL");
             return false;
         }
 
@@ -536,19 +536,19 @@ public class CoyoteAdapter extends HttpHandler {
                 if (ALLOW_BACKSLASH) {
                     b[pos] = (byte) '/';
                 } else {
-                    response.setDetailMessage("Backslashes not allowed");
+                    response.setDetailMessage("Invalid URI: Backslashes not allowed");
                     return false;
                 }
             }
             if (b[pos] == (byte) 0) {
-                response.setDetailMessage("Null byte found during request normalization");
+                response.setDetailMessage("Invalid URI: Null byte found during request normalization");
                 return false;
             }
         }
 
         // The URL must start with '/'
         if (b[start] != (byte) '/') {
-            response.setDetailMessage("Request must start with /");
+            response.setDetailMessage("Invalid URI: Request must start with /");
             return false;
         }
 
@@ -599,7 +599,7 @@ public class CoyoteAdapter extends HttpHandler {
             }
             // Prevent from going outside our context
             if (index == 0) {
-                response.setDetailMessage("Request traversed outside of allowed context");
+                response.setDetailMessage("Invalid URI: Request traversed outside of allowed context");
                 return false;
             }
             int index2 = -1;
@@ -639,19 +639,19 @@ public class CoyoteAdapter extends HttpHandler {
                 if (ALLOW_BACKSLASH) {
                     c[pos] = '/';
                 } else {
-                    response.setDetailMessage("Backslashes not allowed");
+                    response.setDetailMessage("Invalid URI: Backslashes not allowed");
                     return false;
                 }
             }
             if (c[pos] == (char) 0) {
-                response.setDetailMessage("Null byte found during request normalization");
+                response.setDetailMessage("Invalid URI: Null byte found during request normalization");
                 return false;
             }
         }
 
         // The URL must start with '/'
         if (c[start] != '/') {
-            response.setDetailMessage("Request must start with /");
+            response.setDetailMessage("Invalid URI: Request must start with /");
             return false;
         }
 
@@ -702,7 +702,7 @@ public class CoyoteAdapter extends HttpHandler {
             }
             // Prevent from going outside our context
             if (index == 0) {
-                response.setDetailMessage("Request traversed outside of allowed context");
+                response.setDetailMessage("Invalid URI: Request traversed outside of allowed context");
                 return false;
             }
             int index2 = -1;

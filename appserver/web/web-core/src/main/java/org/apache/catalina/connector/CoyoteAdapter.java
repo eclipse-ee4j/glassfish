@@ -331,11 +331,8 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         // Normalize Decoded URI
-        try {
-            normalize(decodedURI);
-        } catch (IOException ioException) {
+        if (!normalize(decodedURI, catalinaResponse)) {
             catalinaResponse.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URI");
-            catalinaResponse.setDetailMessage(ioException.getMessage());
             return false;
         }
 
@@ -501,18 +498,18 @@ public class CoyoteAdapter extends HttpHandler {
      * or if the URI contains a null byte.
      *
      * @param uriDataChunk URI DataChunk to be normalized
+     * @param response The Catalina Response that a detail error message will be added to if an error is encountered
      */
-    public static void normalize(DataChunk uriDataChunk) throws IOException {
+    public static boolean normalize(DataChunk uriDataChunk, Response response) {
         DataChunk.Type type = uriDataChunk.getType();
         if (type == DataChunk.Type.Chars) {
-            normalizeChars(uriDataChunk);
-            return;
+            return normalizeChars(uriDataChunk, response);
         }
 
-        normalizeBytes(uriDataChunk);
+        return normalizeBytes(uriDataChunk, response);
     }
 
-    private static void normalizeBytes(DataChunk uriDataChunk) throws IOException {
+    private static boolean normalizeBytes(DataChunk uriDataChunk, Response response) {
         ByteChunk uriBC = uriDataChunk.getByteChunk();
         byte[] b = uriBC.getBytes();
         int start = uriBC.getStart();
@@ -520,12 +517,13 @@ public class CoyoteAdapter extends HttpHandler {
 
         // An empty URL is not acceptable
         if (start == end) {
-            throw new IOException("Empty URL");
+            response.setDetailMessage("Empty URL");
+            return false;
         }
 
         // URL * is acceptable
         if ((end - start == 1) && b[start] == (byte) '*') {
-            return;
+            return true;
         }
 
         int pos = 0;
@@ -538,17 +536,20 @@ public class CoyoteAdapter extends HttpHandler {
                 if (ALLOW_BACKSLASH) {
                     b[pos] = (byte) '/';
                 } else {
-                    throw new IOException("Backslashes not allowed");
+                    response.setDetailMessage("Backslashes not allowed");
+                    return false;
                 }
             }
             if (b[pos] == (byte) 0) {
-                throw new IOException("Null byte found during request normalization");
+                response.setDetailMessage("Null byte found during request normalization");
+                return false;
             }
         }
 
         // The URL must start with '/'
         if (b[start] != (byte) '/') {
-            throw new IOException("Request must start with /");
+            response.setDetailMessage("Request must start with /");
+            return false;
         }
 
         // Replace "//" with "/"
@@ -598,7 +599,8 @@ public class CoyoteAdapter extends HttpHandler {
             }
             // Prevent from going outside our context
             if (index == 0) {
-                throw new IOException("Request traversed outside of allowed context");
+                response.setDetailMessage("Request traversed outside of allowed context");
+                return false;
             }
             int index2 = -1;
             for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos--) {
@@ -613,9 +615,10 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         uriBC.setBytes(b, start, end);
+        return true;
     }
 
-    private static void normalizeChars(DataChunk uriDataChunk) throws IOException {
+    private static boolean normalizeChars(DataChunk uriDataChunk, Response response) {
         CharChunk uriCharChunk = uriDataChunk.getCharChunk();
         char[] c = uriCharChunk.getChars();
         int start = uriCharChunk.getStart();
@@ -623,7 +626,7 @@ public class CoyoteAdapter extends HttpHandler {
 
         // URL * is acceptable
         if ((end - start == 1) && c[start] == '*') {
-            return;
+            return true;
         }
 
         int pos = 0;
@@ -636,17 +639,20 @@ public class CoyoteAdapter extends HttpHandler {
                 if (ALLOW_BACKSLASH) {
                     c[pos] = '/';
                 } else {
-                    throw new IOException("Backslashes not allowed");
+                    response.setDetailMessage("Backslashes not allowed");
+                    return false;
                 }
             }
             if (c[pos] == (char) 0) {
-                throw new IOException("Null byte found during request normalization");
+                response.setDetailMessage("Null byte found during request normalization");
+                return false;
             }
         }
 
         // The URL must start with '/'
         if (c[start] != '/') {
-            throw new IOException("Request must start with /");
+            response.setDetailMessage("Request must start with /");
+            return false;
         }
 
         // Replace "//" with "/"
@@ -696,7 +702,8 @@ public class CoyoteAdapter extends HttpHandler {
             }
             // Prevent from going outside our context
             if (index == 0) {
-                throw new IOException("Request traversed outside of allowed context");
+                response.setDetailMessage("Request traversed outside of allowed context");
+                return false;
             }
             int index2 = -1;
             for (pos = start + index - 1; (pos >= 0) && (index2 < 0); pos--) {
@@ -711,6 +718,7 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         uriCharChunk.setChars(c, start, end);
+        return true;
     }
 
     // ------------------------------------------------------ Protected Methods

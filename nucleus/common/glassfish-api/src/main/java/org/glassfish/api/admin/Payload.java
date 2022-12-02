@@ -322,14 +322,14 @@ public interface Payload {
         Properties getProperties();
 
         /**
-         * Returns an InputStream suitable for reading the content of the Part.
-         *
-         * @return
+         * @return an InputStream suitable for reading the content of the Part.
+         *         Caller is responsible for closing.
          */
         InputStream getInputStream();
 
         /**
          * Copies the contents of the Part to the specified OutputStream.
+         * Doesn't close the stream.
          *
          * @param os target OutputStream to receive the content of the Part
          * @throws java.io.IOException
@@ -337,9 +337,7 @@ public interface Payload {
         void copy(final OutputStream os) throws IOException;
 
         /**
-         * Indicates if the Part represents a recursive action or not.
-         *
-         * @return
+         * @return true indicates if the Part represents a recursive action
          */
         boolean isRecursive();
 

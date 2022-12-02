@@ -400,14 +400,14 @@ public class CheckpointHelper {
     // ZipPayloadImpl
 
     private void writePartsTo(Iterator<Part> parts, OutputStream os) throws IOException {
-        ZipOutputStream zos = new ZipOutputStream(os);
-        while (parts.hasNext()) {
-            Part part = parts.next();
-            prepareEntry(part, zos);
-            part.copy(zos);
-            zos.closeEntry();
+        try (ZipOutputStream zos = new ZipOutputStream(os)) {
+            while (parts.hasNext()) {
+                Part part = parts.next();
+                prepareEntry(part, zos);
+                part.copy(zos);
+                zos.closeEntry();
+            }
         }
-        zos.close();
     }
 
     private void prepareEntry(final Payload.Part part, final ZipOutputStream zos) throws IOException {

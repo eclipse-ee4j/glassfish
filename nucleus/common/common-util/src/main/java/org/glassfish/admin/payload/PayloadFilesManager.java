@@ -374,19 +374,15 @@ public abstract class PayloadFilesManager {
 
     private void consumePartBody(final Part part) throws FileNotFoundException, IOException {
         try (InputStream is = part.getInputStream()) {
-            byte[] buffer = new byte[1024 * 64];
-            while (is.read(buffer) != -1) {
-            }
+            is.readAllBytes();
         }
     }
 
     private void processReport(final Payload.Part part) throws Exception {
-        if (reportHandler != null) {
-            try (InputStream inputStream = part.getInputStream()) {
-                reportHandler.handleReport(inputStream);
-            }
-        } else {
+        if (reportHandler == null) {
             consumePartBody(part);
+        } else {
+            reportHandler.handleReport(part.getInputStream());
         }
     }
 

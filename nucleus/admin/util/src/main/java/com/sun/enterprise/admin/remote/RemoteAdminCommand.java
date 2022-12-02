@@ -67,6 +67,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.admin.payload.PayloadImpl;
+import org.glassfish.admin.payload.PayloadImpl.Inbound;
 import org.glassfish.api.admin.AuthenticationException;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel;
@@ -1111,17 +1112,13 @@ public class RemoteAdminCommand {
 
             @Override
             public void useConnection(HttpURLConnection urlConnection) throws CommandException, IOException {
-
-                Payload.Inbound inboundPayload;
-                try (InputStream in = urlConnection.getInputStream()) {
-                    String responseContentType = urlConnection.getContentType();
-                    logger.finer("Response Content-Type: " + responseContentType);
-                    inboundPayload = PayloadImpl.Inbound.newInstance(responseContentType, in);
-                    if (inboundPayload == null) {
-                        throw new IOException(strings.get("NoPayloadSupport", responseContentType));
-                    }
+                InputStream in = urlConnection.getInputStream();
+                String responseContentType = urlConnection.getContentType();
+                logger.finer("Response Content-Type: " + responseContentType);
+                Inbound inboundPayload = PayloadImpl.Inbound.newInstance(responseContentType, in);
+                if (inboundPayload == null) {
+                    throw new IOException(strings.get("NoPayloadSupport", responseContentType));
                 }
-
                 boolean isReportProcessed = false;
                 Iterator<Payload.Part> partIt = inboundPayload.parts();
                 while (partIt.hasNext()) {
@@ -1129,18 +1126,17 @@ public class RemoteAdminCommand {
                      * There should be only one part, which should be the
                      * metadata, but skip any other parts just in case.
                      */
-                    if (!isReportProcessed) {
+                    if (isReportProcessed) {
+                        partIt.next(); // just throw it away
+                    } else {
                         metadataErrors = new StringBuilder();
-                        try (InputStream inputStream = partIt.next().getInputStream()) {
-                            commandModel = parseMetadata(inputStream, metadataErrors);
-                        }
+                        commandModel = parseMetadata(partIt.next().getInputStream(), metadataErrors);
                         logger.finer("fetchCommandModel: got command opts: " + commandModel);
                         isReportProcessed = true;
-                    } else {
-                        partIt.next(); // just throw it away
                     }
                 }
             }
+
         });
         if (commandModel == null) {
             if (metadataErrors == null) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +17,24 @@
 
 package com.sun.enterprise.admin.cli.embeddable;
 
+import com.sun.enterprise.util.io.FileUtils;
+
+import jakarta.inject.Inject;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.admin.payload.PayloadFilesManager;
 import org.glassfish.admin.payload.PayloadImpl;
 import org.glassfish.api.ActionReport;
@@ -24,28 +43,11 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.Payload;
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFishException;
-import org.jvnet.hk2.annotations.ContractsProvided;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import jakarta.inject.Inject;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.glassfish.internal.api.InternalSystemAdministrator;
+import org.jvnet.hk2.annotations.ContractsProvided;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is an implementation of {@link Deployer}. Unlike the other EmbeddedDeployer, this deployer uses admin command
@@ -148,7 +150,7 @@ public class DeployerImpl implements Deployer {
             CommandExecutorImpl executer = habitat.getService(CommandExecutorImpl.class);
             ActionReport report = executer.executeCommand("list-components");
             Properties props = report.getTopMessagePart().getProps();
-            return new ArrayList<String>(props.stringPropertyNames());
+            return new ArrayList<>(props.stringPropertyNames());
         } catch (Exception e) {
             throw new GlassFishException(e);
         }
@@ -168,35 +170,14 @@ public class DeployerImpl implements Deployer {
         File file;
         file = File.createTempFile("app", "tmp");
         file.deleteOnExit();
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
-            copyStream(in, out);
+        try (FileOutputStream out = new FileOutputStream(file)) {
+            FileUtils.copy(in, out);
         } finally {
             if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    // ignore
-                }
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } finally {
-                    // ignore
-                }
+                in.close();
             }
         }
         return file;
-    }
-
-    private void copyStream(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[4096];
-        int len;
-        while ((len = in.read(buf)) >= 0) {
-            out.write(buf, 0, len);
-        }
     }
 
     /**
@@ -208,8 +189,6 @@ public class DeployerImpl implements Deployer {
      */
     private void extractPayload(Payload.Outbound outboundPayload, ActionReport actionReport, File retrieveDir) {
         File payloadZip = null;
-        FileOutputStream payloadOutputStream = null;
-        FileInputStream payloadInputStream = null;
         try {
             /*
             * Add the report to the payload to mimic what the normal
@@ -228,41 +207,25 @@ public class DeployerImpl implements Deployer {
             * then reading from that file.
             */
             payloadZip = File.createTempFile("appclient", ".zip");
-            payloadOutputStream = new FileOutputStream(payloadZip);
-            outboundPayload.writeTo(payloadOutputStream);
-            payloadOutputStream.flush();
-            payloadOutputStream.close();
-
+            try (FileOutputStream payloadOutputStream = new FileOutputStream(payloadZip)) {
+                outboundPayload.writeTo(payloadOutputStream);
+            }
             /*
             * Use the temp file's contents as the inbound payload to
             * correctly process the downloaded files.
             */
-            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir,
-                    null /* no action report to record extraction results */, logger);
-            payloadInputStream = new FileInputStream(payloadZip);
-            final PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", payloadInputStream);
-            pfm.processParts(inboundPayload); // explodes the payloadZip.
+            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir, null, logger);
+            try (FileInputStream payloadInputStream = new FileInputStream(payloadZip)) {
+                PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", payloadInputStream);
+                pfm.processParts(inboundPayload); // explodes the payloadZip.
+            }
         } catch (Exception ex) {
             // Log error and ignore exception.
             logger.log(Level.WARNING, ex.getMessage(), ex);
         } finally {
-            if (payloadOutputStream != null) {
-                try {
-                    payloadOutputStream.close();
-                } catch (IOException ioex) {
-                    logger.warning(ioex.getMessage());
-                }
-            }
-            if (payloadInputStream != null) {
-                try {
-                    payloadInputStream.close();
-                } catch (IOException ioex) {
-                    logger.warning(ioex.getMessage());
-                }
-            }
             if (payloadZip != null) {
-                if (payloadZip.delete() == false) {
-                    logger.log(Level.WARNING, "Cannot delete payload: {0}", payloadZip.toString());
+                if (!payloadZip.delete()) {
+                    logger.log(Level.WARNING, "Cannot delete payload: {0}", payloadZip);
                 }
             }
         }

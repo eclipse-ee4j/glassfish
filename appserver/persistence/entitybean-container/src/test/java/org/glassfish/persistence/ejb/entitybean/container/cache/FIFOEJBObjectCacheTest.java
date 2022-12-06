@@ -18,10 +18,12 @@ package org.glassfish.persistence.ejb.entitybean.container.cache;
 
 import java.util.ArrayList;
 
-public class FIFOEJBObjectCacheTest
+import org.junit.jupiter.api.Test;
+
+class FIFOEJBObjectCacheTest
 {
-    public void test_unitTest_1()
-    throws Exception {
+    @Test
+    void unitTest_1() throws Exception {
 
         FIFOEJBObjectCache cache = new FIFOEJBObjectCache("UnitTestCache");
         cache.init(512, 0, 0, (float)1.0, null);

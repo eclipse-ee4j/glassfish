@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.admin.cli.cluster;
 
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
 
 
@@ -44,16 +45,16 @@ public class DeleteInstanceFilesystem extends LocalInstanceCommand {
         instanceName = instanceName0;
         super.validate();
 
-        if (!StringUtils.ok(getServerDirs().getServerName()))
+        if (!StringUtils.ok(getServerDirs().getServerName())) {
             throw new CommandException(Strings.get("DeleteInstance.noInstanceName"));
+        }
     }
 
-    /**
-     */
-    @Override
-    final protected int executeCommand() throws CommandException {
 
-        if (isRunning()) {
+    @Override
+    protected final int executeCommand() throws CommandException {
+
+        if (ProcessUtils.isAlive(getServerDirs().getPidFile())) {
             throw new CommandException(Strings.get("DeleteInstance.running"));
         }
 

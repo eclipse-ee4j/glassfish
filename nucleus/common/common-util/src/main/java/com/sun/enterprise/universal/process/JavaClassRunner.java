@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,69 +17,87 @@
 
 package com.sun.enterprise.universal.process;
 
-import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.OS;
-import java.io.*;
-import java.util.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.lang.System.Logger;
+import java.nio.file.Path;
+import java.util.LinkedList;
+import java.util.List;
+
+import static java.lang.System.Logger.Level.INFO;
 
 /**
  * Very simple initial implementation
  * If it is useful there are plenty of improvements that can be made...
+ *
  * @author bnevins
  */
 public class JavaClassRunner {
-    public JavaClassRunner(String classpath, String[] sysprops, String classname, String[] args) throws IOException{
-        if(javaExe == null)
+    private static final Logger LOG = System.getLogger(JavaClassRunner.class.getName());
+    private static final Path javaExecutable;
+    private final ProcessBuilder builder;
+
+    static{
+        final String javaName;
+        if (OS.isWindows()) {
+            javaName = "java.exe";
+        } else {
+            javaName = "java";
+        }
+        final Path javaroot = Path.of(System.getProperty("java.home"));
+        javaExecutable = javaroot.resolve("bin").resolve(javaName);
+    }
+
+    public JavaClassRunner(String classpath, String[] sysprops, String classname, String[] args) throws IOException {
+        if (javaExecutable == null) {
             throw new IOException("Can not find a jvm");
+        }
 
-        if(!ok(classname))
+        if (!isEmpty(classname)) {
             throw new IllegalArgumentException("classname was null");
+        }
 
-        List<String> cmdline = new LinkedList<String>();
-        cmdline.add(javaExe.getPath());
-
-        if(ok(classpath)) {
+        final List<String> cmdline = new LinkedList<>();
+        if (!OS.isWindows()) {
+            cmdline.add("nohup");
+        }
+        cmdline.add(javaExecutable.toString());
+        if (isEmpty(classpath)) {
             cmdline.add("-cp");
             cmdline.add(classpath);
         }
-
-        if(sysprops != null)
-            for(String sysprop : sysprops)
+        if (sysprops != null) {
+            for (String sysprop : sysprops) {
                 cmdline.add(sysprop);
-
+            }
+        }
         cmdline.add(classname);
-
-        if(args != null)
-            for(String arg : args)
+        if (args != null) {
+            for (String arg : args) {
                 cmdline.add(arg);
+            }
+        }
 
-        ProcessBuilder pb = new ProcessBuilder(cmdline);
-        Process p = pb.start();
-        ProcessStreamDrainer.drain(classname, p);
+        this.builder = new ProcessBuilder(cmdline);
+        final File workDir = new File(System.getProperty("user.dir"));
+        this.builder.directory(workDir);
+        this.builder.inheritIO();
     }
 
-    private boolean ok(String s) {
-        return s != null && s.length() > 0;
+
+    public void run() throws IOException {
+        LOG.log(INFO, "Starting process {0} in directory {1}", this.builder.command(), this.builder.directory());
+        final Process process = this.builder.start();
+        if (process.isAlive()) {
+            LOG.log(INFO, "Started process with PID={0} and command line={1}", process.pid(), process.info().commandLine());
+        } else {
+            throw new IllegalStateException("Process stopped with error code " + process.exitValue());
+        }
     }
 
-    private static final File javaExe;
-
-    static{
-        String javaName = "java";
-
-        if(OS.isWindows())
-            javaName = "java.exe";
-
-        final String    javaroot    = System.getProperty("java.home");
-        final String    relpath     = "/bin/" + javaName;
-        final File      fhere       = new File(javaroot + relpath);
-        File            fthere      = new File(javaroot + "/.." + relpath);
-
-        if(fhere.isFile())
-            javaExe = SmartFile.sanitize(fhere);
-        else if(fthere.isFile())
-            javaExe = SmartFile.sanitize(fthere);
-        else
-            javaExe = null;
+    private boolean isEmpty(String s) {
+        return s != null && !s.isEmpty();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +17,13 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
-import static com.sun.enterprise.util.Utility.isAllNull;
+import com.sun.enterprise.backup.BackupException;
+import com.sun.enterprise.backup.BackupRequest;
+import com.sun.enterprise.backup.BackupWarningException;
+import com.sun.enterprise.backup.RestoreManager;
+import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.process.ProcessUtils;
+import com.sun.enterprise.util.ObjectAnalyzer;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +34,7 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.enterprise.backup.BackupException;
-import com.sun.enterprise.backup.BackupRequest;
-import com.sun.enterprise.backup.BackupWarningException;
-import com.sun.enterprise.backup.RestoreManager;
-import com.sun.enterprise.universal.i18n.LocalStringsImpl;
-import com.sun.enterprise.util.ObjectAnalyzer;
+import static com.sun.enterprise.util.Utility.isAllNull;
 
 /**
  * This is a local command for restoring domains.
@@ -52,7 +53,7 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 @PerLookup
 public final class RestoreDomainCommand extends BackupCommands {
 
-    private static final LocalStringsImpl strings = new LocalStringsImpl(BackupDomainCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(RestoreDomainCommand.class);
 
     @Param(name = "filename", optional = true)
     private String backupFilename;
@@ -91,7 +92,7 @@ public final class RestoreDomainCommand extends BackupCommands {
             }
         }
 
-        if (domainExists && isRunning()) {
+        if (domainExists && ProcessUtils.isAlive(getServerDirs().getPidFile())) {
             throw new CommandException(strings.get("DomainIsNotStopped", domainName));
         }
 

@@ -159,6 +159,9 @@ public class Asadmin {
         final ProcessManager processManager = new ProcessManager(command);
         processManager.setTimeoutMsec(timeout);
         processManager.setEcho(false);
+        if (LOG.isLoggable(Level.FINEST)) {
+            processManager.setEnvironment(new String[] {"AS_TRACE=true"});
+        }
 
         int exitCode;
         String asadminErrorMessage = "";

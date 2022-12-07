@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,21 +17,21 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.jvnet.hk2.annotations.*;
-import org.jvnet.hk2.component.*;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
-import org.glassfish.hk2.api.PerLookup;
-
-import com.sun.enterprise.admin.cli.*;
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainsManager;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
-import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.process.ProcessUtils;
+import com.sun.enterprise.util.HostAndPort;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is a local command that deletes a domain.
@@ -80,7 +81,7 @@ public final class DeleteDomainCommand extends LocalDomainCommand {
 
     private void checkRunning() throws CommandException {
         programOpts.setInteractive(false); // don't prompt for password
-        if (isRunning(adminAddress.getHost(), adminAddress.getPort()) && isThisDAS(getDomainRootDir())) {
+        if (ProcessUtils.isListening(adminAddress) && isThisDAS(getDomainRootDir())) {
             String msg = strings.get("domain.is.running", getDomainName(), getDomainRootDir());
             throw new IllegalStateException(msg);
         }

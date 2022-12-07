@@ -24,9 +24,10 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.glassfish.main.admin.test.tool.asadmin.Asadmin;
 import org.glassfish.main.admin.test.tool.asadmin.GlassFishTestEnvironment;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -51,6 +52,13 @@ public class ClusterITest {
     private static final String URL1 = "http://localhost:" + PORT1;
     private static final String URL2 = "http://localhost:" + PORT2;
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
+
+
+    @AfterAll
+    public static void cleanup() {
+        ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_1);
+        ASADMIN.exec("stop-local-instance", "--kill", INSTANCE_NAME_2);
+    }
 
     @Test
     @Order(1)

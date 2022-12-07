@@ -192,10 +192,6 @@
         <runtest classname="admin.PortTests"/>
     </target>
 
-    <target name="stacker" depends="init">
-        <runtest classname="admin.Jstacker"/>
-    </target>
-
     <target name="prerun" depends="init">
         <runtest classname="admin.PreRun"/>
     </target>
@@ -355,10 +351,6 @@
     </target>
 
 
-    <target name="whacker" depends="init">
-        <runtest classname="admin.Whacker"/>
-    </target>
-
     <target name="create-jms-resource" depends="init">
         <runtest classname="admin.CreateJmsResourceTest"/>
     </target>
@@ -395,7 +387,7 @@
 
 <!-- there must be a better way to do this...
 -->
-    <target name="monitoringverbose" depends="init,whacker,setup">
+    <target name="monitoringverbose" depends="init,setup">
         <runtest classname="admin.monitoring.TestDriver">
             <jvmarg value="-Dverbose=true"/>
         </runtest>

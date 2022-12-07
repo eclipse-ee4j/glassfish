@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,16 +23,16 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
  * Strings -- Get your Strings here.
  * One file with Strings
  * So one class for messing with them!
- * Nothing in here is public protected.  Only for use by this one java package.
+ * Nothing in here is public protected. Only for use by this one java package.
+ *
  * @author Byron Nevins
  */
-
 final class Strings {
     private Strings() {
         // no instances allowed!
     }
 
-    final static String get(String indexString) {
+    static String get(String indexString) {
         return strings.get(indexString);
     }
 

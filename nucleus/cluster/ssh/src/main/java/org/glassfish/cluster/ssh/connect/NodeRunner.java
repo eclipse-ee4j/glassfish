@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,26 +17,28 @@
 
 package org.glassfish.cluster.ssh.connect;
 
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.common.util.admin.AsadminInput;
-import org.glassfish.api.admin.SSHCommandExecutionException;
-import com.sun.enterprise.universal.process.ProcessManagerException;
-import com.sun.enterprise.universal.process.ProcessManager;
 import com.sun.enterprise.config.serverbeans.Node;
-import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.universal.process.ProcessManager;
+import com.sun.enterprise.universal.process.ProcessManagerException;
 import com.sun.enterprise.util.StringUtils;
-import org.glassfish.cluster.ssh.launcher.SSHLauncher;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.SSHCommandExecutionException;
+import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.hk2.api.ServiceLocator;
 
 public class NodeRunner {
-    private static final String NL = System.getProperty("line.separator");
+    private static final String NL = System.lineSeparator();
     private static final String AUTH_TOKEN_STDIN_LINE_PREFIX = "option." + AuthTokenManager.AUTH_TOKEN_OPTION_NAME + "=";
-    private ServiceLocator habitat;
-    private Logger logger;
+    private final ServiceLocator habitat;
+    private final Logger logger;
     private String lastCommandRun = null;
     private final AuthTokenManager authTokenManager;
 
@@ -54,8 +57,9 @@ public class NodeRunner {
         if (node == null) {
             throw new IllegalArgumentException("Node is null");
         }
-        if (node.getType() == null)
+        if (node.getType() == null) {
             return false;
+        }
         return node.getType().equals("SSH");
     }
 
@@ -113,7 +117,7 @@ public class NodeRunner {
             throw new IllegalArgumentException("Node is null");
         }
 
-        final List<String> stdinLines = new ArrayList<String>();
+        final List<String> stdinLines = new ArrayList<>();
         stdinLines.add(AsadminInput.versionSpecifier());
         stdinLines.add(AUTH_TOKEN_STDIN_LINE_PREFIX + authTokenManager.createToken(context.getSubject()));
         args.add(0, "--interactive=false");            // No prompting!
@@ -134,7 +138,7 @@ public class NodeRunner {
             ProcessManagerException {
         args.add(0, AsadminInput.CLI_INPUT_OPTION);
         args.add(1, AsadminInput.SYSTEM_IN_INDICATOR); // specified to read from System.in
-        List<String> fullcommand = new ArrayList<String>();
+        List<String> fullcommand = new ArrayList<>();
         String installDir = node.getInstallDirUnixStyle() + "/"
                 + SystemPropertyConstants.getComponentName();
         if (!StringUtils.ok(installDir)) {
@@ -145,8 +149,9 @@ public class NodeRunner {
         fullcommand.add(asadmin.getAbsolutePath());
         fullcommand.addAll(args);
 
-        if (!asadmin.canExecute())
+        if (!asadmin.canExecute()) {
             throw new ProcessManagerException(asadmin.getAbsolutePath() + " is not executable.");
+        }
 
         lastCommandRun = commandListToString(fullcommand);
 
@@ -156,7 +161,7 @@ public class NodeRunner {
 
         // XXX should not need this after fix for 12777, but we seem to
         pm.waitForReaderThreads(waitForReaderThreads);
-        pm.execute();  // blocks until command is complete
+        int exitValue = pm.execute();  // blocks until command is complete
 
         String stdout = pm.getStdout();
         String stderr = pm.getStderr();
@@ -173,7 +178,7 @@ public class NodeRunner {
                 output.append(stderr);
             }
         }
-        return pm.getExitValue();
+        return exitValue;
     }
 
     private int runAdminCommandOnRemoteNode(Node node, StringBuilder output,
@@ -213,15 +218,17 @@ public class NodeRunner {
     /* hack TODO do not know how to get int status back from Windows
      */
     private int determineStatus(List<String> args, StringBuilder output) {
-        if (isDeleteFS(args) && output.toString().indexOf("UTIL6046") >= 0)
+        if (isDeleteFS(args) && output.toString().indexOf("UTIL6046") >= 0) {
             return 1;
+        }
         return 0;
     }
 
     private boolean isDeleteFS(List<String> args) {
         for (String arg : args) {
-            if ("_delete-instance-filesystem".equals(arg))
+            if ("_delete-instance-filesystem".equals(arg)) {
                 return true;
+            }
         }
         return false;
     }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,18 +21,18 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.universal.process.JavaClassRunner;
-import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.StringUtils;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.embeddable.GlassFish;
-
-import java.io.*;
-import java.util.*;
-import java.util.logging.*;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
+
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.embeddable.GlassFish;
+import org.glassfish.internal.api.Globals;
 
 /**
  * For non-verbose mode:
@@ -46,6 +47,27 @@ import jakarta.inject.Provider;
 public class RestartServer {
     @Inject
     private Provider<GlassFish> glassfishProvider;
+
+    private ModulesRegistry registry;
+    private Boolean debug;
+    private Properties props;
+    private Logger logger;
+    private boolean verbose;
+    private String classpath;
+    private String classname;
+    private String argsString;
+    private String[] args;
+    private String serverName = "";
+    private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
+    private static final String magicProperty = "-DAS_RESTART=" + ProcessHandle.current().pid();
+    private static final String[] normalProps = {magicProperty};
+    private static final int RESTART_NORMAL = 10;
+    private static final int RESTART_DEBUG_ON = 11;
+    private static final int RESTART_DEBUG_OFF = 12;
+    private static final String[] debuggerProps = {
+        magicProperty,
+        "-Xdebug",
+        "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1323"};
 
     protected final void setDebug(Boolean b) {
         debug = b;
@@ -70,8 +92,9 @@ public class RestartServer {
     protected final void doExecute(AdminCommandContext context) {
         try {
             // unfortunately we can't rely on constructors with HK2...
-            if (registry == null)
-                throw new NullPointerException(new LocalStringsImpl(getClass()).get("restart.server.internalError", "registry was not set"));
+            if (registry == null) {
+                throw new NullPointerException("registry was not set");
+            }
 
             init(context);
 
@@ -80,27 +103,26 @@ public class RestartServer {
             // show up in the ServiceLocator.
             GlassFish gfKernel = glassfishProvider.get();
             while (gfKernel == null) {
-                Thread.sleep(1000);
+                Thread.yield();
                 gfKernel = glassfishProvider.get();
             }
 
-            if (!verbose) {
-                // do it now while we still have the Logging service running...
-                reincarnate();
-            }
             // else we just return a special int from System.exit()
             gfKernel.stop();
-        }
-        catch (Exception e) {
+            if (!verbose) {
+                reincarnate();
+            }
+        } catch (Exception e) {
             context.getLogger().severe(strings.get("restart.server.failure", e));
         }
 
-        int ret = RESTART_NORMAL;
-
-        if (debug != null)
-            ret = debug ? RESTART_DEBUG_ON : RESTART_DEBUG_OFF;
-
-        System.exit(ret);
+        final int restartType;
+        if (debug == null) {
+            restartType = RESTART_NORMAL;
+        } else {
+            restartType = debug ? RESTART_DEBUG_ON : RESTART_DEBUG_OFF;
+        }
+        System.exit(restartType);
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -115,39 +137,33 @@ public class RestartServer {
         logger.info(strings.get("restart.server.init"));
     }
 
-    private void reincarnate() {
-        try {
-            if (setupReincarnationWithAsadmin() || setupReincarnationWithOther())
-                doReincarnation();
-            else
-                logger.severe(strings.get("restart.server.noStartupInfo",
-                        strings.get("restart.server.asadminError"),
-                        strings.get("restart.server.nonAsadminError")));
-        }
-        catch (RDCException rdce) {
-            // already logged...
-        }
-        catch (Exception e) {
-            logger.severe(strings.get("restart.server.internalError", e));
-        }
 
+    private void reincarnate() throws Exception {
+        if (setupReincarnationWithAsadmin() || setupReincarnationWithOther()) {
+            doReincarnation();
+        } else {
+            logger.severe(
+                strings.get("restart.server.noStartupInfo",
+                strings.get("restart.server.asadminError"),
+                strings.get("restart.server.nonAsadminError")));
+        }
     }
+
 
     private void doReincarnation() throws RDCException {
         try {
-            // TODO JavaClassRunner is very simple and primitive.
-            // Feel free to beef it up...
+            final String[] sysProps;
+            if (Boolean.parseBoolean(System.getenv("AS_SUPER_DEBUG"))) {
+                // very very difficult to debug this stuff otherwise!
+                sysProps = debuggerProps;
+            } else {
+                sysProps = normalProps;
+            }
 
-            String[] props = normalProps;
-
-            if (Boolean.parseBoolean(System.getenv("AS_SUPER_DEBUG")))
-                props = debuggerProps;  // very very difficult to debug this stuff otherwise!
-
-            new JavaClassRunner(classpath, props, classname, args);
-        }
-        catch (Exception e) {
-            logger.severe(strings.get("restart.server.jvmError", e));
-            throw new RDCException();
+            JavaClassRunner runner = new JavaClassRunner(classpath, sysProps, classname, args);
+            runner.run();
+        } catch (Exception e) {
+            throw new RDCException(e);
         }
     }
 
@@ -180,8 +196,7 @@ public class RestartServer {
 
         // now that at least one is set -- demand that ALL OF THEM be set...
         if (!ok(classpath) || !ok(classname) || argsString == null) {
-            logger.severe(strings.get(errorStringKey));
-            throw new RDCException();
+            throw new RDCException(strings.get(errorStringKey));
         }
 
         args = argsString.split(",,,");
@@ -190,8 +205,9 @@ public class RestartServer {
     }
 
     private void handleDebug() {
-        if (debug == null) // nothing to do!
+        if (debug == null) { // nothing to do!
             return;
+        }
 
         stripDebugFromArgs();
         stripOperandFromArgs();
@@ -234,23 +250,27 @@ public class RestartServer {
             }
         }
 
-        if (indexOfDebug < 0)
+        if (indexOfDebug < 0) {
             return;
+        }
 
         int oldlen = args.length;
         int newlen = oldlen - 1;
 
-        if (twoArgs)
+        if (twoArgs) {
             --newlen;
+        }
 
         String[] newArgs = new String[newlen];
         int ctr = 0;
 
         for (int i = 0; i < oldlen; i++) {
-            if (i == indexOfDebug)
+            if (i == indexOfDebug) {
                 continue;
-            if (twoArgs && i == (indexOfDebug + 1))
+            }
+            if (twoArgs && i == (indexOfDebug + 1)) {
                 continue;
+            }
 
             newArgs[ctr++] = args[i];
         }
@@ -261,8 +281,9 @@ public class RestartServer {
     private void stripOperandFromArgs() {
         // remove the domain-name operand
         // it may not be here!
-        if (args.length < 2 || !StringUtils.ok(serverName))
+        if (args.length < 2 || !StringUtils.ok(serverName)) {
             return;
+        }
 
         int newlen = args.length - 1;
 
@@ -280,26 +301,15 @@ public class RestartServer {
     // We use this simply to tell the difference between fatal errors and other
     // non-fatal conditions.
     private static class RDCException extends Exception {
+
+        private static final long serialVersionUID = 3003852706975708610L;
+
+        private RDCException(Exception e) {
+            super(e);
+        }
+
+        private RDCException(String message) {
+            super(message);
+        }
     }
-    ModulesRegistry registry;
-    private Boolean debug = null;
-    private Properties props;
-    private Logger logger;
-    private boolean verbose;
-    private String classpath;
-    private String classname;
-    private String argsString;
-    private String[] args;
-    private String serverName = "";
-    private static final LocalStringsImpl strings = new LocalStringsImpl(RestartServer.class);
-    /////////////             static variables               ///////////////////
-    private static final String magicProperty = "-DAS_RESTART=" + ProcessUtils.getPid();
-    private static final String[] normalProps = {magicProperty};
-    private static final int RESTART_NORMAL = 10;
-    private static final int RESTART_DEBUG_ON = 11;
-    private static final int RESTART_DEBUG_OFF = 12;
-    private static final String[] debuggerProps = {
-        magicProperty,
-        "-Xdebug",
-        "-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1323"};
 }

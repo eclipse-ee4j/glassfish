@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,12 +25,15 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.ColumnFormatter;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.DomainDirs;
+
 import java.io.File;
 import java.io.IOException;
+
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.*;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.annotations.*;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * This is a local command that lists the domains.
@@ -38,7 +42,6 @@ import org.jvnet.hk2.annotations.*;
 @PerLookup
 public final class ListDomainsCommand extends LocalDomainCommand {
     private static final LocalStringsImpl strings = new LocalStringsImpl(ListDomainsCommand.class);
-    private String domainsRoot = null;
 
     @Param(name = "long", shortName = "l", optional = true)
     boolean longOpt;
@@ -97,7 +100,7 @@ public final class ListDomainsCommand extends LocalDomainCommand {
         setDomainName(dn);
         initDomain();
         DomainInfo di = new DomainInfo();
-        di.adminAddr = getAdminAddress();
+        di.adminAddr = getAdminAddress("server");
         programOpts.setHostAndPort(di.adminAddr);
         di.status = isThisDAS(getDomainRootDir());
 

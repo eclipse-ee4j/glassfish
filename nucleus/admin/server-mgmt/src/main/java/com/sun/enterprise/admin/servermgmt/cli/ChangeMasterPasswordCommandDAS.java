@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,18 +19,18 @@ package com.sun.enterprise.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
-import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
+
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- * The change-master-password command for the DAS. This is a hidden command which is called from change-master-password
- * command.
+ * The change-master-password command for the DAS.
+ * This is a hidden command which is called from change-master-password command.
  *
  * @author Bhakti Mehta
  */
@@ -68,8 +69,9 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
 
         try {
             HostAndPort adminAddress = getAdminAddress();
-            if (isRunning(adminAddress.getHost(), adminAddress.getPort()))
+            if (ProcessUtils.isListening(adminAddress)) {
                 throw new CommandException(strings.get("domain.is.running", getDomainName(), getDomainRootDir()));
+            }
             DomainConfig domainConfig = new DomainConfig(getDomainName(), getDomainsDir().getAbsolutePath());
             PEDomainsManager manager = new PEDomainsManager();
             String mp = super.readFromMasterPasswordFile();
@@ -80,16 +82,20 @@ public class ChangeMasterPasswordCommandDAS extends LocalDomainCommand {
                     mp = mpCharArr != null ? new String(mpCharArr) : null;
                 }
             }
-            if (mp == null)
+            if (mp == null) {
                 throw new CommandException(strings.get("no.console"));
-            if (!super.verifyMasterPassword(mp))
+            }
+            if (!super.verifyMasterPassword(mp)) {
                 throw new CommandException(strings.get("incorrect.mp"));
+            }
             char[] nmpCharArr = getPassword("newmasterpassword", strings.get("new.mp"), strings.get("new.mp.again"), true);
             String nmp = nmpCharArr != null ? new String(nmpCharArr) : null;
-            if (nmp == null)
+            if (nmp == null) {
                 throw new CommandException(strings.get("no.console"));
-            if (nmp.trim().length() < 6)
+            }
+            if (nmp.trim().length() < 6) {
                 throw new CommandException(strings.get("incorrect.password.length"));
+            }
             domainConfig.put(DomainConfig.K_MASTER_PASSWORD, mp);
             domainConfig.put(DomainConfig.K_NEW_MASTER_PASSWORD, nmp);
             domainConfig.put(DomainConfig.K_SAVE_MASTER_PASSWORD, savemp);

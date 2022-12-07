@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,27 @@
 
 package com.sun.enterprise.admin.cli;
 
-import com.sun.enterprise.universal.io.SmartFile;
-import java.io.File;
-import java.util.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import org.glassfish.api.admin.*;
-import org.glassfish.api.admin.CommandModel.ParamModel;
-
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
+import com.sun.enterprise.universal.io.SmartFile;
+import com.sun.enterprise.util.HostAndPort;
+
+import java.io.File;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandModel.ParamModel;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.common.util.admin.AsadminInput;
 import org.glassfish.common.util.admin.AuthTokenManager;
 
@@ -42,7 +52,7 @@ public class ProgramOptions {
 
     public enum PasswordLocation {
         DEFAULT, USER, PASSWORD_FILE, LOGIN_FILE, LOCAL_PASSWORD
-    };
+    }
 
     private static final Set<ParamModel> programOptions;
     private static final Set<ParamModel> helpOption; //--help can be after command name also if all others are before
@@ -67,7 +77,7 @@ public class ProgramOptions {
     private static final LocalStringsImpl strings = new LocalStringsImpl(ProgramOptions.class);
 
     private ParameterMap options;
-    private Environment env;
+    private final Environment env;
     private boolean optionsSet;
     private char[] password;
     private PasswordLocation location;
@@ -85,10 +95,10 @@ public class ProgramOptions {
      * Define the meta-options known by the asadmin command.
      */
     static {
-        Set<ParamModel> opts = new HashSet<ParamModel>();
-        Set<ParamModel> hopts = new HashSet<ParamModel>();
+        Set<ParamModel> opts = new HashSet<>();
+        Set<ParamModel> hopts = new HashSet<>();
         addMetaOption(opts, HOST, 'H', String.class, false, CLIConstants.DEFAULT_HOSTNAME);
-        addMetaOption(opts, PORT, 'p', String.class, false, "" + CLIConstants.DEFAULT_ADMIN_PORT);
+        addMetaOption(opts, PORT, 'p', String.class, false, Integer.toString(CLIConstants.DEFAULT_ADMIN_PORT));
         addMetaOption(opts, USER, 'u', String.class, false, null);
         addMetaOption(opts, PASSWORDFILE, 'W', File.class, false, null);
         addMetaOption(opts, SECURE, 's', Boolean.class, false, "false");
@@ -151,23 +161,50 @@ public class ProgramOptions {
      * Update the program options based on the specified options from the command line.
      */
     public final void updateOptions(ParameterMap newOptions) throws CommandException {
-        if (options == null)
+        if (options == null) {
             options = newOptions;
-        else {
+        } else {
             // merge in the new options
-            for (Map.Entry<String, List<String>> e : newOptions.entrySet())
+            for (Map.Entry<String, List<String>> e : newOptions.entrySet()) {
                 options.set(e.getKey(), e.getValue());
+            }
         }
         optionsSet = true;
 
-        // have to verify port value now
+        // additional validations
+        String host = options.getOne(HOST);
+        if (ok(host)) {
+            final AtomicBoolean resolvable = new AtomicBoolean();
+            Runnable hostResolution = () -> {
+                try {
+                    InetAddress.getByName(host);
+                    resolvable.set(true);
+                } catch (Exception e) {
+                    logger.log(Level.WARNING, "Host could not be resolved: " + host, e);
+                }
+            };
+            Thread thread = new Thread(hostResolution, "host-resolution");
+            thread.setDaemon(true);
+            thread.start();
+            long timeout = 5000L;
+            try {
+                thread.join(timeout);
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Host " + host + " could not be resolved in " + timeout + " ms", e);
+            }
+            if (!resolvable.get()) {
+                throw new CommandException("Provided hostname could not be resolved to an IP address: " + host);
+            }
+        }
+
         String sport = options.getOne(PORT);
         if (ok(sport)) {
             String badPortMsg = strings.get("InvalidPortNumber", sport);
             try {
                 int port = Integer.parseInt(sport);
-                if (port < 1 || port > 65535)
+                if (port < 1 || port > 65535) {
                     throw new CommandException(badPortMsg);
+                }
             } catch (NumberFormatException e) {
                 throw new CommandException(badPortMsg);
             }
@@ -175,7 +212,7 @@ public class ProgramOptions {
     }
 
     private static boolean ok(String s) {
-        return s != null && s.length() > 0;
+        return s != null && !s.isEmpty();
     }
 
     /**
@@ -216,8 +253,9 @@ public class ProgramOptions {
 
     private void putEnv(Environment env, String name) {
         String value = options.getOne(name);
-        if (value != null)
+        if (value != null) {
             env.putOption(name, value);
+        }
     }
 
     /**
@@ -225,10 +263,12 @@ public class ProgramOptions {
      */
     public String getHost() {
         String host = options.getOne(HOST);
-        if (!ok(host))
+        if (!ok(host)) {
             host = env.getStringOption(HOST);
-        if (!ok(host))
+        }
+        if (!ok(host)) {
             host = CLIConstants.DEFAULT_HOSTNAME;
+        }
         return host;
     }
 
@@ -245,18 +285,22 @@ public class ProgramOptions {
     public int getPort() {
         int port;
         String sport = options.getOne(PORT);
-        if (!ok(sport))
+        if (!ok(sport)) {
             sport = env.getStringOption(PORT);
+        }
         if (ok(sport)) {
             try {
                 port = Integer.parseInt(sport);
-                if (port < 1 || port > 65535)
+                if (port < 1 || port > 65535) {
                     port = -1; // should've been verified in constructor
+                }
             } catch (NumberFormatException e) {
                 port = -1; // should've been verified in constructor
             }
-        } else
+        }
+        else {
             port = CLIConstants.DEFAULT_ADMIN_PORT; // the default port
+        }
         return port;
     }
 
@@ -283,10 +327,13 @@ public class ProgramOptions {
      */
     public String getUser() {
         String user = options.getOne(USER);
-        if (!ok(user))
+        if (!ok(user)) {
             user = env.getStringOption(USER);
+        }
         if (!ok(user))
+         {
             user = null; // distinguish between specify the default explicitly
+        }
         return user;
     }
 
@@ -294,8 +341,9 @@ public class ProgramOptions {
      * @param user the user to set
      */
     public void setUser(String user) {
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("Setting user to: " + user);
+        }
         options.set(USER, user);
     }
 
@@ -317,8 +365,9 @@ public class ProgramOptions {
      * @param password the password to set
      */
     public void setPassword(char[] password, PasswordLocation location) {
-        if (logger.isLoggable(Level.FINER))
+        if (logger.isLoggable(Level.FINER)) {
             logger.finer("Setting password to: " + ((password != null && password.length > 0) ? "<non-null>" : "<null>"));
+        }
         this.password = password;
         this.location = location;
     }
@@ -329,15 +378,19 @@ public class ProgramOptions {
     public String getPasswordFile() {
         String passwordFile = options.getOne(PASSWORDFILE);
 
-        if (!ok(passwordFile))
+        if (!ok(passwordFile)) {
             passwordFile = env.getStringOption(PASSWORDFILE);
+        }
 
         if (!ok(passwordFile))
+         {
             return null; // no default
+        }
 
         // weird, huh?  This means use standard input
-        if (!passwordFile.equals("-"))
+        if (!passwordFile.equals("-")) {
             passwordFile = SmartFile.sanitize(passwordFile);
+        }
 
         return passwordFile;
     }
@@ -356,12 +409,14 @@ public class ProgramOptions {
         boolean secure;
         if (options.containsKey(SECURE)) {
             String value = options.getOne(SECURE);
-            if (ok(value))
+            if (ok(value)) {
                 secure = Boolean.parseBoolean(value);
-            else
+            } else {
                 secure = true;
-        } else
+            }
+        } else {
             secure = env.getBooleanOption(SECURE);
+        }
         return secure;
     }
 
@@ -407,12 +462,14 @@ public class ProgramOptions {
         boolean terse;
         if (options.containsKey(TERSE)) {
             String value = options.getOne(TERSE);
-            if (ok(value))
+            if (ok(value)) {
                 terse = Boolean.parseBoolean(value);
-            else
+            } else {
                 terse = true;
-        } else
+            }
+        } else {
             terse = env.getBooleanOption(TERSE);
+        }
         return terse;
     }
 
@@ -458,12 +515,14 @@ public class ProgramOptions {
         boolean echo;
         if (options.containsKey(ECHO)) {
             String value = options.getOne(ECHO);
-            if (ok(value))
+            if (ok(value)) {
                 echo = Boolean.parseBoolean(value);
-            else
+            } else {
                 echo = true;
-        } else
+            }
+        } else {
             echo = env.getBooleanOption(ECHO);
+        }
         return echo;
     }
 
@@ -481,14 +540,16 @@ public class ProgramOptions {
         boolean interactive;
         if (options.containsKey(INTERACTIVE)) {
             String value = options.getOne(INTERACTIVE);
-            if (ok(value))
+            if (ok(value)) {
                 interactive = Boolean.parseBoolean(value);
-            else
+            } else {
                 interactive = true;
+            }
         } else if (env.hasOption(INTERACTIVE)) {
             interactive = env.getBooleanOption(INTERACTIVE);
-        } else
+        } else {
             interactive = System.console() != null;
+        }
         return interactive;
     }
 
@@ -506,12 +567,14 @@ public class ProgramOptions {
         boolean help = false;
         if (options.containsKey(HELP)) {
             String value = options.getOne(HELP);
-            if (ok(value))
+            if (ok(value)) {
                 help = Boolean.parseBoolean(value);
-            else
+            } else {
                 help = true;
-        } else
+            }
+        } else {
             help = env.getBooleanOption(HELP);
+        }
         return help;
     }
 
@@ -540,7 +603,7 @@ public class ProgramOptions {
      * Return an array of asadmin command line options that specify all the options of this ProgramOptions instance.
      */
     public String[] getProgramArguments() {
-        List<String> args = new ArrayList<String>(15);
+        List<String> args = new ArrayList<>(15);
         if (ok(getHost())) {
             args.add("--host");
             args.add(getHost());
@@ -622,18 +685,24 @@ public class ProgramOptions {
     /**
      * String representation of the asadmin program options. Included in the --echo output.
      */
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        if (ok(getHost()))
+        if (ok(getHost())) {
             sb.append("--host ").append(getHost()).append(' ');
-        if (getPort() > 0)
+        }
+        if (getPort() > 0) {
             sb.append("--port ").append(getPort()).append(' ');
-        if (ok(getUser()))
+        }
+        if (ok(getUser())) {
             sb.append("--user ").append(getUser()).append(' ');
-        if (ok(getPasswordFile()))
+        }
+        if (ok(getPasswordFile())) {
             sb.append("--passwordfile ").append(getPasswordFile()).append(' ');
-        if (isSecure())
+        }
+        if (isSecure()) {
             sb.append("--secure ");
+        }
         sb.append("--interactive=").append(Boolean.toString(isInteractive())).append(' ');
         sb.append("--echo=").append(Boolean.toString(isEcho())).append(' ');
         sb.append("--terse=").append(Boolean.toString(isTerse())).append(' ');

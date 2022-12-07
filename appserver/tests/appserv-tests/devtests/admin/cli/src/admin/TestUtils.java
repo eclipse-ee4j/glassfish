@@ -170,7 +170,6 @@ final class TestUtils {
             System.out.println("***   AS_TESTS_FAIL_FAST is true -- exiting out NOW!!!! *****");
             System.out.println("*************************************************************");
             System.out.println("*************************************************************");
-            SystemExit();
         }
     }
 
@@ -200,15 +199,6 @@ final class TestUtils {
             return envVal;
     }
 
-    public static void SystemExit() {
-        ProcessUtils.killJvm("ASMain");
-        ProcessUtils.killJvm("AsadminMain");
-        ProcessUtils.killJvm("DerbyControl");
-        ProcessUtils.killJvm("admin-cli.jar");
-        ProcessUtils.killJvm("derbyrun.jar");
-        ProcessUtils.killJvm("glassfish.jar");
-        System.exit(1);
-    }
     private final static String LOGFILE = System.getenv("AS_LOGFILE");
     private static final String STARS = "****************************************";
 }

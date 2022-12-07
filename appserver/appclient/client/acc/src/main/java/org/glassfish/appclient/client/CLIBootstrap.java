@@ -802,7 +802,8 @@ public class CLIBootstrap {
                     introducer = null;
                     values.set(values.size() - 1, "-classpath");
                     values.add(gfInfo.agentJarPath() + File.pathSeparatorChar + getClassPathForGfClient(clientJarPath));
-                    values.add(ClassPathUtils.getMainClass(clientJarFile));
+                    String mainClass = ClassPathUtils.getMainClass(clientJarFile);
+                    values.add(mainClass == null ? "" : mainClass);
                 }
             }
             return result;
@@ -1047,7 +1048,8 @@ public class CLIBootstrap {
             for (int i = 0; i < envVarJVMArgs.length;) {
                 boolean isMatched = false;
                 for (CommandLineElement cle : evElements) {
-                    if (isMatched = cle.matches(envVarJVMArgs[i])) {
+                    isMatched = cle.matches(envVarJVMArgs[i]);
+                    if (isMatched) {
                         i = cle.processValue(envVarJVMArgs, i);
                         break;
                     }

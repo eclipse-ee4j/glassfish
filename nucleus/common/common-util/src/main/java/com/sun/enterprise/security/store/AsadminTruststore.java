@@ -71,30 +71,18 @@ public class AsadminTruststore {
         _keyFile = keyfile;
         _keyStore = KeyStore.getInstance("JKS");
         _password = password;
-        BufferedInputStream bInput = null;
-        if (_keyFile.exists()) {
-            bInput = new BufferedInputStream(new FileInputStream(_keyFile));
+        if (!_keyFile.exists()) {
+            _keyStore.load(null, null);
+            return;
         }
-        try {
+        try (BufferedInputStream bInput = new BufferedInputStream(new FileInputStream(_keyFile))) {
             //load must be called with null to initialize an empty keystore
             _keyStore.load(bInput, _password);
-            if (bInput != null) {
-                bInput.close();
-                bInput = null;
-            }
-        } finally {
-            if (bInput != null) {
-                try {
-                    bInput.close();
-                } catch (Exception ex) {
-                    //ignore we are cleaning up
-                }
-            }
         }
     }
 
     public boolean certificateExists(Certificate cert) throws KeyStoreException {
-        return (_keyStore.getCertificateAlias(cert) == null ? false : true);
+        return _keyStore.getCertificateAlias(cert) == null ? false : true;
     }
 
     public void addCertificate(String alias, Certificate cert)
@@ -104,21 +92,8 @@ public class AsadminTruststore {
     }
 
     public void writeStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-        BufferedOutputStream boutput = null;
-
-        try {
-            boutput = new BufferedOutputStream(new FileOutputStream(_keyFile));
+        try (BufferedOutputStream boutput = new BufferedOutputStream(new FileOutputStream(_keyFile))) {
             _keyStore.store(boutput, _password);
-            boutput.close();
-            boutput = null;
-        } finally {
-            if (boutput != null) {
-                try {
-                    boutput.close();
-                } catch (Exception ex) {
-                    //ignore we are cleaning up
-                }
-            }
         }
     }
 }

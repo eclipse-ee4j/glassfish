@@ -74,9 +74,9 @@ public class RemoteCommand extends CLICommand {
     private static final LocalStringsImpl strings = new LocalStringsImpl(RemoteCommand.class);
 
     // return output string rather than printing it
-    private boolean returnOutput = false;
+    private boolean returnOutput;
     private String output;
-    private boolean returnAttributes = false;
+    private boolean returnAttributes;
     private Map<String, String> attrs;
     private String usage;
 
@@ -94,8 +94,8 @@ public class RemoteCommand extends CLICommand {
 
         private static final String JSESSIONID = "JSESSIONID";
         private static final String COOKIE_HEADER = "Cookie";
-        private CookieManager cookieManager = null;
-        private File sessionCache = null;
+        private CookieManager cookieManager;
+        private final File sessionCache;
 
         /**
          * Construct a new remote command object. The command and arguments are supplied later using the execute method in the
@@ -104,16 +104,7 @@ public class RemoteCommand extends CLICommand {
         public CLIRemoteAdminCommand(String name, String host, int port, boolean secure, String user, char[] password, Logger logger,
                 String authToken) throws CommandException {
             super(name, host, port, secure, user, password, logger, getCommandScope(), authToken, true /* prohibitDirectoryUploads */);
-
-            StringBuilder sessionFilePath = new StringBuilder();
-
-            // Store the cache at: $GFCLIENT/cache/{host}_{port}/session
-            sessionFilePath.append("cache").append(File.separator);
-            sessionFilePath.append(host).append("_");
-            sessionFilePath.append(port).append(File.separator);
-            sessionFilePath.append("session");
-
-            sessionCache = new File(AsadminSecurityUtil.getDefaultClientDir(), sessionFilePath.toString());
+            sessionCache = AsadminSecurityUtil.getGfClientSessionFile(host, port);
         }
 
         @Override

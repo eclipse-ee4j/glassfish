@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -38,6 +39,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.io.Writer;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
@@ -50,13 +53,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 
 public class FileUtils {
-    final static Logger _utillogger = CULoggerInfo.getLogger();
+    /** Current user's home directory resolved from the system property user.home */
+    public static final File USER_HOME = new File(System.getProperty("user.home"));
+
+    private static final Logger LOG = System.getLogger(FileUtils.class.getName());
     private final static LocalStringsImpl messages = new LocalStringsImpl(FileUtils.class);
 
     /**
@@ -70,10 +78,36 @@ public class FileUtils {
      * @return
      */
     public static File getParentFile(File f) {
-        if (f == null)
+        if (f == null) {
             return null;
+        }
 
         return SmartFile.sanitize(f).getParentFile();
+    }
+
+    /**
+     * Result: existing writable directory given in parameter OR {@link IllegalStateException}.
+     *
+     * @param dir
+     * @throws IllegalStateException The exception should not be catched, because it means that
+     *             the client can have unpredictable issues.
+     */
+    public static void ensureWritableDir(File dir) {
+        if (dir.exists()) {
+            if (!dir.isDirectory()) {
+                throw new IllegalStateException("The configured temporary directory is not a directory: " + dir);
+            }
+            if (!dir.canWrite()) {
+                throw new IllegalStateException("The configured temporary directory is not writeable: " + dir);
+            }
+            return;
+        }
+        if (dir.mkdirs()) {
+            LOG.log(DEBUG, "The directory {0} has been created.", dir);
+            return;
+        }
+        // just note: mkdirs maybe created part of the path, but we don't care here.
+        throw new IllegalStateException("The configured directory does not exist and could not be created: " + dir);
     }
 
     /**
@@ -111,8 +145,9 @@ public class FileUtils {
         try {
             File[] files = f.listFiles();
 
-            if(files != null)
-            return files;
+            if(files != null) {
+                return files;
+            }
         }
         catch(Exception e) {
             // fall through
@@ -125,8 +160,9 @@ public class FileUtils {
         try {
             File[] files = f.listFiles(ff);
 
-            if(files != null)
-            return files;
+            if(files != null) {
+                return files;
+            }
         }
         catch(Exception e) {
             // fall through
@@ -139,8 +175,9 @@ public class FileUtils {
         try {
             File[] files = f.listFiles(fnf);
 
-            if(files != null)
-            return files;
+            if(files != null) {
+                return files;
+            }
         }
         catch(Exception e) {
             // fall through
@@ -152,8 +189,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean safeIsDirectory(File f) {
-        if (f == null || !f.exists() || !f.isDirectory())
+        if (f == null || !f.exists() || !f.isDirectory()) {
             return false;
+        }
 
         return true;
     }
@@ -167,23 +205,26 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean safeIsRealDirectory(File f) {
-        if (safeIsDirectory(f) == false)
+        if (safeIsDirectory(f) == false) {
             return false;
+        }
 
         // these 2 values while be different for symbolic links
         String canonical = safeGetCanonicalPath(f);
         String absolute = f.getAbsolutePath();
 
-        if (canonical.equals(absolute))
+        if (canonical.equals(absolute)) {
             return true;
+        }
 
         /* Bug 4715043 -- WHOA -- Bug Obscura!!
            * In Windows, if you create the File object with, say, "d:/foo", then the
            * absolute path will be "d:\foo" and the canonical path will be "D:\foo"
            * and they won't match!!!
            **/
-        if (OS.isWindows() && canonical.equalsIgnoreCase(absolute))
+        if (OS.isWindows() && canonical.equalsIgnoreCase(absolute)) {
             return true;
+        }
 
         return false;
     }
@@ -197,8 +238,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static String safeGetCanonicalPath(File f) {
-        if (f == null)
+        if (f == null) {
             return null;
+        }
 
         try {
             return f.getCanonicalPath();
@@ -211,8 +253,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static File safeGetCanonicalFile(File f) {
-        if (f == null)
+        if (f == null) {
             return null;
+        }
 
         try {
             return f.getCanonicalFile();
@@ -225,8 +268,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean hasExtension(String filename, String ext) {
-        if (filename == null || filename.length() <= 0)
+        if (filename == null || filename.length() <= 0) {
             return false;
+        }
 
         return filename.endsWith(ext);
     }
@@ -234,8 +278,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean hasExtension(File f, String ext) {
-        if (f == null || !f.exists())
+        if (f == null || !f.exists()) {
             return false;
+        }
 
         return f.getName().endsWith(ext);
     }
@@ -243,8 +288,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean hasExtensionIgnoreCase(String filename, String ext) {
-        if (filename == null || filename.length() <= 0)
+        if (filename == null || filename.length() <= 0) {
             return false;
+        }
 
         return filename.toLowerCase(Locale.ENGLISH).endsWith(ext.toLowerCase(Locale.ENGLISH));
     }
@@ -252,8 +298,9 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean hasExtensionIgnoreCase(File f, String ext) {
-        if (f == null || !f.exists())
+        if (f == null || !f.exists()) {
             return false;
+        }
 
         return f.getName().toLowerCase(Locale.ENGLISH).endsWith(ext.toLowerCase(Locale.ENGLISH));
     }
@@ -261,12 +308,15 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean isLegalFilename(String filename) {
-        if (!isValidString(filename))
+        if (!isValidString(filename)) {
             return false;
+        }
 
-        for (int i = 0; i < ILLEGAL_FILENAME_CHARS.length; i++)
-            if (filename.indexOf(ILLEGAL_FILENAME_CHARS[i]) >= 0)
+        for (char element : ILLEGAL_FILENAME_CHARS) {
+            if (filename.indexOf(element) >= 0) {
                 return false;
+            }
+        }
 
         return true;
     }
@@ -274,11 +324,13 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static boolean isFriendlyFilename(String filename) {
-        if (!isValidString(filename))
+        if (!isValidString(filename)) {
             return false;
+        }
 
-        if (filename.indexOf(BLANK) >= 0 || filename.indexOf(DOT) >= 0)
+        if (filename.indexOf(BLANK) >= 0 || filename.indexOf(DOT) >= 0) {
             return false;
+        }
 
         return isLegalFilename(filename);
     }
@@ -286,15 +338,17 @@ public class FileUtils {
     ///////////////////////////////////////////////////////////////////////////
 
     public static String makeLegalFilename(String filename) {
-        if (isLegalFilename(filename))
+        if (isLegalFilename(filename)) {
             return filename;
+        }
 
         // let's use "__" to replace "/" and "\" (on Windows) so less chance
         // to collide with the actual name when reverting
         filename = filename.replaceAll("[/" + Pattern.quote("\\") + "]", "__");
 
-        for (int i = 0; i < ILLEGAL_FILENAME_CHARS.length; i++)
-            filename = filename.replace(ILLEGAL_FILENAME_CHARS[i], REPLACEMENT_CHAR);
+        for (char element : ILLEGAL_FILENAME_CHARS) {
+            filename = filename.replace(element, REPLACEMENT_CHAR);
+        }
 
         return filename;
     }
@@ -310,8 +364,9 @@ public class FileUtils {
 
     ///////////////////////////////////////////////////////////////////////////
     public static String makeFriendlyFilename(String filename) {
-        if (isFriendlyFilename(filename))
+        if (isFriendlyFilename(filename)) {
             return filename;
+        }
 
         String ret = makeLegalFilename(filename).replace(BLANK, REPLACEMENT_CHAR);
         ret = ret.replace(DOT, REPLACEMENT_CHAR);
@@ -323,8 +378,9 @@ public class FileUtils {
     public static String makeFriendlyFilenameNoExtension(String filename) {
         int index = filename.lastIndexOf('.');
 
-        if (index > 0)
+        if (index > 0) {
             filename = filename.substring(0, index);
+        }
 
         return (makeFriendlyFilename(filename));
     }
@@ -455,7 +511,7 @@ public class FileUtils {
             */
             return whackResolvedDirectory(parent.getCanonicalFile(), undeletedFiles);
         } catch (IOException ioe) {
-            _utillogger.log(Level.SEVERE, CULoggerInfo.exceptionIO, ioe);
+            LOG.log(Level.ERROR, "Could not recursively delete the directory " + parent, ioe);
             return false;
         }
     }
@@ -481,12 +537,10 @@ public class FileUtils {
         if (safeIsRealDirectory(parent)) {
             File[] kids = listFiles(parent);
 
-            for (int i = 0; i < kids.length; i++) {
-                File f = kids[i];
-
-                if (f.isDirectory())
+            for (File f : kids) {
+                if (f.isDirectory()) {
                     whackResolvedDirectory(f, undeletedFiles);
-                else if (!deleteFile(f) && undeletedFiles != null) {
+                } else if (!deleteFile(f) && undeletedFiles != null) {
                     undeletedFiles.add(f);
                 }
 
@@ -506,8 +560,9 @@ public class FileUtils {
      * @param f file to delete
      */
     public static void deleteFileNowOrLater(File f) {
-        if(!deleteFile(f))
+        if(!deleteFile(f)) {
             f.deleteOnExit();
+        }
     }
 
     /**
@@ -563,7 +618,6 @@ public class FileUtils {
             }
         }
 
-        boolean log = _utillogger.isLoggable(FILE_OPERATION_LOG_LEVEL);
         String filePath = f.getAbsolutePath();
 
         /*
@@ -572,18 +626,14 @@ public class FileUtils {
         *return.
         */
         if (!f.exists()) {
-            if (log) {
-                _utillogger.log(Level.FINE, CULoggerInfo.deleteFailedAbsent, filePath);
-            }
+            LOG.log(TRACE, "Attempt to delete {0} failed; the file is reported as non-existent", f);
             return true;
         } else {
             /*
             *The delete failed and the file exists.  Log a message if that
             *level is enabled and return false to indicate the failure.
             */
-            if (log) {
-                _utillogger.log(FILE_OPERATION_LOG_LEVEL, CULoggerInfo.deleteFailed, filePath);
-            }
+            LOG.log(WARNING, "Error attempting to delete {0}", f);
             return false;
         }
     }
@@ -599,7 +649,7 @@ public class FileUtils {
         FileOutputStreamWork work = new FileOutputStreamWork(out);
         int retries = doWithRetry(work);
         if (retries > 0) {
-            _utillogger.log(Level.FINE, "Retrying " + retries + " times");
+            LOG.log(DEBUG, "Retried {0} times the output to {1}", retries, out);
         }
         if (work.workComplete()) {
             return work.getStream();
@@ -622,7 +672,7 @@ public class FileUtils {
     }
 
     public static Set<File> getAllFilesUnder(File directory, FilenameFilter filenameFilter, boolean relativize) throws IOException {
-        Set<File> allFiles = new TreeSet<File>();
+        Set<File> allFiles = new TreeSet<>();
         File relativizingDir = relativize ? directory : null;
         recursiveGetFilesUnder( relativizingDir, directory, filenameFilter,
                                 allFiles, false );
@@ -633,7 +683,7 @@ public class FileUtils {
         if (!directory.exists() || !directory.isDirectory()) {
             throw new IOException("Problem with: " + directory + ". You must supply a directory that exists");
         }
-        Set<File> allFiles = new TreeSet<File>();
+        Set<File> allFiles = new TreeSet<>();
         recursiveGetFilesUnder(directory, directory, null, allFiles, true);
         return allFiles;
     }
@@ -642,21 +692,21 @@ public class FileUtils {
     // performed.
     private static void recursiveGetFilesUnder(File relativizingRoot, File directory, FilenameFilter filenameFilter, Set<File> set, boolean returnDirectories) {
         File[] files = listFiles(directory, filenameFilter);
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                recursiveGetFilesUnder(relativizingRoot, files[i], filenameFilter, set, returnDirectories);
+        for (File file : files) {
+            if (file.isDirectory()) {
+                recursiveGetFilesUnder(relativizingRoot, file, filenameFilter, set, returnDirectories);
                 if (returnDirectories) {
                     if( relativizingRoot != null ) {
-                        set.add(relativize(relativizingRoot, files[i]));
+                        set.add(relativize(relativizingRoot, file));
                     } else {
-                        set.add(files[i]);
+                        set.add(file);
                     }
                 }
             } else {
                 if( relativizingRoot != null ) {
-                    set.add(relativize(relativizingRoot, files[i]));
+                    set.add(relativize(relativizingRoot, file));
                 } else {
-                    set.add(files[i]);
+                    set.add(file);
                 }
             }
             }
@@ -703,12 +753,12 @@ public class FileUtils {
         *unlock the locked file - then begin the retries.
         */
         if (!work.workComplete() && OS.isWindows()) {
-            _utillogger.log(FILE_OPERATION_LOG_LEVEL, CULoggerInfo.performGC);
             while (!work.workComplete() && retries++ < FILE_OPERATION_MAX_RETRIES) {
                 try {
                     Thread.sleep(FILE_OPERATION_SLEEP_DELAY_MS);
                 } catch (InterruptedException ex) {
                 }
+                LOG.log(DEBUG, "Performing gc to try to force file closures");
                 System.gc();
                 work.run();
             }
@@ -749,7 +799,7 @@ public class FileUtils {
             f = File.createTempFile(TMPFILENAME, "jar", directory);
         }
         catch (IOException ioe) {
-            _utillogger.log(Level.SEVERE, CULoggerInfo.exceptionIO, ioe);
+            LOG.log(Level.ERROR, CULoggerInfo.exceptionIO, ioe);
         }
 
         f.deleteOnExit(); // just in case
@@ -773,7 +823,7 @@ public class FileUtils {
 
         if ((list != null) && (list.size() > 0)) {
             target = new File[list.size()];
-            target = (File[]) list.toArray(target);
+            target = list.toArray(target);
         }
 
         return target;
@@ -795,17 +845,17 @@ public class FileUtils {
         List<File> targetList = null;
 
         if (dirName.isDirectory()) {
-            targetList = new ArrayList<File>();
+            targetList = new ArrayList<>();
 
             File[] list = listFiles(dirName);
 
-            for (int i = 0; i < list.length; i++) {
-                if (list[i].isDirectory()) {
-                    targetList.addAll(searchDir(list[i], ext));
+            for (File element : list) {
+                if (element.isDirectory()) {
+                    targetList.addAll(searchDir(element, ext));
                 } else {
-                    String name = list[i].toString();
+                    String name = element.toString();
                     if (hasExtension(name, ext)) {
-                        targetList.add(list[i]);
+                        targetList.add(element);
                     }
                 }
             }
@@ -823,8 +873,9 @@ public class FileUtils {
      */
     public static void copy(String from, String to) throws IOException {
         //if(!StringUtils.ok(from) || !StringUtils.ok(to))
-        if (from == null || to == null)
+        if (from == null || to == null) {
             throw new IllegalArgumentException("null or empty filename argument");
+        }
 
         File fin = new File(from);
         File fout = new File(to);
@@ -845,11 +896,13 @@ public class FileUtils {
             return;
         }
 
-        if (!fin.exists())
+        if (!fin.exists()) {
             throw new IllegalArgumentException("File source doesn't exist");
+        }
 
-            if(!mkdirsMaybe(fout.getParentFile()))
+            if(!mkdirsMaybe(fout.getParentFile())) {
                 throw new RuntimeException("Can't create parent dir of output file: " + fout);
+            }
 
         copyFile(fin, fout);
     }
@@ -863,18 +916,20 @@ public class FileUtils {
      */
     public static void copyTree(File din, File dout)
             throws IOException {
-        if (!safeIsDirectory(din))
+        if (!safeIsDirectory(din)) {
             throw new IllegalArgumentException("Source isn't a directory");
+        }
 
-        if(!mkdirsMaybe(dout))
+        if(!mkdirsMaybe(dout)) {
             throw new IllegalArgumentException("Can't create destination directory");
+        }
 
         FileListerRelative flr = new FileListerRelative(din);
         String[] files = flr.getFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            File fin = new File(din, files[i]);
-            File fout = new File(dout, files[i]);
+        for (String file : files) {
+            File fin = new File(din, file);
+            File fout = new File(dout, file);
 
             copy(fin, fout);
         }
@@ -891,8 +946,9 @@ public class FileUtils {
      * @return a String which <code> does not contain `\\` character </code>
      */
     public static String makeForwardSlashes(String inputStr) {
-        if (inputStr == null)
+        if (inputStr == null) {
             throw new IllegalArgumentException("null String FileUtils.makeForwardSlashes");
+        }
         return (inputStr.replace('\\', '/'));
     }
 
@@ -959,10 +1015,12 @@ public class FileUtils {
         try {
             copyWithoutClose(in, out, size);
         } finally {
-            if (in != null)
+            if (in != null) {
                 in.close();
-            if (out != null)
+            }
+            if (out != null) {
                 out.close();
+            }
         }
     }
 
@@ -1014,46 +1072,13 @@ public class FileUtils {
          *@return boolean result of the rename attempt
          */
         public static boolean renameFile(File fromFile, File toFile) {
-            boolean log = _utillogger.isLoggable(FILE_OPERATION_LOG_LEVEL) || _utillogger.isLoggable(Level.FINE);
-
             RenameFileWork renameWork = new RenameFileWork(fromFile, toFile);
             int retries = doWithRetry(renameWork);
             boolean result = renameWork.workComplete();
-
-            String fromFilePath = null;
-            String toFilePath = null;
-            if (log || ! result) {
-                fromFilePath = fromFile.getAbsolutePath();
-                toFilePath = toFile.getAbsolutePath();
-            }
-
-            /*
-             *If the rename worked, then write an appropriate log message if the
-             *logging level allows.
-             */
             if (result) {
-                if (log) {
-                    /*
-                     *If the rename worked without retries, then log a FINE message.
-                     *If retries were needed then use the configured
-                     *FILE_OPERATION_LOG_LEVEL.
-                     */
-                    if (retries == 0) {
-                        if (_utillogger.isLoggable(Level.FINE)) {
-                            _utillogger.log(Level.FINE, CULoggerInfo.renameInitialSuccess,
-                                    new Object [] {fromFilePath, toFilePath});
-                        }
-                    } else {
-                        _utillogger.log(FILE_OPERATION_LOG_LEVEL, CULoggerInfo.retryRenameSuccess,
-                                new Object [] {fromFilePath, toFilePath, Integer.valueOf(retries)});
-                    }
-                }
+                LOG.log(DEBUG, "Attempt to rename {0} to {1} succeeded after {2} retries", fromFile, toFile, retries);
             } else {
-                /*
-                 *The rename has failed.  Write a warning message.
-                 */
-                _utillogger.log(Level.WARNING, CULoggerInfo.retryRenameFailure,
-                        new Object [] {fromFilePath, toFilePath, Integer.valueOf(retries) });
+                LOG.log(WARNING, "Attempt to rename {0} to {1} failed after {2} retries", fromFile, toFile, retries);
             }
             return result;
         }
@@ -1083,8 +1108,9 @@ public class FileUtils {
         }
         finally {
             try {
-                if (file != null)
+                if (file != null) {
                     file.close();
+                }
             }
             catch(Exception e){}
         }
@@ -1143,18 +1169,21 @@ public class FileUtils {
 
     public static File getManagedFile(String file, File dir) throws IOException {
         File f = new File(dir, file);
-        if (f.exists())
-           return f;
+        if (f.exists()) {
+            return f;
+        }
         InputStream is = null, bis = null;
         OutputStream os = null;
         try {
             is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
-            if (is == null)
+            if (is == null) {
                 return null;
+            }
             bis = new BufferedInputStream(is);
 
-            if(!mkdirsMaybe(f.getParentFile()))
+            if(!mkdirsMaybe(f.getParentFile())) {
                 throw new RuntimeException("Can't create parent dir of output file: " + f);
+            }
 
             os = new BufferedOutputStream(FileUtils.openFileOutputStream(f));
             byte buf[] = new byte[10240];
@@ -1164,20 +1193,23 @@ public class FileUtils {
             }
             return f;
         } finally {
-            if (os != null)
+            if (os != null) {
                 try {
                     os.close();
                 } catch (IOException ex) {}
+            }
 
-            if (bis != null)
+            if (bis != null) {
                 try {
                     bis.close();
                 } catch (IOException ex) {}
+            }
 
-            if (is != null)
+            if (is != null) {
                 try {
                     is.close();
                 } catch (IOException ex) {}
+            }
         }
     }
 
@@ -1224,8 +1256,9 @@ public class FileUtils {
                     return name.matches(regexp);
                 }
             });
-            if (matches != null)
+            if (matches != null) {
                 return matches;
+            }
         }
         catch (Exception e) {
             // fall through
@@ -1255,8 +1288,9 @@ public class FileUtils {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         InputStream is = cl.getResourceAsStream(resourceName);
 
-        if (is == null)
+        if (is == null) {
             return null;
+        }
 
         try {
             is = new BufferedInputStream(is);
@@ -1299,7 +1333,7 @@ public class FileUtils {
          *
          * @return whether the work has been successfully completed
          */
-        public boolean workComplete();
+        boolean workComplete();
     }
 
     /**
@@ -1307,8 +1341,8 @@ public class FileUtils {
      */
     private static class RenameFileWork implements RetriableWork {
 
-        private File originalFile;
-        private File newFile;
+        private final File originalFile;
+        private final File newFile;
         private boolean renameResult = false;
 
         public RenameFileWork(File originalFile, File newFile) {
@@ -1316,10 +1350,12 @@ public class FileUtils {
             this.newFile = newFile;
         }
 
+        @Override
         public boolean workComplete() {
             return renameResult;
         }
 
+        @Override
         public void run() {
             renameResult = originalFile.renameTo(newFile);
         }
@@ -1332,16 +1368,18 @@ public class FileUtils {
 
         private FileOutputStream fos = null;
         private Throwable lastError = null;
-        private File out;
+        private final File out;
 
         public FileOutputStreamWork(File out) {
             this.out = out;
         }
 
+        @Override
         public boolean workComplete() {
             return fos != null;
         }
 
+        @Override
         public void run() {
             try {
                 fos = new FileOutputStream(out);
@@ -1374,9 +1412,13 @@ public class FileUtils {
 
         @Override
         public void run() {
-            if (complete) return;
+            if (complete) {
+                return;
+            }
 
-            if (deleteMe.delete()) complete = true;
+            if (deleteMe.delete()) {
+                complete = true;
+            }
         }
 
         @Override
@@ -1399,6 +1441,5 @@ public class FileUtils {
     *The following property names are private, unsupported, and unpublished.
     */
     private static final int FILE_OPERATION_MAX_RETRIES = Integer.getInteger("com.sun.appserv.winFileLockRetryLimit", 5).intValue();
-        private static final int FILE_OPERATION_SLEEP_DELAY_MS = Integer.getInteger("com.sun.appserv.winFileLockRetryDelay", 1000).intValue();
-        private static final Level FILE_OPERATION_LOG_LEVEL = Level.FINE;
+    private static final int FILE_OPERATION_SLEEP_DELAY_MS = Integer.getInteger("com.sun.appserv.winFileLockRetryDelay", 1000).intValue();
 }

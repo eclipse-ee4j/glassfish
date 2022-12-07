@@ -20,7 +20,16 @@ package com.sun.enterprise.admin.util.cache;
 import com.sun.enterprise.admin.util.AdminLoggerInfo;
 import com.sun.enterprise.security.store.AsadminSecurityUtil;
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,7 +47,7 @@ public class AdminCacheFileStore implements AdminCache {
 
     private static final Logger LOG = AdminLoggerInfo.getLogger();
 
-    private final AdminCacheUtils adminCahceUtils = AdminCacheUtils.getInstance();
+    private final AdminCacheUtils adminCacheUtils = AdminCacheUtils.getInstance();
 
     private AdminCacheFileStore() {
     }
@@ -52,7 +61,7 @@ public class AdminCacheFileStore implements AdminCache {
         if (clazz == null) {
             throw new IllegalArgumentException("Attribute clazz can not be null.");
         }
-        DataProvider provider = adminCahceUtils.getProvider(clazz);
+        DataProvider provider = adminCacheUtils.getProvider(clazz);
         if (provider == null) {
             return null;
         }
@@ -70,7 +79,7 @@ public class AdminCacheFileStore implements AdminCache {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
-        if (!adminCahceUtils.validateKey(key)) {
+        if (!adminCacheUtils.validateKey(key)) {
             throw new IllegalArgumentException("Attribute key must be in form (([-_.a-zA-Z0-9]+/?)+)");
         }
         File f = getCacheFile(key);
@@ -78,35 +87,34 @@ public class AdminCacheFileStore implements AdminCache {
     }
 
     private File getCacheFile(String key) throws IOException {
-        File dir = AsadminSecurityUtil.getDefaultClientDir();
         int idx = key.lastIndexOf('/');
-        if (idx > 0) {
-            dir = new File(dir, key.substring(0, idx));
-
-            if (!FileUtils.mkdirsMaybe(dir)) {
-                throw new IOException("Can't create directory: " + dir);
-            }
-            key = key.substring(idx + 1);
-            if (key.isEmpty()) {
-                key = DEFAULT_FILENAME;
-            }
+        if (idx == 0) {
+            return new File(AsadminSecurityUtil.GF_CLIENT_DIR, key);
+        }
+        File dir = new File(AsadminSecurityUtil.GF_CLIENT_DIR, key.substring(0, idx));
+        if (!FileUtils.mkdirsMaybe(dir)) {
+            throw new IOException("Can't create directory: " + dir);
+        }
+        key = key.substring(idx + 1);
+        if (key.isEmpty()) {
+            key = DEFAULT_FILENAME;
         }
         return new File(dir, key);
     }
 
     @Override
     public synchronized void put(String key, Object data) {
-        LOG.log(Level.FINEST, "put(key, data={0})", new Object[] {key, data});
+        LOG.log(Level.FINEST, "put(key={0}, data={1})", new Object[] {key, data});
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
-        if (!adminCahceUtils.validateKey(key)) {
+        if (!adminCacheUtils.validateKey(key)) {
             throw new IllegalArgumentException("Attribute key must be in form (([-_.a-zA-Z0-9]+/?)+)");
         }
         if (data == null) {
             throw new IllegalArgumentException("Attribute data can not be null.");
         }
-        DataProvider provider = adminCahceUtils.getProvider(data.getClass());
+        DataProvider provider = adminCacheUtils.getProvider(data.getClass());
         if (provider == null) {
             throw new IllegalStateException("There is no data provider for " + data.getClass());
         }
@@ -145,7 +153,7 @@ public class AdminCacheFileStore implements AdminCache {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
-        if (!adminCahceUtils.validateKey(key)) {
+        if (!adminCacheUtils.validateKey(key)) {
             throw new IllegalArgumentException("Attribute key must be in form (([-_.a-zA-Z0-9]+/?)+)");
         }
         File cacheFile;
@@ -162,7 +170,7 @@ public class AdminCacheFileStore implements AdminCache {
         if (key == null || key.isEmpty()) {
             throw new IllegalArgumentException("Attribute key must be unempty.");
         }
-        if (!adminCahceUtils.validateKey(key)) {
+        if (!adminCacheUtils.validateKey(key)) {
             throw new IllegalArgumentException("Attribute key must be in form (([-_.a-zA-Z0-9]+/?)+)");
         }
         File cacheFile;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,6 @@
 
 package com.sun.enterprise.security.store;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PROPERTY;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -29,6 +28,8 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+
+import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PROPERTY;
 
 /**
  * This class implements an adapter for password manipulation a JCEKS.
@@ -46,7 +47,7 @@ public class AsadminTruststore {
     public static File getAsadminTruststore() {
         String location = System.getProperty(CLIENT_TRUSTSTORE_PROPERTY);
         if (location == null) {
-            return new File(AsadminSecurityUtil.getDefaultClientDir(), ASADMIN_TRUSTSTORE);
+            return new File(AsadminSecurityUtil.GF_CLIENT_DIR, ASADMIN_TRUSTSTORE);
         }
 
         return new File(location);

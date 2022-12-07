@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2022 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +18,13 @@
 package com.sun.enterprise.admin.util.cache;
 
 import com.sun.enterprise.util.io.FileUtils;
-import java.io.*;
-import java.nio.charset.Charset;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -29,16 +35,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class StringDataProvider implements DataProvider {
 
-    private Charset charset;
-
-    public StringDataProvider() {
-        try {
-            charset = Charset.forName("UTF-8");
-        } catch (Exception ex) {
-            charset = Charset.defaultCharset();
-        }
-    }
-
     @Override
     public boolean accept(Class clazz) {
         return String.class.isAssignableFrom(clazz);
@@ -47,14 +43,14 @@ public class StringDataProvider implements DataProvider {
     @Override
     public void writeToStream(Object o, OutputStream stream) throws IOException {
         String str = (String) o;
-        stream.write(str.getBytes(charset));
+        stream.write(str.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
     public Object toInstance(InputStream stream, Class clazz) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         FileUtils.copy(stream, baos, 0);
-        return new String(baos.toByteArray(), charset);
+        return new String(baos.toByteArray(), StandardCharsets.UTF_8);
     }
 
 }
